@@ -1,0 +1,31 @@
+env:
+  browser: true
+parser: '@typescript-eslint/parser'
+parserOptions:
+  ecmaVersion: 6
+  sourceType: module
+  ecmaFeatures:
+    modules: true
+extends:
+  - 'plugin:@typescript-eslint/recommended'
+  # - 'plugin:react/recommended'
+plugins:
+  - '@typescript-eslint'
+  - 'react'
+rules:
+  '@typescript-eslint/no-unused-vars': off
+  '@typescript-eslint/camelcase': off
+  '@typescript-eslint/explicit-function-return-type': off
+  '@typescript-eslint/no-explicit-any': off
+  '@typescript-eslint/interface-name-prefix': off
+  '@typescript-eslint/no-use-before-define': off
+  '@typescript-eslint/no-this-alias': off
+  '@typescript-eslint/no-empty-interface': off
+  '@typescript-eslint/no-non-null-assertion': off
+  quotes:
+    - warn
+    - single
+    - avoidEscape: false
+  semi:
+    - error
+    - always
