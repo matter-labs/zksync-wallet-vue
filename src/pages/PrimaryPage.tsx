@@ -12,40 +12,47 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [isAccount, setAccount] = useState<boolean>(false);
 
-  const { ethId, setEthBalance, setEthId, setZkBalance } = useRootData(
-    ({ ethId, setEthBalance, setEthId, setZkBalance }) => ({
+  const { ethId, setEthBalance, setEthId, setEthWallet, setZkBalance, setZkWallet } = useRootData(
+    ({ ethId, setEthBalance, setEthId, setEthWallet, setZkBalance, setZkWallet }) => ({
       ethId: ethId.get(),
       setEthBalance,
       setEthId,
+      setEthWallet,
       setZkBalance,
+      setZkWallet,
     }),
   );
 
   const createWallet = useCallback(async () => {
     try {
       const wallet = new ethers.providers.Web3Provider(window['ethereum']).getSigner();
+
+      setEthWallet(wallet);
+
       const network = process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider: Provider = await getDefaultProvider(network, 'HTTP');
       const ethersProvider = ethers.getDefaultProvider('rinkeby');
       const ethProxy = new ETHProxy(ethersProvider, syncProvider.contractAddress);
       const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider, ethProxy);
 
+      setZkWallet(syncWallet);
+
       const ehtBalance = await await getEthereumBalance(wallet, 'ETH');
-      const zkBalance = await (await syncWallet.getAccountState()).committed.nonce;
+      const zkBalance = await (await syncWallet.getAccountState()).committed.balances;
       setZkBalance(zkBalance);
-      setEthBalance(+ehtBalance / Math.pow(10, 18));
+      setEthBalance(+ehtBalance / Math.pow(10, 12));
       setAccount(true);
     } catch (e) {
       console.error(e);
     }
-  }, [setEthBalance, setZkBalance]);
+  }, [setEthBalance, setEthWallet, setZkBalance, setZkWallet]);
 
   const connect = useCallback(() => {
     if (window['ethereum']) {
       window['ethereum']
         .enable()
         .then(async res => {
-          setEthId(res[0]);
+          setEthId(res?.[0]);
           openModal(true);
         })
         .catch(err => console.error(err))
