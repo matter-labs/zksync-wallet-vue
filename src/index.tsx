@@ -5,6 +5,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import Account from './pages/Account';
 import App from './App';
 import PrimaryPage from './pages/PrimaryPage';
+import Send from './pages/Send';
 
 import StoreProvider from './store/context';
 
@@ -18,8 +19,9 @@ ReactDOM.render(
     <BrowserRouter>
       <App>
         <Switch>
-          <Route path="/" exact component={PrimaryPage} />
           <Route path="/account" exact component={Account} />
+          <Route path="/" exact component={PrimaryPage} />
+          <Route path="/send" component={Send} />
         </Switch>
       </App>
     </BrowserRouter>

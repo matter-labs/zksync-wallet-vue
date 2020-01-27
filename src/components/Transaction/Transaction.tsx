@@ -1,0 +1,56 @@
+import React from 'react';
+
+import { Button, Input, InputNumber, Spin } from 'antd';
+
+import { ITransactionProps } from './Types';
+
+const Transaction: React.FC<ITransactionProps> = ({
+  addressValue,
+  amountValue,
+  asset,
+  balance,
+  hash,
+  isExecuted,
+  isInput,
+  isLoading,
+  onCancel,
+  openModal,
+  onChangeAddress,
+  onChangeAmount,
+  title,
+  transactionAction,
+}): JSX.Element => {
+  return (
+    <>
+      {isExecuted ? (
+        <>
+          <p>{typeof hash === 'string' ? hash : hash?.hash}</p>
+          <Button onClick={onCancel && openModal ? () => onCancel(openModal) : undefined}>Nice!</Button>
+        </>
+      ) : (
+        <>
+          {isLoading ? (
+            <Spin tip="Loading..." />
+          ) : (
+            <>
+              {isInput && <Input value={addressValue} onChange={onChangeAddress} />}
+              <span>
+                {asset} &nbsp;{balance}
+              </span>
+              <InputNumber
+                min={0}
+                max={+balance}
+                value={amountValue}
+                onChange={value => onChangeAmount(value)}
+                step={0.1}
+              />
+              <Button onClick={transactionAction}>{title}</Button>
+            </>
+          )}
+        </>
+      )}
+    </>
+  );
+};
+
+export default Transaction;

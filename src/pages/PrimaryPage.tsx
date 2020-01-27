@@ -26,7 +26,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const createWallet = useCallback(async () => {
     try {
       const wallet = new ethers.providers.Web3Provider(window['ethereum']).getSigner();
-
       setEthWallet(wallet);
 
       const network = process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
@@ -34,13 +33,12 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       const ethersProvider = ethers.getDefaultProvider('rinkeby');
       const ethProxy = new ETHProxy(ethersProvider, syncProvider.contractAddress);
       const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider, ethProxy);
-
       setZkWallet(syncWallet);
 
-      const ehtBalance = await await getEthereumBalance(wallet, 'ETH');
-      const zkBalance = await (await syncWallet.getAccountState()).committed.balances;
+      const ehtBalance = await getEthereumBalance(wallet, 'ETH');
+      const zkBalance = (await syncWallet.getAccountState()).committed.balances;
       setZkBalance(zkBalance);
-      setEthBalance(+ehtBalance / Math.pow(10, 12));
+      setEthBalance(+ehtBalance / Math.pow(10, 18));
       setAccount(true);
     } catch (e) {
       console.error(e);
