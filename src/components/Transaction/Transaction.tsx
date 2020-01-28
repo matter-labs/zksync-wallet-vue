@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { Button, Input, InputNumber, Spin } from 'antd';
 
@@ -20,6 +20,14 @@ const Transaction: React.FC<ITransactionProps> = ({
   title,
   transactionAction,
 }): JSX.Element => {
+  const handleSave = useCallback(() => {
+    if (addressValue) {
+      const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+      const newContacts = JSON.stringify([addressValue, ...contacts]);
+      localStorage.setItem('contacts', newContacts);
+    }
+  }, [addressValue]);
+
   return (
     <>
       {isExecuted ? (
@@ -33,7 +41,12 @@ const Transaction: React.FC<ITransactionProps> = ({
             <Spin tip="Loading..." />
           ) : (
             <>
-              {isInput && <Input value={addressValue} onChange={onChangeAddress} />}
+              {isInput && (
+                <>
+                  <Input value={addressValue} onChange={onChangeAddress} />
+                  <Button onClick={handleSave}>Save as a contacts</Button>
+                </>
+              )}
               <span>
                 {asset} &nbsp;{balance}
               </span>
