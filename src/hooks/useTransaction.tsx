@@ -22,9 +22,13 @@ export const useTransaction = () => {
   }));
 
   const history = useCallback((amount: number, hash: string | undefined, to: string, type: string) => {
-    const history = JSON.parse(localStorage.getItem('history') || '[]');
-    const newHistory = JSON.stringify([{ amount, date: new Date(), hash, to, type }, ...history]);
-    localStorage.setItem('history', newHistory);
+    try {
+      const history = JSON.parse(localStorage.getItem('history') || '[]');
+      const newHistory = JSON.stringify([{ amount, date: new Date(), hash, to, type }, ...history]);
+      localStorage.setItem('history', newHistory);
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
 
   const transactions = useCallback(

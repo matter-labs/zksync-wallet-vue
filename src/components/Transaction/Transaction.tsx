@@ -21,10 +21,14 @@ const Transaction: React.FC<ITransactionProps> = ({
   transactionAction,
 }): JSX.Element => {
   const handleSave = useCallback(() => {
-    if (addressValue) {
-      const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-      const newContacts = JSON.stringify([addressValue, ...contacts]);
-      localStorage.setItem('contacts', newContacts);
+    try {
+      if (addressValue) {
+        const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+        const newContacts = JSON.stringify([addressValue, ...contacts]);
+        localStorage.setItem('contacts', newContacts);
+      }
+    } catch (err) {
+      console.error(err);
     }
   }, [addressValue]);
 
