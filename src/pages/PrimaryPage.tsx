@@ -7,10 +7,13 @@ import { Button, Modal, Spin } from 'antd';
 
 import { useRootData } from '../hooks/useRootData';
 
+import { WALLETS } from '../constants/Wallets';
+
 const PrimaryPage: React.FC = (): JSX.Element => {
   const [isModalOpen, openModal] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [isAccount, setAccount] = useState<boolean>(false);
+  const [walletName, setWalletName] = useState<string>('');
 
   const { ethId, setEthBalance, setEthId, setEthWallet, setZkBalance, setZkWallet } = useRootData(
     ({ ethId, setEthBalance, setEthId, setEthWallet, setZkBalance, setZkWallet }) => ({
@@ -25,11 +28,12 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   const createWallet = useCallback(async () => {
     try {
-      const wallet = new ethers.providers.Web3Provider(window['ethereum']).getSigner();
+      const [{ provider }] = WALLETS.filter(({ name }) => name === walletName);
+      const wallet = new ethers.providers.Web3Provider(provider).getSigner();
       setEthWallet(wallet);
 
       const network = process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      const syncProvider: Provider = await getDefaultProvider(network, 'HTTP');
+      const syncProvider: Provider = await getDefaultProvider(network);
       const ethersProvider = ethers.getDefaultProvider('rinkeby');
       const ethProxy = new ETHProxy(ethersProvider, syncProvider.contractAddress);
       const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider, ethProxy);
@@ -43,20 +47,21 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     } catch (e) {
       console.error(e);
     }
-  }, [setEthBalance, setEthWallet, setZkBalance, setZkWallet]);
+  }, [setEthBalance, setEthWallet, setZkBalance, setZkWallet, walletName]);
 
-  const connect = useCallback(() => {
-    if (window['ethereum']) {
-      window['ethereum']
-        .enable()
+  const connect = useCallback(
+    (signUp, name) => {
+      signUp()
         .then(async res => {
           setEthId(res?.[0]);
+          setWalletName(name);
           openModal(true);
         })
         .catch(err => console.error(err))
         .finally(() => setLoading(false));
-    }
-  }, [setEthId]);
+    },
+    [setEthId],
+  );
 
   return (
     <>
@@ -64,14 +69,18 @@ const PrimaryPage: React.FC = (): JSX.Element => {
         <Redirect to="/account" />
       ) : (
         <>
-          <Modal title="Metamask" visible={isModalOpen} onOk={() => openModal(false)} onCancel={() => openModal(false)}>
+          <Modal title="Name" visible={isModalOpen} onOk={() => openModal(false)} onCancel={() => openModal(false)}>
             {isLoading && !ethId ? (
               <Spin tip="Connecting..." />
             ) : (
               <Button onClick={createWallet}>Access my account</Button>
             )}
           </Modal>
-          <Button onClick={connect}>Metamask</Button>
+          {WALLETS.map(({ name, signUp }) => (
+            <Button key={name} onClick={() => connect(signUp, name)}>
+              {name}
+            </Button>
+          ))}
         </>
       )}
     </>
