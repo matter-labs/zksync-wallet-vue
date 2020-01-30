@@ -89,6 +89,7 @@ ENV NODE_ENV='production'
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=src,target=src \
     --mount=type=bind,source=public,target=public \
+    --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
     --mount=type=bind,source=/opt/app/node_modules,target=node_modules,from=install-frontend-dependencies \
     npm run build
 
