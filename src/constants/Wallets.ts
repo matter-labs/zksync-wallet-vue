@@ -1,12 +1,7 @@
-import * as dotenv from 'dotenv';
 import Fortmatic from 'fortmatic';
 import Portis from '@portis/web3';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Web3 from 'web3';
-
-dotenv.config();
-
-dotenv.config({ path: `${__dirname}/../../../.env` });
 
 const fm = new Fortmatic(process.env.REACT_APP_FORTMATIC);
 const fmProvider = fm.getProvider();
