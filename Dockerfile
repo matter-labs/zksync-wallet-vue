@@ -85,6 +85,9 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     npm run lint
 
 FROM set-virtual-host AS build-frontend
+ARG REACT_APP_WALLET_CONNECT
+ARG REACT_APP_FORTMATIC
+ARG REACT_APP_PORTIS
 ENV NODE_ENV='production'
 RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=src,target=src \
