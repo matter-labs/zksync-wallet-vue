@@ -29,7 +29,7 @@ revision=$(git rev-parse --short HEAD)
 microscanner_token=$(cat /run/secrets/aqua_microscanner_token)
 sonarqube_token=$(cat /run/secrets/sonarqube_token)
 firebase_key=$(cat /run/secrets/firebase_key)
-wallet-connect=$(cat /run/secrets/naw/zksync.matter/wallet-connect)
+wallet_connect=$(cat /run/secrets/naw/zksync.matter/wallet-connect)
 fortmatic=$(cat /run/secrets/naw/zksync.matter/fortmatic)
 portis=$(cat /run/secrets/naw/zksync.matter/portis)
 
@@ -49,7 +49,7 @@ if [[ "${deploy_to_production}" == 'true' ]] && [[ $(normalize_branch_name "${cu
   "VIRTUAL_HOST=${production_host}"
   "FIREBASE_KEY=${firebase_key}"
   "INVALIDATE_CACHE=${build_date}"
-  "REACT_APP_WALLET_CONNECT=${wallet-connect}"
+  "REACT_APP_WALLET_CONNECT=${wallet_connect}"
   "REACT_APP_FORTMATIC=${fortmatic}"
   "REACT_APP_PORTIS=${portis}"
   )
