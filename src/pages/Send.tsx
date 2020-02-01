@@ -18,9 +18,9 @@ const Send: React.FC = (): JSX.Element => {
     transfer,
   } = useTransaction();
 
-  const { ethId, zkBalance } = useRootData(({ ethId, zkBalance }) => ({
-    zkBalance: zkBalance.get(),
+  const { ethId, zkBalances } = useRootData(({ ethId, zkBalances }) => ({
     ethId: ethId.get(),
+    zkBalances: zkBalances.get(),
   }));
 
   useEffect(() => {
@@ -32,8 +32,7 @@ const Send: React.FC = (): JSX.Element => {
     <Transaction
       addressValue={addressValue}
       amountValue={amountValue}
-      asset="ETH"
-      balance={zkBalance ? (zkBalance['ETH'] as number) / Math.pow(10, 18) : 0}
+      balances={zkBalances}
       hash={hash}
       isExecuted={isExecuted}
       isInput
