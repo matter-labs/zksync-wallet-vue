@@ -1,14 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
-import { Button, Input, InputNumber, Spin } from 'antd';
+import { Button, Input, InputNumber, Select, Spin } from 'antd';
 
 import { ITransactionProps } from './Types';
+
+const { Option } = Select;
 
 const Transaction: React.FC<ITransactionProps> = ({
   addressValue,
   amountValue,
-  asset,
-  balance,
+  balances,
   hash,
   isExecuted,
   isInput,
@@ -20,6 +21,8 @@ const Transaction: React.FC<ITransactionProps> = ({
   title,
   transactionAction,
 }): JSX.Element => {
+  const [token, setToken] = useState<string>('');
+
   const handleSave = useCallback(() => {
     try {
       if (addressValue) {
@@ -31,6 +34,8 @@ const Transaction: React.FC<ITransactionProps> = ({
       console.error(err);
     }
   }, [addressValue]);
+
+  const maxValue = balances?.filter(({ address, symbol }) => (+address ? address === token : symbol === token));
 
   return (
     <>
@@ -51,17 +56,23 @@ const Transaction: React.FC<ITransactionProps> = ({
                   <Button onClick={handleSave}>Save as a contacts</Button>
                 </>
               )}
-              <span>
-                {asset} &nbsp;{balance}
-              </span>
+              {balances?.length && (
+                <Select style={{ width: 200 }} onChange={value => setToken(value.toString())}>
+                  {balances.map(({ address, balance, symbol }) => (
+                    <Option key={address} value={+address ? address : symbol}>
+                      {symbol}&nbsp;{balance}
+                    </Option>
+                  ))}
+                </Select>
+              )}
               <InputNumber
                 min={0}
-                max={+balance}
+                max={maxValue && maxValue?.[0] ? +maxValue?.[0]?.balance : 0}
                 value={amountValue}
                 onChange={value => onChangeAmount(value)}
                 step={0.1}
               />
-              <Button onClick={transactionAction}>{title}</Button>
+              <Button onClick={() => transactionAction(token)}>{title}</Button>
             </>
           )}
         </>

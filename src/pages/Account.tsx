@@ -30,10 +30,10 @@ const Account: React.FC = (): JSX.Element => {
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
   const [price, setPrice] = useState<number>(0);
 
-  const { ethId, ethBalance, zkBalance } = useRootData(({ ethId, ethBalance, zkBalance }) => ({
+  const { ethId, ethBalances, zkBalances } = useRootData(({ ethId, ethBalances, zkBalances }) => ({
     ethId: ethId.get(),
-    ethBalance: ethBalance.get(),
-    zkBalance: zkBalance.get(),
+    ethBalances: ethBalances.get(),
+    zkBalances: zkBalances.get(),
   }));
 
   useEffect(() => {
@@ -78,8 +78,7 @@ const Account: React.FC = (): JSX.Element => {
         <Transaction
           addressValue={addressValue}
           amountValue={amountValue}
-          asset="ETH"
-          balance={ethBalance}
+          balances={ethBalances}
           hash={hash}
           isExecuted={isExecuted}
           isInput={false}
@@ -102,8 +101,7 @@ const Account: React.FC = (): JSX.Element => {
         <Transaction
           addressValue={addressValue}
           amountValue={amountValue}
-          asset="ETH"
-          balance={zkBalance ? (zkBalance['ETH'] as number) / Math.pow(10, 18) : 0}
+          balances={zkBalances}
           hash={hash}
           isExecuted={isExecuted}
           isInput
@@ -128,14 +126,12 @@ const Account: React.FC = (): JSX.Element => {
           />
           <Icon type="edit" onClick={() => setDisabled(false)} />
         </div>
-        {zkBalance &&
-          Object.keys(zkBalance).map(key => (
-            <div key={key}>
-              <span>zk{key} &nbsp;</span>
+        {zkBalances.length &&
+          zkBalances.map(({ balance, symbol }) => (
+            <div key={symbol}>
+              <span>zk{symbol}&nbsp;</span>
               <span>
-                {+zkBalance[key] / Math.pow(10, 18)}
-                &nbsp;
-                {!!price ? price.toFixed(2) : <Icon type="spin" />}
+                {balance}&nbsp;{price}
               </span>
             </div>
           ))}

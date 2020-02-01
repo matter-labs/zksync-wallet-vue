@@ -1,10 +1,10 @@
 import { ContractTransaction } from 'ethers';
+import { IEthBalance } from '../../types/Common';
 
 export interface ITransactionProps {
   addressValue: string;
   amountValue?: number;
-  asset: string;
-  balance: number;
+  balances?: IEthBalance[];
   hash: ContractTransaction | string | undefined;
   isExecuted: boolean;
   isInput: boolean;
@@ -15,5 +15,5 @@ export interface ITransactionProps {
   onChangeAmount: React.Dispatch<React.SetStateAction<number | undefined>>;
   setExecuted: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
-  transactionAction: () => void;
+  transactionAction: (token?: string) => void;
 }

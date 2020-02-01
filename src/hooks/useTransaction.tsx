@@ -50,24 +50,27 @@ export const useTransaction = () => {
     [setAmountValue, setExecuted, setLoading, setZkBalance, zkWallet],
   );
 
-  const deposit = useCallback(async () => {
-    try {
-      setLoading(true);
-      const depositPriorityOperation = await depositFromETH({
-        depositFrom: ethWallet,
-        depositTo: zkWallet,
-        token: TOKEN,
-        amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
-      });
-      const hash = depositPriorityOperation.ethTx;
-      history(amountValue || 0, hash.hash, zkWallet.address(), 'deposit');
-      setHash(hash);
-      const receipt = await depositPriorityOperation.awaitReceipt();
-      transactions(receipt);
-    } catch (err) {
-      console.error(err);
-    }
-  }, [amountValue, ethWallet, history, setHash, setLoading, transactions, zkWallet]);
+  const deposit = useCallback(
+    async (token = TOKEN) => {
+      try {
+        setLoading(true);
+        const depositPriorityOperation = await depositFromETH({
+          depositFrom: ethWallet,
+          depositTo: zkWallet,
+          token,
+          amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
+        });
+        const hash = depositPriorityOperation.ethTx;
+        history(amountValue || 0, hash.hash, zkWallet.address(), 'deposit');
+        setHash(hash);
+        const receipt = await depositPriorityOperation.awaitReceipt();
+        transactions(receipt);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [amountValue, ethWallet, history, setHash, setLoading, transactions, zkWallet],
+  );
 
   const transfer = useCallback(async () => {
     setLoading(true);
