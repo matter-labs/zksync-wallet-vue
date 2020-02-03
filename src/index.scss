@@ -5,4 +5,62 @@ body {
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --color-white: #fff;
+  --color-black: #000;
+}
+
+.menu {
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 auto;
+  }
+
+  &-wallet {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 160px;
+    height: 25px;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-black);
+    border-radius: 13px;
+    outline: none;
+    cursor: pointer;
+
+    & > p {
+      max-width: 60px;
+      margin: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.ant-menu.title {
+  border: none;
+}
+
+.wallet-modal {
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  z-index: 10000;
+  width: 100%;
+  max-width: 250px;
+  height: 200px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-black);
+  border-radius: 8px;
+
+  &.open {
+    display: block;
+  }
+
+  &.closed {
+    display: none;
+  }
 }
