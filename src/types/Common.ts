@@ -13,3 +13,8 @@ export interface IEthBalance {
 export type IAppProps = {
   children?: React.ReactNode;
 };
+
+export interface HeaderLinks {
+  title: string;
+  link: string;
+}
