@@ -4,46 +4,57 @@ import { IBalances, IEthBalance } from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Wallet } from 'zksync';
 
-export const createStore = () => {
-  const store = {
-    ethBalance: observable.box<number>(0),
-    ethBalances: observable.box<IEthBalance[]>([]),
-    ethId: observable.box<string>(''),
-    ethWallet: observable.box<JsonRpcSigner>(),
-    zkBalance: observable.box<IBalances>(),
-    zkBalances: observable.box<IEthBalance[]>([]),
-    zkWallet: observable.box<Wallet>(),
+export const createStore = () => ({
+  ethBalance: observable.box<number>(0),
+  ethBalances: observable.box<IEthBalance[]>([]),
+  ethId: observable.box<string>(''),
+  ethWallet: observable.box<JsonRpcSigner>(),
+  isAccessModalOpen: observable.box<boolean>(false),
+  provider: observable.box<any>(),
+  walletName: observable.box<string>(''),
+  zkBalance: observable.box<IBalances>(),
+  zkBalances: observable.box<IEthBalance[]>([]),
+  zkWallet: observable.box<Wallet>(),
 
-    setEthBalance(balance: number): void {
-      this.ethBalance.set(balance);
-    },
+  setAccessModal(isOpen: boolean): void {
+    this.isAccessModalOpen.set(isOpen);
+  },
 
-    setEthBalances(balances: IEthBalance[]): void {
-      this.ethBalances.set(balances);
-    },
+  setEthBalance(balance: number): void {
+    this.ethBalance.set(balance);
+  },
 
-    setEthId(id: string): void {
-      this.ethId.set(id);
-    },
+  setEthBalances(balances: IEthBalance[]): void {
+    this.ethBalances.set(balances);
+  },
 
-    setEthWallet(wallet: JsonRpcSigner): void {
-      this.ethWallet.set(wallet);
-    },
+  setEthId(id: string): void {
+    this.ethId.set(id);
+  },
 
-    setZkBalance(balance: IBalances): void {
-      this.zkBalance.set(balance);
-    },
+  setEthWallet(wallet: JsonRpcSigner): void {
+    this.ethWallet.set(wallet);
+  },
 
-    setZkBalances(balances: IEthBalance[]): void {
-      this.zkBalances.set(balances);
-    },
+  setProvider(provider: any): void {
+    this.provider.set(provider);
+  },
 
-    setZkWallet(wallet: Wallet): void {
-      this.zkWallet.set(wallet);
-    },
-  };
+  setWalletName(name: string): void {
+    this.walletName.set(name);
+  },
 
-  return store;
-};
+  setZkBalance(balance: IBalances): void {
+    this.zkBalance.set(balance);
+  },
+
+  setZkBalances(balances: IEthBalance[]): void {
+    this.zkBalances.set(balances);
+  },
+
+  setZkWallet(wallet: Wallet): void {
+    this.zkWallet.set(wallet);
+  },
+});
 
 export type TStore = ReturnType<typeof createStore>;
