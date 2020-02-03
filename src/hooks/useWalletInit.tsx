@@ -12,16 +12,28 @@ const useWalletInit = () => {
     setEthBalances,
     setEthId,
     setEthWallet,
+    setTokens,
     setZkBalances,
     setZkWallet,
     provider,
     walletName,
   } = useRootData(
-    ({ setAccessModal, setEthBalances, setEthId, setEthWallet, setZkBalances, setZkWallet, provider, walletName }) => ({
+    ({
       setAccessModal,
       setEthBalances,
       setEthId,
       setEthWallet,
+      setTokens,
+      setZkBalances,
+      setZkWallet,
+      provider,
+      walletName,
+    }) => ({
+      setAccessModal,
+      setEthBalances,
+      setEthId,
+      setEthWallet,
+      setTokens,
       setZkBalances,
       setZkWallet,
       provider: provider.get(),
@@ -32,10 +44,8 @@ const useWalletInit = () => {
   const connect = useCallback(
     (provider, signUp) => {
       if (provider) {
-        console.log(provider);
         signUp()
           .then(async res => {
-            console.log(res);
             setEthId(res);
             setAccessModal(true);
           })
@@ -65,6 +75,8 @@ const useWalletInit = () => {
       setZkWallet(syncWallet);
 
       const tokens = await syncProvider.getTokens();
+
+      setTokens(tokens);
 
       const balancePromises = Object.keys(tokens).map(async key => {
         if (tokens[key].symbol) {
@@ -101,7 +113,7 @@ const useWalletInit = () => {
     } catch (e) {
       console.error(e);
     }
-  }, [getSigner, provider, setEthBalances, setEthWallet, setZkBalances, setZkWallet]);
+  }, [getSigner, provider, setEthBalances, setTokens, setEthWallet, setZkBalances, setZkWallet]);
 
   return {
     connect,

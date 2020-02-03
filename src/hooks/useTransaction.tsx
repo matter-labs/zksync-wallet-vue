@@ -4,6 +4,7 @@ import { depositFromETH } from 'zksync';
 
 import { useRootData } from '../hooks/useRootData';
 
+import { IEthBalance } from '../types/Common';
 import { PriorityOperationReceipt } from 'zksync/build/types';
 
 const TOKEN = 'ETH';
@@ -15,11 +16,14 @@ export const useTransaction = () => {
   const [isExecuted, setExecuted] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  const { ethWallet, setZkBalance, zkWallet } = useRootData(({ ethWallet, setZkBalance, zkWallet }) => ({
-    ethWallet: ethWallet.get(),
-    setZkBalance,
-    zkWallet: zkWallet.get(),
-  }));
+  const { ethWallet, setZkBalances, tokens, zkWallet } = useRootData(
+    ({ ethWallet, setZkBalances, tokens, zkWallet }) => ({
+      ethWallet: ethWallet.get(),
+      setZkBalances,
+      tokens: tokens.get(),
+      zkWallet: zkWallet.get(),
+    }),
+  );
 
   const history = useCallback((amount: number, hash: string | undefined, to: string, type: string) => {
     try {
@@ -37,7 +41,19 @@ export const useTransaction = () => {
         if (receipt) {
           setLoading(false);
           const zkBalance = (await zkWallet.getAccountState()).committed.balances;
-          setZkBalance(zkBalance);
+          const zkBalancePromises = Object.keys(zkBalance).map(async key => {
+            return {
+              address: tokens[key].address,
+              balance: +zkBalance[key] / Math.pow(10, 18),
+              symbol: tokens[key].symbol,
+            };
+          });
+
+          Promise.all(zkBalancePromises)
+            .then(res => {
+              setZkBalances(res as IEthBalance[]);
+            })
+            .catch(err => console.error(err));
           setAmountValue(0);
         }
         if (receipt.executed) {
@@ -47,7 +63,7 @@ export const useTransaction = () => {
         console.error(err);
       }
     },
-    [setAmountValue, setExecuted, setLoading, setZkBalance, zkWallet],
+    [setAmountValue, setExecuted, setLoading, setZkBalances, tokens, zkWallet],
   );
 
   const deposit = useCallback(
