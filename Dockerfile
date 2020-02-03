@@ -34,7 +34,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.npm,id=npm_cache \
     npm --prefer-offline ci --silent
 
-FROM install-frontend-dependencies AS prepare-sonar-scanner-environment
+FROM install-system-dependencies AS prepare-sonar-scanner-environment
 WORKDIR /opt/app/src
 ARG SONARQUBE_URL
 ARG SONARQUBE_TOKEN
@@ -69,10 +69,12 @@ ENV SONARQUBE_PROPERTIES="${SONARQUBE_URL} ${SONARQUBE_TOKEN} ${WORKING_DIRECTOR
     ${LINK_SCM} ${PROJECT_KEY} ${PROJECT_NAME} ${PROJECT_VERSION} ${PROJECT_DESCRIPTION}"
 
 FROM prepare-sonar-scanner-environment AS run-sonar-scanner
-RUN --mount=type=bind,source=.,target=.,readwrite \
+RUN --mount=type=bind,source=.git,target=.git \
+    --mount=type=bind,source=src,target=src \
     --mount=type=cache,target=/root/.sonar,id=sonar_cache,sharing=locked \
     --mount=type=cache,target=/tmp/scannerwork,id=sonar_tmp,sharing=locked \
     --mount=type=bind,source=/sonar-scanner,target=sonar-scanner,from=sonar-scanner \
+    --mount=type=bind,source=/opt/app/node_modules,target=node_modules,from=install-frontend-dependencies \
     ./sonar-scanner/bin/sonar-scanner ${SONARQUBE_PROPERTIES}
 
 FROM set-virtual-host AS lint-source-code
