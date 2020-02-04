@@ -7,6 +7,7 @@ import { useRootData } from '../hooks/useRootData';
 import { IEthBalance } from '../types/Common';
 import { PriorityOperationReceipt } from 'zksync/build/types';
 
+import { ADDRESS_VALIDATION } from '../constants/regExs';
 import { DEFAULT_ERROR } from '../constants/errors';
 
 const TOKEN = 'ETH';
@@ -97,39 +98,57 @@ export const useTransaction = () => {
   );
 
   const transfer = useCallback(
-    async (token = TOKEN) => {
-      setLoading(true);
-      const transferTransaction = await zkWallet.syncTransfer({
-        to: addressValue,
-        token: token,
-        amount: ethers.utils.parseEther(amountValue ? amountValue.toString() : '0'),
-        fee: ethers.utils.parseEther('0.001'),
-      });
-      const hash = transferTransaction.txHash;
-      history(amountValue || 0, hash, addressValue, 'transfer');
-      setHash(hash);
-      const receipt = await transferTransaction.awaitReceipt();
-      transactions(receipt);
+    async (token = TOKEN, type) => {
+      try {
+        if (ADDRESS_VALIDATION[type].test(addressValue)) {
+          setLoading(true);
+          const transferTransaction = await zkWallet.syncTransfer({
+            to: addressValue,
+            token: token,
+            amount: ethers.utils.parseEther(amountValue ? amountValue.toString() : '0'),
+            fee: ethers.utils.parseEther('0.001'),
+          });
+          const hash = transferTransaction.txHash;
+          history(amountValue || 0, hash, addressValue, 'transfer');
+          setHash(hash);
+          const receipt = await transferTransaction.awaitReceipt();
+          transactions(receipt);
+        } else {
+          setError(`Address: "${addressValue}" doesn't match ethereum address format`);
+        }
+      } catch (err) {
+        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        setLoading(false);
+      }
     },
-    [addressValue, amountValue, history, transactions, zkWallet],
+    [addressValue, amountValue, history, setError, transactions, zkWallet],
   );
 
   const withdraw = useCallback(
-    async (token = TOKEN) => {
-      setLoading(true);
-      const withdrawTransaction = await zkWallet.withdrawTo({
-        ethAddress: addressValue,
-        token: token,
-        amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
-        fee: ethers.utils.parseEther('0.001'),
-      });
-      const hash = withdrawTransaction.txHash;
-      history(amountValue || 0, hash, addressValue, 'withdraw');
-      setHash(hash);
-      const receipt = await withdrawTransaction.awaitReceipt();
-      transactions(receipt);
+    async (token = TOKEN, type) => {
+      try {
+        if (ADDRESS_VALIDATION[type].test(addressValue)) {
+          setLoading(true);
+          const withdrawTransaction = await zkWallet.withdrawTo({
+            ethAddress: addressValue,
+            token: token,
+            amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
+            fee: ethers.utils.parseEther('0.001'),
+          });
+          const hash = withdrawTransaction.txHash;
+          history(amountValue || 0, hash, addressValue, 'withdraw');
+          setHash(hash);
+          const receipt = await withdrawTransaction.awaitReceipt();
+          transactions(receipt);
+        } else {
+          setError(`Address: "${addressValue}" doesn't match following format "sync:...."`);
+        }
+      } catch (err) {
+        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        setLoading(false);
+      }
     },
-    [addressValue, amountValue, history, setHash, setLoading, transactions, zkWallet],
+    [addressValue, amountValue, history, setError, setHash, setLoading, transactions, zkWallet],
   );
 
   return {

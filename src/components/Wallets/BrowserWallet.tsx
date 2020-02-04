@@ -15,7 +15,7 @@ const BrowserWallet: React.FC = (): JSX.Element => {
     if (!provider) {
       const browserProvider = window?.['ethereum'];
       setProvider(browserProvider);
-      connect(browserProvider, browserProvider.enable.bind(browserProvider));
+      connect(browserProvider, browserProvider?.enable.bind(browserProvider));
     }
   }, [connect, provider, setProvider]);
   return <></>;

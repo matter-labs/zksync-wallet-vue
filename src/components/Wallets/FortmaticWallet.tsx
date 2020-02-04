@@ -18,7 +18,7 @@ const FortmaticWallet: React.FC = (): JSX.Element => {
       const fmProvider = fm.getProvider();
       setProvider(fmProvider);
       const signer = getSigner(fmProvider);
-      connect(fmProvider, signer.getAddress.bind(signer));
+      connect(fmProvider, signer?.getAddress.bind(signer));
     }
   }, [connect, getSigner, provider, setProvider]);
 
