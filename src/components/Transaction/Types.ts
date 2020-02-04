@@ -15,5 +15,6 @@ export interface ITransactionProps {
   onChangeAmount: React.Dispatch<React.SetStateAction<number | undefined>>;
   setExecuted: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
-  transactionAction: (token?: string) => void;
+  transactionAction: (token?: string, type?: string) => void;
+  type: string;
 }

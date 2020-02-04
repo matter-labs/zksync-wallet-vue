@@ -18,7 +18,7 @@ const PortisWallet: React.FC = (): JSX.Element => {
       const portisProvider = portis.provider;
       setProvider(portisProvider);
       const signer = getSigner(portisProvider);
-      connect(portisProvider, signer.getAddress.bind(signer));
+      connect(portisProvider, signer?.getAddress.bind(signer));
     }
   }, [connect, getSigner, provider, setProvider]);
 

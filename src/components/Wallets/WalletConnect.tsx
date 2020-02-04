@@ -18,7 +18,7 @@ const WalletConnect: React.FC = (): JSX.Element => {
         infuraId: process.env.REACT_APP_WALLET_CONNECT,
       });
       setProvider(wcProvider);
-      connect(wcProvider, wcProvider.enable.bind(wcProvider));
+      connect(wcProvider, wcProvider?.enable.bind(wcProvider));
     }
   }, [connect, getSigner, provider, setProvider]);
 

@@ -24,6 +24,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   onChangeAmount,
   title,
   transactionAction,
+  type,
 }): JSX.Element => {
   const [token, setToken] = useState<string>('');
 
@@ -79,7 +80,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 onChange={value => onChangeAmount(value)}
                 step={0.1}
               />
-              <Button onClick={() => transactionAction(token)}>{title}</Button>
+              <Button onClick={() => transactionAction(token, type)}>{title}</Button>
             </>
           )}
         </>
