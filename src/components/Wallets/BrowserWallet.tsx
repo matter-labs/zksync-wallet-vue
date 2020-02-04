@@ -4,7 +4,7 @@ import { useRootData } from '../../hooks/useRootData';
 import useWalletInit from '../../hooks/useWalletInit';
 
 const BrowserWallet: React.FC = (): JSX.Element => {
-  const { connect, getSigner } = useWalletInit();
+  const { connect } = useWalletInit();
 
   const { provider, setProvider } = useRootData(({ provider, setProvider }) => ({
     provider: provider.get(),
@@ -13,12 +13,11 @@ const BrowserWallet: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     if (!provider) {
-      const signer = getSigner(window?.['ethereum']);
       const browserProvider = window?.['ethereum'];
       setProvider(browserProvider);
-      connect(browserProvider, signer.getAddress.bind(signer));
+      connect(browserProvider, browserProvider.enable.bind(browserProvider));
     }
-  }, [connect, getSigner, provider, setProvider]);
+  }, [connect, provider, setProvider]);
   return <></>;
 };
 
