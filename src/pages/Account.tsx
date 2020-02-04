@@ -9,6 +9,7 @@ import { useTransaction } from '../hooks/useTransaction';
 import { request } from '../functions/Request';
 
 import { BASE_URL, CURRENCY, CONVERT_CURRENCY } from '../constants/CoinBase';
+import { DEFAULT_ERROR } from '../constants/errors';
 
 const Account: React.FC = (): JSX.Element => {
   const {
@@ -30,19 +31,25 @@ const Account: React.FC = (): JSX.Element => {
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
   const [price, setPrice] = useState<number>(0);
 
-  const { ethId, ethBalances, zkBalances } = useRootData(({ ethId, ethBalances, zkBalances }) => ({
-    ethId: ethId.get(),
-    ethBalances: ethBalances.get(),
-    zkBalances: zkBalances.get(),
-  }));
+  const { error, ethId, ethBalances, setError, zkBalances } = useRootData(
+    ({ error, ethId, ethBalances, setError, zkBalances }) => ({
+      error: error.get(),
+      ethId: ethId.get(),
+      ethBalances: ethBalances.get(),
+      setError,
+      zkBalances: zkBalances.get(),
+    }),
+  );
 
   useEffect(() => {
     request(`${BASE_URL}/${CURRENCY}/?convert=${CONVERT_CURRENCY}`)
       .then((res: any) => {
         setPrice(+res?.[0]?.price_usd);
       })
-      .catch(err => console.error(err));
-  }, []);
+      .catch(err => {
+        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+      });
+  }, [error, setError, setPrice]);
 
   useEffect(() => {
     if (!ethId) {

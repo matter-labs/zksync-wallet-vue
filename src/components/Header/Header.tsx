@@ -31,13 +31,11 @@ const Header: React.FC = (): JSX.Element => {
     <div className="menu-wrapper">
       <Link to="/">ZK Synk</Link>
       <Menu mode="horizontal">
-        {HEADER_ITEMS.map(({ title, link }) => {
-          return (
-            <Menu.Item>
-              <Link to={link}>{title}</Link>
-            </Menu.Item>
-          );
-        })}
+        {HEADER_ITEMS.map(({ title, link }) => (
+          <Menu.Item key={title}>
+            <Link to={link}>{title}</Link>
+          </Menu.Item>
+        ))}
       </Menu>
       <button type="button" className="menu-wallet" onClick={() => openModal(!isModalOpen)}>
         <img src="../../images/randomImage.png" alt="wallet" />

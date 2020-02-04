@@ -6,9 +6,12 @@ import { useRootData } from '../hooks/useRootData';
 
 import { IEthBalance } from '../types/Common';
 
+import { DEFAULT_ERROR } from '../constants/errors';
+
 const useWalletInit = () => {
   const {
     setAccessModal,
+    setError,
     setEthBalances,
     setEthId,
     setEthWallet,
@@ -20,6 +23,7 @@ const useWalletInit = () => {
   } = useRootData(
     ({
       setAccessModal,
+      setError,
       setEthBalances,
       setEthId,
       setEthWallet,
@@ -30,6 +34,7 @@ const useWalletInit = () => {
       walletName,
     }) => ({
       setAccessModal,
+      setError,
       setEthBalances,
       setEthId,
       setEthWallet,
@@ -49,12 +54,14 @@ const useWalletInit = () => {
             setEthId(res);
             setAccessModal(true);
           })
-          .catch(err => console.error(err));
+          .catch(err => {
+            err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+          });
       } else {
-        console.error(`${walletName} not found`);
+        setError(`${walletName} not found`);
       }
     },
-    [setAccessModal, setEthId, walletName],
+    [setAccessModal, setError, setEthId, walletName],
   );
 
   const getSigner = useCallback(provider => {
@@ -94,7 +101,9 @@ const useWalletInit = () => {
           const balance = res.filter(token => token);
           setEthBalances(balance as IEthBalance[]);
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+          err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        });
 
       const zkBalance = (await syncWallet.getAccountState()).committed.balances;
       const zkBalancePromises = Object.keys(zkBalance).map(async key => {
@@ -109,11 +118,13 @@ const useWalletInit = () => {
         .then(res => {
           setZkBalances(res as IEthBalance[]);
         })
-        .catch(err => console.error(err));
-    } catch (e) {
-      console.error(e);
+        .catch(err => {
+          err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        });
+    } catch (err) {
+      err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
     }
-  }, [getSigner, provider, setEthBalances, setTokens, setEthWallet, setZkBalances, setZkWallet]);
+  }, [getSigner, provider, setError, setEthBalances, setTokens, setEthWallet, setZkBalances, setZkWallet]);
 
   return {
     connect,
