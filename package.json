@@ -23,7 +23,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
-    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "lint-css": "stylelint \"src/**/*.{scss,css}\" --fix",
     "deploy_hosting": "firebase deploy --only hosting"
   },

@@ -6,6 +6,7 @@ import { Tokens } from 'zksync/build/types';
 import { Wallet } from 'zksync';
 
 export const createStore = () => ({
+  error: observable.box<string>(''),
   ethBalances: observable.box<IEthBalance[]>([]),
   ethId: observable.box<string>(''),
   ethWallet: observable.box<JsonRpcSigner>(),
@@ -18,6 +19,10 @@ export const createStore = () => ({
 
   setAccessModal(isOpen: boolean): void {
     this.isAccessModalOpen.set(isOpen);
+  },
+
+  setError(error: string): void {
+    this.error.set(error);
   },
 
   setEthBalances(balances: IEthBalance[]): void {

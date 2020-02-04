@@ -4,6 +4,10 @@ import { Button, Input, InputNumber, Select, Spin } from 'antd';
 
 import { ITransactionProps } from './Types';
 
+import { useRootData } from '../../hooks/useRootData';
+
+import { DEFAULT_ERROR } from '../../constants/errors';
+
 const { Option } = Select;
 
 const Transaction: React.FC<ITransactionProps> = ({
@@ -23,6 +27,9 @@ const Transaction: React.FC<ITransactionProps> = ({
 }): JSX.Element => {
   const [token, setToken] = useState<string>('');
 
+  const { setError } = useRootData(({ setError }) => ({
+    setError,
+  }));
   const handleSave = useCallback(() => {
     try {
       if (addressValue) {
@@ -31,9 +38,9 @@ const Transaction: React.FC<ITransactionProps> = ({
         localStorage.setItem('contacts', newContacts);
       }
     } catch (err) {
-      console.error(err);
+      err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
     }
-  }, [addressValue]);
+  }, [addressValue, setError]);
 
   const maxValue = balances?.filter(({ address, symbol }) => (+address ? address === token : symbol === token));
 
