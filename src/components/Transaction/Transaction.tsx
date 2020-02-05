@@ -1,18 +1,9 @@
-import React, { useCallback, useState } from 'react';
-
-import { Button, Input, InputNumber, Select, Spin } from 'antd';
+import React, { useState } from 'react';
 
 import { ITransactionProps } from './Types';
 
-import { useRootData } from '../../hooks/useRootData';
-
-import { DEFAULT_ERROR } from '../../constants/errors';
-
-const { Option } = Select;
-
 const Transaction: React.FC<ITransactionProps> = ({
   addressValue,
-  amountValue,
   balances,
   hash,
   isExecuted,
@@ -22,69 +13,111 @@ const Transaction: React.FC<ITransactionProps> = ({
   openModal,
   onChangeAddress,
   onChangeAmount,
+  price,
   title,
   transactionAction,
+  zkBalances,
 }): JSX.Element => {
   const [token, setToken] = useState<string>('');
+  const [inputValue, setInputValue] = useState<number | string>('');
+  const [maxValue, setMaxValue] = useState<number>(0);
 
-  const { setError } = useRootData(({ setError }) => ({
-    setError,
-  }));
-  const handleSave = useCallback(() => {
-    try {
-      if (addressValue) {
-        const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
-        const newContacts = JSON.stringify([addressValue, ...contacts]);
-        localStorage.setItem('contacts', newContacts);
-      }
-    } catch (err) {
-      err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+  const validateNumbers = e => {
+    if (/^[0-9]*\.?[0-9]*$/.test(e)) {
+      e <= maxValue ? setInputValue(e) : setInputValue(maxValue);
+    } else {
+      setInputValue(0);
     }
-  }, [addressValue, setError]);
-
-  const maxValue = balances?.filter(({ address, symbol }) => (+address ? address === token : symbol === token));
+  };
 
   return (
-    <>
+    <div className="transaction-wrapper">
       {isExecuted ? (
         <>
           <p>{typeof hash === 'string' ? hash : hash?.hash}</p>
-          <Button onClick={onCancel && openModal ? () => onCancel(openModal) : undefined}>Nice!</Button>
+          <button onClick={onCancel && openModal ? () => onCancel(openModal) : undefined}>Nice!</button>
         </>
       ) : (
         <>
           {isLoading ? (
-            <Spin tip="Loading..." />
+            <span>Loading...</span>
           ) : (
             <>
+              <h2 className="transaction-title">{title}</h2>
               {isInput && (
                 <>
-                  <Input value={addressValue} onChange={onChangeAddress} />
-                  <Button onClick={handleSave}>Save as a contacts</Button>
+                  <span className="transaction-field-title">To address</span>
+                  <div className="transaction-field">
+                    <div className="currency-input-wrapper">
+                      <input
+                        placeholder="Ox address, ENS or contact name"
+                        value={addressValue}
+                        onChange={onChangeAddress}
+                        className="currency-input-address"
+                      />
+                      <select
+                        className="currency-selector"
+                        onChange={e => {
+                          setToken(e.toString());
+                          setMaxValue(+e.target.value);
+                        }}
+                      >
+                        {balances?.length &&
+                          balances.map(({ address, balance, symbol }) => (
+                            <option key={address} value={balance}>
+                              {symbol}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
+                  </div>
                 </>
               )}
-              {balances?.length && (
-                <Select style={{ width: 200 }} onChange={value => setToken(value.toString())}>
-                  {balances.map(({ address, balance, symbol }) => (
-                    <Option key={address} value={+address ? address : symbol}>
-                      {symbol}&nbsp;{balance}
-                    </Option>
+              <span className="transaction-field-title">Amount / asset</span>
+              <div className="transaction-field">
+                <div className="currency-input-wrapper border">
+                  <input
+                    placeholder="0.00"
+                    className={'currency-input'}
+                    onChange={e => {
+                      validateNumbers(e.target.value);
+                      onChangeAmount(+e.target.value);
+                    }}
+                    value={inputValue}
+                  />
+                  <select
+                    className="currency-selector"
+                    onChange={e => {
+                      setToken(e.toString());
+                      setMaxValue(+e.target.value);
+                    }}
+                  >
+                    {balances?.length &&
+                      balances.map(({ address, balance, symbol }) => (
+                        <option key={address} value={balance}>
+                          {symbol}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+                {zkBalances?.length &&
+                  zkBalances.map(({ balance, symbol }) => (
+                    <div className="currency-input-wrapper" key={symbol}>
+                      <span>~${price * balance}</span>
+                      <span>
+                        Balance: {balance} {symbol}
+                      </span>
+                    </div>
                   ))}
-                </Select>
-              )}
-              <InputNumber
-                min={0}
-                max={maxValue && maxValue?.[0] ? +maxValue?.[0]?.balance : 0}
-                value={amountValue}
-                onChange={value => onChangeAmount(value)}
-                step={0.1}
-              />
-              <Button onClick={() => transactionAction(token)}>{title}</Button>
+              </div>
+              <button className="btn submit-button" onClick={() => transactionAction(token)}>
+                {title}
+              </button>
             </>
           )}
         </>
       )}
-    </>
+    </div>
   );
 };
 

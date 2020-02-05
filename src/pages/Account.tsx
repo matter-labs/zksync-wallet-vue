@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { Button, Card, Icon, Input, Modal } from 'antd';
 import Transaction from '../components/Transaction/Transaction';
+// import CurrencyInput from '../components/Inputs/CurrencyInput';
 
 import { useRootData } from '../hooks/useRootData';
 import { useTransaction } from '../hooks/useTransaction';
@@ -23,7 +24,7 @@ const Account: React.FC = (): JSX.Element => {
     setAmountValue,
     setExecuted,
     setHash,
-    withdraw,
+    // withdraw,
   } = useTransaction();
   const [isDepositModalOpen, setDepositModal] = useState<boolean>(false);
   const [isWithrawModalOpen, setWithdrawModal] = useState<boolean>(false);
@@ -76,6 +77,24 @@ const Account: React.FC = (): JSX.Element => {
 
   return (
     <>
+      <Transaction
+        addressValue={addressValue}
+        amountValue={amountValue}
+        balances={ethBalances}
+        hash={hash}
+        isExecuted={isExecuted}
+        isInput={true}
+        isLoading={isLoading}
+        onCancel={handleCancel}
+        openModal={setDepositModal}
+        onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
+        onChangeAmount={setAmountValue}
+        price={price}
+        setExecuted={setExecuted}
+        title="Deposit"
+        transactionAction={deposit}
+        zkBalances={zkBalances}
+      />
       <Modal
         title="Deposit"
         visible={isDepositModalOpen}
@@ -88,15 +107,17 @@ const Account: React.FC = (): JSX.Element => {
           balances={ethBalances}
           hash={hash}
           isExecuted={isExecuted}
-          isInput={false}
+          isInput={true}
           isLoading={isLoading}
           onCancel={handleCancel}
           openModal={setDepositModal}
           onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
           onChangeAmount={setAmountValue}
+          price={price}
           setExecuted={setExecuted}
           title="Deposit"
           transactionAction={deposit}
+          zkBalances={zkBalances}
         />
       </Modal>
       <Modal
@@ -108,18 +129,20 @@ const Account: React.FC = (): JSX.Element => {
         <Transaction
           addressValue={addressValue}
           amountValue={amountValue}
-          balances={zkBalances}
+          balances={ethBalances}
           hash={hash}
           isExecuted={isExecuted}
-          isInput
+          isInput={true}
           isLoading={isLoading}
           onCancel={handleCancel}
-          openModal={setWithdrawModal}
+          openModal={setDepositModal}
           onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
           onChangeAmount={setAmountValue}
+          price={price}
           setExecuted={setExecuted}
-          title="Withdraw"
-          transactionAction={withdraw}
+          title="Deposit"
+          transactionAction={deposit}
+          zkBalances={zkBalances}
         />
       </Modal>
       <Card bordered={true} style={{ maxWidth: 900 }}>
