@@ -39,10 +39,11 @@ const Send: React.FC = (): JSX.Element => {
       isLoading={isLoading}
       onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
       onChangeAmount={setAmountValue}
+      price={0}
       setExecuted={setExecuted}
       title="Transfer"
       transactionAction={transfer}
-      type="sync"
+      zkBalances={zkBalances}
     />
   );
 };

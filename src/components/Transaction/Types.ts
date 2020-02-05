@@ -9,12 +9,11 @@ export interface ITransactionProps {
   isExecuted: boolean;
   isInput: boolean;
   isLoading: boolean;
-  onCancel?: (setModal: (isOpen: boolean) => void) => void;
-  openModal?: (isOpen: boolean) => void;
   onChangeAddress: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeAmount: React.Dispatch<React.SetStateAction<number | undefined>>;
   setExecuted: React.Dispatch<React.SetStateAction<boolean>>;
+  price: number;
   title: string;
-  transactionAction: (token?: string, type?: string) => void;
-  type: string;
+  transactionAction: (token?: string) => void;
+  zkBalances?: IEthBalance[];
 }
