@@ -2,12 +2,8 @@ import { HeaderLinks } from '../types/Common';
 
 export const HEADER_ITEMS: HeaderLinks[] = [
   {
-    title: 'Account',
+    title: 'My wallet',
     link: '/account',
-  },
-  {
-    title: 'Send',
-    link: '/send',
   },
   {
     title: 'Contacts',

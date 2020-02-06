@@ -113,6 +113,12 @@ const Transaction: React.FC<ITransactionProps> = ({
               <button className="btn submit-button" onClick={() => transactionAction(token)}>
                 {title}
               </button>
+              {zkBalances?.length &&
+                zkBalances.map(({ balance }) => (
+                  <p className="transaction-fee">
+                    Fee: <span>{balance * 0.001}</span>
+                  </p>
+                ))}
             </>
           )}
         </>
