@@ -121,7 +121,7 @@ const Account: React.FC = (): JSX.Element => {
           setExecuted={setExecuted}
           title="Withdraw"
           transactionAction={withdraw}
-          type="sync"
+          type="eth"
         />
       </Modal>
       <Card bordered={true} style={{ maxWidth: 900 }}>
