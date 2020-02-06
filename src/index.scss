@@ -12,6 +12,7 @@
   --button-bg-color-light: #8C8DFC;
   --main-bg-color-light: #F3F5FF;
   --border-color-light: rgba(0, 0, 0, 0.08);
+  --transparent: transparent;
 
   --sm-font-size: 14px;
   --md-font-size: 18px;
@@ -33,10 +34,47 @@ h2 {
 
 .menu {
   &-wrapper {
+    padding: 16px;
+  }
+
+  &-logo {
+    height: 30px;
+    width: 150px;
+    background-image: url(./images/logo.svg);
+  }
+
+  &-top {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 0 auto;
+  }
+
+  &-route { 
+    display: block;
+    box-sizing: content-box;
+    color: var(--dark-color-light);
+    padding-bottom: 10px;
+    border-bottom: 4px solid var(--transparent);
+
+    &.active {
+      color: var(--dark-color-light);
+      border-bottom: 4px solid var(--button-bg-color-light);
+    }
+
+    &:hover {
+      color: var(--dark-color-light);
+      border-bottom: 4px solid var(--button-bg-color-light);
+    }
+
+    &-wrapper {
+      font-size: var(--md-font-size);
+      padding: 5px 24px 0;
+    }
+  }
+
+  &-routes {
+    display: flex;
+    justify-content: center;
+    height: 54px;
   }
 
   &-wallet {
@@ -47,7 +85,7 @@ h2 {
     max-width: 160px;
     height: 25px;
     background-color: var(--light-color-light);
-    border: 1px solid var(--dark-color-light);
+    border: none;
     border-radius: 13px;
     outline: none;
     cursor: pointer;
@@ -66,24 +104,26 @@ h2 {
   border: none;
 }
 
-.wallet-modal {
-  position: absolute;
-  top: 15px;
-  right: 10px;
-  z-index: 10000;
-  width: 100%;
-  max-width: 250px;
-  height: 200px;
-  background-color: var(--light-color-light);
-  border: 1px solid var(-border-color-light);
-  border-radius: 8px;
+.modal {
+  &-wallet {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    z-index: 10000;
+    width: 100%;
+    max-width: 250px;
+    height: 200px;
+    background-color: var(--light-color-light);
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
 
-  &.open {
-    display: block;
-  }
-
-  &.closed {
-    display: none;
+    &.open {
+      display: block;
+    }
+  
+    &.closed {
+      display: none;
+    }
   }
 }
 
@@ -92,18 +132,27 @@ h2 {
     text-align: center;
   }
 
+  &-fee {
+    font-size: var(--sm-font-size);
+    text-align: center;
+    color: var(--dark-color-light);
+    margin-top: 24px;
+
+    & > span {
+      color: var(--hints-color-light);
+    }
+  }
+
   &-wrapper {
-    position: absolute;
     top: 50%;
     left: 50%;
     padding: 20px;
+    max-width: 500px;
     background-color: var(--light-color-light);
-    transform: translate(-50%, -50%);
   }
 
   &-field {
     width: 100%;
-    width: 500px;
     height: 100%;
     max-height: 135px;
     margin-bottom: 20px;
@@ -123,7 +172,7 @@ h2 {
   &-selector {
     color: var(--dark-color-light);
     font-size: var(--xxl-font-size);
-    // background-color: transparent;
+    background-color: var(--transparent);
     border: none;
     outline: none;
   }
@@ -175,4 +224,5 @@ h2 {
   background-color: var(--button-bg-color-light);
   border: none;
   border-radius: 40px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
 }

@@ -1,28 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import { Button, Menu } from 'antd';
-
 import { useRootData } from '../../hooks/useRootData';
 
 import { HEADER_ITEMS } from '../../constants/header';
+import Modal from '../Modal/Modal';
 
 const Header: React.FC = (): JSX.Element => {
   const [isModalOpen, openModal] = useState<boolean>(false);
-  const history = useHistory();
-  const ref = useRef<HTMLDivElement>(null);
-  const { ethId, setAccessModal, setProvider, setWalletName, setZkWallet } = useRootData(
-    ({ ethId, setAccessModal, setProvider, setWalletName, setZkWallet }) => ({
-      ethId: ethId.get(),
-      setAccessModal,
-      setProvider,
-      setWalletName,
-      setZkWallet,
-    }),
-  );
+  const [menuActive, setMenuActive] = useState<string>('');
+  const myRef = useRef<HTMLDivElement>(null);
+  const { ethId, zkWallet } = useRootData(({ ethId, zkWallet }) => ({
+    ethId: ethId.get(),
+    zkWallet: zkWallet.get(),
+  }));
 
-  const handleClickOutside = useCallback(e => {
-    if (ref.current && !ref.current.contains(e.target)) {
+  const handleClickOutside = e => {
+    if (myRef.current && !myRef.current.contains(e.target)) {
       openModal(false);
     }
   }, []);
@@ -44,20 +38,31 @@ const Header: React.FC = (): JSX.Element => {
 
   return (
     <div className="menu-wrapper">
-      <Link to="/">ZK Synk</Link>
-      <Menu mode="horizontal">
-        {HEADER_ITEMS.map(({ title, link }) => (
-          <Menu.Item key={title}>
-            <Link to={link}>{title}</Link>
-          </Menu.Item>
-        ))}
-      </Menu>
-      <button type="button" className="menu-wallet" onClick={() => openModal(!isModalOpen)}>
-        <img src="../../images/randomImage.png" alt="wallet" />
-        <p>{ethId}</p>
-      </button>
-      <div ref={ref} className={`wallet-modal ${isModalOpen ? 'open' : 'closed'}`}>
-        <Button onClick={hanleLogOut}>Log out</Button>
+      <div className="menu-top">
+        <Link className="menu-logo" to="/"></Link>
+        {zkWallet?.address() && (
+          <>
+            <button type="button" className="menu-wallet" onClick={() => openModal(!isModalOpen)}>
+              <p>{ethId}</p>
+              <img src="../../images/randomImage.png" alt="wallet" />
+            </button>
+            <Modal classSpecifier="wallet" open={isModalOpen} ref={myRef}></Modal>
+          </>
+        )}
+      </div>
+      <div className="menu-routes">
+        {zkWallet?.address() &&
+          HEADER_ITEMS.map(({ title, link }) => (
+            <div className="menu-route-wrapper" key={title}>
+              <Link
+                onClick={() => setMenuActive(title)}
+                className={`menu-route ${menuActive === title ? 'active' : ''}`}
+                to={link}
+              >
+                {title}
+              </Link>
+            </div>
+          ))}
       </div>
     </div>
   );
