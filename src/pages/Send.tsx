@@ -42,7 +42,7 @@ const Send: React.FC = (): JSX.Element => {
       setExecuted={setExecuted}
       title="Transfer"
       transactionAction={transfer}
-      type="eth"
+      type="sync"
     />
   );
 };
