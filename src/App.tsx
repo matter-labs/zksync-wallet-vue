@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import Header from './components/Header/Header';
 
@@ -7,8 +7,6 @@ import { Modal } from 'antd';
 import { useRootData } from './hooks/useRootData';
 
 import { IAppProps } from './types/Common';
-
-import { DEFAULT_ERROR } from './constants/errors';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const { error, setError, zkWallet } = useRootData(({ error, setError, zkWallet }) => ({

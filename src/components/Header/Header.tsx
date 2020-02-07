@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Menu } from 'antd';
+import { Button, Menu } from 'antd';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -14,18 +14,22 @@ const Header: React.FC = (): JSX.Element => {
     ethId: ethId.get(),
   }));
 
-  const handleClickOutside = e => {
+  const handleClickOutside = useCallback(e => {
     if (ref.current && !ref.current.contains(e.target)) {
       openModal(false);
     }
-  };
+  }, []);
+
+  const hanleLogOut = useCallback(() => {
+    window.location.pathname = '/';
+  }, []);
 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   return (
     <div className="menu-wrapper">
@@ -41,7 +45,9 @@ const Header: React.FC = (): JSX.Element => {
         <img src="../../images/randomImage.png" alt="wallet" />
         <p>{ethId}</p>
       </button>
-      <div ref={ref} className={`wallet-modal ${isModalOpen ? 'open' : 'closed'}`}></div>
+      <div ref={ref} className={`wallet-modal ${isModalOpen ? 'open' : 'closed'}`}>
+        <Button onClick={hanleLogOut}>Log out</Button>
+      </div>
     </div>
   );
 };
