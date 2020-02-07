@@ -13,6 +13,8 @@ current_branch=${bamboo_repository_git_branch:-${default_env}}
 # Toggles of the deployment environments
 deploy_to_production='true'
 execute_sonarqube_analysis='true'
+execute_lighthouse_analysis='true'
+export_reports='true'
 
 # Project-specific variables
 persistent_branches='master'
@@ -86,4 +88,46 @@ if [[ ${execute_sonarqube_analysis} == 'true' ]]; then
     run-sonar-scanner \
     ${build_args[@]}
   echo "SonarQube analysis completed! Please feel free to check out - ${sonarqube_host}/dashboard?id=${project_key:?err}"
+fi
+
+if [[ ${execute_lighthouse_analysis} == 'true' ]]; then
+  image_name=$(create_image_name ${dockerfile_path} 1 "${current_branch}")
+  build_args=(
+    "INVALIDATE_CACHE=${build_date}"
+    "HOSTNAME=${production_host}"
+  )
+  build_image \
+    ${dockerfile_path} \
+    ${image_name} \
+    generate-lighthouse-report \
+    ${build_args[@]}
+  extract_file \
+    ${image_name} \
+    "/home/chrome/reports/lighthouse.html" \
+    "lighthouse.html"
+  echo "Lighthouse analysis completed!"
+fi
+
+if [[ ${export_reports} == 'true' ]]; then
+  image_name=$(create_image_name ${dockerfile_path} 1 "${current_branch}")
+  build_args=(
+    "INVALIDATE_CACHE=${build_date}"
+  )
+  build_image \
+    ${dockerfile_path} \
+    ${image_name} \
+    export-reports \
+    ${build_args[@]}
+  extract_file \
+    ${image_name} \
+    "/tmp/dependencies.audit.html" \
+    "dependencies.audit.html"
+  extract_file \
+    ${image_name} \
+    "/tmp/npm.json" \
+    "npm.json"
+  extract_file \
+    ${image_name} \
+    "/tmp/licenses.json" \
+    "licenses.json"
 fi

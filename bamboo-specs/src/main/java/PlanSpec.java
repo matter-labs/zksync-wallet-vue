@@ -9,6 +9,7 @@ import com.atlassian.bamboo.specs.api.builders.plan.Job;
 import com.atlassian.bamboo.specs.api.builders.plan.Plan;
 import com.atlassian.bamboo.specs.api.builders.plan.PlanIdentifier;
 import com.atlassian.bamboo.specs.api.builders.plan.Stage;
+import com.atlassian.bamboo.specs.api.builders.plan.artifact.Artifact;
 import com.atlassian.bamboo.specs.api.builders.plan.branches.BranchCleanup;
 import com.atlassian.bamboo.specs.api.builders.plan.branches.PlanBranchManagement;
 import com.atlassian.bamboo.specs.api.builders.plan.configuration.ConcurrentBuilds;
@@ -36,6 +37,19 @@ public class PlanSpec {
             .stages(new Stage("Stage 1")
                     .jobs(new Job("Job 1",
                             new BambooKey("JOB1"))
+                            .artifacts(
+                                new Artifact()
+                                    .name("dependencies_licenses")
+                                    .copyPattern("licenses.json"),
+                                new Artifact()
+                                    .name("lighthouse_report")
+                                    .copyPattern("lighthouse.html"),
+                                new Artifact()
+                                    .name("dependencies_audit")
+                                    .copyPattern("dependencies.audit.html"),
+                                new Artifact()
+                                    .name("npm_settings")
+                                    .copyPattern("npm.json"))
                             .tasks(new VcsCheckoutTask()
                                     .checkoutItems(new CheckoutItem().defaultRepository()),
                                 new ScriptTask()
