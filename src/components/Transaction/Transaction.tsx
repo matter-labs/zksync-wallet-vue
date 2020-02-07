@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 
 import { ITransactionProps } from './Types';
 
+import './Transaction.scss';
+
 const Transaction: React.FC<ITransactionProps> = ({
   addressValue,
   balances,
@@ -115,7 +117,7 @@ const Transaction: React.FC<ITransactionProps> = ({
               </button>
               {zkBalances?.length &&
                 zkBalances.map(({ balance }) => (
-                  <p className="transaction-fee">
+                  <p key={balance} className="transaction-fee">
                     Fee: <span>{balance * 0.001}</span>
                   </p>
                 ))}

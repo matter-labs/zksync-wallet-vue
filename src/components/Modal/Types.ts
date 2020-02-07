@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { Ref, MouseEvent } from 'react';
 
 export interface IModal {
+  background: boolean;
   classSpecifier: string;
+  onClose: any;
   open: boolean;
-  ref: React.Ref<HTMLDivElement>;
+  ref: Ref<HTMLDivElement>;
 }
