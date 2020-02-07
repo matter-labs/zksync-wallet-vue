@@ -4,7 +4,10 @@ import { Link, useHistory } from 'react-router-dom';
 import { useRootData } from '../../hooks/useRootData';
 
 import { HEADER_ITEMS } from '../../constants/header';
+
 import Modal from '../Modal/Modal';
+
+import './Header.scss';
 
 const Header: React.FC = (): JSX.Element => {
   const [isModalOpen, openModal] = useState<boolean>(false);
@@ -46,7 +49,13 @@ const Header: React.FC = (): JSX.Element => {
               <p>{ethId}</p>
               <img src="../../images/randomImage.png" alt="wallet" />
             </button>
-            <Modal classSpecifier="wallet" open={isModalOpen} ref={myRef}></Modal>
+            <Modal
+              background={true}
+              onClose={() => openModal(false)}
+              classSpecifier="wallet"
+              open={isModalOpen}
+              ref={myRef}
+            ></Modal>
           </>
         )}
       </div>

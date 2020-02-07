@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Button, Card, Icon, Input, Modal } from 'antd';
+
 import Transaction from '../components/Transaction/Transaction';
-// import CurrencyInput from '../components/Inputs/CurrencyInput';
+import MyWallet from '../components/Wallets/MyWallet';
 
 import { useRootData } from '../hooks/useRootData';
 import { useTransaction } from '../hooks/useTransaction';
@@ -77,6 +78,7 @@ const Account: React.FC = (): JSX.Element => {
 
   return (
     <>
+      <MyWallet title="My wallet" />
       <Transaction
         addressValue={addressValue}
         amountValue={amountValue}

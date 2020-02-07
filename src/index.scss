@@ -12,6 +12,8 @@
   --button-bg-color-light: #8C8DFC;
   --main-bg-color-light: #F3F5FF;
   --border-color-light: rgba(0, 0, 0, 0.08);
+  --copyblock-color-light: rgba(0, 0, 0, 0.04);
+  --input-color-light: rgba(0, 0, 0, 0.02);
   --transparent: transparent;
 
   --sm-font-size: 14px;
@@ -20,199 +22,20 @@
   --xl-font-size: 30px;
   --xxl-font-size: 48px;
 
-  --bold-font-weight: 800;
+  --bold-font-weight: 900;
 }
 
 body, html {
   color: var(--main-bg-color-light);
 }
 
+body.fixed {
+  overflow: hidden;
+}
+
 h2 {
   font-weight: var(--bold-font-weight);
   font-size: var(--xl-font-size);
-}
-
-.menu {
-  &-wrapper {
-    padding: 16px;
-  }
-
-  &-logo {
-    height: 30px;
-    width: 150px;
-    background-image: url(./images/logo.svg);
-  }
-
-  &-top {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  &-route { 
-    display: block;
-    box-sizing: content-box;
-    color: var(--dark-color-light);
-    padding-bottom: 10px;
-    border-bottom: 4px solid var(--transparent);
-
-    &.active {
-      color: var(--dark-color-light);
-      border-bottom: 4px solid var(--button-bg-color-light);
-    }
-
-    &:hover {
-      color: var(--dark-color-light);
-      border-bottom: 4px solid var(--button-bg-color-light);
-    }
-
-    &-wrapper {
-      font-size: var(--md-font-size);
-      padding: 5px 24px 0;
-    }
-  }
-
-  &-routes {
-    display: flex;
-    justify-content: center;
-    height: 54px;
-  }
-
-  &-wallet {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 160px;
-    height: 25px;
-    background-color: var(--light-color-light);
-    border: none;
-    border-radius: 13px;
-    outline: none;
-    cursor: pointer;
-
-    & > p {
-      max-width: 60px;
-      margin: 0;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-  }
-}
-
-.ant-menu.title {
-  border: none;
-}
-
-.modal {
-  &-wallet {
-    position: absolute;
-    top: 15px;
-    right: 10px;
-    z-index: 10000;
-    width: 100%;
-    max-width: 250px;
-    height: 200px;
-    background-color: var(--light-color-light);
-    border: 1px solid var(--border-color-light);
-    border-radius: 8px;
-
-    &.open {
-      display: block;
-    }
-  
-    &.closed {
-      display: none;
-    }
-  }
-}
-
-.transaction {
-  &-title {
-    text-align: center;
-  }
-
-  &-fee {
-    font-size: var(--sm-font-size);
-    text-align: center;
-    color: var(--dark-color-light);
-    margin-top: 24px;
-
-    & > span {
-      color: var(--hints-color-light);
-    }
-  }
-
-  &-wrapper {
-    top: 50%;
-    left: 50%;
-    padding: 20px;
-    max-width: 500px;
-    background-color: var(--light-color-light);
-  }
-
-  &-field {
-    width: 100%;
-    height: 100%;
-    max-height: 135px;
-    margin-bottom: 20px;
-    padding: 0 25px 10px 25px;
-    border: 1px solid var(--border-color-light);
-    border-radius: 4px;
-
-    &-title {
-      display: block;
-      margin-bottom: 10px;
-      color: var(--hints-color-light);
-    }
-  }
-}
-
-.currency {
-  &-selector {
-    color: var(--dark-color-light);
-    font-size: var(--xxl-font-size);
-    background-color: var(--transparent);
-    border: none;
-    outline: none;
-  }
-
-  &-input {
-    max-width: 250px;
-    color: var(--dark-color-light);
-    font-size: var(--xxl-font-size);
-    border: none;
-    outline: none;
-
-    &-address {
-      width: 100%;
-      font-size: var(--md-font-size);
-      border: none;
-    }
-
-    &-wrapper {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 500px;
-      margin-top: 10px;
-      background-color: var(--light-color-light);
-
-      & > span {
-        color: var(--hints-color-light);
-      }
-
-      &.border {
-        border-bottom: 1px solid var(--border-color-light);
-      }
-    }
-
-    &::placeholder {
-      color: var(--hints-color-light);
-      font-size: var(--xxl-font-size);
-      line-height: 40px;
-    }
-  }
 }
 
 .submit-button {
@@ -225,4 +48,5 @@ h2 {
   border: none;
   border-radius: 40px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }

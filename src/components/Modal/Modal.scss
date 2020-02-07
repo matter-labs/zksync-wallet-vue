@@ -1,0 +1,69 @@
+.modal {
+  position: absolute;
+  z-index: 10000;
+
+  &.wallet {
+    top: 15px;
+    right: 10px;
+    z-index: 10000;
+    width: 100%;
+    max-width: 250px;
+    height: 200px;
+    background-color: var(--light-color-light);
+    border: 1px solid var(--border-color-light);
+    border-radius: 8px;
+  }
+
+  &.open {
+    display: block;
+  }
+
+  &.closed {
+    display: none;
+  }
+
+  &-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100vw;
+    height: 100vw;
+    background-color: var(--dark-color-light);
+    opacity: 0.4;
+
+    &.open {
+      display: block;
+    }
+  
+    &.closed {
+      display: none;
+    }
+  }
+}
+
+.close-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 40px;
+  height: 40px;
+  background-color: var(--transparent);
+  border: none;
+  outline: none;
+  transform: rotate(45deg);
+  cursor: pointer;
+
+  &::before, &::after {
+    position: absolute;
+    left: 0;
+    width: 40px;
+    height: 1px;
+    background-color: var(--hints-color-light);
+    content: '';
+  }
+
+  &::after {
+    transform: rotate(90deg);
+  }
+}
