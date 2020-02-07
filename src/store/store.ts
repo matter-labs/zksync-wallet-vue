@@ -15,7 +15,7 @@ export const createStore = () => ({
   tokens: observable.box<Tokens>(),
   walletName: observable.box<string>(''),
   zkBalances: observable.box<IEthBalance[]>([]),
-  zkWallet: observable.box<Wallet>(),
+  zkWallet: observable.box<Wallet | null>(),
 
   setAccessModal(isOpen: boolean): void {
     this.isAccessModalOpen.set(isOpen);
@@ -53,7 +53,7 @@ export const createStore = () => ({
     this.zkBalances.set(balances);
   },
 
-  setZkWallet(wallet: Wallet): void {
+  setZkWallet(wallet: Wallet | null): void {
     this.zkWallet.set(wallet);
   },
 });

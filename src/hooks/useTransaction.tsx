@@ -45,7 +45,7 @@ export const useTransaction = () => {
   const transactions = useCallback(
     async (receipt: PriorityOperationReceipt) => {
       try {
-        if (receipt) {
+        if (receipt && zkWallet) {
           setLoading(false);
           const zkBalance = (await zkWallet.getAccountState()).committed.balances;
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
@@ -77,21 +77,23 @@ export const useTransaction = () => {
 
   const deposit = useCallback(
     async (token = TOKEN) => {
-      try {
-        setLoading(true);
-        const depositPriorityOperation = await depositFromETH({
-          depositFrom: ethWallet,
-          depositTo: zkWallet,
-          token: token,
-          amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
-        });
-        const hash = depositPriorityOperation.ethTx;
-        history(amountValue || 0, hash.hash, zkWallet.address(), 'deposit');
-        setHash(hash);
-        const receipt = await depositPriorityOperation.awaitReceipt();
-        transactions(receipt);
-      } catch (err) {
-        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+      if (zkWallet) {
+        try {
+          setLoading(true);
+          const depositPriorityOperation = await depositFromETH({
+            depositFrom: ethWallet,
+            depositTo: zkWallet,
+            token: token,
+            amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
+          });
+          const hash = depositPriorityOperation.ethTx;
+          history(amountValue || 0, hash.hash, zkWallet.address(), 'deposit');
+          setHash(hash);
+          const receipt = await depositPriorityOperation.awaitReceipt();
+          transactions(receipt);
+        } catch (err) {
+          err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        }
       }
     },
     [amountValue, ethWallet, history, setError, setHash, setLoading, transactions, zkWallet],
@@ -100,7 +102,7 @@ export const useTransaction = () => {
   const transfer = useCallback(
     async (token = TOKEN, type) => {
       try {
-        if (ADDRESS_VALIDATION[type].test(addressValue)) {
+        if (ADDRESS_VALIDATION[type].test(addressValue) && zkWallet) {
           setLoading(true);
           const transferTransaction = await zkWallet.syncTransfer({
             to: addressValue,
@@ -127,7 +129,7 @@ export const useTransaction = () => {
   const withdraw = useCallback(
     async (token = TOKEN, type) => {
       try {
-        if (ADDRESS_VALIDATION[type].test(addressValue)) {
+        if (ADDRESS_VALIDATION[type].test(addressValue) && zkWallet) {
           setLoading(true);
           const withdrawTransaction = await zkWallet.withdrawTo({
             ethAddress: addressValue,

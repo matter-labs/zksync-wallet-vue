@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 
 import LazyWallet from '../components/Wallets/LazyWallet';
 
@@ -13,52 +12,32 @@ import { WALLETS } from '../constants/Wallets';
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
 
-  const { isAccessModalOpen, setAccessModal, setWalletName, zkWallet } = useRootData(
-    ({
-      isAccessModalOpen,
-      setAccessModal,
-      setEthBalances,
-      setEthId,
-      setEthWallet,
-      setWalletName,
-      setZkBalances,
-      setZkWallet,
-      zkWallet,
-    }) => ({
+  const { isAccessModalOpen, setAccessModal, setWalletName } = useRootData(
+    ({ isAccessModalOpen, setAccessModal, setWalletName }) => ({
       isAccessModalOpen: isAccessModalOpen.get(),
       setAccessModal,
-      setEthBalances,
-      setEthId,
-      setEthWallet,
       setWalletName,
-      setZkBalances,
-      setZkWallet,
-      zkWallet: zkWallet.get(),
     }),
   );
 
   return (
     <>
       <LazyWallet />
-      {zkWallet ? (
-        <Redirect to="/account" />
-      ) : (
-        <>
-          <Modal
-            title="Name"
-            visible={isAccessModalOpen}
-            onOk={() => setAccessModal(false)}
-            onCancel={() => setAccessModal(false)}
-          >
-            <Button onClick={createWallet}>Access my account</Button>
-          </Modal>
-          {Object.keys(WALLETS).map(key => (
-            <Button onClick={() => setWalletName(key)} key={key}>
-              {key}
-            </Button>
-          ))}
-        </>
-      )}
+      <>
+        <Modal
+          title="Name"
+          visible={isAccessModalOpen}
+          onOk={() => setAccessModal(false)}
+          onCancel={() => setAccessModal(false)}
+        >
+          <Button onClick={createWallet}>Access my account</Button>
+        </Modal>
+        {Object.keys(WALLETS).map(key => (
+          <Button onClick={() => setWalletName(key)} key={key}>
+            {key}
+          </Button>
+        ))}
+      </>
     </>
   );
 };

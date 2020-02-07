@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import { getEthereumBalance, Wallet, Provider, ETHProxy, getDefaultProvider } from 'zksync';
 
@@ -46,6 +47,8 @@ const useWalletInit = () => {
     }),
   );
 
+  const history = useHistory();
+
   const connect = useCallback(
     (provider, signUp) => {
       if (provider) {
@@ -80,6 +83,7 @@ const useWalletInit = () => {
       const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider, ethProxy);
 
       setZkWallet(syncWallet);
+      history.push('/account');
 
       const tokens = await syncProvider.getTokens();
 
@@ -124,7 +128,7 @@ const useWalletInit = () => {
     } catch (err) {
       err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
     }
-  }, [getSigner, provider, setError, setEthBalances, setTokens, setEthWallet, setZkBalances, setZkWallet]);
+  }, [history, getSigner, provider, setError, setEthBalances, setTokens, setEthWallet, setZkBalances, setZkWallet]);
 
   return {
     connect,

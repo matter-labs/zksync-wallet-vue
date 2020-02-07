@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import Header from './components/Header/Header';
 
@@ -8,11 +8,10 @@ import { useRootData } from './hooks/useRootData';
 
 import { IAppProps } from './types/Common';
 
-import { DEFAULT_ERROR } from './constants/errors';
-
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
-  const { error, setError, zkWallet } = useRootData(({ error, setError, zkWallet }) => ({
+  const { error, provider, setError, zkWallet } = useRootData(({ error, provider, setError, zkWallet }) => ({
     error: error.get(),
+    provider: provider.get(),
     setError,
     zkWallet: zkWallet.get(),
   }));
@@ -22,7 +21,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       <Modal visible={!!error} onOk={() => setError('')} onCancel={() => setError('')}>
         {error}
       </Modal>
-      {zkWallet?.address() && <Header />}
+      {zkWallet?.address() && provider && <Header />}
       <div style={{ maxWidth: 900, margin: '0 auto' }}> {children}</div>
     </>
   );
