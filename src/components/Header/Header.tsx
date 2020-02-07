@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { Button, Menu } from 'antd';
 
@@ -9,10 +9,17 @@ import { HEADER_ITEMS } from '../../constants/header';
 
 const Header: React.FC = (): JSX.Element => {
   const [isModalOpen, openModal] = useState<boolean>(false);
+  const history = useHistory();
   const ref = useRef<HTMLDivElement>(null);
-  const { ethId } = useRootData(({ ethId }) => ({
-    ethId: ethId.get(),
-  }));
+  const { ethId, setAccessModal, setProvider, setWalletName, setZkWallet } = useRootData(
+    ({ ethId, setAccessModal, setProvider, setWalletName, setZkWallet }) => ({
+      ethId: ethId.get(),
+      setAccessModal,
+      setProvider,
+      setWalletName,
+      setZkWallet,
+    }),
+  );
 
   const handleClickOutside = useCallback(e => {
     if (ref.current && !ref.current.contains(e.target)) {
@@ -21,8 +28,12 @@ const Header: React.FC = (): JSX.Element => {
   }, []);
 
   const hanleLogOut = useCallback(() => {
-    window.location.pathname = '/';
-  }, []);
+    setProvider(null);
+    setWalletName('');
+    setAccessModal(false);
+    setZkWallet(null);
+    history.push('/');
+  }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside, true);

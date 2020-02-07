@@ -9,8 +9,9 @@ import { useRootData } from './hooks/useRootData';
 import { IAppProps } from './types/Common';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
-  const { error, setError, zkWallet } = useRootData(({ error, setError, zkWallet }) => ({
+  const { error, provider, setError, zkWallet } = useRootData(({ error, provider, setError, zkWallet }) => ({
     error: error.get(),
+    provider: provider.get(),
     setError,
     zkWallet: zkWallet.get(),
   }));
@@ -20,7 +21,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       <Modal visible={!!error} onOk={() => setError('')} onCancel={() => setError('')}>
         {error}
       </Modal>
-      {zkWallet?.address() && <Header />}
+      {zkWallet?.address() && provider && <Header />}
       <div style={{ maxWidth: 900, margin: '0 auto' }}> {children}</div>
     </>
   );
