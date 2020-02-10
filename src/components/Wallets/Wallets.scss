@@ -1,15 +1,30 @@
 .mywallet {
+  &-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &-currency-block {
+    width: calc(100% + 64px);
+    height: 90px;
+    background-color: var(--bg-block-color-light);
+    transform: translateX(-32px);
+  } 
+
   &-wrapper {
     width: 100%;
     max-width: 560px;
+    padding: 32px;
     text-align: center;
+    background-color: var(--light-color-light);
     border-radius: 4px;
 
     & .copy-block {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 22px 32px 15px;
+      margin: 22px 0 15px;
       padding: 30px;
       color: var(--dark-color-light);
       font-size: var(--large-font-size);
@@ -36,5 +51,34 @@
         cursor: pointer;
       }
     }
+  }
+}
+
+.deposit-button, .withdraw-button {
+  position: relative;
+  padding-left: 30px;
+  color: var(--button-bg-color-light);
+  font-size: var(--large-font-size);
+  background-color: var(--transparent);
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  & > span { 
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    background: url(../../images/deposit.svg);
+    transform: translateY(-50%);
+  }
+}
+
+.withdraw-button {
+  color: var(--hints-color-light);
+
+  & > span {
+    background: url(../../images/mdi_arrow_downward.svg);
   }
 }

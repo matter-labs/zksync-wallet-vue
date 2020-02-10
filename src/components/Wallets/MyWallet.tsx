@@ -10,6 +10,7 @@ const MyWallet: React.FC<IMyWallet> = ({
   // balances,
   // price,
   title,
+  // transactionAction,
   // zkBalances,
 }): JSX.Element => {
   const { zkWallet } = useRootData(({ zkWallet }) => ({
@@ -36,6 +37,18 @@ const MyWallet: React.FC<IMyWallet> = ({
         <div>{zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}</div>
         <button className="copy-block-button" onClick={handleCopy}></button>
       </div>
+      <div className="mywallet-currency-block"></div>
+      <div className="mywallet-buttons-container">
+        <button className="btn deposit-button">
+          <span></span>Deposit
+        </button>
+        <button className="btn withdraw-button">
+          <span></span>Withdraw
+        </button>
+      </div>
+      <button className="btn submit-button" onClick={() => console.log('send')}>
+        Send
+      </button>
     </div>
   );
 };

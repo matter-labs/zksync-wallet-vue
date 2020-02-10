@@ -1,6 +1,7 @@
 import React from 'react';
 
 import LazyWallet from '../components/Wallets/LazyWallet';
+import MyWallet from '../components/Wallets/MyWallet';
 
 import { Button, Modal } from 'antd';
 
@@ -22,6 +23,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   return (
     <>
+      <MyWallet title="My Wallet" />
       <LazyWallet />
       <>
         <Modal
