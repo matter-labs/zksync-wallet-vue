@@ -5,4 +5,5 @@ export interface IMyWallet {
   // price: number;
   title: string;
   // zkBalances: IEthBalance[];
+  // transactionAction: (token?: string) => void;
 }

@@ -20,7 +20,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         {error}
       </Modal>
       <Header />
-      <div style={{ maxWidth: 900, margin: '0 auto' }}> {children}</div>
+      <div className="content-wrapper"> {children}</div>
     </>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 
 import LazyWallet from '../components/Wallets/LazyWallet';
+import MyWallet from '../components/Wallets/MyWallet';
 
 import { Button, Modal } from 'antd';
 
@@ -39,6 +40,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   return (
     <>
+      <MyWallet title="My Wallet" />
       <LazyWallet />
       {zkWallet ? (
         <Redirect to="/account" />
