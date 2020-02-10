@@ -28,6 +28,7 @@ const Send: React.FC = (): JSX.Element => {
       window.location.pathname = '/';
     }
   }, [ethId]);
+
   return (
     <Transaction
       addressValue={addressValue}

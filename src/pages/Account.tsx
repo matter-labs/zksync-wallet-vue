@@ -1,6 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
-
-import { Button, Card, Icon, Input, Modal } from 'antd';
+import React, { useEffect, useState } from 'react';
 
 import Transaction from '../components/Transaction/Transaction';
 import MyWallet from '../components/Wallets/MyWallet';
@@ -17,28 +15,22 @@ const Account: React.FC = (): JSX.Element => {
   const {
     addressValue,
     amountValue,
-    deposit,
     hash,
     isExecuted,
     isLoading,
     setAddressValue,
     setAmountValue,
     setExecuted,
-    setHash,
-    withdraw,
   } = useTransaction();
-  const [isDepositModalOpen, setDepositModal] = useState<boolean>(false);
-  const [isWithrawModalOpen, setWithdrawModal] = useState<boolean>(false);
-  const [isDisabled, setDisabled] = useState<boolean>(true);
-  const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
   const [price, setPrice] = useState<number>(0);
 
-  const { error, ethId, ethBalances, setError, zkBalances } = useRootData(
-    ({ error, ethId, ethBalances, setError, zkBalances }) => ({
+  const { error, ethId, ethBalances, setError, transactionModal, zkBalances } = useRootData(
+    ({ error, ethId, ethBalances, setError, transactionModal, zkBalances }) => ({
       error: error.get(),
       ethId: ethId.get(),
       ethBalances: ethBalances.get(),
       setError,
+      transactionModal: transactionModal.get(),
       zkBalances: zkBalances.get(),
     }),
   );
@@ -59,86 +51,27 @@ const Account: React.FC = (): JSX.Element => {
     }
   }, [ethId]);
 
-  const setWalletName = useCallback(() => {
-    if (value && value !== ethId) {
-      localStorage.setItem('walletName', value);
-    } else {
-      setValue(localStorage.getItem('walletName') || ethId);
-    }
-  }, [ethId, value]);
-
-  const handleCancel = useCallback(
-    setModal => {
-      setModal(false);
-      setHash('');
-      setExecuted(false);
-    },
-    [setExecuted, setHash],
-  );
-
   return (
     <>
-      <MyWallet title="My wallet" />
-      <Transaction
-        addressValue={addressValue}
-        amountValue={amountValue}
-        balances={ethBalances}
-        hash={hash}
-        isExecuted={isExecuted}
-        isInput={false}
-        isLoading={isLoading}
-        onCancel={handleCancel}
-        openModal={setDepositModal}
-        onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
-        onChangeAmount={setAmountValue}
-        price={price}
-        setExecuted={setExecuted}
-        title="Deposit"
-        transactionAction={deposit}
-        zkBalances={zkBalances}
-      />
-      <Transaction
-        addressValue={addressValue}
-        amountValue={amountValue}
-        balances={ethBalances}
-        hash={hash}
-        isExecuted={isExecuted}
-        isInput={true}
-        isLoading={isLoading}
-        onCancel={handleCancel}
-        openModal={setDepositModal}
-        onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
-        onChangeAmount={setAmountValue}
-        price={price}
-        setExecuted={setExecuted}
-        title="Withdraw"
-        transactionAction={withdraw}
-        zkBalances={zkBalances}
-      />
-      <Card bordered={true} style={{ maxWidth: 900 }}>
-        <div style={{ display: 'flex' }}>
-          <Input
-            placeholder={ethId}
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            disabled={isDisabled}
-            onBlur={setWalletName}
-          />
-          <Icon type="edit" onClick={() => setDisabled(false)} />
-        </div>
-        {zkBalances.length &&
-          zkBalances.map(({ balance, symbol }) => (
-            <div key={symbol}>
-              <span>zk{symbol}&nbsp;</span>
-              <span>
-                {balance}&nbsp;{price}
-              </span>
-            </div>
-          ))}
-        <br />
-        <Button onClick={() => setDepositModal(true)}>Deposit</Button>
-        <Button onClick={() => setWithdrawModal(true)}>Withdraw</Button>
-      </Card>
+      <MyWallet balances={ethBalances} price={price} title="My wallet" />
+      {transactionModal?.title.length && (
+        <Transaction
+          addressValue={addressValue}
+          amountValue={amountValue}
+          balances={ethBalances}
+          hash={hash}
+          isExecuted={isExecuted}
+          isInput={transactionModal.input}
+          isLoading={isLoading}
+          onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
+          onChangeAmount={setAmountValue}
+          price={price}
+          setExecuted={setExecuted}
+          title={transactionModal.title}
+          transactionAction={transactionModal.action}
+          zkBalances={zkBalances}
+        />
+      )}
     </>
   );
 };
