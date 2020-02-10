@@ -1,11 +1,15 @@
 import { observable } from 'mobx';
 
-import { IEthBalance } from '../types/Common';
+import { IEthBalance, Transaction } from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Tokens } from 'zksync/build/types';
 import { Wallet } from 'zksync';
 
 export const createStore = () => ({
+  depositModal: observable.box<boolean>(false),
+
+  transactionModal: observable.box<Transaction>(),
+
   error: observable.box<string>(''),
   ethBalances: observable.box<IEthBalance[]>([]),
   ethId: observable.box<string>(''),
@@ -14,11 +18,20 @@ export const createStore = () => ({
   provider: observable.box<any>(),
   tokens: observable.box<Tokens>(),
   walletName: observable.box<string>(''),
+  withdrawModal: observable.box<boolean>(false),
   zkBalances: observable.box<IEthBalance[]>([]),
   zkWallet: observable.box<Wallet>(),
 
   setAccessModal(isOpen: boolean): void {
     this.isAccessModalOpen.set(isOpen);
+  },
+
+  setDepositModal(depositModal: boolean): void {
+    this.depositModal.set(depositModal);
+  },
+
+  setTransactionModal(transactionModal: Transaction): void {
+    this.transactionModal.set(transactionModal);
   },
 
   setError(error: string): void {
@@ -47,6 +60,10 @@ export const createStore = () => ({
 
   setWalletName(name: string): void {
     this.walletName.set(name);
+  },
+
+  setWithdrawModal(withdrawModal: boolean): void {
+    this.withdrawModal.set(withdrawModal);
   },
 
   setZkBalances(balances: IEthBalance[]): void {

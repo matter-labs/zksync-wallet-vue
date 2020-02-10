@@ -18,3 +18,9 @@ export interface HeaderLinks {
   title: string;
   link: string;
 }
+
+export interface Transaction {
+  title: string;
+  input: boolean;
+  action: any;
+}

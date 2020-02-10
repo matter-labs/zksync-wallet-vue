@@ -5,10 +5,20 @@
     justify-content: space-between;
   }
 
+  &-price {
+    color: var(--hints-color-light);
+    font-size: var(--md-font-size);
+  }
+
   &-currency-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: calc(100% + 64px);
     height: 90px;
+    padding: 18px 32px;
     background-color: var(--bg-block-color-light);
+    border-left: 3px solid var(--button-bg-color-light);
     transform: translateX(-32px);
   } 
 
@@ -19,6 +29,14 @@
     text-align: center;
     background-color: var(--light-color-light);
     border-radius: 4px;
+
+    &.open {
+      display: block;
+    }
+
+    &.closed {
+      display: none;
+    }
 
     & .copy-block {
       display: flex;

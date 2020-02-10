@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { ITransactionProps } from './Types';
+
+import { INPUT_VALIDATION } from '../../constants/regExs';
+
+import { useRootData } from '../../hooks/useRootData';
+import { useTransaction } from '../../hooks/useTransaction';
 
 import './Transaction.scss';
 
@@ -11,8 +16,6 @@ const Transaction: React.FC<ITransactionProps> = ({
   isExecuted,
   isInput,
   isLoading,
-  onCancel,
-  openModal,
   onChangeAddress,
   onChangeAmount,
   price,
@@ -20,31 +23,63 @@ const Transaction: React.FC<ITransactionProps> = ({
   transactionAction,
   zkBalances,
 }): JSX.Element => {
+  const { ethId } = useRootData(({ ethId }) => ({
+    ethId: ethId.get(),
+  }));
+
+  const { setExecuted, setHash } = useTransaction();
+
   const [token, setToken] = useState<string>('');
   const [inputValue, setInputValue] = useState<number | string>('');
   const [maxValue, setMaxValue] = useState<number>(0);
+  const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
 
   const validateNumbers = e => {
-    if (/^[0-9]*\.?[0-9]*$/.test(e)) {
+    if (INPUT_VALIDATION.digits.test(e)) {
       e <= maxValue ? setInputValue(e) : setInputValue(maxValue);
     } else {
       setInputValue(0);
     }
   };
 
+  const handleCancel = useCallback(
+    setModal => {
+      setModal(false);
+      setHash('');
+      setExecuted(false);
+    },
+    [setExecuted, setHash],
+  );
+
+  const setWalletName = useCallback(() => {
+    if (value && value !== ethId) {
+      localStorage.setItem('walletName', value);
+    } else {
+      setValue(localStorage.getItem('walletName') || ethId);
+    }
+  }, [ethId, value]);
+
   return (
     <div className="transaction-wrapper">
       {isExecuted ? (
         <>
           <p>{typeof hash === 'string' ? hash : hash?.hash}</p>
-          <button onClick={onCancel && openModal ? () => onCancel(openModal) : undefined}>Nice!</button>
         </>
       ) : (
         <>
-          {isLoading ? (
-            <span>Loading...</span>
+          {isLoading ? ( // need to remove later
+            <>
+              <span>Loading...</span>
+              <button
+                onClick={() => {
+                  handleCancel(false);
+                  setWalletName();
+                }}
+              ></button>
+            </>
           ) : (
             <>
+              <button className="transaction-back"></button>
               <h2 className="transaction-title">{title}</h2>
               {isInput && (
                 <>
