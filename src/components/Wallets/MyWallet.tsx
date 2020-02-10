@@ -35,7 +35,7 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
   };
 
   return (
-    <div className={`mywallet-wrapper ${transactionModal ? 'closed' : 'open'}`}>
+    <div className={`mywallet-wrapper ${transactionModal?.title.length ? 'closed' : 'open'}`}>
       <h2 className="mywallet-title">My wallet</h2>
       <div className="copy-block">
         <input
@@ -73,7 +73,10 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
           <span></span>Withdraw
         </button>
       </div>
-      <button className="btn submit-button" onClick={() => console.log('send')}>
+      <button
+        className="btn submit-button"
+        onClick={() => setTransactionModal({ title: 'Send', input: true, action: withdraw })}
+      >
         Send
       </button>
     </div>
