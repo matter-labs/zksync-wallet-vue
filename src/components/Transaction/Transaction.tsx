@@ -23,8 +23,9 @@ const Transaction: React.FC<ITransactionProps> = ({
   transactionAction,
   zkBalances,
 }): JSX.Element => {
-  const { ethId } = useRootData(({ ethId }) => ({
+  const { ethId, setTransactionModal } = useRootData(({ ethId, setTransactionModal }) => ({
     ethId: ethId.get(),
+    setTransactionModal,
   }));
 
   const { setExecuted, setHash } = useTransaction();
@@ -42,14 +43,11 @@ const Transaction: React.FC<ITransactionProps> = ({
     }
   };
 
-  const handleCancel = useCallback(
-    setModal => {
-      setModal(false);
-      setHash('');
-      setExecuted(false);
-    },
-    [setExecuted, setHash],
-  );
+  const handleCancel = useCallback(() => {
+    setHash('');
+    setExecuted(false);
+    setTransactionModal({ title: '', input: false, action: false });
+  }, [setExecuted, setTransactionModal, setHash]);
 
   const setWalletName = useCallback(() => {
     if (value && value !== ethId) {
@@ -72,14 +70,14 @@ const Transaction: React.FC<ITransactionProps> = ({
               <span>Loading...</span>
               <button
                 onClick={() => {
-                  handleCancel(false);
+                  handleCancel();
                   setWalletName();
                 }}
               ></button>
             </>
           ) : (
             <>
-              <button className="transaction-back"></button>
+              <button onClick={() => handleCancel()} className="transaction-back"></button>
               <h2 className="transaction-title">{title}</h2>
               {isInput && (
                 <>

@@ -16,11 +16,11 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
 
   return (
     <>
-      <Modal visible={!!error} onOk={() => setError('')} onCancel={() => setError('')}>
+      <Modal visible={!!error} onOk={() => setError('')} onCancel={() => setError('444')}>
         {error}
       </Modal>
       <Header />
-      <div className="content-wrapper"> {children}</div>
+      <div className="content-wrapper">{children}</div>
     </>
   );
 };
