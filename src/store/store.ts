@@ -15,6 +15,7 @@ export const createStore = () => ({
   ethId: observable.box<string>(''),
   ethWallet: observable.box<JsonRpcSigner>(),
   isAccessModalOpen: observable.box<boolean>(false),
+  isModalOpen: observable.box<boolean>(false),
   provider: observable.box<any>(),
   tokens: observable.box<Tokens>(),
   walletName: observable.box<string>(''),
@@ -28,10 +29,6 @@ export const createStore = () => ({
 
   setDepositModal(depositModal: boolean): void {
     this.depositModal.set(depositModal);
-  },
-
-  setTransactionModal(transactionModal: Transaction): void {
-    this.transactionModal.set(transactionModal);
   },
 
   setError(error: string): void {
@@ -50,12 +47,20 @@ export const createStore = () => ({
     this.ethWallet.set(wallet);
   },
 
+  setModal(isModalOpen: boolean): void {
+    this.isModalOpen.set(isModalOpen);
+  },
+
   setProvider(provider: any): void {
     this.provider.set(provider);
   },
 
   setTokens(tokens: Tokens): void {
     this.tokens.set(tokens);
+  },
+
+  setTransactionModal(transactionModal: Transaction): void {
+    this.transactionModal.set(transactionModal);
   },
 
   setWalletName(name: string): void {

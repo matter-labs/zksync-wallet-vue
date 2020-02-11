@@ -10,26 +10,13 @@ import Modal from '../Modal/Modal';
 import './Header.scss';
 
 const Header: React.FC = (): JSX.Element => {
-  const [isModalOpen, openModal] = useState<boolean>(false);
   const [menuActive, setMenuActive] = useState<string>('');
-  const myRef = useRef<HTMLDivElement>(null);
-  const { ethId, zkWallet } = useRootData(({ ethId, zkWallet }) => ({
+  const { ethId, isModalOpen, setModal, zkWallet } = useRootData(({ ethId, isModalOpen, setModal, zkWallet }) => ({
     ethId: ethId.get(),
+    isModalOpen: isModalOpen.get(),
+    setModal,
     zkWallet: zkWallet.get(),
   }));
-
-  const handleClickOutside = e => {
-    if (myRef.current && !myRef.current.contains(e.target)) {
-      openModal(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside, true);
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
-  }, []);
 
   return (
     <div className="menu-wrapper">
@@ -37,17 +24,11 @@ const Header: React.FC = (): JSX.Element => {
         <Link className="menu-logo" to="/"></Link>
         {zkWallet?.address() && (
           <>
-            <button type="button" className="menu-wallet" onClick={() => openModal(!isModalOpen)}>
+            <button type="button" className="menu-wallet" onClick={() => setModal(!isModalOpen)}>
               <p>{ethId}</p>
               <img src="../../images/randomImage.png" alt="wallet" />
             </button>
-            <Modal
-              background={true}
-              onClose={() => openModal(false)}
-              classSpecifier="wallet"
-              open={isModalOpen}
-              ref={myRef}
-            ></Modal>
+            <Modal background={true} classSpecifier="wallet"></Modal>
           </>
         )}
       </div>

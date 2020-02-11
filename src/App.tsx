@@ -1,8 +1,7 @@
 import React from 'react';
 
 import Header from './components/Header/Header';
-
-import { Modal } from 'antd';
+import Modal from './components/Modal/Modal';
 
 import { useRootData } from './hooks/useRootData';
 
@@ -16,9 +15,9 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
 
   return (
     <>
-      <Modal visible={!!error} onOk={() => setError('')} onCancel={() => setError('444')}>
+      {/* <Modal classSpecifier='error' background={true} >
         {error}
-      </Modal>
+      </Modal> */}
       <Header />
       <div className="content-wrapper">{children}</div>
     </>

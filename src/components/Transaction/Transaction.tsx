@@ -34,6 +34,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [inputValue, setInputValue] = useState<number | string>('');
   const [maxValue, setMaxValue] = useState<number>(0);
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
+  const [symbolName, setSymbolName] = useState<string>('');
 
   const validateNumbers = e => {
     if (INPUT_VALIDATION.digits.test(e)) {
@@ -125,6 +126,8 @@ const Transaction: React.FC<ITransactionProps> = ({
                     onChange={e => {
                       setToken(e.toString());
                       setMaxValue(+e.target.value);
+                      const id = e.target?.selectedIndex;
+                      setSymbolName(e.target.options[id].text);
                     }}
                   >
                     {balances?.length &&
@@ -135,25 +138,30 @@ const Transaction: React.FC<ITransactionProps> = ({
                       ))}
                   </select>
                 </div>
-                {zkBalances?.length &&
-                  zkBalances.map(({ balance, symbol }) => (
-                    <div className="currency-input-wrapper" key={symbol}>
-                      <span>~${price * balance}</span>
-                      <span>
-                        Balance: {balance} {symbol}
-                      </span>
-                    </div>
-                  ))}
+                {zkBalances?.length && (
+                  <div className="currency-input-wrapper" key={token}>
+                    <span>~${price * (maxValue ? maxValue : zkBalances[0].balance)}</span>
+                    <span>
+                      Balance: {maxValue ? maxValue : zkBalances[0].balance}{' '}
+                      {symbolName ? symbolName : zkBalances[0].symbol}
+                    </span>
+                  </div>
+                )}
               </div>
               <button className="btn submit-button" onClick={() => transactionAction(token)}>
                 {title}
               </button>
-              {zkBalances?.length &&
-                zkBalances.map(({ balance }) => (
-                  <p key={balance} className="transaction-fee">
-                    Fee: <span>{balance * 0.001}</span>
+              <p key={maxValue} className="transaction-fee">
+                {zkBalances?.length && (
+                  <p>
+                    Fee:{' '}
+                    <span>
+                      {maxValue ? maxValue * 0.001 : zkBalances[0].balance * 0.001}{' '}
+                      {symbolName ? symbolName : zkBalances[0].symbol}
+                    </span>
                   </p>
-                ))}
+                )}
+              </p>
             </>
           )}
         </>

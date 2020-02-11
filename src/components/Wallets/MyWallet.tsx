@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import { IMyWallet } from './Types';
 
@@ -17,7 +17,9 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
     }),
   );
 
-  const { deposit, withdraw } = useTransaction();
+  const [walletBalance, setWalletBalance] = useState<string>(zkBalances[0]?.balance.toString());
+
+  const { deposit, transfer, withdraw } = useTransaction();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -48,15 +50,22 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
         <button className="copy-block-button" onClick={handleCopy}></button>
       </div>
       <div className="mywallet-currency-block">
-        <select className="currency-selector">
-          {zkBalances?.length &&
-            zkBalances.map(({ address, balance, symbol }) => (
-              <option key={address} value={balance}>
-                {balance}
-                zk{symbol}
-              </option>
-            ))}
-        </select>
+        <div className="mywallet-currency-wrapper">
+          <span className="mywallet-currency-balance">
+            {walletBalance ? walletBalance : zkBalances[0]?.balance.toString()}
+          </span>
+          <select className="mywallet-currency-selector" onChange={e => setWalletBalance(e.target.value)}>
+            {zkBalances?.length &&
+              zkBalances.map(({ address, balance, symbol }) => (
+                <>
+                  <option key={address} value={balance}>
+                    zk{symbol}
+                  </option>
+                </>
+              ))}
+          </select>
+        </div>
+
         <span className="mywallet-price">~{(price * zkBalancesSum()).toFixed(2)} USD</span>
       </div>
       <div className="mywallet-buttons-container">
@@ -75,7 +84,7 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
       </div>
       <button
         className="btn submit-button"
-        onClick={() => setTransactionModal({ title: 'Send', input: true, action: withdraw })}
+        onClick={() => setTransactionModal({ title: 'Send', input: true, action: transfer })}
       >
         Send
       </button>
