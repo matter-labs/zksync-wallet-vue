@@ -1,17 +1,26 @@
 .modal {
   position: absolute;
+  top: 50%;
+  left: 50%;
   z-index: 10000;
+  width: 100%;
+  max-width: 300px;
+  padding: 32px;
+  background-color: var(--light-color-light);
+  border: 1px solid var(--border-color-light);
+  border-radius: 8px;
+  transform: translate(-50%, -50%);
 
   &.wallet {
     top: 15px;
     right: 10px;
-    z-index: 10000;
     width: 100%;
-    max-width: 250px;
+    max-width: 560px;
     height: 200px;
-    background-color: var(--light-color-light);
-    border: 1px solid var(--border-color-light);
-    border-radius: 8px;
+  }
+
+  &.error {
+    min-height: 150px;
   }
 
   &.open {
@@ -46,8 +55,8 @@
   position: absolute;
   top: 5px;
   right: 5px;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   background-color: var(--transparent);
   border: none;
   outline: none;
@@ -57,7 +66,7 @@
   &::before, &::after {
     position: absolute;
     left: 0;
-    width: 40px;
+    width: 30px;
     height: 1px;
     background-color: var(--hints-color-light);
     content: '';

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
+
 import { Link } from 'react-router-dom';
 
 import { useRootData } from '../../hooks/useRootData';
