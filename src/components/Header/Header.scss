@@ -1,6 +1,8 @@
 .menu {
   &-wrapper {
+    width: 100%;
     padding: 16px 16px 0;
+    background-color: var(--light-color);
   }
 
   &-logo {
@@ -19,17 +21,17 @@
     box-sizing: content-box;
     margin-top: 10px;
     padding-bottom: 10px;
-    color: var(--dark-color-light);
+    color: var(--dark-color);
     border-bottom: 4px solid var(--transparent);
 
     &.active {
-      color: var(--dark-color-light);
-      border-bottom: 4px solid var(--button-bg-color-light);
+      color: var(--dark-color);
+      border-bottom: 4px solid var(--button-bg-color);
     }
 
     &:hover {
-      color: var(--dark-color-light);
-      border-bottom: 4px solid var(--button-bg-color-light);
+      color: var(--dark-color);
+      border-bottom: 4px solid var(--button-bg-color);
     }
 
     &-wrapper {
@@ -51,7 +53,7 @@
     width: 100%;
     max-width: 160px;
     height: 25px;
-    background-color: var(--light-color-light);
+    background-color: var(--light-color);
     border: none;
     border-radius: 13px;
     outline: none;

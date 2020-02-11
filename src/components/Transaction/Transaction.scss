@@ -20,13 +20,13 @@
 
   &-fee {
     margin-top: 24px;
-    color: var(--dark-color-light);
+    color: var(--dark-color);
     font-size: var(--sm-font-size);
     text-align: center;
 
     & > p {
       & > span {
-        color: var(--hints-color-light);
+        color: var(--hints-color);
       }
     }
   }
@@ -39,7 +39,7 @@
     left: 32px;
     max-width: 500px;
     padding: 20px;
-    background-color: var(--light-color-light);
+    background-color: var(--light-color);
     border-radius: 4px;
 
     &.open {
@@ -57,20 +57,20 @@
     max-height: 135px;
     margin-bottom: 20px;
     padding: 0 25px 10px 25px;
-    border: 1px solid var(--border-color-light);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
 
     &-title {
       display: block;
       margin-bottom: 10px;
-      color: var(--hints-color-light);
+      color: var(--hints-color);
     }
   }
 }
 
 .currency {
   &-selector {
-    color: var(--dark-color-light);
+    color: var(--dark-color);
     font-size: var(--xxl-font-size);
     background-color: var(--transparent);
     border: none;
@@ -85,7 +85,7 @@
 
   &-input {
     max-width: 250px;
-    color: var(--dark-color-light);
+    color: var(--dark-color);
     font-size: var(--xxl-font-size);
     border: none;
     outline: none;
@@ -105,16 +105,16 @@
       background-color: var(--transparent);
       /* stylelint-disable-next-line no-descending-specificity */
       & > span {
-        color: var(--hints-color-light);
+        color: var(--hints-color);
       }
 
       &.border {
-        border-bottom: 1px solid var(--border-color-light);
+        border-bottom: 1px solid var(--border-color);
       }
     }
 
     &::placeholder {
-      color: var(--hints-color-light);
+      color: var(--hints-color);
       font-size: var(--xxl-font-size);
       line-height: 40px;
     }

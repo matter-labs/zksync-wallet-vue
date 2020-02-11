@@ -6,18 +6,18 @@
   }
 
   &-price {
-    color: var(--hints-color-light);
+    color: var(--hints-color);
     font-size: var(--md-font-size);
   }
 
   &-currency {
     &-balance {
-      color: var(--dark-color-light);
+      color: var(--dark-color);
       font-size: var(--xxl-font-size);
     }
 
     &-selector {
-      color: var(--dark-color-light);
+      color: var(--dark-color);
       font-size: var(--large-font-size);
       background: var(--transparent);
       border: none;
@@ -30,8 +30,8 @@
       width: calc(100% + 64px);
       height: 90px;
       padding: 18px 32px;
-      background-color: var(--bg-block-color-light);
-      border-left: 3px solid var(--button-bg-color-light);
+      background-color: var(--bg-block-color);
+      border-left: 3px solid var(--button-bg-color);
       transform: translateX(-32px);
     }  
 
@@ -45,7 +45,7 @@
     max-width: 560px;
     padding: 32px;
     text-align: center;
-    background-color: var(--light-color-light);
+    background-color: var(--light-color);
     border-radius: 4px;
 
     &.open {
@@ -62,9 +62,9 @@
       justify-content: space-between;
       margin: 22px 0 15px;
       padding: 30px;
-      color: var(--dark-color-light);
+      color: var(--dark-color);
       font-size: var(--large-font-size);
-      background-color: var(--copyblock-color-light);
+      background-color: var(--copyblock-color);
       border-radius: 4px;
 
       &-input {
@@ -94,7 +94,7 @@
   position: relative;
   margin: 24px 0 50px;
   padding-left: 30px;
-  color: var(--button-bg-color-light);
+  color: var(--button-bg-color);
   font-size: var(--large-font-size);
   background-color: var(--transparent);
   border: none;
@@ -113,7 +113,7 @@
 }
 
 .withdraw-button {
-  color: var(--hints-color-light);
+  color: var(--hints-color);
 
   & > span {
     background: url(../../images/mdi_arrow_downward.svg);

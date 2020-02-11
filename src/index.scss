@@ -6,15 +6,15 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --light-color-light: #fff;
-  --dark-color-light: #000;
-  --hints-color-light: rgba(0, 0, 0, 0.4);
-  --button-bg-color-light: #8C8DFC;
-  --main-bg-color-light: #F3F4F7;
-  --bg-block-color-light: #F3F5FF;
-  --border-color-light: rgba(24, 13, 13, 0.08);
-  --copyblock-color-light: rgba(0, 0, 0, 0.04);
-  --input-color-light: rgba(0, 0, 0, 0.02);
+  --light-color: #fff;
+  --dark-color: #000;
+  --hints-color: rgba(0, 0, 0, 0.4);
+  --button-bg-color: #8C8DFC;
+  --main-bg-color: #F3F4F7;
+  --bg-block-color: #F3F5FF;
+  --border-color: rgba(24, 13, 13, 0.08);
+  --copyblock-color: rgba(0, 0, 0, 0.04);
+  --input-color: rgba(0, 0, 0, 0.02);
   --transparent: transparent;
 
   --sm-font-size: 14px;
@@ -29,7 +29,20 @@
 body, html {
   margin: 0;
   padding: 0;
-  background-color: var(--main-bg-color-light);
+  background-color: var(--main-bg-color);
+}
+
+body.dark {
+  --light-color: #000;
+  --dark-color: rgba(255, 255, 255, 0.9);
+  --hints-color: rgba(255, 255, 255, 0.4);
+  --button-bg-color: #8C8DFC;
+  --main-bg-color: #11142B;
+  --bg-block-color: #1D2039;
+  --border-color: rgba(24, 13, 13, 0.08);
+  --copyblock-color: rgba(255, 255, 255, 0.2);
+  --input-color: #000;
+  --transparent: transparent;
 }
 
 body.fixed {
@@ -45,9 +58,9 @@ h2 {
   width: 100%;
   max-width: 500px;
   height: 80px;
-  color: var(--light-color-light);
+  color: var(--light-color);
   font-size: var(--large-font-size);
-  background-color: var(--button-bg-color-light);
+  background-color: var(--button-bg-color);
   border: none;
   border-radius: 40px;
   outline: none;
@@ -61,8 +74,7 @@ h2 {
   align-items: center;
   width: 100%;
   height: 100%;
-  min-height: calc(100vh - 100px);
+  min-height: 100vh;
   margin: 0;
-  padding: 16px 0;
-  background-color: var(--main-bg-color-light);
+  background-color: var(--main-bg-color);
 }
