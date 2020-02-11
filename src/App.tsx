@@ -8,13 +8,15 @@ import { useRootData } from './hooks/useRootData';
 import { IAppProps } from './types/Common';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
-  const { error } = useRootData(({ error }) => ({
+  const { error, setError, setModal } = useRootData(({ error, setError, setModal }) => ({
     error: error.get(),
+    setError,
+    setModal,
   }));
 
   return (
     <>
-      <Modal classSpecifier="" background={true}>
+      <Modal visible={!!error} classSpecifier="wallet" background={true}>
         {error}
       </Modal>
       <Header />

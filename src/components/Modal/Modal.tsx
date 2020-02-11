@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, Children } from 'react';
 
 import { IModal } from './Types';
 
@@ -6,8 +6,9 @@ import { useRootData } from '../../hooks/useRootData';
 
 import './Modal.scss';
 
-const Modal: React.FC<IModal> = ({ background, classSpecifier }): JSX.Element => {
-  const { isModalOpen, setError, setModal } = useRootData(({ isModalOpen, setError, setModal }) => ({
+const Modal: React.FC<IModal> = ({ background, children, classSpecifier, visible }): JSX.Element => {
+  const { error, isModalOpen, setError, setModal } = useRootData(({ error, isModalOpen, setError, setModal }) => ({
+    error: error.get(),
     isModalOpen: isModalOpen.get(),
     setError,
     setModal,
@@ -23,6 +24,7 @@ const Modal: React.FC<IModal> = ({ background, classSpecifier }): JSX.Element =>
   const handleClickOutside = e => {
     if (myRef.current && !myRef.current.contains(e.target)) {
       setModal(false);
+      setError('');
     }
   };
 
@@ -35,7 +37,7 @@ const Modal: React.FC<IModal> = ({ background, classSpecifier }): JSX.Element =>
 
   return (
     <>
-      <div ref={myRef} className={`modal ${classSpecifier} ${isModalOpen ? 'open' : 'closed'}`}>
+      <div ref={myRef} className={`modal ${classSpecifier} ${visible ? 'open' : 'closed'}`}>
         <button
           onClick={() => {
             setError('');
@@ -43,8 +45,9 @@ const Modal: React.FC<IModal> = ({ background, classSpecifier }): JSX.Element =>
           }}
           className="close-icon"
         ></button>
+        {children}
       </div>
-      <div className={`modal-wrapper ${isModalOpen && background ? 'open' : 'closed'}`}></div>
+      <div className={`modal-wrapper ${visible && background ? 'open' : 'closed'}`}></div>
     </>
   );
 };
