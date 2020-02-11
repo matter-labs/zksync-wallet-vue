@@ -49,7 +49,9 @@ const Header: React.FC = (): JSX.Element => {
               <p>{ethId}</p>
               <img src="../../images/randomImage.png" alt="wallet" />
             </button>
-            <Modal background={true} classSpecifier="wallet"></Modal>
+            <Modal visible={isModalOpen} background={true} classSpecifier="wallet">
+              jopa
+            </Modal>
           </>
         )}
       </div>
