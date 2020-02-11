@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, Children } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { IModal } from './Types';
 
@@ -7,8 +7,7 @@ import { useRootData } from '../../hooks/useRootData';
 import './Modal.scss';
 
 const Modal: React.FC<IModal> = ({ background, children, classSpecifier, visible }): JSX.Element => {
-  const { error, isModalOpen, setError, setModal } = useRootData(({ error, isModalOpen, setError, setModal }) => ({
-    error: error.get(),
+  const { isModalOpen, setError, setModal } = useRootData(({ isModalOpen, setError, setModal }) => ({
     isModalOpen: isModalOpen.get(),
     setError,
     setModal,
@@ -21,19 +20,22 @@ const Modal: React.FC<IModal> = ({ background, children, classSpecifier, visible
     isModalOpen ? body.classList.add('fixed') : body.classList.remove('fixed');
   }
 
-  const handleClickOutside = e => {
-    if (myRef.current && !myRef.current.contains(e.target)) {
-      setModal(false);
-      setError('');
-    }
-  };
+  const handleClickOutside = useCallback(
+    e => {
+      if (myRef.current && !myRef.current.contains(e.target)) {
+        setModal(false);
+        setError('');
+      }
+    },
+    [setError, setModal],
+  );
 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, []);
+  }, [handleClickOutside]);
 
   return (
     <>

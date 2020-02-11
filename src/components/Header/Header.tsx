@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useCallback, useEffect, useRef } from 'react';
+
+import { Link } from 'react-router-dom';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -10,34 +11,26 @@ import Modal from '../Modal/Modal';
 import './Header.scss';
 
 const Header: React.FC = (): JSX.Element => {
-  const [menuActive, setMenuActive] = useState<string>('');
-  const { ethId, isModalOpen, setModal, zkWallet } = useRootData(({ ethId, isModalOpen, setModal, zkWallet }) => ({
+  const { ethId, path, setModal, setPath, zkWallet } = useRootData(({ ethId, path, setModal, setPath, zkWallet }) => ({
     ethId: ethId.get(),
-    isModalOpen: isModalOpen.get(),
+    path: path.get(),
     setModal,
+    setPath,
     zkWallet: zkWallet.get(),
   }));
 
-  const handleClickOutside = e => {
-    if (myRef.current && !myRef.current.contains(e.target)) {
-      openModal(false);
-    }
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleCopy = () => {
+    inputRef.current!.select();
+    document.execCommand('copy');
+  };
+
+  const handleLogOut = useCallback(() => {
+    window.location.pathname = '/';
   }, []);
 
-  const hanleLogOut = useCallback(() => {
-    setProvider(null);
-    setWalletName('');
-    setAccessModal(false);
-    setZkWallet(null);
-    history.push('/');
-  }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside, true);
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
-  }, [handleClickOutside]);
+  useEffect(() => console.log(path));
 
   return (
     <div className="menu-wrapper">
@@ -45,12 +38,39 @@ const Header: React.FC = (): JSX.Element => {
         <Link className="menu-logo" to="/"></Link>
         {zkWallet?.address() && (
           <>
-            <button type="button" className="menu-wallet" onClick={() => setModal(!isModalOpen)}>
+            <button type="button" className="menu-wallet" onClick={() => setModal('wallet')}>
               <p>{ethId}</p>
               <img src="../../images/randomImage.png" alt="wallet" />
             </button>
-            <Modal visible={isModalOpen} background={true} classSpecifier="wallet">
-              jopa
+            <Modal visible={false} background={true} classSpecifier="wallet" cancelAction={() => null}>
+              <div className="wallet-title">
+                {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
+              </div>
+              <div className="copy-block">
+                <input
+                  onChange={() => console.log(null)}
+                  className="copy-block-input"
+                  value={zkWallet?.address()}
+                  ref={inputRef}
+                />
+                <p>{zkWallet.address()}</p>
+                <button className="copy-block-button" onClick={handleCopy}></button>
+              </div>
+              <div className="horizontal-line"></div>
+              <div className="wallet-buttons">
+                <button>
+                  <span className="icon-qr"></span>Show QR code
+                </button>
+                <div className="horizontal-line"></div>
+                <button>
+                  <span className="icon-edit"></span>Rename wallet
+                </button>
+                <div className="horizontal-line"></div>
+                <button onClick={() => handleLogOut()}>
+                  <span className="icon-disconnect"></span>Disconnect wallet
+                </button>
+                <div className="horizontal-line"></div>
+              </div>
             </Modal>
           </>
         )}
@@ -60,8 +80,8 @@ const Header: React.FC = (): JSX.Element => {
           HEADER_ITEMS.map(({ title, link }) => (
             <div className="menu-route-wrapper" key={title}>
               <Link
-                onClick={() => setMenuActive(title)}
-                className={`menu-route ${menuActive === title ? 'active' : ''}`}
+                onClick={() => setPath(window?.location.pathname)}
+                className={`menu-route ${link === path ? 'active' : ''}`}
                 to={link}
               >
                 {title}
