@@ -24,8 +24,10 @@
     font-size: var(--sm-font-size);
     text-align: center;
 
-    & > span {
-      color: var(--hints-color-light);
+    & > p {
+      & > span {
+        color: var(--hints-color-light);
+      }
     }
   }
 
@@ -101,7 +103,7 @@
       max-width: 500px;
       margin-top: 10px;
       background-color: var(--transparent);
-
+      /* stylelint-disable-next-line no-descending-specificity */
       & > span {
         color: var(--hints-color-light);
       }

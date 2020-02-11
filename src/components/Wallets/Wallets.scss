@@ -10,16 +10,34 @@
     font-size: var(--md-font-size);
   }
 
-  &-currency-block {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: calc(100% + 64px);
-    height: 90px;
-    padding: 18px 32px;
-    background-color: var(--bg-block-color-light);
-    border-left: 3px solid var(--button-bg-color-light);
-    transform: translateX(-32px);
+  &-currency {
+    &-balance {
+      color: var(--dark-color-light);
+      font-size: var(--xxl-font-size);
+    }
+
+    &-selector {
+      color: var(--dark-color-light);
+      font-size: var(--large-font-size);
+      background: var(--transparent);
+      border: none;
+    }
+
+    &-block {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: calc(100% + 64px);
+      height: 90px;
+      padding: 18px 32px;
+      background-color: var(--bg-block-color-light);
+      border-left: 3px solid var(--button-bg-color-light);
+      transform: translateX(-32px);
+    }  
+
+    &-wrapper {
+      margin-top: -10px;
+    }
   } 
 
   &-wrapper {
@@ -74,6 +92,7 @@
 
 .deposit-button, .withdraw-button {
   position: relative;
+  margin: 24px 0 50px;
   padding-left: 30px;
   color: var(--button-bg-color-light);
   font-size: var(--large-font-size);
