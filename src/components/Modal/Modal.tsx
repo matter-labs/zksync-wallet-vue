@@ -6,7 +6,7 @@ import { useRootData } from '../../hooks/useRootData';
 
 import './Modal.scss';
 
-const Modal = React.forwardRef((props: IModal) => {
+const Modal: React.FC<IModal> = ({ background, classSpecifier }): JSX.Element => {
   const { isModalOpen, setError, setModal } = useRootData(({ isModalOpen, setError, setModal }) => ({
     isModalOpen: isModalOpen.get(),
     setError,
@@ -35,7 +35,7 @@ const Modal = React.forwardRef((props: IModal) => {
 
   return (
     <>
-      <div ref={myRef} className={`modal ${props.classSpecifier} ${isModalOpen ? 'open' : 'closed'}`}>
+      <div ref={myRef} className={`modal ${classSpecifier} ${isModalOpen ? 'open' : 'closed'}`}>
         <button
           onClick={() => {
             setError('');
@@ -44,9 +44,9 @@ const Modal = React.forwardRef((props: IModal) => {
           className="close-icon"
         ></button>
       </div>
-      <div className={`modal-wrapper ${isModalOpen && props.background ? 'open' : 'closed'}`}></div>
+      <div className={`modal-wrapper ${isModalOpen && background ? 'open' : 'closed'}`}></div>
     </>
   );
-});
+};
 
 export default Modal;
