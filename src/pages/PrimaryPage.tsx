@@ -66,7 +66,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                 <h2>Simple, fast and secure token transfers.</h2>
                 <p>Connect a wallet</p>
               </div>
-
               <div className="wallets-wrapper">
                 {Object.keys(WALLETS).map(key => (
                   <button

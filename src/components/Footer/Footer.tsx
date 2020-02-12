@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
+import { FOOTER_LINKS } from '../../constants/footer';
+
 import '../../index.scss';
 import './Footer.scss';
 
@@ -23,9 +25,25 @@ const Footer: React.FC = (): JSX.Element => {
   }
 
   return (
-    <button className="theme-switch" onClick={() => handleSwitch()}>
-      Switch
-    </button>
+    <div className="footer-wrapper">
+      <button className="theme-switch" onClick={() => handleSwitch()}>
+        Switch
+      </button>
+      <div className="footer-menu">
+        <p>
+          <span className="footer-links-block">
+            {FOOTER_LINKS.map(({ title, link }) => (
+              <>
+                <a className="footer-link" href={link}>
+                  {title}
+                </a>
+              </>
+            ))}
+          </span>
+          ZK Sync by Matter Labs
+        </p>
+      </div>
+    </div>
   );
 };
 

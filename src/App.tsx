@@ -19,7 +19,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         <Modal visible={!!error} classSpecifier="error" background={true}>
           {error}
         </Modal>
-        {children}
+        <div className="content">{children}</div>
         <Footer />
       </div>
     </>

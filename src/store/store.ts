@@ -1,6 +1,6 @@
 import { observable } from 'mobx';
 
-import { IEthBalance, Transaction } from '../types/Common';
+import { IEthBalance, ITransaction } from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Tokens } from 'zksync/build/types';
 import { Wallet } from 'zksync';
@@ -16,7 +16,7 @@ export const createStore = () => ({
   isModalOpen: observable.box<boolean>(false),
   provider: observable.box<any>(),
   tokens: observable.box<Tokens>(),
-  transactionModal: observable.box<Transaction>(),
+  transactionModal: observable.box<ITransaction>(),
   walletName: observable.box<string>(''),
   withdrawModal: observable.box<boolean>(false),
   zkBalances: observable.box<IEthBalance[]>([]),
@@ -62,7 +62,7 @@ export const createStore = () => ({
     this.tokens.set(tokens);
   },
 
-  setTransactionModal(transactionModal: Transaction): void {
+  setTransactionModal(transactionModal: ITransaction): void {
     this.transactionModal.set(transactionModal);
   },
 

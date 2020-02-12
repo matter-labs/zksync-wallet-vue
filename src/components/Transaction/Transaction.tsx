@@ -152,14 +152,12 @@ const Transaction: React.FC<ITransactionProps> = ({
                 {title}
               </button>
               <p key={maxValue} className="transaction-fee">
+                Fee:{' '}
                 {zkBalances?.length && (
-                  <p>
-                    Fee:{' '}
-                    <span>
-                      {maxValue ? maxValue * 0.001 : zkBalances[0].balance * 0.001}{' '}
-                      {symbolName ? symbolName : zkBalances[0].symbol}
-                    </span>
-                  </p>
+                  <span>
+                    {maxValue ? maxValue * 0.001 : zkBalances[0].balance * 0.001}{' '}
+                    {symbolName ? symbolName : zkBalances[0].symbol}
+                  </span>
                 )}
               </p>
             </>

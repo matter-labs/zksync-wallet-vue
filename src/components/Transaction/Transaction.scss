@@ -5,6 +5,7 @@
 
   &-back {
     position: absolute;
+    left: 20px;
     width: 48px;
     height: 48px;
     background: url(../../images/arrow-back.svg);
@@ -24,20 +25,15 @@
     font-size: var(--sm-font-size);
     text-align: center;
 
-    & > p {
-      & > span {
-        color: var(--hints-color);
-      }
+    & > span {
+      color: var(--hints-color);
     }
   }
 
   &-wrapper {
     position: relative;
-    top: 50%;
-    top: 32px;
-    left: 50%;
-    left: 32px;
     max-width: 500px;
+    margin: 0 auto;
     padding: 20px;
     background-color: var(--modal-bg-color);
     border-radius: 4px;
