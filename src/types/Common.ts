@@ -14,13 +14,18 @@ export type IAppProps = {
   children?: React.ReactNode;
 };
 
-export interface HeaderLinks {
+export interface IHeaderLinks {
   title: string;
   link: string;
 }
 
-export interface Transaction {
+export interface ITransaction {
   title: string;
   input: boolean;
   action: any;
+}
+
+export interface IFooterLinks {
+  title: string;
+  link: string;
 }

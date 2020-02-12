@@ -55,38 +55,38 @@
     &.closed {
       display: none;
     }
+  }
+}
 
-    & .copy-block {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 22px 0 15px;
-      padding: 30px;
-      color: var(--dark-color);
-      font-size: var(--large-font-size);
-      background-color: var(--copyblock-color);
-      border-radius: 4px;
+.copy-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 22px 0 15px;
+  padding: 30px;
+  color: var(--dark-color);
+  font-size: var(--large-font-size);
+  background-color: var(--copyblock-color);
+  border-radius: 4px;
 
-      &-input {
-        position: absolute;
-        left: -10000px;
-        width: 1px;
-        height: 0;
-        color: var(--transparent);
-        background-color: var(--transparent);
-        border: none;
-        outline: none;
-      }
+  &-input {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 0;
+    color: var(--transparent);
+    background-color: var(--transparent);
+    border: none;
+    outline: none;
+  }
 
-      &-button {
-        width: 24px;
-        height: 24px;
-        background-color: var(--transparent);
-        background-image: url(../../images/mdi_file_copy.svg);
-        border: none;
-        cursor: pointer;
-      }
-    }
+  &-button {
+    width: 24px;
+    height: 24px;
+    background-color: var(--transparent);
+    background-image: url(../../images/mdi_file_copy.svg);
+    border: none;
+    cursor: pointer;
   }
 }
 

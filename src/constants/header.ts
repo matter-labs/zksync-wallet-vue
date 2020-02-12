@@ -1,6 +1,6 @@
-import { HeaderLinks } from '../types/Common';
+import { IHeaderLinks } from '../types/Common';
 
-export const HEADER_ITEMS: HeaderLinks[] = [
+export const HEADER_ITEMS: IHeaderLinks[] = [
   {
     title: 'My wallet',
     link: '/account',
