@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 
 import '../../index.scss';
+import './Footer.scss';
 
 const Footer: React.FC = (): JSX.Element => {
   const body = document.querySelector('body');
@@ -21,7 +22,11 @@ const Footer: React.FC = (): JSX.Element => {
     JSON.parse(savedMode) ? body.classList.add('dark') : body.classList.remove('dark');
   }
 
-  return <button onClick={() => handleSwitch()}>Switch</button>;
+  return (
+    <button className="theme-switch" onClick={() => handleSwitch()}>
+      Switch
+    </button>
+  );
 };
 
 export default Footer;

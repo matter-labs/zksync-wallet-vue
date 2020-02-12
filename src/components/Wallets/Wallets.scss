@@ -13,7 +13,7 @@
   &-currency {
     &-balance {
       color: var(--dark-color);
-      font-size: var(--xxl-font-size);
+      font-size: var(--xxxl-font-size);
     }
 
     &-selector {
@@ -45,7 +45,7 @@
     max-width: 560px;
     padding: 32px;
     text-align: center;
-    background-color: var(--light-color);
+    background-color: var(--modal-bg-color);
     border-radius: 4px;
 
     &.open {
