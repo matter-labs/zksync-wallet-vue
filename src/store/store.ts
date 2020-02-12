@@ -7,17 +7,16 @@ import { Wallet } from 'zksync';
 
 export const createStore = () => ({
   depositModal: observable.box<boolean>(false),
-
-  transactionModal: observable.box<Transaction>(),
-
   error: observable.box<string>(''),
   ethBalances: observable.box<IEthBalance[]>([]),
   ethId: observable.box<string>(''),
   ethWallet: observable.box<JsonRpcSigner>(),
+  normalBg: observable.box<boolean>(false),
   isAccessModalOpen: observable.box<boolean>(false),
   isModalOpen: observable.box<boolean>(false),
   provider: observable.box<any>(),
   tokens: observable.box<Tokens>(),
+  transactionModal: observable.box<Transaction>(),
   walletName: observable.box<string>(''),
   withdrawModal: observable.box<boolean>(false),
   zkBalances: observable.box<IEthBalance[]>([]),
@@ -45,6 +44,10 @@ export const createStore = () => ({
 
   setEthWallet(wallet: JsonRpcSigner): void {
     this.ethWallet.set(wallet);
+  },
+
+  setNormalBg(normalBg: boolean): void {
+    this.normalBg.set(normalBg);
   },
 
   setModal(isModalOpen: boolean): void {

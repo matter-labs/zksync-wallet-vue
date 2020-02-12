@@ -39,7 +39,7 @@
     left: 32px;
     max-width: 500px;
     padding: 20px;
-    background-color: var(--light-color);
+    background-color: var(--modal-bg-color);
     border-radius: 4px;
 
     &.open {
@@ -71,7 +71,7 @@
 .currency {
   &-selector {
     color: var(--dark-color);
-    font-size: var(--xxl-font-size);
+    font-size: var(--xxxl-font-size);
     background-color: var(--transparent);
     border: none;
     outline: none;
@@ -86,7 +86,7 @@
   &-input {
     max-width: 250px;
     color: var(--dark-color);
-    font-size: var(--xxl-font-size);
+    font-size: var(--xxxl-font-size);
     border: none;
     outline: none;
 
@@ -115,7 +115,7 @@
 
     &::placeholder {
       color: var(--hints-color);
-      font-size: var(--xxl-font-size);
+      font-size: var(--xxxl-font-size);
       line-height: 40px;
     }
   }

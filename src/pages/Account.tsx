@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import Transaction from '../components/Transaction/Transaction';
+import Header from '../components/Header/Header';
 import MyWallet from '../components/Wallets/MyWallet';
+import Transaction from '../components/Transaction/Transaction';
 
 import { useRootData } from '../hooks/useRootData';
 import { useTransaction } from '../hooks/useTransaction';
@@ -53,6 +54,7 @@ const Account: React.FC = (): JSX.Element => {
 
   return (
     <>
+      <Header />
       <MyWallet balances={ethBalances} price={price} title="My wallet" />
       {transactionModal?.title.length && (
         <Transaction

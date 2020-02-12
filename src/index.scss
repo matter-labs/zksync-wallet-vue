@@ -6,7 +6,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --light-color: #fff;
+  --button-text-color: #fff;
+  --modal-bg-color: #fff;
   --dark-color: #000;
   --hints-color: rgba(0, 0, 0, 0.4);
   --button-bg-color: #8C8DFC;
@@ -21,7 +22,8 @@
   --md-font-size: 18px;
   --large-font-size: 24px;
   --xl-font-size: 30px;
-  --xxl-font-size: 48px;
+  --xxl-font-size: 36px;
+  --xxxl-font-size: 48px;
 
   --bold-font-weight: 900;
 }
@@ -29,11 +31,12 @@
 body, html {
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
   background-color: var(--main-bg-color);
 }
 
 body.dark {
-  --light-color: #000;
+  --modal-bg-color: #1D2039;
   --dark-color: rgba(255, 255, 255, 0.9);
   --hints-color: rgba(255, 255, 255, 0.4);
   --button-bg-color: #8C8DFC;
@@ -41,7 +44,7 @@ body.dark {
   --bg-block-color: #1D2039;
   --border-color: rgba(24, 13, 13, 0.08);
   --copyblock-color: rgba(255, 255, 255, 0.2);
-  --input-color: #000;
+  --input-color: rgba(255, 255, 255, 0.02);
   --transparent: transparent;
 }
 
@@ -58,7 +61,7 @@ h2 {
   width: 100%;
   max-width: 500px;
   height: 80px;
-  color: var(--light-color);
+  color: var(--button-text-color);
   font-size: var(--large-font-size);
   background-color: var(--button-bg-color);
   border: none;
@@ -76,5 +79,120 @@ h2 {
   height: 100%;
   min-height: 100vh;
   margin: 0;
-  background-color: var(--main-bg-color);
+  background: var(--main-bg-color);
+
+  &.start-page {
+    background: url(./images/start_page_bg.png) no-repeat center;
+    background-size: cover;
+  }
+}
+
+body.dark > #root {
+  & > .content-wrapper {
+    &.start-page {
+      background: var(--main-bg-color);
+    }  
+  }
+}
+
+.wallet {
+  &-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 40px;
+    color: var(--dark-color);
+    text-align: center;
+    background-color: var(--transparent);
+    border: none;
+    outline: none;
+
+    & > p {
+      margin-top: 10px;
+      font-size: var(--md-font-size);
+      cursor: pointer;
+    }
+  }
+
+  &-button {
+    width: 145px;
+    height: 145px;
+    background-color: var(--button-text-color);
+    background-repeat: no-repeat;
+    background-position: center;
+    border: none;
+    border-radius: 30px;
+    outline: none;
+    box-shadow: 0px 4px 8px var(--copyblock-color);
+    cursor: pointer;
+
+    &.Coinbase {
+      background-image: url(./images/coinbase.png);
+      background-size: 82px;
+    }
+
+    &.WalletConnect {
+      background-image: url(./images/walletconnect.png);
+      background-size: 106px;
+    }
+
+    &.Metamask {
+      background-image: url(./images/metamask.png);
+      background-size: 92px 84px;
+    }
+
+    &.Portis {
+      background-image: url(./images/portis.png);
+      background-size: 58px 88px;
+    }
+
+    &.Fortmatic {
+      background-image: url(./images/fortmatic.png);
+      background-size: 98px;
+    }
+  }  
+}
+
+.wallets-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 240px);
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.welcome-text {
+  text-align: center;
+
+  & > h1 {
+    margin-bottom: 0;
+    color: var(--dark-color);
+    font-weight: var(--bold-font-weight);
+    font-size: var(--xxl-font-size);
+  }
+
+  & > h2 {
+    color: var(--dark-color);
+    font-size: var(--xxl-font-size);
+  }
+
+  & > p {
+    margin: 60px 0 0;
+    color: var(--dark-color);
+    font-size: var(--large-font-size);
+  }
+}
+
+.logo-textless {
+  width: 70px;
+  height: 40px;
+  margin: 50px 0 30px;
+  background-image: url(./images/logo.svg);
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+#walletconnect-qrcode-modal {
+  background-color: var(--transparent);
 }

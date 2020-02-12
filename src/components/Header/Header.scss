@@ -2,13 +2,13 @@
   &-wrapper {
     width: 100%;
     padding: 16px 16px 0;
-    background-color: var(--light-color);
+    background-color: var(--modal-bg-color);
   }
 
   &-logo {
     width: 150px;
     height: 30px;
-    background-image: url(../../images/logo.svg);
+    background-image: url(../../images/logo_text.svg);
   }
 
   &-top {
@@ -53,7 +53,7 @@
     width: 100%;
     max-width: 160px;
     height: 25px;
-    background-color: var(--light-color);
+    background-color: var(--modal-bg-color);
     border: none;
     border-radius: 13px;
     outline: none;
