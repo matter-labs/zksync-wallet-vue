@@ -6,6 +6,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
+  --light-bg-color: #fff;
   --button-text-color: #fff;
   --modal-bg-color: #fff;
   --dark-color: #000;
@@ -21,7 +22,7 @@
 
   --sm-font-size: 14px;
   --md-font-size: 18px;
-  --large-font-size: 24px;
+  --large-font-size: 22px;
   --xl-font-size: 30px;
   --xxl-font-size: 36px;
   --xxxl-font-size: 48px;
@@ -37,6 +38,8 @@ body, html {
 }
 
 body.dark {
+  --light-bg-color: #fff;
+  --button-text-color: #1D2039;
   --modal-bg-color: #1D2039;
   --dark-color: rgba(255, 255, 255, 0.9);
   --hints-color: rgba(255, 255, 255, 0.4);
@@ -44,8 +47,9 @@ body.dark {
   --main-bg-color: #11142B;
   --bg-block-color: #1D2039;
   --border-color: rgba(24, 13, 13, 0.08);
-  --copyblock-color: rgba(255, 255, 255, 0.2);
+  --copyblock-color: rgba(255, 255, 255, 0.08);
   --input-color: rgba(255, 255, 255, 0.02);
+  --currency-block-color: rgba(255, 255, 255, 0.1);
   --links-color: #4E529A;
   --transparent: transparent;
 }
@@ -57,20 +61,6 @@ body.fixed {
 h2 {
   font-weight: var(--bold-font-weight);
   font-size: var(--xl-font-size);
-}
-
-.submit-button {
-  width: 100%;
-  max-width: 500px;
-  height: 80px;
-  color: var(--button-text-color);
-  font-size: var(--large-font-size);
-  background-color: var(--button-bg-color);
-  border: none;
-  border-radius: 40px;
-  outline: none;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
 }
 
 .content {
@@ -93,14 +83,6 @@ h2 {
   }
 }
 
-body.dark > #root {
-  & > .content-wrapper {
-    &.start-page {
-      background: var(--main-bg-color);
-    }  
-  }
-}
-
 .wallet {
   &-block {
     display: flex;
@@ -116,15 +98,15 @@ body.dark > #root {
 
     & > p {
       margin-top: 10px;
-      font-size: var(--md-font-size);
+      font-size: var(--sm-font-size);
       cursor: pointer;
     }
   }
 
   &-button {
-    width: 145px;
-    height: 145px;
-    background-color: var(--button-text-color);
+    width: 95px;
+    height: 95px;
+    background-color: var(--light-bg-color);
     background-repeat: no-repeat;
     background-position: center;
     border: none;
@@ -135,58 +117,138 @@ body.dark > #root {
 
     &.Coinbase {
       background-image: url(./images/coinbase.png);
-      background-size: 82px;
+      background-size: 55px;
     }
 
     &.WalletConnect {
       background-image: url(./images/walletconnect.png);
-      background-size: 106px;
+      background-size: 70px;
     }
 
     &.Metamask {
       background-image: url(./images/metamask.png);
-      background-size: 92px 84px;
+      background-size: 60px 55px;
     }
 
     &.Portis {
       background-image: url(./images/portis.png);
-      background-size: 58px 88px;
+      background-size: 40px 60px;
     }
 
     &.Fortmatic {
       background-image: url(./images/fortmatic.png);
-      background-size: 98px;
+      background-size: 65px;
     }
   }  
 }
 
-.wallets-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 240px);
+.submit-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
+  max-width: 500px;
+  height: 55px;
+  color: var(--button-text-color);
+  font-size: var(--md-font-size);
+  background-color: var(--button-bg-color);
+  border: none;
+  border-radius: 27px;
+  outline: none;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+
+  & > span {
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+    background-image: url(./images/send.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
 }
 
-.welcome-text {
-  text-align: center;
+body.dark > #root {
+  & > .content-wrapper {
+    &.start-page {
+      background: var(--main-bg-color);
+    }
+    
+    & > .content {
+      & > .mywallet-wrapper {
+        & > .submit-button {
+          & > span {
+            background-image: url(./images/send_dark.svg);
+          }
+        }
 
-  & > h1 {
-    margin-bottom: 0;
-    color: var(--dark-color);
-    font-weight: var(--bold-font-weight);
-    font-size: var(--xxl-font-size);
-  }
+        & > .mywallet-buttons-container {
+          & > .withdraw-button {
+            & > span {
+              width: 16px;
+              height: 16px;
+              background: url(./images/mdi_arrow_downward_dark.svg);
+              background-repeat: no-repeat;
+              background-size: contain;
+            }
+          } 
+        }
 
-  & > h2 {
-    color: var(--dark-color);
-    font-size: var(--xxl-font-size);
-  }
+        & > .mywallet-currency-block {
+          background-color: var(--currency-block-color);
+          border-bottom: 1px solid var(--copyblock-color);
+          border-left: none;
 
-  & > p {
-    margin: 60px 0 0;
-    color: var(--dark-color);
-    font-size: var(--large-font-size);
+          & > .mywallet-currency-wrapper {
+            & > .mywallet-currency-selector {
+              background-image: url(./images/arrow-select-dark.svg);
+            }
+          }
+        }
+
+        & > .copy-block {
+          & > .copy-block-button {
+            background-image: url(./images/mdi_file_copy_dark.svg);
+          }
+        }
+      }
+
+      & > .menu-wrapper {
+        & > .menu-top {
+          & > .wallet {
+            & > .wallet-buttons {
+              & > button {
+                & > .icon {
+                  &-qr {
+                    background: url(./images/icon-qr_dark.svg);
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                  }
+
+                  &-disconnect {
+                    background: url(./images/icon-disconnect_dark.svg);
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                  }
+
+                  &-edit {
+                    background: url(./images/icon-edit_dark.svg);
+                    background-repeat: no-repeat;
+                    background-size: contain;
+                  }
+                }
+              }
+            }
+          }
+
+          & > .menu-logo {
+            background-image: url(./images/logo_text_dark.svg);
+          }
+        }
+      }
+    }
   }
 }
 
@@ -211,4 +273,97 @@ body.dark > #root {
   width: 560px !important;
   height: 500px;
   transform: translateY(-60%) !important;
+}
+
+.wallets-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 150px);
+  max-width: 95vw;
+  margin: 0 2.5vw;
+}
+
+.welcome-text {
+  text-align: center;
+
+  & > h1 {
+    margin-bottom: 0;
+    color: var(--dark-color);
+    font-weight: var(--bold-font-weight);
+    font-size: var(--large-font-size);
+
+  }
+
+  & > h2 {
+    color: var(--dark-color);
+    font-size: var(--large-font-size);
+
+  }
+
+  & > p {
+    margin: 60px 0 0;
+    color: var(--dark-color);
+    font-size: var(--md-font-size);
+
+  }
+}
+
+@media screen and (min-width: 760px) {
+  .submit-button {
+    height: 80px;
+    font-size: var(--large-font-size);
+    border-radius: 40px;
+  }
+
+  .welcome-text {
+    & > h1 {
+      font-size: var(--xxl-font-size);
+    }
+  
+    & > h2 {
+      font-size: var(--xxl-font-size);
+    }
+  
+    & > p {
+      font-size: var(--large-font-size);
+    }
+  }
+
+  .wallet {
+    &-block {
+      & > p {
+        font-size: var(--md-font-size);
+      }
+    }
+
+    &-button {
+      width: 145px;
+      height: 145px;
+  
+      &.Coinbase {
+        background-size: 82px;
+      }
+  
+      &.WalletConnect {
+        background-size: 106px;
+      }
+  
+      &.Metamask {
+        background-size: 92px 84px;
+      }
+  
+      &.Portis {
+        background-size: 58px 88px;
+      }
+  
+      &.Fortmatic {
+        background-size: 98px;
+      }
+    }  
+  }
+
+  .wallets-wrapper {
+    grid-template-columns: repeat(auto-fit, 240px);
+    max-width: 720px;
+    margin: 0 auto;
+  }
 }

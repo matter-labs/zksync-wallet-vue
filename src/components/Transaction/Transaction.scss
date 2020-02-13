@@ -66,11 +66,17 @@
 
 .currency {
   &-selector {
+    margin-left: 10px;
+    padding-right: 20px;
     color: var(--dark-color);
     font-size: var(--xxxl-font-size);
     background-color: var(--transparent);
+    background-image: url(../../images/arrow-select.svg);
+    background-repeat: no-repeat;  
+    background-position: right;
     border: none;
     outline: none;
+    appearance: none;
 
     & > option {
       & > p {

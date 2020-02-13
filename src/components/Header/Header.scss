@@ -9,6 +9,7 @@
     width: 150px;
     height: 30px;
     background-image: url(../../images/logo_text.svg);
+    background-repeat: no-repeat;
   }
 
   &-top {
@@ -19,9 +20,10 @@
   &-route { 
     display: block;
     box-sizing: content-box;
-    margin-top: 10px;
+    margin-top: 14px;
     padding-bottom: 10px;
     color: var(--dark-color);
+    font-size: var(--sm-font-size);
     border-bottom: 4px solid var(--transparent);
 
     &.active {
@@ -35,7 +37,7 @@
     }
 
     &-wrapper {
-      padding: 5px 24px 0;
+      padding: 5px 10px 0;
       font-size: var(--md-font-size);
     }
   }
@@ -53,6 +55,7 @@
     width: 100%;
     max-width: 160px;
     height: 25px;
+    color: var(--dark-color);
     background-color: var(--modal-bg-color);
     border: none;
     border-radius: 13px;
@@ -60,11 +63,31 @@
     cursor: pointer;
 
     & > p {
+      display: none;
       max-width: 60px;
       margin: 0;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+  }
+}
+
+@media screen and (min-width: 760px) {
+  .menu {
+    &-wallet {
+      & > p {
+        display: inline-block;
+      }
+    }
+
+    &-route {
+      margin-top: 10px;
+      font-size: var(--md-font-size);
+
+      &-wrapper {
+        padding: 5 24px 0;
+      }
     }
   }
 }

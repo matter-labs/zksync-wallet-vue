@@ -6,7 +6,7 @@ import { useRootData } from '../../hooks/useRootData';
 
 import './Modal.scss';
 
-const Modal: React.FC<IModal> = ({ background, children, classSpecifier, visible }): JSX.Element => {
+const Modal: React.FC<IModal> = ({ background, cancelAction, children, classSpecifier, visible }): JSX.Element => {
   const { isModalOpen, setError, setModal } = useRootData(({ isModalOpen, setError, setModal }) => ({
     isModalOpen: isModalOpen.get(),
     setError,
@@ -42,6 +42,7 @@ const Modal: React.FC<IModal> = ({ background, children, classSpecifier, visible
       <div ref={myRef} className={`modal ${classSpecifier} ${visible ? 'open' : 'closed'}`}>
         <button
           onClick={() => {
+            cancelAction();
             setError('');
             setModal(false);
           }}

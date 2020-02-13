@@ -3,8 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 import Header from '../components/Header/Header';
 import LazyWallet from '../components/Wallets/LazyWallet';
-
-import { Modal } from 'antd';
+import Modal from '../components/Modal/Modal';
 
 import { useRootData } from '../hooks/useRootData';
 import useWalletInit from '../hooks/useWalletInit';
@@ -50,12 +49,16 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       ) : (
         <>
           <Modal
-            title="Name"
+            background={false}
+            classSpecifier="metamask"
             visible={isAccessModalOpen}
-            onOk={() => setAccessModal(false)}
-            onCancel={() => setAccessModal(false)}
+            cancelAction={() => setAccessModal(false)}
           >
-            <button onClick={createWallet}>Access my account</button>
+            <div className="metamask-logo"></div>
+            <h3>Connected to Metamask</h3>
+            <button className="btn submit-button" onClick={createWallet}>
+              Access my account
+            </button>
           </Modal>
           {walletName && <Header />}
           {!walletName && (

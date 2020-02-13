@@ -36,7 +36,7 @@ const Header: React.FC = (): JSX.Element => {
               <p>{ethId}</p>
               <img src="../../images/randomImage.png" alt="wallet" />
             </button>
-            <Modal visible={isModalOpen} background={true} classSpecifier="wallet">
+            <Modal visible={isModalOpen} background={true} classSpecifier="wallet" cancelAction={() => null}>
               <div className="wallet-title">
                 {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
               </div>
@@ -47,7 +47,7 @@ const Header: React.FC = (): JSX.Element => {
                   value={zkWallet?.address()}
                   ref={inputRef}
                 />
-                <div>{zkWallet.address()}</div>
+                <p>{zkWallet.address()}</p>
                 <button className="copy-block-button" onClick={handleCopy}></button>
               </div>
               <div className="horizontal-line"></div>
@@ -55,12 +55,15 @@ const Header: React.FC = (): JSX.Element => {
                 <button>
                   <span className="icon-qr"></span>Show QR code
                 </button>
+                <div className="horizontal-line"></div>
                 <button>
                   <span className="icon-edit"></span>Rename wallet
                 </button>
+                <div className="horizontal-line"></div>
                 <button>
                   <span className="icon-disconnect"></span>Disconnect wallet
                 </button>
+                <div className="horizontal-line"></div>
               </div>
             </Modal>
           </>
