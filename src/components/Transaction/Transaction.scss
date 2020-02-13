@@ -32,8 +32,10 @@
 
   &-wrapper {
     position: relative;
-    max-width: 500px;
+    width: 100%;
+    max-width: 560px;
     margin: 0 auto;
+    margin-top: 15px;
     padding: 20px;
     background-color: var(--modal-bg-color);
     border-radius: 4px;

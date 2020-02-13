@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
+import Balances from '../components/Balances/Balances';
 import Header from '../components/Header/Header';
 import MyWallet from '../components/Wallets/MyWallet';
 import Transaction from '../components/Transaction/Transaction';
@@ -74,6 +75,7 @@ const Account: React.FC = (): JSX.Element => {
           zkBalances={zkBalances}
         />
       )}
+      <Balances visible={!transactionModal || transactionModal.title === 'Send' ? true : false} />
     </>
   );
 };
