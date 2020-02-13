@@ -1,10 +1,34 @@
+.metamask {
+  &-logo {
+    width: 95px;
+    height: 95px;
+    margin: 0 auto;
+    background-image: url(../../images/metamask.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+
+  & > h3 {
+    margin: 30px 0;
+    color: var(--dark-color);
+    font-weight: var(--bold-font-weight);
+    font-size: var(--large-font-size);
+  }
+
+  & > p {
+    color: var(--dark-color);
+    font-size: var(--sm-font-size);
+  }
+}
+
 .modal {
   position: absolute;
   top: 50%;
   left: 50%;
   z-index: 10000;
   width: 100%;
-  max-width: 300px;
+  max-width: 90vw;
   padding: 32px;
   color: var(--dark-color);
   background-color: var(--modal-bg-color);
@@ -12,11 +36,18 @@
   border-radius: 8px;
   transform: translate(-50%, -50%);
 
+  &.metamask {
+    top: 120px;
+    left: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateX(-50%);
+  }
+
   &.wallet {
     top: 30px;
     left: 100%;
     width: 100%;
-    max-width: 560px;
     transform: translateX(-105%);
 
     & > .wallet-buttons {
@@ -77,6 +108,13 @@
     & > .copy-block {
       margin-bottom: 40px;
       font-size: var(--sm-font-size);
+
+      & > p {
+        display: inline-block;
+        margin-bottom: 0;
+        padding-right: 15px;
+        word-break: break-word;
+      }
     }
   }
 
@@ -135,5 +173,11 @@
 
   &::after {
     transform: rotate(90deg);
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .modal {
+    max-width: 560px;
   }
 }

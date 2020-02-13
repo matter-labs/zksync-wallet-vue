@@ -86,7 +86,7 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
         className="btn submit-button"
         onClick={() => setTransactionModal({ title: 'Send', input: true, action: transfer })}
       >
-        Send
+        <span></span> Send
       </button>
     </div>
   );

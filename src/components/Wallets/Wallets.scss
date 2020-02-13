@@ -5,6 +5,10 @@
     justify-content: space-between;
   }
 
+  &-title {
+    color: var(--dark-color);
+  }
+
   &-price {
     color: var(--hints-color);
     font-size: var(--md-font-size);
@@ -17,10 +21,17 @@
     }
 
     &-selector {
+      margin-left: 10px;
+      padding-right: 20px;
       color: var(--dark-color);
       font-size: var(--large-font-size);
       background: var(--transparent);
+      background-image: url(../../images/arrow-select.svg);
+      background-repeat: no-repeat;  
+      background-position: right;
       border: none;
+      outline: none;
+      appearance: none;
     }
 
     &-block {
@@ -41,8 +52,9 @@
   } 
 
   &-wrapper {
-    width: 100%;
+    width: 90%;
     max-width: 560px;
+    margin-top: 15px;
     padding: 32px;
     text-align: center;
     background-color: var(--modal-bg-color);
@@ -108,6 +120,8 @@
     width: 24px;
     height: 24px;
     background: url(../../images/deposit.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
     transform: translateY(-50%);
   }
 }
