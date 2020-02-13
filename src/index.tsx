@@ -4,8 +4,10 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import Account from './pages/Account';
 import App from './App';
+import Contacts from './pages/Contacts';
 import PrimaryPage from './pages/PrimaryPage';
 import Send from './pages/Send';
+import Transactions from './pages/Transactions';
 
 import StoreProvider from './store/context';
 
@@ -20,8 +22,10 @@ ReactDOM.render(
       <App>
         <Switch>
           <Route path="/account" exact component={Account} />
+          <Route path="/contacts" exact component={Contacts} />
           <Route path="/" exact component={PrimaryPage} />
           <Route path="/send" component={Send} />
+          <Route path="/transactions" component={Transactions} />
         </Switch>
       </App>
     </BrowserRouter>
