@@ -66,6 +66,10 @@
   }
 }
 
+.contacts-selector {
+  font-size: var(--md-font-size);
+}
+
 .currency {
   &-selector {
     margin-left: 10px;
@@ -96,8 +100,12 @@
 
     &-address {
       width: 100%;
+      max-width: 180px;
       font-size: var(--md-font-size);
+      white-space: nowrap;
+      text-overflow: ellipsis;
       border: none;
+      outline: none;
     }
 
     &-wrapper {

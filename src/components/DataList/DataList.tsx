@@ -27,17 +27,17 @@ const DataList: React.FC<IBalances> = ({ title, visible }): JSX.Element => {
     }),
   );
 
-  const data = useLocalStorage('contacts');
+  const arr: any = localStorage.getItem('contacts');
 
-  const [searchContacts, setContacts] = useState<object>(data);
+  const contacts = JSON.parse(arr);
+
+  const [searchContacts, setContacts] = useState<any>(contacts);
   const [searchBalances, setBalances] = useState<IEthBalance[]>(zkBalances);
   const [price, setPrice] = useState<number>(0);
 
-  console.log(data);
-
   useEffect(() => {
+    setContacts(contacts);
     setBalances(zkBalances);
-    setContacts(data);
     request(`${BASE_URL}/${CURRENCY}/?convert=${CONVERT_CURRENCY}`)
       .then((res: any) => {
         setPrice(+res?.[0]?.price_usd);
@@ -50,19 +50,27 @@ const DataList: React.FC<IBalances> = ({ title, visible }): JSX.Element => {
   const handleSearch = useCallback(
     e => {
       const searchQuery = e.target.value.toLowerCase();
-      const displayedBalances = zkBalances.filter(el => {
-        const searchValue = `zk${el.symbol}`.toLowerCase();
-        return searchValue.indexOf(searchQuery) !== -1;
-      });
-      setBalances(displayedBalances);
+      if (title === 'Token balances') {
+        const displayedBalances = zkBalances.filter(el => {
+          const searchValue = `zk${el.symbol}`.toLowerCase();
+          return searchValue.indexOf(searchQuery) !== -1;
+        });
+        setBalances(displayedBalances);
+      } else if (title === 'Contacts') {
+        const displayedContacts = contacts.filter(el => {
+          const searchValue = el.name.toLowerCase();
+          return searchValue.indexOf(searchQuery) !== -1;
+        });
+        setContacts(displayedContacts);
+      }
     },
     [zkBalances],
   );
 
   return (
     <>
-      <Modal visible={false} classSpecifier="add-contact" background={true} cancelAction={() => null}>
-        <SaveContacts address="address" />
+      <Modal visible={false} classSpecifier="add-contact addressless" background={true} cancelAction={() => null}>
+        <SaveContacts addressValue="" addressInput={true} />
       </Modal>
       <div className={`balances-wrapper ${visible ? 'open' : 'closed'}`}>
         <h3 className="balances-title">{title}</h3>
@@ -77,14 +85,14 @@ const DataList: React.FC<IBalances> = ({ title, visible }): JSX.Element => {
               </div>
             </div>
           ))}
-        {title === 'Contacts' && data && (
+        {title === 'Contacts' && contacts && (
           <>
-            <button className="add-contact-button" onClick={() => setModal('add-contact')}>
+            <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>
               <span></span>
               <p>Add a contact</p>
             </button>
-            {Array.isArray(data) ? (
-              data.map(({ address, name }) => (
+            {!!searchContacts ? (
+              searchContacts.map(({ address, name }) => (
                 <div className="balances-contact" key={address}>
                   <div className="balances-contact-left">
                     <span className="balances-contact-name">{name}</span>
@@ -104,7 +112,7 @@ const DataList: React.FC<IBalances> = ({ title, visible }): JSX.Element => {
                 </div>
               ))
             ) : (
-              <div>{data}</div>
+              <div>You don't have contacts yet...</div>
             )}
           </>
         )}
