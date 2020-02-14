@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from 'react';
 
+import Modal from '../Modal/Modal';
+import SaveContacts from '../SaveContacts/SaveContacts';
+
 import { ITransactionProps } from './Types';
 
 import { INPUT_VALIDATION } from '../../constants/regExs';
@@ -23,8 +26,9 @@ const Transaction: React.FC<ITransactionProps> = ({
   transactionAction,
   zkBalances,
 }): JSX.Element => {
-  const { ethId, setTransactionModal } = useRootData(({ ethId, setTransactionModal }) => ({
+  const { ethId, setModal, setTransactionModal } = useRootData(({ ethId, setModal, setTransactionModal }) => ({
     ethId: ethId.get(),
+    setModal,
     setTransactionModal,
   }));
 
@@ -44,6 +48,10 @@ const Transaction: React.FC<ITransactionProps> = ({
     }
   };
 
+  const arr: any = localStorage.getItem('contacts');
+
+  const contacts = JSON.parse(arr);
+
   const handleCancel = useCallback(() => {
     setHash('');
     setExecuted(false);
@@ -58,113 +66,124 @@ const Transaction: React.FC<ITransactionProps> = ({
     }
   }, [ethId, value]);
 
+  console.log(addressValue);
+
   return (
-    <div className="transaction-wrapper">
-      {isExecuted ? (
-        <>
-          <p>{typeof hash === 'string' ? hash : hash?.hash}</p>
-        </>
-      ) : (
-        <>
-          {isLoading ? ( // need to remove later
-            <>
-              <span>Loading...</span>
-              <button
-                onClick={() => {
-                  handleCancel();
-                  setWalletName();
-                }}
-              ></button>
-            </>
-          ) : (
-            <>
-              <button onClick={() => handleCancel()} className="transaction-back"></button>
-              <h2 className="transaction-title">{title}</h2>
-              {isInput && (
-                <>
-                  <span className="transaction-field-title">To address</span>
-                  <div className="transaction-field">
-                    <div className="currency-input-wrapper">
-                      <input
-                        placeholder="Ox address, ENS or contact name"
-                        value={addressValue}
-                        onChange={onChangeAddress}
-                        className="currency-input-address"
-                      />
-                      <select
-                        className="currency-selector"
-                        onChange={e => {
-                          setToken(e.toString());
-                          setMaxValue(+e.target.value);
-                        }}
-                      >
-                        {balances?.length &&
-                          balances.map(({ address, balance, symbol }) => (
-                            <option key={address} value={balance}>
-                              {symbol}
-                            </option>
-                          ))}
-                      </select>
+    <>
+      <Modal visible={false} classSpecifier="add-contact" background={true} cancelAction={() => null}>
+        <SaveContacts addressValue={addressValue} addressInput={false} />
+      </Modal>
+      <div className="transaction-wrapper">
+        {isExecuted ? (
+          <>
+            <p>{typeof hash === 'string' ? hash : hash?.hash}</p>
+          </>
+        ) : (
+          <>
+            {isLoading ? ( // need to remove later
+              <>
+                <span>Loading...</span>
+                <button
+                  onClick={() => {
+                    handleCancel();
+                    setWalletName();
+                  }}
+                ></button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => handleCancel()} className="transaction-back"></button>
+                <h2 className="transaction-title">{title}</h2>
+                {isInput && (
+                  <>
+                    <span className="transaction-field-title">To address</span>
+                    <div className="transaction-field">
+                      <div className="currency-input-wrapper">
+                        <input
+                          placeholder="Ox address, ENS or contact name"
+                          value={addressValue}
+                          onChange={onChangeAddress}
+                          className="currency-input-address"
+                        />
+                        <button className="add-contact-button-input" onClick={() => setModal('add-contact')}>
+                          <span></span>
+                          <p>Save</p>
+                        </button>
+                        <select
+                          className="contacts-selector"
+                          onChange={e => {
+                            setToken(e.toString());
+                            setMaxValue(+e.target.value);
+                          }}
+                        >
+                          {contacts?.length &&
+                            contacts.map(({ name, address }) => (
+                              <option key={address} value={name}>
+                                {name}
+                              </option>
+                            ))}
+                        </select>
+                      </div>
                     </div>
+                  </>
+                )}
+                <span className="transaction-field-title">Amount / asset</span>
+                <div className="transaction-field">
+                  <div className="currency-input-wrapper border">
+                    <input
+                      placeholder="0.00"
+                      className={'currency-input'}
+                      onChange={e => {
+                        validateNumbers(e.target.value);
+                        onChangeAmount(+e.target.value);
+                      }}
+                      value={inputValue}
+                    />
+                    <select
+                      className="currency-selector"
+                      onChange={e => {
+                        setToken(e.toString());
+                        setMaxValue(+e.target.value);
+                        const id = e.target?.selectedIndex;
+                        setSymbolName(e.target.options[id].text);
+                      }}
+                    >
+                      {balances?.length &&
+                        balances.map(({ address, balance, symbol }) => (
+                          <option key={address} value={balance}>
+                            {symbol}
+                          </option>
+                        ))}
+                    </select>
                   </div>
-                </>
-              )}
-              <span className="transaction-field-title">Amount / asset</span>
-              <div className="transaction-field">
-                <div className="currency-input-wrapper border">
-                  <input
-                    placeholder="0.00"
-                    className={'currency-input'}
-                    onChange={e => {
-                      validateNumbers(e.target.value);
-                      onChangeAmount(+e.target.value);
-                    }}
-                    value={inputValue}
-                  />
-                  <select
-                    className="currency-selector"
-                    onChange={e => {
-                      setToken(e.toString());
-                      setMaxValue(+e.target.value);
-                      const id = e.target?.selectedIndex;
-                      setSymbolName(e.target.options[id].text);
-                    }}
-                  >
-                    {balances?.length &&
-                      balances.map(({ address, balance, symbol }) => (
-                        <option key={address} value={balance}>
-                          {symbol}
-                        </option>
-                      ))}
-                  </select>
+                  {zkBalances?.length && (
+                    <div className="currency-input-wrapper" key={token}>
+                      <span>~${price * (maxValue ? maxValue : zkBalances[0].balance)}</span>
+                      <span>
+                        Balance: {maxValue ? maxValue : zkBalances[0].balance}{' '}
+                        {symbolName ? symbolName : zkBalances[0].symbol}
+                      </span>
+                    </div>
+                  )}
                 </div>
-                {zkBalances?.length && (
-                  <div className="currency-input-wrapper" key={token}>
-                    <span>~${price * (maxValue ? maxValue : zkBalances[0].balance)}</span>
+                <button className="btn submit-button" onClick={() => transactionAction(token)}>
+                  {title}
+                </button>
+                <p key={maxValue} className="transaction-fee">
+                  Fee:{' '}
+                  {zkBalances?.length && (
                     <span>
-                      Balance: {maxValue ? maxValue : zkBalances[0].balance}{' '}
+                      {maxValue ? maxValue * 0.001 : zkBalances[0].balance * 0.001}{' '}
                       {symbolName ? symbolName : zkBalances[0].symbol}
                     </span>
-                  </div>
-                )}
-              </div>
-              <button className="btn submit-button" onClick={() => transactionAction(token)}>
-                {title}
-              </button>
-              <p key={maxValue} className="transaction-fee">
-                Fee:{' '}
-                {zkBalances?.length && (
-                  <span>
-                    {maxValue ? maxValue * 0.001 : zkBalances[0].balance * 0.001}{' '}
-                    {symbolName ? symbolName : zkBalances[0].symbol}
-                  </span>
-                )}
-              </p>
-            </>
-          )}
-        </>
-      )}
-    </div>
+                  )}
+                </p>
+              </>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 };
 

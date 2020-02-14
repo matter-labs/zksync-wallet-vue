@@ -1,3 +1,4 @@
 export interface ISaveContactsProps {
-  address: string;
+  addressInput: boolean;
+  addressValue: string;
 }

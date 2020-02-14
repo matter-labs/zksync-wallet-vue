@@ -25,6 +25,7 @@ const Modal: React.FC<IModal> = ({ background, cancelAction, children, classSpec
       if (e.target.getAttribute('data-name')) {
         e.stopPropagation();
         setModal('');
+        setError('');
       }
     },
     [setError, setModal],
