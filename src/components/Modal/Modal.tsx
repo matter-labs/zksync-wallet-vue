@@ -22,9 +22,9 @@ const Modal: React.FC<IModal> = ({ background, cancelAction, children, classSpec
 
   const handleClickOutside = useCallback(
     e => {
-      if (myRef.current && !myRef.current.contains(e.target)) {
-        setModal(false);
-        setError('');
+      if (e.target.getAttribute('data-name')) {
+        e.stopPropagation();
+        setModal('');
       }
     },
     [setError, setModal],
@@ -39,18 +39,26 @@ const Modal: React.FC<IModal> = ({ background, cancelAction, children, classSpec
 
   return (
     <>
-      <div ref={myRef} className={`modal ${classSpecifier} ${visible ? 'open' : 'closed'}`}>
+      <div
+        ref={myRef}
+        className={`modal ${classSpecifier} ${classSpecifier === isModalOpen || visible ? 'open' : 'closed'}`}
+      >
         <button
           onClick={() => {
             cancelAction();
             setError('');
-            setModal(false);
+            setModal('');
           }}
           className="close-icon"
         ></button>
         {children}
       </div>
-      <div className={`modal-wrapper ${visible && background ? 'open' : 'closed'}`}></div>
+      <div
+        data-name="modal-wrapper"
+        className={`modal-wrapper ${
+          (classSpecifier === isModalOpen && background) || (visible && background) ? 'open' : 'closed'
+        }`}
+      ></div>
     </>
   );
 };

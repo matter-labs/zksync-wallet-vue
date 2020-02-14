@@ -1,14 +1,12 @@
 import React, { useCallback, useState } from 'react';
 
-import { Button, Input, Modal } from 'antd';
-
 import { useRootData } from '../../hooks/useRootData';
 
 import { ISaveContactsProps } from './Types';
 
 import { DEFAULT_ERROR } from '../../constants/errors';
 
-const SaveContacts: React.FC<ISaveContactsProps> = ({ address, canceslModal, isModalOpen }): JSX.Element => {
+const SaveContacts: React.FC<ISaveContactsProps> = ({ address }): JSX.Element => {
   const [name, setName] = useState<string>('');
 
   const { setError } = useRootData(({ setError }) => ({
@@ -33,10 +31,10 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({ address, canceslModal, isM
   }, [address, name, setError]);
 
   return (
-    <Modal title="Save contact" visible={isModalOpen} onOk={canceslModal} onCancel={canceslModal}>
-      <Input placeholder="name" value={name} onChange={e => setName(e.target.value)} />
-      <Button onClick={handleSave}>Save</Button>
-    </Modal>
+    <>
+      <input placeholder="name" value={name} onChange={e => setName(e.target.value)} />
+      <button onClick={handleSave}>Save</button>
+    </>
   );
 };
 

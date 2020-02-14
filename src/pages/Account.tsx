@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import Balances from '../components/Balances/Balances';
-import Header from '../components/Header/Header';
+import DataList from '../components/DataList/DataList';
 import MyWallet from '../components/Wallets/MyWallet';
 import Transaction from '../components/Transaction/Transaction';
 
@@ -55,7 +54,6 @@ const Account: React.FC = (): JSX.Element => {
 
   return (
     <>
-      <Header />
       <MyWallet balances={ethBalances} price={price} title="My wallet" />
       {transactionModal?.title.length && (
         <Transaction
@@ -75,7 +73,10 @@ const Account: React.FC = (): JSX.Element => {
           zkBalances={zkBalances}
         />
       )}
-      <Balances visible={!transactionModal || transactionModal.title === 'Send' ? true : false} />
+      <DataList
+        title="Token balances"
+        visible={!transactionModal || transactionModal.title === 'Send' ? true : false}
+      />
     </>
   );
 };
