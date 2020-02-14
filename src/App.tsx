@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Footer from './components/Footer/Footer';
+import Header from './components/Header/Header';
 import Modal from './components/Modal/Modal';
 
 import { useRootData } from './hooks/useRootData';
@@ -19,6 +20,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         <Modal cancelAction={() => null} visible={!!error} classSpecifier="error" background={true}>
           {error}
         </Modal>
+        {walletName && <Header />}
         <div className="content">{children}</div>
         <Footer />
       </div>

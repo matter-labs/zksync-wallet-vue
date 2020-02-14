@@ -11,20 +11,20 @@
 
   &-price {
     color: var(--hints-color);
-    font-size: var(--md-font-size);
+    font-size: var(--sm-font-size);
   }
 
   &-currency {
     &-balance {
       color: var(--dark-color);
-      font-size: var(--xxxl-font-size);
+      font-size: var(--xl-font-size);
     }
 
     &-selector {
       margin-left: 10px;
       padding-right: 20px;
       color: var(--dark-color);
-      font-size: var(--large-font-size);
+      font-size: var(--sm-font-size);
       background: var(--transparent);
       background-image: url(../../images/arrow-select.svg);
       background-repeat: no-repeat;  
@@ -131,5 +131,23 @@
 
   & > span {
     background: url(../../images/mdi_arrow_downward.svg);
+  }
+}
+
+@media screen and (min-width: 760px) {
+  .mywallet {
+    &-price {
+      font-size: var(--md-font-size);
+    }
+
+    &-currency {
+      &-balance {
+        font-size: var(--xxxl-font-size);
+      }
+
+      &-selector {
+        font-size: var(--large-font-size);
+      }
+    }  
   }
 }

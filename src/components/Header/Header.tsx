@@ -32,11 +32,11 @@ const Header: React.FC = (): JSX.Element => {
         <Link className="menu-logo" to="/"></Link>
         {zkWallet?.address() && (
           <>
-            <button type="button" className="menu-wallet" onClick={() => setModal(!isModalOpen)}>
+            <button type="button" className="menu-wallet" onClick={() => setModal('wallet')}>
               <p>{ethId}</p>
               <img src="../../images/randomImage.png" alt="wallet" />
             </button>
-            <Modal visible={isModalOpen} background={true} classSpecifier="wallet" cancelAction={() => null}>
+            <Modal visible={false} background={true} classSpecifier="wallet" cancelAction={() => null}>
               <div className="wallet-title">
                 {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
               </div>

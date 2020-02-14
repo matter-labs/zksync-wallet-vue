@@ -1,7 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-import Header from '../components/Header/Header';
 import LazyWallet from '../components/Wallets/LazyWallet';
 import Modal from '../components/Modal/Modal';
 
@@ -60,7 +59,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               Access my account
             </button>
           </Modal>
-          {walletName && <Header />}
           {!walletName && (
             <>
               <div className="logo-textless"></div>
