@@ -32,7 +32,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({ addressInput, addressValue
     } catch (err) {
       err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
     }
-  }, [address, addressInput, addressValue, name, setError]);
+  }, [address, addressValue, name, setError]);
 
   return (
     <>

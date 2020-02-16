@@ -1,15 +1,16 @@
 import React from 'react';
 
 import useLocalStorage from '../hooks/useLocalStorage';
+import DataList from '../components/DataList/DataList';
 
 const Transactions: React.FC = (): JSX.Element => {
-  const data = useLocalStorage('history');
+  const history = useLocalStorage('history');
   return (
-    <div>
-      {data && (
+    <DataList title="Transactions" visible={true}>
+      {history && (
         <>
-          {Array.isArray(data) ? (
-            data.map(({ amount, date, hash, to }) => (
+          {Array.isArray(history) ? (
+            history.map(({ amount, date, hash, to }) => (
               <div key={hash}>
                 <span>
                   {amount}&nbsp;|| {date}&nbsp;|| {hash}&nbsp;|| {to}
@@ -17,11 +18,11 @@ const Transactions: React.FC = (): JSX.Element => {
               </div>
             ))
           ) : (
-            <div>{data}</div>
+            <div>{history}</div>
           )}
         </>
       )}
-    </div>
+    </DataList>
   );
 };
 

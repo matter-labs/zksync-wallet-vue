@@ -15,6 +15,9 @@ export const createStore = () => ({
   isAccessModalOpen: observable.box<boolean>(false),
   isModalOpen: observable.box<string>(''),
   provider: observable.box<any>(),
+  searchBalances: observable.box<IEthBalance[]>([]),
+  searchContacts: observable.box<any>(),
+  searchTransactions: observable.box<any>(),
   tokens: observable.box<Tokens>(),
   transactionModal: observable.box<ITransaction>(),
   walletName: observable.box<string>(''),
@@ -24,6 +27,14 @@ export const createStore = () => ({
 
   setAccessModal(isOpen: boolean): void {
     this.isAccessModalOpen.set(isOpen);
+  },
+
+  setBalances(searchBalances: any): void {
+    this.searchBalances.set(searchBalances);
+  },
+
+  setContacts(searchContacts: any): void {
+    this.searchContacts.set(searchContacts);
   },
 
   setDepositModal(depositModal: boolean): void {
@@ -64,6 +75,10 @@ export const createStore = () => ({
 
   setTransactionModal(transactionModal: ITransaction): void {
     this.transactionModal.set(transactionModal);
+  },
+
+  setTransactions(searchTransactions: any): void {
+    this.searchTransactions.set(searchTransactions);
   },
 
   setWalletName(name: string): void {
