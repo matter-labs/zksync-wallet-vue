@@ -1,51 +1,31 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
-import useLocalStorage from '../../hooks/useLocalStorage';
 import { useRootData } from '../../hooks/useRootData';
 
 import { IBalances } from './Types';
-import { IEthBalance } from '../../types/Common';
 
 import Modal from '../Modal/Modal';
 import SaveContacts from '../SaveContacts/SaveContacts';
 
-import { request } from '../../functions/Request';
-
-import { BASE_URL, CURRENCY, CONVERT_CURRENCY } from '../../constants/CoinBase';
-import { DEFAULT_ERROR } from '../../constants/errors';
-
 import './DataList.scss';
 
-const DataList: React.FC<IBalances> = ({ title, visible }): JSX.Element => {
-  const { error, isModalOpen, setError, setModal, zkBalances } = useRootData(
-    ({ error, isModalOpen, setError, setModal, zkBalances }) => ({
-      error: error.get(),
-      isModalOpen: isModalOpen.get(),
-      setError,
+const DataList: React.FC<IBalances> = ({ children, title, visible }): JSX.Element => {
+  const { setBalances, setContacts, setModal, zkBalances } = useRootData(
+    ({ setBalances, setContacts, setModal, zkBalances }) => ({
+      setBalances,
+      setContacts,
       setModal,
       zkBalances: zkBalances.get(),
     }),
   );
 
   const arr: any = localStorage.getItem('contacts');
-
   const contacts = JSON.parse(arr);
-
-  const [searchContacts, setContacts] = useState<any>(contacts);
-  const [searchBalances, setBalances] = useState<IEthBalance[]>(zkBalances);
-  const [price, setPrice] = useState<number>(0);
 
   useEffect(() => {
     setContacts(contacts);
     setBalances(zkBalances);
-    request(`${BASE_URL}/${CURRENCY}/?convert=${CONVERT_CURRENCY}`)
-      .then((res: any) => {
-        setPrice(+res?.[0]?.price_usd);
-      })
-      .catch(err => {
-        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
-      });
-  }, [error, setError, setPrice, zkBalances]);
+  }, [contacts, setBalances, setContacts, zkBalances]);
 
   const handleSearch = useCallback(
     e => {
@@ -64,7 +44,7 @@ const DataList: React.FC<IBalances> = ({ title, visible }): JSX.Element => {
         setContacts(displayedContacts);
       }
     },
-    [zkBalances],
+    [contacts, setBalances, setContacts, title, zkBalances],
   );
 
   return (
@@ -75,47 +55,28 @@ const DataList: React.FC<IBalances> = ({ title, visible }): JSX.Element => {
       <div className={`balances-wrapper ${visible ? 'open' : 'closed'}`}>
         <h3 className="balances-title">{title}</h3>
         <input onChange={e => handleSearch(e)} placeholder="Search token" className="balances-search" type="text" />
-        {title === 'Token balances' &&
-          !!searchBalances &&
-          searchBalances.map(({ symbol, balance }) => (
-            <div className="balances-token">
-              <div>zk{symbol}</div>
-              <div>
-                {balance} <span>(~${balance * price})</span>
-              </div>
-            </div>
-          ))}
-        {title === 'Contacts' && contacts && (
-          <>
-            <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>
-              <span></span>
-              <p>Add a contact</p>
-            </button>
-            {!!searchContacts ? (
-              searchContacts.map(({ address, name }) => (
-                <div className="balances-contact" key={address}>
-                  <div className="balances-contact-left">
-                    <span className="balances-contact-name">{name}</span>
-                    <span className="balances-contact-address">
-                      {address?.replace(address?.slice(6, address?.length - 3), '...')}
-                    </span>
-                  </div>
-                  <div className="balances-contact-right">
-                    <button className="balances-contact-send"></button>
-                    <button className="balances-contact-copy"></button>
-                    <button className="balances-contact-edit">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div>You don't have contacts yet...</div>
-            )}
-          </>
+        {children}
+        {title === 'Contacts' && (
+          <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>
+            <span></span>
+            <p>Add a contact</p>
+          </button>
         )}
+        {/* {title === 'Transactions' && history && (
+        <>
+          {Array.isArray(history) ? (
+            history.map(({ amount, date, hash, to }) => (
+              <div key={hash}>
+                <span>
+                  {amount}&nbsp;|| {date}&nbsp;|| {hash}&nbsp;|| {to}
+                </span>
+              </div>
+            ))
+            ) : (
+              <div>{history}</div>
+            )}
+        </>
+        )} */}
       </div>
     </>
   );

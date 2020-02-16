@@ -12,9 +12,8 @@ import './Header.scss';
 
 const Header: React.FC = (): JSX.Element => {
   const [menuActive, setMenuActive] = useState<string>('');
-  const { ethId, isModalOpen, setModal, zkWallet } = useRootData(({ ethId, isModalOpen, setModal, zkWallet }) => ({
+  const { ethId, setModal, zkWallet } = useRootData(({ ethId, setModal, zkWallet }) => ({
     ethId: ethId.get(),
-    isModalOpen: isModalOpen.get(),
     setModal,
     zkWallet: zkWallet.get(),
   }));

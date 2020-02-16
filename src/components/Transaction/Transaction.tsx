@@ -66,8 +66,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     }
   }, [ethId, value]);
 
-  console.log(addressValue);
-
   return (
     <>
       <Modal visible={false} classSpecifier="add-contact" background={true} cancelAction={() => null}>

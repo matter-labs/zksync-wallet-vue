@@ -175,6 +175,14 @@ body.dark > #root {
     &.start-page {
       background: var(--main-bg-color);
     }
+
+    & > .footer {
+      &-wrapper {
+        & > .theme-switch {
+          background-image: url(./images/mdi_wb_sunny.svg);
+        }
+      }
+    }
     
     & > .content {
       & > .mywallet-wrapper {

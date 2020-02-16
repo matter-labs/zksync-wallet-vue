@@ -25,11 +25,12 @@ const Account: React.FC = (): JSX.Element => {
   } = useTransaction();
   const [price, setPrice] = useState<number>(0);
 
-  const { error, ethId, ethBalances, setError, transactionModal, zkBalances } = useRootData(
-    ({ error, ethId, ethBalances, setError, transactionModal, zkBalances }) => ({
+  const { error, ethId, ethBalances, setError, searchBalances, transactionModal, zkBalances } = useRootData(
+    ({ error, ethId, ethBalances, setError, searchBalances, transactionModal, zkBalances }) => ({
       error: error.get(),
       ethId: ethId.get(),
       ethBalances: ethBalances.get(),
+      searchBalances: searchBalances.get(),
       setError,
       transactionModal: transactionModal.get(),
       zkBalances: zkBalances.get(),
@@ -73,10 +74,17 @@ const Account: React.FC = (): JSX.Element => {
           zkBalances={zkBalances}
         />
       )}
-      <DataList
-        title="Token balances"
-        visible={!transactionModal || transactionModal.title === 'Send' ? true : false}
-      />
+      <DataList title="Token balances" visible={!transactionModal || transactionModal.title === 'Send' ? true : false}>
+        {!!searchBalances &&
+          searchBalances.map(({ symbol, balance }) => (
+            <div className="balances-token">
+              <div>zk{symbol}</div>
+              <div>
+                {balance} <span>(~${balance * price})</span>
+              </div>
+            </div>
+          ))}
+      </DataList>
     </>
   );
 };
