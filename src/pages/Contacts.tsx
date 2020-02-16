@@ -1,17 +1,33 @@
-import React from 'react';
+import React, { useRef } from 'react';
+
+import { Link } from 'react-router-dom';
 
 import { useRootData } from '../hooks/useRootData';
+import { useTransaction } from '../hooks/useTransaction';
 
 import DataList from '../components/DataList/DataList';
 
 const Contacts: React.FC = (): JSX.Element => {
-  const { searchContacts, setModal } = useRootData(({ searchContacts, setModal }) => ({
-    searchContacts: searchContacts.get(),
-    setModal,
-  }));
+  const { searchContacts, setModal, setTransactionModal, setWalletAddress } = useRootData(
+    ({ searchContacts, setModal, setTransactionModal, setWalletAddress }) => ({
+      searchContacts: searchContacts.get(),
+      setModal,
+      setTransactionModal,
+      setWalletAddress,
+    }),
+  );
 
   const arr: any = localStorage.getItem('contacts');
   const contacts = JSON.parse(arr);
+
+  const { transfer } = useTransaction();
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleCopy = () => {
+    inputRef.current!.select();
+    document.execCommand('copy');
+  };
 
   return (
     <DataList title="Contacts" visible={true}>
@@ -31,8 +47,22 @@ const Contacts: React.FC = (): JSX.Element => {
                   </span>
                 </div>
                 <div className="balances-contact-right">
-                  <button className="balances-contact-send"></button>
-                  <button className="balances-contact-copy"></button>
+                  <button
+                    className="balances-contact-send"
+                    onClick={() => {
+                      setTransactionModal({ title: 'Send', input: true, action: transfer });
+                      setWalletAddress(address);
+                    }}
+                  >
+                    <Link to="/"></Link>
+                  </button>
+                  <button className="balances-contact-copy" onClick={() => handleCopy()}></button>
+                  <input
+                    onChange={() => console.log(null)}
+                    className="copy-block-input"
+                    value={address}
+                    ref={inputRef}
+                  />
                   <button className="balances-contact-edit">
                     <span></span>
                     <span></span>

@@ -77,7 +77,7 @@ const Account: React.FC = (): JSX.Element => {
       <DataList title="Token balances" visible={!transactionModal || transactionModal.title === 'Send' ? true : false}>
         {!!searchBalances &&
           searchBalances.map(({ symbol, balance }) => (
-            <div className="balances-token">
+            <div key={balance} className="balances-token">
               <div>zk{symbol}</div>
               <div>
                 {balance} <span>(~${balance * price})</span>
