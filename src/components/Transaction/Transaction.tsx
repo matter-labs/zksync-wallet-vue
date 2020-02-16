@@ -26,11 +26,14 @@ const Transaction: React.FC<ITransactionProps> = ({
   transactionAction,
   zkBalances,
 }): JSX.Element => {
-  const { ethId, setModal, setTransactionModal } = useRootData(({ ethId, setModal, setTransactionModal }) => ({
-    ethId: ethId.get(),
-    setModal,
-    setTransactionModal,
-  }));
+  const { ethId, setModal, setTransactionModal, walletAddress } = useRootData(
+    ({ ethId, setModal, setTransactionModal, walletAddress }) => ({
+      ethId: ethId.get(),
+      setModal,
+      setTransactionModal,
+      walletAddress: walletAddress.get(),
+    }),
+  );
 
   const { setExecuted, setHash } = useTransaction();
 
@@ -42,7 +45,7 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const validateNumbers = e => {
     if (INPUT_VALIDATION.digits.test(e)) {
-      e <= maxValue ? setInputValue(e) : setInputValue(maxValue);
+      e <= maxValue ? setInputValue(+e) : setInputValue(+maxValue);
     } else {
       setInputValue(0);
     }
@@ -65,6 +68,8 @@ const Transaction: React.FC<ITransactionProps> = ({
       setValue(localStorage.getItem('walletName') || ethId);
     }
   }, [ethId, value]);
+
+  console.log(inputValue);
 
   return (
     <>
@@ -99,7 +104,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                       <div className="currency-input-wrapper">
                         <input
                           placeholder="Ox address, ENS or contact name"
-                          value={addressValue}
+                          value={walletAddress ? walletAddress : addressValue}
                           onChange={onChangeAddress}
                           className="currency-input-address"
                         />

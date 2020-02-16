@@ -70,6 +70,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               <div className="wallets-wrapper">
                 {Object.keys(WALLETS).map(key => (
                   <button
+                    key={key}
                     className="wallet-block"
                     onClick={() => {
                       setWalletName(key);

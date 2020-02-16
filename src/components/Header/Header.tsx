@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -11,12 +11,13 @@ import Modal from '../Modal/Modal';
 import './Header.scss';
 
 const Header: React.FC = (): JSX.Element => {
-  const [menuActive, setMenuActive] = useState<string>('');
   const { ethId, setModal, zkWallet } = useRootData(({ ethId, setModal, zkWallet }) => ({
     ethId: ethId.get(),
     setModal,
     zkWallet: zkWallet.get(),
   }));
+
+  const path = window?.location.pathname;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -72,11 +73,7 @@ const Header: React.FC = (): JSX.Element => {
         {zkWallet?.address() &&
           HEADER_ITEMS.map(({ title, link }) => (
             <div className="menu-route-wrapper" key={title}>
-              <Link
-                onClick={() => setMenuActive(title)}
-                className={`menu-route ${menuActive === title ? 'active' : ''}`}
-                to={link}
-              >
+              <Link className={`menu-route ${link === path ? 'active' : ''}`} to={link}>
                 {title}
               </Link>
             </div>

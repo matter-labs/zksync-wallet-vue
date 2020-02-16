@@ -25,7 +25,7 @@ const DataList: React.FC<IBalances> = ({ children, title, visible }): JSX.Elemen
   useEffect(() => {
     setContacts(contacts);
     setBalances(zkBalances);
-  }, [contacts, setBalances, setContacts, zkBalances]);
+  }, [zkBalances]);
 
   const handleSearch = useCallback(
     e => {
@@ -42,6 +42,7 @@ const DataList: React.FC<IBalances> = ({ children, title, visible }): JSX.Elemen
           return searchValue.indexOf(searchQuery) !== -1;
         });
         setContacts(displayedContacts);
+        console.log(displayedContacts);
       }
     },
     [contacts, setBalances, setContacts, title, zkBalances],
@@ -62,21 +63,6 @@ const DataList: React.FC<IBalances> = ({ children, title, visible }): JSX.Elemen
             <p>Add a contact</p>
           </button>
         )}
-        {/* {title === 'Transactions' && history && (
-        <>
-          {Array.isArray(history) ? (
-            history.map(({ amount, date, hash, to }) => (
-              <div key={hash}>
-                <span>
-                  {amount}&nbsp;|| {date}&nbsp;|| {hash}&nbsp;|| {to}
-                </span>
-              </div>
-            ))
-            ) : (
-              <div>{history}</div>
-            )}
-        </>
-        )} */}
       </div>
     </>
   );

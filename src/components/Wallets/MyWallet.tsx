@@ -57,11 +57,9 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
           <select className="mywallet-currency-selector" onChange={e => setWalletBalance(e.target.value)}>
             {zkBalances?.length &&
               zkBalances.map(({ address, balance, symbol }) => (
-                <>
-                  <option key={address} value={balance}>
-                    zk{symbol}
-                  </option>
-                </>
+                <option key={address} value={balance}>
+                  zk{symbol}
+                </option>
               ))}
           </select>
         </div>

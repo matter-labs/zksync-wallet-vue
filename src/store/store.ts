@@ -21,6 +21,7 @@ export const createStore = () => ({
   tokens: observable.box<Tokens>(),
   transactionModal: observable.box<ITransaction>(),
   walletName: observable.box<string>(''),
+  walletAddress: observable.box<string>(''),
   withdrawModal: observable.box<boolean>(false),
   zkBalances: observable.box<IEthBalance[]>([]),
   zkWallet: observable.box<Wallet>(),
@@ -79,6 +80,10 @@ export const createStore = () => ({
 
   setTransactions(searchTransactions: any): void {
     this.searchTransactions.set(searchTransactions);
+  },
+
+  setWalletAddress(walletAddress: string): void {
+    this.walletAddress.set(walletAddress);
   },
 
   setWalletName(name: string): void {

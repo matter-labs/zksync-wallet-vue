@@ -31,11 +31,9 @@ const Footer: React.FC = (): JSX.Element => {
         <p>
           <span className="footer-links-block">
             {FOOTER_LINKS.map(({ title, link }) => (
-              <>
-                <a className="footer-link" href={link}>
-                  {title}
-                </a>
-              </>
+              <a key={title} className="footer-link" href={link}>
+                {title}
+              </a>
             ))}
           </span>
           ZK Sync by Matter Labs
