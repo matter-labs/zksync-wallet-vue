@@ -14,6 +14,7 @@ export const createStore = () => ({
   normalBg: observable.box<boolean>(false),
   isAccessModalOpen: observable.box<boolean>(false),
   isModalOpen: observable.box<string>(''),
+  path: observable.box<string>(window?.location.pathname),
   provider: observable.box<any>(),
   searchBalances: observable.box<IEthBalance[]>([]),
   searchContacts: observable.box<any>(),
@@ -64,6 +65,10 @@ export const createStore = () => ({
 
   setModal(isModalOpen: string): void {
     this.isModalOpen.set(isModalOpen);
+  },
+
+  setPath(path: string): void {
+    this.path.set(path);
   },
 
   setProvider(provider: any): void {
