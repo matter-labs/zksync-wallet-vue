@@ -36,9 +36,19 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({ addressInput, addressValue
 
   return (
     <>
-      {addressInput && <input placeholder="address" value={address} onChange={e => setAddress(e.target.value)} />}
-      <input placeholder="name" value={name} onChange={e => setName(e.target.value)} />
-      <button onClick={handleSave}>Save</button>
+      <h3>Add contact</h3>
+      <div className="horizontal-line"></div>
+      <span className="transaction-field-title">Contact name</span>
+      <input placeholder="Name here" value={name} onChange={e => setName(e.target.value)} />
+      {addressInput && (
+        <>
+          <span className="transaction-field-title">Address</span>
+          <input placeholder="0x address" value={address} onChange={e => setAddress(e.target.value)} />
+        </>
+      )}
+      <button className="btn submit-button" onClick={handleSave}>
+        Save
+      </button>
     </>
   );
 };

@@ -102,6 +102,14 @@
   }
 }
 
+.withdraw-button {
+  color: var(--hints-color);
+
+  & > span {
+    background: url(../../images/mdi_arrow_downward.svg);
+  }
+}
+
 .deposit-button, .withdraw-button {
   position: relative;
   margin: 24px 0 50px;
@@ -113,6 +121,15 @@
   outline: none;
   cursor: pointer;
 
+  &:hover {
+    background-color: var(--copyblock-color);
+    border-radius: 5px;
+  }
+
+  &:active {
+    color: var(--links-color);
+  }
+
   & > span { 
     position: absolute;
     top: 50%;
@@ -123,14 +140,6 @@
     background-repeat: no-repeat;
     background-size: contain;
     transform: translateY(-50%);
-  }
-}
-
-.withdraw-button {
-  color: var(--hints-color);
-
-  & > span {
-    background: url(../../images/mdi_arrow_downward.svg);
   }
 }
 

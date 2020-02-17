@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -25,6 +25,10 @@ const Header: React.FC = (): JSX.Element => {
     inputRef.current!.select();
     document.execCommand('copy');
   };
+
+  const handleLogOut = useCallback(() => {
+    window.location.pathname = '/';
+  }, []);
 
   useEffect(() => console.log(path));
 
@@ -62,7 +66,7 @@ const Header: React.FC = (): JSX.Element => {
                   <span className="icon-edit"></span>Rename wallet
                 </button>
                 <div className="horizontal-line"></div>
-                <button>
+                <button onClick={() => handleLogOut()}>
                   <span className="icon-disconnect"></span>Disconnect wallet
                 </button>
                 <div className="horizontal-line"></div>

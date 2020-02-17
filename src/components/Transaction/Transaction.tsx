@@ -26,11 +26,12 @@ const Transaction: React.FC<ITransactionProps> = ({
   transactionAction,
   zkBalances,
 }): JSX.Element => {
-  const { ethId, setModal, setTransactionModal, walletAddress } = useRootData(
-    ({ ethId, setModal, setTransactionModal, walletAddress }) => ({
+  const { ethId, setModal, setTransactionModal, setWalletAddress, walletAddress } = useRootData(
+    ({ ethId, setModal, setTransactionModal, setWalletAddress, walletAddress }) => ({
       ethId: ethId.get(),
       setModal,
       setTransactionModal,
+      setWalletAddress,
       walletAddress: walletAddress.get(),
     }),
   );
@@ -91,7 +92,13 @@ const Transaction: React.FC<ITransactionProps> = ({
               </>
             ) : (
               <>
-                <button onClick={() => handleCancel()} className="transaction-back"></button>
+                <button
+                  onClick={() => {
+                    handleCancel();
+                    setWalletAddress('');
+                  }}
+                  className="transaction-back"
+                ></button>
                 <h2 className="transaction-title">{title}</h2>
                 {isInput && (
                   <>
