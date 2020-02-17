@@ -10,42 +10,73 @@ import SaveContacts from '../SaveContacts/SaveContacts';
 import './DataList.scss';
 
 const DataList: React.FC<IBalances> = ({ children, title, visible }): JSX.Element => {
-  const { setBalances, setContacts, setModal, zkBalances } = useRootData(
-    ({ setBalances, setContacts, setModal, zkBalances }) => ({
+  const { setBalances, setContacts, setModal, setTransactions, zkBalances } = useRootData(
+    ({ setBalances, setContacts, setModal, setTransactions, zkBalances }) => ({
       setBalances,
       setContacts,
       setModal,
+      setTransactions,
       zkBalances: zkBalances.get(),
     }),
   );
 
-  const arr: any = localStorage.getItem('contacts');
-  const contacts = JSON.parse(arr);
+  const arrContacts: any = localStorage.getItem('contacts');
+  const contacts = JSON.parse(arrContacts);
+
+  // const arrTransactions: any = localStorage.getItem('history');
+  // const transactions = JSON.parse(arrTransactions);
+
+  const transactions = [
+    {
+      amount: 1.5,
+      type: 'deposit',
+      hash: 'zkETH',
+      to: 'asdasdadsad',
+    },
+    {
+      amount: 1.5,
+      type: 'transfer',
+      hash: 'zkETH',
+      to: 'dsfdsfsdfdsfdsfdsf',
+    },
+    {
+      amount: 1.5,
+      type: 'withdraw',
+      hash: 'zkETH',
+      to: 'dsfrrrrrrrrrrrrrrdsfdsf',
+    },
+  ];
 
   useEffect(() => {
     setContacts(contacts);
     setBalances(zkBalances);
+    setTransactions(transactions);
   }, [zkBalances]);
 
   const handleSearch = useCallback(
     e => {
       const searchQuery = e.target.value.toLowerCase();
       if (title === 'Token balances') {
-        const displayedBalances = zkBalances.filter(el => {
+        const displayedBalances = zkBalances?.filter(el => {
           const searchValue = `zk${el.symbol}`.toLowerCase();
           return searchValue.indexOf(searchQuery) !== -1;
         });
         setBalances(displayedBalances);
       } else if (title === 'Contacts') {
-        const displayedContacts = contacts.filter(el => {
+        const displayedContacts = contacts?.filter(el => {
           const searchValue = el.name.toLowerCase();
           return searchValue.indexOf(searchQuery) !== -1;
         });
         setContacts(displayedContacts);
-        console.log(displayedContacts);
+      } else if (title === 'Transactions') {
+        const displayedContacts = transactions?.filter(el => {
+          const searchValue = el.to.toLowerCase();
+          return searchValue.indexOf(searchQuery) !== -1;
+        });
+        setTransactions(displayedContacts);
       }
     },
-    [contacts, setBalances, setContacts, title, zkBalances],
+    [contacts, setBalances, setContacts, setTransactions, title, transactions, zkBalances],
   );
 
   return (

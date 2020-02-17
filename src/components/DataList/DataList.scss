@@ -213,6 +213,79 @@
   }
 }
 
+.transaction-history {
+  &.transfer, &.deposit, &.withdraw {
+    width: 40px;
+    height: 40px;
+    background-color: var(--button-bg-color);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 18px;
+    border-radius: 20px;
+  } 
+
+  &.withdraw {
+    background-color: var(--success-color);
+    background-image: url(../../images/mdi_arrow_downward_white.svg);
+  }
+
+  &.deposit {
+    background-image: url(../../images/deposit_white.svg);
+    background-size: 25px;
+  }
+
+  &.transfer {
+    background-image: url(../../images/send_white.svg);
+    background-size: 25px;
+  }
+
+  &-amount {
+    margin-left: 20px;
+    color: var(--dark-color);
+    font-size: var(--xl-font-size);
+  }
+
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 30px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  &-hash {
+    margin-left: 10px;
+    color: var(--dark-color);
+    font-size: var(--sm-font-size);
+  }
+
+  &-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  &-address {
+    & > p {
+      margin-bottom: 0;
+      color: var(--dark-color);
+    }
+
+    & > span {
+      color: var(--hints-color)
+    }
+  }
+
+  &-right {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 180px;
+  }
+}
+
 @media screen and (min-width: 760px) {
   .balances {
     &-token, &-contact {

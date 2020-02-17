@@ -46,8 +46,6 @@ const Transaction: React.FC<ITransactionProps> = ({
   const validateNumbers = e => {
     if (INPUT_VALIDATION.digits.test(e)) {
       e <= maxValue ? setInputValue(+e) : setInputValue(+maxValue);
-    } else {
-      setInputValue(0);
     }
   };
 
@@ -68,8 +66,6 @@ const Transaction: React.FC<ITransactionProps> = ({
       setValue(localStorage.getItem('walletName') || ethId);
     }
   }, [ethId, value]);
-
-  console.log(inputValue);
 
   return (
     <>
