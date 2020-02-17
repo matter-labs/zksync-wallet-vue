@@ -1,7 +1,6 @@
 :root {
   --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
     'Droid Sans', 'Helvetica Neue', sans-serif;
-  margin: 0;
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -12,11 +11,13 @@
   --dark-color: #000;
   --hints-color: rgba(0, 0, 0, 0.4);
   --button-bg-color: #8C8DFC;
+  --button-bg-hover: #797AFB;
   --main-bg-color: #F3F4F7;
   --bg-block-color: #F3F5FF;
   --border-color: rgba(24, 13, 13, 0.08);
   --copyblock-color: rgba(0, 0, 0, 0.04);
   --input-color: rgba(0, 0, 0, 0.02);
+  --input-border-focus: rgba(0, 0, 0, 0.2);
   --links-color: #4E529A;
   --success-color: #27AE60;
   --transparent: transparent;
@@ -36,6 +37,29 @@ body, html {
   padding: 0;
   overflow-x: hidden;
   background-color: var(--main-bg-color);
+  transition-timing-function: ease-in-out;
+  transition-duration: 200ms;
+  transition-property: background-color, opacity;
+}
+
+*:hover {
+  transition-timing-function: ease-in-out;
+  transition-duration: 200ms;
+  transition-property: background-color, opacity;
+}
+
+input {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 30px;
+  padding: 25px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  outline: none;
+
+  &:focus {
+    border: 1px solid var(--input-border-focus);
+  }
 }
 
 body.dark {
@@ -45,6 +69,7 @@ body.dark {
   --dark-color: rgba(255, 255, 255, 0.9);
   --hints-color: rgba(255, 255, 255, 0.4);
   --button-bg-color: #8C8DFC;
+  --button-bg-hover: #797AFB;
   --main-bg-color: #11142B;
   --bg-block-color: #1D2039;
   --border-color: rgba(24, 13, 13, 0.08);
@@ -159,6 +184,10 @@ h2 {
   outline: none;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+
+  &:hover {
+    background-color: var(--button-bg-hover);
+  }
 
   & > span {
     display: block;

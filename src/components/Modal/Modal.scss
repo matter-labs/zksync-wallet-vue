@@ -35,6 +35,29 @@
   border: 1px solid var(--border-color);
   border-radius: 8px;
   transform: translate(-50%, -50%);
+  transition: opacity 200ms ease-in-out;
+
+  &.add-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & > input {
+      margin-bottom: 20px;
+    }
+
+    & > h3 {
+      align-self: flex-start;
+      font-weight: var(--bold-font-weight);
+      font-size: var(--xl-font-size);
+      line-height: var(--large-font-size);
+    }
+
+    & > .transaction-field-title {
+      align-self: start;
+      margin-top: 20px;
+    }
+  }
 
   &.metamask {
     top: 120px;
@@ -123,11 +146,17 @@
   }
 
   &.open {
-    display: block;
+    height: auto;
+    opacity: 1;
   }
 
   &.closed {
-    display: none;
+    width: 0;
+    height: 0;
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
   }
 
   &-wrapper {
@@ -152,8 +181,8 @@
 
 .close-icon {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 30px;
+  right: 30px;
   width: 30px;
   height: 30px;
   background-color: var(--transparent);

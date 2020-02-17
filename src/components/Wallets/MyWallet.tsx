@@ -63,7 +63,6 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
               ))}
           </select>
         </div>
-
         <span className="mywallet-price">~{(price * zkBalancesSum()).toFixed(2)} USD</span>
       </div>
       <div className="mywallet-buttons-container">
