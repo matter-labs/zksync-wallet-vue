@@ -17,7 +17,6 @@ const Footer: React.FC = (): JSX.Element => {
     setDarkTheme(!darkTheme);
   }, [body, darkTheme]);
 
-
   useEffect(() => {
     localStorage
       ? localStorage.setItem('darkTheme', JSON.stringify(darkTheme))
