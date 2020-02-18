@@ -14,6 +14,7 @@ export interface ITransactionProps {
   setExecuted: React.Dispatch<React.SetStateAction<boolean>>;
   price: number;
   title: string;
-  transactionAction: (token?: string) => void;
+  transactionAction: (token: string, type?: string) => Promise<void> | boolean;
+  type?: string;
   zkBalances?: IEthBalance[];
 }

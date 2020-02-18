@@ -24,6 +24,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   price,
   title,
   transactionAction,
+  type,
   zkBalances,
 }): JSX.Element => {
   const { ethId, setModal, setTransactionModal, setWalletAddress, walletAddress } = useRootData(
@@ -38,14 +39,14 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const { setExecuted, setHash } = useTransaction();
 
-  const [token, setToken] = useState<string>('');
+  const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(balances?.length ? balances[0].balance : 0);
-  const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
-  const [symbolName, setSymbolName] = useState<string>('');
-  const [unlockFau, setUnlockFau] = useState<boolean>(false);
   const [selectedValue, setSelectedValue] = useState<any>();
-  const [isContactsListOpen, openContactsList] = useState<boolean>(false);
+  const [symbolName, setSymbolName] = useState<string>('');
+  const [token, setToken] = useState<string>('');
+  const [unlockFau, setUnlockFau] = useState<boolean>(false);
+  const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
 
   const validateNumbers = e => {
     if (INPUT_VALIDATION.digits.test(e)) {
@@ -60,7 +61,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const handleCancel = useCallback(() => {
     setHash('');
     setExecuted(false);
-    setTransactionModal({ title: '', input: false, action: false });
+    setTransactionModal({ title: '', input: false, action: () => false });
   }, [setExecuted, setTransactionModal, setHash]);
 
   const setWalletName = useCallback(() => {
@@ -129,7 +130,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                       <div className="currency-input-wrapper">
                         <input
                           placeholder="Ox address, ENS or contact name"
-                          value={addressValue}
+                          value={walletAddress ? (addressValue = walletAddress) : addressValue}
                           onChange={onChangeAddress}
                           className="currency-input-address"
                         />
@@ -216,7 +217,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 <button
                   className={`btn submit-button ${unlockFau ? '' : 'disabled'}`}
                   onClick={() => {
-                    unlockFau ? transactionAction(token) : console.log('fau token is locked');
+                    unlockFau ? transactionAction(token, type) : console.log('fau token is locked');
                   }}
                 >
                   {title}

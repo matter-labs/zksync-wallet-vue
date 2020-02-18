@@ -1,6 +1,6 @@
 import { IEthBalance } from '../../types/Common';
 
-export interface IMyWallet {
+export interface IMyWalletProps {
   balances: IEthBalance[];
   price: number;
   title: string;

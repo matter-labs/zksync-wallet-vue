@@ -30,8 +30,6 @@ const Header: React.FC = (): JSX.Element => {
     window.location.pathname = '/';
   }, []);
 
-  useEffect(() => console.log(path));
-
   return (
     <div className="menu-wrapper">
       <div className="menu-top">

@@ -20,9 +20,10 @@ export interface IHeaderLinks {
 }
 
 export interface ITransaction {
-  title: string;
+  action: (token: string, type?: string) => Promise<void> | boolean;
   input: boolean;
-  action: any;
+  title: string;
+  type?: string;
 }
 
 export interface IFooterLinks {

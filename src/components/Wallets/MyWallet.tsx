@@ -1,13 +1,13 @@
-import React, { useRef, useState } from 'react';
-
-import { IMyWallet } from './Types';
+import React, { useCallback, useRef, useState } from 'react';
 
 import { useRootData } from '../../hooks/useRootData';
 import { useTransaction } from '../../hooks/useTransaction';
 
+import { IMyWalletProps } from './Types';
+
 import './Wallets.scss';
 
-const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
+const MyWallet: React.FC<IMyWalletProps> = ({ price }): JSX.Element => {
   const { transactionModal, setTransactionModal, zkBalances, zkWallet } = useRootData(
     ({ transactionModal, setTransactionModal, zkBalances, zkWallet }) => ({
       transactionModal: transactionModal.get(),
@@ -23,29 +23,18 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleCopy = () => {
-    inputRef.current!.select();
-    document.execCommand('copy');
-  };
-
-  const zkBalancesSum = () => {
-    let sum = 0;
-    for (const el in zkBalances) {
-      sum += zkBalances[el].balance;
+  const handleCopy = useCallback(() => {
+    if (inputRef.current) {
+      inputRef.current.select();
     }
-    return sum;
-  };
+    document.execCommand('copy');
+  }, []);
 
   return (
-    <div className={`mywallet-wrapper ${transactionModal?.title.length ? 'closed' : 'open'}`}>
+    <div className={`mywallet-wrapper ${!!transactionModal?.title ? 'closed' : 'open'}`}>
       <h2 className="mywallet-title">My wallet</h2>
       <div className="copy-block">
-        <input
-          onChange={() => console.log(null)}
-          className="copy-block-input"
-          value={zkWallet?.address()}
-          ref={inputRef}
-        />
+        <input className="copy-block-input" value={zkWallet?.address()} ref={inputRef} />
         <div>{zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}</div>
         <button className="copy-block-button" onClick={handleCopy}></button>
       </div>
@@ -63,7 +52,16 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
               ))}
           </select>
         </div>
-        <span className="mywallet-price">~{(price * zkBalancesSum()).toFixed(2)} USD</span>
+        <span className="mywallet-price">
+          ~
+          {(
+            price *
+            zkBalances?.reduce((acc, cur) => {
+              return acc + cur.balance;
+            }, 0)
+          ).toFixed(2)}{' '}
+          USD
+        </span>
       </div>
       <div className="mywallet-buttons-container">
         <button
@@ -73,7 +71,7 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
           <span></span>Deposit
         </button>
         <button
-          onClick={() => setTransactionModal({ title: 'Withdraw', input: true, action: withdraw })}
+          onClick={() => setTransactionModal({ title: 'Withdraw', input: true, action: withdraw, type: 'eth' })}
           className="btn withdraw-button"
         >
           <span></span>Withdraw
@@ -81,7 +79,7 @@ const MyWallet: React.FC<IMyWallet> = ({ price }): JSX.Element => {
       </div>
       <button
         className="btn submit-button"
-        onClick={() => setTransactionModal({ title: 'Send', input: true, action: transfer })}
+        onClick={() => setTransactionModal({ title: 'Send', input: true, action: transfer, type: 'sync' })}
       >
         <span></span> Send
       </button>

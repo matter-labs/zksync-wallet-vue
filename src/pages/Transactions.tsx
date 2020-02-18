@@ -1,6 +1,5 @@
 import React from 'react';
 
-import useLocalStorage from '../hooks/useLocalStorage';
 import { useRootData } from '../hooks/useRootData';
 
 import DataList from '../components/DataList/DataList';
@@ -11,28 +10,7 @@ const Transactions: React.FC = (): JSX.Element => {
   }));
 
   const arrTransactions: any = localStorage.getItem('history');
-  // const transactions = JSON.parse(arrTransactions);
-
-  const transactions = [
-    {
-      amount: 1.5,
-      type: 'deposit',
-      hash: 'zkETH',
-      to: 'asdasdadsad',
-    },
-    {
-      amount: 1.5,
-      type: 'transfer',
-      hash: 'zkETH',
-      to: 'dsfdsfsdfdsfdsfdsf',
-    },
-    {
-      amount: 1.5,
-      type: 'withdraw',
-      hash: 'zkETH',
-      to: 'dsfrrrrrrrrrrrrrrdsfdsf',
-    },
-  ];
+  const transactions = JSON.parse(arrTransactions);
 
   return (
     <DataList title="Transactions" visible={true}>

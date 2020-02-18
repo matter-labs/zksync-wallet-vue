@@ -23,29 +23,8 @@ const DataList: React.FC<IBalances> = ({ children, title, visible }): JSX.Elemen
   const arrContacts: any = localStorage.getItem('contacts');
   const contacts = JSON.parse(arrContacts);
 
-  // const arrTransactions: any = localStorage.getItem('history');
-  // const transactions = JSON.parse(arrTransactions);
-
-  const transactions = [
-    {
-      amount: 1.5,
-      type: 'deposit',
-      hash: 'zkETH',
-      to: 'asdasdadsad',
-    },
-    {
-      amount: 1.5,
-      type: 'transfer',
-      hash: 'zkETH',
-      to: 'dsfdsfsdfdsfdsfdsf',
-    },
-    {
-      amount: 1.5,
-      type: 'withdraw',
-      hash: 'zkETH',
-      to: 'dsfrrrrrrrrrrrrrrdsfdsf',
-    },
-  ];
+  const arrTransactions: any = localStorage.getItem('history');
+  const transactions = JSON.parse(arrTransactions);
 
   useEffect(() => {
     setContacts(contacts);

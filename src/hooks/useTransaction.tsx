@@ -116,7 +116,7 @@ export const useTransaction = () => {
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
         } else {
-          setError(`Address: "${addressValue}" doesn't match ethereum address format`);
+          setError(`Address: "${addressValue}" doesn't match following format "sync:...." `);
         }
       } catch (err) {
         err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
@@ -143,7 +143,7 @@ export const useTransaction = () => {
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);
         } else {
-          setError(`Address: "${addressValue}" doesn't match following format "sync:...."`);
+          setError(`Address: "${addressValue}" doesn't match ethereum address format`);
         }
       } catch (err) {
         err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);

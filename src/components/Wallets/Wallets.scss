@@ -93,8 +93,8 @@
   }
 
   &-button {
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
     background-color: var(--transparent);
     background-image: url(../../images/mdi_file_copy.svg);
     border: none;
@@ -112,7 +112,7 @@
 
 .deposit-button, .withdraw-button {
   position: relative;
-  margin: 24px 0 50px;
+  margin: 25px 0 50px;
   padding-left: 30px;
   color: var(--button-bg-color);
   font-size: var(--large-font-size);
@@ -134,8 +134,8 @@
     position: absolute;
     top: 50%;
     left: 0;
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
     background: url(../../images/deposit.svg);
     background-repeat: no-repeat;
     background-size: contain;

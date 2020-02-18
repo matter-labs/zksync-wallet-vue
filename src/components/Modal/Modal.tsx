@@ -16,9 +16,11 @@ const Modal: React.FC<IModal> = ({ background, cancelAction, children, classSpec
   const myRef = useRef<HTMLDivElement>(null);
   const body = document.querySelector('body');
 
-  if (body) {
-    isModalOpen ? body.classList.add('fixed') : body.classList.remove('fixed');
-  }
+  useEffect(() => {
+    if (body) {
+      isModalOpen ? body.classList.add('fixed') : body.classList.remove('fixed');
+    }
+  });
 
   const handleClickOutside = useCallback(
     e => {

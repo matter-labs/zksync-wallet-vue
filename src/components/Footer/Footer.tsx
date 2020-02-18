@@ -24,7 +24,7 @@ const Footer: React.FC = (): JSX.Element => {
     if (body) {
       darkTheme ? body.classList.add('dark') : body.classList.remove('dark');
     }
-  }, [darkTheme]);
+  }, [body, darkTheme]);
 
   return (
     <div className="footer-wrapper">

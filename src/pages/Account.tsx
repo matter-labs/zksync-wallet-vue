@@ -56,7 +56,7 @@ const Account: React.FC = (): JSX.Element => {
   return (
     <>
       <MyWallet balances={ethBalances} price={price} title="My wallet" />
-      {transactionModal?.title.length && (
+      {!!transactionModal?.title && (
         <Transaction
           addressValue={addressValue}
           amountValue={amountValue}
@@ -71,6 +71,7 @@ const Account: React.FC = (): JSX.Element => {
           setExecuted={setExecuted}
           title={transactionModal.title}
           transactionAction={transactionModal.action}
+          type={transactionModal.type}
           zkBalances={zkBalances}
         />
       )}
