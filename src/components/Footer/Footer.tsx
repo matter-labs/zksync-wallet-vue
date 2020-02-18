@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import { FOOTER_LINKS } from '../../constants/footer';
 
@@ -7,22 +7,25 @@ import './Footer.scss';
 
 const Footer: React.FC = (): JSX.Element => {
   const body = document.querySelector('body');
-  const [darkTheme, setDarkTheme] = useState<boolean>(false);
-  const savedMode = localStorage.getItem('darkTheme');
+  const theme = localStorage.getItem('darkTheme') === 'true' ? true : false;
+  const [darkTheme, setDarkTheme] = useState<boolean>(theme || false);
 
   const handleSwitch = useCallback(() => {
     if (body) {
       darkTheme ? body.classList.add('dark') : body.classList.remove('dark');
     }
     setDarkTheme(!darkTheme);
+  }, [body, darkTheme]);
+
+
+  useEffect(() => {
     localStorage
       ? localStorage.setItem('darkTheme', JSON.stringify(darkTheme))
       : console.log('localStorage is not available');
-  }, [body, darkTheme]);
-
-  if (body && savedMode) {
-    JSON.parse(savedMode) ? body.classList.add('dark') : body.classList.remove('dark');
-  }
+    if (body) {
+      darkTheme ? body.classList.add('dark') : body.classList.remove('dark');
+    }
+  }, [darkTheme]);
 
   return (
     <div className="footer-wrapper">
