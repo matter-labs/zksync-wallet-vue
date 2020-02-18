@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -11,24 +11,47 @@ import Modal from '../Modal/Modal';
 import './Header.scss';
 
 const Header: React.FC = (): JSX.Element => {
-  const { ethId, path, setModal, setPath, zkWallet } = useRootData(({ ethId, path, setModal, setPath, zkWallet }) => ({
-    ethId: ethId.get(),
-    path: path.get(),
+  const {
+    ethId,
+    path,
+    setAccessModal,
     setModal,
     setPath,
-    zkWallet: zkWallet.get(),
-  }));
+    setProvider,
+    setWalletName,
+    setZkWallet,
+    zkWallet,
+  } = useRootData(
+    ({ ethId, path, setAccessModal, setModal, setPath, setProvider, setWalletName, setZkWallet, zkWallet }) => ({
+      ethId: ethId.get(),
+      path: path.get(),
+      setAccessModal,
+      setModal,
+      setPath,
+      setProvider,
+      setWalletName,
+      setZkWallet,
+      zkWallet: zkWallet.get(),
+    }),
+  );
 
+  const history = useHistory();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleCopy = () => {
-    inputRef.current!.select();
+  const handleCopy = useCallback(() => {
+    if (inputRef.current) {
+      inputRef.current.select();
+    }
     document.execCommand('copy');
-  };
+  }, []);
 
   const handleLogOut = useCallback(() => {
-    window.location.pathname = '/';
-  }, []);
+    setProvider(null);
+    setWalletName('');
+    setAccessModal(false);
+    setZkWallet(null);
+    history.push('/');
+  }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
 
   return (
     <div className="menu-wrapper">
