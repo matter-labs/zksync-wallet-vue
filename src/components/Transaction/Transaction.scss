@@ -140,6 +140,7 @@
 
   &-input {
     max-width: 250px;
+    padding-left: 0;
     color: var(--dark-color);
     font-size: var(--xxxl-font-size);
     border: none;
@@ -199,6 +200,7 @@
   font-size: var(--md-font-size);
   background-color: var(--transparent);
   border: none;
+  outline: none;
 
   & > span {
     font-size: var(--xl-font-size);

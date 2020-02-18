@@ -39,12 +39,23 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const { setExecuted, setHash } = useTransaction();
 
+  const baseBalance =
+    title === 'deposit' ? (!!balances?.length ? balances[0] : 0) : !!zkBalances?.length ? zkBalances[0] : 0;
+
+  const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>(0);
   const [maxValue, setMaxValue] = useState<number>(
-    title === 'deposit' ? (balances?.length ? balances[0].balance : 0) : zkBalances?.length ? zkBalances[0].balance : 0,
+    title === 'deposit'
+      ? !!balances?.length
+        ? balances[0].balance
+        : 0
+      : !!zkBalances?.length
+      ? zkBalances[0].balance
+      : 0,
   );
-  const [selectedValue, setSelectedValue] = useState<any>();
+  const [selectedBalance, setSelectedBalance] = useState<any>(baseBalance);
+  const [selectedContact, setSelectedContact] = useState<any>();
   const [symbolName, setSymbolName] = useState<string>('');
   const [token, setToken] = useState<string>('');
   const [unlockFau, setUnlockFau] = useState<boolean>(false);
@@ -75,13 +86,19 @@ const Transaction: React.FC<ITransactionProps> = ({
   }, [ethId, value]);
 
   const handleSelect = useCallback(name => {
-    setSelectedValue(name);
+    if (isContactsListOpen) {
+      setSelectedContact(name);
+    }
+    if (isBalancesListOpen) {
+      setSelectedBalance(name);
+    }
   }, []);
 
   const handleClickOutside = useCallback(e => {
     if (e.target.getAttribute('data-name')) {
       e.stopPropagation();
       openContactsList(false);
+      openBalancesList(false);
     }
   }, []);
 
@@ -94,7 +111,10 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   return (
     <>
-      <div data-name="modal-wrapper" className={`modal-wrapper ${isContactsListOpen ? 'open' : 'closed'}`}></div>
+      <div
+        data-name="modal-wrapper"
+        className={`modal-wrapper ${isContactsListOpen || isBalancesListOpen ? 'open' : 'closed'}`}
+      ></div>
       <Modal visible={false} classSpecifier="add-contact" background={true} cancelAction={() => null}>
         <SaveContacts addressValue={addressValue} addressInput={false} />
       </Modal>
@@ -142,9 +162,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                             <p>Save</p>
                           </button>
                         )}
-                        <div className="custom-selector">
+                        <div className="custom-selector contacts">
                           <div onClick={() => openContactsList(!isContactsListOpen)} className="custom-selector-title">
-                            {selectedValue ? <p>{selectedValue}</p> : <span></span>}
+                            {selectedContact ? <p>{selectedContact}</p> : <span></span>}
                             <div></div>
                           </div>
                           <ul className={`custom-selector-list ${isContactsListOpen ? 'open' : 'closed'}`}>
@@ -183,7 +203,56 @@ const Transaction: React.FC<ITransactionProps> = ({
                     <button className="all-balance" onClick={() => setInputValue(maxValue)}>
                       <span>+</span> All balance
                     </button>
-                    <select
+                    <div className="custom-selector balances">
+                      <div onClick={() => openBalancesList(!isBalancesListOpen)} className="custom-selector-title">
+                        {symbolName ? (
+                          <p>{symbolName}</p>
+                        ) : (
+                          <span>{selectedBalance.symbol ? selectedBalance.symbol : 'You have no balances'}</span>
+                        )}
+                        <div></div>
+                      </div>
+                      <ul className={`custom-selector-list ${isBalancesListOpen ? 'open' : 'closed'}`}>
+                        {title === 'Deposit' &&
+                          balances?.length &&
+                          balances.map(({ address, balance, symbol }) => (
+                            <li
+                              className="custom-selector-list-item"
+                              key={address}
+                              value={balance}
+                              onClick={e => {
+                                setToken(e.toString());
+                                setMaxValue(balance);
+                                setSymbolName(symbol);
+                                handleSelect(symbol);
+                                openBalancesList(false);
+                              }}
+                            >
+                              {symbol}
+                            </li>
+                          ))}
+                        {title === 'Send' ||
+                          (title === 'Withdraw' &&
+                            zkBalances?.length &&
+                            zkBalances.map(({ address, balance, symbol }) => (
+                              <li
+                                className="custom-selector-list-item"
+                                key={address}
+                                value={balance}
+                                onClick={e => {
+                                  setToken(e.toString());
+                                  setMaxValue(balance);
+                                  setSymbolName(symbol);
+                                  handleSelect(symbol);
+                                  openBalancesList(false);
+                                }}
+                              >
+                                zk{symbol}
+                              </li>
+                            )))}
+                      </ul>
+                    </div>
+                    {/* <select
                       className="currency-selector"
                       onChange={e => {
                         setToken(e.toString());
@@ -194,20 +263,20 @@ const Transaction: React.FC<ITransactionProps> = ({
                     >
                       {title === 'Deposit' &&
                         balances?.length &&
-                          balances.map(({ address, balance, symbol }) => (
-                            <option key={address} value={balance}>
-                              {symbol}
-                            </option>
-                          ))}
+                        balances.map(({ address, balance, symbol }) => (
+                          <option key={address} value={balance}>
+                            {symbol}
+                          </option>
+                        ))}
                       {title === 'Send' ||
                         (title === 'Withdraw' &&
                           zkBalances?.length &&
-                            zkBalances.map(({ address, balance, symbol }) => (
-                              <option key={address} value={balance}>
-                                {symbol}
-                              </option>
-                            )))}
-                    </select>
+                          zkBalances.map(({ address, balance, symbol }) => (
+                            <option key={address} value={balance}>
+                              {symbol}
+                            </option>
+                          )))}
+                    </select> */}
                   </div>
                   {zkBalances?.length && (
                     <div className="currency-input-wrapper" key={token}>

@@ -291,6 +291,8 @@ h2 {
     }
 
     & > div {
+      position: absolute;
+      right: -10px;
       width: 15px;
       height: 10px;
       background-image: url(./images/arrow-select.svg);
@@ -306,6 +308,38 @@ h2 {
       background-image: url(./images/mdi_people.svg);
       background-repeat: no-repeat;
       background-size: contain;
+    }
+  }
+
+
+  &.balances {
+    & > .custom-selector-title {
+      max-width: 120px;
+
+      & > span {
+        width: 120px;
+        height: 50px;
+        margin-left: 0;
+        color: var(--dark-color);
+        font-size: var(--xxxl-font-size);
+        line-height: var(--xxxl-font-size);
+        background-image: none;
+      }
+
+      & > p {
+        overflow: visible;
+        color: var(--dark-color);
+        font-size: var(--xxxl-font-size);
+        text-overflow: clip;
+      }
+    }
+  }
+
+  &.contacts {
+    & > .custom-selector-title {
+      & > span {
+        background-image: url(./images/mdi_people.svg);
+      }
     }
   }
 
