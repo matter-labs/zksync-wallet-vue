@@ -47,6 +47,9 @@
     }  
 
     &-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-top: -10px;
     }
   } 
@@ -97,7 +100,9 @@
     height: 25px;
     background-color: var(--transparent);
     background-image: url(../../images/mdi_file_copy.svg);
+    background-repeat: no-repeat;
     border: none;
+    outline: none;
     cursor: pointer;
   }
 }

@@ -311,6 +311,14 @@ h2 {
     }
   }
 
+  &.contacts {
+    & > .custom-selector-title {
+      & > span {
+        background-image: url(./images/mdi_people.svg);
+      }
+    }
+  }
+
 
   &.balances {
     & > .custom-selector-title {
@@ -333,12 +341,19 @@ h2 {
         text-overflow: clip;
       }
     }
-  }
 
-  &.contacts {
-    & > .custom-selector-title {
-      & > span {
-        background-image: url(./images/mdi_people.svg);
+    &.mywallet {
+      margin-top: 20px;
+
+      & > .custom-selector-title {
+        & > p {
+          font-size: var(--large-font-size);
+        }
+
+        & > span {
+          font-weight: var(--bold-font-weight);
+          font-size: var(--large-font-size);
+        }
       }
     }
   }

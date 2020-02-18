@@ -85,14 +85,17 @@ const Transaction: React.FC<ITransactionProps> = ({
     }
   }, [ethId, value]);
 
-  const handleSelect = useCallback(name => {
-    if (isContactsListOpen) {
-      setSelectedContact(name);
-    }
-    if (isBalancesListOpen) {
-      setSelectedBalance(name);
-    }
-  }, []);
+  const handleSelect = useCallback(
+    name => {
+      if (isContactsListOpen) {
+        setSelectedContact(name);
+      }
+      if (isBalancesListOpen) {
+        setSelectedBalance(name);
+      }
+    },
+    [isBalancesListOpen, isContactsListOpen],
+  );
 
   const handleClickOutside = useCallback(e => {
     if (e.target.getAttribute('data-name')) {
@@ -252,31 +255,6 @@ const Transaction: React.FC<ITransactionProps> = ({
                             )))}
                       </ul>
                     </div>
-                    {/* <select
-                      className="currency-selector"
-                      onChange={e => {
-                        setToken(e.toString());
-                        setMaxValue(+e.target.value);
-                        const id = e.target?.selectedIndex;
-                        setSymbolName(e.target.options[id].text);
-                      }}
-                    >
-                      {title === 'Deposit' &&
-                        balances?.length &&
-                        balances.map(({ address, balance, symbol }) => (
-                          <option key={address} value={balance}>
-                            {symbol}
-                          </option>
-                        ))}
-                      {title === 'Send' ||
-                        (title === 'Withdraw' &&
-                          zkBalances?.length &&
-                          zkBalances.map(({ address, balance, symbol }) => (
-                            <option key={address} value={balance}>
-                              {symbol}
-                            </option>
-                          )))}
-                    </select> */}
                   </div>
                   {zkBalances?.length && (
                     <div className="currency-input-wrapper" key={token}>
