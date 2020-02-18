@@ -41,7 +41,9 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>(0);
-  const [maxValue, setMaxValue] = useState<number>(balances?.length ? balances[0].balance : 0);
+  const [maxValue, setMaxValue] = useState<number>(
+    title === 'deposit' ? (balances?.length ? balances[0].balance : 0) : zkBalances?.length ? zkBalances[0].balance : 0,
+  );
   const [selectedValue, setSelectedValue] = useState<any>();
   const [symbolName, setSymbolName] = useState<string>('');
   const [token, setToken] = useState<string>('');
@@ -190,12 +192,21 @@ const Transaction: React.FC<ITransactionProps> = ({
                         setSymbolName(e.target.options[id].text);
                       }}
                     >
-                      {balances?.length &&
-                        balances.map(({ address, balance, symbol }) => (
-                          <option key={address} value={balance}>
-                            {symbol}
-                          </option>
-                        ))}
+                      {title === 'Deposit' &&
+                        balances?.length &&
+                          balances.map(({ address, balance, symbol }) => (
+                            <option key={address} value={balance}>
+                              {symbol}
+                            </option>
+                          ))}
+                      {title === 'Send' ||
+                        (title === 'Withdraw' &&
+                          zkBalances?.length &&
+                            zkBalances.map(({ address, balance, symbol }) => (
+                              <option key={address} value={balance}>
+                                {symbol}
+                              </option>
+                            )))}
                     </select>
                   </div>
                   {zkBalances?.length && (
