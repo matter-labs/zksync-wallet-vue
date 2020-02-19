@@ -1,8 +1,6 @@
 import React, { useCallback } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 
-import Web3 from 'web3';
-
 import LazyWallet from '../components/Wallets/LazyWallet';
 import Modal from '../components/Modal/Modal';
 
@@ -16,6 +14,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   const {
     isAccessModalOpen,
+    provider,
     setAccessModal,
     setNormalBg,
     setProvider,
@@ -26,6 +25,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   } = useRootData(
     ({
       isAccessModalOpen,
+      provider,
       setAccessModal,
       setEthBalances,
       setEthId,
@@ -39,6 +39,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       zkWallet,
     }) => ({
       isAccessModalOpen: isAccessModalOpen.get(),
+      provider: provider.get(),
       setAccessModal,
       setEthBalances,
       setEthId,
@@ -52,8 +53,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       zkWallet: zkWallet.get(),
     }),
   );
-
-  const web3: any = new Web3(Web3.givenProvider);
 
   const history = useHistory();
 
@@ -79,7 +78,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             cancelAction={() => setAccessModal(false)}
           >
             <div className="metamask-logo"></div>
-            {web3 && web3.currentProvider.networkVersion === '4' ? ( //need to change on prod
+            {provider && provider.networkVersion === '4' ? ( //need to change on prod
               <>
                 <h3>Connected to Metamask</h3>
                 <button className="btn submit-button" onClick={createWallet}>
