@@ -7,8 +7,7 @@ import './Footer.scss';
 
 const Footer: React.FC = (): JSX.Element => {
   const body = document.querySelector('body');
-  const theme = localStorage.getItem('darkTheme') === 'true' ? true : false;
-  const [darkTheme, setDarkTheme] = useState<boolean>(theme || false);
+  const [darkTheme, setDarkTheme] = useState<boolean>(false);
 
   const handleSwitch = useCallback(() => {
     if (body) {
@@ -16,6 +15,17 @@ const Footer: React.FC = (): JSX.Element => {
     }
     setDarkTheme(!darkTheme);
   }, [body, darkTheme]);
+
+  useEffect(() => {
+    const theme = localStorage.getItem('darkTheme');
+    if (theme) {
+      try {
+        setDarkTheme(JSON.parse(theme));
+      } catch {
+        setDarkTheme(false);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     localStorage
