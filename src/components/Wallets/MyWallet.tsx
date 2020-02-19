@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useRootData } from '../../hooks/useRootData';
 import { useTransaction } from '../../hooks/useTransaction';
@@ -24,14 +24,20 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price }): JSX.Element => {
 
   const { deposit, transfer, withdraw } = useTransaction();
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef: (HTMLInputElement | null)[] = [];
 
-  const handleCopy = useCallback(() => {
-    if (inputRef.current) {
-      inputRef.current.select();
-    }
-    document.execCommand('copy');
-  }, []);
+  const handleCopy = useCallback(
+    address => {
+      inputRef.map(el => {
+        if (address === el?.value) {
+          el?.focus();
+          el?.select();
+          document.execCommand('copy');
+        }
+      });
+    },
+    [inputRef],
+  );
 
   const handleSelect = useCallback(name => {
     setSelectedBalance(name);
@@ -57,25 +63,22 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price }): JSX.Element => {
         <div className={`mywallet-wrapper ${!!transactionModal?.title ? 'closed' : 'open'}`}>
           <h2 className="mywallet-title">My wallet</h2>
           <div className="copy-block">
-            <input className="copy-block-input" value={zkWallet?.address()} ref={inputRef} />
+            <input
+              className="copy-block-input"
+              onChange={() => console.log(null)}
+              value={zkWallet?.address()}
+              ref={e => inputRef.push(e)}
+            />
             <div>
               {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
             </div>
-            <button className="copy-block-button" onClick={handleCopy}></button>
+            <button className="copy-block-button" onClick={() => handleCopy(zkWallet?.address())}></button>
           </div>
           <div className="mywallet-currency-block">
             <div className="mywallet-currency-wrapper">
               <span className="mywallet-currency-balance">
                 {walletBalance ? walletBalance : zkBalances[0]?.balance.toString()}
               </span>
-              {/* <select className="mywallet-currency-selector" onChange={e => setWalletBalance(e.target.value)}>
-                {zkBalances?.length &&
-                  zkBalances.map(({ address, balance, symbol }) => (
-                    <option key={address} value={balance}>
-                      zk{symbol}
-                    </option>
-                  ))}
-              </select> */}
               <div className="custom-selector balances mywallet">
                 <div onClick={() => openBalancesList(!isBalancesListOpen)} className="custom-selector-title">
                   {symbolName ? (
@@ -145,11 +148,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price }): JSX.Element => {
           </button>
         </div>
       </>
-
-      {/* <div
-        data-name="modal-wrapper"
-        className={`modal-wrapper ${isBalancesListOpen ? 'open' : 'closed'}`}
-      ></div> */}
+      <div data-name="modal-wrapper" className={`modal-wrapper ${isBalancesListOpen ? 'open' : 'closed'}`}></div>
     </>
   );
 };

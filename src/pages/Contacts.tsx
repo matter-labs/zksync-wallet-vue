@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -22,12 +22,20 @@ const Contacts: React.FC = (): JSX.Element => {
 
   const { transfer } = useTransaction();
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef: (HTMLInputElement | null)[] = [];
 
-  const handleCopy = () => {
-    inputRef.current!.select();
-    document.execCommand('copy');
-  };
+  const handleCopy = useCallback(
+    address => {
+      inputRef.map(el => {
+        if (address === el?.value) {
+          el?.focus();
+          el?.select();
+          document.execCommand('copy');
+        }
+      });
+    },
+    [inputRef],
+  );
 
   return (
     <DataList title="Contacts" visible={true}>
@@ -39,7 +47,7 @@ const Contacts: React.FC = (): JSX.Element => {
           </button>
           {!!searchContacts ? (
             searchContacts.map(({ address, name }) => (
-              <div className="balances-contact" key={address}>
+              <div className="balances-contact" key={name}>
                 <div className="balances-contact-left">
                   <span className="balances-contact-name">{name}</span>
                   <span className="balances-contact-address">
@@ -56,12 +64,12 @@ const Contacts: React.FC = (): JSX.Element => {
                   >
                     <Link to="/"></Link>
                   </button>
-                  <button className="balances-contact-copy" onClick={() => handleCopy()}></button>
+                  <button className="balances-contact-copy" onClick={() => handleCopy(address)}></button>
                   <input
                     onChange={() => console.log(null)}
                     className="copy-block-input"
                     value={address}
-                    ref={inputRef}
+                    ref={e => inputRef.push(e)}
                   />
                   <button className="balances-contact-edit">
                     <span></span>

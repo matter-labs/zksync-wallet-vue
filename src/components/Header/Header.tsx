@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback } from 'react';
 
 import { Link, useHistory } from 'react-router-dom';
 
@@ -36,14 +36,22 @@ const Header: React.FC = (): JSX.Element => {
   );
 
   const history = useHistory();
-  const inputRef = useRef<HTMLInputElement>(null);
+  // const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleCopy = useCallback(() => {
-    if (inputRef.current) {
-      inputRef.current.select();
-    }
-    document.execCommand('copy');
-  }, []);
+  const inputRef: (HTMLInputElement | null)[] = [];
+
+  const handleCopy = useCallback(
+    address => {
+      inputRef.map(el => {
+        if (address === el?.value) {
+          el?.focus();
+          el?.select();
+          document.execCommand('copy');
+        }
+      });
+    },
+    [inputRef],
+  );
 
   const handleLogOut = useCallback(() => {
     setProvider(null);
@@ -72,10 +80,10 @@ const Header: React.FC = (): JSX.Element => {
                   onChange={() => console.log(null)}
                   className="copy-block-input"
                   value={zkWallet?.address()}
-                  ref={inputRef}
+                  ref={e => inputRef.push(e)}
                 />
                 <p>{zkWallet.address()}</p>
-                <button className="copy-block-button" onClick={handleCopy}></button>
+                <button className="copy-block-button" onClick={() => handleCopy(zkWallet.address())}></button>
               </div>
               <div className="horizontal-line"></div>
               <div className="wallet-buttons">
