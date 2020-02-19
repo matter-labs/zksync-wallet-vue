@@ -1,6 +1,8 @@
 import React, { useCallback } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 
+import Web3 from 'web3';
+
 import LazyWallet from '../components/Wallets/LazyWallet';
 import Modal from '../components/Modal/Modal';
 
@@ -8,7 +10,6 @@ import { useRootData } from '../hooks/useRootData';
 import useWalletInit from '../hooks/useWalletInit';
 
 import { WALLETS } from '../constants/Wallets';
-import Web3 from 'web3';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
