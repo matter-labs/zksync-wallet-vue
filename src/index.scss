@@ -18,6 +18,7 @@
   --copyblock-color: rgba(0, 0, 0, 0.04);
   --input-color: rgba(0, 0, 0, 0.02);
   --input-border-focus: rgba(0, 0, 0, 0.2);
+  --error-color: rgba(255, 101, 35, 0.17);
   --links-color: #4E529A;
   --success-color: #27AE60;
   --transparent: transparent;
@@ -30,6 +31,7 @@
   --xxxl-font-size: 48px;
 
   --bold-font-weight: 900;
+  --medium-font-weight: 500;
 }
 
 body, html {
@@ -77,6 +79,7 @@ body.dark {
   --input-color: rgba(255, 255, 255, 0.02);
   --currency-block-color: rgba(255, 255, 255, 0.1);
   --links-color: #4E529A;
+  --error-color: rgba(255, 101, 35, 0.17);
   --success-color: #27AE60;
   --transparent: transparent;
 }
@@ -107,6 +110,33 @@ h2 {
       background: url(./images/start_page_bg.png) no-repeat center;
       background-size: cover;
     }
+  }
+}
+
+.wrong-network {
+  width: 90%;
+  margin: 0 auto;
+  margin-bottom: 40px;
+  padding: 30px;
+  color: var(--dark-color);
+  text-align: center;
+  background-color: var(--error-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+
+  & > p {
+    margin-bottom: 0;
+    font-weight: var(--medium-font-weight);
+    font-size: var(--large-font-size);
+  }
+
+  &-logo {
+    width: 25px;
+    height: 25px;
+    margin: 0 auto 10px;
+    background-image: url(./images/mdi_network_wifi.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 }
 
@@ -220,19 +250,19 @@ h2 {
   background-size: contain;
 }
 
-#walletconnect-qrcode-modal {
-  background-color: var(--transparent);
-}
+// #walletconnect-qrcode-modal {
+//   background-color: var(--transparent);
+// }
 
-#walletconnect-wrapper {
-  position: relative;
-}
+// #walletconnect-wrapper {
+//   position: relative;
+// }
 
-.walletconnect-modal__base {
-  width: 560px !important;
-  height: 500px;
-  transform: translateY(-60%) !important;
-}
+// .walletconnect-modal__base {
+//   width: 560px !important;
+//   height: 500px;
+//   transform: translateY(-60%) !important;
+// }
 
 .wallets-wrapper {
   display: grid;

@@ -36,7 +36,6 @@ const Header: React.FC = (): JSX.Element => {
   );
 
   const history = useHistory();
-  // const inputRef = useRef<HTMLInputElement>(null);
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
