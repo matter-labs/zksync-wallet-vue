@@ -33,12 +33,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price }): JSX.Element => {
     document.execCommand('copy');
   }, []);
 
-  const handleSelect = useCallback(
-    name => {
-      setSelectedBalance(name);
-    },
-    [isBalancesListOpen],
-  );
+  const handleSelect = useCallback(name => {
+    setSelectedBalance(name);
+  }, []);
 
   const handleClickOutside = useCallback(e => {
     if (e.target.getAttribute('data-name')) {

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 
 import { IModal } from './Types';
+import Portal from './Portal';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -39,29 +40,29 @@ const Modal: React.FC<IModal> = ({ background, cancelAction, children, classSpec
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, [handleClickOutside]);
-
   return (
     <>
-      <div
-        ref={myRef}
-        className={`modal ${classSpecifier} ${classSpecifier === isModalOpen || visible ? 'open' : 'closed'}`}
-      >
-        <button
-          onClick={() => {
-            cancelAction();
-            setError('');
-            setModal('');
-          }}
-          className="close-icon"
-        ></button>
-        {children}
-      </div>
-      <div
-        data-name="modal-wrapper"
-        className={`modal-wrapper ${
-          (classSpecifier === isModalOpen && background) || (visible && background) ? 'open' : 'closed'
-        }`}
-      ></div>
+      {(classSpecifier === isModalOpen || visible) && (
+        <Portal>
+          <div ref={myRef} className={`modal ${classSpecifier} open`}>
+            <button
+              onClick={() => {
+                cancelAction();
+                setError('');
+                setModal('');
+              }}
+              className="close-icon"
+            ></button>
+            {children}
+          </div>
+          <div
+            data-name="modal-wrapper"
+            className={`modal-wrapper ${
+              (classSpecifier === isModalOpen && background) || (visible && background) ? 'open' : 'closed'
+            }`}
+          ></div>
+        </Portal>
+      )}
     </>
   );
 };

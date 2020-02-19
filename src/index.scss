@@ -395,6 +395,32 @@ h2 {
 
 body.dark > #root {
   & > .content-wrapper {
+    & .menu-top {
+      & .icon {
+        &-qr {
+          background: url(./images/icon-qr_dark.svg);
+          background-repeat: no-repeat;
+          background-size: contain;
+        }
+
+        &-disconnect {
+          background: url(./images/icon-disconnect_dark.svg);
+          background-repeat: no-repeat;
+          background-size: contain;
+        }
+
+        &-edit {
+          background: url(./images/icon-edit_dark.svg);
+          background-repeat: no-repeat;
+          background-size: contain;
+        }
+      }
+
+      & > .menu-logo {
+        background-image: url(./images/logo_text_dark.svg);
+      }
+    }
+
     &.start-page {
       background: var(--main-bg-color);
     }
@@ -442,40 +468,6 @@ body.dark > #root {
         & > .copy-block {
           & > .copy-block-button {
             background-image: url(./images/mdi_file_copy_dark.svg);
-          }
-        }
-      }
-
-      & > .menu-wrapper {
-        & > .menu-top {
-          & > .wallet {
-            & > .wallet-buttons {
-              & > button {
-                & > .icon {
-                  &-qr {
-                    background: url(./images/icon-qr_dark.svg);
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                  }
-
-                  &-disconnect {
-                    background: url(./images/icon-disconnect_dark.svg);
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                  }
-
-                  &-edit {
-                    background: url(./images/icon-edit_dark.svg);
-                    background-repeat: no-repeat;
-                    background-size: contain;
-                  }
-                }
-              }
-            }
-          }
-
-          & > .menu-logo {
-            background-image: url(./images/logo_text_dark.svg);
           }
         }
       }
