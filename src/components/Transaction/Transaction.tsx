@@ -118,7 +118,7 @@ const Transaction: React.FC<ITransactionProps> = ({
         data-name="modal-wrapper"
         className={`modal-wrapper ${isContactsListOpen || isBalancesListOpen ? 'open' : 'closed'}`}
       ></div>
-      <Modal visible={false} classSpecifier="add-contact" background={true} cancelAction={() => null}>
+      <Modal visible={false} classSpecifier="add-contact" background={true}>
         <SaveContacts addressValue={addressValue} addressInput={false} />
       </Modal>
       <div className="transaction-wrapper">

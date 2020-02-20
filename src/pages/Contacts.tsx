@@ -8,9 +8,12 @@ import { useTransaction } from '../hooks/useTransaction';
 import DataList from '../components/DataList/DataList';
 
 const Contacts: React.FC = (): JSX.Element => {
-  const { searchContacts, setModal, setTransactionModal, setWalletAddress } = useRootData(
-    ({ searchContacts, setModal, setTransactionModal, setWalletAddress }) => ({
+  const dataPropertyName = 'name';
+
+  const { searchContacts, setContacts, setModal, setTransactionModal, setWalletAddress } = useRootData(
+    ({ searchContacts, setContacts, setModal, setTransactionModal, setWalletAddress }) => ({
       searchContacts: searchContacts.get(),
+      setContacts,
       setModal,
       setTransactionModal,
       setWalletAddress,
@@ -38,7 +41,7 @@ const Contacts: React.FC = (): JSX.Element => {
   );
 
   return (
-    <DataList title="Contacts" visible={true}>
+    <DataList setValue={setContacts} dataProperty={dataPropertyName} data={contacts} title="Contacts" visible={true}>
       {contacts && (
         <>
           <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>

@@ -28,7 +28,7 @@ const Footer: React.FC = (): JSX.Element => {
 
   return (
     <div className="footer-wrapper">
-      <button className="theme-switch" onClick={() => handleSwitch()}></button>
+      <button className="theme-switch" onClick={handleSwitch}></button>
       <div className="footer-menu">
         <p>
           <span className="footer-links-block">

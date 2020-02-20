@@ -1,12 +1,11 @@
 import React, { useCallback } from 'react';
-
 import { Link, useHistory } from 'react-router-dom';
+
+import Modal from '../Modal/Modal';
 
 import { useRootData } from '../../hooks/useRootData';
 
 import { HEADER_ITEMS } from '../../constants/header';
-
-import Modal from '../Modal/Modal';
 
 import './Header.scss';
 
@@ -70,7 +69,7 @@ const Header: React.FC = (): JSX.Element => {
               <p>{ethId}</p>
               <img src="../../images/randomImage.png" alt="wallet" />
             </button>
-            <Modal visible={false} background={true} classSpecifier="wallet" cancelAction={() => null}>
+            <Modal visible={false} background={true} classSpecifier="wallet">
               <div className="wallet-title">
                 {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
               </div>
