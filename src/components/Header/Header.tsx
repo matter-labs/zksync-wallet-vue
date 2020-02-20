@@ -10,23 +10,11 @@ import { HEADER_ITEMS } from '../../constants/header';
 import './Header.scss';
 
 const Header: React.FC = (): JSX.Element => {
-  const {
-    ethId,
-    path,
-    setAccessModal,
-    setModal,
-    setPath,
-    setProvider,
-    setWalletName,
-    setZkWallet,
-    zkWallet,
-  } = useRootData(
-    ({ ethId, path, setAccessModal, setModal, setPath, setProvider, setWalletName, setZkWallet, zkWallet }) => ({
+  const { ethId, setAccessModal, setModal, setProvider, setWalletName, setZkWallet, zkWallet } = useRootData(
+    ({ ethId, setAccessModal, setModal, setProvider, setWalletName, setZkWallet, zkWallet }) => ({
       ethId: ethId.get(),
-      path: path.get(),
       setAccessModal,
       setModal,
-      setPath,
       setProvider,
       setWalletName,
       setZkWallet,
@@ -106,11 +94,7 @@ const Header: React.FC = (): JSX.Element => {
         {zkWallet?.address() &&
           HEADER_ITEMS.map(({ title, link }) => (
             <div className="menu-route-wrapper" key={title}>
-              <Link
-                onClick={() => setPath(window?.location.pathname)}
-                className={`menu-route ${link === path ? 'active' : ''}`}
-                to={link}
-              >
+              <Link className={`menu-route ${link === window?.location.pathname ? 'active' : ''}`} to={link}>
                 {title}
               </Link>
             </div>
