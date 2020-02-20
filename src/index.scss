@@ -352,14 +352,14 @@ h2 {
 
   &.balances {
     & > .custom-selector-title {
-      max-width: 120px;
+      max-width: 60px;
 
       & > span {
-        width: 120px;
+        width: 60px;
         height: 50px;
         margin-left: 0;
         color: var(--dark-color);
-        font-size: var(--xxxl-font-size);
+        font-size: var(--large-font-size);
         line-height: var(--xxxl-font-size);
         background-image: none;
       }
@@ -381,8 +381,8 @@ h2 {
         }
 
         & > span {
-          font-weight: var(--bold-font-weight);
-          font-size: var(--large-font-size);
+          font-weight: var(--medium-font-weight);
+          font-size: var(--md-font-size);
         }
       }
     }
@@ -557,6 +557,85 @@ body.dark > #root {
         background-size: 98px;
       }
     }  
+  }
+
+  .custom-selector {
+    position: relative;
+    width: 100%;
+    max-width: 100px;
+    height: 25px;
+  
+    &-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 100px;
+      height: 25px;
+      text-overflow: ellipsis;
+      cursor: pointer;
+  
+      & > p {
+        margin-bottom: 0;
+        padding-right: 15px;
+        overflow: hidden;
+        color: var(--dark-color);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+  
+      & > div {
+        position: absolute;
+        right: -20px;
+        width: 15px;
+        height: 10px;
+        background-image: url(./images/arrow-select.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+      
+      & > span {
+        display: block;
+        width: 25px;
+        height: 25px;
+        margin-left: 25px;
+        background-image: url(./images/mdi_people.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+    }
+  
+    &.contacts {
+      & > .custom-selector-title {
+        & > span {
+          background-image: url(./images/mdi_people.svg);
+        }
+      }
+    }
+  
+  
+    &.balances {
+      & > .custom-selector-title {
+        & > span {
+          font-size: var(--xxxl-font-size);
+        }
+      }
+
+      &.mywallet {
+        margin-top: 35px;
+        margin-left: 20px;
+  
+        & > .custom-selector-title {
+          & > p {
+            font-size: var(--large-font-size);
+          }
+  
+          & > span {
+            font-weight: var(--medium-font-weight);
+            font-size: var(--large-font-size);
+          }
+        }
+      }
+    }
   }
 
   .wallets-wrapper {

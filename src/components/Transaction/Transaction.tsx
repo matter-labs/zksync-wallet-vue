@@ -192,7 +192,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   </>
                 )}
                 <span className="transaction-field-title">Amount / asset</span>
-                <div className="transaction-field">
+                <div className="transaction-field balance">
                   <div className="currency-input-wrapper border">
                     <input
                       placeholder="0.00"
@@ -258,7 +258,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   </div>
                   {zkBalances?.length && (
                     <div className="currency-input-wrapper" key={token}>
-                      <span>~${price * (maxValue ? maxValue : zkBalances[0].balance)}</span>
+                      <span>~${(price * (maxValue ? maxValue : zkBalances[0].balance)).toFixed(2)}</span>
                       <span>
                         Balance: {maxValue ? maxValue : zkBalances[0].balance}{' '}
                         {symbolName ? symbolName : zkBalances[0].symbol}

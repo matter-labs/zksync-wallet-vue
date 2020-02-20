@@ -1,78 +1,3 @@
-.mywallet {
-  &-buttons-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  &-title {
-    color: var(--dark-color);
-  }
-
-  &-price {
-    color: var(--hints-color);
-    font-size: var(--sm-font-size);
-  }
-
-  &-currency {
-    &-balance {
-      color: var(--dark-color);
-      font-size: var(--xl-font-size);
-    }
-
-    &-selector {
-      margin-left: 10px;
-      padding-right: 20px;
-      color: var(--dark-color);
-      font-size: var(--sm-font-size);
-      background: var(--transparent);
-      background-image: url(../../images/arrow-select.svg);
-      background-repeat: no-repeat;  
-      background-position: right;
-      border: none;
-      outline: none;
-      appearance: none;
-    }
-
-    &-block {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: calc(100% + 64px);
-      height: 90px;
-      padding: 18px 32px;
-      background-color: var(--bg-block-color);
-      border-left: 3px solid var(--button-bg-color);
-      transform: translateX(-32px);
-    }  
-
-    &-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: -10px;
-    }
-  } 
-
-  &-wrapper {
-    width: 90%;
-    max-width: 560px;
-    margin-top: 15px;
-    padding: 32px;
-    text-align: center;
-    background-color: var(--modal-bg-color);
-    border-radius: 4px;
-
-    &.open {
-      display: block;
-    }
-
-    &.closed {
-      display: none;
-    }
-  }
-}
-
 .copy-block {
   display: flex;
   align-items: center;
@@ -118,7 +43,7 @@
   margin: 25px 0 50px;
   padding-left: 30px;
   color: var(--button-bg-color);
-  font-size: var(--large-font-size);
+  font-size: var(--md-font-size);
   background-color: var(--transparent);
   border: none;
   outline: none;
@@ -137,8 +62,8 @@
     position: absolute;
     top: 50%;
     left: 0;
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     background: url(../../images/deposit.svg);
     background-repeat: no-repeat;
     background-size: contain;
@@ -146,13 +71,124 @@
   }
 }
 
+.mywallet {
+  &-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &-title {
+    color: var(--dark-color);
+    font-size: var(--large-font-size);
+  }
+
+  &-price {
+    margin-top: 5px;
+    color: var(--hints-color);
+    font-size: var(--sm-font-size);
+  }
+
+  &-currency {
+    &-balance {
+      margin-top: 12px;
+      color: var(--dark-color);
+      font-size: var(--xl-font-size);
+      line-height: var(--xl-font-size);
+    }
+
+    &-selector {
+      margin-left: 10px;
+      padding-right: 20px;
+      color: var(--dark-color);
+      font-size: var(--sm-font-size);
+      background: var(--transparent);
+      background-image: url(../../images/arrow-select.svg);
+      background-repeat: no-repeat;  
+      background-position: right;
+      border: none;
+      outline: none;
+      appearance: none;
+    }
+
+    &-block {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: calc(100% + 30px);
+      height: 90px;
+      padding: 18px 18px;
+      background-color: var(--bg-block-color);
+      border-left: 3px solid var(--button-bg-color);
+      transform: translateX(-15px);
+    }  
+
+    &-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: -10px;
+    }
+  } 
+
+  &-wrapper {
+    width: 90%;
+    max-width: 560px;
+    margin-top: 15px;
+    padding: 15px;
+    text-align: center;
+    background-color: var(--modal-bg-color);
+    border-radius: 4px;
+
+    & > .copy-block {
+      font-size: var(--sm-font-size);
+    }
+
+    &.open {
+      display: block;
+    }
+
+    &.closed {
+      display: none;
+    }
+  }
+}
+
+
 @media screen and (min-width: 760px) {
+  .deposit-button, .withdraw-button {
+    font-size: var(--large-font-size);
+
+    & > span { 
+      width: 25px;
+      height: 25px;
+    }
+  }
+
   .mywallet {
     &-price {
       font-size: var(--md-font-size);
     }
 
+    &-title {
+      font-size: var(--xl-font-size);
+    }
+
+    &-wrapper {
+      padding: 32px;
+
+      & > .copy-block {
+        font-size: var(--md-font-size);
+      }
+    }
+
     &-currency {
+      &-block {
+        width: calc(100% + 64px);
+        padding: 18px 32px;
+        transform: translateX(-32px);
+      }
+
       &-balance {
         font-size: var(--xxxl-font-size);
       }
