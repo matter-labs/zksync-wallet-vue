@@ -247,8 +247,10 @@
   }
 
   &-wrapper {
+    position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: space-between;
     width: 100%;
     padding: 30px;
@@ -256,15 +258,18 @@
   }
 
   &-hash {
-    margin-left: 10px;
+    margin-bottom: 10px;
+    margin-left: 60px;
     color: var(--dark-color);
     font-size: var(--sm-font-size);
   }
 
   &-left {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
+    width: 150px;
   }
 
   &-address {
@@ -284,6 +289,14 @@
     justify-content: space-between;
     width: 100%;
     max-width: 180px;
+    margin-left: 60px;
+
+    & > .balances-contact-edit {
+      position: absolute;
+      top: 50%;
+      right: 25px;
+      transform: translateY(-50%);
+    }
   }
 }
 
@@ -291,6 +304,33 @@
   .balances {
     &-token, &-contact {
       font-size: var(--md-font-size);
+    }
+  }
+
+  .transaction-history {
+    &-wrapper {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  
+    &-hash {
+      margin-bottom: 0;
+      margin-left: 10px;
+    }
+  
+    &-left {
+      flex-wrap: nowrap;
+      width: 100%;
+    }
+  
+    &-right {
+      margin-left: 0;
+
+      & > .balances-contact-edit {
+        position: relative;
+        right: 0;
+        transform: translateY(0);
+      }
     }
   }
 
@@ -304,7 +344,6 @@
         margin-right: 15px;
       }
     }
-    
   }
 }
 
