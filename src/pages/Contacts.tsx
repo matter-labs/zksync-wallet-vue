@@ -1,6 +1,8 @@
-import React, { useCallback } from 'react';
-
+import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import Modal from '../components/Modal/Modal';
+import SaveContacts from '../components/SaveContacts/SaveContacts';
 
 import { useRootData } from '../hooks/useRootData';
 import { useTransaction } from '../hooks/useTransaction';
@@ -19,6 +21,8 @@ const Contacts: React.FC = (): JSX.Element => {
       setWalletAddress,
     }),
   );
+
+  const [addressValue, setAddressValue] = useState<string>('');
 
   const arr: any = localStorage.getItem('contacts');
   const contacts = JSON.parse(arr);
@@ -40,8 +44,21 @@ const Contacts: React.FC = (): JSX.Element => {
     [inputRef],
   );
 
+  const handleDelete = useCallback(name => {
+    const selectedItem = contacts.findIndex(el => {
+      return el.name === name;
+    });
+    const newContacts = contacts;
+    newContacts.splice(selectedItem, 1);
+    localStorage.setItem('contacts', JSON.stringify(newContacts));
+    setModal('');
+  }, []);
+
   return (
     <DataList setValue={setContacts} dataProperty={dataPropertyName} data={contacts} title="Contacts" visible={true}>
+      <Modal visible={false} classSpecifier="add-contact edit-contact" background={true}>
+        <SaveContacts title="Edit contact" addressValue="" addressInput={true} />
+      </Modal>
       {contacts && (
         <>
           <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>
@@ -74,7 +91,13 @@ const Contacts: React.FC = (): JSX.Element => {
                     value={address}
                     ref={e => inputRef.push(e)}
                   />
-                  <button className="balances-contact-edit">
+                  <button
+                    onClick={() => {
+                      setAddressValue(address);
+                      setModal('add-contact edit-contact');
+                    }}
+                    className="balances-contact-edit"
+                  >
                     <span></span>
                     <span></span>
                     <span></span>

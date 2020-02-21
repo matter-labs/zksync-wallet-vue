@@ -73,7 +73,7 @@ const Header: React.FC = (): JSX.Element => {
               </div>
               <div className="horizontal-line"></div>
               <div className="wallet-buttons">
-                <button>
+                <button onClick={() => setModal('qr')}>
                   <span className="icon-qr"></span>Show QR code
                 </button>
                 <div className="horizontal-line"></div>
@@ -86,6 +86,12 @@ const Header: React.FC = (): JSX.Element => {
                 </button>
                 <div className="horizontal-line"></div>
               </div>
+            </Modal>
+            <Modal visible={false} background={true} classSpecifier="qr">
+              <img
+                src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${zkWallet.address()}`}
+                alt="wallet-qr"
+              />
             </Modal>
           </>
         )}

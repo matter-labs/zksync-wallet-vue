@@ -94,15 +94,23 @@ const Account: React.FC = (): JSX.Element => {
         title="Token balances"
         visible={!transactionModal || transactionModal.title === 'Send' ? true : false}
       >
-        {!!searchBalances &&
-          searchBalances.map(({ symbol, balance }) => (
-            <div key={balance} className="balances-token">
-              <div>zk{symbol}</div>
-              <div>
-                {balance} <span>(~${balance * price})</span>
+        {!!searchBalances.length
+          ? searchBalances.map(({ symbol, balance }) => (
+              <div key={balance} className="balances-token">
+                <div>zk{symbol}</div>
+                <div>
+                  {balance} <span>(~${balance * price})</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          : zkBalances.map(({ symbol, balance }) => (
+              <div key={balance} className="balances-token">
+                <div>zk{symbol}</div>
+                <div>
+                  {balance} <span>(~${balance * price})</span>
+                </div>
+              </div>
+            ))}
       </DataList>
     </>
   );

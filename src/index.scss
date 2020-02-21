@@ -437,27 +437,7 @@ h2 {
 body.dark > #root {
   & > .content-wrapper {
     & .menu-top {
-      & .icon {
-        &-qr {
-          background: url(./images/icon-qr_dark.svg);
-          background-repeat: no-repeat;
-          background-size: contain;
-        }
-
-        &-disconnect {
-          background: url(./images/icon-disconnect_dark.svg);
-          background-repeat: no-repeat;
-          background-size: contain;
-        }
-
-        &-edit {
-          background: url(./images/icon-edit_dark.svg);
-          background-repeat: no-repeat;
-          background-size: contain;
-        }
-      }
-
-      & > .menu-logo {
+      & .menu-logo {
         background-image: url(./images/logo_text_dark.svg);
       }
     }
@@ -513,6 +493,10 @@ body.dark > #root {
         }
       }
     }
+  }
+
+  & .arrow-down {
+    background-image: url(./images/arrow-select-dark.svg);
   }
 }
 

@@ -93,7 +93,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price }): JSX.Element => {
                         : 'empty'}
                     </span>
                   )}
-                  <div></div>
+                  <div className="arrow-down"></div>
                 </div>
                 <ul className={`custom-selector-list ${isBalancesListOpen ? 'open' : 'closed'}`}>
                   {zkBalances?.length &&

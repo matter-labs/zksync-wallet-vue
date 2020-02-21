@@ -41,7 +41,7 @@ const DataList: React.FC<IBalancesProps> = ({
   return (
     <>
       <Modal visible={false} classSpecifier="add-contact addressless" background={true}>
-        <SaveContacts addressValue="" addressInput={true} />
+        <SaveContacts title="Add contact" addressValue="" addressInput={true} />
       </Modal>
       <div className={`balances-wrapper ${visible ? 'open' : 'closed'}`}>
         <h3 className="balances-title">{title}</h3>

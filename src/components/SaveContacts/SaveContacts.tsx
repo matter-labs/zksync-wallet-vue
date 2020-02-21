@@ -6,7 +6,7 @@ import { ISaveContactsProps } from './Types';
 
 import { DEFAULT_ERROR } from '../../constants/errors';
 
-const SaveContacts: React.FC<ISaveContactsProps> = ({ addressInput, addressValue }): JSX.Element => {
+const SaveContacts: React.FC<ISaveContactsProps> = ({ addressInput, addressValue, title }): JSX.Element => {
   const [name, setName] = useState<string>('');
   const [address, setAddress] = useState<string>('');
 
@@ -22,14 +22,20 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({ addressInput, addressValue
         if (addressValue) {
           setAddress(addressValue);
         }
-        const isContact = contacts.find(
+        const isContact = contacts.findIndex(
           ({ address: contactAddress, name: contactName }) => contactAddress === address || contactName === name,
         );
-        if (!isContact) {
+        if (isContact === -1) {
           const newContacts = JSON.stringify([{ address, name }, ...contacts]);
           localStorage.setItem('contacts', newContacts);
+          setModal('');
         }
-        setModal('');
+        if (isContact > -1) {
+          const newContacts = contacts;
+          newContacts.splice(isContact, 1, { address, name });
+          localStorage.setItem('contacts', JSON.stringify(newContacts));
+          setModal('');
+        }
       }
     } catch (err) {
       err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
@@ -38,7 +44,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({ addressInput, addressValue
 
   return (
     <>
-      <h3>Add contact</h3>
+      <h3>{title}</h3>
       <div className="horizontal-line"></div>
       <span className="transaction-field-title">Contact name</span>
       <input placeholder="Name here" value={name} onChange={e => setName(e.target.value)} />

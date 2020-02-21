@@ -78,6 +78,10 @@
     justify-content: space-between;
   }
 
+  .arrow-down { 
+    right: -30px;
+  }
+
   &-title {
     color: var(--dark-color);
     font-size: var(--large-font-size);

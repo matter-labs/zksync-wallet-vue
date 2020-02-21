@@ -119,7 +119,7 @@ const Transaction: React.FC<ITransactionProps> = ({
         className={`modal-wrapper ${isContactsListOpen || isBalancesListOpen ? 'open' : 'closed'}`}
       ></div>
       <Modal visible={false} classSpecifier="add-contact" background={true}>
-        <SaveContacts addressValue={addressValue} addressInput={false} />
+        <SaveContacts title="Add contact" addressValue={addressValue} addressInput={false} />
       </Modal>
       <div className="transaction-wrapper">
         {isExecuted ? (
@@ -168,7 +168,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                         <div className="custom-selector contacts">
                           <div onClick={() => openContactsList(!isContactsListOpen)} className="custom-selector-title">
                             {selectedContact ? <p>{selectedContact}</p> : <span></span>}
-                            <div></div>
+                            <div className="arrow-down"></div>
                           </div>
                           <ul className={`custom-selector-list ${isContactsListOpen ? 'open' : 'closed'}`}>
                             {contacts?.length &&
@@ -215,7 +215,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                         ) : (
                           <span>{selectedBalance.symbol ? selectedBalance.symbol : 'You have no balances'}</span>
                         )}
-                        <div></div>
+                        <div className="arrow-down"></div>
                       </div>
                       <ul className={`custom-selector-list ${isBalancesListOpen ? 'open' : 'closed'}`}>
                         {title === 'Deposit' &&
