@@ -197,6 +197,8 @@ const Transaction: React.FC<ITransactionProps> = ({
                     <input
                       placeholder="0.00"
                       className={'currency-input'}
+                      type="number"
+                      step={0.001}
                       onChange={e => {
                         validateNumbers(+e.target.value);
                         onChangeAmount(+e.target.value);

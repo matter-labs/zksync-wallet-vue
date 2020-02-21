@@ -58,6 +58,17 @@ input {
   border: 1px solid var(--border-color);
   border-radius: 5px;
   outline: none;
+  appearance: none;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+  }
+
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
 
   &:focus {
     border: 1px solid var(--input-border-focus);
