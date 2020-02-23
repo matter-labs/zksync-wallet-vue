@@ -37,6 +37,47 @@
   transform: translate(-50%, -50%);
   transition: opacity 200ms ease-in-out;
 
+  & input {
+    background-color: var(--copyblock-color);
+  }
+
+  &.qr {
+    text-align: center;
+
+    & > img {
+      margin-top: 30px;
+    }
+  }
+
+  & .icon {
+    &-qr, &-edit, &-disconnect {
+      width: 25px;
+      height: 25px;
+      margin-right: 30px;
+    }
+
+    &-edit {
+      background: url(../../images/icon-edit.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+
+    &-qr {
+      background: url(../../images/icon-qr.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+
+    &-disconnect {
+      background: url(../../images/icon-disconnect.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+  }
+
   &.add-contact {
     display: flex;
     flex-direction: column;
@@ -48,6 +89,7 @@
 
     & > h3 {
       align-self: flex-start;
+      color: var(--dark-color);
       font-weight: var(--bold-font-weight);
       font-size: var(--xl-font-size);
       line-height: var(--large-font-size);
@@ -83,35 +125,6 @@
         border: none;
         outline: none;
         cursor: pointer;
-
-        & > .icon {
-          &-qr, &-edit, &-disconnect {
-            width: 25px;
-            height: 25px;
-            margin-right: 30px;
-          }
-
-          &-edit {
-            background: url(../../images/icon-edit.svg);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
-          }
-
-          &-qr {
-            background: url(../../images/icon-qr.svg);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
-          }
-
-          &-disconnect {
-            background: url(../../images/icon-disconnect.svg);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
-          }
-        }
       }
     }
 
@@ -177,6 +190,36 @@
       display: none;
     }
   }
+}
+
+body.dark {
+  & .modal {
+    & .copy-block {
+      & > .copy-block-button {
+        background-image: url(../../images/mdi_file_copy_dark.svg);
+      }
+    }
+
+    & .icon {
+      &-qr {
+        background: url(../../images/icon-qr_dark.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      &-disconnect {
+        background: url(../../images/icon-disconnect_dark.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      &-edit {
+        background: url(../../images/icon-edit_dark.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+    }
+  } 
 }
 
 .close-icon {

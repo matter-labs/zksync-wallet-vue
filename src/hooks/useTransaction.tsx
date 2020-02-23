@@ -99,9 +99,18 @@ export const useTransaction = () => {
     [amountValue, ethWallet, history, setError, setHash, setLoading, transactions, zkWallet],
   );
 
+  console.log(addressValue);
+
   const transfer = useCallback(
     async (token = TOKEN, type) => {
       try {
+        console.log(addressValue);
+        // console.log({
+        //   to: addressValue,
+        //   token: token,
+        //   amount: ethers.utils.parseEther(amountValue ? amountValue.toString() : '0'),
+        //   fee: ethers.utils.parseEther('0.001'),
+        // });
         if (ADDRESS_VALIDATION[type].test(addressValue) && zkWallet) {
           setLoading(true);
           const transferTransaction = await zkWallet.syncTransfer({

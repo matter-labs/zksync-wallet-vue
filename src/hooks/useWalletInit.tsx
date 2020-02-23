@@ -77,7 +77,7 @@ const useWalletInit = () => {
       const wallet = getSigner(provider);
       setEthWallet(wallet);
       const network = process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      const syncProvider: Provider = await getDefaultProvider(network);
+      const syncProvider: Provider = await getDefaultProvider(network, 'HTTP');
       const ethersProvider = ethers.getDefaultProvider('rinkeby');
       const ethProxy = new ETHProxy(ethersProvider, syncProvider.contractAddress);
       const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider, ethProxy);

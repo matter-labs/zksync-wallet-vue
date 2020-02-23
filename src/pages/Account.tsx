@@ -13,24 +13,41 @@ import { BASE_URL, CURRENCY, CONVERT_CURRENCY } from '../constants/CoinBase';
 import { DEFAULT_ERROR } from '../constants/errors';
 
 const Account: React.FC = (): JSX.Element => {
+  const dataPropertyName = 'symbol';
+
   const {
     addressValue,
     amountValue,
+    deposit,
     hash,
     isExecuted,
     isLoading,
     setAddressValue,
     setAmountValue,
+    setHash,
     setExecuted,
+    transfer,
+    withdraw,
   } = useTransaction();
   const [price, setPrice] = useState<number>(0);
+  const [transactionType, setTransactionType] = useState<'deposit' | 'withdraw' | 'transfer' | undefined>();
 
-  const { error, ethId, ethBalances, setError, searchBalances, transactionModal, zkBalances } = useRootData(
-    ({ error, ethId, ethBalances, setError, searchBalances, transactionModal, zkBalances }) => ({
+  const {
+    error,
+    ethId,
+    ethBalances,
+    setBalances,
+    setError,
+    searchBalances,
+    transactionModal,
+    zkBalances,
+  } = useRootData(
+    ({ error, ethId, ethBalances, setBalances, setError, searchBalances, transactionModal, zkBalances }) => ({
       error: error.get(),
       ethId: ethId.get(),
       ethBalances: ethBalances.get(),
       searchBalances: searchBalances.get(),
+      setBalances,
       setError,
       transactionModal: transactionModal.get(),
       zkBalances: zkBalances.get(),
@@ -55,36 +72,89 @@ const Account: React.FC = (): JSX.Element => {
 
   return (
     <>
-      <MyWallet balances={ethBalances} price={price} title="My wallet" />
-      {!!transactionModal?.title && (
+      {!transactionType && (
+        <MyWallet balances={ethBalances} price={price} title="My wallet" setTransactionType={setTransactionType} />
+      )}
+      {transactionType === 'deposit' && (
         <Transaction
           addressValue={addressValue}
           amountValue={amountValue}
           balances={ethBalances}
           hash={hash}
           isExecuted={isExecuted}
-          isInput={transactionModal.input}
+          isInput={false}
           isLoading={isLoading}
           onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
           onChangeAmount={setAmountValue}
           price={price}
+          setHash={setHash}
           setExecuted={setExecuted}
-          title={transactionModal.title}
-          transactionAction={transactionModal.action}
-          type={transactionModal.type}
-          zkBalances={zkBalances}
+          title="Deposit"
+          transactionAction={deposit}
         />
       )}
-      <DataList title="Token balances" visible={!transactionModal || transactionModal.title === 'Send' ? true : false}>
-        {!!searchBalances &&
-          searchBalances.map(({ symbol, balance }) => (
-            <div key={balance} className="balances-token">
-              <div>zk{symbol}</div>
-              <div>
-                {balance} <span>(~${balance * price})</span>
+      {transactionType === 'withdraw' && (
+        <Transaction
+          addressValue={addressValue}
+          amountValue={amountValue}
+          balances={zkBalances}
+          hash={hash}
+          isExecuted={isExecuted}
+          isInput={true}
+          isLoading={isLoading}
+          onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
+          onChangeAmount={setAmountValue}
+          price={price}
+          setHash={setHash}
+          setExecuted={setExecuted}
+          title="Deposit"
+          transactionAction={withdraw}
+          type="eth"
+        />
+      )}
+      {transactionType === 'transfer' && (
+        <Transaction
+          addressValue={addressValue}
+          amountValue={amountValue}
+          balances={zkBalances}
+          hash={hash}
+          isExecuted={isExecuted}
+          isInput={true}
+          isLoading={isLoading}
+          onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
+          onChangeAmount={setAmountValue}
+          price={price}
+          setHash={setHash}
+          setExecuted={setExecuted}
+          title="Deposit"
+          transactionAction={transfer}
+          type="sync"
+        />
+      )}
+      <DataList
+        setValue={setBalances}
+        dataProperty={dataPropertyName}
+        data={zkBalances}
+        title="Token balances"
+        visible={!transactionModal || transactionModal.title === 'Send' ? true : false}
+      >
+        {!!searchBalances.length
+          ? searchBalances.map(({ symbol, balance }) => (
+              <div key={balance} className="balances-token">
+                <div>zk{symbol}</div>
+                <div>
+                  {balance} <span>(~${balance * price})</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          : zkBalances.map(({ symbol, balance }) => (
+              <div key={balance} className="balances-token">
+                <div>zk{symbol}</div>
+                <div>
+                  {balance} <span>(~${balance * price})</span>
+                </div>
+              </div>
+            ))}
       </DataList>
     </>
   );

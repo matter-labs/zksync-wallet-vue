@@ -1,6 +1,6 @@
-export interface IModal {
+export interface IModalProps {
   background: boolean;
-  cancelAction: any;
+  cancelAction?: any;
   children?: React.ReactNode;
   classSpecifier: string;
   visible: boolean;

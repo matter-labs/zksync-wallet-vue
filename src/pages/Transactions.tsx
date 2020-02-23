@@ -5,15 +5,24 @@ import { useRootData } from '../hooks/useRootData';
 import DataList from '../components/DataList/DataList';
 
 const Transactions: React.FC = (): JSX.Element => {
-  const { searchTransactions } = useRootData(({ searchTransactions }) => ({
+  const dataPropertyName = 'to';
+
+  const { searchTransactions, setTransactions } = useRootData(({ searchTransactions, setTransactions }) => ({
     searchTransactions: searchTransactions.get(),
+    setTransactions,
   }));
 
   const arrTransactions: any = localStorage.getItem('history');
   const transactions = JSON.parse(arrTransactions);
 
   return (
-    <DataList title="Transactions" visible={true}>
+    <DataList
+      setValue={setTransactions}
+      dataProperty={dataPropertyName}
+      data={transactions}
+      title="Transactions"
+      visible={true}
+    >
       {transactions ? (
         searchTransactions?.map(({ amount, type, hash, to }) => (
           <div className="transaction-history-wrapper" key={hash}>

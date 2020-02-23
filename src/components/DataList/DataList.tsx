@@ -1,71 +1,51 @@
 import React, { useEffect, useCallback } from 'react';
 
-import { useRootData } from '../../hooks/useRootData';
-
-import { IBalances } from './Types';
-
 import Modal from '../Modal/Modal';
 import SaveContacts from '../SaveContacts/SaveContacts';
 
+import { useRootData } from '../../hooks/useRootData';
+
+import { IBalancesProps } from './Types';
+
 import './DataList.scss';
 
-const DataList: React.FC<IBalances> = ({ children, title, visible }): JSX.Element => {
-  const { setBalances, setContacts, setModal, setTransactions, zkBalances } = useRootData(
-    ({ setBalances, setContacts, setModal, setTransactions, zkBalances }) => ({
-      setBalances,
-      setContacts,
-      setModal,
-      setTransactions,
-      zkBalances: zkBalances.get(),
-    }),
-  );
-
-  const arrContacts: any = localStorage.getItem('contacts');
-  const contacts = JSON.parse(arrContacts);
-
-  const arrTransactions: any = localStorage.getItem('history');
-  const transactions = JSON.parse(arrTransactions);
+const DataList: React.FC<IBalancesProps> = ({
+  children,
+  data,
+  dataProperty,
+  setValue,
+  title,
+  visible,
+}): JSX.Element => {
+  const { setModal } = useRootData(({ setModal }) => ({
+    setModal,
+  }));
 
   useEffect(() => {
-    setContacts(contacts);
-    setBalances(zkBalances);
-    setTransactions(transactions);
-  }, [zkBalances]);
+    setValue(data);
+  }, [setValue]); // don't add data to the dependencies for preventing infinite loop
 
   const handleSearch = useCallback(
     e => {
       const searchQuery = e.target.value.toLowerCase();
-      if (title === 'Token balances') {
-        const displayedBalances = zkBalances?.filter(el => {
-          const searchValue = `zk${el.symbol}`.toLowerCase();
-          return searchValue.indexOf(searchQuery) !== -1;
-        });
-        setBalances(displayedBalances);
-      } else if (title === 'Contacts') {
-        const displayedContacts = contacts?.filter(el => {
-          const searchValue = el.name.toLowerCase();
-          return searchValue.indexOf(searchQuery) !== -1;
-        });
-        setContacts(displayedContacts);
-      } else if (title === 'Transactions') {
-        const displayedContacts = transactions?.filter(el => {
-          const searchValue = el.to.toLowerCase();
-          return searchValue.indexOf(searchQuery) !== -1;
-        });
-        setTransactions(displayedContacts);
-      }
+      const displayedItems = data?.filter(el => {
+        const searchValue =
+          dataProperty === 'symbol' ? `zk${el[dataProperty]}`.toLowerCase() : el[dataProperty].toLowerCase();
+        return searchValue.indexOf(searchQuery) !== -1;
+      });
+      setValue(displayedItems);
     },
-    [contacts, setBalances, setContacts, setTransactions, title, transactions, zkBalances],
+    [data, dataProperty, setValue],
   );
 
   return (
     <>
-      <Modal visible={false} classSpecifier="add-contact addressless" background={true} cancelAction={() => null}>
-        <SaveContacts addressValue="" addressInput={true} />
+      <Modal visible={false} classSpecifier="add-contact addressless" background={true}>
+        <SaveContacts title="Add contact" addressValue="" addressInput={true} />
       </Modal>
       <div className={`balances-wrapper ${visible ? 'open' : 'closed'}`}>
         <h3 className="balances-title">{title}</h3>
-        <input onChange={e => handleSearch(e)} placeholder="Search token" className="balances-search" type="text" />
+        <input onChange={handleSearch} placeholder="Search token" className="balances-search" type="text" />
         {children}
         {title === 'Contacts' && (
           <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>

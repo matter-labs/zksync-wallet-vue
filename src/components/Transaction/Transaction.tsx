@@ -8,7 +8,6 @@ import { ITransactionProps } from './Types';
 import { INPUT_VALIDATION } from '../../constants/regExs';
 
 import { useRootData } from '../../hooks/useRootData';
-import { useTransaction } from '../../hooks/useTransaction';
 
 import './Transaction.scss';
 
@@ -22,10 +21,11 @@ const Transaction: React.FC<ITransactionProps> = ({
   onChangeAddress,
   onChangeAmount,
   price,
+  setHash,
+  setExecuted,
   title,
   transactionAction,
   type,
-  zkBalances,
 }): JSX.Element => {
   const { ethId, setModal, setTransactionModal, setWalletAddress, walletAddress } = useRootData(
     ({ ethId, setModal, setTransactionModal, setWalletAddress, walletAddress }) => ({
@@ -37,23 +37,12 @@ const Transaction: React.FC<ITransactionProps> = ({
     }),
   );
 
-  const { setExecuted, setHash } = useTransaction();
-
-  const baseBalance =
-    title === 'deposit' ? (!!balances?.length ? balances[0] : 0) : !!zkBalances?.length ? zkBalances[0] : 0;
+  const baseBalance = !!balances?.length ? balances[0] : 0;
 
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>(0);
-  const [maxValue, setMaxValue] = useState<number>(
-    title === 'deposit'
-      ? !!balances?.length
-        ? balances[0].balance
-        : 0
-      : !!zkBalances?.length
-      ? zkBalances[0].balance
-      : 0,
-  );
+  const [maxValue, setMaxValue] = useState<number>(!!balances?.length ? balances[0].balance : 0);
   const [selectedBalance, setSelectedBalance] = useState<any>(baseBalance);
   const [selectedContact, setSelectedContact] = useState<any>();
   const [symbolName, setSymbolName] = useState<string>('');
@@ -112,14 +101,16 @@ const Transaction: React.FC<ITransactionProps> = ({
     };
   }, [handleClickOutside]);
 
+  console.log(token);
+
   return (
     <>
       <div
         data-name="modal-wrapper"
         className={`modal-wrapper ${isContactsListOpen || isBalancesListOpen ? 'open' : 'closed'}`}
       ></div>
-      <Modal visible={false} classSpecifier="add-contact" background={true} cancelAction={() => null}>
-        <SaveContacts addressValue={addressValue} addressInput={false} />
+      <Modal visible={false} classSpecifier="add-contact" background={true}>
+        <SaveContacts title="Add contact" addressValue={addressValue} addressInput={false} />
       </Modal>
       <div className="transaction-wrapper">
         {isExecuted ? (
@@ -168,7 +159,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                         <div className="custom-selector contacts">
                           <div onClick={() => openContactsList(!isContactsListOpen)} className="custom-selector-title">
                             {selectedContact ? <p>{selectedContact}</p> : <span></span>}
-                            <div></div>
+                            <div className="arrow-down"></div>
                           </div>
                           <ul className={`custom-selector-list ${isContactsListOpen ? 'open' : 'closed'}`}>
                             {contacts?.length &&
@@ -192,11 +183,13 @@ const Transaction: React.FC<ITransactionProps> = ({
                   </>
                 )}
                 <span className="transaction-field-title">Amount / asset</span>
-                <div className="transaction-field">
+                <div className="transaction-field balance">
                   <div className="currency-input-wrapper border">
                     <input
                       placeholder="0.00"
                       className={'currency-input'}
+                      type="number"
+                      step={0.001}
                       onChange={e => {
                         validateNumbers(+e.target.value);
                         onChangeAmount(+e.target.value);
@@ -213,18 +206,17 @@ const Transaction: React.FC<ITransactionProps> = ({
                         ) : (
                           <span>{selectedBalance.symbol ? selectedBalance.symbol : 'You have no balances'}</span>
                         )}
-                        <div></div>
+                        <div className="arrow-down"></div>
                       </div>
                       <ul className={`custom-selector-list ${isBalancesListOpen ? 'open' : 'closed'}`}>
-                        {title === 'Deposit' &&
-                          balances?.length &&
+                        {balances?.length &&
                           balances.map(({ address, balance, symbol }) => (
                             <li
                               className="custom-selector-list-item"
                               key={address}
                               value={balance}
-                              onClick={e => {
-                                setToken(e.toString());
+                              onClick={() => {
+                                setToken(+address ? address : symbol);
                                 setMaxValue(balance);
                                 setSymbolName(symbol);
                                 handleSelect(symbol);
@@ -234,34 +226,15 @@ const Transaction: React.FC<ITransactionProps> = ({
                               {symbol}
                             </li>
                           ))}
-                        {title === 'Send' ||
-                          (title === 'Withdraw' &&
-                            zkBalances?.length &&
-                            zkBalances.map(({ address, balance, symbol }) => (
-                              <li
-                                className="custom-selector-list-item"
-                                key={address}
-                                value={balance}
-                                onClick={e => {
-                                  setToken(e.toString());
-                                  setMaxValue(balance);
-                                  setSymbolName(symbol);
-                                  handleSelect(symbol);
-                                  openBalancesList(false);
-                                }}
-                              >
-                                zk{symbol}
-                              </li>
-                            )))}
                       </ul>
                     </div>
                   </div>
-                  {zkBalances?.length && (
+                  {balances?.length && (
                     <div className="currency-input-wrapper" key={token}>
-                      <span>~${price * (maxValue ? maxValue : zkBalances[0].balance)}</span>
+                      <span>~${(price * (maxValue ? maxValue : balances[0].balance)).toFixed(2)}</span>
                       <span>
-                        Balance: {maxValue ? maxValue : zkBalances[0].balance}{' '}
-                        {symbolName ? symbolName : zkBalances[0].symbol}
+                        Balance: {maxValue ? maxValue : balances[0].balance}{' '}
+                        {symbolName ? symbolName : balances[0].symbol}
                       </span>
                     </div>
                   )}
@@ -274,18 +247,16 @@ const Transaction: React.FC<ITransactionProps> = ({
                 </div>
                 <button
                   className={`btn submit-button ${unlockFau ? '' : 'disabled'}`}
-                  onClick={() => {
-                    unlockFau ? transactionAction(token, type) : console.log('fau token is locked');
-                  }}
+                  onClick={() => transactionAction(token, type)}
                 >
                   {title}
                 </button>
                 <p key={maxValue} className="transaction-fee">
                   Fee:{' '}
-                  {zkBalances?.length && (
+                  {balances?.length && (
                     <span>
-                      {maxValue ? maxValue * 0.001 : zkBalances[0].balance * 0.001}{' '}
-                      {symbolName ? symbolName : zkBalances[0].symbol}
+                      {maxValue ? maxValue * 0.001 : balances[0].balance * 0.001}{' '}
+                      {symbolName ? symbolName : balances[0].symbol}
                     </span>
                   )}
                 </p>

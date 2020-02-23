@@ -1,6 +1,8 @@
-import React, { useCallback } from 'react';
-
+import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
+
+import Modal from '../components/Modal/Modal';
+import SaveContacts from '../components/SaveContacts/SaveContacts';
 
 import { useRootData } from '../hooks/useRootData';
 import { useTransaction } from '../hooks/useTransaction';
@@ -8,14 +10,19 @@ import { useTransaction } from '../hooks/useTransaction';
 import DataList from '../components/DataList/DataList';
 
 const Contacts: React.FC = (): JSX.Element => {
-  const { searchContacts, setModal, setTransactionModal, setWalletAddress } = useRootData(
-    ({ searchContacts, setModal, setTransactionModal, setWalletAddress }) => ({
+  const dataPropertyName = 'name';
+
+  const { searchContacts, setContacts, setModal, setTransactionModal, setWalletAddress } = useRootData(
+    ({ searchContacts, setContacts, setModal, setTransactionModal, setWalletAddress }) => ({
       searchContacts: searchContacts.get(),
+      setContacts,
       setModal,
       setTransactionModal,
       setWalletAddress,
     }),
   );
+
+  const [addressValue, setAddressValue] = useState<string>('');
 
   const arr: any = localStorage.getItem('contacts');
   const contacts = JSON.parse(arr);
@@ -37,8 +44,21 @@ const Contacts: React.FC = (): JSX.Element => {
     [inputRef],
   );
 
+  const handleDelete = useCallback(name => {
+    const selectedItem = contacts.findIndex(el => {
+      return el.name === name;
+    });
+    const newContacts = contacts;
+    newContacts.splice(selectedItem, 1);
+    localStorage.setItem('contacts', JSON.stringify(newContacts));
+    setModal('');
+  }, []);
+
   return (
-    <DataList title="Contacts" visible={true}>
+    <DataList setValue={setContacts} dataProperty={dataPropertyName} data={contacts} title="Contacts" visible={true}>
+      <Modal visible={false} classSpecifier="add-contact edit-contact" background={true}>
+        <SaveContacts title="Edit contact" addressValue="" addressInput={true} />
+      </Modal>
       {contacts && (
         <>
           <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>
@@ -71,7 +91,13 @@ const Contacts: React.FC = (): JSX.Element => {
                     value={address}
                     ref={e => inputRef.push(e)}
                   />
-                  <button className="balances-contact-edit">
+                  <button
+                    onClick={() => {
+                      setAddressValue(address);
+                      setModal('add-contact edit-contact');
+                    }}
+                    className="balances-contact-edit"
+                  >
                     <span></span>
                     <span></span>
                     <span></span>

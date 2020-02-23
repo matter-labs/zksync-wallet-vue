@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 
-import { IModal } from './Types';
 import Portal from './Portal';
+
+import { IModalProps } from './Types';
 
 import { useRootData } from '../../hooks/useRootData';
 
 import './Modal.scss';
 
-const Modal: React.FC<IModal> = ({ background, cancelAction, children, classSpecifier, visible }): JSX.Element => {
+const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, classSpecifier, visible }): JSX.Element => {
   const { isModalOpen, setError, setModal } = useRootData(({ isModalOpen, setError, setModal }) => ({
     isModalOpen: isModalOpen.get(),
     setError,
@@ -47,7 +48,9 @@ const Modal: React.FC<IModal> = ({ background, cancelAction, children, classSpec
           <div ref={myRef} className={`modal ${classSpecifier} open`}>
             <button
               onClick={() => {
-                cancelAction();
+                if (cancelAction) {
+                  cancelAction();
+                }
                 setError('');
                 setModal('');
               }}

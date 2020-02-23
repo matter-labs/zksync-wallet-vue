@@ -11,10 +11,10 @@ export interface ITransactionProps {
   isLoading: boolean;
   onChangeAddress: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeAmount: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setHash: React.Dispatch<React.SetStateAction<string | ContractTransaction | undefined>>;
   setExecuted: React.Dispatch<React.SetStateAction<boolean>>;
   price: number;
   title: string;
-  transactionAction: (token: string, type?: string) => Promise<void> | boolean;
+  transactionAction: (token?: any, type?: any) => Promise<void>;
   type?: string;
-  zkBalances?: IEthBalance[];
 }
