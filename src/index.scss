@@ -21,6 +21,7 @@
   --input-color: rgba(0, 0, 0, 0.02);
   --input-border-focus: rgba(0, 0, 0, 0.2);
   --error-color: rgba(255, 101, 35, 0.17);
+  --delete-color: #AE1E1E;
   --links-color: #4E529A;
   --success-color: #27AE60;
   --transparent: transparent;
@@ -314,6 +315,61 @@ h2 {
   }
 }
 
+.contact-manage {
+  position: absolute;
+  width: 100%;
+  max-width: 300px;
+  height: 145px;
+  overflow: hidden;
+  background-color: var(--modal-bg-color);
+  border-radius: 5px;
+  transform: translate(-50%, -50%);
+
+  &-delete {
+    color: var(--delete-color);
+  }
+
+  & > button {
+    display: flex; 
+    align-items: center;
+    width: 100%;
+    height: 50%;
+    padding-left: 20px;
+    text-align: left;
+    background-color: var(--transparent);
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+
+    & > p {
+      margin-bottom: 0;
+      margin-left: 25px;
+    }
+
+    &:hover {
+      background-color: var(--copyblock-color);
+    }
+  }
+}
+
+input[type="radio"] + .contact-manage {
+  display: none;
+  outline: none;
+}
+
+.contact-edit-wrapper:focus-within > .contact-manage {
+  display: block;
+}
+
+input[type="radio"]:focus + .contact-manage{
+  display: block;
+}
+
+.balances-contact-right {
+  & .balances-contact-edit {
+      background-image: url(./images/mdi_more_horiz.svg);
+  }
+}
+
 .custom-selector {
   position: relative;
   width: 100%;
@@ -329,6 +385,7 @@ h2 {
     text-overflow: ellipsis;
     cursor: pointer;
 
+    /* stylelint-disable-next-line no-descending-specificity*/
     & > p {
       margin-bottom: 0;
       padding-right: 15px;

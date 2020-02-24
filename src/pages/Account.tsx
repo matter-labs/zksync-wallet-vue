@@ -30,7 +30,7 @@ const Account: React.FC = (): JSX.Element => {
     withdraw,
   } = useTransaction();
   const [price, setPrice] = useState<number>(0);
-  const [transactionType, setTransactionType] = useState<'deposit' | 'withdraw' | 'transfer' | undefined>();
+  // const [transactionType, setTransactionType] = useState<'deposit' | 'withdraw' | 'transfer' | undefined>();
 
   const {
     error,
@@ -39,17 +39,31 @@ const Account: React.FC = (): JSX.Element => {
     setBalances,
     setError,
     searchBalances,
-    transactionModal,
+    setTransactionType,
+    transactionType,
     zkBalances,
   } = useRootData(
-    ({ error, ethId, ethBalances, setBalances, setError, searchBalances, transactionModal, zkBalances }) => ({
+    ({
+      error,
+      ethId,
+      ethBalances,
+      setBalances,
+      setError,
+      searchBalances,
+      setTransactionType,
+      transactionModal,
+      transactionType,
+      zkBalances,
+    }) => ({
       error: error.get(),
       ethId: ethId.get(),
       ethBalances: ethBalances.get(),
       searchBalances: searchBalances.get(),
       setBalances,
       setError,
+      setTransactionType,
       transactionModal: transactionModal.get(),
+      transactionType: transactionType.get(),
       zkBalances: zkBalances.get(),
     }),
   );

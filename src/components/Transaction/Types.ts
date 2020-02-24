@@ -12,7 +12,7 @@ export interface ITransactionProps {
   onChangeAddress: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeAmount: React.Dispatch<React.SetStateAction<number | undefined>>;
   setHash: React.Dispatch<React.SetStateAction<string | ContractTransaction | undefined>>;
-  setTransactionType: React.Dispatch<React.SetStateAction<'deposit' | 'withdraw' | 'transfer' | undefined>>;
+  setTransactionType: (transaction: 'deposit' | 'withdraw' | 'transfer' | undefined) => void;
   setExecuted: React.Dispatch<React.SetStateAction<boolean>>;
   price: number;
   title: string;

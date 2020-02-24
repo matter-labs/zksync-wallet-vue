@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 import Modal from '../components/Modal/Modal';
 import SaveContacts from '../components/SaveContacts/SaveContacts';
+import editicon from '../images/icon-edit.svg';
+import deleteicon from '../images/mdi_delete.svg';
 
 import { useRootData } from '../hooks/useRootData';
 import { useTransaction } from '../hooks/useTransaction';
@@ -12,17 +14,26 @@ import DataList from '../components/DataList/DataList';
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
 
-  const { searchContacts, setContacts, setModal, setTransactionModal, setWalletAddress } = useRootData(
-    ({ searchContacts, setContacts, setModal, setTransactionModal, setWalletAddress }) => ({
+  const {
+    searchContacts,
+    setContacts,
+    setModal,
+    setTransactionModal,
+    setTransactionType,
+    setWalletAddress,
+  } = useRootData(
+    ({ searchContacts, setContacts, setModal, setTransactionModal, setTransactionType, setWalletAddress }) => ({
       searchContacts: searchContacts.get(),
       setContacts,
       setModal,
       setTransactionModal,
+      setTransactionType,
       setWalletAddress,
     }),
   );
 
   const [addressValue, setAddressValue] = useState<string>('');
+  const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   const arr: any = localStorage.getItem('contacts');
   const contacts = JSON.parse(arr);
@@ -78,7 +89,7 @@ const Contacts: React.FC = (): JSX.Element => {
                   <button
                     className="balances-contact-send"
                     onClick={() => {
-                      setTransactionModal({ title: 'Send', input: true, action: transfer });
+                      setTransactionType('transfer');
                       setWalletAddress(address);
                     }}
                   >
@@ -91,17 +102,37 @@ const Contacts: React.FC = (): JSX.Element => {
                     value={address}
                     ref={e => inputRef.push(e)}
                   />
-                  <button
-                    onClick={() => {
-                      setAddressValue(address);
-                      setModal('add-contact edit-contact');
-                    }}
-                    className="balances-contact-edit"
-                  >
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </button>
+
+                  <div className="contact-edit-wrapper">
+                    <input
+                      type="radio"
+                      onClick={() => {
+                        setAddressValue(address);
+                        setEditModalOpen(true);
+                      }}
+                      className="balances-contact-edit"
+                    >
+                      {/* <span></span>
+                      <span></span>
+                      <span></span> */}
+                    </input>
+                    <div className={`contact-manage ${isEditModalOpen ? 'open' : 'closed'}`}>
+                      <button
+                        className="contact-manage-edit"
+                        onClick={() => {
+                          setAddressValue(address);
+                          setModal('add-contact edit-contact');
+                        }}
+                      >
+                        <img src={editicon} alt="edit" />
+                        <p>Edit</p>
+                      </button>
+                      <button onClick={() => handleDelete(name)} className="contact-manage-delete">
+                        <img src={deleteicon} alt="edit" />
+                        <p>Delete</p>
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))

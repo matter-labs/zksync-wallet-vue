@@ -98,7 +98,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   }, []);
 
   useEffect(() => {
-    if (balances) {
+    if (balances?.length) {
       setToken(balances[0].address ? balances[0].address : balances[0].symbol);
     }
     document.addEventListener('click', handleClickOutside, true);

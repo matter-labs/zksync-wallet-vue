@@ -21,6 +21,7 @@ export const createStore = () => ({
   searchTransactions: observable.box<any>(),
   tokens: observable.box<Tokens>(),
   transactionModal: observable.box<ITransaction>(),
+  transactionType: observable.box<'deposit' | 'withdraw' | 'transfer' | undefined>(undefined),
   walletName: observable.box<string>(''),
   walletAddress: observable.box<string>(''),
   withdrawModal: observable.box<boolean>(false),
@@ -85,6 +86,10 @@ export const createStore = () => ({
 
   setTransactions(searchTransactions: any): void {
     this.searchTransactions.set(searchTransactions);
+  },
+
+  setTransactionType(transaction: 'deposit' | 'withdraw' | 'transfer' | undefined) {
+    this.transactionType.set(transaction);
   },
 
   setWalletAddress(walletAddress: string): void {
