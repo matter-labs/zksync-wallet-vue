@@ -78,7 +78,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             cancelAction={() => handleLogOut()}
           >
             <div className="metamask-logo"></div>
-            {provider && provider.networkVersion === '4' ? ( //need to change on prod
+            {provider && provider.networkVersion === '4' ? ( //TODO: need to change on prod
               <>
                 <h3>Connected to Metamask</h3>
                 <button className="btn submit-button" onClick={createWallet}>

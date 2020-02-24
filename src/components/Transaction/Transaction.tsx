@@ -31,11 +31,10 @@ const Transaction: React.FC<ITransactionProps> = ({
   transactionAction,
   type,
 }): JSX.Element => {
-  const { ethId, setModal, setTransactionModal, setWalletAddress, walletAddress } = useRootData(
-    ({ ethId, setModal, setTransactionModal, setWalletAddress, walletAddress }) => ({
+  const { ethId, setModal, setWalletAddress, walletAddress } = useRootData(
+    ({ ethId, setModal, setWalletAddress, walletAddress }) => ({
       ethId: ethId.get(),
       setModal,
-      setTransactionModal,
       setWalletAddress,
       walletAddress: walletAddress.get(),
     }),

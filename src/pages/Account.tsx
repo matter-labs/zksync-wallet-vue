@@ -30,7 +30,6 @@ const Account: React.FC = (): JSX.Element => {
     withdraw,
   } = useTransaction();
   const [price, setPrice] = useState<number>(0);
-  // const [transactionType, setTransactionType] = useState<'deposit' | 'withdraw' | 'transfer' | undefined>();
 
   const {
     error,

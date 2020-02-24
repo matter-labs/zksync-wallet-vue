@@ -7,26 +7,17 @@ import editicon from '../images/icon-edit.svg';
 import deleteicon from '../images/mdi_delete.svg';
 
 import { useRootData } from '../hooks/useRootData';
-import { useTransaction } from '../hooks/useTransaction';
 
 import DataList from '../components/DataList/DataList';
 
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
 
-  const {
-    searchContacts,
-    setContacts,
-    setModal,
-    setTransactionModal,
-    setTransactionType,
-    setWalletAddress,
-  } = useRootData(
-    ({ searchContacts, setContacts, setModal, setTransactionModal, setTransactionType, setWalletAddress }) => ({
+  const { searchContacts, setContacts, setModal, setTransactionType, setWalletAddress } = useRootData(
+    ({ searchContacts, setContacts, setModal, setTransactionType, setWalletAddress }) => ({
       searchContacts: searchContacts.get(),
       setContacts,
       setModal,
-      setTransactionModal,
       setTransactionType,
       setWalletAddress,
     }),
@@ -37,8 +28,6 @@ const Contacts: React.FC = (): JSX.Element => {
 
   const arr: any = localStorage.getItem('contacts');
   const contacts = JSON.parse(arr);
-
-  const { transfer } = useTransaction();
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
@@ -111,11 +100,7 @@ const Contacts: React.FC = (): JSX.Element => {
                         setEditModalOpen(true);
                       }}
                       className="balances-contact-edit"
-                    >
-                      {/* <span></span>
-                      <span></span>
-                      <span></span> */}
-                    </input>
+                    ></input>
                     <div className={`contact-manage ${isEditModalOpen ? 'open' : 'closed'}`}>
                       <button
                         className="contact-manage-edit"
