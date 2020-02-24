@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 
 import Modal from '../components/Modal/Modal';
 import SaveContacts from '../components/SaveContacts/SaveContacts';
@@ -13,8 +13,9 @@ import DataList from '../components/DataList/DataList';
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
 
-  const { searchContacts, setContacts, setModal, setTransactionType, setWalletAddress } = useRootData(
-    ({ searchContacts, setContacts, setModal, setTransactionType, setWalletAddress }) => ({
+  const { ethId, searchContacts, setContacts, setModal, setTransactionType, setWalletAddress } = useRootData(
+    ({ ethId, searchContacts, setContacts, setModal, setTransactionType, setWalletAddress }) => ({
+      ethId: ethId.get(),
       searchContacts: searchContacts.get(),
       setContacts,
       setModal,
@@ -22,6 +23,8 @@ const Contacts: React.FC = (): JSX.Element => {
       setWalletAddress,
     }),
   );
+
+  const history = useHistory();
 
   const [addressValue, setAddressValue] = useState<string>('');
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
@@ -53,6 +56,13 @@ const Contacts: React.FC = (): JSX.Element => {
     localStorage.setItem('contacts', JSON.stringify(newContacts));
     setModal('');
   }, []);
+
+  useEffect(() => {
+    if (!ethId) {
+      window.location.pathname = '/';
+      history.push('/');
+    }
+  }, [ethId]);
 
   return (
     <DataList setValue={setContacts} dataProperty={dataPropertyName} data={contacts} title="Contacts" visible={true}>

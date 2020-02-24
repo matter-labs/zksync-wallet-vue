@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { useRootData } from '../hooks/useRootData';
 
@@ -7,13 +8,25 @@ import DataList from '../components/DataList/DataList';
 const Transactions: React.FC = (): JSX.Element => {
   const dataPropertyName = 'to';
 
-  const { searchTransactions, setTransactions } = useRootData(({ searchTransactions, setTransactions }) => ({
-    searchTransactions: searchTransactions.get(),
-    setTransactions,
-  }));
+  const { ethId, searchTransactions, setTransactions } = useRootData(
+    ({ ethId, searchTransactions, setTransactions }) => ({
+      ethId: ethId.get(),
+      searchTransactions: searchTransactions.get(),
+      setTransactions,
+    }),
+  );
+
+  const history = useHistory();
 
   const arrTransactions: any = localStorage.getItem('history');
   const transactions = JSON.parse(arrTransactions);
+
+  useEffect(() => {
+    if (!ethId) {
+      window.location.pathname = '/';
+      history.push('/');
+    }
+  }, [ethId]);
 
   return (
     <DataList

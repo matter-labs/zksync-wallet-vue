@@ -135,7 +135,6 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
           </button>
         </div>
       </>
-      <div data-name="modal-wrapper" className={`modal-wrapper ${isBalancesListOpen ? 'open' : 'closed'}`}></div>
     </>
   );
 };
