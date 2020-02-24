@@ -75,7 +75,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             background={false}
             classSpecifier="metamask"
             visible={isAccessModalOpen}
-            cancelAction={() => setAccessModal(false)}
+            cancelAction={() => handleLogOut()}
           >
             <div className="metamask-logo"></div>
             {provider && provider.networkVersion === '4' ? ( //need to change on prod

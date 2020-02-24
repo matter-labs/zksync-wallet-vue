@@ -89,6 +89,7 @@ const Account: React.FC = (): JSX.Element => {
           price={price}
           setHash={setHash}
           setExecuted={setExecuted}
+          setTransactionType={setTransactionType}
           title="Deposit"
           transactionAction={deposit}
         />
@@ -107,7 +108,8 @@ const Account: React.FC = (): JSX.Element => {
           price={price}
           setHash={setHash}
           setExecuted={setExecuted}
-          title="Deposit"
+          setTransactionType={setTransactionType}
+          title="Withdraw"
           transactionAction={withdraw}
           type="eth"
         />
@@ -126,7 +128,8 @@ const Account: React.FC = (): JSX.Element => {
           price={price}
           setHash={setHash}
           setExecuted={setExecuted}
-          title="Deposit"
+          setTransactionType={setTransactionType}
+          title="Send"
           transactionAction={transfer}
           type="sync"
         />
@@ -136,7 +139,7 @@ const Account: React.FC = (): JSX.Element => {
         dataProperty={dataPropertyName}
         data={zkBalances}
         title="Token balances"
-        visible={!transactionModal || transactionModal.title === 'Send' ? true : false}
+        visible={true}
       >
         {!!searchBalances.length
           ? searchBalances.map(({ symbol, balance }) => (

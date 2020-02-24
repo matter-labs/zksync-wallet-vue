@@ -30,10 +30,10 @@ export const useTransaction = () => {
   );
 
   const history = useCallback(
-    (amount: number, hash: string | undefined, to: string, type: string) => {
+    (amount: number, hash: string | undefined, to: string, type: string, token: string) => {
       try {
         const history = JSON.parse(localStorage.getItem('history') || '[]');
-        const newHistory = JSON.stringify([{ amount, date: new Date(), hash, to, type }, ...history]);
+        const newHistory = JSON.stringify([{ amount, date: new Date(), hash, to, type, token }, ...history]);
         localStorage.setItem('history', newHistory);
       } catch (err) {
         err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
@@ -87,7 +87,7 @@ export const useTransaction = () => {
             amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
           });
           const hash = depositPriorityOperation.ethTx;
-          history(amountValue || 0, hash.hash, zkWallet.address(), 'deposit');
+          history(amountValue || 0, hash.hash, zkWallet.address(), 'deposit', token);
           setHash(hash);
           const receipt = await depositPriorityOperation.awaitReceipt();
           transactions(receipt);
@@ -98,8 +98,6 @@ export const useTransaction = () => {
     },
     [amountValue, ethWallet, history, setError, setHash, setLoading, transactions, zkWallet],
   );
-
-  console.log(addressValue);
 
   const transfer = useCallback(
     async (token = TOKEN, type) => {
@@ -120,7 +118,7 @@ export const useTransaction = () => {
             fee: ethers.utils.parseEther('0.001'),
           });
           const hash = transferTransaction.txHash;
-          history(amountValue || 0, hash, addressValue, 'transfer');
+          history(amountValue || 0, hash, addressValue, 'transfer', token);
           setHash(hash);
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
@@ -147,7 +145,7 @@ export const useTransaction = () => {
             fee: ethers.utils.parseEther('0.001'),
           });
           const hash = withdrawTransaction.txHash;
-          history(amountValue || 0, hash, addressValue, 'withdraw');
+          history(amountValue || 0, hash, addressValue, 'withdraw', token);
           setHash(hash);
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);

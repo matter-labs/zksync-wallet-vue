@@ -5,16 +5,14 @@ import { useRootData } from '../../hooks/useRootData';
 import { IMyWalletProps } from './Types';
 
 import './Wallets.scss';
+import Spinner from '../Spinner/Spinner';
 
 const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.Element => {
-  const { transactionModal, setTransactionModal, zkBalances, zkWallet } = useRootData(
-    ({ transactionModal, setTransactionModal, zkBalances, zkWallet }) => ({
-      transactionModal: transactionModal.get(),
-      setTransactionModal,
-      zkBalances: zkBalances.get(),
-      zkWallet: zkWallet.get(),
-    }),
-  );
+  const { transactionModal, zkBalances, zkWallet } = useRootData(({ transactionModal, zkBalances, zkWallet }) => ({
+    transactionModal: transactionModal.get(),
+    zkBalances: zkBalances.get(),
+    zkWallet: zkWallet.get(),
+  }));
 
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [selectedBalance, setSelectedBalance] = useState<any>(!!zkBalances?.length ? zkBalances[0] : 0);
@@ -62,7 +60,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
           <div className="copy-block">
             <input
               className="copy-block-input"
-              onChange={() => console.log(null)}
+              onChange={undefined}
               value={zkWallet?.address()}
               ref={e => inputRef.push(e)}
             />
@@ -82,12 +80,13 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                     <p>zk{symbolName}</p>
                   ) : (
                     <span>
-                      zk
-                      {selectedBalance.symbol
-                        ? selectedBalance.symbol
-                        : !!zkBalances?.length
-                        ? zkBalances[0].symbol
-                        : 'empty'}
+                      {selectedBalance.symbol ? (
+                        <>zk{selectedBalance.symbol}</>
+                      ) : !!zkBalances?.length ? (
+                        <>zk{zkBalances[0].symbol}</>
+                      ) : (
+                        <Spinner />
+                      )}
                     </span>
                   )}
                   <div className="arrow-down"></div>

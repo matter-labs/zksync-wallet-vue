@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import Modal from '../Modal/Modal';
+import avatar from '../../images/avatar.png';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -55,15 +56,16 @@ const Header: React.FC = (): JSX.Element => {
           <>
             <button type="button" className="menu-wallet" onClick={() => setModal('wallet')}>
               <p>{ethId}</p>
-              <img src="../../images/randomImage.png" alt="wallet" />
+              <img src={avatar} alt="avatar" />
             </button>
             <Modal visible={false} background={true} classSpecifier="wallet">
               <div className="wallet-title">
+                <img src={avatar} alt="avatar" />{' '}
                 {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
               </div>
               <div className="copy-block">
                 <input
-                  onChange={() => console.log(null)}
+                  onChange={undefined}
                   className="copy-block-input"
                   value={zkWallet?.address()}
                   ref={e => inputRef.push(e)}

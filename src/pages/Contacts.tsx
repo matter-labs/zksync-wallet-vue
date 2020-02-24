@@ -86,7 +86,7 @@ const Contacts: React.FC = (): JSX.Element => {
                   </button>
                   <button className="balances-contact-copy" onClick={() => handleCopy(address)}></button>
                   <input
-                    onChange={() => console.log(null)}
+                    onChange={undefined}
                     className="copy-block-input"
                     value={address}
                     ref={e => inputRef.push(e)}

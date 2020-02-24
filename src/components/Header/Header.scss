@@ -54,13 +54,18 @@
     justify-content: space-between;
     width: 100%;
     max-width: 60px;
-    height: 25px;
+    height: 30px;
     color: var(--dark-color);
     background-color: var(--modal-bg-color);
     border: none;
     border-radius: 13px;
     outline: none;
     cursor: pointer;
+
+    & > img {
+      width: 25px;
+      height: 25px;
+    }
 
     & > p {
       display: none;

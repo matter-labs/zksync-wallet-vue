@@ -1,0 +1,59 @@
+@mixin absolute-center {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+
+.overlay {
+  text-align: center;
+  background: var(--transparent);
+}
+    
+.spinner {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin: 0 auto;
+  font-size: var(--xxl-font-size);
+  
+  &.center {
+    @include absolute-center;
+  }
+}
+
+.spinner-blade {
+  position: absolute;
+  bottom: 0;
+  left: .4629em;
+  width: .1em;
+  height: .2777em;
+  background-color: var(--transparent);
+  transform-origin: center -.2222em;
+  animation: spinner-fade 1s infinite linear;
+
+  $animation-delay: 0s;
+  $blade-rotation: 0deg;
+
+  @for $i from 1 through 8 {
+    &:nth-child(#{$i}) {
+      transform: rotate($blade-rotation);
+      animation-delay: $animation-delay;
+      $blade-rotation: $blade-rotation + 45;
+      $animation-delay: $animation-delay + .1245;
+    }
+  }
+}
+
+@keyframes spinner-fade {
+  0% {
+    background-color: var(--button-bg-color);
+  }
+  
+  100% {
+    background-color: var(--transparent);
+  }
+}

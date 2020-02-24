@@ -15,6 +15,8 @@
   --main-bg-color: #F3F4F7;
   --bg-block-color: #F3F5FF;
   --border-color: rgba(24, 13, 13, 0.08);
+  --info-message-color: #FFF8DE;
+  --info-message-text-color: #AA935D;
   --copyblock-color: rgba(0, 0, 0, 0.04);
   --input-color: rgba(0, 0, 0, 0.02);
   --input-border-focus: rgba(0, 0, 0, 0.2);
@@ -32,6 +34,10 @@
 
   --bold-font-weight: 900;
   --medium-font-weight: 500;
+}
+
+button {
+  cursor: pointer;
 }
 
 body, html {
@@ -90,6 +96,8 @@ body.dark {
   --input-color: rgba(255, 255, 255, 0.02);
   --currency-block-color: rgba(255, 255, 255, 0.1);
   --links-color: #4E529A;
+  --info-message-color: rgba(255, 248, 222, 0.1);
+  --info-message-text-color: #AA935D;
   --error-color: rgba(255, 101, 35, 0.17);
   --success-color: #27AE60;
   --transparent: transparent;
@@ -296,7 +304,6 @@ h2 {
   & > h2 {
     color: var(--dark-color);
     font-size: var(--large-font-size);
-
   }
 
   & > p {
@@ -403,11 +410,12 @@ h2 {
     position: absolute;
     left: 0;
     z-index: 10000;
+    min-width: 120px;
     padding-left: 0;
+    text-align: center;
     background-color: var(--modal-bg-color);
     border: none;
     border-radius: 5px;
-    transform: translateX(-50%);
     transition: opacity 200ms ease;
 
     &-item {
@@ -435,6 +443,10 @@ h2 {
 }
 
 body.dark > #root {
+  .transaction-back {
+    background-image: url(./images/arrow-back-dark.svg);
+  }
+
   & > .content-wrapper {
     & .menu-top {
       & .menu-logo {

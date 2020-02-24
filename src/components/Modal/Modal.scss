@@ -132,6 +132,12 @@
       color: var(--dark-color);
       font-weight: var(--bold-font-weight);
       font-size: var(--xl-font-size);
+
+      & > img {
+        width: 55px;
+        height: 55px;
+        padding: 5px;
+      }
     }
 
     & > .horizontal-line {

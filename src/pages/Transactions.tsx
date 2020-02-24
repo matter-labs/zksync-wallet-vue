@@ -24,12 +24,14 @@ const Transactions: React.FC = (): JSX.Element => {
       visible={true}
     >
       {transactions ? (
-        searchTransactions?.map(({ amount, type, hash, to }) => (
+        searchTransactions?.map(({ amount, type, hash, to, token }) => (
           <div className="transaction-history-wrapper" key={hash}>
             <div className="transaction-history-left">
               <div className={`transaction-history ${type}`}></div>
               <div className="transaction-history-amount">{amount}</div>
-              <div className="transaction-history-hash">{hash}</div>
+              <div className="transaction-history-hash">
+                {token.length > 5 ? token.replace(token.slice(6, token.length - 3), '...') : <>zk{token}</>}
+              </div>
             </div>
             <div className="transaction-history-right">
               <div className="transaction-history-address">

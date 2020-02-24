@@ -65,6 +65,11 @@
     border: 1px solid var(--border-color);
     border-radius: 4px;
 
+    &-amount {
+      color: var(--dark-color);
+      font-size: var(--xl-font-size);
+    }
+
     &.balance {
       max-height: 150px;
     }
@@ -129,6 +134,22 @@
   }
 }
 
+.info-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  color: var(--info-message-text-color);
+  background-color: var(--info-message-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+
+  & > p {
+    margin-bottom: 0;
+    font-size: var(--md-font-size);
+  }
+}
+
 .currency {
   &-selector {
     margin-left: 10px;
@@ -170,6 +191,7 @@
       font-size: var(--md-font-size);
       white-space: nowrap;
       text-overflow: ellipsis;
+      background-color: var(--transparent);
       border: none;
       outline: none;
 
@@ -243,6 +265,16 @@
     &-title {
       font-size: var(--xl-font-size);
     }
+
+    &-hash {
+      margin-top: 20px;
+      color: var(--dark-color);
+      font-size: var(--sm-font-size);
+
+      & > span {
+        color: var(--hints-color);
+      }
+    }
   
     &-back {
       position: absolute;
@@ -252,7 +284,7 @@
       background: url(../../images/arrow-back.svg);
       background-repeat: no-repeat;
       background-position: center;
-      background-size: 35px;
+      background-size: 25px;
       border: none;
       border-radius: 25px;
       outline: none;

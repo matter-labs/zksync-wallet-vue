@@ -2,12 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import Modal from '../Modal/Modal';
 import SaveContacts from '../SaveContacts/SaveContacts';
+import Spinner from '../Spinner/Spinner';
 
 import { ITransactionProps } from './Types';
 
 import { INPUT_VALIDATION } from '../../constants/regExs';
 
 import { useRootData } from '../../hooks/useRootData';
+
+import clocks from '../../images/mdi_access_time.svg';
 
 import './Transaction.scss';
 
@@ -23,6 +26,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   price,
   setHash,
   setExecuted,
+  setTransactionType,
   title,
   transactionAction,
   type,
@@ -57,14 +61,13 @@ const Transaction: React.FC<ITransactionProps> = ({
   };
 
   const arr: any = localStorage.getItem('contacts');
-
   const contacts = JSON.parse(arr);
 
   const handleCancel = useCallback(() => {
     setHash('');
     setExecuted(false);
-    setTransactionModal({ title: '', input: false, action: () => false });
-  }, [setExecuted, setTransactionModal, setHash]);
+    setTransactionType(undefined);
+  }, [setExecuted, setTransactionType, setHash]);
 
   const setWalletName = useCallback(() => {
     if (value && value !== ethId) {
@@ -95,13 +98,14 @@ const Transaction: React.FC<ITransactionProps> = ({
   }, []);
 
   useEffect(() => {
+    if (balances) {
+      setToken(balances[0].address ? balances[0].address : balances[0].symbol);
+    }
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, [handleClickOutside]);
-
-  console.log(token);
 
   return (
     <>
@@ -115,19 +119,51 @@ const Transaction: React.FC<ITransactionProps> = ({
       <div className="transaction-wrapper">
         {isExecuted ? (
           <>
-            <p>{typeof hash === 'string' ? hash : hash?.hash}</p>
+            <button
+              onClick={() => {
+                handleCancel();
+                setWalletAddress('');
+                setTransactionType(undefined);
+              }}
+              className="transaction-back"
+            ></button>
+            <h2 className="transaction-title">{title} successful!</h2>
+            <span className="transaction-field-title">{title} into zk Sync:</span>
+            <p className="transaction-field-amount">{inputValue}</p>
+            <div className="info-block">
+              <p>
+                Waiting for the block to be mined... <br /> Wasn’t that easy?
+              </p>{' '}
+              <img src={clocks} alt="clocks" />
+            </div>
+            <p className="transaction-hash">
+              Tx hash:<span>{typeof hash === 'string' ? hash : hash?.hash}</span>
+            </p>
+            <button
+              className="btn submit-button"
+              onClick={() => {
+                handleCancel();
+                setWalletAddress('');
+                setTransactionType(undefined);
+              }}
+            >
+              Go to my wallet
+            </button>
           </>
         ) : (
           <>
-            {isLoading ? ( // need to remove later
+            {isLoading ? (
               <>
-                <span>Loading...</span>
+                <Spinner />
                 <button
+                  className="btn submit-button"
                   onClick={() => {
                     handleCancel();
                     setWalletName();
                   }}
-                ></button>
+                >
+                  Cancel
+                </button>
               </>
             ) : (
               <>
@@ -135,6 +171,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   onClick={() => {
                     handleCancel();
                     setWalletAddress('');
+                    setTransactionType(undefined);
                   }}
                   className="transaction-back"
                 ></button>
@@ -204,7 +241,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                         {symbolName ? (
                           <p>{symbolName}</p>
                         ) : (
-                          <span>{selectedBalance.symbol ? selectedBalance.symbol : 'You have no balances'}</span>
+                          <span>{selectedBalance.symbol ? selectedBalance.symbol : <Spinner />}</span>
                         )}
                         <div className="arrow-down"></div>
                       </div>
@@ -240,7 +277,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   )}
                 </div>
                 <div onClick={() => setUnlockFau(true)} className="fau-unlock-wrapper">
-                  <p>Fau tocken unlocked</p>
+                  <p>{selectedBalance.symbol} tocken unlocked</p>
                   <button className={`fau-unlock-tocken ${unlockFau}`}>
                     <span className={`fau-unlock-tocken-circle ${unlockFau}`}></span>
                   </button>
