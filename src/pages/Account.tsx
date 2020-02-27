@@ -29,7 +29,11 @@ const Account: React.FC = (): JSX.Element => {
     transfer,
     withdraw,
   } = useTransaction();
+
+  const [maxValue, setMaxValue] = useState<number>(0);
   const [price, setPrice] = useState<number>(0);
+  const [symbolName, setSymbolName] = useState<string>('');
+  const [token, setToken] = useState<string>('');
 
   const {
     error,
@@ -82,6 +86,13 @@ const Account: React.FC = (): JSX.Element => {
       window.location.pathname = '/';
     }
   }, [ethId]);
+
+  const handleSend = (address, balance, symbol) => {
+    setTransactionType('transfer');
+    setMaxValue(balance);
+    setSymbolName(symbol);
+    setToken(+address ? address : symbol);
+  };
 
   return (
     <>
@@ -138,6 +149,9 @@ const Account: React.FC = (): JSX.Element => {
           isLoading={isLoading}
           onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
           onChangeAmount={setAmountValue}
+          propsMaxValue={maxValue ? maxValue : 0}
+          propsSymbolName={symbolName ? symbolName : ''}
+          propsToken={token ? token : ''}
           price={price}
           setHash={setHash}
           setExecuted={setExecuted}
@@ -155,20 +169,22 @@ const Account: React.FC = (): JSX.Element => {
         visible={true}
       >
         {!!searchBalances.length
-          ? searchBalances.map(({ symbol, balance }) => (
+          ? searchBalances.map(({ address, symbol, balance }) => (
               <div key={balance} className="balances-token">
-                <div>zk{symbol}</div>
-                <div>
-                  {balance} <span>(~${balance * price})</span>
+                <div className="balances-token-left">zk{symbol}</div>
+                <div className="balances-token-right">
+                  {balance} <span>(~${(balance * price).toFixed(2)})</span>
                 </div>
+                <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
               </div>
             ))
-          : zkBalances.map(({ symbol, balance }) => (
+          : zkBalances.map(({ address, symbol, balance }) => (
               <div key={balance} className="balances-token">
-                <div>zk{symbol}</div>
-                <div>
-                  {balance} <span>(~${balance * price})</span>
+                <div className="balances-token-left">zk{symbol}</div>
+                <div className="balances-token-right">
+                  {balance} <span>(~${(balance * price).toFixed(2)})</span>
                 </div>
+                <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
               </div>
             ))}
       </DataList>

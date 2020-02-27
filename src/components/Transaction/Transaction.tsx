@@ -24,6 +24,9 @@ const Transaction: React.FC<ITransactionProps> = ({
   onChangeAddress,
   onChangeAmount,
   price,
+  propsMaxValue,
+  propsSymbolName,
+  propsToken,
   setHash,
   setExecuted,
   setTransactionType,
@@ -41,15 +44,16 @@ const Transaction: React.FC<ITransactionProps> = ({
   );
 
   const baseBalance = !!balances?.length ? balances[0] : 0;
+  const baseMaxValue = !!balances?.length ? balances[0].balance : 0;
 
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>();
-  const [maxValue, setMaxValue] = useState<number>(!!balances?.length ? balances[0].balance : 0);
+  const [maxValue, setMaxValue] = useState<number>(propsMaxValue ? propsMaxValue : baseMaxValue);
   const [selectedBalance, setSelectedBalance] = useState<any>(baseBalance);
   const [selectedContact, setSelectedContact] = useState<any>();
-  const [symbolName, setSymbolName] = useState<string>('');
-  const [token, setToken] = useState<string>('');
+  const [symbolName, setSymbolName] = useState<string>(propsSymbolName ? propsSymbolName : '');
+  const [token, setToken] = useState<string>(propsToken ? propsToken : '');
   const [unlockFau, setUnlockFau] = useState<boolean>(false);
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
 

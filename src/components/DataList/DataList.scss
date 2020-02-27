@@ -44,16 +44,38 @@
 
   &-token {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 30px;
+    height: 80px;
+    padding: 20px;
     color: var(--dark-color);
     font-size: var(--sm-font-size);
     border-bottom: 1px solid var(--border-color);
     cursor: pointer;
 
+    & > button {
+      display: none;
+      width: 110px;
+      background-color: var(--modal-bg-color);
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+
+      &:hover {
+        background-color: var(--copyblock-color);
+      }
+    }
+
     &:hover {
-      background-color: var(--bg-block-color);
+      background-color: var(--copyblock-color);
+
+      .balances-token-right {
+        display: none;
+      }
+
+      button {
+        display: block;
+      }
     }
   }
 

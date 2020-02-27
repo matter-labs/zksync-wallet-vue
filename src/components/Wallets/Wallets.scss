@@ -3,7 +3,7 @@
   align-items: center;
   justify-content: space-between;
   margin: 22px 0 15px;
-  padding: 30px;
+  padding: 20px;
   color: var(--dark-color);
   font-size: var(--large-font-size);
   background-color: var(--copyblock-color);
@@ -47,7 +47,7 @@
 
 .deposit-button, .withdraw-button {
   position: relative;
-  margin: 25px 0 50px;
+  margin: 25px 0 40px;
   padding-left: 30px;
   color: var(--button-bg-color);
   font-size: var(--md-font-size);
@@ -83,7 +83,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 120px;
+    margin-top: 100px;
   }
 
   .arrow-down { 
@@ -92,6 +92,7 @@
 
   &-title {
     color: var(--dark-color);
+    font-weight: var(--bold-font-weight);
     font-size: var(--large-font-size);
   }
 

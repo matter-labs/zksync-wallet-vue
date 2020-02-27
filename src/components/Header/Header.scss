@@ -53,7 +53,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 60px;
+    max-width: 70px;
     height: 35px;
     color: var(--dark-color);
     background-color: var(--modal-bg-color);
@@ -62,6 +62,10 @@
     outline: none;
     cursor: pointer;
 
+    & > .arrow-select {
+      display: block;
+    }
+
     &:hover {
       background-color: var(--copyblock-color)
     }
@@ -69,7 +73,7 @@
     & > img {
       width: 25px;
       height: 25px;
-      margin: 0 15px
+      margin: 0 10px
     }
 
     & > p {
