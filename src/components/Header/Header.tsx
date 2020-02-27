@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 
 import Modal from '../Modal/Modal';
 import avatar from '../../images/avatar.png';
+import arrowDown from '../../images/mdi_arrow_downward_white.svg';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -57,6 +58,7 @@ const Header: React.FC = (): JSX.Element => {
             <button type="button" className="menu-wallet" onClick={() => setModal('wallet')}>
               <p>{ethId}</p>
               <img src={avatar} alt="avatar" />
+              <div className="arrow-select"></div>
             </button>
             <Modal visible={false} background={true} classSpecifier="wallet">
               <div className="wallet-title">

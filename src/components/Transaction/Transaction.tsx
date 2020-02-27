@@ -44,7 +44,7 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<number>(0);
+  const [inputValue, setInputValue] = useState<number>();
   const [maxValue, setMaxValue] = useState<number>(!!balances?.length ? balances[0].balance : 0);
   const [selectedBalance, setSelectedBalance] = useState<any>(baseBalance);
   const [selectedContact, setSelectedContact] = useState<any>();
@@ -223,7 +223,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   <div className="currency-input-wrapper border">
                     <input
                       placeholder="0.00"
-                      className={'currency-input'}
+                      className="currency-input"
                       type="number"
                       step={0.001}
                       onChange={e => {

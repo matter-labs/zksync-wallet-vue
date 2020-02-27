@@ -358,9 +358,31 @@ input[type="radio"]:focus + .contact-manage{
 
 .custom-selector {
   position: relative;
+  z-index: 1000;
   width: 100%;
   max-width: 100px;
   height: 25px;
+
+  &-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--dark-color);
+    opacity: 0.5;
+
+    &.open {
+      display: block;
+    }
+
+    &.closed {
+      display: none;
+    }
+  }
 
   &-title {
     display: flex;
@@ -466,6 +488,10 @@ input[type="radio"]:focus + .contact-manage{
       list-style-type: none;
       border-bottom: 1px solid var(--border-color);
       cursor: pointer;
+
+      &:hover {
+        background-color: var(--copyblock-color);
+      }
     }
 
     &.open {
@@ -482,6 +508,15 @@ input[type="radio"]:focus + .contact-manage{
       opacity: 0;
     }
   }
+}
+
+.arrow-select {
+  width: 15px;
+  height: 15px;
+  background: url(./images/arrow-select.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
 
 body.dark > #root {
@@ -516,18 +551,6 @@ body.dark > #root {
           }
         }
 
-        & > .mywallet-buttons-container {
-          & > .withdraw-button {
-            & > span {
-              width: 16px;
-              height: 16px;
-              background: url(./images/mdi_arrow_downward_dark.svg);
-              background-repeat: no-repeat;
-              background-size: contain;
-            }
-          } 
-        }
-
         & > .mywallet-currency-block {
           background-color: var(--currency-block-color);
           border-bottom: 1px solid var(--copyblock-color);
@@ -551,6 +574,13 @@ body.dark > #root {
 
   & .arrow-down {
     background-image: url(./images/arrow-select-dark.svg);
+  }
+
+  .arrow-select {
+    background: url(./images/arrow-select-dark.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
   }
 }
 

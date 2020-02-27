@@ -58,18 +58,17 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
         <div className={`mywallet-wrapper ${!!transactionModal?.title ? 'closed' : 'open'}`}>
           <h2 className="mywallet-title">My wallet</h2>
           <div className="copy-block">
-            <input
-              className="copy-block-input"
-              onChange={undefined}
-              value={zkWallet?.address()}
-              ref={e => inputRef.push(e)}
-            />
+            <input className="copy-block-input" readOnly value={zkWallet?.address()} ref={e => inputRef.push(e)} />
             <div>
               {zkWallet?.address().replace(zkWallet?.address().slice(14, zkWallet?.address().length - 4), '...')}
             </div>
             <button className="copy-block-button" onClick={() => handleCopy(zkWallet?.address())}></button>
           </div>
-          <div className="mywallet-currency-block">
+          <div className={`mywallet-currency-block ${isBalancesListOpen ? 'borderless' : ''}`}>
+            <div
+              data-name="custom-selector"
+              className={`mywallet-currency-block-shadow ${isBalancesListOpen ? 'open' : 'closed'}`}
+            ></div>
             <div className="mywallet-currency-wrapper">
               <span className="mywallet-currency-balance">
                 {walletBalance ? walletBalance : zkBalances[0]?.balance.toString()}
@@ -135,6 +134,10 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
           </button>
         </div>
       </>
+      <div
+        data-name="custom-selector"
+        className={`custom-selector-wrapper ${isBalancesListOpen ? 'open' : 'closed'}`}
+      ></div>
     </>
   );
 };

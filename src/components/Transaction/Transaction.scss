@@ -228,17 +228,25 @@
 }
 
 .all-balance {
+  position: absolute;
+  left: 30%;
   display: none;
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: 110px;
+  max-width: 130px;
   padding: 0;
+  padding: 0 10px;
   color: var(--links-color);
   font-size: var(--sm-font-size);
-  background-color: var(--transparent);
+  background-color: var(--modal-bg-color);
   border: none;
+  border-radius: 5px;
   outline: none;
+
+  &:hover {
+    background-color: var(--copyblock-color);
+  }
 
   & > span {
     font-size: var(--xl-font-size);

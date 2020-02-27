@@ -121,10 +121,16 @@
         align-items: center;
         justify-content: space-between;
         margin-top: 20px;
+        padding: 5px 10px;
         background-color: var(--transparent);
         border: none;
+        border-radius: 5px;
         outline: none;
         cursor: pointer;
+
+        &:hover {
+          background-color: var(--copyblock-color);
+        }
       }
     }
 
@@ -179,7 +185,7 @@
   }
 
   &-wrapper {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 1000;
