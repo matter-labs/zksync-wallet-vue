@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import DataList from '../components/DataList/DataList';
 import MyWallet from '../components/Wallets/MyWallet';
@@ -82,10 +82,11 @@ const Account: React.FC = (): JSX.Element => {
   }, [error, setError, setPrice]);
 
   useEffect(() => {
+    setBalances(zkBalances);
     if (!ethId) {
       window.location.pathname = '/';
     }
-  }, [ethId]);
+  }, [ethId, zkBalances]);
 
   const handleSend = (address, balance, symbol) => {
     setTransactionType('transfer');
@@ -168,25 +169,19 @@ const Account: React.FC = (): JSX.Element => {
         title="Token balances"
         visible={true}
       >
-        {!!searchBalances.length
-          ? searchBalances.map(({ address, symbol, balance }) => (
-              <div key={balance} className="balances-token">
-                <div className="balances-token-left">zk{symbol}</div>
-                <div className="balances-token-right">
-                  {balance} <span>(~${(balance * price).toFixed(2)})</span>
-                </div>
-                <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
+        {!!searchBalances.length ? (
+          searchBalances.map(({ address, symbol, balance }) => (
+            <div key={balance} className="balances-token">
+              <div className="balances-token-left">zk{symbol}</div>
+              <div className="balances-token-right">
+                {balance} <span>(~${(balance * price).toFixed(2)})</span>
               </div>
-            ))
-          : zkBalances.map(({ address, symbol, balance }) => (
-              <div key={balance} className="balances-token">
-                <div className="balances-token-left">zk{symbol}</div>
-                <div className="balances-token-right">
-                  {balance} <span>(~${(balance * price).toFixed(2)})</span>
-                </div>
-                <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
-              </div>
-            ))}
+              <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
+            </div>
+          ))
+        ) : (
+          <div></div>
+        )}
       </DataList>
     </>
   );

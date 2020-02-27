@@ -1,20 +1,31 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import DataList from '../DataList/DataList';
+import Modal from '../Modal/Modal';
+import Spinner from '../Spinner/Spinner';
+
 import { useRootData } from '../../hooks/useRootData';
 
 import { IMyWalletProps } from './Types';
 
 import './Wallets.scss';
-import Spinner from '../Spinner/Spinner';
 
 const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.Element => {
-  const { transactionModal, zkBalances, zkWallet } = useRootData(({ transactionModal, zkBalances, zkWallet }) => ({
-    transactionModal: transactionModal.get(),
-    zkBalances: zkBalances.get(),
-    zkWallet: zkWallet.get(),
-  }));
+  const { searchBalances, setBalances, setModal, transactionModal, zkBalances, zkWallet } = useRootData(
+    ({ searchBalances, setBalances, setModal, transactionModal, zkBalances, zkWallet }) => ({
+      searchBalances: searchBalances.get(),
+      setBalances,
+      setModal,
+      transactionModal: transactionModal.get(),
+      zkBalances: zkBalances.get(),
+      zkWallet: zkWallet.get(),
+    }),
+  );
+
+  const dataPropertyName = 'symbol';
 
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
+  const [isAssetsOpen, openAssets] = useState<boolean>(false);
   const [selectedBalance, setSelectedBalance] = useState<any>(!!zkBalances?.length ? zkBalances[0] : 0);
   const [symbolName, setSymbolName] = useState<any>(!!zkBalances?.length ? zkBalances[0].symbol : '');
   const [walletBalance, setWalletBalance] = useState<string>(zkBalances[0]?.balance.toString());
@@ -42,18 +53,69 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     if (e.target.getAttribute('data-name')) {
       e.stopPropagation();
       openBalancesList(false);
+      openAssets(false);
     }
   }, []);
 
   useEffect(() => {
+    setBalances(zkBalances);
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [handleClickOutside]);
+  }, [handleClickOutside, zkBalances]);
 
   return (
     <>
+      <div className={`assets-wrapper ${isAssetsOpen ? 'open' : 'closed'}`}>
+        <DataList
+          setValue={setBalances}
+          dataProperty={dataPropertyName}
+          data={zkBalances}
+          title="Select asset"
+          visible={true}
+        >
+          <button
+            onClick={() => {
+              openAssets(false);
+            }}
+            className="close-icon"
+          ></button>
+          {!!searchBalances.length ? (
+            searchBalances.map(({ symbol, balance }) => (
+              <div
+                onClick={() => {
+                  setWalletBalance(balance.toString());
+                  handleSelect(symbol);
+                  openBalancesList(false);
+                  setSymbolName(symbol);
+                  openAssets(false);
+                }}
+                key={balance}
+                className="balances-token"
+              >
+                <div className="balances-token-left">
+                  <div className={`logo ${symbol}`}></div>
+                  <div className="balances-token-name">
+                    <p>{symbol}</p>
+                    <span>
+                      {symbol === 'ETH' && <>Ethereum</>}
+                      {symbol === 'DAI' && <>Dai</>}
+                      {symbol === 'FAU' && <>Faucet</>}
+                    </span>
+                  </div>
+                </div>
+                <div className="balances-token-right">
+                  <span>balance: {balance}</span>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div></div>
+          )}
+        </DataList>
+      </div>
+      <div data-name="assets-wrapper" className={`assets-wrapper-bg ${isAssetsOpen ? 'open' : 'closed'}`}></div>
       <>
         <div className={`mywallet-wrapper ${!!transactionModal?.title ? 'closed' : 'open'}`}>
           <h2 className="mywallet-title">My wallet</h2>
@@ -74,7 +136,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                 {walletBalance ? walletBalance : zkBalances[0]?.balance.toString()}
               </span>
               <div className="custom-selector balances mywallet">
-                <div onClick={() => openBalancesList(!isBalancesListOpen)} className="custom-selector-title">
+                <div onClick={() => openAssets(true)} className="custom-selector-title">
                   {symbolName ? (
                     <p>zk{symbolName}</p>
                   ) : (
@@ -90,24 +152,6 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                   )}
                   <div className="arrow-down"></div>
                 </div>
-                <ul className={`custom-selector-list ${isBalancesListOpen ? 'open' : 'closed'}`}>
-                  {zkBalances?.length &&
-                    zkBalances.map(({ address, balance, symbol }) => (
-                      <li
-                        className="custom-selector-list-item"
-                        key={address}
-                        value={balance}
-                        onClick={() => {
-                          setWalletBalance(balance.toString());
-                          handleSelect(symbol);
-                          openBalancesList(false);
-                          setSymbolName(symbol);
-                        }}
-                      >
-                        zk{symbol}
-                      </li>
-                    ))}
-                </ul>
               </div>
             </div>
             <span className="mywallet-price">

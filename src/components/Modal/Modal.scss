@@ -202,6 +202,122 @@
       display: none;
     }
   }
+
+  & > .balances {
+    &-wrapper {
+      width: 100%;
+      margin-top: 0;
+      padding-top: 0;
+      background-color: var(--transparent);
+    }
+  }
+}
+
+.assets-wrapper {
+  position: absolute;
+  top: 120px;
+  z-index: 10000;
+  width: 100%;
+  max-width: 630px;
+  background-color: var(--modal-bg-color);
+  border-radius: 5px;
+
+  & > .balances-wrapper {
+    width: 100%;
+    max-width: 630px;
+    margin: 0 auto;
+    padding-top: 20px;
+
+    & span {
+      color: var(--hints-color);
+      font-size: var(--md-font-size);
+    }
+
+    & .balances-token-right {
+      display: flex;
+      height: 100%;
+
+      span {
+        align-self: flex-end;
+      }
+    }
+
+    & .balances-token {
+      height: 115px;
+      padding: 25px;
+
+      &:hover > .balances-token-right {
+        display: flex;
+      }
+
+      &-left {
+        display: flex;
+        align-items: center;
+
+        .balances-token-name {
+          p {
+            margin-bottom: 0;
+            font-weight: var(--large-font-weight);
+            font-size: var(--large-font-size);
+          }
+        }
+
+        .logo {
+          width: 50px;
+          height: 50px;
+          margin-right: 15px;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
+          border-radius: 25px;
+
+          &.FAU {
+            background-image: url(../../images/FAU.png);
+          }
+
+          &.ETH {
+            background-image: url(../../images/ETH.png);
+          }
+
+          &.DAI {
+            background-image: url(../../images/DAI.png);
+          }
+        }
+      }
+    }
+
+    & > .balances-title {
+      align-self: flex-start;
+      margin-left: 25px;
+    }
+  }
+
+  &-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9000;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--dark-color);
+    opacity: 0.5;
+
+    &.open {
+      display: block;
+    }
+  
+    &.closed {
+      display: none;
+    }
+  }
+
+  &.open {
+    display: block;
+  }
+
+  &.closed {
+    display: none;
+  }
 }
 
 body.dark {
