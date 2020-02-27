@@ -65,7 +65,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
               ref={e => inputRef.push(e)}
             />
             <div>
-              {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
+              {zkWallet?.address().replace(zkWallet?.address().slice(14, zkWallet?.address().length - 4), '...')}
             </div>
             <button className="copy-block-button" onClick={() => handleCopy(zkWallet?.address())}></button>
           </div>
@@ -79,15 +79,15 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                   {symbolName ? (
                     <p>zk{symbolName}</p>
                   ) : (
-                    <span>
+                    <p>
                       {selectedBalance.symbol ? (
-                        <>zk{selectedBalance.symbol}</>
+                        <span>zk{selectedBalance.symbol}</span>
                       ) : !!zkBalances?.length ? (
-                        <>zk{zkBalances[0].symbol}</>
+                        <span>zk{zkBalances[0].symbol}</span>
                       ) : (
                         <Spinner />
                       )}
-                    </span>
+                    </p>
                   )}
                   <div className="arrow-down"></div>
                 </div>

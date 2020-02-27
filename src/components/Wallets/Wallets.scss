@@ -19,14 +19,21 @@
   }
 
   &-button {
-    width: 25px;
-    height: 25px;
+    width: 35px;
+    height: 35px;
     background-color: var(--transparent);
     background-image: url(../../images/mdi_file_copy.svg);
     background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25px;
     border: none;
+    border-radius: 5px;
     outline: none;
     cursor: pointer;
+
+    &:hover {
+      background-color: var(--copyblock-color);
+    }
   }
 }
 

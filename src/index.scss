@@ -374,7 +374,7 @@ input[type="radio"]:focus + .contact-manage{
     /* stylelint-disable-next-line no-descending-specificity*/
     & > p {
       margin-bottom: 0;
-      padding-right: 15px;
+      padding-right: 10px;
       overflow: hidden;
       color: var(--dark-color);
       white-space: nowrap;
@@ -382,9 +382,7 @@ input[type="radio"]:focus + .contact-manage{
     }
 
     & > div {
-      position: absolute;
-      right: -10px;
-      width: 15px;
+      min-width: 15px;
       height: 10px;
       background-image: url(./images/arrow-select.svg);
       background-repeat: no-repeat;
@@ -413,10 +411,11 @@ input[type="radio"]:focus + .contact-manage{
 
   &.balances {
     & > .custom-selector-title {
-      max-width: 60px;
+      max-width: 110px;
+      padding: 5px;
 
       & > span {
-        width: 60px;
+        max-width: 80px;
         height: 50px;
         margin-left: 0;
         color: var(--dark-color);
@@ -622,11 +621,16 @@ body.dark > #root {
       max-width: 100px;
       height: 25px;
       text-overflow: ellipsis;
+      border-radius: 6px;
       cursor: pointer;
+
+      &:hover {
+        background-color: var(--copyblock-color);
+      }
   
       & > p {
         margin-bottom: 0;
-        padding-right: 15px;
+        padding-right: 10px;
         overflow: hidden;
         color: var(--dark-color);
         white-space: nowrap;
@@ -634,8 +638,6 @@ body.dark > #root {
       }
   
       & > div {
-        position: absolute;
-        right: -20px;
         width: 15px;
         height: 10px;
         background-image: url(./images/arrow-select.svg);
@@ -671,10 +673,14 @@ body.dark > #root {
       }
 
       &.mywallet {
-        margin-top: 35px;
+        margin-top: 28px;
         margin-left: 20px;
   
         & > .custom-selector-title {
+          &:hover {
+            background-color: var(--copyblock-color);
+          }
+
           & > p {
             font-size: var(--large-font-size);
           }
