@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import DataList from '../DataList/DataList';
 import Modal from '../Modal/Modal';
 import SaveContacts from '../SaveContacts/SaveContacts';
 import Spinner from '../Spinner/Spinner';
@@ -34,9 +35,33 @@ const Transaction: React.FC<ITransactionProps> = ({
   transactionAction,
   type,
 }): JSX.Element => {
-  const { ethId, setModal, setWalletAddress, zkBalancesLoaded, walletAddress } = useRootData(
-    ({ ethId, setModal, setWalletAddress, zkBalancesLoaded, walletAddress }) => ({
+  const {
+    ethId,
+    searchBalances,
+    searchContacts,
+    setBalances,
+    setContacts,
+    setModal,
+    setWalletAddress,
+    zkBalancesLoaded,
+    walletAddress,
+  } = useRootData(
+    ({
+      ethId,
+      searchBalances,
+      searchContacts,
+      setBalances,
+      setContacts,
+      setModal,
+      setWalletAddress,
+      zkBalancesLoaded,
+      walletAddress,
+    }) => ({
       ethId: ethId.get(),
+      searchBalances: searchBalances.get(),
+      searchContacts: searchContacts.get(),
+      setBalances,
+      setContacts,
       setModal,
       setWalletAddress,
       zkBalancesLoaded: zkBalancesLoaded.get(),
@@ -44,9 +69,13 @@ const Transaction: React.FC<ITransactionProps> = ({
     }),
   );
 
+  const dataPropertySymbol = 'symbol';
+  const dataPropertyName = 'name';
+
   const baseBalance = !!balances?.length ? balances[0] : 0;
   const baseMaxValue = !!balances?.length ? balances[0].balance : 0;
 
+  const [isAssetsOpen, openAssets] = useState<boolean>(false);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>();
@@ -74,10 +103,11 @@ const Transaction: React.FC<ITransactionProps> = ({
   const contacts = JSON.parse(arr);
 
   const handleCancel = useCallback(() => {
+    setTransactionType(undefined);
     setHash('');
     setExecuted(false);
-    setTransactionType(undefined);
-  }, [setExecuted, setTransactionType, setHash]);
+    setWalletAddress('');
+  }, [setExecuted, setHash, setTransactionType, setWalletAddress]);
 
   const setWalletName = useCallback(() => {
     if (value && value !== ethId) {
@@ -126,14 +156,104 @@ const Transaction: React.FC<ITransactionProps> = ({
       <Modal visible={false} classSpecifier="add-contact" background={true}>
         <SaveContacts title="Add contact" addressValue={addressValue} addressInput={false} />
       </Modal>
+      <div className={`assets-wrapper ${isContactsListOpen || isBalancesListOpen ? 'open' : 'closed'}`}>
+        {isContactsListOpen && (
+          <DataList
+            setValue={setContacts}
+            dataProperty={dataPropertyName}
+            data={contacts}
+            title="Select contact"
+            visible={true}
+          >
+            <button
+              onClick={() => {
+                openContactsList(false);
+              }}
+              className="close-icon"
+            ></button>
+            {!!searchContacts ? (
+              searchContacts.map(({ address, name }) => (
+                <div
+                  className="balances-contact"
+                  key={name}
+                  onClick={() => {
+                    handleSelect(name);
+                    setWalletAddress(address);
+                    openContactsList(false);
+                  }}
+                >
+                  <div className="balances-contact-left">
+                    <p className="balances-contact-name">{name}</p>
+                    <span className="balances-contact-address">
+                      {address?.replace(address?.slice(6, address?.length - 3), '...')}
+                    </span>
+                  </div>
+                  <div className="balances-contact-right">
+                    <></>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div>You don't have contacts yet...</div>
+            )}
+          </DataList>
+        )}
+        {isBalancesListOpen && (
+          <DataList
+            setValue={setBalances}
+            dataProperty={dataPropertySymbol}
+            data={balances}
+            title="Select asset"
+            visible={true}
+          >
+            <button
+              onClick={() => {
+                openAssets(false);
+              }}
+              className="close-icon"
+            ></button>
+            {!!searchBalances.length ? (
+              searchBalances.map(({ address, symbol, balance }) => (
+                <div
+                  onClick={() => {
+                    setToken(+address ? address : symbol);
+                    setMaxValue(balance);
+                    setSymbolName(symbol);
+                    handleSelect(symbol);
+                    openBalancesList(false);
+                  }}
+                  key={balance}
+                  className="balances-token"
+                >
+                  <div className="balances-token-left">
+                    <div className={`logo ${symbol}`}></div>
+                    <div className="balances-token-name">
+                      <p>{symbol}</p>
+                      <span>
+                        {symbol === 'ETH' && <>Ethereum</>}
+                        {symbol === 'DAI' && <>Dai</>}
+                        {symbol === 'FAU' && <>Faucet</>}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="balances-token-right">
+                    <span>balance: {balance}</span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div></div>
+            )}
+          </DataList>
+        )}
+      </div>
+      <div data-name="assets-wrapper" className={`assets-wrapper-bg ${isAssetsOpen ? 'open' : 'closed'}`}></div>
       <div className="transaction-wrapper">
         {isExecuted ? (
           <>
             <button
               onClick={() => {
                 handleCancel();
-                setWalletAddress('');
-                setTransactionType(undefined);
               }}
               className="transaction-back"
             ></button>
@@ -208,22 +328,6 @@ const Transaction: React.FC<ITransactionProps> = ({
                             {selectedContact ? <p>{selectedContact}</p> : <span></span>}
                             <div className="arrow-down"></div>
                           </div>
-                          <ul className={`custom-selector-list ${isContactsListOpen ? 'open' : 'closed'}`}>
-                            {contacts?.length &&
-                              contacts.map(({ name, address }) => (
-                                <li
-                                  className="custom-selector-list-item"
-                                  key={address}
-                                  onClick={() => {
-                                    handleSelect(name);
-                                    setWalletAddress(address);
-                                    openContactsList(false);
-                                  }}
-                                >
-                                  {name}
-                                </li>
-                              ))}
-                          </ul>
                         </div>
                       </div>
                     </div>
@@ -261,25 +365,6 @@ const Transaction: React.FC<ITransactionProps> = ({
                         )}
                         <div className="arrow-down"></div>
                       </div>
-                      <ul className={`custom-selector-list ${isBalancesListOpen ? 'open' : 'closed'}`}>
-                        {balances?.length &&
-                          balances.map(({ address, balance, symbol }) => (
-                            <li
-                              className="custom-selector-list-item"
-                              key={address}
-                              value={balance}
-                              onClick={() => {
-                                setToken(+address ? address : symbol);
-                                setMaxValue(balance);
-                                setSymbolName(symbol);
-                                handleSelect(symbol);
-                                openBalancesList(false);
-                              }}
-                            >
-                              {symbol}
-                            </li>
-                          ))}
-                      </ul>
                     </div>
                   </div>
                   {balances?.length && (

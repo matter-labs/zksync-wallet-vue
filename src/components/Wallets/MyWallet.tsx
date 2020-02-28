@@ -11,19 +11,10 @@ import { IMyWalletProps } from './Types';
 import './Wallets.scss';
 
 const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.Element => {
-  const {
-    searchBalances,
-    setBalances,
-    setModal,
-    transactionModal,
-    zkBalances,
-    zkBalancesLoaded,
-    zkWallet,
-  } = useRootData(
-    ({ searchBalances, setBalances, setModal, transactionModal, zkBalances, zkBalancesLoaded, zkWallet }) => ({
+  const { searchBalances, setBalances, transactionModal, zkBalances, zkBalancesLoaded, zkWallet } = useRootData(
+    ({ searchBalances, setBalances, transactionModal, zkBalances, zkBalancesLoaded, zkWallet }) => ({
       searchBalances: searchBalances.get(),
       setBalances,
-      setModal,
       transactionModal: transactionModal.get(),
       zkBalances: zkBalances.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
@@ -73,8 +64,6 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, [handleClickOutside, zkBalances]);
-
-  console.log(zkBalancesLoaded);
 
   return (
     <>

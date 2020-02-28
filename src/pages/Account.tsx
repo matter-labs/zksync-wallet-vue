@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import DataList from '../components/DataList/DataList';
 import MyWallet from '../components/Wallets/MyWallet';

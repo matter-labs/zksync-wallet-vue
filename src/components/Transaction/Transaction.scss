@@ -72,6 +72,20 @@
 
     &.balance {
       max-height: 150px;
+
+      & .currency-input-wrapper {
+        & > .custom-selector{
+          &.balances {
+            max-width: 140px;
+            height: 75px;
+
+            .custom-selector-title {
+              max-width: 140px;
+              height: 75px;
+            }
+          }
+        }
+      }
     }
 
     &-title {
@@ -199,7 +213,7 @@
         border: none;
       }
     }
-
+    /* stylelint-disable-next-line no-descending-specificity */
     &-wrapper {
       display: flex;
       align-items: center; 
@@ -209,7 +223,7 @@
       margin-top: 10px;
       margin-top: 0;
       background-color: var(--transparent);
-      /* stylelint-disable-next-line no-descending-specificity */
+      
       & > span {
         color: var(--hints-color);
       }

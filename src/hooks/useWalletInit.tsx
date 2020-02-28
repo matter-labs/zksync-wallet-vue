@@ -132,7 +132,18 @@ const useWalletInit = () => {
     } catch (err) {
       err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
     }
-  }, [history, getSigner, provider, setError, setEthBalances, setTokens, setEthWallet, setZkBalances, setZkWallet]);
+  }, [
+    history,
+    getSigner,
+    provider,
+    setError,
+    setEthBalances,
+    setTokens,
+    setEthWallet,
+    setZkBalances,
+    setZkBalancesLoaded,
+    setZkWallet,
+  ]);
 
   return {
     connect,

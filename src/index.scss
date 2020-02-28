@@ -362,6 +362,7 @@ input[type="radio"]:focus + .contact-manage{
   width: 100%;
   max-width: 100px;
   height: 25px;
+  text-align: center;
 
   &-wrapper {
     position: absolute;
@@ -415,7 +416,7 @@ input[type="radio"]:focus + .contact-manage{
       display: block;
       width: 25px;
       height: 25px;
-      margin-left: 25px;
+      margin-left: 10px;
       background-image: url(./images/mdi_people.svg);
       background-repeat: no-repeat;
       background-size: contain;
@@ -424,6 +425,8 @@ input[type="radio"]:focus + .contact-manage{
 
   &.contacts {
     & > .custom-selector-title {
+      padding: 10px 5px;
+      
       & > span {
         background-image: url(./images/mdi_people.svg);
       }
@@ -437,7 +440,6 @@ input[type="radio"]:focus + .contact-manage{
       padding: 5px;
 
       & > span {
-        max-width: 80px;
         height: 50px;
         margin-left: 0;
         color: var(--dark-color);
@@ -648,7 +650,7 @@ body.dark > #root {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      max-width: 100px;
+      max-width: 80px;
       height: 25px;
       text-overflow: ellipsis;
       border-radius: 6px;
@@ -679,7 +681,7 @@ body.dark > #root {
         display: block;
         width: 25px;
         height: 25px;
-        margin-left: 25px;
+        margin-left: 10px;
         background-image: url(./images/mdi_people.svg);
         background-repeat: no-repeat;
         background-size: contain;
@@ -688,6 +690,10 @@ body.dark > #root {
   
     &.contacts {
       & > .custom-selector-title {
+        height: 40px;
+        margin-top: -10px;
+        margin-left: 20px;
+
         & > span {
           background-image: url(./images/mdi_people.svg);
         }
