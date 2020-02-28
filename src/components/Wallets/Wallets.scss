@@ -8,6 +8,7 @@
   font-size: var(--large-font-size);
   background-color: var(--copyblock-color);
   border-radius: 4px;
+  cursor: pointer;
 
   &-input {
     position: absolute;
@@ -177,8 +178,18 @@
     background-color: var(--modal-bg-color);
     border-radius: 4px;
 
-    & > .copy-block {
+    & .copy-block {
       font-size: var(--sm-font-size);
+
+      &-left {
+        display: flex;
+      }
+
+      & img {
+        width: 30px;
+        height: 30px;
+        margin-right: 20px;
+      }
     }
 
     &.open {

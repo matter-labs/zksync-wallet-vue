@@ -34,11 +34,12 @@ const Transaction: React.FC<ITransactionProps> = ({
   transactionAction,
   type,
 }): JSX.Element => {
-  const { ethId, setModal, setWalletAddress, walletAddress } = useRootData(
-    ({ ethId, setModal, setWalletAddress, walletAddress }) => ({
+  const { ethId, setModal, setWalletAddress, zkBalancesLoaded, walletAddress } = useRootData(
+    ({ ethId, setModal, setWalletAddress, zkBalancesLoaded, walletAddress }) => ({
       ethId: ethId.get(),
       setModal,
       setWalletAddress,
+      zkBalancesLoaded: zkBalancesLoaded.get(),
       walletAddress: walletAddress.get(),
     }),
   );
@@ -59,7 +60,13 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const validateNumbers = e => {
     if (INPUT_VALIDATION.digits.test(e)) {
-      e <= maxValue ? setInputValue(+e) : setInputValue(+maxValue);
+      if (e <= maxValue) {
+        setInputValue(+e);
+        onChangeAmount(+e);
+      } else {
+        setInputValue(+maxValue);
+        onChangeAmount(+maxValue - 0.001 * maxValue);
+      }
     }
   };
 
@@ -229,14 +236,20 @@ const Transaction: React.FC<ITransactionProps> = ({
                       placeholder="0.00"
                       className="currency-input"
                       type="number"
-                      step={0.001}
+                      step="0.001"
                       onChange={e => {
                         validateNumbers(+e.target.value);
                         onChangeAmount(+e.target.value);
                       }}
                       value={inputValue}
                     />
-                    <button className="all-balance" onClick={() => setInputValue(maxValue)}>
+                    <button
+                      className="all-balance"
+                      onClick={() => {
+                        setInputValue(+maxValue);
+                        onChangeAmount(+maxValue - 0.001 * maxValue);
+                      }}
+                    >
                       <span>+</span> All balance
                     </button>
                     <div className="custom-selector balances">

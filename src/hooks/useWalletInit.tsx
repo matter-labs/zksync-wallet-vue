@@ -18,6 +18,7 @@ const useWalletInit = () => {
     setEthWallet,
     setTokens,
     setZkBalances,
+    setZkBalancesLoaded,
     setZkWallet,
     provider,
     walletName,
@@ -30,6 +31,7 @@ const useWalletInit = () => {
       setEthWallet,
       setTokens,
       setZkBalances,
+      setZkBalancesLoaded,
       setZkWallet,
       provider,
       walletName,
@@ -41,6 +43,7 @@ const useWalletInit = () => {
       setEthWallet,
       setTokens,
       setZkBalances,
+      setZkBalancesLoaded,
       setZkWallet,
       provider: provider.get(),
       walletName: walletName.get(),
@@ -122,6 +125,7 @@ const useWalletInit = () => {
         .then(res => {
           setZkBalances(res as IEthBalance[]);
         })
+        .then(() => setZkBalancesLoaded(true))
         .catch(err => {
           err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
         });

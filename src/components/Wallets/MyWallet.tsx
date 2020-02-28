@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import avatar from '../../images/avatar.png';
 import DataList from '../DataList/DataList';
-import Modal from '../Modal/Modal';
 import Spinner from '../Spinner/Spinner';
 
 import { useRootData } from '../../hooks/useRootData';
@@ -11,13 +11,22 @@ import { IMyWalletProps } from './Types';
 import './Wallets.scss';
 
 const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.Element => {
-  const { searchBalances, setBalances, setModal, transactionModal, zkBalances, zkWallet } = useRootData(
-    ({ searchBalances, setBalances, setModal, transactionModal, zkBalances, zkWallet }) => ({
+  const {
+    searchBalances,
+    setBalances,
+    setModal,
+    transactionModal,
+    zkBalances,
+    zkBalancesLoaded,
+    zkWallet,
+  } = useRootData(
+    ({ searchBalances, setBalances, setModal, transactionModal, zkBalances, zkBalancesLoaded, zkWallet }) => ({
       searchBalances: searchBalances.get(),
       setBalances,
       setModal,
       transactionModal: transactionModal.get(),
       zkBalances: zkBalances.get(),
+      zkBalancesLoaded: zkBalancesLoaded.get(),
       zkWallet: zkWallet.get(),
     }),
   );
@@ -64,6 +73,8 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, [handleClickOutside, zkBalances]);
+
+  console.log(zkBalancesLoaded);
 
   return (
     <>
@@ -119,10 +130,13 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
       <>
         <div className={`mywallet-wrapper ${!!transactionModal?.title ? 'closed' : 'open'}`}>
           <h2 className="mywallet-title">My wallet</h2>
-          <div className="copy-block">
+          <div onClick={() => handleCopy(zkWallet?.address())} className="copy-block">
             <input className="copy-block-input" readOnly value={zkWallet?.address()} ref={e => inputRef.push(e)} />
-            <div>
-              {zkWallet?.address().replace(zkWallet?.address().slice(14, zkWallet?.address().length - 4), '...')}
+            <div className="copy-block-left">
+              <img src={avatar} alt="avatar" />{' '}
+              <div>
+                {zkWallet?.address().replace(zkWallet?.address().slice(14, zkWallet?.address().length - 4), '...')}
+              </div>
             </div>
             <button className="copy-block-button" onClick={() => handleCopy(zkWallet?.address())}></button>
           </div>
@@ -141,13 +155,13 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                     <p>zk{symbolName}</p>
                   ) : (
                     <p>
-                      {selectedBalance.symbol ? (
-                        <span>zk{selectedBalance.symbol}</span>
-                      ) : !!zkBalances?.length ? (
-                        <span>zk{zkBalances[0].symbol}</span>
-                      ) : (
-                        <Spinner />
-                      )}
+                      {!!zkBalances.length &&
+                        (selectedBalance.symbol ? (
+                          <span>zk{selectedBalance.symbol}</span>
+                        ) : (
+                          <span>zk{zkBalances[0].symbol}</span>
+                        ))}
+                      {!zkBalances.length && (!zkBalancesLoaded ? <Spinner /> : <span>empty</span>)}
                     </p>
                   )}
                   <div className="arrow-down"></div>

@@ -156,6 +156,7 @@
     & > .copy-block {
       margin-bottom: 40px;
       font-size: var(--sm-font-size);
+      cursor: pointer;
 
       & > p {
         display: inline-block;
@@ -168,6 +169,7 @@
 
   &.error {
     min-height: 150px;
+    padding-top: 60px;
   }
 
   &.open {

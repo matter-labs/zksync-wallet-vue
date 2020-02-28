@@ -1,21 +1,41 @@
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { useRootData } from '../../hooks/useRootData';
 import useWalletInit from '../../hooks/useWalletInit';
 
+import { DEFAULT_ERROR } from '../../constants/errors';
+
 const BrowserWallet: React.FC = (): JSX.Element => {
   const { connect } = useWalletInit();
 
-  const { provider, setProvider } = useRootData(({ provider, setProvider }) => ({
-    provider: provider.get(),
-    setProvider,
-  }));
+  const { provider, setError, setProvider, setWalletName, setZkWallet } = useRootData(
+    ({ provider, setError, setProvider, setWalletName, setZkWallet }) => ({
+      provider: provider.get(),
+      setError,
+      setProvider,
+      setWalletName,
+      setZkWallet,
+    }),
+  );
+
+  const history = useHistory();
 
   useEffect(() => {
-    if (!provider) {
-      const browserProvider = window?.['ethereum'];
-      setProvider(browserProvider);
-      connect(browserProvider, browserProvider?.enable.bind(browserProvider));
+    try {
+      if (!provider) {
+        const browserProvider = window?.['ethereum'];
+        setProvider(browserProvider);
+        connect(browserProvider, browserProvider?.enable.bind(browserProvider));
+      }
+    } catch (err) {
+      err.name && err.message
+        ? setError(`${err.name}:${err.message}. Maybe you don't have Metamask or Coinbase installed in your browser`)
+        : setError(DEFAULT_ERROR);
+      history.push('/');
+      setWalletName('');
+      setZkWallet(null);
+      setProvider(null);
     }
   }, [connect, provider, setProvider]);
   return <></>;

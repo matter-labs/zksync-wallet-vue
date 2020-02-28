@@ -3,7 +3,6 @@ import { Link, useHistory } from 'react-router-dom';
 
 import Modal from '../Modal/Modal';
 import avatar from '../../images/avatar.png';
-import arrowDown from '../../images/mdi_arrow_downward_white.svg';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -12,9 +11,8 @@ import { HEADER_ITEMS } from '../../constants/header';
 import './Header.scss';
 
 const Header: React.FC = (): JSX.Element => {
-  const { ethId, setAccessModal, setModal, setProvider, setWalletName, setZkWallet, zkWallet } = useRootData(
-    ({ ethId, setAccessModal, setModal, setProvider, setWalletName, setZkWallet, zkWallet }) => ({
-      ethId: ethId.get(),
+  const { setAccessModal, setModal, setProvider, setWalletName, setZkWallet, zkWallet } = useRootData(
+    ({ setAccessModal, setModal, setProvider, setWalletName, setZkWallet, zkWallet }) => ({
       setAccessModal,
       setModal,
       setProvider,
@@ -56,7 +54,7 @@ const Header: React.FC = (): JSX.Element => {
         {zkWallet?.address() && (
           <>
             <button type="button" className="menu-wallet" onClick={() => setModal('wallet')}>
-              <p>{ethId}</p>
+              <p>{zkWallet.address()}</p>
               <img src={avatar} alt="avatar" />
               <div className="arrow-select"></div>
             </button>
@@ -65,7 +63,7 @@ const Header: React.FC = (): JSX.Element => {
                 <img src={avatar} alt="avatar" />{' '}
                 {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
               </div>
-              <div className="copy-block">
+              <div onClick={() => handleCopy(zkWallet?.address())} className="copy-block">
                 <input
                   onChange={undefined}
                   className="copy-block-input"

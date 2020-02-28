@@ -14,11 +14,13 @@
     
 .spinner {
   position: relative;
+  left: 50%;
   display: inline-block;
   width: 1em;
   height: 1em;
   margin: 0 auto;
   font-size: var(--xxl-font-size);
+  transform: translateX(-50%);
   
   &.center {
     @include absolute-center;
