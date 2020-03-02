@@ -26,7 +26,6 @@ const Contacts: React.FC = (): JSX.Element => {
 
   const history = useHistory();
 
-  const [addressValue, setAddressValue] = useState<string>('');
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   const arr: any = localStorage.getItem('contacts');
@@ -47,22 +46,25 @@ const Contacts: React.FC = (): JSX.Element => {
     [inputRef],
   );
 
-  const handleDelete = useCallback(name => {
-    const selectedItem = contacts.findIndex(el => {
-      return el.name === name;
-    });
-    const newContacts = contacts;
-    newContacts.splice(selectedItem, 1);
-    localStorage.setItem('contacts', JSON.stringify(newContacts));
-    setModal('');
-  }, []);
+  const handleDelete = useCallback(
+    name => {
+      const selectedItem = contacts.findIndex(el => {
+        return el.name === name;
+      });
+      const newContacts = contacts;
+      newContacts.splice(selectedItem, 1);
+      localStorage.setItem('contacts', JSON.stringify(newContacts));
+      setModal('');
+    },
+    [contacts, setModal],
+  );
 
   useEffect(() => {
     if (!ethId) {
       window.location.pathname = '/';
       history.push('/');
     }
-  }, [ethId]);
+  }, [ethId, history]);
 
   return (
     <DataList setValue={setContacts} dataProperty={dataPropertyName} data={contacts} title="Contacts" visible={true}>
@@ -106,7 +108,6 @@ const Contacts: React.FC = (): JSX.Element => {
                     <input
                       type="radio"
                       onClick={() => {
-                        setAddressValue(address);
                         setEditModalOpen(true);
                       }}
                       className="balances-contact-edit"
@@ -115,7 +116,6 @@ const Contacts: React.FC = (): JSX.Element => {
                       <button
                         className="contact-manage-edit"
                         onClick={() => {
-                          setAddressValue(address);
                           setModal('add-contact edit-contact');
                         }}
                       >

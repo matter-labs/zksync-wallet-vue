@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import DataList from '../components/DataList/DataList';
 import MyWallet from '../components/Wallets/MyWallet';
+import SpinnerWorm from '../components/Spinner/SpinnerWorm';
 import Transaction from '../components/Transaction/Transaction';
 
 import { useRootData } from '../hooks/useRootData';
@@ -34,6 +35,7 @@ const Account: React.FC = (): JSX.Element => {
   const [price, setPrice] = useState<number>(0);
   const [symbolName, setSymbolName] = useState<string>('');
   const [token, setToken] = useState<string>('');
+  const [verified, setVerified] = useState<any>();
 
   const {
     error,
@@ -45,6 +47,7 @@ const Account: React.FC = (): JSX.Element => {
     setTransactionType,
     transactionType,
     zkBalances,
+    zkWallet,
   } = useRootData(
     ({
       error,
@@ -57,6 +60,7 @@ const Account: React.FC = (): JSX.Element => {
       transactionModal,
       transactionType,
       zkBalances,
+      zkWallet,
     }) => ({
       error: error.get(),
       ethId: ethId.get(),
@@ -68,6 +72,7 @@ const Account: React.FC = (): JSX.Element => {
       transactionModal: transactionModal.get(),
       transactionType: transactionType.get(),
       zkBalances: zkBalances.get(),
+      zkWallet: zkWallet.get(),
     }),
   );
 
@@ -86,7 +91,7 @@ const Account: React.FC = (): JSX.Element => {
     if (!ethId) {
       window.location.pathname = '/';
     }
-  }, [ethId, zkBalances]);
+  }, [ethId, setBalances, zkBalances]);
 
   const handleSend = (address, balance, symbol) => {
     setTransactionType('transfer');
@@ -95,10 +100,62 @@ const Account: React.FC = (): JSX.Element => {
     setToken(+address ? address : symbol);
   };
 
+  useEffect(() => {
+    zkWallet
+      ?.getAccountState()
+      .then(res => res)
+      .then(data => setVerified(data.verified.balances));
+  }, [zkWallet]);
+
   return (
     <>
       {!transactionType && (
-        <MyWallet balances={ethBalances} price={price} title="My wallet" setTransactionType={setTransactionType} />
+        <>
+          <MyWallet balances={ethBalances} price={price} title="My wallet" setTransactionType={setTransactionType} />
+          <DataList
+            setValue={setBalances}
+            dataProperty={dataPropertyName}
+            data={zkBalances}
+            title="Token balances"
+            visible={true}
+          >
+            {!!searchBalances.length ? (
+              searchBalances.map(({ address, symbol, balance }) => (
+                <>
+                  {verified &&
+                  (+balance === +verified[address] / Math.pow(10, 18) ||
+                    +balance === +verified[symbol] / Math.pow(10, 18)) ? (
+                    <div key={balance} className="balances-token verified">
+                      <div className="balances-token-left">zk{symbol}</div>
+                      <div className="balances-token-right">
+                        {balance} <span>(~${(balance * price).toFixed(2)})</span>
+                        <div>
+                          <p>Verified</p> <span className="label-done"></span>
+                        </div>
+                      </div>
+                      <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
+                    </div>
+                  ) : (
+                    <div key={balance} className="balances-token">
+                      <div className="balances-token-left">zk{symbol}</div>
+                      <div className="balances-token-right">
+                        {balance} <span>(~${(balance * price).toFixed(2)})</span>
+                        <div>
+                          <p>Pending</p> <SpinnerWorm />
+                        </div>
+                      </div>
+                      <button className="pending" onClick={() => undefined}>
+                        Send
+                      </button>
+                    </div>
+                  )}
+                </>
+              ))
+            ) : (
+              <div></div>
+            )}
+          </DataList>
+        </>
       )}
       {transactionType === 'deposit' && (
         <Transaction
@@ -162,27 +219,6 @@ const Account: React.FC = (): JSX.Element => {
           type="sync"
         />
       )}
-      <DataList
-        setValue={setBalances}
-        dataProperty={dataPropertyName}
-        data={zkBalances}
-        title="Token balances"
-        visible={true}
-      >
-        {!!searchBalances.length ? (
-          searchBalances.map(({ address, symbol, balance }) => (
-            <div key={balance} className="balances-token">
-              <div className="balances-token-left">zk{symbol}</div>
-              <div className="balances-token-right">
-                {balance} <span>(~${(balance * price).toFixed(2)})</span>
-              </div>
-              <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
-            </div>
-          ))
-        ) : (
-          <div></div>
-        )}
-      </DataList>
     </>
   );
 };

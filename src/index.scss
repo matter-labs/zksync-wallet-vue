@@ -13,6 +13,7 @@
   --button-bg-color: #8C8DFC;
   --button-bg-hover: #797AFB;
   --main-bg-color: #F3F4F7;
+  --main-light-bg-color: #fff;
   --bg-block-color: #F3F5FF;
   --border-color: rgba(24, 13, 13, 0.08);
   --info-message-color: #FFF8DE;
@@ -91,8 +92,9 @@ body.dark {
   --button-bg-color: #8C8DFC;
   --button-bg-hover: #797AFB;
   --main-bg-color: #11142B;
+  --main-light-bg-color: #11142B;
   --bg-block-color: #1D2039;
-  --border-color: rgba(24, 13, 13, 0.08);
+  --border-color: rgba(255, 255, 255, 0.08);
   --copyblock-color: rgba(255, 255, 255, 0.08);
   --input-color: rgba(255, 255, 255, 0.02);
   --currency-block-color: rgba(255, 255, 255, 0.1);
@@ -461,6 +463,7 @@ input[type="radio"]:focus + .contact-manage{
 
       & > .custom-selector-title {
         & > p {
+          margin-top: -5px;
           font-size: var(--large-font-size);
         }
 
@@ -524,6 +527,17 @@ input[type="radio"]:focus + .contact-manage{
 body.dark > #root {
   .transaction-back {
     background-image: url(./images/arrow-back-dark.svg);
+  }
+
+  .custom-selector {
+    &.contacts {
+      .custom-selector-title {
+        & > span {
+          background-image: url(./images/mdi_people_dark.svg);
+        }
+      }
+    }
+    
   }
 
   & > .content-wrapper {

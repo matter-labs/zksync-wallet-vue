@@ -40,7 +40,7 @@ const WalletConnect: React.FC = (): JSX.Element => {
       setZkWallet(null);
       setProvider(null);
     }
-  }, [connect, getSigner, provider, setProvider]);
+  }, [connect, getSigner, history, provider, setError, setProvider, setWalletName, setZkWallet]);
 
   return <></>;
 };

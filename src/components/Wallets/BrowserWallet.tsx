@@ -37,7 +37,7 @@ const BrowserWallet: React.FC = (): JSX.Element => {
       setZkWallet(null);
       setProvider(null);
     }
-  }, [connect, provider, setProvider]);
+  }, [connect, history, provider, setError, setProvider, setWalletName, setZkWallet]);
   return <></>;
 };
 

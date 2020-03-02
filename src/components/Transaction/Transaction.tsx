@@ -43,7 +43,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     setContacts,
     setModal,
     setWalletAddress,
-    zkBalancesLoaded,
     walletAddress,
   } = useRootData(
     ({
@@ -54,7 +53,6 @@ const Transaction: React.FC<ITransactionProps> = ({
       setContacts,
       setModal,
       setWalletAddress,
-      zkBalancesLoaded,
       walletAddress,
     }) => ({
       ethId: ethId.get(),
@@ -64,7 +62,6 @@ const Transaction: React.FC<ITransactionProps> = ({
       setContacts,
       setModal,
       setWalletAddress,
-      zkBalancesLoaded: zkBalancesLoaded.get(),
       walletAddress: walletAddress.get(),
     }),
   );
@@ -75,7 +72,6 @@ const Transaction: React.FC<ITransactionProps> = ({
   const baseBalance = !!balances?.length ? balances[0] : 0;
   const baseMaxValue = !!balances?.length ? balances[0].balance : 0;
 
-  const [isAssetsOpen, openAssets] = useState<boolean>(false);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>();
@@ -145,7 +141,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [handleClickOutside]);
+  }, [balances, handleClickOutside]);
 
   return (
     <>
@@ -208,7 +204,7 @@ const Transaction: React.FC<ITransactionProps> = ({
           >
             <button
               onClick={() => {
-                openAssets(false);
+                openBalancesList(false);
               }}
               className="close-icon"
             ></button>
@@ -247,7 +243,6 @@ const Transaction: React.FC<ITransactionProps> = ({
           </DataList>
         )}
       </div>
-      <div data-name="assets-wrapper" className={`assets-wrapper-bg ${isAssetsOpen ? 'open' : 'closed'}`}></div>
       <div className="transaction-wrapper">
         {isExecuted ? (
           <>
@@ -378,7 +373,11 @@ const Transaction: React.FC<ITransactionProps> = ({
                   )}
                 </div>
                 <div onClick={() => setUnlockFau(true)} className="fau-unlock-wrapper">
-                  <p>{selectedBalance.symbol} tocken unlocked</p>
+                  {unlockFau ? (
+                    <p>{symbolName.length ? symbolName : balances && balances[0].symbol} tocken unlocked</p>
+                  ) : (
+                    <p>Unlock {symbolName.length ? symbolName : balances && balances[0].symbol} tocken</p>
+                  )}
                   <button className={`fau-unlock-tocken ${unlockFau}`}>
                     <span className={`fau-unlock-tocken-circle ${unlockFau}`}></span>
                   </button>

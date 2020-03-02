@@ -63,7 +63,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [handleClickOutside, zkBalances]);
+  }, [handleClickOutside, setBalances, zkBalances]);
 
   return (
     <>

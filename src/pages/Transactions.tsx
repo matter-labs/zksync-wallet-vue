@@ -26,7 +26,7 @@ const Transactions: React.FC = (): JSX.Element => {
       window.location.pathname = '/';
       history.push('/');
     }
-  }, [ethId]);
+  }, [ethId, history]);
 
   return (
     <DataList

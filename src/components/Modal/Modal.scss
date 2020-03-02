@@ -220,15 +220,17 @@
   top: 120px;
   z-index: 10000;
   width: 100%;
-  max-width: 630px;
+  max-width: 610px;
   background-color: var(--modal-bg-color);
   border-radius: 5px;
 
   & > .balances-wrapper {
     width: 100%;
     max-width: 630px;
+    height: 60vh;
     margin: 0 auto;
     padding-top: 20px;
+    overflow-y: scroll;
 
     & span {
       color: var(--hints-color);
@@ -382,4 +384,14 @@ body.dark {
   .modal {
     max-width: 560px;
   }
+
+  .assets-wrapper {
+    overflow-x: hidden;
+  
+    & > .balances-wrapper {
+      width: calc(100% + 34px);
+      margin-right: -17px;
+      padding-right: 5px;
+    } 
+  }  
 }
