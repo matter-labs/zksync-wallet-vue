@@ -162,6 +162,42 @@
   }
 }
 
+.submit-label {
+  width: 20px;
+  height: 20px;
+  background-color: var(--transparent);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+  &.Deposit {
+    background-image: url(../../images/deposit_white.svg);
+
+    &.false{
+      background-image: url(../../images/deposit_disable.svg);
+    }
+  }
+
+  &.Send {
+    background-image: url(../../images/send.svg);
+
+    &.false{
+      background-image: url(../../images/send_disable.svg);
+    }
+  }
+
+  &.Withdraw {
+    background-image: url(../../images/mdi_arrow_downward_white.svg);
+    background-size: 17px;
+
+    &.false{
+      background-image: url(../../images/mdi_arrow_downward.svg);
+      background-size: 20px;
+
+    }
+  }
+}
+
 .transaction {
   &-title {
     margin-bottom: 50px;

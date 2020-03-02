@@ -174,6 +174,7 @@ h2 {
     background-color: var(--transparent);
     border: none;
     outline: none;
+    cursor: auto;
 
     & > p {
       margin-top: 10px;
@@ -537,7 +538,33 @@ body.dark > #root {
         }
       }
     }
-    
+  }
+
+  .submit-label {
+    &.Deposit {
+      background-image: url(./images/deposit_dark.svg);
+  
+      &.false{
+        background-image: url(./images/deposit_dark_disable.svg);
+      }
+    }
+  
+    &.Send {
+      background-image: url(./images/send_dark.svg);
+  
+      &.false{
+        background-image: url(./images/send_dark_disable.svg);
+      }
+    }
+  
+    &.Withdraw {
+      background-image: url(./images/mdi_arrow_downward_dark.svg);
+      background-size: 17px;
+  
+      &.false{
+        background-image: url(./images/mdi_arrow_downward_dark_disable.svg);
+      }
+    }
   }
 
   & > .content-wrapper {

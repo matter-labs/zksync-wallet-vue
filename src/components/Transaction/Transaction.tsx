@@ -386,6 +386,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   className={`btn submit-button ${unlockFau ? '' : 'disabled'}`}
                   onClick={() => transactionAction(token, type)}
                 >
+                  <span className={`submit-label ${title} ${unlockFau}`}></span>
                   {title}
                 </button>
                 <p key={maxValue} className="transaction-fee">

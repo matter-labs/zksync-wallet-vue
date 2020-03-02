@@ -77,6 +77,14 @@ const Account: React.FC = (): JSX.Element => {
   );
 
   useEffect(() => {
+    setBalances(zkBalances);
+    zkWallet
+      ?.getAccountState()
+      .then(res => res)
+      .then(data => setVerified(data.verified.balances));
+    if (!ethId) {
+      window.location.pathname = '/';
+    }
     request(`${BASE_URL}/${CURRENCY}/?convert=${CONVERT_CURRENCY}`)
       .then((res: any) => {
         setPrice(+res?.[0]?.price_usd);
@@ -84,14 +92,7 @@ const Account: React.FC = (): JSX.Element => {
       .catch(err => {
         err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
       });
-  }, [error, setError, setPrice]);
-
-  useEffect(() => {
-    setBalances(zkBalances);
-    if (!ethId) {
-      window.location.pathname = '/';
-    }
-  }, [ethId, setBalances, zkBalances]);
+  }, [error, ethId, setBalances, setError, setPrice, zkBalances, zkWallet]);
 
   const handleSend = (address, balance, symbol) => {
     setTransactionType('transfer');
@@ -99,13 +100,6 @@ const Account: React.FC = (): JSX.Element => {
     setSymbolName(symbol);
     setToken(+address ? address : symbol);
   };
-
-  useEffect(() => {
-    zkWallet
-      ?.getAccountState()
-      .then(res => res)
-      .then(data => setVerified(data.verified.balances));
-  }, [zkWallet]);
 
   return (
     <>
@@ -136,7 +130,7 @@ const Account: React.FC = (): JSX.Element => {
                       <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
                     </div>
                   ) : (
-                    <div key={balance} className="balances-token">
+                    <div key={balance} className="balances-token pending">
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
                         {balance} <span>(~${(balance * price).toFixed(2)})</span>

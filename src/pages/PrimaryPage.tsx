@@ -111,15 +111,15 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               </div>
               <div className="wallets-wrapper">
                 {Object.keys(WALLETS).map(key => (
-                  <button
-                    key={key}
-                    className="wallet-block"
-                    onClick={() => {
-                      setWalletName(key);
-                      setNormalBg(true);
-                    }}
-                  >
-                    <div className={`btn wallet-button ${key}`} key={key}></div>
+                  <button key={key} className="wallet-block">
+                    <div
+                      className={`btn wallet-button ${key}`}
+                      key={key}
+                      onClick={() => {
+                        setWalletName(key);
+                        setNormalBg(true);
+                      }}
+                    ></div>
                     <p>{key}</p>
                   </button>
                 ))}

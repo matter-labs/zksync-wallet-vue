@@ -24,10 +24,12 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
 
   const dataPropertyName = 'symbol';
 
+  const [address, setAddress] = useState<string>('');
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isAssetsOpen, openAssets] = useState<boolean>(false);
   const [selectedBalance, setSelectedBalance] = useState<any>(!!zkBalances?.length ? zkBalances[0] : 0);
   const [symbolName, setSymbolName] = useState<any>(!!zkBalances?.length ? zkBalances[0].symbol : '');
+  const [verified, setVerified] = useState<any>();
   const [walletBalance, setWalletBalance] = useState<string>(zkBalances[0]?.balance.toString());
 
   const inputRef: (HTMLInputElement | null)[] = [];
@@ -59,6 +61,10 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
 
   useEffect(() => {
     setBalances(zkBalances);
+    zkWallet
+      ?.getAccountState()
+      .then(res => res)
+      .then(data => setVerified(data.verified.balances));
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
@@ -82,7 +88,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             className="close-icon"
           ></button>
           {!!searchBalances.length ? (
-            searchBalances.map(({ symbol, balance }) => (
+            searchBalances.map(({ address, symbol, balance }) => (
               <div
                 onClick={() => {
                   setWalletBalance(balance.toString());
@@ -90,6 +96,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                   openBalancesList(false);
                   setSymbolName(symbol);
                   openAssets(false);
+                  setAddress(address);
                 }}
                 key={balance}
                 className="balances-token"
