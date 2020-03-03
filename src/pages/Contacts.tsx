@@ -26,10 +26,10 @@ const Contacts: React.FC = (): JSX.Element => {
 
   const history = useHistory();
 
-  const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
-
   const arr: any = localStorage.getItem('contacts');
   const contacts = JSON.parse(arr);
+
+  const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
@@ -55,6 +55,7 @@ const Contacts: React.FC = (): JSX.Element => {
       newContacts.splice(selectedItem, 1);
       localStorage.setItem('contacts', JSON.stringify(newContacts));
       setModal('');
+      setContacts(contacts);
     },
     [contacts, setModal],
   );
@@ -125,6 +126,7 @@ const Contacts: React.FC = (): JSX.Element => {
                       <button onClick={() => handleDelete(name)} className="contact-manage-delete">
                         <img src={deleteicon} alt="edit" />
                         <p>Delete</p>
+                        <Link to="/contacts"></Link>
                       </button>
                     </div>
                   </div>

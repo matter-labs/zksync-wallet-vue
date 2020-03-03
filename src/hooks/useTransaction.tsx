@@ -85,7 +85,7 @@ export const useTransaction = () => {
             amount: ethers.utils.bigNumberify(amountValue ? amountValue?.toString() : '0'),
           });
           const hash = depositPriorityOperation.ethTx;
-          history(amountValue || 0, hash.hash, zkWallet.address(), 'deposit', token);
+          history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', token);
           setHash(hash);
           const receipt = await depositPriorityOperation.awaitReceipt();
           transactions(receipt);
@@ -112,11 +112,11 @@ export const useTransaction = () => {
           const transferTransaction = await zkWallet.syncTransfer({
             to: addressValue,
             token: token,
-            amount: ethers.utils.parseEther(amountValue ? amountValue.toString() : '0'),
+            amount: ethers.utils.bigNumberify(amountValue ? amountValue?.toString() : '0'),
             fee: ethers.utils.parseEther('0.001'),
           });
           const hash = transferTransaction.txHash;
-          history(amountValue || 0, hash, addressValue, 'transfer', token);
+          history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'transfer', token);
           setHash(hash);
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
@@ -139,11 +139,11 @@ export const useTransaction = () => {
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum({
             ethAddress: addressValue,
             token: token,
-            amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
+            amount: ethers.utils.bigNumberify(amountValue ? amountValue?.toString() : '0'),
             fee: ethers.utils.parseEther('0.001'),
           });
           const hash = withdrawTransaction.txHash;
-          history(amountValue || 0, hash, addressValue, 'withdraw', token);
+          history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'withdraw', token);
           setHash(hash);
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);

@@ -21,6 +21,7 @@
 
   &-button {
     width: 35px;
+    min-width: 35px;
     height: 35px;
     background-color: var(--transparent);
     background-image: url(../../images/mdi_file_copy.svg);
@@ -185,10 +186,15 @@
         display: flex;
       }
 
+      & div {
+        height: 15px;
+      }
+
       & img {
         width: 30px;
         height: 30px;
-        margin-right: 20px;
+        margin-top: -5px;
+        margin-right: 5px;
       }
     }
 
@@ -227,6 +233,14 @@
 
       & > .copy-block {
         font-size: var(--md-font-size);
+
+        & img {
+          margin-right: 10px;
+        }
+
+        & > div {
+          height: 20px;
+        }
       }
     }
 

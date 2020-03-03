@@ -44,6 +44,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     setModal,
     setWalletAddress,
     walletAddress,
+    zkBalancesLoaded,
     zkWallet,
   } = useRootData(
     ({
@@ -55,6 +56,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       setModal,
       setWalletAddress,
       walletAddress,
+      zkBalancesLoaded,
       zkWallet,
     }) => ({
       ethId: ethId.get(),
@@ -65,6 +67,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       setModal,
       setWalletAddress,
       walletAddress: walletAddress.get(),
+      zkBalancesLoaded: zkBalancesLoaded.get(),
       zkWallet: zkWallet.get(),
     }),
   );
@@ -83,7 +86,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [selectedContact, setSelectedContact] = useState<any>();
   const [symbolName, setSymbolName] = useState<string>(propsSymbolName ? propsSymbolName : '');
   const [token, setToken] = useState<string>(propsToken ? propsToken : '');
-  const [unlocked, setUnlocked] = useState<boolean>(false);
+  const [unlocked, setUnlocked] = useState<boolean | undefined>(undefined);
   const [unlockFau, setUnlockFau] = useState<boolean>(false);
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
 
@@ -249,7 +252,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                     </div>
                   </div>
                   <div className="balances-token-right">
-                    <span>balance: {balance}</span>
+                    <span>
+                      balance: <p className="datalist-balance">{balance}</p>
+                    </span>
                   </div>
                 </div>
               ))
@@ -293,7 +298,7 @@ const Transaction: React.FC<ITransactionProps> = ({
           </>
         ) : (
           <>
-            {isLoading ? (
+            {isLoading || unlocked === undefined ? (
               <>
                 <Spinner />
                 <button
@@ -377,8 +382,11 @@ const Transaction: React.FC<ITransactionProps> = ({
                             {symbolName ? (
                               <p>{symbolName}</p>
                             ) : (
-                              <span>{selectedBalance.symbol ? selectedBalance.symbol : <Spinner />}</span>
+                              <span>
+                                {selectedBalance.symbol && zkBalancesLoaded ? selectedBalance.symbol : <Spinner />}
+                              </span>
                             )}
+
                             <div className="arrow-down"></div>
                           </div>
                         </div>

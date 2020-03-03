@@ -10,7 +10,8 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({ addressInput, addressValue
   const [name, setName] = useState<string>('');
   const [address, setAddress] = useState<string>('');
 
-  const { setError, setModal } = useRootData(({ setError, setModal }) => ({
+  const { setContacts, setError, setModal } = useRootData(({ setContacts, setError, setModal }) => ({
+    setContacts,
     setError,
     setModal,
   }));
@@ -28,14 +29,16 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({ addressInput, addressValue
         if (isContact === -1) {
           const newContacts = JSON.stringify([{ address, name }, ...contacts]);
           localStorage.setItem('contacts', newContacts);
-          setModal('');
         }
         if (isContact > -1) {
           const newContacts = contacts;
           newContacts.splice(isContact, 1, { address, name });
           localStorage.setItem('contacts', JSON.stringify(newContacts));
-          setModal('');
         }
+        setModal('');
+        const arr: any = localStorage.getItem('contacts');
+        const acontacts = JSON.parse(arr);
+        setContacts(acontacts);
       }
     } catch (err) {
       err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);

@@ -75,6 +75,17 @@
   }
 }
 
+.datalist-balance {
+  width: 100%;
+  max-width: 80px;
+  margin-bottom: 0;
+  margin-left: 10px;
+  padding-left: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .balances {
   &-wrapper {
     position: relative;
@@ -143,6 +154,20 @@
     &-right {
       display: flex;
       align-items: center;
+
+      & > span {
+        display: flex;
+      }
+
+      & > p {
+        width: 100%;
+        max-width: 50px;
+        margin-bottom: 0;
+        padding-left: 5px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
 
       & > div {
         display: flex;

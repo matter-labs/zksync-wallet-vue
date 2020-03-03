@@ -315,7 +315,22 @@ h2 {
   transform: translate(-50%, -50%);
 
   &-delete {
+    position: relative;
+    overflow: hidden;
     color: var(--delete-color);
+    border-bottom: none;
+
+    & > a {
+      position: absolute;
+      left: 0;
+      z-index: 10000;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &-edit {
+    border-bottom: 1px solid var(--border-color);
   }
 
   & > button {
@@ -324,10 +339,10 @@ h2 {
     width: 100%;
     height: 50%;
     padding-left: 20px;
+    overflow: none;
     text-align: left;
     background-color: var(--transparent);
     border: none;
-    border-bottom: 1px solid var(--border-color);
 
     & > p {
       margin-bottom: 0;
@@ -440,6 +455,7 @@ input[type="radio"]:focus + .contact-manage{
   &.balances {
     & > .custom-selector-title {
       max-width: 110px;
+      margin-top: 0;
       padding: 5px;
 
       & > span {
@@ -452,10 +468,10 @@ input[type="radio"]:focus + .contact-manage{
       }
 
       & > p {
-        overflow: visible;
+        overflow: hidden;
         color: var(--dark-color);
-        font-size: var(--xxxl-font-size);
-        text-overflow: clip;
+        font-size: var(--xxl-font-size);
+        text-overflow: unset;
       }
     }
 
@@ -629,6 +645,16 @@ body.dark > #root {
     background-position: center;
     background-size: contain;
   }
+
+  .balances-contact {
+    &-copy {
+      background-image: url(./images/mdi_file_copy_dark.svg);
+    }
+
+    &-edit {
+      background-image: url(./images/mdi_more_horiz_dark.svg);
+    }
+  }
 }
 
 @media screen and (min-width: 760px) {
@@ -748,6 +774,7 @@ body.dark > #root {
   
     &.balances {
       & > .custom-selector-title {
+        margin-top: 3px;
         & > span {
           font-size: var(--xxxl-font-size);
         }

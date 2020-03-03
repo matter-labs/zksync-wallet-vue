@@ -113,7 +113,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                   </div>
                 </div>
                 <div className="balances-token-right">
-                  <span>balance: {balance}</span>
+                  <span>
+                    balance: <p className="datalist-balance">{balance}</p>
+                  </span>
                 </div>
               </div>
             ))
@@ -131,7 +133,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             <div className="copy-block-left">
               <img src={avatar} alt="avatar" />{' '}
               <div>
-                {zkWallet?.address().replace(zkWallet?.address().slice(14, zkWallet?.address().length - 4), '...')}
+                {zkWallet?.address().replace(zkWallet?.address().slice(12, zkWallet?.address().length - 4), '...')}
               </div>
             </div>
             <button className="copy-block-button" onClick={() => handleCopy(zkWallet?.address())}></button>
@@ -143,7 +145,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             ></div>
             <div className="mywallet-currency-wrapper">
               <span className="mywallet-currency-balance">
-                {walletBalance ? parseInt(walletBalance).toFixed(3) : zkBalances[0]?.balance.toFixed(3).toString()}
+                {walletBalance ? parseFloat(walletBalance).toFixed(3) : zkBalances[0]?.balance.toFixed(3).toString()}
               </span>
               <div className="custom-selector balances mywallet">
                 <div onClick={() => openAssets(true)} className="custom-selector-title">
