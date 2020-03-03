@@ -548,6 +548,10 @@ body.dark > #root {
         background-image: url(./images/deposit_dark_disable.svg);
       }
     }
+
+    &.unlock {
+      background-image: url(./images/lock_dark.svg);
+    }
   
     &.Send {
       background-image: url(./images/send_dark.svg);

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
-import { getEthereumBalance, Wallet, Provider, ETHProxy, getDefaultProvider } from 'zksync';
+import { Wallet, Provider, getDefaultProvider } from 'zksync';
 
 import { useRootData } from '../hooks/useRootData';
 
@@ -81,9 +81,7 @@ const useWalletInit = () => {
       setEthWallet(wallet);
       const network = process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider: Provider = await getDefaultProvider(network, 'HTTP');
-      const ethersProvider = ethers.getDefaultProvider('rinkeby');
-      const ethProxy = new ETHProxy(ethersProvider, syncProvider.contractAddress);
-      const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider, ethProxy);
+      const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider);
 
       setZkWallet(syncWallet);
       history.push('/account');
@@ -94,7 +92,7 @@ const useWalletInit = () => {
 
       const balancePromises = Object.keys(tokens).map(async key => {
         if (tokens[key].symbol) {
-          const balance = await getEthereumBalance(wallet, key);
+          const balance = await syncWallet.getEthereumBalance(key);
           return {
             address: tokens[key].address,
             balance: +balance / Math.pow(10, 18),

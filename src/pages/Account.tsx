@@ -122,7 +122,7 @@ const Account: React.FC = (): JSX.Element => {
                     <div key={balance} className="balances-token verified">
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
-                        {balance} <span>(~${(balance * price).toFixed(2)})</span>
+                        {balance.toFixed(3)} <span>(~${(balance * price).toFixed(2)})</span>
                         <div>
                           <p>Verified</p> <span className="label-done"></span>
                         </div>

@@ -44,6 +44,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     setModal,
     setWalletAddress,
     walletAddress,
+    zkWallet,
   } = useRootData(
     ({
       ethId,
@@ -54,6 +55,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       setModal,
       setWalletAddress,
       walletAddress,
+      zkWallet,
     }) => ({
       ethId: ethId.get(),
       searchBalances: searchBalances.get(),
@@ -63,6 +65,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       setModal,
       setWalletAddress,
       walletAddress: walletAddress.get(),
+      zkWallet: zkWallet.get(),
     }),
   );
 
@@ -80,17 +83,21 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [selectedContact, setSelectedContact] = useState<any>();
   const [symbolName, setSymbolName] = useState<string>(propsSymbolName ? propsSymbolName : '');
   const [token, setToken] = useState<string>(propsToken ? propsToken : '');
+  const [unlocked, setUnlocked] = useState<boolean>(false);
   const [unlockFau, setUnlockFau] = useState<boolean>(false);
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
+
+  const bigNumberMultiplier = Math.pow(10, 18);
 
   const validateNumbers = e => {
     if (INPUT_VALIDATION.digits.test(e)) {
       if (e <= maxValue) {
         setInputValue(+e);
-        onChangeAmount(+e);
+        onChangeAmount(+e * bigNumberMultiplier);
       } else {
         setInputValue(+maxValue);
-        onChangeAmount(+maxValue - 0.001 * maxValue);
+        // onChangeAmount(+maxValue - 0.001 * maxValue);
+        onChangeAmount(+maxValue * bigNumberMultiplier);
       }
     }
   };
@@ -133,10 +140,19 @@ const Transaction: React.FC<ITransactionProps> = ({
     }
   }, []);
 
+  const handleUnlock = useCallback(async () => {
+    const onchainAuthTransaction = await zkWallet?.onchainAuthSigningKey();
+    await onchainAuthTransaction?.wait();
+    const changePubkey = await zkWallet?.setSigningKey('committed', true);
+    const receipt = await changePubkey?.awaitReceipt();
+    setUnlocked(!!receipt);
+  }, []);
+
   useEffect(() => {
     if (balances?.length) {
       setToken(balances[0].address ? balances[0].address : balances[0].symbol);
     }
+    zkWallet?.isSigningKeySet().then(res => setUnlocked(res));
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
@@ -301,103 +317,120 @@ const Transaction: React.FC<ITransactionProps> = ({
                   className="transaction-back"
                 ></button>
                 <h2 className="transaction-title">{title}</h2>
-                {isInput && (
+                {unlocked ? (
                   <>
-                    <span className="transaction-field-title">To address</span>
-                    <div className="transaction-field">
-                      <div className="currency-input-wrapper">
+                    {isInput && (
+                      <>
+                        <span className="transaction-field-title">To address</span>
+                        <div className="transaction-field">
+                          <div className="currency-input-wrapper">
+                            <input
+                              placeholder="Ox address, ENS or contact name"
+                              value={walletAddress ? (addressValue = walletAddress) : addressValue}
+                              onChange={onChangeAddress}
+                              className="currency-input-address"
+                            />
+                            {(walletAddress || addressValue) && !walletAddress && (
+                              <button className="add-contact-button-input" onClick={() => setModal('add-contact')}>
+                                <span></span>
+                                <p>Save</p>
+                              </button>
+                            )}
+                            <div className="custom-selector contacts">
+                              <div
+                                onClick={() => openContactsList(!isContactsListOpen)}
+                                className="custom-selector-title"
+                              >
+                                {selectedContact ? <p>{selectedContact}</p> : <span></span>}
+                                <div className="arrow-down"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    <span className="transaction-field-title">Amount / asset</span>
+                    <div className="transaction-field balance">
+                      <div className="currency-input-wrapper border">
                         <input
-                          placeholder="Ox address, ENS or contact name"
-                          value={walletAddress ? (addressValue = walletAddress) : addressValue}
-                          onChange={onChangeAddress}
-                          className="currency-input-address"
+                          placeholder="0.00"
+                          className="currency-input"
+                          type="number"
+                          step="0.001"
+                          onChange={e => {
+                            validateNumbers(+e.target.value);
+                            // onChangeAmount(+e.target.value);
+                          }}
+                          value={inputValue}
                         />
-                        {(walletAddress || addressValue) && !walletAddress && (
-                          <button className="add-contact-button-input" onClick={() => setModal('add-contact')}>
-                            <span></span>
-                            <p>Save</p>
-                          </button>
-                        )}
-                        <div className="custom-selector contacts">
-                          <div onClick={() => openContactsList(!isContactsListOpen)} className="custom-selector-title">
-                            {selectedContact ? <p>{selectedContact}</p> : <span></span>}
+                        <button
+                          className="all-balance"
+                          onClick={() => {
+                            setInputValue(+maxValue);
+                            // onChangeAmount(+maxValue - 0.001 * maxValue);
+                          }}
+                        >
+                          <span>+</span> All balance
+                        </button>
+                        <div className="custom-selector balances">
+                          <div onClick={() => openBalancesList(!isBalancesListOpen)} className="custom-selector-title">
+                            {symbolName ? (
+                              <p>{symbolName}</p>
+                            ) : (
+                              <span>{selectedBalance.symbol ? selectedBalance.symbol : <Spinner />}</span>
+                            )}
                             <div className="arrow-down"></div>
                           </div>
                         </div>
                       </div>
+                      {balances?.length && (
+                        <div className="currency-input-wrapper" key={token}>
+                          <span>~${(price * (maxValue ? maxValue : balances[0].balance)).toFixed(2)}</span>
+                          <span>
+                            Balance: {maxValue ? maxValue : balances[0].balance}{' '}
+                            {symbolName ? symbolName : balances[0].symbol}
+                          </span>
+                        </div>
+                      )}
                     </div>
+                    <div onClick={() => setUnlockFau(true)} className="fau-unlock-wrapper">
+                      {unlockFau ? (
+                        <p>{symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken unlocked</p>
+                      ) : (
+                        <p>Unlock {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken</p>
+                      )}
+                      <button className={`fau-unlock-tocken ${unlockFau}`}>
+                        <span className={`fau-unlock-tocken-circle ${unlockFau}`}></span>
+                      </button>
+                    </div>
+                    <button
+                      className={`btn submit-button ${unlockFau ? '' : 'disabled'}`}
+                      onClick={() => transactionAction(token, type)}
+                    >
+                      <span className={`submit-label ${title} ${unlockFau}`}></span>
+                      {title}
+                    </button>
+                    <p key={maxValue} className="transaction-fee">
+                      Fee:{' '}
+                      {balances?.length && (
+                        <span>
+                          {maxValue ? maxValue * 0.001 : balances[0].balance * 0.001}{' '}
+                          {symbolName ? symbolName : balances[0].symbol}
+                        </span>
+                      )}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="info-block center">
+                      <p>To control your account you need to unlock it once by registering your public key.</p>
+                    </div>
+                    <button className="btn submit-button" onClick={handleUnlock}>
+                      <span className="submit-label unlock"></span>
+                      Unlock
+                    </button>
                   </>
                 )}
-                <span className="transaction-field-title">Amount / asset</span>
-                <div className="transaction-field balance">
-                  <div className="currency-input-wrapper border">
-                    <input
-                      placeholder="0.00"
-                      className="currency-input"
-                      type="number"
-                      step="0.001"
-                      onChange={e => {
-                        validateNumbers(+e.target.value);
-                        onChangeAmount(+e.target.value);
-                      }}
-                      value={inputValue}
-                    />
-                    <button
-                      className="all-balance"
-                      onClick={() => {
-                        setInputValue(+maxValue);
-                        onChangeAmount(+maxValue - 0.001 * maxValue);
-                      }}
-                    >
-                      <span>+</span> All balance
-                    </button>
-                    <div className="custom-selector balances">
-                      <div onClick={() => openBalancesList(!isBalancesListOpen)} className="custom-selector-title">
-                        {symbolName ? (
-                          <p>{symbolName}</p>
-                        ) : (
-                          <span>{selectedBalance.symbol ? selectedBalance.symbol : <Spinner />}</span>
-                        )}
-                        <div className="arrow-down"></div>
-                      </div>
-                    </div>
-                  </div>
-                  {balances?.length && (
-                    <div className="currency-input-wrapper" key={token}>
-                      <span>~${(price * (maxValue ? maxValue : balances[0].balance)).toFixed(2)}</span>
-                      <span>
-                        Balance: {maxValue ? maxValue : balances[0].balance}{' '}
-                        {symbolName ? symbolName : balances[0].symbol}
-                      </span>
-                    </div>
-                  )}
-                </div>
-                <div onClick={() => setUnlockFau(true)} className="fau-unlock-wrapper">
-                  {unlockFau ? (
-                    <p>{symbolName.length ? symbolName : balances && balances[0].symbol} tocken unlocked</p>
-                  ) : (
-                    <p>Unlock {symbolName.length ? symbolName : balances && balances[0].symbol} tocken</p>
-                  )}
-                  <button className={`fau-unlock-tocken ${unlockFau}`}>
-                    <span className={`fau-unlock-tocken-circle ${unlockFau}`}></span>
-                  </button>
-                </div>
-                <button
-                  className={`btn submit-button ${unlockFau ? '' : 'disabled'}`}
-                  onClick={() => transactionAction(token, type)}
-                >
-                  <span className={`submit-label ${title} ${unlockFau}`}></span>
-                  {title}
-                </button>
-                <p key={maxValue} className="transaction-fee">
-                  Fee:{' '}
-                  {balances?.length && (
-                    <span>
-                      {maxValue ? maxValue * 0.001 : balances[0].balance * 0.001}{' '}
-                      {symbolName ? symbolName : balances[0].symbol}
-                    </span>
-                  )}
-                </p>
               </>
             )}
           </>

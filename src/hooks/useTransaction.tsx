@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
-import { depositFromETH } from 'zksync';
 
 import { useRootData } from '../hooks/useRootData';
 
@@ -14,7 +13,7 @@ const TOKEN = 'ETH';
 
 export const useTransaction = () => {
   const [addressValue, setAddressValue] = useState<string>('');
-  const [amountValue, setAmountValue] = useState<number | undefined>(0);
+  const [amountValue, setAmountValue] = useState<any>(0);
   const [hash, setHash] = useState<ContractTransaction | string | undefined>();
   const [isExecuted, setExecuted] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -80,11 +79,10 @@ export const useTransaction = () => {
       if (zkWallet) {
         try {
           setLoading(true);
-          const depositPriorityOperation = await depositFromETH({
-            depositFrom: ethWallet,
-            depositTo: zkWallet,
+          const depositPriorityOperation = await zkWallet.depositToSyncFromEthereum({
+            depositTo: zkWallet.address(),
             token: token,
-            amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
+            amount: ethers.utils.bigNumberify(amountValue ? amountValue?.toString() : '0'),
           });
           const hash = depositPriorityOperation.ethTx;
           history(amountValue || 0, hash.hash, zkWallet.address(), 'deposit', token);
@@ -138,7 +136,7 @@ export const useTransaction = () => {
       try {
         if (ADDRESS_VALIDATION[type].test(addressValue) && zkWallet) {
           setLoading(true);
-          const withdrawTransaction = await zkWallet.withdrawTo({
+          const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum({
             ethAddress: addressValue,
             token: token,
             amount: ethers.utils.parseEther(amountValue ? amountValue?.toString() : '0'),
