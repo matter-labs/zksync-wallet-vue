@@ -34,8 +34,9 @@
   --xxl-font-size: 36px;
   --xxxl-font-size: 48px;
 
-  --bold-font-weight: 900;
   --medium-font-weight: 500;
+  --semibold-font-weight: 600;
+  --bold-font-weight: 800;
 }
 
 button {
@@ -320,6 +321,7 @@ h2 {
 
   & > h2 {
     color: var(--dark-color);
+    font-weight: var(--medium-font-weight);
     font-size: var(--large-font-size);
   }
 
@@ -710,6 +712,7 @@ body.dark > #root {
     }
   
     & > p {
+      font-weight: var(--semibold-font-weight);
       font-size: var(--large-font-size);
     }
   }
