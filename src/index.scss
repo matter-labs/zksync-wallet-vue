@@ -399,6 +399,8 @@ input[type="radio"]:focus + .contact-manage{
 
 .balances-contact-right {
   & .balances-contact-edit {
+      width: 20px;
+      padding: 15px;
       background-image: url(./images/mdi_more_horiz.svg);
   }
 }
@@ -577,7 +579,7 @@ body.dark > #root {
 
   .withdraw-button {
     & > span {
-      margin-top: 3px;
+      margin-top: 1px;
       background-image: url(./images/mdi_arrow_downward_dark_disable.svg);
       background-repeat: no-repeat;
       background-size: 16px;
@@ -691,6 +693,11 @@ body.dark > #root {
 
     &-edit {
       background-image: url(./images/mdi_more_horiz_dark.svg);
+    }
+
+    &-send {
+      background-image: url(./images/send_white.svg);
+      opacity: 0.9;
     }
   }
 }
