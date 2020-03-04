@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Portal from './Portal';
 
@@ -9,14 +10,43 @@ import { useRootData } from '../../hooks/useRootData';
 import './Modal.scss';
 
 const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, classSpecifier, visible }): JSX.Element => {
-  const { isModalOpen, setError, setModal } = useRootData(({ isModalOpen, setError, setModal }) => ({
-    isModalOpen: isModalOpen.get(),
+  const {
+    isModalOpen,
+    setAccessModal,
     setError,
     setModal,
-  }));
+    setProvider,
+    setWalletName,
+    setZkWallet,
+    walletName,
+    zkWallet,
+  } = useRootData(
+    ({
+      isModalOpen,
+      setAccessModal,
+      setError,
+      setModal,
+      setProvider,
+      setWalletName,
+      setZkWallet,
+      walletName,
+      zkWallet,
+    }) => ({
+      isModalOpen: isModalOpen.get(),
+      setAccessModal,
+      setError,
+      setModal,
+      setProvider,
+      setWalletName,
+      setZkWallet,
+      walletName: walletName.get(),
+      zkWallet: zkWallet.get(),
+    }),
+  );
 
   const myRef = useRef<HTMLDivElement>(null);
   const body = document.querySelector('body');
+  const history = useHistory();
 
   useEffect(() => {
     if (body) {
@@ -41,6 +71,7 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, [handleClickOutside]);
+
   return (
     <>
       {(classSpecifier === isModalOpen || visible) && (
@@ -50,6 +81,13 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
               onClick={() => {
                 if (cancelAction) {
                   cancelAction();
+                }
+                if (!zkWallet && walletName === 'Metamask') {
+                  setProvider(null);
+                  setWalletName('');
+                  setAccessModal(false);
+                  setZkWallet(null);
+                  history.push('/');
                 }
                 setError('');
                 setModal('');
