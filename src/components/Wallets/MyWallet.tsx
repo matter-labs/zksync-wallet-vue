@@ -114,7 +114,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                 </div>
                 <div className="balances-token-right">
                   <span>
-                    balance: <p className="datalist-balance">{balance}</p>
+                    balance: <p className="datalist-balance">{balance.toFixed(2)}</p>
                   </span>
                 </div>
               </div>

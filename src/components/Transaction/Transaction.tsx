@@ -254,7 +254,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   </div>
                   <div className="balances-token-right">
                     <span>
-                      balance: <p className="datalist-balance">{balance}</p>
+                      balance: <p className="datalist-balance">{balance.toFixed(2)}</p>
                     </span>
                   </div>
                 </div>
