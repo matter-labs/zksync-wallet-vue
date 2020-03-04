@@ -43,6 +43,7 @@ button {
 }
 
 body, html {
+  display: block;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -52,16 +53,42 @@ body, html {
   transition-property: background-color, opacity;
 }
 
+*, *::before, *::after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+* {
+  box-sizing: border-box;
+  outline: none;
+
+  &:active, &:hover, &:focus {
+    outline: none;
+  } 
+}
+
+p {
+  margin-top: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
 *:hover {
   transition-timing-function: ease-in-out;
   transition-duration: 200ms;
   transition-property: background-color, opacity;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 10px;
+}
+
 input {
   width: 100%;
   height: 80px;
-  margin-bottom: 30px;
+  margin-bottom: 0;
   padding: 25px;
   border: 1px solid var(--border-color);
   border-radius: 5px;
@@ -470,13 +497,13 @@ input[type="radio"]:focus + .contact-manage{
       & > p {
         overflow: hidden;
         color: var(--dark-color);
-        font-size: var(--xxl-font-size);
+        font-size: var(--xl-font-size);
         text-overflow: unset;
       }
     }
 
     &.mywallet {
-      margin-top: 20px;
+      margin-top: 22px;
 
       & > .custom-selector-title {
         & > p {
@@ -544,6 +571,15 @@ input[type="radio"]:focus + .contact-manage{
 body.dark > #root {
   .transaction-back {
     background-image: url(./images/arrow-back-dark.svg);
+  }
+
+  .withdraw-button {
+    & > span {
+      margin-top: 3px;
+      background-image: url(./images/mdi_arrow_downward_dark_disable.svg);
+      background-repeat: no-repeat;
+      background-size: 16px;
+    }
   }
 
   .custom-selector {
@@ -714,15 +750,16 @@ body.dark > #root {
   .custom-selector {
     position: relative;
     width: 100%;
-    max-width: 100px;
+    max-width: 150px;
     height: 25px;
   
     &-title {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      max-width: 80px;
-      height: 25px;
+      max-width: 150px;
+      height: 40px;
+      font-size: var(--large-font-size);
       text-overflow: ellipsis;
       border-radius: 6px;
       cursor: pointer;
@@ -781,7 +818,7 @@ body.dark > #root {
       }
 
       &.mywallet {
-        margin-top: 28px;
+        margin-top: 18px;
         margin-left: 12px;
   
         & > .custom-selector-title {

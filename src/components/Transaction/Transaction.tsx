@@ -91,6 +91,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
 
   const bigNumberMultiplier = Math.pow(10, 18);
+  const selectedSymbol = selectedBalance.symbol !== 'ERC20-1' ? selectedBalance.symbol : 'ERC';
 
   const validateNumbers = e => {
     if (INPUT_VALIDATION.digits.test(e)) {
@@ -149,7 +150,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     const changePubkey = await zkWallet?.setSigningKey('committed', true);
     const receipt = await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
-  }, []);
+  }, [zkWallet]);
 
   useEffect(() => {
     if (balances?.length) {
@@ -160,7 +161,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [balances, handleClickOutside]);
+  }, [balances, handleClickOutside, zkWallet]);
 
   return (
     <>
@@ -380,11 +381,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                         <div className="custom-selector balances">
                           <div onClick={() => openBalancesList(!isBalancesListOpen)} className="custom-selector-title">
                             {symbolName ? (
-                              <p>{symbolName}</p>
+                              <p>{symbolName !== 'ERC20-1' ? symbolName : 'ERC'}</p>
                             ) : (
-                              <span>
-                                {selectedBalance.symbol && zkBalancesLoaded ? selectedBalance.symbol : <Spinner />}
-                              </span>
+                              <span>{selectedBalance.symbol && zkBalancesLoaded ? selectedSymbol : <Spinner />}</span>
                             )}
 
                             <div className="arrow-down"></div>
@@ -395,7 +394,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                         <div className="currency-input-wrapper" key={token}>
                           <span>~${(price * (maxValue ? maxValue : balances[0].balance)).toFixed(2)}</span>
                           <span>
-                            Balance: {maxValue ? maxValue : balances[0].balance}{' '}
+                            Balance: {maxValue ? maxValue.toFixed(2) : balances[0].balance.toFixed(2)}{' '}
                             {symbolName ? symbolName : balances[0].symbol}
                           </span>
                         </div>

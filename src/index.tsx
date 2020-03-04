@@ -11,7 +11,6 @@ import Transactions from './pages/Transactions';
 import StoreProvider from './store/context';
 
 import './index.scss';
-import 'antd/dist/antd.css';
 
 import * as serviceWorker from './serviceWorker';
 

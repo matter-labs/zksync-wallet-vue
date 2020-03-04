@@ -44,14 +44,22 @@
 
   & > span {
     background: url(../../images/mdi_arrow_downward.svg);
+    background-size: 22px;
+  }
+}
+
+.deposit-button {
+  color: var(--button-bg-color);
+  
+  & > span {
+    background: url(../../images/deposit.svg);
   }
 }
 
 .deposit-button, .withdraw-button {
   position: relative;
-  margin: 25px 0 40px;
+  margin: 25px 0;
   padding-left: 30px;
-  color: var(--button-bg-color);
   font-size: var(--md-font-size);
   background-color: var(--transparent);
   border: none;
@@ -73,10 +81,10 @@
     left: 0;
     width: 20px;
     height: 20px;
-    background: url(../../images/deposit.svg);
     background-repeat: no-repeat;
+    background-position: center;
     background-size: contain;
-    transform: translateY(-50%);
+    transform: translateY(-55%);
   }
 }
 
@@ -134,7 +142,7 @@
       justify-content: space-between;
       width: 100%;
       height: 90px;
-      padding: 18px 18px;
+      padding: 18px 10px;
       background-color: var(--bg-block-color);
       border-left: 3px solid var(--button-bg-color);
       transform: translateX(-15px);
@@ -211,6 +219,7 @@
 
 @media screen and (min-width: 760px) {
   .deposit-button, .withdraw-button {
+    margin-bottom: 40px;
     font-size: var(--large-font-size);
 
     & > span { 

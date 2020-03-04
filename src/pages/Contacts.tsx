@@ -57,7 +57,7 @@ const Contacts: React.FC = (): JSX.Element => {
       setModal('');
       setContacts(contacts);
     },
-    [contacts, setModal],
+    [contacts, setContacts, setModal],
   );
 
   useEffect(() => {

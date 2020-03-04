@@ -94,7 +94,8 @@
     max-width: 250px;
     padding: 10px 0;
     color: var(--dark-color);
-    font-size: var(--xxxl-font-size);
+    font-size: var(--xl-font-size);
+    line-height: var(--xl-font-size);
     background-color: var(--transparent);
     border: none;
     outline: none;
@@ -143,7 +144,7 @@
 
     &::placeholder {
       color: var(--hints-color);
-      font-size: var(--xxxl-font-size);
+      font-size: var(--xl-font-size);
       line-height: 40px;
     }
   }
@@ -293,7 +294,7 @@
       padding: 0;
 
       & .currency-input-wrapper {
-        padding: 0 15px;
+        padding: 0 20px;
 
         & > .currency-input {
           padding: 0;
@@ -301,7 +302,7 @@
 
         & > .custom-selector{
           &.balances {
-            max-width: 130px;
+            max-width: 100px;
             height: 75px;
 
             .custom-selector-title {
@@ -312,7 +313,7 @@
                 width: 100%;
                 max-width: 130px;
                 overflow: hidden;
-                font-size: var(--xxxl-font-size);
+                font-size: var(--xl-font-size);
                 white-space: nowrap;
                 text-overflow: ellipsis;
               }
@@ -342,6 +343,11 @@
   .currency {
     &-input {
       padding: 15px 0;
+      font-size: var(--xxxl-font-size);
+
+      &::placeholder {
+        font-size: var(--xxxl-font-size);
+      }
 
       &-wrapper {
         padding: 10px 0;
@@ -418,14 +424,15 @@
               .custom-selector-title {
                 max-width: 140px;
                 height: 75px;
+
+                & > p, span {
+                  font-size: var(--xxxl-font-size);
+                }
               }
             }
           }
         }
       }
-    }
-  
-        
-      
+    } 
   }
 }

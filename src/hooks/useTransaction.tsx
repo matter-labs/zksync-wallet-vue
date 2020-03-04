@@ -18,9 +18,8 @@ export const useTransaction = () => {
   const [isExecuted, setExecuted] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  const { ethWallet, setError, setZkBalances, tokens, zkWallet } = useRootData(
-    ({ ethWallet, setError, setZkBalances, tokens, zkWallet }) => ({
-      ethWallet: ethWallet.get(),
+  const { setError, setZkBalances, tokens, zkWallet } = useRootData(
+    ({ setError, setZkBalances, tokens, zkWallet }) => ({
       setError,
       setZkBalances,
       tokens: tokens.get(),
@@ -94,19 +93,12 @@ export const useTransaction = () => {
         }
       }
     },
-    [amountValue, ethWallet, history, setError, setHash, setLoading, transactions, zkWallet],
+    [amountValue, history, setError, setHash, setLoading, transactions, zkWallet],
   );
 
   const transfer = useCallback(
     async (token = TOKEN, type) => {
       try {
-        console.log(addressValue);
-        // console.log({
-        //   to: addressValue,
-        //   token: token,
-        //   amount: ethers.utils.parseEther(amountValue ? amountValue.toString() : '0'),
-        //   fee: ethers.utils.parseEther('0.001'),
-        // });
         if (ADDRESS_VALIDATION[type].test(addressValue) && zkWallet) {
           setLoading(true);
           const transferTransaction = await zkWallet.syncTransfer({

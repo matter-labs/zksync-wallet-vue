@@ -145,7 +145,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             ></div>
             <div className="mywallet-currency-wrapper">
               <span className="mywallet-currency-balance">
-                {walletBalance ? parseFloat(walletBalance).toFixed(3) : zkBalances[0]?.balance.toFixed(3).toString()}
+                {walletBalance ? parseFloat(walletBalance).toFixed(2) : zkBalances[0]?.balance.toFixed(2).toString()}
               </span>
               <div className="custom-selector balances mywallet">
                 <div onClick={() => openAssets(true)} className="custom-selector-title">

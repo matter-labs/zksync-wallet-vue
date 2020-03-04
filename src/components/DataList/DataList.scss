@@ -127,7 +127,7 @@
   &-title {
     color: var(--dark-color);
     font-weight: var(--bold-font-weight);
-    font-size: var(--xl-font-size);
+    font-size: var(--large-font-size);
   }
 
   &-token {
@@ -392,6 +392,10 @@
   .balances {
     &-token, &-contact {
       font-size: var(--md-font-size);
+    }
+
+    &-title {
+      font-size: var(--xl-font-size);
     }
   }
 
