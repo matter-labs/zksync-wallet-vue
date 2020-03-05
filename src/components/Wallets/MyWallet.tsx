@@ -9,6 +9,7 @@ import { useRootData } from '../../hooks/useRootData';
 import { IMyWalletProps } from './Types';
 
 import './Wallets.scss';
+import { setTimeout } from 'timers';
 
 const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.Element => {
   const { searchBalances, setBalances, transactionModal, zkBalances, zkBalancesLoaded, zkWallet } = useRootData(
@@ -25,6 +26,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
   const dataPropertyName = 'symbol';
 
   const [address, setAddress] = useState<string>('');
+  const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isAssetsOpen, openAssets] = useState<boolean>(false);
   const [selectedBalance, setSelectedBalance] = useState<any>(!!zkBalances?.length ? zkBalances[0] : 0);
@@ -43,6 +45,8 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
           document.execCommand('copy');
         }
       });
+      openCopyModal(true);
+      setTimeout(() => openCopyModal(false), 2000);
     },
     [inputRef],
   );
@@ -129,6 +133,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
         <div className={`mywallet-wrapper ${!!transactionModal?.title ? 'closed' : 'open'}`}>
           <h2 className="mywallet-title">My wallet</h2>
           <div onClick={() => handleCopy(zkWallet?.address())} className="copy-block">
+            <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
+              <p>Copied!</p>
+            </div>
             <input className="copy-block-input" readOnly value={zkWallet?.address()} ref={e => inputRef.push(e)} />
             <div className="copy-block-left">
               <img src={avatar} alt="avatar" />{' '}
@@ -148,7 +155,10 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                 {walletBalance ? parseFloat(walletBalance).toFixed(2) : zkBalances[0]?.balance.toFixed(2).toString()}
               </span>
               <div className="custom-selector balances mywallet">
-                <div onClick={() => openAssets(true)} className="custom-selector-title">
+                <div
+                  onClick={() => openAssets(true)}
+                  className={`custom-selector-title ${!zkBalances.length && zkBalancesLoaded ? 'empty' : ''}`}
+                >
                   {symbolName ? (
                     <p>zk{symbolName}</p>
                   ) : (

@@ -30,7 +30,7 @@ const BrowserWallet: React.FC = (): JSX.Element => {
       }
     } catch (err) {
       err.name && err.message
-        ? setError(`${err.name}:${err.message}. Maybe you don't have Metamask or Coinbase installed in your browser`)
+        ? setError(`${err.name}: ${err.message}. Maybe you don't have Metamask or Coinbase installed in your browser`)
         : setError(DEFAULT_ERROR);
       history.push('/');
       setWalletName('');

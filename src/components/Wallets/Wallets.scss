@@ -1,4 +1,5 @@
 .copy-block {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -247,7 +248,7 @@
           margin-right: 10px;
         }
 
-        & > div {
+        & > .copy-block-left {
           height: 20px;
         }
       }

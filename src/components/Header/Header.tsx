@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
 import Modal from '../Modal/Modal';
@@ -24,10 +24,13 @@ const Header: React.FC = (): JSX.Element => {
 
   const history = useHistory();
 
+  const [isCopyModal, openCopyModal] = useState<boolean>(false);
+
   const inputRef: (HTMLInputElement | null)[] = [];
 
   const handleCopy = useCallback(
     address => {
+      openCopyModal(true);
       inputRef.map(el => {
         if (address === el?.value) {
           el?.focus();
@@ -35,6 +38,8 @@ const Header: React.FC = (): JSX.Element => {
           document.execCommand('copy');
         }
       });
+      setModal('wallet');
+      setTimeout(() => openCopyModal(false), 2000);
     },
     [inputRef],
   );
@@ -64,8 +69,11 @@ const Header: React.FC = (): JSX.Element => {
                 {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
               </div>
               <div onClick={() => handleCopy(zkWallet?.address())} className="copy-block">
+                <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
+                  <p>Copied!</p>
+                </div>
                 <input
-                  onChange={undefined}
+                  onChange={() => undefined}
                   className="copy-block-input"
                   value={zkWallet?.address()}
                   ref={e => inputRef.push(e)}

@@ -114,6 +114,7 @@
     width: calc(100% - 50px);
     height: 40px;
     padding-left: 40px;
+    color: var(--dark-color);
     background-color: var(--input-color);
     background-image: url(../../images/mdi_search.svg);
     background-repeat: no-repeat;
@@ -214,6 +215,7 @@
   }
 
   &-contact {
+    position: relative;
     display: flex;
     justify-content: space-between;
     width: 100%;

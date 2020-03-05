@@ -90,7 +90,7 @@ const Account: React.FC = (): JSX.Element => {
         setPrice(+res?.[0]?.price_usd);
       })
       .catch(err => {
-        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
       });
   }, [error, ethId, setBalances, setError, setPrice, zkBalances, zkWallet]);
 

@@ -34,7 +34,7 @@ export const useTransaction = () => {
         const newHistory = JSON.stringify([{ amount, date: new Date(), hash, to, type, token }, ...history]);
         localStorage.setItem('history', newHistory);
       } catch (err) {
-        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
       }
     },
     [setError],
@@ -59,7 +59,7 @@ export const useTransaction = () => {
               setZkBalances(res as IEthBalance[]);
             })
             .catch(err => {
-              err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+              err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
             });
           setAmountValue(0);
         }
@@ -67,7 +67,7 @@ export const useTransaction = () => {
           setExecuted(true);
         }
       } catch (err) {
-        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
       }
     },
     [setAmountValue, setError, setExecuted, setLoading, setZkBalances, tokens, zkWallet],
@@ -89,7 +89,7 @@ export const useTransaction = () => {
           const receipt = await depositPriorityOperation.awaitReceipt();
           transactions(receipt);
         } catch (err) {
-          err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         }
       }
     },
@@ -97,9 +97,9 @@ export const useTransaction = () => {
   );
 
   const transfer = useCallback(
-    async (token = TOKEN, type) => {
+    async (token = TOKEN) => {
       try {
-        if (ADDRESS_VALIDATION[type].test(addressValue) && zkWallet) {
+        if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
           const transferTransaction = await zkWallet.syncTransfer({
             to: addressValue,
@@ -113,10 +113,10 @@ export const useTransaction = () => {
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
         } else {
-          setError(`Address: "${addressValue}" doesn't match following format "sync:...." `);
+          setError(`Address: "${addressValue}" doesn't match ethereum address format`);
         }
       } catch (err) {
-        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         setLoading(false);
       }
     },
@@ -124,9 +124,9 @@ export const useTransaction = () => {
   );
 
   const withdraw = useCallback(
-    async (token = TOKEN, type) => {
+    async (token = TOKEN) => {
       try {
-        if (ADDRESS_VALIDATION[type].test(addressValue) && zkWallet) {
+        if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum({
             ethAddress: addressValue,
@@ -143,7 +143,7 @@ export const useTransaction = () => {
           setError(`Address: "${addressValue}" doesn't match ethereum address format`);
         }
       } catch (err) {
-        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         setLoading(false);
       }
     },

@@ -105,12 +105,12 @@
     top: 120px;
     left: 50%;
     text-align: center;
-    transform: translateX(-50%);
+    transform: translateX(-50%) scale(0.9);
   }
 
   &.wallet {
-    top: 30px;
-    left: 100%;
+    top: 16px;
+    left: calc(100% - 16px);
     width: 100%;
     transform: translateX(-100%);
 
@@ -136,6 +136,8 @@
     }
 
     & > .wallet-title {
+      display: flex;
+      align-items: center;
       color: var(--dark-color);
       font-weight: var(--bold-font-weight);
       font-size: var(--xl-font-size);

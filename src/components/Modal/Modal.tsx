@@ -81,6 +81,8 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
               onClick={() => {
                 if (cancelAction) {
                   cancelAction();
+                } else {
+                  setModal('');
                 }
                 if (!zkWallet && walletName === 'Metamask') {
                   setProvider(null);
@@ -88,9 +90,8 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
                   setAccessModal(false);
                   setZkWallet(null);
                   history.push('/');
+                  setModal('');
                 }
-                setError('');
-                setModal('');
               }}
               className="close-icon"
             ></button>

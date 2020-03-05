@@ -9,6 +9,7 @@ import deleteicon from '../images/mdi_delete.svg';
 import { useRootData } from '../hooks/useRootData';
 
 import DataList from '../components/DataList/DataList';
+import { stringify } from 'querystring';
 
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
@@ -28,8 +29,14 @@ const Contacts: React.FC = (): JSX.Element => {
 
   const arr: any = localStorage.getItem('contacts');
   const contacts = JSON.parse(arr);
+  interface IOldContacts {
+    name: string;
+    address: string;
+  }
 
+  const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [oldContact, setOldContact] = useState<IOldContacts>();
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
@@ -42,6 +49,8 @@ const Contacts: React.FC = (): JSX.Element => {
           document.execCommand('copy');
         }
       });
+      openCopyModal(true);
+      setTimeout(() => openCopyModal(false), 2000);
     },
     [inputRef],
   );
@@ -70,7 +79,7 @@ const Contacts: React.FC = (): JSX.Element => {
   return (
     <DataList setValue={setContacts} dataProperty={dataPropertyName} data={contacts} title="Contacts" visible={true}>
       <Modal visible={false} classSpecifier="add-contact edit-contact" background={true}>
-        <SaveContacts title="Edit contact" addressValue="" addressInput={true} />
+        <SaveContacts oldContact={oldContact} title="Edit contact" addressValue="" addressInput={true} edit={true} />
       </Modal>
       {contacts && (
         <>
@@ -88,6 +97,9 @@ const Contacts: React.FC = (): JSX.Element => {
                   </span>
                 </div>
                 <div className="balances-contact-right">
+                  <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
+                    <p>Copied!</p>
+                  </div>
                   <button
                     className="balances-contact-send"
                     onClick={() => {
@@ -118,6 +130,7 @@ const Contacts: React.FC = (): JSX.Element => {
                         className="contact-manage-edit"
                         onClick={() => {
                           setModal('add-contact edit-contact');
+                          setOldContact({ name: name, address: address });
                         }}
                       >
                         <img src={editicon} alt="edit" />

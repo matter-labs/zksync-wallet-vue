@@ -76,7 +76,7 @@ const Transactions: React.FC = (): JSX.Element => {
           </div>
         ))
       ) : (
-        <div>History is empty</div>
+        <div className="default-text">History is empty</div>
       )}
     </DataList>
   );

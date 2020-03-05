@@ -61,7 +61,7 @@ const useWalletInit = () => {
             setAccessModal(true);
           })
           .catch(err => {
-            err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+            err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
           });
       } else {
         setError(`${walletName} not found`);
@@ -107,7 +107,7 @@ const useWalletInit = () => {
           setEthBalances(balance as IEthBalance[]);
         })
         .catch(err => {
-          err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         });
 
       const zkBalance = (await syncWallet.getAccountState()).committed.balances;
@@ -125,10 +125,10 @@ const useWalletInit = () => {
         })
         .then(() => setZkBalancesLoaded(true))
         .catch(err => {
-          err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         });
     } catch (err) {
-      err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+      err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
     }
   }, [
     history,

@@ -33,7 +33,7 @@ const PortisWallet: React.FC = (): JSX.Element => {
       }
     } catch (err) {
       err.name && err.message
-        ? setError(`${err.name}:${err.message}. Maybe you don't have Portis Wallet installed in your browser`)
+        ? setError(`${err.name}: ${err.message}. Maybe you don't have Portis Wallet installed in your browser`)
         : setError(DEFAULT_ERROR);
       history.push('/');
       setWalletName('');
