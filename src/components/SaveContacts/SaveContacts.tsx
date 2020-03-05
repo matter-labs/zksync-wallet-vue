@@ -13,8 +13,8 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
   oldContact,
   title,
 }): JSX.Element => {
-  const [name, setName] = useState<string>('');
-  const [address, setAddress] = useState<string>('');
+  const [name, setName] = useState<string>(oldContact?.name ? oldContact.name : '');
+  const [address, setAddress] = useState<string>(oldContact?.address ? oldContact.address : '');
 
   const { setContacts, setError, setModal } = useRootData(({ setContacts, setError, setModal }) => ({
     setContacts,
