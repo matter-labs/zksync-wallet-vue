@@ -85,13 +85,13 @@ const Account: React.FC = (): JSX.Element => {
     if (!ethId) {
       window.location.pathname = '/';
     }
-    request(`${BASE_URL}/${CURRENCY}/?convert=${CONVERT_CURRENCY}`)
-      .then((res: any) => {
-        setPrice(+res?.[0]?.price_usd);
-      })
-      .catch(err => {
-        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
-      });
+    // request(`${BASE_URL}/${CURRENCY}/?convert=${CONVERT_CURRENCY}`)
+    //   .then((res: any) => {
+    //     setPrice(+res?.[0]?.price_usd);
+    //   })
+    //   .catch(err => {
+    //     err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+    //   });
   }, [error, ethId, setBalances, setError, setPrice, zkBalances, zkWallet]);
 
   const handleSend = (address, balance, symbol) => {

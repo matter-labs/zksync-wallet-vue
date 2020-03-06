@@ -1,7 +1,7 @@
 .metamask {
   &-logo {
-    width: 95px;
-    height: 95px;
+    width: 86px;
+    height: 86px;
     margin: 0 auto;
     background-image: url(../../images/metamask.png);
     background-repeat: no-repeat;
@@ -10,7 +10,7 @@
   }
 
   & > h3 {
-    margin: 30px 0 80px;
+    margin: 27px 0 72px;
     color: var(--dark-color);
     font-weight: var(--bold-font-weight);
     font-size: var(--large-font-size);
@@ -29,7 +29,7 @@
   z-index: 10000;
   width: 100%;
   max-width: 100vw;
-  padding: 32px;
+  padding: 28px;
   color: var(--dark-color);
   background-color: var(--modal-bg-color);
   border: 1px solid var(--border-color);
@@ -51,9 +51,9 @@
 
   & .icon {
     &-qr, &-edit, &-disconnect {
-      width: 25px;
-      height: 25px;
-      margin-right: 30px;
+      width: 22px;
+      height: 22px;
+      margin-right: 27px;
     }
 
     &-edit {
@@ -105,7 +105,7 @@
     top: 120px;
     left: 50%;
     text-align: center;
-    transform: translateX(-50%) scale(0.9);
+    transform: translateX(-50%);
   }
 
   &.wallet {
@@ -119,7 +119,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 30px;
+        height: 27px;
         margin-top: 20px;
         padding: 5px 10px;
         color: var(--dark-color);
@@ -143,21 +143,21 @@
       font-size: var(--xl-font-size);
 
       & > img {
-        width: 55px;
-        height: 55px;
+        width: 50px;
+        height: 50px;
         padding: 5px;
       }
     }
 
     & > .horizontal-line {
-      width: calc(100% + 64px);
+      width: calc(100% + 58px);
       height: 1px;
       background-color: var(--copyblock-color);
-      transform: translateX(-32px);
+      transform: translateX(-29px);
     }
 
     & > .copy-block {
-      margin-bottom: 40px;
+      margin-bottom: 36px;
       font-size: var(--sm-font-size);
       cursor: pointer;
 
@@ -171,8 +171,8 @@
   }
 
   &.error {
-    min-height: 150px;
-    padding-top: 60px;
+    min-height: 135px;
+    padding-top: 54px;
   }
 
   &.open {
@@ -220,16 +220,16 @@
 
 .assets-wrapper {
   position: absolute;
-  top: 120px;
+  top: 108px;
   z-index: 10000;
   width: 100%;
-  max-width: 610px;
+  max-width: 550px;
   background-color: var(--modal-bg-color);
   border-radius: 5px;
 
   & > .balances-wrapper {
     width: 100%;
-    max-width: 630px;
+    max-width: 565px;
     height: 60vh;
     margin: 0 auto;
     padding-top: 20px;
@@ -252,8 +252,8 @@
     }
 
     & .balances-token {
-      height: 115px;
-      padding: 25px;
+      height: 104px;
+      padding: 22px;
 
       &:hover > .balances-token-right {
         display: flex;
@@ -272,13 +272,13 @@
         }
 
         .logo {
-          width: 50px;
-          height: 50px;
+          width: 45px;
+          height: 45px;
           margin-right: 15px;
           background-repeat: no-repeat;
           background-position: center;
           background-size: contain;
-          border-radius: 25px;
+          border-radius: 28px;
 
           &.FAU {
             background-image: url(../../images/FAU.png);
@@ -297,7 +297,7 @@
 
     & > .balances-title {
       align-self: flex-start;
-      margin-left: 25px;
+      margin-left: 22px;
     }
   }
 
@@ -361,10 +361,10 @@ body.dark {
 
 .close-icon {
   position: absolute;
-  top: 30px;
-  right: 30px;
-  width: 30px;
-  height: 30px;
+  top: 27px;
+  right: 27px;
+  width: 27px;
+  height: 27px;
   background-color: var(--transparent);
   border: none;
   outline: none;
@@ -374,7 +374,7 @@ body.dark {
   &::before, &::after {
     position: absolute;
     left: 0;
-    width: 30px;
+    width: 27px;
     height: 1px;
     background-color: var(--hints-color);
     content: '';
@@ -387,15 +387,15 @@ body.dark {
 
 @media screen and (min-width: 600px) {
   .modal {
-    max-width: 560px;
+    max-width: 505px;
   }
 
   .assets-wrapper {
     overflow-x: hidden;
   
     & > .balances-wrapper {
-      width: calc(100% + 34px);
-      margin-right: -17px;
+      width: calc(100% + 30px);
+      margin-right: -15px;
       padding-right: 5px;
     } 
   }  

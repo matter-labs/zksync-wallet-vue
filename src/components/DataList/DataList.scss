@@ -1,8 +1,8 @@
 .add-contact {
   &-button {
     position: absolute;
-    top: 48px;
-    right: 30px;
+    top: 43px;
+    right: 27px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -64,8 +64,8 @@
 
     & > span {
       display: block;
-      width: 25px;
-      height: 25px;
+      width: 22px;
+      height: 22px;
       margin-right: 0;
       background-image: url(../../images/mdi_person_add.svg);
       background-repeat: no-repeat;
@@ -77,7 +77,7 @@
 
 .datalist-balance {
   width: 100%;
-  max-width: 80px;
+  max-width: 72px;
   margin-bottom: 0;
   margin-left: 10px;
   padding-left: 5px;
@@ -93,10 +93,10 @@
     flex-direction: column;
     align-items: center;
     width: 90vw;
-    max-width: 560px;
-    margin-top: 15px;
-    padding-top: 30px;
-    padding-bottom: 25px;
+    max-width: 505px;
+    margin-top: 16px;
+    padding-top: 27px;
+    padding-bottom: 22px;
     background-color: var(--modal-bg-color);
     border-radius: 5px;
 
@@ -111,9 +111,9 @@
 
   &-search {
     position: relative;
-    width: calc(100% - 50px);
-    height: 40px;
-    padding-left: 40px;
+    width: calc(100% - 45px);
+    height: 36px;
+    padding-left: 36px;
     color: var(--dark-color);
     background-color: var(--input-color);
     background-image: url(../../images/mdi_search.svg);
@@ -136,8 +136,8 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    height: 80px;
-    padding: 25px;
+    height: 72px;
+    padding: 22px;
     color: var(--dark-color);
     font-size: var(--sm-font-size);
     background-color: var(--transparent);
@@ -162,7 +162,7 @@
 
       & > p {
         width: 100%;
-        max-width: 50px;
+        max-width: 45px;
         margin-bottom: 0;
         padding-left: 5px;
         overflow: hidden;
@@ -184,8 +184,8 @@
 
     & > button {
       display: none;
-      width: 110px;
-      height: 30px;
+      width: 100px;
+      height: 27px;
       color: var(--dark-color);
       background-color: var(--modal-bg-color);
       border: 1px solid var(--border-color);
@@ -219,7 +219,7 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding: 25px;
+    padding: 22px;
     color: var(--dark-color);
     font-size: var(--sm-font-size);
     text-align: center;
@@ -233,8 +233,8 @@
     }
 
     &-send, &-edit, &-copy {
-      width: 30px;
-      height: 30px;
+      width: 27px;
+      height: 27px;
       margin-left: 15px;
       background-color: var(--transparent);
       background-repeat: no-repeat;
@@ -255,7 +255,7 @@
     }
 
     &-copy {
-      height: 25px;
+      height: 22px;
       background-image: url(../../images/mdi_file_copy.svg);
     }
   
@@ -307,13 +307,13 @@
 
 .transaction-history {
   &.transfer, &.deposit, &.withdraw {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     background-color: var(--button-bg-color);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 18px;
-    border-radius: 20px;
+    border-radius: 18px;
   } 
 
   &.withdraw {
@@ -323,16 +323,16 @@
 
   &.deposit {
     background-image: url(../../images/deposit_white.svg);
-    background-size: 25px;
+    background-size: 22px;
   }
 
   &.transfer {
     background-image: url(../../images/send_white.svg);
-    background-size: 25px;
+    background-size: 22px;
   }
 
   &-amount {
-    margin-left: 20px;
+    margin-left: 18px;
     color: var(--dark-color);
     font-size: var(--xl-font-size);
   }
@@ -344,13 +344,13 @@
     align-items: flex-start;
     justify-content: space-between;
     width: 100%;
-    padding: 30px;
+    padding: 27px;
     border-bottom: 1px solid var(--border-color);
   }
 
   &-hash {
     margin-bottom: 10px;
-    margin-left: 60px;
+    margin-left: 54px;
     color: var(--dark-color);
     font-size: var(--sm-font-size);
   }
@@ -360,7 +360,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-start;
-    width: 150px;
+    width: 135px;
   }
 
   &-address {
@@ -380,13 +380,13 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    max-width: 180px;
-    margin-left: 60px;
+    max-width: 162px;
+    margin-left: 54px;
 
     & > .balances-contact-edit {
       position: absolute;
       top: 50%;
-      right: 25px;
+      right: 22px;
       transform: translateY(-50%);
     }
   }

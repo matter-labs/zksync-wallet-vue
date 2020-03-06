@@ -115,9 +115,9 @@ h1, h2, h3, h4, h5, h6 {
 
 input {
   width: 100%;
-  height: 80px;
+  height: 72px;
   margin-bottom: 0;
-  padding: 25px;
+  padding: 22px;
   color: var(--dark-color);
   font-size: var(--sm-font-size);
   border: 1px solid var(--border-color);
@@ -203,8 +203,8 @@ h2 {
 .wrong-network {
   width: 90%;
   margin: 0 auto;
-  margin-bottom: 40px;
-  padding: 30px;
+  margin-bottom: 36px;
+  padding: 27px;
   color: var(--dark-color);
   text-align: center;
   background-color: var(--error-color);
@@ -218,8 +218,8 @@ h2 {
   }
 
   &-logo {
-    width: 25px;
-    height: 25px;
+    width: 22px;
+    height: 22px;
     margin: 0 auto 10px;
     background-image: url(./images/mdi_network_wifi.svg);
     background-repeat: no-repeat;
@@ -233,7 +233,7 @@ h2 {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    margin-top: 40px;
+    margin-top: 36px;
     color: var(--dark-color);
     text-align: center;
     background-color: var(--transparent);
@@ -249,40 +249,40 @@ h2 {
   }
 
   &-button {
-    width: 95px;
-    height: 95px;
+    width: 85px;
+    height: 85px;
     background-color: var(--light-bg-color);
     background-repeat: no-repeat;
     background-position: center;
     border: none;
-    border-radius: 30px;
+    border-radius: 27px;
     outline: none;
     box-shadow: 0px 4px 8px var(--copyblock-color);
     cursor: pointer;
 
     &.Coinbase {
       background-image: url(./images/coinbase.png);
-      background-size: 55px;
+      background-size: 50px;
     }
 
     &.WalletConnect {
       background-image: url(./images/walletconnect.png);
-      background-size: 70px;
+      background-size: 63px;
     }
 
     &.Metamask {
       background-image: url(./images/metamask.png);
-      background-size: 60px 55px;
+      background-size: 54px 50px;
     }
 
     &.Portis {
       background-image: url(./images/portis.png);
-      background-size: 40px 60px;
+      background-size: 36px 54px;
     }
 
     &.Fortmatic {
       background-image: url(./images/fortmatic.png);
-      background-size: 65px;
+      background-size: 60px;
     }
   }  
 }
@@ -292,12 +292,12 @@ h2 {
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 55px;
+  height: 50px;
   color: var(--button-text-color);
   font-size: var(--md-font-size);
   background-color: var(--button-bg-color);
   border: none;
-  border-radius: 27px;
+  border-radius: 25px;
   outline: none;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
   cursor: pointer;
@@ -319,8 +319,8 @@ h2 {
 
   & > span {
     display: block;
-    width: 25px;
-    height: 25px;
+    width: 22px;
+    height: 22px;
     margin-right: 10px;
     background-image: url(./images/send.svg);
     background-repeat: no-repeat;
@@ -330,9 +330,9 @@ h2 {
 }
 
 .logo-textless {
-  width: 70px;
-  height: 40px;
-  margin: 50px 0 30px;
+  width: 63px;
+  height: 36px;
+  margin: 45px 0 27px;
   background-image: url(./images/logo.svg);
   background-repeat: no-repeat;
   background-size: contain;
@@ -340,7 +340,7 @@ h2 {
 
 .wallets-wrapper {
   display: grid;
-  grid-template-columns: repeat(auto-fit, 150px);
+  grid-template-columns: repeat(auto-fit, 135px);
   max-width: 95vw;
   margin: 0 2.5vw;
 }
@@ -363,7 +363,7 @@ h2 {
   }
 
   & > p {
-    margin: 60px 0 0;
+    margin: 54px 0 0;
     color: var(--dark-color);
     font-size: var(--md-font-size);
 
@@ -373,8 +373,8 @@ h2 {
 .contact-manage {
   position: absolute;
   width: 100%;
-  max-width: 300px;
-  height: 145px;
+  max-width: 270px;
+  height: 130px;
   overflow: hidden;
   background-color: var(--modal-bg-color);
   border-radius: 5px;
@@ -407,7 +407,7 @@ h2 {
     align-items: center;
     width: 100%;
     height: 50%;
-    padding-left: 20px;
+    padding-left: 18px;
     overflow: none;
     text-align: left;
     background-color: var(--transparent);
@@ -415,7 +415,7 @@ h2 {
 
     & > p {
       margin-bottom: 0;
-      margin-left: 25px;
+      margin-left: 22px;
     }
 
     &:hover {
@@ -449,7 +449,7 @@ input[type="radio"]:focus + .contact-manage{
   position: relative;
   z-index: 1000;
   width: 100%;
-  max-width: 100px;
+  max-width: 90px;
   height: 25px;
   text-align: center;
 
@@ -478,8 +478,8 @@ input[type="radio"]:focus + .contact-manage{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 100px;
-    height: 25px;
+    max-width: 90px;
+    height: 22px;
     text-overflow: ellipsis;
     cursor: pointer;
 
@@ -503,8 +503,8 @@ input[type="radio"]:focus + .contact-manage{
     
     & > span {
       display: block;
-      width: 25px;
-      height: 25px;
+      width: 22px;
+      height: 22px;
       margin-left: 10px;
       background-image: url(./images/mdi_people.svg);
       background-repeat: no-repeat;
@@ -525,7 +525,7 @@ input[type="radio"]:focus + .contact-manage{
 
   &.balances {
     & > .custom-selector-title {
-      max-width: 110px;
+      max-width: 100px;
       margin-top: 0;
       padding: 5px;
 
@@ -534,7 +534,7 @@ input[type="radio"]:focus + .contact-manage{
       }
 
       & > span {
-        height: 50px;
+        height: 45px;
         margin-left: 0;
         color: var(--dark-color);
         font-size: var(--large-font-size);
@@ -571,7 +571,7 @@ input[type="radio"]:focus + .contact-manage{
     position: absolute;
     left: 0;
     z-index: 10000;
-    min-width: 120px;
+    min-width: 108px;
     padding-left: 0;
     text-align: center;
     background-color: var(--modal-bg-color);
@@ -748,9 +748,9 @@ body.dark > #root {
 
 @media screen and (min-width: 760px) {
   .submit-button {
-    height: 80px;
+    height: 72px;
     font-size: var(--large-font-size);
-    border-radius: 40px;
+    border-radius: 36px;
   }
 
   .welcome-text {
@@ -776,27 +776,27 @@ body.dark > #root {
     }
 
     &-button {
-      width: 145px;
-      height: 145px;
+      width: 130px;
+      height: 130px;
   
       &.Coinbase {
-        background-size: 82px;
+        background-size: 74px;
       }
   
       &.WalletConnect {
-        background-size: 106px;
+        background-size: 95px;
       }
   
       &.Metamask {
-        background-size: 92px 84px;
+        background-size: 83px 75px;
       }
   
       &.Portis {
-        background-size: 58px 88px;
+        background-size: 52px 80px;
       }
   
       &.Fortmatic {
-        background-size: 98px;
+        background-size: 90px;
       }
     }  
   }
@@ -804,15 +804,15 @@ body.dark > #root {
   .custom-selector {
     position: relative;
     width: 100%;
-    max-width: 150px;
-    height: 25px;
+    max-width: 135px;
+    height: 22px;
   
     &-title {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      max-width: 150px;
-      height: 40px;
+      max-width: 135px;
+      height: 36px;
       font-size: var(--large-font-size);
       text-overflow: ellipsis;
       border-radius: 6px;
@@ -841,8 +841,8 @@ body.dark > #root {
       
       & > span {
         display: block;
-        width: 25px;
-        height: 25px;
+        width: 22px;
+        height: 22px;
         margin-left: 10px;
         background-image: url(./images/mdi_people.svg);
         background-repeat: no-repeat;
@@ -852,8 +852,8 @@ body.dark > #root {
   
     &.contacts {
       & > .custom-selector-title {
-        height: 40px;
-        margin-top: -10px;
+        height: 36px;
+        margin-top: -9px;
         margin-left: 20px;
 
         & > span {
@@ -899,8 +899,8 @@ body.dark > #root {
   }
 
   .wallets-wrapper {
-    grid-template-columns: repeat(auto-fit, 240px);
-    max-width: 720px;
+    grid-template-columns: repeat(auto-fit, 215px);
+    max-width: 645px;
     margin: 0 auto;
   }
 }

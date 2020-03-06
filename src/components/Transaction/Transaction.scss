@@ -366,7 +366,7 @@
     }
 
     &-hash {
-      margin-top: 20px;
+      margin-top: 18px;
       color: var(--dark-color);
       font-size: var(--sm-font-size);
 
@@ -377,7 +377,7 @@
     }
   
     &-fee {
-      margin-top: 25px;
+      margin-top: 22px;
       color: var(--dark-color);
       font-size: var(--sm-font-size);
       text-align: center;
@@ -390,10 +390,10 @@
     &-wrapper {
       position: relative;
       width: 90vw;
-      max-width: 560px;
+      max-width: 505px;
       margin: 0 auto;
-      margin-top: 15px;
-      padding: 20px;
+      margin-top: 14px;
+      padding: 18px;
       background-color: var(--modal-bg-color);
       border-radius: 4px;
   
@@ -408,22 +408,22 @@
   
     &-field {
       height: auto;
-      min-height: 100px;
-      max-height: 200px;
+      min-height: 90px;
+      max-height: 180px;
       padding-top: 5px;
 
       &.balance {
-        height: 140px;
+        height: 126px;
 
         & .currency-input-wrapper {
           & > .custom-selector{
             &.balances {
-              max-width: 140px;
-              height: 75px;
+              max-width: 126px;
+              height: 68px;
   
               .custom-selector-title {
-                max-width: 140px;
-                height: 75px;
+                max-width: 126px;
+                height: 68px;
 
                 & > p, span {
                   font-size: var(--xxxl-font-size);
