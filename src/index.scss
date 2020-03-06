@@ -30,9 +30,9 @@
   --sm-font-size: 14px;
   --md-font-size: 18px;
   --large-font-size: 22px;
-  --xl-font-size: 30px;
-  --xxl-font-size: 36px;
-  --xxxl-font-size: 48px;
+  --xl-font-size: 27px;
+  --xxl-font-size: 32px;
+  --xxxl-font-size: 43px;
 
   --medium-font-weight: 500;
   --semibold-font-weight: 600;
@@ -493,7 +493,7 @@ input[type="radio"]:focus + .contact-manage{
       text-overflow: ellipsis;
     }
 
-    & > div {
+    & > .arrow-down {
       min-width: 15px;
       height: 10px;
       background-image: url(./images/arrow-select.svg);
@@ -555,8 +555,8 @@ input[type="radio"]:focus + .contact-manage{
 
       & > .custom-selector-title {
         & > p {
-          margin-top: -5px;
-          font-size: var(--large-font-size);
+          margin-top: 3px;
+          font-size: var(--md-font-size);
         }
 
         & > span {
@@ -865,7 +865,7 @@ body.dark > #root {
   
     &.balances {
       & > .custom-selector-title {
-        margin-top: 3px;
+        margin-top: 0;
 
         &.empty {
           margin-top: -10px;

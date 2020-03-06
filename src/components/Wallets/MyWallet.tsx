@@ -118,7 +118,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                 </div>
                 <div className="balances-token-right">
                   <span>
-                    balance: <p className="datalist-balance">{balance.toFixed(2)}</p>
+                    balance: <p className="datalist-balance">{+balance.toFixed(2)}</p>
                   </span>
                 </div>
               </div>
@@ -178,12 +178,16 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             </div>
             <span className="mywallet-price">
               ~
-              {(
-                price *
-                zkBalances?.reduce((acc, cur) => {
-                  return acc + cur.balance;
-                }, 0)
-              ).toFixed(2)}{' '}
+              {parseFloat(
+                (
+                  price *
+                  zkBalances?.reduce((acc, cur) => {
+                    return acc + cur.balance;
+                  }, 0)
+                )
+                  .toFixed(2)
+                  .toString(),
+              )}{' '}
               USD
             </span>
           </div>

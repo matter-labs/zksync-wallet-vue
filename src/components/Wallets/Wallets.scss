@@ -224,8 +224,9 @@
     font-size: var(--large-font-size);
 
     & > span { 
-      width: 22px;
-      height: 22px;
+      width: 23px;
+      height: 23px;
+      background-size: cover;
     }
   }
 

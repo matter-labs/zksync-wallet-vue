@@ -251,7 +251,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   </div>
                   <div className="balances-token-right">
                     <span>
-                      balance: <p className="datalist-balance">{balance.toFixed(2)}</p>
+                      balance: <p className="datalist-balance">{+balance.toFixed(2)}</p>
                     </span>
                   </div>
                 </div>
@@ -389,9 +389,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                       </div>
                       {balances?.length && (
                         <div className="currency-input-wrapper" key={token}>
-                          <span>~${(price * (maxValue ? maxValue : balances[0].balance)).toFixed(2)}</span>
+                          <span>~${+(price * (maxValue ? maxValue : balances[0].balance)).toFixed(2)}</span>
                           <span>
-                            Balance: {maxValue ? maxValue.toFixed(2) : balances[0].balance.toFixed(2)}{' '}
+                            Balance: {maxValue ? +maxValue.toFixed(2) : +balances[0].balance.toFixed(2)}{' '}
                             {symbolName ? symbolName : balances[0].symbol}
                           </span>
                         </div>

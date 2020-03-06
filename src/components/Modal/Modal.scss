@@ -9,6 +9,14 @@
     background-size: contain;
   }
 
+  & > .title-connecting {
+    margin-bottom: 18px;
+  }
+
+  & > .spinner {
+    margin: 58px 0 67px;
+  }
+
   & > h3 {
     margin: 27px 0 72px;
     color: var(--dark-color);
@@ -388,6 +396,14 @@ body.dark {
 @media screen and (min-width: 600px) {
   .modal {
     max-width: 505px;
+  }
+
+  .metamask {
+    padding-bottom: 36px;
+
+    & > h3 {
+      margin: 27px 0 41px;
+    }
   }
 
   .assets-wrapper {

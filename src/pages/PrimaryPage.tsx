@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 
 import LazyWallet from '../components/Wallets/LazyWallet';
@@ -8,6 +8,7 @@ import { useRootData } from '../hooks/useRootData';
 import useWalletInit from '../hooks/useWalletInit';
 
 import { WALLETS } from '../constants/Wallets';
+import Spinner from '../components/Spinner/Spinner';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
@@ -56,6 +57,8 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   const history = useHistory();
 
+  const [curAddress, setCurAddress] = useState<string>(provider?.selectedAddress);
+
   const handleLogOut = useCallback(() => {
     setProvider(null);
     setWalletName('');
@@ -63,6 +66,21 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     setZkWallet(null);
     history.push('/');
   }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
+
+  useEffect(() => {
+    if (provider?.selectedAddress == null && walletName === 'Metamask') {
+      setAccessModal(true);
+    }
+    setCurAddress(provider?.selectedAddress);
+  }, [provider]);
+
+  if (!curAddress && walletName === 'Metamask') {
+    setInterval(() => {
+      if (provider?.selectedAddress) {
+        setCurAddress(provider?.selectedAddress);
+      }
+    }, 2000);
+  }
 
   return (
     <>
@@ -77,29 +95,40 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             visible={isAccessModalOpen}
             cancelAction={() => handleLogOut()}
           >
-            <div className="metamask-logo"></div>
-            {provider && provider.networkVersion === '4' ? ( //TODO: need to change on prod
+            <div
+              className="metamask-logo"
+              onClick={() => console.log(provider?.selectedAddress, provider.networkVersion === '4')}
+            ></div>
+            {!curAddress && (
               <>
-                <h3>Connected to Metamask</h3>
-                <button className="btn submit-button" onClick={createWallet}>
-                  Access my account
-                </button>
-              </>
-            ) : (
-              <>
-                <h3>Connecting to Metamask</h3>
-                <div className="wrong-network">
-                  <div className="wrong-network-logo"></div>
-                  <p>
-                    You are in the wrong network. <br />
-                    Please switch to mainnet
-                  </p>
-                </div>
-                <button className="btn submit-button" onClick={() => handleLogOut()}>
-                  Disconnect Metamask
-                </button>
+                <h3 className="title-connecting">Connecting to Metamask</h3>
+                <p>Follow the instructions in the popup</p>
+                <Spinner />
               </>
             )}
+            {curAddress &&
+              (provider.networkVersion === '4' ? ( //TODO: need to change on prod
+                <>
+                  <h3>Connected to Metamask</h3>
+                  <button className="btn submit-button" onClick={createWallet}>
+                    Access my account
+                  </button>
+                </>
+              ) : (
+                <>
+                  <h3>Connecting to Metamask</h3>
+                  <div className="wrong-network">
+                    <div className="wrong-network-logo"></div>
+                    <p>
+                      You are in the wrong network. <br />
+                      Please switch to mainnet
+                    </p>
+                  </div>
+                  <button className="btn submit-button" onClick={() => handleLogOut()}>
+                    Disconnect Metamask
+                  </button>
+                </>
+              ))}
           </Modal>
           {!walletName && (
             <>
