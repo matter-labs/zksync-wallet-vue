@@ -118,6 +118,15 @@
     transform: translateX(-50%);
   }
 
+  &.error {
+    min-height: 135px;
+    padding-top: 54px;
+
+    & > p {
+      word-break: break-all;
+    }
+  }
+
   &.wallet {
     top: 16px;
     left: calc(100%);
@@ -176,11 +185,6 @@
         word-break: break-word;
       }
     }
-  }
-
-  &.error {
-    min-height: 135px;
-    padding-top: 54px;
   }
 
   &.open {

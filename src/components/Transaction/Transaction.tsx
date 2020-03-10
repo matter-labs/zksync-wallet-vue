@@ -30,6 +30,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   propsToken,
   setHash,
   setExecuted,
+  setLoading,
   setTransactionType,
   title,
   transactionAction,
@@ -102,7 +103,6 @@ const Transaction: React.FC<ITransactionProps> = ({
         onChangeAmount(+e * bigNumberMultiplier);
       } else {
         setInputValue(+maxValue);
-        // onChangeAmount(+maxValue - 0.001 * maxValue);
         onChangeAmount(+maxValue * bigNumberMultiplier);
       }
     }
@@ -116,6 +116,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     setHash('');
     setExecuted(false);
     setWalletAddress('');
+    setLoading(false);
   }, [setExecuted, setHash, setTransactionType, setWalletAddress]);
 
   const setWalletName = useCallback(() => {
@@ -333,7 +334,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                     {isInput && (
                       <>
                         <span className="transaction-field-title">To address</span>
-                        <div className="transaction-field">
+                        <div className="transaction-field contacts">
                           <div className="currency-input-wrapper">
                             <input
                               placeholder="Ox address, ENS or contact name"

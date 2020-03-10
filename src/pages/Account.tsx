@@ -27,6 +27,7 @@ const Account: React.FC = (): JSX.Element => {
     setAmountValue,
     setHash,
     setExecuted,
+    setLoading,
     transfer,
     withdraw,
   } = useTransaction();
@@ -165,6 +166,7 @@ const Account: React.FC = (): JSX.Element => {
           price={price}
           setHash={setHash}
           setExecuted={setExecuted}
+          setLoading={setLoading}
           setTransactionType={setTransactionType}
           title="Deposit"
           transactionAction={deposit}
@@ -184,6 +186,7 @@ const Account: React.FC = (): JSX.Element => {
           price={price}
           setHash={setHash}
           setExecuted={setExecuted}
+          setLoading={setLoading}
           setTransactionType={setTransactionType}
           title="Withdraw"
           transactionAction={withdraw}
@@ -207,6 +210,7 @@ const Account: React.FC = (): JSX.Element => {
           price={price}
           setHash={setHash}
           setExecuted={setExecuted}
+          setLoading={setLoading}
           setTransactionType={setTransactionType}
           title="Send"
           transactionAction={transfer}

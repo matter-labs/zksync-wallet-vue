@@ -28,6 +28,8 @@
   --success-color: #27AE60;
   --transparent: transparent;
 
+  --xs-font-size: 11px;
+  --xs-font-size: 12px;
   --sm-font-size: 14px;
   --md-font-size: 18px;
   --large-font-size: 22px;
@@ -159,6 +161,7 @@ h2 {
 }
 
 .default-text {
+  margin-top: 20px;
   color: var(--dark-color);
 }
 
@@ -168,7 +171,6 @@ h2 {
   align-items: center;
   width: 100%;
   min-height: calc(100vh - 320px);
-  // transform: scale(0.9);
 
   &-wrapper {
     width: 100%;
@@ -745,6 +747,10 @@ body.dark > #root {
     background-size: contain;
   }
 
+  .balances-search {
+    background-image: url(./images/mdi_search_dark.svg);
+  }
+
   .balances-contact {
     &-copy {
       background-image: url(./images/mdi_file_copy_dark.svg);
@@ -892,7 +898,7 @@ body.dark > #root {
       }
 
       &.mywallet {
-        margin-top: 8px;
+        margin-top: 11px;
         margin-left: 12px;
   
         & > .custom-selector-title {

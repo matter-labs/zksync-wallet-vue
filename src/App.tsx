@@ -19,7 +19,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     <>
       <div className={`content-wrapper ${walletName ? '' : 'start-page'}`}>
         <Modal cancelAction={() => setError('')} visible={!!error} classSpecifier="error" background={true}>
-          {error}
+          <p>{error}</p>
         </Modal>
         {walletName && <Header />}
         <div className="content">{children}</div>

@@ -81,7 +81,7 @@ export const useTransaction = () => {
           const depositPriorityOperation = await zkWallet.depositToSyncFromEthereum({
             depositTo: zkWallet.address(),
             token: token,
-            amount: ethers.utils.bigNumberify(amountValue ? amountValue?.toString() : '0'),
+            amount: ethers.utils.parseEther(amountValue ? amountValue.toString() : '0'),
           });
           const hash = depositPriorityOperation.ethTx;
           history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', token);
@@ -161,6 +161,7 @@ export const useTransaction = () => {
     setAmountValue,
     setExecuted,
     setHash,
+    setLoading,
     transfer,
     withdraw,
   };

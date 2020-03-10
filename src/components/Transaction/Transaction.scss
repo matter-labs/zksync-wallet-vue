@@ -3,7 +3,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 20px 0;
+    margin: 27px 0 23px;
+    font-size: var(--sm-font-size);
 
     & > p {
       margin-bottom: 0;
@@ -91,7 +92,7 @@
   }
 
   &-input {
-    max-width: 250px;
+    max-width: 130px;
     padding: 10px 0;
     color: var(--dark-color);
     font-size: var(--xl-font-size);
@@ -137,7 +138,8 @@
       }
 
       &.border {
-        height: 100px;
+        width: 100%;
+        height: 65px;
         border-bottom: 1px solid var(--border-color);
       }
     }
@@ -152,7 +154,7 @@
 
 .all-balance {
   position: absolute;
-  left: 30%;
+  left: 33.5%;
   display: none;
   align-items: center;
   justify-content: space-between;
@@ -218,7 +220,7 @@
 
 .transaction {
   &-title {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     color: var(--dark-color);
     font-size: var(--large-font-size);
     text-align: center;
@@ -227,13 +229,13 @@
   &-back {
     position: absolute;
     left: 20px;
-    width: 50px;
-    height: 50px;
+    width: 44px;
+    height: 44px;
     background: url(../../images/arrow-back.svg);
     background-color: var(--main-light-bg-color);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 25px;
+    background-size: 16px;
     border: none;
     border-radius: 25px;
     outline: none;
@@ -269,6 +271,10 @@
     &.closed {
       display: none;
     }
+
+    & > .spinner {
+      margin: 30px auto;
+    }
   }
 
   &-field {
@@ -290,11 +296,19 @@
     }
 
     &.balance {
-      max-height: 150px;
+      max-height: 90px;
       padding: 0;
 
       & .currency-input-wrapper {
-        padding: 0 20px;
+        width: 100%;
+        padding: 0 15px;
+        font-size: var(--xs-font-size);
+
+        &.border {
+          width: 100%;
+          height: 60px;
+          padding: 0 15px;
+        }
 
         & > .currency-input {
           padding: 0;
@@ -340,6 +354,11 @@
 }
 
 @media screen and (min-width: 760px) {
+  .fau-unlock {
+    &-wrapper {
+      font-size: var(--md-font-size);
+    }
+  }  
   .currency {
     &-input {
       padding: 15px 0;
@@ -412,17 +431,40 @@
       max-height: 180px;
       padding-top: 5px;
 
+      &.contacts {
+        height: 72px;
+        min-height: 72px;
+
+        .custom-selector-title {
+          & span {
+            width: 28px;
+            height: 28px;
+            margin-left: 50px;
+          }
+        }
+      }
+
       &.balance {
-        height: 126px;
+        min-height: 120px;
 
         & .currency-input-wrapper {
+          width: calc(100% - 40px);
+          padding: 0;
+          font-size: var(--sm-font-size);
+
+          &.border {
+            width: calc(100% - 40px);
+            height: 90px;
+            padding: 15px 0 0;
+          }
+
           & > .custom-selector{
             &.balances {
-              max-width: 126px;
+              max-width: 130px;
               height: 68px;
   
               .custom-selector-title {
-                max-width: 126px;
+                max-width: 130px;
                 height: 68px;
 
                 & > p, span {
