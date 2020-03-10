@@ -9,8 +9,18 @@ import { useRootData } from '../../hooks/useRootData';
 
 import './Modal.scss';
 
-const Modal: React.FC<IModalProps> = ({ background, children, classSpecifier, visible }): JSX.Element => {
-  const { isModalOpen, setAccessModal, setError, setModal, setProvider, setWalletName, setZkWallet } = useRootData(
+const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, classSpecifier, visible }): JSX.Element => {
+  const {
+    isModalOpen,
+    setAccessModal,
+    setError,
+    setModal,
+    setProvider,
+    setWalletName,
+    setZkWallet,
+    walletName,
+    zkWallet,
+  } = useRootData(
     ({
       isModalOpen,
       setAccessModal,
@@ -44,21 +54,13 @@ const Modal: React.FC<IModalProps> = ({ background, children, classSpecifier, vi
     }
   });
 
-  const handleClose = useCallback(() => {
-    setProvider(null);
-    setWalletName('');
-    setAccessModal(false);
-    setZkWallet(null);
-    history.push('/');
-    setModal('');
-    setError('');
-  }, []);
-
   const handleClickOutside = useCallback(
     e => {
       if (e.target.getAttribute('data-name')) {
         e.stopPropagation();
-        handleClose();
+        setModal('');
+        setError('');
+        visible = false;
       }
     },
     [setError, setModal],
@@ -76,7 +78,24 @@ const Modal: React.FC<IModalProps> = ({ background, children, classSpecifier, vi
       {(classSpecifier === isModalOpen || visible) && (
         <Portal>
           <div ref={myRef} className={`modal ${classSpecifier} open`}>
-            <button onClick={handleClose} className="close-icon"></button>
+            <button
+              onClick={() => {
+                if (cancelAction) {
+                  cancelAction();
+                } else {
+                  setModal('');
+                }
+                if (!zkWallet && !!walletName) {
+                  setProvider(null);
+                  setWalletName('');
+                  setAccessModal(false);
+                  setZkWallet(null);
+                  history.push('/');
+                  setModal('');
+                }
+              }}
+              className="close-icon"
+            ></button>
             {children}
           </div>
           <div
