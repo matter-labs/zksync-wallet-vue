@@ -60,6 +60,7 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
         e.stopPropagation();
         setModal('');
         setError('');
+        visible = false;
       }
     },
     [setError, setModal],

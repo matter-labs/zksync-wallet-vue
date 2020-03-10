@@ -92,6 +92,7 @@
 @media screen and (min-width: 760px) {
   .menu {
     &-wallet {
+      width: auto;
       max-width: 220px;
 
       & > p {

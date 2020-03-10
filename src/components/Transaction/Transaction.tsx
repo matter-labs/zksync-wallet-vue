@@ -151,6 +151,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const handleUnlock = useCallback(async () => {
     const changePubkey = await zkWallet?.setSigningKey();
     await changePubkey?.awaitReceipt();
+    const receipt = await changePubkey?.awaitReceipt();
   }, [zkWallet]);
 
   useEffect(() => {
@@ -329,7 +330,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   className="transaction-back"
                 ></button>
                 <h2 className="transaction-title">{title}</h2>
-                {unlocked ? (
+                {unlocked || title === 'Deposit' ? (
                   <>
                     {isInput && (
                       <>

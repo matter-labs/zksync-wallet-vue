@@ -70,10 +70,10 @@ const Contacts: React.FC = (): JSX.Element => {
   );
 
   useEffect(() => {
-    // if (!ethId) {
-    //   window.location.pathname = '/';
-    //   history.push('/');
-    // }
+    if (!ethId) {
+      window.location.pathname = '/';
+      history.push('/');
+    }
   }, [ethId, history]);
 
   return (

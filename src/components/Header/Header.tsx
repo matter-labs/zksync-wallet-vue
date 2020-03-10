@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import Modal from '../Modal/Modal';
 import avatar from '../../images/avatar.png';
+import ChangeName from './ChangeName';
+import Modal from '../Modal/Modal';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -22,9 +23,12 @@ const Header: React.FC = (): JSX.Element => {
     }),
   );
 
+  const userName = localStorage.getItem('userName');
+
   const history = useHistory();
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
+  const [isChangeNameOpen, openChangeName] = useState<boolean>(false);
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
@@ -59,14 +63,16 @@ const Header: React.FC = (): JSX.Element => {
         {zkWallet?.address() && (
           <>
             <button type="button" className="menu-wallet" onClick={() => setModal('wallet')}>
-              <p>{zkWallet.address()}</p>
+              <p>{userName ? userName : zkWallet.address()}</p>
               <img src={avatar} alt="avatar" />
               <div className="arrow-select"></div>
             </button>
             <Modal visible={false} background={true} classSpecifier="wallet">
               <div className="wallet-title">
                 <img src={avatar} alt="avatar" />{' '}
-                {zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
+                {userName
+                  ? userName
+                  : zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
               </div>
               <div onClick={() => handleCopy(zkWallet?.address())} className="copy-block">
                 <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
@@ -87,7 +93,7 @@ const Header: React.FC = (): JSX.Element => {
                   <span className="icon-qr"></span>Show QR code
                 </button>
                 <div className="horizontal-line"></div>
-                <button>
+                <button onClick={() => openChangeName(true)}>
                   <span className="icon-edit"></span>Rename wallet
                 </button>
                 <div className="horizontal-line"></div>
@@ -102,6 +108,14 @@ const Header: React.FC = (): JSX.Element => {
                 src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${zkWallet.address()}`}
                 alt="wallet-qr"
               />
+            </Modal>
+            <Modal
+              visible={isChangeNameOpen}
+              cancelAction={() => openChangeName(false)}
+              background={true}
+              classSpecifier="change-name"
+            >
+              <ChangeName setModalOpen={openChangeName} />
             </Modal>
           </>
         )}
