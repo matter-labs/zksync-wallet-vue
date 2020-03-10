@@ -74,7 +74,7 @@
     & > img {
       width: 25px;
       height: 25px;
-      margin: 0 10px
+      margin: 0 10px;
     }
 
     & > p {
@@ -97,10 +97,14 @@
       & > p {
         display: inline-block;
       }
+
+      & > img {
+        margin: 0 15px;
+      }
     }
 
     &-route {
-      margin-top: 13px;
+      margin-top: 12px;
       font-size: var(--md-font-size);
 
       &-wrapper {

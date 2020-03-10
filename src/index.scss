@@ -1,6 +1,5 @@
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-    'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-family: 'IBM Plex Sans', sans-serif;
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -10,12 +9,14 @@
   --modal-bg-color: #fff;
   --dark-color: #000;
   --hints-color: rgba(0, 0, 0, 0.4);
+  --hints-color-active:  rgba(0, 0, 0, 0.6);
   --button-bg-color: #8C8DFC;
   --button-bg-hover: #797AFB;
   --main-bg-color: #F3F4F7;
   --main-light-bg-color: #fff;
   --bg-block-color: #F3F5FF;
   --border-color: rgba(24, 13, 13, 0.08);
+  --light-border-color: rgba(0, 0, 0, 0.08);
   --info-message-color: #FFF8DE;
   --info-message-text-color: #AA935D;
   --copyblock-color: rgba(0, 0, 0, 0.04);
@@ -45,11 +46,13 @@ body.dark {
   --modal-bg-color: #1D2039;
   --dark-color: rgba(255, 255, 255, 0.9);
   --hints-color: rgba(255, 255, 255, 0.4);
+  --hints-color-active:  rgba(255, 255, 255, 0.5);
   --button-bg-color: #8C8DFC;
   --button-bg-hover: #797AFB;
   --main-bg-color: #11142B;
   --main-light-bg-color: #11142B;
   --bg-block-color: #1D2039;
+  --light-border-color: rgba(255, 255, 255, 0.08);
   --border-color: rgba(255, 255, 255, 0.08);
   --copyblock-color: rgba(255, 255, 255, 0.08);
   --input-color: rgba(255, 255, 255, 0.02);
@@ -62,7 +65,13 @@ body.dark {
   --transparent: transparent;
 }
 
-body.fixed {
+body.fixed, body.fixed-b {
+  height: 100vh;
+  overflow: hidden;
+}
+
+
+#root.fixed {
   overflow: hidden;
 }
 
@@ -110,7 +119,7 @@ a {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin-top: 10px;
+  margin-top: 0;
 }
 
 input {
@@ -185,7 +194,7 @@ h2 {
   min-height: 40px;
   color: var(--dark-color);
   background-color: var(--modal-bg-color);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--light-border-color);
   border-radius: 5px;
   transform: scale(0.8);
   transition: transform 200ms ease-in-out;
@@ -555,13 +564,19 @@ input[type="radio"]:focus + .contact-manage{
 
       & > .custom-selector-title {
         & > p {
-          margin-top: 3px;
+          margin-top: 0;
           font-size: var(--md-font-size);
         }
 
         & > span {
           font-weight: var(--medium-font-weight);
           font-size: var(--md-font-size);
+        }
+
+        & > .arrow-down {
+          width: 10px;
+          min-width: 10px;
+          margin-top: 5px;
         }
       }
     }
@@ -608,7 +623,7 @@ input[type="radio"]:focus + .contact-manage{
 }
 
 .arrow-select {
-  width: 15px;
+  width: 17px;
   height: 15px;
   background: url(./images/arrow-select.svg);
   background-repeat: no-repeat;
@@ -877,7 +892,7 @@ body.dark > #root {
       }
 
       &.mywallet {
-        margin-top: 18px;
+        margin-top: 8px;
         margin-left: 12px;
   
         & > .custom-selector-title {
@@ -892,6 +907,13 @@ body.dark > #root {
           & > span {
             font-weight: var(--medium-font-weight);
             font-size: var(--large-font-size);
+          }
+
+          & > .arrow-down {
+            width: 12px;
+            min-width: 12px;
+            margin-top: 4px;
+            background-position: center;
           }
         }
       }

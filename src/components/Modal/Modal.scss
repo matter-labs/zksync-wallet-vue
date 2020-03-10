@@ -112,13 +112,15 @@
   &.metamask {
     top: 120px;
     left: 50%;
+    width: calc(100% - 32px);
+    padding: 16px;
     text-align: center;
     transform: translateX(-50%);
   }
 
   &.wallet {
     top: 16px;
-    left: calc(100% - 16px);
+    left: calc(100%);
     width: 100%;
     transform: translateX(-100%);
 
@@ -126,20 +128,17 @@
       & > button {
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        height: 27px;
-        margin-top: 20px;
-        padding: 5px 10px;
+        justify-content: flex-start;
+        width: calc(100% + 56px);
+        height: 50px;
+        margin-left: -28px;
+        padding: 10px;
         color: var(--dark-color);
         background-color: var(--transparent);
         border: none;
-        border-radius: 5px;
+        border-bottom: 1px solid var(--border-color);
         outline: none;
         cursor: pointer;
-
-        &:hover {
-          background-color: var(--copyblock-color);
-        }
       }
     }
 
@@ -148,11 +147,12 @@
       align-items: center;
       color: var(--dark-color);
       font-weight: var(--bold-font-weight);
-      font-size: var(--xl-font-size);
+      font-size: var(--large-font-size);
 
       & > img {
         width: 50px;
         height: 50px;
+        margin-right: 10px;
         padding: 5px;
       }
     }
@@ -226,6 +226,14 @@
   }
 }
 
+.assets-border-bottom {
+  width: calc(100% + 5px);
+  height: 27px;
+  min-height: 27px;
+  margin-left: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
 .assets-wrapper {
   position: absolute;
   top: 108px;
@@ -260,7 +268,9 @@
     }
 
     & .balances-token {
+      width: calc(100% + 5px);
       height: 104px;
+      margin-left: 5px;
       padding: 22px;
 
       &:hover > .balances-token-right {
@@ -369,10 +379,10 @@ body.dark {
 
 .close-icon {
   position: absolute;
-  top: 27px;
-  right: 27px;
-  width: 27px;
-  height: 27px;
+  top: 15px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
   background-color: var(--transparent);
   border: none;
   outline: none;
@@ -382,7 +392,7 @@ body.dark {
   &::before, &::after {
     position: absolute;
     left: 0;
-    width: 27px;
+    width: 36px;
     height: 1px;
     background-color: var(--hints-color);
     content: '';
@@ -394,8 +404,62 @@ body.dark {
 }
 
 @media screen and (min-width: 600px) {
+  .close-icon {
+    top: 27px;
+    right: 27px;
+    width: 27px;
+    height: 27px;
+  
+    &::before, &::after {
+      width: 27px;
+    }
+  }
+
   .modal {
     max-width: 505px;
+
+    &.wallet {
+      left: calc(100% - 16px);
+
+      & > .wallet-buttons {
+        & > button {
+          justify-content: space-between;
+          width: auto;
+          height: 35px;
+          margin-top: 20px;
+          margin-left: 0;
+          padding: 5px 10px;
+          color: var(--dark-color);
+          background-color: var(--transparent);
+          border: none;
+          border-radius: 5px;
+          outline: none;
+          cursor: pointer;
+  
+          &:hover {
+            background-color: var(--copyblock-color);
+          }
+        }
+      }
+
+      & > .wallet-title {
+        display: flex;
+        align-items: center;
+        color: var(--dark-color);
+        font-weight: var(--bold-font-weight);
+        font-size: var(--xl-font-size);
+
+        & > img {
+          width: 50px;
+          height: 50px;
+          padding: 5px;
+        }
+      }
+    }
+
+    &.metamask {
+      padding: 25px 27px 36px;
+    }
   }
 
   .metamask {

@@ -40,6 +40,29 @@
   }
 }
 
+.deposit-button, .withdraw-button {
+  position: relative;
+  margin: 22px 0;
+  padding-left: 23px;
+  font-size: var(--md-font-size);
+  background-color: var(--transparent);
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  & > span { 
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transform: translateY(-55%);
+  }
+}
+
 .withdraw-button {
   color: var(--hints-color);
 
@@ -47,25 +70,27 @@
     background: url(../../images/mdi_arrow_downward.svg);
     background-size: 20px;
   }
+
+  &:hover {
+    background-color: var(--copyblock-color);
+    border-radius: 5px;
+  }
+
+  &:active {
+    color: var(--hints-color-active);
+
+    & > span {
+      background: url(../../images/mdi_arrow_downward_active.svg);
+    }
+  }
 }
 
 .deposit-button {
   color: var(--button-bg-color);
-  
+  /* stylelint-disable-next-line no-descending-specificity */
   & > span {
     background: url(../../images/deposit.svg);
   }
-}
-
-.deposit-button, .withdraw-button {
-  position: relative;
-  margin: 22px 0;
-  padding-left: 27px;
-  font-size: var(--md-font-size);
-  background-color: var(--transparent);
-  border: none;
-  outline: none;
-  cursor: pointer;
 
   &:hover {
     background-color: var(--copyblock-color);
@@ -74,18 +99,10 @@
 
   &:active {
     color: var(--links-color);
-  }
 
-  & > span { 
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 18px;
-    height: 18px;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    transform: translateY(-55%);
+    & > span {
+      background: url(../../images/deposit_active.svg);
+    }
   }
 }
 
@@ -221,12 +238,14 @@
 @media screen and (min-width: 760px) {
   .deposit-button, .withdraw-button {
     margin-bottom: 36px;
+    padding-left: 27px;
     font-size: var(--large-font-size);
 
     & > span { 
       width: 23px;
       height: 23px;
       background-size: cover;
+      transform: translateY(-52%);
     }
   }
 

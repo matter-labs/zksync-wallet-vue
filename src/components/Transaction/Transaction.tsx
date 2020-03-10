@@ -72,6 +72,8 @@ const Transaction: React.FC<ITransactionProps> = ({
     }),
   );
 
+  const body = document.querySelector('#body');
+
   const dataPropertySymbol = 'symbol';
   const dataPropertyName = 'name';
 
@@ -141,6 +143,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       e.stopPropagation();
       openContactsList(false);
       openBalancesList(false);
+      body?.classList.remove('fixed-b');
     }
   }, []);
 
@@ -158,7 +161,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [balances, handleClickOutside, zkWallet]);
+  }, [balances, body, handleClickOutside, isBalancesListOpen, isContactsListOpen, zkWallet]);
 
   return (
     <>
@@ -181,9 +184,11 @@ const Transaction: React.FC<ITransactionProps> = ({
             <button
               onClick={() => {
                 openContactsList(false);
+                body?.classList.remove('fixed-b');
               }}
               className="close-icon"
             ></button>
+            <div className="assets-border-bottom"></div>
             {!!searchContacts ? (
               searchContacts.map(({ address, name }) => (
                 <div
@@ -193,6 +198,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                     handleSelect(name);
                     setWalletAddress(address);
                     openContactsList(false);
+                    body?.classList.remove('fixed-b');
                   }}
                 >
                   <div className="balances-contact-left">
@@ -222,6 +228,7 @@ const Transaction: React.FC<ITransactionProps> = ({
             <button
               onClick={() => {
                 openBalancesList(false);
+                body?.classList.remove('fixed-b');
               }}
               className="close-icon"
             ></button>
@@ -234,6 +241,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                     setSymbolName(symbol);
                     handleSelect(symbol);
                     openBalancesList(false);
+                    body?.classList.remove('fixed-b');
                   }}
                   key={balance}
                   className="balances-token"
@@ -341,7 +349,10 @@ const Transaction: React.FC<ITransactionProps> = ({
                             )}
                             <div className="custom-selector contacts">
                               <div
-                                onClick={() => openContactsList(!isContactsListOpen)}
+                                onClick={() => {
+                                  openContactsList(!isContactsListOpen);
+                                  body?.classList.add('fixed-b');
+                                }}
                                 className="custom-selector-title"
                               >
                                 {selectedContact ? <p>{selectedContact}</p> : <span></span>}
@@ -362,7 +373,6 @@ const Transaction: React.FC<ITransactionProps> = ({
                           step="0.001"
                           onChange={e => {
                             validateNumbers(+e.target.value);
-                            // onChangeAmount(+e.target.value);
                           }}
                           value={inputValue}
                         />
@@ -370,13 +380,18 @@ const Transaction: React.FC<ITransactionProps> = ({
                           className="all-balance"
                           onClick={() => {
                             setInputValue(+maxValue);
-                            // onChangeAmount(+maxValue - 0.001 * maxValue);
                           }}
                         >
                           <span>+</span> All balance
                         </button>
                         <div className="custom-selector balances">
-                          <div onClick={() => openBalancesList(!isBalancesListOpen)} className="custom-selector-title">
+                          <div
+                            onClick={() => {
+                              openBalancesList(!isBalancesListOpen);
+                              body?.classList.add('fixed-b');
+                            }}
+                            className="custom-selector-title"
+                          >
                             {symbolName ? (
                               <p>{symbolName !== 'ERC20-1' ? symbolName : 'ERC'}</p>
                             ) : (

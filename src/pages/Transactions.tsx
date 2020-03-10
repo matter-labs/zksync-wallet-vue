@@ -43,7 +43,7 @@ const Transactions: React.FC = (): JSX.Element => {
               <div className={`transaction-history ${type}`}></div>
               <div className="transaction-history-amount">{+amount.toFixed(3)}</div>
               <div className="transaction-history-hash">
-                {token.length > 5 ? token.replace(token.slice(6, token.length - 3), '...') : <>zk{token}</>}
+                {token && token.length > 5 ? token.replace(token.slice(6, token.length - 3), '...') : <>zk{token}</>}
               </div>
             </div>
             <div className="transaction-history-right">

@@ -23,6 +23,8 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     }),
   );
 
+  const body = document.getElementById('body');
+
   const dataPropertyName = 'symbol';
 
   const [address, setAddress] = useState<string>('');
@@ -59,6 +61,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     if (e.target.getAttribute('data-name')) {
       e.stopPropagation();
       openBalancesList(false);
+      body?.classList.remove('fixed-b');
       openAssets(false);
     }
   }, []);
@@ -73,7 +76,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [handleClickOutside, setBalances, zkBalances]);
+  }, [body, handleClickOutside, isBalancesListOpen, setBalances, zkBalances]);
 
   return (
     <>
@@ -88,9 +91,11 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
           <button
             onClick={() => {
               openAssets(false);
+              body?.classList.remove('fixed-b');
             }}
             className="close-icon"
           ></button>
+          <div className="assets-border-bottom"></div>
           {!!searchBalances.length ? (
             searchBalances.map(({ address, symbol, balance }) => (
               <div
@@ -101,6 +106,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                   setSymbolName(symbol);
                   openAssets(false);
                   setAddress(address);
+                  body?.classList.remove('fixed-b');
                 }}
                 key={balance}
                 className="balances-token"
@@ -156,7 +162,12 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
               </span>
               <div className="custom-selector balances mywallet">
                 <div
-                  onClick={() => openAssets(true)}
+                  onClick={() => {
+                    openAssets(true);
+                    if (body) {
+                      body.classList.add('fixed-b');
+                    }
+                  }}
                   className={`custom-selector-title ${!zkBalances.length && zkBalancesLoaded ? 'empty' : ''}`}
                 >
                   {symbolName ? (
