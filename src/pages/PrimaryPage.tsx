@@ -95,10 +95,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             visible={isAccessModalOpen}
             cancelAction={() => handleLogOut()}
           >
-            <div
-              className="metamask-logo"
-              onClick={() => console.log(provider?.selectedAddress, provider.networkVersion === '4')}
-            ></div>
+            <div className="metamask-logo"></div>
             {!curAddress && (
               <>
                 <h3 className="title-connecting">Connecting to Metamask</h3>
@@ -107,7 +104,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               </>
             )}
             {curAddress &&
-              (provider.networkVersion === '4' ? ( //TODO: need to change on prod
+              (provider && provider.networkVersion === '4' ? ( //TODO: need to change on prod
                 <>
                   <h3>Connected to Metamask</h3>
                   <button className="btn submit-button" onClick={createWallet}>
