@@ -33,7 +33,7 @@ const Account: React.FC = (): JSX.Element => {
   } = useTransaction();
 
   const [maxValue, setMaxValue] = useState<number>(0);
-  const [price, setPrice] = useState<number>(0);
+  // const [price, setPrice] = useState<number>(0);
   const [symbolName, setSymbolName] = useState<string>('');
   const [token, setToken] = useState<string>('');
   const [verified, setVerified] = useState<any>();
@@ -42,11 +42,14 @@ const Account: React.FC = (): JSX.Element => {
     error,
     ethId,
     ethBalances,
+    price,
     setBalances,
     setError,
     searchBalances,
+    setPrice,
     setTransactionType,
     transactionType,
+    verifyToken,
     zkBalances,
     zkWallet,
   } = useRootData(
@@ -54,24 +57,30 @@ const Account: React.FC = (): JSX.Element => {
       error,
       ethId,
       ethBalances,
+      price,
       setBalances,
       setError,
       searchBalances,
+      setPrice,
       setTransactionType,
       transactionModal,
       transactionType,
+      verifyToken,
       zkBalances,
       zkWallet,
     }) => ({
       error: error.get(),
       ethId: ethId.get(),
       ethBalances: ethBalances.get(),
+      price: price.get(),
       searchBalances: searchBalances.get(),
       setBalances,
       setError,
+      setPrice,
       setTransactionType,
       transactionModal: transactionModal.get(),
       transactionType: transactionType.get(),
+      verifyToken: verifyToken.get(),
       zkBalances: zkBalances.get(),
       zkWallet: zkWallet.get(),
     }),
@@ -86,20 +95,41 @@ const Account: React.FC = (): JSX.Element => {
     if (!ethId) {
       window.location.pathname = '/';
     }
-    // request(`${BASE_URL}/${CURRENCY}/?convert=${CONVERT_CURRENCY}`)
-    //   .then((res: any) => {
-    //     setPrice(+res?.[0]?.price_usd);
-    //   })
-    //   .catch(err => {
-    //     err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
-    //   });
-  }, [error, ethId, setBalances, setError, setPrice, zkBalances, zkWallet]);
+
+    const balancesSymbols = () => {
+      const exceptFau = zkBalances?.filter(el => el.symbol !== 'FAU').map(el => el.symbol);
+      return exceptFau;
+    };
+    if (balancesSymbols().toString()) {
+      request(
+        `https://cors-anywhere.herokuapp.com/${BASE_URL}?symbol=${
+          balancesSymbols().toString() ? balancesSymbols().toString() : 'ETH'
+        }`,
+        {
+          method: 'GET',
+          headers: {
+            'X-CMC_PRO_API_KEY': '6497b92f-601e-4765-86e3-cd11e41a21f8',
+          },
+        },
+      )
+        .then((res: any) => {
+          const prices = {};
+          Object.keys(res.data).map(el => {
+            prices[el] = res.data[el].quote.USD.price;
+          });
+          setPrice(prices);
+        })
+        .catch(err => {
+          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+        });
+    }
+  }, [error, ethId, setBalances, setError, setPrice, verifyToken, zkBalances, zkWallet]);
 
   const handleSend = (address, balance, symbol) => {
     setTransactionType('transfer');
     setMaxValue(balance);
     setSymbolName(symbol);
-    setToken(+address ? address : symbol);
+    setToken(symbol ? symbol : address);
   };
 
   return (
@@ -120,10 +150,15 @@ const Account: React.FC = (): JSX.Element => {
                   {verified &&
                   (+balance === +verified[address] / Math.pow(10, 18) ||
                     +balance === +verified[symbol] / Math.pow(10, 18)) ? (
-                    <div key={balance} className="balances-token verified">
+                    <div
+                      onClick={() => console.log(symbol, price, price[symbol])}
+                      key={balance}
+                      className="balances-token verified"
+                    >
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
-                        <p>{+balance.toFixed(2)}</p> <span>(~${+(balance * price).toFixed()})</span>
+                        <p>{+balance.toFixed(2)}</p>{' '}
+                        <span>(~${+(balance * (price ? +price[symbol] : 1)).toFixed()})</span>
                         <div>
                           <p>Verified</p> <span className="label-done"></span>
                         </div>
@@ -134,7 +169,8 @@ const Account: React.FC = (): JSX.Element => {
                     <div key={balance} className="balances-token pending">
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
-                        <p>{+balance.toFixed(2)}</p> <span>(~${+(balance * price).toFixed()})</span>
+                        <p>{+balance.toFixed(2)}</p>{' '}
+                        <span>(~${+(balance * (price ? +price[symbol] : 1)).toFixed()})</span>
                         <div>
                           <p>Pending</p> <SpinnerWorm />
                         </div>

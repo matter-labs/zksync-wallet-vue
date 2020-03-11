@@ -11,7 +11,7 @@ export interface ITransactionProps {
   isLoading: boolean;
   onChangeAddress: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeAmount: React.Dispatch<React.SetStateAction<number | undefined>>;
-  price: number;
+  price: any;
   propsMaxValue?: number;
   propsSymbolName?: string;
   propsToken?: string;

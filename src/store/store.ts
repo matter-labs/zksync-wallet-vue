@@ -1,6 +1,6 @@
 import { observable } from 'mobx';
 
-import { IEthBalance, ITransaction } from '../types/Common';
+import { IEthBalance, IPrice, ITransaction } from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Tokens } from 'zksync/build/types';
 import { Wallet } from 'zksync';
@@ -15,6 +15,7 @@ export const createStore = () => ({
   isAccessModalOpen: observable.box<boolean>(false),
   isModalOpen: observable.box<string>(''),
   path: observable.box<string>(window?.location.pathname),
+  price: observable.box<IPrice>(),
   provider: observable.box<any>(),
   searchBalances: observable.box<IEthBalance[]>([]),
   searchContacts: observable.box<any>(),
@@ -22,6 +23,7 @@ export const createStore = () => ({
   tokens: observable.box<Tokens>(),
   transactionModal: observable.box<ITransaction>(),
   transactionType: observable.box<'deposit' | 'withdraw' | 'transfer' | undefined>(undefined),
+  verifyToken: observable.box<boolean | undefined>(undefined),
   walletName: observable.box<string>(''),
   walletAddress: observable.box<string>(''),
   withdrawModal: observable.box<boolean>(false),
@@ -73,6 +75,10 @@ export const createStore = () => ({
     this.path.set(path);
   },
 
+  setPrice(value) {
+    this.price.set(value);
+  },
+
   setProvider(provider: any): void {
     this.provider.set(provider);
   },
@@ -91,6 +97,10 @@ export const createStore = () => ({
 
   setTransactionType(transaction: 'deposit' | 'withdraw' | 'transfer' | undefined) {
     this.transactionType.set(transaction);
+  },
+
+  setVerifyToken(verified: boolean | undefined) {
+    this.verifyToken.set(verified);
   },
 
   setWalletAddress(walletAddress: string): void {

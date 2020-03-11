@@ -2,7 +2,7 @@ import { IEthBalance } from '../../types/Common';
 
 export interface IMyWalletProps {
   balances: IEthBalance[];
-  price: number;
+  price: any;
   setTransactionType: (transaction: 'deposit' | 'withdraw' | 'transfer' | undefined) => void;
   title: string;
 }

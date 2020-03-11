@@ -44,6 +44,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     setContacts,
     setModal,
     setWalletAddress,
+    verifyToken,
     walletAddress,
     zkBalancesLoaded,
     zkWallet,
@@ -56,6 +57,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       setContacts,
       setModal,
       setWalletAddress,
+      verifyToken,
       walletAddress,
       zkBalancesLoaded,
       zkWallet,
@@ -67,6 +69,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       setContacts,
       setModal,
       setWalletAddress,
+      verifyToken: verifyToken.get(),
       walletAddress: walletAddress.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
       zkWallet: zkWallet.get(),
@@ -85,10 +88,11 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>();
   const [maxValue, setMaxValue] = useState<number>(propsMaxValue ? propsMaxValue : baseMaxValue);
+  const [selected, setSelected] = useState<boolean>(false);
   const [selectedBalance, setSelectedBalance] = useState<any>(baseBalance);
   const [selectedContact, setSelectedContact] = useState<any>();
   const [symbolName, setSymbolName] = useState<string>(propsSymbolName ? propsSymbolName : '');
-  const [token, setToken] = useState<string>(propsToken ? propsToken : '');
+  const [token, setToken] = useState<string | undefined>(propsToken);
   const [unlocked, setUnlocked] = useState<boolean | undefined>(undefined);
   const [unlockFau, setUnlockFau] = useState<boolean>(false);
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
@@ -150,13 +154,13 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const handleUnlock = useCallback(async () => {
     const changePubkey = await zkWallet?.setSigningKey();
-    await changePubkey?.awaitReceipt();
     const receipt = await changePubkey?.awaitReceipt();
+    setUnlocked(!!receipt);
   }, [zkWallet]);
 
   useEffect(() => {
-    if (balances?.length) {
-      setToken(balances[0].address ? balances[0].address : balances[0].symbol);
+    if (balances?.length && !selected) {
+      setToken(balances[0].symbol);
     }
     zkWallet?.isSigningKeySet().then(res => setUnlocked(res));
     document.addEventListener('click', handleClickOutside, true);
@@ -238,11 +242,12 @@ const Transaction: React.FC<ITransactionProps> = ({
               searchBalances.map(({ address, symbol, balance }) => (
                 <div
                   onClick={() => {
-                    setToken(+address ? address : symbol);
+                    setToken(!!+address ? address : symbol);
                     setMaxValue(balance);
                     setSymbolName(symbol);
                     handleSelect(symbol);
                     openBalancesList(false);
+                    setSelected(true);
                     body?.classList.remove('fixed-b');
                   }}
                   key={balance}
@@ -406,7 +411,14 @@ const Transaction: React.FC<ITransactionProps> = ({
                       </div>
                       {balances?.length && (
                         <div className="currency-input-wrapper" key={token}>
-                          <span>~${+(price * (maxValue ? maxValue : balances[0].balance)).toFixed(2)}</span>
+                          <span>
+                            ~$
+                            {
+                              +(
+                                (price ? +price[selectedBalance] : 1) * (maxValue ? maxValue : balances[0].balance)
+                              ).toFixed(2)
+                            }
+                          </span>
                           <span>
                             Balance: {maxValue ? +maxValue.toFixed(2) : +balances[0].balance.toFixed(2)}{' '}
                             {symbolName ? symbolName : balances[0].symbol}

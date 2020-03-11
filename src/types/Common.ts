@@ -30,3 +30,7 @@ export interface IFooterLinks {
   title: string;
   link: string;
 }
+
+export interface IPrice {
+  [price: string]: number;
+}

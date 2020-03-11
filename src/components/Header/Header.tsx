@@ -23,7 +23,7 @@ const Header: React.FC = (): JSX.Element => {
     }),
   );
 
-  const userName = localStorage.getItem('userName');
+  const userName = localStorage.getItem(zkWallet ? zkWallet.address() : '');
 
   const history = useHistory();
 

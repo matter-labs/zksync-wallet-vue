@@ -1,14 +1,22 @@
 import React, { useCallback, useState } from 'react';
 
+import { useRootData } from '../../hooks/useRootData';
+
 import { IChangeNameProps } from './Types';
 
 const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }): JSX.Element => {
-  const oldName = localStorage.getItem('userName');
+  const { zkWallet } = useRootData(({ zkWallet }) => ({
+    zkWallet: zkWallet.get(),
+  }));
+
+  const oldName = localStorage.getItem(zkWallet ? zkWallet.address() : '');
 
   const [newName, setNewName] = useState<string>(oldName ? oldName : '');
 
   const handleChangeName = useCallback(() => {
-    localStorage.setItem('userName', newName);
+    if (zkWallet) {
+      localStorage.setItem(zkWallet.address(), newName);
+    }
     setModalOpen(false);
   }, [newName]);
 

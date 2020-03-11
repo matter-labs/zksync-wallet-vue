@@ -18,9 +18,10 @@ export const useTransaction = () => {
   const [isExecuted, setExecuted] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  const { setError, setZkBalances, tokens, zkWallet } = useRootData(
-    ({ setError, setZkBalances, tokens, zkWallet }) => ({
+  const { setError, setVerifyToken, setZkBalances, tokens, zkWallet } = useRootData(
+    ({ setError, setVerifyToken, setZkBalances, tokens, zkWallet }) => ({
       setError,
+      setVerifyToken,
       setZkBalances,
       tokens: tokens.get(),
       zkWallet: zkWallet.get(),
@@ -88,6 +89,8 @@ export const useTransaction = () => {
           setHash(hash);
           const receipt = await depositPriorityOperation.awaitReceipt();
           transactions(receipt);
+          const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
+          setVerifyToken(!!verifyReceipt);
         } catch (err) {
           err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         }
@@ -139,6 +142,9 @@ export const useTransaction = () => {
           setHash(hash);
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);
+
+          const verifyReceipt = await withdrawTransaction.awaitVerifyReceipt();
+          setVerifyToken(!!verifyReceipt);
         } else {
           setError(`Address: "${addressValue}" doesn't match ethereum address format`);
         }
