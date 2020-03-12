@@ -204,11 +204,6 @@ h2 {
   & > p {
     margin-bottom: 0;
   }
-
-  &.open {
-    display: flex;
-    transform: scale(1);
-  }
 }
 
 .wrong-network {
@@ -449,6 +444,15 @@ input[type="radio"]:focus + .contact-manage{
 }
 
 .balances-contact-right {
+  &:hover {
+    .hint-copied {
+      &.open {
+        display: flex;
+        transform: scale(1);
+      }
+    }
+  }
+
   & .balances-contact-edit {
       width: 20px;
       padding: 15px;

@@ -12,21 +12,22 @@ import { DEFAULT_ERROR } from '../constants/errors';
 const TOKEN = 'ETH';
 
 export const useTransaction = () => {
-  const [addressValue, setAddressValue] = useState<string>('');
-  const [amountValue, setAmountValue] = useState<any>(0);
-  const [hash, setHash] = useState<ContractTransaction | string | undefined>();
-  const [isExecuted, setExecuted] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState<boolean>(false);
-
-  const { setError, setVerifyToken, setZkBalances, tokens, zkWallet } = useRootData(
-    ({ setError, setVerifyToken, setZkBalances, tokens, zkWallet }) => ({
+  const { setError, setVerifyToken, setZkBalances, tokens, walletAddress, zkWallet } = useRootData(
+    ({ setError, setVerifyToken, setZkBalances, tokens, walletAddress, zkWallet }) => ({
       setError,
       setVerifyToken,
       setZkBalances,
       tokens: tokens.get(),
+      walletAddress: walletAddress.get(),
       zkWallet: zkWallet.get(),
     }),
   );
+
+  const [addressValue, setAddressValue] = useState<string>(walletAddress ? walletAddress : '');
+  const [amountValue, setAmountValue] = useState<any>(0);
+  const [hash, setHash] = useState<ContractTransaction | string | undefined>();
+  const [isExecuted, setExecuted] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const history = useCallback(
     (amount: number, hash: string | undefined, to: string, type: string, token: string) => {

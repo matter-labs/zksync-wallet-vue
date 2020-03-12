@@ -438,8 +438,9 @@
 
   .add-contact {
     &-button {
+      top: 35px;
+
       & > p {
-        top: 35px;
         display: inline;
       }
     

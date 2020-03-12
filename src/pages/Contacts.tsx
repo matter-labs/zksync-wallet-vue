@@ -50,7 +50,7 @@ const Contacts: React.FC = (): JSX.Element => {
         }
       });
       openCopyModal(true);
-      setTimeout(() => openCopyModal(false), 2000);
+      setTimeout(() => openCopyModal(false), 200);
     },
     [inputRef],
   );
@@ -66,7 +66,7 @@ const Contacts: React.FC = (): JSX.Element => {
       setModal('');
       setContacts(contacts);
     },
-    [contacts, setContacts, setModal],
+    [contacts, setContacts, setModal, zkWallet],
   );
 
   useEffect(() => {
