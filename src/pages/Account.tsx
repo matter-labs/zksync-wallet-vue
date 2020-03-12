@@ -33,7 +33,6 @@ const Account: React.FC = (): JSX.Element => {
   } = useTransaction();
 
   const [maxValue, setMaxValue] = useState<number>(0);
-  // const [price, setPrice] = useState<number>(0);
   const [symbolName, setSymbolName] = useState<string>('');
   const [token, setToken] = useState<string>('');
   const [verified, setVerified] = useState<any>();
@@ -48,6 +47,7 @@ const Account: React.FC = (): JSX.Element => {
     searchBalances,
     setPrice,
     setTransactionType,
+    setVerifyToken,
     transactionType,
     verifyToken,
     zkBalances,
@@ -63,6 +63,7 @@ const Account: React.FC = (): JSX.Element => {
       searchBalances,
       setPrice,
       setTransactionType,
+      setVerifyToken,
       transactionModal,
       transactionType,
       verifyToken,
@@ -78,6 +79,7 @@ const Account: React.FC = (): JSX.Element => {
       setError,
       setPrice,
       setTransactionType,
+      setVerifyToken,
       transactionModal: transactionModal.get(),
       transactionType: transactionType.get(),
       verifyToken: verifyToken.get(),
@@ -95,7 +97,6 @@ const Account: React.FC = (): JSX.Element => {
     if (!ethId) {
       window.location.pathname = '/';
     }
-
     const balancesSymbols = () => {
       const exceptFau = zkBalances?.filter(el => el.symbol !== 'FAU').map(el => el.symbol);
       return exceptFau;
@@ -150,11 +151,7 @@ const Account: React.FC = (): JSX.Element => {
                   {verified &&
                   (+balance === +verified[address] / Math.pow(10, 18) ||
                     +balance === +verified[symbol] / Math.pow(10, 18)) ? (
-                    <div
-                      onClick={() => console.log(symbol, price, price[symbol])}
-                      key={balance}
-                      className="balances-token verified"
-                    >
+                    <div onClick={() => setVerifyToken(true)} key={balance} className="balances-token verified">
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
                         <p>{+balance.toFixed(2)}</p>{' '}

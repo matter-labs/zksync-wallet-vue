@@ -96,7 +96,7 @@ export const useTransaction = () => {
         }
       }
     },
-    [amountValue, history, setError, setHash, setLoading, transactions, zkWallet],
+    [amountValue, history, setError, setHash, setLoading, setVerifyToken, transactions, zkWallet],
   );
 
   const transfer = useCallback(
@@ -115,6 +115,8 @@ export const useTransaction = () => {
           setHash(hash);
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
+          const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
+          setVerifyToken(!!verifyReceipt);
         } else {
           setError(`Address: "${addressValue}" doesn't match ethereum address format`);
         }
@@ -123,7 +125,7 @@ export const useTransaction = () => {
         setLoading(false);
       }
     },
-    [addressValue, amountValue, history, setError, transactions, zkWallet],
+    [addressValue, amountValue, history, setError, setVerifyToken, transactions, zkWallet],
   );
 
   const withdraw = useCallback(
@@ -142,7 +144,6 @@ export const useTransaction = () => {
           setHash(hash);
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);
-
           const verifyReceipt = await withdrawTransaction.awaitVerifyReceipt();
           setVerifyToken(!!verifyReceipt);
         } else {
@@ -153,7 +154,7 @@ export const useTransaction = () => {
         setLoading(false);
       }
     },
-    [addressValue, amountValue, history, setError, setHash, setLoading, transactions, zkWallet],
+    [addressValue, amountValue, history, setError, setHash, setLoading, setVerifyToken, transactions, zkWallet],
   );
 
   return {

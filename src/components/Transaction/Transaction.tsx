@@ -432,21 +432,27 @@ const Transaction: React.FC<ITransactionProps> = ({
                           </div>
                         ))}
                     </div>
-                    <div onClick={() => setUnlockFau(true)} className="fau-unlock-wrapper">
-                      {unlockFau ? (
-                        <p>{symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken unlocked</p>
-                      ) : (
-                        <p>Unlock {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken</p>
-                      )}
-                      <button className={`fau-unlock-tocken ${unlockFau}`}>
-                        <span className={`fau-unlock-tocken-circle ${unlockFau}`}></span>
-                      </button>
-                    </div>
+                    {title === 'Deposit' && (
+                      <div onClick={() => setUnlockFau(true)} className="fau-unlock-wrapper">
+                        {unlockFau ? (
+                          <p>
+                            {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken unlocked
+                          </p>
+                        ) : (
+                          <p>Unlock {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken</p>
+                        )}
+                        <button className={`fau-unlock-tocken ${unlockFau}`}>
+                          <span className={`fau-unlock-tocken-circle ${unlockFau}`}></span>
+                        </button>
+                      </div>
+                    )}
                     <button
-                      className={`btn submit-button ${unlockFau ? '' : 'disabled'}`}
+                      className={`btn submit-button ${!unlockFau && title === 'Deposit' ? 'disabled' : ''}`}
                       onClick={() => transactionAction(token, type)}
                     >
-                      <span className={`submit-label ${title} ${unlockFau}`}></span>
+                      <span
+                        className={`submit-label ${title} ${!unlockFau && title === 'Deposit' ? unlockFau : true}`}
+                      ></span>
                       {title}
                     </button>
                     <p key={maxValue} className="transaction-fee">
