@@ -255,6 +255,7 @@
     }
 
     &-copy {
+      display: none;
       height: 22px;
       background-image: url(../../images/mdi_file_copy.svg);
     }
@@ -393,6 +394,10 @@
 }
 
 @media screen and (min-width: 760px) {
+  .balances-contact-copy {
+    display: block;
+  }
+
   .balances {
     &-token, &-contact {
       font-size: var(--md-font-size);

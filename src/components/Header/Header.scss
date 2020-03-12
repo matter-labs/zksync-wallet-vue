@@ -65,6 +65,8 @@
 
     & > .arrow-select {
       display: block;
+      min-width: 14px;
+      min-height: 15px;
     }
 
     &:hover {

@@ -1,3 +1,15 @@
+.coinbasewallet {
+  &-logo {
+    width: 86px;
+    height: 86px;
+    margin: 0 auto;
+    background-image: url(../../images/coinbase.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }  
+}
+
 .metamask {
   &-logo {
     width: 86px;

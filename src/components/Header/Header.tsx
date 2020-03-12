@@ -32,17 +32,31 @@ const Header: React.FC = (): JSX.Element => {
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
-  const handleCopy = useCallback(address => {
-    openCopyModal(true);
-    inputRef.map(el => {
-      if (address === el?.value) {
-        el?.focus();
-        el?.select();
+  const handleCopy = useCallback(
+    address => {
+      if (navigator.userAgent.match(/ipad|iphone/i)) {
+        const input: any = document.getElementsByClassName('copy-block-input')[0];
+        const range = document.createRange();
+        range.selectNodeContents(input);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+        input.setSelectionRange(0, 999999);
         document.execCommand('copy');
+      } else {
+        openCopyModal(true);
+        inputRef.map(el => {
+          if (address === el?.value) {
+            el?.focus();
+            el?.select();
+            document.execCommand('copy');
+          }
+        });
+        setTimeout(() => openCopyModal(false), 2000);
       }
-    });
-    setTimeout(() => openCopyModal(false), 2000);
-  }, []);
+    },
+    [inputRef],
+  );
 
   const handleLogOut = useCallback(() => {
     setProvider(null);
@@ -75,9 +89,9 @@ const Header: React.FC = (): JSX.Element => {
                   <p>Copied!</p>
                 </div>
                 <input
-                  onChange={() => undefined}
+                  readOnly
                   className="copy-block-input"
-                  value={zkWallet?.address()}
+                  value={zkWallet?.address().toString()}
                   ref={e => inputRef.push(e)}
                 />
                 <p>{zkWallet.address()}</p>

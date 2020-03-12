@@ -40,15 +40,26 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
 
   const handleCopy = useCallback(
     address => {
-      inputRef.map(el => {
-        if (address === el?.value) {
-          el?.focus();
-          el?.select();
-          document.execCommand('copy');
-        }
-      });
-      openCopyModal(true);
-      setTimeout(() => openCopyModal(false), 2000);
+      if (navigator.userAgent.match(/ipad|iphone/i)) {
+        const input: any = document.getElementsByClassName('copy-block-input')[0];
+        const range = document.createRange();
+        range.selectNodeContents(input);
+        const selection = window.getSelection();
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+        input.setSelectionRange(0, 999999);
+        document.execCommand('copy');
+      } else {
+        openCopyModal(true);
+        inputRef.map(el => {
+          if (address === el?.value) {
+            el?.focus();
+            el?.select();
+            document.execCommand('copy');
+          }
+        });
+        setTimeout(() => openCopyModal(false), 2000);
+      }
     },
     [inputRef],
   );
@@ -142,7 +153,12 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
               <p>Copied!</p>
             </div>
-            <input className="copy-block-input" readOnly value={zkWallet?.address()} ref={e => inputRef.push(e)} />
+            <input
+              className="copy-block-input"
+              readOnly
+              value={zkWallet?.address().toString()}
+              ref={e => inputRef.push(e)}
+            />
             <div className="copy-block-left">
               <img src={avatar} alt="avatar" />{' '}
               <div>

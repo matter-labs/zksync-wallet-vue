@@ -91,14 +91,14 @@ const PrimaryPage: React.FC = (): JSX.Element => {
         <>
           <Modal
             background={false}
-            classSpecifier="metamask"
+            classSpecifier={`metamask ${walletName ? walletName.replace(/\s+/g, '').toLowerCase() : 'primary-page'}`}
             visible={isAccessModalOpen}
             cancelAction={() => handleLogOut()}
           >
-            <div className="metamask-logo"></div>
+            <div className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}></div>
             {!curAddress && (
               <>
-                <h3 className="title-connecting">Connecting to Metamask</h3>
+                <h3 className="title-connecting">Connecting to {walletName}</h3>
                 <p>Follow the instructions in the popup</p>
                 <Spinner />
               </>
@@ -106,14 +106,14 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             {curAddress &&
               (provider && provider.networkVersion === '1' ? ( //TODO: need to change on prod
                 <>
-                  <h3>Connected to Metamask</h3>
+                  <h3>Connected to {walletName}</h3>
                   <button className="btn submit-button" onClick={createWallet}>
                     Access my account
                   </button>
                 </>
               ) : (
                 <>
-                  <h3>Connecting to Metamask</h3>
+                  <h3>Connecting to {walletName}</h3>
                   <div className="wrong-network">
                     <div className="wrong-network-logo"></div>
                     <p>
@@ -122,7 +122,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                     </p>
                   </div>
                   <button className="btn submit-button" onClick={() => handleLogOut()}>
-                    Disconnect Metamask
+                    Disconnect {walletName}
                   </button>
                 </>
               ))}
