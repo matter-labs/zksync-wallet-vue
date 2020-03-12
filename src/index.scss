@@ -839,6 +839,10 @@ body.dark > #root {
       border-radius: 6px;
       cursor: pointer;
 
+      &.short {
+        max-width: 90px;
+      }
+
       &:hover {
         background-color: var(--copyblock-color);
       }
@@ -876,6 +880,10 @@ body.dark > #root {
         height: 36px;
         margin-top: -9px;
         margin-left: 20px;
+
+        &.short {
+          margin-left: 40px;
+        }
 
         & > span {
           background-image: url(./images/mdi_people.svg);

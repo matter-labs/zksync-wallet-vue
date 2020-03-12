@@ -162,7 +162,9 @@ const Transaction: React.FC<ITransactionProps> = ({
     if (balances?.length && !selected) {
       setToken(balances[0].symbol);
     }
-    zkWallet?.isSigningKeySet().then(res => setUnlocked(res));
+    zkWallet
+      ?.getAccountState()
+      .then(res => (!!res.id ? zkWallet?.isSigningKeySet().then(data => setUnlocked(data)) : setUnlocked(true)));
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
@@ -360,7 +362,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   openContactsList(!isContactsListOpen);
                                   body?.classList.add('fixed-b');
                                 }}
-                                className="custom-selector-title"
+                                className={`custom-selector-title ${selectedContact ? '' : 'short'}`}
                               >
                                 {selectedContact ? <p>{selectedContact}</p> : <span></span>}
                                 <div className="arrow-down"></div>
