@@ -1,7 +1,7 @@
 .add-contact {
   &-button {
     position: absolute;
-    top: 43px;
+    top: 30px;
     right: 27px;
     display: flex;
     align-items: center;
@@ -439,6 +439,7 @@
   .add-contact {
     &-button {
       & > p {
+        top: 35px;
         display: inline;
       }
     
