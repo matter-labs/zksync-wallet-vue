@@ -190,12 +190,10 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             <span className="mywallet-price">
               ~
               {parseFloat(
-                (
-                  (price ? +price[!!symbolName.length ? symbolName : zkBalances[0].symbol] : 1) *
-                  zkBalances?.reduce((acc, cur) => {
-                    return acc + cur.balance;
+                zkBalances
+                  ?.reduce((acc, cur) => {
+                    return acc + cur.balance * +(price && !!price[cur.symbol] ? price[cur.symbol] : 1);
                   }, 0)
-                )
                   .toFixed(2)
                   .toString(),
               )}{' '}

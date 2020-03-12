@@ -21,7 +21,7 @@
   &-route { 
     display: block;
     box-sizing: content-box;
-    margin-top: 18px;
+    margin-top: 17px;
     padding-bottom: 10px;
     color: var(--dark-color);
     font-size: var(--sm-font-size);
@@ -73,7 +73,9 @@
 
     & > img {
       width: 25px;
+      min-width: 25px;
       height: 25px;
+      min-height: 25px;
       margin: 0 10px;
     }
 
@@ -105,7 +107,7 @@
     }
 
     &-route {
-      margin-top: 12px;
+      margin-top: 14px;
       font-size: var(--md-font-size);
 
       &-wrapper {

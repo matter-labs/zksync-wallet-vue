@@ -104,7 +104,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               </>
             )}
             {curAddress &&
-              (provider && provider.networkVersion === '4' ? ( //TODO: need to change on prod
+              (provider && provider.networkVersion === '1' ? ( //TODO: need to change on prod
                 <>
                   <h3>Connected to Metamask</h3>
                   <button className="btn submit-button" onClick={createWallet}>

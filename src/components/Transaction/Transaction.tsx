@@ -402,29 +402,35 @@ const Transaction: React.FC<ITransactionProps> = ({
                             {symbolName ? (
                               <p>{symbolName !== 'ERC20-1' ? symbolName : 'ERC'}</p>
                             ) : (
-                              <span>{selectedBalance.symbol && zkBalancesLoaded ? selectedSymbol : <Spinner />}</span>
+                              <span>{zkBalancesLoaded ? selectedSymbol : <Spinner />}</span>
                             )}
 
                             <div className="arrow-down"></div>
                           </div>
                         </div>
                       </div>
-                      {balances?.length && (
-                        <div className="currency-input-wrapper" key={token}>
-                          <span>
-                            ~$
-                            {
-                              +(
-                                (price ? +price[selectedBalance] : 1) * (maxValue ? maxValue : balances[0].balance)
-                              ).toFixed(2)
-                            }
-                          </span>
-                          <span>
-                            Balance: {maxValue ? +maxValue.toFixed(2) : +balances[0].balance.toFixed(2)}{' '}
-                            {symbolName ? symbolName : balances[0].symbol}
-                          </span>
-                        </div>
-                      )}
+                      {zkBalancesLoaded &&
+                        (!!balances?.length ? (
+                          <div className="currency-input-wrapper" key={token}>
+                            <span>
+                              ~$
+                              {
+                                +(
+                                  +(price && !!price[selectedBalance.symbol] ? price[selectedBalance.symbol] : 1) *
+                                  (maxValue ? maxValue : balances[0].balance)
+                                ).toFixed(2)
+                              }
+                            </span>
+                            <span>
+                              Balance: {maxValue ? +maxValue.toFixed(2) : +balances[0].balance.toFixed(2)}{' '}
+                              {symbolName ? symbolName : balances[0].symbol}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="currency-input-wrapper" key={token}>
+                            <span>You have no balances</span>
+                          </div>
+                        ))}
                     </div>
                     <div onClick={() => setUnlockFau(true)} className="fau-unlock-wrapper">
                       {unlockFau ? (

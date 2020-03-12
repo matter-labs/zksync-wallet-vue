@@ -18,7 +18,7 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }): JSX.Element =
       localStorage.setItem(zkWallet.address(), newName);
     }
     setModalOpen(false);
-  }, [newName]);
+  }, [newName, setModalOpen, zkWallet]);
 
   return (
     <>

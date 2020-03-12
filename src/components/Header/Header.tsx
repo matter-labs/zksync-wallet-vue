@@ -32,21 +32,17 @@ const Header: React.FC = (): JSX.Element => {
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
-  const handleCopy = useCallback(
-    address => {
-      openCopyModal(true);
-      inputRef.map(el => {
-        if (address === el?.value) {
-          el?.focus();
-          el?.select();
-          document.execCommand('copy');
-        }
-      });
-      setModal('wallet');
-      setTimeout(() => openCopyModal(false), 2000);
-    },
-    [inputRef],
-  );
+  const handleCopy = useCallback(address => {
+    openCopyModal(true);
+    inputRef.map(el => {
+      if (address === el?.value) {
+        el?.focus();
+        el?.select();
+        document.execCommand('copy');
+      }
+    });
+    setTimeout(() => openCopyModal(false), 2000);
+  }, []);
 
   const handleLogOut = useCallback(() => {
     setProvider(null);

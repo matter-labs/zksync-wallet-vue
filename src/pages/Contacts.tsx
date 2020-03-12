@@ -9,7 +9,6 @@ import deleteicon from '../images/mdi_delete.svg';
 import { useRootData } from '../hooks/useRootData';
 
 import DataList from '../components/DataList/DataList';
-import { stringify } from 'querystring';
 
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';

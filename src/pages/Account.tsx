@@ -10,7 +10,7 @@ import { useTransaction } from '../hooks/useTransaction';
 
 import { request } from '../functions/Request';
 
-import { BASE_URL, CURRENCY, CONVERT_CURRENCY } from '../constants/CoinBase';
+import { BASE_URL } from '../constants/CoinBase';
 import { DEFAULT_ERROR } from '../constants/errors';
 
 const Account: React.FC = (): JSX.Element => {
@@ -158,7 +158,7 @@ const Account: React.FC = (): JSX.Element => {
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
                         <p>{+balance.toFixed(2)}</p>{' '}
-                        <span>(~${+(balance * (price ? +price[symbol] : 1)).toFixed()})</span>
+                        <span>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed()})</span>
                         <div>
                           <p>Verified</p> <span className="label-done"></span>
                         </div>
@@ -170,7 +170,7 @@ const Account: React.FC = (): JSX.Element => {
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
                         <p>{+balance.toFixed(2)}</p>{' '}
-                        <span>(~${+(balance * (price ? +price[symbol] : 1)).toFixed()})</span>
+                        <span>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed()})</span>
                         <div>
                           <p>Pending</p> <SpinnerWorm />
                         </div>
