@@ -31,9 +31,9 @@ export const useTransaction = () => {
   const history = useCallback(
     (amount: number, hash: string | undefined, to: string, type: string, token: string) => {
       try {
-        const history = JSON.parse(localStorage.getItem('history') || '[]');
+        const history = JSON.parse(localStorage.getItem(`history${zkWallet?.address()}`) || '[]');
         const newHistory = JSON.stringify([{ amount, date: new Date(), hash, to, type, token }, ...history]);
-        localStorage.setItem('history', newHistory);
+        localStorage.setItem(`history${zkWallet?.address()}`, newHistory);
       } catch (err) {
         err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
       }

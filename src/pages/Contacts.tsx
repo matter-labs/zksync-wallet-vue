@@ -13,20 +13,21 @@ import DataList from '../components/DataList/DataList';
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
 
-  const { ethId, searchContacts, setContacts, setModal, setTransactionType, setWalletAddress } = useRootData(
-    ({ ethId, searchContacts, setContacts, setModal, setTransactionType, setWalletAddress }) => ({
+  const { ethId, searchContacts, setContacts, setModal, setTransactionType, setWalletAddress, zkWallet } = useRootData(
+    ({ ethId, searchContacts, setContacts, setModal, setTransactionType, setWalletAddress, zkWallet }) => ({
       ethId: ethId.get(),
       searchContacts: searchContacts.get(),
       setContacts,
       setModal,
       setTransactionType,
       setWalletAddress,
+      zkWallet: zkWallet.get(),
     }),
   );
 
   const history = useHistory();
 
-  const arr: any = localStorage.getItem('contacts');
+  const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
   const contacts = JSON.parse(arr);
   interface IOldContacts {
     name: string;
@@ -61,7 +62,7 @@ const Contacts: React.FC = (): JSX.Element => {
       });
       const newContacts = contacts;
       newContacts.splice(selectedItem, 1);
-      localStorage.setItem('contacts', JSON.stringify(newContacts));
+      localStorage.setItem(`contacts${zkWallet?.address()}`, JSON.stringify(newContacts));
       setModal('');
       setContacts(contacts);
     },

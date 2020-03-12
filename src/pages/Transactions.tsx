@@ -8,17 +8,18 @@ import DataList from '../components/DataList/DataList';
 const Transactions: React.FC = (): JSX.Element => {
   const dataPropertyName = 'to';
 
-  const { ethId, searchTransactions, setTransactions } = useRootData(
-    ({ ethId, searchTransactions, setTransactions }) => ({
+  const { ethId, searchTransactions, setTransactions, zkWallet } = useRootData(
+    ({ ethId, searchTransactions, setTransactions, zkWallet }) => ({
       ethId: ethId.get(),
       searchTransactions: searchTransactions.get(),
       setTransactions,
+      zkWallet: zkWallet.get(),
     }),
   );
 
   const history = useHistory();
 
-  const arrTransactions: any = localStorage.getItem('history');
+  const arrTransactions: any = localStorage.getItem(`history${zkWallet?.address()}`);
   const transactions = JSON.parse(arrTransactions);
 
   useEffect(() => {

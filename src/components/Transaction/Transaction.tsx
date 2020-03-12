@@ -112,7 +112,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     }
   };
 
-  const arr: any = localStorage.getItem('contacts');
+  const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
   const contacts = JSON.parse(arr);
 
   const handleCancel = useCallback(() => {

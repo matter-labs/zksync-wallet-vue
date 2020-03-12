@@ -16,15 +16,18 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
   const [name, setName] = useState<string>(oldContact?.name ? oldContact.name : '');
   const [address, setAddress] = useState<string>(oldContact?.address ? oldContact.address : '');
 
-  const { setContacts, setError, setModal } = useRootData(({ setContacts, setError, setModal }) => ({
-    setContacts,
-    setError,
-    setModal,
-  }));
+  const { setContacts, setError, setModal, zkWallet } = useRootData(
+    ({ setContacts, setError, setModal, zkWallet }) => ({
+      setContacts,
+      setError,
+      setModal,
+      zkWallet: zkWallet.get(),
+    }),
+  );
 
   const handleSave = useCallback(() => {
     if (((address && name) || (addressValue && name)) && ADDRESS_VALIDATION['eth'].test(address)) {
-      const contacts = JSON.parse(localStorage.getItem('contacts') || '[]');
+      const contacts = JSON.parse(localStorage.getItem(`contacts${zkWallet?.address()}`) || '[]');
       if (addressValue) {
         setAddress(addressValue);
       }
@@ -37,19 +40,19 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
       if (edit && oldContactIndex > -1) {
         const newContacts = contacts;
         newContacts.splice(oldContactIndex, 1, { address, name });
-        localStorage.setItem('contacts', JSON.stringify(newContacts));
+        localStorage.setItem(`contacts${zkWallet?.address()}`, JSON.stringify(newContacts));
       }
       if (isContact === -1 && !edit) {
         const newContacts = JSON.stringify([{ address, name }, ...contacts]);
-        localStorage.setItem('contacts', newContacts);
+        localStorage.setItem(`contacts${zkWallet?.address()}`, newContacts);
       }
       if (isContact > -1) {
         const newContacts = contacts;
         newContacts.splice(isContact, 1, { address, name });
-        localStorage.setItem('contacts', JSON.stringify(newContacts));
+        localStorage.setItem(`contacts${zkWallet?.address()}`, JSON.stringify(newContacts));
       }
       setModal('');
-      const arr: any = localStorage.getItem('contacts');
+      const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
       const acontacts = JSON.parse(arr);
       setContacts(acontacts);
     } else if (!name) {
