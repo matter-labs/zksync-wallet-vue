@@ -13,11 +13,15 @@
     cursor: pointer;
 
     &-input {
+      position: absolute;
+      top: 85px;
+      right: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      width: 80px;
       color: var(--links-color);
-      font-size: var(--md-font-size);
+      font-size: var(--xs-font-size);
       background-color: var(--transparent);
       border: none;
       outline: none;
@@ -439,6 +443,12 @@
   .add-contact {
     &-button {
       top: 35px;
+
+      &-input {
+        position: unset;
+        width: 100px;
+        font-size: var(--md-font-size);
+      }
 
       & > p {
         display: inline;

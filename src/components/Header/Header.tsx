@@ -59,6 +59,7 @@ const Header: React.FC = (): JSX.Element => {
   );
 
   const handleLogOut = useCallback(() => {
+    setModal('');
     setProvider(null);
     setWalletName('');
     setAccessModal(false);

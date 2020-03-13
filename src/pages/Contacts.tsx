@@ -79,7 +79,7 @@ const Contacts: React.FC = (): JSX.Element => {
   return (
     <DataList setValue={setContacts} dataProperty={dataPropertyName} data={contacts} title="Contacts" visible={true}>
       <Modal visible={false} classSpecifier="add-contact edit-contact" background={true}>
-        <SaveContacts oldContact={oldContact} title="Edit contact" addressValue="" addressInput={true} edit={true} />
+        <SaveContacts oldContact={oldContact} title="Edit contact" addressInput={true} edit={true} />
       </Modal>
       {contacts && (
         <>

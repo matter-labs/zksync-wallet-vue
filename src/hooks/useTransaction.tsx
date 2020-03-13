@@ -80,18 +80,26 @@ export const useTransaction = () => {
       if (zkWallet) {
         try {
           setLoading(true);
-          const depositPriorityOperation = await zkWallet.depositToSyncFromEthereum({
-            depositTo: zkWallet.address(),
-            token: token,
-            amount: ethers.utils.bigNumberify(amountValue ? amountValue?.toString() : '0'),
-          });
-          const hash = depositPriorityOperation.ethTx;
-          history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', token);
-          setHash(hash);
-          const receipt = await depositPriorityOperation.awaitReceipt();
-          transactions(receipt);
-          const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
-          setVerifyToken(!!verifyReceipt);
+          const executeDeposit = async fee => {
+            const depositPriorityOperation = await zkWallet.depositToSyncFromEthereum({
+              depositTo: zkWallet.address(),
+              token: token,
+              amount: ethers.utils.bigNumberify(amountValue ? amountValue?.toString() : '0'),
+              maxFeeInETHToken: ethers.utils.bigNumberify(2 * 179000 * fee),
+            });
+            const hash = depositPriorityOperation.ethTx;
+            history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', token);
+            setHash(hash);
+            const receipt = await depositPriorityOperation.awaitReceipt();
+            transactions(receipt);
+            const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
+            setVerifyToken(!!verifyReceipt);
+          };
+          ethers
+            .getDefaultProvider()
+            .getGasPrice()
+            .then(res => res.toString())
+            .then(data => executeDeposit(data));
         } catch (err) {
           err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         }

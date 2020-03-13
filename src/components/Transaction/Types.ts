@@ -9,7 +9,7 @@ export interface ITransactionProps {
   isExecuted: boolean;
   isInput: boolean;
   isLoading: boolean;
-  onChangeAddress: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeAddress: (e: string) => void;
   onChangeAmount: React.Dispatch<React.SetStateAction<number | undefined>>;
   price: any;
   propsMaxValue?: number;

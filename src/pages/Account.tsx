@@ -189,7 +189,7 @@ const Account: React.FC = (): JSX.Element => {
           isExecuted={isExecuted}
           isInput={false}
           isLoading={isLoading}
-          onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
+          onChangeAddress={(e: string) => setAddressValue(e)}
           onChangeAmount={setAmountValue}
           price={price}
           setHash={setHash}
@@ -209,7 +209,7 @@ const Account: React.FC = (): JSX.Element => {
           isExecuted={isExecuted}
           isInput={true}
           isLoading={isLoading}
-          onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
+          onChangeAddress={(e: string) => setAddressValue(e)}
           onChangeAmount={setAmountValue}
           price={price}
           setHash={setHash}
@@ -230,7 +230,7 @@ const Account: React.FC = (): JSX.Element => {
           isExecuted={isExecuted}
           isInput={true}
           isLoading={isLoading}
-          onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
+          onChangeAddress={(e: string) => setAddressValue(e)}
           onChangeAmount={setAmountValue}
           propsMaxValue={maxValue ? maxValue : 0}
           propsSymbolName={symbolName ? symbolName : ''}

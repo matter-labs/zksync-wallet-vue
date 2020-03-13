@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -14,7 +14,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
   title,
 }): JSX.Element => {
   const [name, setName] = useState<string>(oldContact?.name ? oldContact.name : '');
-  const [address, setAddress] = useState<string>(oldContact?.address ? oldContact.address : '');
+  const [address, setAddress] = useState<string>(oldContact?.address ? oldContact?.address : '');
 
   const { setContacts, setError, setModal, zkWallet } = useRootData(
     ({ setContacts, setError, setModal, zkWallet }) => ({
@@ -25,12 +25,15 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
     }),
   );
 
+  useEffect(() => {
+    if (addressValue) {
+      setAddress(addressValue);
+    }
+  }, [addressValue, setAddress]);
+
   const handleSave = useCallback(() => {
     if (((address && name) || (addressValue && name)) && ADDRESS_VALIDATION['eth'].test(address)) {
       const contacts = JSON.parse(localStorage.getItem(`contacts${zkWallet?.address()}`) || '[]');
-      if (addressValue) {
-        setAddress(addressValue);
-      }
       const isContact = contacts.findIndex(
         ({ address: contactAddress, name: contactName }) => contactAddress === address || contactName === name,
       );
@@ -67,15 +70,11 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
       <h3>{title}</h3>
       <div className="horizontal-line"></div>
       <span className="transaction-field-title">Contact name</span>
-      <input placeholder="Name here" value={name ? name : oldContact?.name} onChange={e => setName(e.target.value)} />
+      <input placeholder="Name here" value={name} onChange={e => setName(e.target.value)} />
       {addressInput && (
         <>
           <span className="transaction-field-title">Address</span>
-          <input
-            placeholder="0x address"
-            value={address ? address : oldContact?.address}
-            onChange={e => setAddress(e.target.value)}
-          />
+          <input placeholder="0x address" value={address} onChange={e => setAddress(e.target.value)} />
         </>
       )}
       <button className="btn submit-button" onClick={handleSave}>

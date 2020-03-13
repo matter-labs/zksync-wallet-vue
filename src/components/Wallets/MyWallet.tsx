@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-
+import { ethers } from 'ethers';
 import avatar from '../../images/avatar.png';
 import DataList from '../DataList/DataList';
 import Spinner from '../Spinner/Spinner';

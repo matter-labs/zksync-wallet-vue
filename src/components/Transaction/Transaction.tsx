@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { ethers } from 'ethers';
 
 import DataList from '../DataList/DataList';
 import Modal from '../Modal/Modal';
@@ -7,6 +8,7 @@ import Spinner from '../Spinner/Spinner';
 
 import { ITransactionProps } from './Types';
 
+import { ADDRESS_VALIDATION } from '../../constants/regExs';
 import { INPUT_VALIDATION } from '../../constants/regExs';
 
 import { useRootData } from '../../hooks/useRootData';
@@ -42,6 +44,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     searchContacts,
     setBalances,
     setContacts,
+    setError,
     setModal,
     setWalletAddress,
     verifyToken,
@@ -55,6 +58,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       searchContacts,
       setBalances,
       setContacts,
+      setError,
       setModal,
       setWalletAddress,
       verifyToken,
@@ -67,6 +71,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       searchContacts: searchContacts.get(),
       setBalances,
       setContacts,
+      setError,
       setModal,
       setWalletAddress,
       verifyToken: verifyToken.get(),
@@ -77,13 +82,13 @@ const Transaction: React.FC<ITransactionProps> = ({
   );
 
   const body = document.querySelector('#body');
-
   const dataPropertySymbol = 'symbol';
   const dataPropertyName = 'name';
 
   const baseBalance = !!balances?.length ? balances[0] : 0;
   const baseMaxValue = !!balances?.length ? balances[0].balance : 0;
 
+  const [fee, setFee] = useState<number>(0);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>();
@@ -100,17 +105,20 @@ const Transaction: React.FC<ITransactionProps> = ({
   const bigNumberMultiplier = Math.pow(10, 18);
   const selectedSymbol = selectedBalance.symbol !== 'ERC20-1' ? selectedBalance.symbol : 'ERC';
 
-  const validateNumbers = e => {
-    if (INPUT_VALIDATION.digits.test(e)) {
-      if (e <= maxValue) {
-        setInputValue(+e);
-        onChangeAmount(+e * bigNumberMultiplier);
-      } else {
-        setInputValue(+maxValue);
-        onChangeAmount(+maxValue * bigNumberMultiplier);
+  const validateNumbers = useCallback(
+    e => {
+      if (INPUT_VALIDATION.digits.test(e)) {
+        if (e <= maxValue) {
+          setInputValue(+e);
+          onChangeAmount((+e - 0.0003) * bigNumberMultiplier - 2 * 179000 * fee);
+        } else {
+          setInputValue(+maxValue);
+          onChangeAmount((+maxValue - 0.0003) * bigNumberMultiplier - 2 * 179000 * fee);
+        }
       }
-    }
-  };
+    },
+    [bigNumberMultiplier, fee, maxValue, onChangeAmount],
+  );
 
   const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
   const contacts = JSON.parse(arr);
@@ -121,7 +129,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     setExecuted(false);
     setWalletAddress('');
     setLoading(false);
-  }, [setExecuted, setHash, setTransactionType, setWalletAddress]);
+  }, [setExecuted, setHash, setLoading, setTransactionType, setWalletAddress]);
 
   const setWalletName = useCallback(() => {
     if (value && value !== ethId) {
@@ -143,19 +151,29 @@ const Transaction: React.FC<ITransactionProps> = ({
     [isBalancesListOpen, isContactsListOpen],
   );
 
-  const handleClickOutside = useCallback(e => {
-    if (e.target.getAttribute('data-name')) {
-      e.stopPropagation();
-      openContactsList(false);
-      openBalancesList(false);
-      body?.classList.remove('fixed-b');
+  const handleClickOutside = useCallback(
+    e => {
+      if (e.target.getAttribute('data-name')) {
+        e.stopPropagation();
+        openContactsList(false);
+        openBalancesList(false);
+        body?.classList.remove('fixed-b');
+      }
+    },
+    [body],
+  );
+
+  const handleSave = useCallback(() => {
+    if (addressValue && ADDRESS_VALIDATION['eth'].test(addressValue)) {
+      setModal('add-contact');
+    } else {
+      setError(`Error: "${addressValue}" doesn't match ethereum address format`);
     }
-  }, []);
+  }, [addressValue, setError, setModal]);
 
   const handleUnlock = useCallback(async () => {
     const changePubkey = await zkWallet?.setSigningKey();
     const receipt = await changePubkey?.awaitReceipt();
-    await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
   }, [zkWallet]);
 
@@ -163,6 +181,11 @@ const Transaction: React.FC<ITransactionProps> = ({
     if (balances?.length && !selected) {
       setToken(balances[0].symbol);
     }
+    ethers
+      .getDefaultProvider()
+      .getGasPrice()
+      .then(res => res.toString())
+      .then(data => setFee(+data));
     zkWallet
       ?.getAccountState()
       .then(res => (!!res.id ? zkWallet?.isSigningKeySet().then(data => setUnlocked(data)) : setUnlocked(true)));
@@ -170,7 +193,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [balances, body, handleClickOutside, isBalancesListOpen, isContactsListOpen, zkWallet]);
+  }, [balances, body, fee, handleClickOutside, isBalancesListOpen, isContactsListOpen, selected, zkWallet]);
 
   return (
     <>
@@ -206,6 +229,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   onClick={() => {
                     handleSelect(name);
                     setWalletAddress(address);
+                    onChangeAddress(address);
                     openContactsList(false);
                     body?.classList.remove('fixed-b');
                   }}
@@ -348,11 +372,11 @@ const Transaction: React.FC<ITransactionProps> = ({
                             <input
                               placeholder="Ox address, ENS or contact name"
                               value={walletAddress ? (addressValue = walletAddress) : addressValue}
-                              onChange={onChangeAddress}
+                              onChange={e => onChangeAddress(e.target.value)}
                               className="currency-input-address"
                             />
-                            {(walletAddress || addressValue) && !walletAddress && (
-                              <button className="add-contact-button-input" onClick={() => setModal('add-contact')}>
+                            {addressValue && !walletAddress && (
+                              <button className="add-contact-button-input" onClick={() => handleSave()}>
                                 <span></span>
                                 <p>Save</p>
                               </button>
@@ -390,6 +414,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                           className="all-balance"
                           onClick={() => {
                             setInputValue(+maxValue);
+                            onChangeAmount((+maxValue - 0.0003) * bigNumberMultiplier - 2 * 179000 * fee);
                           }}
                         >
                           <span>+</span> All balance
