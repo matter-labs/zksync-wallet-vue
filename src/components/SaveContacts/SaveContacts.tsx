@@ -60,7 +60,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
     } else {
       setError(`Error: "${address}" doesn't match ethereum address format`);
     }
-  }, [address, addressValue, name, setContacts, setError, setModal]);
+  }, [address, addressValue, edit, name, oldContact, setContacts, setError, setModal, zkWallet]);
 
   return (
     <>

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import avatar from '../../images/avatar.png';
 import DataList from '../DataList/DataList';
 import Spinner from '../Spinner/Spinner';
+import SpinnerWorm from '../Spinner/SpinnerWorm';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -12,11 +13,20 @@ import './Wallets.scss';
 import { setTimeout } from 'timers';
 
 const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.Element => {
-  const { searchBalances, setBalances, transactionModal, zkBalances, zkBalancesLoaded, zkWallet } = useRootData(
-    ({ searchBalances, setBalances, transactionModal, zkBalances, zkBalancesLoaded, zkWallet }) => ({
+  const {
+    searchBalances,
+    setBalances,
+    transactionModal,
+    zkBalances,
+    zkBalancesLoaded,
+    verifyToken,
+    zkWallet,
+  } = useRootData(
+    ({ searchBalances, setBalances, transactionModal, zkBalances, zkBalancesLoaded, verifyToken, zkWallet }) => ({
       searchBalances: searchBalances.get(),
       setBalances,
       transactionModal: transactionModal.get(),
+      verifyToken: verifyToken.get(),
       zkBalances: zkBalances.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
       zkWallet: zkWallet.get(),
@@ -31,10 +41,14 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isAssetsOpen, openAssets] = useState<boolean>(false);
-  const [selectedBalance, setSelectedBalance] = useState<any>(!!zkBalances?.length ? zkBalances[0] : 0);
+  const [selectedBalance, setSelectedBalance] = useState<any>();
   const [symbolName, setSymbolName] = useState<any>(!!zkBalances?.length ? zkBalances[0].symbol : '');
   const [verified, setVerified] = useState<any>();
   const [walletBalance, setWalletBalance] = useState<string>(zkBalances[0]?.balance.toString());
+
+  const verifiedState = verified
+    ? +selectedBalance?.balance !== +verified[selectedBalance?.symbol] / Math.pow(10, 18)
+    : false;
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
@@ -50,7 +64,6 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
         input.setSelectionRange(0, 999999);
         document.execCommand('copy');
       } else {
-        openCopyModal(true);
         inputRef.map(el => {
           if (address === el?.value) {
             el?.focus();
@@ -58,8 +71,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             document.execCommand('copy');
           }
         });
-        setTimeout(() => openCopyModal(false), 2000);
       }
+      openCopyModal(true);
+      setTimeout(() => openCopyModal(false), 2000);
     },
     [inputRef],
   );
@@ -68,17 +82,21 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     setSelectedBalance(name);
   }, []);
 
-  const handleClickOutside = useCallback(e => {
-    if (e.target.getAttribute('data-name')) {
-      e.stopPropagation();
-      openBalancesList(false);
-      body?.classList.remove('fixed-b');
-      openAssets(false);
-    }
-  }, []);
+  const handleClickOutside = useCallback(
+    e => {
+      if (e.target.getAttribute('data-name')) {
+        e.stopPropagation();
+        openBalancesList(false);
+        body?.classList.remove('fixed-b');
+        openAssets(false);
+      }
+    },
+    [body],
+  );
 
   useEffect(() => {
     setBalances(zkBalances);
+    setSelectedBalance(zkBalances[0]);
     zkWallet
       ?.getAccountState()
       .then(res => res)
@@ -87,7 +105,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [body, handleClickOutside, isBalancesListOpen, setBalances, zkBalances]);
+  }, [body, handleClickOutside, isBalancesListOpen, setBalances, verifyToken, zkBalances, zkBalancesLoaded, zkWallet]);
 
   return (
     <>
@@ -167,7 +185,11 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             </div>
             <button className="copy-block-button" onClick={() => handleCopy(zkWallet?.address())}></button>
           </div>
-          <div className={`mywallet-currency-block ${isBalancesListOpen ? 'borderless' : ''}`}>
+          <div
+            className={`mywallet-currency-block ${verifiedState ? 'unverified' : ''} ${
+              isBalancesListOpen ? 'borderless' : ''
+            }`}
+          >
             <div
               data-name="custom-selector"
               className={`mywallet-currency-block-shadow ${isBalancesListOpen ? 'open' : 'closed'}`}
@@ -191,8 +213,8 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                   ) : (
                     <p>
                       {!!zkBalances.length &&
-                        (selectedBalance.symbol ? (
-                          <span>zk{selectedBalance.symbol}</span>
+                        (selectedBalance?.symbol ? (
+                          <span>zk{selectedBalance?.symbol}</span>
                         ) : (
                           <span>zk{zkBalances[0].symbol}</span>
                         ))}
@@ -203,18 +225,21 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                 </div>
               </div>
             </div>
-            <span className="mywallet-price">
-              ~
-              {parseFloat(
-                zkBalances
-                  ?.reduce((acc, cur) => {
-                    return acc + cur.balance * +(price && !!price[cur.symbol] ? price[cur.symbol] : 1);
-                  }, 0)
-                  .toFixed(2)
-                  .toString(),
-              )}{' '}
-              USD
-            </span>
+            <div className="mywallet-price-wrapper">
+              {verified && verifiedState && <SpinnerWorm />}
+              <span className="mywallet-price">
+                ~
+                {parseFloat(
+                  zkBalances
+                    ?.reduce((acc, cur) => {
+                      return acc + cur.balance * +(price && !!price[cur.symbol] ? price[cur.symbol] : 1);
+                    }, 0)
+                    .toFixed(2)
+                    .toString(),
+                )}{' '}
+                USD
+              </span>
+            </div>
           </div>
           <div className="mywallet-buttons-container">
             <button onClick={() => setTransactionType('deposit')} className="btn deposit-button">

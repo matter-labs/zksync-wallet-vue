@@ -11,6 +11,10 @@
   border-radius: 4px;
   cursor: pointer;
 
+  & > .hint-copied.open {
+    display: flex;
+  }
+
   &-input {
     position: absolute;
     left: -10000px;
@@ -129,6 +133,13 @@
     margin-top: 5px;
     color: var(--hints-color);
     font-size: var(--sm-font-size);
+
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+    }
   }
 
   &-currency {
@@ -168,6 +179,11 @@
 
       &.borderless {
         border-left: 3px solid var(--dark-color);
+      }
+
+      &.unverified {
+        background-color: var(--info-message-color);
+        border-left: none;
       }
 
       &-shadow {

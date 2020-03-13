@@ -39,7 +39,7 @@ export const useTransaction = () => {
         err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
       }
     },
-    [setError],
+    [setError, zkWallet],
   );
 
   const transactions = useCallback(

@@ -47,7 +47,6 @@ const Account: React.FC = (): JSX.Element => {
     searchBalances,
     setPrice,
     setTransactionType,
-    setVerifyToken,
     transactionType,
     verifyToken,
     zkBalances,
@@ -63,7 +62,6 @@ const Account: React.FC = (): JSX.Element => {
       searchBalances,
       setPrice,
       setTransactionType,
-      setVerifyToken,
       transactionModal,
       transactionType,
       verifyToken,
@@ -79,7 +77,6 @@ const Account: React.FC = (): JSX.Element => {
       setError,
       setPrice,
       setTransactionType,
-      setVerifyToken,
       transactionModal: transactionModal.get(),
       transactionType: transactionType.get(),
       verifyToken: verifyToken.get(),
@@ -115,9 +112,7 @@ const Account: React.FC = (): JSX.Element => {
       )
         .then((res: any) => {
           const prices = {};
-          Object.keys(res.data).map(el => {
-            prices[el] = res.data[el].quote.USD.price;
-          });
+          Object.keys(res.data).map(el => (prices[el] = res.data[el].quote.USD.price));
           setPrice(prices);
         })
         .catch(err => {
@@ -151,7 +146,7 @@ const Account: React.FC = (): JSX.Element => {
                   {verified &&
                   (+balance === +verified[address] / Math.pow(10, 18) ||
                     +balance === +verified[symbol] / Math.pow(10, 18)) ? (
-                    <div onClick={() => setVerifyToken(true)} key={balance} className="balances-token verified">
+                    <div key={balance} className="balances-token verified">
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
                         <p>{+balance.toFixed(2)}</p>{' '}

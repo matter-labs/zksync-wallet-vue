@@ -72,7 +72,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setAccessModal(true);
     }
     setCurAddress(provider?.selectedAddress);
-  }, [provider]);
+  }, [provider, setAccessModal, walletName]);
 
   if (!curAddress && walletName === 'Metamask') {
     setInterval(() => {
