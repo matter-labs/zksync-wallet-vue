@@ -220,10 +220,21 @@
 
 .transaction {
   &-title {
-    margin-bottom: 30px;
+    margin: 8px 0 30px 10px;
     color: var(--dark-color);
     font-size: var(--large-font-size);
     text-align: center;
+  }
+
+  &-hash {
+    margin-top: 18px;
+    color: var(--dark-color);
+    font-size: var(--sm-font-size);
+
+    & > span {
+      color: var(--hints-color);
+      word-break: break-all
+    }
   }
 
   &-back {
@@ -382,17 +393,6 @@
   .transaction {
     &-title {
       font-size: var(--xl-font-size);
-    }
-
-    &-hash {
-      margin-top: 18px;
-      color: var(--dark-color);
-      font-size: var(--sm-font-size);
-
-      & > span {
-        color: var(--hints-color);
-        word-break: break-all
-      }
     }
   
     &-fee {

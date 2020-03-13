@@ -46,9 +46,10 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
   const [verified, setVerified] = useState<any>();
   const [walletBalance, setWalletBalance] = useState<string>(zkBalances[0]?.balance.toString());
 
-  const verifiedState = verified
-    ? +selectedBalance?.balance !== +verified[selectedBalance?.symbol] / Math.pow(10, 18)
-    : false;
+  const verifiedState =
+    verified && !!zkBalances.length
+      ? +selectedBalance?.balance !== +verified[selectedBalance?.symbol] / Math.pow(10, 18)
+      : false;
 
   const inputRef: (HTMLInputElement | null)[] = [];
 

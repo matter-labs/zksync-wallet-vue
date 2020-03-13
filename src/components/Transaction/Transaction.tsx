@@ -154,7 +154,9 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const handleUnlock = useCallback(async () => {
     const changePubkey = await zkWallet?.setSigningKey();
+    await zkWallet?.setSigningKey();
     const receipt = await changePubkey?.awaitReceipt();
+    await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
   }, [zkWallet]);
 
