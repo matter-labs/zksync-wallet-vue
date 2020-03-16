@@ -44,11 +44,11 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
   const [selectedBalance, setSelectedBalance] = useState<any>();
   const [symbolName, setSymbolName] = useState<any>(!!zkBalances?.length ? zkBalances[0].symbol : '');
   const [verified, setVerified] = useState<any>();
-  const [walletBalance, setWalletBalance] = useState<string>(zkBalances[0]?.balance.toString());
+  const [walletBalance, setWalletBalance] = useState<string>('');
 
   const verifiedState =
     verified && !!zkBalances.length
-      ? +selectedBalance?.balance !== +verified[selectedBalance?.symbol] / Math.pow(10, 18)
+      ? +parseFloat(walletBalance).toFixed(6) !== +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(6)
       : false;
 
   const inputRef: (HTMLInputElement | null)[] = [];
@@ -79,9 +79,12 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     [inputRef],
   );
 
-  const handleSelect = useCallback(name => {
-    setSelectedBalance(name);
-  }, []);
+  const handleSelect = useCallback(
+    name => {
+      setSelectedBalance(name);
+    },
+    [setSelectedBalance],
+  );
 
   const handleClickOutside = useCallback(
     e => {
@@ -97,7 +100,8 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
 
   useEffect(() => {
     setBalances(zkBalances);
-    setSelectedBalance(zkBalances[0]);
+    setSelectedBalance(zkBalances[0]?.symbol);
+    setWalletBalance(zkBalances[0]?.balance.toString());
     zkWallet
       ?.getAccountState()
       .then(res => res)
@@ -106,7 +110,19 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [body, handleClickOutside, isBalancesListOpen, setBalances, verifyToken, zkBalances, zkBalancesLoaded, zkWallet]);
+  }, [
+    body,
+    handleClickOutside,
+    isBalancesListOpen,
+    setBalances,
+    setSelectedBalance,
+    setVerified,
+    setWalletBalance,
+    verifyToken,
+    zkBalances,
+    zkBalancesLoaded,
+    zkWallet,
+  ]);
 
   return (
     <>

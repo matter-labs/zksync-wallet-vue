@@ -110,10 +110,14 @@ const Transaction: React.FC<ITransactionProps> = ({
       if (INPUT_VALIDATION.digits.test(e)) {
         if (e <= maxValue) {
           setInputValue(+e);
-          onChangeAmount((+e - 0.0003) * bigNumberMultiplier - 2 * 179000 * fee);
+          title === 'Deposit'
+            ? onChangeAmount(+e * bigNumberMultiplier - fee - 2 * 179000 * fee)
+            : onChangeAmount(+e * bigNumberMultiplier - fee);
         } else {
           setInputValue(+maxValue);
-          onChangeAmount((+maxValue - 0.0003) * bigNumberMultiplier - 2 * 179000 * fee);
+          title === 'Deposit'
+            ? onChangeAmount(+maxValue * bigNumberMultiplier - fee - 2 * 179000 * fee)
+            : onChangeAmount(+maxValue * bigNumberMultiplier - fee);
         }
       }
     },
@@ -176,6 +180,8 @@ const Transaction: React.FC<ITransactionProps> = ({
     const receipt = await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
   }, [zkWallet]);
+
+  console.log(fee);
 
   useEffect(() => {
     if (balances?.length && !selected) {

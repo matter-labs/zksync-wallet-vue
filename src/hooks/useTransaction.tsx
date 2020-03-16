@@ -85,7 +85,7 @@ export const useTransaction = () => {
               depositTo: zkWallet.address(),
               token: token,
               amount: ethers.utils.bigNumberify(amountValue ? amountValue?.toString() : '0'),
-              maxFeeInETHToken: ethers.utils.bigNumberify(2 * 179000 * fee),
+              maxFeeInETHToken: ethers.utils.bigNumberify((2 * 179000 * fee).toString()),
             });
             const hash = depositPriorityOperation.ethTx;
             history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', token);
