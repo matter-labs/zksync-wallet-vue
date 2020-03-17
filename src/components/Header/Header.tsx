@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import makeBlockie from 'ethereum-blockies-base64';
 
 import avatar from '../../images/avatar.png';
 import ChangeName from './ChangeName';
@@ -74,16 +75,20 @@ const Header: React.FC = (): JSX.Element => {
         {zkWallet?.address() && (
           <>
             <button type="button" className="menu-wallet" onClick={() => setModal('wallet')}>
-              <p>{userName ? userName : zkWallet.address()}</p>
-              <img src={avatar} alt="avatar" />
+              <p>
+                {userName
+                  ? userName
+                  : zkWallet?.address().replace(zkWallet?.address().slice(9, zkWallet?.address().length - 4), '...')}
+              </p>
+              <img src={zkWallet ? makeBlockie(zkWallet.address()) : avatar} alt="avatar" />
               <div className="arrow-select"></div>
             </button>
             <Modal visible={false} background={true} classSpecifier="wallet">
               <div className="wallet-title">
-                <img src={avatar} alt="avatar" />{' '}
+                <img src={zkWallet ? makeBlockie(zkWallet.address()) : avatar} alt="avatar" />{' '}
                 {userName
                   ? userName
-                  : zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 3), '...')}
+                  : zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 4), '...')}
               </div>
               <div onClick={() => handleCopy(zkWallet?.address())} className="copy-block">
                 <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
@@ -97,6 +102,12 @@ const Header: React.FC = (): JSX.Element => {
                 />
                 <p>{zkWallet.address()}</p>
                 <button className="copy-block-button" onClick={() => handleCopy(zkWallet.address())}></button>
+              </div>
+              <div className="wallet-qr">
+                <img
+                  src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${zkWallet.address()}`}
+                  alt="wallet-qr"
+                />
               </div>
               <div className="horizontal-line"></div>
               <div className="wallet-buttons">

@@ -72,7 +72,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setAccessModal(true);
     }
     setCurAddress(provider?.selectedAddress);
-  }, [provider, setAccessModal, walletName]);
+  }, [createWallet, provider, setAccessModal, walletName, zkWallet]);
 
   if (!curAddress && walletName === 'Metamask') {
     setInterval(() => {

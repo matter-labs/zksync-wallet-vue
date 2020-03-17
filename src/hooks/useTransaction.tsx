@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
+import { closestPackableTransactionFee } from 'zksync';
 
 import { useRootData } from '../hooks/useRootData';
 
@@ -119,6 +120,7 @@ export const useTransaction = () => {
             amount: ethers.utils.bigNumberify(amountValue ? amountValue?.toString() : '0'),
             fee: ethers.utils.parseEther('0.001'),
           });
+
           const hash = transferTransaction.txHash;
           history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'transfer', token);
           setHash(hash);

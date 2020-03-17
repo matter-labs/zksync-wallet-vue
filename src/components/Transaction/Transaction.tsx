@@ -99,7 +99,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [symbolName, setSymbolName] = useState<string>(propsSymbolName ? propsSymbolName : '');
   const [token, setToken] = useState<string | undefined>(propsToken);
   const [unlocked, setUnlocked] = useState<boolean | undefined>(undefined);
-  const [unlockFau, setUnlockFau] = useState<boolean>(false);
+  const [unlockFau, setUnlockFau] = useState<boolean>(title === 'Deposit' ? false : true);
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
 
   const bigNumberMultiplier = Math.pow(10, 18);
@@ -111,7 +111,7 @@ const Transaction: React.FC<ITransactionProps> = ({
         if (e <= maxValue) {
           setInputValue(+e);
           title === 'Deposit'
-            ? onChangeAmount(+e * bigNumberMultiplier - fee - 2 * 179000 * fee)
+            ? onChangeAmount(+e * bigNumberMultiplier - fee)
             : onChangeAmount(+e * bigNumberMultiplier - fee);
         } else {
           setInputValue(+maxValue);
@@ -450,7 +450,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                               ~$
                               {
                                 +(
-                                  +(price && !!price[selectedBalance.symbol] ? price[selectedBalance.symbol] : 1) *
+                                  +(price && !!price[selectedBalance] ? price[selectedBalance] : 1) *
                                   (maxValue ? maxValue : balances[0].balance)
                                 ).toFixed(2)
                               }
@@ -482,7 +482,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                     )}
                     <button
                       className={`btn submit-button ${!unlockFau && title === 'Deposit' ? 'disabled' : ''}`}
-                      onClick={() => transactionAction(token, type)}
+                      onClick={() => (unlockFau ? transactionAction(token, type) : undefined)}
                     >
                       <span
                         className={`submit-label ${title} ${!unlockFau && title === 'Deposit' ? unlockFau : true}`}

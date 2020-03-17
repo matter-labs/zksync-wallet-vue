@@ -117,6 +117,10 @@
     align-items: center;
     justify-content: space-between;
     margin-top: 90px;
+
+    & > p {
+      margin-top: 30px;
+    }
   }
 
   .arrow-down { 
@@ -148,6 +152,10 @@
       color: var(--dark-color);
       font-size: var(--xl-font-size);
       line-height: var(--xl-font-size);
+
+      &.empty {
+        color: var(--hints-color);
+      }
     }
 
     &-selector {
@@ -233,11 +241,18 @@
         height: 15px;
       }
 
+      p {
+        height: 20px;
+        margin-top: 0;
+        font-size: var(--sm-font-size);
+      }
+
       & img {
         width: 27px;
         height: 27px;
         margin-top: -5px;
         margin-right: 5px;
+        border-radius: 15px;
       }
     }
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 
 import Modal from '../Modal/Modal';
 import SaveContacts from '../SaveContacts/SaveContacts';
@@ -45,7 +45,13 @@ const DataList: React.FC<IBalancesProps> = ({
       </Modal>
       <div className={`balances-wrapper ${visible ? 'open' : 'closed'}`}>
         <h3 className="balances-title">{title}</h3>
-        <input onChange={handleSearch} placeholder="Search token" className="balances-search" type="text" />
+        <input
+          ref={e => e?.focus()}
+          onChange={handleSearch}
+          placeholder="Search token"
+          className="balances-search"
+          type="text"
+        />
         {children}
         {title === 'Contacts' && (
           <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>

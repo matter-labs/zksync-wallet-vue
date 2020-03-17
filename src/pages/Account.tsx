@@ -98,27 +98,27 @@ const Account: React.FC = (): JSX.Element => {
       const exceptFau = zkBalances?.filter(el => el.symbol !== 'FAU').map(el => el.symbol);
       return exceptFau;
     };
-    if (balancesSymbols().toString()) {
-      request(
-        `https://cors-anywhere.herokuapp.com/${BASE_URL}?symbol=${
-          balancesSymbols().toString() ? balancesSymbols().toString() : 'ETH'
-        }`,
-        {
-          method: 'GET',
-          headers: {
-            'X-CMC_PRO_API_KEY': '6497b92f-601e-4765-86e3-cd11e41a21f8',
-          },
-        },
-      )
-        .then((res: any) => {
-          const prices = {};
-          Object.keys(res.data).map(el => (prices[el] = res.data[el].quote.USD.price));
-          setPrice(prices);
-        })
-        .catch(err => {
-          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
-        });
-    }
+    // if (balancesSymbols().toString()) {
+    //   request(
+    //     `https://cors-anywhere.herokuapp.com/${BASE_URL}?symbol=${
+    //       balancesSymbols().toString() ? balancesSymbols().toString() : 'ETH'
+    //     }`,
+    //     {
+    //       method: 'GET',
+    //       headers: {
+    //         'X-CMC_PRO_API_KEY': '6497b92f-601e-4765-86e3-cd11e41a21f8',
+    //       },
+    //     },
+    //   )
+    //     .then((res: any) => {
+    //       const prices = {};
+    //       Object.keys(res.data).map(el => (prices[el] = res.data[el].quote.USD.price));
+    //       setPrice(prices);
+    //     })
+    //     .catch(err => {
+    //       err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+    //     });
+    // }
   }, [error, ethId, setBalances, setError, setPrice, verifyToken, zkBalances, zkWallet]);
 
   const handleSend = (address, balance, symbol) => {

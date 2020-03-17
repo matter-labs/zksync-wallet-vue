@@ -153,6 +153,17 @@
     width: 100%;
     transform: translateX(-100%);
 
+    .wallet-qr {
+      display: none;
+      margin-top: -30px;
+      text-align: center;
+
+      & > img {
+        width: 200px;
+        height: 200px;
+      }
+    }
+
     & > .wallet-buttons {
       & > button {
         display: flex;
@@ -163,6 +174,7 @@
         margin-left: -28px;
         padding: 10px;
         color: var(--dark-color);
+        font-size: var(--sm-font-size);
         background-color: var(--transparent);
         border: none;
         border-bottom: 1px solid var(--border-color);
@@ -183,6 +195,7 @@
         height: 50px;
         margin-right: 10px;
         padding: 5px;
+        border-radius: 25px;
       }
     }
 
@@ -445,6 +458,10 @@ body.dark {
     &.wallet {
       left: calc(100% - 16px);
 
+      .wallet-qr {
+        display: block;
+      }
+
       & > .wallet-buttons {
         & > button {
           justify-content: space-between;
@@ -459,6 +476,10 @@ body.dark {
           border-radius: 5px;
           outline: none;
           cursor: pointer;
+
+          &:first-child {
+            display: none;
+          }
   
           &:hover {
             background-color: var(--copyblock-color);
@@ -477,6 +498,7 @@ body.dark {
           width: 50px;
           height: 50px;
           padding: 5px;
+          border-radius: 25px;
         }
       }
     }

@@ -317,10 +317,18 @@ h2 {
     &:hover {
       background-color: var(--border-color);
     }
+
+    &:active {
+      background-color: var(--border-color);
+    }
   }
 
   &:hover {
     background-color: var(--button-bg-hover);
+  }
+
+  &:active {
+    background-color: var(--links-color);
   }
 
   & > span {
