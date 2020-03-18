@@ -48,7 +48,7 @@ const DataList: React.FC<IBalancesProps> = ({
         <input
           ref={e => e?.focus()}
           onChange={handleSearch}
-          placeholder="Search token"
+          placeholder={`Filter ${title.toLowerCase().replace(/.?(select )/, '')}`}
           className="balances-search"
           type="text"
         />

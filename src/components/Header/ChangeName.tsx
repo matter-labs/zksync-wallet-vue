@@ -21,13 +21,13 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }): JSX.Element =
   }, [newName, setModalOpen, zkWallet]);
 
   return (
-    <>
+    <form>
       <h3>Change name</h3>
       <input placeholder="Enter new name" value={newName} onChange={e => setNewName(e.target.value)} />
-      <button onClick={handleChangeName} className="btn btn submit-button">
+      <button type="submit" onClick={handleChangeName} className="btn btn submit-button">
         Save
       </button>
-    </>
+    </form>
   );
 };
 

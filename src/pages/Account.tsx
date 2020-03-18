@@ -149,27 +149,27 @@ const Account: React.FC = (): JSX.Element => {
                     <div key={balance} className="balances-token verified">
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
-                        <p>{+balance.toFixed(2)}</p>{' '}
-                        <span>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed()})</span>
-                        <div>
+                        <p>{+balance.toFixed(6)}</p>{' '}
+                        <span>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)})</span>
+                        <div className="balances-token-status">
                           <p>Verified</p> <span className="label-done"></span>
                         </div>
+                        <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
                       </div>
-                      <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
                     </div>
                   ) : (
                     <div key={balance} className="balances-token pending">
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
-                        <p>{+balance.toFixed(2)}</p>{' '}
-                        <span>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed()})</span>
-                        <div>
+                        <p>{+balance.toFixed(6)}</p>{' '}
+                        <span>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)})</span>
+                        <div className="balances-token-status">
                           <p>Pending</p> <SpinnerWorm />
                         </div>
+                        <button className="pending" onClick={() => undefined}>
+                          Send
+                        </button>
                       </div>
-                      <button className="pending" onClick={() => undefined}>
-                        Send
-                      </button>
                     </div>
                   )}
                 </>

@@ -164,14 +164,31 @@
         display: flex;
       }
 
+      & > button {
+        display: none;
+        min-width: 100px;
+        height: 27px;
+        margin-left: 10px;
+        color: var(--dark-color);
+        background-color: var(--modal-bg-color);
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+  
+        &.pending {
+          background-color: var(--copyblock-color);
+          cursor: auto;
+        }
+  
+        &:hover {
+          background-color: var(--copyblock-color);
+        }
+      }
+
       & > p {
         width: 100%;
-        max-width: 45px;
+        max-width: 100px;
         margin-bottom: 0;
         padding-left: 5px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
       }
 
       & > div {
@@ -186,29 +203,10 @@
       }
     }
 
-    & > button {
-      display: none;
-      width: 100px;
-      height: 27px;
-      color: var(--dark-color);
-      background-color: var(--modal-bg-color);
-      border: 1px solid var(--border-color);
-      border-radius: 5px;
-
-      &.pending {
-        background-color: var(--copyblock-color);
-        cursor: auto;
-      }
-
-      &:hover {
-        background-color: var(--copyblock-color);
-      }
-    }
-
     &:hover {
       background-color: var(--copyblock-color);
 
-      .balances-token-right {
+      .balances-token-status {
         display: none;
       }
 
@@ -392,7 +390,7 @@
       position: absolute;
       top: 50%;
       right: 22px;
-      display: none;
+      display: flex;
       transform: translateY(-50%);
     }
   }

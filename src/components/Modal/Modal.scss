@@ -103,21 +103,25 @@
     flex-direction: column;
     align-items: center;
 
-    & > input {
-      margin-bottom: 20px;
-    }
+    & > form {
+      width: 100%;
 
-    & > h3 {
-      align-self: flex-start;
-      color: var(--dark-color);
-      font-weight: var(--bold-font-weight);
-      font-size: var(--xl-font-size);
-      line-height: var(--large-font-size);
-    }
+      & > input {
+        margin-bottom: 20px;
+      }
 
-    & > .transaction-field-title {
-      align-self: start;
-      margin-top: 20px;
+      & > h3 {
+        align-self: flex-start;
+        color: var(--dark-color);
+        font-weight: var(--bold-font-weight);
+        font-size: var(--xl-font-size);
+        line-height: var(--large-font-size);
+      }
+
+      & > .transaction-field-title {
+        align-self: start;
+        margin-top: 20px;
+      }
     }
   }
 
@@ -142,8 +146,10 @@
   &.change-name {
     z-index: 10000;
 
-    & > .btn {
-      margin-top: 30px;
+    & > form {
+       & > .btn {
+        margin-top: 30px;
+      }
     }
   }
 

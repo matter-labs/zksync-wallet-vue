@@ -66,7 +66,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
   }, [address, addressValue, edit, name, oldContact, setContacts, setError, setModal, zkWallet]);
 
   return (
-    <>
+    <form>
       <h3>{title}</h3>
       <div className="horizontal-line"></div>
       <span className="transaction-field-title">Contact name</span>
@@ -77,10 +77,10 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
           <input placeholder="0x address" value={address} onChange={e => setAddress(e.target.value)} />
         </>
       )}
-      <button className="btn submit-button" onClick={handleSave}>
+      <button type="submit" className="btn submit-button" onClick={handleSave}>
         Save
       </button>
-    </>
+    </form>
   );
 };
 
