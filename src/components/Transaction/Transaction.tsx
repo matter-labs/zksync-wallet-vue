@@ -84,6 +84,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const body = document.querySelector('#body');
   const dataPropertySymbol = 'symbol';
   const dataPropertyName = 'name';
+  const defaultAddress = walletAddress ? (addressValue = walletAddress) : addressValue;
 
   const baseBalance = !!balances?.length ? balances[0] : 0;
   const baseMaxValue = !!balances?.length ? balances[0].balance : 0;
@@ -181,11 +182,13 @@ const Transaction: React.FC<ITransactionProps> = ({
     setUnlocked(!!receipt);
   }, [zkWallet]);
 
-  console.log(fee);
-
   useEffect(() => {
     if (balances?.length && !selected) {
       setToken(balances[0].symbol);
+    }
+    if (title === 'Withdraw' && zkWallet) {
+      setWalletAddress(zkWallet?.address());
+      onChangeAddress(zkWallet?.address());
     }
     ethers
       .getDefaultProvider()
@@ -199,7 +202,18 @@ const Transaction: React.FC<ITransactionProps> = ({
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
     };
-  }, [balances, body, fee, handleClickOutside, isBalancesListOpen, isContactsListOpen, selected, zkWallet]);
+  }, [
+    balances,
+    body,
+    fee,
+    handleClickOutside,
+    isBalancesListOpen,
+    isContactsListOpen,
+    selected,
+    setWalletAddress,
+    title,
+    zkWallet,
+  ]);
 
   return (
     <>
@@ -377,7 +391,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                           <div className="currency-input-wrapper">
                             <input
                               placeholder="Ox address, ENS or contact name"
-                              value={walletAddress ? (addressValue = walletAddress) : addressValue}
+                              value={title === 'Withdraw' ? zkWallet?.address() : defaultAddress}
                               onChange={e => onChangeAddress(e.target.value)}
                               className="currency-input-address"
                             />

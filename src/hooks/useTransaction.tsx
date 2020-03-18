@@ -85,7 +85,9 @@ export const useTransaction = () => {
             const depositPriorityOperation = await zkWallet.depositToSyncFromEthereum({
               depositTo: zkWallet.address(),
               token: token,
-              amount: ethers.utils.bigNumberify(amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0'),
+              amount: ethers.utils.bigNumberify(
+                amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
+              ),
               maxFeeInETHToken: ethers.utils.bigNumberify(closestPackableTransactionFee((2 * 179000 * fee).toString())),
             });
             const hash = depositPriorityOperation.ethTx;
@@ -148,7 +150,9 @@ export const useTransaction = () => {
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum({
             ethAddress: addressValue,
             token: token,
-            amount: ethers.utils.bigNumberify(amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0'),
+            amount: ethers.utils.bigNumberify(
+              amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
+            ),
             fee: ethers.utils.parseEther('0.001'),
           });
           const hash = withdrawTransaction.txHash;
