@@ -456,7 +456,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                               }
                             </span>
                             <span>
-                              Balance: {maxValue ? +maxValue.toFixed(2) : +balances[0].balance.toFixed(2)}{' '}
+                              Balance: {maxValue ? +maxValue.toFixed(6) : +balances[0].balance.toFixed(6)}{' '}
                               {symbolName ? symbolName : balances[0].symbol}
                             </span>
                           </div>

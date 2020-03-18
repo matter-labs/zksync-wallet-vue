@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Footer from './components/Footer/Footer';
 import Header from './components/Header/Header';
@@ -9,8 +9,9 @@ import { useRootData } from './hooks/useRootData';
 import { IAppProps } from './types/Common';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
-  const { error, setError, walletName } = useRootData(({ error, setError, walletName }) => ({
+  const { error, provider, setError, walletName } = useRootData(({ error, provider, setError, walletName }) => ({
     error: error.get(),
+    provider: provider.get(),
     setError,
     walletName: walletName.get(),
   }));

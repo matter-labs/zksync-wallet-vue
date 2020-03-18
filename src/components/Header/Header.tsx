@@ -13,13 +13,36 @@ import { HEADER_ITEMS } from '../../constants/header';
 import './Header.scss';
 
 const Header: React.FC = (): JSX.Element => {
-  const { setAccessModal, setModal, setProvider, setWalletName, setZkWallet, zkWallet } = useRootData(
-    ({ setAccessModal, setModal, setProvider, setWalletName, setZkWallet, zkWallet }) => ({
+  const {
+    provider,
+    setAccessModal,
+    setModal,
+    setProvider,
+    setWalletName,
+    setZkWallet,
+    walletName,
+    zkBalancesLoaded,
+    zkWallet,
+  } = useRootData(
+    ({
+      provider,
       setAccessModal,
       setModal,
       setProvider,
       setWalletName,
       setZkWallet,
+      walletName,
+      zkBalancesLoaded,
+      zkWallet,
+    }) => ({
+      provider: provider.get(),
+      setAccessModal,
+      setModal,
+      setProvider,
+      setWalletName,
+      setZkWallet,
+      walletName: walletName.get(),
+      zkBalancesLoaded: zkBalancesLoaded.get(),
       zkWallet: zkWallet.get(),
     }),
   );
@@ -67,6 +90,19 @@ const Header: React.FC = (): JSX.Element => {
     setZkWallet(null);
     history.push('/');
   }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
+
+  if (provider) {
+    provider.on('accountsChanged', () => {
+      if (zkWallet?.address().toLowerCase() !== provider.selectedAddress.toLowerCase()) {
+        sessionStorage.setItem('walletName', walletName);
+        handleLogOut();
+        const savedWalletName = sessionStorage.getItem('walletName');
+        if (savedWalletName) {
+          setWalletName(savedWalletName);
+        }
+      }
+    });
+  }
 
   return (
     <div className="menu-wrapper">

@@ -289,7 +289,7 @@
 
     &-address {
       color: var(--hints-color);
-      font-size: var(--sm-font-size);
+      font-size: var(--xs-font-size);
     }
 
     &:hover {
@@ -386,12 +386,21 @@
     max-width: 162px;
     margin-left: 54px;
 
-    & > .balances-contact-edit {
+    & > .contact-edit-wrapper {
       position: absolute;
       top: 50%;
       right: 22px;
       display: flex;
       transform: translateY(-50%);
+
+      .contact-manage {
+        width: 200px;
+        height: 60px;
+        padding-top: 10px;
+        color: var(--links-color);
+        text-align: center;
+        border: 1px solid var(--light-border-color);
+      }
     }
   }
 }

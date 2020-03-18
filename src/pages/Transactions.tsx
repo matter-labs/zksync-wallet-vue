@@ -53,7 +53,7 @@ const Transactions: React.FC = (): JSX.Element => {
               <div className={`transaction-history ${type}`}></div>
               <div className="transaction-history-amount">{+amount.toFixed(3)}</div>
               <div className="transaction-history-hash">
-                {token && token.length > 5 ? token.replace(token.slice(6, token.length - 3), '...') : <>zk{token}</>}
+                {token && token.length > 10 ? token.replace(token.slice(6, token.length - 3), '...') : <>zk{token}</>}
               </div>
             </div>
             <div className="transaction-history-right">
@@ -61,7 +61,7 @@ const Transactions: React.FC = (): JSX.Element => {
                 {type === 'transfer' && (
                   <>
                     <span>Sent to:</span>
-                    <p>{to?.replace(to?.slice(6, to?.length - 3), '..')}</p>
+                    <p>{to?.replace(to?.slice(6, to?.length - 3), '...')}</p>
                   </>
                 )}
                 {type === 'deposit' && (
@@ -73,7 +73,7 @@ const Transactions: React.FC = (): JSX.Element => {
                 {type === 'withdraw' && (
                   <>
                     <span>Withdrawed to:</span>
-                    <p>{to?.replace(to?.slice(6, to?.length - 3), '..')}</p>
+                    <p>{to?.replace(to?.slice(6, to?.length - 3), '...')}</p>
                   </>
                 )}
               </div>

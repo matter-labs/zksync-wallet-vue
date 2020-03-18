@@ -68,13 +68,14 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
 
   useEffect(() => {
-    if (provider?.selectedAddress == null && walletName === 'Metamask') {
+    if (provider?.selectedAddress == null && walletName) {
       setAccessModal(true);
     }
     setCurAddress(provider?.selectedAddress);
   }, [createWallet, provider, setAccessModal, walletName, zkWallet]);
 
-  if (!curAddress && walletName === 'Metamask') {
+  if (!curAddress && walletName && provider) {
+    createWallet();
     setInterval(() => {
       if (provider?.selectedAddress) {
         setCurAddress(provider?.selectedAddress);
@@ -96,20 +97,12 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             cancelAction={() => handleLogOut()}
           >
             <div className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}></div>
-            {!curAddress && (
-              <>
-                <h3 className="title-connecting">Connecting to {walletName}</h3>
-                <p>Follow the instructions in the popup</p>
-                <Spinner />
-              </>
-            )}
             {curAddress &&
               (provider && provider.networkVersion === '4' ? ( //TODO: need to change on prod
                 <>
-                  <h3>Connected to {walletName}</h3>
-                  <button className="btn submit-button" onClick={createWallet}>
-                    Access my account
-                  </button>
+                  <h3 className="title-connecting">Connecting to {walletName}</h3>
+                  <p>Follow the instructions in the popup</p>
+                  <Spinner />
                 </>
               ) : (
                 <>

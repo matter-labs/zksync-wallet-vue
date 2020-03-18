@@ -93,7 +93,11 @@ const Contacts: React.FC = (): JSX.Element => {
                 <div className="balances-contact-left">
                   <span className="balances-contact-name">{name}</span>
                   <span className="balances-contact-address">
-                    {address?.replace(address?.slice(6, address?.length - 3), '...')}
+                    {window?.innerWidth > 540
+                      ? zkWallet?.address()
+                      : zkWallet
+                          ?.address()
+                          .replace(zkWallet?.address().slice(14, zkWallet?.address().length - 4), '...')}
                   </span>
                 </div>
                 <div className="balances-contact-right">
