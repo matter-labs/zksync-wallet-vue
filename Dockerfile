@@ -1,10 +1,10 @@
-# syntax = docker/dockerfile:1.1.3-experimental
+# syntax = docker/dockerfile:1.1.5-experimental
 
 FROM hotline.nodeart.app/naw/rnn/particles/lighthouse:1.0.3 AS generate-lighthouse-report
 ARG INVALIDATE_CACHE
 ARG HOSTNAME
 RUN lighthouse --quiet --output-path='stdout' --plugins=lighthouse-plugin-field-performance \
-    --chrome-flags="--headless --disable-gpu --no-sandbox" "https://${HOSTNAME}" > lighthouse.html
+    --chrome-flags="--headless --disable-gpu --no-sandbox" "https://${HOSTNAME}" > lighthouse.html  || true
 
 FROM hotline.nodeart.app/naw/rnn/particles/sonar-scanner:1.0.0 AS sonar-scanner
 
