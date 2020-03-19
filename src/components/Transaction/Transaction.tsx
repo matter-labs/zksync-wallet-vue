@@ -84,12 +84,13 @@ const Transaction: React.FC<ITransactionProps> = ({
   const body = document.querySelector('#body');
   const dataPropertySymbol = 'symbol';
   const dataPropertyName = 'name';
-  const defaultAddress = walletAddress ? (addressValue = walletAddress) : addressValue;
+  const defaultAddress = walletAddress ? walletAddress : addressValue;
 
   const baseBalance = !!balances?.length ? balances[0] : 0;
   const baseMaxValue = !!balances?.length ? balances[0].balance : 0;
 
   const [fee, setFee] = useState<number>(0);
+  const [filteredContacts, setFilteredContacts] = useState<any>([]);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [isHintUnlocked, setHintUnlocked] = useState<boolean>(false);
@@ -129,6 +130,16 @@ const Transaction: React.FC<ITransactionProps> = ({
   const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
   const contacts = JSON.parse(arr);
 
+  const handleFilterContacts = useCallback(
+    e => {
+      const searchValue = contacts.filter(el => {
+        return el.name.toLowerCase().includes(e.toLowerCase());
+      });
+      setFilteredContacts(searchValue);
+    },
+    [addressValue, contacts, setFilteredContacts],
+  );
+
   const handleCancel = useCallback(() => {
     setTransactionType(undefined);
     setHash('');
@@ -154,7 +165,7 @@ const Transaction: React.FC<ITransactionProps> = ({
         setSelectedBalance(name);
       }
     },
-    [isBalancesListOpen, isContactsListOpen],
+    [isBalancesListOpen, isContactsListOpen, onChangeAddress],
   );
 
   const handleClickOutside = useCallback(
@@ -197,6 +208,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       setWalletAddress(zkWallet?.address());
       onChangeAddress(zkWallet?.address());
     }
+
     ethers
       .getDefaultProvider()
       .getGasPrice()
@@ -210,17 +222,20 @@ const Transaction: React.FC<ITransactionProps> = ({
       document.removeEventListener('click', handleClickOutside, true);
     };
   }, [
+    addressValue,
     balances,
     body,
     fee,
     handleClickOutside,
     isBalancesListOpen,
     isContactsListOpen,
+    onChangeAddress,
     selected,
     setUnlockFau,
     setWalletAddress,
     title,
     unlockFau,
+    walletAddress,
     zkWallet,
   ]);
 
@@ -279,7 +294,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                   <div className="balances-contact-left">
                     <p className="balances-contact-name">{name}</p>
                     <span className="balances-contact-address">
-                      {address?.replace(address?.slice(6, address?.length - 3), '...')}
+                      {window?.innerWidth > 540
+                        ? address
+                        : address?.replace(address?.slice(14, address?.length - 4), '...')}
                     </span>
                   </div>
                   <div className="balances-contact-right">
@@ -365,7 +382,10 @@ const Transaction: React.FC<ITransactionProps> = ({
               <img src={clocks} alt="clocks" />
             </div>
             <p className="transaction-hash">
-              Tx hash:<span>{typeof hash === 'string' ? hash : hash?.hash}</span>
+              Tx hash:
+              <a href={`https://demo.zksync.dev/explorer/transactions/${hash}`}>
+                {typeof hash === 'string' ? hash : hash?.hash}
+              </a>
             </p>
             <button
               className="btn submit-button"
@@ -409,34 +429,81 @@ const Transaction: React.FC<ITransactionProps> = ({
                     {isInput && (
                       <>
                         <span className="transaction-field-title">To address</span>
-                        <div className="transaction-field contacts">
+                        <div className={`transaction-field contacts ${ADDRESS_VALIDATION['eth'].test(addressValue)}`}>
                           <div className="currency-input-wrapper">
+                            {ADDRESS_VALIDATION['eth'].test(addressValue) && <span className="label-done"></span>}
                             <input
-                              placeholder="Ox address, ENS or contact name"
-                              value={title === 'Withdraw' ? zkWallet?.address() : defaultAddress}
-                              onChange={e => onChangeAddress(e.target.value)}
+                              placeholder="Ox address or contact name"
+                              value={title === 'Withdraw' ? zkWallet?.address() : addressValue}
+                              onChange={e => {
+                                onChangeAddress(e.target.value);
+                                handleFilterContacts(e.target.value);
+                                setWalletAddress('');
+                                setSelectedContact('');
+                              }}
                               className="currency-input-address"
                             />
-                            {addressValue && !walletAddress && (
+                            {ADDRESS_VALIDATION['eth'].test(addressValue) && !walletAddress && (
                               <button className="add-contact-button-input" onClick={() => handleSave()}>
                                 <span></span>
                                 <p>Save</p>
                               </button>
                             )}
-                            <div className="custom-selector contacts">
-                              <div
-                                onClick={() => {
-                                  openContactsList(!isContactsListOpen);
-                                  body?.classList.add('fixed-b');
-                                }}
-                                className={`custom-selector-title ${selectedContact ? '' : 'short'}`}
-                              >
-                                {selectedContact ? <p>{selectedContact}</p> : <span></span>}
-                                <div className="arrow-down"></div>
+                            {((!addressValue && !walletAddress) ||
+                              (!addressValue && walletAddress) ||
+                              !addressValue ||
+                              walletAddress) && (
+                              <div className="custom-selector contacts">
+                                <div
+                                  onClick={() => {
+                                    openContactsList(!isContactsListOpen);
+                                    body?.classList.add('fixed-b');
+                                  }}
+                                  className={`custom-selector-title ${
+                                    selectedContact && addressValue === walletAddress ? '' : 'short'
+                                  }`}
+                                >
+                                  {selectedContact && addressValue === walletAddress ? (
+                                    <p>{selectedContact}</p>
+                                  ) : (
+                                    <span></span>
+                                  )}
+                                  <div className="arrow-down"></div>
+                                </div>
                               </div>
-                            </div>
+                            )}
                           </div>
                         </div>
+                        {!!filteredContacts.length && addressValue && !walletAddress && (
+                          <div className="transaction-contacts-list">
+                            {filteredContacts.map(({ name, address }) => (
+                              <div
+                                className="balances-contact"
+                                key={name}
+                                onClick={() => {
+                                  handleSelect(name);
+                                  setWalletAddress(address);
+                                  onChangeAddress(address);
+                                  openContactsList(false);
+                                  body?.classList.remove('fixed-b');
+                                  setFilteredContacts([]);
+                                }}
+                              >
+                                <div className="balances-contact-left">
+                                  <p className="balances-contact-name">{name}</p>
+                                  <span className="balances-contact-address">
+                                    {window?.innerWidth > 540
+                                      ? address
+                                      : address?.replace(address?.slice(14, address?.length - 4), '...')}
+                                  </span>
+                                </div>
+                                <div className="balances-contact-right">
+                                  <></>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </>
                     )}
                     <span className="transaction-field-title">Amount / asset</span>
@@ -452,15 +519,13 @@ const Transaction: React.FC<ITransactionProps> = ({
                           }}
                           value={inputValue}
                         />
-                        <button
-                          className="all-balance"
-                          onClick={() => {
-                            setInputValue(+maxValue);
-                            onChangeAmount((+maxValue - 0.0003) * bigNumberMultiplier - 2 * 179000 * fee);
-                          }}
-                        >
-                          <span>+</span> All balance
-                        </button>
+                        <span className="amount-price">
+                          $
+                          {(
+                            +(price && !!price[selectedBalance] ? price[selectedBalance] : 1) *
+                            (inputValue ? inputValue : 0)
+                          ).toFixed(2)}
+                        </span>
                         <div className="custom-selector balances">
                           <div
                             onClick={() => {
@@ -482,19 +547,32 @@ const Transaction: React.FC<ITransactionProps> = ({
                       {zkBalancesLoaded &&
                         (!!balances?.length ? (
                           <div className="currency-input-wrapper" key={token}>
-                            <span>
-                              ~$
-                              {
-                                +(
-                                  +(price && !!price[selectedBalance] ? price[selectedBalance] : 1) *
-                                  (maxValue ? maxValue : balances[0].balance)
-                                ).toFixed(2)
-                              }
-                            </span>
-                            <span>
+                            <div className="all-balance-wrapper">
+                              <button
+                                className="all-balance"
+                                onClick={() => {
+                                  setInputValue(+maxValue);
+                                  onChangeAmount((+maxValue - 0.0003) * bigNumberMultiplier - 2 * 179000 * fee);
+                                }}
+                              >
+                                Max: {maxValue ? +maxValue.toFixed(6) : +balances[0].balance.toFixed(6)}{' '}
+                                {symbolName ? symbolName : balances[0].symbol}
+                              </button>
+                              <span>
+                                ~$
+                                {
+                                  +(
+                                    +(price && !!price[selectedBalance] ? price[selectedBalance] : 1) *
+                                    (maxValue ? maxValue : balances[0].balance)
+                                  ).toFixed(2)
+                                }
+                              </span>
+                            </div>
+
+                            {/* <span>
                               Balance: {maxValue ? +maxValue.toFixed(6) : +balances[0].balance.toFixed(6)}{' '}
                               {symbolName ? symbolName : balances[0].symbol}
-                            </span>
+                            </span> */}
                           </div>
                         ) : (
                           <div className="currency-input-wrapper" key={token}>

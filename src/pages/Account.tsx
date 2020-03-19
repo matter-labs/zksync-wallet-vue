@@ -174,7 +174,7 @@ const Account: React.FC = (): JSX.Element => {
                         <p>{+balance.toFixed(6)}</p>{' '}
                         <span>
                           (
-                          {!!price.length ? (
+                          {price && !!price.length ? (
                             <>~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)}</>
                           ) : (
                             <>Unknown</>

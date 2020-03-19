@@ -152,22 +152,30 @@
   }
 }
 
-.all-balance {
-  position: absolute;
-  left: 33.5%;
+.amount-price {
   display: none;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.all-balance {
   align-items: center;
   justify-content: space-between;
   width: 100%;
   max-width: 130px;
-  padding: 0;
+  margin-left: -10px;
   padding: 0 10px;
   color: var(--links-color);
   font-size: var(--sm-font-size);
+  text-decoration: underline;
   background-color: var(--modal-bg-color);
   border: none;
   border-radius: 5px;
   outline: none;
+
+  &-wrapper {
+    display: flex;
+  }
 
   &:hover {
     background-color: var(--copyblock-color);
@@ -224,6 +232,17 @@
     color: var(--dark-color);
     font-size: var(--large-font-size);
     text-align: center;
+  }
+
+  &-contacts-list {
+    position: absolute;
+    top: 200px;
+    left: 20px;
+    z-index: 10000;
+    width: calc(100% - 40px);
+    background-color: var(--modal-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
   }
 
   &-hash {
@@ -306,6 +325,46 @@
       font-size: var(--xl-font-size);
     }
 
+    &.contacts {
+      display: block;
+      height: 80px;
+      max-height: 100px;
+      
+      & > .currency-input-wrapper {
+        position: relative;
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        justify-content: flex-start;
+        margin-top: 15px;
+
+        & > .currency-input-address {
+          position: absolute;
+          bottom: 20px;
+          margin-bottom: -30px;
+        }
+
+        & > .custom-selector {
+          margin-bottom: 30px;
+          
+          & > .custom-selector-title {
+            margin-left: 0;
+
+            & > .arrow-down {
+              min-width: 10px;
+            }
+
+            &.short {
+              max-width: 60px;
+            }
+
+            span {
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+
     &.balance {
       max-height: 90px;
       padding: 0;
@@ -370,6 +429,14 @@
       font-size: var(--md-font-size);
     }
   }  
+
+  .amount-price {
+    display: block;
+    margin-top: 18px;
+    margin-right: 60px;
+    font-size: var(--md-font-size);
+  }
+
   .currency {
     &-input {
       padding: 15px 0;
@@ -387,7 +454,7 @@
 
   .all-balance {
     display: flex;
-    font-size: var(--md-font-size);
+    font-size: var(--sm-font-size);
   }
 
   .transaction {
@@ -432,7 +499,7 @@
       padding-top: 5px;
 
       &.contacts {
-        height: 72px;
+        height: 100px;
         min-height: 72px;
 
         .custom-selector-title {
@@ -440,6 +507,48 @@
             width: 28px;
             height: 28px;
             margin-left: 30px;
+          }
+        }
+
+        & > .currency-input-wrapper {
+          position: relative;
+          margin-top: 25px;
+  
+          & > .currency-input-address {
+            position: absolute;
+            bottom: 20px;
+            margin-bottom: -30px;
+          }
+  
+          & > .custom-selector {
+            margin-bottom: 30px;
+            
+            & > .custom-selector-title {
+              margin-left: 0;
+  
+              & > .arrow-down {
+                min-width: 10px;
+              }
+  
+              &.short {
+                max-width: 60px;
+              }
+  
+              span {
+                margin: 0;
+              }
+            }
+          }
+        }
+
+        &.true {
+          position: relative;
+          padding-left: 40px;
+
+          .label-done {
+            position: absolute;
+            bottom: 8px;
+            left: -27px;
           }
         }
       }

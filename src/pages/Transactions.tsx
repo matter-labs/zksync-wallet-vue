@@ -80,13 +80,8 @@ const Transactions: React.FC = (): JSX.Element => {
               <div className="contact-edit-wrapper">
                 <input type="radio" className="balances-contact-edit" />
                 <div className="contact-manage">
-                  <a
-                    target="_blank"
-                    href={`https://${
-                      provider && provider.networkVersion !== '1' ? `${networks[provider.networkVersion]}.` : ''
-                    }etherscan.io/tx/${hash.replace(/.*?(:)/, '0x')}`}
-                  >
-                    View info on etherscan
+                  <a target="_blank" href={`https://demo.zksync.dev/explorer/transactions/${hash}`}>
+                    View info on explorer
                   </a>
                 </div>
               </div>
