@@ -118,7 +118,8 @@ const Account: React.FC = (): JSX.Element => {
         setPrice(prices);
       })
       .catch(err => {
-        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+        // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+        console.log(err);
       });
   }, [error, ethId, provider, setBalances, setError, setPrice, verifyToken, zkBalances, zkWallet]);
 
@@ -151,7 +152,15 @@ const Account: React.FC = (): JSX.Element => {
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
                         <p>{+balance.toFixed(6)}</p>{' '}
-                        <span>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)})</span>
+                        <span>
+                          (
+                          {price && !!price.length ? (
+                            <>~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)}</>
+                          ) : (
+                            <>Unknown</>
+                          )}
+                          )
+                        </span>
                         <div className="balances-token-status">
                           <p>Verified</p> <span className="label-done"></span>
                         </div>
@@ -163,7 +172,15 @@ const Account: React.FC = (): JSX.Element => {
                       <div className="balances-token-left">zk{symbol}</div>
                       <div className="balances-token-right">
                         <p>{+balance.toFixed(6)}</p>{' '}
-                        <span>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)})</span>
+                        <span>
+                          (
+                          {!!price.length ? (
+                            <>~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)}</>
+                          ) : (
+                            <>Unknown</>
+                          )}
+                          )
+                        </span>
                         <div className="balances-token-status">
                           <p>Pending</p> <SpinnerWorm />
                         </div>

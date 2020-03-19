@@ -71,11 +71,15 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (provider?.selectedAddress == null && walletName) {
       setAccessModal(true);
     }
-    setCurAddress(provider?.selectedAddress);
-  }, [createWallet, provider, setAccessModal, walletName, zkWallet]);
+    if (provider && walletName) {
+      setCurAddress(provider?.selectedAddress);
+    }
+    if (curAddress && !zkWallet) {
+      createWallet();
+    }
+  }, [createWallet, curAddress, provider, setAccessModal, walletName, zkWallet]);
 
   if (!curAddress && walletName && provider) {
-    createWallet();
     setInterval(() => {
       if (provider?.selectedAddress) {
         setCurAddress(provider?.selectedAddress);
@@ -97,28 +101,27 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             cancelAction={() => handleLogOut()}
           >
             <div className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}></div>
-            {curAddress &&
-              (provider && provider.networkVersion === '4' ? ( //TODO: need to change on prod
-                <>
-                  <h3 className="title-connecting">Connecting to {walletName}</h3>
-                  <p>Follow the instructions in the popup</p>
-                  <Spinner />
-                </>
-              ) : (
-                <>
-                  <h3>Connecting to {walletName}</h3>
-                  <div className="wrong-network">
-                    <div className="wrong-network-logo"></div>
-                    <p>
-                      You are in the wrong network. <br />
-                      Please switch to mainnet
-                    </p>
-                  </div>
-                  <button className="btn submit-button" onClick={() => handleLogOut()}>
-                    Disconnect {walletName}
-                  </button>
-                </>
-              ))}
+            {provider && provider.networkVersion === '4' ? ( //TODO: need to change on prod
+              <>
+                <h3 className="title-connecting">Connecting to {walletName}</h3>
+                <p>Follow the instructions in the popup</p>
+                <Spinner />
+              </>
+            ) : (
+              <>
+                <h3>Connecting to {walletName}</h3>
+                <div className="wrong-network">
+                  <div className="wrong-network-logo"></div>
+                  <p>
+                    You are in the wrong network. <br />
+                    Please switch to mainnet
+                  </p>
+                </div>
+                <button className="btn submit-button" onClick={() => handleLogOut()}>
+                  Disconnect {walletName}
+                </button>
+              </>
+            )}
           </Modal>
           {!walletName && (
             <>

@@ -93,6 +93,9 @@ export const useTransaction = () => {
             const hash = depositPriorityOperation.ethTx;
             history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', token);
             setHash(hash);
+            if (!zkWallet.isERC20DepositsApproved(token)) {
+              zkWallet.approveERC20TokenDeposits(token);
+            }
             const receipt = await depositPriorityOperation.awaitReceipt();
             transactions(receipt);
             const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();

@@ -92,15 +92,16 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [fee, setFee] = useState<number>(0);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
+  const [isHintUnlocked, setHintUnlocked] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number>();
   const [maxValue, setMaxValue] = useState<number>(propsMaxValue ? propsMaxValue : baseMaxValue);
   const [selected, setSelected] = useState<boolean>(false);
   const [selectedBalance, setSelectedBalance] = useState<any>(baseBalance);
   const [selectedContact, setSelectedContact] = useState<any>();
   const [symbolName, setSymbolName] = useState<string>(propsSymbolName ? propsSymbolName : '');
-  const [token, setToken] = useState<string | undefined>(propsToken);
+  const [token, setToken] = useState<string>(propsToken ? propsToken : '');
   const [unlocked, setUnlocked] = useState<boolean | undefined>(undefined);
-  const [unlockFau, setUnlockFau] = useState<boolean>(title === 'Deposit' ? false : true);
+  const [unlockFau, setUnlockFau] = useState<boolean>(false);
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
 
   const bigNumberMultiplier = Math.pow(10, 18);
@@ -186,6 +187,12 @@ const Transaction: React.FC<ITransactionProps> = ({
     if (balances?.length && !selected) {
       setToken(balances[0].symbol);
     }
+    if (token && zkWallet && token !== 'ETH') {
+      zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
+    }
+    if (token && token === 'ETH') {
+      setUnlockFau(true);
+    }
     if (title === 'Withdraw' && zkWallet) {
       setWalletAddress(zkWallet?.address());
       onChangeAddress(zkWallet?.address());
@@ -210,10 +217,25 @@ const Transaction: React.FC<ITransactionProps> = ({
     isBalancesListOpen,
     isContactsListOpen,
     selected,
+    setUnlockFau,
     setWalletAddress,
     title,
+    unlockFau,
     zkWallet,
   ]);
+
+  const handleShowHint = useCallback(() => {
+    setHintUnlocked(true);
+    setTimeout(() => {
+      setHintUnlocked(false);
+    }, 1000);
+  }, [setHintUnlocked]);
+
+  const handleUnlockERC = useCallback(() => {
+    zkWallet
+      ?.approveERC20TokenDeposits(token)
+      .then(() => zkWallet?.isERC20DepositsApproved(token).then(res => setUnlockFau(res)));
+  }, [setUnlockFau, unlockFau, zkWallet]);
 
   return (
     <>
@@ -480,19 +502,29 @@ const Transaction: React.FC<ITransactionProps> = ({
                           </div>
                         ))}
                     </div>
-                    {title === 'Deposit' && (
-                      <div onClick={() => setUnlockFau(true)} className="fau-unlock-wrapper">
-                        {unlockFau ? (
-                          <p>
-                            {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken unlocked
-                          </p>
-                        ) : (
-                          <p>Unlock {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken</p>
-                        )}
-                        <button className={`fau-unlock-tocken ${unlockFau}`}>
-                          <span className={`fau-unlock-tocken-circle ${unlockFau}`}></span>
-                        </button>
-                      </div>
+                    {title === 'Deposit' && token !== 'ETH' && (
+                      <>
+                        <div className={`hint-unlocked ${isHintUnlocked}`}>
+                          Already unlocked. This only needs to be done once per token.
+                        </div>
+                        <div
+                          onClick={() => (!unlockFau ? handleUnlockERC() : handleShowHint())}
+                          className="fau-unlock-wrapper"
+                        >
+                          {unlockFau ? (
+                            <p>
+                              {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken unlocked
+                            </p>
+                          ) : (
+                            <p>
+                              Unlock {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken
+                            </p>
+                          )}
+                          <button className={`fau-unlock-tocken ${unlockFau}`}>
+                            <span className={`fau-unlock-tocken-circle ${unlockFau}`}></span>
+                          </button>
+                        </div>
+                      </>
                     )}
                     <button
                       className={`btn submit-button ${!unlockFau && title === 'Deposit' ? 'disabled' : ''}`}
