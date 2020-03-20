@@ -13,9 +13,20 @@ import { DEFAULT_ERROR } from '../constants/errors';
 const TOKEN = 'ETH';
 
 export const useTransaction = () => {
-  const { setError, setVerifyToken, setZkBalances, tokens, walletAddress, zkWallet } = useRootData(
-    ({ setError, setVerifyToken, setZkBalances, tokens, walletAddress, zkWallet }) => ({
+  const {
+    hintModal,
+    setError,
+    setHintModal,
+    setVerifyToken,
+    setZkBalances,
+    tokens,
+    walletAddress,
+    zkWallet,
+  } = useRootData(
+    ({ hintModal, setError, setHintModal, setVerifyToken, setZkBalances, tokens, walletAddress, zkWallet }) => ({
+      hintModal: hintModal.get(),
       setError,
+      setHintModal,
       setVerifyToken,
       setZkBalances,
       tokens: tokens.get(),
@@ -93,9 +104,9 @@ export const useTransaction = () => {
             const hash = depositPriorityOperation.ethTx;
             history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', token);
             setHash(hash);
-            if (!zkWallet.isERC20DepositsApproved(token)) {
-              zkWallet.approveERC20TokenDeposits(token);
-            }
+            await depositPriorityOperation.awaitEthereumTxCommit().then(() => {
+              setHintModal('Block has been mined!');
+            });
             const receipt = await depositPriorityOperation.awaitReceipt();
             transactions(receipt);
             const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
@@ -111,7 +122,18 @@ export const useTransaction = () => {
         }
       }
     },
-    [amountValue, history, setError, setHash, setLoading, setVerifyToken, transactions, zkWallet],
+    [
+      amountValue,
+      hintModal,
+      history,
+      setError,
+      setHash,
+      setHintModal,
+      setLoading,
+      setVerifyToken,
+      transactions,
+      zkWallet,
+    ],
   );
 
   const transfer = useCallback(
@@ -125,7 +147,7 @@ export const useTransaction = () => {
             amount: ethers.utils.bigNumberify(
               amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
             ),
-            fee: ethers.utils.parseEther('0.001'),
+            fee: closestPackableTransactionFee(ethers.utils.bigNumberify((amountValue * 0.001).toString())),
           });
           const hash = transferTransaction.txHash;
           history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'transfer', token);
@@ -156,7 +178,7 @@ export const useTransaction = () => {
             amount: ethers.utils.bigNumberify(
               amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
             ),
-            fee: ethers.utils.parseEther('0.001'),
+            fee: closestPackableTransactionFee(ethers.utils.bigNumberify((amountValue * 0.001).toString())),
           });
           const hash = withdrawTransaction.txHash;
           history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'withdraw', token);

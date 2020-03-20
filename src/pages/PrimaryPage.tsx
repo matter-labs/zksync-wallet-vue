@@ -74,7 +74,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (provider && walletName) {
       setCurAddress(provider?.selectedAddress);
     }
-    if (curAddress && !zkWallet) {
+    if ((walletName === 'Metamask' && curAddress && !zkWallet) || (!zkWallet && walletName)) {
       createWallet();
     }
   }, [createWallet, curAddress, provider, setAccessModal, walletName, zkWallet]);
@@ -101,7 +101,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             cancelAction={() => handleLogOut()}
           >
             <div className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}></div>
-            {provider && provider.networkVersion === '4' ? ( //TODO: need to change on prod
+            {provider || (provider && walletName === 'Metamask' && provider.networkVersion === '4') ? ( //TODO: need to change on prod
               <>
                 <h3 className="title-connecting">Connecting to {walletName}</h3>
                 <p>Follow the instructions in the popup</p>

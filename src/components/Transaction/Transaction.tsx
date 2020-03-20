@@ -13,7 +13,7 @@ import { INPUT_VALIDATION } from '../../constants/regExs';
 
 import { useRootData } from '../../hooks/useRootData';
 
-import clocks from '../../images/mdi_access_time.svg';
+import success from '../../images/success.svg';
 
 import './Transaction.scss';
 
@@ -40,11 +40,14 @@ const Transaction: React.FC<ITransactionProps> = ({
 }): JSX.Element => {
   const {
     ethId,
+    hintModal,
+    provider,
     searchBalances,
     searchContacts,
     setBalances,
     setContacts,
     setError,
+    setHintModal,
     setModal,
     setWalletAddress,
     verifyToken,
@@ -54,10 +57,13 @@ const Transaction: React.FC<ITransactionProps> = ({
   } = useRootData(
     ({
       ethId,
+      hintModal,
+      provider,
       searchBalances,
       searchContacts,
       setBalances,
       setContacts,
+      setHintModal,
       setError,
       setModal,
       setWalletAddress,
@@ -67,10 +73,13 @@ const Transaction: React.FC<ITransactionProps> = ({
       zkWallet,
     }) => ({
       ethId: ethId.get(),
+      hintModal: hintModal.get(),
+      provider: provider.get(),
       searchBalances: searchBalances.get(),
       searchContacts: searchContacts.get(),
       setBalances,
       setContacts,
+      setHintModal,
       setError,
       setModal,
       setWalletAddress,
@@ -114,8 +123,14 @@ const Transaction: React.FC<ITransactionProps> = ({
         if (e <= maxValue) {
           setInputValue(+e);
           title === 'Deposit'
-            ? onChangeAmount(+e * bigNumberMultiplier - fee)
-            : onChangeAmount(+e * bigNumberMultiplier - fee);
+            ? onChangeAmount(
+                +e * bigNumberMultiplier + fee > +maxValue
+                  ? +e * bigNumberMultiplier - fee - 2 * 179000 * fee
+                  : +e * bigNumberMultiplier,
+              )
+            : onChangeAmount(
+                +e * bigNumberMultiplier + fee > +maxValue ? +e * bigNumberMultiplier - fee : +e * bigNumberMultiplier,
+              );
         } else {
           setInputValue(+maxValue);
           title === 'Deposit'
@@ -198,17 +213,21 @@ const Transaction: React.FC<ITransactionProps> = ({
     if (balances?.length && !selected) {
       setToken(balances[0].symbol);
     }
-    if (token && zkWallet && token !== 'ETH') {
-      zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
-    }
     if (token && token === 'ETH') {
       setUnlockFau(true);
+    }
+    if (!!hintModal.length) {
+      setTimeout(() => {
+        setHintModal('');
+      }, 5000);
     }
     if (title === 'Withdraw' && zkWallet) {
       setWalletAddress(zkWallet?.address());
       onChangeAddress(zkWallet?.address());
     }
-
+    if (token && zkWallet && token !== 'ETH') {
+      zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
+    }
     ethers
       .getDefaultProvider()
       .getGasPrice()
@@ -247,13 +266,29 @@ const Transaction: React.FC<ITransactionProps> = ({
   }, [setHintUnlocked]);
 
   const handleUnlockERC = useCallback(() => {
+    setLoading(true);
     zkWallet
       ?.approveERC20TokenDeposits(token)
-      .then(() => zkWallet?.isERC20DepositsApproved(token).then(res => setUnlockFau(res)));
-  }, [setUnlockFau, unlockFau, zkWallet]);
+      .then(res => res)
+      .then(data => data);
+    const setUnlocked = async () => {
+      const checkApprove = await zkWallet?.isERC20DepositsApproved(token).then(res => res);
+      if (checkApprove) {
+        setUnlockFau(checkApprove);
+        setLoading(false);
+      }
+    };
+    setUnlocked();
+    if (!unlockFau) {
+      setInterval(() => {
+        setUnlocked();
+      }, 3000);
+    }
+  }, [setUnlockFau, token, unlockFau, zkWallet]);
 
   return (
     <>
+      {!!hintModal.length && <div className="hint-modal">{hintModal}</div>}
       <div
         data-name="modal-wrapper"
         className={`modal-wrapper ${isContactsListOpen || isBalancesListOpen ? 'open' : 'closed'}`}
@@ -377,13 +412,13 @@ const Transaction: React.FC<ITransactionProps> = ({
             <p className="transaction-field-amount">{inputValue}</p>
             <div className="info-block">
               <p>
-                Waiting for the block to be mined... <br /> Wasn’t that easy?
+                Transaction successful <br /> Wasn’t that easy?
               </p>{' '}
-              <img src={clocks} alt="clocks" />
+              <img src={success} alt="clocks" />
             </div>
             <p className="transaction-hash">
               Tx hash:
-              <a href={`https://demo.zksync.dev/explorer/transactions/${hash}`}>
+              <a href={`https://demo.zksync.dev/explorer/transactions/${typeof hash === 'string' ? hash : hash?.hash}`}>
                 {typeof hash === 'string' ? hash : hash?.hash}
               </a>
             </p>
@@ -400,8 +435,9 @@ const Transaction: React.FC<ITransactionProps> = ({
           </>
         ) : (
           <>
-            {isLoading || unlocked === undefined ? (
+            {unlocked === undefined || isLoading ? (
               <>
+                <p>Follow the instructions in the popup</p>
                 <Spinner />
                 <button
                   className="btn submit-button"
@@ -568,11 +604,6 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 }
                               </span>
                             </div>
-
-                            {/* <span>
-                              Balance: {maxValue ? +maxValue.toFixed(6) : +balances[0].balance.toFixed(6)}{' '}
-                              {symbolName ? symbolName : balances[0].symbol}
-                            </span> */}
                           </div>
                         ) : (
                           <div className="currency-input-wrapper" key={token}>

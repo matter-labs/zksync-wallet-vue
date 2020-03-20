@@ -11,6 +11,7 @@ export const createStore = () => ({
   ethBalances: observable.box<IEthBalance[]>([]),
   ethId: observable.box<string>(''),
   ethWallet: observable.box<JsonRpcSigner>(),
+  hintModal: observable.box<string>(''),
   normalBg: observable.box<boolean>(false),
   isAccessModalOpen: observable.box<boolean>(false),
   isModalOpen: observable.box<string>(''),
@@ -61,6 +62,10 @@ export const createStore = () => ({
 
   setEthWallet(wallet: JsonRpcSigner): void {
     this.ethWallet.set(wallet);
+  },
+
+  setHintModal(text: string): void {
+    this.hintModal.set(text);
   },
 
   setNormalBg(normalBg: boolean): void {

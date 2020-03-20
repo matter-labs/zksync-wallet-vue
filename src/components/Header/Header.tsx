@@ -91,7 +91,7 @@ const Header: React.FC = (): JSX.Element => {
     history.push('/');
   }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
 
-  if (provider) {
+  if (provider && walletName === 'Metamask') {
     provider.on('accountsChanged', () => {
       if (zkWallet && zkWallet?.address().toLowerCase() !== provider.selectedAddress.toLowerCase()) {
         sessionStorage.setItem('walletName', walletName);
