@@ -390,7 +390,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   </div>
                   <div className="balances-token-right">
                     <span>
-                      balance: <p className="datalist-balance">{+balance.toFixed(2)}</p>
+                      balance: <p className="datalist-balance">{parseFloat(balance.toFixed(8).toString())}</p>
                     </span>
                   </div>
                 </div>
@@ -440,6 +440,7 @@ const Transaction: React.FC<ITransactionProps> = ({
           <>
             {unlocked === undefined || isLoading ? (
               <>
+                <h1>{title}</h1>
                 <p>Follow the instructions in the popup</p>
                 <Spinner />
                 <button
@@ -577,7 +578,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                             {symbolName ? (
                               <p>{symbolName}</p>
                             ) : (
-                              <span>{zkBalancesLoaded ? selectedSymbol : <Spinner />}</span>
+                              <span>{zkBalancesLoaded ? 'Select token' : <Spinner />}</span>
                             )}
 
                             <div className="arrow-down"></div>
@@ -628,11 +629,11 @@ const Transaction: React.FC<ITransactionProps> = ({
                         >
                           {unlockFau ? (
                             <p>
-                              {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken unlocked
+                              {symbolName.length ? symbolName : balances?.length && balances[0].symbol} token unlocked
                             </p>
                           ) : (
                             <p>
-                              Unlock {symbolName.length ? symbolName : balances?.length && balances[0].symbol} tocken
+                              Unlock {symbolName.length ? symbolName : balances?.length && balances[0].symbol} token
                             </p>
                           )}
                           <button className={`fau-unlock-tocken ${unlockFau}`}>

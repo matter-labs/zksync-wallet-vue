@@ -110,7 +110,8 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             cancelAction={() => handleLogOut()}
           >
             <div className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}></div>
-            {provider || (provider && walletName === 'Metamask' && provider.networkVersion === '4') ? ( //TODO: need to change on prod
+            {(provider && walletName !== 'Metamask') ||
+            (provider && walletName === 'Metamask' && provider.networkVersion === '4') ? ( //TODO: need to change on prod
               <>
                 <h3 onClick={createWallet} className="title-connecting">
                   Connecting to {walletName}

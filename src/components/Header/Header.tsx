@@ -114,7 +114,7 @@ const Header: React.FC = (): JSX.Element => {
               <p>
                 {userName
                   ? userName
-                  : zkWallet?.address().replace(zkWallet?.address().slice(9, zkWallet?.address().length - 4), '...')}
+                  : zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 6), '...')}
               </p>
               <img src={zkWallet ? makeBlockie(zkWallet.address()) : avatar} alt="avatar" />
               <div className="arrow-select"></div>
@@ -124,7 +124,7 @@ const Header: React.FC = (): JSX.Element => {
                 <img src={zkWallet ? makeBlockie(zkWallet.address()) : avatar} alt="avatar" />{' '}
                 {userName
                   ? userName
-                  : zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 4), '...')}
+                  : zkWallet?.address().replace(zkWallet?.address().slice(6, zkWallet?.address().length - 6), '...')}
               </div>
               <div onClick={() => handleCopy(zkWallet?.address())} className="copy-block">
                 <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>

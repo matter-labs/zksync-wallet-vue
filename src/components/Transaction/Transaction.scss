@@ -314,6 +314,12 @@
       transform: translateX(-50%);
     }
 
+    & > h1 {
+      display: block;
+      font-size: var(--xl-font-size);
+      text-align: center;
+    }
+
     &.open {
       display: block;
     }
@@ -418,7 +424,7 @@
                 width: 100%;
                 max-width: 150px;
                 overflow: hidden;
-                font-size: var(--xl-font-size);
+                font-size: var(--md-font-size);
                 // white-space: nowrap;
                 // text-overflow: ellipsis;
               }
@@ -616,9 +622,13 @@ p.transaction-hash {
                 max-width: 230px;
                 height: 68px;
 
-                & > p, span {
+                & > p {
                   max-width: 230px;
                   font-size: var(--xxxl-font-size);
+                }
+
+                & > span {
+                  font-size: var(--md-font-size);
                 }
               }
             }
