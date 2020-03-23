@@ -10,8 +10,9 @@ import { useRootData } from '../../hooks/useRootData';
 
 import { IMyWalletProps } from './Types';
 
+import { WIDTH_BP } from '../../constants/magicNumbers';
+
 import './Wallets.scss';
-import { setTimeout } from 'timers';
 
 const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.Element => {
   const {
@@ -198,7 +199,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
             <div className="copy-block-left">
               <img src={zkWallet ? makeBlockie(zkWallet.address()) : avatar} alt="avatar" />{' '}
               <p>
-                {window?.innerWidth > 540
+                {window?.innerWidth > WIDTH_BP
                   ? zkWallet?.address()
                   : zkWallet?.address().replace(zkWallet?.address().slice(14, zkWallet?.address().length - 4), '...')}
               </p>

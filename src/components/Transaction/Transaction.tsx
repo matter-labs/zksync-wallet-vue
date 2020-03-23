@@ -10,6 +10,8 @@ import { ITransactionProps } from './Types';
 
 import { ADDRESS_VALIDATION } from '../../constants/regExs';
 import { INPUT_VALIDATION } from '../../constants/regExs';
+import { WIDTH_BP, ZK_FEE_MULTIPLIER } from '../../constants/magicNumbers';
+import { ZK_EXPLORER } from '../../constants/links';
 
 import { useRootData } from '../../hooks/useRootData';
 
@@ -115,7 +117,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
 
   const bigNumberMultiplier = Math.pow(10, 18);
-  const selectedSymbol = selectedBalance.symbol !== 'ERC20-1' ? selectedBalance.symbol : 'ERC';
+  const selectedSymbol = selectedBalance.symbol;
 
   const validateNumbers = useCallback(
     e => {
@@ -125,7 +127,7 @@ const Transaction: React.FC<ITransactionProps> = ({
           title === 'Deposit'
             ? onChangeAmount(
                 +e * bigNumberMultiplier + fee > +maxValue
-                  ? +e * bigNumberMultiplier - fee - 2 * 179000 * fee
+                  ? +e * bigNumberMultiplier - fee - 2 * ZK_FEE_MULTIPLIER * fee
                   : +e * bigNumberMultiplier,
               )
             : onChangeAmount(
@@ -134,7 +136,7 @@ const Transaction: React.FC<ITransactionProps> = ({
         } else {
           setInputValue(+maxValue);
           title === 'Deposit'
-            ? onChangeAmount(+maxValue * bigNumberMultiplier - fee - 2 * 179000 * fee)
+            ? onChangeAmount(+maxValue * bigNumberMultiplier - fee - 2 * ZK_FEE_MULTIPLIER * fee)
             : onChangeAmount(+maxValue * bigNumberMultiplier - fee);
         }
       }
@@ -329,7 +331,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   <div className="balances-contact-left">
                     <p className="balances-contact-name">{name}</p>
                     <span className="balances-contact-address">
-                      {window?.innerWidth > 540
+                      {window?.innerWidth > WIDTH_BP
                         ? address
                         : address?.replace(address?.slice(14, address?.length - 4), '...')}
                     </span>
@@ -418,7 +420,7 @@ const Transaction: React.FC<ITransactionProps> = ({
             </div>
             <p className="transaction-hash">
               Tx hash:
-              <a href={`https://demo.zksync.dev/explorer/transactions/${typeof hash === 'string' ? hash : hash?.hash}`}>
+              <a href={`${ZK_EXPLORER}/${typeof hash === 'string' ? hash : hash?.hash}`}>
                 {typeof hash === 'string' ? hash : hash?.hash}
               </a>
             </p>
@@ -528,7 +530,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 <div className="balances-contact-left">
                                   <p className="balances-contact-name">{name}</p>
                                   <span className="balances-contact-address">
-                                    {window?.innerWidth > 540
+                                    {window?.innerWidth > WIDTH_BP
                                       ? address
                                       : address?.replace(address?.slice(14, address?.length - 4), '...')}
                                   </span>
@@ -571,7 +573,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                             className="custom-selector-title"
                           >
                             {symbolName ? (
-                              <p>{symbolName !== 'ERC20-1' ? symbolName : 'ERC'}</p>
+                              <p>{symbolName}</p>
                             ) : (
                               <span>{zkBalancesLoaded ? selectedSymbol : <Spinner />}</span>
                             )}
@@ -588,7 +590,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 className="all-balance"
                                 onClick={() => {
                                   setInputValue(+maxValue);
-                                  onChangeAmount((+maxValue - 0.0003) * bigNumberMultiplier - 2 * 179000 * fee);
+                                  onChangeAmount(
+                                    (+maxValue - 0.0003) * bigNumberMultiplier - 2 * ZK_FEE_MULTIPLIER * fee,
+                                  );
                                 }}
                               >
                                 Max: {maxValue ? +maxValue.toFixed(6) : +balances[0].balance.toFixed(6)}{' '}

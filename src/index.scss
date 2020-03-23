@@ -465,6 +465,7 @@ input[type="radio"] + .contact-manage {
 }
 
 .contact-edit-wrapper:focus-within > .contact-manage {
+  z-index: 10000;
   display: block;
 }
 

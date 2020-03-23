@@ -14,6 +14,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
 
   const {
+    error,
     isAccessModalOpen,
     provider,
     setAccessModal,
@@ -25,6 +26,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     zkWallet,
   } = useRootData(
     ({
+      error,
       isAccessModalOpen,
       provider,
       setAccessModal,
@@ -39,6 +41,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       walletName,
       zkWallet,
     }) => ({
+      error: error.get(),
       isAccessModalOpen: isAccessModalOpen.get(),
       provider: provider.get(),
       setAccessModal,
@@ -74,8 +77,14 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (provider && walletName) {
       setCurAddress(provider?.selectedAddress);
     }
-    if ((walletName === 'Metamask' && curAddress && !zkWallet) || (!zkWallet && walletName)) {
+    if (
+      (walletName === 'Metamask' && curAddress && !!curAddress.length && !zkWallet) ||
+      (!zkWallet && walletName && walletName !== 'Metamask')
+    ) {
       createWallet();
+    }
+    if (error) {
+      setAccessModal(false);
     }
   }, [createWallet, curAddress, provider, setAccessModal, walletName, zkWallet]);
 
@@ -103,7 +112,9 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             <div className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}></div>
             {provider || (provider && walletName === 'Metamask' && provider.networkVersion === '4') ? ( //TODO: need to change on prod
               <>
-                <h3 className="title-connecting">Connecting to {walletName}</h3>
+                <h3 onClick={createWallet} className="title-connecting">
+                  Connecting to {walletName}
+                </h3>
                 <p>Follow the instructions in the popup</p>
                 <Spinner />
               </>

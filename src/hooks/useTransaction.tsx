@@ -9,6 +9,7 @@ import { PriorityOperationReceipt } from 'zksync/build/types';
 
 import { ADDRESS_VALIDATION } from '../constants/regExs';
 import { DEFAULT_ERROR } from '../constants/errors';
+import { ZK_FEE_MULTIPLIER } from '../constants/magicNumbers';
 
 const TOKEN = 'ETH';
 
@@ -99,7 +100,9 @@ export const useTransaction = () => {
               amount: ethers.utils.bigNumberify(
                 amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
               ),
-              maxFeeInETHToken: ethers.utils.bigNumberify(closestPackableTransactionFee((2 * 179000 * fee).toString())),
+              maxFeeInETHToken: ethers.utils.bigNumberify(
+                closestPackableTransactionFee((2 * ZK_FEE_MULTIPLIER * fee).toString()),
+              ),
             });
             const hash = depositPriorityOperation.ethTx;
             history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', token);

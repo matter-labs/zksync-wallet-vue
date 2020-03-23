@@ -85,7 +85,7 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
                 } else {
                   setModal('');
                 }
-                if (!zkWallet && !!walletName) {
+                if (!zkWallet) {
                   setProvider(null);
                   setWalletName('');
                   setAccessModal(false);

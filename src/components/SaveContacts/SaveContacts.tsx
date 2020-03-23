@@ -31,39 +31,43 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
     }
   }, [addressValue, setAddress]);
 
-  const handleSave = useCallback(() => {
-    if (((address && name) || (addressValue && name)) && ADDRESS_VALIDATION['eth'].test(address)) {
-      const contacts = JSON.parse(localStorage.getItem(`contacts${zkWallet?.address()}`) || '[]');
-      const isContact = contacts.findIndex(
-        ({ address: contactAddress, name: contactName }) => contactAddress === address || contactName === name,
-      );
-      const oldContactIndex = contacts.findIndex(
-        ({ name, address }) => oldContact?.address === address || oldContact?.name === name,
-      );
-      if (edit && oldContactIndex > -1) {
-        const newContacts = contacts;
-        newContacts.splice(oldContactIndex, 1, { address, name });
-        localStorage.setItem(`contacts${zkWallet?.address()}`, JSON.stringify(newContacts));
+  const handleSave = useCallback(
+    e => {
+      e.preventDefault();
+      if (((address && name) || (addressValue && name)) && ADDRESS_VALIDATION['eth'].test(address)) {
+        const contacts = JSON.parse(localStorage.getItem(`contacts${zkWallet?.address()}`) || '[]');
+        const isContact = contacts.findIndex(
+          ({ address: contactAddress, name: contactName }) => contactAddress === address || contactName === name,
+        );
+        const oldContactIndex = contacts.findIndex(
+          ({ name, address }) => oldContact?.address === address || oldContact?.name === name,
+        );
+        if (edit && oldContactIndex > -1) {
+          const newContacts = contacts;
+          newContacts.splice(oldContactIndex, 1, { address, name });
+          localStorage.setItem(`contacts${zkWallet?.address()}`, JSON.stringify(newContacts));
+        }
+        if (isContact === -1 && !edit) {
+          const newContacts = JSON.stringify([{ address, name }, ...contacts]);
+          localStorage.setItem(`contacts${zkWallet?.address()}`, newContacts);
+        }
+        if (isContact > -1) {
+          const newContacts = contacts;
+          newContacts.splice(isContact, 1, { address, name });
+          localStorage.setItem(`contacts${zkWallet?.address()}`, JSON.stringify(newContacts));
+        }
+        setModal('');
+        const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
+        const acontacts = JSON.parse(arr);
+        setContacts(acontacts);
+      } else if (!name) {
+        setError('Error: name cannot be empty');
+      } else {
+        setError(`Error: "${address}" doesn't match ethereum address format`);
       }
-      if (isContact === -1 && !edit) {
-        const newContacts = JSON.stringify([{ address, name }, ...contacts]);
-        localStorage.setItem(`contacts${zkWallet?.address()}`, newContacts);
-      }
-      if (isContact > -1) {
-        const newContacts = contacts;
-        newContacts.splice(isContact, 1, { address, name });
-        localStorage.setItem(`contacts${zkWallet?.address()}`, JSON.stringify(newContacts));
-      }
-      setModal('');
-      const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
-      const acontacts = JSON.parse(arr);
-      setContacts(acontacts);
-    } else if (!name) {
-      setError('Error: name cannot be empty');
-    } else {
-      setError(`Error: "${address}" doesn't match ethereum address format`);
-    }
-  }, [address, addressValue, edit, name, oldContact, setContacts, setError, setModal, zkWallet]);
+    },
+    [address, addressValue, edit, name, oldContact, setContacts, setError, setModal, zkWallet],
+  );
 
   return (
     <form>

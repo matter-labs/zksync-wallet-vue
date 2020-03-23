@@ -128,7 +128,7 @@ const useWalletInit = () => {
           err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         });
     } catch (err) {
-      err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+      // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
     }
   }, [
     history,

@@ -13,12 +13,16 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }): JSX.Element =
 
   const [newName, setNewName] = useState<string>(oldName ? oldName : '');
 
-  const handleChangeName = useCallback(() => {
-    if (zkWallet) {
-      localStorage.setItem(zkWallet.address(), newName);
-    }
-    setModalOpen(false);
-  }, [newName, setModalOpen, zkWallet]);
+  const handleChangeName = useCallback(
+    e => {
+      e.preventDefault();
+      if (zkWallet) {
+        localStorage.setItem(zkWallet.address(), newName);
+      }
+      setModalOpen(false);
+    },
+    [newName, setModalOpen, zkWallet],
+  );
 
   return (
     <form>

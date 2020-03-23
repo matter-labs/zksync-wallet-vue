@@ -184,6 +184,7 @@
 
   &-wrapper {
     display: flex;
+    color: var(--dark-color);
   }
 
   &:hover {
@@ -308,6 +309,7 @@
       align-self: center;
       width: 100%;
       margin-left: 50%;
+      color: var(--dark-color);
       text-align: center;
       transform: translateX(-50%);
     }
@@ -404,20 +406,21 @@
 
         & > .custom-selector{
           &.balances {
-            max-width: 100px;
+            min-width: 140px;
+            max-width: 150px;
             height: 75px;
 
             .custom-selector-title {
-              max-width: 130px;
+              max-width: 150px;
               height: 75px;
 
               & > span {
                 width: 100%;
-                max-width: 130px;
+                max-width: 150px;
                 overflow: hidden;
                 font-size: var(--xl-font-size);
-                white-space: nowrap;
-                text-overflow: ellipsis;
+                // white-space: nowrap;
+                // text-overflow: ellipsis;
               }
             }
           }
@@ -467,7 +470,7 @@ p.transaction-hash {
   .amount-price {
     display: block;
     margin-top: 18px;
-    margin-right: 60px;
+    margin-right: 40px;
     font-size: var(--md-font-size);
   }
 
@@ -603,14 +606,18 @@ p.transaction-hash {
 
           & > .custom-selector{
             &.balances {
-              max-width: 130px;
+              display: block;
+              width: auto;
+              max-width: 230px;
               height: 68px;
   
               .custom-selector-title {
-                max-width: 130px;
+                width: auto;
+                max-width: 230px;
                 height: 68px;
 
                 & > p, span {
+                  max-width: 230px;
                   font-size: var(--xxxl-font-size);
                 }
               }

@@ -10,6 +10,8 @@ import { useRootData } from '../hooks/useRootData';
 
 import DataList from '../components/DataList/DataList';
 
+import { WIDTH_BP } from '../constants/magicNumbers';
+
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
 
@@ -93,7 +95,7 @@ const Contacts: React.FC = (): JSX.Element => {
                 <div className="balances-contact-left">
                   <span className="balances-contact-name">{name}</span>
                   <span className="balances-contact-address">
-                    {window?.innerWidth > 540
+                    {window?.innerWidth > WIDTH_BP
                       ? zkWallet?.address()
                       : zkWallet
                           ?.address()

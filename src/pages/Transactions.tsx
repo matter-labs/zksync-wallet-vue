@@ -5,6 +5,8 @@ import { useRootData } from '../hooks/useRootData';
 
 import DataList from '../components/DataList/DataList';
 
+import { ZK_EXPLORER } from '../constants/links';
+
 const Transactions: React.FC = (): JSX.Element => {
   const dataPropertyName = 'to';
 
@@ -80,7 +82,7 @@ const Transactions: React.FC = (): JSX.Element => {
               <div className="contact-edit-wrapper">
                 <input type="radio" className="balances-contact-edit" />
                 <div className="contact-manage">
-                  <a target="_blank" href={`https://demo.zksync.dev/explorer/transactions/${hash}`}>
+                  <a target="_blank" href={`${ZK_EXPLORER}/${hash}`}>
                     View info on explorer
                   </a>
                 </div>

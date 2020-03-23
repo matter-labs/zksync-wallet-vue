@@ -93,7 +93,7 @@ const Header: React.FC = (): JSX.Element => {
 
   if (provider && walletName === 'Metamask') {
     provider.on('accountsChanged', () => {
-      if (zkWallet && zkWallet?.address().toLowerCase() !== provider.selectedAddress.toLowerCase()) {
+      if (zkWallet && provider && zkWallet?.address().toLowerCase() !== provider.selectedAddress.toLowerCase()) {
         sessionStorage.setItem('walletName', walletName);
         handleLogOut();
         const savedWalletName = sessionStorage.getItem('walletName');
