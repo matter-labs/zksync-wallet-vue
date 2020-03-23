@@ -234,18 +234,6 @@
       justify-content: space-between;
     }
 
-    &-send, &-edit, &-copy {
-      width: 27px;
-      height: 27px;
-      margin-left: 15px;
-      background-color: var(--transparent);
-      background-repeat: no-repeat;
-      background-size: contain;
-      border: none;
-      outline: none;
-      cursor: pointer;
-    }
-
     &-send {
       background-image: url(../../images/send_dark.svg);
 
@@ -258,8 +246,9 @@
 
     &-copy {
       display: none;
-      height: 22px;
+      height: 26px;
       background-image: url(../../images/mdi_file_copy.svg);
+      background-size: 22px;
     }
   
     &-edit {
@@ -273,6 +262,25 @@
         height: 3px;
         background-color: var(--dark-color);
         border-radius: 2px;
+      }
+    }
+
+    &-send, &-edit, &-copy {
+      width: 32px;
+      height: 32px;
+      margin-left: 15px;
+      padding: 5px;
+      background-color: var(--transparent);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--border-color);
       }
     }
 

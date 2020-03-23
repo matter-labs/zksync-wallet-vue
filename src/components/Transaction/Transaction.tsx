@@ -100,6 +100,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const baseBalance = !!balances?.length ? balances[0] : 0;
   const baseMaxValue = !!balances?.length ? balances[0].balance : 0;
 
+  const [amount, setAmount] = useState<number>(0);
   const [fee, setFee] = useState<number>(0);
   const [filteredContacts, setFilteredContacts] = useState<any>([]);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
@@ -554,6 +555,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                           step="0.001"
                           onChange={e => {
                             validateNumbers(+e.target.value);
+                            setAmount(+e.target.value);
                           }}
                           value={inputValue}
                         />
@@ -652,7 +654,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                       Fee:{' '}
                       {balances?.length && (
                         <span>
-                          {maxValue ? maxValue * 0.001 : balances[0].balance * 0.001}{' '}
+                          {amount < maxValue ? amount * 0.001 : maxValue * 0.001}{' '}
                           {symbolName ? symbolName : balances[0].symbol}
                         </span>
                       )}
