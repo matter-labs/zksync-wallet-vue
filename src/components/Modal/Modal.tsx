@@ -20,39 +20,23 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
     setZkWallet,
     walletName,
     zkWallet,
-  } = useRootData(
-    ({
-      isModalOpen,
-      setAccessModal,
-      setError,
-      setModal,
-      setProvider,
-      setWalletName,
-      setZkWallet,
-      walletName,
-      zkWallet,
-    }) => ({
-      isModalOpen: isModalOpen.get(),
-      setAccessModal,
-      setError,
-      setModal,
-      setProvider,
-      setWalletName,
-      setZkWallet,
-      walletName: walletName.get(),
-      zkWallet: zkWallet.get(),
-    }),
-  );
+  } = useRootData(({ isModalOpen, walletName, zkWallet, ...rest }) => ({
+    isModalOpen: isModalOpen.get(),
+    walletName: walletName.get(),
+    zkWallet: zkWallet.get(),
+    ...rest,
+  }));
 
   const myRef = useRef<HTMLDivElement>(null);
-  const body = document.querySelector('body');
   const history = useHistory();
 
   useEffect(() => {
-    if (body) {
-      isModalOpen ? body.classList.add('fixed') : body.classList.remove('fixed');
+    const body = document.querySelector('body');
+    if (isModalOpen) {
+      body?.classList.add('fixed');
     }
-  });
+    return () => body?.classList.remove('fixed');
+  }, [isModalOpen]);
 
   const handleClickOutside = useCallback(
     e => {
@@ -60,7 +44,6 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
         e.stopPropagation();
         setModal('');
         setError('');
-        visible = false;
       }
     },
     [setError, setModal],
@@ -73,29 +56,28 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
     };
   }, [handleClickOutside]);
 
+  const closeHandler = useCallback(() => {
+    if (cancelAction) {
+      cancelAction();
+    } else {
+      setModal('');
+    }
+    if (!zkWallet && !!walletName) {
+      setProvider(null);
+      setWalletName('');
+      setAccessModal(false);
+      setZkWallet(null);
+      history.push('/');
+      setModal('');
+    }
+  }, []);
+
   return (
     <>
       {(classSpecifier === isModalOpen || visible) && (
         <Portal>
           <div ref={myRef} className={`modal ${classSpecifier} open`}>
-            <button
-              onClick={() => {
-                if (cancelAction) {
-                  cancelAction();
-                } else {
-                  setModal('');
-                }
-                if (!zkWallet) {
-                  setProvider(null);
-                  setWalletName('');
-                  setAccessModal(false);
-                  setZkWallet(null);
-                  history.push('/');
-                  setModal('');
-                }
-              }}
-              className="close-icon"
-            ></button>
+            <button onClick={closeHandler} className="close-icon" />
             {children}
           </div>
           <div
@@ -103,7 +85,7 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
             className={`modal-wrapper ${
               (classSpecifier === isModalOpen && background) || (visible && background) ? 'open' : 'closed'
             }`}
-          ></div>
+          />
         </Portal>
       )}
     </>
