@@ -89,7 +89,7 @@ const Header: React.FC = () => {
         }
       }
     });
-  }, []);
+  }, [handleLogOut, provider, setWalletName, walletName, zkWallet]);
 
   return (
     <div className="menu-wrapper">

@@ -106,10 +106,10 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [isHintUnlocked, setHintUnlocked] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<number>();
+  const [inputValue, setInputValue] = useState<number | string>();
   const [maxValue, setMaxValue] = useState<number>(propsMaxValue ? propsMaxValue : baseMaxValue);
   const [selected, setSelected] = useState<boolean>(false);
-  const [selectedBalance, setSelectedBalance] = useState<any>(baseBalance);
+  const [selectedBalance, setSelectedBalance] = useState<any>();
   const [selectedContact, setSelectedContact] = useState<any>();
   const [symbolName, setSymbolName] = useState<string>(propsSymbolName ? propsSymbolName : '');
   const [token, setToken] = useState<string>(propsToken ? propsToken : '');
@@ -118,13 +118,16 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
 
   const bigNumberMultiplier = Math.pow(10, 18);
-  const selectedSymbol = selectedBalance.symbol;
+  // const isBalanceSelected = selectedBalance ? transactionAction(token, type) : setError('Token did not selected');
 
   const validateNumbers = useCallback(
     e => {
       if (INPUT_VALIDATION.digits.test(e)) {
-        if (e <= maxValue) {
+        if (e <= maxValue || e === 0) {
           setInputValue(+e);
+          if ((inputValue === 0 || inputValue === '') && e.toString().indexOf('.') === -1 && e === 0) {
+            setInputValue('');
+          }
           title === 'Deposit'
             ? onChangeAmount(
                 +e * bigNumberMultiplier + fee > +maxValue
@@ -142,7 +145,7 @@ const Transaction: React.FC<ITransactionProps> = ({
         }
       }
     },
-    [bigNumberMultiplier, fee, maxValue, onChangeAmount],
+    [bigNumberMultiplier, fee, inputValue, maxValue, onChangeAmount, setInputValue],
   );
 
   const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
@@ -316,7 +319,7 @@ const Transaction: React.FC<ITransactionProps> = ({
               className="close-icon"
             ></button>
             <div className="assets-border-bottom"></div>
-            {!!searchContacts ? (
+            {searchContacts ? (
               searchContacts.map(({ address, name }) => (
                 <div
                   className="balances-contact"
@@ -396,7 +399,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 </div>
               ))
             ) : (
-              <div></div>
+              <p>No balances yet, please make a deposit or request money from someone!</p>
             )}
           </DataList>
         )}
@@ -421,7 +424,7 @@ const Transaction: React.FC<ITransactionProps> = ({
             </div>
             <p className="transaction-hash">
               Tx hash:
-              <a href={`${ZK_EXPLORER}/${typeof hash === 'string' ? hash : hash?.hash}`}>
+              <a target="_blank" href={`${ZK_EXPLORER}/${typeof hash === 'string' ? hash : hash?.hash}`}>
                 {typeof hash === 'string' ? hash : hash?.hash}
               </a>
             </p>
@@ -440,18 +443,36 @@ const Transaction: React.FC<ITransactionProps> = ({
           <>
             {unlocked === undefined || isLoading ? (
               <>
-                <h1>{title}</h1>
-                <p>Follow the instructions in the popup</p>
-                <Spinner />
-                <button
-                  className="btn submit-button"
-                  onClick={() => {
-                    handleCancel();
-                    setWalletName();
-                  }}
-                >
-                  Cancel
-                </button>
+                {isLoading && (
+                  <>
+                    <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
+                    <p>Follow the instructions in the popup</p>
+                    <Spinner />
+                    <button
+                      className="btn submit-button"
+                      onClick={() => {
+                        handleCancel();
+                        setWalletName();
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
+                {unlocked === undefined && (
+                  <>
+                    <Spinner />
+                    <button
+                      className="btn submit-button"
+                      onClick={() => {
+                        handleCancel();
+                        setWalletName();
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -470,6 +491,18 @@ const Transaction: React.FC<ITransactionProps> = ({
                       <>
                         <span className="transaction-field-title">To address</span>
                         <div className={`transaction-field contacts ${ADDRESS_VALIDATION['eth'].test(addressValue)}`}>
+                          <div
+                            className="custom-selector contacts"
+                            onClick={() => {
+                              openContactsList(!isContactsListOpen);
+                              body?.classList.add('fixed-b');
+                            }}
+                          >
+                            <div className="custom-selector-title">
+                              <p>{selectedContact}</p>
+                              {selectedContact && <div className="arrow-down"></div>}
+                            </div>
+                          </div>
                           <div className="currency-input-wrapper">
                             {ADDRESS_VALIDATION['eth'].test(addressValue) && <span className="label-done"></span>}
                             <input
@@ -479,7 +512,6 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 onChangeAddress(e.target.value);
                                 handleFilterContacts(e.target.value);
                                 setWalletAddress('');
-                                setSelectedContact('');
                               }}
                               className="currency-input-address"
                             />
@@ -492,8 +524,13 @@ const Transaction: React.FC<ITransactionProps> = ({
                             {((!addressValue && !walletAddress) ||
                               (!addressValue && walletAddress) ||
                               !addressValue ||
-                              walletAddress) && (
-                              <div className="custom-selector contacts">
+                              walletAddress) &&
+                            !selectedContact ? (
+                              <div
+                                className={`custom-selector contacts ${
+                                  selectedContact && addressValue === walletAddress ? '' : 'short'
+                                }`}
+                              >
                                 <div
                                   onClick={() => {
                                     openContactsList(!isContactsListOpen);
@@ -511,6 +548,16 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   <div className="arrow-down"></div>
                                 </div>
                               </div>
+                            ) : (
+                              <button
+                                className="cross-clear"
+                                onClick={() => {
+                                  onChangeAddress('');
+                                  handleFilterContacts('');
+                                  setWalletAddress('');
+                                  setSelectedContact('');
+                                }}
+                              ></button>
                             )}
                           </div>
                         </div>
@@ -525,6 +572,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   setWalletAddress(address);
                                   onChangeAddress(address);
                                   openContactsList(false);
+                                  setSelectedContact(name);
                                   body?.classList.remove('fixed-b');
                                   setFilteredContacts([]);
                                 }}
@@ -560,13 +608,6 @@ const Transaction: React.FC<ITransactionProps> = ({
                           }}
                           value={inputValue}
                         />
-                        <span className="amount-price">
-                          $
-                          {(
-                            +(price && !!price[selectedBalance] ? price[selectedBalance] : 1) *
-                            (inputValue ? inputValue : 0)
-                          ).toFixed(2)}
-                        </span>
                         <div className="custom-selector balances">
                           <div
                             onClick={() => {
@@ -598,19 +639,19 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   );
                                 }}
                               >
-                                Max: {maxValue ? +maxValue.toFixed(6) : +balances[0].balance.toFixed(6)}{' '}
+                                Max: {maxValue ? maxValue.toFixed(6) : +balances[0].balance.toFixed(6)}{' '}
                                 {symbolName ? symbolName : balances[0].symbol}
                               </button>
-                              <span>
-                                ~$
-                                {
-                                  +(
-                                    +(price && !!price[selectedBalance] ? price[selectedBalance] : 1) *
-                                    (maxValue ? maxValue : balances[0].balance)
-                                  ).toFixed(2)
-                                }
-                              </span>
                             </div>
+                            <span>
+                              ~$
+                              {
+                                +(
+                                  +(price && !!price[selectedBalance] ? price[selectedBalance] : 1) *
+                                  (maxValue ? maxValue : balances[0].balance)
+                                ).toFixed(2)
+                              }
+                            </span>
                           </div>
                         ) : (
                           <div className="currency-input-wrapper" key={token}>
@@ -644,7 +685,13 @@ const Transaction: React.FC<ITransactionProps> = ({
                     )}
                     <button
                       className={`btn submit-button ${!unlockFau && title === 'Deposit' ? 'disabled' : ''}`}
-                      onClick={() => (unlockFau ? transactionAction(token, type) : undefined)}
+                      onClick={() =>
+                        unlockFau
+                          ? selectedBalance
+                            ? transactionAction(token, type)
+                            : setError('Token did not selected')
+                          : undefined
+                      }
                     >
                       <span
                         className={`submit-label ${title} ${!unlockFau && title === 'Deposit' ? unlockFau : true}`}
@@ -655,7 +702,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                       Fee:{' '}
                       {balances?.length && (
                         <span>
-                          {amount < maxValue ? amount * 0.001 : maxValue * 0.001}{' '}
+                          {amount < maxValue
+                            ? parseFloat((amount * 0.001).toFixed(10).toString())
+                            : parseFloat((maxValue * 0.001).toFixed(10).toString())}{' '}
                           {symbolName ? symbolName : balances[0].symbol}
                         </span>
                       )}

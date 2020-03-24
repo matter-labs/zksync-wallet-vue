@@ -104,7 +104,7 @@
     max-width: 130px;
     padding: 10px 0;
     color: var(--dark-color);
-    font-size: var(--xl-font-size);
+    font-size: var(--md-font-size);
     line-height: var(--xl-font-size);
     background-color: var(--transparent);
     border: none;
@@ -170,8 +170,8 @@
 .all-balance {
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  max-width: 160px;
+  width: auto;
+  max-width: 220px;
   margin-left: -10px;
   padding: 0 10px;
   color: var(--links-color);
@@ -352,35 +352,34 @@
     }
 
     &.contacts {
-      display: block;
+      flex-direction: column;
+      align-items: flex-start;
       height: 80px;
       max-height: 100px;
+      padding-top: 10px;
+
+      & .arrow-down {
+        min-width: 10px;
+      }
       
       & > .currency-input-wrapper {
         position: relative;
-        flex-direction: column-reverse;
-        align-items: flex-start;
-        justify-content: flex-start;
-        margin-top: 15px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 5px;
 
-        & > .currency-input-address {
-          position: absolute;
-          bottom: 20px;
-          margin-bottom: -30px;
-        }
-
-        & > .custom-selector {
-          margin-bottom: 30px;
+        & .custom-selector {
+          &.short {
+            max-width: 60px;
+          }
           
-          & > .custom-selector-title {
+          & .custom-selector-title {
             margin-left: 0;
 
-            & > .arrow-down {
-              min-width: 10px;
-            }
-
             &.short {
-              max-width: 60px;
+              max-width: 90px;
+              margin-right: 0;
             }
 
             span {
@@ -466,12 +465,48 @@ p.transaction-hash {
   outline: none;
 }
 
+.cross-clear {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  background-color: var(--transparent);
+  border: none;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: var(--border-color);
+  }
+
+  &::before, &::after {
+    position: absolute;
+    top: 2px;
+    left: 9px;
+    width: 2px;
+    height: 15px;
+    background-color: var(--dark-color);
+    content: '';
+  }
+
+  &::before {
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+}
+
 @media screen and (min-width: 760px) {
   .fau-unlock {
     &-wrapper {
       font-size: var(--md-font-size);
     }
   }  
+
+  .cross-clear {
+    margin-bottom: 30px;
+  }
 
   .amount-price {
     display: block;
@@ -482,11 +517,12 @@ p.transaction-hash {
 
   .currency {
     &-input {
+      max-width: 300px;
       padding: 15px 0;
-      font-size: var(--xxxl-font-size);
+      font-size: var(--xxl-font-size);
 
       &::placeholder {
-        font-size: var(--xxxl-font-size);
+        font-size: var(--xxl-font-size);
       }
 
       &-wrapper {
@@ -514,6 +550,10 @@ p.transaction-hash {
       & > span {
         color: var(--hints-color);
       }
+    }
+
+    &-contacts-list {
+      top: 225px;
     }
   
     &-wrapper {
@@ -545,11 +585,26 @@ p.transaction-hash {
         height: 100px;
         min-height: 72px;
 
+        & .arrow-down {
+          min-width: 15px;
+        }
+
         .custom-selector-title {
+          margin-left: 0;
+
           & span {
             width: 28px;
             height: 28px;
             margin-left: 30px;
+          }
+        }
+
+        .custom-selector.contacts {
+          max-width: 120px;
+          margin-top: 20px;
+
+          & > .custom-selector-title {
+            margin-left: 5px;
           }
         }
 
@@ -558,20 +613,15 @@ p.transaction-hash {
           margin-top: 25px;
   
           & > .currency-input-address {
-            position: absolute;
-            bottom: 20px;
-            margin-bottom: -30px;
+            margin-bottom: 30px;
+            padding: 0 10px;
           }
   
           & > .custom-selector {
-            margin-bottom: 30px;
+            margin-bottom: 50px;
             
             & > .custom-selector-title {
               margin-left: 0;
-  
-              & > .arrow-down {
-                min-width: 10px;
-              }
   
               &.short {
                 max-width: 60px;
@@ -590,8 +640,8 @@ p.transaction-hash {
 
           .label-done {
             position: absolute;
-            bottom: 8px;
-            left: -27px;
+            bottom: 32px;
+            left: -20px;
           }
         }
       }

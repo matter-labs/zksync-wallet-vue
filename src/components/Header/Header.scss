@@ -84,7 +84,7 @@
 
     & > p {
       display: none;
-      max-width: 160px;
+      max-width: 180px;
       margin: 0;
       font-size: var(--md-font-size);
     }
@@ -95,7 +95,7 @@
   .menu {
     &-wallet {
       width: auto;
-      max-width: 240px;
+      max-width: 260px;
 
       & > p {
         display: inline-block;

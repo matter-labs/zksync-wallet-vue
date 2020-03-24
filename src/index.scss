@@ -161,7 +161,6 @@ h2 {
 }
 
 .default-text {
-  margin-top: 20px;
   color: var(--dark-color);
 }
 
@@ -179,7 +178,7 @@ h2 {
     background: var(--main-bg-color);
 
     &.start-page {
-      background: url(./images/start_page_bg.png) no-repeat center;
+      background: url(./images/start_page_bg.jpg) no-repeat center;
       background-size: cover;
     }
   }

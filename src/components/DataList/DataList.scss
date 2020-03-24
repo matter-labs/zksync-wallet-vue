@@ -52,7 +52,6 @@
           top: 45%;
           left: 2px;
           transform: rotate(90deg);
-          
         }
       }
 
@@ -81,7 +80,7 @@
 
 .datalist-balance {
   width: 100%;
-  max-width: 80px;
+  max-width: 50px;
   margin-bottom: 0;
   margin-left: 10px;
   padding-left: 5px;
@@ -103,6 +102,16 @@
     padding-bottom: 22px;
     background-color: var(--modal-bg-color);
     border-radius: 5px;
+
+    & > input {
+      margin-bottom: 15px;
+    }
+
+    & > p {
+      padding: 0 20px;
+      color: var(--dark-color);
+      text-align: center;
+    }
 
     &.open {
       display: flex;
@@ -453,6 +462,10 @@
         transform: translateY(0);
       }
     }
+  }
+
+  .datalist-balance {
+    max-width: 120px;
   }
 
   .add-contact {

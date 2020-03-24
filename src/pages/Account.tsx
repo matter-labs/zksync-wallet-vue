@@ -193,7 +193,7 @@ const Account: React.FC = (): JSX.Element => {
                 </>
               ))
             ) : (
-              <div></div>
+              <p>No balances yet, please make a deposit or request money from someone!</p>
             )}
           </DataList>
         </>
