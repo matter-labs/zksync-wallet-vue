@@ -12,7 +12,13 @@ import { ZK_EXPLORER } from '../constants/links';
 const Transactions: React.FC = (): JSX.Element => {
   const dataPropertyName = 'to';
 
-  const { ethId, provider, searchTransactions, setTransactions, zkWallet } = useRootData(
+  const {
+    ethId,
+    provider,
+    searchTransactions,
+    setTransactions,
+    zkWallet,
+  } = useRootData(
     ({ ethId, provider, searchTransactions, setTransactions, zkWallet }) => ({
       ethId: ethId.get(),
       provider: provider.get(),
@@ -24,7 +30,9 @@ const Transactions: React.FC = (): JSX.Element => {
 
   const history = useHistory();
 
-  const arrTransactions: any = localStorage.getItem(`history${zkWallet?.address()}`);
+  const arrTransactions: any = localStorage.getItem(
+    `history${zkWallet?.address()}`,
+  );
   const transactions = JSON.parse(arrTransactions);
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
@@ -67,7 +75,7 @@ const Transactions: React.FC = (): JSX.Element => {
       setValue={setTransactions}
       dataProperty={dataPropertyName}
       data={transactions}
-      title="Transactions"
+      title='Transactions'
       visible={true}
     >
       {/* <InfiniteScroll
@@ -78,22 +86,28 @@ const Transactions: React.FC = (): JSX.Element => {
         > */}
       {transactions ? (
         searchTransactions?.map(({ amount, type, hash, to, token }) => (
-          <div className="transaction-history-wrapper" key={hash}>
-            <div className="transaction-history-left">
+          <div className='transaction-history-wrapper' key={hash}>
+            <div className='transaction-history-left'>
               <div className={`transaction-history ${type}`}></div>
-              <div className="transaction-history-amount">{+amount.toFixed(3)}</div>
-              <div className="transaction-history-hash">
-                {token && token.length > 10 ? token.replace(token.slice(6, token.length - 3), '...') : <>zk{token}</>}
+              <div className='transaction-history-amount'>
+                {+amount.toFixed(3)}
+              </div>
+              <div className='transaction-history-hash'>
+                {token && token.length > 10 ? (
+                  token.replace(token.slice(6, token.length - 3), '...')
+                ) : (
+                  <>zk{token}</>
+                )}
               </div>
             </div>
             <input
               onChange={undefined}
-              className="copy-block-input"
+              className='copy-block-input'
               value={to.toString()}
               ref={e => inputRef.push(e)}
             />
-            <div className="transaction-history-right">
-              <div className="transaction-history-address">
+            <div className='transaction-history-right'>
+              <div className='transaction-history-address'>
                 {type === 'transfer' && (
                   <>
                     <span>Sent to:</span>
@@ -113,16 +127,19 @@ const Transactions: React.FC = (): JSX.Element => {
                   </>
                 )}
               </div>
-              <div className="contact-edit-wrapper">
-                <input type="radio" className="balances-contact-edit" />
-                <div className="contact-manage">
+              <div className='contact-edit-wrapper'>
+                <input type='radio' className='balances-contact-edit' />
+                <div className='contact-manage'>
                   <div>
-                    <a target="_blank" href={`${ZK_EXPLORER}/${hash}`}>
+                    <a target='_blank' href={`${ZK_EXPLORER}/${hash}`}>
                       View info on explorer
                     </a>
                   </div>
                   <div>
-                    <button className="contact-manage-copy btn-tr" onClick={() => handleCopy(to)}>
+                    <button
+                      className='contact-manage-copy btn-tr'
+                      onClick={() => handleCopy(to)}
+                    >
                       Copy
                     </button>
                   </div>
@@ -132,7 +149,7 @@ const Transactions: React.FC = (): JSX.Element => {
           </div>
         ))
       ) : (
-        <div className="default-text">History is empty</div>
+        <div className='default-text'>History is empty</div>
       )}
       {/* </InfiniteScroll> */}
     </DataList>
