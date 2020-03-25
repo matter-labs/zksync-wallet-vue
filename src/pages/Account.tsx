@@ -11,7 +11,6 @@ import { useTransaction } from '../hooks/useTransaction';
 import { request } from '../functions/Request';
 
 import { BASE_URL } from '../constants/CoinBase';
-import { DEFAULT_ERROR } from '../constants/errors';
 
 const Account: React.FC = (): JSX.Element => {
   const dataPropertyName = 'symbol';
@@ -28,6 +27,7 @@ const Account: React.FC = (): JSX.Element => {
     setHash,
     setExecuted,
     setLoading,
+    setSymbol,
     transfer,
     withdraw,
   } = useTransaction();
@@ -50,6 +50,7 @@ const Account: React.FC = (): JSX.Element => {
     setTransactionType,
     transactionType,
     verifyToken,
+    walletName,
     zkBalances,
     zkWallet,
   } = useRootData(
@@ -67,6 +68,7 @@ const Account: React.FC = (): JSX.Element => {
       transactionModal,
       transactionType,
       verifyToken,
+      walletName,
       zkBalances,
       zkWallet,
     }) => ({
@@ -83,6 +85,7 @@ const Account: React.FC = (): JSX.Element => {
       transactionModal: transactionModal.get(),
       transactionType: transactionType.get(),
       verifyToken: verifyToken.get(),
+      walletName: walletName.get(),
       zkBalances: zkBalances.get(),
       zkWallet: zkWallet.get(),
     }),
@@ -121,7 +124,7 @@ const Account: React.FC = (): JSX.Element => {
         // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         console.log(err);
       });
-  }, [error, ethId, provider, setBalances, setError, setPrice, verifyToken, zkBalances, zkWallet]);
+  }, [error, ethId, provider, setBalances, setError, setPrice, verifyToken, walletName, zkBalances, zkWallet]);
 
   const handleSend = (address, balance, symbol) => {
     setTransactionType('transfer');
@@ -153,18 +156,18 @@ const Account: React.FC = (): JSX.Element => {
                       <div className="balances-token-right">
                         <p>{+balance.toFixed(6)}</p>{' '}
                         <span>
-                          (
                           {price && !!price.length ? (
-                            <>~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)}</>
+                            <>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)})</>
                           ) : (
-                            <>Unknown</>
+                            <></>
                           )}
-                          )
                         </span>
                         <div className="balances-token-status">
                           <p>Verified</p> <span className="label-done"></span>
                         </div>
-                        <button onClick={() => handleSend(address, balance, symbol)}>Send</button>
+                        <button className="btn-tr" onClick={() => handleSend(address, balance, symbol)}>
+                          Send
+                        </button>
                       </div>
                     </div>
                   ) : (
@@ -184,7 +187,7 @@ const Account: React.FC = (): JSX.Element => {
                         <div className="balances-token-status">
                           <p>Pending</p> <SpinnerWorm />
                         </div>
-                        <button className="pending" onClick={() => undefined}>
+                        <button className="pending btn-tr" onClick={() => undefined}>
                           Send
                         </button>
                       </div>
@@ -195,6 +198,7 @@ const Account: React.FC = (): JSX.Element => {
             ) : (
               <p>No balances yet, please make a deposit or request money from someone!</p>
             )}
+            <>{price && !price.length ? <p>No Conversion Rate Available</p> : <></>}</>
           </DataList>
         </>
       )}
@@ -213,6 +217,7 @@ const Account: React.FC = (): JSX.Element => {
           setHash={setHash}
           setExecuted={setExecuted}
           setLoading={setLoading}
+          setSymbol={setSymbol}
           setTransactionType={setTransactionType}
           title="Deposit"
           transactionAction={deposit}
@@ -234,6 +239,7 @@ const Account: React.FC = (): JSX.Element => {
           setExecuted={setExecuted}
           setLoading={setLoading}
           setTransactionType={setTransactionType}
+          setSymbol={setSymbol}
           title="Withdraw"
           transactionAction={withdraw}
           type="eth"
@@ -257,6 +263,7 @@ const Account: React.FC = (): JSX.Element => {
           setHash={setHash}
           setExecuted={setExecuted}
           setLoading={setLoading}
+          setSymbol={setSymbol}
           setTransactionType={setTransactionType}
           title="Send"
           transactionAction={transfer}

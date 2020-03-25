@@ -19,6 +19,7 @@ export interface ITransactionProps {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setTransactionType: (transaction: 'deposit' | 'withdraw' | 'transfer' | undefined) => void;
   setExecuted: React.Dispatch<React.SetStateAction<boolean>>;
+  setSymbol: React.Dispatch<React.SetStateAction<string>>;
   title: string;
   transactionAction: (token?: any, type?: any) => Promise<void>;
   type?: string;

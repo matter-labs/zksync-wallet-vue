@@ -84,7 +84,7 @@ const Contacts: React.FC = (): JSX.Element => {
         <SaveContacts oldContact={oldContact} title="Edit contact" addressInput={true} edit={true} />
       </Modal>
       <>
-        <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>
+        <button className="add-contact-button btn-tr" onClick={() => setModal('add-contact addressless')}>
           <span></span>
           <p>Add a contact</p>
         </button>
@@ -104,7 +104,7 @@ const Contacts: React.FC = (): JSX.Element => {
                   <p>Copied!</p>
                 </div>
                 <button
-                  className="balances-contact-send"
+                  className="balances-contact-send btn-tr"
                   onClick={() => {
                     setTransactionType('transfer');
                     setWalletAddress(address);
@@ -112,7 +112,7 @@ const Contacts: React.FC = (): JSX.Element => {
                 >
                   <Link to="/"></Link>
                 </button>
-                <button className="balances-contact-copy" onClick={() => handleCopy(address)}></button>
+                <button className="balances-contact-copy btn-tr" onClick={() => handleCopy(address)}></button>
                 <input
                   onChange={undefined}
                   className="copy-block-input"
@@ -139,7 +139,7 @@ const Contacts: React.FC = (): JSX.Element => {
                       <img src={editicon} alt="edit" />
                       <p>Edit</p>
                     </button>
-                    <button onClick={() => handleDelete(name)} className="contact-manage-delete">
+                    <button onClick={() => handleDelete(name)} className="contact-manage-delete btn-tr">
                       <img src={deleteicon} alt="edit" />
                       <p>Delete</p>
                       <Link to="/contacts"></Link>

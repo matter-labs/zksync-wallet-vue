@@ -8,13 +8,31 @@ import { useRootData } from './hooks/useRootData';
 
 import { IAppProps } from './types/Common';
 
+import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from './constants/networks';
+
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
-  const { error, provider, setError, walletName } = useRootData(({ error, provider, setError, walletName }) => ({
-    error: error.get(),
-    provider: provider.get(),
-    setError,
-    walletName: walletName.get(),
-  }));
+  const { error, provider, setError, walletName, zkWallet } = useRootData(
+    ({ error, provider, setError, walletName, zkWallet }) => ({
+      error: error.get(),
+      provider: provider.get(),
+      setError,
+      walletName: walletName.get(),
+      zkWallet: zkWallet.get(),
+    }),
+  );
+
+  useEffect(() => {
+    if (provider) {
+      window['ethereum'].autoRefreshOnNetworkChange = false;
+    }
+    if (provider) {
+      provider.on('networkChanged', () => {
+        provider.networkVersion !== RIGHT_NETWORK_ID && walletName === 'Metamask'
+          ? setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`)
+          : setError('');
+      });
+    }
+  }, [provider, setError, walletName, zkWallet]);
 
   return (
     <>

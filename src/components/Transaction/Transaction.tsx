@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ethers } from 'ethers';
 
 import DataList from '../DataList/DataList';
@@ -14,8 +14,6 @@ import { WIDTH_BP, ZK_FEE_MULTIPLIER } from '../../constants/magicNumbers';
 import { ZK_EXPLORER } from '../../constants/links';
 
 import { useRootData } from '../../hooks/useRootData';
-
-import success from '../../images/success.svg';
 
 import './Transaction.scss';
 
@@ -36,6 +34,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   setExecuted,
   setLoading,
   setTransactionType,
+  setSymbol,
   title,
   transactionAction,
   type,
@@ -52,7 +51,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     setHintModal,
     setModal,
     setWalletAddress,
-    verifyToken,
     walletAddress,
     zkBalancesLoaded,
     zkWallet,
@@ -95,10 +93,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const body = document.querySelector('#body');
   const dataPropertySymbol = 'symbol';
   const dataPropertyName = 'name';
-  const defaultAddress = walletAddress ? walletAddress : addressValue;
-
-  const baseBalance = !!balances?.length ? balances[0] : 0;
-  const baseMaxValue = !!balances?.length ? balances[0].balance : 0;
+  const myRef = useRef<HTMLInputElement>(null);
 
   const [amount, setAmount] = useState<number>(0);
   const [fee, setFee] = useState<number>(0);
@@ -107,7 +102,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [isHintUnlocked, setHintUnlocked] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<number | string>();
-  const [maxValue, setMaxValue] = useState<number>(propsMaxValue ? propsMaxValue : baseMaxValue);
+  const [maxValue, setMaxValue] = useState<number>(propsMaxValue ? propsMaxValue : 0);
   const [selected, setSelected] = useState<boolean>(false);
   const [selectedBalance, setSelectedBalance] = useState<any>();
   const [selectedContact, setSelectedContact] = useState<any>();
@@ -116,17 +111,15 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [unlocked, setUnlocked] = useState<boolean | undefined>(undefined);
   const [unlockFau, setUnlockFau] = useState<boolean>(false);
   const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
-
   const bigNumberMultiplier = Math.pow(10, 18);
-  // const isBalanceSelected = selectedBalance ? transactionAction(token, type) : setError('Token did not selected');
 
   const validateNumbers = useCallback(
     e => {
       if (INPUT_VALIDATION.digits.test(e)) {
         if (e <= maxValue || e === 0) {
-          setInputValue(+e);
-          if ((inputValue === 0 || inputValue === '') && e.toString().indexOf('.') === -1 && e === 0) {
-            setInputValue('');
+          setInputValue(e);
+          if (inputValue === undefined && e === 0) {
+            setInputValue(0);
           }
           title === 'Deposit'
             ? onChangeAmount(
@@ -138,14 +131,14 @@ const Transaction: React.FC<ITransactionProps> = ({
                 +e * bigNumberMultiplier + fee > +maxValue ? +e * bigNumberMultiplier - fee : +e * bigNumberMultiplier,
               );
         } else {
-          setInputValue(+maxValue);
+          setInputValue(maxValue);
           title === 'Deposit'
             ? onChangeAmount(+maxValue * bigNumberMultiplier - fee - 2 * ZK_FEE_MULTIPLIER * fee)
             : onChangeAmount(+maxValue * bigNumberMultiplier - fee);
         }
       }
     },
-    [bigNumberMultiplier, fee, inputValue, maxValue, onChangeAmount, setInputValue],
+    [bigNumberMultiplier, fee, inputValue, maxValue, onChangeAmount, setInputValue, title],
   );
 
   const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
@@ -216,9 +209,6 @@ const Transaction: React.FC<ITransactionProps> = ({
   }, [zkWallet]);
 
   useEffect(() => {
-    if (balances?.length && !selected) {
-      setToken(balances[0].symbol);
-    }
     if (token && token === 'ETH') {
       setUnlockFau(true);
     }
@@ -291,6 +281,13 @@ const Transaction: React.FC<ITransactionProps> = ({
       }, 3000);
     }
   }, [setUnlockFau, token, unlockFau, zkWallet]);
+
+  const handleInputWidth = useCallback(e => {
+    const el = myRef.current;
+    if (el) {
+      el.style.width = (e.toString().length + 1) * 16 + 'px';
+    }
+  }, []);
 
   return (
     <>
@@ -372,6 +369,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                     setToken(!!+address ? address : symbol);
                     setMaxValue(balance);
                     setSymbolName(symbol);
+                    setSymbol(symbol);
                     handleSelect(symbol);
                     openBalancesList(false);
                     setSelected(true);
@@ -414,14 +412,14 @@ const Transaction: React.FC<ITransactionProps> = ({
               className="transaction-back"
             ></button>
             <h2 className="transaction-title">{title} successful!</h2>
-            <span className="transaction-field-title">{title} into zk Sync:</span>
-            <p className="transaction-field-amount">{inputValue}</p>
-            <div className="info-block">
-              <p>
-                Transaction successful <br /> Wasn’t that easy?
-              </p>{' '}
-              <img src={success} alt="clocks" />
-            </div>
+            <span className="transaction-field-title">
+              {title === 'Send' && <>Transfered into</>}
+              {title === 'Withdraw' && <>Withdrawn from</>}
+              {title === 'Deposit' && <>Deposited to</>} zkSync:{' '}
+              <p className="transaction-field-amount">
+                {inputValue} {symbolName}
+              </p>
+            </span>
             <p className="transaction-hash">
               Tx hash:
               <a target="_blank" href={`${ZK_EXPLORER}/${typeof hash === 'string' ? hash : hash?.hash}`}>
@@ -516,7 +514,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                               className="currency-input-address"
                             />
                             {ADDRESS_VALIDATION['eth'].test(addressValue) && !walletAddress && (
-                              <button className="add-contact-button-input" onClick={() => handleSave()}>
+                              <button className="add-contact-button-input btn-tr" onClick={() => handleSave()}>
                                 <span></span>
                                 <p>Save</p>
                               </button>
@@ -597,17 +595,34 @@ const Transaction: React.FC<ITransactionProps> = ({
                     <span className="transaction-field-title">Amount / asset</span>
                     <div className="transaction-field balance">
                       <div className="currency-input-wrapper border">
-                        <input
-                          placeholder="0.00"
-                          className="currency-input"
-                          type="number"
-                          step="0.001"
-                          onChange={e => {
-                            validateNumbers(+e.target.value);
-                            setAmount(+e.target.value);
-                          }}
-                          value={inputValue}
-                        />
+                        <div className="scroll-wrapper">
+                          <input
+                            placeholder="0.00"
+                            className="currency-input"
+                            type="number"
+                            ref={myRef}
+                            onChange={e => {
+                              validateNumbers(+e.target.value);
+                              setAmount(+e.target.value);
+                              handleInputWidth(+e.target.value);
+                              setInputValue(e.target.value);
+                              if (+e.target.value > maxValue) {
+                                setInputValue(maxValue);
+                                handleInputWidth(maxValue);
+                              }
+                            }}
+                            value={
+                              inputValue
+                                ? parseFloat(
+                                    parseFloat(inputValue?.toString())
+                                      .toFixed(18)
+                                      .toString(),
+                                  )
+                                : ''
+                            }
+                          />
+                        </div>
+
                         <div className="custom-selector balances">
                           <div
                             onClick={() => {
@@ -631,16 +646,16 @@ const Transaction: React.FC<ITransactionProps> = ({
                           <div className="currency-input-wrapper" key={token}>
                             <div className="all-balance-wrapper">
                               <button
-                                className="all-balance"
+                                className="all-balance btn-tr"
                                 onClick={() => {
                                   setInputValue(+maxValue);
                                   onChangeAmount(
                                     (+maxValue - 0.0003) * bigNumberMultiplier - 2 * ZK_FEE_MULTIPLIER * fee,
                                   );
+                                  handleInputWidth(maxValue);
                                 }}
                               >
-                                Max: {maxValue ? maxValue.toFixed(6) : +balances[0].balance.toFixed(6)}{' '}
-                                {symbolName ? symbolName : balances[0].symbol}
+                                Max: {maxValue ? maxValue.toFixed(6) : '0'} {symbolName ? symbolName : ''}
                               </button>
                             </div>
                             <span>
@@ -648,7 +663,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                               {
                                 +(
                                   +(price && !!price[selectedBalance] ? price[selectedBalance] : 1) *
-                                  (maxValue ? maxValue : balances[0].balance)
+                                  (maxValue ? maxValue : 0)
                                 ).toFixed(2)
                               }
                             </span>
@@ -659,15 +674,12 @@ const Transaction: React.FC<ITransactionProps> = ({
                           </div>
                         ))}
                     </div>
-                    {title === 'Deposit' && token !== 'ETH' && (
+                    {title === 'Deposit' && token !== 'ETH' && selectedBalance && (
                       <>
                         <div className={`hint-unlocked ${isHintUnlocked}`}>
                           Already unlocked. This only needs to be done once per token.
                         </div>
-                        <div
-                          onClick={() => (!unlockFau ? handleUnlockERC() : handleShowHint())}
-                          className="fau-unlock-wrapper"
-                        >
+                        <div className="fau-unlock-wrapper">
                           {unlockFau ? (
                             <p>
                               {symbolName.length ? symbolName : balances?.length && balances[0].symbol} token unlocked
@@ -677,7 +689,10 @@ const Transaction: React.FC<ITransactionProps> = ({
                               Unlock {symbolName.length ? symbolName : balances?.length && balances[0].symbol} token
                             </p>
                           )}
-                          <button className={`fau-unlock-tocken ${unlockFau}`}>
+                          <button
+                            onClick={() => (!unlockFau ? handleUnlockERC() : handleShowHint())}
+                            className={`fau-unlock-tocken ${unlockFau}`}
+                          >
                             <span className={`fau-unlock-tocken-circle ${unlockFau}`}></span>
                           </button>
                         </div>
@@ -687,9 +702,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                       className={`btn submit-button ${!unlockFau && title === 'Deposit' ? 'disabled' : ''}`}
                       onClick={() =>
                         unlockFau
-                          ? selectedBalance
+                          ? selectedBalance && inputValue && +inputValue > 0
                             ? transactionAction(token, type)
-                            : setError('Token did not selected')
+                            : setError('Please select token and amount value')
                           : undefined
                       }
                     >

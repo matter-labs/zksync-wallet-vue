@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
-import { closestPackableTransactionAmount, closestPackableTransactionFee } from 'zksync';
+import { closestPackableTransactionAmount, closestPackableTransactionFee, getDefaultProvider } from 'zksync';
 
 import { useRootData } from '../hooks/useRootData';
 
@@ -16,6 +16,7 @@ const TOKEN = 'ETH';
 export const useTransaction = () => {
   const {
     hintModal,
+    provider,
     setError,
     setHintModal,
     setVerifyToken,
@@ -24,8 +25,19 @@ export const useTransaction = () => {
     walletAddress,
     zkWallet,
   } = useRootData(
-    ({ hintModal, setError, setHintModal, setVerifyToken, setZkBalances, tokens, walletAddress, zkWallet }) => ({
+    ({
+      hintModal,
+      provider,
+      setError,
+      setHintModal,
+      setVerifyToken,
+      setZkBalances,
+      tokens,
+      walletAddress,
+      zkWallet,
+    }) => ({
       hintModal: hintModal.get(),
+      provider: provider.get(),
       setError,
       setHintModal,
       setVerifyToken,
@@ -41,6 +53,7 @@ export const useTransaction = () => {
   const [hash, setHash] = useState<ContractTransaction | string | undefined>();
   const [isExecuted, setExecuted] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [symbol, setSymbol] = useState<string>('');
 
   const history = useCallback(
     (amount: number, hash: string | undefined, to: string, type: string, token: string) => {
@@ -105,13 +118,14 @@ export const useTransaction = () => {
               ),
             });
             const hash = depositPriorityOperation.ethTx;
-            history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', token);
+            history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', symbol);
             setHash(hash);
             await depositPriorityOperation.awaitEthereumTxCommit().then(() => {
               setHintModal('Block has been mined!');
             });
             const receipt = await depositPriorityOperation.awaitReceipt();
             transactions(receipt);
+            setLoading(false);
             const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
             setVerifyToken(!!verifyReceipt);
           };
@@ -150,10 +164,10 @@ export const useTransaction = () => {
             amount: ethers.utils.bigNumberify(
               amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
             ),
-            fee: closestPackableTransactionFee(ethers.utils.bigNumberify((amountValue * 0.001).toString())),
+            fee: ethers.utils.bigNumberify(closestPackableTransactionFee(Math.floor(amountValue * 0.001).toString())),
           });
           const hash = transferTransaction.txHash;
-          history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'transfer', token);
+          history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'transfer', symbol);
           setHash(hash);
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
@@ -181,10 +195,10 @@ export const useTransaction = () => {
             amount: ethers.utils.bigNumberify(
               amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
             ),
-            fee: closestPackableTransactionFee(ethers.utils.bigNumberify((amountValue * 0.001).toString())),
+            fee: ethers.utils.bigNumberify(closestPackableTransactionFee(Math.floor(amountValue * 0.001).toString())),
           });
           const hash = withdrawTransaction.txHash;
-          history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'withdraw', token);
+          history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'withdraw', symbol);
           setHash(hash);
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);
@@ -213,6 +227,7 @@ export const useTransaction = () => {
     setExecuted,
     setHash,
     setLoading,
+    setSymbol,
     transfer,
     withdraw,
   };

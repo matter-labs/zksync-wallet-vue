@@ -3,12 +3,13 @@ import { Redirect, useHistory } from 'react-router-dom';
 
 import LazyWallet from '../components/Wallets/LazyWallet';
 import Modal from '../components/Modal/Modal';
+import Spinner from '../components/Spinner/Spinner';
 
 import { useRootData } from '../hooks/useRootData';
 import useWalletInit from '../hooks/useWalletInit';
 
 import { WALLETS } from '../constants/Wallets';
-import Spinner from '../components/Spinner/Spinner';
+import { RIGHT_NETWORK_ID } from '../constants/networks';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
@@ -86,7 +87,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (error) {
       setAccessModal(false);
     }
-  }, [createWallet, curAddress, provider, setAccessModal, walletName, zkWallet]);
+  }, [createWallet, curAddress, error, provider, setAccessModal, walletName, zkWallet]);
 
   if (!curAddress && walletName && provider) {
     setInterval(() => {
@@ -111,7 +112,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
           >
             <div className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}></div>
             {(provider && walletName !== 'Metamask') ||
-            (provider && walletName === 'Metamask' && provider.networkVersion === '4') ? ( //TODO: need to change on prod
+            (provider && walletName === 'Metamask' && provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
               <>
                 <h3 onClick={createWallet} className="title-connecting">
                   Connecting to {walletName}
@@ -139,7 +140,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             <>
               <div className="logo-textless"></div>
               <div className="welcome-text">
-                <h1>Welcome to ZK Sync.</h1>
+                <h1>Welcome to zkSync.</h1>
                 <h2>Simple, fast and secure token transfers.</h2>
                 <p>Connect a wallet</p>
               </div>

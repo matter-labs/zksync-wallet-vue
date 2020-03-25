@@ -97,7 +97,7 @@ const Header: React.FC = () => {
         <Link className="menu-logo" to="/"></Link>
         {address && (
           <>
-            <button type="button" className="menu-wallet" onClick={() => setModal('wallet')}>
+            <button type="button" className="menu-wallet btn-tr" onClick={() => setModal('wallet')}>
               <p>{userName || `${address.slice(0, 11)}...${address.slice(-4)}`}</p>
               <img src={zkWallet ? makeBlockie(address) : avatar} alt="avatar" />
               <div className="arrow-select"></div>
@@ -113,22 +113,22 @@ const Header: React.FC = () => {
                 </div>
                 <input readOnly className="copy-block-input" value={address.toString()} ref={e => inputRef.push(e)} />
                 <p>{address}</p>
-                <button className="copy-block-button" onClick={handleCopy} />
+                <button className="copy-block-button btn-tr" onClick={handleCopy} />
               </div>
               <div className="wallet-qr">
                 <img src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${address}`} alt="wallet-qr" />
               </div>
               <div className="horizontal-line"></div>
               <div className="wallet-buttons">
-                <button onClick={() => setModal('qr')}>
+                <button className="btn-tr" onClick={() => setModal('qr')}>
                   <span className="icon-qr"></span>Show QR code
                 </button>
                 <div className="horizontal-line"></div>
-                <button onClick={() => openChangeName(true)}>
+                <button className="btn-tr" onClick={() => openChangeName(true)}>
                   <span className="icon-edit"></span>Rename wallet
                 </button>
                 <div className="horizontal-line"></div>
-                <button onClick={() => handleLogOut()}>
+                <button className="btn-tr" onClick={() => handleLogOut()}>
                   <span className="icon-disconnect"></span>Disconnect wallet
                 </button>
                 <div className="horizontal-line"></div>

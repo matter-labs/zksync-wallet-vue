@@ -204,7 +204,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                   : zkWallet?.address().replace(zkWallet?.address().slice(14, zkWallet?.address().length - 4), '...')}
               </p>
             </div>
-            <button className="copy-block-button" onClick={() => handleCopy(zkWallet?.address())}></button>
+            <button className="copy-block-button btn-tr" onClick={() => handleCopy(zkWallet?.address())}></button>
           </div>
           <div
             className={`mywallet-currency-block ${verifiedState ? 'unverified' : ''} ${
@@ -269,10 +269,10 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
           {!!zkBalances?.length && zkBalancesLoaded ? (
             <>
               <div className="mywallet-buttons-container">
-                <button onClick={() => setTransactionType('deposit')} className="btn deposit-button">
+                <button onClick={() => setTransactionType('deposit')} className="btn deposit-button btn-tr">
                   <span></span>Deposit
                 </button>
-                <button onClick={() => setTransactionType('withdraw')} className="btn withdraw-button">
+                <button onClick={() => setTransactionType('withdraw')} className="btn withdraw-button btn-tr">
                   <span></span>Withdraw
                 </button>
               </div>

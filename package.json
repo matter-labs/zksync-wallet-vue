@@ -14,6 +14,7 @@
     "node-sass": "^4.13.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-infinite-scroll-component": "^5.0.4",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.3.0",
     "zksync": "^0.4.2"
@@ -121,6 +122,8 @@
     "firebase-tools": "^7.3.0",
     "husky": "^3.1.0",
     "license-checker": "25.0.1",
+    "npm": "^6.13.7",
+    "npm-audit-html": "1.4.0",
     "prettier": "^1.19.1",
     "stylelint": "^13.0.0",
     "stylelint-config-rational-order": "^0.1.2",
@@ -129,8 +132,6 @@
     "stylelint-high-performance-animation": "^1.4.0",
     "stylelint-order": "^4.0.0",
     "stylelint-scss": "^3.13.0",
-    "typescript": "^3.7.5",
-    "npm": "^6.13.7",
-    "npm-audit-html": "1.4.0"
+    "typescript": "^3.7.5"
   }
 }
