@@ -34,8 +34,7 @@ const Header: React.FC = () => {
   const address = zkWallet?.address();
   const userName = localStorage.getItem(zkWallet ? address! : '');
   const history = useHistory();
-
-  const [inp, setInp] = useState('');
+  
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isChangeNameOpen, openChangeName] = useState<boolean>(false);
 
@@ -132,7 +131,6 @@ const Header: React.FC = () => {
                   <span className="icon-disconnect"></span>Disconnect wallet
                 </button>
                 <div className="horizontal-line"></div>
-                <input type="text" value={inp} onChange={e => setInp(e.target.value)} />
               </div>
             </Modal>
             <Modal visible={false} background={true} classSpecifier="qr">

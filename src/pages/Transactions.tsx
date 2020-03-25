@@ -93,6 +93,9 @@ const Transactions: React.FC = (): JSX.Element => {
               ref={e => inputRef.push(e)}
             />
             <div className="transaction-history-right">
+                <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
+                  <p>Copied!</p>
+                </div>
               <div className="transaction-history-address">
                 {type === 'transfer' && (
                   <>

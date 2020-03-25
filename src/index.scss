@@ -481,7 +481,7 @@ input[type="radio"]:focus + .contact-manage{
   display: block;
 }
 
-.balances-contact-right {
+.balances-contact-right, .transaction-history-right {
   &:hover {
     .hint-copied {
       &.open {
