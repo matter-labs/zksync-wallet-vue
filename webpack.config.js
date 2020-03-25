@@ -4,6 +4,7 @@ const path = require('path');
 const HTMLPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCSSPlugin = require('mini-css-extract-plugin');
+const autoprefixer = require('autoprefixer');
 
 const BUILD_DIR = path.resolve('build/');
 const DEV = process.env.NODE_ENV === 'development';
@@ -19,6 +20,12 @@ const rules = [
     use: [
       DEV ? 'style-loader' : MiniCSSPlugin.loader,
       'css-loader',
+      {
+        loader: 'postcss-loader',
+        options: {
+          plugins: () => [autoprefixer()],
+        },
+      },
       'sass-loader',
     ],
   },
@@ -56,6 +63,9 @@ const config = {
     historyApiFallback: true,
     stats: 'minimal',
   },
+  optimization: {
+    minimize: false,
+  }
 };
 
 if (!DEV) {
