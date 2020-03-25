@@ -64,6 +64,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const [curAddress, setCurAddress] = useState<string>(
     provider?.selectedAddress,
   );
+  const [addressTimer, setAddressTimer] = useState<number | null>(null);
 
   const handleLogOut = useCallback(() => {
     setProvider(null);
@@ -92,23 +93,26 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (error) {
       setAccessModal(false);
     }
+
+    if (!curAddress && walletName && provider) {
+      const t = setInterval(() => {
+        if (provider?.selectedAddress) {
+          setCurAddress(provider?.selectedAddress);
+        }
+      }, 2000);
+      setAddressTimer(t as any);
+    }
+    return () => {
+      if (addressTimer) clearInterval(addressTimer!);
+    };
   }, [
     createWallet,
     curAddress,
-    error,
     provider,
     setAccessModal,
     walletName,
     zkWallet,
   ]);
-
-  if (!curAddress && walletName && provider) {
-    setInterval(() => {
-      if (provider?.selectedAddress) {
-        setCurAddress(provider?.selectedAddress);
-      }
-    }, 2000);
-  }
 
   return (
     <>
