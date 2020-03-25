@@ -108,7 +108,7 @@ const Header: React.FC = () => {
           <>
             <button
               type='button'
-              className='menu-wallet'
+              className='menu-wallet btn-tr'
               onClick={() => setModal('wallet')}
             >
               <p>
@@ -139,23 +139,26 @@ const Header: React.FC = () => {
                   ref={e => inputRef.push(e)}
                 />
                 <p>{address}</p>
-                <button className='copy-block-button' onClick={handleCopy} />
+                <button
+                  className='copy-block-button btn-tr'
+                  onClick={handleCopy}
+                />
               </div>
               <QRCode data={address} />
-              <div className='horizontal-line'></div>
+              <div className='horizontal-line' />
               <div className='wallet-buttons'>
-                <button onClick={() => setModal('qr')}>
+                <button className='btn-tr' onClick={() => setModal('qr')}>
                   <span className='icon-qr'></span>Show QR code
                 </button>
                 <div className='horizontal-line'></div>
-                <button onClick={() => openChangeName(true)}>
+                <button className='btn-tr' onClick={() => openChangeName(true)}>
                   <span className='icon-edit'></span>Rename wallet
                 </button>
                 <div className='horizontal-line'></div>
-                <button onClick={() => handleLogOut()}>
+                <button className='btn-tr' onClick={() => handleLogOut()}>
                   <span className='icon-disconnect'></span>Disconnect wallet
                 </button>
-                <div className='horizontal-line'></div>
+                <div className='horizontal-line' />
               </div>
             </Modal>
             <Modal visible={false} background={true} classSpecifier='qr'>

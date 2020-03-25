@@ -37,18 +37,23 @@ const Footer: React.FC = (): JSX.Element => {
   }, [body, darkTheme]);
 
   return (
-    <div className="footer-wrapper">
-      <button className="theme-switch" onClick={handleSwitch}></button>
-      <div className="footer-menu">
+    <div className='footer-wrapper'>
+      <button className='theme-switch' onClick={handleSwitch}></button>
+      <div className='footer-menu'>
         <p>
-          <span className="footer-links-block">
+          <span className='footer-links-block'>
             {FOOTER_LINKS.map(({ title, link }) => (
-              <a target="_blank" key={title} className="footer-link" href={link}>
+              <a
+                target='_blank'
+                key={title}
+                className='footer-link'
+                href={link}
+              >
                 {title}
               </a>
             ))}
           </span>
-          ZK Sync by Matter Labs
+          zkSync by Matter Labs
         </p>
       </div>
     </div>

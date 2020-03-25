@@ -9,6 +9,7 @@
     color: var(--dark-color);
     background-color: var(--transparent);
     border: none;
+    border-radius: 5px;
     outline: none;
     cursor: pointer;
 
@@ -108,6 +109,7 @@
     }
 
     & > p {
+      margin-top: 10px;
       padding: 0 20px;
       color: var(--dark-color);
       text-align: center;
@@ -282,7 +284,6 @@
       background-color: var(--transparent);
       background-repeat: no-repeat;
       background-position: center;
-      background-size: contain;
       border: none;
       border-radius: 5px;
       outline: none;
@@ -316,6 +317,7 @@
 }
 
 .label-done {
+  display: none;
   width: 15px;
   height: 15px;
   background-image: url(../../images/success.svg);
@@ -417,6 +419,19 @@
         color: var(--links-color);
         text-align: center;
         border: 1px solid var(--light-border-color);
+
+        &-copy {
+          width: 100%;
+          height: 30px;
+          color: var(--dark-color);
+          background-color: var(--transparent);
+          border: none;
+          border-top: 1px solid var(--border-color);
+
+          &:hover {
+            background-color: var(--border-color);
+          }
+        }
       }
     }
   }
@@ -424,6 +439,10 @@
 
 @media screen and (min-width: 760px) {
   .balances-contact-copy {
+    display: block;
+  }
+
+  .label-done {
     display: block;
   }
 

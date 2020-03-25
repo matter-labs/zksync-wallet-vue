@@ -14,7 +14,10 @@ import { WIDTH_BP } from '../../constants/magicNumbers';
 
 import './Wallets.scss';
 
-const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.Element => {
+const MyWallet: React.FC<IMyWalletProps> = ({
+  price,
+  setTransactionType,
+}): JSX.Element => {
   const {
     searchBalances,
     setBalances,
@@ -24,7 +27,15 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
     verifyToken,
     zkWallet,
   } = useRootData(
-    ({ searchBalances, setBalances, transactionModal, zkBalances, zkBalancesLoaded, verifyToken, zkWallet }) => ({
+    ({
+      searchBalances,
+      setBalances,
+      transactionModal,
+      zkBalances,
+      zkBalancesLoaded,
+      verifyToken,
+      zkWallet,
+    }) => ({
       searchBalances: searchBalances.get(),
       setBalances,
       transactionModal: transactionModal.get(),
@@ -44,13 +55,16 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isAssetsOpen, openAssets] = useState<boolean>(false);
   const [selectedBalance, setSelectedBalance] = useState<any>();
-  const [symbolName, setSymbolName] = useState<any>(!!zkBalances?.length ? zkBalances[0].symbol : '');
+  const [symbolName, setSymbolName] = useState<any>(
+    !!zkBalances?.length ? zkBalances[0].symbol : '',
+  );
   const [verified, setVerified] = useState<any>();
   const [walletBalance, setWalletBalance] = useState<string>('');
 
   const verifiedState =
     verified && !!zkBalances.length
-      ? +parseFloat(walletBalance).toFixed(6) !== +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(6)
+      ? +parseFloat(walletBalance).toFixed(6) !==
+        +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(6)
       : false;
 
   const inputRef: (HTMLInputElement | null)[] = [];
@@ -58,7 +72,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
   const handleCopy = useCallback(
     address => {
       if (navigator.userAgent.match(/ipad|iphone/i)) {
-        const input: any = document.getElementsByClassName('copy-block-input')[0];
+        const input: any = document.getElementsByClassName(
+          'copy-block-input',
+        )[0];
         const range = document.createRange();
         range.selectNodeContents(input);
         const selection = window.getSelection();
@@ -133,7 +149,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
           setValue={setBalances}
           dataProperty={dataPropertyName}
           data={zkBalances}
-          title="Select asset"
+          title='Select asset'
           visible={true}
         >
           <button
@@ -141,9 +157,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
               openAssets(false);
               body?.classList.remove('fixed-b');
             }}
-            className="close-icon"
+            className='close-icon'
           ></button>
-          <div className="assets-border-bottom"></div>
+          <div className='assets-border-bottom'></div>
           {!!searchBalances.length ? (
             searchBalances.map(({ address, symbol, balance }) => (
               <div
@@ -157,11 +173,11 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                   body?.classList.remove('fixed-b');
                 }}
                 key={balance}
-                className="balances-token"
+                className='balances-token'
               >
-                <div className="balances-token-left">
+                <div className='balances-token-left'>
                   <div className={`logo ${symbol}`}></div>
-                  <div className="balances-token-name">
+                  <div className='balances-token-name'>
                     <p>{symbol}</p>
                     <span>
                       {symbol === 'ETH' && <>Ethereum</>}
@@ -170,60 +186,93 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                     </span>
                   </div>
                 </div>
-                <div className="balances-token-right">
+                <div className='balances-token-right'>
                   <span>
-                    balance: <p className="datalist-balance">{+balance.toFixed(2)}</p>
+                    balance:{' '}
+                    <p className='datalist-balance'>{+balance.toFixed(2)}</p>
                   </span>
                 </div>
               </div>
             ))
           ) : (
-            <p>No balances yet, please make a deposit or request money from someone!</p>
+            <p>
+              No balances yet, please make a deposit or request money from
+              someone!
+            </p>
           )}
         </DataList>
       </div>
-      <div data-name="assets-wrapper" className={`assets-wrapper-bg ${isAssetsOpen ? 'open' : 'closed'}`}></div>
+      <div
+        data-name='assets-wrapper'
+        className={`assets-wrapper-bg ${isAssetsOpen ? 'open' : 'closed'}`}
+      ></div>
       <>
-        <div className={`mywallet-wrapper ${!!transactionModal?.title ? 'closed' : 'open'}`}>
-          <h2 className="mywallet-title">My wallet</h2>
-          <div onClick={() => handleCopy(zkWallet?.address())} className="copy-block">
+        <div
+          className={`mywallet-wrapper ${
+            !!transactionModal?.title ? 'closed' : 'open'
+          }`}
+        >
+          <h2 className='mywallet-title'>My wallet</h2>
+          <div
+            onClick={() => handleCopy(zkWallet?.address())}
+            className='copy-block'
+          >
             <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
               <p>Copied!</p>
             </div>
             <input
-              className="copy-block-input"
+              className='copy-block-input'
               readOnly
               value={zkWallet?.address().toString()}
               ref={e => inputRef.push(e)}
             />
-            <div className="copy-block-left">
-              <img src={zkWallet ? makeBlockie(zkWallet.address()) : avatar} alt="avatar" />{' '}
+            <div className='copy-block-left'>
+              <img
+                src={zkWallet ? makeBlockie(zkWallet.address()) : avatar}
+                alt='avatar'
+              />{' '}
               <p>
                 {window?.innerWidth > WIDTH_BP
                   ? zkWallet?.address()
-                  : zkWallet?.address().replace(zkWallet?.address().slice(14, zkWallet?.address().length - 4), '...')}
+                  : zkWallet
+                      ?.address()
+                      .replace(
+                        zkWallet
+                          ?.address()
+                          .slice(14, zkWallet?.address().length - 4),
+                        '...',
+                      )}
               </p>
             </div>
-            <button className="copy-block-button" onClick={() => handleCopy(zkWallet?.address())}></button>
+            <button
+              className='copy-block-button btn-tr'
+              onClick={() => handleCopy(zkWallet?.address())}
+            ></button>
           </div>
           <div
-            className={`mywallet-currency-block ${verifiedState ? 'unverified' : ''} ${
-              isBalancesListOpen ? 'borderless' : ''
-            }`}
+            className={`mywallet-currency-block ${
+              verifiedState ? 'unverified' : ''
+            } ${isBalancesListOpen ? 'borderless' : ''}`}
           >
             <div
-              data-name="custom-selector"
-              className={`mywallet-currency-block-shadow ${isBalancesListOpen ? 'open' : 'closed'}`}
+              data-name='custom-selector'
+              className={`mywallet-currency-block-shadow ${
+                isBalancesListOpen ? 'open' : 'closed'
+              }`}
             ></div>
-            <div className="mywallet-currency-wrapper">
-              <span className={`mywallet-currency-balance ${!zkBalances.length && zkBalancesLoaded ? 'empty' : ''}`}>
+            <div className='mywallet-currency-wrapper'>
+              <span
+                className={`mywallet-currency-balance ${
+                  !zkBalances.length && zkBalancesLoaded ? 'empty' : ''
+                }`}
+              >
                 {walletBalance
                   ? +parseFloat(walletBalance)
                       .toFixed(4)
                       .toString()
                   : '0.00'}
               </span>
-              <div className="custom-selector balances mywallet">
+              <div className='custom-selector balances mywallet'>
                 <div
                   onClick={() => {
                     openAssets(true);
@@ -231,7 +280,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                       body.classList.add('fixed-b');
                     }
                   }}
-                  className={`custom-selector-title ${!zkBalances.length && zkBalancesLoaded ? '' : ''}`}
+                  className={`custom-selector-title ${
+                    !zkBalances.length && zkBalancesLoaded ? '' : ''
+                  }`}
                 >
                   {symbolName ? (
                     <p>zk{symbolName}</p>
@@ -243,21 +294,28 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
                         ) : (
                           <span>zk{zkBalances[0].symbol}</span>
                         ))}
-                      {!zkBalances.length && (!zkBalancesLoaded ? <Spinner /> : <span>zkETH</span>)}
+                      {!zkBalances.length &&
+                        (!zkBalancesLoaded ? <Spinner /> : <span>zkETH</span>)}
                     </p>
                   )}
-                  <div className="arrow-down"></div>
+                  <div className='arrow-down'></div>
                 </div>
               </div>
             </div>
-            <div className="mywallet-price-wrapper">
+            <div className='mywallet-price-wrapper'>
               {verified && verifiedState && <SpinnerWorm />}
-              <span className="mywallet-price">
+              <span className='mywallet-price'>
                 ~
                 {parseFloat(
                   zkBalances
                     ?.reduce((acc, cur) => {
-                      return acc + cur.balance * +(price && !!price[cur.symbol] ? price[cur.symbol] : 1);
+                      return (
+                        acc +
+                        cur.balance *
+                          +(price && !!price[cur.symbol]
+                            ? price[cur.symbol]
+                            : 1)
+                      );
                     }, 0)
                     .toFixed(2)
                     .toString(),
@@ -268,24 +326,39 @@ const MyWallet: React.FC<IMyWalletProps> = ({ price, setTransactionType }): JSX.
           </div>
           {!!zkBalances?.length && zkBalancesLoaded ? (
             <>
-              <div className="mywallet-buttons-container">
-                <button onClick={() => setTransactionType('deposit')} className="btn deposit-button">
+              <div className='mywallet-buttons-container'>
+                <button
+                  onClick={() => setTransactionType('deposit')}
+                  className='btn deposit-button btn-tr'
+                >
                   <span></span>Deposit
                 </button>
-                <button onClick={() => setTransactionType('withdraw')} className="btn withdraw-button">
+                <button
+                  onClick={() => setTransactionType('withdraw')}
+                  className='btn withdraw-button btn-tr'
+                >
                   <span></span>Withdraw
                 </button>
               </div>
-              <button className="btn submit-button" onClick={() => setTransactionType('transfer')}>
+              <button
+                className='btn submit-button'
+                onClick={() => setTransactionType('transfer')}
+              >
                 <span></span> Send
               </button>
             </>
           ) : (
             <>
-              <div className="mywallet-buttons-container">
-                <p>No balances yet, please make a deposit or request money from someone!</p>
+              <div className='mywallet-buttons-container'>
+                <p>
+                  No balances yet, please make a deposit or request money from
+                  someone!
+                </p>
               </div>
-              <button className="btn submit-button" onClick={() => setTransactionType('deposit')}>
+              <button
+                className='btn submit-button'
+                onClick={() => setTransactionType('deposit')}
+              >
                 Deposit
               </button>
             </>

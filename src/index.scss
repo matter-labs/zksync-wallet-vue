@@ -72,13 +72,8 @@ body.fixed, body.fixed-b {
   overflow: hidden;
 }
 
-
 #root.fixed {
   overflow: hidden;
-}
-
-button {
-  cursor: pointer;
 }
 
 body, html {
@@ -152,6 +147,16 @@ input {
 
   &:focus {
     border: 1px solid var(--input-border-focus);
+  }
+}
+
+button {
+  cursor: pointer;
+}
+
+.btn-tr {
+  &:active {
+    background-color: var(--input-border-focus) !important;
   }
 }
 
@@ -266,6 +271,10 @@ h2 {
     border: none;
     outline: none;
     cursor: auto;
+
+    &:active {
+      background-color: var(--transparent);
+    }
 
     & > p {
       margin-top: 10px;
