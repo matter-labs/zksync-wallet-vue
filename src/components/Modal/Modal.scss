@@ -162,13 +162,7 @@
 
     .wallet-qr {
       display: none;
-      margin-top: -30px;
       text-align: center;
-
-      & > img {
-        width: 200px;
-        height: 200px;
-      }
     }
 
     & > .wallet-buttons {

@@ -11,6 +11,7 @@
     "fortmatic": "^1.1.3",
     "mobx": "^5.15.2",
     "mobx-react-lite": "^1.5.2",
+    "qrcode-generator": "^1.4.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
@@ -35,7 +36,10 @@
   },
   "lint-staged": {
     "*.{css,scss}": "npm run lint-css",
-    "*.{ts,tsx}": ["npm run lint-ts", "npm run format"]
+    "*.{ts,tsx}": [
+      "npm run lint-ts",
+      "npm run format"
+    ]
   },
   "stylelint": {
     "extends": [
