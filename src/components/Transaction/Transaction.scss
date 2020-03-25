@@ -14,11 +14,11 @@
 
   &-tocken {
     position: relative;
-    width: 40px;
-    height: 20px;
+    width: 50px;
+    height: 25px;
     background-color: var(--success-color);
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
     outline: none;
 
     &.false {
@@ -28,12 +28,12 @@
     & > span {
       position: absolute;
       top: 50%;
-      right: 4px;
+      right: 6px;
       display: block;
-      width: 12px;
-      height: 12px;
+      width: 15px;
+      height: 15px;
       background-color: var(--button-text-color);
-      border-radius: 6px;
+      border-radius: 8px;
       transform: translateY(-50%);
 
       &.false {
@@ -234,6 +234,32 @@
 
     }
   }
+}
+
+.scroll-wrapper {
+  width: 260px;
+  height: 30px;
+  overflow: hidden;
+  overflow-x: scroll;
+
+  & > .currency-input {
+    min-width: 60px;
+    max-width: none;
+    max-width: inherit;
+  }
+}
+
+.scroll-wrapper::-webkit-scrollbar{
+  width: 6px;
+  height: 4px;
+  background: var(--transparent);
+  cursor: pointer;
+
+}
+
+.scroll-wrapper::-webkit-scrollbar-thumb:horizontal{
+  background: var(--button-bg-color);
+  border-radius: 10px;
 }
 
 .transaction {
@@ -687,4 +713,12 @@ p.transaction-hash {
       }
     } 
   }
+
+  .scroll-wrapper {
+    height: 60px;
+
+    & > .currency-input {
+      min-width: 80px;
+    }
+  }  
 }

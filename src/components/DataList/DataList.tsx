@@ -30,7 +30,9 @@ const DataList: React.FC<IBalancesProps> = ({
       const searchQuery = e.target.value.toLowerCase();
       const displayedItems = data?.filter(el => {
         const searchValue =
-          dataProperty === 'symbol' ? `zk${el[dataProperty]}`.toLowerCase() : el[dataProperty].toLowerCase();
+          dataProperty === 'symbol'
+            ? `zk${el[dataProperty]}`.toLowerCase()
+            : el[dataProperty].toLowerCase();
         return searchValue.indexOf(searchQuery) !== -1;
       });
       setValue(displayedItems);
@@ -40,21 +42,30 @@ const DataList: React.FC<IBalancesProps> = ({
 
   return (
     <>
-      <Modal visible={false} classSpecifier="add-contact addressless" background={true}>
-        <SaveContacts title="Add contact" addressValue="" addressInput={true} />
+      <Modal
+        visible={false}
+        classSpecifier='add-contact addressless'
+        background={true}
+      >
+        <SaveContacts title='Add contact' addressValue='' addressInput={true} />
       </Modal>
       <div className={`balances-wrapper ${visible ? 'open' : 'closed'}`}>
-        <h3 className="balances-title">{title}</h3>
+        <h3 className='balances-title'>{title}</h3>
         <input
           ref={e => e?.focus()}
           onChange={handleSearch}
-          placeholder={`Filter ${title.toLowerCase().replace(/.?(select )/, '')}`}
-          className="balances-search"
-          type="text"
+          placeholder={`Filter ${title
+            .toLowerCase()
+            .replace(/.?(select )/, '')}`}
+          className='balances-search'
+          type='text'
         />
         {children}
         {title === 'Contacts' && (
-          <button className="add-contact-button" onClick={() => setModal('add-contact addressless')}>
+          <button
+            className='add-contact-button btn-tr'
+            onClick={() => setModal('add-contact addressless')}
+          >
             <span></span>
             <p>Add a contact</p>
           </button>

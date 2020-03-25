@@ -3,12 +3,13 @@ import { Redirect, useHistory } from 'react-router-dom';
 
 import LazyWallet from '../components/Wallets/LazyWallet';
 import Modal from '../components/Modal/Modal';
+import Spinner from '../components/Spinner/Spinner';
 
 import { useRootData } from '../hooks/useRootData';
 import useWalletInit from '../hooks/useWalletInit';
 
 import { WALLETS } from '../constants/Wallets';
-import Spinner from '../components/Spinner/Spinner';
+import { RIGHT_NETWORK_ID } from '../constants/networks';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
@@ -60,7 +61,9 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   const history = useHistory();
 
-  const [curAddress, setCurAddress] = useState<string>(provider?.selectedAddress);
+  const [curAddress, setCurAddress] = useState<string>(
+    provider?.selectedAddress,
+  );
 
   const handleLogOut = useCallback(() => {
     setProvider(null);
@@ -78,7 +81,10 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setCurAddress(provider?.selectedAddress);
     }
     if (
-      (walletName === 'Metamask' && curAddress && !!curAddress.length && !zkWallet) ||
+      (walletName === 'Metamask' &&
+        curAddress &&
+        !!curAddress.length &&
+        !zkWallet) ||
       (!zkWallet && walletName && walletName !== 'Metamask')
     ) {
       createWallet();
@@ -86,7 +92,15 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (error) {
       setAccessModal(false);
     }
-  }, [createWallet, curAddress, provider, setAccessModal, walletName, zkWallet]);
+  }, [
+    createWallet,
+    curAddress,
+    error,
+    provider,
+    setAccessModal,
+    walletName,
+    zkWallet,
+  ]);
 
   if (!curAddress && walletName && provider) {
     setInterval(() => {
@@ -100,20 +114,28 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     <>
       <LazyWallet />
       {zkWallet ? (
-        <Redirect to="/account" />
+        <Redirect to='/account' />
       ) : (
         <>
           <Modal
             background={false}
-            classSpecifier={`metamask ${walletName ? walletName.replace(/\s+/g, '').toLowerCase() : 'primary-page'}`}
+            classSpecifier={`metamask ${
+              walletName
+                ? walletName.replace(/\s+/g, '').toLowerCase()
+                : 'primary-page'
+            }`}
             visible={isAccessModalOpen}
             cancelAction={() => handleLogOut()}
           >
-            <div className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}></div>
+            <div
+              className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
+            ></div>
             {(provider && walletName !== 'Metamask') ||
-            (provider && walletName === 'Metamask' && provider.networkVersion === '4') ? ( //TODO: need to change on prod
+            (provider &&
+              walletName === 'Metamask' &&
+              provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
               <>
-                <h3 onClick={createWallet} className="title-connecting">
+                <h3 onClick={createWallet} className='title-connecting'>
                   Connecting to {walletName}
                 </h3>
                 <p>Follow the instructions in the popup</p>
@@ -122,14 +144,17 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             ) : (
               <>
                 <h3>Connecting to {walletName}</h3>
-                <div className="wrong-network">
-                  <div className="wrong-network-logo"></div>
+                <div className='wrong-network'>
+                  <div className='wrong-network-logo'></div>
                   <p>
                     You are in the wrong network. <br />
                     Please switch to mainnet
                   </p>
                 </div>
-                <button className="btn submit-button" onClick={() => handleLogOut()}>
+                <button
+                  className='btn submit-button'
+                  onClick={() => handleLogOut()}
+                >
                   Disconnect {walletName}
                 </button>
               </>
@@ -137,15 +162,15 @@ const PrimaryPage: React.FC = (): JSX.Element => {
           </Modal>
           {!walletName && (
             <>
-              <div className="logo-textless"></div>
-              <div className="welcome-text">
-                <h1>Welcome to ZK Sync.</h1>
+              <div className='logo-textless'></div>
+              <div className='welcome-text'>
+                <h1>Welcome to zkSync.</h1>
                 <h2>Simple, fast and secure token transfers.</h2>
                 <p>Connect a wallet</p>
               </div>
-              <div className="wallets-wrapper">
+              <div className='wallets-wrapper'>
                 {Object.keys(WALLETS).map(key => (
-                  <button key={key} className="wallet-block">
+                  <button key={key} className='wallet-block'>
                     <div
                       className={`btn wallet-button ${key}`}
                       key={key}

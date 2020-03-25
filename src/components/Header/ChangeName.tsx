@@ -4,7 +4,9 @@ import { useRootData } from '../../hooks/useRootData';
 
 import { IChangeNameProps } from './Types';
 
-const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }): JSX.Element => {
+const ChangeName: React.FC<IChangeNameProps> = ({
+  setModalOpen,
+}): JSX.Element => {
   const { zkWallet } = useRootData(({ zkWallet }) => ({
     zkWallet: zkWallet.get(),
   }));
@@ -33,8 +35,17 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }): JSX.Element =
   return (
     <form>
       <h3>Change name</h3>
-      <input ref={myRef} placeholder="Enter new name" value={newName} onChange={e => setNewName(e.target.value)} />
-      <button type="submit" onClick={handleChangeName} className="btn btn submit-button">
+      <input
+        ref={myRef}
+        placeholder='Enter new name'
+        value={newName}
+        onChange={e => setNewName(e.target.value)}
+      />
+      <button
+        type='submit'
+        onClick={handleChangeName}
+        className='btn btn-tr submit-button'
+      >
         Save
       </button>
     </form>
