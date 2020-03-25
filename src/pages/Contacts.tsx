@@ -151,7 +151,7 @@ const Contacts: React.FC = (): JSX.Element => {
                   className='balances-contact-send btn-tr'
                   onClick={() => {
                     setTransactionType('transfer');
-                    setWalletAddress(address);
+                    setWalletAddress([name, address]);
                   }}
                 >
                   <Link to='/'></Link>

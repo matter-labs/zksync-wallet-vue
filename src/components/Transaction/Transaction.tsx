@@ -178,7 +178,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     setTransactionType(undefined);
     setHash('');
     setExecuted(false);
-    setWalletAddress('');
+    setWalletAddress([]);
     setLoading(false);
   }, [setExecuted, setHash, setLoading, setTransactionType, setWalletAddress]);
 
@@ -240,7 +240,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       }, 5000);
     }
     if (title === 'Withdraw' && zkWallet) {
-      setWalletAddress(zkWallet?.address());
+      setWalletAddress(['You', zkWallet?.address()]);
       onChangeAddress(zkWallet?.address());
     }
     if (token && zkWallet && token !== 'ETH') {
@@ -361,7 +361,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   key={name}
                   onClick={() => {
                     handleSelect(name);
-                    setWalletAddress(address);
+                    setWalletAddress([name, address]);
                     onChangeAddress(address);
                     openContactsList(false);
                     body?.classList.remove('fixed-b');
@@ -482,7 +482,7 @@ const Transaction: React.FC<ITransactionProps> = ({
               className='btn submit-button'
               onClick={() => {
                 handleCancel();
-                setWalletAddress('');
+                setWalletAddress([]);
                 setTransactionType(undefined);
               }}
             >
@@ -529,7 +529,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 <button
                   onClick={() => {
                     handleCancel();
-                    setWalletAddress('');
+                    setWalletAddress([]);
                     setTransactionType(undefined);
                   }}
                   className='transaction-back'
@@ -555,10 +555,15 @@ const Transaction: React.FC<ITransactionProps> = ({
                             }}
                           >
                             <div className='custom-selector-title'>
-                              <p>{selectedContact}</p>
-                              {selectedContact && (
-                                <div className='arrow-down'></div>
-                              )}
+                              <p>
+                                {walletAddress[0]
+                                  ? walletAddress[0]
+                                  : selectedContact}
+                              </p>
+                              {selectedContact ||
+                                (walletAddress[0] && (
+                                  <div className='arrow-down'></div>
+                                ))}
                             </div>
                           </div>
                           <div className='currency-input-wrapper'>
@@ -575,12 +580,12 @@ const Transaction: React.FC<ITransactionProps> = ({
                               onChange={e => {
                                 onChangeAddress(e.target.value);
                                 handleFilterContacts(e.target.value);
-                                setWalletAddress('');
+                                setWalletAddress([]);
                               }}
                               className='currency-input-address'
                             />
                             {ADDRESS_VALIDATION['eth'].test(addressValue) &&
-                              !walletAddress && (
+                              !walletAddress.length && (
                                 <button
                                   className='add-contact-button-input btn-tr'
                                   onClick={() => handleSave()}
@@ -589,15 +594,15 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   <p>Save</p>
                                 </button>
                               )}
-                            {((!addressValue && !walletAddress) ||
-                              (!addressValue && walletAddress) ||
+                            {((!addressValue && !walletAddress[1]) ||
+                              (!addressValue && walletAddress[1]) ||
                               !addressValue ||
-                              walletAddress) &&
+                              walletAddress[1]) &&
                             !selectedContact ? (
                               <div
                                 className={`custom-selector contacts ${
                                   selectedContact &&
-                                  addressValue === walletAddress
+                                  addressValue === walletAddress[1]
                                     ? ''
                                     : 'short'
                                 }`}
@@ -609,13 +614,13 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   }}
                                   className={`custom-selector-title ${
                                     selectedContact &&
-                                    addressValue === walletAddress
+                                    addressValue === walletAddress[1]
                                       ? ''
                                       : 'short'
                                   }`}
                                 >
-                                  {selectedContact &&
-                                  addressValue === walletAddress ? (
+                                  {(selectedContact || !walletAddress[0]) &&
+                                  addressValue === walletAddress[1] ? (
                                     <p>{selectedContact}</p>
                                   ) : (
                                     <span></span>
@@ -629,7 +634,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 onClick={() => {
                                   onChangeAddress('');
                                   handleFilterContacts('');
-                                  setWalletAddress('');
+                                  setWalletAddress([]);
                                   setSelectedContact('');
                                 }}
                               ></button>
@@ -638,7 +643,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                         </div>
                         {!!filteredContacts.length &&
                           addressValue &&
-                          !walletAddress && (
+                          !walletAddress[1] && (
                             <div className='transaction-contacts-list'>
                               {filteredContacts.map(({ name, address }) => (
                                 <div
@@ -646,7 +651,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   key={name}
                                   onClick={() => {
                                     handleSelect(name);
-                                    setWalletAddress(address);
+                                    setWalletAddress([name, address]);
                                     onChangeAddress(address);
                                     openContactsList(false);
                                     setSelectedContact(name);

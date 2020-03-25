@@ -78,12 +78,6 @@ const Transactions: React.FC = (): JSX.Element => {
       title='Transactions'
       visible={true}
     >
-      {/* <InfiniteScroll
-          dataLength={items.length}
-          next={fetchMoreData}
-          hasMore={hasMore}
-          loader={<h4>Loading...</h4>}
-        > */}
       {transactions ? (
         searchTransactions?.map(({ amount, type, hash, to, token }) => (
           <div className='transaction-history-wrapper' key={hash}>
@@ -154,7 +148,6 @@ const Transactions: React.FC = (): JSX.Element => {
       ) : (
         <div className='default-text'>History is empty</div>
       )}
-      {/* </InfiniteScroll> */}
     </DataList>
   );
 };

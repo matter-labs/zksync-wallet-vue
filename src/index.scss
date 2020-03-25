@@ -479,6 +479,7 @@ input[type="radio"] + .contact-manage {
 
 input[type="radio"]:focus + .contact-manage{
   display: block;
+  outline: none;  
 }
 
 .balances-contact-right, .transaction-history-right {
