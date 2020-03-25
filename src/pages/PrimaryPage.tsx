@@ -85,7 +85,9 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       (walletName === 'Metamask' &&
         curAddress &&
         !!curAddress.length &&
-        !zkWallet) ||
+        !zkWallet &&
+        provider &&
+        provider.networkVersion === RIGHT_NETWORK_ID) ||
       (!zkWallet && walletName && walletName !== 'Metamask')
     ) {
       createWallet();
