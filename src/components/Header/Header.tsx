@@ -11,6 +11,7 @@ import { useRootData } from '../../hooks/useRootData';
 import { HEADER_ITEMS } from '../../constants/header';
 
 import './Header.scss';
+import { QRCode } from '../QRCode/QRCode';
 
 const Header: React.FC = () => {
   const {
@@ -37,7 +38,6 @@ const Header: React.FC = () => {
   const userName = localStorage.getItem(zkWallet ? address! : '');
   const history = useHistory();
 
-  const [inp, setInp] = useState('');
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isChangeNameOpen, openChangeName] = useState<boolean>(false);
 
@@ -144,13 +144,8 @@ const Header: React.FC = () => {
                   onClick={handleCopy}
                 />
               </div>
-              <div className='wallet-qr'>
-                <img
-                  src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${address}`}
-                  alt='wallet-qr'
-                />
-              </div>
-              <div className='horizontal-line'></div>
+              <QRCode data={address} />
+              <div className='horizontal-line' />
               <div className='wallet-buttons'>
                 <button className='btn-tr' onClick={() => setModal('qr')}>
                   <span className='icon-qr'></span>Show QR code
@@ -163,19 +158,11 @@ const Header: React.FC = () => {
                 <button className='btn-tr' onClick={() => handleLogOut()}>
                   <span className='icon-disconnect'></span>Disconnect wallet
                 </button>
-                <div className='horizontal-line'></div>
-                <input
-                  type='text'
-                  value={inp}
-                  onChange={e => setInp(e.target.value)}
-                />
+                <div className='horizontal-line' />
               </div>
             </Modal>
             <Modal visible={false} background={true} classSpecifier='qr'>
-              <img
-                src={`https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=${address}`}
-                alt='wallet-qr'
-              />
+              <QRCode data={address} />
             </Modal>
             <Modal
               visible={isChangeNameOpen}
