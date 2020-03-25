@@ -25,4 +25,4 @@ yarn-error.log*
 
 .env*
 .cache
-/.firebase
+.firebase/
