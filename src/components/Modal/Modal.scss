@@ -1,0 +1,529 @@
+.coinbasewallet {
+  &-logo {
+    width: 86px;
+    height: 86px;
+    margin: 0 auto;
+    background-image: url(../../images/coinbase.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }  
+}
+
+.metamask {
+  &-logo {
+    width: 86px;
+    height: 86px;
+    margin: 0 auto;
+    background-image: url(../../images/metamask.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+  }
+
+  & > .title-connecting {
+    margin-bottom: 18px;
+  }
+
+  & > .spinner {
+    margin: 58px auto 36px;
+  }
+
+  & > h3 {
+    margin: 27px 0 72px;
+    color: var(--dark-color);
+    font-weight: var(--bold-font-weight);
+    font-size: var(--large-font-size);
+  }
+
+  & > p {
+    color: var(--dark-color);
+    font-size: var(--sm-font-size);
+  }
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 3000;
+  width: 100%;
+  max-width: 100vw;
+  padding: 28px;
+  color: var(--dark-color);
+  background-color: var(--modal-bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  transform: translate(-50%, -50%);
+  transition: opacity 200ms ease-in-out;
+
+  & input {
+    background-color: var(--copyblock-color);
+  }
+
+  &.qr {
+    text-align: center;
+
+    & > img {
+      width: 100%;
+      margin-top: 30px;
+    }
+  }
+
+  & .icon {
+    &-qr, &-edit, &-disconnect {
+      width: 22px;
+      height: 22px;
+      margin-right: 27px;
+    }
+
+    &-edit {
+      background: url(../../images/icon-edit.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+
+    &-qr {
+      background: url(../../images/icon-qr.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+
+    &-disconnect {
+      background: url(../../images/icon-disconnect.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    }
+  }
+
+  &.add-contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & > form {
+      width: 100%;
+
+      & > input {
+        margin-bottom: 20px;
+      }
+
+      & > h3 {
+        align-self: flex-start;
+        color: var(--dark-color);
+        font-weight: var(--bold-font-weight);
+        font-size: var(--xl-font-size);
+        line-height: var(--large-font-size);
+      }
+
+      & > .transaction-field-title {
+        align-self: start;
+        margin-top: 20px;
+      }
+    }
+  }
+
+  &.metamask {
+    top: 120px;
+    left: 50%;
+    width: calc(100% - 32px);
+    padding: 16px;
+    text-align: center;
+    transform: translateX(-50%);
+  }
+
+  &.error {
+    min-height: 135px;
+    padding-top: 54px;
+
+    & > p {
+      word-break: break-all;
+    }
+  }
+
+  &.change-name {
+    z-index: 10000;
+
+    & > form {
+       & > .btn {
+        margin-top: 30px;
+      }
+    }
+  }
+
+  &.wallet {
+    top: 16px;
+    left: calc(100%);
+    width: 100%;
+    transform: translateX(-100%);
+
+    .wallet-qr {
+      display: none;
+      text-align: center;
+    }
+
+    & > .wallet-buttons {
+      & > button {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: calc(100% + 56px);
+        height: 50px;
+        margin-left: -28px;
+        padding: 10px;
+        color: var(--dark-color);
+        font-size: var(--sm-font-size);
+        background-color: var(--transparent);
+        border: none;
+        border-bottom: 1px solid var(--border-color);
+        outline: none;
+        cursor: pointer;
+      }
+    }
+
+    & > .wallet-title {
+      display: flex;
+      align-items: center;
+      color: var(--dark-color);
+      font-weight: var(--bold-font-weight);
+      font-size: var(--large-font-size);
+
+      & > img {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+        padding: 5px;
+        border-radius: 25px;
+      }
+    }
+
+    & > .horizontal-line {
+      width: calc(100% + 58px);
+      height: 1px;
+      background-color: var(--copyblock-color);
+      transform: translateX(-29px);
+    }
+
+    & > .copy-block {
+      margin-bottom: 36px;
+      font-size: var(--sm-font-size);
+      cursor: pointer;
+
+      & > p {
+        display: inline-block;
+        margin-bottom: 0;
+        padding-right: 15px;
+        word-break: break-word;
+      }
+    }
+  }
+
+  &.open {
+    height: auto;
+    opacity: 1;
+  }
+
+  &.closed {
+    width: 0;
+    height: 0;
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  &-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--dark-color);
+    opacity: 0.4;
+
+    &.open {
+      display: block;
+    }
+  
+    &.closed {
+      display: none;
+    }
+  }
+
+  & > .balances {
+    &-wrapper {
+      width: 100%;
+      margin-top: 0;
+      padding-top: 0;
+      background-color: var(--transparent);
+    }
+  }
+}
+
+.assets-border-bottom {
+  width: calc(100% + 5px);
+  height: 27px;
+  min-height: 27px;
+  margin-left: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.assets-wrapper {
+  position: absolute;
+  top: 108px;
+  z-index: 10000;
+  width: 100%;
+  max-width: 550px;
+  background-color: var(--modal-bg-color);
+  border-radius: 5px;
+
+  & > .balances-wrapper {
+    width: 100%;
+    max-width: 565px;
+    height: 60vh;
+    margin: 0 auto;
+    padding-top: 20px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+
+    & span {
+      color: var(--hints-color);
+      font-size: var(--md-font-size);
+    }
+
+    & .balances-token-right {
+      display: flex;
+      height: 100%;
+      padding-bottom: 5px;
+
+      span {
+        align-self: flex-end;
+      }
+    }
+
+    & .balances-token {
+      width: calc(100% + 5px);
+      height: 104px;
+      margin-left: 5px;
+      padding: 22px;
+
+      &:hover > .balances-token-right {
+        display: flex;
+      }
+
+      &-left {
+        display: flex;
+        align-items: center;
+
+        .balances-token-name {
+          p {
+            margin-bottom: 0;
+            font-weight: var(--large-font-weight);
+            font-size: var(--large-font-size);
+          }
+        }
+
+        .logo {
+          width: 45px;
+          height: 45px;
+          margin-right: 15px;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: contain;
+          border-radius: 28px;
+
+          &.FAU {
+            background-image: url(../../images/FAU.png);
+          }
+
+          &.ETH {
+            background-image: url(../../images/ETH.png);
+          }
+
+          &.DAI {
+            background-image: url(../../images/DAI.png);
+          }
+        }
+      }
+    }
+
+    & > .balances-title {
+      align-self: flex-start;
+      margin-left: 22px;
+    }
+  }
+
+  &-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9000;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--dark-color);
+    opacity: 0.5;
+
+    &.open {
+      display: block;
+    }
+  
+    &.closed {
+      display: none;
+    }
+  }
+
+  &.open {
+    display: block;
+  }
+
+  &.closed {
+    display: none;
+  }
+}
+
+body.dark {
+  & .modal {
+    & .copy-block {
+      & > .copy-block-button {
+        background-image: url(../../images/mdi_file_copy_dark.svg);
+      }
+    }
+
+    & .icon {
+      &-qr {
+        background: url(../../images/icon-qr_dark.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      &-disconnect {
+        background: url(../../images/icon-disconnect_dark.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+
+      &-edit {
+        background: url(../../images/icon-edit_dark.svg);
+        background-repeat: no-repeat;
+        background-size: contain;
+      }
+    }
+  } 
+}
+
+.close-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 36px;
+  height: 36px;
+  background-color: var(--transparent);
+  border: none;
+  outline: none;
+  transform: rotate(45deg);
+  cursor: pointer;
+
+  &::before, &::after {
+    position: absolute;
+    left: 0;
+    width: 36px;
+    height: 1px;
+    background-color: var(--hints-color);
+    content: '';
+  }
+
+  &::after {
+    transform: rotate(90deg);
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .close-icon {
+    top: 27px;
+    right: 27px;
+    width: 27px;
+    height: 27px;
+  
+    &::before, &::after {
+      width: 27px;
+    }
+  }
+
+  .modal {
+    max-width: 505px;
+
+    &.wallet {
+      left: calc(100% - 16px);
+
+      .wallet-qr {
+        display: block;
+      }
+
+      & > .wallet-buttons {
+        & > button {
+          justify-content: space-between;
+          width: auto;
+          height: 35px;
+          margin-top: 20px;
+          margin-left: 0;
+          padding: 5px 10px;
+          color: var(--dark-color);
+          background-color: var(--transparent);
+          border: none;
+          border-radius: 5px;
+          outline: none;
+          cursor: pointer;
+
+          &:first-child {
+            display: none;
+          }
+  
+          &:hover {
+            background-color: var(--copyblock-color);
+          }
+        }
+      }
+
+      & > .wallet-title {
+        display: flex;
+        align-items: center;
+        color: var(--dark-color);
+        font-weight: var(--bold-font-weight);
+        font-size: var(--xl-font-size);
+
+        & > img {
+          width: 50px;
+          height: 50px;
+          padding: 5px;
+          border-radius: 25px;
+        }
+      }
+    }
+
+    &.metamask {
+      padding: 25px 27px 36px;
+    }
+  }
+
+  .metamask {
+    padding-bottom: 36px;
+
+    & > h3 {
+      margin: 27px 0 41px;
+    }
+  }
+
+  .assets-wrapper {
+    overflow-x: hidden;
+  
+    & > .balances-wrapper {
+      width: calc(100% + 30px);
+      margin-right: -15px;
+      padding-right: 5px;
+    } 
+  }  
+}

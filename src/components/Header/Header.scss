@@ -1,0 +1,118 @@
+.menu {
+  &-wrapper {
+    width: 100%;
+    padding: 16px 16px 0;
+    background-color: var(--modal-bg-color);
+  }
+
+  &-logo {
+    width: 150px;
+    height: 30px;
+    margin-top: 5px;
+    background-image: url(../../images/logo_text.svg);
+    background-repeat: no-repeat;
+  }
+
+  &-top {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &-route { 
+    display: block;
+    box-sizing: content-box;
+    margin-top: 17px;
+    padding-bottom: 10px;
+    color: var(--dark-color);
+    font-size: var(--sm-font-size);
+    border-bottom: 4px solid var(--transparent);
+
+    &.active {
+      color: var(--dark-color);
+      border-bottom: 4px solid var(--button-bg-color);
+    }
+
+    &:hover {
+      color: var(--dark-color);
+      border-bottom: 4px solid var(--button-bg-color);
+    }
+
+    &-wrapper {
+      padding: 5px 10px 0;
+      font-size: var(--md-font-size);
+    }
+  }
+
+  &-routes {
+    display: flex;
+    justify-content: center;
+    height: 54px;
+  }
+
+  &-wallet {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 70px;
+    height: 35px;
+    color: var(--dark-color);
+    background-color: var(--modal-bg-color);
+    border: none;
+    border-radius: 18px;
+    outline: none;
+    cursor: pointer;
+
+    & > .arrow-select {
+      display: block;
+      min-width: 14px;
+      min-height: 15px;
+    }
+
+    &:hover {
+      background-color: var(--copyblock-color)
+    }
+
+    & > img {
+      width: 25px;
+      min-width: 25px;
+      height: 25px;
+      min-height: 25px;
+      margin: 0 10px;
+      border-radius: 15px;
+    }
+
+    & > p {
+      display: none;
+      max-width: 180px;
+      margin: 0;
+      font-size: var(--md-font-size);
+    }
+  }
+}
+
+@media screen and (min-width: 760px) {
+  .menu {
+    &-wallet {
+      width: auto;
+      max-width: 260px;
+
+      & > p {
+        display: inline-block;
+      }
+
+      & > img {
+        margin: 0 15px;
+      }
+    }
+
+    &-route {
+      margin-top: 14px;
+      font-size: var(--md-font-size);
+
+      &-wrapper {
+        padding: 5px 25px 0;
+      }
+    }
+  }
+}

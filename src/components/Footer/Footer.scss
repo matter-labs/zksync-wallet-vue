@@ -1,0 +1,49 @@
+.theme-switch {
+  width: 64px;
+  height: 64px;
+  background-color: var(--copyblock-color);
+  background-image: url(../../images/moon.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 25px;
+  border: none;
+  border-radius: 32px;
+  outline: none; 
+  cursor: pointer;
+}
+
+.footer {
+  &-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    padding: 30px;
+  }
+
+  &-link {
+    margin-right: 10px;
+    color: var(--links-color);
+
+    &:visited {
+      color: var(--links-color);
+    }
+  }
+
+  &-links-block {
+    display: flex;
+    justify-content: space-between;
+    float: left;
+    width: 250px;
+    min-width: 195px;
+    height: 20px;
+  }
+
+  &-menu {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    color: var(--hints-color);
+    text-align: center;
+  }
+}

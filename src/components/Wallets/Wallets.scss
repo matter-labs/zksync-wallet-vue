@@ -1,0 +1,344 @@
+.copy-block {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 22px 0 15px;
+  padding: 20px;
+  color: var(--dark-color);
+  font-size: var(--large-font-size);
+  background-color: var(--copyblock-color);
+  border-radius: 4px;
+  cursor: pointer;
+
+  & > .hint-copied.open {
+    display: flex;
+  }
+
+  &-input {
+    position: absolute;
+    left: -10000px;
+    color: var(--transparent);
+    background-color: var(--transparent);
+    border: none;
+    outline: none;
+  }
+
+  &-button {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    background-color: var(--transparent);
+    background-image: url(../../images/mdi_file_copy.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 22px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--copyblock-color);
+    }
+  }
+}
+
+.hint-modal {
+  position: absolute;
+  top: 119px;
+  left: 16px;
+  z-index: 10000;
+  width: 120px;
+  height: 80px;
+  padding: 10px;
+  color: var(--dark-color);
+  background-color: var(--modal-bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+}
+
+.deposit-button, .withdraw-button {
+  position: relative;
+  margin: 22px 0;
+  padding-left: 23px;
+  font-size: var(--md-font-size);
+  background-color: var(--transparent);
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  & > span { 
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transform: translateY(-55%);
+  }
+}
+
+.withdraw-button {
+  color: var(--hints-color);
+
+  & > span {
+    background: url(../../images/mdi_arrow_downward.svg);
+    background-size: 20px;
+  }
+
+  &:hover {
+    background-color: var(--copyblock-color);
+    border-radius: 5px;
+  }
+
+  &:active {
+    color: var(--hints-color-active);
+
+    & > span {
+      background: url(../../images/mdi_arrow_downward_active.svg);
+    }
+  }
+}
+
+.deposit-button {
+  color: var(--button-bg-color);
+  /* stylelint-disable-next-line no-descending-specificity */
+  & > span {
+    background: url(../../images/deposit.svg);
+    background-size: 20px;
+  }
+
+  &:hover {
+    background-color: var(--copyblock-color);
+    border-radius: 5px;
+  }
+
+  &:active {
+    color: var(--links-color);
+
+    & > span {
+      background: url(../../images/deposit_active.svg);
+    }
+  }
+}
+
+.mywallet {
+  &-buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 90px;
+
+    & > p {
+      margin-top: 30px;
+      color: var(--dark-color);
+    }
+  }
+
+  .arrow-down { 
+    right: -27px;
+  }
+
+  &-title {
+    color: var(--dark-color);
+    font-weight: var(--bold-font-weight);
+    font-size: var(--large-font-size);
+  }
+
+  &-price {
+    margin-top: 5px;
+    color: var(--hints-color);
+    font-size: var(--sm-font-size);
+
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+    }
+  }
+
+  &-currency {
+    &-balance {
+      margin-top: 12px;
+      color: var(--dark-color);
+      font-size: var(--xl-font-size);
+      line-height: var(--xl-font-size);
+
+      &.empty {
+        color: var(--hints-color);
+      }
+    }
+
+    &-selector {
+      margin-left: 9px;
+      padding-right: 18px;
+      color: var(--dark-color);
+      font-size: var(--sm-font-size);
+      background: var(--transparent);
+      background-image: url(../../images/arrow-select.svg);
+      background-repeat: no-repeat;  
+      background-position: right;
+      border: none;
+      outline: none;
+      appearance: none;
+    }
+
+    &-block {
+      position: absolute;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 81px;
+      padding: 18px 15px;
+      background-color: var(--bg-block-color);
+      border-left: 3px solid var(--button-bg-color);
+      transform: translateX(-15px);
+
+      &.borderless {
+        border-left: 3px solid var(--dark-color);
+      }
+
+      &.unverified {
+        background-color: var(--info-message-color);
+        border-left: none;
+      }
+
+      &-shadow {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: var(--dark-color);
+        transform: translateX(-15px);
+        opacity: 0.5;
+
+        &.open {
+          display: block;
+        }
+
+        &.closed {
+          display: none;
+        }
+      }
+    }  
+
+    &-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: -10px;
+    }
+  } 
+
+  &-wrapper {
+    position: relative;
+    width: 90%;
+    max-width: 505px;
+    margin-top: 15px;
+    padding: 15px;
+    text-align: center;
+    background-color: var(--modal-bg-color);
+    border-radius: 4px;
+
+    & .copy-block {
+      font-size: var(--sm-font-size);
+
+      &-left {
+        display: flex;
+      }
+
+      & div {
+        height: 15px;
+      }
+
+      p {
+        height: 20px;
+        margin-top: 0;
+        font-size: var(--sm-font-size);
+      }
+
+      & img {
+        width: 27px;
+        height: 27px;
+        margin-top: -5px;
+        margin-right: 5px;
+        border-radius: 15px;
+      }
+    }
+
+    &.open {
+      display: block;
+    }
+
+    &.closed {
+      display: none;
+    }
+  }
+}
+
+
+@media screen and (min-width: 760px) {
+  .deposit-button, .withdraw-button {
+    margin-bottom: 36px;
+    padding-left: 27px;
+    font-size: var(--large-font-size);
+
+    & > span { 
+      width: 23px;
+      height: 23px;
+      background-size: cover;
+      transform: translateY(-52%);
+    }
+  }
+
+  .mywallet {
+    &-price {
+      font-size: var(--md-font-size);
+    }
+
+    &-title {
+      font-size: var(--xl-font-size);
+    }
+
+    &-wrapper {
+      padding: 29px;
+
+      & > .copy-block {
+        font-size: var(--md-font-size);
+
+        & img {
+          margin-right: 10px;
+        }
+
+        & > .copy-block-left {
+          height: 18px;
+        }
+      }
+    }
+
+    &-currency {
+      &-block {
+        width: 100%;
+        padding: 18px 29px;
+        transform: translateX(-29px);
+
+        &-shadow {
+          transform: translateX(-29px);
+        }
+      }
+
+      &-balance {
+        font-size: var(--xxxl-font-size);
+      }
+
+      &-selector {
+        font-size: var(--large-font-size);
+      }
+    }  
+  }
+}

@@ -5,7 +5,6 @@
     "jsx": "react",
     "module": "esnext",
     "moduleResolution": "node",
-    "noEmit": true,
     "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noImplicitAny": false,
@@ -14,7 +13,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "esnext",
+    "target": "ES2019",
     "outDir": "./lib",
     "lib": ["dom", "dom.iterable", "esnext"],
     "esModuleInterop": true,
@@ -23,5 +22,5 @@
     "isolatedModules": true
   },
   "include": ["./src/**/**/*", "**/*.d.ts"],
-  "exclude": ["node_modules", "**/node_modules/*"]
+  "exclude": ["node_modules"]
 }

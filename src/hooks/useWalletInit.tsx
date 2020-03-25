@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
-import { getEthereumBalance, Wallet, Provider, ETHProxy, getDefaultProvider } from 'zksync';
+import { Wallet, Provider, getDefaultProvider } from 'zksync';
 
 import { useRootData } from '../hooks/useRootData';
 
@@ -18,6 +18,7 @@ const useWalletInit = () => {
     setEthWallet,
     setTokens,
     setZkBalances,
+    setZkBalancesLoaded,
     setZkWallet,
     provider,
     walletName,
@@ -30,6 +31,7 @@ const useWalletInit = () => {
       setEthWallet,
       setTokens,
       setZkBalances,
+      setZkBalancesLoaded,
       setZkWallet,
       provider,
       walletName,
@@ -41,6 +43,7 @@ const useWalletInit = () => {
       setEthWallet,
       setTokens,
       setZkBalances,
+      setZkBalancesLoaded,
       setZkWallet,
       provider: provider.get(),
       walletName: walletName.get(),
@@ -58,7 +61,7 @@ const useWalletInit = () => {
             setAccessModal(true);
           })
           .catch(err => {
-            err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+            err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
           });
       } else {
         setError(`${walletName} not found`);
@@ -77,10 +80,8 @@ const useWalletInit = () => {
       const wallet = getSigner(provider);
       setEthWallet(wallet);
       const network = process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      const syncProvider: Provider = await getDefaultProvider(network);
-      const ethersProvider = ethers.getDefaultProvider('rinkeby');
-      const ethProxy = new ETHProxy(ethersProvider, syncProvider.contractAddress);
-      const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider, ethProxy);
+      const syncProvider: Provider = await getDefaultProvider(network, 'HTTP');
+      const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider);
 
       setZkWallet(syncWallet);
       history.push('/account');
@@ -91,7 +92,7 @@ const useWalletInit = () => {
 
       const balancePromises = Object.keys(tokens).map(async key => {
         if (tokens[key].symbol) {
-          const balance = await getEthereumBalance(wallet, key);
+          const balance = await syncWallet.getEthereumBalance(key);
           return {
             address: tokens[key].address,
             balance: +balance / Math.pow(10, 18),
@@ -106,7 +107,7 @@ const useWalletInit = () => {
           setEthBalances(balance as IEthBalance[]);
         })
         .catch(err => {
-          err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         });
 
       const zkBalance = (await syncWallet.getAccountState()).committed.balances;
@@ -122,13 +123,25 @@ const useWalletInit = () => {
         .then(res => {
           setZkBalances(res as IEthBalance[]);
         })
+        .then(() => setZkBalancesLoaded(true))
         .catch(err => {
-          err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         });
     } catch (err) {
-      err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
+      // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
     }
-  }, [history, getSigner, provider, setError, setEthBalances, setTokens, setEthWallet, setZkBalances, setZkWallet]);
+  }, [
+    history,
+    getSigner,
+    provider,
+    setError,
+    setEthBalances,
+    setTokens,
+    setEthWallet,
+    setZkBalances,
+    setZkBalancesLoaded,
+    setZkWallet,
+  ]);
 
   return {
     connect,

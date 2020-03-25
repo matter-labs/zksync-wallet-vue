@@ -112,7 +112,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=.gitignore,target=.gitignore \
     --mount=type=bind,source=.eslintrc.yml,target=.eslintrc.yml \
     --mount=type=bind,source=/opt/app/node_modules,target=node_modules,from=install-dependencies \
-    npm run lint
+    npm run lint-ts
 
 FROM prepare-virtual-host AS build-source-code
 ARG REACT_APP_WALLET_CONNECT
@@ -122,6 +122,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=src,target=src \
     --mount=type=bind,source=public,target=public \
     --mount=type=bind,source=tsconfig.json,target=tsconfig.json \
+    --mount=type=bind,source=webpack.config.js,target=webpack.config.js \
     --mount=type=bind,source=/opt/app/node_modules,target=node_modules,from=install-dependencies \
     npm run build
 

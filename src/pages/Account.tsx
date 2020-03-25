@@ -1,6 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Button, Card, Icon, Input, Modal } from 'antd';
+import DataList from '../components/DataList/DataList';
+import MyWallet from '../components/Wallets/MyWallet';
+import SpinnerWorm from '../components/Spinner/SpinnerWorm';
 import Transaction from '../components/Transaction/Transaction';
 
 import { useRootData } from '../hooks/useRootData';
@@ -8,10 +10,11 @@ import { useTransaction } from '../hooks/useTransaction';
 
 import { request } from '../functions/Request';
 
-import { BASE_URL, CURRENCY, CONVERT_CURRENCY } from '../constants/CoinBase';
-import { DEFAULT_ERROR } from '../constants/errors';
+import { BASE_URL } from '../constants/CoinBase';
 
 const Account: React.FC = (): JSX.Element => {
+  const dataPropertyName = 'symbol';
+
   const {
     addressValue,
     amountValue,
@@ -21,67 +24,241 @@ const Account: React.FC = (): JSX.Element => {
     isLoading,
     setAddressValue,
     setAmountValue,
-    setExecuted,
     setHash,
+    setExecuted,
+    setLoading,
+    setSymbol,
+    transfer,
     withdraw,
   } = useTransaction();
-  const [isDepositModalOpen, setDepositModal] = useState<boolean>(false);
-  const [isWithrawModalOpen, setWithdrawModal] = useState<boolean>(false);
-  const [isDisabled, setDisabled] = useState<boolean>(true);
-  const [value, setValue] = useState<string>(localStorage.getItem('walletName') || '');
-  const [price, setPrice] = useState<number>(0);
 
-  const { error, ethId, ethBalances, setError, zkBalances } = useRootData(
-    ({ error, ethId, ethBalances, setError, zkBalances }) => ({
+  const [maxValue, setMaxValue] = useState<number>(0);
+  const [symbolName, setSymbolName] = useState<string>('');
+  const [token, setToken] = useState<string>('');
+  const [verified, setVerified] = useState<any>();
+
+  const {
+    error,
+    ethId,
+    ethBalances,
+    price,
+    provider,
+    setBalances,
+    setError,
+    searchBalances,
+    setPrice,
+    setTransactionType,
+    transactionType,
+    verifyToken,
+    walletName,
+    zkBalances,
+    zkWallet,
+  } = useRootData(
+    ({
+      error,
+      ethId,
+      ethBalances,
+      price,
+      provider,
+      setBalances,
+      setError,
+      searchBalances,
+      setPrice,
+      setTransactionType,
+      transactionModal,
+      transactionType,
+      verifyToken,
+      walletName,
+      zkBalances,
+      zkWallet,
+    }) => ({
       error: error.get(),
       ethId: ethId.get(),
       ethBalances: ethBalances.get(),
+      provider: provider.get(),
+      price: price.get(),
+      searchBalances: searchBalances.get(),
+      setBalances,
       setError,
+      setPrice,
+      setTransactionType,
+      transactionModal: transactionModal.get(),
+      transactionType: transactionType.get(),
+      verifyToken: verifyToken.get(),
+      walletName: walletName.get(),
       zkBalances: zkBalances.get(),
+      zkWallet: zkWallet.get(),
     }),
   );
 
   useEffect(() => {
-    request(`${BASE_URL}/${CURRENCY}/?convert=${CONVERT_CURRENCY}`)
-      .then((res: any) => {
-        setPrice(+res?.[0]?.price_usd);
-      })
-      .catch(err => {
-        err.name && err.message ? setError(`${err.name}:${err.message}`) : setError(DEFAULT_ERROR);
-      });
-  }, [error, setError, setPrice]);
-
-  useEffect(() => {
+    setBalances(zkBalances);
+    zkWallet
+      ?.getAccountState()
+      .then(res => res)
+      .then(data => setVerified(data.verified.balances));
     if (!ethId) {
       window.location.pathname = '/';
     }
-  }, [ethId]);
+    const balancesSymbols = () => {
+      const exceptFau = zkBalances
+        ?.filter(el => el.symbol !== 'FAU')
+        .map(el => el.symbol);
+      return exceptFau;
+    };
+    request(
+      `https://cors-anywhere.herokuapp.com/${BASE_URL}?symbol=${
+        balancesSymbols().toString() ? balancesSymbols().toString() : 'ETH'
+      }`,
+      {
+        method: 'GET',
+        headers: {
+          'X-CMC_PRO_API_KEY': '6497b92f-601e-4765-86e3-cd11e41a21f8',
+        },
+      },
+    )
+      .then((res: any) => {
+        const prices = {};
+        Object.keys(res.data).map(
+          el => (prices[el] = res.data[el].quote.USD.price),
+        );
+        setPrice(prices);
+      })
+      .catch(err => {
+        // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+        console.log(err);
+      });
+  }, [
+    error,
+    ethId,
+    provider,
+    setBalances,
+    setError,
+    setPrice,
+    verifyToken,
+    walletName,
+    zkBalances,
+    zkWallet,
+  ]);
 
-  const setWalletName = useCallback(() => {
-    if (value && value !== ethId) {
-      localStorage.setItem('walletName', value);
-    } else {
-      setValue(localStorage.getItem('walletName') || ethId);
-    }
-  }, [ethId, value]);
-
-  const handleCancel = useCallback(
-    setModal => {
-      setModal(false);
-      setHash('');
-      setExecuted(false);
-    },
-    [setExecuted, setHash],
-  );
+  const handleSend = (address, balance, symbol) => {
+    setTransactionType('transfer');
+    setMaxValue(balance);
+    setSymbolName(symbol);
+    setToken(symbol ? symbol : address);
+  };
 
   return (
     <>
-      <Modal
-        title="Deposit"
-        visible={isDepositModalOpen}
-        onOk={() => handleCancel(setDepositModal)}
-        onCancel={() => handleCancel(setDepositModal)}
-      >
+      {!transactionType && (
+        <>
+          <MyWallet
+            balances={ethBalances}
+            price={price}
+            title='My wallet'
+            setTransactionType={setTransactionType}
+          />
+          <DataList
+            setValue={setBalances}
+            dataProperty={dataPropertyName}
+            data={zkBalances}
+            title='Token balances'
+            visible={true}
+          >
+            {!!searchBalances.length ? (
+              searchBalances.map(({ address, symbol, balance }) => (
+                <>
+                  {verified &&
+                  (+balance === +verified[address] / Math.pow(10, 18) ||
+                    +balance === +verified[symbol] / Math.pow(10, 18)) ? (
+                    <div key={balance} className='balances-token verified'>
+                      <div className='balances-token-left'>zk{symbol}</div>
+                      <div className='balances-token-right'>
+                        <p>{+balance.toFixed(6)}</p>{' '}
+                        <span>
+                          {price && !!price.length ? (
+                            <>
+                              (~$
+                              {
+                                +(
+                                  balance *
+                                  +(price && !!price[symbol]
+                                    ? price[symbol]
+                                    : 1)
+                                ).toFixed(2)
+                              }
+                              )
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                        </span>
+                        <div className='balances-token-status'>
+                          <p>Verified</p> <span className='label-done'></span>
+                        </div>
+                        <button
+                          className='btn-tr'
+                          onClick={() => handleSend(address, balance, symbol)}
+                        >
+                          Send
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div key={balance} className='balances-token pending'>
+                      <div className='balances-token-left'>zk{symbol}</div>
+                      <div className='balances-token-right'>
+                        <p>{+balance.toFixed(6)}</p>{' '}
+                        <span>
+                          (
+                          {price && !!price.length ? (
+                            <>
+                              ~$
+                              {
+                                +(
+                                  balance *
+                                  +(price && !!price[symbol]
+                                    ? price[symbol]
+                                    : 1)
+                                ).toFixed(2)
+                              }
+                            </>
+                          ) : (
+                            <>Unknown</>
+                          )}
+                          )
+                        </span>
+                        <div className='balances-token-status'>
+                          <p>Pending</p> <SpinnerWorm />
+                        </div>
+                        <button
+                          className='pending btn-tr'
+                          onClick={() => undefined}
+                        >
+                          Send
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              ))
+            ) : (
+              <p>
+                No balances yet, please make a deposit or request money from
+                someone!
+              </p>
+            )}
+            <>
+              {price && !price.length ? (
+                <p>No Conversion Rate Available</p>
+              ) : (
+                <></>
+              )}
+            </>
+          </DataList>
+        </>
+      )}
+      {transactionType === 'deposit' && (
         <Transaction
           addressValue={addressValue}
           amountValue={amountValue}
@@ -90,64 +267,65 @@ const Account: React.FC = (): JSX.Element => {
           isExecuted={isExecuted}
           isInput={false}
           isLoading={isLoading}
-          onCancel={handleCancel}
-          openModal={setDepositModal}
-          onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
+          onChangeAddress={(e: string) => setAddressValue(e)}
           onChangeAmount={setAmountValue}
+          price={price}
+          setHash={setHash}
           setExecuted={setExecuted}
-          title="Deposit"
+          setLoading={setLoading}
+          setSymbol={setSymbol}
+          setTransactionType={setTransactionType}
+          title='Deposit'
           transactionAction={deposit}
-          type="deposit"
         />
-      </Modal>
-      <Modal
-        title="Withdraw"
-        visible={isWithrawModalOpen}
-        onOk={() => handleCancel(setWithdrawModal)}
-        onCancel={() => handleCancel(setWithdrawModal)}
-      >
+      )}
+      {transactionType === 'withdraw' && (
         <Transaction
           addressValue={addressValue}
           amountValue={amountValue}
           balances={zkBalances}
           hash={hash}
           isExecuted={isExecuted}
-          isInput
+          isInput={true}
           isLoading={isLoading}
-          onCancel={handleCancel}
-          openModal={setWithdrawModal}
-          onChangeAddress={(e: React.ChangeEvent<HTMLInputElement>) => setAddressValue(e.target.value)}
+          onChangeAddress={(e: string) => setAddressValue(e)}
           onChangeAmount={setAmountValue}
+          price={price}
+          setHash={setHash}
           setExecuted={setExecuted}
-          title="Withdraw"
+          setLoading={setLoading}
+          setTransactionType={setTransactionType}
+          setSymbol={setSymbol}
+          title='Withdraw'
           transactionAction={withdraw}
-          type="eth"
+          type='eth'
         />
-      </Modal>
-      <Card bordered={true} style={{ maxWidth: 900 }}>
-        <div style={{ display: 'flex' }}>
-          <Input
-            placeholder={ethId}
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            disabled={isDisabled}
-            onBlur={setWalletName}
-          />
-          <Icon type="edit" onClick={() => setDisabled(false)} />
-        </div>
-        {zkBalances.length &&
-          zkBalances.map(({ balance, symbol }) => (
-            <div key={symbol}>
-              <span>zk{symbol}&nbsp;</span>
-              <span>
-                {balance}&nbsp;{price}
-              </span>
-            </div>
-          ))}
-        <br />
-        <Button onClick={() => setDepositModal(true)}>Deposit</Button>
-        <Button onClick={() => setWithdrawModal(true)}>Withdraw</Button>
-      </Card>
+      )}
+      {transactionType === 'transfer' && (
+        <Transaction
+          addressValue={addressValue}
+          amountValue={amountValue}
+          balances={zkBalances}
+          hash={hash}
+          isExecuted={isExecuted}
+          isInput={true}
+          isLoading={isLoading}
+          onChangeAddress={(e: string) => setAddressValue(e)}
+          onChangeAmount={setAmountValue}
+          propsMaxValue={maxValue ? maxValue : 0}
+          propsSymbolName={symbolName ? symbolName : ''}
+          propsToken={token ? token : ''}
+          price={price}
+          setHash={setHash}
+          setExecuted={setExecuted}
+          setLoading={setLoading}
+          setSymbol={setSymbol}
+          setTransactionType={setTransactionType}
+          title='Send'
+          transactionAction={transfer}
+          type='sync'
+        />
+      )}
     </>
   );
 };

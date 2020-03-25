@@ -10,6 +10,7 @@
 
 # production
 /build
+/.idea
 
 # misc
 .DS_Store
@@ -23,3 +24,5 @@ yarn-debug.log*
 yarn-error.log*
 
 .env*
+.cache
+.firebase/

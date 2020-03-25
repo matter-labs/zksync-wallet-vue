@@ -9,12 +9,22 @@ export interface ITransactionProps {
   isExecuted: boolean;
   isInput: boolean;
   isLoading: boolean;
-  onCancel?: (setModal: (isOpen: boolean) => void) => void;
-  openModal?: (isOpen: boolean) => void;
-  onChangeAddress: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeAddress: (e: string) => void;
   onChangeAmount: React.Dispatch<React.SetStateAction<number | undefined>>;
+  price: any;
+  propsMaxValue?: number;
+  propsSymbolName?: string;
+  propsToken?: string;
+  setHash: React.Dispatch<
+    React.SetStateAction<string | ContractTransaction | undefined>
+  >;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setTransactionType: (
+    transaction: 'deposit' | 'withdraw' | 'transfer' | undefined,
+  ) => void;
   setExecuted: React.Dispatch<React.SetStateAction<boolean>>;
+  setSymbol: React.Dispatch<React.SetStateAction<string>>;
   title: string;
-  transactionAction: (token?: string, type?: string) => void;
-  type: string;
+  transactionAction: (token?: any, type?: any) => Promise<void>;
+  type?: string;
 }
