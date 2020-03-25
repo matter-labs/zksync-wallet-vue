@@ -4,14 +4,12 @@ import { useRootData } from '../../hooks/useRootData';
 
 import { IChangeNameProps } from './Types';
 
-const ChangeName: React.FC<IChangeNameProps> = ({
-  setModalOpen,
-}): JSX.Element => {
+const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }) => {
   const { zkWallet } = useRootData(({ zkWallet }) => ({
     zkWallet: zkWallet.get(),
   }));
 
-  const myRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const oldName = localStorage.getItem(zkWallet ? zkWallet.address() : '');
 
@@ -29,14 +27,14 @@ const ChangeName: React.FC<IChangeNameProps> = ({
   );
 
   useEffect(() => {
-    myRef.current?.focus();
-  }, [myRef, useRef]);
+    inputRef.current?.focus();
+  }, []);
 
   return (
     <form>
       <h3>Change name</h3>
       <input
-        ref={myRef}
+        ref={inputRef}
         placeholder='Enter new name'
         value={newName}
         onChange={e => setNewName(e.target.value)}

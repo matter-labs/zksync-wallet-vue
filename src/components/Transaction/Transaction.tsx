@@ -416,7 +416,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                     setSelected(true);
                     body?.classList.remove('fixed-b');
                   }}
-                  key={balance}
+                  key={address}
                   className='balances-token'
                 >
                   <div className='balances-token-left'>
