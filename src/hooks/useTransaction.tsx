@@ -53,7 +53,7 @@ export const useTransaction = () => {
   );
 
   const [addressValue, setAddressValue] = useState<string>(
-    walletAddress ? walletAddress : '',
+    walletAddress[1] ? walletAddress[1] : '',
   );
   const [amountValue, setAmountValue] = useState<any>(0);
   const [hash, setHash] = useState<ContractTransaction | string | undefined>();

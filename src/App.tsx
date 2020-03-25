@@ -25,7 +25,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     if (provider) {
       window['ethereum'].autoRefreshOnNetworkChange = false;
     }
-    if (provider) {
+    if (provider && walletName) {
       provider.on('networkChanged', () => {
         provider.networkVersion !== RIGHT_NETWORK_ID &&
         walletName === 'Metamask'

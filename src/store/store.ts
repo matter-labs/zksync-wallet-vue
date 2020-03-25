@@ -23,10 +23,12 @@ export const createStore = () => ({
   searchTransactions: observable.box<any>(),
   tokens: observable.box<Tokens>(),
   transactionModal: observable.box<ITransaction>(),
-  transactionType: observable.box<'deposit' | 'withdraw' | 'transfer' | undefined>(undefined),
+  transactionType: observable.box<
+    'deposit' | 'withdraw' | 'transfer' | undefined
+  >(undefined),
   verifyToken: observable.box<boolean | undefined>(undefined),
   walletName: observable.box<string>(''),
-  walletAddress: observable.box<string>(''),
+  walletAddress: observable.box<any>([]),
   withdrawModal: observable.box<boolean>(false),
   zkBalances: observable.box<IEthBalance[]>([]),
   zkBalancesLoaded: observable.box<boolean>(false),
@@ -100,7 +102,9 @@ export const createStore = () => ({
     this.searchTransactions.set(searchTransactions);
   },
 
-  setTransactionType(transaction: 'deposit' | 'withdraw' | 'transfer' | undefined) {
+  setTransactionType(
+    transaction: 'deposit' | 'withdraw' | 'transfer' | undefined,
+  ) {
     this.transactionType.set(transaction);
   },
 
@@ -108,7 +112,7 @@ export const createStore = () => ({
     this.verifyToken.set(verified);
   },
 
-  setWalletAddress(walletAddress: string): void {
+  setWalletAddress(walletAddress: any): void {
     this.walletAddress.set(walletAddress);
   },
 
