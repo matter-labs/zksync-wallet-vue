@@ -27,8 +27,11 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     }
     if (provider) {
       provider.on('networkChanged', () => {
-        provider.networkVersion !== RIGHT_NETWORK_ID && walletName === 'Metamask'
-          ? setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`)
+        provider.networkVersion !== RIGHT_NETWORK_ID &&
+        walletName === 'Metamask'
+          ? setError(
+              `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`,
+            )
           : setError('');
       });
     }
@@ -37,11 +40,16 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   return (
     <>
       <div className={`content-wrapper ${walletName ? '' : 'start-page'}`}>
-        <Modal cancelAction={() => setError('')} visible={!!error} classSpecifier="error" background={true}>
+        <Modal
+          cancelAction={() => setError('')}
+          visible={!!error}
+          classSpecifier='error'
+          background={true}
+        >
           <p>{error}</p>
         </Modal>
         {walletName && <Header />}
-        <div className="content">{children}</div>
+        <div className='content'>{children}</div>
         <Footer />
       </div>
     </>

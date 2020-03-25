@@ -101,7 +101,9 @@ const Account: React.FC = (): JSX.Element => {
       window.location.pathname = '/';
     }
     const balancesSymbols = () => {
-      const exceptFau = zkBalances?.filter(el => el.symbol !== 'FAU').map(el => el.symbol);
+      const exceptFau = zkBalances
+        ?.filter(el => el.symbol !== 'FAU')
+        .map(el => el.symbol);
       return exceptFau;
     };
     request(
@@ -117,14 +119,27 @@ const Account: React.FC = (): JSX.Element => {
     )
       .then((res: any) => {
         const prices = {};
-        Object.keys(res.data).map(el => (prices[el] = res.data[el].quote.USD.price));
+        Object.keys(res.data).map(
+          el => (prices[el] = res.data[el].quote.USD.price),
+        );
         setPrice(prices);
       })
       .catch(err => {
         // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         console.log(err);
       });
-  }, [error, ethId, provider, setBalances, setError, setPrice, verifyToken, walletName, zkBalances, zkWallet]);
+  }, [
+    error,
+    ethId,
+    provider,
+    setBalances,
+    setError,
+    setPrice,
+    verifyToken,
+    walletName,
+    zkBalances,
+    zkWallet,
+  ]);
 
   const handleSend = (address, balance, symbol) => {
     setTransactionType('transfer');
@@ -137,12 +152,17 @@ const Account: React.FC = (): JSX.Element => {
     <>
       {!transactionType && (
         <>
-          <MyWallet balances={ethBalances} price={price} title="My wallet" setTransactionType={setTransactionType} />
+          <MyWallet
+            balances={ethBalances}
+            price={price}
+            title='My wallet'
+            setTransactionType={setTransactionType}
+          />
           <DataList
             setValue={setBalances}
             dataProperty={dataPropertyName}
             data={zkBalances}
-            title="Token balances"
+            title='Token balances'
             visible={true}
           >
             {!!searchBalances.length ? (
@@ -151,43 +171,70 @@ const Account: React.FC = (): JSX.Element => {
                   {verified &&
                   (+balance === +verified[address] / Math.pow(10, 18) ||
                     +balance === +verified[symbol] / Math.pow(10, 18)) ? (
-                    <div key={balance} className="balances-token verified">
-                      <div className="balances-token-left">zk{symbol}</div>
-                      <div className="balances-token-right">
+                    <div key={balance} className='balances-token verified'>
+                      <div className='balances-token-left'>zk{symbol}</div>
+                      <div className='balances-token-right'>
                         <p>{+balance.toFixed(6)}</p>{' '}
                         <span>
                           {price && !!price.length ? (
-                            <>(~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)})</>
+                            <>
+                              (~$
+                              {
+                                +(
+                                  balance *
+                                  +(price && !!price[symbol]
+                                    ? price[symbol]
+                                    : 1)
+                                ).toFixed(2)
+                              }
+                              )
+                            </>
                           ) : (
                             <></>
                           )}
                         </span>
-                        <div className="balances-token-status">
-                          <p>Verified</p> <span className="label-done"></span>
+                        <div className='balances-token-status'>
+                          <p>Verified</p> <span className='label-done'></span>
                         </div>
-                        <button className="btn-tr" onClick={() => handleSend(address, balance, symbol)}>
+                        <button
+                          className='btn-tr'
+                          onClick={() => handleSend(address, balance, symbol)}
+                        >
                           Send
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <div key={balance} className="balances-token pending">
-                      <div className="balances-token-left">zk{symbol}</div>
-                      <div className="balances-token-right">
+                    <div key={balance} className='balances-token pending'>
+                      <div className='balances-token-left'>zk{symbol}</div>
+                      <div className='balances-token-right'>
                         <p>{+balance.toFixed(6)}</p>{' '}
                         <span>
                           (
                           {price && !!price.length ? (
-                            <>~${+(balance * +(price && !!price[symbol] ? price[symbol] : 1)).toFixed(2)}</>
+                            <>
+                              ~$
+                              {
+                                +(
+                                  balance *
+                                  +(price && !!price[symbol]
+                                    ? price[symbol]
+                                    : 1)
+                                ).toFixed(2)
+                              }
+                            </>
                           ) : (
                             <>Unknown</>
                           )}
                           )
                         </span>
-                        <div className="balances-token-status">
+                        <div className='balances-token-status'>
                           <p>Pending</p> <SpinnerWorm />
                         </div>
-                        <button className="pending btn-tr" onClick={() => undefined}>
+                        <button
+                          className='pending btn-tr'
+                          onClick={() => undefined}
+                        >
                           Send
                         </button>
                       </div>
@@ -196,9 +243,18 @@ const Account: React.FC = (): JSX.Element => {
                 </>
               ))
             ) : (
-              <p>No balances yet, please make a deposit or request money from someone!</p>
+              <p>
+                No balances yet, please make a deposit or request money from
+                someone!
+              </p>
             )}
-            <>{price && !price.length ? <p>No Conversion Rate Available</p> : <></>}</>
+            <>
+              {price && !price.length ? (
+                <p>No Conversion Rate Available</p>
+              ) : (
+                <></>
+              )}
+            </>
           </DataList>
         </>
       )}
@@ -219,7 +275,7 @@ const Account: React.FC = (): JSX.Element => {
           setLoading={setLoading}
           setSymbol={setSymbol}
           setTransactionType={setTransactionType}
-          title="Deposit"
+          title='Deposit'
           transactionAction={deposit}
         />
       )}
@@ -240,9 +296,9 @@ const Account: React.FC = (): JSX.Element => {
           setLoading={setLoading}
           setTransactionType={setTransactionType}
           setSymbol={setSymbol}
-          title="Withdraw"
+          title='Withdraw'
           transactionAction={withdraw}
-          type="eth"
+          type='eth'
         />
       )}
       {transactionType === 'transfer' && (
@@ -265,9 +321,9 @@ const Account: React.FC = (): JSX.Element => {
           setLoading={setLoading}
           setSymbol={setSymbol}
           setTransactionType={setTransactionType}
-          title="Send"
+          title='Send'
           transactionAction={transfer}
-          type="sync"
+          type='sync'
         />
       )}
     </>

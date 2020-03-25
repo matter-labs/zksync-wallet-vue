@@ -1,6 +1,10 @@
 import { useState, useCallback } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
-import { closestPackableTransactionAmount, closestPackableTransactionFee, getDefaultProvider } from 'zksync';
+import {
+  closestPackableTransactionAmount,
+  closestPackableTransactionFee,
+  getDefaultProvider,
+} from 'zksync';
 
 import { useRootData } from '../hooks/useRootData';
 
@@ -48,7 +52,9 @@ export const useTransaction = () => {
     }),
   );
 
-  const [addressValue, setAddressValue] = useState<string>(walletAddress ? walletAddress : '');
+  const [addressValue, setAddressValue] = useState<string>(
+    walletAddress ? walletAddress : '',
+  );
   const [amountValue, setAmountValue] = useState<any>(0);
   const [hash, setHash] = useState<ContractTransaction | string | undefined>();
   const [isExecuted, setExecuted] = useState<boolean>(false);
@@ -56,13 +62,26 @@ export const useTransaction = () => {
   const [symbol, setSymbol] = useState<string>('');
 
   const history = useCallback(
-    (amount: number, hash: string | undefined, to: string, type: string, token: string) => {
+    (
+      amount: number,
+      hash: string | undefined,
+      to: string,
+      type: string,
+      token: string,
+    ) => {
       try {
-        const history = JSON.parse(localStorage.getItem(`history${zkWallet?.address()}`) || '[]');
-        const newHistory = JSON.stringify([{ amount, date: new Date(), hash, to, type, token }, ...history]);
+        const history = JSON.parse(
+          localStorage.getItem(`history${zkWallet?.address()}`) || '[]',
+        );
+        const newHistory = JSON.stringify([
+          { amount, date: new Date(), hash, to, type, token },
+          ...history,
+        ]);
         localStorage.setItem(`history${zkWallet?.address()}`, newHistory);
       } catch (err) {
-        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+        err.name && err.message
+          ? setError(`${err.name}: ${err.message}`)
+          : setError(DEFAULT_ERROR);
       }
     },
     [setError, zkWallet],
@@ -73,7 +92,8 @@ export const useTransaction = () => {
       try {
         if (receipt && zkWallet) {
           setLoading(false);
-          const zkBalance = (await zkWallet.getAccountState()).committed.balances;
+          const zkBalance = (await zkWallet.getAccountState()).committed
+            .balances;
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
@@ -87,7 +107,9 @@ export const useTransaction = () => {
               setZkBalances(res as IEthBalance[]);
             })
             .catch(err => {
-              err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+              err.name && err.message
+                ? setError(`${err.name}: ${err.message}`)
+                : setError(DEFAULT_ERROR);
             });
           setAmountValue(0);
         }
@@ -95,10 +117,20 @@ export const useTransaction = () => {
           setExecuted(true);
         }
       } catch (err) {
-        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+        err.name && err.message
+          ? setError(`${err.name}: ${err.message}`)
+          : setError(DEFAULT_ERROR);
       }
     },
-    [setAmountValue, setError, setExecuted, setLoading, setZkBalances, tokens, zkWallet],
+    [
+      setAmountValue,
+      setError,
+      setExecuted,
+      setLoading,
+      setZkBalances,
+      tokens,
+      zkWallet,
+    ],
   );
 
   const deposit = useCallback(
@@ -107,18 +139,30 @@ export const useTransaction = () => {
         try {
           setLoading(true);
           const executeDeposit = async fee => {
-            const depositPriorityOperation = await zkWallet.depositToSyncFromEthereum({
-              depositTo: zkWallet.address(),
-              token: token,
-              amount: ethers.utils.bigNumberify(
-                amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
-              ),
-              maxFeeInETHToken: ethers.utils.bigNumberify(
-                closestPackableTransactionFee((2 * ZK_FEE_MULTIPLIER * fee).toString()),
-              ),
-            });
+            const depositPriorityOperation = await zkWallet.depositToSyncFromEthereum(
+              {
+                depositTo: zkWallet.address(),
+                token: token,
+                amount: ethers.utils.bigNumberify(
+                  amountValue
+                    ? closestPackableTransactionAmount(amountValue?.toString())
+                    : '0',
+                ),
+                maxFeeInETHToken: ethers.utils.bigNumberify(
+                  closestPackableTransactionFee(
+                    (2 * ZK_FEE_MULTIPLIER * fee).toString(),
+                  ),
+                ),
+              },
+            );
             const hash = depositPriorityOperation.ethTx;
-            history(amountValue / Math.pow(10, 18) || 0, hash.hash, zkWallet.address(), 'deposit', symbol);
+            history(
+              amountValue / Math.pow(10, 18) || 0,
+              hash.hash,
+              zkWallet.address(),
+              'deposit',
+              symbol,
+            );
             setHash(hash);
             await depositPriorityOperation.awaitEthereumTxCommit().then(() => {
               setHintModal('Block has been mined!');
@@ -135,7 +179,9 @@ export const useTransaction = () => {
             .then(res => res.toString())
             .then(data => executeDeposit(data));
         } catch (err) {
-          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+          err.name && err.message
+            ? setError(`${err.name}: ${err.message}`)
+            : setError(DEFAULT_ERROR);
         }
       }
     },
@@ -162,26 +208,50 @@ export const useTransaction = () => {
             to: addressValue,
             token: token,
             amount: ethers.utils.bigNumberify(
-              amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
+              amountValue
+                ? closestPackableTransactionAmount(amountValue?.toString())
+                : '0',
             ),
-            fee: ethers.utils.bigNumberify(closestPackableTransactionFee(Math.floor(amountValue * 0.001).toString())),
+            fee: ethers.utils.bigNumberify(
+              closestPackableTransactionFee(
+                Math.floor(amountValue * 0.001).toString(),
+              ),
+            ),
           });
           const hash = transferTransaction.txHash;
-          history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'transfer', symbol);
+          history(
+            amountValue / Math.pow(10, 18) || 0,
+            hash,
+            addressValue,
+            'transfer',
+            symbol,
+          );
           setHash(hash);
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
           setVerifyToken(!!verifyReceipt);
         } else {
-          setError(`Address: "${addressValue}" doesn't match ethereum address format`);
+          setError(
+            `Address: "${addressValue}" doesn't match ethereum address format`,
+          );
         }
       } catch (err) {
-        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+        err.name && err.message
+          ? setError(`${err.name}: ${err.message}`)
+          : setError(DEFAULT_ERROR);
         setLoading(false);
       }
     },
-    [addressValue, amountValue, history, setError, setVerifyToken, transactions, zkWallet],
+    [
+      addressValue,
+      amountValue,
+      history,
+      setError,
+      setVerifyToken,
+      transactions,
+      zkWallet,
+    ],
   );
 
   const withdraw = useCallback(
@@ -189,30 +259,58 @@ export const useTransaction = () => {
       try {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
-          const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum({
-            ethAddress: addressValue,
-            token: token,
-            amount: ethers.utils.bigNumberify(
-              amountValue ? closestPackableTransactionAmount(amountValue?.toString()) : '0',
-            ),
-            fee: ethers.utils.bigNumberify(closestPackableTransactionFee(Math.floor(amountValue * 0.001).toString())),
-          });
+          const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
+            {
+              ethAddress: addressValue,
+              token: token,
+              amount: ethers.utils.bigNumberify(
+                amountValue
+                  ? closestPackableTransactionAmount(amountValue?.toString())
+                  : '0',
+              ),
+              fee: ethers.utils.bigNumberify(
+                closestPackableTransactionFee(
+                  Math.floor(amountValue * 0.001).toString(),
+                ),
+              ),
+            },
+          );
           const hash = withdrawTransaction.txHash;
-          history(amountValue / Math.pow(10, 18) || 0, hash, addressValue, 'withdraw', symbol);
+          history(
+            amountValue / Math.pow(10, 18) || 0,
+            hash,
+            addressValue,
+            'withdraw',
+            symbol,
+          );
           setHash(hash);
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await withdrawTransaction.awaitVerifyReceipt();
           setVerifyToken(!!verifyReceipt);
         } else {
-          setError(`Address: "${addressValue}" doesn't match ethereum address format`);
+          setError(
+            `Address: "${addressValue}" doesn't match ethereum address format`,
+          );
         }
       } catch (err) {
-        err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+        err.name && err.message
+          ? setError(`${err.name}: ${err.message}`)
+          : setError(DEFAULT_ERROR);
         setLoading(false);
       }
     },
-    [addressValue, amountValue, history, setError, setHash, setLoading, setVerifyToken, transactions, zkWallet],
+    [
+      addressValue,
+      amountValue,
+      history,
+      setError,
+      setHash,
+      setLoading,
+      setVerifyToken,
+      transactions,
+      zkWallet,
+    ],
   );
 
   return {
