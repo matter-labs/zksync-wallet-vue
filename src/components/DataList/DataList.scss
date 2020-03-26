@@ -117,6 +117,10 @@
 
     &.open {
       display: flex;
+
+      .add-contact-button {
+        top: 30px;
+      }
     }
 
     &.closed {
@@ -442,6 +446,26 @@
     display: block;
   }
 
+  .add-contact {
+    &-button {
+      top: 35px;
+
+      &-input {
+        top: -30px;
+        width: 90px;
+        font-size: var(--md-font-size);
+      }
+
+      & > p {
+        display: inline;
+      }
+    
+      & > span {
+        margin-right: 15px;
+      }
+    }
+  }
+
   .label-done {
     display: block;
   }
@@ -453,6 +477,14 @@
 
     &-title {
       font-size: var(--xl-font-size);
+    }
+
+    &-wrapper {
+      &.open {
+        .add-contact-button {
+          top: 35px;
+        }
+      }
     }
   }
 
@@ -485,26 +517,6 @@
 
   .datalist-balance {
     max-width: 120px;
-  }
-
-  .add-contact {
-    &-button {
-      top: 35px;
-
-      &-input {
-        top: -30px;
-        width: 90px;
-        font-size: var(--md-font-size);
-      }
-
-      & > p {
-        display: inline;
-      }
-    
-      & > span {
-        margin-right: 15px;
-      }
-    }
   }
 }
 

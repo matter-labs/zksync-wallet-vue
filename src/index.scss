@@ -155,6 +155,10 @@ button {
 }
 
 .btn-tr {
+  &:hover {
+    background-color: var(--border-color) !important;
+  }
+  
   &:active {
     background-color: var(--input-border-focus) !important;
   }
