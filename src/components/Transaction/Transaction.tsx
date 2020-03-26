@@ -468,7 +468,7 @@ const Transaction: React.FC<ITransactionProps> = ({
               </p>
             </span>
             <p className='transaction-hash'>
-              Tx hash:
+              {'Tx hash: '}
               <a
                 target='_blank'
                 href={`${ZK_EXPLORER}/${
