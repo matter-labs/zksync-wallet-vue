@@ -9,7 +9,13 @@ import { useRootData } from '../../hooks/useRootData';
 
 import './Modal.scss';
 
-const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, classSpecifier, visible }): JSX.Element => {
+const Modal: React.FC<IModalProps> = ({
+  background,
+  cancelAction,
+  children,
+  classSpecifier,
+  visible,
+}): JSX.Element => {
   const {
     isModalOpen,
     setAccessModal,
@@ -73,22 +79,25 @@ const Modal: React.FC<IModalProps> = ({ background, cancelAction, children, clas
   }, []);
 
   return (
-    <>
+    <Portal>
       {(classSpecifier === isModalOpen || visible) && (
-        <Portal>
+        <>
           <div ref={myRef} className={`modal ${classSpecifier} open`}>
-            <button onClick={closeHandler} className="close-icon" />
+            <button onClick={closeHandler} className='close-icon' />
             {children}
           </div>
           <div
-            data-name="modal-wrapper"
+            data-name='modal-wrapper'
             className={`modal-wrapper ${
-              (classSpecifier === isModalOpen && background) || (visible && background) ? 'open' : 'closed'
+              (classSpecifier === isModalOpen && background) ||
+              (visible && background)
+                ? 'open'
+                : 'closed'
             }`}
           />
-        </Portal>
+        </>
       )}
-    </>
+    </Portal>
   );
 };
 

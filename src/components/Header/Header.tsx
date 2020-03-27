@@ -12,6 +12,7 @@ import { HEADER_ITEMS } from '../../constants/header';
 
 import './Header.scss';
 import { QRCode } from '../QRCode/QRCode';
+import { useTimeout } from '../../hooks/timers';
 
 const Header: React.FC = () => {
   const {
@@ -40,6 +41,7 @@ const Header: React.FC = () => {
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isChangeNameOpen, openChangeName] = useState<boolean>(false);
+  const setTimeout = useTimeout();
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
