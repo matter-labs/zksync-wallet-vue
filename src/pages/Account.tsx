@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import DataList from '../components/DataList/DataList';
+import { DataList } from '../components/DataList/DataListNew';
 import MyWallet from '../components/Wallets/MyWallet';
 import SpinnerWorm from '../components/Spinner/SpinnerWorm';
 import Transaction from '../components/Transaction/Transaction';
@@ -91,9 +91,9 @@ const Account: React.FC = (): JSX.Element => {
     }),
   );
 
-  useEffect(() => {
+  const initWallet = async () => {
     setBalances(zkBalances);
-    zkWallet
+    await zkWallet
       ?.getAccountState()
       .then(res => res)
       .then(data => setVerified(data.verified.balances));
@@ -128,6 +128,10 @@ const Account: React.FC = (): JSX.Element => {
         // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
         console.log(err);
       });
+  };
+  // console.log(ethId);
+  useEffect(() => {
+    initWallet();
   }, [
     error,
     ethId,
@@ -159,103 +163,89 @@ const Account: React.FC = (): JSX.Element => {
             setTransactionType={setTransactionType}
           />
           <DataList
-            setValue={setBalances}
-            dataProperty={dataPropertyName}
+            // setValue={setBalances}
             data={zkBalances}
             title='Token balances'
             visible={true}
-          >
-            {!!searchBalances.length ? (
-              searchBalances.map(({ address, symbol, balance }) => (
-                <>
-                  {verified &&
-                  (+balance === +verified[address] / Math.pow(10, 18) ||
-                    +balance === +verified[symbol] / Math.pow(10, 18)) ? (
-                    <div key={balance} className='balances-token verified'>
-                      <div className='balances-token-left'>zk{symbol}</div>
-                      <div className='balances-token-right'>
-                        <p>{+balance.toFixed(6)}</p>{' '}
-                        <span>
-                          {price && !!price.length ? (
-                            <>
-                              (~$
-                              {
-                                +(
-                                  balance *
-                                  +(price && !!price[symbol]
-                                    ? price[symbol]
-                                    : 1)
-                                ).toFixed(2)
-                              }
-                              )
-                            </>
-                          ) : (
-                            <></>
-                          )}
-                        </span>
-                        <div className='balances-token-status'>
-                          <p>Verified</p> <span className='label-done'></span>
-                        </div>
-                        <button
-                          className='btn-tr'
-                          onClick={() => handleSend(address, balance, symbol)}
-                        >
-                          Send
-                        </button>
+            renderItem={({ address, symbol, balance }) => (
+              <>
+                {verified &&
+                (+balance === +verified[address] / Math.pow(10, 18) ||
+                  +balance === +verified[symbol] / Math.pow(10, 18)) ? (
+                  <div key={balance} className='balances-token verified'>
+                    <div className='balances-token-left'>zk{symbol}</div>
+                    <div className='balances-token-right'>
+                      <p>{+balance.toFixed(6)}</p>{' '}
+                      <span>
+                        {price && !!price.length ? (
+                          <>
+                            (~$
+                            {
+                              +(
+                                balance *
+                                +(price && !!price[symbol] ? price[symbol] : 1)
+                              ).toFixed(2)
+                            }
+                            )
+                          </>
+                        ) : (
+                          <></>
+                        )}
+                      </span>
+                      <div className='balances-token-status'>
+                        <p>Verified</p> <span className='label-done'></span>
                       </div>
+                      <button
+                        className='btn-tr'
+                        onClick={() => handleSend(address, balance, symbol)}
+                      >
+                        Send
+                      </button>
                     </div>
-                  ) : (
-                    <div key={balance} className='balances-token pending'>
-                      <div className='balances-token-left'>zk{symbol}</div>
-                      <div className='balances-token-right'>
-                        <p>{+balance.toFixed(6)}</p>{' '}
-                        <span>
-                          (
-                          {price && !!price.length ? (
-                            <>
-                              ~$
-                              {
-                                +(
-                                  balance *
-                                  +(price && !!price[symbol]
-                                    ? price[symbol]
-                                    : 1)
-                                ).toFixed(2)
-                              }
-                            </>
-                          ) : (
-                            <>Unknown</>
-                          )}
-                          )
-                        </span>
-                        <div className='balances-token-status'>
-                          <p>Pending</p> <SpinnerWorm />
-                        </div>
-                        <button
-                          className='pending btn-tr'
-                          onClick={() => undefined}
-                        >
-                          Send
-                        </button>
+                  </div>
+                ) : (
+                  <div key={balance} className='balances-token pending'>
+                    <div className='balances-token-left'>zk{symbol}</div>
+                    <div className='balances-token-right'>
+                      <p>{+balance.toFixed(6)}</p>{' '}
+                      <span>
+                        (
+                        {price && !!price.length ? (
+                          <>
+                            ~$
+                            {
+                              +(
+                                balance *
+                                +(price && !!price[symbol] ? price[symbol] : 1)
+                              ).toFixed(2)
+                            }
+                          </>
+                        ) : (
+                          <>Unknown</>
+                        )}
+                        )
+                      </span>
+                      <div className='balances-token-status'>
+                        <p>Pending</p> <SpinnerWorm />
                       </div>
+                      <button
+                        className='pending btn-tr'
+                        onClick={() => undefined}
+                      >
+                        Send
+                      </button>
                     </div>
-                  )}
-                </>
-              ))
-            ) : (
+                  </div>
+                )}
+              </>
+            )}
+            emptyListComponent={() => (
               <p>
                 No balances yet, please make a deposit or request money from
                 someone!
               </p>
             )}
-            <>
-              {price && !price.length ? (
-                <p>No Conversion Rate Available</p>
-              ) : (
-                <></>
-              )}
-            </>
-          </DataList>
+          />
         </>
       )}
       {transactionType === 'deposit' && (

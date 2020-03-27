@@ -1,28 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-type UseTimer = (
-  defTimeout?: number,
-) => (cb: (...args: any[]) => void, timeout?: number, ...args: any[]) => void;
+type Cb = (...args: any[]) => void;
 
-function useTimer(baseSet, baseClear) {
-  return (defTimeout = 250) => {
-    const [timer, setTimer] = useState<number | null>(null);
+export function useInterval(cb: Cb, timeout = 250) {
+  const callback = useRef<Cb>();
 
-    useEffect(() => {
-      return () => {
-        if (timer) {
-          baseClear(timer);
-          setTimer(null);
-        }
-      };
-    }, [timer]);
+  useEffect(() => (callback.current = cb), [cb]);
 
-    return (cb, timeout?: number, ...args) => {
-      const t = baseSet(cb, timeout || defTimeout, ...args);
-      setTimer(t as any);
+  useEffect(() => {
+    const tick = () => {
+      callback.current && callback.current();
     };
-  };
+    const t = setInterval(tick, timeout);
+    return () => clearInterval(t);
+  }, []);
 }
 
-export const useTimeout: UseTimer = useTimer(setTimeout, clearTimeout);
-export const useInterval: UseTimer = useTimer(setInterval, clearInterval);
+export function useTimeout() {
+  const [tID, setTID] = useState<number | undefined>();
+
+  const cleanup = () => {
+    if (tID) clearInterval(tID);
+  };
+
+  useEffect(() => cleanup, []);
+
+  return (cb: Cb, timeout = 250, ...args: any[]) => {
+    cleanup();
+    setTID(setTimeout(cb, timeout, ...args) as any);
+  };
+}
