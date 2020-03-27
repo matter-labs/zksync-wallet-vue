@@ -10,6 +10,7 @@ import useWalletInit from '../hooks/useWalletInit';
 
 import { WALLETS } from '../constants/Wallets';
 import { RIGHT_NETWORK_ID } from '../constants/networks';
+import { useInterval, useTimeout } from '../hooks/timers';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
@@ -70,7 +71,8 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const [curAddress, setCurAddress] = useState<string>(
     provider?.selectedAddress,
   );
-  const [addressTimer, setAddressTimer] = useState<number | null>(null);
+  const setInterval = useInterval(2000);
+  const setTimeout = useTimeout(5000);
 
   const handleLogOut = useCallback(() => {
     setProvider(null);
@@ -105,17 +107,15 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setHintModal('Connected! Follow the instructions in the popup');
       setTimeout(() => {
         setHintModal('');
-      }, 5000);
+      });
     }
 
     if (!curAddress && walletName && provider) {
-      const t = setInterval(() => {
+      setInterval(() => {
         if (provider?.selectedAddress) {
           setCurAddress(provider?.selectedAddress);
         }
-      }, 2000);
-
-      if (curAddress) clearInterval(t);
+      });
     }
   }, [
     createWallet,
