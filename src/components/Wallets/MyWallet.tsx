@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import makeBlockie from 'ethereum-blockies-base64';
+import cl from 'classnames';
 
 import avatar from '../../images/avatar.png';
-import DataList from '../DataList/DataList';
+import { DataList } from '../DataList/DataListNew';
 import Spinner from '../Spinner/Spinner';
 import SpinnerWorm from '../Spinner/SpinnerWorm';
 
@@ -144,63 +145,50 @@ const MyWallet: React.FC<IMyWalletProps> = ({
 
   return (
     <>
-      <div className={`assets-wrapper ${isAssetsOpen ? 'open' : 'closed'}`}>
+      <div className={cl('assets-wrapper', isAssetsOpen ? 'open' : 'closed')}>
         <DataList
-          setValue={setBalances}
-          dataProperty={dataPropertyName}
           data={zkBalances}
-          title='Select asset'
-          visible={true}
-        >
-          <button
-            onClick={() => {
-              openAssets(false);
-              body?.classList.remove('fixed-b');
-            }}
-            className='close-icon'
-          ></button>
-          <div className='assets-border-bottom'></div>
-          {!!searchBalances.length ? (
-            searchBalances.map(({ address, symbol, balance }) => (
-              <div
-                onClick={() => {
-                  setWalletBalance(balance.toString());
-                  handleSelect(symbol);
-                  openBalancesList(false);
-                  setSymbolName(symbol);
-                  openAssets(false);
-                  setAddress(address);
-                  body?.classList.remove('fixed-b');
-                }}
-                key={balance}
-                className='balances-token'
-              >
-                <div className='balances-token-left'>
-                  <div className={`logo ${symbol}`}></div>
-                  <div className='balances-token-name'>
-                    <p>{symbol}</p>
-                    <span>
-                      {symbol === 'ETH' && <>Ethereum</>}
-                      {symbol === 'DAI' && <>Dai</>}
-                      {symbol === 'FAU' && <>Faucet</>}
-                    </span>
-                  </div>
-                </div>
-                <div className='balances-token-right'>
+          renderItem={({ address, symbol, balance }) => (
+            <div
+              onClick={() => {
+                setWalletBalance(balance.toString());
+                handleSelect(symbol);
+                openBalancesList(false);
+                setSymbolName(symbol);
+                openAssets(false);
+                setAddress(address);
+                body?.classList.remove('fixed-b');
+              }}
+              key={balance}
+              className='balances-token'
+            >
+              <div className='balances-token-left'>
+                <div className={`logo ${symbol}`}></div>
+                <div className='balances-token-name'>
+                  <p>{symbol}</p>
                   <span>
-                    balance:{' '}
-                    <p className='datalist-balance'>{+balance.toFixed(2)}</p>
+                    {symbol === 'ETH' && <>Ethereum</>}
+                    {symbol === 'DAI' && <>Dai</>}
+                    {symbol === 'FAU' && <>Faucet</>}
                   </span>
                 </div>
               </div>
-            ))
-          ) : (
+              <div className='balances-token-right'>
+                <span>
+                  balance:{' '}
+                  <p className='datalist-balance'>{+balance.toFixed(2)}</p>
+                </span>
+              </div>
+            </div>
+          )}
+          emptyListComponent={() => (
             <p>
               No balances yet, please make a deposit or request money from
               someone!
             </p>
           )}
-        </DataList>
+          title='Select asset'
+        />
       </div>
       <div
         data-name='assets-wrapper'
