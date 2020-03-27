@@ -5,6 +5,8 @@ const HTMLPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCSSPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
+const dotenv = require('dotenv');
+const { EnvironmentPlugin } = require('webpack');
 
 const BUILD_DIR = path.resolve('build/');
 const DEV = process.env.NODE_ENV === 'development';
@@ -52,6 +54,7 @@ const config = {
         ignore: ['index.html'],
       },
     ]),
+    new EnvironmentPlugin(dotenv.config().parsed),
   ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
