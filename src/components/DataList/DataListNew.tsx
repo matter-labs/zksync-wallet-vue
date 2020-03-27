@@ -7,7 +7,7 @@ import SaveContacts from '../SaveContacts/SaveContacts';
 import { useRootData } from '../../hooks/useRootData';
 
 import './DataList.scss';
-import { useDebounce } from '../../hooks/useDebouncd';
+import { useDebounce } from '../../hooks/useDebounce';
 import { useAutoFocus } from '../../hooks/useAutoFocus';
 
 interface Props<T> {
