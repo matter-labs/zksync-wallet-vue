@@ -251,8 +251,10 @@ const MyWallet: React.FC<IMyWalletProps> = ({
           </div>
           <div
             className={`mywallet-currency-block ${
-              verifiedState ? 'unverified' : ''
-            } ${isBalancesListOpen ? 'borderless' : ''}`}
+              price && !!price.length ? '' : 'none'
+            } ${verifiedState ? 'unverified' : ''} ${
+              isBalancesListOpen ? 'borderless' : ''
+            }`}
           >
             <div
               data-name='custom-selector'
@@ -261,17 +263,6 @@ const MyWallet: React.FC<IMyWalletProps> = ({
               }`}
             ></div>
             <div className='mywallet-currency-wrapper'>
-              <span
-                className={`mywallet-currency-balance ${
-                  !zkBalances.length && zkBalancesLoaded ? 'empty' : ''
-                }`}
-              >
-                {walletBalance
-                  ? +parseFloat(walletBalance)
-                      .toFixed(4)
-                      .toString()
-                  : '0.00'}
-              </span>
               <div className='custom-selector balances mywallet'>
                 <div
                   onClick={() => {
@@ -305,28 +296,17 @@ const MyWallet: React.FC<IMyWalletProps> = ({
             <div className='mywallet-price-wrapper'>
               {verified && verifiedState && <SpinnerWorm />}
               <span className='mywallet-price'>
-                ~
-                {parseFloat(
-                  zkBalances
-                    ?.reduce((acc, cur) => {
-                      return (
-                        acc +
-                        cur.balance *
-                          +(price && !!price[cur.symbol]
-                            ? price[cur.symbol]
-                            : 1)
-                      );
-                    }, 0)
-                    .toFixed(2)
-                    .toString(),
-                )}{' '}
-                USD
+                ~{parseFloat((+walletBalance).toFixed(2).toString())} USD
               </span>
             </div>
           </div>
           {!!zkBalances?.length && zkBalancesLoaded ? (
             <>
-              <div className='mywallet-buttons-container'>
+              <div
+                className={`mywallet-buttons-container ${
+                  price && !!price.length ? '' : 'none'
+                }`}
+              >
                 <button
                   onClick={() => setTransactionType('deposit')}
                   className='btn deposit-button btn-tr'
@@ -349,7 +329,11 @@ const MyWallet: React.FC<IMyWalletProps> = ({
             </>
           ) : (
             <>
-              <div className='mywallet-buttons-container'>
+              <div
+                className={`mywallet-buttons-container ${
+                  price && !!price.length ? '' : 'none'
+                }`}
+              >
                 <p>
                   No balances yet, please make a deposit or request money from
                   someone!

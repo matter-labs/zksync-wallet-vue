@@ -50,7 +50,7 @@
   left: 16px;
   z-index: 10000;
   width: 120px;
-  height: 80px;
+  height: auto;
   padding: 10px;
   color: var(--dark-color);
   background-color: var(--modal-bg-color);
@@ -132,6 +132,10 @@
     justify-content: space-between;
     margin-top: 90px;
 
+    &.none {
+      margin-top: 20px;
+    }
+
     & > p {
       margin-top: 30px;
       color: var(--dark-color);
@@ -199,6 +203,10 @@
       background-color: var(--bg-block-color);
       border-left: 3px solid var(--button-bg-color);
       transform: translateX(-15px);
+
+      &.none {
+        display: none;
+      }
 
       &.borderless {
         border-left: 3px solid var(--dark-color);

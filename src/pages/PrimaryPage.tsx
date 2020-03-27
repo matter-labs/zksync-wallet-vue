@@ -16,9 +16,11 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   const {
     error,
+    hintModal,
     isAccessModalOpen,
     provider,
     setAccessModal,
+    setHintModal,
     setNormalBg,
     setProvider,
     setWalletName,
@@ -28,12 +30,14 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   } = useRootData(
     ({
       error,
+      hintModal,
       isAccessModalOpen,
       provider,
       setAccessModal,
       setEthBalances,
       setEthId,
       setEthWallet,
+      setHintModal,
       setNormalBg,
       setProvider,
       setWalletName,
@@ -43,12 +47,14 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       zkWallet,
     }) => ({
       error: error.get(),
+      hintModal: hintModal.get(),
       isAccessModalOpen: isAccessModalOpen.get(),
       provider: provider.get(),
       setAccessModal,
       setEthBalances,
       setEthId,
       setEthWallet,
+      setHintModal,
       setNormalBg,
       setProvider,
       setWalletName,
@@ -85,13 +91,21 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       (walletName === 'Metamask' &&
         curAddress &&
         !!curAddress.length &&
-        !zkWallet) ||
+        !zkWallet &&
+        provider &&
+        provider.networkVersion === RIGHT_NETWORK_ID) ||
       (!zkWallet && walletName && walletName !== 'Metamask')
     ) {
       createWallet();
     }
     if (error) {
       setAccessModal(false);
+    }
+    if (curAddress && walletName) {
+      setHintModal('Connected! Follow the instructions in the popup');
+      setTimeout(() => {
+        setHintModal('');
+      }, 5000);
     }
 
     if (!curAddress && walletName && provider) {
@@ -100,11 +114,9 @@ const PrimaryPage: React.FC = (): JSX.Element => {
           setCurAddress(provider?.selectedAddress);
         }
       }, 2000);
-      setAddressTimer(t as any);
+
+      if (curAddress) clearInterval(t);
     }
-    return () => {
-      if (addressTimer) clearInterval(addressTimer!);
-    };
   }, [
     createWallet,
     curAddress,
@@ -116,6 +128,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   return (
     <>
+      {!!hintModal.length && <div className='hint-modal'>{hintModal}</div>}
       <LazyWallet />
       {zkWallet ? (
         <Redirect to='/account' />
