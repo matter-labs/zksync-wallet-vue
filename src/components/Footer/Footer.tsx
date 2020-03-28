@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
-import { FOOTER_LINKS } from '../../constants/footer';
+import { FOOTER_LINKS } from 'constants/footer';
 
 import '../../index.scss';
 import './Footer.scss';

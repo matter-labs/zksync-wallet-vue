@@ -1,14 +1,14 @@
 import React, { useEffect, ReactElement, useState, useMemo } from 'react';
 
 import cl from 'classnames';
-import Modal from '../Modal/Modal';
-import SaveContacts from '../SaveContacts/SaveContacts';
+import Modal from 'components/Modal/Modal';
+import SaveContacts from 'components/SaveContacts/SaveContacts';
 
-import { useRootData } from '../../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
 import './DataList.scss';
-import { useDebounce } from '../../hooks/useDebounce';
-import { useAutoFocus } from '../../hooks/useAutoFocus';
+import { useDebounce } from 'hooks/useDebounce';
+import { useAutoFocus } from 'hooks/useAutoFocus';
 
 interface Props<T> {
   data: T[];

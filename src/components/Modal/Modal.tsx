@@ -5,7 +5,7 @@ import Portal from './Portal';
 
 import { IModalProps } from './Types';
 
-import { useRootData } from '../../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
 import './Modal.scss';
 

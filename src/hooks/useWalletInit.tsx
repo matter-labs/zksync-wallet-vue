@@ -3,11 +3,11 @@ import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import { Wallet, Provider, getDefaultProvider } from 'zksync';
 
-import { useRootData } from '../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
-import { IEthBalance } from '../types/Common';
+import { IEthBalance } from 'types/Common';
 
-import { DEFAULT_ERROR } from '../constants/errors';
+import { DEFAULT_ERROR } from 'constants/errors';
 
 const useWalletInit = () => {
   const {
@@ -61,7 +61,9 @@ const useWalletInit = () => {
             setAccessModal(true);
           })
           .catch(err => {
-            err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+            err.name && err.message
+              ? setError(`${err.name}: ${err.message}`)
+              : setError(DEFAULT_ERROR);
           });
       } else {
         setError(`${walletName} not found`);
@@ -79,7 +81,8 @@ const useWalletInit = () => {
     try {
       const wallet = getSigner(provider);
       setEthWallet(wallet);
-      const network = process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
+      const network =
+        process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider: Provider = await getDefaultProvider(network, 'HTTP');
       const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider);
 
@@ -107,7 +110,9 @@ const useWalletInit = () => {
           setEthBalances(balance as IEthBalance[]);
         })
         .catch(err => {
-          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+          err.name && err.message
+            ? setError(`${err.name}: ${err.message}`)
+            : setError(DEFAULT_ERROR);
         });
 
       const zkBalance = (await syncWallet.getAccountState()).committed.balances;
@@ -125,7 +130,9 @@ const useWalletInit = () => {
         })
         .then(() => setZkBalancesLoaded(true))
         .catch(err => {
-          err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
+          err.name && err.message
+            ? setError(`${err.name}: ${err.message}`)
+            : setError(DEFAULT_ERROR);
         });
     } catch (err) {
       // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);

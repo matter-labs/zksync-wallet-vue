@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
-import { DataList } from '../components/DataList/DataListNew';
-import MyWallet from '../components/Wallets/MyWallet';
-import SpinnerWorm from '../components/Spinner/SpinnerWorm';
-import Transaction from '../components/Transaction/Transaction';
+import { DataList } from 'components/DataList/DataListNew';
+import MyWallet from 'components/Wallets/MyWallet';
+import SpinnerWorm from 'components/Spinner/SpinnerWorm';
+import Transaction from 'components/Transaction/Transaction';
 
-import { useRootData } from '../hooks/useRootData';
-import { useTransaction } from '../hooks/useTransaction';
+import { useRootData } from 'hooks/useRootData';
+import { useTransaction } from 'hooks/useTransaction';
 
-import { request } from '../functions/Request';
+import { request } from 'functions/Request';
 
-import { BASE_URL } from '../constants/CoinBase';
+import { BASE_URL } from 'constants/CoinBase';
 
 const Account: React.FC = (): JSX.Element => {
   const dataPropertyName = 'symbol';

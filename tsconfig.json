@@ -19,7 +19,16 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "baseUrl": "./",
+    "paths": {
+      "constants/*": ["src/constants/*"],
+      "hooks/*": ["src/hooks/*"],
+      "components/*": ["src/components/*"],
+      "functions/*": ["src/functions/*"],
+      "images/*": ["src/images/*"],
+      "types/*": ["src/types/*"]
+    }
   },
   "include": ["./src/**/**/*", "**/*.d.ts"],
   "exclude": ["node_modules"]

@@ -2,17 +2,17 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import makeBlockie from 'ethereum-blockies-base64';
 
-import avatar from '../../images/avatar.png';
+import avatar from 'images/avatar.png';
 import ChangeName from './ChangeName';
-import Modal from '../Modal/Modal';
+import Modal from 'components/Modal/Modal';
 
-import { useRootData } from '../../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
-import { HEADER_ITEMS } from '../../constants/header';
+import { HEADER_ITEMS } from 'constants/header';
 
 import './Header.scss';
-import { QRCode } from '../QRCode/QRCode';
-import { useTimeout } from '../../hooks/timers';
+import { QRCode } from 'components/QRCode/QRCode';
+import { useTimeout } from 'hooks/timers';
 
 const Header: React.FC = () => {
   const {

@@ -3,11 +3,11 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { useHistory } from 'react-router-dom';
 
-import { useRootData } from '../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
-import DataList from '../components/DataList/DataList';
+import DataList from 'components/DataList/DataList';
 
-import { ZK_EXPLORER } from '../constants/links';
+import { ZK_EXPLORER } from 'constants/links';
 
 const Transactions: React.FC = (): JSX.Element => {
   const dataPropertyName = 'to';
