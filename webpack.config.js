@@ -34,12 +34,17 @@ const rules = [
   {
     test: /\.(svg|png|jpe?g)?$/,
     loader: 'file-loader',
+    options: {
+      name: 'assets/[hash].[ext]',
+    },
   },
 ];
 
 function getAliases() {
   const tsconfig = require('./tsconfig.json');
-  const { compilerOptions: { paths = [] } } = tsconfig;
+  const {
+    compilerOptions: { paths = [] },
+  } = tsconfig;
   const aliases = {};
   for (const k in paths) {
     const key = k.replace(/\/\*$/, '');
@@ -54,7 +59,7 @@ const config = {
   entry: path.resolve('src/'),
   output: {
     path: BUILD_DIR,
-    filename: 'index.js',
+    filename: 'js/[name]-[chunkhash].js',
   },
   module: { rules },
   plugins: [
@@ -84,7 +89,7 @@ const config = {
 };
 
 if (!DEV) {
-  config.plugins.push(new MiniCSSPlugin({}));
+  config.plugins.push(new MiniCSSPlugin({ filename: 'css/[chunkhash].css' }));
 }
 
 module.exports = config;
