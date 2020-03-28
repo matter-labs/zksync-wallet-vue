@@ -1,19 +1,19 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ethers } from 'ethers';
 
-import DataList from '../DataList/DataList';
-import Modal from '../Modal/Modal';
-import SaveContacts from '../SaveContacts/SaveContacts';
-import Spinner from '../Spinner/Spinner';
+import DataList from 'components/DataList/DataList';
+import Modal from 'components/Modal/Modal';
+import SaveContacts from 'components/SaveContacts/SaveContacts';
+import Spinner from 'components/Spinner/Spinner';
 
 import { ITransactionProps } from './Types';
 
-import { ADDRESS_VALIDATION } from '../../constants/regExs';
-import { INPUT_VALIDATION } from '../../constants/regExs';
-import { WIDTH_BP, ZK_FEE_MULTIPLIER } from '../../constants/magicNumbers';
-import { ZK_EXPLORER } from '../../constants/links';
+import { ADDRESS_VALIDATION } from 'constants/regExs';
+import { INPUT_VALIDATION } from 'constants/regExs';
+import { WIDTH_BP, ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
+import { ZK_EXPLORER } from 'constants/links';
 
-import { useRootData } from '../../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
 import './Transaction.scss';
 

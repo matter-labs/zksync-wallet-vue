@@ -2,16 +2,16 @@ import React, { useCallback, useEffect, useState } from 'react';
 import makeBlockie from 'ethereum-blockies-base64';
 import cl from 'classnames';
 
-import avatar from '../../images/avatar.png';
-import { DataList } from '../DataList/DataListNew';
-import Spinner from '../Spinner/Spinner';
-import SpinnerWorm from '../Spinner/SpinnerWorm';
+import avatar from 'images/avatar.png';
+import { DataList } from 'components/DataList/DataListNew';
+import Spinner from 'components/Spinner/Spinner';
+import SpinnerWorm from 'components/Spinner/SpinnerWorm';
 
-import { useRootData } from '../../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
 import { IMyWalletProps } from './Types';
 
-import { WIDTH_BP } from '../../constants/magicNumbers';
+import { WIDTH_BP } from 'constants/magicNumbers';
 
 import './Wallets.scss';
 

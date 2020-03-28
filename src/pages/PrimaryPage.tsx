@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 
-import LazyWallet from '../components/Wallets/LazyWallet';
-import Modal from '../components/Modal/Modal';
-import Spinner from '../components/Spinner/Spinner';
+import LazyWallet from 'components/Wallets/LazyWallet';
+import Modal from 'components/Modal/Modal';
+import Spinner from 'components/Spinner/Spinner';
 
-import { useRootData } from '../hooks/useRootData';
-import useWalletInit from '../hooks/useWalletInit';
+import { useRootData } from 'hooks/useRootData';
+import useWalletInit from 'hooks/useWalletInit';
 
-import { WALLETS } from '../constants/Wallets';
-import { RIGHT_NETWORK_ID } from '../constants/networks';
-import { useInterval } from '../hooks/timers';
+import { WALLETS } from 'constants/Wallets';
+import { RIGHT_NETWORK_ID } from 'constants/networks';
+import { useInterval } from 'hooks/timers';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();

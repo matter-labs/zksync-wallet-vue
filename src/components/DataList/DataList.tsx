@@ -1,9 +1,9 @@
 import React, { useEffect, useCallback, useRef } from 'react';
 
-import Modal from '../Modal/Modal';
-import SaveContacts from '../SaveContacts/SaveContacts';
+import Modal from 'components/Modal/Modal';
+import SaveContacts from 'components/SaveContacts/SaveContacts';
 
-import { useRootData } from '../../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
 import { IBalancesProps } from './Types';
 

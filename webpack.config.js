@@ -37,6 +37,18 @@ const rules = [
   },
 ];
 
+function getAliases() {
+  const tsconfig = require('./tsconfig.json');
+  const { compilerOptions: { paths = [] } } = tsconfig;
+  const aliases = {};
+  for (const k in paths) {
+    const key = k.replace(/\/\*$/, '');
+    const value = paths[k][0].replace(/(\/?\*)/, '');
+    aliases[key] = path.resolve(__dirname, value);
+  }
+  return aliases;
+}
+
 const config = {
   mode: process.env.NODE_ENV,
   entry: path.resolve('src/'),
@@ -58,7 +70,7 @@ const config = {
   ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
-    alias: {},
+    alias: getAliases(),
   },
   devtool: DEV ? 'sourcemap' : false,
   devServer: {
@@ -68,7 +80,7 @@ const config = {
   },
   optimization: {
     minimize: false,
-  }
+  },
 };
 
 if (!DEV) {

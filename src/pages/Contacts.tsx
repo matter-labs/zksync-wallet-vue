@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
-import Modal from '../components/Modal/Modal';
-import SaveContacts from '../components/SaveContacts/SaveContacts';
-import editicon from '../images/icon-edit.svg';
-import deleteicon from '../images/mdi_delete.svg';
+import Modal from 'components/Modal/Modal';
+import SaveContacts from 'components/SaveContacts/SaveContacts';
+import editicon from 'images/icon-edit.svg';
+import deleteicon from 'images/mdi_delete.svg';
 
-import { useRootData } from '../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
-import DataList from '../components/DataList/DataList';
+import DataList from 'components/DataList/DataList';
 
-import { WIDTH_BP } from '../constants/magicNumbers';
+import { WIDTH_BP } from 'constants/magicNumbers';
 
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
