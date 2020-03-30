@@ -41,7 +41,6 @@ const Header: React.FC = () => {
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isChangeNameOpen, openChangeName] = useState<boolean>(false);
-  const setTimeout = useTimeout();
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
@@ -68,10 +67,17 @@ const Header: React.FC = () => {
             document.execCommand('copy');
           }
         });
-        setTimeout(() => openCopyModal(false), 2000);
       }
     },
     [inputRef],
+  );
+
+  useTimeout(
+    () => {
+      if (isCopyModal) openCopyModal(false);
+    },
+    2000,
+    [isCopyModal],
   );
 
   const handleLogOut = useCallback(() => {

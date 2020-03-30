@@ -7,7 +7,7 @@ import Spinner from 'components/Spinner/Spinner';
 
 import { useRootData } from 'hooks/useRootData';
 import useWalletInit from 'hooks/useWalletInit';
-import { useInterval } from 'hooks/timers';
+import { useInterval, useTimeout } from 'hooks/timers';
 
 import { WALLETS } from 'constants/Wallets';
 import { RIGHT_NETWORK_ID } from 'constants/networks';
@@ -97,11 +97,9 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     }
     if (
       (walletName === 'Metamask' &&
-        curAddress &&
-        !!curAddress.length &&
+        curAddress?.length &&
         !zkWallet &&
-        provider &&
-        provider.networkVersion === RIGHT_NETWORK_ID) ||
+        provider?.networkVersion === RIGHT_NETWORK_ID) ||
       (!zkWallet && walletName && walletName !== 'Metamask')
     ) {
       createWallet();
@@ -111,9 +109,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     }
     if (curAddress && walletName) {
       setHintModal('Connected! Follow the instructions in the popup');
-      setTimeout(() => {
-        setHintModal('');
-      });
     }
   }, [
     createWallet,
@@ -125,11 +120,19 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     zkWallet,
   ]);
 
+  useTimeout(
+    () => {
+      if (hintModal) setHintModal('');
+    },
+    2000,
+    [hintModal],
+  );
+
   useInterval(() => {
     if (!curAddress && walletName && provider?.selectedAddress) {
       setCurAddress(provider?.selectedAddress);
     }
-  }, 2000);
+  }, 5000);
 
   return (
     <>
