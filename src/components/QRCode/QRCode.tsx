@@ -12,7 +12,7 @@ export const QRCode: FC<Props> = ({ data }) => {
     const qr = qrcode(4, 'L');
     qr.addData(data);
     qr.make();
-    setImgTag(qr.createImgTag(6, 0));
+    setImgTag(qr.createImgTag(6, 6));
   }, [data]);
 
   return (

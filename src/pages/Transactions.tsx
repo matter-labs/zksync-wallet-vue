@@ -7,6 +7,7 @@ import { useRootData } from 'hooks/useRootData';
 import DataList from 'components/DataList/DataList';
 
 import { ZK_EXPLORER } from 'constants/links';
+import { useTimeout } from 'hooks/timers';
 
 const Transactions: React.FC = (): JSX.Element => {
   const dataPropertyName = 'to';
@@ -50,10 +51,11 @@ const Transactions: React.FC = (): JSX.Element => {
         }
       });
       openCopyModal(true);
-      setTimeout(() => openCopyModal(false), 200);
     },
     [inputRef],
   );
+
+  useTimeout(() => isCopyModal && openCopyModal(false), 2000);
 
   const fetchMoreData = () => {
     if (items.length >= 500) {
