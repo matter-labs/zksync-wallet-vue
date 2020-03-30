@@ -6,14 +6,14 @@ import {
   getDefaultProvider,
 } from 'zksync';
 
-import { useRootData } from '../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
-import { IEthBalance } from '../types/Common';
+import { IEthBalance } from 'types/Common';
 import { PriorityOperationReceipt } from 'zksync/build/types';
 
-import { ADDRESS_VALIDATION } from '../constants/regExs';
-import { DEFAULT_ERROR } from '../constants/errors';
-import { ZK_FEE_MULTIPLIER } from '../constants/magicNumbers';
+import { ADDRESS_VALIDATION } from 'constants/regExs';
+import { DEFAULT_ERROR } from 'constants/errors';
+import { ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
 
 const TOKEN = 'ETH';
 

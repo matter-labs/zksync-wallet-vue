@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { useRootData } from '../../hooks/useRootData';
-import useWalletInit from '../../hooks/useWalletInit';
+import { useRootData } from 'hooks/useRootData';
+import useWalletInit from 'hooks/useWalletInit';
 
-import { DEFAULT_ERROR } from '../../constants/errors';
+import { DEFAULT_ERROR } from 'constants/errors';
 
 const BrowserWallet: React.FC = () => {
   const { connect } = useWalletInit();

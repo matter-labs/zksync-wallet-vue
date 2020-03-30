@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useRootData } from '../../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
 import { IChangeNameProps } from './Types';
 

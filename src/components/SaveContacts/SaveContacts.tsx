@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { useRootData } from '../../hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
 import { ISaveContactsProps } from './Types';
 
-import { ADDRESS_VALIDATION } from '../../constants/regExs';
+import { ADDRESS_VALIDATION } from 'constants/regExs';
 
 const SaveContacts: React.FC<ISaveContactsProps> = ({
   addressInput,
@@ -13,8 +13,12 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
   oldContact,
   title,
 }): JSX.Element => {
-  const [name, setName] = useState<string>(oldContact?.name ? oldContact.name : '');
-  const [address, setAddress] = useState<string>(oldContact?.address ? oldContact?.address : '');
+  const [name, setName] = useState<string>(
+    oldContact?.name ? oldContact.name : '',
+  );
+  const [address, setAddress] = useState<string>(
+    oldContact?.address ? oldContact?.address : '',
+  );
 
   const { setContacts, setError, setModal, zkWallet } = useRootData(
     ({ setContacts, setError, setModal, zkWallet }) => ({
@@ -34,18 +38,28 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
   const handleSave = useCallback(
     e => {
       e.preventDefault();
-      if (((address && name) || (addressValue && name)) && ADDRESS_VALIDATION['eth'].test(address)) {
-        const contacts = JSON.parse(localStorage.getItem(`contacts${zkWallet?.address()}`) || '[]');
+      if (
+        ((address && name) || (addressValue && name)) &&
+        ADDRESS_VALIDATION['eth'].test(address)
+      ) {
+        const contacts = JSON.parse(
+          localStorage.getItem(`contacts${zkWallet?.address()}`) || '[]',
+        );
         const isContact = contacts.findIndex(
-          ({ address: contactAddress, name: contactName }) => contactAddress === address || contactName === name,
+          ({ address: contactAddress, name: contactName }) =>
+            contactAddress === address || contactName === name,
         );
         const oldContactIndex = contacts.findIndex(
-          ({ name, address }) => oldContact?.address === address || oldContact?.name === name,
+          ({ name, address }) =>
+            oldContact?.address === address || oldContact?.name === name,
         );
         if (edit && oldContactIndex > -1) {
           const newContacts = contacts;
           newContacts.splice(oldContactIndex, 1, { address, name });
-          localStorage.setItem(`contacts${zkWallet?.address()}`, JSON.stringify(newContacts));
+          localStorage.setItem(
+            `contacts${zkWallet?.address()}`,
+            JSON.stringify(newContacts),
+          );
         }
         if (isContact === -1 && !edit) {
           const newContacts = JSON.stringify([{ address, name }, ...contacts]);
@@ -54,7 +68,10 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
         if (isContact > -1) {
           const newContacts = contacts;
           newContacts.splice(isContact, 1, { address, name });
-          localStorage.setItem(`contacts${zkWallet?.address()}`, JSON.stringify(newContacts));
+          localStorage.setItem(
+            `contacts${zkWallet?.address()}`,
+            JSON.stringify(newContacts),
+          );
         }
         setModal('');
         const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
@@ -66,22 +83,40 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
         setError(`Error: "${address}" doesn't match ethereum address format`);
       }
     },
-    [address, addressValue, edit, name, oldContact, setContacts, setError, setModal, zkWallet],
+    [
+      address,
+      addressValue,
+      edit,
+      name,
+      oldContact,
+      setContacts,
+      setError,
+      setModal,
+      zkWallet,
+    ],
   );
 
   return (
     <form>
       <h3>{title}</h3>
-      <div className="horizontal-line"></div>
-      <span className="transaction-field-title">Contact name</span>
-      <input placeholder="Name here" value={name} onChange={e => setName(e.target.value)} />
+      <div className='horizontal-line'></div>
+      <span className='transaction-field-title'>Contact name</span>
+      <input
+        placeholder='Name here'
+        value={name}
+        onChange={e => setName(e.target.value)}
+      />
       {addressInput && (
         <>
-          <span className="transaction-field-title">Address</span>
-          <input placeholder="0x address" value={address} onChange={e => setAddress(e.target.value)} />
+          <span className='transaction-field-title'>Address</span>
+          <input
+            placeholder='0x address'
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+          />
         </>
       )}
-      <button type="submit" className="btn submit-button" onClick={handleSave}>
+      <button type='submit' className='btn submit-button' onClick={handleSave}>
         Save
       </button>
     </form>

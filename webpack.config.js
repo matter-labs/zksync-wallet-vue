@@ -5,6 +5,8 @@ const HTMLPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCSSPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
+const dotenv = require('dotenv');
+const { EnvironmentPlugin } = require('webpack');
 
 const BUILD_DIR = path.resolve('build/');
 const DEV = process.env.NODE_ENV === 'development';
@@ -32,15 +34,32 @@ const rules = [
   {
     test: /\.(svg|png|jpe?g)?$/,
     loader: 'file-loader',
+    options: {
+      name: 'assets/[hash].[ext]',
+    },
   },
 ];
+
+function getAliases() {
+  const tsconfig = require('./tsconfig.json');
+  const {
+    compilerOptions: { paths = [] },
+  } = tsconfig;
+  const aliases = {};
+  for (const k in paths) {
+    const key = k.replace(/\/\*$/, '');
+    const value = paths[k][0].replace(/(\/?\*)/, '');
+    aliases[key] = path.resolve(__dirname, value);
+  }
+  return aliases;
+}
 
 const config = {
   mode: process.env.NODE_ENV,
   entry: path.resolve('src/'),
   output: {
     path: BUILD_DIR,
-    filename: 'index.js',
+    filename: 'js/[name]-[chunkhash].js',
   },
   module: { rules },
   plugins: [
@@ -52,10 +71,11 @@ const config = {
         ignore: ['index.html'],
       },
     ]),
+    new EnvironmentPlugin(dotenv.config().parsed),
   ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
-    alias: {},
+    alias: getAliases(),
   },
   devtool: DEV ? 'sourcemap' : false,
   devServer: {
@@ -65,11 +85,11 @@ const config = {
   },
   optimization: {
     minimize: false,
-  }
+  },
 };
 
 if (!DEV) {
-  config.plugins.push(new MiniCSSPlugin({}));
+  config.plugins.push(new MiniCSSPlugin({ filename: 'css/[chunkhash].css' }));
 }
 
 module.exports = config;

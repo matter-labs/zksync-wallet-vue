@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 
-import LazyWallet from '../components/Wallets/LazyWallet';
-import Modal from '../components/Modal/Modal';
-import Spinner from '../components/Spinner/Spinner';
+import LazyWallet from 'components/Wallets/LazyWallet';
+import Modal from 'components/Modal/Modal';
+import Spinner from 'components/Spinner/Spinner';
 
-import { useRootData } from '../hooks/useRootData';
-import useWalletInit from '../hooks/useWalletInit';
+import { useRootData } from 'hooks/useRootData';
+import useWalletInit from 'hooks/useWalletInit';
+import { useInterval } from 'hooks/timers';
 
-import { WALLETS } from '../constants/Wallets';
-import { RIGHT_NETWORK_ID } from '../constants/networks';
-import { useInterval } from '../hooks/timers';
+import { WALLETS } from 'constants/Wallets';
+import { RIGHT_NETWORK_ID } from 'constants/networks';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
@@ -72,6 +72,14 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     provider?.selectedAddress,
   );
 
+  const desktopWallets = ['Metamask'];
+  const mobileWallets = ['Coinbase Wallet'];
+  const mobileCheck = /mobi/i.test(navigator.userAgent);
+
+  const wallets = Object.keys(WALLETS).filter(el =>
+    mobileCheck ? !desktopWallets.includes(el) : !mobileWallets.includes(el),
+  );
+
   const handleLogOut = useCallback(() => {
     setProvider(null);
     setWalletName('');
@@ -113,6 +121,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     provider,
     setAccessModal,
     walletName,
+    wallets,
     zkWallet,
   ]);
 
@@ -182,7 +191,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                 <p>Connect a wallet</p>
               </div>
               <div className='wallets-wrapper'>
-                {Object.keys(WALLETS).map(key => (
+                {wallets.map(key => (
                   <button key={key} className='wallet-block'>
                     <div
                       className={`btn wallet-button ${key}`}
