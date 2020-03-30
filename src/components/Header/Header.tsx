@@ -13,6 +13,7 @@ import { HEADER_ITEMS } from 'constants/header';
 import './Header.scss';
 import { QRCode } from 'components/QRCode/QRCode';
 import { useTimeout } from 'hooks/timers';
+import { Transition } from 'components/Transition/Transition';
 
 const Header: React.FC = () => {
   const {
@@ -72,13 +73,7 @@ const Header: React.FC = () => {
     [inputRef],
   );
 
-  useTimeout(
-    () => {
-      if (isCopyModal) openCopyModal(false);
-    },
-    2000,
-    [isCopyModal],
-  );
+  useTimeout(() => isCopyModal && openCopyModal(false), 2000, [isCopyModal]);
 
   const handleLogOut = useCallback(() => {
     setModal('');
@@ -137,9 +132,11 @@ const Header: React.FC = () => {
                 {userName || `${address.slice(0, 8)}...${address.slice(-4)}`}
               </div>
               <div onClick={handleCopy} className='copy-block'>
-                <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
-                  <p>Copied!</p>
-                </div>
+                <Transition type='fly' timeout={200} trigger={isCopyModal}>
+                  <div className={'hint-copied open'}>
+                    <p>Copied!</p>
+                  </div>
+                </Transition>
                 <input
                   readOnly
                   className='copy-block-input'

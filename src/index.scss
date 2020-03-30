@@ -227,7 +227,7 @@ h2 {
     background-color: var(--modal-bg-color);
     border: 1px solid var(--light-border-color);
     border-radius: 5px;
-    transform: scale(0.8);
+    // transform: scale(0.8);
     transition: transform 200ms ease-in-out;
 
     & > p {
@@ -990,5 +990,73 @@ body.dark > #root {
     grid-template-columns: repeat(auto-fit, 215px);
     max-width: 645px;
     margin: 0 auto;
+  }
+}
+
+$dur: .2s;
+$scale: 0.95;
+.transition {
+  &-scale {
+    &-enter {
+      transform: scale($scale);
+      opacity: 0;
+    }
+    &-enter-active {
+      transform: scale(1);
+      opacity: 1;
+      transition: opacity $dur, transform $dur;
+    }
+
+    &-exit {
+      transform: scale(1);
+      opacity: 1;
+    }
+    &-exit-active {
+      transform: scale(0.9);
+      opacity: 0;
+      transition: opacity $dur, transform $dur;
+    }
+  }
+  &-opacity {
+    &-enter {
+      opacity: 0;
+    }
+    &-enter-active {
+      opacity: 1;
+    }
+    &-exit {
+      opacity: 1;
+    }
+    &-exit-active {
+      opacity: 0;
+    }
+
+    &-enter-active,
+    &-exit-active {
+      transition: opacity $dur;
+    }
+  }
+  &-fly {
+    &-enter {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+    &-enter-active {
+      transform: translateY(0px);
+      opacity: 1;
+    }
+    &-exit {
+      transform: translateY(0px);
+      opacity: 1;
+    }
+    &-exit-active {
+      transform: translateY(10px);
+      opacity: 0;
+    }
+
+    &-enter-active,
+    &-exit-active {
+      transition: opacity $dur, transform $dur;
+    }
   }
 }
