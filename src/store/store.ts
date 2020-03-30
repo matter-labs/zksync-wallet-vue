@@ -26,6 +26,7 @@ export const createStore = () => ({
   transactionType: observable.box<
     'deposit' | 'withdraw' | 'transfer' | undefined
   >(undefined),
+  unlocked: observable.box<boolean | undefined>(undefined),
   verifyToken: observable.box<boolean | undefined>(undefined),
   walletName: observable.box<string>(''),
   walletAddress: observable.box<any>([]),
@@ -106,6 +107,10 @@ export const createStore = () => ({
     transaction: 'deposit' | 'withdraw' | 'transfer' | undefined,
   ) {
     this.transactionType.set(transaction);
+  },
+
+  setUnlocked(unlockedStatus: boolean | undefined) {
+    this.unlocked.set(unlockedStatus);
   },
 
   setVerifyToken(verified: boolean | undefined) {

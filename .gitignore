@@ -11,6 +11,7 @@
 # production
 /build
 /.idea
+/lib
 
 # misc
 .DS_Store

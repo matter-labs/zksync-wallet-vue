@@ -48,6 +48,7 @@ const Account: React.FC = (): JSX.Element => {
     searchBalances,
     setPrice,
     setTransactionType,
+    setUnlocked,
     transactionType,
     verifyToken,
     walletName,
@@ -65,6 +66,7 @@ const Account: React.FC = (): JSX.Element => {
       searchBalances,
       setPrice,
       setTransactionType,
+      setUnlocked,
       transactionModal,
       transactionType,
       verifyToken,
@@ -82,6 +84,7 @@ const Account: React.FC = (): JSX.Element => {
       setError,
       setPrice,
       setTransactionType,
+      setUnlocked,
       transactionModal: transactionModal.get(),
       transactionType: transactionType.get(),
       verifyToken: verifyToken.get(),
@@ -132,6 +135,13 @@ const Account: React.FC = (): JSX.Element => {
   // console.log(ethId);
   useEffect(() => {
     initWallet();
+    zkWallet
+      ?.getAccountState()
+      .then(res =>
+        !!res.id
+          ? zkWallet?.isSigningKeySet().then(data => setUnlocked(data))
+          : setUnlocked(true),
+      );
   }, [
     error,
     ethId,

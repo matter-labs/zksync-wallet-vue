@@ -42,7 +42,6 @@ const Transaction: React.FC<ITransactionProps> = ({
   const {
     ethId,
     hintModal,
-    provider,
     searchBalances,
     searchContacts,
     setBalances,
@@ -50,7 +49,9 @@ const Transaction: React.FC<ITransactionProps> = ({
     setError,
     setHintModal,
     setModal,
+    setUnlocked,
     setWalletAddress,
+    unlocked,
     walletAddress,
     zkBalancesLoaded,
     zkWallet,
@@ -58,23 +59,22 @@ const Transaction: React.FC<ITransactionProps> = ({
     ({
       ethId,
       hintModal,
-      provider,
       searchBalances,
       searchContacts,
       setBalances,
       setContacts,
-      setHintModal,
       setError,
+      setHintModal,
       setModal,
+      setUnlocked,
       setWalletAddress,
-      verifyToken,
+      unlocked,
       walletAddress,
       zkBalancesLoaded,
       zkWallet,
     }) => ({
       ethId: ethId.get(),
       hintModal: hintModal.get(),
-      provider: provider.get(),
       searchBalances: searchBalances.get(),
       searchContacts: searchContacts.get(),
       setBalances,
@@ -82,8 +82,9 @@ const Transaction: React.FC<ITransactionProps> = ({
       setHintModal,
       setError,
       setModal,
+      setUnlocked,
       setWalletAddress,
-      verifyToken: verifyToken.get(),
+      unlocked: unlocked.get(),
       walletAddress: walletAddress.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
       zkWallet: zkWallet.get(),
@@ -112,7 +113,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     propsSymbolName ? propsSymbolName : '',
   );
   const [token, setToken] = useState<string>(propsToken ? propsToken : '');
-  const [unlocked, setUnlocked] = useState<boolean | undefined>(undefined);
+  // const [unlocked, setUnlocked] = useState<boolean | undefined>(undefined);
   const [unlockFau, setUnlockFau] = useState<boolean>(false);
   const [value, setValue] = useState<string>(
     localStorage.getItem('walletName') || '',
@@ -251,13 +252,6 @@ const Transaction: React.FC<ITransactionProps> = ({
       .getGasPrice()
       .then(res => res.toString())
       .then(data => setFee(+data));
-    zkWallet
-      ?.getAccountState()
-      .then(res =>
-        !!res.id
-          ? zkWallet?.isSigningKeySet().then(data => setUnlocked(data))
-          : setUnlocked(true),
-      );
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
