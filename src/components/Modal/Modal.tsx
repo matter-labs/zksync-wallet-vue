@@ -1,21 +1,30 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-
-import Portal from './Portal';
-
-import { IModalProps } from './Types';
+import { CSSTransition } from 'react-transition-group';
 
 import { useRootData } from 'hooks/useRootData';
 
+import Portal from './Portal';
 import './Modal.scss';
+import { useListener } from 'hooks/useListener';
+import { Transition } from 'components/Transition/Transition';
 
-const Modal: React.FC<IModalProps> = ({
-  background,
+export interface ModalProps {
+  background: boolean;
+  cancelAction?: any;
+  children?: React.ReactNode;
+  classSpecifier: string;
+  visible: boolean;
+  transition?: 'scale' | 'fly';
+}
+
+const Modal: React.FC<ModalProps> = ({
   cancelAction,
   children,
   classSpecifier,
   visible,
-}): JSX.Element => {
+  transition = 'scale',
+}) => {
   const {
     isModalOpen,
     setAccessModal,
@@ -33,7 +42,6 @@ const Modal: React.FC<IModalProps> = ({
     ...rest,
   }));
 
-  const myRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -55,12 +63,7 @@ const Modal: React.FC<IModalProps> = ({
     [setError, setModal],
   );
 
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside, true);
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
-  }, [handleClickOutside]);
+  useListener(document, 'click', handleClickOutside, true);
 
   const closeHandler = useCallback(() => {
     if (cancelAction) {
@@ -78,25 +81,21 @@ const Modal: React.FC<IModalProps> = ({
     }
   }, []);
 
+  const shown = classSpecifier === isModalOpen || visible;
+
   return (
     <Portal>
-      {(classSpecifier === isModalOpen || visible) && (
+      <Transition type={transition} trigger={shown} timeout={100}>
         <>
-          <div ref={myRef} className={`modal ${classSpecifier} open`}>
+          <div className={`modal ${classSpecifier}`}>
             <button onClick={closeHandler} className='close-icon' />
             {children}
           </div>
-          <div
-            data-name='modal-wrapper'
-            className={`modal-wrapper ${
-              (classSpecifier === isModalOpen && background) ||
-              (visible && background)
-                ? 'open'
-                : 'closed'
-            }`}
-          />
         </>
-      )}
+      </Transition>
+      <Transition trigger={shown} type='opacity' timeout={100}>
+        <div data-name='modal-wrapper' className={'modal-wrapper'} />
+      </Transition>
     </Portal>
   );
 };

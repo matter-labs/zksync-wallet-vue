@@ -8,7 +8,7 @@ import deleteicon from 'images/mdi_delete.svg';
 
 import { useRootData } from 'hooks/useRootData';
 
-import DataList from 'components/DataList/DataList';
+import { DataList } from 'components/DataList/DataListNew';
 
 import { WIDTH_BP } from 'constants/magicNumbers';
 
@@ -99,115 +99,111 @@ const Contacts: React.FC = (): JSX.Element => {
 
   return (
     <DataList
-      setValue={setContacts}
-      dataProperty={dataPropertyName}
-      data={contacts}
+      data={(contacts as any[]) || []}
       title='Contacts'
       visible={true}
-    >
-      <Modal
-        visible={false}
-        classSpecifier='add-contact edit-contact'
-        background={true}
-      >
-        <SaveContacts
-          oldContact={oldContact}
-          title='Edit contact'
-          addressInput={true}
-          edit={true}
-        />
-      </Modal>
-      <>
-        <button
-          className='add-contact-button btn-tr'
-          onClick={() => setModal('add-contact addressless')}
-        >
-          <span></span>
-          <p>Add a contact</p>
-        </button>
-        {!!searchContacts ? (
-          searchContacts.map(({ address, name }) => (
-            <div className='balances-contact' key={name}>
-              <div className='balances-contact-left'>
-                <span className='balances-contact-name'>{name}</span>
-                <span className='balances-contact-address'>
-                  {window?.innerWidth > WIDTH_BP
-                    ? zkWallet?.address()
-                    : zkWallet
+      header={() => (
+        <>
+          <Modal
+            visible={false}
+            classSpecifier='add-contact edit-contact'
+            background={true}
+          >
+            <SaveContacts
+              oldContact={oldContact}
+              title='Edit contact'
+              addressInput={true}
+              edit={true}
+            />
+          </Modal>
+          <button
+            className='add-contact-button btn-tr'
+            onClick={() => setModal('add-contact addressless')}
+          >
+            <span></span>
+            <p>Add a contact</p>
+          </button>
+        </>
+      )}
+      emptyListComponent={() => <div>You don't have contacts yet...</div>}
+      renderItem={({ address, name }) => (
+        <div className='balances-contact' key={name}>
+          <div className='balances-contact-left'>
+            <span className='balances-contact-name'>{name}</span>
+            <span className='balances-contact-address'>
+              {window?.innerWidth > WIDTH_BP
+                ? zkWallet?.address()
+                : zkWallet
+                    ?.address()
+                    .replace(
+                      zkWallet
                         ?.address()
-                        .replace(
-                          zkWallet
-                            ?.address()
-                            .slice(14, zkWallet?.address().length - 4),
-                          '...',
-                        )}
-                </span>
-              </div>
-              <div className='balances-contact-right'>
-                <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
-                  <p>Copied!</p>
-                </div>
+                        .slice(14, zkWallet?.address().length - 4),
+                      '...',
+                    )}
+            </span>
+          </div>
+          <div className='balances-contact-right'>
+            <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
+              <p>Copied!</p>
+            </div>
+            <button
+              className='balances-contact-send btn-tr'
+              onClick={() => {
+                setTransactionType('transfer');
+                setWalletAddress([name, address]);
+              }}
+            >
+              <Link to='/'></Link>
+            </button>
+            <button
+              className='balances-contact-copy btn-tr'
+              onClick={() => handleCopy(address)}
+            ></button>
+            <input
+              onChange={undefined}
+              className='copy-block-input'
+              value={address.toString()}
+              ref={e => inputRef.push(e)}
+            />
+
+            <div className='contact-edit-wrapper'>
+              <input
+                type='radio'
+                onClick={() => {
+                  setEditModalOpen(true);
+                }}
+                className='balances-contact-edit'
+              ></input>
+              <div
+                className={`contact-manage ${
+                  isEditModalOpen ? 'open' : 'closed'
+                }`}
+              >
                 <button
-                  className='balances-contact-send btn-tr'
+                  className='contact-manage-edit'
                   onClick={() => {
-                    setTransactionType('transfer');
-                    setWalletAddress([name, address]);
+                    setModal('add-contact edit-contact');
+                    setOldContact({ name: name, address: address });
                   }}
                 >
-                  <Link to='/'></Link>
+                  <img src={editicon} alt='edit' />
+                  <p>Edit</p>
                 </button>
                 <button
-                  className='balances-contact-copy btn-tr'
-                  onClick={() => handleCopy(address)}
-                ></button>
-                <input
-                  onChange={undefined}
-                  className='copy-block-input'
-                  value={address.toString()}
-                  ref={e => inputRef.push(e)}
-                />
-
-                <div className='contact-edit-wrapper'>
-                  <input
-                    type='radio'
-                    onClick={() => {
-                      setEditModalOpen(true);
-                    }}
-                    className='balances-contact-edit'
-                  ></input>
-                  <div
-                    className={`contact-manage ${
-                      isEditModalOpen ? 'open' : 'closed'
-                    }`}
-                  >
-                    <button
-                      className='contact-manage-edit'
-                      onClick={() => {
-                        setModal('add-contact edit-contact');
-                        setOldContact({ name: name, address: address });
-                      }}
-                    >
-                      <img src={editicon} alt='edit' />
-                      <p>Edit</p>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(name)}
-                      className='contact-manage-delete btn-tr'
-                    >
-                      <img src={deleteicon} alt='edit' />
-                      <p>Delete</p>
-                      <Link to='/contacts'></Link>
-                    </button>
-                  </div>
-                </div>
+                  onClick={() => handleDelete(name)}
+                  className='contact-manage-delete btn-tr'
+                >
+                  <img src={deleteicon} alt='edit' />
+                  <p>Delete</p>
+                  <Link to='/contacts'></Link>
+                </button>
               </div>
             </div>
-          ))
-        ) : (
-          <div>You don't have contacts yet...</div>
-        )}
-      </>
-    </DataList>
+          </div>
+        </div>
+      )}
+    />
   );
 };
 

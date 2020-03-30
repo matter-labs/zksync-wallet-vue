@@ -1,14 +1,12 @@
 import React, { useEffect, ReactElement, useState, useMemo } from 'react';
-
 import cl from 'classnames';
+
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
-
-import { useRootData } from 'hooks/useRootData';
-
-import './DataList.scss';
 import { useDebounce } from 'hooks/useDebounce';
 import { useAutoFocus } from 'hooks/useAutoFocus';
+
+import './DataList.scss';
 
 interface Props<T> {
   data: T[];
@@ -16,27 +14,26 @@ interface Props<T> {
   visible?: boolean;
   renderItem?: (i: T) => ReactElement | null;
   header?: () => ReactElement | null;
-  filterCallback?: (e: T) => boolean;
+  footer?: () => ReactElement | null;
+  searchPredicate?: (query: string, e: T) => boolean;
   onSetFiltered?: (data: T[]) => void;
-  emptyListComponent?: any;
+  emptyListComponent?: () => ReactElement | null;
 }
 
-export const DataList = function<T>({
-  data = [],
+export function DataList<T>({
+  data,
   title = '',
   visible = true,
-  filterCallback,
+  searchPredicate,
   renderItem,
-  header: Header = () => null,
-  onSetFiltered,
-  emptyListComponent: EmptyPlaceholder,
+  header = () => null,
+  footer = () => null,
+  onSetFiltered = () => null,
+  emptyListComponent: EmptyPlaceholder = () => null,
 }: Props<T>) {
-  const { setModal } = useRootData(({ setModal }) => ({
-    setModal,
-  }));
-
   const [debouncedSearch, setSearch, searchValue] = useDebounce('', 500);
   const [filteredData, setFiltered] = useState<T[]>(data);
+  const focusInput = useAutoFocus();
 
   useEffect(() => {
     if (!debouncedSearch) {
@@ -45,17 +42,17 @@ export const DataList = function<T>({
     }
 
     const re = new RegExp(debouncedSearch, 'i');
-    const filterCb = filterCallback || (e => re.test(e as any));
+    const filterCb = searchPredicate
+      ? e => searchPredicate(debouncedSearch, e)
+      : e => re.test(e);
     const filtered = data.filter(filterCb);
     setFiltered(filtered);
-    onSetFiltered && onSetFiltered(filtered);
+    onSetFiltered(filtered);
   }, [debouncedSearch]);
-  const focusInput = useAutoFocus();
 
-  const list = useMemo(() => {
-    const mapCb = renderItem || (e => e as any);
-    return filteredData.map(mapCb);
-  }, [filteredData]);
+  const list = useMemo(() => filteredData.map(renderItem || (e => e as any)), [
+    filteredData,
+  ]);
 
   return (
     <>
@@ -78,18 +75,10 @@ export const DataList = function<T>({
             .replace(/.?(select )/, '')}`}
           className='balances-search'
         />
-        <Header />
-        {list}
+        {header()}
         {list.length ? list : <EmptyPlaceholder />}
-        {title === 'Contacts' && (
-          <button
-            className='add-contact-button btn-tr'
-            onClick={() => setModal('add-contact addressless')}
-          >
-            <p>Add a contact</p>
-          </button>
-        )}
+        {footer()}
       </div>
     </>
   );
-};
+}
