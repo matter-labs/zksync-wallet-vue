@@ -7,7 +7,7 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-  }  
+  }
 }
 
 .metamask {
@@ -45,7 +45,6 @@
 .modal {
   position: absolute;
   top: 50%;
-  left: 50%;
   z-index: 3000;
   width: 100%;
   max-width: 100vw;
@@ -54,7 +53,6 @@
   background-color: var(--modal-bg-color);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  transform: translate(-50%, -50%);
   transition: opacity 200ms ease-in-out;
 
   & input {
@@ -71,7 +69,9 @@
   }
 
   & .icon {
-    &-qr, &-edit, &-disconnect {
+    &-qr,
+    &-edit,
+    &-disconnect {
       width: 22px;
       height: 22px;
       margin-right: 27px;
@@ -148,7 +148,7 @@
     z-index: 10000;
 
     & > form {
-       & > .btn {
+      & > .btn {
         margin-top: 30px;
       }
     }
@@ -156,9 +156,8 @@
 
   &.wallet {
     top: 16px;
-    left: calc(100%);
+    right: 16px;
     width: 100%;
-    transform: translateX(-100%);
 
     .wallet-qr {
       display: none;
@@ -242,13 +241,12 @@
     z-index: 1000;
     width: 100vw;
     height: 100vh;
-    background-color: var(--dark-color);
-    opacity: 0.4;
+    background-color: var(--backdrop-color);
 
     &.open {
       display: block;
     }
-  
+
     &.closed {
       display: none;
     }
@@ -370,7 +368,7 @@
     &.open {
       display: block;
     }
-  
+
     &.closed {
       display: none;
     }
@@ -412,7 +410,7 @@ body.dark {
         background-size: contain;
       }
     }
-  } 
+  }
 }
 
 .close-icon {
@@ -427,7 +425,8 @@ body.dark {
   transform: rotate(45deg);
   cursor: pointer;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     position: absolute;
     left: 0;
     width: 36px;
@@ -447,8 +446,9 @@ body.dark {
     right: 27px;
     width: 27px;
     height: 27px;
-  
-    &::before, &::after {
+
+    &::before,
+    &::after {
       width: 27px;
     }
   }
@@ -457,7 +457,7 @@ body.dark {
     max-width: 505px;
 
     &.wallet {
-      left: calc(100% - 16px);
+      // left: calc(100% - 16px);
 
       .wallet-qr {
         display: block;
@@ -481,7 +481,7 @@ body.dark {
           &:first-child {
             display: none;
           }
-  
+
           &:hover {
             background-color: var(--copyblock-color);
           }
@@ -519,11 +519,56 @@ body.dark {
 
   .assets-wrapper {
     overflow-x: hidden;
-  
+
     & > .balances-wrapper {
       width: calc(100% + 30px);
       margin-right: -15px;
       padding-right: 5px;
-    } 
-  }  
+    }
+  }
+}
+
+$dur: .2s;
+$scale: 0.95;
+.transition {
+  &-scale {
+    &-enter {
+      transform: scale($scale);
+      opacity: 0;
+    }
+    &-enter-active {
+      transform: scale(1);
+      opacity: 1;
+      transition: opacity $dur, transform $dur;
+    }
+
+    &-exit {
+      transform: scale(1);
+      opacity: 1;
+    }
+    &-exit-active {
+      transform: scale(0.9);
+      opacity: 0;
+      transition: opacity $dur, transform $dur;
+    }
+  }
+  &-opacity {
+    &-enter {
+      opacity: 0;
+    }
+    &-enter-active {
+      opacity: 1;
+    }
+    &-exit {
+      opacity: 1;
+    }
+    &-exit-active {
+      opacity: 0;
+    }
+
+    &-enter-active,
+    &-exit-active {
+      transition: opacity $dur;
+    }
+  }
 }
