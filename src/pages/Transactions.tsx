@@ -8,6 +8,7 @@ import DataList from 'components/DataList/DataList';
 
 import { ZK_EXPLORER } from 'constants/links';
 import { useTimeout } from 'hooks/timers';
+import { Transition } from 'components/Transition/Transition';
 
 const Transactions: React.FC = (): JSX.Element => {
   const dataPropertyName = 'to';
@@ -102,9 +103,11 @@ const Transactions: React.FC = (): JSX.Element => {
               ref={e => inputRef.push(e)}
             />
             <div className='transaction-history-right'>
-              <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
-                <p>Copied!</p>
-              </div>
+              <Transition trigger={isCopyModal} timeout={200} type='fly'>
+                <div className={'hint-copied open'}>
+                  <p>Copied!</p>
+                </div>
+              </Transition>
               <div className='transaction-history-address'>
                 {type === 'transfer' && (
                   <>

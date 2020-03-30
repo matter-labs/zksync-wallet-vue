@@ -11,6 +11,8 @@ import { useRootData } from 'hooks/useRootData';
 import { DataList } from 'components/DataList/DataListNew';
 
 import { WIDTH_BP } from 'constants/magicNumbers';
+import { Transition } from 'components/Transition/Transition';
+import { useTimeout } from 'hooks/timers';
 
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
@@ -68,10 +70,11 @@ const Contacts: React.FC = (): JSX.Element => {
         }
       });
       openCopyModal(true);
-      setTimeout(() => openCopyModal(false), 200);
     },
     [inputRef],
   );
+
+  useTimeout(() => isCopyModal && openCopyModal(false), 2000, [isCopyModal]);
 
   const handleDelete = useCallback(
     name => {
@@ -144,9 +147,11 @@ const Contacts: React.FC = (): JSX.Element => {
             </span>
           </div>
           <div className='balances-contact-right'>
-            <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
-              <p>Copied!</p>
-            </div>
+            <Transition type='fly' timeout={200} trigger={isCopyModal}>
+              <div className={'hint-copied open'}>
+                <p>Copied!</p>
+              </div>
+            </Transition>
             <button
               className='balances-contact-send btn-tr'
               onClick={() => {
