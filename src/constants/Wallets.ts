@@ -5,3 +5,7 @@ export const WALLETS = {
   Portis: () => import('../components/Wallets/PortisWallet'),
   Fortmatic: () => import('../components/Wallets/FortmaticWallet'),
 };
+
+export const DESKTOP_ONLY_WALLETS = ['Metamask'];
+export const MOBILE_ONLY_WALLETS = ['Coinbase Wallet'];
+export const BRAVE_NON_WORKING_WALLETS = ['Portis'];

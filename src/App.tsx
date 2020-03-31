@@ -22,10 +22,10 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   );
 
   useEffect(() => {
-    if (provider) {
+    if (provider && window['ethereum']) {
       window['ethereum'].autoRefreshOnNetworkChange = false;
     }
-    if (provider && walletName) {
+    if (provider && walletName && walletName !== 'Fortmatic') {
       provider.on('networkChanged', () => {
         provider.networkVersion !== RIGHT_NETWORK_ID &&
         walletName === 'Metamask'

@@ -79,7 +79,7 @@ const Modal: React.FC<ModalProps> = ({
       history.push('/');
       setModal('');
     }
-  }, []);
+  }, [walletName, zkWallet]);
 
   const shown = classSpecifier === isModalOpen || visible;
 
