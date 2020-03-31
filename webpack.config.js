@@ -35,7 +35,8 @@ const rules = [
     test: /\.(svg|png|jpe?g)?$/,
     loader: 'file-loader',
     options: {
-      name: 'assets/[hash].[ext]',
+      name: '[hash].[ext]',
+      outputPath: 'assets/',
     },
   },
 ];
@@ -60,6 +61,7 @@ const config = {
   output: {
     path: BUILD_DIR,
     filename: 'js/[name]-[chunkhash].js',
+    publicPath: '/',
   },
   module: { rules },
   plugins: [
