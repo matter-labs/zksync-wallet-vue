@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { CSSTransition } from 'react-transition-group';
+import cl from 'classnames';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -16,6 +16,7 @@ export interface ModalProps {
   classSpecifier: string;
   visible: boolean;
   transition?: 'scale' | 'fly';
+  centered?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -24,6 +25,7 @@ const Modal: React.FC<ModalProps> = ({
   classSpecifier,
   visible,
   transition = 'scale',
+  centered = false,
 }) => {
   const {
     isModalOpen,
@@ -84,14 +86,12 @@ const Modal: React.FC<ModalProps> = ({
   const shown = classSpecifier === isModalOpen || visible;
 
   return (
-    <Portal>
+    <Portal className={cl(centered && 'center')}>
       <Transition type={transition} trigger={shown} timeout={100}>
-        <>
-          <div className={`modal ${classSpecifier}`}>
-            <button onClick={closeHandler} className='close-icon' />
-            {children}
-          </div>
-        </>
+        <div className={`modal ${classSpecifier}`}>
+          <button onClick={closeHandler} className='close-icon' />
+          {children}
+        </div>
       </Transition>
       <Transition trigger={shown} type='opacity' timeout={100}>
         <div data-name='modal-wrapper' className={'modal-wrapper'} />

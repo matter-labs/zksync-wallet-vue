@@ -174,6 +174,7 @@ const Header: React.FC = () => {
               cancelAction={() => openChangeName(false)}
               background={true}
               classSpecifier='change-name'
+              centered
             >
               <ChangeName setModalOpen={openChangeName} />
             </Modal>
