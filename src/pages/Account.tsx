@@ -13,8 +13,6 @@ import { request } from 'functions/Request';
 import { BASE_URL } from 'constants/CoinBase';
 
 const Account: React.FC = (): JSX.Element => {
-  const dataPropertyName = 'symbol';
-
   const {
     addressValue,
     amountValue,
@@ -96,7 +94,7 @@ const Account: React.FC = (): JSX.Element => {
 
   const initWallet = async () => {
     setBalances(zkBalances);
-    await zkWallet
+    zkWallet
       ?.getAccountState()
       .then(res => res)
       .then(data => setVerified(data.verified.balances));
@@ -162,6 +160,61 @@ const Account: React.FC = (): JSX.Element => {
     setToken(symbol ? symbol : address);
   };
 
+  const isVerified = ({ address, symbol, balance }) =>
+    (verified && +balance === +verified[address] / Math.pow(10, 18)) ||
+    +balance === +verified[symbol] / Math.pow(10, 18);
+
+  const VerifiedBal = ({ balance: { address, symbol, balance } }) => (
+    <div key={balance} className='balances-token verified'>
+      <div className='balances-token-left'>
+        {'zk'}
+        {symbol}
+      </div>
+      <div className='balances-token-right'>
+        <p>{+balance.toFixed(6)}</p>{' '}
+        {price?.length && (
+          <span>
+            {`(~${+(
+              balance * +(price && price[symbol] ? price[symbol] : 1)
+            ).toFixed(2)})`}
+          </span>
+        )}
+        <div className='balances-token-status'>
+          <p>Verified</p> <span className='label-done'></span>
+        </div>
+        <button
+          className='btn-tr'
+          onClick={() => handleSend(address, balance, symbol)}
+        >
+          {'Send'}
+        </button>
+      </div>
+    </div>
+  );
+
+  const UnverifiedBal = ({ balance: { symbol, balance } }) => (
+    <div key={balance} className='balances-token pending'>
+      <div className='balances-token-left'>zk{symbol}</div>
+      <div className='balances-token-right'>
+        <p>{+balance.toFixed(6)}</p>{' '}
+        <span>
+          {price?.length
+            ? `~$(${+(
+                balance * +(price && !!price[symbol] ? price[symbol] : 1)
+              ).toFixed(2)})`
+            : 'Unknown'}
+        </span>
+        <div className='balances-token-status'>
+          <p>Pending</p>
+          <SpinnerWorm />
+        </div>
+        <button className='pending btn-tr' onClick={() => undefined}>
+          Send
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <>
       {!transactionType && (
@@ -173,86 +226,21 @@ const Account: React.FC = (): JSX.Element => {
             setTransactionType={setTransactionType}
           />
           <DataList
-            // setValue={setBalances}
             data={zkBalances}
             title='Token balances'
             visible={true}
-            renderItem={({ address, symbol, balance }) => (
-              <>
-                {verified &&
-                (+balance === +verified[address] / Math.pow(10, 18) ||
-                  +balance === +verified[symbol] / Math.pow(10, 18)) ? (
-                  <div key={balance} className='balances-token verified'>
-                    <div className='balances-token-left'>zk{symbol}</div>
-                    <div className='balances-token-right'>
-                      <p>{+balance.toFixed(6)}</p>{' '}
-                      <span>
-                        {price && !!price.length ? (
-                          <>
-                            (~$
-                            {
-                              +(
-                                balance *
-                                +(price && !!price[symbol] ? price[symbol] : 1)
-                              ).toFixed(2)
-                            }
-                            )
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </span>
-                      <div className='balances-token-status'>
-                        <p>Verified</p> <span className='label-done'></span>
-                      </div>
-                      <button
-                        className='btn-tr'
-                        onClick={() => handleSend(address, balance, symbol)}
-                      >
-                        Send
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div key={balance} className='balances-token pending'>
-                    <div className='balances-token-left'>zk{symbol}</div>
-                    <div className='balances-token-right'>
-                      <p>{+balance.toFixed(6)}</p>{' '}
-                      <span>
-                        (
-                        {price && !!price.length ? (
-                          <>
-                            ~$
-                            {
-                              +(
-                                balance *
-                                +(price && !!price[symbol] ? price[symbol] : 1)
-                              ).toFixed(2)
-                            }
-                          </>
-                        ) : (
-                          <>Unknown</>
-                        )}
-                        )
-                      </span>
-                      <div className='balances-token-status'>
-                        <p>Pending</p> <SpinnerWorm />
-                      </div>
-                      <button
-                        className='pending btn-tr'
-                        onClick={() => undefined}
-                      >
-                        Send
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
+            renderItem={balance =>
+              isVerified(balance) ? (
+                <VerifiedBal key={balance.address} balance={balance} />
+              ) : (
+                <UnverifiedBal key={balance.address} balance={balance} />
+              )
+            }
             emptyListComponent={() => (
               <p>
-                No balances yet, please make a deposit or request money from
-                someone!
+                {
+                  'No balances yet, please make a deposit or request money from someone!'
+                }
               </p>
             )}
           />
