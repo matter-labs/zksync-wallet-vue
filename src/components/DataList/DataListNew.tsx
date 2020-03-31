@@ -60,7 +60,6 @@ export function DataList<T>({
   useEffect(() => {
     if (data?.length) setResolvedData(data);
   }, [data]);
-
   // lazy fetch
   useEffect(() => {
     if (typeof onFetch === 'function') {
