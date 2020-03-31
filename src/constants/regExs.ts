@@ -6,3 +6,5 @@ export const ADDRESS_VALIDATION = {
 export const INPUT_VALIDATION = {
   digits: /^[0-9]*\.?[0-9]*$/,
 };
+
+export const MOBILE_DEVICE = /mobi/i;
