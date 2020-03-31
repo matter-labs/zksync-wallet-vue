@@ -22,6 +22,7 @@
     "isolatedModules": true,
     "baseUrl": "./",
     "paths": {
+      "src/*": ["src/*"],
       "constants/*": ["src/constants/*"],
       "hooks/*": ["src/hooks/*"],
       "components/*": ["src/components/*"],

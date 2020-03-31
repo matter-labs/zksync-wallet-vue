@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { Redirect, useHistory } from 'react-router-dom';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
@@ -11,9 +11,20 @@ import { useInterval, useTimeout } from 'hooks/timers';
 
 import { WALLETS } from 'constants/Wallets';
 import { RIGHT_NETWORK_ID } from 'constants/networks';
+import { MOBILE_WALLETS, DESKTOP_WALLETS } from 'src/config';
+
+const mobileCheck = /mobi/i;
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
+  const isMobile = useMemo(() => mobileCheck.test(navigator.userAgent), []);
+  const wallets = useMemo(
+    () =>
+      Object.keys(WALLETS).filter(el =>
+        isMobile ? MOBILE_WALLETS.includes(el) : DESKTOP_WALLETS.includes(el),
+      ),
+    [isMobile],
+  );
 
   const {
     error,
@@ -72,14 +83,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     provider?.selectedAddress,
   );
 
-  const desktopWallets = ['Metamask'];
-  const mobileWallets = ['Coinbase Wallet'];
-  const mobileCheck = /mobi/i.test(navigator.userAgent);
-
-  const wallets = Object.keys(WALLETS).filter(el =>
-    mobileCheck ? !desktopWallets.includes(el) : !mobileWallets.includes(el),
-  );
-
   const handleLogOut = useCallback(() => {
     setProvider(null);
     setWalletName('');
@@ -116,7 +119,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     provider,
     setAccessModal,
     walletName,
-    wallets,
     zkWallet,
   ]);
 

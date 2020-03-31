@@ -14,6 +14,8 @@ import { IMyWalletProps } from './Types';
 import { WIDTH_BP } from 'constants/magicNumbers';
 
 import './Wallets.scss';
+import { Transition } from 'components/Transition/Transition';
+import { useTimeout } from 'hooks/timers';
 
 const MyWallet: React.FC<IMyWalletProps> = ({
   price,
@@ -93,10 +95,11 @@ const MyWallet: React.FC<IMyWalletProps> = ({
         });
       }
       openCopyModal(true);
-      setTimeout(() => openCopyModal(false), 2000);
     },
     [inputRef],
   );
+
+  useTimeout(() => isCopyModal && openCopyModal(false), 2000, [isCopyModal]);
 
   const handleSelect = useCallback(
     name => {
@@ -205,9 +208,11 @@ const MyWallet: React.FC<IMyWalletProps> = ({
             onClick={() => handleCopy(zkWallet?.address())}
             className='copy-block'
           >
-            <div className={`hint-copied ${isCopyModal ? 'open' : ''}`}>
-              <p>Copied!</p>
-            </div>
+            <Transition type='fly' timeout={200} trigger={isCopyModal}>
+              <div className={'hint-copied open'}>
+                <p>Copied!</p>
+              </div>
+            </Transition>
             <input
               className='copy-block-input'
               readOnly
