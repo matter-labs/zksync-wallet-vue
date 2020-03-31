@@ -60,6 +60,7 @@ export function DataList<T>({
   useEffect(() => {
     if (data?.length) setResolvedData(data);
   }, [data]);
+
   // lazy fetch
   useEffect(() => {
     if (typeof onFetch === 'function') {
@@ -105,7 +106,7 @@ export function DataList<T>({
     const res = data.map(renderItem || (e => e as any));
     if (itemAmount) return res.slice(0, itemAmount);
     return res;
-  }, [resolvedData, filteredData, itemAmount]);
+  }, [renderItem, searchPredicate, resolvedData, filteredData, itemAmount]);
 
   return (
     <>
