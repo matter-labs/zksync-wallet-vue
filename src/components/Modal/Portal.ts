@@ -1,19 +1,23 @@
-import { useEffect, useRef, useLayoutEffect } from 'react';
+import { useRef, useLayoutEffect, FC } from 'react';
+import cl from 'classnames';
+import { createPortal } from 'react-dom';
 
-import ReactDOM from 'react-dom';
+interface Props {
+  className?: string;
+}
 
-const Portal = ({ children }) => {
+const Portal: FC<Props> = ({ children, className = '' }) => {
   const rootDiv = useRef(document.createElement('div'));
   useLayoutEffect(() => {
     const modal = rootDiv.current;
-    modal.setAttribute('class', 'modal-container');
+    modal.setAttribute('class', cl('modal-container', className));
     document.body.appendChild(modal);
     return () => {
       document.body.removeChild(modal);
     };
   }, []);
 
-  return ReactDOM.createPortal(children, rootDiv.current);
+  return createPortal(children, rootDiv.current);
 };
 
 export default Portal;

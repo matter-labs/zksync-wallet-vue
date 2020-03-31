@@ -57,6 +57,9 @@ export function DataList<T>({
   const [debScrollTop, setScrollTop] = useDebouncedValue(0);
   const [itemAmount, setItemAmount] = useState(infScrollInitialCount);
 
+  useEffect(() => {
+    if (data?.length) setResolvedData(data);
+  }, [data]);
   // lazy fetch
   useEffect(() => {
     if (typeof onFetch === 'function') {
@@ -116,10 +119,6 @@ export function DataList<T>({
       <div
         ref={rootRef}
         className={cl('balances-wrapper', visible ? 'open' : 'closed')}
-        style={{
-          maxHeight: '200px',
-          overflowY: 'auto',
-        }}
       >
         <h3 className='balances-title'>{title}</h3>
         <input
