@@ -9,21 +9,34 @@ import { useRootData } from 'hooks/useRootData';
 import useWalletInit from 'hooks/useWalletInit';
 import { useInterval, useTimeout } from 'hooks/timers';
 
-import { WALLETS } from 'constants/Wallets';
+import { MOBILE_DEVICE } from 'constants/regExs';
 import { RIGHT_NETWORK_ID } from 'constants/networks';
-import { MOBILE_WALLETS, DESKTOP_WALLETS } from 'src/config';
-
-const mobileCheck = /mobi/i;
+import {
+  BRAVE_NON_WORKING_WALLETS,
+  DESKTOP_ONLY_WALLETS,
+  MOBILE_ONLY_WALLETS,
+  WALLETS,
+} from 'constants/Wallets';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
-  const isMobile = useMemo(() => mobileCheck.test(navigator.userAgent), []);
+
+  const mobileCheck = useMemo(
+    () => MOBILE_DEVICE.test(navigator.userAgent),
+    [],
+  );
+  const filterWallets = (list: string[]) => {
+    if (!!navigator['brave']) list.push(...BRAVE_NON_WORKING_WALLETS);
+    return list;
+  };
   const wallets = useMemo(
     () =>
       Object.keys(WALLETS).filter(el =>
-        isMobile ? MOBILE_WALLETS.includes(el) : DESKTOP_WALLETS.includes(el),
+        mobileCheck
+          ? !filterWallets(DESKTOP_ONLY_WALLETS).includes(el)
+          : !filterWallets(MOBILE_ONLY_WALLETS).includes(el),
       ),
-    [isMobile],
+    [mobileCheck],
   );
 
   const {
