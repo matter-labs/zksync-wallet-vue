@@ -1,27 +1,42 @@
-import React, { useEffect, ReactElement, useState, useMemo } from 'react';
+import React, {
+  useEffect,
+  ReactElement,
+  useState,
+  useMemo,
+  useRef,
+} from 'react';
 import cl from 'classnames';
 
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
-import { useDebounce } from 'hooks/useDebounce';
+import { useDebouncedValue } from 'src/hooks/debounce';
 import { useAutoFocus } from 'hooks/useAutoFocus';
 
 import './DataList.scss';
+import { useListener } from 'hooks/useListener';
+
+type ReactComp = ReactElement | string | null;
 
 interface Props<T> {
-  data: T[];
+  data?: T[];
+  onFetch?: (amount?: number, offset?: number) => Promise<T[]>;
   title?: string;
   visible?: boolean;
-  renderItem?: (i: T) => ReactElement | null;
-  header?: () => ReactElement | null;
-  footer?: () => ReactElement | null;
-  searchPredicate?: (query: string, e: T) => boolean;
+  renderItem?: (i: T) => ReactComp;
+  header?: () => ReactComp;
+  footer?: () => ReactComp;
+  searchPredicate?: (e: T, query: string, regex: RegExp) => boolean;
   onSetFiltered?: (data: T[]) => void;
-  emptyListComponent?: () => ReactElement | null;
+  emptyListComponent?: () => ReactComp;
+
+  infScrollInitialCount?: number;
+  loadMoreThreshold?: number;
+  loadMoreAmount?: number;
 }
 
 export function DataList<T>({
   data,
+  onFetch,
   title = '',
   visible = true,
   searchPredicate,
@@ -29,30 +44,65 @@ export function DataList<T>({
   header = () => null,
   footer = () => null,
   onSetFiltered = () => null,
-  emptyListComponent: EmptyPlaceholder = () => null,
+  emptyListComponent = () => null,
+  infScrollInitialCount,
+  loadMoreThreshold = 10,
+  loadMoreAmount = 5,
 }: Props<T>) {
-  const [debouncedSearch, setSearch, searchValue] = useDebounce('', 500);
-  const [filteredData, setFiltered] = useState<T[]>(data);
+  const [debouncedSearch, setSearch, searchValue] = useDebouncedValue('', 500);
+  const [resolvedData, setResolvedData] = useState(data || []);
+  const [filteredData, setFiltered] = useState<T[]>(data || []);
   const focusInput = useAutoFocus();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [debScrollTop, setScrollTop] = useDebouncedValue(0);
+  const [itemAmount, setItemAmount] = useState(infScrollInitialCount);
 
+  // lazy fetch
   useEffect(() => {
+    if (typeof onFetch === 'function') {
+      onFetch(itemAmount, 0).then(setResolvedData);
+    }
+  }, [onFetch, setFiltered, itemAmount]);
+
+  useListener(
+    rootRef.current,
+    'scroll',
+    () => setScrollTop(rootRef.current!.scrollTop),
+    { passive: true },
+  );
+
+  // infinite scroll
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!(infScrollInitialCount && root)) return;
+    const loadMore =
+      root.scrollHeight - (root.scrollTop + root.offsetHeight) <
+      loadMoreThreshold;
+    if (!loadMore) return;
+    setItemAmount(i => i! + loadMoreAmount);
+  }, [debScrollTop]);
+
+  // on search hook
+  useEffect(() => {
+    if (!searchPredicate || !resolvedData.length) return;
     if (!debouncedSearch) {
-      if (data.length > filteredData.length) setFiltered(data);
+      if (resolvedData.length > filteredData.length) setFiltered(resolvedData);
       return;
     }
-
     const re = new RegExp(debouncedSearch, 'i');
-    const filterCb = searchPredicate
-      ? e => searchPredicate(debouncedSearch, e)
-      : e => re.test(e);
-    const filtered = data.filter(filterCb);
+    const filtered = resolvedData.filter(e =>
+      searchPredicate(e, debouncedSearch, re),
+    );
     setFiltered(filtered);
     onSetFiltered(filtered);
-  }, [debouncedSearch]);
+  }, [debouncedSearch, resolvedData]);
 
-  const list = useMemo(() => filteredData.map(renderItem || (e => e as any)), [
-    filteredData,
-  ]);
+  const list = useMemo(() => {
+    const data = searchPredicate ? filteredData : resolvedData;
+    const res = data.map(renderItem || (e => e as any));
+    if (itemAmount) return res.slice(0, itemAmount);
+    return res;
+  }, [resolvedData, filteredData, itemAmount]);
 
   return (
     <>
@@ -63,7 +113,14 @@ export function DataList<T>({
       >
         <SaveContacts title='Add contact' addressValue='' addressInput={true} />
       </Modal>
-      <div className={cl('balances-wrapper', visible ? 'open' : 'closed')}>
+      <div
+        ref={rootRef}
+        className={cl('balances-wrapper', visible ? 'open' : 'closed')}
+        style={{
+          maxHeight: '200px',
+          overflowY: 'auto',
+        }}
+      >
         <h3 className='balances-title'>{title}</h3>
         <input
           type='text'
@@ -76,7 +133,7 @@ export function DataList<T>({
           className='balances-search'
         />
         {header()}
-        {list.length ? list : <EmptyPlaceholder />}
+        {list.length ? list : emptyListComponent()}
         {footer()}
       </div>
     </>

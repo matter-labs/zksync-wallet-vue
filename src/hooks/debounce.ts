@@ -2,7 +2,10 @@ import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
 type SetState<T> = Dispatch<SetStateAction<T>>;
 
-export function useDebounce<T>(init: T, timeout = 250): [T, SetState<T>, T] {
+export function useDebouncedValue<T>(
+  init: T,
+  timeout = 250,
+): [T, SetState<T>, T] {
   const [immediate, setImmediate] = useState<T>(init);
   const [debounced, setDebounced] = useState<T>(init);
   useEffect(() => {
