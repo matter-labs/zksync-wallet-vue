@@ -527,3 +527,12 @@ body.dark {
     }
   }
 }
+
+.modal-container {
+  &.center {
+    display: flex;
+    // position: fixed;
+    align-items: center;
+    justify-content: center;
+  }
+}
