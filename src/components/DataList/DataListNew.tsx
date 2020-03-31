@@ -105,7 +105,7 @@ export function DataList<T>({
     const res = data.map(renderItem || (e => e as any));
     if (itemAmount) return res.slice(0, itemAmount);
     return res;
-  }, [resolvedData, filteredData, itemAmount]);
+  }, [renderItem, searchPredicate, resolvedData, filteredData, itemAmount]);
 
   return (
     <>

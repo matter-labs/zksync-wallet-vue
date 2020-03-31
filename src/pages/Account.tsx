@@ -161,8 +161,9 @@ const Account: React.FC = (): JSX.Element => {
   };
 
   const isVerified = ({ address, symbol, balance }) =>
-    (verified && +balance === +verified[address] / Math.pow(10, 18)) ||
-    +balance === +verified[symbol] / Math.pow(10, 18);
+    verified &&
+    (+balance === +verified[address] / Math.pow(10, 18) ||
+      +balance === +verified[symbol] / Math.pow(10, 18));
 
   const VerifiedBal = ({ balance: { address, symbol, balance } }) => (
     <div key={balance} className='balances-token verified'>
