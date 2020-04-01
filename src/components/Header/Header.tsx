@@ -106,7 +106,11 @@ const Header: React.FC = () => {
   return (
     <div className='menu-wrapper'>
       <div className='menu-top'>
-        <Link className='menu-logo' to='/'></Link>
+        <Link
+          onClick={() => (!zkWallet ? handleLogOut() : undefined)}
+          className='menu-logo'
+          to='/'
+        ></Link>
         {address && (
           <>
             <button
