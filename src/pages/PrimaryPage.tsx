@@ -149,8 +149,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     }
   }, 5000);
 
-  console.log(provider);
-
   return (
     <>
       {!!hintModal.length && <div className='hint-modal'>{hintModal}</div>}
