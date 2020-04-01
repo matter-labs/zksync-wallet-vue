@@ -173,13 +173,21 @@ const Account: React.FC = (): JSX.Element => {
       </div>
       <div className='balances-token-right'>
         <p>{+balance.toFixed(6)}</p>{' '}
-        {price?.length && (
-          <span>
-            {`(~${+(
-              balance * +(price && price[symbol] ? price[symbol] : 1)
-            ).toFixed(2)})`}
-          </span>
-        )}
+        <span>
+          {price && !!price.length ? (
+            <>
+              (~$
+              {
+                +(
+                  balance * +(price && !!price[symbol] ? price[symbol] : 1)
+                ).toFixed(2)
+              }
+              )
+            </>
+          ) : (
+            <></>
+          )}
+        </span>
         <div className='balances-token-status'>
           <p>Verified</p> <span className='label-done'></span>
         </div>
@@ -199,11 +207,19 @@ const Account: React.FC = (): JSX.Element => {
       <div className='balances-token-right'>
         <p>{+balance.toFixed(6)}</p>{' '}
         <span>
-          {price?.length
-            ? `~$(${+(
-                balance * +(price && !!price[symbol] ? price[symbol] : 1)
-              ).toFixed(2)})`
-            : 'Unknown'}
+          {price && !!price.length ? (
+            <>
+              (~$
+              {
+                +(
+                  balance * +(price && !!price[symbol] ? price[symbol] : 1)
+                ).toFixed(2)
+              }
+              )
+            </>
+          ) : (
+            <></>
+          )}
         </span>
         <div className='balances-token-status'>
           <p>Pending</p>

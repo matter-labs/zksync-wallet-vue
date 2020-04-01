@@ -9,11 +9,13 @@ import cl from 'classnames';
 
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
-import { useDebouncedValue } from 'src/hooks/debounce';
+
 import { useAutoFocus } from 'hooks/useAutoFocus';
+import { useDebouncedValue } from 'src/hooks/debounce';
+import { useListener } from 'hooks/useListener';
+import { useRootData } from 'hooks/useRootData';
 
 import './DataList.scss';
-import { useListener } from 'hooks/useListener';
 
 type ReactComp = ReactElement | string | null;
 
@@ -49,6 +51,10 @@ export function DataList<T>({
   loadMoreThreshold = 10,
   loadMoreAmount = 5,
 }: Props<T>) {
+  const { price } = useRootData(({ price }) => ({
+    price: price.get(),
+  }));
+
   const [debouncedSearch, setSearch, searchValue] = useDebouncedValue('', 500);
   const [resolvedData, setResolvedData] = useState(data || []);
   const [filteredData, setFiltered] = useState<T[]>(data || []);
@@ -134,6 +140,9 @@ export function DataList<T>({
         {header()}
         {list.length ? list : emptyListComponent()}
         {footer()}
+        <>
+          {price && !price.length ? <p>No Conversion Rate Available</p> : <></>}
+        </>
       </div>
     </>
   );
