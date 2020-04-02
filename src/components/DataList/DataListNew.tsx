@@ -21,27 +21,57 @@ type ReactComp = ReactElement | string | null;
 
 interface Props<T> {
   data?: T[];
+  /**
+   * @param amount Amount to fetch (will be appended to existing data).
+   * Pass `undefined` to skip pagination
+   */
   onFetch?: (amount?: number, offset?: number) => Promise<T[]>;
   title?: string;
   visible?: boolean;
+
   renderItem?: (i: T) => ReactComp;
   header?: () => ReactComp;
   footer?: () => ReactComp;
-  searchPredicate?: (e: T, query: string, regex: RegExp) => boolean;
-  onSetFiltered?: (data: T[]) => void;
   emptyListComponent?: () => ReactComp;
 
+  /**
+   * @param query Search string
+   * @param regex `RegExp` instance from search string with ignorecase flag
+   */
+  searchPredicate?: (e: T, query: string, regex: RegExp) => boolean;
+  onSetFiltered?: (data: T[]) => void;
+
+  /**
+   * Initial count of items to display
+   * (if `undefined`, the feature will be disabled)
+   */
   infScrollInitialCount?: number;
+
+  /**
+   * In pixels: remaining scroll height to start loading more items
+   */
   loadMoreThreshold?: number;
+
+  /**
+   * How many items to load at one time
+   */
   loadMoreAmount?: number;
 }
+
+const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
+  if (typeof o === 'object') {
+    const string = Object.entries(o).reduce((acc, [_k, v]) => acc + v, '');
+    return re.test(string);
+  }
+  return re.test(o);
+};
 
 export function DataList<T>({
   data,
   onFetch,
   title = '',
   visible = true,
-  searchPredicate,
+  searchPredicate = DEFAULT_SEARCH,
   renderItem,
   header = () => null,
   footer = () => null,
@@ -51,26 +81,36 @@ export function DataList<T>({
   loadMoreThreshold = 10,
   loadMoreAmount = 5,
 }: Props<T>) {
-  const { price } = useRootData(({ price }) => ({
-    price: price.get(),
-  }));
-
   const [debouncedSearch, setSearch, searchValue] = useDebouncedValue('', 500);
-  const [resolvedData, setResolvedData] = useState(data || []);
-  const [filteredData, setFiltered] = useState<T[]>(data || []);
   const focusInput = useAutoFocus();
   const rootRef = useRef<HTMLDivElement>(null);
+
   const [debScrollTop, setScrollTop] = useDebouncedValue(0);
+  const [hasMore, setHasMore] = useState(true);
   const [itemAmount, setItemAmount] = useState(infScrollInitialCount);
+  const [resolvedData, setResolvedData] = useState(data || []);
+  const [filteredData, setFiltered] = useState<T[]>(data || []);
 
   useEffect(() => {
     if (data?.length) setResolvedData(data);
   }, [data]);
-  // lazy fetch
+
+  // Lazy fetch
   useEffect(() => {
-    if (typeof onFetch === 'function') {
-      onFetch(itemAmount, 0).then(setResolvedData);
-    }
+    if (!hasMore || typeof onFetch !== 'function') return;
+
+    const amount = infScrollInitialCount ? loadMoreAmount : undefined;
+    const offset = infScrollInitialCount
+      ? itemAmount! - loadMoreAmount
+      : undefined;
+
+    onFetch(amount, offset).then(res => {
+      if (res.length) {
+        setResolvedData(d => [...d, ...res]);
+      } else {
+        setHasMore(false);
+      }
+    });
   }, [onFetch, setFiltered, itemAmount]);
 
   useListener(
@@ -80,10 +120,10 @@ export function DataList<T>({
     { passive: true },
   );
 
-  // infinite scroll
+  // Infinite scroll
   useEffect(() => {
     const root = rootRef.current;
-    if (!(infScrollInitialCount && root)) return;
+    if (!(infScrollInitialCount && root) || !hasMore) return;
     const loadMore =
       root.scrollHeight - (root.scrollTop + root.offsetHeight) <
       loadMoreThreshold;
@@ -91,7 +131,7 @@ export function DataList<T>({
     setItemAmount(i => i! + loadMoreAmount);
   }, [debScrollTop]);
 
-  // on search hook
+  // On search hook
   useEffect(() => {
     if (!searchPredicate || !resolvedData.length) return;
     if (!debouncedSearch) {
@@ -114,36 +154,22 @@ export function DataList<T>({
   }, [renderItem, searchPredicate, resolvedData, filteredData, itemAmount]);
 
   return (
-    <>
-      <Modal
-        visible={false}
-        classSpecifier='add-contact addressless'
-        background={true}
-      >
-        <SaveContacts title='Add contact' addressValue='' addressInput={true} />
-      </Modal>
-      <div
-        ref={rootRef}
-        className={cl('balances-wrapper', visible ? 'open' : 'closed')}
-      >
-        <h3 className='balances-title'>{title}</h3>
-        <input
-          type='text'
-          ref={focusInput}
-          onChange={e => setSearch(e.target.value)}
-          value={searchValue}
-          placeholder={`Filter ${title
-            .toLowerCase()
-            .replace(/.?(select )/, '')}`}
-          className='balances-search'
-        />
-        {header()}
-        {list.length ? list : emptyListComponent()}
-        {footer()}
-        <>
-          {price && !price.length ? <p>No Conversion Rate Available</p> : <></>}
-        </>
-      </div>
-    </>
+    <div
+      ref={rootRef}
+      className={cl('balances-wrapper', visible ? 'open' : 'closed')}
+    >
+      <h3 className='balances-title'>{title}</h3>
+      <input
+        type='text'
+        ref={focusInput}
+        onChange={e => setSearch(e.target.value)}
+        value={searchValue}
+        placeholder={`Filter ${title.toLowerCase().replace(/.?(select )/, '')}`}
+        className='balances-search'
+      />
+      {header()}
+      {list.length ? list : emptyListComponent()}
+      {footer()}
+    </div>
   );
 }

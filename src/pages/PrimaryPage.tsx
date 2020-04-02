@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import { Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';
@@ -17,6 +17,7 @@ import {
   MOBILE_ONLY_WALLETS,
   WALLETS,
 } from 'constants/Wallets';
+import { useQuery } from 'src/hooks/useQuery';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
@@ -149,84 +150,85 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     }
   }, 5000);
 
+  const params = useQuery();
+  if (zkWallet) {
+    return <Redirect to={`/${params.get('redir') || 'account'}`} />;
+  }
+
   return (
     <>
       {!!hintModal.length && <div className='hint-modal'>{hintModal}</div>}
       <LazyWallet />
-      {zkWallet ? (
-        <Redirect to='/account' />
-      ) : (
-        <>
-          <Modal
-            background={false}
-            classSpecifier={`metamask ${
-              walletName
-                ? walletName.replace(/\s+/g, '').toLowerCase()
-                : 'primary-page'
-            }`}
-            visible={isAccessModalOpen}
-            cancelAction={() => handleLogOut()}
-          >
-            <div
-              className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
-            ></div>
-            {(provider && walletName !== 'Metamask') ||
-            (provider &&
-              walletName === 'Metamask' &&
-              provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
-              <>
-                <h3 onClick={createWallet} className='title-connecting'>
-                  Connecting to {walletName}
-                </h3>
-                <p>Follow the instructions in the popup</p>
-                <Spinner />
-              </>
-            ) : (
-              <>
-                <h3>Connecting to {walletName}</h3>
-                <div className='wrong-network'>
-                  <div className='wrong-network-logo'></div>
-                  <p>
-                    You are in the wrong network. <br />
-                    Please switch to mainnet
-                  </p>
-                </div>
-                <button
-                  className='btn submit-button'
-                  onClick={() => handleLogOut()}
-                >
-                  Disconnect {walletName}
-                </button>
-              </>
-            )}
-          </Modal>
-          {!walletName && (
+      <>
+        <Modal
+          background={false}
+          classSpecifier={`metamask ${
+            walletName
+              ? walletName.replace(/\s+/g, '').toLowerCase()
+              : 'primary-page'
+          }`}
+          visible={isAccessModalOpen}
+          cancelAction={() => handleLogOut()}
+        >
+          <div
+            className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
+          ></div>
+          {(provider && walletName !== 'Metamask') ||
+          (provider &&
+            walletName === 'Metamask' &&
+            provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
             <>
-              <div className='logo-textless'></div>
-              <div className='welcome-text'>
-                <h1>Welcome to zkSync.</h1>
-                <h2>Simple, fast and secure token transfers.</h2>
-                <p>Connect a wallet</p>
+              <h3 onClick={createWallet} className='title-connecting'>
+                Connecting to {walletName}
+              </h3>
+              <p>Follow the instructions in the popup</p>
+              <Spinner />
+            </>
+          ) : (
+            <>
+              <h3>Connecting to {walletName}</h3>
+              <div className='wrong-network'>
+                <div className='wrong-network-logo'></div>
+                <p>
+                  You are in the wrong network. <br />
+                  Please switch to mainnet
+                </p>
               </div>
-              <div className='wallets-wrapper'>
-                {wallets.map(key => (
-                  <button key={key} className='wallet-block'>
-                    <div
-                      className={`btn wallet-button ${key}`}
-                      key={key}
-                      onClick={() => {
-                        setWalletName(key);
-                        setNormalBg(true);
-                      }}
-                    ></div>
-                    <p>{key}</p>
-                  </button>
-                ))}
-              </div>
+              <button
+                className='btn submit-button'
+                onClick={() => handleLogOut()}
+              >
+                Disconnect {walletName}
+              </button>
             </>
           )}
-        </>
-      )}
+        </Modal>
+        {!walletName && (
+          <>
+            <div className='logo-textless'></div>
+            <div className='welcome-text'>
+              <h1>Welcome to zkSync.</h1>
+              <h2>Simple, fast and secure token transfers.</h2>
+              <p>Connect a wallet</p>
+            </div>
+            <div className='wallets-wrapper'>
+              {wallets.map(key => (
+                <button key={key} className='wallet-block'>
+                  <div
+                    className={`btn wallet-button ${key}`}
+                    key={key}
+                    onClick={() => {
+                      setWalletName(key);
+                      setNormalBg(true);
+                    }}
+                  ></div>
+                  <p>{key}</p>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </>
     </>
   );
 };

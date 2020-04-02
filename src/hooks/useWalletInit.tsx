@@ -87,7 +87,6 @@ const useWalletInit = () => {
       const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider);
 
       setZkWallet(syncWallet);
-      history.push('/account');
 
       const tokens = await syncProvider.getTokens();
 
