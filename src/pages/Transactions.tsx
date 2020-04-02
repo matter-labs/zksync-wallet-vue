@@ -29,11 +29,6 @@ interface Tx {
   verified: boolean;
 }
 
-const fetchTransactions = (amount, offset): Promise<Tx[]> =>
-  fetch(
-    `https://kraftwerk28.pp.ua/cors/https://testnet.zksync.dev/api/v0.1/account/0x66718f1f2355feb8456ab30656fd92ba69feae1b/history/${offset}/${amount}`,
-  ).then(r => r.json());
-
 const Transactions: React.FC = (): JSX.Element => {
   const { zkWallet } = useRootData(
     ({ ethId, provider, searchTransactions, zkWallet }) => ({
@@ -43,6 +38,11 @@ const Transactions: React.FC = (): JSX.Element => {
       zkWallet: zkWallet.get(),
     }),
   );
+
+  const fetchTransactions = (amount, offset): Promise<Tx[]> =>
+    fetch(
+      `https://kraftwerk28.pp.ua/cors/https://testnet.zksync.dev/api/v0.1/account/${zkWallet?.address()}/history/${offset}/${amount}`,
+    ).then(r => r.json());
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
 
@@ -76,7 +76,7 @@ const Transactions: React.FC = (): JSX.Element => {
           <div className='transaction-history-left'>
             <div className={`transaction-history ${type}`}></div>
             <div className='transaction-history-amount'>
-              {(+amount).toFixed(3)}
+              {parseFloat((+amount / Math.pow(10, 18)).toFixed(3).toString())}
             </div>
             <div className='transaction-history-hash'>
               {token && token.toString().length > 10 ? (

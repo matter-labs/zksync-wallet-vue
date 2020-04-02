@@ -358,9 +358,11 @@
   }
 
   &-amount {
+    max-width: 200px;
     margin-left: 18px;
     color: var(--dark-color);
     font-size: var(--xl-font-size);
+    word-wrap: break-word;
   }
 
   &-wrapper {
