@@ -163,6 +163,10 @@ const Account: React.FC = (): JSX.Element => {
     (+balance === +verified[address] / Math.pow(10, 18) ||
       +balance === +verified[symbol] / Math.pow(10, 18));
 
+  const ApiFailedHint = () => (
+    <>{price && !price.length ? <p>No Conversion Rate Available</p> : <></>}</>
+  );
+
   const VerifiedBal = ({ balance: { address, symbol, balance } }) => (
     <div key={balance} className='balances-token verified'>
       <div className='balances-token-left'>
@@ -244,6 +248,7 @@ const Account: React.FC = (): JSX.Element => {
             data={zkBalances}
             title='Token balances'
             visible={true}
+            footer={ApiFailedHint}
             renderItem={balance =>
               isVerified(balance) ? (
                 <VerifiedBal key={balance.address} balance={balance} />
