@@ -152,7 +152,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   const params = useQuery();
   if (zkWallet) {
-    return <Redirect to={`/${params.get('redir') || 'account'}`} />;
+    return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
   }
 
   return (

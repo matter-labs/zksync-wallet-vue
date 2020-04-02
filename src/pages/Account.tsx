@@ -8,10 +8,9 @@ import Transaction from 'components/Transaction/Transaction';
 import { useRootData } from 'hooks/useRootData';
 import { useTransaction } from 'hooks/useTransaction';
 
-import { request } from 'functions/Request';
-
 import { BASE_URL } from 'constants/CoinBase';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
+import { useHistory } from 'react-router-dom';
 
 const Account: React.FC = (): JSX.Element => {
   const {
@@ -93,6 +92,8 @@ const Account: React.FC = (): JSX.Element => {
     }),
   );
 
+  const history = useHistory();
+
   const initWallet = async () => {
     setBalances(zkBalances);
     zkWallet
@@ -100,7 +101,7 @@ const Account: React.FC = (): JSX.Element => {
       .then(res => res)
       .then(data => setVerified(data.verified.balances));
     if (!ethId) {
-      window.location.pathname = '/';
+      history.push('/');
     }
     const balancesSymbols = () => {
       const exceptFau = zkBalances
@@ -108,16 +109,10 @@ const Account: React.FC = (): JSX.Element => {
         .map(el => el.symbol);
       return exceptFau;
     };
-    request(
-      `https://cors-anywhere.herokuapp.com/${BASE_URL}?symbol=${
+    fetch(
+      `https://kraftwerk28.pp.ua/cors/${BASE_URL}?symbol=${
         balancesSymbols().toString() ? balancesSymbols().toString() : 'ETH'
       }`,
-      {
-        method: 'GET',
-        headers: {
-          'X-CMC_PRO_API_KEY': '6497b92f-601e-4765-86e3-cd11e41a21f8',
-        },
-      },
     )
       .then((res: any) => {
         const prices = {};

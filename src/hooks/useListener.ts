@@ -1,14 +1,25 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, MutableRefObject } from 'react';
 
-export function useListener(
-  target: EventTarget | null,
+type Listener = (e: Event) => void;
+
+export function useListener<T>(
+  target: EventTarget | MutableRefObject<T> | null,
   event: string,
-  listener: (e: Event) => void,
+  listener: Listener,
   options?: boolean | AddEventListenerOptions,
 ) {
+  const savedHandler = useRef();
+
+  useEffect(() => (savedHandler.current = listener as any), [listener]);
+
   useEffect(() => {
-    if (!target) return;
-    target.addEventListener(event, listener, options);
-    return () => target.removeEventListener(event, listener, options);
-  }, [target, event, listener, options]);
+    const t = target!.hasOwnProperty('current')
+      ? (target as any).current
+      : target;
+
+    const l = savedHandler.current;
+
+    t.addEventListener(event, l, options);
+    return () => t.removeEventListener(event, l, options);
+  }, [target, event]);
 }

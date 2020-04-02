@@ -9,6 +9,6 @@ export function useCheckLogin() {
 
   useEffect(() => {
     if (ethId) return;
-    history.push({ pathname: '/', search: `?redir=${pathname.slice(1)}` });
+    history.push({ pathname: '/', search: `?redirect=${pathname.slice(1)}` });
   }, [ethId, history]);
 }

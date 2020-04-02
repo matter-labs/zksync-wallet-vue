@@ -56,6 +56,7 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleClickOutside = useCallback(
     e => {
+      if (!e) return;
       if (e.target.getAttribute('data-name')) {
         e.stopPropagation();
         setModal('');

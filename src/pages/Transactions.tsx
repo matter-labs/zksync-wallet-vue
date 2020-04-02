@@ -7,6 +7,33 @@ import { useTimeout } from 'hooks/timers';
 import { Transition } from 'components/Transition/Transition';
 import { useCheckLogin } from 'hooks/useCheckLogin';
 
+interface Tx {
+  hash: string;
+  pq_id?: any;
+  tx: {
+    amount: string;
+    fee: string;
+    from: string;
+    nonce: number;
+    signature: {
+      pubKey: string;
+      signature: string;
+    };
+    to?: string;
+    token?: number;
+    type: 'Transfer' | 'Withdraw' | 'Deposit';
+  };
+  success: boolean;
+  fail_reason?: any;
+  commited: boolean;
+  verified: boolean;
+}
+
+const fetchTransactions = (amount, offset): Promise<Tx[]> =>
+  fetch(
+    `https://kraftwerk28.pp.ua/cors/https://testnet.zksync.dev/api/v0.1/account/0x66718f1f2355feb8456ab30656fd92ba69feae1b/history/${offset}/${amount}`,
+  ).then(r => r.json());
+
 const Transactions: React.FC = (): JSX.Element => {
   const { zkWallet } = useRootData(
     ({ ethId, provider, searchTransactions, zkWallet }) => ({
@@ -41,23 +68,24 @@ const Transactions: React.FC = (): JSX.Element => {
 
   return (
     <DataList
-      // TODO: fetch transactions list (waiting for CORS on backend side)
-      // setValue={setTransactions}
-      // dataProperty={dataPropertyName}
-      // data={transactions}
-      data={[] as any[]}
+      onFetch={fetchTransactions}
       title='Transactions'
       visible={true}
-      renderItem={({ amount, type, hash, to, token }) => (
+      renderItem={({ hash, tx: { amount, type, to, token } }) => (
         <div className='transaction-history-wrapper' key={hash}>
           <div className='transaction-history-left'>
             <div className={`transaction-history ${type}`}></div>
             <div className='transaction-history-amount'>
-              {+amount.toFixed(3)}
+              {(+amount).toFixed(3)}
             </div>
             <div className='transaction-history-hash'>
-              {token && token.length > 10 ? (
-                token.replace(token.slice(6, token.length - 3), '...')
+              {token && token.toString().length > 10 ? (
+                token
+                  .toString()
+                  .replace(
+                    token.toString().slice(6, token.toString().length - 3),
+                    '...',
+                  )
               ) : (
                 <>
                   {'zk'}
@@ -69,7 +97,7 @@ const Transactions: React.FC = (): JSX.Element => {
           <input
             onChange={undefined}
             className='copy-block-input'
-            value={to.toString()}
+            value={to?.toString()}
             ref={e => inputRef.push(e)}
           />
           <div className='transaction-history-right'>
@@ -79,19 +107,19 @@ const Transactions: React.FC = (): JSX.Element => {
               </div>
             </Transition>
             <div className='transaction-history-address'>
-              {type === 'transfer' && (
+              {type === 'Transfer' && (
                 <>
                   <span>Sent to:</span>
                   <p>{to?.replace(to?.slice(6, to?.length - 3), '...')}</p>
                 </>
               )}
-              {type === 'deposit' && (
+              {type === 'Deposit' && (
                 <>
                   <span>Deposited to:</span>
                   <p>Your account</p>
                 </>
               )}
-              {type === 'withdraw' && (
+              {type === 'Withdraw' && (
                 <>
                   <span>Withdrawed to:</span>
                   <p>{to?.replace(to?.slice(6, to?.length - 3), '...')}</p>
