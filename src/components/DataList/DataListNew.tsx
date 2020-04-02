@@ -7,13 +7,9 @@ import React, {
 } from 'react';
 import cl from 'classnames';
 
-import Modal from 'components/Modal/Modal';
-import SaveContacts from 'components/SaveContacts/SaveContacts';
-
 import { useAutoFocus } from 'hooks/useAutoFocus';
-import { useDebouncedValue } from 'src/hooks/debounce';
+import { useDebouncedValue } from 'hooks/debounce';
 import { useListener } from 'hooks/useListener';
-import { useRootData } from 'hooks/useRootData';
 
 import './DataList.scss';
 
@@ -70,7 +66,7 @@ export function DataList<T>({
   data,
   onFetch,
   title = '',
-  visible = true,
+  // visible = true,
   searchPredicate = DEFAULT_SEARCH,
   renderItem,
   header = () => null,
@@ -87,21 +83,29 @@ export function DataList<T>({
 
   const [debScrollTop, setScrollTop] = useDebouncedValue(0);
   const [hasMore, setHasMore] = useState(true);
-  const [itemAmount, setItemAmount] = useState(infScrollInitialCount);
+  const [itemAmount, setItemAmount] = useState(infScrollInitialCount || 0);
   const [resolvedData, setResolvedData] = useState(data || []);
   const [filteredData, setFiltered] = useState<T[]>(data || []);
 
   useEffect(() => {
-    if (data?.length) setResolvedData(data);
+    if (data?.length) {
+      setResolvedData(data);
+    }
   }, [data]);
 
   // Lazy fetch
   useEffect(() => {
     if (!hasMore || typeof onFetch !== 'function') return;
 
-    const amount = infScrollInitialCount ? loadMoreAmount : undefined;
+    const amount = infScrollInitialCount
+      ? itemAmount <= infScrollInitialCount
+        ? infScrollInitialCount
+        : loadMoreAmount
+      : undefined;
     const offset = infScrollInitialCount
-      ? itemAmount! - loadMoreAmount
+      ? itemAmount <= infScrollInitialCount
+        ? 0
+        : itemAmount - loadMoreAmount
       : undefined;
 
     onFetch(amount, offset).then(res => {
@@ -114,7 +118,7 @@ export function DataList<T>({
   }, [onFetch, setFiltered, itemAmount]);
 
   useListener(
-    rootRef.current,
+    rootRef,
     'scroll',
     () => setScrollTop(rootRef.current!.scrollTop),
     { passive: true },
@@ -123,10 +127,11 @@ export function DataList<T>({
   // Infinite scroll
   useEffect(() => {
     const root = rootRef.current;
-    if (!(infScrollInitialCount && root) || !hasMore) return;
+    if (!(infScrollInitialCount && root && hasMore)) return;
     const loadMore =
+      root.scrollHeight !== root.offsetHeight &&
       root.scrollHeight - (root.scrollTop + root.offsetHeight) <
-      loadMoreThreshold;
+        loadMoreThreshold;
     if (!loadMore) return;
     setItemAmount(i => i! + loadMoreAmount);
   }, [debScrollTop]);
@@ -149,15 +154,12 @@ export function DataList<T>({
   const list = useMemo(() => {
     const data = searchPredicate ? filteredData : resolvedData;
     const res = data.map(renderItem || (e => e as any));
-    if (itemAmount) return res.slice(0, itemAmount);
+    if (infScrollInitialCount && itemAmount) return res.slice(0, itemAmount);
     return res;
   }, [renderItem, searchPredicate, resolvedData, filteredData, itemAmount]);
 
   return (
-    <div
-      ref={rootRef}
-      className={cl('balances-wrapper', visible ? 'open' : 'closed')}
-    >
+    <div ref={rootRef} className={cl('balances-wrapper', 'open')}>
       <h3 className='balances-title'>{title}</h3>
       <input
         type='text'
