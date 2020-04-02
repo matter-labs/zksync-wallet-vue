@@ -11,6 +11,7 @@ import { useTransaction } from 'hooks/useTransaction';
 import { request } from 'functions/Request';
 
 import { BASE_URL } from 'constants/CoinBase';
+import { useCheckLogin } from 'src/hooks/useCheckLogin';
 
 const Account: React.FC = (): JSX.Element => {
   const {
@@ -159,6 +160,8 @@ const Account: React.FC = (): JSX.Element => {
     setSymbolName(symbol);
     setToken(symbol ? symbol : address);
   };
+
+  useCheckLogin();
 
   const isVerified = ({ address, symbol, balance }) =>
     verified &&

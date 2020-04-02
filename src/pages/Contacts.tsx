@@ -13,6 +13,7 @@ import { DataList } from 'components/DataList/DataListNew';
 import { WIDTH_BP } from 'constants/magicNumbers';
 import { Transition } from 'components/Transition/Transition';
 import { useTimeout } from 'hooks/timers';
+import { useCheckLogin } from 'src/hooks/useCheckLogin';
 
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
@@ -93,12 +94,7 @@ const Contacts: React.FC = (): JSX.Element => {
     [contacts, setContacts, setModal, zkWallet],
   );
 
-  useEffect(() => {
-    if (!ethId) {
-      window.location.pathname = '/';
-      history.push('/');
-    }
-  }, [ethId, history]);
+  useCheckLogin();
 
   return (
     <DataList
