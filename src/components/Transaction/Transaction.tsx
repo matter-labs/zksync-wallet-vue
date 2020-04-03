@@ -240,7 +240,7 @@ const Transaction: React.FC<ITransactionProps> = ({
         setHintModal('');
       }, 5000);
     }
-    if (title === 'Withdraw' && zkWallet) {
+    if (title === 'Withdraw' && zkWallet && !walletAddress[1]) {
       setWalletAddress(['You', zkWallet?.address()]);
       onChangeAddress(zkWallet?.address());
     }
@@ -556,10 +556,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                                       ? walletAddress[0]
                                       : selectedContact}
                                   </p>
-                                  {selectedContact ||
-                                    (walletAddress[0] && (
-                                      <div className='arrow-down'></div>
-                                    ))}
+                                  {(selectedContact || walletAddress[0]) && (
+                                    <div className='arrow-down'></div>
+                                  )}
                                 </div>
                               </div>
                               <div className='currency-input-wrapper'>

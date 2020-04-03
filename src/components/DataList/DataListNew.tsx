@@ -56,7 +56,10 @@ interface Props<T> {
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   if (typeof o === 'object') {
-    const string = Object.entries(o).reduce((acc, [_k, v]) => acc + v, '');
+    const string = Object.entries(o).reduce(
+      (acc, [_k, v]) => acc + (_k === 'symbol' ? `zk${v}` : v),
+      '',
+    );
     return re.test(string);
   }
   return re.test(o);

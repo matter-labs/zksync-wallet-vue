@@ -164,7 +164,13 @@ const Account: React.FC = (): JSX.Element => {
       +balance === +verified[symbol] / Math.pow(10, 18));
 
   const ApiFailedHint = () => (
-    <>{price && !price.length ? <p>No Conversion Rate Available</p> : <></>}</>
+    <>
+      {(price && !price.length) || !price ? (
+        <p>No Conversion Rate Available</p>
+      ) : (
+        <></>
+      )}
+    </>
   );
 
   const VerifiedBal = ({ balance: { address, symbol, balance } }) => (
@@ -256,13 +262,7 @@ const Account: React.FC = (): JSX.Element => {
                 <UnverifiedBal key={balance.address} balance={balance} />
               )
             }
-            emptyListComponent={() => (
-              <p>
-                {
-                  'No balances yet, please make a deposit or request money from someone!'
-                }
-              </p>
-            )}
+            emptyListComponent={() => <p>{'No balances yet.'}</p>}
           />
         </>
       )}
