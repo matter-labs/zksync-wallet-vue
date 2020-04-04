@@ -330,6 +330,10 @@
     background-color: var(--modal-bg-color);
     border-radius: 4px;
 
+    & > .submit-buttom {
+      margin: 20px 0;
+    }
+
     /* stylelint-disable-next-line no-descending-specificity */
     & > p {
       align-self: center;

@@ -15,6 +15,12 @@ interface Tx {
     fee: string;
     from: string;
     nonce: number;
+    priority_op?: {
+      amount: string;
+      from: string;
+      to: string;
+      token: number;
+    };
     signature: {
       pubKey: string;
       signature: string;
@@ -41,7 +47,7 @@ const Transactions: React.FC = (): JSX.Element => {
 
   const fetchTransactions = (amount, offset): Promise<Tx[]> =>
     fetch(
-      `https://kraftwerk28.pp.ua/cors/https://testnet.zksync.dev/api/v0.1/account/${zkWallet?.address()}/history/${offset}/${amount}`,
+      `https://testnet.zksync.dev/api/v0.1/account/${zkWallet?.address()}/history/${offset}/${amount}`,
     ).then(r => r.json());
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
@@ -71,12 +77,20 @@ const Transactions: React.FC = (): JSX.Element => {
       onFetch={fetchTransactions}
       title='Transactions'
       visible={true}
-      renderItem={({ hash, tx: { amount, type, to, token } }) => (
+      renderItem={({ hash, tx: { amount, priority_op, type, to, token } }) => (
         <div className='transaction-history-wrapper' key={hash}>
           <div className='transaction-history-left'>
             <div className={`transaction-history ${type}`}></div>
             <div className='transaction-history-amount'>
-              {parseFloat((+amount / Math.pow(10, 18)).toFixed(3).toString())}
+              {parseFloat(
+                (
+                  (type === 'Deposit' && priority_op
+                    ? +priority_op.amount
+                    : +amount) / Math.pow(10, 18)
+                )
+                  .toFixed(3)
+                  .toString(),
+              )}
             </div>
             <div className='transaction-history-hash'>
               {token && token.toString().length > 10 ? (
