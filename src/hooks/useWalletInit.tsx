@@ -1,13 +1,14 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
-import { Wallet, getDefaultProvider } from 'zksync';
+import { Wallet, getDefaultProvider, Provider } from 'zksync';
 
 import { useRootData } from 'hooks/useRootData';
 
 import { IEthBalance } from 'types/Common';
 
 import { DEFAULT_ERROR } from 'constants/errors';
+import { WSTransport } from 'zksync/build/transport';
 
 const useWalletInit = () => {
   const {
@@ -22,6 +23,7 @@ const useWalletInit = () => {
     setZkWallet,
     provider,
     walletName,
+    setWSTransport,
   } = useRootData(
     ({
       setAccessModal,
@@ -35,6 +37,7 @@ const useWalletInit = () => {
       setZkWallet,
       provider,
       walletName,
+      ...s
     }) => ({
       setAccessModal,
       setError,
@@ -47,6 +50,7 @@ const useWalletInit = () => {
       setZkWallet,
       provider: provider.get(),
       walletName: walletName.get(),
+      setWSTransport: s.setWSTransport,
     }),
   );
 
@@ -83,9 +87,10 @@ const useWalletInit = () => {
       setEthWallet(wallet);
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      const syncProvider = await getDefaultProvider(network, 'HTTP');
+      const syncProvider = await getDefaultProvider(network, 'WS');
       const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider);
-
+      const transport = syncProvider.transport as WSTransport;
+      setWSTransport(transport);
       setZkWallet(syncWallet);
 
       const tokens = await syncProvider.getTokens();

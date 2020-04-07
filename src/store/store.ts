@@ -4,6 +4,7 @@ import { IEthBalance, IPrice, ITransaction } from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Tokens } from 'zksync/build/types';
 import { Wallet } from 'zksync';
+import { WSTransport } from 'zksync/build/transport';
 
 export const createStore = () => ({
   depositModal: observable.box<boolean>(false),
@@ -34,6 +35,7 @@ export const createStore = () => ({
   zkBalances: observable.box<IEthBalance[]>([]),
   zkBalancesLoaded: observable.box<boolean>(false),
   zkWallet: observable.box<Wallet | null>(),
+  wsTransport: observable.box<WSTransport>(),
 
   setAccessModal(isOpen: boolean): void {
     this.isAccessModalOpen.set(isOpen);
@@ -139,6 +141,10 @@ export const createStore = () => ({
 
   setZkWallet(wallet: Wallet | null): void {
     this.zkWallet.set(wallet);
+  },
+
+  setWSTransport(t: WSTransport) {
+    this.wsTransport.set(t);
   },
 });
 

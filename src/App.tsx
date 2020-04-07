@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
 
-import Footer from './components/Footer/Footer';
-import Header from './components/Header/Header';
-import Modal from './components/Modal/Modal';
+import Footer from 'components/Footer/Footer';
+import Header from 'components/Header/Header';
+import Modal from 'components/Modal/Modal';
 
-import { useRootData } from './hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 
-import { IAppProps } from './types/Common';
+import { IAppProps } from 'types/Common';
 
-import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from './constants/networks';
+import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
+import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const { error, provider, setError, walletName, zkWallet } = useRootData(
@@ -20,6 +21,8 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       zkWallet: zkWallet.get(),
     }),
   );
+
+  useWSHeartBeat();
 
   useEffect(() => {
     if (provider && window['ethereum']) {

@@ -20,5 +20,17 @@ export const useTimer = (baseSet, baseClear) => (
   }, [timeout, ...deps]);
 };
 
+export function useSafeTimeout() {
+  const [t, setT] = useState<number | undefined>();
+  useEffect(() => {
+    if (t) (console.log('Clearing safe timeout') as any) || clearTimeout(t);
+  }, []);
+  return (cb, timeout) => {
+    const t = setTimeout(cb, timeout);
+    setT(t as any);
+    return t;
+  };
+}
+
 export const useTimeout = useTimer(setTimeout, clearTimeout);
 export const useInterval = useTimer(setInterval, clearInterval);
