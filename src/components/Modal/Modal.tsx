@@ -2,12 +2,15 @@ import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import cl from 'classnames';
 
+import { useListener } from 'hooks/useListener';
 import { useRootData } from 'hooks/useRootData';
 
 import Portal from './Portal';
-import './Modal.scss';
-import { useListener } from 'hooks/useListener';
 import { Transition } from 'components/Transition/Transition';
+
+import { WRONG_NETWORK } from 'constants/regExs.ts';
+
+import './Modal.scss';
 
 export interface ModalProps {
   background: boolean;
@@ -28,7 +31,9 @@ const Modal: React.FC<ModalProps> = ({
   centered = false,
 }) => {
   const {
+    error,
     isModalOpen,
+    provider,
     setAccessModal,
     setError,
     setModal,
@@ -37,12 +42,16 @@ const Modal: React.FC<ModalProps> = ({
     setZkWallet,
     walletName,
     zkWallet,
-  } = useRootData(({ isModalOpen, walletName, zkWallet, ...rest }) => ({
-    isModalOpen: isModalOpen.get(),
-    walletName: walletName.get(),
-    zkWallet: zkWallet.get(),
-    ...rest,
-  }));
+  } = useRootData(
+    ({ error, isModalOpen, provider, walletName, zkWallet, ...rest }) => ({
+      error: error.get(),
+      isModalOpen: isModalOpen.get(),
+      provider: provider.get(),
+      walletName: walletName.get(),
+      zkWallet: zkWallet.get(),
+      ...rest,
+    }),
+  );
 
   const history = useHistory();
 
@@ -69,20 +78,24 @@ const Modal: React.FC<ModalProps> = ({
   useListener(document, 'click', handleClickOutside, true);
 
   const closeHandler = useCallback(() => {
-    if (cancelAction) {
-      cancelAction();
+    if (!!error.match(WRONG_NETWORK) && !!zkWallet) {
+      return;
     } else {
-      setModal('');
+      if (cancelAction) {
+        cancelAction();
+      } else {
+        setModal('');
+      }
+      if (!zkWallet && !!walletName) {
+        setProvider(null);
+        setWalletName('');
+        setAccessModal(false);
+        setZkWallet(null);
+        history.push('/');
+        setModal('');
+      }
     }
-    if (!zkWallet && !!walletName) {
-      setProvider(null);
-      setWalletName('');
-      setAccessModal(false);
-      setZkWallet(null);
-      history.push('/');
-      setModal('');
-    }
-  }, [walletName, zkWallet]);
+  }, [error, walletName, zkWallet]);
 
   const shown = classSpecifier === isModalOpen || visible;
 

@@ -1,11 +1,5 @@
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
-import {
-  closestPackableTransactionAmount,
-  closestPackableTransactionFee,
-  getDefaultProvider,
-} from 'zksync';
-
 import { useRootData } from 'hooks/useRootData';
 
 import { IEthBalance } from 'types/Common';
@@ -21,7 +15,6 @@ const TOKEN = 'ETH';
 export const useTransaction = () => {
   const {
     hintModal,
-    provider,
     setError,
     setHintModal,
     setVerifyToken,
@@ -32,7 +25,6 @@ export const useTransaction = () => {
   } = useRootData(
     ({
       hintModal,
-      provider,
       setError,
       setHintModal,
       setVerifyToken,
@@ -42,7 +34,6 @@ export const useTransaction = () => {
       zkWallet,
     }) => ({
       hintModal: hintModal.get(),
-      provider: provider.get(),
       setError,
       setHintModal,
       setVerifyToken,
@@ -59,6 +50,8 @@ export const useTransaction = () => {
     walletAddress[1] ? walletAddress[1] : '',
   );
   const [amountValue, setAmountValue] = useState<any>(0);
+  const [packableAmount, setPackableAmount] = useState<any>();
+  const [packableFee, setPackableFee] = useState<any>();
   const [hash, setHash] = useState<ContractTransaction | string | undefined>();
   const [isExecuted, setExecuted] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -147,13 +140,19 @@ export const useTransaction = () => {
                 depositTo: zkWallet.address(),
                 token: token,
                 amount: ethers.utils.bigNumberify(
-                  amountValue
-                    ? closestPackableTransactionAmount(amountValue?.toString())
-                    : '0',
+                  (
+                    await import('zksync').then(module =>
+                      module.closestPackableTransactionAmount(
+                        amountValue?.toString(),
+                      ),
+                    )
+                  ).toString(),
                 ),
                 maxFeeInETHToken: ethers.utils.bigNumberify(
-                  closestPackableTransactionFee(
-                    (2 * ZK_FEE_MULTIPLIER * fee).toString(),
+                  await import('zksync').then(module =>
+                    module.closestPackableTransactionFee(
+                      (2 * ZK_FEE_MULTIPLIER * +fee).toString(),
+                    ),
                   ),
                 ),
               }),
@@ -178,7 +177,9 @@ export const useTransaction = () => {
           };
           cancelable(ethers.getDefaultProvider().getGasPrice())
             .then(res => res.toString())
-            .then(data => executeDeposit(data));
+            .then(data => {
+              executeDeposit(data);
+            });
         } catch (err) {
           err.name && err.message
             ? setError(`${err.name}: ${err.message}`)
@@ -190,10 +191,14 @@ export const useTransaction = () => {
       amountValue,
       hintModal,
       history,
+      packableAmount,
+      packableFee,
       setError,
       setHash,
       setHintModal,
       setLoading,
+      setPackableAmount,
+      setPackableFee,
       setVerifyToken,
       transactions,
       zkWallet,
@@ -209,13 +214,19 @@ export const useTransaction = () => {
             to: addressValue,
             token: token,
             amount: ethers.utils.bigNumberify(
-              amountValue
-                ? closestPackableTransactionAmount(amountValue?.toString())
-                : '0',
+              (
+                await import('zksync').then(module =>
+                  module.closestPackableTransactionAmount(
+                    amountValue?.toString(),
+                  ),
+                )
+              ).toString(),
             ),
             fee: ethers.utils.bigNumberify(
-              closestPackableTransactionFee(
-                Math.floor(amountValue * 0.001).toString(),
+              await import('zksync').then(module =>
+                module.closestPackableTransactionFee(
+                  Math.floor(amountValue * 0.001).toString(),
+                ),
               ),
             ),
           });
@@ -265,13 +276,19 @@ export const useTransaction = () => {
               ethAddress: addressValue,
               token: token,
               amount: ethers.utils.bigNumberify(
-                amountValue
-                  ? closestPackableTransactionAmount(amountValue?.toString())
-                  : '0',
+                (
+                  await import('zksync').then(module =>
+                    module.closestPackableTransactionAmount(
+                      amountValue?.toString(),
+                    ),
+                  )
+                ).toString(),
               ),
               fee: ethers.utils.bigNumberify(
-                closestPackableTransactionFee(
-                  Math.floor(amountValue * 0.001).toString(),
+                await import('zksync').then(module =>
+                  module.closestPackableTransactionFee(
+                    Math.floor(amountValue * 0.001).toString(),
+                  ),
                 ),
               ),
             },

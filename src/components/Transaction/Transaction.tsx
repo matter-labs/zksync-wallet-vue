@@ -113,7 +113,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     propsSymbolName ? propsSymbolName : '',
   );
   const [token, setToken] = useState<string>(propsToken ? propsToken : '');
-  // const [unlocked, setUnlocked] = useState<boolean | undefined>(undefined);
   const [unlockFau, setUnlockFau] = useState<boolean>(false);
   const [value, setValue] = useState<string>(
     localStorage.getItem('walletName') || '',
@@ -168,7 +167,13 @@ const Transaction: React.FC<ITransactionProps> = ({
   const handleFilterContacts = useCallback(
     e => {
       const searchValue = contacts.filter(el => {
-        return el.name.toLowerCase().includes(e.toLowerCase());
+        return ADDRESS_VALIDATION['eth'].test(e) &&
+          el.address.toLowerCase().includes(e.toLowerCase())
+          ? (setSelectedContact(el.name),
+            handleSelect(el.name),
+            setWalletAddress([el.name, el.address]),
+            onChangeAddress(el.address))
+          : el.name.toLowerCase().includes(e.toLowerCase());
       });
       setFilteredContacts(searchValue);
     },
@@ -226,10 +231,12 @@ const Transaction: React.FC<ITransactionProps> = ({
   }, [addressValue, setError, setModal]);
 
   const handleUnlock = useCallback(async () => {
+    setLoading(true);
     const changePubkey = await zkWallet?.setSigningKey();
     const receipt = await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
-  }, [zkWallet]);
+    setLoading(false);
+  }, [setLoading, zkWallet]);
 
   useEffect(() => {
     if (token && token === 'ETH') {
@@ -310,6 +317,24 @@ const Transaction: React.FC<ITransactionProps> = ({
       el.style.width = (e.toString().length + 1) * 16 + 'px';
     }
   }, []);
+
+  const handleSumbit = useCallback(() => {
+    if (
+      ADDRESS_VALIDATION['eth'].test(addressValue) &&
+      selectedBalance &&
+      inputValue &&
+      +inputValue > 0 &&
+      unlockFau
+    ) {
+      transactionAction(token, type);
+    }
+    if (!selectedBalance || (inputValue && +inputValue <= 0) || !inputValue) {
+      setError('Please select token and amount value');
+    }
+    if (!ADDRESS_VALIDATION['eth'].test(addressValue)) {
+      setError('Adress does not match ethereum address format');
+    }
+  }, [inputValue, selectedBalance, setError, unlockFau]);
 
   return (
     <>
@@ -580,7 +605,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   className='currency-input-address'
                                 />
                                 {ADDRESS_VALIDATION['eth'].test(addressValue) &&
-                                  !walletAddress.length && (
+                                  !selectedContact && (
                                     <button
                                       className='add-contact-button-input btn-tr'
                                       onClick={() => handleSave()}
@@ -827,15 +852,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                           className={`btn submit-button ${
                             !unlockFau && title === 'Deposit' ? 'disabled' : ''
                           }`}
-                          onClick={() =>
-                            unlockFau
-                              ? selectedBalance && inputValue && +inputValue > 0
-                                ? transactionAction(token, type)
-                                : setError(
-                                    'Please select token and amount value',
-                                  )
-                              : undefined
-                          }
+                          onClick={handleSumbit}
                         >
                           <span
                             className={`submit-label ${title} ${

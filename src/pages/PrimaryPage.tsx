@@ -47,6 +47,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     isAccessModalOpen,
     provider,
     setAccessModal,
+    setError,
     setHintModal,
     setNormalBg,
     setProvider,
@@ -61,6 +62,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       isAccessModalOpen,
       provider,
       setAccessModal,
+      setError,
       setEthBalances,
       setEthId,
       setEthWallet,
@@ -78,6 +80,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       isAccessModalOpen: isAccessModalOpen.get(),
       provider: provider.get(),
       setAccessModal,
+      setError,
       setEthBalances,
       setEthId,
       setEthWallet,
@@ -215,14 +218,20 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               <p>Connect a wallet</p>
             </div>
             <div className='wallets-wrapper'>
-              {wallets.map(key => (
+              {Object.keys(WALLETS).map(key => (
                 <button key={key} className='wallet-block'>
                   <div
                     className={`btn wallet-button ${key}`}
                     key={key}
                     onClick={() => {
-                      setWalletName(key);
-                      setNormalBg(true);
+                      if (wallets.includes(key)) {
+                        setWalletName(key);
+                        setNormalBg(true);
+                      } else {
+                        setError(
+                          `Your browser doesn't support ${key}, please select another wallet or switch browser`,
+                        );
+                      }
                     }}
                   ></div>
                   <p>{key}</p>

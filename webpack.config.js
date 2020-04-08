@@ -18,6 +18,10 @@ const rules = [
     loader: 'ts-loader',
   },
   {
+    test: /\.wasm$/,
+    type: "webassembly/experimental",
+  },
+  {
     test: /\.s[ac]ss$/,
     use: [
       DEV ? 'style-loader' : MiniCSSPlugin.loader,
@@ -58,6 +62,7 @@ function getAliases() {
 const config = {
   mode: process.env.NODE_ENV,
   entry: path.resolve('src/'),
+  
   output: {
     path: BUILD_DIR,
     filename: 'js/[name]-[chunkhash].js',
@@ -76,7 +81,7 @@ const config = {
     new EnvironmentPlugin(dotenv.config().parsed),
   ],
   resolve: {
-    extensions: ['.js', '.ts', '.tsx'],
+    extensions: ['.js', '.ts', '.tsx', '.wasm'],
     alias: getAliases(),
   },
   devtool: DEV ? 'sourcemap' : false,

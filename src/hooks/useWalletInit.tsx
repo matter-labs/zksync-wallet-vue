@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
-import { Wallet, getDefaultProvider, Signer } from 'zksync';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -18,12 +17,12 @@ const useWalletInit = () => {
     setEthId,
     setEthWallet,
     setTokens,
+    setWSTransport,
     setZkBalances,
     setZkBalancesLoaded,
     setZkWallet,
     provider,
     walletName,
-    setWSTransport,
   } = useRootData(
     ({
       setAccessModal,
@@ -32,12 +31,12 @@ const useWalletInit = () => {
       setEthId,
       setEthWallet,
       setTokens,
+      setWSTransport,
       setZkBalances,
       setZkBalancesLoaded,
       setZkWallet,
       provider,
       walletName,
-      ...s
     }) => ({
       setAccessModal,
       setError,
@@ -45,12 +44,12 @@ const useWalletInit = () => {
       setEthId,
       setEthWallet,
       setTokens,
+      setWSTransport,
       setZkBalances,
       setZkBalancesLoaded,
       setZkWallet,
       provider: provider.get(),
       walletName: walletName.get(),
-      setWSTransport: s.setWSTransport,
     }),
   );
 
@@ -87,15 +86,18 @@ const useWalletInit = () => {
       setEthWallet(wallet);
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      const syncProvider = await getDefaultProvider(network, 'WS');
-      const signer = await Signer.fromETHSignature(wallet);
-      const syncWallet = await Wallet.fromEthSigner(
-        wallet,
-        syncProvider,
-        signer,
+      const syncProvider = await import(
+        'zksync'
+      ).then(({ getDefaultProvider }) => getDefaultProvider(network, 'WS'));
+      const signer = await import(
+        'zksync'
+      ).then(({ Signer }) => Signer.fromETHSignature(wallet));
+      const syncWallet = await import('zksync').then(({ Wallet }) =>
+        Wallet.fromEthSigner(wallet, syncProvider, signer),
       );
       const transport = syncProvider.transport as WSTransport;
       setWSTransport(transport);
+
       setZkWallet(syncWallet);
 
       const tokens = await syncProvider.getTokens();
