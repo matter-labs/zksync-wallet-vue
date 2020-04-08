@@ -7,11 +7,12 @@ export function useCancelable() {
     return () => {
       isCancelled.current = true;
     };
-  }, []);
+  }, [isCancelled]);
 
-  return function<T>(fn: Promise<T> | (() => Promise<T>) | undefined) {
+  return <T>(fn: Promise<T> | (() => Promise<T>) | undefined) => {
     return new Promise<T>((resolve, reject) => {
-      if (!fn || isCancelled.current) return resolve();
+      if (isCancelled.current) return;
+      if (!fn) return resolve();
       const p = typeof fn === 'function' ? fn() : fn;
 
       p.then(res => {

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
-import { Wallet, getDefaultProvider, Provider } from 'zksync';
+import { Wallet, getDefaultProvider, Signer } from 'zksync';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -88,7 +88,12 @@ const useWalletInit = () => {
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider = await getDefaultProvider(network, 'WS');
-      const syncWallet = await Wallet.fromEthSigner(wallet, syncProvider);
+      const signer = await Signer.fromETHSignature(wallet);
+      const syncWallet = await Wallet.fromEthSigner(
+        wallet,
+        syncProvider,
+        signer,
+      );
       const transport = syncProvider.transport as WSTransport;
       setWSTransport(transport);
       setZkWallet(syncWallet);
