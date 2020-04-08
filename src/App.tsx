@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
 import Modal from 'components/Modal/Modal';
 
-import { useRootData } from 'hooks/useRootData';
+import { useRootData } from './hooks/useRootData';
+import useWalletInit from 'hooks/useWalletInit';
 
 import { IAppProps } from 'types/Common';
 
@@ -12,21 +14,63 @@ import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
-  const { error, provider, setError, walletName, zkWallet } = useRootData(
-    ({ error, provider, setError, walletName, zkWallet }) => ({
+  const {
+    error,
+    provider,
+    setAccessModal,
+    setError,
+    setModal,
+    setProvider,
+    setWalletName,
+    setZkWallet,
+    walletName,
+    zkWallet,
+  } = useRootData(
+    ({
+      error,
+      provider,
+      setAccessModal,
+      setError,
+      setModal,
+      setProvider,
+      setWalletName,
+      setZkWallet,
+      walletName,
+      zkWallet,
+    }) => ({
       error: error.get(),
       provider: provider.get(),
+      setAccessModal,
       setError,
+      setModal,
+      setProvider,
+      setWalletName,
+      setZkWallet,
       walletName: walletName.get(),
       zkWallet: zkWallet.get(),
     }),
   );
 
   useWSHeartBeat();
+  const { createWallet } = useWalletInit();
+
+  const handleNetworkChange = useCallback(() => {
+    if (walletName === 'Metamask') {
+      provider.on('networkChanged', () => {
+        if (
+          window.location.pathname.length <= 1 &&
+          provider?.networkVersion === RIGHT_NETWORK_ID
+        ) {
+          createWallet();
+        }
+      });
+    }
+  }, [createWallet, provider, setAccessModal, setWalletName, zkWallet]);
 
   useEffect(() => {
     if (provider && window['ethereum']) {
       window['ethereum'].autoRefreshOnNetworkChange = false;
+      handleNetworkChange();
     }
     if (provider && walletName && walletName !== 'Fortmatic') {
       provider.on('networkChanged', () => {
@@ -38,7 +82,15 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
           : setError('');
       });
     }
-  }, [provider, setError, walletName, zkWallet]);
+  }, [
+    createWallet,
+    handleNetworkChange,
+    provider,
+    setError,
+    walletName,
+    window,
+    zkWallet,
+  ]);
 
   return (
     <>

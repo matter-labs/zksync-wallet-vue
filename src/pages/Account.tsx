@@ -122,7 +122,6 @@ const Account: React.FC = (): JSX.Element => {
         console.log(err);
       });
   };
-
   useEffect(() => {
     cancelable(initWallet);
     cancelable(zkWallet?.getAccountState()).then(res => {
