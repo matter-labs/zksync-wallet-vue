@@ -11,6 +11,7 @@ import { useTransaction } from 'hooks/useTransaction';
 import { BASE_URL } from 'constants/CoinBase';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useHistory } from 'react-router-dom';
+import { useCancelable } from 'hooks/useCancelable';
 
 const Account: React.FC = (): JSX.Element => {
   const {
@@ -127,8 +128,10 @@ const Account: React.FC = (): JSX.Element => {
       });
   };
   // console.log(ethId);
+  const cancelable = useCancelable();
+
   useEffect(() => {
-    initWallet();
+    cancelable(initWallet());
     zkWallet
       ?.getAccountState()
       .then(res =>

@@ -14,6 +14,7 @@ import { PriorityOperationReceipt } from 'zksync/build/types';
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { DEFAULT_ERROR } from 'constants/errors';
 import { ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
+import { useCancelable } from 'hooks/useCancelable';
 
 const TOKEN = 'ETH';
 
@@ -51,6 +52,8 @@ export const useTransaction = () => {
       zkWallet: zkWallet.get(),
     }),
   );
+
+  const cancelable = useCancelable();
 
   const [addressValue, setAddressValue] = useState<string>(
     walletAddress[1] ? walletAddress[1] : '',
@@ -139,8 +142,8 @@ export const useTransaction = () => {
         try {
           setLoading(true);
           const executeDeposit = async fee => {
-            const depositPriorityOperation = await zkWallet.depositToSyncFromEthereum(
-              {
+            const depositPriorityOperation = await cancelable(
+              zkWallet.depositToSyncFromEthereum({
                 depositTo: zkWallet.address(),
                 token: token,
                 amount: ethers.utils.bigNumberify(
@@ -153,7 +156,7 @@ export const useTransaction = () => {
                     (2 * ZK_FEE_MULTIPLIER * fee).toString(),
                   ),
                 ),
-              },
+              }),
             );
             const hash = depositPriorityOperation.ethTx;
             history(
@@ -173,9 +176,7 @@ export const useTransaction = () => {
             const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
             setVerifyToken(!!verifyReceipt);
           };
-          ethers
-            .getDefaultProvider()
-            .getGasPrice()
+          cancelable(ethers.getDefaultProvider().getGasPrice())
             .then(res => res.toString())
             .then(data => executeDeposit(data));
         } catch (err) {

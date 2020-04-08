@@ -16,6 +16,7 @@ import { WIDTH_BP } from 'constants/magicNumbers';
 import './Wallets.scss';
 import { Transition } from 'components/Transition/Transition';
 import { useTimeout } from 'hooks/timers';
+import { useCancelable } from 'hooks/useCancelable';
 
 const MyWallet: React.FC<IMyWalletProps> = ({
   price,
@@ -120,12 +121,13 @@ const MyWallet: React.FC<IMyWalletProps> = ({
     [body],
   );
 
+  const cancelable = useCancelable();
+
   useEffect(() => {
     setBalances(zkBalances);
     setSelectedBalance(zkBalances[0]?.symbol);
     setWalletBalance(zkBalances[0]?.balance.toString());
-    zkWallet
-      ?.getAccountState()
+    cancelable(zkWallet?.getAccountState())
       .then(res => res)
       .then(data => setVerified(data.verified.balances));
     document.addEventListener('click', handleClickOutside, true);
