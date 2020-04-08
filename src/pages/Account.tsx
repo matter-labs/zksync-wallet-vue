@@ -93,27 +93,22 @@ const Account: React.FC = (): JSX.Element => {
     }),
   );
 
-  const history = useHistory();
+  const cancelable = useCancelable();
 
   const initWallet = async () => {
     setBalances(zkBalances);
-    zkWallet
-      ?.getAccountState()
-      .then(res => res)
-      .then(data => setVerified(data.verified.balances));
-    if (!ethId) {
-      history.push('/');
-    }
     const balancesSymbols = () => {
       const exceptFau = zkBalances
         ?.filter(el => el.symbol !== 'FAU')
         .map(el => el.symbol);
       return exceptFau;
     };
-    fetch(
-      `https://kraftwerk28.pp.ua/cors/${BASE_URL}?symbol=${
-        balancesSymbols().toString() ? balancesSymbols().toString() : 'ETH'
-      }`,
+    cancelable(
+      fetch(
+        `https://kraftwerk28.pp.ua/cors/${BASE_URL}?symbol=${
+          balancesSymbols().toString() ? balancesSymbols().toString() : 'ETH'
+        }`,
+      ),
     )
       .then((res: any) => {
         const prices = {};
@@ -127,18 +122,17 @@ const Account: React.FC = (): JSX.Element => {
         console.log(err);
       });
   };
-  // console.log(ethId);
-  const cancelable = useCancelable();
 
   useEffect(() => {
-    cancelable(initWallet());
-    zkWallet
-      ?.getAccountState()
-      .then(res =>
-        !!res.id
-          ? zkWallet?.isSigningKeySet().then(data => setUnlocked(data))
-          : setUnlocked(true),
-      );
+    cancelable(initWallet);
+    cancelable(zkWallet?.getAccountState()).then(res => {
+      setVerified(res?.verified.balances);
+      res?.id
+        ? cancelable(zkWallet?.isSigningKeySet()).then(data =>
+            setUnlocked(data),
+          )
+        : setUnlocked(true);
+    });
   }, [
     error,
     ethId,

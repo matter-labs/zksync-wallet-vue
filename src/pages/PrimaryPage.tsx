@@ -8,6 +8,8 @@ import Spinner from 'components/Spinner/Spinner';
 import { useRootData } from 'hooks/useRootData';
 import useWalletInit from 'hooks/useWalletInit';
 import { useInterval, useTimeout } from 'hooks/timers';
+import { useQuery } from 'hooks/useQuery';
+import { useCancelable } from 'hooks/useCancelable';
 
 import { MOBILE_DEVICE } from 'constants/regExs';
 import { RIGHT_NETWORK_ID } from 'constants/networks';
@@ -17,7 +19,6 @@ import {
   MOBILE_ONLY_WALLETS,
   WALLETS,
 } from 'constants/Wallets';
-import { useQuery } from 'src/hooks/useQuery';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
@@ -105,6 +106,8 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     history.push('/');
   }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
 
+  const cancelable = useCancelable();
+
   useEffect(() => {
     if (provider?.selectedAddress == null && walletName) {
       setAccessModal(true);
@@ -119,7 +122,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
         provider?.networkVersion === RIGHT_NETWORK_ID) ||
       (!zkWallet && walletName && walletName !== 'Metamask')
     ) {
-      createWallet();
+      cancelable(createWallet());
     }
     if (error) {
       setAccessModal(false);
