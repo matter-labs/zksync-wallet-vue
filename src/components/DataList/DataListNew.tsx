@@ -113,7 +113,7 @@ export function DataList<T>({
 
     onFetch(amount, offset).then(res => {
       if (res.length) {
-        setResolvedData(d => [...d, ...res]);
+        setResolvedData(d => d.slice(0, offset).concat(res));
       } else {
         setHasMore(false);
       }
