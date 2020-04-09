@@ -53,7 +53,7 @@ const Footer: React.FC = (): JSX.Element => {
               </a>
             ))}
           </span>
-          zkSync by Matter Labs
+          <p>Made with ❤️ by Matter Labs</p>
         </p>
       </div>
     </div>
