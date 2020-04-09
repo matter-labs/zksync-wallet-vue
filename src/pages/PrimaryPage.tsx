@@ -131,7 +131,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setAccessModal(false);
     }
     if (curAddress && walletName) {
-      setHintModal('Connected! Follow the instructions in the popup');
+      setHintModal('Connected! Make sing in the pop up');
     }
   }, [
     createWallet,
@@ -141,14 +141,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     walletName,
     zkWallet,
   ]);
-
-  useTimeout(
-    () => {
-      if (hintModal) setHintModal('');
-    },
-    2000,
-    [hintModal],
-  );
 
   useInterval(() => {
     if (!curAddress && walletName && provider?.selectedAddress) {
@@ -163,7 +155,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
 
   return (
     <>
-      {!!hintModal.length && <div className='hint-modal'>{hintModal}</div>}
       <LazyWallet />
       <>
         <Modal
@@ -187,7 +178,9 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               <h3 onClick={createWallet} className='title-connecting'>
                 Connecting to {walletName}
               </h3>
-              <p>Follow the instructions in the popup</p>
+              <p>
+                {hintModal ? hintModal : 'Follow the instructions in the popup'}
+              </p>
               <Spinner />
             </>
           ) : (

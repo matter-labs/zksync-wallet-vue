@@ -242,11 +242,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     if (token && token === 'ETH') {
       setUnlockFau(true);
     }
-    if (!!hintModal.length) {
-      setTimeout(() => {
-        setHintModal('');
-      }, 5000);
-    }
     if (title === 'Withdraw' && zkWallet && !walletAddress[1]) {
       setWalletAddress(['You', zkWallet?.address()]);
       onChangeAddress(zkWallet?.address());
@@ -338,7 +333,6 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   return (
     <>
-      {!!hintModal.length && <div className='hint-modal'>{hintModal}</div>}
       <div
         data-name='modal-wrapper'
         className={`modal-wrapper ${
@@ -515,7 +509,11 @@ const Transaction: React.FC<ITransactionProps> = ({
                 {isLoading && (
                   <>
                     <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
-                    <p>Follow the instructions in the popup</p>
+                    <p>
+                      {hintModal
+                        ? hintModal
+                        : 'Follow the instructions in the popup'}
+                    </p>
                     <Spinner />
                     <button
                       className='btn submit-button'

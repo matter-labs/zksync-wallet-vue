@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
 import { DataList } from 'components/DataList/DataListNew';
 import { ZK_EXPLORER } from 'constants/links';
@@ -54,19 +54,17 @@ const Transactions: React.FC = (): JSX.Element => {
 
   const inputRef: (HTMLInputElement | null)[] = [];
 
-  const handleCopy = useCallback(
-    address => {
-      inputRef.map(el => {
-        if (address === el?.value) {
-          el?.focus();
-          el?.select();
-          document.execCommand('copy');
-        }
-      });
-      openCopyModal(true);
-    },
-    [inputRef],
-  );
+  const handleCopy = useCallback(() => {
+    inputRef.map(el => {
+      if (el?.value) {
+        el?.focus();
+        el?.select();
+        document.execCommand('copy');
+      }
+    });
+    openCopyModal(true);
+    setTimeout(() => openCopyModal(false), 200);
+  }, [inputRef]);
 
   useTimeout(() => isCopyModal && openCopyModal(false), 2000);
 
@@ -111,7 +109,7 @@ const Transactions: React.FC = (): JSX.Element => {
           <input
             onChange={undefined}
             className='copy-block-input'
-            value={to?.toString()}
+            value={hash.toString()}
             ref={e => inputRef.push(e)}
           />
           <div className='transaction-history-right'>
@@ -151,7 +149,7 @@ const Transactions: React.FC = (): JSX.Element => {
                 <div>
                   <button
                     className='contact-manage-copy btn-tr'
-                    onClick={() => handleCopy(to)}
+                    onClick={() => handleCopy()}
                   >
                     Copy
                   </button>
