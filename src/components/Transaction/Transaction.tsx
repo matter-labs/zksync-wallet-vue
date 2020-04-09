@@ -315,7 +315,7 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const handleSumbit = useCallback(() => {
     if (
-      ADDRESS_VALIDATION['eth'].test(addressValue) &&
+      (ADDRESS_VALIDATION['eth'].test(addressValue) || title === 'Deposit') &&
       selectedBalance &&
       inputValue &&
       +inputValue > 0 &&
@@ -326,7 +326,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     if (!selectedBalance || (inputValue && +inputValue <= 0) || !inputValue) {
       setError('Please select token and amount value');
     }
-    if (!ADDRESS_VALIDATION['eth'].test(addressValue)) {
+    if (!ADDRESS_VALIDATION['eth'].test(addressValue) && title !== 'Deposit') {
       setError('Adress does not match ethereum address format');
     }
   }, [inputValue, selectedBalance, setError, unlockFau]);
