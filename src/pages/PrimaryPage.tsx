@@ -12,7 +12,7 @@ import { useQuery } from 'hooks/useQuery';
 import { useCancelable } from 'hooks/useCancelable';
 
 import { MOBILE_DEVICE } from 'constants/regExs';
-import { RIGHT_NETWORK_ID } from 'constants/networks';
+import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
 import {
   BRAVE_NON_WORKING_WALLETS,
   DESKTOP_ONLY_WALLETS,
@@ -189,8 +189,8 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               <div className='wrong-network'>
                 <div className='wrong-network-logo'></div>
                 <p>
-                  You are in the wrong network. <br />
-                  Please switch to mainnet
+                  {`You are in the wrong network. <br />
+                  Please switch to ${RIGHT_NETWORK_NAME}`}
                 </p>
               </div>
               <button
