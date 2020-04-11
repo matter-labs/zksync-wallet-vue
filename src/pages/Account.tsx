@@ -243,7 +243,7 @@ const Account: React.FC = (): JSX.Element => {
           <MyWallet
             balances={ethBalances}
             price={price}
-            title='My wallet'
+            title='zkSync Wallet'
             setTransactionType={setTransactionType}
           />
           <DataList

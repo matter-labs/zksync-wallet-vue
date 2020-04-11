@@ -101,7 +101,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [filteredContacts, setFilteredContacts] = useState<any>([]);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
-  const [isHintUnlocked, setHintUnlocked] = useState<boolean>(false);
+  const [isHintUnlocked, setHintUnlocked] = useState<string>('');
   const [inputValue, setInputValue] = useState<number | string>();
   const [maxValue, setMaxValue] = useState<number>(
     propsMaxValue ? propsMaxValue : 0,
@@ -276,12 +276,15 @@ const Transaction: React.FC<ITransactionProps> = ({
     zkWallet,
   ]);
 
-  const handleShowHint = useCallback(() => {
-    setHintUnlocked(true);
-    setTimeout(() => {
-      setHintUnlocked(false);
-    }, 1000);
-  }, [setHintUnlocked]);
+  const handleShowHint = useCallback(
+    text => {
+      setHintUnlocked(text);
+      setTimeout(() => {
+        setHintUnlocked('');
+      }, 3000);
+    },
+    [setHintUnlocked],
+  );
 
   const handleUnlockERC = useCallback(() => {
     setLoading(true);
@@ -471,7 +474,9 @@ const Transaction: React.FC<ITransactionProps> = ({
               }}
               className='transaction-back'
             ></button>
-            <h2 className='transaction-title'>{title} successful!</h2>
+            <h2 className='transaction-title'>
+              {title} {title === 'Withdraw' ? 'initiated' : 'successful!'}
+            </h2>
             <span className='transaction-field-title'>
               {title === 'Send' && <>Transfered into</>}
               {title === 'Withdraw' && <>Withdrawn from</>}
@@ -802,40 +807,56 @@ const Transaction: React.FC<ITransactionProps> = ({
                               </div>
                             ))}
                         </div>
+                        <div className={`hint-unlocked ${!!isHintUnlocked}`}>
+                          {isHintUnlocked}
+                        </div>
                         {title === 'Deposit' &&
                           token !== 'ETH' &&
                           selectedBalance && (
                             <>
                               <div
-                                className={`hint-unlocked ${isHintUnlocked}`}
+                                className={`hint-unlocked ${!!isHintUnlocked}`}
                               >
-                                Already unlocked. This only needs to be done
-                                once per token.
+                                {isHintUnlocked}
                               </div>
                               <div className='fau-unlock-wrapper'>
-                                {unlockFau ? (
-                                  <p>
-                                    {symbolName.length
-                                      ? symbolName
-                                      : balances?.length &&
-                                        balances[0].symbol}{' '}
-                                    token unlocked
-                                  </p>
-                                ) : (
-                                  <p>
-                                    Unlock{' '}
-                                    {symbolName.length
-                                      ? symbolName
-                                      : balances?.length &&
-                                        balances[0].symbol}{' '}
-                                    token
-                                  </p>
-                                )}
+                                <div className='fau-unlock-wrapper'>
+                                  {unlockFau ? (
+                                    <p>
+                                      {symbolName.length
+                                        ? symbolName
+                                        : balances?.length &&
+                                          balances[0].symbol}{' '}
+                                      token unlocked
+                                    </p>
+                                  ) : (
+                                    <p>
+                                      Unlock{' '}
+                                      {symbolName.length
+                                        ? symbolName
+                                        : balances?.length &&
+                                          balances[0].symbol}{' '}
+                                      token
+                                    </p>
+                                  )}
+                                  <button
+                                    onClick={() =>
+                                      handleShowHint(
+                                        'You need to call ERC20.approve() for our contract once in order to authorize token deposits.',
+                                      )
+                                    }
+                                    className='hint-question-mark'
+                                  >
+                                    ?
+                                  </button>
+                                </div>
                                 <button
                                   onClick={() =>
                                     !unlockFau
                                       ? handleUnlockERC()
-                                      : handleShowHint()
+                                      : handleShowHint(
+                                          'Already unlocked. This only needs to be done once per token.',
+                                        )
                                   }
                                   className={`fau-unlock-tocken ${unlockFau}`}
                                 >

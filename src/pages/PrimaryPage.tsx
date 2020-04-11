@@ -123,7 +123,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setAccessModal(false);
     }
     if (curAddress && walletName) {
-      setHintModal('Connected! Make sing in the pop up');
+      setHintModal('Connected! Make sign in the pop up');
     }
   }, [
     createWallet,
@@ -181,7 +181,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               <div className='wrong-network'>
                 <div className='wrong-network-logo'></div>
                 <p>
-                  {`You are in the wrong network. <br />
+                  {`You are in the wrong network.
                   Please switch to ${RIGHT_NETWORK_NAME}`}
                 </p>
               </div>
