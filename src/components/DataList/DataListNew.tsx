@@ -52,6 +52,12 @@ interface Props<T> {
    * How many items to load at one time
    */
   loadMoreAmount?: number;
+
+  /**
+   * Custom sort function
+   * @param elements - Array of unsorted elements
+   */
+  onSort?: (elements: T[]) => T[];
 }
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
@@ -79,6 +85,7 @@ export function DataList<T>({
   infScrollInitialCount,
   loadMoreThreshold = 10,
   loadMoreAmount = 5,
+  onSort,
 }: Props<T>) {
   const [debouncedSearch, setSearch, searchValue] = useDebouncedValue('', 500);
   const focusInput = useAutoFocus();
@@ -156,7 +163,8 @@ export function DataList<T>({
 
   const list = useMemo(() => {
     const data = searchPredicate ? filteredData : resolvedData;
-    const res = data.map(renderItem || (e => e as any));
+    let res = data.map(renderItem || (e => e as any));
+    if (typeof onSort === 'function') res = onSort(res);
     if (infScrollInitialCount && itemAmount) return res.slice(0, itemAmount);
     return res;
   }, [renderItem, searchPredicate, resolvedData, filteredData, itemAmount]);
