@@ -127,26 +127,31 @@ const Transaction: React.FC<ITransactionProps> = ({
           if (inputValue === undefined && e === 0) {
             setInputValue(0);
           }
+          const amountNumber = ethers.utils.parseEther(e.toString());
           title === 'Deposit'
             ? onChangeAmount(
-                +e * bigNumberMultiplier + fee > +maxValue
-                  ? +e * bigNumberMultiplier - fee - 2 * ZK_FEE_MULTIPLIER * fee
-                  : +e * bigNumberMultiplier,
+                +amountNumber + fee >
+                  +ethers.utils.parseEther(maxValue.toString())
+                  ? +amountNumber - fee - 2 * ZK_FEE_MULTIPLIER * fee
+                  : +amountNumber,
               )
             : onChangeAmount(
-                +e * bigNumberMultiplier + fee > +maxValue
-                  ? +e * bigNumberMultiplier - fee
-                  : +e * bigNumberMultiplier,
+                +amountNumber + fee >
+                  +ethers.utils.parseEther(maxValue.toString())
+                  ? +amountNumber - fee
+                  : +amountNumber,
               );
         } else {
           setInputValue(maxValue);
           title === 'Deposit'
             ? onChangeAmount(
-                +maxValue * bigNumberMultiplier -
+                +ethers.utils.parseEther(maxValue.toString()) -
                   fee -
                   2 * ZK_FEE_MULTIPLIER * fee,
               )
-            : onChangeAmount(+maxValue * bigNumberMultiplier - fee);
+            : onChangeAmount(
+                +ethers.utils.parseEther(maxValue.toString()) - fee,
+              );
         }
       }
     },

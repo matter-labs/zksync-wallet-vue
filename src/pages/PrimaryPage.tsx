@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';
