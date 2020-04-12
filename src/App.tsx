@@ -1,17 +1,17 @@
 import React, { useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
 import Modal from 'components/Modal/Modal';
 
-import { useRootData } from './hooks/useRootData';
+import { useRootData } from 'hooks/useRootData';
 import useWalletInit from 'hooks/useWalletInit';
 
 import { IAppProps } from 'types/Common';
 
 import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
+import { useLogout } from 'hooks/useLogout';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const {
@@ -19,10 +19,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     provider,
     setAccessModal,
     setError,
-    setModal,
-    setProvider,
     setWalletName,
-    setZkWallet,
     walletName,
     zkWallet,
   } = useRootData(
@@ -91,6 +88,27 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     window,
     zkWallet,
   ]);
+
+  const logout = useLogout();
+
+  useEffect(() => {
+    if (!provider || walletName.toLowerCase() !== 'metamask') return;
+    provider.on('accountsChanged', () => {
+      if (
+        zkWallet &&
+        provider &&
+        zkWallet?.address().toLowerCase() !==
+          provider.selectedAddress.toLowerCase()
+      ) {
+        sessionStorage.setItem('walletName', walletName);
+        const savedWalletName = sessionStorage.getItem('walletName');
+        if (savedWalletName) {
+          setWalletName(savedWalletName);
+        }
+        logout();
+      }
+    });
+  }, [logout, provider, setWalletName, walletName, zkWallet]);
 
   return (
     <>
