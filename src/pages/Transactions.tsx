@@ -75,6 +75,7 @@ const Transactions: React.FC = (): JSX.Element => {
       onFetch={fetchTransactions}
       title='Transactions'
       visible={true}
+      onSort={arr => arr.reverse()}
       renderItem={({ hash, tx: { amount, priority_op, type, to, token } }) => (
         <div className='transaction-history-wrapper' key={hash}>
           <div className='transaction-history-left'>
