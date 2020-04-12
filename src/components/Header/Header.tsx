@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, Redirect } from 'react-router-dom';
 import makeBlockie from 'ethereum-blockies-base64';
 
 import avatar from 'images/avatar.png';
@@ -14,19 +14,10 @@ import './Header.scss';
 import { QRCode } from 'components/QRCode/QRCode';
 import { useTimeout } from 'hooks/timers';
 import { Transition } from 'components/Transition/Transition';
+import { useLogout } from 'src/hooks/useLogout';
 
 const Header: React.FC = () => {
-  const {
-    provider,
-    setAccessModal,
-    setModal,
-    setProvider,
-    setWalletName,
-    setZkWallet,
-    walletName,
-    zkBalancesLoaded,
-    zkWallet,
-  } = useRootData(
+  const { setModal, zkWallet } = useRootData(
     ({ provider, walletName, zkBalancesLoaded, zkWallet, ...rest }) => ({
       provider: provider.get(),
       walletName: walletName.get(),
@@ -38,7 +29,6 @@ const Header: React.FC = () => {
 
   const address = zkWallet?.address();
   const userName = localStorage.getItem(zkWallet ? address! : '');
-  const history = useHistory();
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isChangeNameOpen, openChangeName] = useState<boolean>(false);
@@ -73,41 +63,15 @@ const Header: React.FC = () => {
     [inputRef],
   );
 
+  const logout = useLogout();
+
   useTimeout(() => isCopyModal && openCopyModal(false), 2000, [isCopyModal]);
-
-  const handleLogOut = useCallback(() => {
-    setModal('');
-    setProvider(null);
-    setWalletName('');
-    setAccessModal(false);
-    setZkWallet(null);
-    history.push('/');
-  }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
-
-  useEffect(() => {
-    if (!provider || walletName !== 'Metamask') return;
-    provider.on('accountsChanged', () => {
-      if (
-        zkWallet &&
-        provider &&
-        zkWallet?.address().toLowerCase() !==
-          provider.selectedAddress.toLowerCase()
-      ) {
-        sessionStorage.setItem('walletName', walletName);
-        handleLogOut();
-        const savedWalletName = sessionStorage.getItem('walletName');
-        if (savedWalletName) {
-          setWalletName(savedWalletName);
-        }
-      }
-    });
-  }, [handleLogOut, provider, setWalletName, walletName, zkWallet]);
 
   return (
     <div className='menu-wrapper'>
       <div className='menu-top'>
         <Link
-          onClick={() => (!zkWallet ? handleLogOut() : undefined)}
+          onClick={() => (!zkWallet ? logout() : undefined)}
           className='menu-logo'
           to='/'
         ></Link>
@@ -164,7 +128,7 @@ const Header: React.FC = () => {
                   <span className='icon-edit'></span>Rename wallet
                 </button>
                 <div className='horizontal-line'></div>
-                <button className='btn-tr' onClick={() => handleLogOut()}>
+                <button className='btn-tr' onClick={() => logout()}>
                   <span className='icon-disconnect'></span>Disconnect wallet
                 </button>
                 <div className='horizontal-line' />

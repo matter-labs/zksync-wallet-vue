@@ -19,6 +19,7 @@ import {
   MOBILE_ONLY_WALLETS,
   WALLETS,
 } from 'constants/Wallets';
+import { useLogout } from 'src/hooks/useLogout';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const { createWallet } = useWalletInit();
@@ -95,20 +96,11 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     }),
   );
 
-  const history = useHistory();
-
   const [curAddress, setCurAddress] = useState<string>(
     provider?.selectedAddress,
   );
 
-  const handleLogOut = useCallback(() => {
-    setProvider(null);
-    setWalletName('');
-    setAccessModal(false);
-    setZkWallet(null);
-    history.push('/');
-  }, [history, setAccessModal, setProvider, setWalletName, setZkWallet]);
-
+  const handleLogOut = useLogout();
   const cancelable = useCancelable();
 
   useEffect(() => {
