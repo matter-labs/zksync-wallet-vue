@@ -14,6 +14,7 @@ import './Header.scss';
 import { QRCode } from 'components/QRCode/QRCode';
 import { useTimeout } from 'hooks/timers';
 import { Transition } from 'components/Transition/Transition';
+import { ConnectionStatus } from 'components/Header/ConnectionStatus';
 
 const Header: React.FC = () => {
   const {
@@ -27,7 +28,14 @@ const Header: React.FC = () => {
     zkBalancesLoaded,
     zkWallet,
   } = useRootData(
-    ({ provider, walletName, zkBalancesLoaded, zkWallet, ...rest }) => ({
+    ({
+      provider,
+      walletName,
+      zkBalancesLoaded,
+      zkWallet,
+      wsTransport,
+      ...rest
+    }) => ({
       provider: provider.get(),
       walletName: walletName.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
@@ -200,6 +208,7 @@ const Header: React.FC = () => {
             </div>
           ))}
       </div>
+      <ConnectionStatus />
     </div>
   );
 };

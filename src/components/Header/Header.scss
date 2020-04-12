@@ -116,3 +116,13 @@
     }
   }
 }
+
+.ws-status {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  color: var(--light-bg-color);
+  text-align: center;
+  background: var(--delete-color);
+}
