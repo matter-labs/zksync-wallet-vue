@@ -109,18 +109,13 @@ const Account: React.FC = (): JSX.Element => {
           balancesSymbols().toString() ? balancesSymbols().toString() : 'ETH'
         }`,
       ),
-    )
-      .then((res: any) => {
-        const prices = {};
-        Object.keys(res.data).map(
-          el => (prices[el] = res.data[el].quote.USD.price),
-        );
-        setPrice(prices);
-      })
-      .catch(err => {
-        // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
-        console.log(err);
-      });
+    ).then((res: any) => {
+      const prices = {};
+      Object.keys(res.data).map(
+        el => (prices[el] = res.data[el].quote.USD.price),
+      );
+      setPrice(prices);
+    });
   };
   useEffect(() => {
     cancelable(initWallet);
@@ -243,7 +238,7 @@ const Account: React.FC = (): JSX.Element => {
           <MyWallet
             balances={ethBalances}
             price={price}
-            title='My wallet'
+            title='zkSync Wallet'
             setTransactionType={setTransactionType}
           />
           <DataList

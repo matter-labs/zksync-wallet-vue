@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Redirect, useHistory, useLocation, useParams } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';
@@ -123,7 +123,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setAccessModal(false);
     }
     if (curAddress && walletName) {
-      setHintModal('Connected! Make sing in the pop up');
+      setHintModal('Connected! Make sign in the pop up');
     }
   }, [
     createWallet,
@@ -181,7 +181,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               <div className='wrong-network'>
                 <div className='wrong-network-logo'></div>
                 <p>
-                  {`You are in the wrong network. <br />
+                  {`You are in the wrong network.
                   Please switch to ${RIGHT_NETWORK_NAME}`}
                 </p>
               </div>

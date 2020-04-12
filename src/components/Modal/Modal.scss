@@ -166,10 +166,14 @@
 
     .wallet-qr {
       display: none;
+      margin-bottom: 36px;
       text-align: center;
     }
 
     & > .wallet-buttons {
+      padding-top: 28px;
+
+
       & > button {
         display: flex;
         align-items: center;
@@ -194,6 +198,14 @@
       color: var(--dark-color);
       font-weight: var(--bold-font-weight);
       font-size: var(--large-font-size);
+      
+      & > p {
+        max-width: 250px;
+        margin-bottom: 0;
+        overflow: hidden;
+        line-height: var(--large-font-size);
+        text-overflow: ellipsis;
+      }
 
       & > img {
         width: 50px;
@@ -473,7 +485,6 @@ body.dark {
           justify-content: space-between;
           width: auto;
           height: 35px;
-          margin-top: 20px;
           margin-left: 0;
           padding: 5px 10px;
           color: var(--dark-color);

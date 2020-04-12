@@ -97,7 +97,9 @@ const Header: React.FC = () => {
                   src={zkWallet ? makeBlockie(address) : avatar}
                   alt='avatar'
                 />{' '}
-                {userName || `${address.slice(0, 8)}...${address.slice(-4)}`}
+                <p>
+                  {userName || `${address.slice(0, 8)}...${address.slice(-4)}`}
+                </p>
               </div>
               <div onClick={handleCopy} className='copy-block'>
                 <Transition type='fly' timeout={200} trigger={isCopyModal}>

@@ -34,9 +34,11 @@
     display: flex;
     justify-content: space-between;
     float: left;
-    width: 250px;
+    width: 100%;
     min-width: 195px;
+    max-width: 250px;
     height: 20px;
+    margin-bottom: 30px;
   }
 
   &-menu {
@@ -46,4 +48,12 @@
     color: var(--shaded-color);
     text-align: center;
   }
+}
+
+@media screen and (min-width: 760px) {
+  .footer {
+    &-links-block {
+      max-width: 400px;
+    }
+  }  
 }

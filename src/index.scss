@@ -45,6 +45,7 @@
 }
 
 body.dark {
+  --input-border-focus: rgba(255, 255, 255, 0.2);
   --light-bg-color: #fff;
   --button-text-color: #1D2039;
   --modal-bg-color: #1D2039;
@@ -105,6 +106,7 @@ body, html {
 
 p {
   margin-top: 0;
+  color: var(--dark-color);
 }
 
 a {
@@ -119,6 +121,7 @@ a {
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
+  color: var(--dark-color);
 }
 
 input {
@@ -157,6 +160,8 @@ button {
 }
 
 .btn-tr {
+  margin-top: 0;
+
   &:hover {
     background-color: var(--border-color) !important;
   }
@@ -196,6 +201,17 @@ h2 {
 }
 
 .hint {
+  &-question-mark {
+    width: 20px;
+    height: 20px;
+    margin-left: 20px;
+    color: var(--button-text-color);
+    font-size: var(--sm-font-size);
+    background-color: var(--input-border-focus);
+    border: none;
+    border-radius: 10px;
+  }
+
   &-unlocked {
     position: absolute;
     z-index: 10000;

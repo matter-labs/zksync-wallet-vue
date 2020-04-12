@@ -87,7 +87,6 @@ export const useTransaction = () => {
     async (receipt: PriorityOperationReceipt) => {
       try {
         if (receipt && zkWallet) {
-          setLoading(false);
           const zkBalance = (await zkWallet.getAccountState()).committed
             .balances;
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
@@ -97,7 +96,6 @@ export const useTransaction = () => {
               symbol: tokens[key].symbol,
             };
           });
-
           Promise.all(zkBalancePromises)
             .then(res => {
               setZkBalances(res as IEthBalance[]);
@@ -111,6 +109,7 @@ export const useTransaction = () => {
         }
         if (receipt.executed) {
           setExecuted(true);
+          setLoading(false);
         }
       } catch (err) {
         err.name && err.message
@@ -171,7 +170,6 @@ export const useTransaction = () => {
             });
             const receipt = await depositPriorityOperation.awaitReceipt();
             transactions(receipt);
-            setLoading(false);
             const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
             setVerifyToken(!!verifyReceipt);
           };

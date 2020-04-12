@@ -101,7 +101,7 @@ const Transactions: React.FC = (): JSX.Element => {
               ) : (
                 <>
                   {'zk'}
-                  {token}
+                  {type === 'Deposit' ? priority_op?.token : token}
                 </>
               )}
             </div>

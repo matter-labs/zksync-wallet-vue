@@ -37,7 +37,7 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }) => {
         ref={inputRef}
         placeholder='Enter new name'
         value={newName}
-        onChange={e => setNewName(e.target.value)}
+        onChange={e => setNewName(e.target.value.trim())}
       />
       <button
         type='submit'
