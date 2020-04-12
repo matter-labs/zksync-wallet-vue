@@ -199,151 +199,149 @@ const MyWallet: React.FC<IMyWalletProps> = ({
         data-name='assets-wrapper'
         className={`assets-wrapper-bg ${isAssetsOpen ? 'open' : 'closed'}`}
       ></div>
-      <>
+      <div
+        className={`mywallet-wrapper ${
+          !!transactionModal?.title ? 'closed' : 'open'
+        }`}
+      >
+        <h2 className='mywallet-title'>My wallet</h2>
         <div
-          className={`mywallet-wrapper ${
-            !!transactionModal?.title ? 'closed' : 'open'
+          onClick={() => handleCopy(zkWallet?.address())}
+          className='copy-block'
+        >
+          <Transition type='fly' timeout={200} trigger={isCopyModal}>
+            <div className={'hint-copied open'}>
+              <p>Copied!</p>
+            </div>
+          </Transition>
+          <input
+            className='copy-block-input'
+            readOnly
+            value={zkWallet?.address().toString()}
+            ref={e => inputRef.push(e)}
+          />
+          <div className='copy-block-left'>
+            <img
+              src={zkWallet ? makeBlockie(zkWallet.address()) : avatar}
+              alt='avatar'
+            />{' '}
+            <p>
+              {window?.innerWidth > WIDTH_BP
+                ? zkWallet?.address()
+                : zkWallet
+                    ?.address()
+                    .replace(
+                      zkWallet
+                        ?.address()
+                        .slice(14, zkWallet?.address().length - 4),
+                      '...',
+                    )}
+            </p>
+          </div>
+          <button
+            className='copy-block-button btn-tr'
+            onClick={() => handleCopy(zkWallet?.address())}
+          ></button>
+        </div>
+        <div
+          className={`mywallet-currency-block ${
+            price && !!price.length ? '' : 'none'
+          } ${verifiedState ? 'unverified' : ''} ${
+            isBalancesListOpen ? 'borderless' : ''
           }`}
         >
-          <h2 className='mywallet-title'>My wallet</h2>
           <div
-            onClick={() => handleCopy(zkWallet?.address())}
-            className='copy-block'
-          >
-            <Transition type='fly' timeout={200} trigger={isCopyModal}>
-              <div className={'hint-copied open'}>
-                <p>Copied!</p>
+            data-name='custom-selector'
+            className={`mywallet-currency-block-shadow ${
+              isBalancesListOpen ? 'open' : 'closed'
+            }`}
+          ></div>
+          <div className='mywallet-currency-wrapper'>
+            <div className='custom-selector balances mywallet'>
+              <div
+                onClick={() => {
+                  openAssets(true);
+                  if (body) {
+                    body.classList.add('fixed-b');
+                  }
+                }}
+                className={`custom-selector-title ${
+                  !zkBalances.length && zkBalancesLoaded ? '' : ''
+                }`}
+              >
+                {symbolName ? (
+                  <p>zk{symbolName}</p>
+                ) : (
+                  <p>
+                    {!!zkBalances.length &&
+                      (selectedBalance?.symbol ? (
+                        <span>zk{selectedBalance?.symbol}</span>
+                      ) : (
+                        <span>zk{zkBalances[0].symbol}</span>
+                      ))}
+                    {!zkBalances.length &&
+                      (!zkBalancesLoaded ? <Spinner /> : <span>zkETH</span>)}
+                  </p>
+                )}
+                <div className='arrow-down'></div>
               </div>
-            </Transition>
-            <input
-              className='copy-block-input'
-              readOnly
-              value={zkWallet?.address().toString()}
-              ref={e => inputRef.push(e)}
-            />
-            <div className='copy-block-left'>
-              <img
-                src={zkWallet ? makeBlockie(zkWallet.address()) : avatar}
-                alt='avatar'
-              />{' '}
+            </div>
+          </div>
+          <div className='mywallet-price-wrapper'>
+            {verified && verifiedState && <SpinnerWorm />}
+            <span className='mywallet-price'>
+              ~{parseFloat((+walletBalance).toFixed(2).toString())} USD
+            </span>
+          </div>
+        </div>
+        {!!zkBalances?.length && zkBalancesLoaded ? (
+          <>
+            <div
+              className={`mywallet-buttons-container ${
+                price && !!price.length ? '' : 'none'
+              }`}
+            >
+              <button
+                onClick={() => setTransactionType('deposit')}
+                className='btn deposit-button btn-tr'
+              >
+                <span></span>Deposit
+              </button>
+              <button
+                onClick={() => setTransactionType('withdraw')}
+                className='btn withdraw-button btn-tr'
+              >
+                <span></span>Withdraw
+              </button>
+            </div>
+            <button
+              className='btn submit-button'
+              onClick={() => setTransactionType('transfer')}
+            >
+              <span></span> Send
+            </button>
+          </>
+        ) : (
+          <>
+            <div
+              className={`mywallet-buttons-container ${
+                price && !!price.length ? '' : 'none'
+              }`}
+            >
               <p>
-                {window?.innerWidth > WIDTH_BP
-                  ? zkWallet?.address()
-                  : zkWallet
-                      ?.address()
-                      .replace(
-                        zkWallet
-                          ?.address()
-                          .slice(14, zkWallet?.address().length - 4),
-                        '...',
-                      )}
+                No balances yet, please make a deposit or request money from
+                someone!
               </p>
             </div>
             <button
-              className='copy-block-button btn-tr'
-              onClick={() => handleCopy(zkWallet?.address())}
-            ></button>
-          </div>
-          <div
-            className={`mywallet-currency-block ${
-              price && !!price.length ? '' : 'none'
-            } ${verifiedState ? 'unverified' : ''} ${
-              isBalancesListOpen ? 'borderless' : ''
-            }`}
-          >
-            <div
-              data-name='custom-selector'
-              className={`mywallet-currency-block-shadow ${
-                isBalancesListOpen ? 'open' : 'closed'
-              }`}
-            ></div>
-            <div className='mywallet-currency-wrapper'>
-              <div className='custom-selector balances mywallet'>
-                <div
-                  onClick={() => {
-                    openAssets(true);
-                    if (body) {
-                      body.classList.add('fixed-b');
-                    }
-                  }}
-                  className={`custom-selector-title ${
-                    !zkBalances.length && zkBalancesLoaded ? '' : ''
-                  }`}
-                >
-                  {symbolName ? (
-                    <p>zk{symbolName}</p>
-                  ) : (
-                    <p>
-                      {!!zkBalances.length &&
-                        (selectedBalance?.symbol ? (
-                          <span>zk{selectedBalance?.symbol}</span>
-                        ) : (
-                          <span>zk{zkBalances[0].symbol}</span>
-                        ))}
-                      {!zkBalances.length &&
-                        (!zkBalancesLoaded ? <Spinner /> : <span>zkETH</span>)}
-                    </p>
-                  )}
-                  <div className='arrow-down'></div>
-                </div>
-              </div>
-            </div>
-            <div className='mywallet-price-wrapper'>
-              {verified && verifiedState && <SpinnerWorm />}
-              <span className='mywallet-price'>
-                ~{parseFloat((+walletBalance).toFixed(2).toString())} USD
-              </span>
-            </div>
-          </div>
-          {!!zkBalances?.length && zkBalancesLoaded ? (
-            <>
-              <div
-                className={`mywallet-buttons-container ${
-                  price && !!price.length ? '' : 'none'
-                }`}
-              >
-                <button
-                  onClick={() => setTransactionType('deposit')}
-                  className='btn deposit-button btn-tr'
-                >
-                  <span></span>Deposit
-                </button>
-                <button
-                  onClick={() => setTransactionType('withdraw')}
-                  className='btn withdraw-button btn-tr'
-                >
-                  <span></span>Withdraw
-                </button>
-              </div>
-              <button
-                className='btn submit-button'
-                onClick={() => setTransactionType('transfer')}
-              >
-                <span></span> Send
-              </button>
-            </>
-          ) : (
-            <>
-              <div
-                className={`mywallet-buttons-container ${
-                  price && !!price.length ? '' : 'none'
-                }`}
-              >
-                <p>
-                  No balances yet, please make a deposit or request money from
-                  someone!
-                </p>
-              </div>
-              <button
-                className='btn submit-button'
-                onClick={() => setTransactionType('deposit')}
-              >
-                Deposit
-              </button>
-            </>
-          )}
-        </div>
-      </>
+              className='btn submit-button'
+              onClick={() => setTransactionType('deposit')}
+            >
+              Deposit
+            </button>
+          </>
+        )}
+      </div>
     </>
   );
 };

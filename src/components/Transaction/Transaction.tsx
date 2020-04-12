@@ -399,13 +399,11 @@ const Transaction: React.FC<ITransactionProps> = ({
                           )}
                     </span>
                   </div>
-                  <div className='balances-contact-right'>
-                    <></>
-                  </div>
+                  <div className='balances-contact-right'></div>
                 </div>
               ))
             ) : (
-              <p>You don't have contacts yet...</p>
+              <p>{"You don't have contacts yet..."}</p>
             )}
           </DataList>
         )}
@@ -703,9 +701,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                               )}
                                         </span>
                                       </div>
-                                      <div className='balances-contact-right'>
-                                        <></>
-                                      </div>
+                                      <div className='balances-contact-right'></div>
                                     </div>
                                   ))}
                                 </div>
