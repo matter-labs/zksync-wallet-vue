@@ -8,7 +8,10 @@ import { useSafeTimeout } from 'hooks/timers';
  * every time route changes
  */
 export function useWSHeartBeat() {
-  const transport = useRootData(s => s.wsTransport.get());
+  const [transport, setWSTransport] = useRootData(s => [
+    s.wsTransport.get(),
+    s.setWSTransport,
+  ]);
   const setTimeout = useSafeTimeout();
   const [hbInterval, setHbInterval] = useState<number | undefined>();
 
@@ -23,17 +26,21 @@ export function useWSHeartBeat() {
     return hb;
   }, [transport]);
 
-  useEffect(() => {
-    if (hbInterval) {
-      clearInterval(hbInterval);
-    }
-  }, []);
+  useEffect(
+    () => () => {
+      if (hbInterval) {
+        clearInterval(hbInterval);
+      }
+    },
+    [],
+  );
 
   const tryReOpen = useCallback(() => {
     transport?.ws
       .open()
       .then(() => {
-        if (transport) setHeartBeat(transport);
+        console.log('reconnected.');
+        setWSTransport(transport);
       })
       .catch(() => {
         setTimeout(tryReOpen, 1000);
@@ -46,20 +53,17 @@ export function useWSHeartBeat() {
       pingTimeout = 2000,
       disconnectTimeout = pingTimeout * 2,
     ) => {
-      function cleanup() {
-        clearInterval(pingTimer);
-        clearTimeout(waitTimer);
-        transport.ws.onUnpackedMessage.removeListener(pongListener);
-      }
-
       function disconnectHandler() {
         cleanup();
         // TODO: connection does not close immediately when network destroyed
         // even when calling `close` implicitly
+        setWSTransport(null);
         transport.ws.close().then(() => {
           tryReOpen();
         });
       }
+
+      window['nativeWS'] = transport.ws.ws;
 
       function pongListener(m) {
         // Pong received
@@ -67,6 +71,13 @@ export function useWSHeartBeat() {
           clearTimeout(waitTimer);
           waitTimer = setTimeout(disconnectHandler, disconnectTimeout);
         }
+      }
+
+      function cleanup() {
+        clearInterval(pingTimer);
+        clearTimeout(waitTimer);
+        setHbInterval(undefined);
+        transport.ws.onUnpackedMessage.removeListener(pongListener);
       }
 
       let waitTimer = setTimeout(disconnectHandler, disconnectTimeout);
@@ -79,6 +90,6 @@ export function useWSHeartBeat() {
 
       return cleanup;
     },
-    [setHbInterval, setTimeout],
+    [setHbInterval, hbInterval, setTimeout],
   );
 }

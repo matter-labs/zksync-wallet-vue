@@ -10,22 +10,18 @@ import { useRootData } from 'hooks/useRootData';
 
 import { HEADER_ITEMS } from 'constants/header';
 
-import './Header.scss';
 import { QRCode } from 'components/QRCode/QRCode';
 import { useTimeout } from 'hooks/timers';
 import { Transition } from 'components/Transition/Transition';
-import { useLogout } from 'src/hooks/useLogout';
+import { ConnectionStatus } from 'components/Header/ConnectionStatus';
+import { useLogout } from 'hooks/useLogout';
+import './Header.scss';
 
 const Header: React.FC = () => {
-  const { setModal, zkWallet } = useRootData(
-    ({ provider, walletName, zkBalancesLoaded, zkWallet, ...rest }) => ({
-      provider: provider.get(),
-      walletName: walletName.get(),
-      zkBalancesLoaded: zkBalancesLoaded.get(),
-      zkWallet: zkWallet.get(),
-      ...rest,
-    }),
-  );
+  const { setModal, zkWallet } = useRootData(s => ({
+    setModal: s.setModal,
+    zkWallet: s.zkWallet.get(),
+  }));
 
   const address = zkWallet?.address();
   const userName = localStorage.getItem(zkWallet ? address! : '');
@@ -166,6 +162,7 @@ const Header: React.FC = () => {
             </div>
           ))}
       </div>
+      <ConnectionStatus />
     </div>
   );
 };
