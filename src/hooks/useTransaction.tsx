@@ -96,7 +96,6 @@ export const useTransaction = () => {
               symbol: tokens[key].symbol,
             };
           });
-          console.log(receipt);
           Promise.all(zkBalancePromises)
             .then(res => {
               setZkBalances(res as IEthBalance[]);
@@ -170,9 +169,7 @@ export const useTransaction = () => {
               setHintModal('Block has been mined!');
             });
             const receipt = await depositPriorityOperation.awaitReceipt();
-            console.log(receipt);
             transactions(receipt);
-            // setLoading(false);
             const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
             setVerifyToken(!!verifyReceipt);
           };

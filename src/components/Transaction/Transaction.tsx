@@ -405,7 +405,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 </div>
               ))
             ) : (
-              <div>You don't have contacts yet...</div>
+              <p>You don't have contacts yet...</p>
             )}
           </DataList>
         )}
