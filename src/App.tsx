@@ -111,21 +111,19 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   }, [logout, provider, setWalletName, walletName, zkWallet]);
 
   return (
-    <>
-      <div className={`content-wrapper ${walletName ? '' : 'start-page'}`}>
-        <Modal
-          cancelAction={() => setError('')}
-          visible={!!error}
-          classSpecifier='error'
-          background={true}
-        >
-          <p>{error}</p>
-        </Modal>
-        {walletName && <Header />}
-        <div className='content'>{children}</div>
-        <Footer />
-      </div>
-    </>
+    <div className={`content-wrapper ${walletName ? '' : 'start-page'}`}>
+      <Modal
+        cancelAction={() => setError('')}
+        visible={!!error}
+        classSpecifier='error'
+        background={true}
+      >
+        <p>{error}</p>
+      </Modal>
+      {walletName && <Header />}
+      <div className='content'>{children}</div>
+      <Footer />
+    </div>
   );
 };
 

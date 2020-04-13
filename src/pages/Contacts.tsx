@@ -124,7 +124,7 @@ const Contacts: React.FC = (): JSX.Element => {
           </button>
         </>
       )}
-      emptyListComponent={() => <p>You don't have contacts yet...</p>}
+      emptyListComponent={() => <p>{"You don't have contacts yet..."}</p>}
       renderItem={({ address, name }) => (
         <div className='balances-contact' key={name}>
           <div className='balances-contact-left'>

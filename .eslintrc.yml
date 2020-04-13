@@ -8,7 +8,7 @@ parserOptions:
     modules: true
 extends:
   - 'plugin:@typescript-eslint/recommended'
-  # - 'plugin:react/recommended'
+  - 'plugin:react/recommended'
 plugins:
   - '@typescript-eslint'
   - 'react'
@@ -23,6 +23,10 @@ rules:
   '@typescript-eslint/no-empty-interface': off
   '@typescript-eslint/no-non-null-assertion': off
   'react/jsx-wrap-multilines': error
+  'react/jsx-no-target-blank': off
+  'react/prop-types': off
+  'react/jsx-no-literals': warn
+  'react/jsx-no-useless-fragment': warn
   quotes:
     - warn
     - single
