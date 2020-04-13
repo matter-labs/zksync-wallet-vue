@@ -3,7 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 
 interface Props extends Record<string, any> {
   trigger: boolean;
-  type: 'scale' | 'opacity' | 'fly';
+  type: 'scale' | 'opacity' | 'fly' | 'modal';
   timeout?: number;
 }
 
