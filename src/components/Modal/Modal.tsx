@@ -56,11 +56,11 @@ const Modal: React.FC<ModalProps> = ({
   const history = useHistory();
 
   useEffect(() => {
-    const body = document.querySelector('body');
+    const body = document.body;
     if (isModalOpen) {
-      body?.classList.add('fixed');
+      body.classList.add('fixed');
     }
-    return () => body?.classList.remove('fixed');
+    return () => body.classList.remove('fixed');
   }, [isModalOpen]);
 
   const handleClickOutside = useCallback(
@@ -101,14 +101,13 @@ const Modal: React.FC<ModalProps> = ({
 
   return (
     <Portal className={cl(centered && 'center')}>
-      <Transition type={transition} trigger={shown} timeout={100}>
-        <div className={`modal ${classSpecifier}`}>
-          <button onClick={closeHandler} className='close-icon' />
-          {children}
+      <Transition type='modal' trigger={shown}>
+        <div data-name='modal-wrapper' className='modal-wrapper'>
+          <div className={`modal ${classSpecifier}`}>
+            <button onClick={closeHandler} className='close-icon' />
+            {children}
+          </div>
         </div>
-      </Transition>
-      <Transition trigger={shown} type='opacity' timeout={100}>
-        <div data-name='modal-wrapper' className={'modal-wrapper'} />
       </Transition>
     </Portal>
   );

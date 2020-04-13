@@ -90,6 +90,10 @@ body, html {
   transition-property: background-color, opacity;
 }
 
+html { 
+  height: 100vh;
+}
+
 *, *::before, *::after {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
@@ -1073,6 +1077,40 @@ $scale: 0.95;
     &-enter-active,
     &-exit-active {
       transition: opacity $dur, transform $dur;
+    }
+  }
+  &-modal {
+    &-enter {
+      opacity: 0;
+      .modal {
+        transform: scale(0.95);
+      }
+    }
+    &-enter-active {
+      opacity: 1;
+      .modal {
+        transform: scale(1);
+      }
+    }
+    &-exit {
+      opacity: 1;
+      .modal {
+        transform: scale(1);
+      }
+    }
+    &-exit-active {
+      opacity: 0;
+      .modal {
+        transform: scale(0.95);
+      }
+    }
+
+    &-enter-active,
+    &-exit-active {
+      transition: opacity $dur;
+      .modal {
+        transition: transform $dur;
+      }
     }
   }
 }
