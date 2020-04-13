@@ -57,3 +57,34 @@
     }
   }  
 }
+
+.cookiebar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 20px;
+  font-size: var(--sm-font-size);
+  text-align: center;
+  background: var(--light-bg-color);
+  div {
+    flex: 5
+  }
+  button {
+    display: inline;
+    flex: 1;
+    width: unset;
+    height: unset;
+    margin-left: 10px;
+    padding: 5px;
+  }
+
+  @media screen and (max-width: 760px) {
+    flex-flow: column nowrap;
+    button {
+      margin-top: 10px;
+    }
+  }
+}
