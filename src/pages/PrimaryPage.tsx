@@ -104,6 +104,14 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const handleLogOut = useLogout();
   const cancelable = useCancelable();
 
+  if (provider) {
+    provider.on('networkChanged', () => {
+      setWalletName('');
+      setAccessModal(true);
+      setWalletName('Metamask');
+    });
+  }
+
   useEffect(() => {
     if (provider?.selectedAddress == null && walletName) {
       setAccessModal(true);
@@ -126,14 +134,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (curAddress && walletName) {
       setHintModal('Connected! Make sign in the pop up');
     }
-  }, [
-    createWallet,
-    curAddress,
-    provider,
-    setAccessModal,
-    walletName,
-    zkWallet,
-  ]);
+  }, [createWallet, curAddress, provider, setAccessModal, zkWallet]);
 
   useInterval(() => {
     if (!curAddress && walletName && provider?.selectedAddress) {
