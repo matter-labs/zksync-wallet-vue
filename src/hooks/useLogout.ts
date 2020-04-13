@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router-dom';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -11,19 +11,18 @@ export function useLogout() {
     setWalletName,
     setZkWallet,
   } = useRootData(s => ({
+    ...s,
     error: s.error.get(),
     provider: s.provider.get(),
     walletName: s.walletName.get(),
     zkWallet: s.zkWallet.get(),
-    ...s,
   }));
 
   const history = useHistory();
-  window['hookHistory'] = history;
 
   const handleLogOut = useCallback(() => {
     setModal('');
-    setWalletName('');
+    setWalletName('Metamask');
     setAccessModal(false);
     setZkWallet(null);
     history.push('/');

@@ -443,9 +443,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                     <div className='balances-token-name'>
                       <p>{symbol}</p>
                       <span>
-                        {symbol === 'ETH' && <>Ethereum</>}
-                        {symbol === 'DAI' && <>Dai</>}
-                        {symbol === 'FAU' && <>Faucet</>}
+                        {symbol === 'ETH' && <>{'Ethereum'}</>}
+                        {symbol === 'DAI' && <>{'Dai'}</>}
+                        {symbol === 'FAU' && <>{'Faucet'}</>}
                       </span>
                     </div>
                   </div>
@@ -481,9 +481,9 @@ const Transaction: React.FC<ITransactionProps> = ({
               {title} {title === 'Withdraw' ? 'initiated' : 'successful!'}
             </h2>
             <span className='transaction-field-title'>
-              {title === 'Send' && <>Transfered into</>}
-              {title === 'Withdraw' && <>Withdrawn from</>}
-              {title === 'Deposit' && <>Deposited to</>} zkSync:{' '}
+              {title === 'Send' && <>{'Transfered into'}</>}
+              {title === 'Withdraw' && <>{'Withdrawn from'}</>}
+              {title === 'Deposit' && <>{'Deposited to'}</>} zkSync:{' '}
               <p className='transaction-field-amount'>
                 {inputValue} {symbolName}
               </p>
@@ -617,7 +617,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                       onClick={() => handleSave()}
                                     >
                                       <span></span>
-                                      <p>Save</p>
+                                      <p>{'Save'}</p>
                                     </button>
                                   )}
                                 {((!addressValue && !walletAddress[1]) ||
@@ -804,7 +804,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 className='currency-input-wrapper'
                                 key={token}
                               >
-                                <span>You have no balances</span>
+                                <span>{'You have no balances'}</span>
                               </div>
                             ))}
                         </div>

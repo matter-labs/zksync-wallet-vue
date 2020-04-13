@@ -12,6 +12,7 @@ import { IAppProps } from 'types/Common';
 import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 import { useLogout } from 'hooks/useLogout';
+import { WalletType } from './constants/Wallets';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const {
@@ -101,7 +102,9 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
           provider.selectedAddress.toLowerCase()
       ) {
         sessionStorage.setItem('walletName', walletName);
-        const savedWalletName = sessionStorage.getItem('walletName');
+        const savedWalletName = sessionStorage.getItem(
+          'walletName',
+        ) as WalletType;
         if (savedWalletName) {
           setWalletName(savedWalletName);
         }
