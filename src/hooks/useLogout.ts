@@ -1,5 +1,5 @@
 import { useHistory } from 'react-router-dom';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
 import { useRootData } from 'hooks/useRootData';
 
