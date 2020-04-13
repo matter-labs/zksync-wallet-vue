@@ -7,6 +7,7 @@ const MiniCSSPlugin = require('mini-css-extract-plugin');
 const autoprefixer = require('autoprefixer');
 const dotenv = require('dotenv');
 const { EnvironmentPlugin } = require('webpack');
+const packageJson = require('./package.json');
 
 const BUILD_DIR = path.resolve('build/');
 const DEV = process.env.NODE_ENV === 'development';
@@ -78,7 +79,10 @@ const config = {
         ignore: ['index.html'],
       },
     ]),
-    new EnvironmentPlugin(dotenv.config().parsed),
+    new EnvironmentPlugin({
+      ...dotenv.config().parsed,
+      VERSION: packageJson.version,
+    }),
   ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.wasm'],
