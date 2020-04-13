@@ -53,7 +53,13 @@ const Footer: React.FC = (): JSX.Element => {
               </a>
             ))}
           </span>
-          <p>Made with ❤️ by Matter Labs</p>
+          <p>
+            {'Made with ❤️ by Matter Labs.'}
+            <span>
+              {' v. '}
+              {process.env.VERSION}
+            </span>
+          </p>
         </p>
       </div>
     </div>
