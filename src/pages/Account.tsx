@@ -13,6 +13,8 @@ import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useHistory } from 'react-router-dom';
 import { useCancelable } from 'hooks/useCancelable';
 
+import { DEFAULT_ERROR } from 'constants/errors';
+
 const Account: React.FC = (): JSX.Element => {
   const {
     addressValue,
@@ -105,17 +107,28 @@ const Account: React.FC = (): JSX.Element => {
     };
     cancelable(
       fetch(
-        `https://kraftwerk28.pp.ua/cors/${BASE_URL}?symbol=${
-          balancesSymbols().toString() ? balancesSymbols().toString() : 'ETH'
-        }`,
+        'https://ticker-nhq6ta45ia-ez.a.run.app/cryptocurrency/listings/latest',
+        {
+          referrerPolicy: 'strict-origin-when-cross-origin',
+          body: null,
+          method: 'GET',
+          mode: 'cors',
+        },
       ),
-    ).then((res: any) => {
-      const prices = {};
-      Object.keys(res.data).map(
-        el => (prices[el] = res.data[el].quote.USD.price),
-      );
-      setPrice(prices);
-    });
+    )
+      .then((res: any) => res.json())
+      .then(data => {
+        const prices = {};
+        Object.keys(data.data).map(
+          el => (prices[data.data[el].symbol] = data.data[el].quote.USD.price),
+        );
+        setPrice(prices);
+      })
+      .catch(err => {
+        err.name && err.message
+          ? setError(`${err.name}: ${err.message}`)
+          : setError(DEFAULT_ERROR);
+      });
   };
   useEffect(() => {
     cancelable(initWallet);
@@ -155,13 +168,7 @@ const Account: React.FC = (): JSX.Element => {
       +balance === +verified[symbol] / Math.pow(10, 18));
 
   const ApiFailedHint = () => (
-    <>
-      {(price && !price.length) || !price ? (
-        <p>No Conversion Rate Available</p>
-      ) : (
-        <></>
-      )}
-    </>
+    <>{!price ? <p>No Conversion Rate Available</p> : <></>}</>
   );
 
   const VerifiedBal = ({ balance: { address, symbol, balance } }) => (
@@ -173,7 +180,7 @@ const Account: React.FC = (): JSX.Element => {
       <div className='balances-token-right'>
         <p>{+balance.toFixed(6)}</p>{' '}
         <span>
-          {price && !!price.length ? (
+          {price ? (
             <>
               (~$
               {
