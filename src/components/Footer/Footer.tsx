@@ -4,6 +4,7 @@ import { FOOTER_LINKS } from 'constants/footer';
 
 import '../../index.scss';
 import './Footer.scss';
+import { CookieBar } from './CookieBar';
 
 const Footer: React.FC = (): JSX.Element => {
   const body = document.querySelector('body');
@@ -56,6 +57,7 @@ const Footer: React.FC = (): JSX.Element => {
           <p>Made with ❤️ by Matter Labs</p>
         </p>
       </div>
+      <CookieBar />
     </div>
   );
 };
