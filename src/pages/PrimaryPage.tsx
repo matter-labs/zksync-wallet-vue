@@ -18,6 +18,7 @@ import {
   DESKTOP_ONLY_WALLETS,
   MOBILE_ONLY_WALLETS,
   WALLETS,
+  WalletType,
 } from 'constants/Wallets';
 import { useLogout } from 'src/hooks/useLogout';
 
@@ -210,7 +211,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                     key={key}
                     onClick={() => {
                       if (wallets.includes(key)) {
-                        setWalletName(key);
+                        setWalletName(key as WalletType);
                         setNormalBg(true);
                       } else {
                         setError(

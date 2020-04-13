@@ -4,6 +4,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import useWalletInit from './useWalletInit';
 import { useCancelable } from './useCancelable';
 import { getWalletNameFromProvider } from 'src/utils';
+import { WalletType } from 'src/constants/Wallets';
 
 export function useCheckLogin() {
   const { pathname } = useLocation();
@@ -25,7 +26,7 @@ export function useCheckLogin() {
     const ethprovider = window['ethereum'];
     if (provider) return;
     if (ethprovider?.selectedAddress) {
-      const walletName = getWalletNameFromProvider()!;
+      const walletName = getWalletNameFromProvider()! as WalletType;
       setProvider(ethprovider);
       setWalletName(walletName);
     } else {

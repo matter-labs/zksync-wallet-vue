@@ -5,6 +5,7 @@ import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Tokens } from 'zksync/build/types';
 import { Wallet } from 'zksync';
 import { WSTransport } from 'zksync/build/transport';
+import { WalletType } from 'constants/Wallets';
 
 export const createStore = () => ({
   depositModal: observable.box<boolean>(false),
@@ -29,7 +30,7 @@ export const createStore = () => ({
   >(undefined),
   unlocked: observable.box<boolean | undefined>(undefined),
   verifyToken: observable.box<boolean | undefined>(undefined),
-  walletName: observable.box<string>(''),
+  walletName: observable.box<WalletType>(''),
   walletAddress: observable.box<any>([]),
   withdrawModal: observable.box<boolean>(false),
   zkBalances: observable.box<IEthBalance[]>([]),
@@ -123,7 +124,7 @@ export const createStore = () => ({
     this.walletAddress.set(walletAddress);
   },
 
-  setWalletName(name: string): void {
+  setWalletName(name: WalletType): void {
     this.walletName.set(name);
   },
 

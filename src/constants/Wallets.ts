@@ -1,3 +1,5 @@
+export type WalletType = keyof typeof WALLETS | '';
+
 export const WALLETS = {
   Metamask: () => import('../components/Wallets/BrowserWallet'),
   WalletConnect: () => import('../components/Wallets/WalletConnect'),
