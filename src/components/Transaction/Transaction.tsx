@@ -121,38 +121,23 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const validateNumbers = useCallback(
     e => {
+      setInputValue(e);
+      const amountNumber = ethers.utils.parseEther(e.toString());
+
       if (INPUT_VALIDATION.digits.test(e)) {
-        if (e <= maxValue || e === 0) {
-          setInputValue(e);
-          if (inputValue === undefined && e === 0) {
-            setInputValue(0);
-          }
-          const amountNumber = ethers.utils.parseEther(e.toString());
-          title === 'Deposit'
-            ? onChangeAmount(
-                +amountNumber + fee >
-                  +ethers.utils.parseEther(maxValue.toString())
-                  ? +amountNumber - fee - 2 * ZK_FEE_MULTIPLIER * fee
-                  : +amountNumber,
-              )
-            : onChangeAmount(
-                +amountNumber + fee >
-                  +ethers.utils.parseEther(maxValue.toString())
-                  ? +amountNumber - fee
-                  : +amountNumber,
-              );
-        } else {
-          setInputValue(maxValue);
-          title === 'Deposit'
-            ? onChangeAmount(
-                +ethers.utils.parseEther(maxValue.toString()) -
-                  fee -
-                  2 * ZK_FEE_MULTIPLIER * fee,
-              )
-            : onChangeAmount(
-                +ethers.utils.parseEther(maxValue.toString()) - fee,
-              );
-        }
+        title === 'Deposit'
+          ? onChangeAmount(
+              +amountNumber + fee >
+                +ethers.utils.parseEther(maxValue.toString())
+                ? +amountNumber - fee - 2 * ZK_FEE_MULTIPLIER * fee
+                : +amountNumber,
+            )
+          : onChangeAmount(
+              +amountNumber + fee >
+                +ethers.utils.parseEther(maxValue.toString())
+                ? +amountNumber - fee
+                : +amountNumber,
+            );
       }
     },
     [
@@ -327,7 +312,8 @@ const Transaction: React.FC<ITransactionProps> = ({
       selectedBalance &&
       inputValue &&
       +inputValue > 0 &&
-      unlockFau
+      unlockFau &&
+      +inputValue < maxValue
     ) {
       transactionAction(token, type);
     }
@@ -507,430 +493,418 @@ const Transaction: React.FC<ITransactionProps> = ({
                 setTransactionType(undefined);
               }}
             >
-              Go to my wallet
+              {'Go to my wallet'}
             </button>
+          </>
+        ) : unlocked === undefined || isLoading ? (
+          <>
+            {isLoading && (
+              <>
+                <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
+                <p>
+                  {hintModal
+                    ? hintModal
+                    : 'Follow the instructions in the popup'}
+                </p>
+                <Spinner />
+                <button
+                  className='btn submit-button'
+                  onClick={() => {
+                    handleCancel();
+                    setWalletName();
+                  }}
+                >
+                  Cancel
+                </button>
+              </>
+            )}
+            {unlocked === undefined && (
+              <>
+                <Spinner />
+                <button
+                  className='btn submit-button'
+                  onClick={() => {
+                    handleCancel();
+                    setWalletName();
+                  }}
+                >
+                  Cancel
+                </button>
+              </>
+            )}
           </>
         ) : (
           <>
-            {unlocked === undefined || isLoading ? (
+            <button
+              onClick={() => {
+                handleCancel();
+                setWalletAddress([]);
+                setTransactionType(undefined);
+              }}
+              className='transaction-back'
+            ></button>
+            <h2 className='transaction-title'>{title}</h2>
+            {unlocked || title === 'Deposit' ? (
               <>
-                {isLoading && (
+                {searchBalances.length || title === 'Deposit' ? (
                   <>
-                    <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
-                    <p>
-                      {hintModal
-                        ? hintModal
-                        : 'Follow the instructions in the popup'}
-                    </p>
-                    <Spinner />
+                    {isInput && (
+                      <>
+                        <span className='transaction-field-title'>
+                          To address
+                        </span>
+                        <div
+                          className={`transaction-field contacts ${ADDRESS_VALIDATION[
+                            'eth'
+                          ].test(addressValue)}`}
+                        >
+                          <div
+                            className='custom-selector contacts'
+                            onClick={() => {
+                              openContactsList(!isContactsListOpen);
+                              body?.classList.add('fixed-b');
+                            }}
+                          >
+                            <div className='custom-selector-title'>
+                              <p>
+                                {walletAddress[0]
+                                  ? walletAddress[0]
+                                  : selectedContact}
+                              </p>
+                              {(selectedContact || walletAddress[0]) && (
+                                <div className='arrow-down'></div>
+                              )}
+                            </div>
+                          </div>
+                          <div className='currency-input-wrapper'>
+                            {ADDRESS_VALIDATION['eth'].test(addressValue) && (
+                              <span className='label-done'></span>
+                            )}
+                            <input
+                              placeholder='Ox address or contact name'
+                              value={
+                                title === 'Withdraw'
+                                  ? zkWallet?.address()
+                                  : addressValue
+                              }
+                              onChange={e => {
+                                onChangeAddress(e.target.value);
+                                handleFilterContacts(e.target.value);
+                                setWalletAddress([]);
+                              }}
+                              className='currency-input-address'
+                            />
+                            {ADDRESS_VALIDATION['eth'].test(addressValue) &&
+                              !selectedContact && (
+                                <button
+                                  className='add-contact-button-input btn-tr'
+                                  onClick={() => handleSave()}
+                                >
+                                  <span></span>
+                                  <p>{'Save'}</p>
+                                </button>
+                              )}
+                            {((!addressValue && !walletAddress[1]) ||
+                              (!addressValue && walletAddress[1]) ||
+                              !addressValue ||
+                              walletAddress[1]) &&
+                            !selectedContact ? (
+                              <div
+                                className={`custom-selector contacts ${
+                                  selectedContact &&
+                                  addressValue === walletAddress[1]
+                                    ? ''
+                                    : 'short'
+                                }`}
+                              >
+                                <div
+                                  onClick={() => {
+                                    openContactsList(!isContactsListOpen);
+                                    body?.classList.add('fixed-b');
+                                  }}
+                                  className={`custom-selector-title ${
+                                    selectedContact &&
+                                    addressValue === walletAddress[1]
+                                      ? ''
+                                      : 'short'
+                                  }`}
+                                >
+                                  {(selectedContact || !walletAddress[0]) &&
+                                  addressValue === walletAddress[1] ? (
+                                    <p>{selectedContact}</p>
+                                  ) : (
+                                    <span></span>
+                                  )}
+                                  <div className='arrow-down'></div>
+                                </div>
+                              </div>
+                            ) : (
+                              <button
+                                className='cross-clear'
+                                onClick={() => {
+                                  onChangeAddress('');
+                                  handleFilterContacts('');
+                                  setWalletAddress([]);
+                                  setSelectedContact('');
+                                }}
+                              ></button>
+                            )}
+                          </div>
+                        </div>
+                        {!!filteredContacts.length &&
+                          addressValue &&
+                          !walletAddress[1] && (
+                            <div className='transaction-contacts-list'>
+                              {filteredContacts.map(({ name, address }) => (
+                                <div
+                                  className='balances-contact'
+                                  key={name}
+                                  onClick={() => {
+                                    handleSelect(name);
+                                    setWalletAddress([name, address]);
+                                    onChangeAddress(address);
+                                    openContactsList(false);
+                                    setSelectedContact(name);
+                                    body?.classList.remove('fixed-b');
+                                    setFilteredContacts([]);
+                                  }}
+                                >
+                                  <div className='balances-contact-left'>
+                                    <p className='balances-contact-name'>
+                                      {name}
+                                    </p>
+                                    <span className='balances-contact-address'>
+                                      {window?.innerWidth > WIDTH_BP
+                                        ? address
+                                        : address?.replace(
+                                            address?.slice(
+                                              14,
+                                              address?.length - 4,
+                                            ),
+                                            '...',
+                                          )}
+                                    </span>
+                                  </div>
+                                  <div className='balances-contact-right'></div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                      </>
+                    )}
+                    <span className='transaction-field-title'>
+                      Amount / asset
+                    </span>
+                    <div className='transaction-field balance'>
+                      <div className='currency-input-wrapper border'>
+                        <div className='scroll-wrapper'>
+                          <input
+                            placeholder='0.00'
+                            className='currency-input'
+                            type='number'
+                            ref={myRef}
+                            onChange={e => {
+                              validateNumbers(+e.target.value);
+                              setAmount(+e.target.value);
+                              handleInputWidth(+e.target.value);
+                              setInputValue(e.target.value);
+                              // if (+e.target.value > maxValue) {
+                              //   setInputValue(maxValue);
+                              //   handleInputWidth(maxValue);
+                              // }
+                            }}
+                            value={
+                              inputValue
+                                ? parseFloat(
+                                    parseFloat(inputValue?.toString())
+                                      .toFixed(18)
+                                      .toString(),
+                                  )
+                                : ''
+                            }
+                          />
+                        </div>
+
+                        <div className='custom-selector balances'>
+                          <div
+                            onClick={() => {
+                              openBalancesList(!isBalancesListOpen);
+                              body?.classList.add('fixed-b');
+                            }}
+                            className='custom-selector-title'
+                          >
+                            {symbolName ? (
+                              <p>{symbolName}</p>
+                            ) : (
+                              <span>
+                                {zkBalancesLoaded ? (
+                                  'Select token'
+                                ) : (
+                                  <Spinner />
+                                )}
+                              </span>
+                            )}
+
+                            <div className='arrow-down'></div>
+                          </div>
+                        </div>
+                      </div>
+                      {zkBalancesLoaded &&
+                        (!!balances?.length ? (
+                          <div className='currency-input-wrapper' key={token}>
+                            <div className='all-balance-wrapper'>
+                              <button
+                                className='all-balance btn-tr'
+                                onClick={() => {
+                                  setInputValue(+maxValue);
+                                  onChangeAmount(
+                                    (+maxValue - 0.0003) * bigNumberMultiplier -
+                                      2 * ZK_FEE_MULTIPLIER * fee,
+                                  );
+                                  handleInputWidth(maxValue);
+                                }}
+                              >
+                                Max: {maxValue ? maxValue.toFixed(6) : '0'}{' '}
+                                {symbolName ? symbolName : ''}
+                              </button>
+                            </div>
+                            <span>
+                              ~$
+                              {
+                                +(
+                                  +(price && !!price[selectedBalance]
+                                    ? price[selectedBalance]
+                                    : 1) * (maxValue ? maxValue : 0)
+                                ).toFixed(2)
+                              }
+                            </span>
+                          </div>
+                        ) : (
+                          <div className='currency-input-wrapper' key={token}>
+                            <span>{'You have no balances'}</span>
+                          </div>
+                        ))}
+                    </div>
+                    <div className={`hint-unlocked ${!!isHintUnlocked}`}>
+                      {isHintUnlocked}
+                    </div>
+                    {title === 'Deposit' && token !== 'ETH' && selectedBalance && (
+                      <>
+                        <div className={`hint-unlocked ${!!isHintUnlocked}`}>
+                          {isHintUnlocked}
+                        </div>
+                        <div className='fau-unlock-wrapper'>
+                          <div className='fau-unlock-wrapper'>
+                            {unlockFau ? (
+                              <p>
+                                {symbolName.length
+                                  ? symbolName
+                                  : balances?.length && balances[0].symbol}{' '}
+                                token unlocked
+                              </p>
+                            ) : (
+                              <p>
+                                Unlock{' '}
+                                {symbolName.length
+                                  ? symbolName
+                                  : balances?.length && balances[0].symbol}{' '}
+                                token
+                              </p>
+                            )}
+                            <button
+                              onClick={() =>
+                                handleShowHint(
+                                  'You need to call ERC20.approve() for our contract once in order to authorize token deposits.',
+                                )
+                              }
+                              className='hint-question-mark'
+                            >
+                              ?
+                            </button>
+                          </div>
+                          <button
+                            onClick={() =>
+                              !unlockFau
+                                ? handleUnlockERC()
+                                : handleShowHint(
+                                    'Already unlocked. This only needs to be done once per token.',
+                                  )
+                            }
+                            className={`fau-unlock-tocken ${unlockFau}`}
+                          >
+                            <span
+                              className={`fau-unlock-tocken-circle ${unlockFau}`}
+                            ></span>
+                          </button>
+                        </div>
+                      </>
+                    )}
+                    {!!inputValue &&
+                      selectedBalance &&
+                      +inputValue > maxValue && (
+                        <p className='error-text'>{'Not enough balance'}</p>
+                      )}
                     <button
-                      className='btn submit-button'
-                      onClick={() => {
-                        handleCancel();
-                        setWalletName();
-                      }}
+                      className={`btn submit-button ${
+                        (!unlockFau && title === 'Deposit') ||
+                        !inputValue ||
+                        (!!inputValue && +inputValue > maxValue)
+                          ? 'disabled'
+                          : ''
+                      }`}
+                      onClick={handleSumbit}
                     >
-                      Cancel
+                      <span
+                        className={`submit-label ${title} ${
+                          !unlockFau && title === 'Deposit' ? unlockFau : true
+                        }`}
+                      ></span>
+                      {title}
                     </button>
+                    <p key={maxValue} className='transaction-fee'>
+                      Fee:{' '}
+                      {balances?.length && (
+                        <span>
+                          {amount < maxValue
+                            ? parseFloat(
+                                (amount * 0.001).toFixed(10).toString(),
+                              )
+                            : parseFloat(
+                                (maxValue * 0.001).toFixed(10).toString(),
+                              )}{' '}
+                          {symbolName ? symbolName : balances[0].symbol}
+                        </span>
+                      )}
+                    </p>
                   </>
-                )}
-                {unlocked === undefined && (
+                ) : (
                   <>
-                    <Spinner />
+                    <p>
+                      No balances yet, please make a deposit or request money
+                      from someone!
+                    </p>
                     <button
                       className='btn submit-button'
-                      onClick={() => {
-                        handleCancel();
-                        setWalletName();
-                      }}
+                      onClick={() => setTransactionType('deposit')}
                     >
-                      Cancel
+                      Deposit
                     </button>
                   </>
                 )}
               </>
             ) : (
               <>
-                <button
-                  onClick={() => {
-                    handleCancel();
-                    setWalletAddress([]);
-                    setTransactionType(undefined);
-                  }}
-                  className='transaction-back'
-                ></button>
-                <h2 className='transaction-title'>{title}</h2>
-                {unlocked || title === 'Deposit' ? (
-                  <>
-                    {searchBalances.length || title === 'Deposit' ? (
-                      <>
-                        {isInput && (
-                          <>
-                            <span className='transaction-field-title'>
-                              To address
-                            </span>
-                            <div
-                              className={`transaction-field contacts ${ADDRESS_VALIDATION[
-                                'eth'
-                              ].test(addressValue)}`}
-                            >
-                              <div
-                                className='custom-selector contacts'
-                                onClick={() => {
-                                  openContactsList(!isContactsListOpen);
-                                  body?.classList.add('fixed-b');
-                                }}
-                              >
-                                <div className='custom-selector-title'>
-                                  <p>
-                                    {walletAddress[0]
-                                      ? walletAddress[0]
-                                      : selectedContact}
-                                  </p>
-                                  {(selectedContact || walletAddress[0]) && (
-                                    <div className='arrow-down'></div>
-                                  )}
-                                </div>
-                              </div>
-                              <div className='currency-input-wrapper'>
-                                {ADDRESS_VALIDATION['eth'].test(
-                                  addressValue,
-                                ) && <span className='label-done'></span>}
-                                <input
-                                  placeholder='Ox address or contact name'
-                                  value={
-                                    title === 'Withdraw'
-                                      ? zkWallet?.address()
-                                      : addressValue
-                                  }
-                                  onChange={e => {
-                                    onChangeAddress(e.target.value);
-                                    handleFilterContacts(e.target.value);
-                                    setWalletAddress([]);
-                                  }}
-                                  className='currency-input-address'
-                                />
-                                {ADDRESS_VALIDATION['eth'].test(addressValue) &&
-                                  !selectedContact && (
-                                    <button
-                                      className='add-contact-button-input btn-tr'
-                                      onClick={() => handleSave()}
-                                    >
-                                      <span></span>
-                                      <p>{'Save'}</p>
-                                    </button>
-                                  )}
-                                {((!addressValue && !walletAddress[1]) ||
-                                  (!addressValue && walletAddress[1]) ||
-                                  !addressValue ||
-                                  walletAddress[1]) &&
-                                !selectedContact ? (
-                                  <div
-                                    className={`custom-selector contacts ${
-                                      selectedContact &&
-                                      addressValue === walletAddress[1]
-                                        ? ''
-                                        : 'short'
-                                    }`}
-                                  >
-                                    <div
-                                      onClick={() => {
-                                        openContactsList(!isContactsListOpen);
-                                        body?.classList.add('fixed-b');
-                                      }}
-                                      className={`custom-selector-title ${
-                                        selectedContact &&
-                                        addressValue === walletAddress[1]
-                                          ? ''
-                                          : 'short'
-                                      }`}
-                                    >
-                                      {(selectedContact || !walletAddress[0]) &&
-                                      addressValue === walletAddress[1] ? (
-                                        <p>{selectedContact}</p>
-                                      ) : (
-                                        <span></span>
-                                      )}
-                                      <div className='arrow-down'></div>
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <button
-                                    className='cross-clear'
-                                    onClick={() => {
-                                      onChangeAddress('');
-                                      handleFilterContacts('');
-                                      setWalletAddress([]);
-                                      setSelectedContact('');
-                                    }}
-                                  ></button>
-                                )}
-                              </div>
-                            </div>
-                            {!!filteredContacts.length &&
-                              addressValue &&
-                              !walletAddress[1] && (
-                                <div className='transaction-contacts-list'>
-                                  {filteredContacts.map(({ name, address }) => (
-                                    <div
-                                      className='balances-contact'
-                                      key={name}
-                                      onClick={() => {
-                                        handleSelect(name);
-                                        setWalletAddress([name, address]);
-                                        onChangeAddress(address);
-                                        openContactsList(false);
-                                        setSelectedContact(name);
-                                        body?.classList.remove('fixed-b');
-                                        setFilteredContacts([]);
-                                      }}
-                                    >
-                                      <div className='balances-contact-left'>
-                                        <p className='balances-contact-name'>
-                                          {name}
-                                        </p>
-                                        <span className='balances-contact-address'>
-                                          {window?.innerWidth > WIDTH_BP
-                                            ? address
-                                            : address?.replace(
-                                                address?.slice(
-                                                  14,
-                                                  address?.length - 4,
-                                                ),
-                                                '...',
-                                              )}
-                                        </span>
-                                      </div>
-                                      <div className='balances-contact-right'></div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                          </>
-                        )}
-                        <span className='transaction-field-title'>
-                          Amount / asset
-                        </span>
-                        <div className='transaction-field balance'>
-                          <div className='currency-input-wrapper border'>
-                            <div className='scroll-wrapper'>
-                              <input
-                                placeholder='0.00'
-                                className='currency-input'
-                                type='number'
-                                ref={myRef}
-                                onChange={e => {
-                                  validateNumbers(+e.target.value);
-                                  setAmount(+e.target.value);
-                                  handleInputWidth(+e.target.value);
-                                  setInputValue(e.target.value);
-                                  if (+e.target.value > maxValue) {
-                                    setInputValue(maxValue);
-                                    handleInputWidth(maxValue);
-                                  }
-                                }}
-                                value={
-                                  inputValue
-                                    ? parseFloat(
-                                        parseFloat(inputValue?.toString())
-                                          .toFixed(18)
-                                          .toString(),
-                                      )
-                                    : ''
-                                }
-                              />
-                            </div>
-
-                            <div className='custom-selector balances'>
-                              <div
-                                onClick={() => {
-                                  openBalancesList(!isBalancesListOpen);
-                                  body?.classList.add('fixed-b');
-                                }}
-                                className='custom-selector-title'
-                              >
-                                {symbolName ? (
-                                  <p>{symbolName}</p>
-                                ) : (
-                                  <span>
-                                    {zkBalancesLoaded ? (
-                                      'Select token'
-                                    ) : (
-                                      <Spinner />
-                                    )}
-                                  </span>
-                                )}
-
-                                <div className='arrow-down'></div>
-                              </div>
-                            </div>
-                          </div>
-                          {zkBalancesLoaded &&
-                            (!!balances?.length ? (
-                              <div
-                                className='currency-input-wrapper'
-                                key={token}
-                              >
-                                <div className='all-balance-wrapper'>
-                                  <button
-                                    className='all-balance btn-tr'
-                                    onClick={() => {
-                                      setInputValue(+maxValue);
-                                      onChangeAmount(
-                                        (+maxValue - 0.0003) *
-                                          bigNumberMultiplier -
-                                          2 * ZK_FEE_MULTIPLIER * fee,
-                                      );
-                                      handleInputWidth(maxValue);
-                                    }}
-                                  >
-                                    Max: {maxValue ? maxValue.toFixed(6) : '0'}{' '}
-                                    {symbolName ? symbolName : ''}
-                                  </button>
-                                </div>
-                                <span>
-                                  ~$
-                                  {
-                                    +(
-                                      +(price && !!price[selectedBalance]
-                                        ? price[selectedBalance]
-                                        : 1) * (maxValue ? maxValue : 0)
-                                    ).toFixed(2)
-                                  }
-                                </span>
-                              </div>
-                            ) : (
-                              <div
-                                className='currency-input-wrapper'
-                                key={token}
-                              >
-                                <span>{'You have no balances'}</span>
-                              </div>
-                            ))}
-                        </div>
-                        <div className={`hint-unlocked ${!!isHintUnlocked}`}>
-                          {isHintUnlocked}
-                        </div>
-                        {title === 'Deposit' &&
-                          token !== 'ETH' &&
-                          selectedBalance && (
-                            <>
-                              <div
-                                className={`hint-unlocked ${!!isHintUnlocked}`}
-                              >
-                                {isHintUnlocked}
-                              </div>
-                              <div className='fau-unlock-wrapper'>
-                                <div className='fau-unlock-wrapper'>
-                                  {unlockFau ? (
-                                    <p>
-                                      {symbolName.length
-                                        ? symbolName
-                                        : balances?.length &&
-                                          balances[0].symbol}{' '}
-                                      token unlocked
-                                    </p>
-                                  ) : (
-                                    <p>
-                                      Unlock{' '}
-                                      {symbolName.length
-                                        ? symbolName
-                                        : balances?.length &&
-                                          balances[0].symbol}{' '}
-                                      token
-                                    </p>
-                                  )}
-                                  <button
-                                    onClick={() =>
-                                      handleShowHint(
-                                        'You need to call ERC20.approve() for our contract once in order to authorize token deposits.',
-                                      )
-                                    }
-                                    className='hint-question-mark'
-                                  >
-                                    ?
-                                  </button>
-                                </div>
-                                <button
-                                  onClick={() =>
-                                    !unlockFau
-                                      ? handleUnlockERC()
-                                      : handleShowHint(
-                                          'Already unlocked. This only needs to be done once per token.',
-                                        )
-                                  }
-                                  className={`fau-unlock-tocken ${unlockFau}`}
-                                >
-                                  <span
-                                    className={`fau-unlock-tocken-circle ${unlockFau}`}
-                                  ></span>
-                                </button>
-                              </div>
-                            </>
-                          )}
-                        <button
-                          className={`btn submit-button ${
-                            !unlockFau && title === 'Deposit' ? 'disabled' : ''
-                          }`}
-                          onClick={handleSumbit}
-                        >
-                          <span
-                            className={`submit-label ${title} ${
-                              !unlockFau && title === 'Deposit'
-                                ? unlockFau
-                                : true
-                            }`}
-                          ></span>
-                          {title}
-                        </button>
-                        <p key={maxValue} className='transaction-fee'>
-                          Fee:{' '}
-                          {balances?.length && (
-                            <span>
-                              {amount < maxValue
-                                ? parseFloat(
-                                    (amount * 0.001).toFixed(10).toString(),
-                                  )
-                                : parseFloat(
-                                    (maxValue * 0.001).toFixed(10).toString(),
-                                  )}{' '}
-                              {symbolName ? symbolName : balances[0].symbol}
-                            </span>
-                          )}
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <p>
-                          No balances yet, please make a deposit or request
-                          money from someone!
-                        </p>
-                        <button
-                          className='btn submit-button'
-                          onClick={() => setTransactionType('deposit')}
-                        >
-                          Deposit
-                        </button>
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <div className='info-block center'>
-                      <p>
-                        To control your account you need to unlock it once by
-                        registering your public key.
-                      </p>
-                    </div>
-                    <button
-                      className='btn submit-button'
-                      onClick={handleUnlock}
-                    >
-                      <span className='submit-label unlock'></span>
-                      Unlock
-                    </button>
-                  </>
-                )}
+                <div className='info-block center'>
+                  <p>
+                    {
+                      'To control your account you need to unlock it once by registering your public key.'
+                    }
+                  </p>
+                </div>
+                <button className='btn submit-button' onClick={handleUnlock}>
+                  <span className='submit-label unlock'></span>
+                  {' Unlock'}
+                </button>
               </>
             )}
           </>
