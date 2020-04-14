@@ -10,6 +10,7 @@ import { ITransactionProps } from './Types';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { INPUT_VALIDATION } from 'constants/regExs';
+import { useAutoFocus } from 'hooks/useAutoFocus';
 import { WIDTH_BP, ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
 import { ZK_EXPLORER } from 'constants/links';
 
@@ -90,6 +91,8 @@ const Transaction: React.FC<ITransactionProps> = ({
       zkWallet: zkWallet.get(),
     }),
   );
+
+  const focusInput = useAutoFocus();
 
   const body = document.querySelector('#body');
   const dataPropertySymbol = 'symbol';
@@ -500,22 +503,36 @@ const Transaction: React.FC<ITransactionProps> = ({
           <>
             {isLoading && (
               <>
-                <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
-                <p>
-                  {hintModal
-                    ? hintModal
-                    : 'Follow the instructions in the popup'}
-                </p>
-                <Spinner />
-                <button
-                  className='btn submit-button'
-                  onClick={() => {
-                    handleCancel();
-                    setWalletName();
-                  }}
-                >
-                  Cancel
-                </button>
+                {isLoading && (
+                  <>
+                    <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
+                    <p>{'Follow the instructions in the popup'}</p>
+                    <Spinner />
+                    <button
+                      className='btn submit-button'
+                      onClick={() => {
+                        handleCancel();
+                        setWalletName();
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
+                {unlocked === undefined && (
+                  <>
+                    <Spinner />
+                    <button
+                      className='btn submit-button'
+                      onClick={() => {
+                        handleCancel();
+                        setWalletName();
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
               </>
             )}
             {unlocked === undefined && (

@@ -115,6 +115,17 @@ const Contacts: React.FC = (): JSX.Element => {
               addressInput={true}
             />
           </Modal>
+          <Modal
+            visible={false}
+            classSpecifier='add-contact edit-contact'
+            background={true}
+          >
+            <SaveContacts
+              title='Edit contact'
+              addressValue=''
+              addressInput={true}
+            />
+          </Modal>
           <button
             className='add-contact-button btn-tr'
             onClick={() => setModal('add-contact addressless')}
@@ -131,15 +142,8 @@ const Contacts: React.FC = (): JSX.Element => {
             <span className='balances-contact-name'>{name}</span>
             <span className='balances-contact-address'>
               {window?.innerWidth > WIDTH_BP
-                ? zkWallet?.address()
-                : zkWallet
-                    ?.address()
-                    .replace(
-                      zkWallet
-                        ?.address()
-                        .slice(14, zkWallet?.address().length - 4),
-                      '...',
-                    )}
+                ? address
+                : address.replace(address.slice(14, address.length - 4), '...')}
             </span>
           </div>
           <div className='balances-contact-right'>
