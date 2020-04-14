@@ -160,6 +160,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
           }`}
           visible={isAccessModalOpen}
           cancelAction={() => handleLogOut()}
+          centered
         >
           <div
             className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
