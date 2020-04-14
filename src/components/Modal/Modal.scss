@@ -128,11 +128,9 @@
 
   &.metamask {
     top: 120px;
-    left: 50%;
     width: calc(100% - 32px);
     padding: 16px;
     text-align: center;
-    transform: translateX(-50%);
   }
 
   &.error {
