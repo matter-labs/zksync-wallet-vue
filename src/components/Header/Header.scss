@@ -18,7 +18,7 @@
     justify-content: space-between;
   }
 
-  &-route { 
+  &-route {
     display: block;
     box-sizing: content-box;
     margin-top: 17px;
@@ -70,7 +70,7 @@
     }
 
     &:hover {
-      background-color: var(--copyblock-color)
+      background-color: var(--copyblock-color);
     }
 
     & > img {
@@ -119,11 +119,22 @@
 }
 
 .ws-status {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  color: var(--light-bg-color);
-  text-align: center;
-  background: var(--delete-color);
+  &__reconnected {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    color: var(--light-bg-color);
+    text-align: center;
+    background: var(--success-color);
+  }
+  &__disconnected {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    color: var(--light-bg-color);
+    text-align: center;
+    background: var(--delete-color);
+  }
 }
