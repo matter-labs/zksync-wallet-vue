@@ -107,6 +107,7 @@ const Contacts: React.FC = (): JSX.Element => {
             visible={false}
             classSpecifier='add-contact addressless'
             background={true}
+            centered
           >
             <SaveContacts
               title='Add contact'
