@@ -67,7 +67,7 @@ const DataList: React.FC<IBalancesProps> = ({
             onClick={() => setModal('add-contact addressless')}
           >
             <span></span>
-            <p>Add a contact</p>
+            <p>{'Add a contact'}</p>
           </button>
         )}
       </div>
