@@ -1,10 +1,10 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { Link, useHistory, Redirect } from 'react-router-dom';
+import React, { useCallback, useState } from 'react';
 import makeBlockie from 'ethereum-blockies-base64';
 
 import avatar from 'images/avatar.png';
 import ChangeName from './ChangeName';
 import Modal from 'components/Modal/Modal';
+import { Link } from './Link';
 
 import { useRootData } from 'hooks/useRootData';
 

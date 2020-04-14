@@ -10,6 +10,7 @@ export function useLogout() {
     setProvider,
     setWalletName,
     setZkWallet,
+    setZkBalances,
   } = useRootData(s => ({
     ...s,
     error: s.error.get(),
@@ -25,6 +26,7 @@ export function useLogout() {
     setWalletName('Metamask');
     setAccessModal(true);
     setZkWallet(null);
+    setZkBalances([]);
     history.push('/');
   }, [
     history,
