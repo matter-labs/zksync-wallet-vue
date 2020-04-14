@@ -167,9 +167,8 @@ const Account: React.FC = (): JSX.Element => {
     (+balance === +verified[address] / Math.pow(10, 18) ||
       +balance === +verified[symbol] / Math.pow(10, 18));
 
-  const ApiFailedHint = () => (
-    <>{!price ? <p>No Conversion Rate Available</p> : <></>}</>
-  );
+  const ApiFailedHint = () =>
+    !price ? <p>{'No Conversion Rate Available'}</p> : null;
 
   const VerifiedBal = ({ balance: { address, symbol, balance } }) => (
     <div key={balance} className='balances-token verified'>
@@ -179,23 +178,16 @@ const Account: React.FC = (): JSX.Element => {
       </div>
       <div className='balances-token-right'>
         <p>{+balance.toFixed(6)}</p>{' '}
-        <span>
-          {price ? (
-            <>
-              (~$
-              {
-                +(
-                  balance * +(price && !!price[symbol] ? price[symbol] : 1)
-                ).toFixed(2)
-              }
-              )
-            </>
-          ) : (
-            <></>
-          )}
-        </span>
+        {price && (
+          <span>
+            {`(~$${+(
+              balance * +(price && !!price[symbol] ? price[symbol] : 1)
+            ).toFixed(2)})`}
+          </span>
+        )}
         <div className='balances-token-status'>
-          <p>Verified</p> <span className='label-done'></span>
+          <p>{'Verified'}</p>
+          <span className='label-done'></span>
         </div>
         <button
           className='btn-tr'
@@ -209,31 +201,22 @@ const Account: React.FC = (): JSX.Element => {
 
   const UnverifiedBal = ({ balance: { symbol, balance } }) => (
     <div key={balance} className='balances-token pending'>
-      <div className='balances-token-left'>zk{symbol}</div>
+      <div className='balances-token-left'>
+        {'zk'}
+        {symbol}
+      </div>
       <div className='balances-token-right'>
         <p>{+balance.toFixed(6)}</p>{' '}
-        <span>
-          {price && !!price.length ? (
-            <>
-              (~$
-              {
-                +(
-                  balance * +(price && !!price[symbol] ? price[symbol] : 1)
-                ).toFixed(2)
-              }
-              )
-            </>
-          ) : (
-            <></>
-          )}
-        </span>
+        {price?.length && (
+          <span>{`(~$${+(
+            balance * +(price && !!price[symbol] ? price[symbol] : 1)
+          ).toFixed(2)})`}</span>
+        )}
         <div className='balances-token-status'>
-          <p>Pending</p>
+          <p>{'Pending'}</p>
           <SpinnerWorm />
         </div>
-        <button className='pending btn-tr' onClick={() => undefined}>
-          Send
-        </button>
+        <button className='pending btn-tr'>{'Send'}</button>
       </div>
     </div>
   );

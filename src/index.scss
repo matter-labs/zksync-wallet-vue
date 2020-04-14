@@ -72,7 +72,7 @@ body.dark {
 
 body.fixed, body.fixed-b {
   height: 100vh;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 #root.fixed {

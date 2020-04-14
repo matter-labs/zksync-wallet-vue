@@ -39,7 +39,6 @@ export function useWSHeartBeat() {
     transport?.ws
       .open()
       .then(() => {
-        console.log('reconnected.');
         setWSTransport(transport);
       })
       .catch(() => {
