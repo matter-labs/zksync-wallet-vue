@@ -101,15 +101,17 @@ const Transactions: React.FC = (): JSX.Element => {
           <div className='transaction-history-left'>
             <div className={`transaction-history ${type}`}></div>
             <div className='transaction-history-amount'>
-              {parseFloat(
-                (
-                  (type === 'Deposit' && priority_op
-                    ? +priority_op.amount
-                    : +amount) / Math.pow(10, 18)
-                )
-                  .toFixed(3)
-                  .toString(),
-              )}
+              {!!amount || !!priority_op?.amount
+                ? parseFloat(
+                    (
+                      (type === 'Deposit' && priority_op
+                        ? +priority_op.amount
+                        : +amount) / Math.pow(10, 18)
+                    )
+                      .toFixed(6)
+                      .toString(),
+                  )
+                : 'Unlocking transaction'}
             </div>
             <div className='transaction-history-hash'>
               {token && token.toString().length > 10 ? (
@@ -121,7 +123,7 @@ const Transactions: React.FC = (): JSX.Element => {
                   )
               ) : (
                 <>
-                  {'zk'}
+                  {(priority_op?.token || token) && 'zk'}
                   {type === 'Deposit' ? priority_op?.token : token}
                 </>
               )}

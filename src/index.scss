@@ -204,6 +204,12 @@ h2 {
   }
 }
 
+.error {
+  &-text {
+    color: var(--delete-color);
+  }
+}
+
 .hint {
   &-question-mark {
     width: 20px;

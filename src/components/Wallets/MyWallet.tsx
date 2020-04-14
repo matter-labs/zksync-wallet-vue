@@ -172,9 +172,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({
                 <div className='balances-token-name'>
                   <p>{symbol}</p>
                   <span>
-                    {symbol === 'ETH' && <>Ethereum</>}
-                    {symbol === 'DAI' && <>Dai</>}
-                    {symbol === 'FAU' && <>Faucet</>}
+                    {symbol === 'ETH' && <>{'Ethereum'}</>}
+                    {symbol === 'DAI' && <>{'Dai'}</>}
+                    {symbol === 'FAU' && <>{'Faucet'}</>}
                   </span>
                 </div>
               </div>
@@ -204,14 +204,14 @@ const MyWallet: React.FC<IMyWalletProps> = ({
           !!transactionModal?.title ? 'closed' : 'open'
         }`}
       >
-        <h2 className='mywallet-title'>My wallet</h2>
+        <h2 className='mywallet-title'>{'My wallet'}</h2>
         <div
           onClick={() => handleCopy(zkWallet?.address())}
           className='copy-block'
         >
           <Transition type='fly' timeout={200} trigger={isCopyModal}>
             <div className={'hint-copied open'}>
-              <p>Copied!</p>
+              <p>{'Copied!'}</p>
             </div>
           </Transition>
           <input
