@@ -1,3 +1,5 @@
+import { Web3Provider } from 'ethers/providers';
+
 export function getWalletNameFromProvider(): string | undefined {
   const provider = window['ethereum'];
   if (!provider) return;
@@ -34,5 +36,21 @@ export function getWalletNameFromProvider(): string | undefined {
   }
   if (provider.host && provider.host.indexOf('localhost') !== -1) {
     return 'localhost';
+  }
+}
+
+export async function getConfirmationCount(
+  provider: Web3Provider,
+  txHash: string,
+) {
+  try {
+    const trx = await provider.getTransaction(txHash);
+    const currentBlock = await provider.getBlockNumber();
+
+    if (typeof trx.blockNumber === 'undefined') return 0;
+    return currentBlock - trx.blockNumber;
+  } catch (error) {
+    console.error(error);
+    return 0;
   }
 }

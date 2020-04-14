@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 
@@ -82,26 +82,25 @@ const useWalletInit = () => {
 
   const createWallet = useCallback(async () => {
     try {
+      const zkSync = await import('zksync');
       const wallet = getSigner(provider);
       setEthWallet(wallet);
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      const syncProvider = await import(
-        'zksync'
-      ).then(({ getDefaultProvider }) => getDefaultProvider(network, 'WS'));
-      const signer = await import(
-        'zksync'
-      ).then(({ Signer }) => Signer.fromETHSignature(wallet));
-      const syncWallet = await import('zksync').then(({ Wallet }) =>
-        Wallet.fromEthSigner(wallet, syncProvider, signer),
+
+      const syncProvider = await zkSync.getDefaultProvider(network, 'WS');
+      const signer = await zkSync.Signer.fromETHSignature(wallet);
+      const syncWallet = await zkSync.Wallet.fromEthSigner(
+        wallet,
+        syncProvider,
+        signer,
       );
       const transport = syncProvider.transport as WSTransport;
-      setWSTransport(transport);
 
+      setWSTransport(transport);
       setZkWallet(syncWallet);
 
       const tokens = await syncProvider.getTokens();
-
       setTokens(tokens);
 
       const balancePromises = Object.keys(tokens).map(async key => {
@@ -115,7 +114,7 @@ const useWalletInit = () => {
         }
       });
 
-      Promise.all(balancePromises)
+      await Promise.all(balancePromises)
         .then(res => {
           const balance = res.filter(token => token);
           setEthBalances(balance as IEthBalance[]);
@@ -135,7 +134,7 @@ const useWalletInit = () => {
         };
       });
 
-      Promise.all(zkBalancePromises)
+      await Promise.all(zkBalancePromises)
         .then(res => {
           setZkBalances(res as IEthBalance[]);
         })
