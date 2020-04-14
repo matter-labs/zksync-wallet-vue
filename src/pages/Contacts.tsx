@@ -105,14 +105,13 @@ const Contacts: React.FC = (): JSX.Element => {
         <>
           <Modal
             visible={false}
-            classSpecifier='add-contact edit-contact'
+            classSpecifier='add-contact addressless'
             background={true}
           >
             <SaveContacts
-              oldContact={oldContact}
-              title='Edit contact'
+              title='Add contact'
+              addressValue=''
               addressInput={true}
-              edit={true}
             />
           </Modal>
           <button

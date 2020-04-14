@@ -6,6 +6,7 @@ const COOKIE_TEXT =
 
 export const CookieBar = () => {
   const [accepted, setAccepted] = useState(false);
+
   return (
     <Transition type='fly' trigger={!accepted}>
       <div className='cookiebar'>
