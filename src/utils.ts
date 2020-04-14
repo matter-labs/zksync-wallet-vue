@@ -54,3 +54,16 @@ export async function getConfirmationCount(
     return 0;
   }
 }
+
+export function getCookie(name: string) {
+  const m = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  if (m) return m[2];
+}
+
+export function setCookie(name: string, value, exp?: Date) {
+  let val = `${name}=${value}`;
+  if (exp) {
+    val += `; Expires=${exp.toUTCString()}`;
+  }
+  document.cookie = val;
+}
