@@ -72,7 +72,7 @@ body.dark {
 
 body.fixed, body.fixed-b {
   height: 100vh;
-  overflow: hidden;
+  overflow-y: scroll;
 }
 
 #root.fixed {
@@ -88,6 +88,10 @@ body, html {
   transition-timing-function: ease-in-out;
   transition-duration: 200ms;
   transition-property: background-color, opacity;
+}
+
+html { 
+  height: 100vh;
 }
 
 *, *::before, *::after {
@@ -197,6 +201,12 @@ h2 {
       background: url(./images/start_page_bg.jpg) no-repeat center;
       background-size: cover;
     }
+  }
+}
+
+.error {
+  &-text {
+    color: var(--delete-color);
   }
 }
 
@@ -1073,6 +1083,40 @@ $scale: 0.95;
     &-enter-active,
     &-exit-active {
       transition: opacity $dur, transform $dur;
+    }
+  }
+  &-modal {
+    &-enter {
+      opacity: 0;
+      .modal {
+        transform: scale(0.95);
+      }
+    }
+    &-enter-active {
+      opacity: 1;
+      .modal {
+        transform: scale(1);
+      }
+    }
+    &-exit {
+      opacity: 1;
+      .modal {
+        transform: scale(1);
+      }
+    }
+    &-exit-active {
+      opacity: 0;
+      .modal {
+        transform: scale(0.95);
+      }
+    }
+
+    &-enter-active,
+    &-exit-active {
+      transition: opacity $dur;
+      .modal {
+        transition: transform $dur;
+      }
     }
   }
 }

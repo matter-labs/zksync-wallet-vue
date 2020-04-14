@@ -6,6 +6,8 @@ import { useRootData } from 'hooks/useRootData';
 import { useTimeout } from 'hooks/timers';
 import { Transition } from 'components/Transition/Transition';
 import { useCheckLogin } from 'hooks/useCheckLogin';
+import { ethers } from 'ethers';
+import { getConfirmationCount } from 'src/utils';
 
 interface Tx {
   hash: string;
@@ -33,10 +35,11 @@ interface Tx {
   fail_reason?: any;
   commited: boolean;
   verified: boolean;
+  confirmCount: number;
 }
 
 const Transactions: React.FC = (): JSX.Element => {
-  const { zkWallet } = useRootData(
+  const { zkWallet, provider } = useRootData(
     ({ ethId, provider, searchTransactions, zkWallet }) => ({
       ethId: ethId.get(),
       provider: provider.get(),
@@ -45,13 +48,21 @@ const Transactions: React.FC = (): JSX.Element => {
     }),
   );
 
-  const fetchTransactions = (amount, offset): Promise<Tx[]> =>
-    fetch(
+  const fetchTransactions = async (amount, offset): Promise<Tx[]> => {
+    const txs: Tx[] = await fetch(
       `https://testnet.zksync.dev/api/v0.1/account/${zkWallet?.address()}/history/${offset}/${amount}`,
     ).then(r => r.json());
 
-  const [isCopyModal, openCopyModal] = useState<boolean>(false);
+    return await Promise.all(
+      txs.map(async tx =>
+        Object.assign(tx, {
+          confirmCount: await getConfirmationCount(web3Provider, tx.hash),
+        }),
+      ),
+    );
+  };
 
+  const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const inputRef: (HTMLInputElement | null)[] = [];
 
   const handleCopy = useCallback(() => {
@@ -66,6 +77,11 @@ const Transactions: React.FC = (): JSX.Element => {
     setTimeout(() => openCopyModal(false), 200);
   }, [inputRef]);
 
+  const web3Provider = useMemo(
+    () => provider && new ethers.providers.Web3Provider(provider),
+    [provider],
+  );
+
   useTimeout(() => isCopyModal && openCopyModal(false), 2000);
 
   useCheckLogin();
@@ -76,20 +92,26 @@ const Transactions: React.FC = (): JSX.Element => {
       title='Transactions'
       visible={true}
       onSort={arr => arr.reverse()}
-      renderItem={({ hash, tx: { amount, priority_op, type, to, token } }) => (
+      renderItem={({
+        hash,
+        confirmCount,
+        tx: { amount, priority_op, type, to, token },
+      }) => (
         <div className='transaction-history-wrapper' key={hash}>
           <div className='transaction-history-left'>
             <div className={`transaction-history ${type}`}></div>
             <div className='transaction-history-amount'>
-              {parseFloat(
-                (
-                  (type === 'Deposit' && priority_op
-                    ? +priority_op.amount
-                    : +amount) / Math.pow(10, 18)
-                )
-                  .toFixed(3)
-                  .toString(),
-              )}
+              {!!amount || !!priority_op?.amount
+                ? parseFloat(
+                    (
+                      (type === 'Deposit' && priority_op
+                        ? +priority_op.amount
+                        : +amount) / Math.pow(10, 18)
+                    )
+                      .toFixed(6)
+                      .toString(),
+                  )
+                : 'Unlocking transaction'}
             </div>
             <div className='transaction-history-hash'>
               {token && token.toString().length > 10 ? (
@@ -101,7 +123,7 @@ const Transactions: React.FC = (): JSX.Element => {
                   )
               ) : (
                 <>
-                  {'zk'}
+                  {(priority_op?.token || token) && 'zk'}
                   {type === 'Deposit' ? priority_op?.token : token}
                 </>
               )}
@@ -113,28 +135,32 @@ const Transactions: React.FC = (): JSX.Element => {
             value={hash.toString()}
             ref={e => inputRef.push(e)}
           />
+          <div className='transaction-history-confirmations'>
+            <span>{'Confirmations: '}</span>
+            {confirmCount}
+          </div>
           <div className='transaction-history-right'>
             <Transition trigger={isCopyModal} timeout={200} type='fly'>
               <div className={'hint-copied open'}>
-                <p>Copied!</p>
+                <p>{'Copied!'}</p>
               </div>
             </Transition>
             <div className='transaction-history-address'>
               {type === 'Transfer' && (
                 <>
-                  <span>Sent to:</span>
+                  <span>{'Sent to:'}</span>
                   <p>{to?.replace(to?.slice(6, to?.length - 3), '...')}</p>
                 </>
               )}
               {type === 'Deposit' && (
                 <>
-                  <span>Deposited to:</span>
-                  <p>Your account</p>
+                  <span>{'Deposited to:'}</span>
+                  <p>{'Your account'}</p>
                 </>
               )}
               {type === 'Withdraw' && (
                 <>
-                  <span>Withdrawed to:</span>
+                  <span>{'Withdrawed to:'}</span>
                   <p>{to?.replace(to?.slice(6, to?.length - 3), '...')}</p>
                 </>
               )}
@@ -143,8 +169,12 @@ const Transactions: React.FC = (): JSX.Element => {
               <input type='radio' className='balances-contact-edit' />
               <div className='contact-manage'>
                 <div>
-                  <a target='_blank' href={`${ZK_EXPLORER}/${hash}`}>
-                    View info on explorer
+                  <a
+                    className='contact-manage-copy btn-tr'
+                    target='_blank'
+                    href={`${ZK_EXPLORER}/${hash}`}
+                  >
+                    {'View info on explorer'}
                   </a>
                 </div>
                 <div>
@@ -152,7 +182,7 @@ const Transactions: React.FC = (): JSX.Element => {
                     className='contact-manage-copy btn-tr'
                     onClick={() => handleCopy()}
                   >
-                    Copy
+                    {'Copy'}
                   </button>
                 </div>
               </div>

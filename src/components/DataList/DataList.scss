@@ -403,6 +403,13 @@
     }
   }
 
+  &-confirmations {
+    margin: 0 10px;
+    > span {
+      color: var(--hints-color)
+    }
+  }
+
   &-right {
     display: flex;
     align-items: center;

@@ -32,7 +32,7 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }) => {
 
   return (
     <form>
-      <h3>Change name</h3>
+      <h3>{'Change name'}</h3>
       <input
         ref={inputRef}
         placeholder='Enter new name'

@@ -6,7 +6,6 @@
     "module": "esnext",
     "moduleResolution": "node",
     "noUnusedLocals": false,
-    "noUnusedParameters": true,
     "noImplicitAny": false,
     "preserveConstEnums": true,
     "removeComments": false,

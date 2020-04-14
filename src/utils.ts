@@ -1,3 +1,5 @@
+import { Web3Provider } from 'ethers/providers';
+
 export function getWalletNameFromProvider(): string | undefined {
   const provider = window['ethereum'];
   if (!provider) return;

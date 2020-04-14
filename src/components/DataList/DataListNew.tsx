@@ -162,11 +162,15 @@ export function DataList<T>({
   }, [debouncedSearch, resolvedData]);
 
   const list = useMemo(() => {
-    const data = searchPredicate ? filteredData : resolvedData;
-    let res = data.map(renderItem || (e => e as any));
-    if (typeof onSort === 'function') res = onSort(res);
-    if (infScrollInitialCount && itemAmount) return res.slice(0, itemAmount);
-    return res;
+    let data = searchPredicate ? filteredData : resolvedData;
+    if (typeof onSort === 'function') {
+      data = onSort(data);
+    }
+    if (infScrollInitialCount && itemAmount) {
+      data = data.slice(0, itemAmount);
+    }
+
+    return data.map(renderItem || (e => e as any));
   }, [renderItem, searchPredicate, resolvedData, filteredData, itemAmount]);
 
   return (

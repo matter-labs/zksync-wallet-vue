@@ -105,14 +105,13 @@ const Contacts: React.FC = (): JSX.Element => {
         <>
           <Modal
             visible={false}
-            classSpecifier='add-contact edit-contact'
+            classSpecifier='add-contact addressless'
             background={true}
           >
             <SaveContacts
-              oldContact={oldContact}
-              title='Edit contact'
+              title='Add contact'
+              addressValue=''
               addressInput={true}
-              edit={true}
             />
           </Modal>
           <button
@@ -120,7 +119,7 @@ const Contacts: React.FC = (): JSX.Element => {
             onClick={() => setModal('add-contact addressless')}
           >
             <span></span>
-            <p>Add a contact</p>
+            <p>{'Add a contact'}</p>
           </button>
         </>
       )}
@@ -145,7 +144,7 @@ const Contacts: React.FC = (): JSX.Element => {
           <div className='balances-contact-right'>
             <Transition type='fly' timeout={200} trigger={isCopyModal}>
               <div className={'hint-copied open'}>
-                <p>Copied!</p>
+                <p>{'Copied!'}</p>
               </div>
             </Transition>
             <button
@@ -189,14 +188,14 @@ const Contacts: React.FC = (): JSX.Element => {
                   }}
                 >
                   <img src={editicon} alt='edit' />
-                  <p>Edit</p>
+                  <p>{'Edit'}</p>
                 </button>
                 <button
                   onClick={() => handleDelete(name)}
                   className='contact-manage-delete btn-tr'
                 >
                   <img src={deleteicon} alt='edit' />
-                  <p>Delete</p>
+                  <p>{'Delete'}</p>
                   <Link to='/contacts'></Link>
                 </button>
               </div>

@@ -23,7 +23,7 @@ export function useLogout() {
   const handleLogOut = useCallback(() => {
     setModal('');
     setWalletName('Metamask');
-    setAccessModal(false);
+    setAccessModal(true);
     setZkWallet(null);
     history.push('/');
   }, [

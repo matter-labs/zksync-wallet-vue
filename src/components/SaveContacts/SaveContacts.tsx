@@ -100,7 +100,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
     <form>
       <h3>{title}</h3>
       <div className='horizontal-line'></div>
-      <span className='transaction-field-title'>Contact name</span>
+      <span className='transaction-field-title'>{'Contact name'}</span>
       <input
         placeholder='Name here'
         value={name}
@@ -108,7 +108,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
       />
       {addressInput && (
         <>
-          <span className='transaction-field-title'>Address</span>
+          <span className='transaction-field-title'>{'Address'}</span>
           <input
             placeholder='0x address'
             value={address}
