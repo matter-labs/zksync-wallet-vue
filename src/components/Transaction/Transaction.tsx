@@ -242,7 +242,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       !selectedContact &&
       title !== 'Withdraw'
     ) {
-      contacts.filter(el => {
+      contacts?.filter(el => {
         if (el.address.toLowerCase().includes(addressValue.toLowerCase())) {
           setSelectedContact(el.name);
           handleSelect(el.name);
