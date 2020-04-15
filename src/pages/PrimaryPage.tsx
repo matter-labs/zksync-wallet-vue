@@ -159,7 +159,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               : 'primary-page'
           }`}
           visible={isAccessModalOpen}
-          cancelAction={() => handleLogOut()}
+          cancelAction={() => handleLogOut(false, '')}
           centered
         >
           <div
@@ -171,7 +171,8 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
             <>
               <h3 onClick={createWallet} className='title-connecting'>
-                Connecting to {walletName}
+                {'Connecting to '}
+                {walletName}
               </h3>
               <p>
                 {hintModal ? hintModal : 'Follow the instructions in the popup'}
@@ -180,7 +181,10 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             </>
           ) : (
             <>
-              <h3>Connecting to {walletName}</h3>
+              <h3>
+                {'Connecting to '}
+                {walletName}
+              </h3>
               <div className='wrong-network'>
                 <div className='wrong-network-logo'></div>
                 <p>
@@ -190,9 +194,10 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               </div>
               <button
                 className='btn submit-button'
-                onClick={() => handleLogOut()}
+                onClick={() => handleLogOut(false, '')}
               >
-                Disconnect {walletName}
+                {'Disconnect '}
+                {walletName}
               </button>
             </>
           )}

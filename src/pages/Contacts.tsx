@@ -121,6 +121,7 @@ const Contacts: React.FC = (): JSX.Element => {
             background={true}
           >
             <SaveContacts
+              oldContact={oldContact}
               title='Edit contact'
               addressValue=''
               addressInput={true}

@@ -67,7 +67,7 @@ const Header: React.FC = () => {
     <div className='menu-wrapper'>
       <div className='menu-top'>
         <Link
-          onClick={() => (!zkWallet ? logout() : undefined)}
+          onClick={() => (!zkWallet ? logout(false, '') : undefined)}
           className='menu-logo'
           to='/'
         ></Link>
@@ -126,7 +126,7 @@ const Header: React.FC = () => {
                   <span className='icon-edit'></span>Rename wallet
                 </button>
                 <div className='horizontal-line'></div>
-                <button className='btn-tr' onClick={() => logout()}>
+                <button className='btn-tr' onClick={() => logout(false, '')}>
                   <span className='icon-disconnect'></span>Disconnect wallet
                 </button>
                 <div className='horizontal-line' />

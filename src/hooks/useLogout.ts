@@ -21,21 +21,24 @@ export function useLogout() {
 
   const history = useHistory();
 
-  const handleLogOut = useCallback(() => {
-    setModal('');
-    setWalletName('Metamask');
-    setAccessModal(true);
-    setZkWallet(null);
-    setZkBalances([]);
-    history.push('/');
-  }, [
-    history,
-    setModal,
-    setAccessModal,
-    setProvider,
-    setWalletName,
-    setZkWallet,
-  ]);
+  const handleLogOut = useCallback(
+    (accessModal, name) => {
+      setModal('');
+      setWalletName(name);
+      setAccessModal(accessModal);
+      setZkWallet(null);
+      setZkBalances([]);
+      history.push('/');
+    },
+    [
+      history,
+      setModal,
+      setAccessModal,
+      setProvider,
+      setWalletName,
+      setZkWallet,
+    ],
+  );
 
   return handleLogOut;
 }
