@@ -32,7 +32,6 @@ export const createStore = () => ({
   verifyToken: observable.box<boolean | undefined>(undefined),
   walletName: observable.box<WalletType>(''),
   walletAddress: observable.box<any>([]),
-  withdrawModal: observable.box<boolean>(false),
   zkBalances: observable.box<IEthBalance[]>([]),
   zkBalancesLoaded: observable.box<boolean>(false),
   zkWallet: observable.box<Wallet | null>(),
@@ -126,10 +125,6 @@ export const createStore = () => ({
 
   setWalletName(name: WalletType): void {
     this.walletName.set(name);
-  },
-
-  setWithdrawModal(withdrawModal: boolean): void {
-    this.withdrawModal.set(withdrawModal);
   },
 
   setZkBalances(balances: IEthBalance[]): void {

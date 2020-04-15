@@ -220,6 +220,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                       if (wallets.includes(key)) {
                         setWalletName(key as WalletType);
                         setNormalBg(true);
+                        setAccessModal(true);
                       } else {
                         setError(
                           `Your browser doesn't support ${key}, please select another wallet or switch browser`,
