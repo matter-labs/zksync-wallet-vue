@@ -600,6 +600,15 @@ input[type="radio"]:focus + .contact-manage{
   &.contacts {
     & > .custom-selector-title {
       padding: 10px 5px;
+
+      &.disabled {
+        cursor: default;
+        pointer-events: none;
+
+        &:hover {
+          background-color: var(--transparent);
+        }
+      }
       
       & > span {
         background-image: url(./images/mdi_people.svg);
