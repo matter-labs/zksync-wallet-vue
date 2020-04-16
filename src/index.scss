@@ -256,20 +256,13 @@ h2 {
     position: absolute;
     top: -20px;
     right: 20px;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    min-width: 120px;
-    min-height: 40px;
+    // min-width: 120px;
+    // min-height: 40px;
+    padding: 5px 10px;
     color: var(--dark-color);
     background-color: var(--modal-bg-color);
     border: 1px solid var(--light-border-color);
     border-radius: 5px;
-    transition: transform 200ms ease-in-out;
-
-    & > p {
-      margin-bottom: 0;
-    }
   }
 }
 
@@ -521,17 +514,6 @@ input[type="radio"] + .contact-manage {
 input[type="radio"]:focus + .contact-manage{
   display: block;
   outline: none;  
-}
-
-.balances-contact-right, .transaction-history-right {
-  &:hover {
-    .hint-copied {
-      &.open {
-        display: flex;
-        transform: scale(1);
-      }
-    }
-  }
 }
 
 .balances-contact-edit {
