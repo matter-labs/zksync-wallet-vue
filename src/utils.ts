@@ -84,3 +84,19 @@ export function getPieProps(
     status: `${confirmCount}/${MAX_CONFIRM} confirmations`,
   };
 }
+
+export function whyDidYouUpdate() {
+  const prevFields = {};
+  return fields => {
+    const eqCheck = {};
+    for (const k in fields) {
+      if (!(k in prevFields) || prevFields[k] !== fields[k]) {
+        eqCheck[k] = false;
+      } else {
+        eqCheck[k] = true;
+      }
+      prevFields[k] = fields[k];
+    }
+    console.log(eqCheck);
+  };
+}

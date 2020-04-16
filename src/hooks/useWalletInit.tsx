@@ -135,7 +135,6 @@ const useWalletInit = () => {
       // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
     }
   }, [
-    history,
     getSigner,
     provider,
     setError,
@@ -146,6 +145,7 @@ const useWalletInit = () => {
     setZkBalancesLoaded,
     setZkWallet,
     setTxs,
+    setWSTransport,
   ]);
 
   return {

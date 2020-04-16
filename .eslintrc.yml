@@ -12,6 +12,7 @@ extends:
 plugins:
   - '@typescript-eslint'
   - 'react'
+  - 'react-hooks'
 rules:
   '@typescript-eslint/no-unused-vars': off
   '@typescript-eslint/camelcase': off
@@ -27,6 +28,8 @@ rules:
   'react/prop-types': off
   'react/jsx-no-literals': warn
   'react/jsx-no-useless-fragment': warn
+  'react-hooks/rules-of-hooks': error
+  'react-hooks/exhaustive-deps': warn
   quotes:
     - warn
     - single

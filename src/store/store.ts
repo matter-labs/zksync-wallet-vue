@@ -153,9 +153,12 @@ export const createStore = () => ({
     // this.transactions.loaded = loaded;
   },
 
-  setTxs(transactions: Tx[]) {
+  setTxs(transactions: ((prev: Tx[]) => Tx[]) | Tx[]) {
+    if (typeof transactions === 'function') {
+      this.transactions.replace(transactions(this.transactions));
+      return;
+    }
     this.transactions.replace(transactions);
-    // this.transactions.value = transactions;
   },
 });
 
