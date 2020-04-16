@@ -12,6 +12,7 @@ import { useDebouncedValue } from 'hooks/debounce';
 import { useListener } from 'hooks/useListener';
 
 import './DataList.scss';
+import { useCancelable } from 'src/hooks/useCancelable';
 
 type ReactComp = ReactElement | string | null;
 
@@ -58,6 +59,12 @@ interface Props<T> {
    * @param elements - Array of unsorted elements
    */
   onSort?: (elements: T[]) => T[];
+
+  /**
+   * Used for two-side data binding (for example,
+   * when putting it in global store)
+   */
+  bindData?: [T[], (data: T[]) => any];
 }
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
@@ -86,6 +93,7 @@ export function DataList<T>({
   loadMoreThreshold = 10,
   loadMoreAmount = 5,
   onSort,
+  bindData,
 }: Props<T>) {
   const [debouncedSearch, setSearch, searchValue] = useDebouncedValue('', 500);
   const focusInput = useAutoFocus();
@@ -94,16 +102,28 @@ export function DataList<T>({
   const [debScrollTop, setScrollTop] = useDebouncedValue(0);
   const [hasMore, setHasMore] = useState(true);
   const [itemAmount, setItemAmount] = useState(infScrollInitialCount || 0);
+
+  // Used for local holding ONLY fetched data, not `data` or `bindData`
   const [resolvedData, setResolvedData] = useState(data || []);
+
+  // Used for temp data from search query
   const [filteredData, setFiltered] = useState<T[]>(data || []);
 
-  useEffect(() => {
-    if (data?.length) {
-      setResolvedData(data);
+  const getData = (withFilter = true) => {
+    if (debouncedSearch && withFilter) {
+      return filteredData;
+    } else if (bindData) {
+      return bindData[0];
+    } else if (resolvedData.length) {
+      return resolvedData;
+    } else if (data) {
+      return data;
     }
-  }, [data]);
+    return [];
+  };
 
   // Lazy fetch
+  const cancelable = useCancelable();
   useEffect(() => {
     if (!hasMore || typeof onFetch !== 'function') return;
 
@@ -118,23 +138,29 @@ export function DataList<T>({
         : itemAmount - loadMoreAmount
       : undefined;
 
-    onFetch(amount, offset).then(res => {
-      if (res.length) {
-        setResolvedData(d => d.slice(0, offset).concat(res));
-      } else {
-        setHasMore(false);
-      }
-    });
-  }, [onFetch, setFiltered, itemAmount]);
+    cancelable(
+      onFetch(amount, offset).then(res => {
+        if (res.length) {
+          const pred = d => d.slice(0, offset).concat(res);
+          if (bindData) {
+            bindData[1](pred(bindData[0]));
+          } else {
+            setResolvedData(pred);
+          }
+        } else {
+          setHasMore(false);
+        }
+      }),
+    );
+  }, [onFetch, setFiltered, itemAmount, bindData && bindData[1]]);
 
+  // Infinite scroll
   useListener(
     rootRef,
     'scroll',
     () => setScrollTop(rootRef.current!.scrollTop),
     { passive: true },
   );
-
-  // Infinite scroll
   useEffect(() => {
     const root = rootRef.current;
     if (!(infScrollInitialCount && root && hasMore)) return;
@@ -146,8 +172,9 @@ export function DataList<T>({
     setItemAmount(i => i! + loadMoreAmount);
   }, [debScrollTop]);
 
-  // On search hook
+  // Search hook
   useEffect(() => {
+    const resolvedData = getData(false);
     if (!searchPredicate || !resolvedData.length) return;
     if (!debouncedSearch) {
       if (resolvedData.length > filteredData.length) setFiltered(resolvedData);
@@ -159,10 +186,13 @@ export function DataList<T>({
     );
     setFiltered(filtered);
     onSetFiltered(filtered);
-  }, [debouncedSearch, resolvedData]);
+  }, [debouncedSearch, resolvedData, data, bindData]);
 
+  // Memoized list with mapped data
   const list = useMemo(() => {
-    let data = searchPredicate ? filteredData : resolvedData;
+    let data = getData();
+    // let data = searchPredicate ? filteredData : resolvedData;
+
     if (typeof onSort === 'function') {
       data = onSort(data);
     }
@@ -171,7 +201,15 @@ export function DataList<T>({
     }
 
     return data.map(renderItem || (e => e as any));
-  }, [renderItem, searchPredicate, resolvedData, filteredData, itemAmount]);
+  }, [
+    renderItem,
+    searchPredicate,
+    debouncedSearch,
+    resolvedData,
+    filteredData,
+    itemAmount,
+    bindData && bindData[0],
+  ]);
 
   return (
     <div ref={rootRef} className={cl('balances-wrapper', 'open')}>

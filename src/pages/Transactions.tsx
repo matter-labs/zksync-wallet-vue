@@ -1,15 +1,13 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useCallback } from 'react';
 
 import { DataList } from 'components/DataList/DataListNew';
-import { ZK_EXPLORER } from 'constants/links';
 import { useRootData } from 'hooks/useRootData';
-import { useTimeout } from 'hooks/timers';
-import { Transition } from 'components/Transition/Transition';
 import { useCheckLogin } from 'hooks/useCheckLogin';
 import { ethers } from 'ethers';
 import { getConfirmationCount } from 'src/utils';
+import { Transaction } from './Transaction';
 
-interface Tx {
+export interface Tx {
   hash: string;
   pq_id?: any;
   tx: {
@@ -39,157 +37,47 @@ interface Tx {
 }
 
 const Transactions: React.FC = (): JSX.Element => {
-  const { zkWallet, provider } = useRootData(
-    ({ ethId, provider, searchTransactions, zkWallet }) => ({
-      ethId: ethId.get(),
-      provider: provider.get(),
-      searchTransactions: searchTransactions.get(),
-      zkWallet: zkWallet.get(),
-    }),
-  );
-
-  const fetchTransactions = async (amount, offset): Promise<Tx[]> => {
-    const txs: Tx[] = await fetch(
-      `https://testnet.zksync.dev/api/v0.1/account/${zkWallet?.address()}/history/${offset}/${amount}`,
-    ).then(r => r.json());
-
-    return await Promise.all(
-      txs.map(async tx =>
-        Object.assign(tx, {
-          confirmCount: await getConfirmationCount(web3Provider, tx.hash),
-        }),
-      ),
-    );
-  };
-
-  const [isCopyModal, openCopyModal] = useState<boolean>(false);
-  const inputRef: (HTMLInputElement | null)[] = [];
-
-  const handleCopy = useCallback(() => {
-    inputRef.map(el => {
-      if (el?.value) {
-        el?.focus();
-        el?.select();
-        document.execCommand('copy');
-      }
-    });
-    openCopyModal(true);
-    setTimeout(() => openCopyModal(false), 200);
-  }, [inputRef]);
+  const { zkWallet, provider, transactions, setTxs } = useRootData(s => ({
+    ...s,
+    ethId: s.ethId.get(),
+    provider: s.provider.get(),
+    searchTransactions: s.searchTransactions.get(),
+    zkWallet: s.zkWallet.get(),
+    transactions: s.transactions.toJS(),
+  }));
 
   const web3Provider = useMemo(
     () => provider && new ethers.providers.Web3Provider(provider),
     [provider],
   );
 
-  useTimeout(() => isCopyModal && openCopyModal(false), 2000);
+  const fetchTransactions = useCallback(
+    async (amount, offset): Promise<Tx[]> => {
+      const txs: Tx[] = await fetch(
+        `https://testnet.zksync.dev/api/v0.1/account/${zkWallet?.address()}/history/${offset}/${amount}`,
+      ).then(r => r.json());
+
+      return await Promise.all(
+        txs.map(async tx =>
+          Object.assign(tx, {
+            confirmCount: await getConfirmationCount(web3Provider, tx.hash),
+          }),
+        ),
+      );
+    },
+    [zkWallet, web3Provider, getConfirmationCount],
+  );
 
   useCheckLogin();
 
   return (
     <DataList
       onFetch={fetchTransactions}
+      bindData={[transactions, setTxs]}
       title='Transactions'
       visible={true}
       onSort={arr => arr.reverse()}
-      renderItem={({
-        hash,
-        confirmCount,
-        tx: { amount, priority_op, type, to, token },
-      }) => (
-        <div className='transaction-history-wrapper' key={hash}>
-          <div className='transaction-history-left'>
-            <div className={`transaction-history ${type}`}></div>
-            <div className='transaction-history-amount'>
-              {!!amount || !!priority_op?.amount
-                ? parseFloat(
-                    (
-                      (type === 'Deposit' && priority_op
-                        ? +priority_op.amount
-                        : +amount) / Math.pow(10, 18)
-                    )
-                      .toFixed(6)
-                      .toString(),
-                  )
-                : 'Unlocking transaction'}
-            </div>
-            <div className='transaction-history-hash'>
-              {token && token.toString().length > 10 ? (
-                token
-                  .toString()
-                  .replace(
-                    token.toString().slice(6, token.toString().length - 3),
-                    '...',
-                  )
-              ) : (
-                <>
-                  {(priority_op?.token || token) && 'zk'}
-                  {type === 'Deposit' ? priority_op?.token : token}
-                </>
-              )}
-            </div>
-          </div>
-          <input
-            onChange={undefined}
-            className='copy-block-input'
-            value={hash.toString()}
-            ref={e => inputRef.push(e)}
-          />
-          <div className='transaction-history-confirmations'>
-            <span>{'Confirmations: '}</span>
-            {confirmCount}
-          </div>
-          <div className='transaction-history-right'>
-            <Transition trigger={isCopyModal} timeout={200} type='fly'>
-              <div className={'hint-copied open'}>
-                <p>{'Copied!'}</p>
-              </div>
-            </Transition>
-            <div className='transaction-history-address'>
-              {type === 'Transfer' && (
-                <>
-                  <span>{'Sent to:'}</span>
-                  <p>{to?.replace(to?.slice(6, to?.length - 3), '...')}</p>
-                </>
-              )}
-              {type === 'Deposit' && (
-                <>
-                  <span>{'Deposited to:'}</span>
-                  <p>{'Your account'}</p>
-                </>
-              )}
-              {type === 'Withdraw' && (
-                <>
-                  <span>{'Withdrawed to:'}</span>
-                  <p>{to?.replace(to?.slice(6, to?.length - 3), '...')}</p>
-                </>
-              )}
-            </div>
-            <div className='contact-edit-wrapper'>
-              <input type='radio' className='balances-contact-edit' />
-              <div className='contact-manage'>
-                <div>
-                  <a
-                    className='contact-manage-copy btn-tr'
-                    target='_blank'
-                    href={`${ZK_EXPLORER}/${hash}`}
-                  >
-                    {'View info on explorer'}
-                  </a>
-                </div>
-                <div>
-                  <button
-                    className='contact-manage-copy btn-tr'
-                    onClick={() => handleCopy()}
-                  >
-                    {'Copy'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      renderItem={tx => <Transaction key={tx.hash} {...tx} />}
       emptyListComponent={() => (
         <div className='default-text'>{'History is empty'}</div>
       )}

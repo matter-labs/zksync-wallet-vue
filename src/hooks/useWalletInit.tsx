@@ -8,6 +8,7 @@ import { IEthBalance } from 'types/Common';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
+import { fetchTransactions } from 'src/api';
 
 const useWalletInit = () => {
   const {
@@ -23,35 +24,12 @@ const useWalletInit = () => {
     setZkWallet,
     provider,
     walletName,
-  } = useRootData(
-    ({
-      setAccessModal,
-      setError,
-      setEthBalances,
-      setEthId,
-      setEthWallet,
-      setTokens,
-      setWSTransport,
-      setZkBalances,
-      setZkBalancesLoaded,
-      setZkWallet,
-      provider,
-      walletName,
-    }) => ({
-      setAccessModal,
-      setError,
-      setEthBalances,
-      setEthId,
-      setEthWallet,
-      setTokens,
-      setWSTransport,
-      setZkBalances,
-      setZkBalancesLoaded,
-      setZkWallet,
-      provider: provider.get(),
-      walletName: walletName.get(),
-    }),
-  );
+    setTxs,
+  } = useRootData(({ provider, walletName, ...s }) => ({
+    ...s,
+    provider: provider.get(),
+    walletName: walletName.get(),
+  }));
 
   const history = useHistory();
 
@@ -99,6 +77,15 @@ const useWalletInit = () => {
 
       setWSTransport(transport);
       setZkWallet(syncWallet);
+
+      const web3Provider = new ethers.providers.Web3Provider(provider);
+      const initialTransactions = await fetchTransactions(
+        10,
+        0,
+        syncWallet.address(),
+        web3Provider,
+      );
+      setTxs(initialTransactions);
 
       const tokens = await syncProvider.getTokens();
       setTokens(tokens);
@@ -158,6 +145,7 @@ const useWalletInit = () => {
     setZkBalances,
     setZkBalancesLoaded,
     setZkWallet,
+    setTxs,
   ]);
 
   return {
