@@ -27,7 +27,6 @@ const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   return re.test(o);
 };
 
-const didUpdate = whyDidYouUpdate();
 const noop = () => null;
 
 export function DataList<T>({
@@ -63,7 +62,6 @@ export function DataList<T>({
   const binded = bindData && bindData[0];
   const setBinded = bindData && bindData[1];
 
-  // didUpdate({ data, debouncedSearch, binded, filteredData, resolvedData });
   const getData = useCallback(() => {
     if (binded) {
       return binded;
