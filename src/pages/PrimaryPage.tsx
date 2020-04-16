@@ -127,6 +127,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       (!zkWallet && walletName && walletName !== 'Metamask')
     ) {
       cancelable(createWallet());
+      setHintModal('');
     }
     if (error) {
       setAccessModal(false);
@@ -134,7 +135,18 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (curAddress && walletName) {
       setHintModal('Connected! Make sign in the pop up');
     }
-  }, [createWallet, curAddress, provider, setAccessModal, zkWallet]);
+  }, [
+    cancelable,
+    createWallet,
+    curAddress,
+    error,
+    provider,
+    setAccessModal,
+    setHintModal,
+    setWalletName,
+    walletName,
+    zkWallet,
+  ]);
 
   useInterval(() => {
     if (!curAddress && walletName && provider?.selectedAddress) {

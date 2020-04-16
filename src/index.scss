@@ -206,7 +206,18 @@ h2 {
 
 .error {
   &-text {
-    color: var(--delete-color);
+    margin-bottom: 0;
+    color: var(--transparent);
+
+    &.visible {
+      color: var(--delete-color);
+    }
+  }
+
+  &-container {
+    height: 20px;
+    margin-bottom: 10px;
+    text-align: center;
   }
 }
 
@@ -533,7 +544,6 @@ input[type="radio"]:focus + .contact-manage{
   position: relative;
   z-index: 1000;
   width: 100%;
-  max-width: 90px;
   height: 25px;
   text-align: center;
 
@@ -562,7 +572,6 @@ input[type="radio"]:focus + .contact-manage{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: 90px;
     height: 22px;
     text-overflow: ellipsis;
     cursor: pointer;
@@ -911,23 +920,17 @@ body.dark > #root {
   .custom-selector {
     position: relative;
     width: 100%;
-    max-width: 135px;
     height: 22px;
   
     &-title {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      max-width: 135px;
       height: 36px;
       font-size: var(--large-font-size);
       text-overflow: ellipsis;
       border-radius: 6px;
       cursor: pointer;
-
-      &.short {
-        max-width: 90px;
-      }
 
       &:hover {
         background-color: var(--copyblock-color);

@@ -106,7 +106,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [isHintUnlocked, setHintUnlocked] = useState<string>('');
-  const [inputValue, setInputValue] = useState<number | string>();
+  const [inputValue, setInputValue] = useState<string>('');
   const [maxValue, setMaxValue] = useState<number>(
     propsMaxValue ? propsMaxValue : 0,
   );
@@ -209,12 +209,62 @@ const Transaction: React.FC<ITransactionProps> = ({
   }, [addressValue, setConditionError, setModal]);
 
   const handleUnlock = useCallback(async () => {
+    setHintModal('Follow the instructions in the pop up');
     setLoading(true);
     const changePubkey = await zkWallet?.setSigningKey();
+    setHintModal('Confirmed! \n Waiting for transaction to be ended');
     const receipt = await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
     setLoading(false);
   }, [setLoading, zkWallet]);
+
+  const handleFilterContacts = useCallback(
+    e => {
+      const searchValue = contacts.filter(el => {
+        return ADDRESS_VALIDATION['eth'].test(e) &&
+          el.address.toLowerCase().includes(e.toLowerCase())
+          ? (setSelectedContact(el.name),
+            handleSelect(el.name),
+            setWalletAddress([el.name, el.address]),
+            onChangeAddress(el.address))
+          : el.name.toLowerCase().includes(e.toLowerCase());
+      });
+      setFilteredContacts(searchValue);
+    },
+    [
+      addressValue,
+      contacts,
+      handleSelect,
+      onChangeAddress,
+      setFilteredContacts,
+      setSelectedContact,
+      setWalletAddress,
+    ],
+  );
+
+  const handleCancel = useCallback(() => {
+    setTransactionType(undefined);
+    setHash('');
+    setExecuted(false);
+    setWalletAddress([]);
+    setLoading(false);
+    setSelectedBalance('');
+    setSelectedContact('');
+    onChangeAddress('');
+    handleFilterContacts('');
+  }, [
+    handleFilterContacts,
+    onChangeAddress,
+    setExecuted,
+    setHash,
+    setLoading,
+    setSelectedBalance,
+    setSelectedContact,
+    setTransactionType,
+    setWalletAddress,
+  ]);
+
+  console.log(selected);
 
   useEffect(() => {
     if ((token && token === 'ETH') || symbolName === 'ETH') {
@@ -229,14 +279,18 @@ const Transaction: React.FC<ITransactionProps> = ({
       setSymbolName(balances[0].symbol);
       setSymbol(balances[0].symbol);
     }
-    if (title === 'Withdraw' && zkWallet && !walletAddress[1]) {
+    if (title === 'Withdraw' && zkWallet && !walletAddress[1] && !selected) {
       setWalletAddress(['Own account', zkWallet?.address()]);
       onChangeAddress(zkWallet?.address());
     }
     if (token && zkWallet && token !== 'ETH') {
       zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
     }
-
+    if (hintModal === 'denied') {
+      handleCancel();
+      setWalletName();
+      setHintModal('');
+    }
     if (
       ADDRESS_VALIDATION['eth'].test(addressValue) &&
       !selectedContact &&
@@ -268,6 +322,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     body,
     fee,
     filteredContacts,
+    handleCancel,
     handleClickOutside,
     handleSelect,
     isBalancesListOpen,
@@ -284,6 +339,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     setSymbolName,
     setToken,
     setUnlockFau,
+    setWalletName,
     title,
     unlockFau,
     walletAddress,
@@ -342,43 +398,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     }
   }, [addressValue, inputValue, selectedBalance, setConditionError, unlockFau]);
 
-  const handleFilterContacts = useCallback(
-    e => {
-      const searchValue = contacts.filter(el => {
-        return ADDRESS_VALIDATION['eth'].test(e) &&
-          el.address.toLowerCase().includes(e.toLowerCase())
-          ? (setSelectedContact(el.name),
-            handleSelect(el.name),
-            setWalletAddress([el.name, el.address]),
-            onChangeAddress(el.address))
-          : el.name.toLowerCase().includes(e.toLowerCase());
-      });
-      setFilteredContacts(searchValue);
-    },
-    [
-      addressValue,
-      contacts,
-      handleSelect,
-      onChangeAddress,
-      setFilteredContacts,
-      setSelectedContact,
-      setWalletAddress,
-    ],
-  );
-
-  const handleCancel = useCallback(() => {
-    setTransactionType(undefined);
-    setHash('');
-    setExecuted(false);
-    setWalletAddress([]);
-    setLoading(false);
-    setSelectedBalance('');
-    setSelectedContact('');
-    onChangeAddress('');
-    handleFilterContacts('');
-    setWalletAddress([]);
-  }, [setExecuted, setHash, setLoading, setTransactionType, setWalletAddress]);
-
   return (
     <>
       <div
@@ -426,6 +445,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                     onChangeAddress(address);
                     openContactsList(false);
                     setConditionError('');
+                    setSelected(true);
                     body?.classList.remove('fixed-b');
                   }}
                 >
@@ -493,7 +513,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   </div>
                   <div className='balances-token-right'>
                     <span>
-                      balance:{' '}
+                      {'balance: '}
                       <p className='datalist-balance'>
                         {parseFloat(balance.toFixed(8).toString())}
                       </p>
@@ -503,8 +523,9 @@ const Transaction: React.FC<ITransactionProps> = ({
               ))
             ) : (
               <p>
-                No balances yet, please make a deposit or request money from
-                someone!
+                {
+                  'No balances yet, please make a deposit or request money from someone!'
+                }
               </p>
             )}
           </DataList>
@@ -525,7 +546,7 @@ const Transaction: React.FC<ITransactionProps> = ({
             <span className='transaction-field-title'>
               {title === 'Send' && <>{'Transfered into'}</>}
               {title === 'Withdraw' && <>{'Withdrawn from'}</>}
-              {title === 'Deposit' && <>{'Deposited to'}</>} zkSync:{' '}
+              {title === 'Deposit' && <>{'Deposited to'}</>} {'zkSync: '}
               <p className='transaction-field-amount'>
                 {inputValue} {symbolName}
               </p>
@@ -559,7 +580,14 @@ const Transaction: React.FC<ITransactionProps> = ({
                 {isLoading && (
                   <>
                     <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
-                    <p>{'Follow the instructions in the popup'}</p>
+                    {!!hintModal
+                      ? hintModal?.split('\n').map((text, key) => (
+                          <p className='transaction-hint' key={key}>
+                            {text}
+                          </p>
+                        ))
+                      : 'Follow the instructions in the pop up'}
+
                     <Spinner />
                     <button
                       className='btn submit-button'
@@ -568,7 +596,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                         setWalletName();
                       }}
                     >
-                      Cancel
+                      {'Cancel'}
                     </button>
                   </>
                 )}
@@ -582,7 +610,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                         setWalletName();
                       }}
                     >
-                      Cancel
+                      {'Cancel'}
                     </button>
                   </>
                 )}
@@ -793,15 +821,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                               setConditionError('');
                             }
                           }}
-                          value={
-                            inputValue
-                              ? parseFloat(
-                                  parseFloat(inputValue?.toString())
-                                    .toFixed(18)
-                                    .toString(),
-                                )
-                              : ''
-                          }
+                          value={inputValue.toString().replace(/-/g, '')}
                         />
                       </div>
 
@@ -845,7 +865,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                           <button
                             className='all-balance btn-tr'
                             onClick={() => {
-                              setInputValue(+maxValue);
+                              setInputValue(maxValue.toString());
                               onChangeAmount(
                                 (+maxValue - 0.0003) * bigNumberMultiplier -
                                   2 * ZK_FEE_MULTIPLIER * fee,
@@ -922,11 +942,23 @@ const Transaction: React.FC<ITransactionProps> = ({
                       </div>
                     </>
                   )}
-                  <p className='error-text'>
-                    {!!inputValue && selectedBalance && +inputValue > maxValue
-                      ? 'Not enough balance'
-                      : conditionError}
-                  </p>
+                  <div className='error-container'>
+                    <p
+                      className={`error-text ${
+                        (!!inputValue &&
+                          selectedBalance &&
+                          +inputValue > maxValue) ||
+                        !!conditionError
+                          ? 'visible'
+                          : ''
+                      }`}
+                    >
+                      {!!inputValue && selectedBalance && +inputValue > maxValue
+                        ? 'Not enough balance'
+                        : conditionError}
+                    </p>
+                  </div>
+
                   <button
                     className={`btn submit-button ${
                       (!unlockFau && title === 'Deposit') ||
@@ -945,25 +977,27 @@ const Transaction: React.FC<ITransactionProps> = ({
                     ></span>
                     {title}
                   </button>
-                  <p key={maxValue} className='transaction-fee'>
-                    {selectedBalance && submitCondition && (
-                      <>
-                        {'Fee:'}{' '}
-                        {balances?.length && (
-                          <span>
-                            {amount < maxValue
-                              ? parseFloat(
-                                  (amount * 0.001).toFixed(10).toString(),
-                                )
-                              : parseFloat(
-                                  (maxValue * 0.001).toFixed(10).toString(),
-                                )}{' '}
-                            {symbolName ? symbolName : balances[0].symbol}
-                          </span>
-                        )}
-                      </>
-                    )}
-                  </p>
+                  <div className='transaction-fee-wrapper'>
+                    <p key={maxValue} className='transaction-fee'>
+                      {selectedBalance && submitCondition && (
+                        <>
+                          {'Fee:'}{' '}
+                          {balances?.length && (
+                            <span>
+                              {amount < maxValue
+                                ? parseFloat(
+                                    (amount * 0.001).toFixed(10).toString(),
+                                  )
+                                : parseFloat(
+                                    (maxValue * 0.001).toFixed(10).toString(),
+                                  )}{' '}
+                              {symbolName ? symbolName : balances[0].symbol}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </p>
+                  </div>
                 </>
               ) : (
                 <>
