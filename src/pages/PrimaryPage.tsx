@@ -182,7 +182,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             walletName === 'Metamask' &&
             provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
             <>
-              <h3 onClick={createWallet} className='title-connecting'>
+              <h3 className='title-connecting'>
                 {'Connecting to '}
                 {walletName}
               </h3>
