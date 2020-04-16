@@ -279,7 +279,12 @@ const Transaction: React.FC<ITransactionProps> = ({
       setSymbolName(balances[0].symbol);
       setSymbol(balances[0].symbol);
     }
-    if (title === 'Withdraw' && zkWallet && !walletAddress[1] && !selected) {
+    if (
+      title === 'Withdraw' &&
+      zkWallet &&
+      !walletAddress[1] &&
+      !selectedContact
+    ) {
       setWalletAddress(['Own account', zkWallet?.address()]);
       onChangeAddress(zkWallet?.address());
     }
@@ -688,11 +693,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                           )}
                           <input
                             placeholder='Ox address or contact name'
-                            value={
-                              title === 'Withdraw'
-                                ? zkWallet?.address()
-                                : addressValue
-                            }
+                            value={addressValue}
                             onChange={e => {
                               onChangeAddress(e.target.value);
                               handleFilterContacts(e.target.value);

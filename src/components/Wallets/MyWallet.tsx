@@ -129,7 +129,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({
     setWalletBalance(zkBalances[0]?.balance.toString());
     cancelable(zkWallet?.getAccountState())
       .then(res => res)
-      .then(data => setVerified(data.verified.balances));
+      .then(data => setVerified(data?.verified.balances));
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
