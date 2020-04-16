@@ -41,7 +41,7 @@ const Footer: React.FC = (): JSX.Element => {
     <div className='footer-wrapper'>
       <button className='theme-switch' onClick={handleSwitch}></button>
       <div className='footer-menu'>
-        <p>
+        <div>
           <span className='footer-links-block'>
             {FOOTER_LINKS.map(({ title, link }) => (
               <a
@@ -61,7 +61,7 @@ const Footer: React.FC = (): JSX.Element => {
               {process.env.VERSION}
             </span>
           </p>
-        </p>
+        </div>
       </div>
       <CookieBar />
     </div>

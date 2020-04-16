@@ -20,7 +20,7 @@ export function useCheckLogin() {
   useEffect(() => {
     if (zkWallet || !provider) return;
     cancelable(createWallet());
-  }, [provider]);
+  }, [provider, cancelable, createWallet, zkWallet]);
 
   useEffect(() => {
     const ethprovider = window['ethereum'];
@@ -32,5 +32,5 @@ export function useCheckLogin() {
     } else {
       history.push({ pathname: '/', search: `?redirect=${pathname.slice(1)}` });
     }
-  }, [history, provider, pathname]);
+  }, [history, provider, pathname, setProvider, setWalletName]);
 }

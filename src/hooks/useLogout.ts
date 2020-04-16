@@ -1,13 +1,14 @@
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useCallback } from 'react';
 
 import { useRootData } from 'hooks/useRootData';
 
 export function useLogout() {
+  const history = useHistory();
+  const { pathname } = useLocation();
   const {
     setAccessModal,
     setModal,
-    setProvider,
     setWalletName,
     setZkWallet,
     setZkBalances,
@@ -19,24 +20,30 @@ export function useLogout() {
     zkWallet: s.zkWallet.get(),
   }));
 
-  const history = useHistory();
-
   const handleLogOut = useCallback(
-    (accessModal, name) => {
+    (accessModal, name, withRedirect = false) => {
       setModal('');
       setWalletName(name);
       setAccessModal(accessModal);
       setZkWallet(null);
       setZkBalances([]);
-      history.push('/');
+      if (withRedirect) {
+        history.push({
+          pathname: '/',
+          search: `?redirect=${pathname.slice(1)}`,
+        });
+      } else {
+        history.push('/');
+      }
     },
     [
       history,
       setModal,
       setAccessModal,
-      setProvider,
       setWalletName,
       setZkWallet,
+      pathname,
+      setZkBalances,
     ],
   );
 
