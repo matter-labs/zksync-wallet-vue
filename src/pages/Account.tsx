@@ -125,9 +125,7 @@ const Account: React.FC = (): JSX.Element => {
         setPrice(prices);
       })
       .catch(err => {
-        err.name && err.message
-          ? setError(`${err.name}: ${err.message}`)
-          : setError(DEFAULT_ERROR);
+        console.error(err);
       });
   };
   useEffect(() => {

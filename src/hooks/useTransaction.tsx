@@ -46,6 +46,8 @@ export const useTransaction = () => {
 
   const cancelable = useCancelable();
 
+  const hints = {};
+
   const [addressValue, setAddressValue] = useState<string>(
     walletAddress[1] ? walletAddress[1] : '',
   );
@@ -109,6 +111,7 @@ export const useTransaction = () => {
         }
         if (receipt.executed) {
           setExecuted(true);
+          setHintModal('');
           setLoading(false);
         }
       } catch (err) {
@@ -132,46 +135,66 @@ export const useTransaction = () => {
     async (token = TOKEN) => {
       if (zkWallet) {
         try {
+          setHintModal('Follow the instructions in the pop up');
           setLoading(true);
           const executeDeposit = async fee => {
-            const depositPriorityOperation = await cancelable(
-              zkWallet.depositToSyncFromEthereum({
-                depositTo: zkWallet.address(),
-                token: token,
-                amount: ethers.utils.bigNumberify(
-                  (
+            try {
+              const depositPriorityOperation = await cancelable(
+                zkWallet.depositToSyncFromEthereum({
+                  depositTo: zkWallet.address(),
+                  token: token,
+                  amount: ethers.utils.bigNumberify(
+                    (
+                      await import('zksync').then(module =>
+                        module.closestPackableTransactionAmount(
+                          amountValue?.toString(),
+                        ),
+                      )
+                    ).toString(),
+                  ),
+                  maxFeeInETHToken: ethers.utils.bigNumberify(
                     await import('zksync').then(module =>
-                      module.closestPackableTransactionAmount(
-                        amountValue?.toString(),
+                      module.closestPackableTransactionFee(
+                        (2 * ZK_FEE_MULTIPLIER * +fee).toString(),
                       ),
-                    )
-                  ).toString(),
-                ),
-                maxFeeInETHToken: ethers.utils.bigNumberify(
-                  await import('zksync').then(module =>
-                    module.closestPackableTransactionFee(
-                      (2 * ZK_FEE_MULTIPLIER * +fee).toString(),
                     ),
                   ),
-                ),
-              }),
-            );
-            const hash = depositPriorityOperation.ethTx;
-            history(
-              amountValue / Math.pow(10, 18) || 0,
-              hash.hash,
-              zkWallet.address(),
-              'deposit',
-              symbol,
-            );
-            setHash(hash);
-            await depositPriorityOperation.awaitEthereumTxCommit().then(() => {
-              setHintModal('Block has been mined!');
-            });
-            const receipt = await depositPriorityOperation.awaitReceipt();
-            transactions(receipt);
-            const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
-            setVerifyToken(!!verifyReceipt);
+                }),
+              );
+              const hash = depositPriorityOperation.ethTx;
+              history(
+                amountValue / Math.pow(10, 18) || 0,
+                hash.hash,
+                zkWallet.address(),
+                'deposit',
+                symbol,
+              );
+              if (!!depositPriorityOperation) {
+                setHintModal(
+                  `Confirmed! \n Waiting for transaction to be ended. \n Transaction hash:  ${hash.hash}`,
+                );
+              }
+              setHash(hash);
+              await depositPriorityOperation
+                .awaitEthereumTxCommit()
+                .then(() => {
+                  setHintModal(
+                    `Block has been mined! \n Waiting for transaction to be ended. \n Transaction hash:  ${hash.hash}`,
+                  );
+                });
+              const receipt = await depositPriorityOperation.awaitReceipt();
+              transactions(receipt);
+              const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
+              setVerifyToken(!!verifyReceipt);
+            } catch (err) {
+              if (err.message.match(/(?:denied)/i)) {
+                setHintModal('denied');
+              } else if (err.name && err.message) {
+                setError(`${err.name}: ${err.message}`);
+              } else {
+                setError(DEFAULT_ERROR);
+              }
+            }
           };
           cancelable(ethers.getDefaultProvider().getGasPrice())
             .then(res => res.toString())
@@ -208,6 +231,7 @@ export const useTransaction = () => {
       try {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
+          setHintModal('Follow the instructions in the pop up');
           const transferTransaction = await zkWallet.syncTransfer({
             to: addressValue,
             token: token,
@@ -237,6 +261,11 @@ export const useTransaction = () => {
             symbol,
           );
           setHash(hash);
+          if (!!transferTransaction) {
+            setHintModal(
+              `Confirmed! \n Waiting for transaction to be ended. \n Transaction hash:  ${hash}`,
+            );
+          }
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
@@ -247,9 +276,13 @@ export const useTransaction = () => {
           );
         }
       } catch (err) {
-        err.name && err.message
-          ? setError(`${err.name}: ${err.message}`)
-          : setError(DEFAULT_ERROR);
+        if (err.message.match(/(?:denied)/i)) {
+          setHintModal('denied');
+        } else if (err.name && err.message) {
+          setError(`${err.name}: ${err.message}`);
+        } else {
+          setError(DEFAULT_ERROR);
+        }
         setLoading(false);
       }
     },
@@ -269,6 +302,7 @@ export const useTransaction = () => {
       try {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
+          setHintModal('Follow the instructions in the pop up');
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
             {
               ethAddress: addressValue,
@@ -300,6 +334,11 @@ export const useTransaction = () => {
             symbol,
           );
           setHash(hash);
+          if (!!withdrawTransaction) {
+            setHintModal(
+              `Confirmed! \n Waiting for transaction to be ended. \n Transaction hash:  ${hash}`,
+            );
+          }
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await withdrawTransaction.awaitVerifyReceipt();
@@ -310,9 +349,13 @@ export const useTransaction = () => {
           );
         }
       } catch (err) {
-        err.name && err.message
-          ? setError(`${err.name}: ${err.message}`)
-          : setError(DEFAULT_ERROR);
+        if (err.message.match(/(?:denied)/i)) {
+          setHintModal('denied');
+        } else if (err.name && err.message) {
+          setError(`${err.name}: ${err.message}`);
+        } else {
+          setError(DEFAULT_ERROR);
+        }
         setLoading(false);
       }
     },
