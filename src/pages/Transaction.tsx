@@ -4,15 +4,13 @@ import { Transition } from 'src/components/Transition/Transition';
 import { useTimeout } from 'src/hooks/timers';
 import { ZK_EXPLORER } from 'src/constants/links';
 import { TxStatus } from 'src/components/Transaction/TxStatus';
-import { getPieProps } from 'src/utils';
 
-export const Transaction: FC<Tx> = ({
-  hash,
-  confirmCount,
-  tx: { amount, priority_op, type, to, token },
-  verified,
-  commited,
-}) => {
+export const Transaction: FC<Tx> = props => {
+  const {
+    hash,
+    tx: { amount, priority_op, type, to, token },
+  } = props;
+
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
 
@@ -29,7 +27,7 @@ export const Transaction: FC<Tx> = ({
 
   return (
     <div className='transaction-history-wrapper' key={hash}>
-      <TxStatus {...getPieProps(commited, verified, confirmCount)} />
+      <TxStatus tx={props} />
       <div className='transaction-history-left'>
         <div className={`transaction-history ${type}`}></div>
         <div className='transaction-history-amount'>
