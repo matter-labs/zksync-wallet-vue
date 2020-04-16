@@ -1,4 +1,5 @@
 import { Web3Provider } from 'ethers/providers';
+import { Tx } from './pages/Transactions';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider = window['ethereum'];
@@ -65,24 +66,6 @@ export function setCookie(name: string, value, exp?: Date) {
     val += `; Expires=${exp.toUTCString()}`;
   }
   document.cookie = val;
-}
-
-const MAX_CONFIRM = 25;
-export function getPieProps(
-  commited?: boolean,
-  verified?: boolean,
-  confirmCount = 0,
-) {
-  if (commited && !verified)
-    return { color: '#ff0', value: 1, status: 'Commited & unverified' };
-
-  if (verified) return { color: '#0f0', value: 1, status: 'Verified' };
-
-  return {
-    color: '#0ff',
-    value: confirmCount / MAX_CONFIRM,
-    status: `${confirmCount}/${MAX_CONFIRM} confirmations`,
-  };
 }
 
 export function whyDidYouUpdate() {
