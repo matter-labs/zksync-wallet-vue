@@ -1,71 +1,20 @@
 import React, {
   useEffect,
-  ReactElement,
   useState,
   useMemo,
   useRef,
+  useCallback,
 } from 'react';
 import cl from 'classnames';
 
 import { useAutoFocus } from 'hooks/useAutoFocus';
 import { useDebouncedValue } from 'hooks/debounce';
 import { useListener } from 'hooks/useListener';
+import { useCancelable } from 'hooks/useCancelable';
+import { Props } from './DataListProps';
 
 import './DataList.scss';
-import { useCancelable } from 'src/hooks/useCancelable';
-
-type ReactComp = ReactElement | string | null;
-
-interface Props<T> {
-  data?: T[];
-  /**
-   * @param amount Amount to fetch (will be appended to existing data).
-   * Pass `undefined` to skip pagination
-   */
-  onFetch?: (amount?: number, offset?: number) => Promise<T[]>;
-  title?: string;
-  visible?: boolean;
-
-  renderItem?: (i: T) => ReactComp;
-  header?: () => ReactComp;
-  footer?: () => ReactComp;
-  emptyListComponent?: () => ReactComp;
-
-  /**
-   * @param query Search string
-   * @param regex `RegExp` instance from search string with ignorecase flag
-   */
-  searchPredicate?: (e: T, query: string, regex: RegExp) => boolean;
-  onSetFiltered?: (data: T[]) => void;
-
-  /**
-   * Initial count of items to display
-   * (if `undefined`, the feature will be disabled)
-   */
-  infScrollInitialCount?: number;
-
-  /**
-   * In pixels: remaining scroll height to start loading more items
-   */
-  loadMoreThreshold?: number;
-
-  /**
-   * How many items to load at one time
-   */
-  loadMoreAmount?: number;
-
-  /**
-   * Custom sort function
-   * @param elements - Array of unsorted elements
-   */
-  onSort?: (elements: T[]) => T[];
-
-  /**
-   * Used for two-side data binding (for example,
-   * when putting it in global store)
-   */
-  bindData?: [T[], (data: T[]) => any];
-}
+import { whyDidYouUpdate } from 'src/utils';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   if (typeof o === 'object') {
@@ -78,6 +27,9 @@ const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   return re.test(o);
 };
 
+const didUpdate = whyDidYouUpdate();
+const noop = () => null;
+
 export function DataList<T>({
   data,
   onFetch,
@@ -85,10 +37,10 @@ export function DataList<T>({
   // visible = true,
   searchPredicate = DEFAULT_SEARCH,
   renderItem,
-  header = () => null,
-  footer = () => null,
-  onSetFiltered = () => null,
-  emptyListComponent = () => null,
+  header = noop,
+  footer = noop,
+  onSetFiltered = noop,
+  emptyListComponent = noop,
   infScrollInitialCount,
   loadMoreThreshold = 10,
   loadMoreAmount = 5,
@@ -108,19 +60,20 @@ export function DataList<T>({
 
   // Used for temp data from search query
   const [filteredData, setFiltered] = useState<T[]>(data || []);
+  const binded = bindData && bindData[0];
+  const setBinded = bindData && bindData[1];
 
-  const getData = (withFilter = true) => {
-    if (debouncedSearch && withFilter) {
-      return filteredData;
-    } else if (bindData) {
-      return bindData[0];
+  // didUpdate({ data, debouncedSearch, binded, filteredData, resolvedData });
+  const getData = useCallback(() => {
+    if (binded) {
+      return binded;
     } else if (resolvedData.length) {
       return resolvedData;
     } else if (data) {
       return data;
     }
     return [];
-  };
+  }, [data, binded, resolvedData]);
 
   // Lazy fetch
   const cancelable = useCancelable();
@@ -142,8 +95,8 @@ export function DataList<T>({
       onFetch(amount, offset).then(res => {
         if (res.length) {
           const pred = d => d.slice(0, offset).concat(res);
-          if (bindData) {
-            bindData[1](pred(bindData[0]));
+          if (setBinded) {
+            setBinded(pred);
           } else {
             setResolvedData(pred);
           }
@@ -152,7 +105,16 @@ export function DataList<T>({
         }
       }),
     );
-  }, [onFetch, setFiltered, itemAmount, bindData && bindData[1]]);
+  }, [
+    onFetch,
+    setFiltered,
+    itemAmount,
+    setBinded,
+    cancelable,
+    hasMore,
+    infScrollInitialCount,
+    loadMoreAmount,
+  ]);
 
   // Infinite scroll
   useListener(
@@ -170,12 +132,18 @@ export function DataList<T>({
         loadMoreThreshold;
     if (!loadMore) return;
     setItemAmount(i => i! + loadMoreAmount);
-  }, [debScrollTop]);
+  }, [
+    debScrollTop,
+    hasMore,
+    infScrollInitialCount,
+    loadMoreAmount,
+    loadMoreThreshold,
+  ]);
 
   // Search hook
   useEffect(() => {
-    const resolvedData = getData(false);
-    if (!searchPredicate || !resolvedData.length) return;
+    const resolvedData = getData();
+    if (!(searchPredicate && debouncedSearch && resolvedData.length)) return;
     if (!debouncedSearch) {
       if (resolvedData.length > filteredData.length) setFiltered(resolvedData);
       return;
@@ -186,12 +154,18 @@ export function DataList<T>({
     );
     setFiltered(filtered);
     onSetFiltered(filtered);
-  }, [debouncedSearch, resolvedData, data, bindData]);
+  }, [
+    debouncedSearch,
+    filteredData.length,
+    getData,
+    setFiltered,
+    onSetFiltered,
+    searchPredicate,
+  ]);
 
   // Memoized list with mapped data
   const list = useMemo(() => {
-    let data = getData();
-    // let data = searchPredicate ? filteredData : resolvedData;
+    let data = debouncedSearch ? filteredData : getData();
 
     if (typeof onSort === 'function') {
       data = onSort(data);
@@ -202,13 +176,13 @@ export function DataList<T>({
 
     return data.map(renderItem || (e => e as any));
   }, [
-    renderItem,
-    searchPredicate,
-    debouncedSearch,
-    resolvedData,
-    filteredData,
     itemAmount,
-    bindData && bindData[0],
+    renderItem,
+    getData,
+    infScrollInitialCount,
+    onSort,
+    debouncedSearch,
+    filteredData,
   ]);
 
   return (
