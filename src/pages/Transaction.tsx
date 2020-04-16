@@ -21,9 +21,9 @@ export const Transaction: FC<Tx> = props => {
     el?.select();
     document.execCommand('copy');
     openCopyModal(true);
-  }, [ref]);
+  }, [ref, openCopyModal]);
 
-  useTimeout(() => isCopyModal && openCopyModal(false), 2000);
+  useTimeout(() => isCopyModal && openCopyModal(false), 2000, [isCopyModal]);
 
   return (
     <div className='transaction-history-wrapper' key={hash}>
@@ -64,13 +64,12 @@ export const Transaction: FC<Tx> = props => {
         readOnly
         className='copy-block-input'
         value={hash.toString()}
+        ref={ref}
       />
+      <Transition trigger={isCopyModal} timeout={200} type='fly'>
+        <div className={'hint-copied open'}>{'Copied!'}</div>
+      </Transition>
       <div className='transaction-history-right'>
-        <Transition trigger={isCopyModal} timeout={200} type='fly'>
-          <div className={'hint-copied open'}>
-            <p>{'Copied!'}</p>
-          </div>
-        </Transition>
         <div className='transaction-history-address'>
           {type === 'Transfer' && (
             <>
