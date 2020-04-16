@@ -160,6 +160,15 @@ export const createStore = () => ({
     }
     this.transactions.replace(transactions);
   },
+
+  performLogout(accessModal = false, walletName: WalletType = '') {
+    this.setModal('');
+    this.setWalletName(walletName);
+    this.setAccessModal(accessModal);
+    this.setZkWallet(null);
+    this.setZkBalances([]);
+    this.setProvider(undefined);
+  },
 });
 
 export type TStore = ReturnType<typeof createStore>;

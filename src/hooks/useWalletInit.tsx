@@ -9,6 +9,7 @@ import { IEthBalance } from 'types/Common';
 import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
 import { fetchTransactions } from 'src/api';
+import { useLogout } from './useLogout';
 
 const useWalletInit = () => {
   const {
@@ -57,6 +58,8 @@ const useWalletInit = () => {
     const signer = new ethers.providers.Web3Provider(provider).getSigner();
     return signer;
   }, []);
+
+  const logout = useLogout();
 
   const createWallet = useCallback(async () => {
     try {
@@ -132,6 +135,7 @@ const useWalletInit = () => {
             : setError(DEFAULT_ERROR);
         });
     } catch (err) {
+      logout(false, '');
       // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
     }
   }, [
@@ -146,6 +150,7 @@ const useWalletInit = () => {
     setZkWallet,
     setTxs,
     setWSTransport,
+    logout,
   ]);
 
   return {

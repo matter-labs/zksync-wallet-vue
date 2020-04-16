@@ -108,7 +108,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         if (savedWalletName) {
           setWalletName(savedWalletName);
         }
-        logout(true, 'Metamask');
+        logout(true, 'Metamask', true);
       }
     });
   }, [logout, provider, setWalletName, walletName, zkWallet]);

@@ -27,7 +27,7 @@ export interface Tx {
     };
     to?: string;
     token?: number;
-    type: 'Transfer' | 'Withdraw' | 'Deposit';
+    type: 'Transfer' | 'Withdraw' | 'Deposit' | 'ChangePubKey';
   };
   success: boolean;
   fail_reason?: any;
@@ -57,15 +57,16 @@ const Transactions: React.FC = (): JSX.Element => {
         `https://testnet.zksync.dev/api/v0.1/account/${zkWallet?.address()}/history/${offset}/${amount}`,
       ).then(r => r.json());
 
-      return await Promise.all(
+      const resolvedTxs = await Promise.all(
         txs.map(async tx =>
           Object.assign(tx, {
             confirmCount: await getConfirmationCount(web3Provider, tx.hash),
           }),
         ),
       );
+      return resolvedTxs.filter(tx => tx.tx.type !== 'ChangePubKey');
     },
-    [zkWallet, web3Provider, getConfirmationCount],
+    [zkWallet, web3Provider],
   );
 
   useCheckLogin();
