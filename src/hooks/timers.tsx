@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, DependencyList } from 'react';
+/* eslint-disable react-hooks/rules-of-hooks */
+import {
+  useEffect,
+  useRef,
+  useState,
+  DependencyList,
+  useCallback,
+} from 'react';
 
 type Cb = (...args: any[]) => void;
 
@@ -17,19 +24,20 @@ export const useTimer = (baseSet, baseClear) => (
     };
     const t = baseSet(tick, timeout);
     return () => baseClear(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeout, ...deps]);
 };
 
 export function useSafeTimeout() {
   const [t, setT] = useState<number | undefined>();
   useEffect(() => {
-    if (t) (console.log('Clearing safe timeout') as any) || clearTimeout(t);
-  }, []);
-  return (cb, timeout) => {
+    if (t) clearTimeout(t);
+  }, [t]);
+  return useCallback((cb, timeout) => {
     const t = setTimeout(cb, timeout);
     setT(t as any);
     return t;
-  };
+  }, []);
 }
 
 export const useTimeout = useTimer(setTimeout, clearTimeout);

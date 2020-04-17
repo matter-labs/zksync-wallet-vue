@@ -12,6 +12,7 @@ export function useLogout() {
     setWalletName,
     setZkWallet,
     setZkBalances,
+    setTxs,
   } = useRootData(s => ({
     ...s,
     error: s.error.get(),
@@ -27,6 +28,7 @@ export function useLogout() {
       setAccessModal(accessModal);
       setZkWallet(null);
       setZkBalances([]);
+      setTxs([]);
       if (withRedirect) {
         history.push({
           pathname: '/',

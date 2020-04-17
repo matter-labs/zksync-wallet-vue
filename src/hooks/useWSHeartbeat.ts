@@ -1,50 +1,31 @@
 import { WSTransport } from 'zksync/build/transport';
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useRootData } from './useRootData';
-import { useSafeTimeout } from 'hooks/timers';
 
 /**
  * Should be used in app root to prevent breaking WS connection
  * every time route changes
  */
 export function useWSHeartBeat() {
-  const [transport, setWSTransport] = useRootData(s => [
-    s.wsTransport.get(),
-    s.setWSTransport,
-  ]);
-  const setTimeout = useSafeTimeout();
-  const [hbInterval, setHbInterval] = useState<number | undefined>();
-
-  useEffect(() => {
-    if (!transport) return;
-    const hb = setHeartBeat(transport);
-
-    if (process.env.NODE_ENV === 'development') {
-      Object.assign(window, { transport });
-    }
-
-    return hb;
-  }, [transport]);
-
-  useEffect(
-    () => () => {
-      if (hbInterval) {
-        clearInterval(hbInterval);
-      }
-    },
-    [],
+  const { wsTransport: transport, setWSTransport, setWsStatus } = useRootData(
+    s => ({
+      ...s,
+      wsTransport: s.wsTransport.get(),
+    }),
   );
 
   const tryReOpen = useCallback(() => {
+    if (transport?.ws?.isOpened) return;
     transport?.ws
       .open()
       .then(() => {
         setWSTransport(transport);
+        setWsStatus(false);
       })
       .catch(() => {
         setTimeout(tryReOpen, 1000);
       });
-  }, [transport, setTimeout]);
+  }, [transport, setWSTransport, setWsStatus]);
 
   const setHeartBeat = useCallback(
     (
@@ -57,6 +38,7 @@ export function useWSHeartBeat() {
         // TODO: connection does not close immediately when network destroyed
         // even when calling `close` implicitly
         setWSTransport(null);
+        setWsStatus(true);
         transport.ws.close().then(() => {
           tryReOpen();
         });
@@ -75,7 +57,7 @@ export function useWSHeartBeat() {
       function cleanup() {
         clearInterval(pingTimer);
         clearTimeout(waitTimer);
-        setHbInterval(undefined);
+        clearInterval(pingTimer);
         transport.ws.onUnpackedMessage.removeListener(pongListener);
       }
 
@@ -84,11 +66,17 @@ export function useWSHeartBeat() {
         transport.ws.send('{}');
       }, pingTimeout);
 
-      setHbInterval(pingTimer as any);
       transport.ws.onUnpackedMessage.addListener(pongListener);
 
       return cleanup;
     },
-    [setHbInterval, hbInterval, setTimeout],
+    [setWsStatus, setWSTransport, tryReOpen],
   );
+
+  useEffect(() => {
+    if (!transport) return;
+    const hb = setHeartBeat(transport);
+
+    return hb;
+  }, [transport, setHeartBeat]);
 }
