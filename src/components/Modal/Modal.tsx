@@ -66,13 +66,17 @@ const Modal: React.FC<ModalProps> = ({
   const handleClickOutside = useCallback(
     e => {
       if (!e) return;
-      if (e.target.getAttribute('data-name')) {
+      if (
+        e.target.getAttribute('data-name') &&
+        !error.match(WRONG_NETWORK) &&
+        !!zkWallet
+      ) {
         e.stopPropagation();
         setModal('');
         setError('');
       }
     },
-    [setError, setModal],
+    [error, setError, setModal, zkWallet],
   );
 
   useListener(document, 'click', handleClickOutside, true);
