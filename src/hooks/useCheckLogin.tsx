@@ -11,8 +11,16 @@ export function useCheckLogin() {
   const { pathname } = useLocation();
   const params = useQuery();
   const history = useHistory();
-  const { provider, setProvider, zkWallet, setWalletName } = useRootData(s => ({
+  const {
+    path,
+    provider,
+    setAccessModal,
+    setProvider,
+    zkWallet,
+    setWalletName,
+  } = useRootData(s => ({
     ...s,
+    path: s.path.get(),
     provider: s.provider.get(),
     zkWallet: s.zkWallet.get(),
   }));
@@ -20,9 +28,15 @@ export function useCheckLogin() {
   const cancelable = useCancelable();
 
   useEffect(() => {
-    if (zkWallet || !provider || !params.get('redirect')) return;
+    if (
+      zkWallet ||
+      !provider ||
+      (!params.get('redirect') && path.length < 2) ||
+      (params.get('redirect') && path.length > 2)
+    )
+      return;
     cancelable(createWallet());
-  }, [provider, params, cancelable, createWallet, zkWallet]);
+  }, [path, provider, zkWallet]);
 
   useEffect(() => {
     const ethprovider = window['ethereum'];
