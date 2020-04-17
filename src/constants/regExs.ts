@@ -9,4 +9,4 @@ export const INPUT_VALIDATION = {
 
 export const MOBILE_DEVICE = /mobi/i;
 
-export const WRONG_NETWORK = /(?:wrong\snetwork)/i;
+export const WRONG_NETWORK = /(?:wrong\snetwork)|deployed/i;
