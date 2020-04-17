@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRootData } from 'src/hooks/useRootData';
 import { Transition } from '../Transition/Transition';
 import { useTimeout } from 'src/hooks/timers';
+import { usePrevious } from 'src/hooks/usePreviousValue';
 
 enum ConnStatus {
   DISCONNECTED,
@@ -10,25 +11,26 @@ enum ConnStatus {
 }
 
 export const ConnectionStatus = () => {
-  const wsTransport = useRootData(s => s.wsTransport.get());
-  const [status, setStatus] = useState<ConnStatus>(ConnStatus.RECONNECTED);
+  const wsBroken = useRootData(s => s.wsBroken.get());
+  const [status, setStatus] = useState<ConnStatus>(ConnStatus.CONNECTED);
+  const hadBroken = usePrevious(wsBroken);
 
   useEffect(() => {
-    if (status === ConnStatus.RECONNECTED) {
-      setStatus(ConnStatus.CONNECTED);
-      return;
+    if (!hadBroken && wsBroken) {
+      setStatus(ConnStatus.DISCONNECTED);
+    } else if (hadBroken && !wsBroken) {
+      setStatus(ConnStatus.RECONNECTED);
     }
-    setStatus(wsTransport ? ConnStatus.RECONNECTED : ConnStatus.DISCONNECTED);
-  }, [wsTransport]);
+  }, [wsBroken, hadBroken]);
 
   useTimeout(
     () => {
-      if (wsTransport !== null && status === ConnStatus.RECONNECTED) {
+      if (status === ConnStatus.RECONNECTED) {
         setStatus(ConnStatus.CONNECTED);
       }
     },
     1e3,
-    [wsTransport, status],
+    [setStatus, status],
   );
 
   return (

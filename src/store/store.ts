@@ -36,7 +36,9 @@ export const createStore = () => ({
   zkBalances: observable.box<IEthBalance[]>([]),
   zkBalancesLoaded: observable.box<boolean>(false),
   zkWallet: observable.box<Wallet | null>(),
-  wsTransport: observable.box<WSTransport | null>(),
+  wsTransport: observable.box<WSTransport | null>(null),
+  wsBroken: observable.box(false),
+
   transactions: observable.array<Tx>([]),
   // transactions: observable<{ loaded: boolean; value: Tx[] }>({
   //   loaded: false,
@@ -147,6 +149,10 @@ export const createStore = () => ({
 
   setWSTransport(t: WSTransport | null) {
     this.wsTransport.set(t);
+  },
+
+  setWsStatus(broken: boolean) {
+    this.wsBroken.set(broken);
   },
 
   setTxsLoaded(loaded = true) {
