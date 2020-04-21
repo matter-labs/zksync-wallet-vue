@@ -120,6 +120,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         visible={!!error}
         classSpecifier='error'
         background={true}
+        centered
       >
         <p>{error}</p>
       </Modal>

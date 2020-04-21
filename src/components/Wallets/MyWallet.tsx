@@ -23,7 +23,6 @@ const MyWallet: React.FC<IMyWalletProps> = ({
   setTransactionType,
 }): JSX.Element => {
   const {
-    searchBalances,
     setBalances,
     transactionModal,
     zkBalances,
@@ -33,15 +32,15 @@ const MyWallet: React.FC<IMyWalletProps> = ({
   } = useRootData(
     ({
       searchBalances,
-      setBalances,
       transactionModal,
       zkBalances,
       zkBalancesLoaded,
       verifyToken,
       zkWallet,
+      ...s
     }) => ({
+      ...s,
       searchBalances: searchBalances.get(),
-      setBalances,
       transactionModal: transactionModal.get(),
       verifyToken: verifyToken.get(),
       zkBalances: zkBalances.get(),
@@ -51,8 +50,6 @@ const MyWallet: React.FC<IMyWalletProps> = ({
   );
 
   const body = document.getElementById('body');
-
-  const dataPropertyName = 'symbol';
 
   const [address, setAddress] = useState<string>('');
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
@@ -215,9 +212,10 @@ const MyWallet: React.FC<IMyWalletProps> = ({
             </div>
           </Transition>
           <input
+            type='text'
             className='copy-block-input'
             readOnly
-            value={zkWallet?.address().toString()}
+            value={zkWallet?.address().toString() || ''}
             ref={e => inputRef.push(e)}
           />
           <div className='copy-block-left'>

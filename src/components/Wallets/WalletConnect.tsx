@@ -7,7 +7,7 @@ import { useRootData } from 'hooks/useRootData';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 
-const WalletConnect: React.FC = (): JSX.Element => {
+const WalletConnect: React.FC = () => {
   const { connect, getSigner } = useWalletInit();
 
   const {
@@ -59,7 +59,7 @@ const WalletConnect: React.FC = (): JSX.Element => {
     setZkWallet,
   ]);
 
-  return <></>;
+  return null;
 };
 
 export default WalletConnect;
