@@ -104,7 +104,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const handleLogOut = useLogout();
   const cancelable = useCancelable();
 
-  if (provider) {
+  if (provider && walletName === 'Metamask') {
     provider.on('networkChanged', () => {
       setWalletName('');
       setAccessModal(true);
