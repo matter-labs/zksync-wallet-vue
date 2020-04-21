@@ -74,7 +74,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       window['ethereum'].autoRefreshOnNetworkChange = false;
       handleNetworkChange();
     }
-    if (provider && walletName && walletName !== 'Fortmatic') {
+    if (provider && walletName && walletName === 'Metamask') {
       provider.on('networkChanged', () => {
         provider.networkVersion !== RIGHT_NETWORK_ID &&
         walletName === 'Metamask'
@@ -90,7 +90,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     provider,
     setError,
     walletName,
-    window,
     zkWallet,
   ]);
 
@@ -119,7 +118,15 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         setAccessModal(true);
       }
     });
-  }, [logout, provider, setWalletName, walletName, zkWallet]);
+  }, [
+    logout,
+    provider,
+    setAccessModal,
+    setWalletName,
+    walletName,
+    setZkWallet,
+    zkWallet,
+  ]);
 
   return (
     <div className={`content-wrapper ${walletName ? '' : 'start-page'}`}>
@@ -134,7 +141,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       </Modal>
       <Modal
         cancelAction={() => setAccessModal(false)}
-        visible={isAccessModalOpen}
+        visible={isAccessModalOpen && window.location.pathname.length > 1}
         classSpecifier='acc'
         background={true}
         centered

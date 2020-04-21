@@ -55,8 +55,10 @@ const useWalletInit = () => {
   );
 
   const getSigner = useCallback(provider => {
-    const signer = new ethers.providers.Web3Provider(provider).getSigner();
-    return signer;
+    if (ethers.providers) {
+      const signer = new ethers.providers.Web3Provider(provider).getSigner();
+      return signer;
+    }
   }, []);
 
   const logout = useLogout();
@@ -65,14 +67,16 @@ const useWalletInit = () => {
     try {
       const zkSync = await import('zksync');
       const wallet = getSigner(provider);
-      setEthWallet(wallet);
+      setEthWallet(wallet as ethers.providers.JsonRpcSigner);
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
 
       const syncProvider = await zkSync.getDefaultProvider(network, 'WS');
-      const signer = await zkSync.Signer.fromETHSignature(wallet);
+      const signer = await zkSync.Signer.fromETHSignature(
+        wallet as ethers.providers.JsonRpcSigner,
+      );
       const syncWallet = await zkSync.Wallet.fromEthSigner(
-        wallet,
+        wallet as ethers.providers.JsonRpcSigner,
         syncProvider,
         signer,
       );
@@ -136,7 +140,6 @@ const useWalletInit = () => {
         });
     } catch (err) {
       console.error('CreateWallet error', err);
-      logout(false, '');
       // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
     }
   }, [
@@ -151,7 +154,6 @@ const useWalletInit = () => {
     setZkWallet,
     setTxs,
     setWSTransport,
-    logout,
   ]);
 
   return {
