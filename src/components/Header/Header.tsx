@@ -99,7 +99,7 @@ const Header: React.FC = () => {
               </div>
               <div onClick={handleCopy} className='copy-block'>
                 <Transition type='fly' timeout={200} trigger={isCopyModal}>
-                  <div className={'hint-copied open'}>
+                  <div className='hint-copied open'>
                     <p>{'Copied!'}</p>
                   </div>
                 </Transition>

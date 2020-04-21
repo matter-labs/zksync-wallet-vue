@@ -9,6 +9,7 @@ export function useLogout() {
   const {
     setAccessModal,
     setModal,
+    setProvider,
     setWalletName,
     setZkWallet,
     setZkBalances,
@@ -29,6 +30,7 @@ export function useLogout() {
       setZkWallet(null);
       setZkBalances([]);
       setTxs([]);
+      setProvider(false);
       if (withRedirect) {
         history.push({
           pathname: '/',
