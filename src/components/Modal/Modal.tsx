@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import cl from 'classnames';
 
@@ -27,7 +27,6 @@ const Modal: React.FC<ModalProps> = ({
   children,
   classSpecifier,
   visible,
-  transition = 'scale',
   centered = false,
 }) => {
   const {
@@ -53,6 +52,7 @@ const Modal: React.FC<ModalProps> = ({
     }),
   );
 
+  const overlayRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -65,21 +65,26 @@ const Modal: React.FC<ModalProps> = ({
 
   const handleClickOutside = useCallback(
     e => {
-      if (!e) return;
+      if (e.target !== overlayRef.current) return;
       if (
         e.target.getAttribute('data-name') &&
         !error.match(WRONG_NETWORK) &&
-        !!zkWallet
+        !!zkWallet &&
+        classSpecifier === isModalOpen
       ) {
         e.stopPropagation();
         setModal('');
         setError('');
       }
     },
-    [error, setError, setModal, zkWallet],
+    [error, setError, setModal, isModalOpen, classSpecifier, zkWallet],
   );
 
-  useListener(document, 'click', handleClickOutside, true);
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside, true);
+    return () =>
+      document.removeEventListener('click', handleClickOutside, true);
+  }, [handleClickOutside]);
 
   const closeHandler = useCallback(() => {
     if (!!error.match(WRONG_NETWORK) && !!zkWallet) {
@@ -99,14 +104,29 @@ const Modal: React.FC<ModalProps> = ({
         setModal('');
       }
     }
-  }, [error, walletName, zkWallet]);
+  }, [
+    error,
+    walletName,
+    zkWallet,
+    cancelAction,
+    history,
+    setAccessModal,
+    setModal,
+    setProvider,
+    setWalletName,
+    setZkWallet,
+  ]);
 
   const shown = classSpecifier === isModalOpen || visible;
 
   return (
     <Portal className={cl(centered && 'center')}>
       <Transition type='modal' trigger={shown}>
-        <div data-name='modal-wrapper' className='modal-wrapper'>
+        <div
+          ref={overlayRef}
+          data-name='modal-wrapper'
+          className='modal-wrapper'
+        >
           <div className={`modal ${classSpecifier}`}>
             <button onClick={closeHandler} className='close-icon' />
             {children}

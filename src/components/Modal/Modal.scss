@@ -245,7 +245,7 @@
   }
 
   &-wrapper {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     z-index: 1000;
@@ -545,6 +545,8 @@ body.dark {
       display: flex;
       align-items: center;
       justify-content: center;
+      perspective: 1000px;
+      perspective-origin: center;
     }
   }
 }
