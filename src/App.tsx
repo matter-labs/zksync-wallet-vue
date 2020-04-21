@@ -17,6 +17,7 @@ import { WalletType } from './constants/Wallets';
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const {
     error,
+    isAccessModalOpen,
     provider,
     setAccessModal,
     setError,
@@ -27,6 +28,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   } = useRootData(
     ({
       error,
+      isAccessModalOpen,
       provider,
       setAccessModal,
       setError,
@@ -38,6 +40,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       zkWallet,
     }) => ({
       error: error.get(),
+      isAccessModalOpen: isAccessModalOpen.get(),
       provider: provider.get(),
       setAccessModal,
       setError,
@@ -94,6 +97,9 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const logout = useLogout();
 
   useEffect(() => {
+    if (!!zkWallet) {
+      setAccessModal(false);
+    }
     if (!provider || walletName.toLowerCase() !== 'metamask') return;
     provider.on('accountsChanged', () => {
       if (
@@ -125,6 +131,15 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         centered
       >
         <p>{error}</p>
+      </Modal>
+      <Modal
+        cancelAction={() => setAccessModal(false)}
+        visible={isAccessModalOpen}
+        classSpecifier='acc'
+        background={true}
+        centered
+      >
+        <p>{'Please make sign in the pop up'}</p>
       </Modal>
       {walletName && <Header />}
       <div className='content'>{children}</div>
