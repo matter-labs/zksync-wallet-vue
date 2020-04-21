@@ -119,15 +119,18 @@ const Header: React.FC = () => {
               <div className='horizontal-line' />
               <div className='wallet-buttons'>
                 <button className='btn-tr' onClick={() => setModal('qr')}>
-                  <span className='icon-qr'></span>Show QR code
+                  <span className='icon-qr'></span>
+                  {'Show QR code'}
                 </button>
                 <div className='horizontal-line'></div>
                 <button className='btn-tr' onClick={() => openChangeName(true)}>
-                  <span className='icon-edit'></span>Rename wallet
+                  <span className='icon-edit'></span>
+                  {'Rename wallet'}
                 </button>
                 <div className='horizontal-line'></div>
                 <button className='btn-tr' onClick={() => logout(false, '')}>
-                  <span className='icon-disconnect'></span>Disconnect wallet
+                  <span className='icon-disconnect'></span>
+                  {'Disconnect wallet'}
                 </button>
                 <div className='horizontal-line' />
               </div>

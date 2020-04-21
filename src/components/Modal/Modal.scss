@@ -134,10 +134,8 @@
   }
 
   &.error {
-    left: 50%;
     min-height: 135px;
     padding-top: 54px;
-    transform: translateX(-50%);
 
     & > p {
       word-break: break-all;
