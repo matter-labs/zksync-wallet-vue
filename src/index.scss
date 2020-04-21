@@ -1093,7 +1093,7 @@ $scale: 0.95;
     &-enter {
       opacity: 0;
       .modal {
-        transform: scale(0.95);
+        transform: scale(0.95) rotateX(-10deg);
       }
     }
     &-enter-active {
@@ -1111,7 +1111,7 @@ $scale: 0.95;
     &-exit-active {
       opacity: 0;
       .modal {
-        transform: scale(0.95);
+        transform: scale(0.95) rotateX(10deg);
       }
     }
 

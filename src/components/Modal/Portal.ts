@@ -15,7 +15,7 @@ const Portal: FC<Props> = ({ children, className = '' }) => {
     return () => {
       document.body.removeChild(modal);
     };
-  }, []);
+  }, [className]);
 
   return createPortal(children, rootDiv.current);
 };
