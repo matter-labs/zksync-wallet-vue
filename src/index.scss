@@ -9,23 +9,23 @@
   --modal-bg-color: #fff;
   --dark-color: #000;
   --hints-color: rgba(0, 0, 0, 0.4);
-  --hints-color-active:  rgba(0, 0, 0, 0.6);
-  --button-bg-color: #8C8DFC;
-  --button-bg-hover: #797AFB;
-  --main-bg-color: #F3F4F7;
+  --hints-color-active: rgba(0, 0, 0, 0.6);
+  --button-bg-color: #8c8dfc;
+  --button-bg-hover: #797afb;
+  --main-bg-color: #f3f4f7;
   --main-light-bg-color: #fff;
-  --bg-block-color: #F3F5FF;
+  --bg-block-color: #f3f5ff;
   --border-color: rgba(24, 13, 13, 0.08);
   --light-border-color: rgba(0, 0, 0, 0.08);
-  --info-message-color: #FFF8DE;
+  --info-message-color: #fff8de;
   --shaded-color: #4e6e8e;
-  --info-message-text-color: #AA935D;
+  --info-message-text-color: #aa935d;
   --copyblock-color: rgba(0, 0, 0, 0.04);
   --input-color: rgba(0, 0, 0, 0.02);
   --input-border-focus: rgba(0, 0, 0, 0.2);
   --error-color: rgba(255, 101, 35, 0.17);
-  --delete-color: #AE1E1E;
-  --links-color: #4E529A;
+  --delete-color: #ae1e1e;
+  --links-color: #4e529a;
   --success-color: #5cb85c;
   --transparent: transparent;
   --backdrop-color: rgba(0, 0, 0, 0.4);
@@ -47,30 +47,31 @@
 body.dark {
   --input-border-focus: rgba(255, 255, 255, 0.2);
   --light-bg-color: #fff;
-  --button-text-color: #1D2039;
-  --modal-bg-color: #1D2039;
+  --button-text-color: #1d2039;
+  --modal-bg-color: #1d2039;
   --dark-color: rgba(255, 255, 255, 0.9);
   --hints-color: rgba(255, 255, 255, 0.4);
-  --hints-color-active:  rgba(255, 255, 255, 0.5);
-  --button-bg-color: #8C8DFC;
-  --button-bg-hover: #797AFB;
-  --main-bg-color: #11142B;
-  --main-light-bg-color: #11142B;
-  --bg-block-color: #1D2039;
+  --hints-color-active: rgba(255, 255, 255, 0.5);
+  --button-bg-color: #8c8dfc;
+  --button-bg-hover: #797afb;
+  --main-bg-color: #11142b;
+  --main-light-bg-color: #11142b;
+  --bg-block-color: #1d2039;
   --light-border-color: rgba(255, 255, 255, 0.08);
   --border-color: rgba(255, 255, 255, 0.08);
   --copyblock-color: rgba(255, 255, 255, 0.08);
   --input-color: rgba(255, 255, 255, 0.02);
   --currency-block-color: rgba(255, 255, 255, 0.1);
-  --links-color: #4E529A;
+  --links-color: #4e529a;
   --info-message-color: rgba(255, 248, 222, 0.1);
-  --info-message-text-color: #AA935D;
+  --info-message-text-color: #aa935d;
   --error-color: rgba(255, 101, 35, 0.17);
-  --success-color: #27AE60;
+  --success-color: #27ae60;
   --transparent: transparent;
 }
 
-body.fixed, body.fixed-b {
+body.fixed,
+body.fixed-b {
   height: 100vh;
   overflow-y: scroll;
 }
@@ -79,7 +80,8 @@ body.fixed, body.fixed-b {
   overflow: hidden;
 }
 
-body, html {
+body,
+html {
   display: block;
   margin: 0;
   padding: 0;
@@ -90,11 +92,13 @@ body, html {
   transition-property: background-color, opacity;
 }
 
-html { 
+html {
   height: 100vh;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
@@ -103,9 +107,11 @@ html {
   box-sizing: border-box;
   outline: none;
 
-  &:active, &:hover, &:focus {
+  &:active,
+  &:hover,
+  &:focus {
     outline: none;
-  } 
+  }
 }
 
 p {
@@ -123,7 +129,12 @@ a {
   transition-property: background-color, opacity;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin-top: 0;
   color: var(--dark-color);
 }
@@ -150,7 +161,7 @@ input {
     -webkit-appearance: none;
   }
 
-  input[type=number] {
+  input[type='number'] {
     -moz-appearance: textfield;
   }
 
@@ -169,7 +180,7 @@ button {
   &:hover {
     background-color: var(--border-color) !important;
   }
-  
+
   &:active {
     background-color: var(--input-border-focus) !important;
   }
@@ -354,7 +365,7 @@ h2 {
       background-image: url(./images/fortmatic.png);
       background-size: 60px;
     }
-  }  
+  }
 }
 
 .submit-button {
@@ -431,7 +442,6 @@ h2 {
     color: var(--dark-color);
     font-weight: var(--bold-font-weight);
     font-size: var(--large-font-size);
-
   }
 
   & > h2 {
@@ -444,18 +454,25 @@ h2 {
     margin: 54px 0 0;
     color: var(--dark-color);
     font-size: var(--md-font-size);
-
   }
 }
 
 .contact-manage {
-  position: absolute;
-  width: 100%;
-  max-width: 270px;
-  overflow: hidden;
   background-color: var(--modal-bg-color);
-  border-radius: 5px;
-  transform: translate(-50%, -50%);
+
+  &-delete,
+  &-edit,
+  &-copy {
+    font-size: var(--md-font-size);
+    > img {
+      width: 1em;
+      margin-right: 10px;
+    }
+    > p {
+      margin: 0px;
+      white-space: nowrap;
+    }
+  }
 
   &-delete {
     position: relative;
@@ -479,8 +496,9 @@ h2 {
     border-bottom: 1px solid var(--border-color);
   }
 
-  & > button {
-    display: flex; 
+  & > button,
+  & > a {
+    display: flex;
     align-items: center;
     width: 100%;
     height: 50%;
@@ -490,18 +508,13 @@ h2 {
     background-color: var(--transparent);
     border: none;
 
-    & > p {
-      margin-bottom: 0;
-      margin-left: 22px;
-    }
-
     &:hover {
       background-color: var(--copyblock-color);
     }
   }
 }
 
-input[type="radio"] + .contact-manage {
+input[type='radio'] + .contact-manage {
   display: none;
   outline: none;
 }
@@ -511,9 +524,9 @@ input[type="radio"] + .contact-manage {
   display: block;
 }
 
-input[type="radio"]:focus + .contact-manage{
+input[type='radio']:focus + .contact-manage {
   display: block;
-  outline: none;  
+  outline: none;
 }
 
 .balances-contact-edit {
@@ -575,7 +588,7 @@ input[type="radio"]:focus + .contact-manage{
       background-repeat: no-repeat;
       background-size: contain;
     }
-    
+
     & > span {
       display: block;
       width: 22px;
@@ -599,13 +612,12 @@ input[type="radio"]:focus + .contact-manage{
           background-color: var(--transparent);
         }
       }
-      
+
       & > span {
         background-image: url(./images/mdi_people.svg);
       }
     }
   }
-
 
   &.balances {
     & > .custom-selector-title {
@@ -685,7 +697,7 @@ input[type="radio"]:focus + .contact-manage{
       height: auto;
       opacity: 1;
     }
-  
+
     &.closed {
       width: 0;
       height: 0;
@@ -733,8 +745,8 @@ body.dark > #root {
   .submit-label {
     &.Deposit {
       background-image: url(./images/deposit_dark.svg);
-  
-      &.false{
+
+      &.false {
         background-image: url(./images/deposit_dark_disable.svg);
       }
     }
@@ -742,20 +754,20 @@ body.dark > #root {
     &.unlock {
       background-image: url(./images/lock_dark.svg);
     }
-  
+
     &.Send {
       background-image: url(./images/send_dark.svg);
-  
-      &.false{
+
+      &.false {
         background-image: url(./images/send_dark_disable.svg);
       }
     }
-  
+
     &.Withdraw {
       background-image: url(./images/mdi_arrow_downward_dark.svg);
       background-size: 17px;
-  
-      &.false{
+
+      &.false {
         background-image: url(./images/mdi_arrow_downward_dark_disable.svg);
       }
     }
@@ -779,7 +791,7 @@ body.dark > #root {
         }
       }
     }
-    
+
     & > .content {
       & > .mywallet-wrapper {
         & > .submit-button {
@@ -855,11 +867,11 @@ body.dark > #root {
     & > h1 {
       font-size: var(--xxl-font-size);
     }
-  
+
     & > h2 {
       font-size: var(--xxl-font-size);
     }
-  
+
     & > p {
       font-weight: var(--medium-font-weight);
       font-size: var(--large-font-size);
@@ -876,34 +888,34 @@ body.dark > #root {
     &-button {
       width: 130px;
       height: 130px;
-  
+
       &.Coinbase {
         background-size: 74px;
       }
-  
+
       &.WalletConnect {
         background-size: 95px;
       }
-  
+
       &.Metamask {
         background-size: 83px 75px;
       }
-  
+
       &.Portis {
         background-size: 52px 80px;
       }
-  
+
       &.Fortmatic {
         background-size: 90px;
       }
-    }  
+    }
   }
 
   .custom-selector {
     position: relative;
     width: 100%;
     height: 22px;
-  
+
     &-title {
       display: flex;
       align-items: center;
@@ -917,7 +929,7 @@ body.dark > #root {
       &:hover {
         background-color: var(--copyblock-color);
       }
-  
+
       & > p {
         margin-bottom: 0;
         padding-right: 10px;
@@ -926,7 +938,7 @@ body.dark > #root {
         white-space: nowrap;
         text-overflow: ellipsis;
       }
-  
+
       & > div {
         width: 15px;
         height: 10px;
@@ -934,7 +946,7 @@ body.dark > #root {
         background-repeat: no-repeat;
         background-size: contain;
       }
-      
+
       & > span {
         display: block;
         width: 22px;
@@ -945,7 +957,7 @@ body.dark > #root {
         background-size: contain;
       }
     }
-  
+
     &.contacts {
       & > .custom-selector-title {
         height: 36px;
@@ -961,8 +973,7 @@ body.dark > #root {
         }
       }
     }
-  
-  
+
     &.balances {
       & > .custom-selector-title {
         margin-top: 0;
@@ -979,7 +990,7 @@ body.dark > #root {
       &.mywallet {
         margin-top: 11px;
         margin-left: 12px;
-  
+
         & > .custom-selector-title {
           &:hover {
             background-color: var(--copyblock-color);
@@ -988,7 +999,7 @@ body.dark > #root {
           & > p {
             font-size: var(--large-font-size);
           }
-  
+
           & > span {
             font-weight: var(--medium-font-weight);
             font-size: var(--large-font-size);
@@ -1012,7 +1023,7 @@ body.dark > #root {
   }
 }
 
-$dur: .2s;
+$dur: 0.2s;
 $scale: 0.95;
 .transition {
   &-scale {

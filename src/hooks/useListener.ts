@@ -8,11 +8,14 @@ export function useListener<T>(
   listener: Listener,
   options?: boolean | AddEventListenerOptions,
 ) {
-  const savedHandler = useRef();
-
-  useEffect(() => (savedHandler.current = listener as any), [listener]);
+  const savedHandler = useRef<Listener>();
 
   useEffect(() => {
+    savedHandler.current = listener;
+  }, [listener]);
+
+  useEffect(() => {
+    if (!target) return;
     const t = target!.hasOwnProperty('current')
       ? (target as any).current
       : target;
@@ -21,5 +24,5 @@ export function useListener<T>(
 
     t.addEventListener(event, l, options);
     return () => t.removeEventListener(event, l, options);
-  }, [target, event]);
+  }, [target, event, options]);
 }

@@ -5,6 +5,7 @@ import { useRootData } from 'hooks/useRootData';
 import { ISaveContactsProps } from './Types';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
+import { useAutoFocus } from 'src/hooks/useAutoFocus';
 
 const SaveContacts: React.FC<ISaveContactsProps> = ({
   addressInput,
@@ -96,6 +97,8 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
     ],
   );
 
+  const focusRef = useAutoFocus();
+
   return (
     <form>
       <h3>{title}</h3>
@@ -103,6 +106,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
       <span className='transaction-field-title'>{'Contact name'}</span>
       <input
         placeholder='Name here'
+        ref={focusRef}
         value={name}
         onChange={e => setName(e.target.value)}
       />

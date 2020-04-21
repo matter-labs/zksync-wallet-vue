@@ -14,6 +14,7 @@ import { WIDTH_BP } from 'constants/magicNumbers';
 import { Transition } from 'components/Transition/Transition';
 import { useTimeout } from 'hooks/timers';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
+import { FloatingMenu } from 'src/components/Common/FloatingMenu';
 
 const Contacts: React.FC = (): JSX.Element => {
   const dataPropertyName = 'name';
@@ -119,6 +120,7 @@ const Contacts: React.FC = (): JSX.Element => {
             visible={false}
             classSpecifier='add-contact edit-contact'
             background={true}
+            centered
           >
             <SaveContacts
               oldContact={oldContact}
@@ -173,39 +175,26 @@ const Contacts: React.FC = (): JSX.Element => {
               ref={e => inputRef.push(e)}
             />
 
-            <div className='contact-edit-wrapper'>
-              <input
-                type='radio'
+            <FloatingMenu>
+              <button
+                className='contact-manage-edit'
                 onClick={() => {
-                  setEditModalOpen(true);
+                  setModal('add-contact edit-contact');
+                  setOldContact({ name: name, address: address });
                 }}
-                className='balances-contact-edit'
-              ></input>
-              <div
-                className={`contact-manage ${
-                  isEditModalOpen ? 'open' : 'closed'
-                }`}
               >
-                <button
-                  className='contact-manage-edit'
-                  onClick={() => {
-                    setModal('add-contact edit-contact');
-                    setOldContact({ name: name, address: address });
-                  }}
-                >
-                  <img src={editicon} alt='edit' />
-                  <p>{'Edit'}</p>
-                </button>
-                <button
-                  onClick={() => handleDelete(name)}
-                  className='contact-manage-delete btn-tr'
-                >
-                  <img src={deleteicon} alt='edit' />
-                  <p>{'Delete'}</p>
-                  <Link to='/contacts'></Link>
-                </button>
-              </div>
-            </div>
+                <img src={editicon} alt='edit' />
+                <p>{'Edit'}</p>
+              </button>
+              <button
+                onClick={() => handleDelete(name)}
+                className='contact-manage-delete btn-tr'
+              >
+                <img src={deleteicon} alt='edit' />
+                <p>{'Delete'}</p>
+                <Link to='/contacts'></Link>
+              </button>
+            </FloatingMenu>
           </div>
         </div>
       )}
