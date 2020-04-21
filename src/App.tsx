@@ -23,6 +23,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     setWalletName,
     walletName,
     zkWallet,
+    setZkWallet,
   } = useRootData(
     ({
       error,
@@ -108,7 +109,8 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         if (savedWalletName) {
           setWalletName(savedWalletName);
         }
-        logout(true, 'Metamask', true);
+        setZkWallet(null);
+        setAccessModal(true);
       }
     });
   }, [logout, provider, setWalletName, walletName, zkWallet]);

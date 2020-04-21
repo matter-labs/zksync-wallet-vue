@@ -46,6 +46,7 @@ export function useLogout() {
       setZkWallet,
       pathname,
       setZkBalances,
+      setTxs,
     ],
   );
 
