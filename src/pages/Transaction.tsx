@@ -4,6 +4,7 @@ import { Transition } from 'src/components/Transition/Transition';
 import { useTimeout } from 'src/hooks/timers';
 import { ZK_EXPLORER } from 'src/constants/links';
 import { TxStatus } from 'src/components/Transaction/TxStatus';
+import { FloatingMenu } from 'src/components/Common/FloatingMenu';
 
 export const Transaction: FC<Tx> = props => {
   const {
@@ -91,25 +92,18 @@ export const Transaction: FC<Tx> = props => {
           )}
         </div>
       </div>
-      <div className='contact-edit-wrapper'>
-        <input type='radio' className='balances-contact-edit' />
-        <div className='contact-manage'>
-          <div>
-            <a
-              className='contact-manage-copy btn-tr'
-              target='_blank'
-              href={`${ZK_EXPLORER}/${hash}`}
-            >
-              {'View info on explorer'}
-            </a>
-          </div>
-          <div>
-            <button className='contact-manage-copy btn-tr' onClick={handleCopy}>
-              {'Copy'}
-            </button>
-          </div>
-        </div>
-      </div>
+      <FloatingMenu>
+        <a
+          className='contact-manage-copy btn-tr'
+          target='_blank'
+          href={`${ZK_EXPLORER}/${hash}`}
+        >
+          <p>{'View info on explorer'}</p>
+        </a>
+        <button className='contact-manage-copy btn-tr' onClick={handleCopy}>
+          <p>{'Copy'}</p>
+        </button>
+      </FloatingMenu>
     </div>
   );
 };
