@@ -135,6 +135,7 @@ const useWalletInit = () => {
             : setError(DEFAULT_ERROR);
         });
     } catch (err) {
+      console.error('CreateWallet error', err);
       logout(false, '');
       // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
     }

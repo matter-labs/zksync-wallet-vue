@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useRootData } from './useRootData';
-import { useLocation, useHistory } from 'react-router-dom';
 import useWalletInit from './useWalletInit';
 import { useCancelable } from './useCancelable';
 import { getWalletNameFromProvider } from 'src/utils';
@@ -8,45 +7,48 @@ import { WalletType } from 'src/constants/Wallets';
 import { useQuery } from 'hooks/useQuery';
 
 export function useCheckLogin() {
-  const { pathname } = useLocation();
   const params = useQuery();
-  const history = useHistory();
   const {
     path,
     provider,
-    setAccessModal,
+    setHintModal,
     setProvider,
     zkWallet,
     setWalletName,
+    setAccessModal,
+    walletName,
   } = useRootData(s => ({
     ...s,
     path: s.path.get(),
     provider: s.provider.get(),
     zkWallet: s.zkWallet.get(),
+    walletName: s.walletName.get(),
   }));
   const { createWallet } = useWalletInit();
   const cancelable = useCancelable();
 
   useEffect(() => {
-    if (
-      zkWallet ||
-      !provider ||
-      (!params.get('redirect') && path.length < 2) ||
-      (params.get('redirect') && path.length > 2)
-    )
-      return;
-    cancelable(createWallet());
-  }, [path, provider, zkWallet]);
+    if (provider && walletName) return;
+    setAccessModal(true);
+    setProvider(window['ethereum']);
+    setWalletName(getWalletNameFromProvider() as WalletType);
+  }, [
+    setWalletName,
+    walletName,
+    path,
+    provider,
+    zkWallet,
+    cancelable,
+    createWallet,
+    params,
+    setHintModal,
+    setProvider,
+    setAccessModal,
+  ]);
 
   useEffect(() => {
-    const ethprovider = window['ethereum'];
-    if (provider) return;
-    if (ethprovider?.selectedAddress) {
-      const walletName = getWalletNameFromProvider()! as WalletType;
-      setProvider(ethprovider);
-      setWalletName(walletName);
-    } else {
-      history.push({ pathname: '/', search: `?redirect=${pathname.slice(1)}` });
+    if (provider && !zkWallet) {
+      cancelable(createWallet());
     }
-  }, [history, provider, pathname, setProvider, setWalletName]);
+  }, [cancelable, createWallet, provider, zkWallet, setHintModal]);
 }
