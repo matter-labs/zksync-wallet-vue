@@ -121,7 +121,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
         </>
       )}
       <button type='submit' className='btn submit-button' onClick={handleSave}>
-        Save
+        {'Save'}
       </button>
     </form>
   );

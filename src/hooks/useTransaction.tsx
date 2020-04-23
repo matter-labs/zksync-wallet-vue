@@ -94,7 +94,7 @@ export const useTransaction = () => {
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
-              balance: +zkBalance[key] / Math.pow(10, 18),
+              balance: +ethers.utils.formatEther(zkBalance[key]),
               symbol: tokens[key].symbol,
             };
           });
@@ -163,7 +163,7 @@ export const useTransaction = () => {
               );
               const hash = depositPriorityOperation.ethTx;
               history(
-                amountValue / Math.pow(10, 18) || 0,
+                +ethers.utils.formatEther(amountValue) || 0,
                 hash.hash,
                 zkWallet.address(),
                 'deposit',
@@ -232,29 +232,26 @@ export const useTransaction = () => {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
           setHintModal('Follow the instructions in the pop up');
+          const zkSync = await import('zksync');
           const transferTransaction = await zkWallet.syncTransfer({
             to: addressValue,
             token: token,
             amount: ethers.utils.bigNumberify(
               (
-                await import('zksync').then(module =>
-                  module.closestPackableTransactionAmount(
-                    amountValue?.toString(),
-                  ),
+                await zkSync.closestPackableTransactionAmount(
+                  amountValue?.toString(),
                 )
               ).toString(),
             ),
             fee: ethers.utils.bigNumberify(
-              await import('zksync').then(module =>
-                module.closestPackableTransactionFee(
-                  Math.floor(amountValue * 0.001).toString(),
-                ),
+              zkSync.closestPackableTransactionFee(
+                Math.floor(amountValue * 0.001).toString(),
               ),
             ),
           });
           const hash = transferTransaction.txHash;
           history(
-            amountValue / Math.pow(10, 18) || 0,
+            +ethers.utils.formatEther(amountValue) || 0,
             hash,
             addressValue,
             'transfer',
@@ -327,7 +324,7 @@ export const useTransaction = () => {
           );
           const hash = withdrawTransaction.txHash;
           history(
-            amountValue / Math.pow(10, 18) || 0,
+            +ethers.utils.formatEther(amountValue) || 0,
             hash,
             addressValue,
             'withdraw',
