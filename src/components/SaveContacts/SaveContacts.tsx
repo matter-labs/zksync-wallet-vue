@@ -20,11 +20,11 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
   const [address, setAddress] = useState<string>(
     oldContact?.address ? oldContact?.address : '',
   );
+  const [conditionError, setConditionError] = useState<string>('');
 
-  const { setContacts, setError, setModal, zkWallet } = useRootData(
-    ({ setContacts, setError, setModal, zkWallet }) => ({
+  const { setContacts, setModal, zkWallet } = useRootData(
+    ({ setContacts, setModal, zkWallet }) => ({
       setContacts,
-      setError,
       setModal,
       zkWallet: zkWallet.get(),
     }),
@@ -79,9 +79,13 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
         const acontacts = JSON.parse(arr);
         setContacts(acontacts);
       } else if (!name) {
-        setError('Error: name cannot be empty');
+        setConditionError('Error: name cannot be empty');
       } else {
-        setError(`Error: "${address}" doesn't match ethereum address format`);
+        setConditionError(
+          `Error: "${address?.slice(0, 6)}...${address?.slice(
+            address?.length - 6,
+          )}" doesn't match ethereum address format`,
+        );
       }
     },
     [
@@ -89,9 +93,9 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
       addressValue,
       edit,
       name,
+      setConditionError,
       oldContact,
       setContacts,
-      setError,
       setModal,
       zkWallet,
     ],
@@ -120,6 +124,11 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
           />
         </>
       )}
+      <div className='error-container'>
+        <p className={`error-text ${!!conditionError ? 'visible' : ''}`}>
+          {conditionError}
+        </p>
+      </div>
       <button type='submit' className='btn submit-button' onClick={handleSave}>
         {'Save'}
       </button>
