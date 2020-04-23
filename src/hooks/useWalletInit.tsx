@@ -102,7 +102,7 @@ const useWalletInit = () => {
           const balance = await syncWallet.getEthereumBalance(key);
           return {
             address: tokens[key].address,
-            balance: +balance / Math.pow(10, 18),
+            balance: +ethers.utils.formatEther(balance),
             symbol: tokens[key].symbol,
           };
         }
@@ -123,7 +123,7 @@ const useWalletInit = () => {
       const zkBalancePromises = Object.keys(zkBalance).map(async key => {
         return {
           address: tokens[key].address,
-          balance: +zkBalance[key] / Math.pow(10, 18),
+          balance: +ethers.utils.formatEther(zkBalance[key]),
           symbol: tokens[key].symbol,
         };
       });
@@ -148,6 +148,7 @@ const useWalletInit = () => {
       console.error('CreateWallet error', err);
     }
   }, [
+    logout,
     getSigner,
     provider,
     setError,

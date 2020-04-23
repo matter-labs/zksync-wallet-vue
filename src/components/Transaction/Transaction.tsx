@@ -129,12 +129,11 @@ const Transaction: React.FC<ITransactionProps> = ({
     inputValue &&
     +inputValue > 0 &&
     unlockFau &&
-    +inputValue < maxValue;
+    +inputValue <= maxValue;
 
   const validateNumbers = useCallback(
     e => {
       const amountNumber = ethers.utils.parseEther(e.toString());
-
       if (INPUT_VALIDATION.digits.test(e)) {
         setInputValue(e);
         title === 'Deposit'
@@ -264,8 +263,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     setWalletAddress,
   ]);
 
-  console.log(selected);
-
   useEffect(() => {
     if ((token && token === 'ETH') || symbolName === 'ETH') {
       setUnlockFau(true);
@@ -283,7 +280,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       title === 'Withdraw' &&
       zkWallet &&
       !walletAddress[1] &&
-      !selectedContact
+      selectedContact !== null
     ) {
       setWalletAddress(['Own account', zkWallet?.address()]);
       onChangeAddress(zkWallet?.address());
@@ -748,7 +745,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 onChangeAddress('');
                                 handleFilterContacts('');
                                 setWalletAddress([]);
-                                setSelectedContact('');
+                                setSelectedContact(null);
                               }}
                             ></button>
                           )}
@@ -942,7 +939,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                       className={`error-text ${
                         (!!inputValue &&
                           selectedBalance &&
-                          +inputValue > maxValue) ||
+                          +inputValue >= maxValue) ||
                         !!conditionError
                           ? 'visible'
                           : ''
@@ -979,12 +976,12 @@ const Transaction: React.FC<ITransactionProps> = ({
                           {'Fee:'}{' '}
                           {balances?.length && (
                             <span>
-                              {amount < maxValue
+                              {+inputValue <= maxValue
                                 ? parseFloat(
-                                    (amount * 0.001).toFixed(10).toString(),
+                                    (amount * 0.001).toFixed(8).toString(),
                                   )
                                 : parseFloat(
-                                    (maxValue * 0.001).toFixed(10).toString(),
+                                    (maxValue * 0.001).toFixed(8).toString(),
                                   )}{' '}
                               {symbolName ? symbolName : balances[0].symbol}
                             </span>

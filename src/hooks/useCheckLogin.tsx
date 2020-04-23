@@ -6,6 +6,8 @@ import { getWalletNameFromProvider } from 'src/utils';
 import { WalletType } from 'src/constants/Wallets';
 import { useQuery } from 'hooks/useQuery';
 
+import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
+
 export function useCheckLogin() {
   const params = useQuery();
   const {
@@ -16,6 +18,7 @@ export function useCheckLogin() {
     zkWallet,
     setWalletName,
     setAccessModal,
+    setError,
     walletName,
   } = useRootData(s => ({
     ...s,
@@ -47,8 +50,11 @@ export function useCheckLogin() {
   ]);
 
   useEffect(() => {
-    if (provider && !zkWallet) {
+    if (provider && !zkWallet && provider.networkVersion === RIGHT_NETWORK_ID) {
       cancelable(createWallet());
     }
-  }, [cancelable, createWallet, provider, zkWallet, setHintModal]);
+    if (provider && provider.networkVersion !== RIGHT_NETWORK_ID) {
+      setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`);
+    }
+  }, [cancelable, createWallet, provider, setError, zkWallet, setHintModal]);
 }

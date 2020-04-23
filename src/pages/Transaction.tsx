@@ -1,4 +1,5 @@
 import React, { FC, useState, useRef, useCallback } from 'react';
+import { ethers } from 'ethers';
 import { Tx } from './Transactions';
 import { Transition } from 'src/components/Transition/Transition';
 import { useTimeout } from 'src/hooks/timers';
@@ -34,11 +35,11 @@ export const Transaction: FC<Tx> = props => {
         <div className='transaction-history-amount'>
           {!!amount || !!priority_op?.amount
             ? parseFloat(
-                (
-                  (type === 'Deposit' && priority_op
+                (+ethers.utils.formatEther(
+                  type === 'Deposit' && priority_op
                     ? +priority_op.amount
-                    : +amount) / Math.pow(10, 18)
-                )
+                    : +amount,
+                ))
                   .toFixed(6)
                   .toString(),
               )

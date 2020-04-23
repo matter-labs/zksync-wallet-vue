@@ -14,6 +14,8 @@ import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 import { useLogout } from 'hooks/useLogout';
 import { WalletType } from './constants/Wallets';
 
+import * as zksync from 'zksync';
+
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const {
     error,
@@ -67,7 +69,14 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         }
       });
     }
-  }, [createWallet, provider, setAccessModal, setWalletName, zkWallet]);
+  }, [
+    createWallet,
+    provider,
+    setAccessModal,
+    setWalletName,
+    walletName,
+    zkWallet,
+  ]);
 
   useEffect(() => {
     if (provider && window['ethereum']) {
@@ -128,6 +137,10 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     zkWallet,
   ]);
 
+  const df = async () => await import('zksync');
+
+  console.dir(df());
+
   return (
     <div className={`content-wrapper ${walletName ? '' : 'start-page'}`}>
       <Modal
@@ -141,7 +154,12 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       </Modal>
       <Modal
         cancelAction={() => setAccessModal(false)}
-        visible={isAccessModalOpen && window.location.pathname.length > 1}
+        visible={
+          isAccessModalOpen &&
+          window.location.pathname.length > 1 &&
+          provider &&
+          provider.networkVersion === RIGHT_NETWORK_ID
+        }
         classSpecifier='acc'
         background={true}
         centered
