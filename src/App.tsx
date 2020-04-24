@@ -14,8 +14,6 @@ import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 import { useLogout } from 'hooks/useLogout';
 import { WalletType } from './constants/Wallets';
 
-import * as zksync from 'zksync';
-
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const {
     error,
@@ -58,20 +56,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   useWSHeartBeat();
   const { createWallet } = useWalletInit();
 
-  // const handleNetworkChange = useCallback(() => {
-  //   if (walletName === 'Metamask') {
-  //     provider.on('networkChanged', () => {
-  //     });
-  //   }
-  // }, [
-  //   createWallet,
-  //   provider,
-  //   setAccessModal,
-  //   setWalletName,
-  //   walletName,
-  //   zkWallet,
-  // ]);
-
   useEffect(() => {
     if (provider && window['ethereum']) {
       window['ethereum'].autoRefreshOnNetworkChange = false;
@@ -86,19 +70,35 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       provider.on('networkChanged', listener);
       return () => provider.off('networkChanged', listener);
     }
-  }, [createWallet, provider]);
+  }, [
+    createWallet,
+    provider,
+    setAccessModal,
+    setWalletName,
+    walletName,
+    zkWallet,
+  ]);
+
+  const listener = useCallback(() => {
+    provider.networkVersion !== RIGHT_NETWORK_ID && walletName === 'Metamask'
+      ? setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`)
+      : setError('');
+  }, [
+    createWallet,
+    provider,
+    setAccessModal,
+    setError,
+    setWalletName,
+    walletName,
+    zkWallet,
+  ]);
 
   useEffect(() => {
-    const listener = () => {
-      provider.networkVersion !== RIGHT_NETWORK_ID && walletName === 'Metamask'
-        ? setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`)
-        : setError('');
-    };
     if (provider && walletName && walletName === 'Metamask') {
       provider.on('networkChanged', listener);
       return () => provider.off('networkChanged', listener);
     }
-  }, [createWallet, provider, setError, walletName, zkWallet]);
+  }, [createWallet, listener, provider, setError, walletName, zkWallet]);
 
   const logout = useLogout();
 

@@ -277,6 +277,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     if (
       title === 'Withdraw' &&
       zkWallet &&
+      walletAddress.length < 2 &&
       !walletAddress[1] &&
       selectedContact !== null
     ) {
@@ -710,6 +711,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                             <div
                               className={`custom-selector contacts ${
                                 selectedContact &&
+                                walletAddress.length === 2 &&
                                 addressValue === walletAddress[1]
                                   ? ''
                                   : 'short'
@@ -722,12 +724,14 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 }}
                                 className={`custom-selector-title ${
                                   selectedContact &&
+                                  walletAddress.length === 2 &&
                                   addressValue === walletAddress[1]
                                     ? ''
                                     : 'short'
                                 }`}
                               >
                                 {(selectedContact || !walletAddress[0]) &&
+                                walletAddress.length === 2 &&
                                 addressValue === walletAddress[1] ? (
                                   <p>{selectedContact}</p>
                                 ) : (
@@ -751,7 +755,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                       </div>
                       {!!filteredContacts.length &&
                         addressValue &&
-                        !walletAddress[1] && (
+                        walletAddress.length < 2 && (
                           <div className='transaction-contacts-list'>
                             {filteredContacts.map(({ name, address }) => (
                               <div

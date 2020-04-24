@@ -49,7 +49,7 @@ export const useTransaction = () => {
   const hints = {};
 
   const [addressValue, setAddressValue] = useState<string>(
-    walletAddress[1] ? walletAddress[1] : '',
+    walletAddress.length === 2 ? walletAddress[1] : '',
   );
   const [amountValue, setAmountValue] = useState<any>(0);
   const [packableAmount, setPackableAmount] = useState<any>();
