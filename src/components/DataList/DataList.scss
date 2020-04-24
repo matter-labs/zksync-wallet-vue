@@ -15,7 +15,7 @@
 
     &-input {
       position: absolute;
-      top: 85px;
+      top: -25px;
       right: 20px;
       display: flex;
       align-items: center;
@@ -461,6 +461,7 @@
         top: -48px;
         width: 90px;
         font-size: var(--md-font-size);
+        border-radius: 4px;
       }
 
       & > p {

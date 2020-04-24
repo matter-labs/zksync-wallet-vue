@@ -601,10 +601,15 @@ input[type='radio']:focus + .contact-manage {
   }
 
   &.contacts {
+    &.disabled {
+      width: 5px;
+    }
+
     & > .custom-selector-title {
       padding: 10px 5px;
 
       &.disabled {
+        width: 5px;
         cursor: default;
         pointer-events: none;
 
