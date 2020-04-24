@@ -48,13 +48,4 @@ export function useCheckLogin() {
     setProvider,
     setAccessModal,
   ]);
-
-  useEffect(() => {
-    if (provider && !zkWallet && provider.networkVersion === RIGHT_NETWORK_ID) {
-      cancelable(createWallet());
-    }
-    if (provider && provider.networkVersion !== RIGHT_NETWORK_ID) {
-      setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`);
-    }
-  }, [cancelable, createWallet, provider, setError, zkWallet, setHintModal]);
 }
