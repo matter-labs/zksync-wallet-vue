@@ -9,7 +9,7 @@ export function getWalletNameFromProvider(): string | undefined {
     return 'Torus';
   }
   if (provider.isMetaMask) {
-    return 'MetaMask';
+    return 'Metamask';
   }
   if (provider.isDapper) {
     return 'Dapper';
