@@ -13,6 +13,7 @@ import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 import { useLogout } from 'hooks/useLogout';
 import { WalletType } from './constants/Wallets';
+import { useCancelable } from './hooks/useCancelable';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const {
@@ -56,49 +57,30 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   useWSHeartBeat();
   const { createWallet } = useWalletInit();
 
-  useEffect(() => {
-    if (provider && window['ethereum']) {
-      window['ethereum'].autoRefreshOnNetworkChange = false;
-      const listener = () => {
-        if (
-          window.location.pathname.length <= 1 &&
-          provider?.networkVersion === RIGHT_NETWORK_ID
-        ) {
-          createWallet();
-        }
-      };
-      provider.on('networkChanged', listener);
-      return () => provider.off('networkChanged', listener);
-    }
-  }, [
-    createWallet,
-    provider,
-    setAccessModal,
-    setWalletName,
-    walletName,
-    zkWallet,
-  ]);
-
-  const listener = useCallback(() => {
-    provider.networkVersion !== RIGHT_NETWORK_ID && walletName === 'Metamask'
-      ? setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`)
-      : setError('');
-  }, [
-    createWallet,
-    provider,
-    setAccessModal,
-    setError,
-    setWalletName,
-    walletName,
-    zkWallet,
-  ]);
+  const cancelable = useCancelable();
 
   useEffect(() => {
     if (provider && walletName && walletName === 'Metamask') {
+      window['ethereum'].autoRefreshOnNetworkChange = false;
+
+      const listener = () => {
+        if (
+          provider.networkVersion !== RIGHT_NETWORK_ID &&
+          walletName === 'Metamask'
+        ) {
+          setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`);
+        } else {
+          setError('');
+          if (!zkWallet) {
+            cancelable(createWallet);
+          }
+        }
+      };
+
       provider.on('networkChanged', listener);
       return () => provider.off('networkChanged', listener);
     }
-  }, [createWallet, listener, provider, setError, walletName, zkWallet]);
+  }, [createWallet, provider, setError, walletName, zkWallet, cancelable]);
 
   const logout = useLogout();
 
