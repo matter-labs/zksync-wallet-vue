@@ -104,13 +104,16 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const handleLogOut = useLogout();
   const cancelable = useCancelable();
 
-  if (provider && walletName === 'Metamask') {
-    provider.on('networkChanged', () => {
+  useEffect(() => {
+    if (!(provider && walletName === 'Metamask')) return;
+    const listener = () => {
       setWalletName('');
       setAccessModal(true);
       setWalletName('Metamask');
-    });
-  }
+    };
+    provider.on('networkChanged', listener);
+    return () => provider.off('networkChanged', listener);
+  });
 
   useEffect(() => {
     if (provider?.selectedAddress == null && walletName) {

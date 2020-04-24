@@ -58,49 +58,47 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   useWSHeartBeat();
   const { createWallet } = useWalletInit();
 
-  const handleNetworkChange = useCallback(() => {
-    if (walletName === 'Metamask') {
-      provider.on('networkChanged', () => {
+  // const handleNetworkChange = useCallback(() => {
+  //   if (walletName === 'Metamask') {
+  //     provider.on('networkChanged', () => {
+  //     });
+  //   }
+  // }, [
+  //   createWallet,
+  //   provider,
+  //   setAccessModal,
+  //   setWalletName,
+  //   walletName,
+  //   zkWallet,
+  // ]);
+
+  useEffect(() => {
+    if (provider && window['ethereum']) {
+      window['ethereum'].autoRefreshOnNetworkChange = false;
+      const listener = () => {
         if (
           window.location.pathname.length <= 1 &&
           provider?.networkVersion === RIGHT_NETWORK_ID
         ) {
           createWallet();
         }
-      });
+      };
+      provider.on('networkChanged', listener);
+      return () => provider.off('networkChanged', listener);
     }
-  }, [
-    createWallet,
-    provider,
-    setAccessModal,
-    setWalletName,
-    walletName,
-    zkWallet,
-  ]);
+  }, [createWallet, provider]);
 
   useEffect(() => {
-    if (provider && window['ethereum']) {
-      window['ethereum'].autoRefreshOnNetworkChange = false;
-      handleNetworkChange();
-    }
+    const listener = () => {
+      provider.networkVersion !== RIGHT_NETWORK_ID && walletName === 'Metamask'
+        ? setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`)
+        : setError('');
+    };
     if (provider && walletName && walletName === 'Metamask') {
-      provider.on('networkChanged', () => {
-        provider.networkVersion !== RIGHT_NETWORK_ID &&
-        walletName === 'Metamask'
-          ? setError(
-              `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`,
-            )
-          : setError('');
-      });
+      provider.on('networkChanged', listener);
+      return () => provider.off('networkChanged', listener);
     }
-  }, [
-    createWallet,
-    handleNetworkChange,
-    provider,
-    setError,
-    walletName,
-    zkWallet,
-  ]);
+  }, [createWallet, provider, setError, walletName, zkWallet]);
 
   const logout = useLogout();
 
@@ -136,10 +134,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     setZkWallet,
     zkWallet,
   ]);
-
-  const df = async () => await import('zksync');
-
-  console.dir(df());
 
   return (
     <div className={`content-wrapper ${walletName ? '' : 'start-page'}`}>
