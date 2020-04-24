@@ -262,6 +262,19 @@ const Transaction: React.FC<ITransactionProps> = ({
   ]);
 
   useEffect(() => {
+    if (
+      title === 'Withdraw' &&
+      zkWallet &&
+      walletAddress.length < 2 &&
+      !walletAddress[1] &&
+      selectedContact !== null
+    ) {
+      setWalletAddress(['Own account', zkWallet?.address()]);
+      onChangeAddress(zkWallet?.address());
+    }
+  }, []);
+
+  useEffect(() => {
     if ((token && token === 'ETH') || symbolName === 'ETH') {
       setUnlockFau(true);
     }
@@ -274,16 +287,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       setSymbolName(balances[0].symbol);
       setSymbol(balances[0].symbol);
     }
-    if (
-      title === 'Withdraw' &&
-      zkWallet &&
-      walletAddress.length < 2 &&
-      !walletAddress[1] &&
-      selectedContact !== null
-    ) {
-      setWalletAddress(['Own account', zkWallet?.address()]);
-      onChangeAddress(zkWallet?.address());
-    }
+
     if (token && zkWallet && token !== 'ETH') {
       zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
     }
@@ -651,7 +655,11 @@ const Transaction: React.FC<ITransactionProps> = ({
                         ].test(addressValue)}`}
                       >
                         <div
-                          className='custom-selector contacts'
+                          className={`custom-selector contacts ${
+                            walletAddress[0] || selectedContact
+                              ? ''
+                              : 'disabled'
+                          }`}
                           onClick={() => {
                             if (walletAddress[0] || selectedContact) {
                               openContactsList(!isContactsListOpen);

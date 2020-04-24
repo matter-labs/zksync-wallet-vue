@@ -34,7 +34,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
     if (addressValue) {
       setAddress(addressValue);
     }
-  }, [addressValue, setAddress]);
+  }, [addressValue, setAddress, setModal]);
 
   const handleSave = useCallback(
     e => {

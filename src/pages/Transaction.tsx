@@ -35,11 +35,11 @@ export const Transaction: FC<Tx> = props => {
         <div className='transaction-history-amount'>
           {!!amount || !!priority_op?.amount
             ? parseFloat(
-                (+ethers.utils.formatEther(
-                  type === 'Deposit' && priority_op
+                (
+                  (type === 'Deposit' && priority_op
                     ? +priority_op.amount
-                    : +amount,
-                ))
+                    : +amount) / Math.pow(10, 18)
+                )
                   .toFixed(6)
                   .toString(),
               )
