@@ -31,7 +31,7 @@ export function useWSHeartBeat() {
     (
       transport: WSTransport,
       pingTimeout = 2000,
-      disconnectTimeout = pingTimeout * 2,
+      disconnectTimeout = pingTimeout * 2.5,
     ) => {
       function disconnectHandler() {
         cleanup();

@@ -92,8 +92,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     }),
   );
 
-  const focusInput = useAutoFocus();
-
   const body = document.querySelector('#body');
   const dataPropertySymbol = 'symbol';
   const dataPropertyName = 'name';
