@@ -122,16 +122,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (provider && walletName) {
       setCurAddress(provider?.selectedAddress);
     }
-    if (
-      (walletName === 'Metamask' &&
-        curAddress?.length &&
-        !zkWallet &&
-        provider?.networkVersion === RIGHT_NETWORK_ID) ||
-      (!zkWallet && walletName && walletName !== 'Metamask')
-    ) {
-      cancelable(createWallet());
-      setHintModal('');
-    }
     if (error) {
       setAccessModal(false);
     }

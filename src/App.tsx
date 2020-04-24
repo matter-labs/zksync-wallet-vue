@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 
 import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
@@ -26,29 +26,13 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     walletName,
     zkWallet,
     setZkWallet,
+    setHintModal,
   } = useRootData(
-    ({
-      error,
-      isAccessModalOpen,
-      provider,
-      setAccessModal,
-      setError,
-      setModal,
-      setProvider,
-      setWalletName,
-      setZkWallet,
-      walletName,
-      zkWallet,
-    }) => ({
+    ({ error, isAccessModalOpen, provider, walletName, zkWallet, ...s }) => ({
+      ...s,
       error: error.get(),
       isAccessModalOpen: isAccessModalOpen.get(),
       provider: provider.get(),
-      setAccessModal,
-      setError,
-      setModal,
-      setProvider,
-      setWalletName,
-      setZkWallet,
       walletName: walletName.get(),
       zkWallet: zkWallet.get(),
     }),
@@ -56,8 +40,30 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
 
   useWSHeartBeat();
   const { createWallet } = useWalletInit();
+  const providerNetwork = provider?.networkVersion;
 
   const cancelable = useCancelable();
+
+  useEffect(() => {
+    if (
+      (walletName === 'Metamask' &&
+        provider?.selectedAddress &&
+        !zkWallet &&
+        providerNetwork === RIGHT_NETWORK_ID) ||
+      (!zkWallet && walletName && walletName !== 'Metamask')
+    ) {
+      cancelable(createWallet());
+      setHintModal('');
+    }
+  }, [
+    cancelable,
+    createWallet,
+    provider,
+    setHintModal,
+    walletName,
+    zkWallet,
+    providerNetwork,
+  ]);
 
   useEffect(() => {
     if (provider && walletName && walletName === 'Metamask') {
@@ -71,9 +77,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
           setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`);
         } else {
           setError('');
-          if (!zkWallet) {
-            cancelable(createWallet);
-          }
         }
       };
 
