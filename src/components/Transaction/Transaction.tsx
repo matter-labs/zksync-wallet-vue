@@ -848,7 +848,8 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   +(
                                     +(price && !!price[selectedBalance]
                                       ? price[selectedBalance]
-                                      : 1) * (inputValue ? +inputValue : 0)
+                                      : 1) *
+                                    (inputValue ? Math.abs(+inputValue) : 0)
                                   ).toFixed(2)
                                 }
                               </span>
