@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import React, { useEffect, useMemo } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';
@@ -7,7 +7,6 @@ import Spinner from 'components/Spinner/Spinner';
 
 import { useRootData } from 'hooks/useRootData';
 import useWalletInit from 'hooks/useWalletInit';
-import { useInterval, useTimeout } from 'hooks/timers';
 import { useQuery } from 'hooks/useQuery';
 import { useCancelable } from 'hooks/useCancelable';
 
@@ -52,9 +51,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     setError,
     setHintModal,
     setNormalBg,
-    setProvider,
     setWalletName,
-    setZkWallet,
     walletName,
     zkWallet,
   } = useRootData(
@@ -97,10 +94,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     }),
   );
 
-  const [curAddress, setCurAddress] = useState<string>(
-    provider?.selectedAddress,
-  );
-
   const handleLogOut = useLogout();
   const cancelable = useCancelable();
 
@@ -119,19 +112,12 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     if (provider?.selectedAddress == null && walletName) {
       setAccessModal(true);
     }
-    if (provider && walletName) {
-      setCurAddress(provider?.selectedAddress);
-    }
     if (error) {
       setAccessModal(false);
-    }
-    if (curAddress && walletName) {
-      setHintModal('Connected! Make sign in the pop up');
     }
   }, [
     cancelable,
     createWallet,
-    curAddress,
     error,
     provider,
     setAccessModal,
@@ -140,12 +126,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     walletName,
     zkWallet,
   ]);
-
-  useInterval(() => {
-    if (!curAddress && walletName && provider?.selectedAddress) {
-      setCurAddress(provider?.selectedAddress);
-    }
-  }, 5000);
 
   const params = useQuery();
   if (zkWallet) {
