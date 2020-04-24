@@ -57,28 +57,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   useWSHeartBeat();
   const { createWallet } = useWalletInit();
 
-  // useEffect(() => {
-  //   if (provider && window['ethereum']) {
-  //     const listener = () => {
-  //       if (
-  //         window.location.pathname.length <= 1 &&
-  //         provider?.networkVersion === RIGHT_NETWORK_ID
-  //       ) {
-  //         createWallet();
-  //       }
-  //     };
-  //     provider.on('networkChanged', listener);
-  //     return () => provider.off('networkChanged', listener);
-  //   }
-  // }, [
-  //   createWallet,
-  //   provider,
-  //   setAccessModal,
-  //   setWalletName,
-  //   walletName,
-  //   zkWallet,
-  // ]);
-
   const cancelable = useCancelable();
 
   useEffect(() => {
