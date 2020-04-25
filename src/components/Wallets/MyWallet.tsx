@@ -332,10 +332,10 @@ const MyWallet: React.FC<IMyWalletProps> = ({
               </p>
             </div>
             <button
-              className='btn submit-button'
               onClick={() => setTransactionType('deposit')}
+              className='btn deposit-button btn-tr big'
             >
-              Deposit
+              <span></span>Deposit
             </button>
           </>
         )}

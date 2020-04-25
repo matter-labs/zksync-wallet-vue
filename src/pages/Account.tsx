@@ -197,7 +197,7 @@ const Account: React.FC = (): JSX.Element => {
     </div>
   );
 
-  const UnverifiedBal = ({ balance: { symbol, balance } }) => (
+  const UnverifiedBal = ({ balance: { address, symbol, balance } }) => (
     <div key={balance} className='balances-token pending'>
       <div className='balances-token-left'>
         {'zk'}
@@ -214,7 +214,12 @@ const Account: React.FC = (): JSX.Element => {
           <p>{'Pending'}</p>
           <SpinnerWorm />
         </div>
-        <button className='pending btn-tr'>{'Send'}</button>
+        <button
+          onClick={() => handleSend(address, balance, symbol)}
+          className='pending btn-tr'
+        >
+          {'Send'}
+        </button>
       </div>
     </div>
   );

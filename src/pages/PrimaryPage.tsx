@@ -119,6 +119,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     cancelable,
     createWallet,
     error,
+    hintModal,
     provider,
     setAccessModal,
     setHintModal,
@@ -131,6 +132,8 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   if (zkWallet) {
     return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
   }
+
+  console.log(hintModal);
 
   return (
     <>
@@ -177,13 +180,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                   Please switch to ${RIGHT_NETWORK_NAME}`}
                 </p>
               </div>
-              <button
-                className='btn submit-button'
-                onClick={() => handleLogOut(false, '')}
-              >
-                {'Disconnect '}
-                {walletName}
-              </button>
             </>
           )}
         </Modal>

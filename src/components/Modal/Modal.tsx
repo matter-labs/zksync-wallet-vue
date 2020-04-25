@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import cl from 'classnames';
 
-import { useListener } from 'hooks/useListener';
+import { useLogout } from 'src/hooks/useLogout';
 import { useRootData } from 'hooks/useRootData';
 
 import Portal from './Portal';
@@ -54,6 +54,8 @@ const Modal: React.FC<ModalProps> = ({
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
+
+  const handleLogOut = useLogout();
 
   useEffect(() => {
     const body = document.body;
@@ -128,8 +130,43 @@ const Modal: React.FC<ModalProps> = ({
           className='modal-wrapper'
         >
           <div className={`modal ${classSpecifier}`}>
-            <button onClick={closeHandler} className='close-icon' />
-            {children}
+            {zkWallet && (
+              <>
+                <button onClick={closeHandler} className='close-icon' />
+                {children}
+              </>
+            )}
+            {!zkWallet && !error && (
+              <>
+                {children}
+                <button
+                  className='btn submit-button'
+                  onClick={() => handleLogOut(false, '')}
+                >
+                  {'Disconnect '}
+                  {walletName}
+                </button>
+              </>
+            )}
+            {!zkWallet && error && (
+              <>
+                <h3>
+                  {'Connecting to '}
+                  {walletName}
+                </h3>
+                <div className='wrong-network'>
+                  <div className='wrong-network-logo'></div>
+                  <p>{children}</p>
+                </div>
+                <button
+                  className='btn submit-button'
+                  onClick={() => handleLogOut(false, '')}
+                >
+                  {'Disconnect '}
+                  {walletName}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </Transition>

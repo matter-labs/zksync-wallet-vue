@@ -161,8 +161,7 @@
     font-size: var(--sm-font-size);
     background-color: var(--transparent);
     border-bottom: 1px solid var(--border-color);
-    cursor: pointer;
-
+    
     &.verified {
       background-color: var(--transparent);
     }

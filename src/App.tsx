@@ -26,6 +26,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     setWalletName,
     walletName,
     zkWallet,
+    setZkBalances,
     setZkWallet,
     setHintModal,
   } = useRootData(
@@ -65,7 +66,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       (!zkWallet && walletName && walletName !== 'Metamask')
     ) {
       cancelable(createWallet());
-      setHintModal('');
     }
   }, [
     cancelable,
@@ -126,6 +126,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
           setWalletName(savedWalletName);
         }
         setZkWallet(null);
+        setZkBalances([]);
         setAccessModal(true);
       }
     });
@@ -135,6 +136,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     setAccessModal,
     setWalletName,
     walletName,
+    setZkBalances,
     setZkWallet,
     zkWallet,
   ]);
