@@ -14,6 +14,7 @@ import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 import { useLogout } from 'hooks/useLogout';
 import { WalletType } from './constants/Wallets';
 import { useCancelable } from './hooks/useCancelable';
+import { useInterval } from './hooks/timers';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const {
@@ -41,15 +42,26 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   useWSHeartBeat();
   const { createWallet } = useWalletInit();
   const providerNetwork = provider?.networkVersion;
-
   const cancelable = useCancelable();
+  const [curAddress, setCurAddress] = useState<string>(
+    provider?.selectedAddress,
+  );
+
+  useEffect(() => {
+    if (provider && walletName) {
+      setCurAddress(provider?.selectedAddress);
+    }
+    if (curAddress && walletName) {
+      setHintModal('Connected! Make sign in the pop up');
+    }
+  }, [curAddress, provider, setHintModal, walletName]);
 
   useEffect(() => {
     if (
       (walletName === 'Metamask' &&
-        provider?.selectedAddress &&
+        curAddress &&
         !zkWallet &&
-        providerNetwork === RIGHT_NETWORK_ID) ||
+        provider.networkVersion === RIGHT_NETWORK_ID) ||
       (!zkWallet && walletName && walletName !== 'Metamask')
     ) {
       cancelable(createWallet());
@@ -63,10 +75,17 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     walletName,
     zkWallet,
     providerNetwork,
+    curAddress,
   ]);
 
+  useInterval(() => {
+    if (!curAddress && walletName && provider?.selectedAddress) {
+      setCurAddress(provider?.selectedAddress);
+    }
+  }, 5000);
+
   useEffect(() => {
-    if (provider && walletName && walletName === 'Metamask') {
+    if (provider && walletName === 'Metamask') {
       window['ethereum'].autoRefreshOnNetworkChange = false;
 
       const listener = () => {
