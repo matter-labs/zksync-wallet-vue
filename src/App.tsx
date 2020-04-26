@@ -99,6 +99,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         }
       };
 
+      listener();
       provider.on('networkChanged', listener);
       return () => provider.off('networkChanged', listener);
     }
