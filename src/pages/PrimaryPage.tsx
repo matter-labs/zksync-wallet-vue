@@ -133,8 +133,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
   }
 
-  console.log(hintModal);
-
   return (
     <>
       <LazyWallet />
