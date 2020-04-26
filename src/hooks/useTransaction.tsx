@@ -94,7 +94,7 @@ export const useTransaction = () => {
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
-              balance: +ethers.utils.formatEther(zkBalance[key]),
+              balance: +zkBalance[key] / Math.pow(10, 18),
               symbol: tokens[key].symbol,
             };
           });
@@ -163,7 +163,7 @@ export const useTransaction = () => {
               );
               const hash = depositPriorityOperation.ethTx;
               history(
-                +ethers.utils.formatEther(amountValue) || 0,
+                +(amountValue / Math.pow(10, 18)) || 0,
                 hash.hash,
                 zkWallet.address(),
                 'deposit',
@@ -251,7 +251,7 @@ export const useTransaction = () => {
           });
           const hash = transferTransaction.txHash;
           history(
-            +ethers.utils.formatEther(amountValue) || 0,
+            +(amountValue / Math.pow(10, 18)) || 0,
             hash,
             addressValue,
             'transfer',
@@ -324,7 +324,7 @@ export const useTransaction = () => {
           );
           const hash = withdrawTransaction.txHash;
           history(
-            +ethers.utils.formatEther(amountValue) || 0,
+            +(amountValue / Math.pow(10, 18)) || 0,
             hash,
             addressValue,
             'withdraw',

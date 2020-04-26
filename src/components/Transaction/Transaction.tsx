@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ethers } from 'ethers';
+import makeBlockie from 'ethereum-blockies-base64';
 
 import DataList from 'components/DataList/DataList';
 import Modal from 'components/Modal/Modal';
@@ -687,7 +688,11 @@ const Transaction: React.FC<ITransactionProps> = ({
 
                         <div className='currency-input-wrapper'>
                           {ADDRESS_VALIDATION['eth'].test(addressValue) && (
-                            <span className='label-done'></span>
+                            <img
+                              src={makeBlockie(addressValue)}
+                              alt='blockie-icon'
+                              className='transaction-blockie'
+                            />
                           )}
                           <input
                             placeholder='Ox address or contact name'
