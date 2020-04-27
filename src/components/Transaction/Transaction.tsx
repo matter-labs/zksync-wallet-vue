@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ethers } from 'ethers';
+import { ethers, providers } from 'ethers';
 import makeBlockie from 'ethereum-blockies-base64';
 
 import DataList from 'components/DataList/DataList';
@@ -44,6 +44,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const {
     ethId,
     hintModal,
+    provider,
     searchBalances,
     searchContacts,
     setBalances,
@@ -61,6 +62,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     ({
       ethId,
       hintModal,
+      provider,
       searchBalances,
       searchContacts,
       setBalances,
@@ -77,6 +79,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     }) => ({
       ethId: ethId.get(),
       hintModal: hintModal.get(),
+      provider: provider.get(),
       searchBalances: searchBalances.get(),
       searchContacts: searchContacts.get(),
       setBalances,
@@ -100,7 +103,7 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const [amount, setAmount] = useState<number>(0);
   const [conditionError, setConditionError] = useState('');
-  const [gas, setGas] = useState<number>(0);
+  const [gas, setGas] = useState<any>(0);
   const [fee, setFee] = useState<any>();
   const [filteredContacts, setFilteredContacts] = useState<any>([]);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
@@ -317,7 +320,9 @@ const Transaction: React.FC<ITransactionProps> = ({
       .getDefaultProvider()
       .getGasPrice()
       .then(res => res.toString())
-      .then(data => setGas(+data));
+      .then(data => {
+        setGas(data);
+      });
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
@@ -407,13 +412,15 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const handleFee = useCallback(
     e => {
-      zkWallet?.provider
-        .getTransactionFee(
-          title === 'Withdraw' ? 'Withdraw' : 'Transfer',
-          (+e.target.value * Math.pow(10, 18)).toString(),
-          symbolName,
-        )
-        .then(res => setFee(res.toString()));
+      if (title !== 'Deposit') {
+        zkWallet?.provider
+          .getTransactionFee(
+            title === 'Withdraw' ? 'Withdraw' : 'Transfer',
+            (e * Math.pow(10, 18)).toString(),
+            symbolName,
+          )
+          .then(res => setFee(res.toString()));
+      }
     },
     [inputValue, symbolName, title, zkWallet],
   );
@@ -838,7 +845,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                             setAmount(+e.target.value);
                             handleInputWidth(+e.target.value);
                             setInputValue(e.target.value);
-                            handleFee(e);
+                            handleFee(+e.target.value);
                             if (!!inputValue && +inputValue < maxValue) {
                               setConditionError('');
                             }
@@ -894,6 +901,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   2 * ZK_FEE_MULTIPLIER * gas,
                               );
                               handleInputWidth(maxValue);
+                              handleFee(+maxValue);
                             }}
                           >
                             {selectedBalance && (
@@ -1004,7 +1012,10 @@ const Transaction: React.FC<ITransactionProps> = ({
                     <p key={maxValue} className='transaction-fee'>
                       {selectedBalance && submitCondition && (
                         <>
-                          {'Fee:'} {+fee / Math.pow(10, 18)}
+                          {'Fee:'}{' '}
+                          {title === 'Deposit'
+                            ? (+inputValue * 0.01).toFixed(10)
+                            : +fee / Math.pow(10, 18)}
                         </>
                       )}
                     </p>

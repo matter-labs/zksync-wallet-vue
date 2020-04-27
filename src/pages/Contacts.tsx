@@ -22,7 +22,6 @@ const Contacts: React.FC = (): JSX.Element => {
   const {
     ethId,
     searchContacts,
-    setContacts,
     setModal,
     setTransactionType,
     setWalletAddress,
@@ -31,7 +30,6 @@ const Contacts: React.FC = (): JSX.Element => {
     ({
       ethId,
       searchContacts,
-      setContacts,
       setModal,
       setTransactionType,
       setWalletAddress,
@@ -39,7 +37,6 @@ const Contacts: React.FC = (): JSX.Element => {
     }) => ({
       ethId: ethId.get(),
       searchContacts: searchContacts.get(),
-      setContacts,
       setModal,
       setTransactionType,
       setWalletAddress,
@@ -49,18 +46,22 @@ const Contacts: React.FC = (): JSX.Element => {
 
   const history = useHistory();
 
-  const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
-  const contacts = JSON.parse(arr);
   interface IOldContacts {
     name: string;
     address: string;
   }
 
+  const [contacts, setContacts] = useState<any>();
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [oldContact, setOldContact] = useState<IOldContacts>();
 
   const inputRef: (HTMLInputElement | null)[] = [];
+
+  useEffect(() => {
+    const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
+    setContacts(JSON.parse(arr));
+  }, [setContacts, zkWallet]);
 
   const handleCopy = useCallback(
     address => {
@@ -90,9 +91,8 @@ const Contacts: React.FC = (): JSX.Element => {
         JSON.stringify(newContacts),
       );
       setModal('');
-      setContacts(contacts);
     },
-    [contacts, setContacts, setModal, zkWallet],
+    [contacts, setModal, zkWallet],
   );
 
   useCheckLogin();

@@ -504,6 +504,7 @@ p.transaction-hash {
   word-break: break-all;
 
   & > a {
+    color: var(--button-bg-color);
     text-decoration: none;
     text-decoration: underline;
   }
