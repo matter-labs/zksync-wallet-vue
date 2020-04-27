@@ -527,7 +527,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   </div>
                   <div className='balances-token-right'>
                     <span>
-                      {'balance: '}
+                      {window?.innerWidth > WIDTH_BP && 'balance:'}{' '}
                       <p className='datalist-balance'>
                         {parseFloat(balance.toFixed(8).toString())}
                       </p>

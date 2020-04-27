@@ -55,14 +55,44 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     if (curAddress && walletName) {
       setHintModal('Connected! Make sign in the pop up');
     }
-  }, [curAddress, provider, setHintModal, walletName]);
+  }, [
+    curAddress,
+    createWallet,
+    cancelable,
+    provider,
+    setHintModal,
+    walletName,
+  ]);
 
   useEffect(() => {
     if (
       (walletName === 'Metamask' &&
         curAddress &&
         !zkWallet &&
-        provider.networkVersion === RIGHT_NETWORK_ID) ||
+        provider.networkVersion === RIGHT_NETWORK_ID &&
+        window.location.pathname.length > 1) ||
+      (!zkWallet && walletName && walletName !== 'Metamask')
+    ) {
+      cancelable(createWallet());
+    }
+  }, [
+    cancelable,
+    createWallet,
+    provider,
+    providerNetwork,
+    setHintModal,
+    walletName,
+    zkWallet,
+    curAddress,
+  ]);
+
+  useEffect(() => {
+    if (
+      (walletName === 'Metamask' &&
+        curAddress &&
+        !zkWallet &&
+        provider.networkVersion === RIGHT_NETWORK_ID &&
+        window.location.pathname.length < 2) ||
       (!zkWallet && walletName && walletName !== 'Metamask')
     ) {
       cancelable(createWallet());
