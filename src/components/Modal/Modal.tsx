@@ -185,6 +185,13 @@ const Modal: React.FC<ModalProps> = ({
     </>
   );
 
+  const plainModalContent = () => (
+    <>
+      <button onClick={closeHandler} className='close-icon' />
+      {children}
+    </>
+  );
+
   return (
     <Portal className={cl(centered && 'center')}>
       <Transition type='modal' trigger={shown}>
@@ -197,6 +204,7 @@ const Modal: React.FC<ModalProps> = ({
             {((isAccessModalOpen && !error) || (!zkWallet && !error)) &&
               accessModalContent()}
             {error && errorModalContent()}
+            {zkWallet && !error && plainModalContent()}
           </div>
         </div>
       </Transition>
