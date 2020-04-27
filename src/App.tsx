@@ -74,7 +74,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     setHintModal,
     walletName,
     zkWallet,
-    providerNetwork,
     curAddress,
   ]);
 
