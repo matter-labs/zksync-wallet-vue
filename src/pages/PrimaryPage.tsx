@@ -174,7 +174,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
           <>
             <div className='logo-textless'></div>
             <div className='welcome-text'>
-              <h1>{'Welcome to zkSync.'}</h1>
               <h2>{'Simple, fast and secure token transfers.'}</h2>
               <p>{'Connect a wallet'}</p>
             </div>

@@ -39,7 +39,6 @@
 
 .modal {
   position: absolute;
-  left: 50%;
   // top: 50%;
   z-index: 3000;
   width: 100%;
@@ -50,7 +49,6 @@
   background-color: var(--modal-bg-color);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  transform: translateX(calc(-50% - 10px));
   transition: opacity 200ms ease-in-out;
 
   & > h3 {
@@ -523,6 +521,16 @@ body.dark {
     }
   }
 
+  .modal-container {
+    &.center {
+      .modal-wrapper {
+        .modal {
+          transform: translateX(calc(-50% - 10px));
+        }
+      }
+    }
+  }
+
   .metamask {
     padding-bottom: 36px;
 
@@ -550,8 +558,14 @@ body.dark {
       display: flex;
       align-items: center;
       justify-content: center;
+      padding-right: 10px;
       perspective: 1000px;
       perspective-origin: center;
+
+      .modal {
+        left: 50%;
+        transform: translateX(-50%);
+      }
     }
   }
 }

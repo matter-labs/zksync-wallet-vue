@@ -3,9 +3,11 @@ import { ethers } from 'ethers';
 import { Tx } from './Transactions';
 import { Transition } from 'src/components/Transition/Transition';
 import { useTimeout } from 'src/hooks/timers';
-import { ZK_EXPLORER } from 'src/constants/links';
 import { TxStatus } from 'src/components/Transaction/TxStatus';
 import { FloatingMenu } from 'src/components/Common/FloatingMenu';
+
+import { WIDTH_BP } from 'constants/magicNumbers';
+import { ZK_EXPLORER } from 'src/constants/links';
 
 export const Transaction: FC<Tx> = props => {
   const {
