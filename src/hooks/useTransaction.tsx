@@ -46,8 +46,6 @@ export const useTransaction = () => {
 
   const cancelable = useCancelable();
 
-  const hints = {};
-
   const [addressValue, setAddressValue] = useState<string>(
     walletAddress.length === 2 ? walletAddress[1] : '',
   );
@@ -232,6 +230,9 @@ export const useTransaction = () => {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
           setHintModal('Follow the instructions in the pop up');
+          const fee = await zkWallet?.provider
+            .getTransactionFee('Transfer', amountValue.toString(), token)
+            .then(res => res.toString());
           const zkSync = await import('zksync');
           const transferTransaction = await zkWallet.syncTransfer({
             to: addressValue,
@@ -243,11 +244,7 @@ export const useTransaction = () => {
                 )
               ).toString(),
             ),
-            fee: ethers.utils.bigNumberify(
-              zkSync.closestPackableTransactionFee(
-                Math.floor(amountValue * 0.001).toString(),
-              ),
-            ),
+            fee: zkSync.closestPackableTransactionFee(fee),
           });
           const hash = transferTransaction.txHash;
           history(
@@ -300,6 +297,9 @@ export const useTransaction = () => {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
           setHintModal('Follow the instructions in the pop up');
+          const fee = await zkWallet?.provider
+            .getTransactionFee('Withdraw', amountValue.toString(), token)
+            .then(res => res.toString());
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
             {
               ethAddress: addressValue,
@@ -313,12 +313,8 @@ export const useTransaction = () => {
                   )
                 ).toString(),
               ),
-              fee: ethers.utils.bigNumberify(
-                await import('zksync').then(module =>
-                  module.closestPackableTransactionFee(
-                    Math.floor(amountValue * 0.001).toString(),
-                  ),
-                ),
+              fee: await import('zksync').then(module =>
+                module.closestPackableTransactionFee(fee),
               ),
             },
           );

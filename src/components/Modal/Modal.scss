@@ -39,6 +39,7 @@
 
 .modal {
   position: absolute;
+  left: 50%;
   // top: 50%;
   z-index: 3000;
   width: 100%;
@@ -49,6 +50,7 @@
   background-color: var(--modal-bg-color);
   border: 1px solid var(--border-color);
   border-radius: 8px;
+  transform: translateX(calc(-50% - 10px));
   transition: opacity 200ms ease-in-out;
 
   & > h3 {
