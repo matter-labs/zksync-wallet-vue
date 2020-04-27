@@ -116,6 +116,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setAccessModal(false);
     }
   }, [
+    isAccessModalOpen,
     cancelable,
     createWallet,
     error,
@@ -166,19 +167,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               <Spinner />
             </>
           ) : (
-            <>
-              <h3>
-                {'Connecting to '}
-                {walletName}
-              </h3>
-              <div className='wrong-network'>
-                <div className='wrong-network-logo'></div>
-                <p>
-                  {`You are in the wrong network.
-                  Please switch to ${RIGHT_NETWORK_NAME}`}
-                </p>
-              </div>
-            </>
+            <></>
           )}
         </Modal>
         {!walletName && (
