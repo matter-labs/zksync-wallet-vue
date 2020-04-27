@@ -100,7 +100,8 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const [amount, setAmount] = useState<number>(0);
   const [conditionError, setConditionError] = useState('');
-  const [fee, setFee] = useState<number>(0);
+  const [gas, setGas] = useState<number>(0);
+  const [fee, setFee] = useState<any>();
   const [filteredContacts, setFilteredContacts] = useState<any>([]);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
@@ -137,22 +138,22 @@ const Transaction: React.FC<ITransactionProps> = ({
         setInputValue(e);
         title === 'Deposit'
           ? onChangeAmount(
-              +amountNumber + fee >
+              +amountNumber + gas >
                 +ethers.utils.parseEther(maxValue.toString())
-                ? +amountNumber - fee - 2 * ZK_FEE_MULTIPLIER * fee
+                ? +amountNumber - gas - 2 * ZK_FEE_MULTIPLIER * gas
                 : +amountNumber,
             )
           : onChangeAmount(
-              +amountNumber + fee >
+              +amountNumber + gas >
                 +ethers.utils.parseEther(maxValue.toString())
-                ? +amountNumber - fee
+                ? +amountNumber - gas
                 : +amountNumber,
             );
       }
     },
     [
       bigNumberMultiplier,
-      fee,
+      gas,
       inputValue,
       maxValue,
       onChangeAmount,
@@ -316,7 +317,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       .getDefaultProvider()
       .getGasPrice()
       .then(res => res.toString())
-      .then(data => setFee(+data));
+      .then(data => setGas(+data));
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
@@ -326,7 +327,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     balances,
     contacts,
     body,
-    fee,
+    gas,
     filteredContacts,
     handleCancel,
     handleClickOutside,
@@ -403,6 +404,19 @@ const Transaction: React.FC<ITransactionProps> = ({
       setConditionError('Adress does not match ethereum address format');
     }
   }, [addressValue, inputValue, selectedBalance, setConditionError, unlockFau]);
+
+  const handleFee = useCallback(
+    e => {
+      zkWallet?.provider
+        .getTransactionFee(
+          title === 'Withdraw' ? 'Withdraw' : 'Transfer',
+          (+e.target.value * Math.pow(10, 18)).toString(),
+          symbolName,
+        )
+        .then(res => setFee(res.toString()));
+    },
+    [inputValue, symbolName, title, zkWallet],
+  );
 
   return (
     <>
@@ -824,6 +838,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                             setAmount(+e.target.value);
                             handleInputWidth(+e.target.value);
                             setInputValue(e.target.value);
+                            handleFee(e);
                             if (!!inputValue && +inputValue < maxValue) {
                               setConditionError('');
                             }
@@ -876,7 +891,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                               setInputValue(maxValue.toString());
                               onChangeAmount(
                                 (+maxValue - 0.0003) * bigNumberMultiplier -
-                                  2 * ZK_FEE_MULTIPLIER * fee,
+                                  2 * ZK_FEE_MULTIPLIER * gas,
                               );
                               handleInputWidth(maxValue);
                             }}
@@ -989,19 +1004,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                     <p key={maxValue} className='transaction-fee'>
                       {selectedBalance && submitCondition && (
                         <>
-                          {'Fee:'}{' '}
-                          {balances?.length && (
-                            <span>
-                              {+inputValue <= maxValue
-                                ? parseFloat(
-                                    (amount * 0.001).toFixed(8).toString(),
-                                  )
-                                : parseFloat(
-                                    (maxValue * 0.001).toFixed(8).toString(),
-                                  )}{' '}
-                              {symbolName ? symbolName : balances[0].symbol}
-                            </span>
-                          )}
+                          {'Fee:'} {+fee / Math.pow(10, 18)}
                         </>
                       )}
                     </p>
