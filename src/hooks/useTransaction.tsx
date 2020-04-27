@@ -150,11 +150,9 @@ export const useTransaction = () => {
                       )
                     ).toString(),
                   ),
-                  maxFeeInETHToken: ethers.utils.bigNumberify(
-                    await import('zksync').then(module =>
-                      module.closestPackableTransactionFee(
-                        (2 * ZK_FEE_MULTIPLIER * +fee).toString(),
-                      ),
+                  maxFeeInETHToken: await import('zksync').then(module =>
+                    module.closestPackableTransactionFee(
+                      (2 * ZK_FEE_MULTIPLIER * +fee).toString(),
                     ),
                   ),
                 }),
