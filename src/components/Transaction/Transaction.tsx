@@ -322,7 +322,6 @@ const Transaction: React.FC<ITransactionProps> = ({
       .then(res => res.toString())
       .then(data => {
         setGas(data);
-        console.log(data);
       });
     document.addEventListener('click', handleClickOutside, true);
     return () => {
