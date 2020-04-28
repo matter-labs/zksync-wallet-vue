@@ -110,7 +110,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     if (provider && walletName === 'Metamask') {
       window['ethereum'].autoRefreshOnNetworkChange = false;
 
-      const listener = () => {
+      const networkChangeListener = () => {
         if (
           provider.networkVersion !== RIGHT_NETWORK_ID &&
           walletName === 'Metamask'
@@ -121,9 +121,9 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         }
       };
 
-      listener();
-      provider.on('networkChanged', listener);
-      return () => provider.off('networkChanged', listener);
+      networkChangeListener();
+      provider.on('networkChanged', networkChangeListener);
+      return () => provider.off('networkChanged', networkChangeListener);
     }
   }, [provider, setError, walletName, zkWallet, cancelable]);
 
@@ -133,8 +133,8 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     if (!!zkWallet) {
       setAccessModal(false);
     }
-    if (!provider || walletName.toLowerCase() !== 'metamask') return;
-    provider.on('accountsChanged', () => {
+    if (!provider || walletName !== 'Metamask') return;
+    const accountChangeListener = () => {
       if (
         zkWallet &&
         provider &&
@@ -152,7 +152,9 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         setZkBalances([]);
         setAccessModal(true);
       }
-    });
+    };
+    provider.on('accountsChanged', accountChangeListener);
+    return () => provider.off('accountsChanged', accountChangeListener);
   }, [
     logout,
     provider,
