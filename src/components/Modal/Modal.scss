@@ -521,16 +521,6 @@ body.dark {
     }
   }
 
-  .modal-container {
-    &.center {
-      .modal-wrapper {
-        .modal {
-          transform: translateX(calc(-50% - 10px));
-        }
-      }
-    }
-  }
-
   .metamask {
     padding-bottom: 36px;
 
@@ -561,11 +551,6 @@ body.dark {
       padding-right: 10px;
       perspective: 1000px;
       perspective-origin: center;
-
-      .modal {
-        left: 50%;
-        transform: translateX(-50%);
-      }
     }
   }
 }
