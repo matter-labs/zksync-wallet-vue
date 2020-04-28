@@ -184,7 +184,7 @@ export const useTransaction = () => {
               setVerifyToken(!!verifyReceipt);
             } catch (err) {
               if (err.message.match(/(?:denied)/i)) {
-                setHintModal('denied');
+                setHintModal(err.message);
               } else if (err.name && err.message) {
                 setError(`${err.name}: ${err.message}`);
               } else {
@@ -269,7 +269,7 @@ export const useTransaction = () => {
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          setHintModal('denied');
+          setHintModal('User denied action');
         } else if (err.name && err.message) {
           setError(`${err.name}: ${err.message}`);
         } else {
@@ -341,7 +341,7 @@ export const useTransaction = () => {
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          setHintModal('denied');
+          setHintModal('User denied action');
         } else if (err.name && err.message) {
           setError(`${err.name}: ${err.message}`);
         } else {
