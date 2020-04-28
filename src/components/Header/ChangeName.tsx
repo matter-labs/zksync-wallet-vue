@@ -19,7 +19,7 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }) => {
     e => {
       e.preventDefault();
       if (zkWallet) {
-        localStorage.setItem(zkWallet.address(), newName);
+        localStorage.setItem(zkWallet.address(), newName.trim());
       }
       setModalOpen(false);
     },
@@ -37,7 +37,7 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }) => {
         ref={inputRef}
         placeholder='Enter new name'
         value={newName}
-        onChange={e => setNewName(e.target.value.trim())}
+        onChange={e => setNewName(e.target.value)}
       />
       <button
         type='submit'

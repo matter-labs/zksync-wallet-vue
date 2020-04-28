@@ -53,7 +53,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       setCurAddress(provider?.selectedAddress);
     }
     if (curAddress && walletName) {
-      setHintModal('Connected! Make sign in the pop up');
+      setHintModal(`Login with ${walletName}`);
     }
   }, [curAddress, cancelable, provider, setHintModal, walletName]);
 

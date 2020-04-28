@@ -155,12 +155,11 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
             <>
               <h3 className='title-connecting'>
-                {'Connecting to '}
-                {walletName}
+                {!!hintModal && hintModal.match(/(?:login)/i)
+                  ? hintModal
+                  : 'Connecting to'}{' '}
               </h3>
-              <p>
-                {hintModal ? hintModal : 'Follow the instructions in the popup'}
-              </p>
+              <p>{'Follow the instructions in the popup'}</p>
               <Spinner />
             </>
           ) : (
@@ -171,7 +170,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
           <>
             <div className='logo-textless'></div>
             <div className='welcome-text'>
-              <h2>{'Simple, fast and secure token transfers.'}</h2>
+              <h2>{'Simple, fast and secure token transfers'}</h2>
               <p>{'Connect a wallet'}</p>
             </div>
             <div className='wallets-wrapper'>
