@@ -296,11 +296,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     if (token && zkWallet && token !== 'ETH') {
       zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
     }
-    if (hintModal === 'denied') {
-      handleCancel();
-      setWalletName();
-      setHintModal('');
-    }
     if (
       ADDRESS_VALIDATION['eth'].test(addressValue) &&
       !selectedContact &&
@@ -598,7 +593,7 @@ const Transaction: React.FC<ITransactionProps> = ({
           <>
             {isLoading && (
               <>
-                {isLoading && (
+                {isLoading && !hintModal.match(/(?:denied)/i) && (
                   <>
                     <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
                     {!!hintModal
@@ -635,6 +630,22 @@ const Transaction: React.FC<ITransactionProps> = ({
                     </button>
                   </>
                 )}
+              </>
+            )}
+            {hintModal.match(/(?:denied)/i) && (
+              <>
+                <button
+                  onClick={() => {
+                    handleCancel();
+                    setWalletAddress([]);
+                    setTransactionType(undefined);
+                    setWalletName();
+                    setHintModal('');
+                  }}
+                  className='transaction-back'
+                ></button>
+                <h1>{'Transaction canceled'}</h1>
+                <p>{hintModal}</p>
               </>
             )}
             {unlocked === undefined && (
