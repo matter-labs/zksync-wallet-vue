@@ -1058,7 +1058,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 </div>
                 <button className='btn submit-button' onClick={handleUnlock}>
                   <span className='submit-label unlock'></span>
-                  {' Unlock'}
+                  {'Unlock'}
                 </button>
               </>
             )}
