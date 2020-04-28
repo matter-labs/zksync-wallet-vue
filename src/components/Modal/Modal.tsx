@@ -98,7 +98,7 @@ const Modal: React.FC<ModalProps> = ({
   );
 
   useEffect(() => {
-    if (error) document.addEventListener('click', handleClickOutside, true);
+    document.addEventListener('click', handleClickOutside, true);
     return () =>
       document.removeEventListener('click', handleClickOutside, true);
   }, [handleClickOutside]);
