@@ -453,26 +453,6 @@ body.dark {
   }
 }
 
-.modal-container {
-  &.center {
-    .modal-wrapper {
-      top: 0;
-      left: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding-right: 10px;
-      perspective: 1000px;
-      perspective-origin: center;
-
-      .modal {
-        left: 50%;
-        transform: translateX(calc(-50% - 8px));
-      }
-    }
-  }
-}
-
 @media screen and (min-width: 600px) {
   .close-icon {
     top: 27px;
@@ -541,16 +521,6 @@ body.dark {
     }
   }
 
-  .modal-container {
-    &.center {
-      .modal-wrapper {
-        .modal {
-          transform: translateX(calc(-50% - 10px));
-        }
-      }
-    }
-  }
-
   .metamask {
     padding-bottom: 36px;
 
@@ -566,6 +536,21 @@ body.dark {
       width: calc(100% + 30px);
       margin-right: -15px;
       padding-right: 5px;
+    }
+  }
+}
+
+.modal-container {
+  &.center {
+    .modal-wrapper {
+      top: 0;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-right: 10px;
+      perspective: 1000px;
+      perspective-origin: center;
     }
   }
 }
