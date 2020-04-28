@@ -11,7 +11,7 @@ export const FOOTER_LINKS: IFooterLinks[] = [
   },
   {
     title: 'Terms of Use',
-    link: 'https://zksync.io/legal/terms.htmlg',
+    link: 'https://zksync.io/legal/terms.html',
   },
   {
     title: 'Privacy Policy',

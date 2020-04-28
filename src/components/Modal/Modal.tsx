@@ -139,13 +139,14 @@ const Modal: React.FC<ModalProps> = ({
   const accessModalContent = () => (
     <>
       <h3 className='title-connecting'>
-        {'Connecting to '}
-        {walletName}
+        {!!hintModal && hintModal.match(/(?:login)/i)
+          ? hintModal
+          : 'Connecting to'}
       </h3>
       <div
         className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
       ></div>
-      <p>{hintModal ? hintModal : 'Follow the instructions in the popup'}</p>
+      <p>{'Follow the instructions in the popup'}</p>
       <Spinner />
       <button
         className='btn submit-button'
@@ -164,8 +165,12 @@ const Modal: React.FC<ModalProps> = ({
       )}
       {!zkWallet && (
         <h3 className='title-connecting'>
-          {'Connecting to '}
-          {walletName}
+          <h3 className='title-connecting'>
+            {!!hintModal && hintModal.match(/(?:login)/i)
+              ? hintModal
+              : 'Connecting to'}{' '}
+            {walletName}
+          </h3>
         </h3>
       )}
       <div
