@@ -169,7 +169,6 @@ const Contacts: React.FC = (): JSX.Element => {
               onClick={() => handleCopy(address)}
             ></button>
             <input
-              onChange={undefined}
               className='copy-block-input'
               value={address.toString()}
               ref={e => inputRef.push(e)}
