@@ -22,8 +22,6 @@ import {
 import { useLogout } from 'src/hooks/useLogout';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
-  const { createWallet } = useWalletInit();
-
   const mobileCheck = useMemo(
     () => MOBILE_DEVICE.test(navigator.userAgent),
     [],
@@ -118,7 +116,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   }, [
     isAccessModalOpen,
     cancelable,
-    createWallet,
     error,
     hintModal,
     provider,

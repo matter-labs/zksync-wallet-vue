@@ -4,4 +4,5 @@ export interface ISaveContactsProps {
   edit?: boolean;
   oldContact?: { name: string; address: string };
   title: string;
+  onSaveContact?: () => void;
 }

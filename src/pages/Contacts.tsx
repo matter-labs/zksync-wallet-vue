@@ -1,50 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
 
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
-import editicon from 'images/icon-edit.svg';
-import deleteicon from 'images/mdi_delete.svg';
 
 import { useRootData } from 'hooks/useRootData';
-
 import { DataList } from 'components/DataList/DataListNew';
 
-import { WIDTH_BP } from 'constants/magicNumbers';
-import { Transition } from 'components/Transition/Transition';
-import { useTimeout } from 'hooks/timers';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
-import { FloatingMenu } from 'src/components/Common/FloatingMenu';
+import { Contact } from './Contact';
 
 const Contacts: React.FC = (): JSX.Element => {
-  const dataPropertyName = 'name';
-
-  const {
-    ethId,
-    searchContacts,
-    setModal,
-    setTransactionType,
-    setWalletAddress,
-    zkWallet,
-  } = useRootData(
-    ({
-      ethId,
-      searchContacts,
-      setModal,
-      setTransactionType,
-      setWalletAddress,
-      zkWallet,
-    }) => ({
-      ethId: ethId.get(),
-      searchContacts: searchContacts.get(),
-      setModal,
-      setTransactionType,
-      setWalletAddress,
-      zkWallet: zkWallet.get(),
-    }),
-  );
-
-  const history = useHistory();
+  const { setModal, zkWallet } = useRootData(s => ({
+    ...s,
+    zkWallet: s.zkWallet.get(),
+  }));
 
   interface IOldContacts {
     name: string;
@@ -52,32 +21,13 @@ const Contacts: React.FC = (): JSX.Element => {
   }
 
   const [contacts, setContacts] = useState<any>();
-  const [isCopyModal, openCopyModal] = useState<boolean>(false);
-  const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
   const [oldContact, setOldContact] = useState<IOldContacts>();
 
-  const inputRef: (HTMLInputElement | null)[] = [];
-
-  useEffect(() => {
+  const updateContactList = useCallback(() => {
     const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
     setContacts(JSON.parse(arr));
   }, [setContacts, zkWallet]);
-
-  const handleCopy = useCallback(
-    address => {
-      inputRef.map(el => {
-        if (address === el?.value) {
-          el?.focus();
-          el?.select();
-          document.execCommand('copy');
-        }
-      });
-      openCopyModal(true);
-    },
-    [inputRef],
-  );
-
-  useTimeout(() => isCopyModal && openCopyModal(false), 2000, [isCopyModal]);
+  useEffect(updateContactList, [setContacts, zkWallet]);
 
   const handleDelete = useCallback(
     name => {
@@ -114,6 +64,7 @@ const Contacts: React.FC = (): JSX.Element => {
               title='Add contact'
               addressValue=''
               addressInput={true}
+              onSaveContact={updateContactList}
             />
           </Modal>
           <Modal
@@ -127,6 +78,7 @@ const Contacts: React.FC = (): JSX.Element => {
               title='Edit contact'
               addressValue=''
               addressInput={true}
+              onSaveContact={updateContactList}
             />
           </Modal>
           <button
@@ -139,63 +91,13 @@ const Contacts: React.FC = (): JSX.Element => {
         </>
       )}
       emptyListComponent={() => <p>{"You don't have contacts yet..."}</p>}
-      renderItem={({ address, name }) => (
-        <div className='balances-contact' key={name}>
-          <div className='balances-contact-left'>
-            <span className='balances-contact-name'>{name}</span>
-            <span className='balances-contact-address'>
-              {window?.innerWidth > WIDTH_BP
-                ? address
-                : address.replace(address.slice(14, address.length - 4), '...')}
-            </span>
-          </div>
-          <div className='balances-contact-right'>
-            <Transition type='fly' timeout={200} trigger={isCopyModal}>
-              <div className={'hint-copied open'}>
-                <p>{'Copied!'}</p>
-              </div>
-            </Transition>
-            <button
-              className='balances-contact-send btn-tr'
-              onClick={() => {
-                setTransactionType('transfer');
-                setWalletAddress([name, address]);
-              }}
-            >
-              <Link to='/'></Link>
-            </button>
-            <button
-              className='balances-contact-copy btn-tr'
-              onClick={() => handleCopy(address)}
-            ></button>
-            <input
-              className='copy-block-input'
-              value={address.toString()}
-              ref={e => inputRef.push(e)}
-            />
-
-            <FloatingMenu>
-              <button
-                className='contact-manage-edit'
-                onClick={() => {
-                  setModal('add-contact edit-contact');
-                  setOldContact({ name: name, address: address });
-                }}
-              >
-                <img src={editicon} alt='edit' />
-                <p>{'Edit'}</p>
-              </button>
-              <button
-                onClick={() => handleDelete(name)}
-                className='contact-manage-delete btn-tr'
-              >
-                <img src={deleteicon} alt='edit' />
-                <p>{'Delete'}</p>
-                <Link to='/contacts'></Link>
-              </button>
-            </FloatingMenu>
-          </div>
-        </div>
+      renderItem={contact => (
+        <Contact
+          key={contact.address}
+          onSetOldContact={setOldContact}
+          onDelete={handleDelete}
+          {...contact}
+        />
       )}
     />
   );

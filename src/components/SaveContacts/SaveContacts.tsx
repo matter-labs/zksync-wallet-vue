@@ -13,6 +13,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
   edit,
   oldContact,
   title,
+  onSaveContact,
 }): JSX.Element => {
   const [name, setName] = useState<string>(
     oldContact?.name ? oldContact.name : '',
@@ -74,6 +75,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
             JSON.stringify(newContacts),
           );
         }
+        if (onSaveContact) onSaveContact();
         setModal('');
         const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
         const acontacts = JSON.parse(arr);
@@ -98,6 +100,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = ({
       setContacts,
       setModal,
       zkWallet,
+      onSaveContact,
     ],
   );
 

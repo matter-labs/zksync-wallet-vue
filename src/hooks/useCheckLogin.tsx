@@ -27,7 +27,6 @@ export function useCheckLogin() {
     zkWallet: s.zkWallet.get(),
     walletName: s.walletName.get(),
   }));
-  const { createWallet } = useWalletInit();
   const cancelable = useCancelable();
 
   useEffect(() => {
@@ -42,7 +41,6 @@ export function useCheckLogin() {
     provider,
     zkWallet,
     cancelable,
-    createWallet,
     params,
     setHintModal,
     setProvider,
