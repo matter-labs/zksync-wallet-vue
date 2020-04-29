@@ -143,6 +143,7 @@ const Modal: React.FC<ModalProps> = ({
 
   const accessModalContent = () => (
     <>
+      <button onClick={() => handleLogOut(false, '')} className='close-icon' />
       <h3 className='title-connecting'>
         {hintModal?.match(/login/i) ? hintModal : 'Connecting to'}
       </h3>
@@ -153,12 +154,13 @@ const Modal: React.FC<ModalProps> = ({
       {/* <Spinner /> */}
       <button
         className='btn submit-button'
-        onClick={() => handleLogOut(false, '')}
+        onClick={() =>
+          zkWalletInitializing === true
+            ? handleLogOut(false, '')
+            : createWallet()
+        }
       >
-        {`Disconnect ${walletName}`}
-      </button>
-      <button className='btn submit-button' onClick={() => createWallet()}>
-        {zkWalletInitializing === true ? <Spinner /> : 'Send sign request'}
+        {zkWalletInitializing === true ? 'Cancel' : 'Send sign request'}
       </button>
     </>
   );
