@@ -51,4 +51,6 @@ export interface Props<T> {
    * when putting it in global store)
    */
   bindData?: [T[], (predicate: (data: T[]) => T[]) => any];
+
+  refreshInterval?: number;
 }

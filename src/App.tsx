@@ -1,11 +1,10 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
 import Modal from 'components/Modal/Modal';
 
 import { useRootData } from 'hooks/useRootData';
-import useWalletInit from 'hooks/useWalletInit';
 
 import { IAppProps } from 'types/Common';
 
@@ -41,8 +40,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   );
 
   useWSHeartBeat();
-  const { createWallet } = useWalletInit();
-  const providerNetwork = provider?.networkVersion;
   const cancelable = useCancelable();
   const [curAddress, setCurAddress] = useState<string>(
     provider?.selectedAddress,
@@ -56,49 +53,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       setHintModal(`Login with ${walletName}`);
     }
   }, [curAddress, cancelable, provider, setHintModal, walletName]);
-
-  useEffect(() => {
-    if (
-      (walletName === 'Metamask' &&
-        curAddress &&
-        !zkWallet &&
-        provider.networkVersion === RIGHT_NETWORK_ID &&
-        window.location.pathname.length > 1) ||
-      (!zkWallet && walletName && walletName !== 'Metamask')
-    ) {
-      cancelable(createWallet);
-    }
-  }, [
-    cancelable,
-    createWallet,
-    provider,
-    providerNetwork,
-    setHintModal,
-    walletName,
-    zkWallet,
-    curAddress,
-  ]);
-
-  useEffect(() => {
-    if (
-      (walletName === 'Metamask' &&
-        curAddress &&
-        !zkWallet &&
-        provider.networkVersion === RIGHT_NETWORK_ID &&
-        window.location.pathname.length < 2) ||
-      (!zkWallet && walletName && walletName !== 'Metamask')
-    ) {
-      cancelable(createWallet);
-    }
-  }, [
-    cancelable,
-    createWallet,
-    provider,
-    setHintModal,
-    walletName,
-    zkWallet,
-    curAddress,
-  ]);
 
   useInterval(() => {
     if (!curAddress && walletName && provider?.selectedAddress) {
@@ -130,7 +84,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const logout = useLogout();
 
   useEffect(() => {
-    if (!!zkWallet) {
+    if (zkWallet) {
       setAccessModal(false);
     }
     if (!provider || walletName !== 'Metamask') return;

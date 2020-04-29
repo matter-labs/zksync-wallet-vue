@@ -14,6 +14,7 @@ import { useCancelable } from 'hooks/useCancelable';
 import { Props } from './DataListProps';
 
 import './DataList.scss';
+import { useInterval } from 'src/hooks/timers';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   if (typeof o === 'object') {
@@ -44,6 +45,7 @@ export function DataList<T>({
   loadMoreAmount = 5,
   onSort,
   bindData,
+  refreshInterval = 0,
 }: Props<T>) {
   const [debouncedSearch, setSearch, searchValue] = useDebouncedValue('', 500);
   const focusInput = useAutoFocus();
@@ -74,9 +76,8 @@ export function DataList<T>({
 
   // Lazy fetch
   const cancelable = useCancelable();
-  useEffect(() => {
-    if (!hasMore || typeof onFetch !== 'function') return;
-
+  const refreshData = useCallback(() => {
+    if (typeof onFetch !== 'function') return;
     const amount = infScrollInitialCount
       ? itemAmount <= infScrollInitialCount
         ? infScrollInitialCount
@@ -88,30 +89,30 @@ export function DataList<T>({
         : itemAmount - loadMoreAmount
       : undefined;
 
-    cancelable(
-      onFetch(amount, offset).then(res => {
-        if (res.length) {
-          const pred = d => d.slice(0, offset).concat(res);
-          if (setBinded) {
-            setBinded(pred);
-          } else {
-            setResolvedData(pred);
-          }
-        } else {
-          setHasMore(false);
-        }
-      }),
-    );
+    return cancelable(onFetch!(amount, offset)).then(res => {
+      const pred = d => d.slice(0, offset).concat(res);
+      if (setBinded) {
+        setBinded(pred);
+      } else {
+        setResolvedData(pred);
+      }
+      return res.length;
+    });
   }, [
     onFetch,
-    setFiltered,
     itemAmount,
     setBinded,
     cancelable,
-    hasMore,
     infScrollInitialCount,
     loadMoreAmount,
   ]);
+
+  useEffect(() => {
+    if (!hasMore || typeof onFetch !== 'function') return;
+    refreshData()?.then(length => {
+      if (!length) setHasMore(false);
+    });
+  }, [refreshData, setHasMore, hasMore, onFetch]);
 
   // Infinite scroll
   useListener(
@@ -136,6 +137,8 @@ export function DataList<T>({
     loadMoreAmount,
     loadMoreThreshold,
   ]);
+
+  useInterval(refreshData, refreshInterval, [], refreshInterval > 0);
 
   // Search hook
   useEffect(() => {
