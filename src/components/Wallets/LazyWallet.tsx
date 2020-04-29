@@ -16,7 +16,7 @@ const LazyWallet: React.FC = () => {
   );
 
   return (
-    <Suspense fallback={<div>{'Loading...'}</div>}>
+    <Suspense fallback={null}>
       <Wallet />
     </Suspense>
   );

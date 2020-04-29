@@ -2,13 +2,15 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import cl from 'classnames';
 
-import { useListener } from 'hooks/useListener';
+import { useLogout } from 'src/hooks/useLogout';
 import { useRootData } from 'hooks/useRootData';
 
 import Portal from './Portal';
 import { Transition } from 'components/Transition/Transition';
+import Spinner from 'components/Spinner/Spinner';
 
 import { WRONG_NETWORK } from 'constants/regExs.ts';
+import { RIGHT_NETWORK_ID } from 'constants/networks';
 
 import './Modal.scss';
 
@@ -31,6 +33,8 @@ const Modal: React.FC<ModalProps> = ({
 }) => {
   const {
     error,
+    hintModal,
+    isAccessModalOpen,
     isModalOpen,
     provider,
     setAccessModal,
@@ -42,8 +46,19 @@ const Modal: React.FC<ModalProps> = ({
     walletName,
     zkWallet,
   } = useRootData(
-    ({ error, isModalOpen, provider, walletName, zkWallet, ...rest }) => ({
+    ({
+      error,
+      hintModal,
+      isAccessModalOpen,
+      isModalOpen,
+      provider,
+      walletName,
+      zkWallet,
+      ...rest
+    }) => ({
+      hintModal: hintModal.get(),
       error: error.get(),
+      isAccessModalOpen: isAccessModalOpen.get(),
       isModalOpen: isModalOpen.get(),
       provider: provider.get(),
       walletName: walletName.get(),
@@ -54,6 +69,8 @@ const Modal: React.FC<ModalProps> = ({
 
   const overlayRef = useRef<HTMLDivElement>(null);
   const history = useHistory();
+
+  const handleLogOut = useLogout();
 
   useEffect(() => {
     const body = document.body;
@@ -119,6 +136,67 @@ const Modal: React.FC<ModalProps> = ({
 
   const shown = classSpecifier === isModalOpen || visible;
 
+  const accessModalContent = () => (
+    <>
+      <h3 className='title-connecting'>
+        {!!hintModal && hintModal.match(/(?:login)/i)
+          ? hintModal
+          : 'Connecting to'}
+      </h3>
+      <div
+        className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
+      ></div>
+      <p>{'Follow the instructions in the popup'}</p>
+      <Spinner />
+      <button
+        className='btn submit-button'
+        onClick={() => handleLogOut(false, '')}
+      >
+        {'Disconnect '}
+        {walletName}
+      </button>
+    </>
+  );
+
+  const errorModalContent = () => (
+    <>
+      {zkWallet && error && provider.networkVersion === RIGHT_NETWORK_ID && (
+        <button onClick={closeHandler} className='close-icon' />
+      )}
+      {!zkWallet && (
+        <h3 className='title-connecting'>
+          <h3 className='title-connecting'>
+            {!!hintModal && hintModal.match(/(?:login)/i)
+              ? hintModal
+              : 'Connecting to'}{' '}
+            {walletName}
+          </h3>
+        </h3>
+      )}
+      <div
+        className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
+      ></div>
+      <div className='wrong-network'>
+        <div className='wrong-network-logo'></div>
+        <p>{error}</p>
+      </div>
+      <button
+        className='btn submit-button'
+        onClick={() => handleLogOut(false, '')}
+      >
+        {'Disconnect '}
+        {walletName}
+      </button>
+    </>
+  );
+
+  const plainModalContent = () => (
+    <>
+      <button onClick={closeHandler} className='close-icon' />
+      {children}
+    </>
+  );
+
   return (
     <Portal className={cl(centered && 'center')}>
       <Transition type='modal' trigger={shown}>
@@ -128,8 +206,10 @@ const Modal: React.FC<ModalProps> = ({
           className='modal-wrapper'
         >
           <div className={`modal ${classSpecifier}`}>
-            <button onClick={closeHandler} className='close-icon' />
-            {children}
+            {((isAccessModalOpen && !error) || (!zkWallet && !error)) &&
+              accessModalContent()}
+            {error && errorModalContent()}
+            {zkWallet && !error && plainModalContent()}
           </div>
         </div>
       </Transition>

@@ -8,7 +8,10 @@ export function useLogout() {
   const { pathname } = useLocation();
   const {
     setAccessModal,
+    setError,
+    setHintModal,
     setModal,
+    setProvider,
     setWalletName,
     setZkWallet,
     setZkBalances,
@@ -24,11 +27,14 @@ export function useLogout() {
   const handleLogOut = useCallback(
     (accessModal, name, withRedirect = false) => {
       setModal('');
+      setError('');
       setWalletName(name);
       setAccessModal(accessModal);
       setZkWallet(null);
       setZkBalances([]);
       setTxs([]);
+      setProvider(false);
+      setHintModal('');
       if (withRedirect) {
         history.push({
           pathname: '/',

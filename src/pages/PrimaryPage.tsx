@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { Redirect, useHistory } from 'react-router-dom';
+import React, { useEffect, useMemo } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';
@@ -7,7 +7,6 @@ import Spinner from 'components/Spinner/Spinner';
 
 import { useRootData } from 'hooks/useRootData';
 import useWalletInit from 'hooks/useWalletInit';
-import { useInterval, useTimeout } from 'hooks/timers';
 import { useQuery } from 'hooks/useQuery';
 import { useCancelable } from 'hooks/useCancelable';
 
@@ -23,8 +22,6 @@ import {
 import { useLogout } from 'src/hooks/useLogout';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
-  const { createWallet } = useWalletInit();
-
   const mobileCheck = useMemo(
     () => MOBILE_DEVICE.test(navigator.userAgent),
     [],
@@ -52,9 +49,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     setError,
     setHintModal,
     setNormalBg,
-    setProvider,
     setWalletName,
-    setZkWallet,
     walletName,
     zkWallet,
   } = useRootData(
@@ -97,49 +92,32 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     }),
   );
 
-  const [curAddress, setCurAddress] = useState<string>(
-    provider?.selectedAddress,
-  );
-
   const handleLogOut = useLogout();
   const cancelable = useCancelable();
 
-  if (provider && walletName === 'Metamask') {
-    provider.on('networkChanged', () => {
+  useEffect(() => {
+    if (!(provider && walletName === 'Metamask')) return;
+    const listener = () => {
       setWalletName('');
       setAccessModal(true);
       setWalletName('Metamask');
-    });
-  }
+    };
+    provider.on('networkChanged', listener);
+    return () => provider.off('networkChanged', listener);
+  });
 
   useEffect(() => {
     if (provider?.selectedAddress == null && walletName) {
       setAccessModal(true);
     }
-    if (provider && walletName) {
-      setCurAddress(provider?.selectedAddress);
-    }
-    if (
-      (walletName === 'Metamask' &&
-        curAddress?.length &&
-        !zkWallet &&
-        provider?.networkVersion === RIGHT_NETWORK_ID) ||
-      (!zkWallet && walletName && walletName !== 'Metamask')
-    ) {
-      cancelable(createWallet());
-      setHintModal('');
-    }
     if (error) {
       setAccessModal(false);
     }
-    if (curAddress && walletName) {
-      setHintModal('Connected! Make sign in the pop up');
-    }
   }, [
+    isAccessModalOpen,
     cancelable,
-    createWallet,
-    curAddress,
     error,
+    hintModal,
     provider,
     setAccessModal,
     setHintModal,
@@ -147,12 +125,6 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     walletName,
     zkWallet,
   ]);
-
-  useInterval(() => {
-    if (!curAddress && walletName && provider?.selectedAddress) {
-      setCurAddress(provider?.selectedAddress);
-    }
-  }, 5000);
 
   const params = useQuery();
   if (zkWallet) {
@@ -183,43 +155,22 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
             <>
               <h3 className='title-connecting'>
-                {'Connecting to '}
-                {walletName}
+                {!!hintModal && hintModal.match(/(?:login)/i)
+                  ? hintModal
+                  : 'Connecting to'}{' '}
               </h3>
-              <p>
-                {hintModal ? hintModal : 'Follow the instructions in the popup'}
-              </p>
+              <p>{'Follow the instructions in the popup'}</p>
               <Spinner />
             </>
           ) : (
-            <>
-              <h3>
-                {'Connecting to '}
-                {walletName}
-              </h3>
-              <div className='wrong-network'>
-                <div className='wrong-network-logo'></div>
-                <p>
-                  {`You are in the wrong network.
-                  Please switch to ${RIGHT_NETWORK_NAME}`}
-                </p>
-              </div>
-              <button
-                className='btn submit-button'
-                onClick={() => handleLogOut(false, '')}
-              >
-                {'Disconnect '}
-                {walletName}
-              </button>
-            </>
+            <></>
           )}
         </Modal>
         {!walletName && (
           <>
             <div className='logo-textless'></div>
             <div className='welcome-text'>
-              <h1>{'Welcome to zkSync.'}</h1>
-              <h2>{'Simple, fast and secure token transfers.'}</h2>
+              <h2>{'Simple, fast and secure token transfers'}</h2>
               <p>{'Connect a wallet'}</p>
             </div>
             <div className='wallets-wrapper'>

@@ -46,10 +46,8 @@ export const useTransaction = () => {
 
   const cancelable = useCancelable();
 
-  const hints = {};
-
   const [addressValue, setAddressValue] = useState<string>(
-    walletAddress[1] ? walletAddress[1] : '',
+    walletAddress.length === 2 ? walletAddress[1] : '',
   );
   const [amountValue, setAmountValue] = useState<any>(0);
   const [packableAmount, setPackableAmount] = useState<any>();
@@ -152,18 +150,16 @@ export const useTransaction = () => {
                       )
                     ).toString(),
                   ),
-                  maxFeeInETHToken: ethers.utils.bigNumberify(
-                    await import('zksync').then(module =>
-                      module.closestPackableTransactionFee(
-                        (2 * ZK_FEE_MULTIPLIER * +fee).toString(),
-                      ),
+                  maxFeeInETHToken: await import('zksync').then(module =>
+                    module.closestPackableTransactionFee(
+                      (2 * ZK_FEE_MULTIPLIER * +fee).toString(),
                     ),
                   ),
                 }),
               );
               const hash = depositPriorityOperation.ethTx;
               history(
-                amountValue / Math.pow(10, 18) || 0,
+                +(amountValue / Math.pow(10, 18)) || 0,
                 hash.hash,
                 zkWallet.address(),
                 'deposit',
@@ -188,7 +184,7 @@ export const useTransaction = () => {
               setVerifyToken(!!verifyReceipt);
             } catch (err) {
               if (err.message.match(/(?:denied)/i)) {
-                setHintModal('denied');
+                setHintModal(err.message);
               } else if (err.name && err.message) {
                 setError(`${err.name}: ${err.message}`);
               } else {
@@ -232,29 +228,25 @@ export const useTransaction = () => {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
           setHintModal('Follow the instructions in the pop up');
+          const fee = await zkWallet?.provider
+            .getTransactionFee('Transfer', amountValue.toString(), token)
+            .then(res => res.toString());
+          const zkSync = await import('zksync');
           const transferTransaction = await zkWallet.syncTransfer({
             to: addressValue,
             token: token,
             amount: ethers.utils.bigNumberify(
               (
-                await import('zksync').then(module =>
-                  module.closestPackableTransactionAmount(
-                    amountValue?.toString(),
-                  ),
+                await zkSync.closestPackableTransactionAmount(
+                  amountValue?.toString(),
                 )
               ).toString(),
             ),
-            fee: ethers.utils.bigNumberify(
-              await import('zksync').then(module =>
-                module.closestPackableTransactionFee(
-                  Math.floor(amountValue * 0.001).toString(),
-                ),
-              ),
-            ),
+            fee: zkSync.closestPackableTransactionFee(fee),
           });
           const hash = transferTransaction.txHash;
           history(
-            amountValue / Math.pow(10, 18) || 0,
+            +(amountValue / Math.pow(10, 18)) || 0,
             hash,
             addressValue,
             'transfer',
@@ -277,7 +269,7 @@ export const useTransaction = () => {
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          setHintModal('denied');
+          setHintModal('User denied action');
         } else if (err.name && err.message) {
           setError(`${err.name}: ${err.message}`);
         } else {
@@ -303,6 +295,9 @@ export const useTransaction = () => {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
           setHintModal('Follow the instructions in the pop up');
+          const fee = await zkWallet?.provider
+            .getTransactionFee('Withdraw', amountValue.toString(), token)
+            .then(res => res.toString());
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
             {
               ethAddress: addressValue,
@@ -316,18 +311,14 @@ export const useTransaction = () => {
                   )
                 ).toString(),
               ),
-              fee: ethers.utils.bigNumberify(
-                await import('zksync').then(module =>
-                  module.closestPackableTransactionFee(
-                    Math.floor(amountValue * 0.001).toString(),
-                  ),
-                ),
+              fee: await import('zksync').then(module =>
+                module.closestPackableTransactionFee(fee),
               ),
             },
           );
           const hash = withdrawTransaction.txHash;
           history(
-            amountValue / Math.pow(10, 18) || 0,
+            +(amountValue / Math.pow(10, 18)) || 0,
             hash,
             addressValue,
             'withdraw',
@@ -350,7 +341,7 @@ export const useTransaction = () => {
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          setHintModal('denied');
+          setHintModal('User denied action');
         } else if (err.name && err.message) {
           setError(`${err.name}: ${err.message}`);
         } else {

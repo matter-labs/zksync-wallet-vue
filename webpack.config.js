@@ -38,10 +38,11 @@ const rules = [
   },
   {
     test: /\.(svg|png|jpe?g)?$/,
-    loader: 'file-loader',
+    loader: 'url-loader',
     options: {
       name: '[hash].[ext]',
       outputPath: 'assets/',
+      limit: 8192,
     },
   },
 ];

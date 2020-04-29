@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ethers } from 'ethers';
+import { ethers, providers } from 'ethers';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -55,7 +55,7 @@ const useWalletInit = () => {
   );
 
   const getSigner = useCallback(provider => {
-    if (ethers.providers) {
+    if (provider) {
       const signer = new ethers.providers.Web3Provider(provider).getSigner();
       return signer;
     }
@@ -139,10 +139,16 @@ const useWalletInit = () => {
             : setError(DEFAULT_ERROR);
         });
     } catch (err) {
+      const error = err.message
+        ? !!err.message.match(/(?:denied)/i)
+        : !!err.match(/(?:denied)/i);
+      if (error) {
+        logout(false, '');
+      }
       console.error('CreateWallet error', err);
-      // err.name && err.message ? setError(`${err.name}: ${err.message}`) : setError(DEFAULT_ERROR);
     }
   }, [
+    logout,
     getSigner,
     provider,
     setError,

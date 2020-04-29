@@ -11,10 +11,10 @@ export const FOOTER_LINKS: IFooterLinks[] = [
   },
   {
     title: 'Terms of Use',
-    link: 'https://hackmd.io/ZGp5E7pLTCSbJfalk0g8Jg',
+    link: 'https://zksync.io/legal/terms.html',
   },
   {
     title: 'Privacy Policy',
-    link: 'https://hackmd.io/HrCvYG0OQpK8hEFrmPieYw',
+    link: 'https://zksync.io/legal/privacy.html',
   },
 ];

@@ -112,6 +112,20 @@
     border-radius: 5px;
   }
 
+  &.big {
+    width: 150px;
+    height: 45px;
+    margin-top: 10px;
+    margin-bottom: 0;
+    font-size: var(--xl-font-size);
+
+    & > span {
+      left: 10px;
+      background: url(../../images/deposit.svg);
+      background-size: 25px;
+    }
+  }
+
   &:active {
     color: var(--links-color);
 

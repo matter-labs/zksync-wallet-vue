@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ethers } from 'ethers';
+import { ethers, providers } from 'ethers';
+import makeBlockie from 'ethereum-blockies-base64';
 
 import DataList from 'components/DataList/DataList';
 import Modal from 'components/Modal/Modal';
@@ -43,6 +44,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const {
     ethId,
     hintModal,
+    provider,
     searchBalances,
     searchContacts,
     setBalances,
@@ -60,6 +62,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     ({
       ethId,
       hintModal,
+      provider,
       searchBalances,
       searchContacts,
       setBalances,
@@ -76,6 +79,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     }) => ({
       ethId: ethId.get(),
       hintModal: hintModal.get(),
+      provider: provider.get(),
       searchBalances: searchBalances.get(),
       searchContacts: searchContacts.get(),
       setBalances,
@@ -92,8 +96,6 @@ const Transaction: React.FC<ITransactionProps> = ({
     }),
   );
 
-  const focusInput = useAutoFocus();
-
   const body = document.querySelector('#body');
   const dataPropertySymbol = 'symbol';
   const dataPropertyName = 'name';
@@ -101,7 +103,8 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const [amount, setAmount] = useState<number>(0);
   const [conditionError, setConditionError] = useState('');
-  const [fee, setFee] = useState<number>(0);
+  const [gas, setGas] = useState<any>(0);
+  const [fee, setFee] = useState<any>();
   const [filteredContacts, setFilteredContacts] = useState<any>([]);
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
@@ -129,32 +132,31 @@ const Transaction: React.FC<ITransactionProps> = ({
     inputValue &&
     +inputValue > 0 &&
     unlockFau &&
-    +inputValue < maxValue;
+    +inputValue <= maxValue;
 
   const validateNumbers = useCallback(
     e => {
       const amountNumber = ethers.utils.parseEther(e.toString());
-
       if (INPUT_VALIDATION.digits.test(e)) {
         setInputValue(e);
         title === 'Deposit'
           ? onChangeAmount(
-              +amountNumber + fee >
+              +amountNumber + gas >
                 +ethers.utils.parseEther(maxValue.toString())
-                ? +amountNumber - fee - 2 * ZK_FEE_MULTIPLIER * fee
+                ? +amountNumber - gas - 2 * ZK_FEE_MULTIPLIER * gas
                 : +amountNumber,
             )
           : onChangeAmount(
-              +amountNumber + fee >
+              +amountNumber + gas >
                 +ethers.utils.parseEther(maxValue.toString())
-                ? +amountNumber - fee
+                ? +amountNumber - gas
                 : +amountNumber,
             );
       }
     },
     [
       bigNumberMultiplier,
-      fee,
+      gas,
       inputValue,
       maxValue,
       onChangeAmount,
@@ -264,7 +266,18 @@ const Transaction: React.FC<ITransactionProps> = ({
     setWalletAddress,
   ]);
 
-  console.log(selected);
+  useEffect(() => {
+    if (
+      title === 'Withdraw' &&
+      zkWallet &&
+      walletAddress.length < 2 &&
+      !walletAddress[1] &&
+      selectedContact !== null
+    ) {
+      setWalletAddress(['Own account', zkWallet?.address()]);
+      onChangeAddress(zkWallet?.address());
+    }
+  }, []);
 
   useEffect(() => {
     if ((token && token === 'ETH') || symbolName === 'ETH') {
@@ -279,22 +292,9 @@ const Transaction: React.FC<ITransactionProps> = ({
       setSymbolName(balances[0].symbol);
       setSymbol(balances[0].symbol);
     }
-    if (
-      title === 'Withdraw' &&
-      zkWallet &&
-      !walletAddress[1] &&
-      !selectedContact
-    ) {
-      setWalletAddress(['Own account', zkWallet?.address()]);
-      onChangeAddress(zkWallet?.address());
-    }
+
     if (token && zkWallet && token !== 'ETH') {
       zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
-    }
-    if (hintModal === 'denied') {
-      handleCancel();
-      setWalletName();
-      setHintModal('');
     }
     if (
       ADDRESS_VALIDATION['eth'].test(addressValue) &&
@@ -315,7 +315,9 @@ const Transaction: React.FC<ITransactionProps> = ({
       .getDefaultProvider()
       .getGasPrice()
       .then(res => res.toString())
-      .then(data => setFee(+data));
+      .then(data => {
+        setGas(data);
+      });
     document.addEventListener('click', handleClickOutside, true);
     return () => {
       document.removeEventListener('click', handleClickOutside, true);
@@ -325,7 +327,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     balances,
     contacts,
     body,
-    fee,
+    gas,
     filteredContacts,
     handleCancel,
     handleClickOutside,
@@ -402,6 +404,21 @@ const Transaction: React.FC<ITransactionProps> = ({
       setConditionError('Adress does not match ethereum address format');
     }
   }, [addressValue, inputValue, selectedBalance, setConditionError, unlockFau]);
+
+  const handleFee = useCallback(
+    e => {
+      if (title !== 'Deposit') {
+        zkWallet?.provider
+          .getTransactionFee(
+            title === 'Withdraw' ? 'Withdraw' : 'Transfer',
+            (e * Math.pow(10, 18)).toString(),
+            symbolName,
+          )
+          .then(res => setFee(res.toString()));
+      }
+    },
+    [inputValue, symbolName, title, zkWallet],
+  );
 
   return (
     <>
@@ -512,7 +529,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   </div>
                   <div className='balances-token-right'>
                     <span>
-                      {'balance: '}
+                      {window?.innerWidth > WIDTH_BP && 'balance:'}{' '}
                       <p className='datalist-balance'>
                         {parseFloat(balance.toFixed(8).toString())}
                       </p>
@@ -576,7 +593,7 @@ const Transaction: React.FC<ITransactionProps> = ({
           <>
             {isLoading && (
               <>
-                {isLoading && (
+                {isLoading && !hintModal.match(/(?:denied)/i) && (
                   <>
                     <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
                     {!!hintModal
@@ -613,6 +630,22 @@ const Transaction: React.FC<ITransactionProps> = ({
                     </button>
                   </>
                 )}
+              </>
+            )}
+            {hintModal.match(/(?:denied)/i) && (
+              <>
+                <button
+                  onClick={() => {
+                    handleCancel();
+                    setWalletAddress([]);
+                    setTransactionType(undefined);
+                    setWalletName();
+                    setHintModal('');
+                  }}
+                  className='transaction-back'
+                ></button>
+                <h1>{'Transaction canceled'}</h1>
+                <p>{hintModal}</p>
               </>
             )}
             {unlocked === undefined && (
@@ -655,7 +688,11 @@ const Transaction: React.FC<ITransactionProps> = ({
                         ].test(addressValue)}`}
                       >
                         <div
-                          className='custom-selector contacts'
+                          className={`custom-selector contacts ${
+                            walletAddress[0] || selectedContact
+                              ? ''
+                              : 'disabled'
+                          }`}
                           onClick={() => {
                             if (walletAddress[0] || selectedContact) {
                               openContactsList(!isContactsListOpen);
@@ -683,7 +720,11 @@ const Transaction: React.FC<ITransactionProps> = ({
 
                         <div className='currency-input-wrapper'>
                           {ADDRESS_VALIDATION['eth'].test(addressValue) && (
-                            <span className='label-done'></span>
+                            <img
+                              src={makeBlockie(addressValue)}
+                              alt='blockie-icon'
+                              className='transaction-blockie'
+                            />
                           )}
                           <input
                             placeholder='Ox address or contact name'
@@ -715,6 +756,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                             <div
                               className={`custom-selector contacts ${
                                 selectedContact &&
+                                walletAddress.length === 2 &&
                                 addressValue === walletAddress[1]
                                   ? ''
                                   : 'short'
@@ -727,12 +769,14 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 }}
                                 className={`custom-selector-title ${
                                   selectedContact &&
+                                  walletAddress.length === 2 &&
                                   addressValue === walletAddress[1]
                                     ? ''
                                     : 'short'
                                 }`}
                               >
                                 {(selectedContact || !walletAddress[0]) &&
+                                walletAddress.length === 2 &&
                                 addressValue === walletAddress[1] ? (
                                   <p>{selectedContact}</p>
                                 ) : (
@@ -748,7 +792,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                                 onChangeAddress('');
                                 handleFilterContacts('');
                                 setWalletAddress([]);
-                                setSelectedContact('');
+                                setSelectedContact(null);
                               }}
                             ></button>
                           )}
@@ -756,7 +800,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                       </div>
                       {!!filteredContacts.length &&
                         addressValue &&
-                        !walletAddress[1] && (
+                        walletAddress.length < 2 && (
                           <div className='transaction-contacts-list'>
                             {filteredContacts.map(({ name, address }) => (
                               <div
@@ -812,6 +856,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                             setAmount(+e.target.value);
                             handleInputWidth(+e.target.value);
                             setInputValue(e.target.value);
+                            handleFee(+e.target.value);
                             if (!!inputValue && +inputValue < maxValue) {
                               setConditionError('');
                             }
@@ -851,7 +896,8 @@ const Transaction: React.FC<ITransactionProps> = ({
                                   +(
                                     +(price && !!price[selectedBalance]
                                       ? price[selectedBalance]
-                                      : 1) * (inputValue ? +inputValue : 0)
+                                      : 1) *
+                                    (inputValue ? Math.abs(+inputValue) : 0)
                                   ).toFixed(2)
                                 }
                               </span>
@@ -863,9 +909,10 @@ const Transaction: React.FC<ITransactionProps> = ({
                               setInputValue(maxValue.toString());
                               onChangeAmount(
                                 (+maxValue - 0.0003) * bigNumberMultiplier -
-                                  2 * ZK_FEE_MULTIPLIER * fee,
+                                  2 * ZK_FEE_MULTIPLIER * gas,
                               );
                               handleInputWidth(maxValue);
+                              handleFee(+maxValue);
                             }}
                           >
                             {selectedBalance && (
@@ -942,7 +989,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                       className={`error-text ${
                         (!!inputValue &&
                           selectedBalance &&
-                          +inputValue > maxValue) ||
+                          +inputValue >= maxValue) ||
                         !!conditionError
                           ? 'visible'
                           : ''
@@ -977,18 +1024,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                       {selectedBalance && submitCondition && (
                         <>
                           {'Fee:'}{' '}
-                          {balances?.length && (
-                            <span>
-                              {amount < maxValue
-                                ? parseFloat(
-                                    (amount * 0.001).toFixed(10).toString(),
-                                  )
-                                : parseFloat(
-                                    (maxValue * 0.001).toFixed(10).toString(),
-                                  )}{' '}
-                              {symbolName ? symbolName : balances[0].symbol}
-                            </span>
-                          )}
+                          {title === 'Deposit'
+                            ? (+inputValue * 0.01).toFixed(10)
+                            : +fee / Math.pow(10, 18)}
                         </>
                       )}
                     </p>
@@ -1020,7 +1058,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 </div>
                 <button className='btn submit-button' onClick={handleUnlock}>
                   <span className='submit-label unlock'></span>
-                  {' Unlock'}
+                  {'Unlock'}
                 </button>
               </>
             )}

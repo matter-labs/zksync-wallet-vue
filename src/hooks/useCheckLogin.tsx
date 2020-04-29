@@ -6,6 +6,8 @@ import { getWalletNameFromProvider } from 'src/utils';
 import { WalletType } from 'src/constants/Wallets';
 import { useQuery } from 'hooks/useQuery';
 
+import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
+
 export function useCheckLogin() {
   const params = useQuery();
   const {
@@ -16,6 +18,7 @@ export function useCheckLogin() {
     zkWallet,
     setWalletName,
     setAccessModal,
+    setError,
     walletName,
   } = useRootData(s => ({
     ...s,
@@ -24,7 +27,6 @@ export function useCheckLogin() {
     zkWallet: s.zkWallet.get(),
     walletName: s.walletName.get(),
   }));
-  const { createWallet } = useWalletInit();
   const cancelable = useCancelable();
 
   useEffect(() => {
@@ -39,16 +41,9 @@ export function useCheckLogin() {
     provider,
     zkWallet,
     cancelable,
-    createWallet,
     params,
     setHintModal,
     setProvider,
     setAccessModal,
   ]);
-
-  useEffect(() => {
-    if (provider && !zkWallet) {
-      cancelable(createWallet());
-    }
-  }, [cancelable, createWallet, provider, zkWallet, setHintModal]);
 }

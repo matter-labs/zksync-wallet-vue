@@ -14,7 +14,6 @@ import { useCancelable } from 'hooks/useCancelable';
 import { Props } from './DataListProps';
 
 import './DataList.scss';
-import { whyDidYouUpdate } from 'src/utils';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   if (typeof o === 'object') {

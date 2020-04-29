@@ -3,7 +3,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 27px 0 23px;
     font-size: var(--sm-font-size);
 
     & > p {
@@ -270,6 +269,13 @@
     text-align: center;
   }
 
+  &-blockie {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border-radius: 100%;
+  }
+
   &-contacts-list {
     position: absolute;
     top: 200px;
@@ -312,6 +318,14 @@
     outline: none;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+
+    &:hover {
+      background-color: var(--copyblock-color);
+    }
+
+    &:active {
+      background-color: var(--border-color);
+    }
   }
 
   &-fee {
@@ -490,6 +504,7 @@ p.transaction-hash {
   word-break: break-all;
 
   & > a {
+    color: var(--button-bg-color);
     text-decoration: none;
     text-decoration: underline;
   }
@@ -577,6 +592,14 @@ p.transaction-hash {
   .transaction {
     &-title {
       font-size: var(--xl-font-size);
+    }
+
+    &-blockie {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+      margin-bottom: 30px;
+      border-radius: 100%;
     }
   
     &-fee {

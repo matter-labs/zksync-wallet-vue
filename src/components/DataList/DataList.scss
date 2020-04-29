@@ -15,7 +15,7 @@
 
     &-input {
       position: absolute;
-      top: 85px;
+      top: -25px;
       right: 20px;
       display: flex;
       align-items: center;
@@ -81,13 +81,10 @@
 
 .datalist-balance {
   width: 100%;
-  max-width: 50px;
   margin-bottom: 0;
   margin-left: 10px;
   padding-left: 5px;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .balances {
@@ -162,7 +159,7 @@
     background-color: var(--transparent);
     border-bottom: 1px solid var(--border-color);
     cursor: pointer;
-
+    
     &.verified {
       background-color: var(--transparent);
     }
@@ -461,6 +458,7 @@
         top: -48px;
         width: 90px;
         font-size: var(--md-font-size);
+        border-radius: 4px;
       }
 
       & > p {

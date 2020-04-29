@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 
 import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
@@ -13,6 +13,8 @@ import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 import { useLogout } from 'hooks/useLogout';
 import { WalletType } from './constants/Wallets';
+import { useCancelable } from './hooks/useCancelable';
+import { useInterval } from './hooks/timers';
 
 const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
   const {
@@ -24,30 +26,15 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     setWalletName,
     walletName,
     zkWallet,
+    setZkBalances,
     setZkWallet,
+    setHintModal,
   } = useRootData(
-    ({
-      error,
-      isAccessModalOpen,
-      provider,
-      setAccessModal,
-      setError,
-      setModal,
-      setProvider,
-      setWalletName,
-      setZkWallet,
-      walletName,
-      zkWallet,
-    }) => ({
+    ({ error, isAccessModalOpen, provider, walletName, zkWallet, ...s }) => ({
+      ...s,
       error: error.get(),
       isAccessModalOpen: isAccessModalOpen.get(),
       provider: provider.get(),
-      setAccessModal,
-      setError,
-      setModal,
-      setProvider,
-      setWalletName,
-      setZkWallet,
       walletName: walletName.get(),
       zkWallet: zkWallet.get(),
     }),
@@ -55,43 +42,90 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
 
   useWSHeartBeat();
   const { createWallet } = useWalletInit();
-
-  const handleNetworkChange = useCallback(() => {
-    if (walletName === 'Metamask') {
-      provider.on('networkChanged', () => {
-        if (
-          window.location.pathname.length <= 1 &&
-          provider?.networkVersion === RIGHT_NETWORK_ID
-        ) {
-          createWallet();
-        }
-      });
-    }
-  }, [createWallet, provider, setAccessModal, setWalletName, zkWallet]);
+  const providerNetwork = provider?.networkVersion;
+  const cancelable = useCancelable();
+  const [curAddress, setCurAddress] = useState<string>(
+    provider?.selectedAddress,
+  );
 
   useEffect(() => {
-    if (provider && window['ethereum']) {
-      window['ethereum'].autoRefreshOnNetworkChange = false;
-      handleNetworkChange();
+    if (provider && walletName) {
+      setCurAddress(provider?.selectedAddress);
     }
-    if (provider && walletName && walletName === 'Metamask') {
-      provider.on('networkChanged', () => {
-        provider.networkVersion !== RIGHT_NETWORK_ID &&
-        walletName === 'Metamask'
-          ? setError(
-              `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`,
-            )
-          : setError('');
-      });
+    if (curAddress && walletName) {
+      setHintModal(`Login with ${walletName}`);
+    }
+  }, [curAddress, cancelable, provider, setHintModal, walletName]);
+
+  useEffect(() => {
+    if (
+      (walletName === 'Metamask' &&
+        curAddress &&
+        !zkWallet &&
+        provider.networkVersion === RIGHT_NETWORK_ID &&
+        window.location.pathname.length > 1) ||
+      (!zkWallet && walletName && walletName !== 'Metamask')
+    ) {
+      cancelable(createWallet);
     }
   }, [
+    cancelable,
     createWallet,
-    handleNetworkChange,
     provider,
-    setError,
+    providerNetwork,
+    setHintModal,
     walletName,
     zkWallet,
+    curAddress,
   ]);
+
+  useEffect(() => {
+    if (
+      (walletName === 'Metamask' &&
+        curAddress &&
+        !zkWallet &&
+        provider.networkVersion === RIGHT_NETWORK_ID &&
+        window.location.pathname.length < 2) ||
+      (!zkWallet && walletName && walletName !== 'Metamask')
+    ) {
+      cancelable(createWallet);
+    }
+  }, [
+    cancelable,
+    createWallet,
+    provider,
+    setHintModal,
+    walletName,
+    zkWallet,
+    curAddress,
+  ]);
+
+  useInterval(() => {
+    if (!curAddress && walletName && provider?.selectedAddress) {
+      setCurAddress(provider?.selectedAddress);
+    }
+  }, 5000);
+
+  useEffect(() => {
+    if (provider && walletName === 'Metamask') {
+      window['ethereum'].autoRefreshOnNetworkChange = false;
+
+      const networkChangeListener = () => {
+        if (
+          provider.networkVersion !== RIGHT_NETWORK_ID &&
+          walletName === 'Metamask'
+        ) {
+          setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`);
+        } else {
+          setError('');
+        }
+      };
+
+      networkChangeListener();
+      provider.on('networkChanged', networkChangeListener);
+      return () => provider.off('networkChanged', networkChangeListener);
+    }
+  }, [provider, setError, walletName, zkWallet, cancelable]);
 
   const logout = useLogout();
 
@@ -99,8 +133,8 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     if (!!zkWallet) {
       setAccessModal(false);
     }
-    if (!provider || walletName.toLowerCase() !== 'metamask') return;
-    provider.on('accountsChanged', () => {
+    if (!provider || walletName !== 'Metamask') return;
+    const accountChangeListener = () => {
       if (
         zkWallet &&
         provider &&
@@ -115,15 +149,19 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
           setWalletName(savedWalletName);
         }
         setZkWallet(null);
+        setZkBalances([]);
         setAccessModal(true);
       }
-    });
+    };
+    provider.on('accountsChanged', accountChangeListener);
+    return () => provider.off('accountsChanged', accountChangeListener);
   }, [
     logout,
     provider,
     setAccessModal,
     setWalletName,
     walletName,
+    setZkBalances,
     setZkWallet,
     zkWallet,
   ]);
@@ -141,7 +179,12 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       </Modal>
       <Modal
         cancelAction={() => setAccessModal(false)}
-        visible={isAccessModalOpen && window.location.pathname.length > 1}
+        visible={
+          isAccessModalOpen &&
+          window.location.pathname.length > 1 &&
+          provider &&
+          provider.networkVersion === RIGHT_NETWORK_ID
+        }
         classSpecifier='acc'
         background={true}
         centered

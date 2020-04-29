@@ -2,6 +2,7 @@ import { WSTransport } from 'zksync/build/transport';
 import { useEffect, useCallback } from 'react';
 import { useRootData } from './useRootData';
 
+const WS_HEARTBEAT_TIMEOUT = 5e3;
 /**
  * Should be used in app root to prevent breaking WS connection
  * every time route changes
@@ -30,8 +31,8 @@ export function useWSHeartBeat() {
   const setHeartBeat = useCallback(
     (
       transport: WSTransport,
-      pingTimeout = 2000,
-      disconnectTimeout = pingTimeout * 2,
+      pingTimeout = WS_HEARTBEAT_TIMEOUT,
+      disconnectTimeout = WS_HEARTBEAT_TIMEOUT * 2,
     ) => {
       function disconnectHandler() {
         cleanup();
