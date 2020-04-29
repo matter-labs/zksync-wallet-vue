@@ -1,19 +1,22 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ethers, providers } from 'ethers';
+import { ethers } from 'ethers';
 import makeBlockie from 'ethereum-blockies-base64';
 
 import DataList from 'components/DataList/DataList';
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
 import Spinner from 'components/Spinner/Spinner';
+import { CanceledTx } from './CanceledTx';
+import { ContactSelectorFlat } from './ContactSelectorFlat';
+import { FilteredContactList } from './FilteredContactList';
+import { ExecutedTx } from './ExecutedTx';
+import { LoadingTx } from './LoadingTx';
 
 import { ITransactionProps } from './Types';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { INPUT_VALIDATION } from 'constants/regExs';
-import { useAutoFocus } from 'hooks/useAutoFocus';
 import { WIDTH_BP, ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
-import { ZK_EXPLORER } from 'constants/links';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -420,6 +423,17 @@ const Transaction: React.FC<ITransactionProps> = ({
     [inputValue, symbolName, title, zkWallet],
   );
 
+  const selectFilteredContact = (name, address) => {
+    handleSelect(name);
+    setWalletAddress([name, address]);
+    onChangeAddress(address);
+    openContactsList(false);
+    setSelectedContact(name);
+    setConditionError('');
+    body?.classList.remove('fixed-b');
+    setFilteredContacts([]);
+  };
+
   return (
     <>
       <Modal visible={false} classSpecifier='add-contact' background={true}>
@@ -549,104 +563,30 @@ const Transaction: React.FC<ITransactionProps> = ({
       </div>
       <div className='transaction-wrapper'>
         {isExecuted ? (
-          <>
-            <button
-              onClick={() => {
-                handleCancel();
-              }}
-              className='transaction-back'
-            ></button>
-            <h2 className='transaction-title'>
-              {title} {title === 'Withdraw' ? 'initiated' : 'successful!'}
-            </h2>
-            <span className='transaction-field-title'>
-              {title === 'Send' && <>{'Transfered into'}</>}
-              {title === 'Withdraw' && <>{'Withdrawn from'}</>}
-              {title === 'Deposit' && <>{'Deposited to'}</>} {'zkSync: '}
-              <p className='transaction-field-amount'>
-                {inputValue} {symbolName}
-              </p>
-            </span>
-            <p className='transaction-hash'>
-              {'Tx hash: '}
-              <a
-                target='_blank'
-                href={`${ZK_EXPLORER}/${
-                  typeof hash === 'string' ? hash : hash?.hash
-                }`}
-              >
-                {typeof hash === 'string' ? hash : hash?.hash}
-              </a>
-            </p>
-            <button
-              className='btn submit-button'
-              onClick={() => {
-                handleCancel();
-                setWalletAddress([]);
-                setTransactionType(undefined);
-              }}
-            >
-              {'Go to my wallet'}
-            </button>
-          </>
+          <ExecutedTx
+            hash={hash}
+            handleCancel={handleCancel}
+            inputValue={inputValue}
+            setTransactionType={setTransactionType}
+            symbolName={symbolName}
+            title={title}
+          />
         ) : unlocked === undefined || isLoading ? (
           <>
             {isLoading && (
-              <>
-                {isLoading && !hintModal.match(/(?:denied)/i) && (
-                  <>
-                    <h1>{isLoading && !unlockFau ? 'Unlocking' : title}</h1>
-                    {!!hintModal
-                      ? hintModal?.split('\n').map((text, key) => (
-                          <p className='transaction-hint' key={key}>
-                            {text}
-                          </p>
-                        ))
-                      : 'Follow the instructions in the pop up'}
-
-                    <Spinner />
-                    <button
-                      className='btn submit-button'
-                      onClick={() => {
-                        handleCancel();
-                        setWalletName();
-                      }}
-                    >
-                      {'Cancel'}
-                    </button>
-                  </>
-                )}
-                {unlocked === undefined && (
-                  <>
-                    <Spinner />
-                    <button
-                      className='btn submit-button'
-                      onClick={() => {
-                        handleCancel();
-                        setWalletName();
-                      }}
-                    >
-                      {'Cancel'}
-                    </button>
-                  </>
-                )}
-              </>
+              <LoadingTx
+                handleCancel={handleCancel}
+                isLoading={isLoading}
+                setWalletName={setWalletName}
+                title={title}
+                unlockFau={unlockFau}
+              />
             )}
             {hintModal.match(/(?:denied)/i) && (
-              <>
-                <button
-                  onClick={() => {
-                    handleCancel();
-                    setWalletAddress([]);
-                    setTransactionType(undefined);
-                    setWalletName();
-                    setHintModal('');
-                  }}
-                  className='transaction-back'
-                ></button>
-                <h1>{'Transaction canceled'}</h1>
-                <p>{hintModal}</p>
-              </>
+              <CanceledTx
+                handleCancel={handleCancel}
+                setWalletName={setWalletName}
+              />
             )}
             {unlocked === undefined && (
               <>
@@ -687,37 +627,12 @@ const Transaction: React.FC<ITransactionProps> = ({
                           'eth'
                         ].test(addressValue)}`}
                       >
-                        <div
-                          className={`custom-selector contacts ${
-                            walletAddress[0] || selectedContact
-                              ? ''
-                              : 'disabled'
-                          }`}
-                          onClick={() => {
-                            if (walletAddress[0] || selectedContact) {
-                              openContactsList(!isContactsListOpen);
-                              body?.classList.add('fixed-b');
-                            }
-                          }}
-                        >
-                          <div
-                            className={`custom-selector-title ${
-                              walletAddress[0] || selectedContact
-                                ? ''
-                                : 'disabled'
-                            }`}
-                          >
-                            <p>
-                              {walletAddress[0]
-                                ? walletAddress[0]
-                                : selectedContact}
-                            </p>
-                            {(selectedContact || walletAddress[0]) && (
-                              <div className='arrow-down'></div>
-                            )}
-                          </div>
-                        </div>
-
+                        <ContactSelectorFlat
+                          body={body}
+                          isContactsListOpen={isContactsListOpen}
+                          openContactsList={openContactsList}
+                          selectedContact={selectedContact}
+                        />
                         <div className='currency-input-wrapper'>
                           {ADDRESS_VALIDATION['eth'].test(addressValue) && (
                             <img
@@ -801,42 +716,10 @@ const Transaction: React.FC<ITransactionProps> = ({
                       {!!filteredContacts.length &&
                         addressValue &&
                         walletAddress.length < 2 && (
-                          <div className='transaction-contacts-list'>
-                            {filteredContacts.map(({ name, address }) => (
-                              <div
-                                className='balances-contact'
-                                key={name}
-                                onClick={() => {
-                                  handleSelect(name);
-                                  setWalletAddress([name, address]);
-                                  onChangeAddress(address);
-                                  openContactsList(false);
-                                  setSelectedContact(name);
-                                  setConditionError('');
-                                  body?.classList.remove('fixed-b');
-                                  setFilteredContacts([]);
-                                }}
-                              >
-                                <div className='balances-contact-left'>
-                                  <p className='balances-contact-name'>
-                                    {name}
-                                  </p>
-                                  <span className='balances-contact-address'>
-                                    {window?.innerWidth > WIDTH_BP
-                                      ? address
-                                      : address?.replace(
-                                          address?.slice(
-                                            14,
-                                            address?.length - 4,
-                                          ),
-                                          '...',
-                                        )}
-                                  </span>
-                                </div>
-                                <div className='balances-contact-right'></div>
-                              </div>
-                            ))}
-                          </div>
+                          <FilteredContactList
+                            filteredContacts={filteredContacts}
+                            selectFilteredContact={selectFilteredContact}
+                          />
                         )}
                     </>
                   )}
@@ -907,10 +790,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                             className='all-balance btn-tr'
                             onClick={() => {
                               setInputValue(maxValue.toString());
-                              onChangeAmount(
-                                (+maxValue - 0.0003) * bigNumberMultiplier -
-                                  2 * ZK_FEE_MULTIPLIER * gas,
-                              );
+                              validateNumbers(maxValue);
                               handleInputWidth(maxValue);
                               handleFee(+maxValue);
                             }}
