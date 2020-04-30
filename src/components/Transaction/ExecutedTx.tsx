@@ -18,6 +18,23 @@ interface IExecutedTxProps {
   title: string;
 }
 
+const SuccessAnim = () => (
+  <div
+    className='success-lottie-checkmark'
+    dangerouslySetInnerHTML={{
+      __html: `
+          <lottie-player
+            src='https://assets1.lottiefiles.com/datafiles/OhIfcxnkLsj1Jxj/data.json'
+            background='transparent'
+            speed='1'
+            style='width: 200px; height: 200px;'
+            autoplay
+          ></lottie-player>
+        `,
+    }}
+  />
+);
+
 export const ExecutedTx: React.FC<IExecutedTxProps> = ({
   addressValue,
   hash,
@@ -47,6 +64,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
         {title === 'Withdraw' && 'Withdrawal initiated'}
         {title === 'Send' && 'Transfer complete'}
       </h2>
+      <SuccessAnim />
       {title === 'Send' && (
         <span className='transaction-field-title'>
           {'Recepient:'}
