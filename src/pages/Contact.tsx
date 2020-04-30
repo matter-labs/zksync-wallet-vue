@@ -18,7 +18,8 @@ export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
   useTimeout(() => copyOpened && setCopyOpened(false), 2000, [copyOpened]);
   const inputRef = useRef<HTMLInputElement>(null);
   const handleCopy = useCallback(
-    address => {
+    e => {
+      e.stopPropagation();
       const el = inputRef.current;
       if (!el) return;
       if (address === el?.value) {
@@ -28,11 +29,22 @@ export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
         setCopyOpened(true);
       }
     },
-    [inputRef],
+    [address],
+  );
+  const handleEdit = useCallback(() => {
+    setModal('add-contact edit-contact');
+    onSetOldContact({ name: name, address: address });
+  }, [address, name, onSetOldContact, setModal]);
+  const handleDelete = useCallback(
+    e => {
+      e.stopPropagation();
+      onDelete(name);
+    },
+    [name, onDelete],
   );
 
   return (
-    <div className='balances-contact' key={name}>
+    <div className='balances-contact' onClick={handleEdit}>
       <div className='balances-contact-left'>
         <span className='balances-contact-name'>{name}</span>
         <span className='balances-contact-address'>
@@ -58,7 +70,7 @@ export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
         </button>
         <button
           className='balances-contact-copy btn-tr'
-          onClick={() => handleCopy(address)}
+          onClick={handleCopy}
         ></button>
         <input
           className='copy-block-input'
@@ -68,18 +80,12 @@ export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
         />
 
         <FloatingMenu>
-          <button
-            className='contact-manage-edit'
-            onClick={() => {
-              setModal('add-contact edit-contact');
-              onSetOldContact({ name: name, address: address });
-            }}
-          >
+          <button className='contact-manage-edit' onClick={handleEdit}>
             <img src={editicon} alt='edit' />
             <p>{'Edit'}</p>
           </button>
           <button
-            onClick={() => onDelete(name)}
+            onClick={handleDelete}
             className='contact-manage-delete btn-tr'
           >
             <img src={deleteicon} alt='edit' />
