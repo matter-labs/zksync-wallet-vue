@@ -131,11 +131,11 @@ const Transaction: React.FC<ITransactionProps> = ({
   const bigNumberMultiplier = Math.pow(10, 18);
 
   const submitCondition =
-    (ADDRESS_VALIDATION['eth'].test(addressValue) || title === 'Deposit') &&
+    (ADDRESS_VALIDATION['eth'].test(addressValue) ||
+      (title === 'Deposit' && unlockFau)) &&
     selectedBalance &&
     inputValue &&
     +inputValue > 0 &&
-    unlockFau &&
     +inputValue <= maxValue;
 
   const validateNumbers = useCallback(
@@ -151,22 +151,14 @@ const Transaction: React.FC<ITransactionProps> = ({
                 : +amountNumber,
             )
           : onChangeAmount(
-              +amountNumber + gas >
+              +amountNumber + fee >=
                 +ethers.utils.parseEther(maxValue.toString())
-                ? +amountNumber - gas
+                ? +amountNumber - fee
                 : +amountNumber,
             );
       }
     },
-    [
-      bigNumberMultiplier,
-      gas,
-      inputValue,
-      maxValue,
-      onChangeAmount,
-      setInputValue,
-      title,
-    ],
+    [fee, gas, maxValue, onChangeAmount, setInputValue, title],
   );
 
   const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
@@ -591,6 +583,7 @@ const Transaction: React.FC<ITransactionProps> = ({
           <>
             {isLoading && (
               <LoadingTx
+                isUnlockingProcess={isUnlockingProcess}
                 inputValue={inputValue}
                 symbolName={symbolName}
                 addressValue={addressValue}
@@ -812,6 +805,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                               validateNumbers(maxValue);
                               handleInputWidth(maxValue);
                               handleFee(+maxValue);
+                              setAmount(+maxValue);
                             }}
                           >
                             {selectedBalance && (
