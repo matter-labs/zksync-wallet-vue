@@ -593,7 +593,6 @@ const Transaction: React.FC<ITransactionProps> = ({
               <LoadingTx
                 inputValue={inputValue}
                 symbolName={symbolName}
-                hash={hash}
                 addressValue={addressValue}
                 handleCancel={handleCancel}
                 isLoading={isLoading}
