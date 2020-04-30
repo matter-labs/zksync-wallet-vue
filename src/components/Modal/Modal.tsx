@@ -146,13 +146,12 @@ const Modal: React.FC<ModalProps> = ({
     <>
       <button onClick={() => handleLogOut(false, '')} className='close-icon' />
       <h3 className='title-connecting'>
-        {metaMaskConnected ? hintModal : 'Connecting to'}
+        {metaMaskConnected ? 'Connected' : 'Connecting to'}
       </h3>
       <div
         className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
       ></div>
       <p>{'Follow the instructions in the popup'}</p>
-      {/* <Spinner /> */}
       <button
         className='btn submit-button'
         onClick={() =>
@@ -163,7 +162,7 @@ const Modal: React.FC<ModalProps> = ({
       >
         {zkWalletInitializing === true || !metaMaskConnected
           ? 'Cancel'
-          : 'Send sign request'}
+          : 'Login with Metamask'}
       </button>
     </>
   );
