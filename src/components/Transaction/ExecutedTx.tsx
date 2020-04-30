@@ -5,6 +5,8 @@ import { useRootData } from 'hooks/useRootData';
 import { ZK_EXPLORER } from 'constants/links';
 
 import './Transaction.scss';
+import { LottiePlayer } from '../Common/LottiePlayer';
+import successCheckmark from 'images/success-checkmark.json';
 
 interface IExecutedTxProps {
   addressValue: string;
@@ -17,23 +19,6 @@ interface IExecutedTxProps {
   symbolName: string;
   title: string;
 }
-
-const SuccessAnim = () => (
-  <div
-    className='success-lottie-checkmark'
-    dangerouslySetInnerHTML={{
-      __html: `
-          <lottie-player
-            src='https://assets1.lottiefiles.com/datafiles/OhIfcxnkLsj1Jxj/data.json'
-            background='transparent'
-            speed='1'
-            style='width: 200px; height: 200px;'
-            autoplay
-          ></lottie-player>
-        `,
-    }}
-  />
-);
 
 export const ExecutedTx: React.FC<IExecutedTxProps> = ({
   addressValue,
@@ -64,7 +49,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
         {title === 'Withdraw' && 'Withdrawal initiated'}
         {title === 'Send' && 'Transfer complete'}
       </h2>
-      <SuccessAnim />
+      <LottiePlayer src={successCheckmark} />
       {title === 'Send' && (
         <span className='transaction-field-title'>
           {'Recepient:'}

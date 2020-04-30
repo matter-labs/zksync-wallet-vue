@@ -7,15 +7,12 @@ import { useRootData } from 'hooks/useRootData';
 
 import Portal from './Portal';
 import { Transition } from 'components/Transition/Transition';
-import Spinner from 'components/Spinner/Spinner';
 
 import { WRONG_NETWORK } from 'constants/regExs.ts';
 import { RIGHT_NETWORK_ID } from 'constants/networks';
 
 import './Modal.scss';
 import useWalletInit from 'src/hooks/useWalletInit';
-import { observer } from 'mobx-react-lite';
-import { providers } from 'ethers';
 
 export interface ModalProps {
   background: boolean;
