@@ -169,7 +169,6 @@ const Account: React.FC = (): JSX.Element => {
     !price ? <p>{'No Conversion Rate Available'}</p> : null;
 
   const VerifiedBal = ({ balance: { address, symbol, balance } }) => {
-    console.log(balance / Math.pow(10, 18));
     return (
       <div key={balance} className='balances-token verified'>
         <div className='balances-token-left'>

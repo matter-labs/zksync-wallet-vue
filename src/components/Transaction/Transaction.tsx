@@ -579,6 +579,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       <div className='transaction-wrapper'>
         {isExecuted ? (
           <ExecutedTx
+            addressValue={addressValue}
             hash={hash}
             handleCancel={handleCancel}
             inputValue={inputValue}
@@ -590,6 +591,10 @@ const Transaction: React.FC<ITransactionProps> = ({
           <>
             {isLoading && (
               <LoadingTx
+                inputValue={inputValue}
+                symbolName={symbolName}
+                hash={hash}
+                addressValue={addressValue}
                 handleCancel={handleCancel}
                 isLoading={isLoading}
                 setWalletName={setWalletName}

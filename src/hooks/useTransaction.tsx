@@ -167,7 +167,9 @@ export const useTransaction = () => {
               );
               if (!!depositPriorityOperation) {
                 setHintModal(
-                  `Confirmed! \n Waiting for transaction to be ended. \n Transaction hash:  ${hash.hash}`,
+                  `Waiting for transaction to be mined. \n ${+(
+                    amountValue / Math.pow(10, 18)
+                  )}  \n ${hash.hash}`,
                 );
               }
               setHash(hash);
@@ -175,7 +177,9 @@ export const useTransaction = () => {
                 .awaitEthereumTxCommit()
                 .then(() => {
                   setHintModal(
-                    `Block has been mined! \n Waiting for transaction to be ended. \n Transaction hash:  ${hash.hash}`,
+                    `Block has been mined! \n ${+(
+                      amountValue / Math.pow(10, 18)
+                    )}  \n ${hash.hash}`,
                   );
                 });
               const receipt = await depositPriorityOperation.awaitReceipt();
@@ -253,11 +257,7 @@ export const useTransaction = () => {
             symbol,
           );
           setHash(hash);
-          if (!!transferTransaction) {
-            setHintModal(
-              `Confirmed! \n Waiting for transaction to be ended. \n Transaction hash:  ${hash}`,
-            );
-          }
+          setHintModal(` \n ${+(amountValue / Math.pow(10, 18))}. \n ${hash}`);
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
@@ -325,9 +325,16 @@ export const useTransaction = () => {
             symbol,
           );
           setHash(hash);
+          setHintModal(
+            `Waiting for the transaction to be mined.. \n ${+(
+              amountValue / Math.pow(10, 18)
+            )}  \n ${hash}`,
+          );
           if (!!withdrawTransaction) {
             setHintModal(
-              `Confirmed! \n Waiting for transaction to be ended. \n Transaction hash:  ${hash}`,
+              `Your withdrawal will be processed in short. \n ${+(
+                amountValue / Math.pow(10, 18)
+              )}  \n ${hash}`,
             );
           }
           const receipt = await withdrawTransaction.awaitReceipt();
