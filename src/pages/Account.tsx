@@ -168,34 +168,36 @@ const Account: React.FC = (): JSX.Element => {
   const ApiFailedHint = () =>
     !price ? <p>{'No Conversion Rate Available'}</p> : null;
 
-  const VerifiedBal = ({ balance: { address, symbol, balance } }) => (
-    <div key={balance} className='balances-token verified'>
-      <div className='balances-token-left'>
-        {'zk'}
-        {symbol}
-      </div>
-      <div className='balances-token-right'>
-        <p>{+balance.toFixed(6)}</p>{' '}
-        {price && (
-          <span>
-            {`(~$${+(
-              balance * +(price && !!price[symbol] ? price[symbol] : 1)
-            ).toFixed(2)})`}
-          </span>
-        )}
-        <div className='balances-token-status'>
-          <p>{'Verified'}</p>
-          <span className='label-done'></span>
+  const VerifiedBal = ({ balance: { address, symbol, balance } }) => {
+    return (
+      <div key={balance} className='balances-token verified'>
+        <div className='balances-token-left'>
+          {'zk'}
+          {symbol}
         </div>
-        <button
-          className='btn-tr'
-          onClick={() => handleSend(address, balance, symbol)}
-        >
-          {'Send'}
-        </button>
+        <div className='balances-token-right'>
+          <p>{+balance.toFixed(6)}</p>{' '}
+          {price && (
+            <span>
+              {`(~$${+(
+                balance * +(price && !!price[symbol] ? price[symbol] : 1)
+              ).toFixed(2)})`}
+            </span>
+          )}
+          <div className='balances-token-status'>
+            <p>{'Verified'}</p>
+            <span className='label-done'></span>
+          </div>
+          <button
+            className='btn-tr'
+            onClick={() => handleSend(address, balance, symbol)}
+          >
+            {'Send'}
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const UnverifiedBal = ({ balance: { address, symbol, balance } }) => (
     <div key={balance} className='balances-token pending'>
