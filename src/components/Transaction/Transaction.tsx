@@ -128,7 +128,6 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [value, setValue] = useState<string>(
     localStorage.getItem('walletName') || '',
   );
-  const bigNumberMultiplier = Math.pow(10, 18);
 
   const submitCondition =
     (ADDRESS_VALIDATION['eth'].test(addressValue) ||
@@ -552,7 +551,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                     <span>
                       {window?.innerWidth > WIDTH_BP && 'balance:'}{' '}
                       <p className='datalist-balance'>
-                        {parseFloat(balance.toFixed(8).toString())}
+                        {+balance < 0.000001
+                          ? 0
+                          : parseFloat(balance.toFixed(8).toString())}
                       </p>
                     </span>
                   </div>
@@ -917,9 +918,14 @@ const Transaction: React.FC<ITransactionProps> = ({
                       {selectedBalance && submitCondition && (
                         <>
                           {'Fee:'}{' '}
-                          {title === 'Deposit'
-                            ? (+inputValue * 0.01).toFixed(10)
-                            : +fee / Math.pow(10, 18)}
+                          {title === 'Deposit' &&
+                            (+inputValue * 0.01 < 0.000001
+                              ? 0
+                              : +inputValue * 0.01)}
+                          {title !== 'Deposit' &&
+                            (+fee / Math.pow(10, 18) < 0.000001
+                              ? 0
+                              : +fee / Math.pow(10, 18))}
                         </>
                       )}
                     </p>
