@@ -21,6 +21,7 @@ export const useTransaction = () => {
     setZkBalances,
     tokens,
     walletAddress,
+    zkBalances,
     zkWallet,
   } = useRootData(
     ({
@@ -31,6 +32,7 @@ export const useTransaction = () => {
       setZkBalances,
       tokens,
       walletAddress,
+      zkBalances,
       zkWallet,
     }) => ({
       hintModal: hintModal.get(),
@@ -40,6 +42,7 @@ export const useTransaction = () => {
       setZkBalances,
       tokens: tokens.get(),
       walletAddress: walletAddress.get(),
+      zkBalances: zkBalances.get(),
       zkWallet: zkWallet.get(),
     }),
   );
@@ -135,6 +138,9 @@ export const useTransaction = () => {
         try {
           setHintModal('Follow the instructions in the pop up');
           setLoading(true);
+          const handleMax = zkBalances.filter(
+            balance => balance.symbol === token,
+          );
           const executeDeposit = async fee => {
             try {
               const depositPriorityOperation = await cancelable(
@@ -145,7 +151,13 @@ export const useTransaction = () => {
                     (
                       await import('zksync').then(module =>
                         module.closestPackableTransactionAmount(
-                          amountValue?.toString(),
+                          (amountValue ===
+                          +ethers.utils.parseEther(
+                            handleMax[0].balance.toString(),
+                          )
+                            ? amountValue - 2 * ZK_FEE_MULTIPLIER * +fee
+                            : amountValue
+                          )?.toString(),
                         ),
                       )
                     ).toString(),
@@ -232,6 +244,9 @@ export const useTransaction = () => {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
           setHintModal('Follow the instructions in the pop up');
+          const handleMax = zkBalances.filter(
+            balance => balance.symbol === token,
+          );
           const fee = await zkWallet?.provider
             .getTransactionFee('Transfer', amountValue.toString(), token)
             .then(res => res.toString());
@@ -242,7 +257,11 @@ export const useTransaction = () => {
             amount: ethers.utils.bigNumberify(
               (
                 await zkSync.closestPackableTransactionAmount(
-                  amountValue?.toString(),
+                  (amountValue ===
+                  +ethers.utils.parseEther(handleMax[0].balance.toString())
+                    ? amountValue - +fee
+                    : amountValue
+                  )?.toString(),
                 )
               ).toString(),
             ),
@@ -295,6 +314,9 @@ export const useTransaction = () => {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
           setHintModal('Follow the instructions in the pop up');
+          const handleMax = zkBalances.filter(
+            balance => balance.symbol === token,
+          );
           const fee = await zkWallet?.provider
             .getTransactionFee('Withdraw', amountValue.toString(), token)
             .then(res => res.toString());
@@ -306,7 +328,11 @@ export const useTransaction = () => {
                 (
                   await import('zksync').then(module =>
                     module.closestPackableTransactionAmount(
-                      amountValue?.toString(),
+                      (amountValue ===
+                      +ethers.utils.parseEther(handleMax[0].balance.toString())
+                        ? amountValue - +fee
+                        : amountValue
+                      )?.toString(),
                     ),
                   )
                 ).toString(),

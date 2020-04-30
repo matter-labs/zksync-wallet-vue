@@ -195,12 +195,14 @@ const Modal: React.FC<ModalProps> = ({
       ) : (
         <p>{error}</p>
       )}
-      <button
-        className='btn submit-button'
-        onClick={() => handleLogOut(false, '')}
-      >
-        {`Disconnect ${walletName}`}
-      </button>
+      {!zkWallet && (
+        <button
+          className='btn submit-button'
+          onClick={() => handleLogOut(false, '')}
+        >
+          {`Disconnect ${walletName}`}
+        </button>
+      )}
     </>
   );
 

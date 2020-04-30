@@ -12,6 +12,7 @@ interface ILoadingTXProps {
   addressValue: string;
   handleCancel: any;
   isLoading: boolean;
+  isUnlockingProcess: boolean;
   inputValue: string;
   symbolName: string;
   setWalletName: any;
@@ -27,7 +28,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
   isLoading,
   setWalletName,
   title,
-  unlockFau,
+  isUnlockingProcess,
 }): JSX.Element => {
   const { hintModal, unlocked, walletAddress } = useRootData(
     ({ hintModal, unlocked, walletAddress }) => ({
@@ -50,7 +51,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
             className='transaction-back'
           ></button>
           <h2 className='transaction-title'>
-            {isLoading && !unlockFau ? 'Unlocking' : title}
+            {isLoading && isUnlockingProcess ? 'Unlocking' : title}
           </h2>
           <Spinner />
           {title !== 'Send' && <p>{info[0]}</p>}
