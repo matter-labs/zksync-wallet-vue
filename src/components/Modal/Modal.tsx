@@ -173,13 +173,19 @@ const Modal: React.FC<ModalProps> = ({
           </h3>
         </h3>
       )}
-      <div
-        className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
-      ></div>
-      <div className='wrong-network'>
-        <div className='wrong-network-logo'></div>
+      {provider.networkVersion !== RIGHT_NETWORK_ID ? (
+        <>
+          <div
+            className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
+          ></div>
+          <div className='wrong-network'>
+            <div className='wrong-network-logo'></div>
+            <p>{error}</p>
+          </div>
+        </>
+      ) : (
         <p>{error}</p>
-      </div>
+      )}
       <button
         className='btn submit-button'
         onClick={() => handleLogOut(false, '')}
