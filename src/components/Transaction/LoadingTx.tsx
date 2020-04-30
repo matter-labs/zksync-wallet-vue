@@ -69,11 +69,6 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
               {inputValue} {symbolName}
             </p>
           </span>
-          <p className='transaction-hash'>
-            <a target='_blank' href={`${ZK_EXPLORER}/${info[2]}`}>
-              {'Link to transaction'}
-            </a>
-          </p>
         </>
       )}
       {unlocked === undefined && (
