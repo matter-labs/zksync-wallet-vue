@@ -140,12 +140,13 @@ const Modal: React.FC<ModalProps> = ({
 
   const { createWallet } = useWalletInit();
   const shown = classSpecifier === isModalOpen || visible;
+  const metaMaskConnected = hintModal?.match(/login/i);
 
   const accessModalContent = () => (
     <>
       <button onClick={() => handleLogOut(false, '')} className='close-icon' />
       <h3 className='title-connecting'>
-        {hintModal?.match(/login/i) ? hintModal : 'Connecting to'}
+        {metaMaskConnected ? hintModal : 'Connecting to'}
       </h3>
       <div
         className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
@@ -160,7 +161,9 @@ const Modal: React.FC<ModalProps> = ({
             : createWallet()
         }
       >
-        {zkWalletInitializing === true ? 'Cancel' : 'Send sign request'}
+        {zkWalletInitializing === true || !metaMaskConnected
+          ? 'Cancel'
+          : 'Send sign request'}
       </button>
     </>
   );
