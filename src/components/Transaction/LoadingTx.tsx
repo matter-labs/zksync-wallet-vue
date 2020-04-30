@@ -76,15 +76,6 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
               {'Link to transaction'}
             </a>
           </p>
-          <button
-            className='btn submit-button'
-            onClick={() => {
-              handleCancel();
-              setWalletName();
-            }}
-          >
-            {'Cancel'}
-          </button>
         </>
       )}
       {unlocked === undefined && (
