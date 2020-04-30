@@ -176,7 +176,7 @@ const Account: React.FC = (): JSX.Element => {
           {symbol}
         </div>
         <div className='balances-token-right'>
-          <p>{+balance.toFixed(6)}</p>{' '}
+          <p>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</p>{' '}
           {price && (
             <span>
               {`(~$${+(
@@ -206,7 +206,7 @@ const Account: React.FC = (): JSX.Element => {
         {symbol}
       </div>
       <div className='balances-token-right'>
-        <p>{+balance.toFixed(6)}</p>{' '}
+        <p>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</p>{' '}
         {price?.length && (
           <span>{`(~$${+(
             balance * +(price && !!price[symbol] ? price[symbol] : 1)
