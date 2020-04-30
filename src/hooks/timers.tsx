@@ -13,12 +13,14 @@ export const useTimer = (baseSet, baseClear) => (
   cb: Cb,
   timeout = 250,
   deps: DependencyList = [],
+  condition: any = true,
 ) => {
   const callback = useRef<Cb>();
 
   useEffect(() => (callback.current = cb), [cb]);
 
   useEffect(() => {
+    if (!condition) return;
     const tick = () => {
       callback.current && callback.current();
     };
@@ -30,14 +32,20 @@ export const useTimer = (baseSet, baseClear) => (
 
 export function useSafeTimeout() {
   const [t, setT] = useState<number | undefined>();
-  useEffect(() => {
-    if (t) clearTimeout(t);
-  }, [t]);
-  return useCallback((cb, timeout) => {
-    const t = setTimeout(cb, timeout);
-    setT(t as any);
-    return t;
-  }, []);
+  useEffect(
+    () => () => {
+      if (t) clearTimeout(t);
+    },
+    [t],
+  );
+  return useCallback(
+    (cb, timeout) => {
+      const t = setTimeout(cb, timeout);
+      setT(t as any);
+      return t;
+    },
+    [setT],
+  );
 }
 
 export const useTimeout = useTimer(setTimeout, clearTimeout);

@@ -54,7 +54,8 @@ const Transactions: React.FC = (): JSX.Element => {
   const fetchTransactions = useCallback(
     async (amount, offset): Promise<Tx[]> => {
       const txs: Tx[] = await fetch(
-        `https://testnet.zksync.dev/api/v0.1/account/${zkWallet?.address()}/history/${offset}/${amount}`,
+        'https://testnet.zksync.dev/api/v0.1/account/' +
+          `${zkWallet?.address()}/history/${offset}/${amount}`,
       ).then(r => r.json());
 
       const resolvedTxs = await Promise.all(
@@ -77,12 +78,12 @@ const Transactions: React.FC = (): JSX.Element => {
       bindData={[transactions, setTxs]}
       title='Transactions'
       visible={true}
-      onSort={arr => arr.reverse()}
+      onSort={arr => arr.slice().reverse()}
       renderItem={tx => <Transaction key={tx.hash} {...tx} />}
       emptyListComponent={() => (
         <div className='default-text'>{'History is empty'}</div>
       )}
-      infScrollInitialCount={10}
+      infScrollInitialCount={30}
     />
   );
 };

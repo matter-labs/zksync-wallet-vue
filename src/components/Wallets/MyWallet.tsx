@@ -316,7 +316,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({
               className='btn submit-button'
               onClick={() => setTransactionType('transfer')}
             >
-              <span></span> Send
+              <span className='send-icon'></span> Send
             </button>
           </>
         ) : (

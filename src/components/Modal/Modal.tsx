@@ -13,6 +13,8 @@ import { WRONG_NETWORK } from 'constants/regExs.ts';
 import { RIGHT_NETWORK_ID } from 'constants/networks';
 
 import './Modal.scss';
+import useWalletInit from 'src/hooks/useWalletInit';
+import { observer } from 'mobx-react-lite';
 
 export interface ModalProps {
   background: boolean;
@@ -45,6 +47,7 @@ const Modal: React.FC<ModalProps> = ({
     setZkWallet,
     walletName,
     zkWallet,
+    zkWalletInitializing,
   } = useRootData(
     ({
       error,
@@ -54,8 +57,9 @@ const Modal: React.FC<ModalProps> = ({
       provider,
       walletName,
       zkWallet,
-      ...rest
+      ...s
     }) => ({
+      ...s,
       hintModal: hintModal.get(),
       error: error.get(),
       isAccessModalOpen: isAccessModalOpen.get(),
@@ -63,7 +67,7 @@ const Modal: React.FC<ModalProps> = ({
       provider: provider.get(),
       walletName: walletName.get(),
       zkWallet: zkWallet.get(),
-      ...rest,
+      zkWalletInitializing: s.zkWalletInitializing.get(),
     }),
   );
 
@@ -134,26 +138,29 @@ const Modal: React.FC<ModalProps> = ({
     setZkWallet,
   ]);
 
+  const { createWallet } = useWalletInit();
   const shown = classSpecifier === isModalOpen || visible;
 
   const accessModalContent = () => (
     <>
+      <button onClick={() => handleLogOut(false, '')} className='close-icon' />
       <h3 className='title-connecting'>
-        {!!hintModal && hintModal.match(/(?:login)/i)
-          ? hintModal
-          : 'Connecting to'}
+        {hintModal?.match(/login/i) ? hintModal : 'Connecting to'}
       </h3>
       <div
         className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
       ></div>
       <p>{'Follow the instructions in the popup'}</p>
-      <Spinner />
+      {/* <Spinner /> */}
       <button
         className='btn submit-button'
-        onClick={() => handleLogOut(false, '')}
+        onClick={() =>
+          zkWalletInitializing === true
+            ? handleLogOut(false, '')
+            : createWallet()
+        }
       >
-        {'Disconnect '}
-        {walletName}
+        {zkWalletInitializing === true ? 'Cancel' : 'Send sign request'}
       </button>
     </>
   );
@@ -165,12 +172,11 @@ const Modal: React.FC<ModalProps> = ({
       )}
       {!zkWallet && (
         <h3 className='title-connecting'>
-          <h3 className='title-connecting'>
-            {!!hintModal && hintModal.match(/(?:login)/i)
+          {`${
+            hintModal && hintModal.match(/(?:login)/i)
               ? hintModal
-              : 'Connecting to'}{' '}
-            {walletName}
-          </h3>
+              : 'Connecting to '
+          } ${walletName}`}
         </h3>
       )}
       <div
@@ -184,8 +190,7 @@ const Modal: React.FC<ModalProps> = ({
         className='btn submit-button'
         onClick={() => handleLogOut(false, '')}
       >
-        {'Disconnect '}
-        {walletName}
+        {`Disconnect ${walletName}`}
       </button>
     </>
   );

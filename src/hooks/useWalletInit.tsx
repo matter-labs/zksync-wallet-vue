@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
-import { ethers, providers } from 'ethers';
+import { ethers } from 'ethers';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -26,13 +25,12 @@ const useWalletInit = () => {
     provider,
     walletName,
     setTxs,
+    zkWalletInitializing,
   } = useRootData(({ provider, walletName, ...s }) => ({
     ...s,
     provider: provider.get(),
     walletName: walletName.get(),
   }));
-
-  const history = useHistory();
 
   const connect = useCallback(
     (provider, signUp) => {
@@ -66,6 +64,8 @@ const useWalletInit = () => {
   const createWallet = useCallback(async () => {
     try {
       const zkSync = await import('zksync');
+      zkWalletInitializing.set(true);
+
       const wallet = getSigner(provider);
       setEthWallet(wallet as ethers.providers.JsonRpcSigner);
       const network =
@@ -138,7 +138,9 @@ const useWalletInit = () => {
             ? setError(`${err.name}: ${err.message}`)
             : setError(DEFAULT_ERROR);
         });
+      zkWalletInitializing.set(false);
     } catch (err) {
+      zkWalletInitializing.set(false);
       const error = err.message
         ? !!err.message.match(/(?:denied)/i)
         : !!err.match(/(?:denied)/i);
@@ -160,6 +162,7 @@ const useWalletInit = () => {
     setZkWallet,
     setTxs,
     setWSTransport,
+    zkWalletInitializing,
   ]);
 
   return {

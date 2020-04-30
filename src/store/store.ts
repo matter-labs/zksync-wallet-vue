@@ -36,6 +36,7 @@ export const createStore = () => ({
   zkBalances: observable.box<IEthBalance[]>([]),
   zkBalancesLoaded: observable.box<boolean>(false),
   zkWallet: observable.box<Wallet | null>(),
+  zkWalletInitializing: observable.box<boolean>(false),
   wsTransport: observable.box<WSTransport | null>(null),
   wsBroken: observable.box(false),
 

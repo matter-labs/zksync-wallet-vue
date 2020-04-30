@@ -157,14 +157,12 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               <h3 className='title-connecting'>
                 {!!hintModal && hintModal.match(/(?:login)/i)
                   ? hintModal
-                  : 'Connecting to'}{' '}
+                  : 'Connecting to '}
               </h3>
               <p>{'Follow the instructions in the popup'}</p>
               <Spinner />
             </>
-          ) : (
-            <></>
-          )}
+          ) : null}
         </Modal>
         {!walletName && (
           <>
