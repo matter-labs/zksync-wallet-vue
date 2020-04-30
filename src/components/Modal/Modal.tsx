@@ -15,6 +15,7 @@ import { RIGHT_NETWORK_ID } from 'constants/networks';
 import './Modal.scss';
 import useWalletInit from 'src/hooks/useWalletInit';
 import { observer } from 'mobx-react-lite';
+import { providers } from 'ethers';
 
 export interface ModalProps {
   background: boolean;
@@ -169,9 +170,12 @@ const Modal: React.FC<ModalProps> = ({
 
   const errorModalContent = () => (
     <>
-      {zkWallet && error && provider.networkVersion === RIGHT_NETWORK_ID && (
-        <button onClick={closeHandler} className='close-icon' />
-      )}
+      {zkWallet &&
+        error &&
+        provider &&
+        provider.networkVersion === RIGHT_NETWORK_ID && (
+          <button onClick={closeHandler} className='close-icon' />
+        )}
       {!zkWallet && (
         <h3 className='title-connecting'>
           {`${
@@ -181,7 +185,7 @@ const Modal: React.FC<ModalProps> = ({
           } ${walletName}`}
         </h3>
       )}
-      {provider.networkVersion !== RIGHT_NETWORK_ID ? (
+      {provider && provider.networkVersion !== RIGHT_NETWORK_ID ? (
         <>
           <div
             className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
