@@ -112,6 +112,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [isHintUnlocked, setHintUnlocked] = useState<string>('');
+  const [isUnlockingProcess, setUnlockingProcess] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [maxValue, setMaxValue] = useState<number>(
     propsMaxValue ? propsMaxValue : 0,
@@ -225,6 +226,7 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const handleFilterContacts = useCallback(
     e => {
+      if (!contacts) return;
       const searchValue = contacts.filter(el => {
         return ADDRESS_VALIDATION['eth'].test(e) &&
           el.address.toLowerCase().includes(e.toLowerCase())
@@ -314,6 +316,12 @@ const Transaction: React.FC<ITransactionProps> = ({
       });
     }
 
+    if (unlockFau && isUnlockingProcess) {
+      setUnlockFau(true);
+      setUnlockingProcess(false);
+      setLoading(false);
+    }
+
     ethers
       .getDefaultProvider()
       .getGasPrice()
@@ -337,10 +345,13 @@ const Transaction: React.FC<ITransactionProps> = ({
     handleSelect,
     isBalancesListOpen,
     isContactsListOpen,
+    isUnlockingProcess,
+    isLoading,
     onChangeAddress,
     selected,
     selectedContact,
     setFilteredContacts,
+    setLoading,
     setMaxValue,
     setSelected,
     setModal,
@@ -349,8 +360,12 @@ const Transaction: React.FC<ITransactionProps> = ({
     setSymbolName,
     setToken,
     setUnlockFau,
+    setUnlockingProcess,
+    setWalletAddress,
     setWalletName,
+    symbolName,
     title,
+    token,
     unlockFau,
     walletAddress,
     zkWallet,
@@ -367,6 +382,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   );
 
   const handleUnlockERC = useCallback(() => {
+    setUnlockingProcess(true);
     setLoading(true);
     zkWallet
       ?.approveERC20TokenDeposits(token)
@@ -378,7 +394,6 @@ const Transaction: React.FC<ITransactionProps> = ({
         .then(res => res);
       if (checkApprove) {
         setUnlockFau(checkApprove);
-        setLoading(false);
       }
     };
     setUnlocked();
@@ -387,7 +402,7 @@ const Transaction: React.FC<ITransactionProps> = ({
         setUnlocked();
       }, 3000);
     }
-  }, [setUnlockFau, token, unlockFau, zkWallet]);
+  }, [setLoading, token, unlockFau, zkWallet]);
 
   const handleInputWidth = useCallback(e => {
     const el = myRef.current;
@@ -588,7 +603,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 setWalletName={setWalletName}
               />
             )}
-            {unlocked === undefined && (
+            {/* {unlocked === undefined && (
               <>
                 <Spinner />
                 <button
@@ -601,7 +616,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                   {'Cancel'}
                 </button>
               </>
-            )}
+            )} */}
           </>
         ) : (
           <>

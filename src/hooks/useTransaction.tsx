@@ -275,7 +275,7 @@ export const useTransaction = () => {
         } else {
           setError(DEFAULT_ERROR);
         }
-        setLoading(false);
+        // setLoading(false);
       }
     },
     [
