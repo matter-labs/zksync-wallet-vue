@@ -5,6 +5,8 @@ import { useRootData } from 'hooks/useRootData';
 import { ZK_EXPLORER } from 'constants/links';
 
 import './Transaction.scss';
+import { LottiePlayer } from '../Common/LottiePlayer';
+import successCheckmark from 'images/success-checkmark.json';
 
 interface IExecutedTxProps {
   addressValue: string;
@@ -47,6 +49,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
         {title === 'Withdraw' && 'Withdrawal initiated'}
         {title === 'Send' && 'Transfer complete'}
       </h2>
+      <LottiePlayer src={successCheckmark} />
       {title === 'Send' && (
         <span className='transaction-field-title'>
           {'Recepient:'}

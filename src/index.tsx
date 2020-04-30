@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import Account from './pages/Account';
 import App from './App';
@@ -19,10 +19,11 @@ ReactDOM.render(
     <BrowserRouter>
       <App>
         <Switch>
-          <Route path="/account" exact component={Account} />
-          <Route path="/contacts" exact component={Contacts} />
-          <Route path="/" exact component={PrimaryPage} />
-          <Route path="/transactions" component={Transactions} />
+          <Route path='/account' exact component={Account} />
+          <Route path='/contacts' exact component={Contacts} />
+          <Route path='/transactions' exact component={Transactions} />
+          <Route path='/' exact component={PrimaryPage} />
+          <Route path='/' render={() => <Redirect to='/' />} />
         </Switch>
       </App>
     </BrowserRouter>
