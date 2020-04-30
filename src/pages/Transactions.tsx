@@ -84,7 +84,7 @@ const Transactions: React.FC = (): JSX.Element => {
         <div className='default-text'>{'History is empty'}</div>
       )}
       infScrollInitialCount={30}
-      refreshInterval={2e3}
+      refreshInterval={zkWallet ? 2e3 : 0}
     />
   );
 };
