@@ -6,7 +6,6 @@ import Modal from 'components/Modal/Modal';
 import Spinner from 'components/Spinner/Spinner';
 
 import { useRootData } from 'hooks/useRootData';
-import useWalletInit from 'hooks/useWalletInit';
 import { useQuery } from 'hooks/useQuery';
 import { useCancelable } from 'hooks/useCancelable';
 
@@ -179,9 +178,14 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                     key={key}
                     onClick={() => {
                       if (wallets.includes(key)) {
-                        setWalletName(key as WalletType);
-                        setNormalBg(true);
-                        setAccessModal(true);
+                        key === 'Metamask'
+                          ? (setWalletName(key as WalletType),
+                            setNormalBg(true),
+                            setAccessModal(true))
+                          : (setWalletName(key as WalletType),
+                            setError(
+                              'WalletConnect support will be enabled soon',
+                            ));
                       } else {
                         setError(
                           `Your browser doesn't support ${key}, please select another wallet or switch browser`,

@@ -191,7 +191,9 @@ const Modal: React.FC<ModalProps> = ({
             className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
           ></div>
           <div className='wrong-network'>
-            <div className='wrong-network-logo'></div>
+            {provider && provider.networkVersion === RIGHT_NETWORK_ID ? null : (
+              <div className='wrong-network-logo'></div>
+            )}
             <p>{error}</p>
           </div>
         </>

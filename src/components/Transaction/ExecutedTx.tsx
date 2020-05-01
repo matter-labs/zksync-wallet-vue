@@ -30,12 +30,15 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
   symbolName,
   title,
 }): JSX.Element => {
-  const { setWalletAddress, walletAddress } = useRootData(
-    ({ setWalletAddress, walletAddress }) => ({
+  const { hintModal, setWalletAddress, walletAddress } = useRootData(
+    ({ hintModal, setWalletAddress, walletAddress }) => ({
+      hintModal: hintModal.get(),
       setWalletAddress,
       walletAddress: walletAddress.get(),
     }),
   );
+
+  const info = hintModal?.split('\n');
 
   return (
     <>
@@ -51,6 +54,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
         {title === 'Send' && 'Transfer complete'}
       </h2>
       <LottiePlayer src={successCheckmark} />
+      {title !== 'Send' && <p>{info[0]}</p>}
       {title === 'Send' && (
         <span className='transaction-field-title'>
           {'Recepient:'}
