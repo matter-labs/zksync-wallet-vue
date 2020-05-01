@@ -7,8 +7,8 @@ import Spinner from 'components/Spinner/Spinner';
 import './Transaction.scss';
 
 interface ICanceledTxProps {
-  handleCancel: any;
-  setWalletName: any;
+  handleCancel: () => void;
+  setWalletName: () => void;
 }
 
 export const CanceledTx: React.FC<ICanceledTxProps> = ({

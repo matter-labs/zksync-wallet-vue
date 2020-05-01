@@ -142,14 +142,13 @@ const Modal: React.FC<ModalProps> = ({
 
   const accessModalContent = () => (
     <>
-      <button onClick={() => handleLogOut(false, '')} className='close-icon' />
       <h3 className='title-connecting'>
-        {metaMaskConnected ? 'Connected' : 'Connecting to'}
+        {metaMaskConnected ? 'Connected to ' : 'Connecting to '}
+        {walletName}
       </h3>
       <div
         className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
       ></div>
-      <p>{'Follow the instructions in the popup'}</p>
       <button
         className='btn submit-button'
         onClick={() =>
@@ -158,9 +157,13 @@ const Modal: React.FC<ModalProps> = ({
             : createWallet()
         }
       >
-        {zkWalletInitializing === true || !metaMaskConnected
-          ? 'Cancel'
-          : 'Login with Metamask'}
+        {`Login with ${walletName}`}
+      </button>
+      <button
+        onClick={() => handleLogOut(false, '')}
+        className='btn btn-cancel btn-tr '
+      >
+        {'Cancel'}
       </button>
     </>
   );

@@ -6,11 +6,12 @@
   }
 
   &-logo {
-    width: 150px;
-    height: 30px;
+    width: 180px;
+    height: 50px;
     margin-top: 5px;
-    background-image: url(../../images/LogotypeLight.svg);
+    background-image: url(../../images/ZK_light.svg);
     background-repeat: no-repeat;
+    background-size: contain;
   }
 
   &-top {

@@ -10,14 +10,14 @@ import './Transaction.scss';
 
 interface ILoadingTXProps {
   addressValue: string;
-  handleCancel: any;
+  handleCancel: () => void;
   isLoading: boolean;
   isUnlockingProcess: boolean;
   inputValue: string;
   symbolName: string;
   setWalletName: any;
   title: string;
-  unlockFau: any;
+  unlockFau: boolean;
 }
 
 export const LoadingTx: React.FC<ILoadingTXProps> = ({
