@@ -14,6 +14,7 @@ const TOKEN = 'ETH';
 
 export const useTransaction = () => {
   const {
+    ethBalances,
     hintModal,
     setError,
     setHintModal,
@@ -25,6 +26,7 @@ export const useTransaction = () => {
     zkWallet,
   } = useRootData(
     ({
+      ethBalances,
       hintModal,
       setError,
       setHintModal,
@@ -35,6 +37,7 @@ export const useTransaction = () => {
       zkBalances,
       zkWallet,
     }) => ({
+      ethBalances: ethBalances.get(),
       hintModal: hintModal.get(),
       setError,
       setHintModal,
@@ -138,10 +141,14 @@ export const useTransaction = () => {
         try {
           setHintModal('Follow the instructions in the pop up');
           setLoading(true);
-          const handleMax = zkBalances.filter(
+          const handleMax = ethBalances.filter(
             balance => balance.symbol === token || balance.address === token,
           );
-          const executeDeposit = async fee => {
+          const estimateGas =
+            token === 'ETH'
+              ? +ethers.utils.parseEther('0.0002')
+              : +ethers.utils.parseEther('0.00025');
+          const executeDeposit = async gas => {
             try {
               const depositPriorityOperation = await cancelable(
                 zkWallet.depositToSyncFromEthereum({
@@ -155,7 +162,9 @@ export const useTransaction = () => {
                           +ethers.utils.parseEther(
                             handleMax[0]?.balance.toString(),
                           )
-                            ? amountValue - 2 * ZK_FEE_MULTIPLIER * +fee
+                            ? amountValue -
+                              +estimateGas -
+                              2 * ZK_FEE_MULTIPLIER * +gas
                             : amountValue
                           )?.toString(),
                         ),
@@ -164,7 +173,7 @@ export const useTransaction = () => {
                   ),
                   maxFeeInETHToken: await import('zksync').then(module =>
                     module.closestPackableTransactionFee(
-                      (2 * ZK_FEE_MULTIPLIER * +fee).toString(),
+                      (2 * ZK_FEE_MULTIPLIER * +gas).toString(),
                     ),
                   ),
                 }),

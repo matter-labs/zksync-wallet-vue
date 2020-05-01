@@ -1,4 +1,5 @@
 import React from 'react';
+import { ethers } from 'ethers';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -10,8 +11,8 @@ import successCheckmark from 'images/success-checkmark.json';
 
 interface IExecutedTxProps {
   addressValue: string;
-  handleCancel: any;
-  hash: any;
+  handleCancel: () => void;
+  hash: string | ethers.ContractTransaction | undefined;
   inputValue: string;
   setTransactionType: (
     transaction: 'deposit' | 'withdraw' | 'transfer' | undefined,

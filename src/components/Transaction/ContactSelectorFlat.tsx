@@ -5,9 +5,9 @@ import { useRootData } from 'hooks/useRootData';
 import './Transaction.scss';
 
 interface IContactSelectorFlatProps {
-  body: any;
+  body: Element | null;
   isContactsListOpen: boolean;
-  openContactsList: any;
+  openContactsList: React.Dispatch<React.SetStateAction<boolean>>;
   selectedContact: any;
 }
 

@@ -174,17 +174,31 @@ button {
   cursor: pointer;
 }
 
-.btn-tr {
-  margin-top: 0;
+.btn {
+  &-tr {
+    margin-top: 0;
 
-  &:hover {
-    background-color: var(--border-color) !important;
+    &:hover {
+      background-color: var(--border-color) !important;
+    }
+
+    &:active {
+      background-color: var(--input-border-focus) !important;
+    }
   }
 
-  &:active {
-    background-color: var(--input-border-focus) !important;
+  &-cancel {
+    width: 100px;
+    height: 26px;
+    margin-top: 10px;
+    color: var(--delete-color);
+    background-color: var(--transparent);
+    border: none;
+    border-radius: 13px;
   }
 }
+
+
 
 h2 {
   font-weight: var(--bold-font-weight);
@@ -421,7 +435,7 @@ h2 {
   width: 300px;
   height: 60px;
   margin: 45px 0 27px;
-  background-image: url(./images/LogotypeLight.svg);
+  background-image: url(./images/ZK_light.svg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -791,7 +805,7 @@ body.dark > #root {
   & > .content-wrapper {
     & .menu-top {
       & .menu-logo {
-        background-image: url(./images/logo_text_dark.svg);
+        background-image: url(./images/ZK_dark.svg);
       }
     }
 

@@ -146,13 +146,13 @@ const Transaction: React.FC<ITransactionProps> = ({
           ? onChangeAmount(
               +amountNumber + gas >
                 +ethers.utils.parseEther(maxValue.toString())
-                ? +amountNumber - gas - 2 * ZK_FEE_MULTIPLIER * gas
+                ? +amountNumber
                 : +amountNumber,
             )
           : onChangeAmount(
               +amountNumber + fee >=
                 +ethers.utils.parseEther(maxValue.toString())
-                ? +amountNumber - fee
+                ? +amountNumber
                 : +amountNumber,
             );
       }
