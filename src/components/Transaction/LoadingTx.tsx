@@ -70,6 +70,14 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
               {inputValue} {symbolName}
             </p>
           </span>
+          <button
+            className='btn submit-button'
+            onClick={() => {
+              handleCancel();
+            }}
+          >
+            {'Cancel'}
+          </button>
         </>
       )}
       {unlocked === undefined && (

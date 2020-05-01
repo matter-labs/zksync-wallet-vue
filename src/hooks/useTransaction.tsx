@@ -115,7 +115,6 @@ export const useTransaction = () => {
         }
         if (receipt.executed) {
           setExecuted(true);
-          setHintModal('');
           setLoading(false);
         }
       } catch (err) {
