@@ -57,7 +57,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
         {title === 'Withdraw' && 'Withdrawal initiated'}
         {title === 'Send' && 'Transfer complete'}
       </h2>
-      <LottiePlayer src={successCheckmark} />
+      <LottiePlayer src={JSON.stringify(successCheckmark)} />
       {title !== 'Send' && <p>{info[0]}</p>}
       {title === 'Send' && (
         <span className='transaction-field-title'>

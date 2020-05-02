@@ -45,11 +45,6 @@ const rules = [
       limit: 8192,
     },
   },
-  {
-    test: /images\/.*\.json$/,
-    loader: 'url-loader',
-    type: 'javascript/auto',
-  }
 ];
 
 function getAliases() {
