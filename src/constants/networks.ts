@@ -8,3 +8,5 @@ export const NETWORKS_LIST = {
 };
 export const RIGHT_NETWORK_ID = '4';
 export const RIGHT_NETWORK_NAME = NETWORKS_LIST[RIGHT_NETWORK_ID];
+
+export const CURRENT_NETWORK_PREFIX = 'rinkeby';
