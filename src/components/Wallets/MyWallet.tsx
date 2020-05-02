@@ -302,7 +302,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({
             </span>
           </div>
         </div>
-        {!!zkBalances?.length && zkBalancesLoaded ? (
+        {!!zkBalances?.length && zkBalancesLoaded && (
           <>
             <div
               className={`mywallet-buttons-container ${
@@ -341,7 +341,8 @@ const MyWallet: React.FC<IMyWalletProps> = ({
               {' Send'}
             </button>
           </>
-        ) : (
+        )}
+        {!zkBalances?.length && zkBalancesLoaded && (
           <>
             <div
               className={`mywallet-buttons-container ${
@@ -366,6 +367,7 @@ const MyWallet: React.FC<IMyWalletProps> = ({
             </button>
           </>
         )}
+        {!zkBalancesLoaded && <Spinner />}
       </div>
     </>
   );
