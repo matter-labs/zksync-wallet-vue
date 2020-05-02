@@ -90,7 +90,7 @@ const Account: React.FC = (): JSX.Element => {
     syncProvider,
     syncWallet,
   ]);
-  useInterval(refreshBalances, 2000, [syncProvider, syncWallet]);
+  useInterval(refreshBalances, 1000, [syncProvider, syncWallet]);
 
   const initWallet = async () => {
     setBalances(zkBalances);
