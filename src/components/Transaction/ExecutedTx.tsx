@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useRootData } from 'hooks/useRootData';
 
-import { ZK_EXPLORER } from 'constants/links';
+import { ZK_EXPLORER, ETHERSCAN_EXPLORER } from 'constants/links';
 
 import './Transaction.scss';
 import { LottiePlayer } from '../Common/LottiePlayer';
@@ -77,7 +77,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
       <p className='transaction-hash'>
         <a
           target='_blank'
-          href={`${ZK_EXPLORER}/${
+          href={`${title === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER}/${
             typeof hash === 'string' ? hash : hash?.hash
           }`}
         >
