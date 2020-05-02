@@ -40,6 +40,8 @@ const Account: React.FC = (): JSX.Element => {
     setTokens,
     setEthBalances,
     setZkBalances,
+    setZkBalancesLoaded,
+    zkBalancesLoaded,
   } = useRootData(
     ({
       error,
@@ -54,6 +56,7 @@ const Account: React.FC = (): JSX.Element => {
       zkBalances,
       zkWallet,
       searchBalances,
+      zkBalancesLoaded,
       ...s
     }) => ({
       ...s,
@@ -71,6 +74,7 @@ const Account: React.FC = (): JSX.Element => {
       zkWallet: zkWallet.get(),
       syncProvider: s.syncProvider.get(),
       syncWallet: s.syncWallet.get(),
+      zkBalancesLoaded: zkBalancesLoaded.get(),
     }),
   );
 
@@ -78,6 +82,7 @@ const Account: React.FC = (): JSX.Element => {
 
   const refreshBalances = useCallback(() => {
     cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
+      setZkBalancesLoaded(true);
       setTokens(res.tokens);
       setEthBalances(res.ethBalances);
       setZkBalances(res.zkBalances);
@@ -89,6 +94,7 @@ const Account: React.FC = (): JSX.Element => {
     setZkBalances,
     syncProvider,
     syncWallet,
+    setZkBalancesLoaded,
   ]);
   useInterval(refreshBalances, 1000, [syncProvider, syncWallet]);
 
@@ -144,6 +150,7 @@ const Account: React.FC = (): JSX.Element => {
     walletName,
     zkBalances,
     zkWallet,
+    zkBalancesLoaded,
   ]);
 
   const handleSend = useCallback(
