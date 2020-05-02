@@ -3,12 +3,11 @@ import { ethers } from 'ethers';
 
 import { useRootData } from 'hooks/useRootData';
 
-import { IEthBalance } from 'types/Common';
-
 import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
 import { fetchTransactions } from 'src/api';
 import { useLogout } from './useLogout';
+import { loadTokens } from 'src/utils';
 
 const useWalletInit = () => {
   const {
@@ -26,6 +25,8 @@ const useWalletInit = () => {
     walletName,
     setTxs,
     zkWalletInitializing,
+    syncProvider: storeSyncProvider,
+    syncWallet: storeSyncWallet,
   } = useRootData(({ provider, walletName, ...s }) => ({
     ...s,
     provider: provider.get(),
@@ -82,6 +83,8 @@ const useWalletInit = () => {
       );
       const transport = syncProvider.transport as WSTransport;
 
+      storeSyncProvider.set(syncProvider);
+      storeSyncWallet.set(syncWallet);
       setWSTransport(transport);
       setZkWallet(syncWallet);
 
@@ -94,50 +97,18 @@ const useWalletInit = () => {
       );
       setTxs(initialTransactions);
 
-      const tokens = await syncProvider.getTokens();
+      const { error, ethBalances, tokens, zkBalances } = await loadTokens(
+        syncProvider,
+        syncWallet,
+      );
+      if (error) {
+        setError(error);
+      }
       setTokens(tokens);
+      setEthBalances(ethBalances);
+      setZkBalances(zkBalances);
+      setZkBalancesLoaded(true);
 
-      const balancePromises = Object.keys(tokens).map(async key => {
-        if (tokens[key].symbol) {
-          const balance = await syncWallet.getEthereumBalance(key);
-          return {
-            address: tokens[key].address,
-            balance: +balance / Math.pow(10, 18),
-            symbol: tokens[key].symbol,
-          };
-        }
-      });
-
-      await Promise.all(balancePromises)
-        .then(res => {
-          const balance = res.filter(token => token);
-          setEthBalances(balance as IEthBalance[]);
-        })
-        .catch(err => {
-          err.name && err.message
-            ? setError(`${err.name}: ${err.message}`)
-            : setError(DEFAULT_ERROR);
-        });
-
-      const zkBalance = (await syncWallet.getAccountState()).committed.balances;
-      const zkBalancePromises = Object.keys(zkBalance).map(async key => {
-        return {
-          address: tokens[key].address,
-          balance: +zkBalance[key] / Math.pow(10, 18),
-          symbol: tokens[key].symbol,
-        };
-      });
-
-      await Promise.all(zkBalancePromises)
-        .then(res => {
-          setZkBalances(res as IEthBalance[]);
-        })
-        .then(() => setZkBalancesLoaded(true))
-        .catch(err => {
-          err.name && err.message
-            ? setError(`${err.name}: ${err.message}`)
-            : setError(DEFAULT_ERROR);
-        });
       zkWalletInitializing.set(false);
     } catch (err) {
       zkWalletInitializing.set(false);
@@ -163,6 +134,8 @@ const useWalletInit = () => {
     setTxs,
     setWSTransport,
     zkWalletInitializing,
+    storeSyncProvider,
+    storeSyncWallet,
   ]);
 
   return {

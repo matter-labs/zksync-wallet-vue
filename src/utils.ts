@@ -1,5 +1,9 @@
 import { Web3Provider } from 'ethers/providers';
 import { Tx } from './pages/Transactions';
+import { Provider, Wallet } from 'zksync';
+import { IEthBalance } from './types/Common';
+import { DEFAULT_ERROR } from './constants/errors';
+import { Tokens } from 'zksync/build/types';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider = window['ethereum'];
@@ -81,5 +85,65 @@ export function whyDidYouUpdate() {
       prevFields[k] = fields[k];
     }
     console.log(eqCheck);
+  };
+}
+
+export async function loadTokens(
+  syncProvider: Provider,
+  syncWallet: Wallet,
+): Promise<{
+  tokens: Tokens;
+  zkBalances: IEthBalance[];
+  ethBalances: IEthBalance[];
+  error?: string;
+}> {
+  if (!syncProvider || !syncWallet) {
+    return { tokens: {}, ethBalances: [], zkBalances: [], error: undefined };
+  }
+  const tokens = await syncProvider.getTokens();
+  let error: string | undefined;
+
+  const balancePromises = Object.entries(tokens)
+    .filter(t => t[1].symbol)
+    .map(async ([key, value]) => {
+      const balance = await syncWallet.getEthereumBalance(key);
+      return {
+        address: value.address,
+        balance: +balance / Math.pow(10, 18),
+        symbol: value.symbol,
+      };
+    });
+
+  const ethBalances: IEthBalance[] = await Promise.all(balancePromises)
+    .then(res => {
+      const balance = res.filter(token => token);
+      return balance as IEthBalance[];
+    })
+    .catch(err => {
+      error =
+        err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
+      return [];
+    });
+
+  const zkBalance = (await syncWallet.getAccountState()).committed.balances;
+  const zkBalancePromises = Object.keys(zkBalance).map(async key => ({
+    address: tokens[key].address,
+    balance: +zkBalance[key] / Math.pow(10, 18),
+    symbol: tokens[key].symbol,
+  }));
+
+  const zkBalances: IEthBalance[] = await Promise.all(zkBalancePromises).catch(
+    err => {
+      error =
+        err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
+      return [];
+    },
+  );
+
+  return {
+    tokens,
+    zkBalances,
+    ethBalances,
+    error,
   };
 }

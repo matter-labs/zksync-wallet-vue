@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import { DataList } from 'components/DataList/DataListNew';
 import MyWallet from 'components/Wallets/MyWallet';
@@ -8,12 +8,11 @@ import Transaction from 'components/Transaction/Transaction';
 import { useRootData } from 'hooks/useRootData';
 import { useTransaction } from 'hooks/useTransaction';
 
-import { BASE_URL } from 'constants/CoinBase';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
-import { useHistory } from 'react-router-dom';
 import { useCancelable } from 'hooks/useCancelable';
-
-import { DEFAULT_ERROR } from 'constants/errors';
+import { useInterval } from 'src/hooks/timers';
+import { loadTokens } from 'src/utils';
+import { IEthBalance } from 'src/types/Common';
 
 const Account: React.FC = (): JSX.Element => {
   const {
@@ -55,6 +54,11 @@ const Account: React.FC = (): JSX.Element => {
     walletName,
     zkBalances,
     zkWallet,
+    syncProvider,
+    syncWallet,
+    setTokens,
+    setEthBalances,
+    setZkBalances,
   } = useRootData(
     ({
       error,
@@ -62,40 +66,50 @@ const Account: React.FC = (): JSX.Element => {
       ethBalances,
       price,
       provider,
-      setBalances,
-      setError,
-      searchBalances,
-      setPrice,
-      setTransactionType,
-      setUnlocked,
       transactionModal,
       transactionType,
       verifyToken,
       walletName,
       zkBalances,
       zkWallet,
+      searchBalances,
+      ...s
     }) => ({
+      ...s,
       error: error.get(),
       ethId: ethId.get(),
       ethBalances: ethBalances.get(),
       provider: provider.get(),
       price: price.get(),
       searchBalances: searchBalances.get(),
-      setBalances,
-      setError,
-      setPrice,
-      setTransactionType,
-      setUnlocked,
       transactionModal: transactionModal.get(),
       transactionType: transactionType.get(),
       verifyToken: verifyToken.get(),
       walletName: walletName.get(),
       zkBalances: zkBalances.get(),
       zkWallet: zkWallet.get(),
+      syncProvider: s.syncProvider.get(),
+      syncWallet: s.syncWallet.get(),
     }),
   );
 
   const cancelable = useCancelable();
+
+  const refreshBalances = useCallback(() => {
+    cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
+      setTokens(res.tokens);
+      setEthBalances(res.ethBalances);
+      setZkBalances(res.zkBalances);
+    });
+  }, [
+    cancelable,
+    setEthBalances,
+    setTokens,
+    setZkBalances,
+    syncProvider,
+    syncWallet,
+  ]);
+  useInterval(refreshBalances, 2000, [syncProvider, syncWallet]);
 
   const initWallet = async () => {
     setBalances(zkBalances);
@@ -130,7 +144,7 @@ const Account: React.FC = (): JSX.Element => {
   };
   useEffect(() => {
     cancelable(initWallet);
-    cancelable(zkWallet?.getAccountState()).then(res => {
+    cancelable(zkWallet?.getAccountState()).then((res: any) => {
       setVerified(res?.verified.balances);
       res?.id
         ? cancelable(zkWallet?.isSigningKeySet()).then(data =>
@@ -237,7 +251,7 @@ const Account: React.FC = (): JSX.Element => {
             setTransactionType={setTransactionType}
           />
           <DataList
-            data={zkBalances}
+            data={zkBalances as IEthBalance[]}
             title='Token balances'
             visible={true}
             footer={ApiFailedHint}
