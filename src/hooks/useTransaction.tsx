@@ -189,13 +189,11 @@ export const useTransaction = () => {
                 'deposit',
                 symbol,
               );
-              if (!!depositPriorityOperation) {
-                setHintModal(
-                  `Waiting for transaction to be mined. \n ${+(
-                    amountValue / Math.pow(10, 18)
-                  )}  \n ${hash.hash}`,
-                );
-              }
+              setHintModal(
+                `Waiting for transaction to be mined. \n ${+(
+                  amountValue / Math.pow(10, 18)
+                )}  \n ${hash.hash}`,
+              );
               setHash(hash);
               await depositPriorityOperation
                 .awaitEthereumTxCommit()

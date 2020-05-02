@@ -5,6 +5,8 @@ import { useRootData } from 'hooks/useRootData';
 
 import Spinner from 'components/Spinner/Spinner';
 
+import { ZK_EXPLORER, ETHERSCAN_EXPLORER } from 'constants/links';
+
 import './Transaction.scss';
 
 interface ILoadingTXProps {
@@ -72,6 +74,20 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
               {inputValue} {symbolName}
             </p>
           </span>
+
+          {info[2] && (
+            <p className='transaction-hash'>
+              <a
+                target='_blank'
+                href={`${
+                  title === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
+                }/${info[2]}`}
+              >
+                {'Link to transaction ⇗'}
+              </a>
+            </p>
+          )}
+
           <button
             className='btn submit-button'
             onClick={() => {
