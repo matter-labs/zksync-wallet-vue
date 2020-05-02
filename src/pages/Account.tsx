@@ -82,7 +82,6 @@ const Account: React.FC = (): JSX.Element => {
 
   const refreshBalances = useCallback(() => {
     cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
-      setZkBalancesLoaded(true);
       setTokens(res.tokens);
       setEthBalances(res.ethBalances);
       setZkBalances(res.zkBalances);
@@ -94,7 +93,6 @@ const Account: React.FC = (): JSX.Element => {
     setZkBalances,
     syncProvider,
     syncWallet,
-    setZkBalancesLoaded,
   ]);
   useInterval(refreshBalances, 2000, [syncProvider, syncWallet]);
 
@@ -150,7 +148,6 @@ const Account: React.FC = (): JSX.Element => {
     walletName,
     zkBalances,
     zkWallet,
-    zkBalancesLoaded,
   ]);
 
   const handleSend = useCallback(

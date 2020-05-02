@@ -15,6 +15,7 @@ export function useLogout() {
     setWalletName,
     setZkWallet,
     setZkBalances,
+    setZkBalancesLoaded,
     setTxs,
   } = useRootData(s => ({
     ...s,
@@ -32,6 +33,7 @@ export function useLogout() {
       setAccessModal(accessModal);
       setZkWallet(null);
       setZkBalances([]);
+      setZkBalancesLoaded(false);
       setTxs([]);
       setProvider(false);
       setHintModal('');
@@ -52,6 +54,7 @@ export function useLogout() {
       setZkWallet,
       pathname,
       setZkBalances,
+      setZkBalancesLoaded,
       setTxs,
     ],
   );
