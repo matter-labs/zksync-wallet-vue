@@ -81,7 +81,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
             typeof hash === 'string' ? hash : hash?.hash
           }`}
         >
-          {'Link to transaction'}
+          {'Link to transaction ⇗'}
         </a>
       </p>
       <button
