@@ -164,6 +164,7 @@ const Account: React.FC = (): JSX.Element => {
     verifyToken,
     walletName,
     zkBalances,
+    setZkBalances,
     zkWallet,
   ]);
 
