@@ -39,7 +39,8 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     }),
   );
 
-  useWSHeartBeat();
+  // Temporary disabled
+  // useWSHeartBeat();
   const cancelable = useCancelable();
   const [curAddress, setCurAddress] = useState<string>(
     provider?.selectedAddress,
