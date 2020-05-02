@@ -37,6 +37,13 @@
   }
 }
 
+.WalletConnect-logo {
+  width: 100px;
+  height: 100px;
+  background-image: url(/images/walletconnect.png);
+  background-size: contain;
+}
+
 .modal {
   position: absolute;
   // top: 50%;

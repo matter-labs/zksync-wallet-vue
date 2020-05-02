@@ -47,6 +47,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     setAccessModal,
     setError,
     setHintModal,
+    setModal,
     setNormalBg,
     setWalletName,
     walletName,
@@ -63,6 +64,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setEthId,
       setEthWallet,
       setHintModal,
+      setModal,
       setNormalBg,
       setProvider,
       setWalletName,
@@ -80,6 +82,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setEthBalances,
       setEthId,
       setEthWallet,
+      setModal,
       setHintModal,
       setNormalBg,
       setProvider,
@@ -106,7 +109,12 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   });
 
   useEffect(() => {
-    if (provider?.selectedAddress == null && walletName) {
+    if (
+      provider?.selectedAddress == null &&
+      walletName &&
+      walletName !== 'WalletConnect'
+    ) {
+      //TODO: remove walletName === 'WalletConnect'
       setAccessModal(true);
     }
     if (error) {
@@ -163,6 +171,23 @@ const PrimaryPage: React.FC = (): JSX.Element => {
             </>
           ) : null}
         </Modal>
+        <Modal
+          background={false}
+          classSpecifier={'wc'}
+          visible={false}
+          cancelAction={() => handleLogOut(false, '')}
+          centered
+        >
+          <h3 className='title-connecting'>
+            {'WalletConnect support will be enabled soon'}
+          </h3>
+          <button
+            className='btn submit-button'
+            onClick={() => handleLogOut(false, '')}
+          >
+            {'OK'}
+          </button>
+        </Modal>
         {!walletName && (
           <>
             <div className='logo-textless'></div>
@@ -178,14 +203,11 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                     key={key}
                     onClick={() => {
                       if (wallets.includes(key)) {
-                        key === 'Metamask'
-                          ? (setWalletName(key as WalletType),
-                            setNormalBg(true),
-                            setAccessModal(true))
+                        key === 'WalletConnect' //TODO: just keep false condition later
+                          ? setModal('wc')
                           : (setWalletName(key as WalletType),
-                            setError(
-                              'WalletConnect support will be enabled soon',
-                            ));
+                            setNormalBg(true),
+                            setAccessModal(true));
                       } else {
                         setError(
                           `Your browser doesn't support ${key}, please select another wallet or switch browser`,

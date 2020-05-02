@@ -139,7 +139,7 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
           provider &&
           provider.networkVersion === RIGHT_NETWORK_ID
         }
-        classSpecifier='acc'
+        classSpecifier='metamask'
         background={true}
         centered
       >
