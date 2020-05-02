@@ -60,7 +60,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
             {isLoading && isAccountUnlockingProcess ? 'Unlocking' : title}
           </h2>
           <Spinner />
-          {title !== 'Send' && <p>{info[0]}</p>}
+          <p>{info[0]}</p>
           {title === 'Send' && !isAccountUnlockingProcess && (
             <span className='transaction-field-title'>
               <span>{'Recepient:'}</span>

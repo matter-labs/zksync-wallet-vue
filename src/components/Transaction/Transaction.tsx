@@ -237,8 +237,8 @@ const Transaction: React.FC<ITransactionProps> = ({
     setHintModal('Confirmed! \n Waiting for transaction to be ended');
     const receipt = await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
+    setAccountUnlockingProcess(!receipt);
     setLoading(false);
-    setAccountUnlockingProcess(false);
   }, [setAccountUnlockingProcess, setLoading, zkWallet]);
 
   const handleFilterContacts = useCallback(
