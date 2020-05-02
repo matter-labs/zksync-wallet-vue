@@ -105,13 +105,8 @@ const Account: React.FC = (): JSX.Element => {
 
   const initWallet = async () => {
     setBalances(zkBalances);
-    const balancesSymbols = () => {
-      const exceptFau = zkBalances
-        ?.filter(el => el.symbol !== 'FAU')
-        .map(el => el.symbol);
-      return exceptFau;
-    };
   };
+
   useEffect(() => {
     cancelable(initWallet);
     cancelable(zkWallet?.getAccountState()).then((res: any) => {
