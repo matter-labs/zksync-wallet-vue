@@ -7,7 +7,6 @@ import SpinnerWorm from 'components/Spinner/SpinnerWorm';
 
 import { useRootData } from 'hooks/useRootData';
 import { useTransaction } from 'hooks/useTransaction';
-
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useCancelable } from 'hooks/useCancelable';
 import { loadTokens } from 'src/utils';
@@ -38,18 +37,11 @@ const Account: React.FC = (): JSX.Element => {
   const history = useHistory();
 
   const {
-    error,
-    ethId,
     ethBalances,
     price,
-    provider,
     setBalances,
-    setError,
-    setPrice,
     setTransactionType,
     setUnlocked,
-    verifyToken,
-    walletName,
     zkBalances,
     zkWallet,
     syncProvider,
@@ -57,8 +49,6 @@ const Account: React.FC = (): JSX.Element => {
     setTokens,
     setEthBalances,
     setZkBalances,
-    setZkBalancesLoaded,
-    zkBalancesLoaded,
   } = useRootData(
     ({
       error,
@@ -121,28 +111,6 @@ const Account: React.FC = (): JSX.Element => {
         .map(el => el.symbol);
       return exceptFau;
     };
-    cancelable(
-      fetch(
-        'https://ticker-nhq6ta45ia-ez.a.run.app/cryptocurrency/listings/latest',
-        {
-          referrerPolicy: 'strict-origin-when-cross-origin',
-          body: null,
-          method: 'GET',
-          mode: 'cors',
-        },
-      ),
-    )
-      .then((res: any) => res.json())
-      .then(data => {
-        const prices = {};
-        Object.keys(data.data).map(
-          el => (prices[data.data[el].symbol] = data.data[el].quote.USD.price),
-        );
-        setPrice(prices);
-      })
-      .catch(err => {
-        console.error(err);
-      });
   };
   useEffect(() => {
     cancelable(initWallet);
@@ -154,19 +122,7 @@ const Account: React.FC = (): JSX.Element => {
           )
         : setUnlocked(true);
     });
-  }, [
-    error,
-    ethId,
-    provider,
-    setBalances,
-    setError,
-    setPrice,
-    verifyToken,
-    walletName,
-    zkBalances,
-    setZkBalances,
-    zkWallet,
-  ]);
+  }, [verified, zkBalances, setUnlocked]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
