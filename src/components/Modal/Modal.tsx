@@ -7,6 +7,7 @@ import { useRootData } from 'hooks/useRootData';
 
 import Portal from './Portal';
 import { Transition } from 'components/Transition/Transition';
+import Spinner from 'components/Spinner/Spinner';
 
 import { WRONG_NETWORK } from 'constants/regExs.ts';
 import { RIGHT_NETWORK_ID } from 'constants/networks';
@@ -149,6 +150,12 @@ const Modal: React.FC<ModalProps> = ({
       <div
         className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
       ></div>
+      {zkWalletInitializing && (
+        <>
+          <Spinner />
+          <p>{'Follow the instructions in the pop up'}</p>
+        </>
+      )}
       <button
         className='btn submit-button'
         onClick={() =>
@@ -191,7 +198,9 @@ const Modal: React.FC<ModalProps> = ({
             className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
           ></div>
           <div className='wrong-network'>
-            {provider && provider.networkVersion === RIGHT_NETWORK_ID ? null : (
+            {provider &&
+            walletName === 'Metamask' &&
+            provider.networkVersion === RIGHT_NETWORK_ID ? null : (
               <div className='wrong-network-logo'></div>
             )}
             <p>{error}</p>
@@ -213,7 +222,9 @@ const Modal: React.FC<ModalProps> = ({
 
   const plainModalContent = () => (
     <>
-      <button onClick={closeHandler} className='close-icon' />
+      {classSpecifier !== 'wc' && (
+        <button onClick={closeHandler} className='close-icon' />
+      )}
       {children}
     </>
   );
@@ -228,9 +239,13 @@ const Modal: React.FC<ModalProps> = ({
         >
           <div className={`modal ${classSpecifier}`}>
             {((isAccessModalOpen && !error) || (!zkWallet && !error)) &&
-              accessModalContent()}
+              classSpecifier !== 'wc' &&
+              accessModalContent()}{' '}
+            {/*//TODO: remove classSpecifier === 'wc' */}
             {error && errorModalContent()}
-            {zkWallet && !error && plainModalContent()}
+            {((zkWallet && !error) || classSpecifier === 'wc') &&
+              plainModalContent()}{' '}
+            {/*//TODO: remove classSpecifier === 'wc' */}
           </div>
         </div>
       </Transition>
