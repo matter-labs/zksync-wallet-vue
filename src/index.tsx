@@ -7,6 +7,9 @@ import App from './App';
 import Contacts from './pages/Contacts';
 import PrimaryPage from './pages/PrimaryPage';
 import Transactions from './pages/Transactions';
+import { Deposit } from './pages/Deposit';
+import { Send } from './pages/Send';
+import { Withdraw } from './pages/Withdraw';
 
 import StoreProvider from './store/context';
 
@@ -22,6 +25,9 @@ ReactDOM.render(
           <Route path='/account' exact component={Account} />
           <Route path='/contacts' exact component={Contacts} />
           <Route path='/transactions' exact component={Transactions} />
+          <Route path='/deposit' exact component={Deposit} />
+          <Route path='/send' exact component={Send} />
+          <Route path='/withdraw' exact component={Withdraw} />
           <Route path='/' exact component={PrimaryPage} />
           <Route path='/' render={() => <Redirect to='/' />} />
         </Switch>

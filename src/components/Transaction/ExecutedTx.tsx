@@ -1,5 +1,6 @@
 import React from 'react';
 import { ethers } from 'ethers';
+import { useHistory } from 'react-router-dom';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -40,11 +41,14 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
 
   const info = hintModal?.split('\n');
 
+  const history = useHistory();
+
   return (
     <>
       <button
         onClick={() => {
           handleCancel();
+          history.push('/account');
         }}
         className='transaction-back'
       ></button>
