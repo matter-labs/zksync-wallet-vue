@@ -1,7 +1,8 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { ethers } from 'ethers';
 
 import { useRootData } from 'hooks/useRootData';
+import { useCancelable } from 'hooks/useCancelable';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
@@ -24,14 +25,18 @@ const useWalletInit = () => {
     provider,
     walletName,
     setTxs,
+    setPrice,
     zkWalletInitializing,
     syncProvider: storeSyncProvider,
     syncWallet: storeSyncWallet,
-  } = useRootData(({ provider, walletName, ...s }) => ({
+  } = useRootData(({ provider, walletName, zkWallet, ...s }) => ({
     ...s,
     provider: provider.get(),
     walletName: walletName.get(),
+    zkWallet: zkWallet.get(),
   }));
+
+  const cancelable = useCancelable();
 
   const connect = useCallback(
     (provider, signUp) => {
@@ -108,6 +113,30 @@ const useWalletInit = () => {
       setEthBalances(ethBalances);
       setZkBalances(zkBalances);
       setZkBalancesLoaded(true);
+
+      cancelable(
+        fetch(
+          'https://ticker-nhq6ta45ia-ez.a.run.app/cryptocurrency/listings/latest',
+          {
+            referrerPolicy: 'strict-origin-when-cross-origin',
+            body: null,
+            method: 'GET',
+            mode: 'cors',
+          },
+        ),
+      )
+        .then((res: any) => res.json())
+        .then(data => {
+          const prices = {};
+          Object.keys(data.data).map(
+            el =>
+              (prices[data.data[el].symbol] = data.data[el].quote.USD.price),
+          );
+          setPrice(prices);
+        })
+        .catch(err => {
+          console.error(err);
+        });
 
       zkWalletInitializing.set(false);
     } catch (err) {
