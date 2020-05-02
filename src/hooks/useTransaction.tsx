@@ -192,7 +192,7 @@ export const useTransaction = () => {
               setHintModal(
                 `Waiting for transaction to be mined. \n ${+(
                   amountValue / Math.pow(10, 18)
-                )}  \n ${hash.hash}`,
+                )}  \n${hash.hash}`,
               );
               setHash(hash);
               await depositPriorityOperation
@@ -201,7 +201,7 @@ export const useTransaction = () => {
                   setHintModal(
                     `Block has been mined! \n ${+(
                       amountValue / Math.pow(10, 18)
-                    )}  \n ${hash.hash}`,
+                    )}  \n${hash.hash}`,
                   );
                   setExecuted(true);
                 });
@@ -287,7 +287,7 @@ export const useTransaction = () => {
             symbol,
           );
           setHash(hash);
-          setHintModal(` \n ${+(amountValue / Math.pow(10, 18))}. \n ${hash}`);
+          setHintModal(` \n ${+(amountValue / Math.pow(10, 18))}. \n${hash}`);
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
@@ -365,13 +365,13 @@ export const useTransaction = () => {
           setHintModal(
             `Waiting for the transaction to be mined.. \n ${+(
               amountValue / Math.pow(10, 18)
-            )}  \n ${hash}`,
+            )} \n${hash}`,
           );
           if (!!withdrawTransaction) {
             setHintModal(
               `Your withdrawal will be processed in short. \n ${+(
                 amountValue / Math.pow(10, 18)
-              )}  \n ${hash}`,
+              )} \n${hash}`,
             );
           }
           const receipt = await withdrawTransaction.awaitReceipt();
