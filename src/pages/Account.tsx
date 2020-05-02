@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataList } from 'components/DataList/DataListNew';
@@ -10,8 +10,25 @@ import { useTransaction } from 'hooks/useTransaction';
 
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useCancelable } from 'hooks/useCancelable';
-import { useInterval } from 'src/hooks/timers';
 import { loadTokens } from 'src/utils';
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef(() => undefined);
+
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    function tick() {
+      if (typeof savedCallback.current === 'function') savedCallback.current();
+    }
+    if (delay !== null) {
+      const id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
 
 const Account: React.FC = (): JSX.Element => {
   const { setMaxValueProp, setSymbolNameProp, setTokenProp } = useTransaction();
@@ -90,7 +107,7 @@ const Account: React.FC = (): JSX.Element => {
     syncProvider,
     syncWallet,
   ]);
-  useInterval(refreshBalances, 2000, [syncProvider, syncWallet]);
+  useInterval(refreshBalances, 3000);
 
   const initWallet = async () => {
     setBalances(zkBalances);
