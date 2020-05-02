@@ -203,6 +203,7 @@ export const useTransaction = () => {
                       amountValue / Math.pow(10, 18)
                     )}  \n ${hash.hash}`,
                   );
+                  setExecuted(true);
                 });
               const receipt = await depositPriorityOperation.awaitReceipt();
               transactions(receipt);

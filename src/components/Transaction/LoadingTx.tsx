@@ -12,6 +12,7 @@ import './Transaction.scss';
 interface ILoadingTXProps {
   addressValue: string;
   handleCancel: () => void;
+  isAccountUnlockingProcess: boolean;
   isLoading: boolean;
   isUnlockingProcess: boolean;
   inputValue: string;
@@ -30,6 +31,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
   setWalletName,
   title,
   isUnlockingProcess,
+  isAccountUnlockingProcess,
 }): JSX.Element => {
   const { hintModal, unlocked, walletAddress } = useRootData(
     ({ hintModal, unlocked, walletAddress }) => ({
@@ -55,26 +57,27 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
             className='transaction-back'
           ></button>
           <h2 className='transaction-title'>
-            {isLoading && isUnlockingProcess ? 'Unlocking' : title}
+            {isLoading && isAccountUnlockingProcess ? 'Unlocking' : title}
           </h2>
           <Spinner />
           {title !== 'Send' && <p>{info[0]}</p>}
-          {title === 'Send' && (
+          {title === 'Send' && !isAccountUnlockingProcess && (
             <span className='transaction-field-title'>
               <span>{'Recepient:'}</span>
               <p>{walletAddress.length > 0 && walletAddress[0]}</p>
               <p>{addressValue}</p>
             </span>
           )}
-          <span className='transaction-field-title'>
-            {title === 'Send' && 'Amount + fee'}
-            {title === 'Withdraw' && 'Amount'}
-            {title === 'Deposit' && 'Amount:'}
-            <p className='transaction-field-amount'>
-              {inputValue} {symbolName}
-            </p>
-          </span>
-
+          {!isAccountUnlockingProcess && (
+            <span className='transaction-field-title'>
+              {title === 'Send' && 'Amount + fee'}
+              {title === 'Withdraw' && 'Amount'}
+              {title === 'Deposit' && 'Amount:'}
+              <p className='transaction-field-amount'>
+                {inputValue} {symbolName}
+              </p>
+            </span>
+          )}
           {info[2] && (
             <p className='transaction-hash'>
               <a
@@ -92,6 +95,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
             className='btn submit-button'
             onClick={() => {
               handleCancel();
+              history.push('/account');
             }}
           >
             {'Cancel'}

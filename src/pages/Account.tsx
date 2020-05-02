@@ -146,13 +146,22 @@ const Account: React.FC = (): JSX.Element => {
     zkWallet,
   ]);
 
-  const handleSend = (address, balance, symbol) => {
-    setTransactionType('transfer');
-    history.push('/send');
-    setMaxValueProp(balance);
-    setSymbolNameProp(symbol);
-    setTokenProp(symbol ? symbol : address);
-  };
+  const handleSend = useCallback(
+    (address, balance, symbol) => {
+      setTransactionType('transfer');
+      history.push('/send');
+      setMaxValueProp(balance);
+      setSymbolNameProp(symbol);
+      setTokenProp(symbol ? symbol : address);
+    },
+    [
+      history,
+      setMaxValueProp,
+      setSymbolNameProp,
+      setTokenProp,
+      setTransactionType,
+    ],
+  );
 
   useCheckLogin();
 
