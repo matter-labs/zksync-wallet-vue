@@ -27,7 +27,8 @@
     "format": "prettier --write",
     "lint-ts": "eslint --fix",
     "lint-css": "stylelint --fix",
-    "deploy_hosting": "firebase deploy --only hosting",
+    "deploy_hosting": "firebase deploy --only hosting --project master",
+    "deploy_hosting_production":  "firebase deploy --only hosting --project production",
     "audit_dependencies": "npm audit --package-lock-only --audit-level critical --json | npm-audit-html --output audit.html",
     "check_licenses": "license-checker --json > licenses.json"
   },

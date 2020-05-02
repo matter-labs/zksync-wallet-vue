@@ -1,8 +1,7 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { useRootData } from 'hooks/useRootData';
-
-import Spinner from 'components/Spinner/Spinner';
 
 import './Transaction.scss';
 
@@ -29,6 +28,8 @@ export const CanceledTx: React.FC<ICanceledTxProps> = ({
     }),
   );
 
+  const history = useHistory();
+
   return (
     <>
       <button
@@ -38,6 +39,7 @@ export const CanceledTx: React.FC<ICanceledTxProps> = ({
           setTransactionType(undefined);
           setWalletName();
           setHintModal('');
+          history.push('/account');
         }}
         className='transaction-back'
       ></button>

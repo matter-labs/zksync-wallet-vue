@@ -6,8 +6,7 @@ import { useTimeout } from 'src/hooks/timers';
 import { TxStatus } from 'src/components/Transaction/TxStatus';
 import { FloatingMenu } from 'src/components/Common/FloatingMenu';
 
-import { WIDTH_BP } from 'constants/magicNumbers';
-import { ZK_EXPLORER } from 'src/constants/links';
+import { ZK_EXPLORER, ETHERSCAN_EXPLORER } from 'src/constants/links';
 
 export const Transaction: FC<Tx> = props => {
   const {
@@ -99,7 +98,9 @@ export const Transaction: FC<Tx> = props => {
         <a
           className='contact-manage-copy btn-tr'
           target='_blank'
-          href={`${ZK_EXPLORER}/${hash}`}
+          href={`${
+            type === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
+          }/${hash}`}
         >
           <p>{'View info on explorer'}</p>
         </a>

@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import makeBlockie from 'ethereum-blockies-base64';
 import cl from 'classnames';
 
@@ -69,6 +70,8 @@ const MyWallet: React.FC<IMyWalletProps> = ({
       : false;
 
   const inputRef: (HTMLInputElement | null)[] = [];
+
+  const history = useHistory();
 
   const handleCopy = useCallback(
     address => {
@@ -169,15 +172,15 @@ const MyWallet: React.FC<IMyWalletProps> = ({
                 <div className='balances-token-name'>
                   <p>{symbol}</p>
                   <span>
-                    {symbol === 'ETH' && <>{'Ethereum'}</>}
-                    {symbol === 'DAI' && <>{'Dai'}</>}
-                    {symbol === 'FAU' && <>{'Faucet'}</>}
+                    {symbol === 'ETH' && 'Ethereum'}
+                    {symbol === 'DAI' && 'Dai'}
+                    {symbol === 'FAU' && 'Faucet'}
                   </span>
                 </div>
               </div>
               <div className='balances-token-right'>
                 <span>
-                  balance:{' '}
+                  {'balance: '}
                   <p className='datalist-balance'>{+balance.toFixed(2)}</p>
                 </span>
               </div>
@@ -185,8 +188,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({
           )}
           emptyListComponent={() => (
             <p>
-              No balances yet, please make a deposit or request money from
-              someone!
+              {
+                'No balances yet, please make a deposit or request money from someone!'
+              }
             </p>
           )}
           title='Select asset'
@@ -278,7 +282,11 @@ const MyWallet: React.FC<IMyWalletProps> = ({
                         <span>zk{zkBalances[0].symbol}</span>
                       ))}
                     {!zkBalances.length &&
-                      (!zkBalancesLoaded ? <Spinner /> : <span>zkETH</span>)}
+                      (!zkBalancesLoaded ? (
+                        <Spinner />
+                      ) : (
+                        <span>{'zkETH'}</span>
+                      ))}
                   </p>
                 )}
                 <div className='arrow-down'></div>
@@ -288,7 +296,9 @@ const MyWallet: React.FC<IMyWalletProps> = ({
           <div className='mywallet-price-wrapper'>
             {verified && verifiedState && <SpinnerWorm />}
             <span className='mywallet-price'>
-              ~{parseFloat((+walletBalance).toFixed(2).toString())} USD
+              {'~'}
+              {parseFloat((+walletBalance).toFixed(2).toString())}
+              {' USD'}
             </span>
           </div>
         </div>
@@ -300,23 +310,35 @@ const MyWallet: React.FC<IMyWalletProps> = ({
               }`}
             >
               <button
-                onClick={() => setTransactionType('deposit')}
+                onClick={() => {
+                  setTransactionType('deposit');
+                  history.push('/deposit');
+                }}
                 className='btn deposit-button btn-tr'
               >
-                <span></span>Deposit
+                <span></span>
+                {' Deposit'}
               </button>
               <button
-                onClick={() => setTransactionType('withdraw')}
+                onClick={() => {
+                  setTransactionType('withdraw');
+                  history.push('/withdraw');
+                }}
                 className='btn withdraw-button btn-tr'
               >
-                <span></span>Withdraw
+                <span></span>
+                {' Withdraw'}
               </button>
             </div>
             <button
               className='btn submit-button'
-              onClick={() => setTransactionType('transfer')}
+              onClick={() => {
+                setTransactionType('transfer');
+                history.push('/send');
+              }}
             >
-              <span className='send-icon'></span> Send
+              <span className='send-icon'></span>
+              {' Send'}
             </button>
           </>
         ) : (
@@ -327,15 +349,20 @@ const MyWallet: React.FC<IMyWalletProps> = ({
               }`}
             >
               <p>
-                No balances yet, please make a deposit or request money from
-                someone!
+                {
+                  'No balances yet, please make a deposit or request money from someone!'
+                }
               </p>
             </div>
             <button
-              onClick={() => setTransactionType('deposit')}
+              onClick={() => {
+                setTransactionType('deposit');
+                history.push('/deposit');
+              }}
               className='btn deposit-button btn-tr big'
             >
-              <span></span>Deposit
+              <span></span>
+              {' Deposit'}
             </button>
           </>
         )}

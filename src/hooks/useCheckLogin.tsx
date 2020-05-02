@@ -1,12 +1,9 @@
 import { useEffect } from 'react';
 import { useRootData } from './useRootData';
-import useWalletInit from './useWalletInit';
 import { useCancelable } from './useCancelable';
 import { getWalletNameFromProvider } from 'src/utils';
 import { WalletType } from 'src/constants/Wallets';
 import { useQuery } from 'hooks/useQuery';
-
-import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
 
 export function useCheckLogin() {
   const params = useQuery();
@@ -18,7 +15,6 @@ export function useCheckLogin() {
     zkWallet,
     setWalletName,
     setAccessModal,
-    setError,
     walletName,
   } = useRootData(s => ({
     ...s,

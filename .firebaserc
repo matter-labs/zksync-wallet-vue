@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "zksync-demo"
+    "master": "zksync-demo",
+    "production": "zksync-wallet"
   }
 }
