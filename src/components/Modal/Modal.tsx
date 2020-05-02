@@ -153,19 +153,17 @@ const Modal: React.FC<ModalProps> = ({
       {zkWalletInitializing && (
         <>
           <Spinner />
-          <p>{'Follow the instructions in the pop up'}</p>
+          <p className='modal-instructions'>
+            {'Follow the instructions in the pop up'}
+          </p>
         </>
       )}
-      <button
-        className='btn submit-button'
-        onClick={() =>
-          zkWalletInitializing === true
-            ? handleLogOut(false, '')
-            : createWallet()
-        }
-      >
-        {`Login with ${walletName}`}
-      </button>
+      {!zkWalletInitializing && (
+        <button className='btn submit-button' onClick={() => createWallet()}>
+          {`Login with ${walletName}`}
+        </button>
+      )}
+
       <button
         onClick={() => handleLogOut(false, '')}
         className='btn btn-cancel btn-tr '

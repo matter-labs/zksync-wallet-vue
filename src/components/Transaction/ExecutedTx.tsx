@@ -90,6 +90,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
           handleCancel();
           setWalletAddress([]);
           setTransactionType(undefined);
+          history.push('/account');
         }}
       >
         {'OK'}

@@ -132,6 +132,9 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [isContactsListOpen, openContactsList] = useState<boolean>(false);
   const [isHintUnlocked, setHintUnlocked] = useState<string>('');
   const [isUnlockingProcess, setUnlockingProcess] = useState<boolean>(false);
+  const [isAccountUnlockingProcess, setAccountUnlockingProcess] = useState<
+    boolean
+  >(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [maxValue, setMaxValue] = useState<number>(
     propsMaxValue ? propsMaxValue : 0,
@@ -228,13 +231,15 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const handleUnlock = useCallback(async () => {
     setHintModal('Follow the instructions in the pop up');
+    setAccountUnlockingProcess(true);
     setLoading(true);
     const changePubkey = await zkWallet?.setSigningKey();
     setHintModal('Confirmed! \n Waiting for transaction to be ended');
     const receipt = await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
     setLoading(false);
-  }, [setLoading, zkWallet]);
+    setAccountUnlockingProcess(false);
+  }, [setAccountUnlockingProcess, setLoading, zkWallet]);
 
   const handleFilterContacts = useCallback(
     e => {
@@ -660,6 +665,7 @@ const Transaction: React.FC<ITransactionProps> = ({
           <>
             {isLoading && (
               <LoadingTx
+                isAccountUnlockingProcess={isAccountUnlockingProcess}
                 isUnlockingProcess={isUnlockingProcess}
                 inputValue={inputValue}
                 symbolName={symbolName}
