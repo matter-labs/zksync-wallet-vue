@@ -3,7 +3,7 @@ import { observable } from 'mobx';
 import { IEthBalance, IPrice, ITransaction } from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Tokens } from 'zksync/build/types';
-import { Wallet } from 'zksync';
+import { Wallet, Provider } from 'zksync';
 import { WSTransport } from 'zksync/build/transport';
 import { WalletType } from 'constants/Wallets';
 import { Tx } from 'src/pages/Transactions';
@@ -39,6 +39,9 @@ export const createStore = () => ({
   zkWalletInitializing: observable.box<boolean>(false),
   wsTransport: observable.box<WSTransport | null>(null),
   wsBroken: observable.box(false),
+
+  syncWallet: observable.box<Wallet>(),
+  syncProvider: observable.box<Provider>(),
 
   transactions: observable.array<Tx>([]),
   // transactions: observable<{ loaded: boolean; value: Tx[] }>({
