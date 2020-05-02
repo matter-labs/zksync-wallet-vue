@@ -63,6 +63,10 @@ export const useTransaction = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [symbol, setSymbol] = useState<string>('');
 
+  const [maxValueProp, setMaxValueProp] = useState<number>(0);
+  const [symbolNameProp, setSymbolNameProp] = useState<string>('');
+  const [tokenProp, setTokenProp] = useState<string>('');
+
   const history = useCallback(
     (
       amount: number,
@@ -411,12 +415,18 @@ export const useTransaction = () => {
     hash,
     isExecuted,
     isLoading,
+    maxValueProp,
     setAddressValue,
     setAmountValue,
     setExecuted,
     setHash,
     setLoading,
+    setMaxValueProp,
     setSymbol,
+    setSymbolNameProp,
+    setTokenProp,
+    symbolNameProp,
+    tokenProp,
     transfer,
     withdraw,
   };

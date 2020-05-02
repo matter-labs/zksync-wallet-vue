@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import makeBlockie from 'ethereum-blockies-base64';
 
@@ -18,6 +19,7 @@ import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { INPUT_VALIDATION } from 'constants/regExs';
 import { WIDTH_BP, ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
 
+import { useCancelable } from 'hooks/useCancelable';
 import { useRootData } from 'hooks/useRootData';
 
 import './Transaction.scss';
@@ -45,6 +47,7 @@ const Transaction: React.FC<ITransactionProps> = ({
   type,
 }): JSX.Element => {
   const {
+    error,
     ethId,
     hintModal,
     provider,
@@ -55,14 +58,19 @@ const Transaction: React.FC<ITransactionProps> = ({
     setError,
     setHintModal,
     setModal,
+    setPrice,
     setUnlocked,
     setWalletAddress,
     unlocked,
+    verifyToken,
     walletAddress,
+    walletName,
+    zkBalances,
     zkBalancesLoaded,
     zkWallet,
   } = useRootData(
     ({
+      error,
       ethId,
       hintModal,
       provider,
@@ -73,13 +81,18 @@ const Transaction: React.FC<ITransactionProps> = ({
       setError,
       setHintModal,
       setModal,
+      setPrice,
       setUnlocked,
       setWalletAddress,
       unlocked,
+      verifyToken,
       walletAddress,
+      walletName,
+      zkBalances,
       zkBalancesLoaded,
       zkWallet,
     }) => ({
+      error: error.get(),
       ethId: ethId.get(),
       hintModal: hintModal.get(),
       provider: provider.get(),
@@ -90,14 +103,20 @@ const Transaction: React.FC<ITransactionProps> = ({
       setHintModal,
       setError,
       setModal,
+      setPrice,
       setUnlocked,
       setWalletAddress,
       unlocked: unlocked.get(),
+      verifyToken: verifyToken.get(),
       walletAddress: walletAddress.get(),
+      walletName: walletName.get(),
+      zkBalances: zkBalances.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
       zkWallet: zkWallet.get(),
     }),
   );
+
+  const cancelable = useCancelable();
 
   const body = document.querySelector('#body');
   const dataPropertySymbol = 'symbol';
@@ -128,6 +147,8 @@ const Transaction: React.FC<ITransactionProps> = ({
   const [value, setValue] = useState<string>(
     localStorage.getItem('walletName') || '',
   );
+
+  const history = useHistory();
 
   const submitCondition =
     (ADDRESS_VALIDATION['eth'].test(addressValue) ||
@@ -275,6 +296,60 @@ const Transaction: React.FC<ITransactionProps> = ({
     }
   }, []);
 
+  const initWallet = async () => {
+    setBalances(zkBalances);
+    const balancesSymbols = () => {
+      const exceptFau = zkBalances
+        ?.filter(el => el.symbol !== 'FAU')
+        .map(el => el.symbol);
+      return exceptFau;
+    };
+    cancelable(
+      fetch(
+        'https://ticker-nhq6ta45ia-ez.a.run.app/cryptocurrency/listings/latest',
+        {
+          referrerPolicy: 'strict-origin-when-cross-origin',
+          body: null,
+          method: 'GET',
+          mode: 'cors',
+        },
+      ),
+    )
+      .then((res: any) => res.json())
+      .then(data => {
+        const prices = {};
+        Object.keys(data.data).map(
+          el => (prices[data.data[el].symbol] = data.data[el].quote.USD.price),
+        );
+        setPrice(prices);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  };
+
+  useEffect(() => {
+    cancelable(initWallet);
+    cancelable(zkWallet?.getAccountState()).then(res => {
+      res?.id
+        ? cancelable(zkWallet?.isSigningKeySet()).then(data =>
+            setUnlocked(data),
+          )
+        : setUnlocked(true);
+    });
+  }, [
+    error,
+    ethId,
+    provider,
+    setBalances,
+    setError,
+    setPrice,
+    verifyToken,
+    walletName,
+    zkBalances,
+    zkWallet,
+  ]);
+
   useEffect(() => {
     if ((token && token === 'ETH') || symbolName === 'ETH') {
       setUnlockFau(true);
@@ -357,6 +432,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     symbolName,
     title,
     token,
+    unlocked,
     unlockFau,
     walletAddress,
     zkWallet,
@@ -541,9 +617,9 @@ const Transaction: React.FC<ITransactionProps> = ({
                     <div className='balances-token-name'>
                       <p>{symbol}</p>
                       <span>
-                        {symbol === 'ETH' && <>{'Ethereum'}</>}
-                        {symbol === 'DAI' && <>{'Dai'}</>}
-                        {symbol === 'FAU' && <>{'Faucet'}</>}
+                        {symbol === 'ETH' && 'Ethereum'}
+                        {symbol === 'DAI' && 'Dai'}
+                        {symbol === 'FAU' && 'Faucet'}
                       </span>
                     </div>
                   </div>
@@ -601,20 +677,21 @@ const Transaction: React.FC<ITransactionProps> = ({
                 setWalletName={setWalletName}
               />
             )}
-            {/* {unlocked === undefined && (
-              <>
-                <Spinner />
-                <button
-                  className='btn submit-button'
-                  onClick={() => {
-                    handleCancel();
-                    setWalletName();
-                  }}
-                >
-                  {'Cancel'}
-                </button>
-              </>
-            )} */}
+            {unlocked === undefined ||
+              (!zkBalancesLoaded && (
+                <>
+                  <Spinner />
+                  <button
+                    className='btn submit-button'
+                    onClick={() => {
+                      handleCancel();
+                      setWalletName();
+                    }}
+                  >
+                    {'Cancel'}
+                  </button>
+                </>
+              ))}
           </>
         ) : (
           <>
@@ -623,6 +700,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 handleCancel();
                 setWalletAddress([]);
                 setTransactionType(undefined);
+                history.push('/account');
               }}
               className='transaction-back'
             ></button>
@@ -933,17 +1011,38 @@ const Transaction: React.FC<ITransactionProps> = ({
                 </>
               ) : (
                 <>
-                  <p>
-                    {
-                      'No balances yet, please make a deposit or request money from someone!'
-                    }
-                  </p>
-                  <button
-                    className='btn submit-button'
-                    onClick={() => setTransactionType('deposit')}
-                  >
-                    {'Deposit'}
-                  </button>
+                  {zkBalancesLoaded && zkWallet && (
+                    <>
+                      <p>
+                        {
+                          'No balances yet, please make a deposit or request money from someone!'
+                        }
+                      </p>
+                      <button
+                        className='btn submit-button'
+                        onClick={() => {
+                          setTransactionType('deposit');
+                          history.push('/deposit');
+                        }}
+                      >
+                        {'Deposit'}
+                      </button>
+                    </>
+                  )}
+                  {(!zkBalancesLoaded || !zkWallet) && (
+                    <>
+                      <Spinner />
+                      <button
+                        className='btn submit-button'
+                        onClick={() => {
+                          handleCancel();
+                          setWalletName();
+                        }}
+                      >
+                        {'Cancel'}
+                      </button>
+                    </>
+                  )}
                 </>
               )
             ) : (

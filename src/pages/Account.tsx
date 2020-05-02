@@ -1,42 +1,22 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { DataList } from 'components/DataList/DataListNew';
 import MyWallet from 'components/Wallets/MyWallet';
 import SpinnerWorm from 'components/Spinner/SpinnerWorm';
-import Transaction from 'components/Transaction/Transaction';
 
 import { useRootData } from 'hooks/useRootData';
 import { useTransaction } from 'hooks/useTransaction';
 
-import { BASE_URL } from 'constants/CoinBase';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
-import { useHistory } from 'react-router-dom';
 import { useCancelable } from 'hooks/useCancelable';
 
-import { DEFAULT_ERROR } from 'constants/errors';
-
 const Account: React.FC = (): JSX.Element => {
-  const {
-    addressValue,
-    amountValue,
-    deposit,
-    hash,
-    isExecuted,
-    isLoading,
-    setAddressValue,
-    setAmountValue,
-    setHash,
-    setExecuted,
-    setLoading,
-    setSymbol,
-    transfer,
-    withdraw,
-  } = useTransaction();
+  const { setMaxValueProp, setSymbolNameProp, setTokenProp } = useTransaction();
 
-  const [maxValue, setMaxValue] = useState<number>(0);
-  const [symbolName, setSymbolName] = useState<string>('');
-  const [token, setToken] = useState<string>('');
   const [verified, setVerified] = useState<any>();
+
+  const history = useHistory();
 
   const {
     error,
@@ -46,11 +26,9 @@ const Account: React.FC = (): JSX.Element => {
     provider,
     setBalances,
     setError,
-    searchBalances,
     setPrice,
     setTransactionType,
     setUnlocked,
-    transactionType,
     verifyToken,
     walletName,
     zkBalances,
@@ -153,9 +131,10 @@ const Account: React.FC = (): JSX.Element => {
 
   const handleSend = (address, balance, symbol) => {
     setTransactionType('transfer');
-    setMaxValue(balance);
-    setSymbolName(symbol);
-    setToken(symbol ? symbol : address);
+    history.push('/send');
+    setMaxValueProp(balance);
+    setSymbolNameProp(symbol);
+    setTokenProp(symbol ? symbol : address);
   };
 
   useCheckLogin();
@@ -228,98 +207,26 @@ const Account: React.FC = (): JSX.Element => {
 
   return (
     <>
-      {!transactionType && (
-        <>
-          <MyWallet
-            balances={ethBalances}
-            price={price}
-            title='zkSync Wallet'
-            setTransactionType={setTransactionType}
-          />
-          <DataList
-            data={zkBalances}
-            title='Token balances'
-            visible={true}
-            footer={ApiFailedHint}
-            renderItem={balance =>
-              isVerified(balance) ? (
-                <VerifiedBal key={balance.address} balance={balance} />
-              ) : (
-                <UnverifiedBal key={balance.address} balance={balance} />
-              )
-            }
-            emptyListComponent={() => <p>{'No balances yet.'}</p>}
-          />
-        </>
-      )}
-      {transactionType === 'deposit' && (
-        <Transaction
-          addressValue={addressValue}
-          amountValue={amountValue}
-          balances={ethBalances}
-          hash={hash}
-          isExecuted={isExecuted}
-          isInput={false}
-          isLoading={isLoading}
-          onChangeAddress={(e: string) => setAddressValue(e)}
-          onChangeAmount={setAmountValue}
-          price={price}
-          setHash={setHash}
-          setExecuted={setExecuted}
-          setLoading={setLoading}
-          setSymbol={setSymbol}
-          setTransactionType={setTransactionType}
-          title='Deposit'
-          transactionAction={deposit}
-        />
-      )}
-      {transactionType === 'withdraw' && (
-        <Transaction
-          addressValue={addressValue}
-          amountValue={amountValue}
-          balances={zkBalances}
-          hash={hash}
-          isExecuted={isExecuted}
-          isInput={true}
-          isLoading={isLoading}
-          onChangeAddress={(e: string) => setAddressValue(e)}
-          onChangeAmount={setAmountValue}
-          price={price}
-          setHash={setHash}
-          setExecuted={setExecuted}
-          setLoading={setLoading}
-          setTransactionType={setTransactionType}
-          setSymbol={setSymbol}
-          title='Withdraw'
-          transactionAction={withdraw}
-          type='eth'
-        />
-      )}
-      {transactionType === 'transfer' && (
-        <Transaction
-          addressValue={addressValue}
-          amountValue={amountValue}
-          balances={zkBalances}
-          hash={hash}
-          isExecuted={isExecuted}
-          isInput={true}
-          isLoading={isLoading}
-          onChangeAddress={(e: string) => setAddressValue(e)}
-          onChangeAmount={setAmountValue}
-          propsMaxValue={maxValue ? maxValue : 0}
-          propsSymbolName={symbolName ? symbolName : ''}
-          propsToken={token ? token : ''}
-          price={price}
-          setHash={setHash}
-          setExecuted={setExecuted}
-          setLoading={setLoading}
-          setSymbol={setSymbol}
-          setTransactionType={setTransactionType}
-          title='Send'
-          transactionAction={transfer}
-          type='sync'
-        />
-      )}
+      <MyWallet
+        balances={ethBalances}
+        price={price}
+        title='zkSync Wallet'
+        setTransactionType={setTransactionType}
+      />
+      <DataList
+        data={zkBalances}
+        title='Token balances'
+        visible={true}
+        footer={ApiFailedHint}
+        renderItem={balance =>
+          isVerified(balance) ? (
+            <VerifiedBal key={balance.address} balance={balance} />
+          ) : (
+            <UnverifiedBal key={balance.address} balance={balance} />
+          )
+        }
+        emptyListComponent={() => <p>{'No balances yet.'}</p>}
+      />
     </>
   );
 };

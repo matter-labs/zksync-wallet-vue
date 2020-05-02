@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 import editicon from 'images/icon-edit.svg';
@@ -11,6 +12,8 @@ import { useTimeout } from 'src/hooks/timers';
 import { useRootData } from 'src/hooks/useRootData';
 
 export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
+  const history = useHistory();
+
   const { setModal, setTransactionType, setWalletAddress } = useRootData(
     s => s,
   );
@@ -64,6 +67,7 @@ export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
           onClick={() => {
             setTransactionType('transfer');
             setWalletAddress([name, address]);
+            history.push('/send');
           }}
         >
           <Link to='/'></Link>

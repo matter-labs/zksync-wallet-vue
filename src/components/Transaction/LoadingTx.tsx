@@ -1,8 +1,7 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import { useRootData } from 'hooks/useRootData';
-
-import { ZK_EXPLORER } from 'constants/links';
 
 import Spinner from 'components/Spinner/Spinner';
 
@@ -38,6 +37,8 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
     }),
   );
 
+  const history = useHistory();
+
   const info = hintModal?.split('\n');
 
   return (
@@ -47,6 +48,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
           <button
             onClick={() => {
               handleCancel();
+              history.push('/account');
             }}
             className='transaction-back'
           ></button>
