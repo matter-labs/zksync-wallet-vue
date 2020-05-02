@@ -72,7 +72,7 @@ const useWalletInit = () => {
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
 
-      const syncProvider = await zkSync.getDefaultProvider(network, 'WS');
+      const syncProvider = await zkSync.getDefaultProvider(network, 'HTTP');
       const signer = await zkSync.Signer.fromETHSignature(
         wallet as ethers.providers.JsonRpcSigner,
       );
