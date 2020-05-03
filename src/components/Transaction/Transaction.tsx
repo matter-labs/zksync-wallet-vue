@@ -22,6 +22,8 @@ import { WIDTH_BP, ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
 import { useCancelable } from 'hooks/useCancelable';
 import { useRootData } from 'hooks/useRootData';
 
+import { loadTokens } from 'src/utils';
+
 import './Transaction.scss';
 
 const Transaction: React.FC<ITransactionProps> = ({
@@ -61,6 +63,12 @@ const Transaction: React.FC<ITransactionProps> = ({
     setPrice,
     setUnlocked,
     setWalletAddress,
+    syncProvider,
+    syncWallet,
+    setEthBalances,
+    setTokens,
+    setZkBalances,
+    tokens,
     unlocked,
     verifyToken,
     walletAddress,
@@ -85,8 +93,14 @@ const Transaction: React.FC<ITransactionProps> = ({
       setUnlocked,
       setWalletAddress,
       unlocked,
+      tokens,
       verifyToken,
+      setEthBalances,
+      setTokens,
+      setZkBalances,
       walletAddress,
+      syncProvider,
+      syncWallet,
       walletName,
       zkBalances,
       zkBalancesLoaded,
@@ -106,6 +120,12 @@ const Transaction: React.FC<ITransactionProps> = ({
       setPrice,
       setUnlocked,
       setWalletAddress,
+      setEthBalances,
+      setTokens,
+      setZkBalances,
+      syncProvider: syncProvider.get(),
+      syncWallet: syncWallet.get(),
+      tokens: tokens.get(),
       unlocked: unlocked.get(),
       verifyToken: verifyToken.get(),
       walletAddress: walletAddress.get(),
@@ -151,7 +171,43 @@ const Transaction: React.FC<ITransactionProps> = ({
     localStorage.getItem('walletName') || '',
   );
 
+  const [refreshTimer, setRefreshTimer] = useState<number | null>(null);
+
   const history = useHistory();
+
+  const refreshBalances = useCallback(async () => {
+    cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
+      if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
+        setZkBalances(res.zkBalances);
+      }
+      if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
+        setTokens(res.tokens);
+      }
+      if (JSON.stringify(res.zkBalances) !== JSON.stringify(zkBalances)) {
+        setZkBalances(res.zkBalances);
+      }
+    });
+    const res = await zkWallet?.getAccountState();
+    if (res?.id) {
+      await cancelable(zkWallet?.isSigningKeySet()).then(data =>
+        setUnlocked(data),
+      );
+    } else {
+      setUnlocked(true);
+    }
+    const timeout = setTimeout(refreshBalances, 2000);
+    setRefreshTimer(timeout as any);
+  }, [
+    cancelable,
+    setBalances,
+    setEthBalances,
+    setTokens,
+    setUnlocked,
+    setZkBalances,
+    syncProvider,
+    syncWallet,
+    zkWallet,
+  ]);
 
   const submitCondition =
     (ADDRESS_VALIDATION['eth'].test(addressValue) ||
@@ -353,6 +409,8 @@ const Transaction: React.FC<ITransactionProps> = ({
     walletName,
     zkBalances,
     zkWallet,
+    refreshBalances,
+    setZkBalances,
   ]);
 
   useEffect(() => {

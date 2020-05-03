@@ -32,8 +32,6 @@ function useInterval(callback, delay) {
 const Account: React.FC = (): JSX.Element => {
   const { setMaxValueProp, setSymbolNameProp, setTokenProp } = useTransaction();
 
-  const [verified, setVerified] = useState<any>();
-
   const history = useHistory();
 
   const {
@@ -49,6 +47,9 @@ const Account: React.FC = (): JSX.Element => {
     setTokens,
     setEthBalances,
     setZkBalances,
+    setVerified,
+    verified,
+    tokens,
   } = useRootData(
     ({
       error,
@@ -58,6 +59,7 @@ const Account: React.FC = (): JSX.Element => {
       provider,
       transactionModal,
       transactionType,
+      tokens,
       verifyToken,
       walletName,
       zkBalances,
@@ -73,6 +75,7 @@ const Account: React.FC = (): JSX.Element => {
       provider: provider.get(),
       price: price.get(),
       searchBalances: searchBalances.get(),
+      tokens: tokens.get(),
       transactionModal: transactionModal.get(),
       transactionType: transactionType.get(),
       verifyToken: verifyToken.get(),
@@ -81,6 +84,7 @@ const Account: React.FC = (): JSX.Element => {
       zkWallet: zkWallet.get(),
       syncProvider: s.syncProvider.get(),
       syncWallet: s.syncWallet.get(),
+      verified: s.verified.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
     }),
   );
@@ -89,14 +93,18 @@ const Account: React.FC = (): JSX.Element => {
   const [refreshTimer, setRefreshTimer] = useState<number | null>(null);
 
   const refreshBalances = useCallback(async () => {
-    await cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
-      setTokens(res.tokens);
-      setEthBalances(res.ethBalances);
-      setZkBalances(res.zkBalances);
-      setBalances(res.zkBalances);
+    cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
+      if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
+        setZkBalances(res.zkBalances);
+      }
+      if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
+        setTokens(res.tokens);
+      }
+      if (JSON.stringify(res.zkBalances) !== JSON.stringify(zkBalances)) {
+        setZkBalances(res.zkBalances);
+      }
     });
     const res = await zkWallet?.getAccountState();
-    setVerified(res?.verified.balances);
     if (res?.id) {
       await cancelable(zkWallet?.isSigningKeySet()).then(data =>
         setUnlocked(data),
@@ -120,7 +128,15 @@ const Account: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     refreshBalances();
-  }, [refreshBalances]);
+    cancelable(zkWallet?.getAccountState()).then((res: any) => {
+      setVerified(res?.verified.balances);
+      res?.id
+        ? cancelable(zkWallet?.isSigningKeySet()).then(data =>
+            setUnlocked(data),
+          )
+        : setUnlocked(true);
+    });
+  }, [refreshBalances, zkBalances, setZkBalances]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
@@ -141,10 +157,14 @@ const Account: React.FC = (): JSX.Element => {
 
   useCheckLogin();
 
-  const isVerified = ({ address, symbol, balance }) =>
-    verified &&
-    (+balance === +verified[address] / Math.pow(10, 18) ||
-      +balance === +verified[symbol] / Math.pow(10, 18));
+  const isVerified = ({ address, symbol, balance }) => {
+    console.log(verified, balance);
+    return (
+      verified &&
+      (+balance === +verified[address] / Math.pow(10, 18) ||
+        +balance === +verified[symbol] / Math.pow(10, 18))
+    );
+  };
 
   const ApiFailedHint = () =>
     !price ? <p>{'No Conversion Rate Available'}</p> : null;

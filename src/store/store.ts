@@ -31,6 +31,7 @@ export const createStore = () => ({
   >(undefined),
   unlocked: observable.box<boolean | undefined>(undefined),
   verifyToken: observable.box<boolean | undefined>(undefined),
+  verified: observable.box<any>(),
   walletName: observable.box<WalletType>(''),
   walletAddress: observable.box<any>([]),
   zkBalances: observable.box<IEthBalance[]>([]),
@@ -129,6 +130,10 @@ export const createStore = () => ({
 
   setVerifyToken(verified: boolean | undefined) {
     this.verifyToken.set(verified);
+  },
+
+  setVerified(verified: any) {
+    this.verified.set(verified);
   },
 
   setWalletAddress(walletAddress: any): void {
