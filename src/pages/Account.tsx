@@ -86,38 +86,41 @@ const Account: React.FC = (): JSX.Element => {
   );
 
   const cancelable = useCancelable();
+  const [refreshTimer, setRefreshTimer] = useState<number | null>(null);
 
-  const refreshBalances = useCallback(() => {
-    cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
+  const refreshBalances = useCallback(async () => {
+    await cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
       setTokens(res.tokens);
       setEthBalances(res.ethBalances);
       setZkBalances(res.zkBalances);
+      setBalances(res.zkBalances);
     });
+    const res = await zkWallet?.getAccountState();
+    setVerified(res?.verified.balances);
+    if (res?.id) {
+      await cancelable(zkWallet?.isSigningKeySet()).then(data =>
+        setUnlocked(data),
+      );
+    } else {
+      setUnlocked(true);
+    }
+    const timeout = setTimeout(refreshBalances, 2000);
+    setRefreshTimer(timeout as any);
   }, [
     cancelable,
+    setBalances,
     setEthBalances,
     setTokens,
+    setUnlocked,
     setZkBalances,
     syncProvider,
     syncWallet,
+    zkWallet,
   ]);
-  useInterval(refreshBalances, 3000);
-
-  const initWallet = async () => {
-    setBalances(zkBalances);
-  };
 
   useEffect(() => {
-    cancelable(initWallet);
-    cancelable(zkWallet?.getAccountState()).then((res: any) => {
-      setVerified(res?.verified.balances);
-      res?.id
-        ? cancelable(zkWallet?.isSigningKeySet()).then(data =>
-            setUnlocked(data),
-          )
-        : setUnlocked(true);
-    });
-  }, [verified, zkBalances, setUnlocked]);
+    refreshBalances();
+  }, [refreshBalances]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
