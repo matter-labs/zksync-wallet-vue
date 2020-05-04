@@ -176,24 +176,16 @@ const Transaction: React.FC<ITransactionProps> = ({
   const history = useHistory();
 
   const refreshBalances = useCallback(async () => {
-    cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
-      if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
-        setZkBalances(res.zkBalances);
-      }
-      if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
-        setTokens(res.tokens);
-      }
-      if (JSON.stringify(res.zkBalances) !== JSON.stringify(zkBalances)) {
-        setZkBalances(res.zkBalances);
-      }
-    });
-    const res = await zkWallet?.getAccountState();
-    if (res?.id) {
-      await cancelable(zkWallet?.isSigningKeySet()).then(data =>
-        setUnlocked(data),
-      );
-    } else {
-      setUnlocked(true);
+    if (zkWallet) {
+      cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
+        if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
+          setZkBalances(res.zkBalances);
+          setBalances(zkBalances);
+        }
+        if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
+          setTokens(res.tokens);
+        }
+      });
     }
     const timeout = setTimeout(refreshBalances, 2000);
     setRefreshTimer(timeout as any);
@@ -207,6 +199,8 @@ const Transaction: React.FC<ITransactionProps> = ({
     syncProvider,
     syncWallet,
     zkWallet,
+    zkBalances,
+    tokens,
   ]);
 
   const submitCondition =
@@ -359,59 +353,11 @@ const Transaction: React.FC<ITransactionProps> = ({
 
   const initWallet = async () => {
     setBalances(zkBalances);
-    const balancesSymbols = () => {
-      const exceptFau = zkBalances
-        ?.filter(el => el.symbol !== 'FAU')
-        .map(el => el.symbol);
-      return exceptFau;
-    };
-    cancelable(
-      fetch(
-        'https://ticker-nhq6ta45ia-ez.a.run.app/cryptocurrency/listings/latest',
-        {
-          referrerPolicy: 'strict-origin-when-cross-origin',
-          body: null,
-          method: 'GET',
-          mode: 'cors',
-        },
-      ),
-    )
-      .then((res: any) => res.json())
-      .then(data => {
-        const prices = {};
-        Object.keys(data.data).map(
-          el => (prices[data.data[el].symbol] = data.data[el].quote.USD.price),
-        );
-        setPrice(prices);
-      })
-      .catch(err => {
-        console.error(err);
-      });
   };
 
   useEffect(() => {
     cancelable(initWallet);
-    cancelable(zkWallet?.getAccountState()).then(res => {
-      res?.id
-        ? cancelable(zkWallet?.isSigningKeySet()).then(data =>
-            setUnlocked(data),
-          )
-        : setUnlocked(true);
-    });
-  }, [
-    error,
-    ethId,
-    provider,
-    setBalances,
-    setError,
-    setPrice,
-    verifyToken,
-    walletName,
-    zkBalances,
-    zkWallet,
-    refreshBalances,
-    setZkBalances,
-  ]);
+  }, []);
 
   useEffect(() => {
     if ((token && token === 'ETH') || symbolName === 'ETH') {
@@ -426,8 +372,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       setSymbolName(balances[0].symbol);
       setSymbol(balances[0].symbol);
     }
-
-    if (token && zkWallet && token !== 'ETH') {
+    if (token && zkWallet && symbolName !== 'ETH') {
       zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
     }
     if (

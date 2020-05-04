@@ -13,11 +13,13 @@ import { loadTokens } from 'src/utils';
 const useWalletInit = () => {
   const {
     setAccessModal,
+    setBalances,
     setError,
     setEthBalances,
     setEthId,
     setEthWallet,
     setTokens,
+    setUnlocked,
     setWSTransport,
     setZkBalances,
     setZkBalancesLoaded,
@@ -26,9 +28,11 @@ const useWalletInit = () => {
     walletName,
     setTxs,
     setPrice,
+    setVerified,
     zkWalletInitializing,
     syncProvider: storeSyncProvider,
     syncWallet: storeSyncWallet,
+    zkWallet,
   } = useRootData(({ provider, walletName, zkWallet, ...s }) => ({
     ...s,
     provider: provider.get(),
@@ -44,6 +48,7 @@ const useWalletInit = () => {
         signUp()
           .then(async res => {
             setEthId(res);
+            zkWalletInitializing.set(false);
             setAccessModal(true);
           })
           .catch(err => {
@@ -111,8 +116,21 @@ const useWalletInit = () => {
       }
       setTokens(tokens);
       setEthBalances(ethBalances);
+      setBalances(zkBalances);
       setZkBalances(zkBalances);
       setZkBalancesLoaded(true);
+      const res = await zkWallet?.getAccountState();
+      if (res?.id) {
+        await cancelable(zkWallet?.isSigningKeySet()).then(data => {
+          setUnlocked(data);
+        });
+      } else {
+        setUnlocked(true);
+      }
+
+      cancelable(zkWallet?.getAccountState()).then((res: any) => {
+        setVerified(res?.verified.balances);
+      });
 
       cancelable(
         fetch(
