@@ -52,6 +52,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     setWalletName,
     walletName,
     zkWallet,
+    zkWalletInitializing,
   } = useRootData(
     ({
       error,
@@ -72,6 +73,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setZkWallet,
       walletName,
       zkWallet,
+      zkWalletInitializing,
     }) => ({
       error: error.get(),
       hintModal: hintModal.get(),
@@ -91,6 +93,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
       setZkWallet,
       walletName: walletName.get(),
       zkWallet: zkWallet.get(),
+      zkWalletInitializing,
     }),
   );
 
@@ -131,6 +134,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     setWalletName,
     walletName,
     zkWallet,
+    zkWalletInitializing,
   ]);
 
   const params = useQuery();
@@ -208,6 +212,9 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                           : (setWalletName(key as WalletType),
                             setNormalBg(true),
                             setAccessModal(true));
+                        if (!provider?.selectedAddress) {
+                          zkWalletInitializing.set(true);
+                        }
                       } else {
                         setError(
                           `Your browser doesn't support ${key}, please select another wallet or switch browser`,

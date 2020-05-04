@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { DataList } from 'components/DataList/DataListNew';
@@ -10,6 +16,7 @@ import { useTransaction } from 'hooks/useTransaction';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useCancelable } from 'hooks/useCancelable';
 import { loadTokens } from 'src/utils';
+import Spinner from 'src/components/Spinner/Spinner';
 
 function useInterval(callback, delay) {
   const savedCallback = useRef(() => undefined);
@@ -30,7 +37,12 @@ function useInterval(callback, delay) {
 }
 
 const Account: React.FC = (): JSX.Element => {
-  const { setMaxValueProp, setSymbolNameProp, setTokenProp } = useTransaction();
+  const {
+    setMaxValueProp,
+    setSymbolNameProp,
+    setTokenProp,
+    maxValueProp,
+  } = useTransaction();
 
   const history = useHistory();
 
@@ -50,6 +62,8 @@ const Account: React.FC = (): JSX.Element => {
     setVerified,
     verified,
     tokens,
+    zkBalancesLoaded,
+    unlocked,
   } = useRootData(
     ({
       error,
@@ -85,6 +99,7 @@ const Account: React.FC = (): JSX.Element => {
       syncProvider: s.syncProvider.get(),
       syncWallet: s.syncWallet.get(),
       verified: s.verified.get(),
+      unlocked: s.unlocked.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
     }),
   );
@@ -93,24 +108,19 @@ const Account: React.FC = (): JSX.Element => {
   const [refreshTimer, setRefreshTimer] = useState<number | null>(null);
 
   const refreshBalances = useCallback(async () => {
-    cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
-      if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
-        setZkBalances(res.zkBalances);
-      }
-      if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
-        setTokens(res.tokens);
-      }
-      if (JSON.stringify(res.zkBalances) !== JSON.stringify(zkBalances)) {
-        setZkBalances(res.zkBalances);
-      }
-    });
-    const res = await zkWallet?.getAccountState();
-    if (res?.id) {
-      await cancelable(zkWallet?.isSigningKeySet()).then(data =>
-        setUnlocked(data),
-      );
-    } else {
-      setUnlocked(true);
+    if (zkWallet) {
+      cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
+        if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
+          setZkBalances(res.zkBalances);
+          cancelable(zkWallet?.getAccountState()).then((res: any) => {
+            setVerified(res?.verified.balances);
+          });
+          setBalances(zkBalances);
+        }
+        if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
+          setTokens(res.tokens);
+        }
+      });
     }
     const timeout = setTimeout(refreshBalances, 2000);
     setRefreshTimer(timeout as any);
@@ -120,23 +130,19 @@ const Account: React.FC = (): JSX.Element => {
     setEthBalances,
     setTokens,
     setUnlocked,
+    setVerified,
     setZkBalances,
     syncProvider,
     syncWallet,
+    verified,
     zkWallet,
+    zkBalances,
+    tokens,
   ]);
 
   useEffect(() => {
     refreshBalances();
-    cancelable(zkWallet?.getAccountState()).then((res: any) => {
-      setVerified(res?.verified.balances);
-      res?.id
-        ? cancelable(zkWallet?.isSigningKeySet()).then(data =>
-            setUnlocked(data),
-          )
-        : setUnlocked(true);
-    });
-  }, [refreshBalances, zkBalances, setZkBalances]);
+  }, [refreshBalances, zkBalances]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
@@ -148,6 +154,7 @@ const Account: React.FC = (): JSX.Element => {
     },
     [
       history,
+      maxValueProp,
       setMaxValueProp,
       setSymbolNameProp,
       setTokenProp,
@@ -158,7 +165,6 @@ const Account: React.FC = (): JSX.Element => {
   useCheckLogin();
 
   const isVerified = ({ address, symbol, balance }) => {
-    console.log(verified, balance);
     return (
       verified &&
       (+balance === +verified[address] / Math.pow(10, 18) ||
@@ -167,7 +173,7 @@ const Account: React.FC = (): JSX.Element => {
   };
 
   const ApiFailedHint = () =>
-    !price ? <p>{'No Conversion Rate Available'}</p> : null;
+    !price && zkBalancesLoaded ? <p>{'No Conversion Rate Available'}</p> : null;
 
   const VerifiedBal = ({ balance: { address, symbol, balance } }) => {
     return (
@@ -214,7 +220,7 @@ const Account: React.FC = (): JSX.Element => {
           ).toFixed(2)})`}</span>
         )}
         <div className='balances-token-status'>
-          <p>{'Pending'}</p>
+          <p>{'Verifying'}</p>
           <SpinnerWorm />
         </div>
         <button
@@ -247,7 +253,9 @@ const Account: React.FC = (): JSX.Element => {
             <UnverifiedBal key={balance.address} balance={balance} />
           )
         }
-        emptyListComponent={() => <p>{'No balances yet.'}</p>}
+        emptyListComponent={() =>
+          zkBalancesLoaded ? <p>{'No balances yet.'}</p> : <Spinner />
+        }
       />
     </>
   );

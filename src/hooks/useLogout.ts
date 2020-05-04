@@ -17,6 +17,7 @@ export function useLogout() {
     setZkBalances,
     setZkBalancesLoaded,
     setTxs,
+    zkWalletInitializing,
   } = useRootData(s => ({
     ...s,
     error: s.error.get(),
@@ -37,6 +38,7 @@ export function useLogout() {
       setTxs([]);
       setProvider(false);
       setHintModal('');
+      zkWalletInitializing.set(false);
       if (withRedirect) {
         history.push({
           pathname: '/',
