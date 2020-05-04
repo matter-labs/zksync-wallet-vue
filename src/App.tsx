@@ -28,6 +28,9 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     setZkBalances,
     setZkWallet,
     setHintModal,
+    setBalances,
+    setZkBalancesLoaded,
+    setTxs,
   } = useRootData(
     ({ error, isAccessModalOpen, provider, walletName, zkWallet, ...s }) => ({
       ...s,
@@ -105,6 +108,8 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
         setZkWallet(null);
         setZkBalances([]);
         setAccessModal(true);
+        setZkBalancesLoaded(false);
+        setTxs([]);
       }
     };
     provider.on('accountsChanged', accountChangeListener);

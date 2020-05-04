@@ -70,6 +70,21 @@ body.dark {
   --transparent: transparent;
 }
 
+.beta {
+  &-container {
+    display: flex;
+    align-items: center;
+  }
+
+  &-text {
+    margin-bottom: 10px;
+    margin-left: 10px;
+    color: var(--delete-color);
+    font-weight: var(--semibold-font-weight);
+    font-size: var(--md-font-size);
+  }
+}
+
 body.fixed,
 body.fixed-b {
   height: 100vh;

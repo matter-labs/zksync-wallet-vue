@@ -66,11 +66,15 @@ const Header: React.FC = () => {
   return (
     <div className='menu-wrapper'>
       <div className='menu-top'>
-        <Link
-          onClick={() => (!zkWallet ? logout(false, '') : undefined)}
-          className='menu-logo'
-          to='/'
-        ></Link>
+        <div className='beta-container'>
+          <Link
+            onClick={() => (!zkWallet ? logout(false, '') : undefined)}
+            className='menu-logo'
+            to='/'
+          ></Link>
+          <p className='beta-text'>{'BETA'}</p>
+        </div>
+
         {address && (
           <>
             <button

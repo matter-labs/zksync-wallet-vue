@@ -194,7 +194,10 @@ const PrimaryPage: React.FC = (): JSX.Element => {
         </Modal>
         {!walletName && (
           <>
-            <div className='logo-textless'></div>
+            <div className='beta-container'>
+              <div className='logo-textless'></div>
+              <p className='beta-text'>{'BETA'}</p>
+            </div>
             <div className='welcome-text'>
               <h2>{'Simple, fast and secure token transfers'}</h2>
               <p>{'Connect a wallet'}</p>
