@@ -55,7 +55,7 @@ const Footer: React.FC = (): JSX.Element => {
             ))}
           </span>
           <p>
-            {'Made with ❤️ by Matter Labs.'}
+            {'Made with ❤️ by Matter Labs'}
             <span>
               {' v. '}
               {process.env.VERSION}
