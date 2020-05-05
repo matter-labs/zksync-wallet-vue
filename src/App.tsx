@@ -16,34 +16,10 @@ import { useCancelable } from './hooks/useCancelable';
 import { useInterval } from './hooks/timers';
 import { useObserver } from 'mobx-react-lite';
 import { useStore } from './store/context';
+import { autorun } from 'mobx';
 
 const App: React.FC<IAppProps> = ({ children }) => {
   const store = useStore();
-  // const {
-  //   error,
-  //   isAccessModalOpen,
-  //   provider,
-  //   setAccessModal,
-  //   setError,
-  //   setWalletName,
-  //   walletName,
-  //   zkWallet,
-  //   setZkBalances,
-  //   setZkWallet,
-  //   setHintModal,
-  //   setBalances,
-  //   setZkBalancesLoaded,
-  //   setTxs,
-  // } = useRootData(
-  //   ({ error, isAccessModalOpen, provider, walletName, zkWallet, ...s }) => ({
-  //     ...s,
-  //     error: error.get(),
-  //     isAccessModalOpen: isAccessModalOpen.get(),
-  //     provider: provider.get(),
-  //     walletName: walletName.get(),
-  //     zkWallet: zkWallet.get(),
-  //   }),
-  // );
 
   useWSHeartBeat();
   const cancelable = useCancelable();
@@ -66,6 +42,7 @@ const App: React.FC<IAppProps> = ({ children }) => {
     }
   }, 5000);
 
+  // Listen for network change
   useEffect(() => {
     const provider = store.provider;
     const walletName = store.walletName;
@@ -91,6 +68,7 @@ const App: React.FC<IAppProps> = ({ children }) => {
 
   const logout = useLogout();
 
+  // Listen for account change
   useEffect(() => {
     const provider = store.provider;
     const walletName = store.walletName;

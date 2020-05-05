@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';
 import Spinner from 'components/Spinner/Spinner';
 
-import { useRootData } from 'hooks/useRootData';
 import { useQuery } from 'hooks/useQuery';
-import { useCancelable } from 'hooks/useCancelable';
 
 import { MOBILE_DEVICE } from 'constants/regExs';
 import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
@@ -21,6 +19,7 @@ import {
 import { useLogout } from 'src/hooks/useLogout';
 import { useStore } from 'src/store/context';
 import { useObserver } from 'mobx-react-lite';
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const mobileCheck = useMemo(
@@ -44,10 +43,10 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const store = useStore();
 
   const handleLogOut = useLogout();
-  const cancelable = useCancelable();
 
-  useEffect(() => {
-    if (!(store.provider && store.walletName === 'Metamask')) return;
+  useMobxEffect(() => {
+    const { provider, walletName } = store;
+    if (!(provider && walletName === 'Metamask')) return;
     const listener = () => {
       store.walletName = '';
       store.isAccessModalOpen = true;
@@ -57,19 +56,37 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     return () => store.provider.off('networkChanged', listener);
   });
 
-  useEffect(() => {
-    if (
-      store.provider?.selectedAddress == null &&
-      store.walletName &&
-      store.walletName !== 'WalletConnect'
-    ) {
-      //TODO: remove walletName === 'WalletConnect'
-      store.isAccessModalOpen = true;
-    }
-    if (store.error) {
-      store.isAccessModalOpen = false;
-    }
-  }, [cancelable, store]);
+  // useMobxEffect(() => {
+  //   const { provider, walletName, error } = store;
+  //   if (
+  //     provider?.selectedAddress == null &&
+  //     walletName !== 'WalletConnect' &&
+  //     !error
+  //   ) {
+  //     //TODO: remove walletName === 'WalletConnect'
+  //     store.isAccessModalOpen = true;
+  //   }
+  // });
+
+  const selectWallet = useCallback(
+    (key: WalletType) => () => {
+      if (wallets.includes(key)) {
+        if (key === 'WalletConnect') {
+          store.isModalOpen = 'wc';
+        } else {
+          store.walletName = key as WalletType;
+          store.normalBg = true;
+          store.isAccessModalOpen = true;
+        }
+        if (store.provider?.selectedAddress) {
+          store.zkWalletInitializing = true;
+        }
+      } else {
+        store.error = `Your browser doesn't support ${key}, please select another wallet or switch browser`;
+      }
+    },
+    [store, wallets],
+  );
 
   const params = useQuery();
 
@@ -145,22 +162,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
                     <div
                       className={`btn wallet-button ${key}`}
                       key={key}
-                      onClick={() => {
-                        if (wallets.includes(key)) {
-                          if (key === 'WalletConnect') {
-                            store.isModalOpen = 'wc';
-                          } else {
-                            store.walletName = key as WalletType;
-                            store.normalBg = true;
-                            store.isAccessModalOpen = true;
-                          }
-                          if (!provider?.selectedAddress) {
-                            store.zkWalletInitializing = true;
-                          }
-                        } else {
-                          store.error = `Your browser doesn't support ${key}, please select another wallet or switch browser`;
-                        }
-                      }}
+                      onClick={selectWallet(key as WalletType)}
                     ></div>
                     <p>{key}</p>
                   </button>

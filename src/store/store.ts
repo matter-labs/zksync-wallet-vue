@@ -60,6 +60,22 @@ export class Store {
     }
     this.transactions = transactions;
   }
+
+  @action
+  performLogout(accessModal, walletName) {
+    this.isModalOpen = '';
+    this.error = '';
+    this.walletName = walletName;
+    this.isAccessModalOpen = accessModal;
+    this.zkWallet = null;
+    this.zkBalances = [];
+    this.zkBalancesLoaded = false;
+    this.transactions = [];
+    this.provider = false;
+    this.hintModal = '';
+    this.zkWalletInitializing = false;
+    console.log({ accModal: this.isAccessModalOpen });
+  }
 }
 
 export const createStore = () => ({

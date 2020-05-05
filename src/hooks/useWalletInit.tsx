@@ -12,36 +12,7 @@ import { loadTokens } from 'src/utils';
 import { useStore } from 'src/store/context';
 
 const useWalletInit = () => {
-  // const {
-  //   // setAccessModal,
-  //   // setBalances,
-  //   // setError,
-  //   // setEthBalances,
-  //   // setEthId,
-  //   // setEthWallet,
-  //   // setTokens,
-  //   // setUnlocked,
-  //   // setWSTransport,
-  //   // setZkBalances,
-  //   // setZkBalancesLoaded,
-  //   // setZkWallet,
-  //   // provider,
-  //   // walletName,
-  //   // setTxs,
-  //   // setPrice,
-  //   // setVerified,
-  //   // zkWalletInitializing,
-  //   // syncProvider: storeSyncProvider,
-  //   // syncWallet: storeSyncWallet,
-  //   // zkWallet,
-  // } = useRootData(({ provider, walletName, zkWallet, ...s }) => ({
-  //   ...s,
-  //   provider: provider.get(),
-  //   walletName: walletName.get(),
-  //   zkWallet: zkWallet.get(),
-  // }));
   const store = useStore();
-
   const cancelable = useCancelable();
 
   const connect = useCallback(
@@ -159,12 +130,11 @@ const useWalletInit = () => {
       )
         .then((res: any) => res.json())
         .then(data => {
-          const prices = {};
-          Object.keys(data.data).map(
-            el =>
-              (prices[data.data[el].symbol] = data.data[el].quote.USD.price),
+          store.price = Object.entries(data.data).reduce(
+            (acc, [el, val]: [any, any]) =>
+              Object.assign(acc, { [val.symbol]: val.quote.USD.price }),
+            {},
           );
-          store.price = prices;
         })
         .catch(err => {
           console.error(err);
