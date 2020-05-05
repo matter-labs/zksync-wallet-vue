@@ -6,34 +6,15 @@ import useWalletInit from 'hooks/useWalletInit';
 import { DEFAULT_ERROR } from 'constants/errors';
 import { useStore } from 'src/store/context';
 import { autorun } from 'mobx';
-import { useObserver } from 'mobx-react-lite';
 
 const BrowserWallet: React.FC = () => {
   const { connect } = useWalletInit();
-
-  // const {
-  //   provider,
-  //   setError,
-  //   setProvider,
-  //   setWalletName,
-  //   setZkWallet,
-  // } = useRootData(
-  //   ({ provider, setError, setProvider, setWalletName, setZkWallet }) => ({
-  //     provider: provider.get(),
-  //     setError,
-  //     setProvider,
-  //     setWalletName,
-  //     setZkWallet,
-  //   }),
-  // );
   const store = useStore();
 
   const history = useHistory();
-  console.log('Rendering BrowserWallet');
 
   useEffect(() => {
     const ar = autorun(() => {
-      console.log({ provider: store.provider });
       try {
         if (!store.provider) {
           const browserProvider = window?.['ethereum'];

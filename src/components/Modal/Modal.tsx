@@ -43,7 +43,6 @@ const Modal: React.FC<ModalProps> = ({
   useEffect(
     () =>
       autorun(() => {
-        console.log('autorun runned');
         const body = document.body;
         if (store.isModalOpen) {
           body.classList.add('fixed');
