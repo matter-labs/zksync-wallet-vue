@@ -9,6 +9,7 @@ import { WSTransport } from 'zksync/build/transport';
 import { fetchTransactions } from 'src/api';
 import { useLogout } from './useLogout';
 import { loadTokens } from 'src/utils';
+import { useStore } from 'src/store/context';
 
 const useWalletInit = () => {
   const {
@@ -39,6 +40,7 @@ const useWalletInit = () => {
     walletName: walletName.get(),
     zkWallet: zkWallet.get(),
   }));
+  const store = useStore();
 
   const cancelable = useCancelable();
 
@@ -105,7 +107,7 @@ const useWalletInit = () => {
         syncWallet.address(),
         web3Provider,
       );
-      setTxs(initialTransactions);
+      store.transactions = initialTransactions;
 
       const { error, ethBalances, tokens, zkBalances } = await loadTokens(
         syncProvider,

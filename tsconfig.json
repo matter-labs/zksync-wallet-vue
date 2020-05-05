@@ -12,6 +12,7 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
+    "experimentalDecorators": true,
     "target": "ES2019",
     "outDir": "./lib",
     "lib": ["dom", "dom.iterable", "esnext"],

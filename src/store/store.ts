@@ -2,11 +2,60 @@ import { observable } from 'mobx';
 
 import { IEthBalance, IPrice, ITransaction } from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
-import { Tokens } from 'zksync/build/types';
+import { Tokens, AccountState } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
 import { WSTransport } from 'zksync/build/transport';
 import { WalletType } from 'constants/Wallets';
 import { Tx } from 'src/pages/Transactions';
+
+export class Store {
+  @observable depositModal = false;
+  @observable error = '';
+  @observable ethBalances: IEthBalance[] = [];
+  @observable ethId = '';
+  @observable ethWallet?: JsonRpcSigner;
+  @observable hintModal = '';
+  @observable normalBg = false;
+  @observable isAccessModalOpen = false;
+  @observable isModalOpen = '';
+  // path = observable.box<string>(window?.location.pathname);
+  @observable price?: IPrice;
+  // TODO: add explicit type
+  @observable provider?: any;
+  @observable searchBalances: IEthBalance[] = [];
+  // TODO: add explicit type
+  @observable searchContacts?: any;
+  // TODO: add explicit type
+  @observable searchTransactions?: any;
+  @observable tokens?: Tokens;
+  @observable transactionModal?: ITransaction;
+  @observable transactionType?: 'deposit' | 'withdraw' | 'transfer';
+  @observable unlocked = false;
+  @observable verifyToken = false;
+  // TODO: add explicit type
+  @observable verified: any;
+  @observable walletName: WalletType = '';
+  // TODO: add explicit type
+  @observable walletAddress: any = [];
+  @observable zkBalances: IEthBalance[] = [];
+  @observable zkBalancesLoaded = false;
+  @observable zkWallet: Wallet | null = null;
+  @observable zkWalletInitializing = false;
+  @observable wsTransport: WSTransport | null = null;
+  @observable wsBroken = false;
+  @observable accountState: AccountState | null = null;
+  @observable syncWallet?: Wallet;
+  @observable syncProvider?: Provider;
+  @observable transactions: Tx[] = [];
+
+  setTxs(transactions: ((prev: Tx[]) => Tx[]) | Tx[]) {
+    if (typeof transactions === 'function') {
+      this.transactions = transactions(this.transactions);
+      return;
+    }
+    this.transactions = transactions;
+  }
+}
 
 export const createStore = () => ({
   depositModal: observable.box<boolean>(false),
@@ -40,6 +89,7 @@ export const createStore = () => ({
   zkWalletInitializing: observable.box<boolean>(false),
   wsTransport: observable.box<WSTransport | null>(null),
   wsBroken: observable.box(false),
+  accountState: observable.box<AccountState | null>(null),
 
   syncWallet: observable.box<Wallet>(),
   syncProvider: observable.box<Provider>(),
