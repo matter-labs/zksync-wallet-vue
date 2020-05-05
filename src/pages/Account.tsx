@@ -64,6 +64,7 @@ const Account: React.FC = (): JSX.Element => {
     tokens,
     zkBalancesLoaded,
     unlocked,
+    accountState,
   } = useRootData(
     ({
       error,
@@ -101,6 +102,7 @@ const Account: React.FC = (): JSX.Element => {
       verified: s.verified.get(),
       unlocked: s.unlocked.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
+      accountState: s.accountState.get(),
     }),
   );
 
@@ -108,41 +110,44 @@ const Account: React.FC = (): JSX.Element => {
   const [refreshTimer, setRefreshTimer] = useState<number | null>(null);
 
   const refreshBalances = useCallback(async () => {
-    if (zkWallet) {
-      cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
-        if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
-          setZkBalances(res.zkBalances);
-          cancelable(zkWallet?.getAccountState()).then((res: any) => {
-            setVerified(res?.verified.balances);
-          });
-          setBalances(zkBalances);
-        }
-        if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
-          setTokens(res.tokens);
-        }
-      });
+    if (zkWallet && accountState) {
+      await cancelable(loadTokens(syncProvider, syncWallet, accountState)).then(
+        async res => {
+          if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
+            setZkBalances(res.zkBalances);
+            await cancelable(zkWallet?.getAccountState()).then((res: any) => {
+              setVerified(res?.verified.balances);
+            });
+            setBalances(zkBalances);
+          }
+          if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
+            setTokens(res.tokens);
+          }
+        },
+      );
     }
+    console.log('Refreshed');
     const timeout = setTimeout(refreshBalances, 2000);
     setRefreshTimer(timeout as any);
   }, [
+    zkWallet,
     cancelable,
-    setBalances,
-    setEthBalances,
-    setTokens,
-    setUnlocked,
-    setVerified,
-    setZkBalances,
     syncProvider,
     syncWallet,
-    verified,
-    zkWallet,
     zkBalances,
+    accountState,
     tokens,
+    setZkBalances,
+    setBalances,
+    setVerified,
+    setTokens,
   ]);
 
   useEffect(() => {
-    refreshBalances();
-  }, [refreshBalances, zkBalances]);
+    if (refreshTimer == null) {
+      refreshBalances();
+    }
+  }, [refreshBalances, refreshTimer]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
@@ -154,7 +159,6 @@ const Account: React.FC = (): JSX.Element => {
     },
     [
       history,
-      maxValueProp,
       setMaxValueProp,
       setSymbolNameProp,
       setTokenProp,

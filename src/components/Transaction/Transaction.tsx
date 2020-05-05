@@ -76,6 +76,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     zkBalances,
     zkBalancesLoaded,
     zkWallet,
+    accountState,
   } = useRootData(
     ({
       error,
@@ -105,7 +106,9 @@ const Transaction: React.FC<ITransactionProps> = ({
       zkBalances,
       zkBalancesLoaded,
       zkWallet,
+      ...s
     }) => ({
+      ...s,
       error: error.get(),
       ethId: ethId.get(),
       hintModal: hintModal.get(),
@@ -133,6 +136,7 @@ const Transaction: React.FC<ITransactionProps> = ({
       zkBalances: zkBalances.get(),
       zkBalancesLoaded: zkBalancesLoaded.get(),
       zkWallet: zkWallet.get(),
+      accountState: s.accountState.get(),
     }),
   );
 
@@ -176,25 +180,26 @@ const Transaction: React.FC<ITransactionProps> = ({
   const history = useHistory();
 
   const refreshBalances = useCallback(async () => {
-    if (zkWallet) {
-      cancelable(loadTokens(syncProvider, syncWallet)).then(res => {
-        if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
-          setZkBalances(res.zkBalances);
-          setBalances(zkBalances);
-        }
-        if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
-          setTokens(res.tokens);
-        }
-      });
+    if (zkWallet && accountState) {
+      cancelable(loadTokens(syncProvider, syncWallet, accountState)).then(
+        res => {
+          if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
+            setZkBalances(res.zkBalances);
+            setBalances(zkBalances);
+          }
+          if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
+            setTokens(res.tokens);
+          }
+        },
+      );
     }
     const timeout = setTimeout(refreshBalances, 2000);
     setRefreshTimer(timeout as any);
   }, [
+    accountState,
     cancelable,
     setBalances,
-    setEthBalances,
     setTokens,
-    setUnlocked,
     setZkBalances,
     syncProvider,
     syncWallet,

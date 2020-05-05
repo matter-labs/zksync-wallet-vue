@@ -49,13 +49,9 @@ const useWalletInit = () => {
       if (provider) {
         signUp()
           .then(async res => {
-            console.log('Signed up');
             store.ethId = res;
-            // setEthId(res);
             store.zkWalletInitializing = false;
             store.isAccessModalOpen = true;
-            // zkWalletInitializing.set(false);
-            // setAccessModal(true);
           })
           .catch(err => {
             store.error =
@@ -107,11 +103,13 @@ const useWalletInit = () => {
         signer,
       );
       const transport = syncProvider.transport as WSTransport;
+      const accountState = await syncWallet.getAccountState();
 
       store.syncProvider = syncProvider;
       store.syncWallet = syncWallet;
       store.wsTransport = transport;
       store.zkWallet = syncWallet;
+      store.accountState = accountState;
 
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const initialTransactions = await fetchTransactions(
@@ -125,6 +123,7 @@ const useWalletInit = () => {
       const { error, ethBalances, tokens, zkBalances } = await loadTokens(
         syncProvider,
         syncWallet,
+        accountState,
       );
       if (error) {
         store.error = error;
