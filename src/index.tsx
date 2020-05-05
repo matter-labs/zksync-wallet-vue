@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import 'mobx-react-lite/optimizeForReactDom';
 
 import Account from './pages/Account';
 import App from './App';

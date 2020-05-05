@@ -40,21 +40,21 @@ export interface Tx {
 
 const Transactions: React.FC = (): JSX.Element => {
   const store = useStore();
-  const { zkWallet, provider } = useRootData(s => ({
-    provider: s.provider.get(),
-    zkWallet: s.zkWallet.get(),
-  }));
+  // const { zkWallet, provider } = useRootData(s => ({
+  //   provider: s.provider.get(),
+  //   zkWallet: s.zkWallet.get(),
+  // }));
 
   const web3Provider = useMemo(
-    () => provider && new ethers.providers.Web3Provider(provider),
-    [provider],
+    () => store.provider && new ethers.providers.Web3Provider(store.provider),
+    [store],
   );
 
   const fetchTransactions = useCallback(
     async (amount, offset): Promise<Tx[]> => {
       const txs: Tx[] = await fetch(
         'https://testnet.zksync.dev/api/v0.1/account/' +
-          `${zkWallet?.address()}/history/${offset}/${amount}`,
+          `${store.zkWalletAddress}/history/${offset}/${amount}`,
       ).then(r => r.json());
 
       const resolvedTxs = await Promise.all(
@@ -66,7 +66,7 @@ const Transactions: React.FC = (): JSX.Element => {
       );
       return resolvedTxs.filter(tx => tx.tx.type !== 'ChangePubKey');
     },
-    [zkWallet, web3Provider],
+    [store.zkWalletAddress, web3Provider],
   );
 
   useCheckLogin();
@@ -83,7 +83,7 @@ const Transactions: React.FC = (): JSX.Element => {
         <div className='default-text'>{'History is empty'}</div>
       )}
       infScrollInitialCount={30}
-      refreshInterval={zkWallet ? 2e3 : 0}
+      refreshInterval={store.zkWallet ? 2e3 : 0}
     />
   ));
 };

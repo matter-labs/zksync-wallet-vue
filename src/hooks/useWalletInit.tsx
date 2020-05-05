@@ -12,34 +12,34 @@ import { loadTokens } from 'src/utils';
 import { useStore } from 'src/store/context';
 
 const useWalletInit = () => {
-  const {
-    setAccessModal,
-    setBalances,
-    setError,
-    setEthBalances,
-    setEthId,
-    setEthWallet,
-    setTokens,
-    setUnlocked,
-    setWSTransport,
-    setZkBalances,
-    setZkBalancesLoaded,
-    setZkWallet,
-    provider,
-    walletName,
-    setTxs,
-    setPrice,
-    setVerified,
-    zkWalletInitializing,
-    syncProvider: storeSyncProvider,
-    syncWallet: storeSyncWallet,
-    zkWallet,
-  } = useRootData(({ provider, walletName, zkWallet, ...s }) => ({
-    ...s,
-    provider: provider.get(),
-    walletName: walletName.get(),
-    zkWallet: zkWallet.get(),
-  }));
+  // const {
+  //   // setAccessModal,
+  //   // setBalances,
+  //   // setError,
+  //   // setEthBalances,
+  //   // setEthId,
+  //   // setEthWallet,
+  //   // setTokens,
+  //   // setUnlocked,
+  //   // setWSTransport,
+  //   // setZkBalances,
+  //   // setZkBalancesLoaded,
+  //   // setZkWallet,
+  //   // provider,
+  //   // walletName,
+  //   // setTxs,
+  //   // setPrice,
+  //   // setVerified,
+  //   // zkWalletInitializing,
+  //   // syncProvider: storeSyncProvider,
+  //   // syncWallet: storeSyncWallet,
+  //   // zkWallet,
+  // } = useRootData(({ provider, walletName, zkWallet, ...s }) => ({
+  //   ...s,
+  //   provider: provider.get(),
+  //   walletName: walletName.get(),
+  //   zkWallet: zkWallet.get(),
+  // }));
   const store = useStore();
 
   const cancelable = useCancelable();
@@ -49,20 +49,31 @@ const useWalletInit = () => {
       if (provider) {
         signUp()
           .then(async res => {
-            setEthId(res);
-            zkWalletInitializing.set(false);
-            setAccessModal(true);
+            console.log('Signed up');
+            store.ethId = res;
+            // setEthId(res);
+            store.zkWalletInitializing = false;
+            store.isAccessModalOpen = true;
+            // zkWalletInitializing.set(false);
+            // setAccessModal(true);
           })
           .catch(err => {
-            err.name && err.message
-              ? setError(`${err.name}: ${err.message}`)
-              : setError(DEFAULT_ERROR);
+            store.error =
+              err.name && err.message
+                ? `${err.name}: ${err.message}`
+                : DEFAULT_ERROR;
           });
       } else {
-        setError(`${walletName} not found`);
+        store.error = `${store.walletName} not found`;
       }
     },
-    [setAccessModal, setError, setEthId, walletName],
+    [
+      store.error,
+      store.ethId,
+      store.isAccessModalOpen,
+      store.walletName,
+      store.zkWalletInitializing,
+    ],
   );
 
   const getSigner = useCallback(provider => {
@@ -77,10 +88,12 @@ const useWalletInit = () => {
   const createWallet = useCallback(async () => {
     try {
       const zkSync = await import('zksync');
-      zkWalletInitializing.set(true);
+      store.zkWalletInitializing = true;
+      // zkWalletInitializing.set(true);
 
+      const provider = store.provider;
       const wallet = getSigner(provider);
-      setEthWallet(wallet as ethers.providers.JsonRpcSigner);
+      store.ethWallet = wallet;
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
 
@@ -95,10 +108,10 @@ const useWalletInit = () => {
       );
       const transport = syncProvider.transport as WSTransport;
 
-      storeSyncProvider.set(syncProvider);
-      storeSyncWallet.set(syncWallet);
-      setWSTransport(transport);
-      setZkWallet(syncWallet);
+      store.syncProvider = syncProvider;
+      store.syncWallet = syncWallet;
+      store.wsTransport = transport;
+      store.zkWallet = syncWallet;
 
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const initialTransactions = await fetchTransactions(
@@ -114,24 +127,24 @@ const useWalletInit = () => {
         syncWallet,
       );
       if (error) {
-        setError(error);
+        store.error = error;
       }
-      setTokens(tokens);
-      setEthBalances(ethBalances);
-      setBalances(zkBalances);
-      setZkBalances(zkBalances);
-      setZkBalancesLoaded(true);
-      const res = await zkWallet?.getAccountState();
+      store.tokens = tokens;
+      store.ethBalances = ethBalances;
+      store.searchBalances = zkBalances;
+      store.zkBalances = zkBalances;
+      store.zkBalancesLoaded = true;
+      const res = await store.zkWallet?.getAccountState();
       if (res?.id) {
-        await cancelable(zkWallet?.isSigningKeySet()).then(data => {
-          setUnlocked(data);
+        await cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
+          store.unlocked = data;
         });
       } else {
-        setUnlocked(true);
+        store.unlocked = true;
       }
 
-      cancelable(zkWallet?.getAccountState()).then((res: any) => {
-        setVerified(res?.verified.balances);
+      cancelable(store.zkWallet?.getAccountState()).then((res: any) => {
+        store.verified = res?.verified.balance;
       });
 
       cancelable(
@@ -152,15 +165,15 @@ const useWalletInit = () => {
             el =>
               (prices[data.data[el].symbol] = data.data[el].quote.USD.price),
           );
-          setPrice(prices);
+          store.price = prices;
         })
         .catch(err => {
           console.error(err);
         });
 
-      zkWalletInitializing.set(false);
+      store.zkWalletInitializing = false;
     } catch (err) {
-      zkWalletInitializing.set(false);
+      store.zkWalletInitializing = false;
       const error = err.message
         ? !!err.message.match(/(?:denied)/i)
         : !!err.match(/(?:denied)/i);
@@ -169,23 +182,7 @@ const useWalletInit = () => {
       }
       console.error('CreateWallet error', err);
     }
-  }, [
-    logout,
-    getSigner,
-    provider,
-    setError,
-    setEthBalances,
-    setTokens,
-    setEthWallet,
-    setZkBalances,
-    setZkBalancesLoaded,
-    setZkWallet,
-    setTxs,
-    setWSTransport,
-    zkWalletInitializing,
-    storeSyncProvider,
-    storeSyncWallet,
-  ]);
+  }, [cancelable, getSigner, logout, store]);
 
   return {
     connect,

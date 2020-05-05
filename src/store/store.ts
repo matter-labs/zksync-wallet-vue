@@ -1,4 +1,4 @@
-import { observable } from 'mobx';
+import { observable, action, computed } from 'mobx';
 
 import { IEthBalance, IPrice, ITransaction } from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
@@ -48,6 +48,11 @@ export class Store {
   @observable syncProvider?: Provider;
   @observable transactions: Tx[] = [];
 
+  @computed get zkWalletAddress() {
+    return this.zkWallet?.address();
+  }
+
+  @action
   setTxs(transactions: ((prev: Tx[]) => Tx[]) | Tx[]) {
     if (typeof transactions === 'function') {
       this.transactions = transactions(this.transactions);
