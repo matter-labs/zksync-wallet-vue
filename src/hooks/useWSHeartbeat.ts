@@ -8,12 +8,16 @@ const WS_HEARTBEAT_TIMEOUT = 5e3;
  * every time route changes
  */
 export function useWSHeartBeat() {
-  const { wsTransport: transport, setWSTransport, setWsStatus } = useRootData(
-    s => ({
-      ...s,
-      wsTransport: s.wsTransport.get(),
-    }),
-  );
+  const {
+    wsTransport: transport,
+    wsBroken,
+    setWSTransport,
+    setWsStatus,
+  } = useRootData(s => ({
+    ...s,
+    wsTransport: s.wsTransport.get(),
+    wsBroken: s.wsBroken.get(),
+  }));
 
   const tryReOpen = useCallback(() => {
     if (transport?.ws?.isOpened) return;
@@ -21,12 +25,11 @@ export function useWSHeartBeat() {
       .open()
       .then(() => {
         setWSTransport(transport);
-        setWsStatus(false);
       })
       .catch(() => {
         setTimeout(tryReOpen, 1000);
       });
-  }, [transport, setWSTransport, setWsStatus]);
+  }, [transport, setWSTransport]);
 
   const setHeartBeat = useCallback(
     (
@@ -36,8 +39,6 @@ export function useWSHeartBeat() {
     ) => {
       function disconnectHandler() {
         cleanup();
-        // TODO: connection does not close immediately when network destroyed
-        // even when calling `close` implicitly
         setWSTransport(null);
         setWsStatus(true);
         transport.ws.close().then(() => {
@@ -50,6 +51,9 @@ export function useWSHeartBeat() {
       function pongListener(m) {
         // Pong received
         if (m?.error?.code === -32600) {
+          if (wsBroken) {
+            setWsStatus(false);
+          }
           clearTimeout(waitTimer);
           waitTimer = setTimeout(disconnectHandler, disconnectTimeout);
         }
@@ -71,7 +75,7 @@ export function useWSHeartBeat() {
 
       return cleanup;
     },
-    [setWsStatus, setWSTransport, tryReOpen],
+    [setWsStatus, setWSTransport, tryReOpen, wsBroken],
   );
 
   useEffect(() => {

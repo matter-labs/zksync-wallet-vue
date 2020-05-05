@@ -33,6 +33,7 @@ const useWalletInit = () => {
     syncProvider: storeSyncProvider,
     syncWallet: storeSyncWallet,
     zkWallet,
+    accountState,
   } = useRootData(({ provider, walletName, zkWallet, ...s }) => ({
     ...s,
     provider: provider.get(),
@@ -106,10 +107,13 @@ const useWalletInit = () => {
         web3Provider,
       );
       setTxs(initialTransactions);
+      const _accountState = await syncWallet.getAccountState();
+      accountState.set(_accountState);
 
       const { error, ethBalances, tokens, zkBalances } = await loadTokens(
         syncProvider,
         syncWallet,
+        _accountState,
       );
       if (error) {
         setError(error);
