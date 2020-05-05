@@ -3,7 +3,7 @@ import { Tx } from './pages/Transactions';
 import { Provider, Wallet } from 'zksync';
 import { IEthBalance } from './types/Common';
 import { DEFAULT_ERROR } from './constants/errors';
-import { Tokens } from 'zksync/build/types';
+import { Tokens, AccountState } from 'zksync/build/types';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider = window['ethereum'];
@@ -91,6 +91,7 @@ export function whyDidYouUpdate() {
 export async function loadTokens(
   syncProvider: Provider,
   syncWallet: Wallet,
+  accountState: AccountState,
 ): Promise<{
   tokens: Tokens;
   zkBalances: IEthBalance[];
@@ -125,7 +126,7 @@ export async function loadTokens(
       return [];
     });
 
-  const zkBalance = (await syncWallet.getAccountState()).committed.balances;
+  const zkBalance = accountState.committed.balances;
   const zkBalancePromises = Object.keys(zkBalance).map(async key => ({
     address: tokens[key].address,
     balance: +zkBalance[key] / Math.pow(10, 18),

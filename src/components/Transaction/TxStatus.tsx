@@ -41,10 +41,10 @@ const Wrapper = ({ children, status }) => (
 
 export const TxStatus: FC<{ tx: Tx }> = ({ tx }) => {
   const { value, status } = getPieProps(tx);
-  const val = value / (MAX_CONFIRM || 1);
+  const val = value / MAX_CONFIRM;
 
   // Chechbox
-  if (tx.verified) {
+  if (tx.verified || tx.tx.type !== 'Deposit') {
     return (
       <Wrapper status={status}>
         <path
@@ -64,7 +64,7 @@ export const TxStatus: FC<{ tx: Tx }> = ({ tx }) => {
       {val >= 1 ? (
         <circle fill='#8c8dfc' cx='0' cy='0' r='1' />
       ) : (
-        <path fill='#8c8dfc' d={getPieChartD(val > 1 ? 1 : val)} />
+        <path fill='#8c8dfc' d={getPieChartD(val)} />
       )}
     </Wrapper>
   );
