@@ -93,7 +93,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
                   title === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
                 }/${info[2]}`}
               >
-                {'Link to transaction '}
+                {'Link to the transaction '}
                 <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
               </a>
             </p>
