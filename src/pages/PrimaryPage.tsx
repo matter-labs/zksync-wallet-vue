@@ -20,6 +20,7 @@ import { useLogout } from 'src/hooks/useLogout';
 import { useStore } from 'src/store/context';
 import { useObserver } from 'mobx-react-lite';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
+import { Store } from 'src/store/store';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const mobileCheck = useMemo(
@@ -74,9 +75,11 @@ const PrimaryPage: React.FC = (): JSX.Element => {
         if (key === 'WalletConnect') {
           store.isModalOpen = 'wc';
         } else {
-          store.walletName = key as WalletType;
-          store.normalBg = true;
-          store.isAccessModalOpen = true;
+          store.setBatch({
+            walletName: key,
+            normalBg: true,
+            isAccessModalOpen: true,
+          });
         }
         if (store.provider?.selectedAddress) {
           store.zkWalletInitializing = true;

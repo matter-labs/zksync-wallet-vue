@@ -70,11 +70,13 @@ const useWalletInit = () => {
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
 
-      store.syncProvider = syncProvider;
-      store.syncWallet = syncWallet;
-      store.wsTransport = transport;
-      store.zkWallet = syncWallet;
-      store.accountState = accountState;
+      store.setBatch({
+        syncProvider: syncProvider,
+        syncWallet: syncWallet,
+        wsTransport: transport,
+        zkWallet: syncWallet,
+        accountState: accountState,
+      });
 
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const initialTransactions = await fetchTransactions(

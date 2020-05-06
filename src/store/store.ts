@@ -62,7 +62,7 @@ export class Store {
   }
 
   @action
-  performLogout(accessModal, walletName) {
+  performLogout(accessModal: boolean, walletName: WalletType) {
     this.isModalOpen = '';
     this.error = '';
     this.walletName = walletName;
@@ -74,7 +74,13 @@ export class Store {
     this.provider = false;
     this.hintModal = '';
     this.zkWalletInitializing = false;
-    console.log({ accModal: this.isAccessModalOpen });
+  }
+
+  @action
+  setBatch<K extends keyof Store>(batch: Record<K, any>) {
+    Object.keys(batch).forEach(k => {
+      this[k] = batch[k];
+    });
   }
 }
 
