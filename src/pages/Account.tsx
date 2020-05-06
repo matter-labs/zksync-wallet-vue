@@ -126,7 +126,6 @@ const Account: React.FC = (): JSX.Element => {
         },
       );
     }
-    console.log('Refreshed');
     const timeout = setTimeout(refreshBalances, 2000);
     setRefreshTimer(timeout as any);
   }, [

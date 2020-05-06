@@ -174,11 +174,6 @@ export const useTransaction = () => {
                       )
                     ).toString(),
                   ),
-                  maxFeeInETHToken: await import('zksync').then(module =>
-                    module.closestPackableTransactionFee(
-                      (2 * ZK_FEE_MULTIPLIER * +gas).toString(),
-                    ),
-                  ),
                 }),
               );
               const hash = depositPriorityOperation.ethTx;

@@ -57,7 +57,9 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
             className='transaction-back'
           ></button>
           <h2 className='transaction-title'>
-            {isLoading && isAccountUnlockingProcess ? 'Unlocking' : title}
+            {isLoading && (isAccountUnlockingProcess || isUnlockingProcess)
+              ? 'Unlocking'
+              : title}
           </h2>
           <Spinner />
           <p>{info[0]}</p>
@@ -68,7 +70,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
               <p>{addressValue}</p>
             </span>
           )}
-          {!isAccountUnlockingProcess && (
+          {!isAccountUnlockingProcess && !isUnlockingProcess && (
             <span className='transaction-field-title'>
               {title === 'Send' && 'Amount + fee'}
               {title === 'Withdraw' && 'Amount'}
