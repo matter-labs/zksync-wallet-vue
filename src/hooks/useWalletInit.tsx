@@ -123,14 +123,6 @@ const useWalletInit = () => {
       setBalances(zkBalances);
       setZkBalances(zkBalances);
       setZkBalancesLoaded(true);
-      const res = await zkWallet?.getAccountState();
-      if (res?.id) {
-        await cancelable(zkWallet?.isSigningKeySet()).then(data => {
-          setUnlocked(data);
-        });
-      } else {
-        setUnlocked(true);
-      }
 
       cancelable(zkWallet?.getAccountState()).then((res: any) => {
         setVerified(res?.verified.balances);

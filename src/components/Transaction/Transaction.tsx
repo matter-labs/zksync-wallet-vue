@@ -71,6 +71,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     tokens,
     unlocked,
     verifyToken,
+    setVerified,
     walletAddress,
     walletName,
     zkBalances,
@@ -293,7 +294,7 @@ const Transaction: React.FC<ITransactionProps> = ({
     const receipt = await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
     setAccountUnlockingProcess(!receipt);
-    setLoading(false);
+    setLoading(!receipt);
   }, [setAccountUnlockingProcess, setLoading, zkWallet]);
 
   const handleFilterContacts = useCallback(
@@ -363,6 +364,17 @@ const Transaction: React.FC<ITransactionProps> = ({
   useEffect(() => {
     cancelable(initWallet);
   }, []);
+
+  useEffect(() => {
+    cancelable(zkWallet?.getAccountState()).then((res: any) => {
+      setVerified(res?.verified.balances);
+      res?.id
+        ? cancelable(zkWallet?.isSigningKeySet()).then(data =>
+            setUnlocked(data),
+          )
+        : setUnlocked(true);
+    });
+  }, [cancelable, setUnlocked, zkWallet]);
 
   useEffect(() => {
     if ((token && token === 'ETH') || symbolName === 'ETH') {
@@ -659,6 +671,30 @@ const Transaction: React.FC<ITransactionProps> = ({
         )}
       </div>
       <div className='transaction-wrapper'>
+        {unlocked === undefined && !isAccountUnlockingProcess && (
+          <>
+            <button
+              onClick={() => {
+                handleCancel();
+                setWalletAddress([]);
+                setTransactionType(undefined);
+                history.push('/account');
+              }}
+              className='transaction-back'
+            ></button>
+            <div className='info-block center'>
+              <p>
+                {
+                  'To control your account you need to unlock it once by registering your public key.'
+                }
+              </p>
+            </div>
+            <button className='btn submit-button' onClick={handleUnlock}>
+              <span className='submit-label unlock'></span>
+              {'Unlock'}
+            </button>
+          </>
+        )}
         {isExecuted ? (
           <ExecutedTx
             addressValue={addressValue}
@@ -691,21 +727,6 @@ const Transaction: React.FC<ITransactionProps> = ({
                 setWalletName={setWalletName}
               />
             )}
-            {unlocked === undefined ||
-              (!zkBalancesLoaded && (
-                <>
-                  <Spinner />
-                  <button
-                    className='btn submit-button'
-                    onClick={() => {
-                      handleCancel();
-                      setWalletName();
-                    }}
-                  >
-                    {'Cancel'}
-                  </button>
-                </>
-              ))}
           </>
         ) : (
           <>

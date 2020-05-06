@@ -146,7 +146,15 @@ const Account: React.FC = (): JSX.Element => {
     if (refreshTimer == null) {
       refreshBalances();
     }
-  }, [refreshBalances, refreshTimer]);
+    cancelable(zkWallet?.getAccountState()).then((res: any) => {
+      setVerified(res?.verified.balances);
+      res?.id
+        ? cancelable(zkWallet?.isSigningKeySet()).then(data =>
+            setUnlocked(data),
+          )
+        : setUnlocked(true);
+    });
+  }, [refreshBalances, refreshTimer, zkBalances]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {

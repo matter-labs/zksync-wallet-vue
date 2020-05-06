@@ -1,6 +1,9 @@
 import React from 'react';
 import { ethers } from 'ethers';
 import { useHistory } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -21,6 +24,8 @@ interface IExecutedTxProps {
   symbolName: string;
   title: string;
 }
+
+library.add(fas);
 
 export const ExecutedTx: React.FC<IExecutedTxProps> = ({
   addressValue,
@@ -81,7 +86,8 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
             typeof hash === 'string' ? hash : hash?.hash
           }`}
         >
-          {'Link to transaction ⇗'}
+          {'Link to transaction '}
+          <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
         </a>
       </p>
       <button
