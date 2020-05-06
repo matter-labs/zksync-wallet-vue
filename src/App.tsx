@@ -30,7 +30,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       setCurAddress(store.provider.selectedAddress);
     }
     if (curAddress && store.walletName) {
-      store.hintModal = `Login with ${store.walletName}`;
+      store.hint = `Login with ${store.walletName}`;
     }
   });
 

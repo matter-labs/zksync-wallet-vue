@@ -91,7 +91,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
   const params = useQuery();
 
   return useObserver(() => {
-    const { walletName, provider, hintModal } = store;
+    const { walletName, provider, hint } = store;
     if (store.zkWallet) {
       return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
     }
@@ -120,9 +120,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
               provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
               <>
                 <h3 className='title-connecting'>
-                  {!!hintModal && hintModal.match(/(?:login)/i)
-                    ? hintModal
-                    : 'Connecting to '}
+                  {!!hint && hint.match(/(?:login)/i) ? hint : 'Connecting to '}
                 </h3>
                 <p>{'Follow the instructions in the popup'}</p>
                 <Spinner />

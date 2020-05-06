@@ -15,9 +15,9 @@ const TOKEN = 'ETH';
 export const useTransaction = () => {
   const {
     ethBalances,
-    hintModal,
+    hint,
     setError,
-    setHintModal,
+    setHint,
     setVerifyToken,
     setZkBalances,
     tokens,
@@ -27,9 +27,9 @@ export const useTransaction = () => {
   } = useRootData(
     ({
       ethBalances,
-      hintModal,
+      hint,
       setError,
-      setHintModal,
+      setHint,
       setVerifyToken,
       setZkBalances,
       tokens,
@@ -38,9 +38,9 @@ export const useTransaction = () => {
       zkWallet,
     }) => ({
       ethBalances: ethBalances.get(),
-      hintModal: hintModal.get(),
+      hint: hint.get(),
       setError,
-      setHintModal,
+      setHint,
       setVerifyToken,
       setZkBalances,
       tokens: tokens.get(),
@@ -142,7 +142,7 @@ export const useTransaction = () => {
     async (token = TOKEN) => {
       if (zkWallet) {
         try {
-          setHintModal('Follow the instructions in the pop up');
+          setHint('Follow the instructions in the pop up');
           setLoading(true);
           const handleMax = ethBalances.filter(
             balance => balance.symbol === token || balance.address === token,
@@ -184,7 +184,7 @@ export const useTransaction = () => {
                 'deposit',
                 symbol,
               );
-              setHintModal(
+              setHint(
                 `Waiting for transaction to be mined. \n ${+(
                   amountValue / Math.pow(10, 18)
                 )}  \n${hash.hash}`,
@@ -193,7 +193,7 @@ export const useTransaction = () => {
               await depositPriorityOperation
                 .awaitEthereumTxCommit()
                 .then(() => {
-                  setHintModal(
+                  setHint(
                     `Your deposit tx has been mined and will be processed after 30 confirmations. Use the link below to track the progress. \n ${+(
                       amountValue / Math.pow(10, 18)
                     )}  \n${hash.hash}`,
@@ -206,7 +206,7 @@ export const useTransaction = () => {
               setVerifyToken(!!verifyReceipt);
             } catch (err) {
               if (err.message.match(/(?:denied)/i)) {
-                setHintModal(err.message);
+                setHint(err.message);
               } else if (err.name && err.message) {
                 setError(`${err.name}: ${err.message}`);
               } else {
@@ -228,13 +228,13 @@ export const useTransaction = () => {
     },
     [
       amountValue,
-      hintModal,
+      hint,
       history,
       packableAmount,
       packableFee,
       setError,
       setHash,
-      setHintModal,
+      setHint,
       setLoading,
       setPackableAmount,
       setPackableFee,
@@ -249,7 +249,7 @@ export const useTransaction = () => {
       try {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
-          setHintModal('Follow the instructions in the pop up');
+          setHint('Follow the instructions in the pop up');
           const handleMax = zkBalances.filter(
             balance => balance.symbol === token || balance.address === token,
           );
@@ -282,7 +282,7 @@ export const useTransaction = () => {
             symbol,
           );
           setHash(hash);
-          setHintModal(` \n ${+(amountValue / Math.pow(10, 18))}. \n${hash}`);
+          setHint(` \n ${+(amountValue / Math.pow(10, 18))}. \n${hash}`);
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
@@ -294,7 +294,7 @@ export const useTransaction = () => {
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          setHintModal('User denied action');
+          setHint('User denied action');
         } else if (err.name && err.message) {
           setError(`${err.name}: ${err.message}`);
         } else {
@@ -319,7 +319,7 @@ export const useTransaction = () => {
       try {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
-          setHintModal('Follow the instructions in the pop up');
+          setHint('Follow the instructions in the pop up');
           const handleMax = zkBalances.filter(
             balance => balance.symbol === token || balance.address === token,
           );
@@ -357,13 +357,13 @@ export const useTransaction = () => {
             symbol,
           );
           setHash(hash);
-          setHintModal(
+          setHint(
             `Waiting for the transaction to be mined.. \n ${+(
               amountValue / Math.pow(10, 18)
             )} \n${hash}`,
           );
           if (!!withdrawTransaction) {
-            setHintModal(
+            setHint(
               `Your withdrawal will be processed in short. \n ${+(
                 amountValue / Math.pow(10, 18)
               )} \n${hash}`,
@@ -380,7 +380,7 @@ export const useTransaction = () => {
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          setHintModal('User denied action');
+          setHint('User denied action');
         } else if (err.name && err.message) {
           setError(`${err.name}: ${err.message}`);
         } else {

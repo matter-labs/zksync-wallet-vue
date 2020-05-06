@@ -10,7 +10,7 @@ export function useCheckLogin() {
   const {
     path,
     provider,
-    setHintModal,
+    setHint,
     setProvider,
     zkWallet,
     setWalletName,
@@ -38,7 +38,7 @@ export function useCheckLogin() {
     zkWallet,
     cancelable,
     params,
-    setHintModal,
+    setHint,
     setProvider,
     setAccessModal,
   ]);

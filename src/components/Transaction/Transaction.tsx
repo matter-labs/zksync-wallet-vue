@@ -51,14 +51,14 @@ const Transaction: React.FC<ITransactionProps> = ({
   const {
     error,
     ethId,
-    hintModal,
+    hint,
     provider,
     searchBalances,
     searchContacts,
     setBalances,
     setContacts,
     setError,
-    setHintModal,
+    setHint,
     setModal,
     setPrice,
     setUnlocked,
@@ -82,14 +82,14 @@ const Transaction: React.FC<ITransactionProps> = ({
     ({
       error,
       ethId,
-      hintModal,
+      hint,
       provider,
       searchBalances,
       searchContacts,
       setBalances,
       setContacts,
       setError,
-      setHintModal,
+      setHint,
       setModal,
       setPrice,
       setUnlocked,
@@ -112,13 +112,13 @@ const Transaction: React.FC<ITransactionProps> = ({
       ...s,
       error: error.get(),
       ethId: ethId.get(),
-      hintModal: hintModal.get(),
+      hint: hint.get(),
       provider: provider.get(),
       searchBalances: searchBalances.get(),
       searchContacts: searchContacts.get(),
       setBalances,
       setContacts,
-      setHintModal,
+      setHint,
       setError,
       setModal,
       setPrice,
@@ -286,11 +286,11 @@ const Transaction: React.FC<ITransactionProps> = ({
   }, [addressValue, setConditionError, setModal]);
 
   const handleUnlock = useCallback(async () => {
-    setHintModal('Follow the instructions in the pop up');
+    setHint('Follow the instructions in the pop up');
     setAccountUnlockingProcess(true);
     setLoading(true);
     const changePubkey = await zkWallet?.setSigningKey();
-    setHintModal('Confirmed! \n Waiting for transaction to be ended');
+    setHint('Confirmed! \n Waiting for transaction to be ended');
     const receipt = await changePubkey?.awaitReceipt();
     setUnlocked(!!receipt);
     setAccountUnlockingProcess(!receipt);
@@ -721,7 +721,7 @@ const Transaction: React.FC<ITransactionProps> = ({
                 unlockFau={unlockFau}
               />
             )}
-            {hintModal.match(/(?:denied)/i) && (
+            {hint.match(/(?:denied)/i) && (
               <CanceledTx
                 handleCancel={handleCancel}
                 setWalletName={setWalletName}
