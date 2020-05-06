@@ -14,17 +14,12 @@ export const CanceledTx: React.FC<ICanceledTxProps> = ({
   handleCancel,
   setWalletName,
 }): JSX.Element => {
-  const {
-    hintModal,
-    setHintModal,
-    setTransactionType,
-    setWalletAddress,
-  } = useRootData(
-    ({ hintModal, setHintModal, setTransactionType, setWalletAddress }) => ({
-      setHintModal,
+  const { hint, setHint, setTransactionType, setWalletAddress } = useRootData(
+    ({ hint, setHint, setTransactionType, setWalletAddress }) => ({
+      setHint,
       setTransactionType,
       setWalletAddress,
-      hintModal: hintModal.get(),
+      hint: hint.get(),
     }),
   );
 
@@ -38,13 +33,13 @@ export const CanceledTx: React.FC<ICanceledTxProps> = ({
           setWalletAddress([]);
           setTransactionType(undefined);
           setWalletName();
-          setHintModal('');
+          setHint('');
           history.push('/account');
         }}
         className='transaction-back'
       ></button>
       <h1>{'Transaction canceled'}</h1>
-      <p>{hintModal}</p>
+      <p>{hint}</p>
     </>
   );
 };

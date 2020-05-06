@@ -10,7 +10,7 @@ export function useLogout() {
   // const {
   //   setAccessModal,
   //   setError,
-  //   setHintModal,
+  //   setHint,
   //   setModal,
   //   setProvider,
   //   setWalletName,

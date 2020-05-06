@@ -86,7 +86,7 @@ const Modal: React.FC<ModalProps> = observer(
     }, [cancelAction, history, store]);
 
     const { createWallet } = useWalletInit();
-    const metaMaskConnected = store.hintModal?.match(/login/i);
+    const metaMaskConnected = store.hint?.match(/login/i);
 
     const accessModalContent = () => {
       const { walletName, zkWalletInitializing } = store;
@@ -127,7 +127,7 @@ const Modal: React.FC<ModalProps> = observer(
     };
 
     const errorModalContent = () => {
-      const { zkWallet, error, provider, hintModal, walletName } = store;
+      const { zkWallet, error, provider, hint, walletName } = store;
       return (
         <>
           {zkWallet &&
@@ -139,9 +139,7 @@ const Modal: React.FC<ModalProps> = observer(
           {!zkWallet && (
             <h3 className='title-connecting'>
               {`${
-                hintModal && hintModal.match(/(?:login)/i)
-                  ? hintModal
-                  : 'Connecting to '
+                hint && hint.match(/(?:login)/i) ? hint : 'Connecting to '
               } ${walletName}`}
             </h3>
           )}

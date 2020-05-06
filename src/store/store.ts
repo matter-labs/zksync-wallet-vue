@@ -14,7 +14,7 @@ export class Store {
   @observable ethBalances: IEthBalance[] = [];
   @observable ethId = '';
   @observable ethWallet?: JsonRpcSigner;
-  @observable hintModal = '';
+  @observable hint = '';
   @observable normalBg = false;
   @observable isAccessModalOpen = false;
   @observable isModalOpen = '';
@@ -72,7 +72,7 @@ export class Store {
     this.zkBalancesLoaded = false;
     this.transactions = [];
     this.provider = false;
-    this.hintModal = '';
+    this.hint = '';
     this.zkWalletInitializing = false;
   }
 
@@ -90,7 +90,7 @@ export const createStore = () => ({
   ethBalances: observable.box<IEthBalance[]>([]),
   ethId: observable.box<string>(''),
   ethWallet: observable.box<JsonRpcSigner>(),
-  hintModal: observable.box<string>(''),
+  hint: observable.box<string>(''),
   normalBg: observable.box<boolean>(false),
   isAccessModalOpen: observable.box<boolean>(false),
   isModalOpen: observable.box<string>(''),
@@ -159,8 +159,8 @@ export const createStore = () => ({
     this.ethWallet.set(wallet);
   },
 
-  setHintModal(text: string): void {
-    this.hintModal.set(text);
+  setHint(text: string): void {
+    this.hint.set(text);
   },
 
   setNormalBg(normalBg: boolean): void {

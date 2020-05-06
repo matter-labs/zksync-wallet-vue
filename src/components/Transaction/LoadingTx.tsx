@@ -38,21 +38,21 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
   isUnlockingProcess,
   isAccountUnlockingProcess,
 }): JSX.Element => {
-  const { hintModal, unlocked, walletAddress } = useRootData(
-    ({ hintModal, unlocked, walletAddress }) => ({
+  const { hint, unlocked, walletAddress } = useRootData(
+    ({ hint, unlocked, walletAddress }) => ({
       unlocked: unlocked.get(),
-      hintModal: hintModal.get(),
+      hint: hint.get(),
       walletAddress: walletAddress.get(),
     }),
   );
 
   const history = useHistory();
 
-  const info = hintModal?.split('\n');
+  const info = hint?.split('\n');
 
   return (
     <>
-      {isLoading && !hintModal.match(/(?:denied)/i) && (
+      {isLoading && !hint.match(/(?:denied)/i) && (
         <>
           <button
             onClick={() => {
