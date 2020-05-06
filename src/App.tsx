@@ -52,9 +52,6 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
     if (provider && walletName) {
       setCurAddress(provider?.selectedAddress);
     }
-    if (curAddress && walletName) {
-      setHintModal(`Login with ${walletName}`);
-    }
   }, [curAddress, cancelable, provider, setHintModal, walletName]);
 
   useInterval(() => {
