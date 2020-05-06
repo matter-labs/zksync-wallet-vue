@@ -38,7 +38,7 @@ const Modal: React.FC<ModalProps> = observer(
     useMobxEffect(() => {
       const body = document.body;
       if (store.isModalOpen) {
-        body.classList.add('fixed');
+        document.body.classList.add('fixed');
       }
       return () => body.classList.remove('fixed');
     });
@@ -60,15 +60,11 @@ const Modal: React.FC<ModalProps> = observer(
       [classSpecifier, store],
     );
 
-    useEffect(
-      () =>
-        autorun(() => {
-          document.addEventListener('click', handleClickOutside, true);
-          return () =>
-            document.removeEventListener('click', handleClickOutside, true);
-        }),
-      [handleClickOutside],
-    );
+    useMobxEffect(() => {
+      document.addEventListener('click', handleClickOutside, true);
+      return () =>
+        document.removeEventListener('click', handleClickOutside, true);
+    }, [handleClickOutside]);
 
     const closeHandler = useCallback(() => {
       if (store.error.match(WRONG_NETWORK) && store.zkWallet) {

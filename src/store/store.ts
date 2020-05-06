@@ -110,7 +110,7 @@ export const createStore = () => ({
   zkWalletInitializing: observable.box<boolean>(false),
   wsTransport: observable.box<WSTransport | null>(null),
   wsBroken: observable.box(false),
-  accountState: observable.box<AccountState | null>(null),
+  accountState: observable.box<AccountState>(),
 
   syncWallet: observable.box<Wallet>(),
   syncProvider: observable.box<Provider>(),

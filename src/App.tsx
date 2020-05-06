@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
 import Modal from 'components/Modal/Modal';
-
-import { useRootData } from 'hooks/useRootData';
 
 import { IAppProps } from 'types/Common';
 
@@ -14,11 +12,11 @@ import { useLogout } from 'hooks/useLogout';
 import { WalletType } from './constants/Wallets';
 import { useCancelable } from './hooks/useCancelable';
 import { useInterval } from './hooks/timers';
-import { useObserver } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import { useStore } from './store/context';
-import { autorun } from 'mobx';
+import { useMobxEffect } from './hooks/useMobxEffect';
 
-const App: React.FC<IAppProps> = ({ children }) => {
+const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
 
   useWSHeartBeat();
@@ -27,14 +25,14 @@ const App: React.FC<IAppProps> = ({ children }) => {
     store.provider?.selectedAddress,
   );
 
-  useEffect(() => {
+  useMobxEffect(() => {
     if (store.provider && store.walletName) {
       setCurAddress(store.provider.selectedAddress);
     }
     if (curAddress && store.walletName) {
       store.hintModal = `Login with ${store.walletName}`;
     }
-  }, [curAddress, cancelable, store]);
+  });
 
   useInterval(() => {
     if (!curAddress && store.walletName && store.provider?.selectedAddress) {
@@ -43,7 +41,7 @@ const App: React.FC<IAppProps> = ({ children }) => {
   }, 5000);
 
   // Listen for network change
-  useEffect(() => {
+  useMobxEffect(() => {
     const provider = store.provider;
     const walletName = store.walletName;
     if (provider && walletName === 'Metamask') {
@@ -64,12 +62,12 @@ const App: React.FC<IAppProps> = ({ children }) => {
       provider.on('networkChanged', networkChangeListener);
       return () => provider.off('networkChanged', networkChangeListener);
     }
-  }, [store]);
+  });
 
   const logout = useLogout();
 
   // Listen for account change
-  useEffect(() => {
+  useMobxEffect(() => {
     const provider = store.provider;
     const walletName = store.walletName;
 
@@ -99,9 +97,9 @@ const App: React.FC<IAppProps> = ({ children }) => {
     };
     provider.on('accountsChanged', accountChangeListener);
     return () => provider.off('accountsChanged', accountChangeListener);
-  }, [logout, store]);
+  });
 
-  return useObserver(() => (
+  return (
     <div className={`content-wrapper ${store.walletName ? '' : 'start-page'}`}>
       <Modal
         cancelAction={() => {
@@ -134,7 +132,7 @@ const App: React.FC<IAppProps> = ({ children }) => {
       <div className='content'>{children}</div>
       <Footer />
     </div>
-  ));
-};
+  );
+});
 
 export default App;

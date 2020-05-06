@@ -34,13 +34,7 @@ const useWalletInit = () => {
         store.error = `${store.walletName} not found`;
       }
     },
-    [
-      store.error,
-      store.ethId,
-      store.isAccessModalOpen,
-      store.walletName,
-      store.zkWalletInitializing,
-    ],
+    [store],
   );
 
   const getSigner = useCallback(provider => {
