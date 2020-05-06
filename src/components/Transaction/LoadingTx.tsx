@@ -1,5 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -21,6 +24,8 @@ interface ILoadingTXProps {
   title: string;
   unlockFau: boolean;
 }
+
+library.add(fas);
 
 export const LoadingTx: React.FC<ILoadingTXProps> = ({
   inputValue,
@@ -57,7 +62,9 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
             className='transaction-back'
           ></button>
           <h2 className='transaction-title'>
-            {isLoading && isAccountUnlockingProcess ? 'Unlocking' : title}
+            {isLoading && (isAccountUnlockingProcess || isUnlockingProcess)
+              ? 'Unlocking'
+              : title}
           </h2>
           <Spinner />
           <p>{info[0]}</p>
@@ -68,7 +75,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
               <p>{addressValue}</p>
             </span>
           )}
-          {!isAccountUnlockingProcess && (
+          {!isAccountUnlockingProcess && !isUnlockingProcess && (
             <span className='transaction-field-title'>
               {title === 'Send' && 'Amount + fee'}
               {title === 'Withdraw' && 'Amount'}
@@ -86,7 +93,8 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
                   title === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
                 }/${info[2]}`}
               >
-                {'Link to transaction ⇗'}
+                {'Link to the transaction '}
+                <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
               </a>
             </p>
           )}
@@ -96,20 +104,6 @@ export const LoadingTx: React.FC<ILoadingTXProps> = ({
             onClick={() => {
               handleCancel();
               history.push('/account');
-            }}
-          >
-            {'Cancel'}
-          </button>
-        </>
-      )}
-      {unlocked === undefined && (
-        <>
-          <Spinner />
-          <button
-            className='btn submit-button'
-            onClick={() => {
-              handleCancel();
-              setWalletName();
             }}
           >
             {'Cancel'}

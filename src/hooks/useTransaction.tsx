@@ -174,11 +174,6 @@ export const useTransaction = () => {
                       )
                     ).toString(),
                   ),
-                  maxFeeInETHToken: await import('zksync').then(module =>
-                    module.closestPackableTransactionFee(
-                      (2 * ZK_FEE_MULTIPLIER * +gas).toString(),
-                    ),
-                  ),
                 }),
               );
               const hash = depositPriorityOperation.ethTx;
@@ -199,7 +194,7 @@ export const useTransaction = () => {
                 .awaitEthereumTxCommit()
                 .then(() => {
                   setHintModal(
-                    `Block has been mined! \n ${+(
+                    `Your deposit tx has been mined and will be processed after 30 confirmations. Use the link below to track the progress. \n ${+(
                       amountValue / Math.pow(10, 18)
                     )}  \n${hash.hash}`,
                   );
