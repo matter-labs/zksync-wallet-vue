@@ -13,6 +13,7 @@ import { ContactSelectorFlat } from './ContactSelectorFlat';
 import { FilteredContactList } from './FilteredContactList';
 import { ExecutedTx } from './ExecutedTx';
 import { LoadingTx } from './LoadingTx';
+import { LockedTx } from './LockedTx';
 
 import { ITransactionProps } from './Types';
 
@@ -211,7 +212,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
         ).then(async res => {
           if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
             store.zkBalances = res.zkBalances;
-            store.searchBalances = res.zkBalances;
             await cancelable(zkWallet?.getAccountState()).then((res: any) => {
               store.verified = res?.verified.balances;
               if (res?.id) {
@@ -222,7 +222,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 store.unlocked = true;
               }
             });
-            store.searchBalances = zkBalances;
           }
           if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
             store.tokens = res.tokens;
@@ -239,6 +238,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       zkBalances,
       store,
       tokens,
+      title,
     ]);
 
     const submitCondition =
@@ -390,12 +390,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, []);
 
     const initWallet = async () => {
-      store.searchBalances = zkBalances;
+      store.searchBalances =
+        title === 'Deposit' ? store.ethBalances : zkBalances;
     };
 
     useEffect(() => {
       cancelable(initWallet);
-    }, []);
+    }, [store.ethBalances]);
 
     useEffect(() => {
       cancelable(zkWallet?.getAccountState()).then((res: any) => {
@@ -650,6 +651,93 @@ const Transaction: React.FC<ITransactionProps> = observer(
       </div>
     );
 
+    const TransactionFieldBalance = () => (
+      <>
+        <span className='transaction-field-title'>{'Amount / asset'}</span>
+        <div className='transaction-field balance'>
+          <div className='currency-input-wrapper border'>
+            <div className='scroll-wrapper'>
+              <input
+                placeholder={selectedBalance ? '0.00' : ''}
+                className='currency-input'
+                type='number'
+                ref={myRef}
+                onChange={e => {
+                  validateNumbers(+e.target.value);
+                  setAmount(+e.target.value);
+                  handleInputWidth(+e.target.value);
+                  setInputValue(e.target.value);
+                  handleFee(+e.target.value);
+                  if (!!inputValue && +inputValue < maxValue) {
+                    setConditionError('');
+                  }
+                }}
+                value={inputValue.toString().replace(/-/g, '')}
+              />
+            </div>
+
+            <div className='custom-selector balances'>
+              <div
+                onClick={() => {
+                  openBalancesList(!isBalancesListOpen);
+                  body?.classList.add('fixed-b');
+                }}
+                className='custom-selector-title'
+              >
+                {symbolName ? (
+                  <p>{symbolName}</p>
+                ) : (
+                  <span>{zkBalancesLoaded ? 'Select token' : <Spinner />}</span>
+                )}
+                <div className='arrow-down'></div>
+              </div>
+            </div>
+          </div>
+          {zkBalancesLoaded &&
+            (!!balances?.length ? (
+              <div className='currency-input-wrapper' key={token}>
+                <div className='all-balance-wrapper'>
+                  {selectedBalance && (
+                    <span>
+                      {'~$'}
+                      {
+                        +(
+                          +(price && !!price[selectedBalance]
+                            ? price[selectedBalance]
+                            : 1) * (inputValue ? Math.abs(+inputValue) : 0)
+                        ).toFixed(2)
+                      }
+                    </span>
+                  )}
+                </div>
+                <button
+                  className='all-balance btn-tr'
+                  onClick={() => {
+                    setInputValue(maxValue.toString());
+                    validateNumbers(maxValue);
+                    handleInputWidth(maxValue);
+                    handleFee(+maxValue);
+                    setAmount(+maxValue);
+                  }}
+                >
+                  {selectedBalance && (
+                    <>
+                      {'Max:'}
+                      {maxValue ? maxValue.toFixed(6) : '0'}{' '}
+                    </>
+                  )}
+                  {symbolName ? symbolName : ''}
+                </button>
+              </div>
+            ) : (
+              <div className='currency-input-wrapper' key={token}>
+                <span>{'You have no balances'}</span>
+              </div>
+            ))}
+        </div>
+      </>
+    );
+
     return (
       <>
         <Modal visible={false} classSpecifier='add-contact' background={true}>
@@ -667,7 +755,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           {isContactsListOpen && (
             <DataList
               data={searchContacts}
-              title='Token balances'
+              title='Select contact'
               header={() => (
                 <>
                   <button
@@ -694,7 +782,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           {isBalancesListOpen && (
             <DataList
               data={searchBalances}
-              title='Select contact'
+              title='Token balances'
               header={() => (
                 <button
                   onClick={() => {
@@ -726,28 +814,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         </div>
         <div className='transaction-wrapper'>
           {unlocked === undefined && !isAccountUnlockingProcess && (
-            <>
-              <button
-                onClick={() => {
-                  handleCancel();
-                  store.walletAddress = [];
-                  setTransactionType(undefined);
-                  history.push('/account');
-                }}
-                className='transaction-back'
-              ></button>
-              <div className='info-block center'>
-                <p>
-                  {
-                    'To control your account you need to unlock it once by registering your public key.'
-                  }
-                </p>
-              </div>
-              <button className='btn submit-button' onClick={handleUnlock}>
-                <span className='submit-label unlock'></span>
-                {'Unlock'}
-              </button>
-            </>
+            <LockedTx handleCancel={handleCancel} handleUnlock={handleUnlock} />
           )}
           {isExecuted ? (
             <ExecutedTx
@@ -903,7 +970,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                           )}
                       </>
                     )}
-                    <span className='transaction-field-title'>
+                    {/* <span className='transaction-field-title'>
                       {'Amount / asset'}
                     </span>
                     <div className='transaction-field balance'>
@@ -947,7 +1014,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 )}
                               </span>
                             )}
-
                             <div className='arrow-down'></div>
                           </div>
                         </div>
@@ -994,7 +1060,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             <span>{'You have no balances'}</span>
                           </div>
                         ))}
-                    </div>
+                    </div> */}
+                    <TransactionFieldBalance />
                     <div className={`hint-unlocked ${!!isHintUnlocked}`}>
                       {isHintUnlocked}
                     </div>
@@ -1142,7 +1209,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 )
               ) : (
                 <>
-                  <div className='info-block center'>
+                  {/* <div className='info-block center'>
                     <p>
                       {
                         'To control your account you need to unlock it once by registering your public key.'
@@ -1152,7 +1219,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   <button className='btn submit-button' onClick={handleUnlock}>
                     <span className='submit-label unlock'></span>
                     {'Unlock'}
-                  </button>
+                  </button> */}
                 </>
               )}
             </>
