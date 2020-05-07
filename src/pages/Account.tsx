@@ -6,6 +6,7 @@ import React, {
   useRef,
 } from 'react';
 import { useHistory } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 
 import { DataList } from 'components/DataList/DataListNew';
 import MyWallet from 'components/Wallets/MyWallet';
@@ -19,7 +20,6 @@ import { loadTokens } from 'src/utils';
 import Spinner from 'src/components/Spinner/Spinner';
 import { useStore } from 'src/store/context';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
-import { observer } from 'mobx-react-lite';
 
 const Account: React.FC = observer(() => {
   const {
@@ -50,6 +50,7 @@ const Account: React.FC = observer(() => {
         async res => {
           if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
             store.zkBalances = res.zkBalances;
+            store.searchBalances = res.zkBalances;
             await cancelable(zkWallet?.getAccountState()).then((res: any) => {
               store.verified = res?.verified.balances;
               if (res?.id) {

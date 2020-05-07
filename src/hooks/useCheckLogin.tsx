@@ -9,7 +9,10 @@ import { useMobxEffect } from './useMobxEffect';
 
 export function useCheckLogin() {
   const params = useQuery();
+
   const store = useStore();
+
+  const { walletName, provider, zkWallet } = store;
   // const {
   //   path,
   //   provider,
@@ -34,7 +37,7 @@ export function useCheckLogin() {
       provider: window['ethereum'],
       walletName: getWalletNameFromProvider() as WalletType,
     });
-  });
+  }, [walletName, provider, zkWallet, params]);
   // useEffect(() => {
   //   if (provider && walletName) return;
   //   setAccessModal(true);

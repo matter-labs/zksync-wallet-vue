@@ -1,6 +1,6 @@
 import { observable, action, computed } from 'mobx';
 
-import { IEthBalance, IPrice, ITransaction } from '../types/Common';
+import { IContacts, IEthBalance, IPrice, ITransaction } from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Tokens, AccountState } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
@@ -24,7 +24,7 @@ export class Store {
   @observable provider?: any;
   @observable searchBalances: IEthBalance[] = [];
   // TODO: add explicit type
-  @observable searchContacts?: any;
+  @observable searchContacts?: IContacts[] = [];
   // TODO: add explicit type
   @observable searchTransactions?: any;
   @observable tokens?: Tokens;

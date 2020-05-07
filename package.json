@@ -8,6 +8,7 @@
     "@fortawesome/react-fontawesome": "^0.1.9",
     "@lottiefiles/lottie-player": "^0.5.1",
     "@portis/web3": "^2.0.0-beta.54",
+    "@types/yargs": "^15.0.4",
     "@walletconnect/web3-provider": "^1.0.0-beta.47",
     "antd": "^3.26.7",
     "classnames": "^2.2.6",
