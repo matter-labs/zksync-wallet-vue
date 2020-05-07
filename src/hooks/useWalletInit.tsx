@@ -108,7 +108,10 @@ const useWalletInit = () => {
       } else {
         store.unlocked = true;
       }
-
+      const arr = JSON.parse(
+        localStorage.getItem(`contacts${store.zkWallet?.address()}`) || '[]',
+      );
+      store.searchContacts = arr;
       cancelable(store.zkWallet?.getAccountState()).then((res: any) => {
         store.verified = res?.verified.balance;
       });

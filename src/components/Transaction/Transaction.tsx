@@ -610,6 +610,46 @@ const Transaction: React.FC<ITransactionProps> = observer(
       </div>
     );
 
+    const BalancesList = ({ address, symbol, balance }) => (
+      <div
+        onClick={() => {
+          setToken(!!+address ? address : symbol);
+          setMaxValue(balance);
+          setSymbolName(symbol);
+          setSymbol(symbol);
+          handleSelect(symbol);
+          openBalancesList(false);
+          setSelected(true);
+          setConditionError('');
+          body?.classList.remove('fixed-b');
+        }}
+        key={address}
+        className='balances-token'
+      >
+        <div className='balances-token-left'>
+          <div className={`logo ${symbol}`}></div>
+          <div className='balances-token-name'>
+            <p>{symbol}</p>
+            <span>
+              {symbol === 'ETH' && 'Ethereum'}
+              {symbol === 'DAI' && 'Dai'}
+              {symbol === 'FAU' && 'Faucet'}
+            </span>
+          </div>
+        </div>
+        <div className='balances-token-right'>
+          <span>
+            {window?.innerWidth > WIDTH_BP && 'balance:'}{' '}
+            <p className='datalist-balance'>
+              {+balance < 0.000001
+                ? 0
+                : parseFloat(balance.toFixed(8).toString())}
+            </p>
+          </span>
+        </div>
+      </div>
+    );
+
     return (
       <>
         <Modal visible={false} classSpecifier='add-contact' background={true}>
@@ -653,67 +693,35 @@ const Transaction: React.FC<ITransactionProps> = observer(
           )}
           {isBalancesListOpen && (
             <DataList
-              setValue={setBalances}
-              dataProperty={dataPropertySymbol}
-              data={balances}
-              title='Select asset'
-              visible={true}
-            >
-              <button
-                onClick={() => {
-                  openBalancesList(false);
-                  body?.classList.remove('fixed-b');
-                }}
-                className='close-icon'
-              ></button>
-              {!!searchBalances.length ? (
-                searchBalances.map(({ address, symbol, balance }) => (
-                  <div
-                    onClick={() => {
-                      setToken(!!+address ? address : symbol);
-                      setMaxValue(balance);
-                      setSymbolName(symbol);
-                      setSymbol(symbol);
-                      handleSelect(symbol);
-                      openBalancesList(false);
-                      setSelected(true);
-                      setConditionError('');
-                      body?.classList.remove('fixed-b');
-                    }}
-                    key={address}
-                    className='balances-token'
-                  >
-                    <div className='balances-token-left'>
-                      <div className={`logo ${symbol}`}></div>
-                      <div className='balances-token-name'>
-                        <p>{symbol}</p>
-                        <span>
-                          {symbol === 'ETH' && 'Ethereum'}
-                          {symbol === 'DAI' && 'Dai'}
-                          {symbol === 'FAU' && 'Faucet'}
-                        </span>
-                      </div>
-                    </div>
-                    <div className='balances-token-right'>
-                      <span>
-                        {window?.innerWidth > WIDTH_BP && 'balance:'}{' '}
-                        <p className='datalist-balance'>
-                          {+balance < 0.000001
-                            ? 0
-                            : parseFloat(balance.toFixed(8).toString())}
-                        </p>
-                      </span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>
-                  {
-                    'No balances yet, please make a deposit or request money from someone!'
-                  }
-                </p>
+              data={searchBalances}
+              title='Select contact'
+              header={() => (
+                <button
+                  onClick={() => {
+                    openBalancesList(false);
+                    body?.classList.remove('fixed-b');
+                  }}
+                  className='close-icon'
+                ></button>
               )}
-            </DataList>
+              visible={true}
+              renderItem={({ address, symbol, balance }) => (
+                <BalancesList
+                  address={address}
+                  symbol={symbol}
+                  balance={balance}
+                />
+              )}
+              emptyListComponent={() =>
+                !searchBalances.length ? (
+                  <p>
+                    {
+                      'No balances yet, please make a deposit or request money from someone!'
+                    }
+                  </p>
+                ) : null
+              }
+            />
           )}
         </div>
         <div className='transaction-wrapper'>
