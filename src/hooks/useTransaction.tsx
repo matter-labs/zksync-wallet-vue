@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
 import { useRootData } from 'hooks/useRootData';
+import { observer } from 'mobx-react-lite';
 
 import { IEthBalance } from 'types/Common';
 import { PriorityOperationReceipt } from 'zksync/build/types';
@@ -9,46 +10,22 @@ import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { DEFAULT_ERROR } from 'constants/errors';
 import { ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
 import { useCancelable } from 'hooks/useCancelable';
+import { useStore } from 'src/store/context';
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 const TOKEN = 'ETH';
 
 export const useTransaction = () => {
+  const store = useStore();
+
   const {
     ethBalances,
     hint,
-    setError,
-    setHint,
-    setVerifyToken,
-    setZkBalances,
     tokens,
     walletAddress,
     zkBalances,
     zkWallet,
-  } = useRootData(
-    ({
-      ethBalances,
-      hint,
-      setError,
-      setHint,
-      setVerifyToken,
-      setZkBalances,
-      tokens,
-      walletAddress,
-      zkBalances,
-      zkWallet,
-    }) => ({
-      ethBalances: ethBalances.get(),
-      hint: hint.get(),
-      setError,
-      setHint,
-      setVerifyToken,
-      setZkBalances,
-      tokens: tokens.get(),
-      walletAddress: walletAddress.get(),
-      zkBalances: zkBalances.get(),
-      zkWallet: zkWallet.get(),
-    }),
-  );
+  } = store;
 
   const cancelable = useCancelable();
 
@@ -86,17 +63,17 @@ export const useTransaction = () => {
         localStorage.setItem(`history${zkWallet?.address()}`, newHistory);
       } catch (err) {
         err.name && err.message
-          ? setError(`${err.name}: ${err.message}`)
-          : setError(DEFAULT_ERROR);
+          ? (store.error = `${err.name}: ${err.message}`)
+          : (store.error = DEFAULT_ERROR);
       }
     },
-    [setError, zkWallet],
+    [store.error, zkWallet],
   );
 
   const transactions = useCallback(
     async (receipt: PriorityOperationReceipt) => {
       try {
-        if (receipt && zkWallet) {
+        if (receipt && zkWallet && tokens) {
           const zkBalance = (await zkWallet.getAccountState()).committed
             .balances;
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
@@ -108,12 +85,12 @@ export const useTransaction = () => {
           });
           Promise.all(zkBalancePromises)
             .then(res => {
-              setZkBalances(res as IEthBalance[]);
+              store.zkBalances = res as IEthBalance[];
             })
             .catch(err => {
               err.name && err.message
-                ? setError(`${err.name}: ${err.message}`)
-                : setError(DEFAULT_ERROR);
+                ? (store.error = `${err.name}: ${err.message}`)
+                : (store.error = DEFAULT_ERROR);
             });
           setAmountValue(0);
         }
@@ -123,18 +100,17 @@ export const useTransaction = () => {
         }
       } catch (err) {
         err.name && err.message
-          ? setError(`${err.name}: ${err.message}`)
-          : setError(DEFAULT_ERROR);
+          ? (store.error = `${err.name}: ${err.message}`)
+          : (store.error = DEFAULT_ERROR);
       }
     },
     [
       setAmountValue,
-      setError,
-      setExecuted,
       setLoading,
-      setZkBalances,
       tokens,
       zkWallet,
+      store.error,
+      store.zkBalances,
     ],
   );
 
@@ -142,7 +118,7 @@ export const useTransaction = () => {
     async (token = TOKEN) => {
       if (zkWallet) {
         try {
-          setHint('Follow the instructions in the pop up');
+          store.hint = 'Follow the instructions in the pop up';
           setLoading(true);
           const handleMax = ethBalances.filter(
             balance => balance.symbol === token || balance.address === token,
@@ -184,33 +160,29 @@ export const useTransaction = () => {
                 'deposit',
                 symbol,
               );
-              setHint(
-                `Waiting for transaction to be mined. \n ${+(
-                  amountValue / Math.pow(10, 18)
-                )}  \n${hash.hash}`,
-              );
+              store.hint = `Waiting for transaction to be mined. \n ${+(
+                amountValue / Math.pow(10, 18)
+              )}  \n${hash.hash}`;
               setHash(hash);
               await depositPriorityOperation
                 .awaitEthereumTxCommit()
                 .then(() => {
-                  setHint(
-                    `Your deposit tx has been mined and will be processed after 30 confirmations. Use the link below to track the progress. \n ${+(
-                      amountValue / Math.pow(10, 18)
-                    )}  \n${hash.hash}`,
-                  );
+                  store.hint = `Your deposit tx has been mined and will be processed after 30 confirmations. Use the link below to track the progress. \n ${+(
+                    amountValue / Math.pow(10, 18)
+                  )}  \n${hash.hash}`;
                   setExecuted(true);
                 });
               const receipt = await depositPriorityOperation.awaitReceipt();
               transactions(receipt);
               const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
-              setVerifyToken(!!verifyReceipt);
+              store.verifyToken = !!verifyReceipt;
             } catch (err) {
               if (err.message.match(/(?:denied)/i)) {
-                setHint(err.message);
+                store.hint = err.message;
               } else if (err.name && err.message) {
-                setError(`${err.name}: ${err.message}`);
+                store.error = `${err.name}: ${err.message}`;
               } else {
-                setError(DEFAULT_ERROR);
+                store.error = DEFAULT_ERROR;
               }
             }
           };
@@ -221,26 +193,26 @@ export const useTransaction = () => {
             });
         } catch (err) {
           err.name && err.message
-            ? setError(`${err.name}: ${err.message}`)
-            : setError(DEFAULT_ERROR);
+            ? (store.error = `${err.name}: ${err.message}`)
+            : (store.error = DEFAULT_ERROR);
         }
       }
     },
     [
+      symbol,
       amountValue,
-      hint,
+      store.hint,
       history,
       packableAmount,
       packableFee,
-      setError,
       setHash,
-      setHint,
       setLoading,
       setPackableAmount,
-      setPackableFee,
-      setVerifyToken,
       transactions,
       zkWallet,
+      store.error,
+      store.hint,
+      store.verifyToken,
     ],
   );
 
@@ -249,7 +221,7 @@ export const useTransaction = () => {
       try {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
-          setHint('Follow the instructions in the pop up');
+          store.hint = 'Follow the instructions in the pop up';
           const handleMax = zkBalances.filter(
             balance => balance.symbol === token || balance.address === token,
           );
@@ -282,23 +254,21 @@ export const useTransaction = () => {
             symbol,
           );
           setHash(hash);
-          setHint(` \n ${+(amountValue / Math.pow(10, 18))}. \n${hash}`);
+          store.hint = ` \n ${+(amountValue / Math.pow(10, 18))}. \n${hash}`;
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
-          setVerifyToken(!!verifyReceipt);
+          store.verifyToken = !!verifyReceipt;
         } else {
-          setError(
-            `Address: "${addressValue}" doesn't match ethereum address format`,
-          );
+          store.error = `Address: "${addressValue}" doesn't match ethereum address format`;
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          setHint('User denied action');
+          store.hint = 'User denied action';
         } else if (err.name && err.message) {
-          setError(`${err.name}: ${err.message}`);
+          store.error = `${err.name}: ${err.message}`;
         } else {
-          setError(DEFAULT_ERROR);
+          store.error = DEFAULT_ERROR;
         }
         setLoading(false);
       }
@@ -307,8 +277,9 @@ export const useTransaction = () => {
       addressValue,
       amountValue,
       history,
-      setError,
-      setVerifyToken,
+      store.verifyToken,
+      store.error,
+      store.hint,
       transactions,
       zkWallet,
     ],
@@ -319,7 +290,7 @@ export const useTransaction = () => {
       try {
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
           setLoading(true);
-          setHint('Follow the instructions in the pop up');
+          store.hint = 'Follow the instructions in the pop up';
           const handleMax = zkBalances.filter(
             balance => balance.symbol === token || balance.address === token,
           );
@@ -357,34 +328,28 @@ export const useTransaction = () => {
             symbol,
           );
           setHash(hash);
-          setHint(
-            `Waiting for the transaction to be mined.. \n ${+(
-              amountValue / Math.pow(10, 18)
-            )} \n${hash}`,
-          );
+          store.hint = `Waiting for the transaction to be mined.. \n ${+(
+            amountValue / Math.pow(10, 18)
+          )} \n${hash}`;
           if (!!withdrawTransaction) {
-            setHint(
-              `Your withdrawal will be processed in short. \n ${+(
-                amountValue / Math.pow(10, 18)
-              )} \n${hash}`,
-            );
+            store.hint = `Your withdrawal will be processed in short. \n ${+(
+              amountValue / Math.pow(10, 18)
+            )} \n${hash}`;
           }
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await withdrawTransaction.awaitVerifyReceipt();
-          setVerifyToken(!!verifyReceipt);
+          store.verifyToken = !!verifyReceipt;
         } else {
-          setError(
-            `Address: "${addressValue}" doesn't match ethereum address format`,
-          );
+          store.error = `Address: "${addressValue}" doesn't match ethereum address format`;
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          setHint('User denied action');
+          store.hint = 'User denied action';
         } else if (err.name && err.message) {
-          setError(`${err.name}: ${err.message}`);
+          store.error = `${err.name}: ${err.message}`;
         } else {
-          setError(DEFAULT_ERROR);
+          store.error = DEFAULT_ERROR;
         }
         setLoading(false);
       }
@@ -393,12 +358,13 @@ export const useTransaction = () => {
       addressValue,
       amountValue,
       history,
-      setError,
+      store.error,
       setHash,
       setLoading,
-      setVerifyToken,
+      store.verifyToken,
       transactions,
       zkWallet,
+      store.hint,
     ],
   );
 

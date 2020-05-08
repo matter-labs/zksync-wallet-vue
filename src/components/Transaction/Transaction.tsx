@@ -22,7 +22,6 @@ import { INPUT_VALIDATION } from 'constants/regExs';
 import { WIDTH_BP, ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
 
 import { useCancelable } from 'hooks/useCancelable';
-import { useRootData } from 'hooks/useRootData';
 import { useStore } from 'src/store/context';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
@@ -60,19 +59,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
       hint,
       searchBalances,
       searchContacts,
-      // setBalances,
-      // setContacts,
-      // setHint,
-      // setModal,
-      // setUnlocked,
-      // setWalletAddress,
       syncProvider,
       syncWallet,
-      // setTokens,
-      // setZkBalances,
       tokens,
       unlocked,
-      // setVerified,
       walletAddress,
       zkBalances,
       zkBalancesLoaded,
@@ -80,97 +70,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
       accountState,
     } = store;
 
-    // const {
-    //   ethId,
-    //   hint,
-    //   searchBalances,
-    //   searchContacts,
-    //   setBalances,
-    //   setContacts,
-    //   setHint,
-    //   setModal,
-    //   setUnlocked,
-    //   setWalletAddress,
-    //   syncProvider,
-    //   syncWallet,
-    //   setTokens,
-    //   setZkBalances,
-    //   tokens,
-    //   unlocked,
-    //   setVerified,
-    //   walletAddress,
-    //   zkBalances,
-    //   zkBalancesLoaded,
-    //   zkWallet,
-    //   accountState,
-    // } = useRootData(
-    //   ({
-    //     error,
-    //     ethId,
-    //     hint,
-    //     provider,
-    //     searchBalances,
-    //     searchContacts,
-    //     setBalances,
-    //     setContacts,
-    //     setError,
-    //     setHint,
-    //     setModal,
-    //     setPrice,
-    //     setUnlocked,
-    //     setWalletAddress,
-    //     unlocked,
-    //     tokens,
-    //     verifyToken,
-    //     setEthBalances,
-    //     setTokens,
-    //     setZkBalances,
-    //     walletAddress,
-    //     syncProvider,
-    //     syncWallet,
-    //     walletName,
-    //     zkBalances,
-    //     zkBalancesLoaded,
-    //     zkWallet,
-    //     ...s
-    //   }) => ({
-    //     ...s,
-    //     error: error.get(),
-    //     ethId: ethId.get(),
-    //     hint: hint.get(),
-    //     provider: provider.get(),
-    //     searchBalances: searchBalances.get(),
-    //     searchContacts: searchContacts.get(),
-    //     setBalances,
-    //     setContacts,
-    //     setHint,
-    //     setError,
-    //     setModal,
-    //     setPrice,
-    //     setUnlocked,
-    //     setWalletAddress,
-    //     setEthBalances,
-    //     setTokens,
-    //     setZkBalances,
-    //     syncProvider: syncProvider.get(),
-    //     syncWallet: syncWallet.get(),
-    //     tokens: tokens.get(),
-    //     unlocked: unlocked.get(),
-    //     verifyToken: verifyToken.get(),
-    //     walletAddress: walletAddress.get(),
-    //     walletName: walletName.get(),
-    //     zkBalances: zkBalances.get(),
-    //     zkBalancesLoaded: zkBalancesLoaded.get(),
-    //     zkWallet: zkWallet.get(),
-    //     accountState: s.accountState.get(),
-    //   }),
-    // );
-
     const cancelable = useCancelable();
 
     const body = document.querySelector('#body');
-    const dataPropertySymbol = 'symbol';
-    const dataPropertyName = 'name';
     const myRef = useRef<HTMLInputElement>(null);
 
     const [amount, setAmount] = useState<number>(0);
@@ -651,93 +553,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       </div>
     );
 
-    const TransactionFieldBalance = () => (
-      <>
-        <span className='transaction-field-title'>{'Amount / asset'}</span>
-        <div className='transaction-field balance'>
-          <div className='currency-input-wrapper border'>
-            <div className='scroll-wrapper'>
-              <input
-                placeholder={selectedBalance ? '0.00' : ''}
-                className='currency-input'
-                type='number'
-                ref={myRef}
-                onChange={e => {
-                  validateNumbers(+e.target.value);
-                  setAmount(+e.target.value);
-                  handleInputWidth(+e.target.value);
-                  setInputValue(e.target.value);
-                  handleFee(+e.target.value);
-                  if (!!inputValue && +inputValue < maxValue) {
-                    setConditionError('');
-                  }
-                }}
-                value={inputValue.toString().replace(/-/g, '')}
-              />
-            </div>
-
-            <div className='custom-selector balances'>
-              <div
-                onClick={() => {
-                  openBalancesList(!isBalancesListOpen);
-                  body?.classList.add('fixed-b');
-                }}
-                className='custom-selector-title'
-              >
-                {symbolName ? (
-                  <p>{symbolName}</p>
-                ) : (
-                  <span>{zkBalancesLoaded ? 'Select token' : <Spinner />}</span>
-                )}
-                <div className='arrow-down'></div>
-              </div>
-            </div>
-          </div>
-          {zkBalancesLoaded &&
-            (!!balances?.length ? (
-              <div className='currency-input-wrapper' key={token}>
-                <div className='all-balance-wrapper'>
-                  {selectedBalance && (
-                    <span>
-                      {'~$'}
-                      {
-                        +(
-                          +(price && !!price[selectedBalance]
-                            ? price[selectedBalance]
-                            : 1) * (inputValue ? Math.abs(+inputValue) : 0)
-                        ).toFixed(2)
-                      }
-                    </span>
-                  )}
-                </div>
-                <button
-                  className='all-balance btn-tr'
-                  onClick={() => {
-                    setInputValue(maxValue.toString());
-                    validateNumbers(maxValue);
-                    handleInputWidth(maxValue);
-                    handleFee(+maxValue);
-                    setAmount(+maxValue);
-                  }}
-                >
-                  {selectedBalance && (
-                    <>
-                      {'Max:'}
-                      {maxValue ? maxValue.toFixed(6) : '0'}{' '}
-                    </>
-                  )}
-                  {symbolName ? symbolName : ''}
-                </button>
-              </div>
-            ) : (
-              <div className='currency-input-wrapper' key={token}>
-                <span>{'You have no balances'}</span>
-              </div>
-            ))}
-        </div>
-      </>
-    );
-
     return (
       <>
         <Modal visible={false} classSpecifier='add-contact' background={true}>
@@ -970,98 +785,100 @@ const Transaction: React.FC<ITransactionProps> = observer(
                           )}
                       </>
                     )}
-                    {/* <span className='transaction-field-title'>
-                      {'Amount / asset'}
-                    </span>
-                    <div className='transaction-field balance'>
-                      <div className='currency-input-wrapper border'>
-                        <div className='scroll-wrapper'>
-                          <input
-                            placeholder={selectedBalance ? '0.00' : ''}
-                            className='currency-input'
-                            type='number'
-                            ref={myRef}
-                            onChange={e => {
-                              validateNumbers(+e.target.value);
-                              setAmount(+e.target.value);
-                              handleInputWidth(+e.target.value);
-                              setInputValue(e.target.value);
-                              handleFee(+e.target.value);
-                              if (!!inputValue && +inputValue < maxValue) {
-                                setConditionError('');
-                              }
-                            }}
-                            value={inputValue.toString().replace(/-/g, '')}
-                          />
-                        </div>
-
-                        <div className='custom-selector balances'>
-                          <div
-                            onClick={() => {
-                              openBalancesList(!isBalancesListOpen);
-                              body?.classList.add('fixed-b');
-                            }}
-                            className='custom-selector-title'
-                          >
-                            {symbolName ? (
-                              <p>{symbolName}</p>
-                            ) : (
-                              <span>
-                                {zkBalancesLoaded ? (
-                                  'Select token'
-                                ) : (
-                                  <Spinner />
-                                )}
-                              </span>
-                            )}
-                            <div className='arrow-down'></div>
+                    <>
+                      <span className='transaction-field-title'>
+                        {'Amount / asset'}
+                      </span>
+                      <div className='transaction-field balance'>
+                        <div className='currency-input-wrapper border'>
+                          <div className='scroll-wrapper'>
+                            <input
+                              placeholder={selectedBalance ? '0.00' : ''}
+                              className='currency-input'
+                              key='input1'
+                              type='number'
+                              ref={myRef}
+                              onChange={e => {
+                                validateNumbers(+e.target.value);
+                                setAmount(+e.target.value);
+                                handleInputWidth(+e.target.value);
+                                setInputValue(e.target.value);
+                                handleFee(+e.target.value);
+                                if (!!inputValue && +inputValue < maxValue) {
+                                  setConditionError('');
+                                }
+                              }}
+                              value={inputValue.toString().replace(/-/g, '')}
+                            />
                           </div>
-                        </div>
-                      </div>
-                      {zkBalancesLoaded &&
-                        (!!balances?.length ? (
-                          <div className='currency-input-wrapper' key={token}>
-                            <div className='all-balance-wrapper'>
-                              {selectedBalance && (
+
+                          <div className='custom-selector balances'>
+                            <div
+                              onClick={() => {
+                                openBalancesList(!isBalancesListOpen);
+                                body?.classList.add('fixed-b');
+                              }}
+                              className='custom-selector-title'
+                            >
+                              {symbolName ? (
+                                <p>{symbolName}</p>
+                              ) : (
                                 <span>
-                                  {'~$'}
-                                  {
-                                    +(
-                                      +(price && !!price[selectedBalance]
-                                        ? price[selectedBalance]
-                                        : 1) *
-                                      (inputValue ? Math.abs(+inputValue) : 0)
-                                    ).toFixed(2)
-                                  }
+                                  {zkBalancesLoaded ? (
+                                    'Select token'
+                                  ) : (
+                                    <Spinner />
+                                  )}
                                 </span>
                               )}
+                              <div className='arrow-down'></div>
                             </div>
-                            <button
-                              className='all-balance btn-tr'
-                              onClick={() => {
-                                setInputValue(maxValue.toString());
-                                validateNumbers(maxValue);
-                                handleInputWidth(maxValue);
-                                handleFee(+maxValue);
-                                setAmount(+maxValue);
-                              }}
-                            >
-                              {selectedBalance && (
-                                <>
-                                  {'Max:'}
-                                  {maxValue ? maxValue.toFixed(6) : '0'}{' '}
-                                </>
-                              )}
-                              {symbolName ? symbolName : ''}
-                            </button>
                           </div>
-                        ) : (
-                          <div className='currency-input-wrapper' key={token}>
-                            <span>{'You have no balances'}</span>
-                          </div>
-                        ))}
-                    </div> */}
-                    <TransactionFieldBalance />
+                        </div>
+                        {zkBalancesLoaded &&
+                          (!!balances?.length ? (
+                            <div className='currency-input-wrapper' key={token}>
+                              <div className='all-balance-wrapper'>
+                                {selectedBalance && (
+                                  <span>
+                                    {'~$'}
+                                    {
+                                      +(
+                                        +(price && !!price[selectedBalance]
+                                          ? price[selectedBalance]
+                                          : 1) *
+                                        (inputValue ? Math.abs(+inputValue) : 0)
+                                      ).toFixed(2)
+                                    }
+                                  </span>
+                                )}
+                              </div>
+                              <button
+                                className='all-balance btn-tr'
+                                onClick={() => {
+                                  setInputValue(maxValue.toString());
+                                  validateNumbers(maxValue);
+                                  handleInputWidth(maxValue);
+                                  handleFee(+maxValue);
+                                  setAmount(+maxValue);
+                                }}
+                              >
+                                {selectedBalance && (
+                                  <>
+                                    {'Max:'}
+                                    {maxValue ? maxValue.toFixed(6) : '0'}{' '}
+                                  </>
+                                )}
+                                {symbolName ? symbolName : ''}
+                              </button>
+                            </div>
+                          ) : (
+                            <div className='currency-input-wrapper' key={token}>
+                              <span>{'You have no balances'}</span>
+                            </div>
+                          ))}
+                      </div>
+                    </>
                     <div className={`hint-unlocked ${!!isHintUnlocked}`}>
                       {isHintUnlocked}
                     </div>

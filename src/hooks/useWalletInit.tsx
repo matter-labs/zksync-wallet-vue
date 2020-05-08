@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { ethers } from 'ethers';
 
-import { useRootData } from 'hooks/useRootData';
 import { useCancelable } from 'hooks/useCancelable';
 
 import { DEFAULT_ERROR } from 'constants/errors';
