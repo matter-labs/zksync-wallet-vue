@@ -1,6 +1,7 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 
-import { useRootData } from 'hooks/useRootData';
+import { useStore } from 'src/store/context';
 
 import './Transaction.scss';
 
@@ -11,38 +12,40 @@ interface IContactSelectorFlatProps {
   selectedContact: any;
 }
 
-export const ContactSelectorFlat: React.FC<IContactSelectorFlatProps> = ({
-  body,
-  isContactsListOpen,
-  openContactsList,
-  selectedContact,
-}): JSX.Element => {
-  const { walletAddress } = useRootData(({ walletAddress }) => ({
-    walletAddress: walletAddress.get(),
-  }));
+export const ContactSelectorFlat: React.FC<IContactSelectorFlatProps> = observer(
+  ({
+    body,
+    isContactsListOpen,
+    openContactsList,
+    selectedContact,
+  }): JSX.Element => {
+    const store = useStore();
 
-  return (
-    <div
-      className={`custom-selector contacts ${
-        !!walletAddress[0] || !!selectedContact ? '' : 'disabled'
-      }`}
-      onClick={() => {
-        if (walletAddress[0] || selectedContact) {
-          openContactsList(!isContactsListOpen);
-          body?.classList.add('fixed-b');
-        }
-      }}
-    >
+    const { walletAddress } = store;
+
+    return (
       <div
-        className={`custom-selector-title ${
+        className={`custom-selector contacts ${
           !!walletAddress[0] || !!selectedContact ? '' : 'disabled'
         }`}
+        onClick={() => {
+          if (walletAddress[0] || selectedContact) {
+            openContactsList(!isContactsListOpen);
+            body?.classList.add('fixed-b');
+          }
+        }}
       >
-        <p>{walletAddress[0] ? walletAddress[0] : selectedContact}</p>
-        {(selectedContact || walletAddress[0]) && (
-          <div className='arrow-down'></div>
-        )}
+        <div
+          className={`custom-selector-title ${
+            !!walletAddress[0] || !!selectedContact ? '' : 'disabled'
+          }`}
+        >
+          <p>{walletAddress[0] ? walletAddress[0] : selectedContact}</p>
+          {(selectedContact || walletAddress[0]) && (
+            <div className='arrow-down'></div>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);

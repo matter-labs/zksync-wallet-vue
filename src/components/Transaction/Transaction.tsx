@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import makeBlockie from 'ethereum-blockies-base64';
@@ -278,7 +278,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       store,
     ]);
 
-    useEffect(() => {
+    useMobxEffect(() => {
       if (
         title === 'Withdraw' &&
         zkWallet &&
@@ -296,11 +296,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
         title === 'Deposit' ? store.ethBalances : zkBalances;
     };
 
-    useEffect(() => {
+    useMobxEffect(() => {
       cancelable(initWallet);
     }, [store.ethBalances]);
 
-    useEffect(() => {
+    useMobxEffect(() => {
       cancelable(zkWallet?.getAccountState()).then((res: any) => {
         store.verified = res?.verified.balances;
         res?.id
@@ -311,7 +311,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       });
     }, [cancelable, store, zkWallet]);
 
-    useEffect(() => {
+    useMobxEffect(() => {
       if ((token && token === 'ETH') || symbolName === 'ETH') {
         setUnlockFau(true);
       }
