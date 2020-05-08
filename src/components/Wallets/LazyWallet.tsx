@@ -1,17 +1,14 @@
 import React, { Suspense } from 'react';
 
-import { useRootData } from 'hooks/useRootData';
-
 import { WALLETS } from 'constants/Wallets';
+import { useStore } from 'src/store/context';
 
 const LazyWallet: React.FC = () => {
-  const { walletName } = useRootData(({ walletName }) => ({
-    walletName: walletName.get(),
-  }));
+  const store = useStore();
 
   const Wallet = React.lazy(
-    walletName && walletName in WALLETS
-      ? WALLETS[walletName]
+    store.walletName && store.walletName in WALLETS
+      ? WALLETS[store.walletName]
       : () => import('./DefaultWallet'),
   );
 

@@ -2,191 +2,150 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import makeBlockie from 'ethereum-blockies-base64';
 import cl from 'classnames';
+import { observer } from 'mobx-react-lite';
 
 import avatar from 'images/avatar.png';
 import { DataList } from 'components/DataList/DataListNew';
 import Spinner from 'components/Spinner/Spinner';
 import SpinnerWorm from 'components/Spinner/SpinnerWorm';
+import { Transition } from 'components/Transition/Transition';
 
-import { useRootData } from 'hooks/useRootData';
+import { useTimeout } from 'hooks/timers';
+import { useCancelable } from 'hooks/useCancelable';
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
+import { useStore } from 'src/store/context';
 
 import { IMyWalletProps } from './Types';
 
 import { WIDTH_BP } from 'constants/magicNumbers';
 
 import './Wallets.scss';
-import { Transition } from 'components/Transition/Transition';
-import { useTimeout } from 'hooks/timers';
-import { useCancelable } from 'hooks/useCancelable';
 
-const MyWallet: React.FC<IMyWalletProps> = ({
-  price,
-  setTransactionType,
-}): JSX.Element => {
-  const {
-    setBalances,
-    transactionModal,
-    zkBalances,
-    zkBalancesLoaded,
-    verifyToken,
-    zkWallet,
-  } = useRootData(
-    ({
-      searchBalances,
+const MyWallet: React.FC<IMyWalletProps> = observer(
+  ({ price, setTransactionType }): JSX.Element => {
+    const store = useStore();
+
+    const {
       transactionModal,
       zkBalances,
       zkBalancesLoaded,
       verifyToken,
       zkWallet,
-      ...s
-    }) => ({
-      ...s,
-      searchBalances: searchBalances.get(),
-      transactionModal: transactionModal.get(),
-      verifyToken: verifyToken.get(),
-      zkBalances: zkBalances.get(),
-      zkBalancesLoaded: zkBalancesLoaded.get(),
-      zkWallet: zkWallet.get(),
-    }),
-  );
+    } = store;
 
-  const body = document.getElementById('body');
+    // const {
+    //   setBalances,
+    //   transactionModal,
+    //   zkBalances,
+    //   zkBalancesLoaded,
+    //   verifyToken,
+    //   zkWallet,
+    // } = useRootData(
+    //   ({
+    //     searchBalances,
+    //     transactionModal,
+    //     zkBalances,
+    //     zkBalancesLoaded,
+    //     verifyToken,
+    //     zkWallet,
+    //     ...s
+    //   }) => ({
+    //     ...s,
+    //     searchBalances: searchBalances.get(),
+    //     transactionModal: transactionModal.get(),
+    //     verifyToken: verifyToken.get(),
+    //     zkBalances: zkBalances.get(),
+    //     zkBalancesLoaded: zkBalancesLoaded.get(),
+    //     zkWallet: zkWallet.get(),
+    //   }),
+    // );
 
-  const [address, setAddress] = useState<string>('');
-  const [isCopyModal, openCopyModal] = useState<boolean>(false);
-  const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
-  const [isAssetsOpen, openAssets] = useState<boolean>(false);
-  const [selectedBalance, setSelectedBalance] = useState<any>();
-  const [symbolName, setSymbolName] = useState<any>(
-    !!zkBalances?.length ? zkBalances[0].symbol : '',
-  );
-  const [verified, setVerified] = useState<any>();
-  const [walletBalance, setWalletBalance] = useState<string>('');
+    const body = document.getElementById('body');
 
-  const verifiedState =
-    verified && !!zkBalances.length
-      ? +parseFloat(walletBalance).toFixed(6) !==
-        +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(6)
-      : false;
+    const [address, setAddress] = useState<string>('');
+    const [isCopyModal, openCopyModal] = useState<boolean>(false);
+    const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
+    const [isAssetsOpen, openAssets] = useState<boolean>(false);
+    const [selectedBalance, setSelectedBalance] = useState<any>();
+    const [symbolName, setSymbolName] = useState<any>(
+      !!zkBalances?.length ? zkBalances[0].symbol : '',
+    );
+    const [verified, setVerified] = useState<any>();
+    const [walletBalance, setWalletBalance] = useState<string>('');
 
-  const inputRef: (HTMLInputElement | null)[] = [];
+    const verifiedState =
+      verified && !!zkBalances.length
+        ? +parseFloat(walletBalance).toFixed(6) !==
+          +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(6)
+        : false;
 
-  const history = useHistory();
+    const inputRef: (HTMLInputElement | null)[] = [];
 
-  const handleCopy = useCallback(
-    address => {
-      if (navigator.userAgent.match(/ipad|iphone/i)) {
-        const input: any = document.getElementsByClassName(
-          'copy-block-input',
-        )[0];
-        const range = document.createRange();
-        range.selectNodeContents(input);
-        const selection = window.getSelection();
-        selection?.removeAllRanges();
-        selection?.addRange(range);
-        input.setSelectionRange(0, 999999);
-        document.execCommand('copy');
-      } else {
-        inputRef.map(el => {
-          if (address === el?.value) {
-            el?.focus();
-            el?.select();
-            document.execCommand('copy');
-          }
-        });
-      }
-      openCopyModal(true);
-    },
-    [inputRef],
-  );
+    const history = useHistory();
 
-  useTimeout(() => isCopyModal && openCopyModal(false), 2000, [isCopyModal]);
+    const handleCopy = useCallback(
+      address => {
+        if (navigator.userAgent.match(/ipad|iphone/i)) {
+          const input: any = document.getElementsByClassName(
+            'copy-block-input',
+          )[0];
+          const range = document.createRange();
+          range.selectNodeContents(input);
+          const selection = window.getSelection();
+          selection?.removeAllRanges();
+          selection?.addRange(range);
+          input.setSelectionRange(0, 999999);
+          document.execCommand('copy');
+        } else {
+          inputRef.map(el => {
+            if (address === el?.value) {
+              el?.focus();
+              el?.select();
+              document.execCommand('copy');
+            }
+          });
+        }
+        openCopyModal(true);
+      },
+      [inputRef],
+    );
 
-  const handleSelect = useCallback(
-    name => {
-      setSelectedBalance(name);
-    },
-    [setSelectedBalance],
-  );
+    useTimeout(() => isCopyModal && openCopyModal(false), 2000, [isCopyModal]);
 
-  const handleClickOutside = useCallback(
-    e => {
-      if (e.target.getAttribute('data-name')) {
-        e.stopPropagation();
-        openBalancesList(false);
-        body?.classList.remove('fixed-b');
-        openAssets(false);
-      }
-    },
-    [body],
-  );
+    const handleSelect = useCallback(
+      name => {
+        setSelectedBalance(name);
+      },
+      [setSelectedBalance],
+    );
 
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside, true);
-    return () => {
-      document.removeEventListener('click', handleClickOutside, true);
-    };
-  }, [
-    body,
-    handleClickOutside,
-    isBalancesListOpen,
-    setSelectedBalance,
-    setWalletBalance,
-    verifyToken,
-  ]);
+    const handleClickOutside = useCallback(
+      e => {
+        if (e.target.getAttribute('data-name')) {
+          e.stopPropagation();
+          openBalancesList(false);
+          body?.classList.remove('fixed-b');
+          openAssets(false);
+        }
+      },
+      [body],
+    );
 
-  return (
-    <>
-      <div className={cl('assets-wrapper', isAssetsOpen ? 'open' : 'closed')}>
-        <DataList
-          data={zkBalances}
-          renderItem={({ address, symbol, balance }) => (
-            <div
-              onClick={() => {
-                setWalletBalance(balance.toString());
-                handleSelect(symbol);
-                openBalancesList(false);
-                setSymbolName(symbol);
-                openAssets(false);
-                setAddress(address);
-                body?.classList.remove('fixed-b');
-              }}
-              key={balance}
-              className='balances-token'
-            >
-              <div className='balances-token-left'>
-                <div className={`logo ${symbol}`}></div>
-                <div className='balances-token-name'>
-                  <p>{symbol}</p>
-                  <span>
-                    {symbol === 'ETH' && 'Ethereum'}
-                    {symbol === 'DAI' && 'Dai'}
-                    {symbol === 'FAU' && 'Faucet'}
-                  </span>
-                </div>
-              </div>
-              <div className='balances-token-right'>
-                <span>
-                  {'balance: '}
-                  <p className='datalist-balance'>{+balance.toFixed(2)}</p>
-                </span>
-              </div>
-            </div>
-          )}
-          emptyListComponent={() => (
-            <p>
-              {
-                'No balances yet, please make a deposit or request money from someone!'
-              }
-            </p>
-          )}
-          title='Select asset'
-        />
-      </div>
-      <div
-        data-name='assets-wrapper'
-        className={`assets-wrapper-bg ${isAssetsOpen ? 'open' : 'closed'}`}
-      ></div>
+    useMobxEffect(() => {
+      document.addEventListener('click', handleClickOutside, true);
+      return () => {
+        document.removeEventListener('click', handleClickOutside, true);
+      };
+    }, [
+      body,
+      handleClickOutside,
+      isBalancesListOpen,
+      setSelectedBalance,
+      setWalletBalance,
+      verifyToken,
+    ]);
+
+    return (
       <div
         className={`mywallet-wrapper ${
           !!transactionModal?.title ? 'closed' : 'open'
@@ -356,8 +315,8 @@ const MyWallet: React.FC<IMyWalletProps> = ({
         )}
         {!zkBalancesLoaded && <Spinner />}
       </div>
-    </>
-  );
-};
+    );
+  },
+);
 
 export default MyWallet;

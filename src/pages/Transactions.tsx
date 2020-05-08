@@ -6,6 +6,8 @@ import { useCheckLogin } from 'hooks/useCheckLogin';
 import { ethers } from 'ethers';
 import { getConfirmationCount } from 'src/utils';
 import { Transaction } from './Transaction';
+import { useStore } from 'src/store/context';
+import { useObserver } from 'mobx-react-lite';
 
 export interface Tx {
   hash: string;
@@ -37,25 +39,22 @@ export interface Tx {
 }
 
 const Transactions: React.FC = (): JSX.Element => {
-  const { zkWallet, provider, transactions, setTxs } = useRootData(s => ({
-    ...s,
-    ethId: s.ethId.get(),
-    provider: s.provider.get(),
-    searchTransactions: s.searchTransactions.get(),
-    zkWallet: s.zkWallet.get(),
-    transactions: s.transactions.toJS(),
-  }));
+  const store = useStore();
+  // const { zkWallet, provider } = useRootData(s => ({
+  //   provider: s.provider.get(),
+  //   zkWallet: s.zkWallet.get(),
+  // }));
 
   const web3Provider = useMemo(
-    () => provider && new ethers.providers.Web3Provider(provider),
-    [provider],
+    () => store.provider && new ethers.providers.Web3Provider(store.provider),
+    [store],
   );
 
   const fetchTransactions = useCallback(
     async (amount, offset): Promise<Tx[]> => {
       const txs: Tx[] = await fetch(
         'https://testnet.zksync.dev/api/v0.1/account/' +
-          `${zkWallet?.address()}/history/${offset}/${amount}`,
+          `${store.zkWalletAddress}/history/${offset}/${amount}`,
       ).then(r => r.json());
 
       const resolvedTxs = await Promise.all(
@@ -67,15 +66,15 @@ const Transactions: React.FC = (): JSX.Element => {
       );
       return resolvedTxs.filter(tx => tx.tx.type !== 'ChangePubKey');
     },
-    [zkWallet, web3Provider],
+    [store.zkWalletAddress, web3Provider],
   );
 
   useCheckLogin();
 
-  return (
+  return useObserver(() => (
     <DataList
       onFetch={fetchTransactions}
-      bindData={[transactions, setTxs]}
+      bindData={[store.transactions, store.setTxs.bind(store)]}
       title='Transactions'
       visible={true}
       onSort={arr => arr.slice().reverse()}
@@ -84,9 +83,9 @@ const Transactions: React.FC = (): JSX.Element => {
         <div className='default-text'>{'History is empty'}</div>
       )}
       infScrollInitialCount={30}
-      refreshInterval={zkWallet ? 2e3 : 0}
+      refreshInterval={store.zkWallet ? 2e3 : 0}
     />
-  );
+  ));
 };
 
 export default Transactions;

@@ -36,15 +36,15 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = ({
   symbolName,
   title,
 }): JSX.Element => {
-  const { hintModal, setWalletAddress, walletAddress } = useRootData(
-    ({ hintModal, setWalletAddress, walletAddress }) => ({
-      hintModal: hintModal.get(),
+  const { hint, setWalletAddress, walletAddress } = useRootData(
+    ({ hint, setWalletAddress, walletAddress }) => ({
+      hint: hint.get(),
       setWalletAddress,
       walletAddress: walletAddress.get(),
     }),
   );
 
-  const info = hintModal?.split('\n');
+  const info = hint?.split('\n');
 
   const history = useHistory();
 

@@ -10,6 +10,11 @@ export interface IEthBalance {
   symbol: string;
 }
 
+export interface IContacts {
+  name: string;
+  address: string;
+}
+
 export type IAppProps = {
   children?: React.ReactNode;
 };

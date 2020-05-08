@@ -16,15 +16,14 @@ import { Transition } from 'components/Transition/Transition';
 import { ConnectionStatus } from 'components/Header/ConnectionStatus';
 import { useLogout } from 'hooks/useLogout';
 import './Header.scss';
+import { useStore } from 'src/store/context';
+import { useObserver, observer } from 'mobx-react-lite';
 
-const Header: React.FC = () => {
-  const { setModal, zkWallet } = useRootData(s => ({
-    setModal: s.setModal,
-    zkWallet: s.zkWallet.get(),
-  }));
+const Header: React.FC = observer(() => {
+  const store = useStore();
 
-  const address = zkWallet?.address();
-  const userName = localStorage.getItem(zkWallet ? address! : '');
+  const address = store.zkWalletAddress;
+  const userName = localStorage.getItem(store.zkWallet ? address! : '');
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const [isChangeNameOpen, openChangeName] = useState<boolean>(false);
@@ -56,7 +55,7 @@ const Header: React.FC = () => {
         });
       }
     },
-    [inputRef],
+    [inputRef, address],
   );
 
   const logout = useLogout();
@@ -68,7 +67,7 @@ const Header: React.FC = () => {
       <div className='menu-top'>
         <div className='beta-container'>
           <Link
-            onClick={() => (!zkWallet ? logout(false, '') : undefined)}
+            onClick={() => (!store.zkWallet ? logout(false, '') : undefined)}
             className='menu-logo'
             to='/'
           ></Link>
@@ -80,13 +79,15 @@ const Header: React.FC = () => {
             <button
               type='button'
               className='menu-wallet btn-tr'
-              onClick={() => setModal('wallet')}
+              onClick={() => {
+                store.isModalOpen = 'wallet';
+              }}
             >
               <p>
                 {userName || `${address.slice(0, 11)}...${address.slice(-4)}`}
               </p>
               <img
-                src={zkWallet ? makeBlockie(address) : avatar}
+                src={store.zkWallet ? makeBlockie(address) : avatar}
                 alt='avatar'
               />
               <div className='arrow-select'></div>
@@ -94,7 +95,7 @@ const Header: React.FC = () => {
             <Modal visible={false} background={true} classSpecifier='wallet'>
               <div className='wallet-title'>
                 <img
-                  src={zkWallet ? makeBlockie(address) : avatar}
+                  src={store.zkWallet ? makeBlockie(address) : avatar}
                   alt='avatar'
                 />{' '}
                 <p>
@@ -122,7 +123,12 @@ const Header: React.FC = () => {
               <QRCode data={address} />
               <div className='horizontal-line' />
               <div className='wallet-buttons'>
-                <button className='btn-tr' onClick={() => setModal('qr')}>
+                <button
+                  className='btn-tr'
+                  onClick={() => {
+                    store.isModalOpen = 'qr';
+                  }}
+                >
                   <span className='icon-qr'></span>
                   {'Show QR code'}
                 </button>
@@ -172,6 +178,6 @@ const Header: React.FC = () => {
       <ConnectionStatus />
     </div>
   );
-};
+});
 
 export default Header;

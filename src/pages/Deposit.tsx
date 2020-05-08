@@ -1,9 +1,12 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
+
+import { useStore } from 'src/store/context';
 
 import Transaction from 'components/Transaction/Transaction';
 
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
-import { useRootData } from 'hooks/useRootData';
+// import { useRootData } from 'hooks/useRootData';
 import { useTransaction } from 'hooks/useTransaction';
 
 export const Deposit: React.FC = (): JSX.Element => {
@@ -22,13 +25,17 @@ export const Deposit: React.FC = (): JSX.Element => {
     setSymbol,
   } = useTransaction();
 
-  const { ethBalances, price, setTransactionType } = useRootData(
-    ({ ethBalances, price, setTransactionType }) => ({
-      ethBalances: ethBalances.get(),
-      price: price.get(),
-      setTransactionType,
-    }),
-  );
+  // const { ethBalances, price, setTransactionType } = useRootData(
+  //   ({ ethBalances, price, setTransactionType }) => ({
+  //     ethBalances: ethBalances.get(),
+  //     price: price.get(),
+  //     setTransactionType,
+  //   }),
+  // );
+
+  const store = useStore();
+
+  const { ethBalances, price } = store;
 
   useCheckLogin();
 
@@ -48,7 +55,9 @@ export const Deposit: React.FC = (): JSX.Element => {
       setExecuted={setExecuted}
       setLoading={setLoading}
       setSymbol={setSymbol}
-      setTransactionType={setTransactionType}
+      setTransactionType={t => {
+        store.transactionType = t;
+      }}
       title='Deposit'
       transactionAction={deposit}
     />

@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
 import Modal from 'components/Modal/Modal';
-
-import { useRootData } from 'hooks/useRootData';
 
 import { IAppProps } from 'types/Common';
 
@@ -14,53 +12,38 @@ import { useLogout } from 'hooks/useLogout';
 import { WalletType } from './constants/Wallets';
 import { useCancelable } from './hooks/useCancelable';
 import { useInterval } from './hooks/timers';
+import { observer } from 'mobx-react-lite';
+import { useStore } from './store/context';
+import { useMobxEffect } from './hooks/useMobxEffect';
 
-const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
-  const {
-    error,
-    isAccessModalOpen,
-    provider,
-    setAccessModal,
-    setError,
-    setWalletName,
-    walletName,
-    zkWallet,
-    setZkBalances,
-    setZkWallet,
-    setHintModal,
-    setBalances,
-    setZkBalancesLoaded,
-    setTxs,
-  } = useRootData(
-    ({ error, isAccessModalOpen, provider, walletName, zkWallet, ...s }) => ({
-      ...s,
-      error: error.get(),
-      isAccessModalOpen: isAccessModalOpen.get(),
-      provider: provider.get(),
-      walletName: walletName.get(),
-      zkWallet: zkWallet.get(),
-    }),
-  );
+const App: React.FC<IAppProps> = observer(({ children }) => {
+  const store = useStore();
 
   useWSHeartBeat();
   const cancelable = useCancelable();
   const [curAddress, setCurAddress] = useState<string>(
-    provider?.selectedAddress,
+    store.provider?.selectedAddress,
   );
 
-  useEffect(() => {
-    if (provider && walletName) {
-      setCurAddress(provider?.selectedAddress);
+  useMobxEffect(() => {
+    if (store.provider && store.walletName) {
+      setCurAddress(store.provider.selectedAddress);
     }
-  }, [curAddress, cancelable, provider, setHintModal, walletName]);
+    if (curAddress && store.walletName) {
+      store.hint = `Login with ${store.walletName}`;
+    }
+  });
 
   useInterval(() => {
-    if (!curAddress && walletName && provider?.selectedAddress) {
-      setCurAddress(provider?.selectedAddress);
+    if (!curAddress && store.walletName && store.provider?.selectedAddress) {
+      setCurAddress(store.provider?.selectedAddress);
     }
   }, 5000);
 
-  useEffect(() => {
+  // Listen for network change
+  useMobxEffect(() => {
+    const provider = store.provider;
+    const walletName = store.walletName;
     if (provider && walletName === 'Metamask') {
       window['ethereum'].autoRefreshOnNetworkChange = false;
 
@@ -69,9 +52,9 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
           provider.networkVersion !== RIGHT_NETWORK_ID &&
           walletName === 'Metamask'
         ) {
-          setError(`Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`);
+          store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
         } else {
-          setError('');
+          store.error = '';
         }
       };
 
@@ -79,20 +62,24 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       provider.on('networkChanged', networkChangeListener);
       return () => provider.off('networkChanged', networkChangeListener);
     }
-  }, [provider, setError, walletName, zkWallet, cancelable]);
+  });
 
   const logout = useLogout();
 
-  useEffect(() => {
-    if (zkWallet) {
-      setAccessModal(false);
+  // Listen for account change
+  useMobxEffect(() => {
+    const provider = store.provider;
+    const walletName = store.walletName;
+
+    if (store.zkWallet) {
+      store.isAccessModalOpen = false;
     }
     if (!provider || walletName !== 'Metamask') return;
     const accountChangeListener = () => {
       if (
-        zkWallet &&
+        store.zkWallet &&
         provider &&
-        zkWallet?.address().toLowerCase() !==
+        store.zkWalletAddress?.toLowerCase() !==
           provider.selectedAddress.toLowerCase()
       ) {
         sessionStorage.setItem('walletName', walletName);
@@ -100,46 +87,40 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
           'walletName',
         ) as WalletType;
         if (savedWalletName) {
-          setWalletName(savedWalletName);
+          store.walletName = savedWalletName;
         }
-        setZkWallet(null);
-        setZkBalances([]);
-        setAccessModal(true);
-        setZkBalancesLoaded(false);
-        setTxs([]);
+        store.zkWallet = null;
+        store.zkBalances = [];
+        store.isAccessModalOpen = false;
+        store.transactions = [];
       }
     };
     provider.on('accountsChanged', accountChangeListener);
     return () => provider.off('accountsChanged', accountChangeListener);
-  }, [
-    logout,
-    provider,
-    setAccessModal,
-    setWalletName,
-    walletName,
-    setZkBalances,
-    setZkWallet,
-    zkWallet,
-  ]);
+  });
 
   return (
-    <div className={`content-wrapper ${walletName ? '' : 'start-page'}`}>
+    <div className={`content-wrapper ${store.walletName ? '' : 'start-page'}`}>
       <Modal
-        cancelAction={() => setError('')}
-        visible={!!error}
+        cancelAction={() => {
+          store.error = '';
+        }}
+        visible={!!store.error}
         classSpecifier='error'
         background={true}
         centered
       >
-        <p>{error}</p>
+        <p>{store.error}</p>
       </Modal>
       <Modal
-        cancelAction={() => setAccessModal(false)}
+        cancelAction={() => {
+          store.isAccessModalOpen = false;
+        }}
         visible={
-          isAccessModalOpen &&
+          store.isAccessModalOpen &&
           window.location.pathname.length > 1 &&
-          provider &&
-          provider.networkVersion === RIGHT_NETWORK_ID
+          store.provider &&
+          store.provider.networkVersion === RIGHT_NETWORK_ID
         }
         classSpecifier='metamask'
         background={true}
@@ -147,11 +128,11 @@ const App: React.FC<IAppProps> = ({ children }): JSX.Element => {
       >
         <p>{'Please make sign in the pop up'}</p>
       </Modal>
-      {walletName && <Header />}
+      {store.walletName && <Header />}
       <div className='content'>{children}</div>
       <Footer />
     </div>
   );
-};
+});
 
 export default App;

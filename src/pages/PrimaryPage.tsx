@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';
 import Spinner from 'components/Spinner/Spinner';
 
-import { useRootData } from 'hooks/useRootData';
 import { useQuery } from 'hooks/useQuery';
-import { useCancelable } from 'hooks/useCancelable';
 
 import { MOBILE_DEVICE } from 'constants/regExs';
 import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
@@ -19,6 +17,10 @@ import {
   WalletType,
 } from 'constants/Wallets';
 import { useLogout } from 'src/hooks/useLogout';
+import { useStore } from 'src/store/context';
+import { useObserver } from 'mobx-react-lite';
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
+import { Store } from 'src/store/store';
 
 const PrimaryPage: React.FC = (): JSX.Element => {
   const mobileCheck = useMemo(
@@ -39,201 +41,140 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     [mobileCheck],
   );
 
-  const {
-    error,
-    hintModal,
-    isAccessModalOpen,
-    provider,
-    setAccessModal,
-    setError,
-    setHintModal,
-    setModal,
-    setNormalBg,
-    setWalletName,
-    walletName,
-    zkWallet,
-    zkWalletInitializing,
-  } = useRootData(
-    ({
-      error,
-      hintModal,
-      isAccessModalOpen,
-      provider,
-      setAccessModal,
-      setError,
-      setEthBalances,
-      setEthId,
-      setEthWallet,
-      setHintModal,
-      setModal,
-      setNormalBg,
-      setProvider,
-      setWalletName,
-      setZkBalances,
-      setZkWallet,
-      walletName,
-      zkWallet,
-      zkWalletInitializing,
-    }) => ({
-      error: error.get(),
-      hintModal: hintModal.get(),
-      isAccessModalOpen: isAccessModalOpen.get(),
-      provider: provider.get(),
-      setAccessModal,
-      setError,
-      setEthBalances,
-      setEthId,
-      setEthWallet,
-      setModal,
-      setHintModal,
-      setNormalBg,
-      setProvider,
-      setWalletName,
-      setZkBalances,
-      setZkWallet,
-      walletName: walletName.get(),
-      zkWallet: zkWallet.get(),
-      zkWalletInitializing,
-    }),
-  );
+  const store = useStore();
 
   const handleLogOut = useLogout();
-  const cancelable = useCancelable();
 
-  useEffect(() => {
+  useMobxEffect(() => {
+    const { provider, walletName } = store;
     if (!(provider && walletName === 'Metamask')) return;
     const listener = () => {
-      setWalletName('');
-      setAccessModal(true);
-      setWalletName('Metamask');
+      store.walletName = '';
+      store.isAccessModalOpen = true;
+      store.walletName = 'Metamask';
     };
-    provider.on('networkChanged', listener);
-    return () => provider.off('networkChanged', listener);
+    store.provider.on('networkChanged', listener);
+    return () => store.provider.off('networkChanged', listener);
   });
 
-  useEffect(() => {
-    if (
-      provider?.selectedAddress == null &&
-      walletName &&
-      walletName !== 'WalletConnect'
-    ) {
-      //TODO: remove walletName === 'WalletConnect'
-      setAccessModal(true);
-    }
-    if (error) {
-      setAccessModal(false);
-    }
-  }, [
-    isAccessModalOpen,
-    cancelable,
-    error,
-    hintModal,
-    provider,
-    setAccessModal,
-    setHintModal,
-    setWalletName,
-    walletName,
-    zkWallet,
-    zkWalletInitializing,
-  ]);
+  // useMobxEffect(() => {
+  //   const { provider, walletName, error } = store;
+  //   if (
+  //     provider?.selectedAddress == null &&
+  //     walletName !== 'WalletConnect' &&
+  //     !error
+  //   ) {
+  //     //TODO: remove walletName === 'WalletConnect'
+  //     store.isAccessModalOpen = true;
+  //   }
+  // });
+
+  const selectWallet = useCallback(
+    (key: WalletType) => () => {
+      if (wallets.includes(key)) {
+        if (key === 'WalletConnect') {
+          store.isModalOpen = 'wc';
+        } else {
+          store.setBatch({
+            walletName: key,
+            normalBg: true,
+            isAccessModalOpen: true,
+          });
+        }
+        if (store.provider?.selectedAddress) {
+          store.zkWalletInitializing = true;
+        }
+      } else {
+        store.error = `Your browser doesn't support ${key}, please select another wallet or switch browser`;
+      }
+    },
+    [store, wallets],
+  );
 
   const params = useQuery();
-  if (zkWallet) {
-    return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
-  }
 
-  return (
-    <>
-      <LazyWallet />
+  return useObserver(() => {
+    const { walletName, provider, hint } = store;
+    if (store.zkWallet) {
+      return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
+    }
+
+    return (
       <>
-        <Modal
-          background={false}
-          classSpecifier={`metamask ${
-            walletName
-              ? walletName.replace(/\s+/g, '').toLowerCase()
-              : 'primary-page'
-          }`}
-          visible={isAccessModalOpen}
-          cancelAction={() => handleLogOut(false, '')}
-          centered
-        >
-          <div
-            className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
-          ></div>
-          {(provider && walletName !== 'Metamask') ||
-          (provider &&
-            walletName === 'Metamask' &&
-            provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
-            <>
-              <h3 className='title-connecting'>
-                {!!hintModal && hintModal.match(/(?:login)/i)
-                  ? hintModal
-                  : 'Connecting to '}
-              </h3>
-              <p>{'Follow the instructions in the popup'}</p>
-              <Spinner />
-            </>
-          ) : null}
-        </Modal>
-        <Modal
-          background={false}
-          classSpecifier={'wc'}
-          visible={false}
-          cancelAction={() => handleLogOut(false, '')}
-          centered
-        >
-          <h3 className='title-connecting'>
-            {'WalletConnect support will be enabled soon'}
-          </h3>
-          <button
-            className='btn submit-button'
-            onClick={() => handleLogOut(false, '')}
+        <LazyWallet />
+        <>
+          <Modal
+            background={false}
+            classSpecifier={`metamask ${
+              store.walletName
+                ? store.walletName.replace(/\s+/g, '').toLowerCase()
+                : 'primary-page'
+            }`}
+            visible={store.isAccessModalOpen}
+            cancelAction={() => handleLogOut(false, '')}
+            centered
           >
-            {'OK'}
-          </button>
-        </Modal>
-        {!walletName && (
-          <>
-            <div className='beta-container'>
-              <div className='logo-textless'></div>
-              <p className='beta-text'>{'BETA'}</p>
-            </div>
-            <div className='welcome-text'>
-              <h2>{'Simple, fast and secure token transfers'}</h2>
-              <p>{'Connect a wallet'}</p>
-            </div>
-            <div className='wallets-wrapper'>
-              {Object.keys(WALLETS).map(key => (
-                <button key={key} className='wallet-block'>
-                  <div
-                    className={`btn wallet-button ${key}`}
-                    key={key}
-                    onClick={() => {
-                      if (wallets.includes(key)) {
-                        key === 'WalletConnect' //TODO: just keep false condition later
-                          ? setModal('wc')
-                          : (setWalletName(key as WalletType),
-                            setNormalBg(true),
-                            setAccessModal(true));
-                        if (!provider?.selectedAddress) {
-                          zkWalletInitializing.set(true);
-                        }
-                      } else {
-                        setError(
-                          `Your browser doesn't support ${key}, please select another wallet or switch browser`,
-                        );
-                      }
-                    }}
-                  ></div>
-                  <p>{key}</p>
-                </button>
-              ))}
-            </div>
-          </>
-        )}
+            <div
+              className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
+            ></div>
+            {(provider && walletName !== 'Metamask') ||
+            (provider &&
+              walletName === 'Metamask' &&
+              provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
+              <>
+                <h3 className='title-connecting'>
+                  {!!hint && hint.match(/(?:login)/i) ? hint : 'Connecting to '}
+                </h3>
+                <p>{'Follow the instructions in the popup'}</p>
+                <Spinner />
+              </>
+            ) : null}
+          </Modal>
+          <Modal
+            background={false}
+            classSpecifier={'wc'}
+            visible={false}
+            cancelAction={() => handleLogOut(false, '')}
+            centered
+          >
+            <h3 className='title-connecting'>
+              {'WalletConnect support will be enabled soon'}
+            </h3>
+            <button
+              className='btn submit-button'
+              onClick={() => handleLogOut(false, '')}
+            >
+              {'OK'}
+            </button>
+          </Modal>
+          {!walletName && (
+            <>
+              <div className='beta-container'>
+                <div className='logo-textless'></div>
+                <p className='beta-text'>{'BETA'}</p>
+              </div>
+              <div className='welcome-text'>
+                <h2>{'Simple, fast and secure token transfers'}</h2>
+                <p>{'Connect a wallet'}</p>
+              </div>
+              <div className='wallets-wrapper'>
+                {Object.keys(WALLETS).map(key => (
+                  <button key={key} className='wallet-block'>
+                    <div
+                      className={`btn wallet-button ${key}`}
+                      key={key}
+                      onClick={selectWallet(key as WalletType)}
+                    ></div>
+                    <p>{key}</p>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
+        </>
       </>
-    </>
-  );
+    );
+  });
 };
 
 export default PrimaryPage;

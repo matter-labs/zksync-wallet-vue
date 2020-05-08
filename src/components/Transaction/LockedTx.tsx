@@ -6,16 +6,14 @@ import { useStore } from 'src/store/context';
 
 import './Transaction.scss';
 
-interface ICanceledTxProps {
+interface ILockedTx {
   handleCancel: () => void;
-  setWalletName: () => void;
+  handleUnlock: () => void;
 }
 
-export const CanceledTx: React.FC<ICanceledTxProps> = observer(
-  ({ handleCancel, setWalletName }): JSX.Element => {
+export const LockedTx: React.FC<ILockedTx> = observer(
+  ({ handleCancel, handleUnlock }): JSX.Element => {
     const store = useStore();
-
-    const { hint } = store;
 
     const history = useHistory();
 
@@ -26,14 +24,21 @@ export const CanceledTx: React.FC<ICanceledTxProps> = observer(
             handleCancel();
             store.walletAddress = [];
             store.transactionType = undefined;
-            setWalletName();
-            store.hint = '';
             history.push('/account');
           }}
           className='transaction-back'
         ></button>
-        <h1>{'Transaction canceled'}</h1>
-        <p>{hint}</p>
+        <div className='info-block center'>
+          <p>
+            {
+              'To control your account you need to unlock it once by registering your public key.'
+            }
+          </p>
+        </div>
+        <button className='btn submit-button' onClick={handleUnlock}>
+          <span className='submit-label unlock'></span>
+          {'Unlock'}
+        </button>
       </>
     );
   },
