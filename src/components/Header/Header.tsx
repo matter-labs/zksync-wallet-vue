@@ -6,8 +6,6 @@ import ChangeName from './ChangeName';
 import Modal from 'components/Modal/Modal';
 import { Link } from './Link';
 
-import { useRootData } from 'hooks/useRootData';
-
 import { HEADER_ITEMS } from 'constants/header';
 
 import { QRCode } from 'components/QRCode/QRCode';

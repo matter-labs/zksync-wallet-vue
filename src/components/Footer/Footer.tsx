@@ -2,9 +2,12 @@ import React, { useEffect, useState, useCallback } from 'react';
 
 import { FOOTER_LINKS } from 'constants/footer';
 
+import { CookieBar } from './CookieBar';
+
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
+
 import '../../index.scss';
 import './Footer.scss';
-import { CookieBar } from './CookieBar';
 
 const Footer: React.FC = (): JSX.Element => {
   const body = document.querySelector('body');
@@ -17,7 +20,7 @@ const Footer: React.FC = (): JSX.Element => {
     setDarkTheme(!darkTheme);
   }, [body, darkTheme]);
 
-  useEffect(() => {
+  useMobxEffect(() => {
     const theme = localStorage.getItem('darkTheme');
     if (theme) {
       try {
@@ -28,7 +31,7 @@ const Footer: React.FC = (): JSX.Element => {
     }
   }, []);
 
-  useEffect(() => {
+  useMobxEffect(() => {
     localStorage
       ? localStorage.setItem('darkTheme', JSON.stringify(darkTheme))
       : console.log('localStorage is not available');

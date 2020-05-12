@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 import cl from 'classnames';
 
 import { useLogout } from 'hooks/useLogout';
@@ -13,8 +14,6 @@ import { RIGHT_NETWORK_ID } from 'constants/networks';
 import './Modal.scss';
 import useWalletInit from 'src/hooks/useWalletInit';
 import { useStore } from 'src/store/context';
-import { useObserver, observer } from 'mobx-react-lite';
-import { autorun } from 'mobx';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 export interface ModalProps {
