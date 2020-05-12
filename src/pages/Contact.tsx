@@ -8,15 +8,15 @@ import deleteicon from 'images/mdi_delete.svg';
 import { WIDTH_BP } from 'constants/magicNumbers';
 import { Transition } from 'components/Transition/Transition';
 import { FloatingMenu } from 'src/components/Common/FloatingMenu';
+
+import { useStore } from 'src/store/context';
 import { useTimeout } from 'src/hooks/timers';
-import { useRootData } from 'src/hooks/useRootData';
 
 export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
   const history = useHistory();
 
-  const { setModal, setTransactionType, setWalletAddress } = useRootData(
-    s => s,
-  );
+  const store = useStore();
+
   const [copyOpened, setCopyOpened] = useState(false);
   useTimeout(() => copyOpened && setCopyOpened(false), 2000, [copyOpened]);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,9 +35,9 @@ export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
     [address],
   );
   const handleEdit = useCallback(() => {
-    setModal('add-contact edit-contact');
+    store.isModalOpen = 'add-contact edit-contact';
     onSetOldContact({ name: name, address: address });
-  }, [address, name, onSetOldContact, setModal]);
+  }, [address, name, onSetOldContact, store.isModalOpen]);
   const handleDelete = useCallback(
     e => {
       e.stopPropagation();
@@ -65,8 +65,8 @@ export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
         <button
           className='balances-contact-send btn-tr'
           onClick={() => {
-            setTransactionType('transfer');
-            setWalletAddress([name, address]);
+            store.transactionType = 'transfer';
+            store.walletAddress = { name, address };
             history.push('/send');
           }}
         >

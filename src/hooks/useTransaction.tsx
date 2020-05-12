@@ -30,7 +30,7 @@ export const useTransaction = () => {
   const cancelable = useCancelable();
 
   const [addressValue, setAddressValue] = useState<string>(
-    walletAddress.length === 2 ? walletAddress[1] : '',
+    walletAddress.address ? walletAddress.address : '',
   );
   const [amountValue, setAmountValue] = useState<any>(0);
   const [packableAmount, setPackableAmount] = useState<any>();

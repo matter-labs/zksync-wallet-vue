@@ -24,7 +24,7 @@ export const CanceledTx: React.FC<ICanceledTxProps> = observer(
         <button
           onClick={() => {
             handleCancel();
-            store.walletAddress = [];
+            store.walletAddress = {};
             store.transactionType = undefined;
             setWalletName();
             store.hint = '';

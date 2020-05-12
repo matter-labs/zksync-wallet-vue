@@ -65,7 +65,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
         {title === 'Send' && (
           <span className='transaction-field-title'>
             {'Recepient:'}
-            <h3>{walletAddress.length > 0 && walletAddress[0]}</h3>
+            <h3>{walletAddress.name && walletAddress.name}</h3>
             <p>{addressValue}</p>
           </span>
         )}
@@ -92,7 +92,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
           className='btn submit-button'
           onClick={() => {
             handleCancel();
-            store.walletAddress = [];
+            store.walletAddress = {};
             setTransactionType(undefined);
             history.push('/account');
           }}

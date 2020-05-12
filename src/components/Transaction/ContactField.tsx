@@ -26,10 +26,10 @@ export const ContactField: React.FC<IContactFieldProps> = observer(
     return (
       <div
         className={`custom-selector contacts ${
-          !!walletAddress[0] || !!selectedContact ? '' : 'disabled'
+          !!walletAddress.name || !!selectedContact ? '' : 'disabled'
         }`}
         onClick={() => {
-          if (walletAddress[0] || selectedContact) {
+          if (walletAddress.name || selectedContact) {
             openContactsList(!isContactsListOpen);
             body?.classList.add('fixed-b');
           }
@@ -37,11 +37,11 @@ export const ContactField: React.FC<IContactFieldProps> = observer(
       >
         <div
           className={`custom-selector-title ${
-            !!walletAddress[0] || !!selectedContact ? '' : 'disabled'
+            !!walletAddress.name || !!selectedContact ? '' : 'disabled'
           }`}
         >
-          <p>{walletAddress[0] ? walletAddress[0] : selectedContact}</p>
-          {(selectedContact || walletAddress[0]) && (
+          <p>{walletAddress.name ? walletAddress.name : selectedContact}</p>
+          {(selectedContact || walletAddress.name) && (
             <div className='arrow-down'></div>
           )}
         </div>

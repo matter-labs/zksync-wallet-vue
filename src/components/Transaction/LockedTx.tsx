@@ -22,7 +22,7 @@ export const LockedTx: React.FC<ILockedTx> = observer(
         <button
           onClick={() => {
             handleCancel();
-            store.walletAddress = [];
+            store.walletAddress = {};
             store.transactionType = undefined;
             history.push('/account');
           }}

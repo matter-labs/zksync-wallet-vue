@@ -68,7 +68,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
             {title === 'Send' && !isAccountUnlockingProcess && (
               <span className='transaction-field-title'>
                 <span>{'Recepient:'}</span>
-                <p>{walletAddress.length > 0 && walletAddress[0]}</p>
+                <p>{walletAddress.name && walletAddress.name}</p>
                 <p>{addressValue}</p>
               </span>
             )}
