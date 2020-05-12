@@ -23,7 +23,7 @@ export class Store {
   @observable hint = '';
   @observable normalBg = false;
   @observable isAccessModalOpen = false;
-  @observable isModalOpen = '';
+  @observable modalSpecifier = '';
   // path = observable.box<string>(window?.location.pathname);
   @observable price?: IPrice;
   // TODO: add explicit type
@@ -69,7 +69,7 @@ export class Store {
 
   @action
   performLogout(accessModal: boolean, walletName: WalletType) {
-    this.isModalOpen = '';
+    this.modalSpecifier = '';
     this.error = '';
     this.walletName = walletName;
     this.isAccessModalOpen = accessModal;
@@ -99,7 +99,7 @@ export const createStore = () => ({
   hint: observable.box<string>(''),
   normalBg: observable.box<boolean>(false),
   isAccessModalOpen: observable.box<boolean>(false),
-  isModalOpen: observable.box<string>(''),
+  modalSpecifier: observable.box<string>(''),
   path: observable.box<string>(window?.location.pathname),
   price: observable.box<IPrice>(),
   provider: observable.box<any>(),
@@ -173,8 +173,8 @@ export const createStore = () => ({
     this.normalBg.set(normalBg);
   },
 
-  setModal(isModalOpen: string): void {
-    this.isModalOpen.set(isModalOpen);
+  setModal(modalSpecifier: string): void {
+    this.modalSpecifier.set(modalSpecifier);
   },
 
   setPath(path: string): void {

@@ -1,7 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 
 import { DataList } from 'components/DataList/DataListNew';
-import { useRootData } from 'hooks/useRootData';
 import { useCheckLogin } from 'hooks/useCheckLogin';
 import { ethers } from 'ethers';
 import { getConfirmationCount } from 'src/utils';

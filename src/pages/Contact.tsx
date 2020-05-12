@@ -35,9 +35,9 @@ export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
     [address],
   );
   const handleEdit = useCallback(() => {
-    store.isModalOpen = 'add-contact edit-contact';
+    store.modalSpecifier = 'add-contact edit-contact';
     onSetOldContact({ name: name, address: address });
-  }, [address, name, onSetOldContact, store.isModalOpen]);
+  }, [address, name, onSetOldContact, store.modalSpecifier]);
   const handleDelete = useCallback(
     e => {
       e.stopPropagation();

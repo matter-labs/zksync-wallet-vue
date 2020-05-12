@@ -73,7 +73,7 @@ const PrimaryPage: React.FC = (): JSX.Element => {
     (key: WalletType) => () => {
       if (wallets.includes(key)) {
         if (key === 'WalletConnect') {
-          store.isModalOpen = 'wc';
+          store.modalSpecifier = 'wc';
         } else {
           store.setBatch({
             walletName: key,

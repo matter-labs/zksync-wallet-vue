@@ -34,7 +34,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
       if (addressValue) {
         setAddress(addressValue);
       }
-    }, [addressValue, setAddress, store.isModalOpen]);
+    }, [addressValue, setAddress, store.modalSpecifier]);
 
     const handleSave = useCallback(
       e => {
@@ -78,12 +78,12 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
             );
           }
           if (onSaveContact) onSaveContact();
-          store.isModalOpen = '';
-          const arr: any = localStorage.getItem(
+          store.modalSpecifier = '';
+          const arr: string | null = localStorage.getItem(
             `contacts${zkWallet?.address()}`,
           );
-          const acontacts = JSON.parse(arr);
-          store.searchContacts = acontacts;
+          const parsedContacts = JSON.parse(arr as string);
+          store.searchContacts = parsedContacts;
         } else if (!name) {
           setConditionError('Error: name cannot be empty');
         } else {
@@ -101,7 +101,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
         name,
         setConditionError,
         oldContact,
-        store.isModalOpen,
+        store.modalSpecifier,
         store.searchContacts,
         zkWallet,
         onSaveContact,
