@@ -49,12 +49,14 @@ export async function getConfirmationCount(
   txHash: string,
 ) {
   try {
-    const trx = await provider.getTransaction(txHash);
+    const trx = await provider.getTransaction(txHash.replace('sync-tx:', ''));
     const currentBlock = await provider.getBlockNumber();
 
     if (typeof trx.blockNumber === 'undefined') return 0;
     return currentBlock - trx.blockNumber;
+    // return trx.confirmations;
   } catch (error) {
+    console.error('Confirmation count error', error);
     return 0;
   }
 }
@@ -141,6 +143,12 @@ export async function loadTokens(
     },
   );
 
+  console.log({
+    tokens,
+    zkBalances,
+    ethBalances,
+    error,
+  });
   return {
     tokens,
     zkBalances,

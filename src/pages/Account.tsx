@@ -68,9 +68,10 @@ const Account: React.FC = observer(() => {
           }
         },
       );
+      console.log('Refreshed balances.');
+      const timeout = setTimeout(refreshBalances, 2000);
+      setRefreshTimer(timeout as any);
     }
-    const timeout = setTimeout(refreshBalances, 2000);
-    setRefreshTimer(timeout as any);
   }, [cancelable, store]);
 
   useMobxEffect(() => {

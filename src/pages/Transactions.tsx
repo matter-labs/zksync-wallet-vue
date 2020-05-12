@@ -7,7 +7,7 @@ import { ethers } from 'ethers';
 import { getConfirmationCount } from 'src/utils';
 import { Transaction } from './Transaction';
 import { useStore } from 'src/store/context';
-import { useObserver } from 'mobx-react-lite';
+import { useObserver, observer } from 'mobx-react-lite';
 
 export interface Tx {
   hash: string;
@@ -38,12 +38,8 @@ export interface Tx {
   confirmCount: number;
 }
 
-const Transactions: React.FC = (): JSX.Element => {
+const Transactions: React.FC = observer(() => {
   const store = useStore();
-  // const { zkWallet, provider } = useRootData(s => ({
-  //   provider: s.provider.get(),
-  //   zkWallet: s.zkWallet.get(),
-  // }));
 
   const web3Provider = useMemo(
     () => store.provider && new ethers.providers.Web3Provider(store.provider),
@@ -69,12 +65,19 @@ const Transactions: React.FC = (): JSX.Element => {
     [store.zkWalletAddress, web3Provider],
   );
 
+  const setTxs = useCallback(
+    data => {
+      store.setTxs(data);
+    },
+    [store],
+  );
+
   useCheckLogin();
 
-  return useObserver(() => (
+  return (
     <DataList
       onFetch={fetchTransactions}
-      bindData={[store.transactions, store.setTxs.bind(store)]}
+      bindData={[store.transactions, setTxs]}
       title='Transactions'
       visible={true}
       onSort={arr => arr.slice().reverse()}
@@ -85,7 +88,7 @@ const Transactions: React.FC = (): JSX.Element => {
       infScrollInitialCount={30}
       refreshInterval={store.zkWallet ? 2e3 : 0}
     />
-  ));
-};
+  );
+});
 
 export default Transactions;

@@ -15,6 +15,7 @@ import { Props } from './DataListProps';
 
 import './DataList.scss';
 import { useInterval } from 'src/hooks/timers';
+import { whyDidYouUpdate } from 'src/utils';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   if (typeof o === 'object') {
@@ -29,6 +30,7 @@ const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
 
 const noop = () => null;
 
+const didUpdate = whyDidYouUpdate();
 export function DataList<T>({
   data,
   onFetch,
@@ -107,6 +109,14 @@ export function DataList<T>({
     loadMoreAmount,
   ]);
 
+  didUpdate({
+    onFetch,
+    itemAmount,
+    setBinded,
+    cancelable,
+    infScrollInitialCount,
+    loadMoreAmount,
+  });
   useEffect(() => {
     if (!hasMore || typeof onFetch !== 'function') return;
     refreshData()?.then(length => {

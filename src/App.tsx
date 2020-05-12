@@ -89,10 +89,12 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         if (savedWalletName) {
           store.walletName = savedWalletName;
         }
-        store.zkWallet = null;
-        store.zkBalances = [];
-        store.isAccessModalOpen = false;
-        store.transactions = [];
+        store.setBatch({
+          zkWallet: null,
+          zkBalances: [],
+          isAccessModalOpen: false,
+          transactions: [],
+        });
       }
     };
     provider.on('accountsChanged', accountChangeListener);
