@@ -93,7 +93,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
           onClick={() => {
             handleCancel();
             store.walletAddress = {};
-            setTransactionType(undefined);
+            store.transactionType = undefined;
             history.push('/account');
           }}
         >

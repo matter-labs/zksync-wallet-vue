@@ -26,7 +26,7 @@ export const Withdraw: React.FC = observer(
 
     const store = useStore();
 
-    const { price, transactionType, zkBalances } = store;
+    const { price, zkBalances } = store;
 
     useCheckLogin();
 

@@ -78,7 +78,7 @@ const Header: React.FC = observer(() => {
               type='button'
               className='menu-wallet btn-tr'
               onClick={() => {
-                store.isModalOpen = 'wallet';
+                store.modalSpecifier = 'wallet';
               }}
             >
               <p>
@@ -124,7 +124,7 @@ const Header: React.FC = observer(() => {
                 <button
                   className='btn-tr'
                   onClick={() => {
-                    store.isModalOpen = 'qr';
+                    store.modalSpecifier = 'qr';
                   }}
                 >
                   <span className='icon-qr'></span>

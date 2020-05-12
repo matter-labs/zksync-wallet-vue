@@ -79,8 +79,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const [amount, setAmount] = useState<number>(0);
     const [conditionError, setConditionError] = useState('');
-    const [gas, setGas] = useState<any>(0);
-    const [fee, setFee] = useState<any>();
+    const [gas, setGas] = useState<string>('');
+    const [fee, setFee] = useState<string>('');
     const [filteredContacts, setFilteredContacts] = useState<any>([]);
     const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
     const [isContactsListOpen, openContactsList] = useState<boolean>(false);
@@ -160,13 +160,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
           setInputValue(e);
           title === 'Deposit'
             ? onChangeAmount(
-                +amountNumber + gas >
+                +amountNumber + +gas >
                   +ethers.utils.parseEther(maxValue.toString())
                   ? +amountNumber
                   : +amountNumber,
               )
             : onChangeAmount(
-                +amountNumber + fee >=
+                +amountNumber + +fee >=
                   +ethers.utils.parseEther(maxValue.toString())
                   ? +amountNumber
                   : +amountNumber,
@@ -176,8 +176,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
       [fee, gas, maxValue, onChangeAmount, setInputValue, title],
     );
 
-    const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
-    const contacts = JSON.parse(arr);
+    const arr: string | null = localStorage.getItem(
+      `contacts${zkWallet?.address()}`,
+    );
+    const contacts = JSON.parse(arr as string);
 
     const setWalletName = useCallback(() => {
       if (value && value !== ethId) {
@@ -213,7 +215,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const handleSave = useCallback(() => {
       if (addressValue && ADDRESS_VALIDATION['eth'].test(addressValue)) {
-        store.isModalOpen = 'add-contact';
+        store.modalSpecifier = 'add-contact';
       } else {
         setConditionError(
           `Error: "${addressValue}" doesn't match ethereum address format`,
