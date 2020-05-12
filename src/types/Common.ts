@@ -39,3 +39,8 @@ export interface IFooterLinks {
 export interface IPrice {
   [price: string]: number;
 }
+
+export interface IContactNameValue {
+  name?: string;
+  address?: string;
+}

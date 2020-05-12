@@ -1,5 +1,7 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import qrcode from 'qrcode-generator';
+
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 interface Props {
   data: string;
@@ -8,7 +10,7 @@ interface Props {
 export const QRCode: FC<Props> = ({ data }) => {
   const [imgTag, setImgTag] = useState('');
 
-  useEffect(() => {
+  useMobxEffect(() => {
     const qr = qrcode(4, 'L');
     qr.addData(data);
     qr.make();

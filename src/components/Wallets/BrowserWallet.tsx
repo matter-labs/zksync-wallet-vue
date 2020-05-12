@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 
 import useWalletInit from 'hooks/useWalletInit';
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 import { useStore } from 'src/store/context';
@@ -13,7 +14,7 @@ const BrowserWallet: React.FC = () => {
 
   const history = useHistory();
 
-  useEffect(() => {
+  useMobxEffect(() => {
     const ar = autorun(() => {
       try {
         if (!store.provider) {

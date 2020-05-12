@@ -9,6 +9,7 @@ import { fetchTransactions } from 'src/api';
 import { useLogout } from './useLogout';
 import { loadTokens } from 'src/utils';
 import { useStore } from 'src/store/context';
+import { getEthSignatureType } from 'zksync/build/utils';
 
 const useWalletInit = () => {
   const store = useStore();
@@ -16,6 +17,8 @@ const useWalletInit = () => {
 
   const connect = useCallback(
     (provider, signUp) => {
+      store.zkWalletInitializing = true;
+
       if (provider) {
         signUp()
           .then(async res => {
@@ -49,23 +52,22 @@ const useWalletInit = () => {
     try {
       const zkSync = await import('zksync');
       store.zkWalletInitializing = true;
-      // zkWalletInitializing.set(true);
 
       const provider = store.provider;
       const wallet = getSigner(provider);
       store.ethWallet = wallet;
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-
       const syncProvider = await zkSync.getDefaultProvider(network, 'WS');
       const signer = await zkSync.Signer.fromETHSignature(
         wallet as ethers.providers.JsonRpcSigner,
       );
+
       const syncWallet = await zkSync.Wallet.fromEthSigner(
         wallet as ethers.providers.JsonRpcSigner,
         syncProvider,
-        signer,
       );
+
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
 

@@ -2,6 +2,7 @@ import React, { useEffect, useCallback, useRef } from 'react';
 
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 import { useRootData } from 'hooks/useRootData';
 
@@ -21,7 +22,7 @@ const DataList: React.FC<IBalancesProps> = ({
     setModal,
   }));
 
-  useEffect(() => {
+  useMobxEffect(() => {
     setValue(data);
   }, [setValue]); // don't add data to the dependencies for preventing infinite loop
 

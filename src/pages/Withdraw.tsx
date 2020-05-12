@@ -1,57 +1,56 @@
 import React from 'react';
-import { useCheckLogin } from 'src/hooks/useCheckLogin';
+import { observer } from 'mobx-react-lite';
 
 import Transaction from 'components/Transaction/Transaction';
 
-import { useRootData } from 'hooks/useRootData';
 import { useTransaction } from 'hooks/useTransaction';
+import { useCheckLogin } from 'src/hooks/useCheckLogin';
+import { useStore } from 'src/store/context';
 
-export const Withdraw: React.FC = (): JSX.Element => {
-  const {
-    addressValue,
-    amountValue,
-    hash,
-    isExecuted,
-    isLoading,
-    setAddressValue,
-    setAmountValue,
-    setHash,
-    setExecuted,
-    setLoading,
-    setSymbol,
-    withdraw,
-  } = useTransaction();
+export const Withdraw: React.FC = observer(
+  (): JSX.Element => {
+    const {
+      addressValue,
+      amountValue,
+      hash,
+      isExecuted,
+      isLoading,
+      setAddressValue,
+      setAmountValue,
+      setHash,
+      setExecuted,
+      setLoading,
+      setSymbol,
+      withdraw,
+    } = useTransaction();
 
-  const { price, setTransactionType, zkBalances } = useRootData(
-    ({ price, setTransactionType, zkBalances }) => ({
-      price: price.get(),
-      setTransactionType,
-      zkBalances: zkBalances.get(),
-    }),
-  );
+    const store = useStore();
 
-  useCheckLogin();
+    const { price, transactionType, zkBalances } = store;
 
-  return (
-    <Transaction
-      addressValue={addressValue}
-      amountValue={amountValue}
-      balances={zkBalances}
-      hash={hash}
-      isExecuted={isExecuted}
-      isInput={true}
-      isLoading={isLoading}
-      onChangeAddress={(e: string) => setAddressValue(e)}
-      onChangeAmount={setAmountValue}
-      price={price}
-      setHash={setHash}
-      setExecuted={setExecuted}
-      setLoading={setLoading}
-      setTransactionType={setTransactionType}
-      setSymbol={setSymbol}
-      title='Withdraw'
-      transactionAction={withdraw}
-      type='eth'
-    />
-  );
-};
+    useCheckLogin();
+
+    return (
+      <Transaction
+        addressValue={addressValue}
+        amountValue={amountValue}
+        balances={zkBalances}
+        hash={hash}
+        isExecuted={isExecuted}
+        isInput={true}
+        isLoading={isLoading}
+        onChangeAddress={(e: string) => setAddressValue(e)}
+        onChangeAmount={setAmountValue}
+        price={price}
+        setHash={setHash}
+        setExecuted={setExecuted}
+        setLoading={setLoading}
+        setTransactionType={t => (store.transactionType = t)}
+        setSymbol={setSymbol}
+        title='Withdraw'
+        transactionAction={withdraw}
+        type='eth'
+      />
+    );
+  },
+);

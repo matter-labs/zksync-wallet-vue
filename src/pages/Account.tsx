@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useState, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
@@ -12,7 +6,6 @@ import { DataList } from 'components/DataList/DataListNew';
 import MyWallet from 'components/Wallets/MyWallet';
 import SpinnerWorm from 'components/Spinner/SpinnerWorm';
 
-import { useRootData } from 'hooks/useRootData';
 import { useTransaction } from 'hooks/useTransaction';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useCancelable } from 'hooks/useCancelable';
