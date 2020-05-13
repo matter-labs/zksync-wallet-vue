@@ -1,5 +1,5 @@
 import React from 'react';
 
-const DefaultWallet: React.FC = (): JSX.Element => <></>;
+const DefaultWallet: React.FC = () => null;
 
 export default DefaultWallet;

@@ -2,8 +2,9 @@ import React, { Suspense } from 'react';
 
 import { WALLETS } from 'constants/Wallets';
 import { useStore } from 'src/store/context';
+import { observer } from 'mobx-react-lite';
 
-const LazyWallet: React.FC = () => {
+const LazyWallet: React.FC = observer(() => {
   const store = useStore();
 
   const Wallet = React.lazy(
@@ -17,6 +18,6 @@ const LazyWallet: React.FC = () => {
       <Wallet />
     </Suspense>
   );
-};
+});
 
 export default LazyWallet;
