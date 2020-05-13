@@ -48,9 +48,6 @@ const Wrapper = ({ children, status }) => (
 
 export const TxStatus: FC<{ tx: Tx }> = ({ tx }) => {
   const status = getTxStatus(tx);
-  if (status.endsWith('confirmations')) {
-    console.log({ hash: tx.hash, confirmations: tx.confirmCount });
-  }
   const val = tx.confirmCount / (MAX_CONFIRM || 1);
 
   // Chechbox
