@@ -3,6 +3,8 @@ import { ethers } from 'ethers';
 
 import { useCancelable } from 'hooks/useCancelable';
 
+import { IEthBalance } from 'types/Common';
+
 import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
 import { fetchTransactions } from 'src/api';
@@ -92,8 +94,30 @@ const useWalletInit = () => {
       if (error) {
         store.error = error;
       }
+
+      const balancePromises = Object.keys(tokens).map(async key => {
+        if (tokens[key].symbol) {
+          const balance = await syncWallet.getEthereumBalance(key);
+          return {
+            address: tokens[key].address,
+            balance: +balance / Math.pow(10, 18),
+            symbol: tokens[key].symbol,
+          };
+        }
+      });
+
+      await Promise.all(balancePromises)
+        .then(res => {
+          const balance = res.filter(token => token);
+          store.ethBalances = balance as IEthBalance[];
+        })
+        .catch(err => {
+          err.name && err.message
+            ? (store.error = `${err.name}: ${err.message}`)
+            : (store.error = DEFAULT_ERROR);
+        });
+
       store.tokens = tokens;
-      store.ethBalances = ethBalances;
       store.searchBalances = zkBalances;
       store.zkBalances = zkBalances;
       store.zkBalancesLoaded = true;
