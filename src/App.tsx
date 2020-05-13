@@ -15,9 +15,12 @@ import { useInterval } from './hooks/timers';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './store/context';
 import { useMobxEffect } from './hooks/useMobxEffect';
+import { useLocation } from 'react-router-dom';
+import { getWalletNameFromProvider } from './utils';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
+  const { pathname } = useLocation();
 
   useWSHeartBeat();
   const cancelable = useCancelable();
@@ -42,8 +45,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
 
   // Listen for network change
   useMobxEffect(() => {
-    const provider = store.provider;
-    const walletName = store.walletName;
+    const { provider, walletName } = store;
     if (provider && walletName === 'Metamask') {
       window['ethereum'].autoRefreshOnNetworkChange = false;
 
@@ -64,20 +66,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
   });
 
-  const logout = useLogout();
-
   // Listen for account change
   useMobxEffect(() => {
-    const provider = store.provider;
-    const walletName = store.walletName;
+    const { provider, walletName, zkWallet } = store;
 
-    if (store.zkWallet) {
+    if (zkWallet) {
       store.isAccessModalOpen = false;
     }
     if (!provider || walletName !== 'Metamask') return;
     const accountChangeListener = () => {
       if (
-        store.zkWallet &&
+        zkWallet &&
         provider &&
         store.zkWalletAddress?.toLowerCase() !==
           provider.selectedAddress.toLowerCase()
@@ -89,15 +88,28 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         if (savedWalletName) {
           store.walletName = savedWalletName;
         }
-        store.zkWallet = null;
-        store.zkBalances = [];
-        store.isAccessModalOpen = false;
-        store.transactions = [];
+        store.setBatch({
+          zkWallet: null,
+          zkBalances: [],
+          isAccessModalOpen: true,
+          transactions: [],
+        });
       }
     };
     provider.on('accountsChanged', accountChangeListener);
     return () => provider.off('accountsChanged', accountChangeListener);
   });
+
+  useMobxEffect(() => {
+    const { loggedIn, provider, walletName } = store;
+    if (provider && walletName) return;
+    if (!loggedIn) return;
+    store.setBatch({
+      isAccessModalOpen: true,
+      provider: window['ethereum'],
+      walletName: getWalletNameFromProvider() as WalletType,
+    });
+  }, [pathname]);
 
   return (
     <div className={`content-wrapper ${store.walletName ? '' : 'start-page'}`}>

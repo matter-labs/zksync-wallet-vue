@@ -1,6 +1,12 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, autorun } from 'mobx';
 
-import { IContacts, IEthBalance, IPrice, ITransaction } from '../types/Common';
+import {
+  IContacts,
+  IEthBalance,
+  IPrice,
+  ITransaction,
+  IContactNameValue,
+} from '../types/Common';
 import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Tokens, AccountState } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
@@ -9,6 +15,7 @@ import { WalletType } from 'constants/Wallets';
 import { Tx } from 'src/pages/Transactions';
 
 export class Store {
+  @observable loggedIn = true;
   @observable depositModal = false;
   @observable error = '';
   @observable ethBalances: IEthBalance[] = [];
@@ -17,7 +24,7 @@ export class Store {
   @observable hint = '';
   @observable normalBg = false;
   @observable isAccessModalOpen = false;
-  @observable isModalOpen = '';
+  @observable modalSpecifier = '';
   // path = observable.box<string>(window?.location.pathname);
   @observable price?: IPrice;
   // TODO: add explicit type
@@ -36,7 +43,7 @@ export class Store {
   @observable verified: any;
   @observable walletName: WalletType = '';
   // TODO: add explicit type
-  @observable walletAddress: any = [];
+  @observable walletAddress: IContactNameValue = {};
   @observable zkBalances: IEthBalance[] = [];
   @observable zkBalancesLoaded = false;
   @observable zkWallet: Wallet | null = null;
@@ -63,7 +70,7 @@ export class Store {
 
   @action
   performLogout(accessModal: boolean, walletName: WalletType) {
-    this.isModalOpen = '';
+    this.modalSpecifier = '';
     this.error = '';
     this.walletName = walletName;
     this.isAccessModalOpen = accessModal;
@@ -74,12 +81,22 @@ export class Store {
     this.provider = false;
     this.hint = '';
     this.zkWalletInitializing = false;
+    this.loggedIn = false;
   }
 
   @action
   setBatch<K extends keyof Store>(batch: Record<K, any>) {
     Object.keys(batch).forEach(k => {
       this[k] = batch[k];
+    });
+  }
+
+  constructor() {
+    autorun(() => {
+      console.log({
+        isAccessModalOpen: this.isAccessModalOpen,
+        walletName: this.walletName,
+      });
     });
   }
 }
@@ -93,7 +110,7 @@ export const createStore = () => ({
   hint: observable.box<string>(''),
   normalBg: observable.box<boolean>(false),
   isAccessModalOpen: observable.box<boolean>(false),
-  isModalOpen: observable.box<string>(''),
+  modalSpecifier: observable.box<string>(''),
   path: observable.box<string>(window?.location.pathname),
   price: observable.box<IPrice>(),
   provider: observable.box<any>(),
@@ -167,8 +184,8 @@ export const createStore = () => ({
     this.normalBg.set(normalBg);
   },
 
-  setModal(isModalOpen: string): void {
-    this.isModalOpen.set(isModalOpen);
+  setModal(modalSpecifier: string): void {
+    this.modalSpecifier.set(modalSpecifier);
   },
 
   setPath(path: string): void {

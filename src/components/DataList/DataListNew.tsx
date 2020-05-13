@@ -1,20 +1,16 @@
-import React, {
-  useEffect,
-  useState,
-  useMemo,
-  useRef,
-  useCallback,
-} from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import cl from 'classnames';
 
 import { useAutoFocus } from 'hooks/useAutoFocus';
 import { useDebouncedValue } from 'hooks/debounce';
 import { useListener } from 'hooks/useListener';
 import { useCancelable } from 'hooks/useCancelable';
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
 import { Props } from './DataListProps';
 
 import './DataList.scss';
 import { useInterval } from 'src/hooks/timers';
+import { whyDidYouUpdate } from 'src/utils';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   if (typeof o === 'object') {
@@ -29,6 +25,7 @@ const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
 
 const noop = () => null;
 
+const didUpdate = whyDidYouUpdate();
 export function DataList<T>({
   data,
   onFetch,
@@ -107,7 +104,7 @@ export function DataList<T>({
     loadMoreAmount,
   ]);
 
-  useEffect(() => {
+  useMobxEffect(() => {
     if (!hasMore || typeof onFetch !== 'function') return;
     refreshData()?.then(length => {
       if (!length) setHasMore(false);
@@ -121,7 +118,7 @@ export function DataList<T>({
     () => setScrollTop(rootRef.current!.scrollTop),
     { passive: true },
   );
-  useEffect(() => {
+  useMobxEffect(() => {
     const root = rootRef.current;
     if (!(infScrollInitialCount && root && hasMore)) return;
     const loadMore =
@@ -141,7 +138,7 @@ export function DataList<T>({
   useInterval(refreshData, refreshInterval, [], refreshInterval > 0);
 
   // Search hook
-  useEffect(() => {
+  useMobxEffect(() => {
     const resolvedData = getData();
     if (!(searchPredicate && debouncedSearch && resolvedData.length)) return;
     if (!debouncedSearch) {

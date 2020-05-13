@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import makeBlockie from 'ethereum-blockies-base64';
@@ -28,6 +28,8 @@ import { useMobxEffect } from 'src/hooks/useMobxEffect';
 import { loadTokens } from 'src/utils';
 
 import './Transaction.scss';
+import { IChangeNameProps } from '../Header/Types';
+import { IContactNameValue } from 'src/types/Common';
 
 const Transaction: React.FC<ITransactionProps> = observer(
   ({
@@ -77,8 +79,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const [amount, setAmount] = useState<number>(0);
     const [conditionError, setConditionError] = useState('');
-    const [gas, setGas] = useState<any>(0);
-    const [fee, setFee] = useState<any>();
+    const [gas, setGas] = useState<string>('');
+    const [fee, setFee] = useState<string>('');
     const [filteredContacts, setFilteredContacts] = useState<any>([]);
     const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
     const [isContactsListOpen, openContactsList] = useState<boolean>(false);
@@ -158,13 +160,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
           setInputValue(e);
           title === 'Deposit'
             ? onChangeAmount(
-                +amountNumber + gas >
+                +amountNumber + +gas >
                   +ethers.utils.parseEther(maxValue.toString())
                   ? +amountNumber
                   : +amountNumber,
               )
             : onChangeAmount(
-                +amountNumber + fee >=
+                +amountNumber + +fee >=
                   +ethers.utils.parseEther(maxValue.toString())
                   ? +amountNumber
                   : +amountNumber,
@@ -174,8 +176,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
       [fee, gas, maxValue, onChangeAmount, setInputValue, title],
     );
 
-    const arr: any = localStorage.getItem(`contacts${zkWallet?.address()}`);
-    const contacts = JSON.parse(arr);
+    const arr: string | null = localStorage.getItem(
+      `contacts${zkWallet?.address()}`,
+    );
+    const contacts = JSON.parse(arr as string);
 
     const setWalletName = useCallback(() => {
       if (value && value !== ethId) {
@@ -211,7 +215,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const handleSave = useCallback(() => {
       if (addressValue && ADDRESS_VALIDATION['eth'].test(addressValue)) {
-        store.isModalOpen = 'add-contact';
+        store.modalSpecifier = 'add-contact';
       } else {
         setConditionError(
           `Error: "${addressValue}" doesn't match ethereum address format`,
@@ -234,14 +238,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const handleFilterContacts = useCallback(
       e => {
         if (!contacts) return;
-        const searchValue = contacts.filter(el => {
+        const searchValue = contacts.filter(({ name, address }) => {
           return ADDRESS_VALIDATION['eth'].test(e) &&
-            el.address.toLowerCase().includes(e.toLowerCase())
-            ? (setSelectedContact(el.name),
-              handleSelect(el.name),
-              (store.walletAddress = [el.name, el.address]),
-              onChangeAddress(el.address))
-            : el.name.toLowerCase().includes(e.toLowerCase());
+            address.toLowerCase().includes(e.toLowerCase())
+            ? (setSelectedContact(name),
+              handleSelect(name),
+              (store.walletAddress = { name, address }),
+              onChangeAddress(address))
+            : name.toLowerCase().includes(e.toLowerCase());
         });
         setFilteredContacts(searchValue);
       },
@@ -260,7 +264,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       setTransactionType(undefined);
       setHash('');
       setExecuted(false);
-      store.walletAddress = [];
+      store.walletAddress = {};
       setLoading(false);
       setSelectedBalance('');
       setSelectedContact('');
@@ -278,15 +282,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
       store,
     ]);
 
-    useEffect(() => {
+    useMobxEffect(() => {
       if (
         title === 'Withdraw' &&
         zkWallet &&
-        walletAddress.length < 2 &&
-        !walletAddress[1] &&
+        walletAddress.address &&
         selectedContact !== null
       ) {
-        store.walletAddress = ['Own account', zkWallet?.address()];
+        store.walletAddress = {
+          name: 'Own account',
+          address: zkWallet?.address(),
+        };
         onChangeAddress(zkWallet?.address());
       }
     }, []);
@@ -296,11 +302,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
         title === 'Deposit' ? store.ethBalances : zkBalances;
     };
 
-    useEffect(() => {
+    useMobxEffect(() => {
       cancelable(initWallet);
     }, [store.ethBalances]);
 
-    useEffect(() => {
+    useMobxEffect(() => {
       cancelable(zkWallet?.getAccountState()).then((res: any) => {
         store.verified = res?.verified.balances;
         res?.id
@@ -311,7 +317,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       });
     }, [cancelable, store, zkWallet]);
 
-    useEffect(() => {
+    useMobxEffect(() => {
       if ((token && token === 'ETH') || symbolName === 'ETH') {
         setUnlockFau(true);
       }
@@ -336,7 +342,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           if (el.address.toLowerCase().includes(addressValue.toLowerCase())) {
             setSelectedContact(el.name);
             handleSelect(el.name);
-            store.walletAddress = [el.name, el.address];
+            store.walletAddress = { name: el.name, address: el.address };
             onChangeAddress(el.address);
           }
         });
@@ -475,7 +481,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const selectFilteredContact = (name, address) => {
       handleSelect(name);
-      store.walletAddress = [name, address];
+      store.walletAddress = { name, address };
       onChangeAddress(address);
       openContactsList(false);
       setSelectedContact(name);
@@ -490,7 +496,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         key={name}
         onClick={() => {
           handleSelect(name);
-          store.walletAddress = [name, address];
+          store.walletAddress = { name, address };
           onChangeAddress(address);
           openContactsList(false);
           setConditionError('');
@@ -669,7 +675,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               <button
                 onClick={() => {
                   handleCancel();
-                  store.walletAddress = [];
+                  store.walletAddress = {};
                   setTransactionType(undefined);
                   history.push('/account');
                 }}
@@ -709,7 +715,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               onChange={e => {
                                 onChangeAddress(e.target.value);
                                 handleFilterContacts(e.target.value);
-                                store.walletAddress = [];
+                                store.walletAddress = {};
                                 if (
                                   ADDRESS_VALIDATION['eth'].test(addressValue)
                                 ) {
@@ -720,7 +726,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             />
                             {ADDRESS_VALIDATION['eth'].test(addressValue) &&
                               !selectedContact &&
-                              !walletAddress[0] && (
+                              !walletAddress.name && (
                                 <button
                                   className='add-contact-button-input btn-tr'
                                   onClick={() => handleSave()}
@@ -733,8 +739,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               <div
                                 className={`custom-selector contacts ${
                                   selectedContact &&
-                                  walletAddress.length === 2 &&
-                                  addressValue === walletAddress[1]
+                                  walletAddress.address &&
+                                  addressValue === walletAddress.address
                                     ? ''
                                     : 'short'
                                 }`}
@@ -746,15 +752,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   }}
                                   className={`custom-selector-title ${
                                     selectedContact &&
-                                    walletAddress.length === 2 &&
-                                    addressValue === walletAddress[1]
+                                    walletAddress.address &&
+                                    addressValue === walletAddress.address
                                       ? ''
                                       : 'short'
                                   }`}
                                 >
-                                  {(selectedContact || !walletAddress[0]) &&
-                                  walletAddress.length === 2 &&
-                                  addressValue === walletAddress[1] ? (
+                                  {(selectedContact || !walletAddress.name) &&
+                                  walletAddress.address &&
+                                  addressValue === walletAddress.address ? (
                                     <p>{selectedContact}</p>
                                   ) : (
                                     <span></span>
@@ -768,7 +774,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 onClick={() => {
                                   onChangeAddress('');
                                   handleFilterContacts('');
-                                  store.walletAddress = [];
+                                  store.walletAddress = {};
                                   setSelectedContact(null);
                                 }}
                               ></button>
@@ -777,7 +783,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                         </div>
                         {!!filteredContacts.length &&
                           addressValue &&
-                          walletAddress.length < 2 && (
+                          walletAddress.address && (
                             <FilteredContactList
                               filteredContacts={filteredContacts}
                               selectFilteredContact={selectFilteredContact}

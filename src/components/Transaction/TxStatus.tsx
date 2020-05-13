@@ -10,6 +10,13 @@ export interface PieProps {
 
 const MAX_CONFIRM = 25;
 
+export function getTxStatus(tx: Tx) {
+  const { commited, verified, confirmCount } = tx;
+  if (!commited && !verified) return 'Not commited & unverified';
+  if (verified) return 'Verified';
+  return `${confirmCount}/${MAX_CONFIRM} confirmations`;
+}
+
 export function getPieProps(tx: Tx) {
   const { commited, verified, confirmCount } = tx;
   if (commited && !verified)
@@ -40,8 +47,11 @@ const Wrapper = ({ children, status }) => (
 );
 
 export const TxStatus: FC<{ tx: Tx }> = ({ tx }) => {
-  const { value, status } = getPieProps(tx);
-  const val = value / MAX_CONFIRM;
+  const status = getTxStatus(tx);
+  if (status.endsWith('confirmations')) {
+    console.log({ hash: tx.hash, confirmations: tx.confirmCount });
+  }
+  const val = tx.confirmCount / (MAX_CONFIRM || 1);
 
   // Chechbox
   if (tx.verified || tx.tx.type !== 'Deposit') {

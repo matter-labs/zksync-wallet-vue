@@ -1,13 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
+import { observer } from 'mobx-react-lite';
 
-import { useRootData } from 'hooks/useRootData';
+import { useStore } from 'src/store/context';
+
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 import { IChangeNameProps } from './Types';
 
-const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }) => {
-  const { zkWallet } = useRootData(({ zkWallet }) => ({
-    zkWallet: zkWallet.get(),
-  }));
+const ChangeName: React.FC<IChangeNameProps> = observer(({ setModalOpen }) => {
+  const store = useStore();
+
+  const { zkWallet } = store;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -26,7 +29,7 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }) => {
     [newName, setModalOpen, zkWallet],
   );
 
-  useEffect(() => {
+  useMobxEffect(() => {
     inputRef.current?.focus();
   }, []);
 
@@ -44,10 +47,10 @@ const ChangeName: React.FC<IChangeNameProps> = ({ setModalOpen }) => {
         onClick={handleChangeName}
         className='btn btn-tr submit-button'
       >
-        Save
+        {'Save'}
       </button>
     </form>
   );
-};
+});
 
 export default ChangeName;

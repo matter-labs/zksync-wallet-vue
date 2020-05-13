@@ -6,8 +6,6 @@ import ChangeName from './ChangeName';
 import Modal from 'components/Modal/Modal';
 import { Link } from './Link';
 
-import { useRootData } from 'hooks/useRootData';
-
 import { HEADER_ITEMS } from 'constants/header';
 
 import { QRCode } from 'components/QRCode/QRCode';
@@ -80,7 +78,7 @@ const Header: React.FC = observer(() => {
               type='button'
               className='menu-wallet btn-tr'
               onClick={() => {
-                store.isModalOpen = 'wallet';
+                store.modalSpecifier = 'wallet';
               }}
             >
               <p>
@@ -126,7 +124,7 @@ const Header: React.FC = observer(() => {
                 <button
                   className='btn-tr'
                   onClick={() => {
-                    store.isModalOpen = 'qr';
+                    store.modalSpecifier = 'qr';
                   }}
                 >
                   <span className='icon-qr'></span>

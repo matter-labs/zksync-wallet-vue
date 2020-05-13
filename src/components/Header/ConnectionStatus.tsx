@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useRootData } from 'src/hooks/useRootData';
+import React, { useState } from 'react';
+import { observer } from 'mobx-react-lite';
+
+import { useStore } from 'src/store/context';
+
 import { Transition } from '../Transition/Transition';
+
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
 import { useTimeout } from 'src/hooks/timers';
 import { usePrevious } from 'src/hooks/usePreviousValue';
 
@@ -10,12 +15,13 @@ enum ConnStatus {
   CONNECTED,
 }
 
-export const ConnectionStatus = () => {
-  const wsBroken = useRootData(s => s.wsBroken.get());
+export const ConnectionStatus = observer(() => {
+  const store = useStore();
+  const { wsBroken } = store;
   const [status, setStatus] = useState<ConnStatus>(ConnStatus.CONNECTED);
   const hadBroken = usePrevious(wsBroken);
 
-  useEffect(() => {
+  useMobxEffect(() => {
     if (!hadBroken && wsBroken) {
       setStatus(ConnStatus.DISCONNECTED);
     } else if (hadBroken && !wsBroken) {
@@ -50,4 +56,4 @@ export const ConnectionStatus = () => {
       )}
     </Transition>
   );
-};
+});

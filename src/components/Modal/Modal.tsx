@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 import cl from 'classnames';
 
 import { useLogout } from 'hooks/useLogout';
@@ -13,13 +14,11 @@ import { RIGHT_NETWORK_ID } from 'constants/networks';
 import './Modal.scss';
 import useWalletInit from 'src/hooks/useWalletInit';
 import { useStore } from 'src/store/context';
-import { useObserver, observer } from 'mobx-react-lite';
-import { autorun } from 'mobx';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 export interface ModalProps {
   background: boolean;
-  cancelAction?: any;
+  cancelAction?: () => void;
   children?: React.ReactNode;
   classSpecifier: string;
   visible: boolean;
@@ -33,11 +32,12 @@ const Modal: React.FC<ModalProps> = observer(
     const overlayRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
     const handleLogOut = useLogout();
-    const shown = classSpecifier === store.isModalOpen || visible;
+    const shown = classSpecifier === store.modalSpecifier || visible;
 
     useMobxEffect(() => {
       const body = document.body;
-      if (store.isModalOpen) {
+      if (shown) {
+        // if (store.modalSpecifier) {
         document.body.classList.add('fixed');
       }
       return () => body.classList.remove('fixed');
@@ -50,10 +50,10 @@ const Modal: React.FC<ModalProps> = observer(
           e.target.getAttribute('data-name') &&
           !store.error.match(WRONG_NETWORK) &&
           store.zkWallet &&
-          classSpecifier === store.isModalOpen
+          classSpecifier === store.modalSpecifier
         ) {
           e.stopPropagation();
-          store.isModalOpen = '';
+          store.modalSpecifier = '';
           store.error = '';
         }
       },
@@ -73,7 +73,7 @@ const Modal: React.FC<ModalProps> = observer(
         if (cancelAction) {
           cancelAction();
         } else {
-          store.isModalOpen = '';
+          store.modalSpecifier = '';
         }
         if (!store.zkWallet && !!store.walletName) {
           store.provider = null;
