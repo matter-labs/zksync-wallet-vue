@@ -93,6 +93,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           zkBalances: [],
           isAccessModalOpen: true,
           transactions: [],
+          zkWalletInitializing: false,
         });
       }
     };
