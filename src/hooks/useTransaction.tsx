@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
-import { useRootData } from 'hooks/useRootData';
 import { observer } from 'mobx-react-lite';
 
 import { IEthBalance } from 'types/Common';
@@ -11,21 +10,13 @@ import { DEFAULT_ERROR } from 'constants/errors';
 import { ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
 import { useCancelable } from 'hooks/useCancelable';
 import { useStore } from 'src/store/context';
-import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 const TOKEN = 'ETH';
 
 export const useTransaction = () => {
   const store = useStore();
 
-  const {
-    ethBalances,
-    hint,
-    tokens,
-    walletAddress,
-    zkBalances,
-    zkWallet,
-  } = store;
+  const { ethBalances, tokens, walletAddress, zkBalances, zkWallet } = store;
 
   const cancelable = useCancelable();
 

@@ -26,14 +26,6 @@ export const Deposit: React.FC = observer(
       setSymbol,
     } = useTransaction();
 
-    // const { ethBalances, price, setTransactionType } = useRootData(
-    //   ({ ethBalances, price, setTransactionType }) => ({
-    //     ethBalances: ethBalances.get(),
-    //     price: price.get(),
-    //     setTransactionType,
-    //   }),
-    // );
-
     const store = useStore();
 
     const { ethBalances, price } = store;
