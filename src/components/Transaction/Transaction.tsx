@@ -632,7 +632,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           )}
         </div>
         <div className='transaction-wrapper'>
-          {(unlocked === undefined || unlocked === false) &&
+          {unlocked === false &&
             !isAccountUnlockingProcess &&
             title !== 'Deposit' && (
               <LockedTx

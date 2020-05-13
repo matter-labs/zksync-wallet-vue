@@ -64,7 +64,8 @@ export const Contact = ({ address, name, onDelete, onSetOldContact }) => {
         </Transition>
         <button
           className='balances-contact-send btn-tr'
-          onClick={() => {
+          onClick={e => {
+            e.stopPropagation();
             store.transactionType = 'transfer';
             store.walletAddress = { name, address };
             history.push('/send');
