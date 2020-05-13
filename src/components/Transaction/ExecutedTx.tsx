@@ -70,8 +70,8 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
           </span>
         )}
         <span className='transaction-field-title'>
-          {title === 'Send' && 'Amount + fee'}
-          {title === 'Withdraw' && 'Withdrawn'}
+          {title === 'Send' && 'Amount + fee:'}
+          {title === 'Withdraw' && 'Withdrawn:'}
           {title === 'Deposit' && 'Deposited:'}
           <p className='transaction-field-amount'>
             {inputValue} {symbolName}

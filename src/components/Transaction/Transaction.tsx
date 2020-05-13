@@ -634,10 +634,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
           )}
         </div>
         <div className='transaction-wrapper'>
-          {unlocked === undefined && !isAccountUnlockingProcess && (
-            <LockedTx handleCancel={handleCancel} handleUnlock={handleUnlock} />
-          )}
-          {isExecuted ? (
+          {(unlocked === undefined || unlocked === false) &&
+            !isAccountUnlockingProcess && (
+              <LockedTx
+                handleCancel={handleCancel}
+                handleUnlock={handleUnlock}
+              />
+            )}
+          {isExecuted && (
             <ExecutedTx
               addressValue={addressValue}
               hash={hash}
@@ -647,7 +651,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
               symbolName={symbolName}
               title={title}
             />
-          ) : unlocked === undefined || isLoading ? (
+          )}
+          {!isExecuted && (unlocked === undefined || isLoading) && (
             <>
               {isLoading && (
                 <LoadingTx
@@ -670,20 +675,38 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 />
               )}
             </>
-          ) : (
+          )}
+          {(!zkBalancesLoaded || !zkWallet) && (
             <>
+              <Spinner />
               <button
+                className='btn submit-button'
                 onClick={() => {
                   handleCancel();
-                  store.walletAddress = {};
-                  setTransactionType(undefined);
-                  history.push('/account');
+                  setWalletName();
                 }}
-                className='transaction-back'
-              ></button>
-              <h2 className='transaction-title'>{title}</h2>
-              {unlocked || title === 'Deposit' ? (
-                searchBalances.length || title === 'Deposit' ? (
+              >
+                {'Cancel'}
+              </button>
+            </>
+          )}
+          {zkWallet &&
+            zkBalancesLoaded &&
+            !isLoading &&
+            !isExecuted &&
+            unlocked && (
+              <>
+                <button
+                  onClick={() => {
+                    handleCancel();
+                    store.walletAddress = {};
+                    setTransactionType(undefined);
+                    history.push('/account');
+                  }}
+                  className='transaction-back'
+                ></button>
+                <h2 className='transaction-title'>{title}</h2>
+                {unlocked && (searchBalances.length || title === 'Deposit') && (
                   <>
                     {isInput && (
                       <>
@@ -994,59 +1017,31 @@ const Transaction: React.FC<ITransactionProps> = observer(
                       </p>
                     </div>
                   </>
-                ) : (
-                  <>
-                    {zkBalancesLoaded && zkWallet && (
-                      <>
-                        <p>
-                          {
-                            'No balances yet, please make a deposit or request money from someone!'
-                          }
-                        </p>
-                        <button
-                          className='btn submit-button'
-                          onClick={() => {
-                            setTransactionType('deposit');
-                            history.push('/deposit');
-                          }}
-                        >
-                          {'Deposit'}
-                        </button>
-                      </>
-                    )}
-                    {(!zkBalancesLoaded || !zkWallet) && (
-                      <>
-                        <Spinner />
-                        <button
-                          className='btn submit-button'
-                          onClick={() => {
-                            handleCancel();
-                            setWalletName();
-                          }}
-                        >
-                          {'Cancel'}
-                        </button>
-                      </>
-                    )}
-                  </>
-                )
-              ) : (
-                <>
-                  {/* <div className='info-block center'>
-                    <p>
-                      {
-                        'To control your account you need to unlock it once by registering your public key.'
-                      }
-                    </p>
-                  </div>
-                  <button className='btn submit-button' onClick={handleUnlock}>
-                    <span className='submit-label unlock'></span>
-                    {'Unlock'}
-                  </button> */}
-                </>
-              )}
-            </>
-          )}
+                )}
+                {unlocked &&
+                  !searchBalances.length &&
+                  title !== 'Deposit' &&
+                  zkBalancesLoaded &&
+                  zkWallet && (
+                    <>
+                      <p>
+                        {
+                          'No balances yet, please make a deposit or request money from someone!'
+                        }
+                      </p>
+                      <button
+                        className='btn submit-button'
+                        onClick={() => {
+                          store.transactionType = 'deposit';
+                          history.push('/deposit');
+                        }}
+                      >
+                        {'Deposit'}
+                      </button>
+                    </>
+                  )}
+              </>
+            )}
         </div>
       </>
     );

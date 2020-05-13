@@ -1,5 +1,4 @@
 import { Web3Provider } from 'ethers/providers';
-import { Tx } from './pages/Transactions';
 import { Provider, Wallet } from 'zksync';
 import { IEthBalance } from './types/Common';
 import { DEFAULT_ERROR } from './constants/errors';
@@ -105,14 +104,14 @@ export async function loadTokens(
   }
   const tokens = await syncProvider.getTokens();
   let error: string | undefined;
+  const zkBalance = (await syncWallet.getAccountState()).committed.balances;
 
   const balancePromises = Object.entries(tokens)
     .filter(t => t[1].symbol)
     .map(async ([key, value]) => {
-      const balance = await syncWallet.getEthereumBalance(key);
       return {
         address: value.address,
-        balance: +balance / Math.pow(10, 18),
+        balance: +zkBalance[key] / Math.pow(10, 18),
         symbol: value.symbol,
       };
     });
@@ -128,7 +127,6 @@ export async function loadTokens(
       return [];
     });
 
-  const zkBalance = accountState.committed.balances;
   const zkBalancePromises = Object.keys(zkBalance).map(async key => ({
     address: tokens[key].address,
     balance: +zkBalance[key] / Math.pow(10, 18),
