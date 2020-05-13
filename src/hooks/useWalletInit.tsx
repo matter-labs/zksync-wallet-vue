@@ -86,7 +86,7 @@ const useWalletInit = () => {
       );
       store.transactions = initialTransactions;
 
-      const { error, ethBalances, tokens, zkBalances } = await loadTokens(
+      const { error, tokens, zkBalances } = await loadTokens(
         syncProvider,
         syncWallet,
         accountState,
