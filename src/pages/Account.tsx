@@ -82,7 +82,7 @@ const Account: React.FC = observer(() => {
         store.unlocked = true;
       }
     });
-  }, [refreshBalances, refreshTimer, store.zkBalances]);
+  }, [refreshBalances, refreshTimer, store]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
