@@ -47,8 +47,9 @@ export async function getConfirmationCount(
   provider: Web3Provider,
   txHash: string,
 ) {
+  if (txHash.startsWith('sync-tx')) return 0;
   try {
-    const trx = await provider.getTransaction(txHash.replace('sync-tx:', ''));
+    const trx = await provider.getTransaction(txHash);
     const currentBlock = await provider.getBlockNumber();
 
     if (typeof trx.blockNumber === 'undefined') return 0;

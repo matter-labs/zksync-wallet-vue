@@ -72,7 +72,7 @@ const useWalletInit = () => {
         syncWallet: syncWallet,
         wsTransport: transport,
         zkWallet: syncWallet,
-        accountState: accountState,
+        accountState,
       });
 
       const web3Provider = new ethers.providers.Web3Provider(provider);
