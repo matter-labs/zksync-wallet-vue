@@ -94,6 +94,9 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           isAccessModalOpen: true,
           transactions: [],
           zkWalletInitializing: false,
+          searchBalances: [],
+          searchContacts: [],
+          ethBalances: [],
         });
       }
     };

@@ -45,7 +45,7 @@ const ChangeName: React.FC<IChangeNameProps> = observer(({ setModalOpen }) => {
       <button
         type='submit'
         onClick={handleChangeName}
-        className='btn btn-tr submit-button'
+        className='btn submit-button'
       >
         {'Save'}
       </button>

@@ -82,6 +82,8 @@ export class Store {
     this.hint = '';
     this.zkWalletInitializing = false;
     this.loggedIn = false;
+    this.searchBalances = [];
+    this.searchContacts = [];
   }
 
   @action

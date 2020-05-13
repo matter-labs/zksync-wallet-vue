@@ -224,15 +224,19 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [addressValue, setConditionError, store]);
 
     const handleUnlock = useCallback(async () => {
-      store.hint = 'Follow the instructions in the pop up';
-      setAccountUnlockingProcess(true);
-      setLoading(true);
-      const changePubkey = await zkWallet?.setSigningKey();
-      store.hint = 'Confirmed! \n Waiting for transaction to be ended';
-      const receipt = await changePubkey?.awaitReceipt();
-      store.unlocked = !!receipt;
-      setAccountUnlockingProcess(!receipt);
-      setLoading(!receipt);
+      try {
+        store.hint = 'Follow the instructions in the pop up';
+        setAccountUnlockingProcess(true);
+        setLoading(true);
+        const changePubkey = await zkWallet?.setSigningKey();
+        store.hint = 'Confirmed! \n Waiting for transaction to be ended';
+        const receipt = await changePubkey?.awaitReceipt();
+        store.unlocked = !!receipt;
+        setAccountUnlockingProcess(!receipt);
+        setLoading(!receipt);
+      } catch {
+        history.push('/account');
+      }
     }, [setAccountUnlockingProcess, setLoading, zkWallet]);
 
     const handleFilterContacts = useCallback(
@@ -241,7 +245,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
         const searchValue = contacts.filter(({ name, address }) => {
           return ADDRESS_VALIDATION['eth'].test(e) &&
             address.toLowerCase().includes(e.toLowerCase())
-            ? (setSelectedContact(name),
+            ? (console.log(name),
+              setSelectedContact(name),
               handleSelect(name),
               (store.walletAddress = { name, address }),
               onChangeAddress(address))
@@ -297,16 +302,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     }, []);
 
-    const initWallet = async () => {
+    useMobxEffect(() => {
       store.searchBalances =
         title === 'Deposit' ? store.ethBalances : zkBalances;
-    };
-
-    useMobxEffect(() => {
-      cancelable(initWallet);
-    }, [store.ethBalances]);
-
-    useMobxEffect(() => {
       cancelable(zkWallet?.getAccountState()).then((res: any) => {
         store.verified = res?.verified.balances;
         res?.id
@@ -315,7 +313,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             )
           : (store.unlocked = true);
       });
-    }, [cancelable, store, zkWallet]);
+    }, [cancelable, store, zkWallet, store.searchBalances, title]);
 
     useMobxEffect(() => {
       if ((token && token === 'ETH') || symbolName === 'ETH') {
@@ -635,7 +633,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
         </div>
         <div className='transaction-wrapper'>
           {(unlocked === undefined || unlocked === false) &&
-            !isAccountUnlockingProcess && (
+            !isAccountUnlockingProcess &&
+            title !== 'Deposit' && (
               <LockedTx
                 handleCancel={handleCancel}
                 handleUnlock={handleUnlock}
@@ -694,7 +693,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             zkBalancesLoaded &&
             !isLoading &&
             !isExecuted &&
-            unlocked && (
+            (unlocked || title === 'Deposit') && (
               <>
                 <button
                   onClick={() => {
@@ -706,7 +705,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   className='transaction-back'
                 ></button>
                 <h2 className='transaction-title'>{title}</h2>
-                {unlocked && (searchBalances.length || title === 'Deposit') && (
+                {(unlocked || title === 'Deposit') && searchBalances.length && (
                   <>
                     {isInput && (
                       <>
@@ -804,14 +803,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             )}
                           </div>
                         </div>
-                        {!!filteredContacts.length &&
-                          addressValue &&
-                          walletAddress.address && (
-                            <FilteredContactList
-                              filteredContacts={filteredContacts}
-                              selectFilteredContact={selectFilteredContact}
-                            />
-                          )}
+                        {!!filteredContacts.length && addressValue && (
+                          <FilteredContactList
+                            filteredContacts={filteredContacts}
+                            selectFilteredContact={selectFilteredContact}
+                          />
+                        )}
                       </>
                     )}
                     <>
