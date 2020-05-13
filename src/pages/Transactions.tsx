@@ -64,12 +64,7 @@ const Transactions: React.FC = observer(() => {
     [store.zkWalletAddress, web3Provider],
   );
 
-  const setTxs = useCallback(
-    data => {
-      store.setTxs(data);
-    },
-    [store],
-  );
+  const setTxs = useCallback(store.setTxs.bind(store), [store]);
 
   useCheckLogin();
 

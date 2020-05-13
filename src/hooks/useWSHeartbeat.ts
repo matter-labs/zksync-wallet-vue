@@ -1,6 +1,7 @@
 import { WSTransport } from 'zksync/build/transport';
-import { useEffect, useCallback } from 'react';
-import { useRootData } from './useRootData';
+import { useCallback, useState } from 'react';
+import { useStore } from 'src/store/context';
+import { useMobxEffect } from './useMobxEffect';
 
 const WS_HEARTBEAT_TIMEOUT = 5e3;
 /**
@@ -8,28 +9,22 @@ const WS_HEARTBEAT_TIMEOUT = 5e3;
  * every time route changes
  */
 export function useWSHeartBeat() {
-  const {
-    wsTransport: transport,
-    wsBroken,
-    setWSTransport,
-    setWsStatus,
-  } = useRootData(s => ({
-    ...s,
-    wsTransport: s.wsTransport.get(),
-    wsBroken: s.wsBroken.get(),
-  }));
+  const store = useStore();
+  const [refresh, setRefresh] = useState(0);
 
   const tryReOpen = useCallback(() => {
+    const { wsTransport: transport } = store;
     if (transport?.ws?.isOpened) return;
     transport?.ws
       .open()
       .then(() => {
-        setWSTransport(transport);
+        store.wsTransport = transport;
+        setRefresh(s => s + 1);
       })
       .catch(() => {
         setTimeout(tryReOpen, 1000);
       });
-  }, [transport, setWSTransport]);
+  }, [store]);
 
   const setHeartBeat = useCallback(
     (
@@ -39,8 +34,8 @@ export function useWSHeartBeat() {
     ) => {
       function disconnectHandler() {
         cleanup();
-        setWSTransport(null);
-        setWsStatus(true);
+        // store.wsTransport = null;
+        store.wsBroken = true;
         transport.ws.close().then(() => {
           tryReOpen();
         });
@@ -51,8 +46,8 @@ export function useWSHeartBeat() {
       function pongListener(m) {
         // Pong received
         if (m?.error?.code === -32600) {
-          if (wsBroken) {
-            setWsStatus(false);
+          if (store.wsBroken) {
+            store.wsBroken = false;
           }
           clearTimeout(waitTimer);
           waitTimer = setTimeout(disconnectHandler, disconnectTimeout);
@@ -75,13 +70,13 @@ export function useWSHeartBeat() {
 
       return cleanup;
     },
-    [setWsStatus, setWSTransport, tryReOpen, wsBroken],
+    [tryReOpen, store],
   );
 
-  useEffect(() => {
-    if (!transport) return;
-    const hb = setHeartBeat(transport);
+  useMobxEffect(() => {
+    if (!store.wsTransport) return;
+    const hb = setHeartBeat(store.wsTransport);
 
     return hb;
-  }, [transport, setHeartBeat]);
+  }, [setHeartBeat, refresh]);
 }

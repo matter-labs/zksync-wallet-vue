@@ -6,7 +6,6 @@ import { useStore } from 'src/store/context';
 import Transaction from 'components/Transaction/Transaction';
 
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
-// import { useRootData } from 'hooks/useRootData';
 import { useTransaction } from 'hooks/useTransaction';
 
 export const Deposit: React.FC = observer(

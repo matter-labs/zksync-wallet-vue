@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, autorun } from 'mobx';
 
 import {
   IContacts,
@@ -15,6 +15,7 @@ import { WalletType } from 'constants/Wallets';
 import { Tx } from 'src/pages/Transactions';
 
 export class Store {
+  @observable loggedIn = true;
   @observable depositModal = false;
   @observable error = '';
   @observable ethBalances: IEthBalance[] = [];
@@ -80,12 +81,22 @@ export class Store {
     this.provider = false;
     this.hint = '';
     this.zkWalletInitializing = false;
+    this.loggedIn = false;
   }
 
   @action
   setBatch<K extends keyof Store>(batch: Record<K, any>) {
     Object.keys(batch).forEach(k => {
       this[k] = batch[k];
+    });
+  }
+
+  constructor() {
+    autorun(() => {
+      console.log({
+        isAccessModalOpen: this.isAccessModalOpen,
+        walletName: this.walletName,
+      });
     });
   }
 }

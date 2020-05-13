@@ -143,12 +143,6 @@ export async function loadTokens(
     },
   );
 
-  console.log({
-    tokens,
-    zkBalances,
-    ethBalances,
-    error,
-  });
   return {
     tokens,
     zkBalances,

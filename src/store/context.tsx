@@ -7,6 +7,7 @@ export const fallbackStoreContext = React.createContext<TStore | null>(null);
 
 export const StoreProvider: React.FC = ({ children }) => {
   const store = useLocalStore(() => new Store());
+  // TODO: remove fb store
   const fallbackStore = useLocalStore(createStore);
 
   return (

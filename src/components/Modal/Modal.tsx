@@ -36,7 +36,8 @@ const Modal: React.FC<ModalProps> = observer(
 
     useMobxEffect(() => {
       const body = document.body;
-      if (store.modalSpecifier) {
+      if (shown) {
+        // if (store.modalSpecifier) {
         document.body.classList.add('fixed');
       }
       return () => body.classList.remove('fixed');

@@ -6,7 +6,6 @@ import { useStore } from 'src/store/context';
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
 
-import { useRootData } from 'hooks/useRootData';
 import { DataList } from 'components/DataList/DataListNew';
 
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
