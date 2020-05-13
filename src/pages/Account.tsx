@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
@@ -44,16 +44,15 @@ const Account: React.FC = observer(() => {
           if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
             store.zkBalances = res.zkBalances;
             store.searchBalances = res.zkBalances;
-            await cancelable(zkWallet?.getAccountState()).then((res: any) => {
-              store.verified = res?.verified.balances;
-              if (res?.id) {
-                zkWallet?.isSigningKeySet().then(data => {
-                  store.unlocked = data;
-                });
-              } else {
-                store.unlocked = true;
-              }
-            });
+            const { accountState } = store;
+            store.verified = accountState?.verified.balances;
+            if (accountState?.id) {
+              zkWallet?.isSigningKeySet().then(data => {
+                store.unlocked = data;
+              });
+            } else {
+              store.unlocked = true;
+            }
             store.searchBalances = zkBalances;
           }
           if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
@@ -61,28 +60,25 @@ const Account: React.FC = observer(() => {
           }
         },
       );
-      console.log('Refreshed balances.');
-      const timeout = setTimeout(refreshBalances, 2000);
-      setRefreshTimer(timeout as any);
     }
   }, [cancelable, store]);
 
-  useMobxEffect(() => {
-    const { zkWallet } = store;
-    if (refreshTimer == null) {
-      refreshBalances();
-    }
-    cancelable(zkWallet?.getAccountState()).then((res: any) => {
-      store.verified = res?.verified.balances;
-      if (res?.id) {
-        cancelable(zkWallet?.isSigningKeySet()).then(data => {
-          store.unlocked = data;
-        });
-      } else {
-        store.unlocked = true;
+  useEffect(() => {
+    if (!store.loggedIn) return;
+    let t: number | undefined;
+    const refreshRec = () => {
+      refreshBalances().then(() => {
+        t = setTimeout(refreshRec, 2000) as any;
+      });
+    };
+    refreshRec();
+
+    return () => {
+      if (t !== null) {
+        clearTimeout(t);
       }
-    });
-  }, [refreshBalances, refreshTimer, store]);
+    };
+  }, [store.loggedIn, refreshBalances]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {

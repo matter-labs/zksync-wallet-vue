@@ -90,15 +90,6 @@ export class Store {
       this[k] = batch[k];
     });
   }
-
-  constructor() {
-    autorun(() => {
-      console.log({
-        isAccessModalOpen: this.isAccessModalOpen,
-        walletName: this.walletName,
-      });
-    });
-  }
 }
 
 export const createStore = () => ({
