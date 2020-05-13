@@ -12,21 +12,14 @@ import { useCancelable } from 'hooks/useCancelable';
 import { loadTokens } from 'src/utils';
 import Spinner from 'src/components/Spinner/Spinner';
 import { useStore } from 'src/store/context';
-import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 const Account: React.FC = observer(() => {
-  const {
-    setMaxValueProp,
-    setSymbolNameProp,
-    setTokenProp,
-    maxValueProp,
-  } = useTransaction();
+  const { setMaxValueProp, setSymbolNameProp, setTokenProp } = useTransaction();
 
   const history = useHistory();
   const store = useStore();
 
   const cancelable = useCancelable();
-  const [refreshTimer, setRefreshTimer] = useState<number | null>(null);
 
   const refreshBalances = useCallback(async () => {
     const {
@@ -74,7 +67,7 @@ const Account: React.FC = observer(() => {
     refreshRec();
 
     return () => {
-      if (t !== null) {
+      if (t !== undefined) {
         clearTimeout(t);
       }
     };

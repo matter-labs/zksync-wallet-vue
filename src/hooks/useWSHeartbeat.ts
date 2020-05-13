@@ -63,6 +63,9 @@ export function useWSHeartBeat() {
 
       let waitTimer = setTimeout(disconnectHandler, disconnectTimeout);
       const pingTimer = setInterval(() => {
+        if (!store.loggedIn) {
+          cleanup();
+        }
         transport.ws.send('{}');
       }, pingTimeout);
 
