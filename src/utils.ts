@@ -105,7 +105,7 @@ export async function loadTokens(
   }
   const tokens = await syncProvider.getTokens();
   let error: string | undefined;
-  const zkBalance = (await syncWallet.getAccountState()).committed.balances;
+  const zkBalance = accountState.committed.balances;
 
   const balancePromises = Object.entries(tokens)
     .filter(t => t[1].symbol)
