@@ -255,7 +255,7 @@ export const useTransaction = () => {
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          store.hint = 'User denied action';
+          store.hint = err.message;
         } else if (err.name && err.message) {
           store.error = `${err.name}: ${err.message}`;
         } else {
@@ -336,7 +336,7 @@ export const useTransaction = () => {
         }
       } catch (err) {
         if (err.message.match(/(?:denied)/i)) {
-          store.hint = 'User denied action';
+          store.hint = err.message;
         } else if (err.name && err.message) {
           store.error = `${err.name}: ${err.message}`;
         } else {

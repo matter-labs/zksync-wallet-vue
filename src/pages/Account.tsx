@@ -34,11 +34,12 @@ const Account: React.FC = observer(() => {
     if (zkWallet && syncProvider && syncWallet && accountState) {
       await cancelable(loadTokens(syncProvider, syncWallet, accountState)).then(
         async res => {
+          const { accountState } = store;
+          store.verified = accountState?.verified.balances;
           if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
             store.zkBalances = res.zkBalances;
             store.searchBalances = res.zkBalances;
-            const { accountState } = store;
-            store.verified = accountState?.verified.balances;
+
             if (accountState?.id) {
               zkWallet?.isSigningKeySet().then(data => {
                 store.unlocked = data;

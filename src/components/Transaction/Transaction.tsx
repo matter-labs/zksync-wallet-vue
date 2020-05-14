@@ -303,6 +303,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, []);
 
     useMobxEffect(() => {
+      store.hint = '';
+    }, []);
+
+    useMobxEffect(() => {
       store.searchBalances =
         title === 'Deposit' ? store.ethBalances : zkBalances;
       cancelable(zkWallet?.getAccountState()).then((res: any) => {
@@ -882,11 +886,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               <button
                                 className='all-balance btn-tr'
                                 onClick={() => {
-                                  setInputValue(maxValue.toString());
-                                  validateNumbers(maxValue);
-                                  handleInputWidth(maxValue);
-                                  handleFee(+maxValue);
-                                  setAmount(+maxValue);
+                                  if (maxValue > 0.000001) {
+                                    setInputValue(maxValue.toString());
+                                    validateNumbers(maxValue);
+                                    handleInputWidth(maxValue);
+                                    handleFee(+maxValue);
+                                    setAmount(+maxValue);
+                                  } else {
+                                    setConditionError(
+                                      'Your balance is too low',
+                                    );
+                                  }
                                 }}
                               >
                                 {selectedBalance && (
@@ -998,19 +1008,21 @@ const Transaction: React.FC<ITransactionProps> = observer(
                     </button>
                     <div className='transaction-fee-wrapper'>
                       <p key={maxValue} className='transaction-fee'>
-                        {selectedBalance && submitCondition && (
-                          <>
-                            {'Fee:'}{' '}
-                            {title === 'Deposit' &&
-                              (+inputValue * 0.01 < 0.000001
-                                ? 0
-                                : +inputValue * 0.01)}
-                            {title !== 'Deposit' &&
-                              (+fee / Math.pow(10, 18) < 0.000001
-                                ? 0
-                                : +fee / Math.pow(10, 18))}
-                          </>
-                        )}
+                        {!!selectedBalance &&
+                          !!submitCondition &&
+                          !!inputValue && (
+                            <>
+                              {'Fee:'}{' '}
+                              {title === 'Deposit' &&
+                                (+inputValue * 0.01 < 0.000001
+                                  ? ''
+                                  : +inputValue * 0.01)}
+                              {title !== 'Deposit' &&
+                                (+fee / Math.pow(10, 18) < 0.000001
+                                  ? ''
+                                  : +fee / Math.pow(10, 18))}{' '}
+                            </>
+                          )}
                       </p>
                     </div>
                   </>
