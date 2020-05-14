@@ -90,6 +90,7 @@ const Account: React.FC = observer(() => {
       }
     };
   }, [
+    store,
     store.zkWallet,
     store.verified,
     store.zkBalances,

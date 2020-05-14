@@ -75,18 +75,19 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
 
   let content: JSX.Element | null = null;
 
-  if ((isZkSync && tx.commited && !tx.verified) || (!isZkSync && val > 1)) {
-    content = <Clock />;
-  } else if (tx.verified || tx.tx.type !== 'Deposit') {
-    content = <CheckMark />;
+  if (!tx.verified) {
+    if (isZkSync || val > 1) {
+      content = <Clock />;
+    } else {
+      content =
+        val >= 1 ? (
+          <circle fill={PRIMARY_COLOR} cx='0' cy='0' r='1' />
+        ) : (
+          <path fill={PRIMARY_COLOR} d={getPieChartD(val)} />
+        );
+    }
   } else {
-    // Piechart
-    content =
-      val >= 1 ? (
-        <circle fill={PRIMARY_COLOR} cx='0' cy='0' r='1' />
-      ) : (
-        <path fill={PRIMARY_COLOR} d={getPieChartD(val)} />
-      );
+    content = <CheckMark />;
   }
 
   return <Wrapper status={status}>{content}</Wrapper>;
