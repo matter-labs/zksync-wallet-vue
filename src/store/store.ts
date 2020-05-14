@@ -15,7 +15,6 @@ import { WalletType } from 'constants/Wallets';
 import { Tx } from 'src/pages/Transactions';
 
 export class Store {
-  @observable loggedIn = true;
   @observable depositModal = false;
   @observable error = '';
   @observable ethBalances: IEthBalance[] = [];
@@ -54,6 +53,7 @@ export class Store {
   @observable syncWallet?: Wallet;
   @observable syncProvider?: Provider;
   @observable transactions: Tx[] = [];
+  @observable maxConfirmAmount = 25;
 
   @computed get zkWalletAddress() {
     return this.zkWallet?.address();
@@ -81,7 +81,6 @@ export class Store {
     this.provider = false;
     this.hint = '';
     this.zkWalletInitializing = false;
-    this.loggedIn = false;
     this.searchBalances = [];
     this.searchContacts = [];
   }
@@ -91,6 +90,12 @@ export class Store {
     Object.keys(batch).forEach(k => {
       this[k] = batch[k];
     });
+  }
+
+  constructor() {
+    if (process.env.NODE_ENV === 'development') {
+      Object.assign(window, { store: this });
+    }
   }
 }
 

@@ -46,13 +46,6 @@ const PrimaryPage: React.FC = observer(() => {
   );
 
   useMobxEffect(() => {
-    if (pathname === '/') {
-      store.loggedIn = false;
-      return;
-    }
-  });
-
-  useMobxEffect(() => {
     const { provider, walletName } = store;
     if (!(provider && walletName === 'Metamask')) return;
     const listener = () => {
@@ -73,7 +66,6 @@ const PrimaryPage: React.FC = observer(() => {
             walletName: key,
             normalBg: true,
             isAccessModalOpen: true,
-            // loggedIn: true,
           });
         }
         if (store.provider?.selectedAddress) {

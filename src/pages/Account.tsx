@@ -57,7 +57,7 @@ const Account: React.FC = observer(() => {
   }, [cancelable, store]);
 
   useEffect(() => {
-    if (!store.loggedIn) return;
+    if (!store.zkWallet) return;
     let t: number | undefined;
     const refreshRec = () => {
       refreshBalances().then(() => {
@@ -71,7 +71,7 @@ const Account: React.FC = observer(() => {
         clearTimeout(t);
       }
     };
-  }, [store.loggedIn, refreshBalances]);
+  }, [store.zkWallet, refreshBalances]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
