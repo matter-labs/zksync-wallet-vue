@@ -12,7 +12,6 @@ import { useCancelable } from 'hooks/useCancelable';
 import { loadTokens } from 'src/utils';
 import Spinner from 'src/components/Spinner/Spinner';
 import { useStore } from 'src/store/context';
-import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 const Account: React.FC = observer(() => {
   const { setMaxValueProp, setSymbolNameProp, setTokenProp } = useTransaction();
@@ -37,7 +36,6 @@ const Account: React.FC = observer(() => {
       await cancelable(loadTokens(syncProvider, syncWallet, accountState)).then(
         async res => {
           const { accountState } = store;
-
           if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
             store.zkBalances = res.zkBalances;
             store.searchBalances = res.zkBalances;
@@ -72,16 +70,19 @@ const Account: React.FC = observer(() => {
 
     const getAccState = async () => {
       if (zkWallet) {
-        store.accountState = await zkWallet.getAccountState();
+        const as = await zkWallet.getAccountState();
+        if (JSON.stringify(accountState) !== JSON.stringify(as)) {
+          store.accountState = as;
+        }
+      }
+      if (
+        JSON.stringify(accountState?.verified.balances) !==
+        JSON.stringify(store.verified)
+      ) {
+        store.verified = accountState?.verified.balances;
       }
     };
     const int = setInterval(getAccState, 5000);
-    if (
-      JSON.stringify(accountState?.verified.balances) !==
-      JSON.stringify(store.verified)
-    ) {
-      store.verified = accountState?.verified.balances;
-    }
 
     return () => {
       clearInterval(int);
@@ -92,9 +93,8 @@ const Account: React.FC = observer(() => {
   }, [
     store,
     store.zkWallet,
-    store.verified,
-    store.zkBalances,
     store.accountState,
+    store.verified,
     refreshBalances,
   ]);
 
