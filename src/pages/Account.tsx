@@ -80,7 +80,7 @@ const Account: React.FC = observer(() => {
         clearTimeout(t);
       }
     };
-  }, [refreshBalances, store.zkWallet]);
+  }, [refreshBalances, store.zkWallet, store.verified]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
