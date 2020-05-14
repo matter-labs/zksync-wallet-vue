@@ -63,7 +63,7 @@ export function useWSHeartBeat() {
 
       let waitTimer = setTimeout(disconnectHandler, disconnectTimeout);
       const pingTimer = setInterval(() => {
-        if (!store.loggedIn || !store.zkWallet) {
+        if (!store.zkWallet) {
           cleanup();
         }
         transport.ws.send('{}');

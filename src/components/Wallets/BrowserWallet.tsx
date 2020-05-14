@@ -15,8 +15,9 @@ const BrowserWallet: React.FC = observer(() => {
   const history = useHistory();
 
   useMobxEffect(() => {
+    const { provider, zkWallet, walletName } = store;
     try {
-      if (!store.provider && !store.loggedIn && store.walletName) {
+      if (!provider && !zkWallet && walletName) {
         const browserProvider = window?.['ethereum'];
         store.provider = browserProvider;
         connect(browserProvider, browserProvider?.enable.bind(browserProvider));

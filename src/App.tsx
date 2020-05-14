@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
@@ -8,9 +8,7 @@ import { IAppProps } from 'types/Common';
 
 import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
-import { useLogout } from 'hooks/useLogout';
 import { WalletType } from './constants/Wallets';
-import { useCancelable } from './hooks/useCancelable';
 import { useInterval } from './hooks/timers';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './store/context';
@@ -23,7 +21,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   const { pathname } = useLocation();
 
   useWSHeartBeat();
-  const cancelable = useCancelable();
   const [curAddress, setCurAddress] = useState<string>(
     store.provider?.selectedAddress,
   );
@@ -104,16 +101,16 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     return () => provider.off('accountsChanged', accountChangeListener);
   });
 
-  useMobxEffect(() => {
-    const { loggedIn, provider, walletName } = store;
+  useEffect(() => {
+    const { zkWallet, provider, walletName } = store;
     if (provider && walletName) return;
-    if (!loggedIn) return;
+    if (zkWallet || pathname === '/') return;
     store.setBatch({
       isAccessModalOpen: true,
       provider: window['ethereum'],
       walletName: getWalletNameFromProvider() as WalletType,
     });
-  }, [pathname]);
+  }, [pathname, store]);
 
   return (
     <div className={`content-wrapper ${store.walletName ? '' : 'start-page'}`}>

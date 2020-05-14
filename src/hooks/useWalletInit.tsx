@@ -68,6 +68,7 @@ const useWalletInit = () => {
 
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
+      const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
 
       store.setBatch({
         syncProvider: syncProvider,
@@ -117,12 +118,14 @@ const useWalletInit = () => {
             : (store.error = DEFAULT_ERROR);
         });
 
-      store.tokens = tokens;
-      store.searchBalances = zkBalances;
-      store.zkBalances = zkBalances;
-      store.zkBalancesLoaded = true;
-      const res = await store.zkWallet?.getAccountState();
-      if (res?.id) {
+      store.setBatch({
+        tokens: tokens,
+        searchBalances: zkBalances,
+        zkBalances: zkBalances,
+        zkBalancesLoaded: true,
+        maxConfirmAmount,
+      });
+      if (accountState?.id) {
         await cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
           store.unlocked = data;
         });
@@ -133,9 +136,7 @@ const useWalletInit = () => {
         localStorage.getItem(`contacts${store.zkWallet?.address()}`) || '[]',
       );
       store.searchContacts = arr;
-      cancelable(store.zkWallet?.getAccountState()).then((res: any) => {
-        store.verified = res?.verified.balance;
-      });
+      store.verified = accountState?.verified.balances;
 
       cancelable(
         fetch(
@@ -161,7 +162,6 @@ const useWalletInit = () => {
         });
 
       store.zkWalletInitializing = false;
-      store.loggedIn = true;
     } catch (err) {
       store.zkWalletInitializing = false;
       const error = err.message
