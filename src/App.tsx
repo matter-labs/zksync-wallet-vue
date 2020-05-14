@@ -112,6 +112,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     });
   }, [pathname, store]);
 
+  useMobxEffect(() => {
+    if (
+      store.modalSpecifier ||
+      store.isAccessModalOpen ||
+      store.transactionModal
+    ) {
+      document.body.classList.add('fixed');
+      return () => document.body.classList.remove('fixed');
+    }
+  });
+
   return (
     <div className={`content-wrapper ${store.walletName ? '' : 'start-page'}`}>
       <Modal

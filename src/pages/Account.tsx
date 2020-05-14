@@ -12,6 +12,7 @@ import { useCancelable } from 'hooks/useCancelable';
 import { loadTokens } from 'src/utils';
 import Spinner from 'src/components/Spinner/Spinner';
 import { useStore } from 'src/store/context';
+import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 const Account: React.FC = observer(() => {
   const { setMaxValueProp, setSymbolNameProp, setTokenProp } = useTransaction();
@@ -56,7 +57,7 @@ const Account: React.FC = observer(() => {
     }
   }, [cancelable, store]);
 
-  useEffect(() => {
+  useMobxEffect(() => {
     if (!store.zkWallet) return;
     let t: number | undefined;
     const refreshRec = () => {
@@ -71,7 +72,7 @@ const Account: React.FC = observer(() => {
         clearTimeout(t);
       }
     };
-  }, [store.zkWallet, refreshBalances]);
+  }, [refreshBalances]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
