@@ -15,6 +15,7 @@ import { WalletType } from 'constants/Wallets';
 import { Tx } from 'src/pages/Transactions';
 
 export class Store {
+  @observable awaitedTokens = {};
   @observable depositModal = false;
   @observable error = '';
   @observable ethBalances: IEthBalance[] = [];
