@@ -161,6 +161,7 @@ const useWalletInit = () => {
         });
 
       store.zkWalletInitializing = false;
+      store.loggedIn = true;
     } catch (err) {
       store.zkWalletInitializing = false;
       const error = err.message
