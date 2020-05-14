@@ -34,15 +34,6 @@ const Modal: React.FC<ModalProps> = observer(
     const handleLogOut = useLogout();
     const shown = classSpecifier === store.modalSpecifier || visible;
 
-    useMobxEffect(() => {
-      const body = document.body;
-      if (shown) {
-        // if (store.modalSpecifier) {
-        document.body.classList.add('fixed');
-      }
-      return () => body.classList.remove('fixed');
-    });
-
     const handleClickOutside = useCallback(
       e => {
         if (e.target !== overlayRef.current) return;
