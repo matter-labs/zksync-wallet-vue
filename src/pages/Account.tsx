@@ -65,7 +65,7 @@ const Account: React.FC = observer(() => {
     }
   }, [cancelable, store]);
 
-  useMobxEffect(() => {
+  useEffect(() => {
     if (!store.zkWallet) return;
     let t: number | undefined;
     const refreshRec = () => {
@@ -80,7 +80,7 @@ const Account: React.FC = observer(() => {
         clearTimeout(t);
       }
     };
-  }, [store.zkWallet, store.verified, refreshBalances]);
+  }, [refreshBalances, store.zkWallet]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
