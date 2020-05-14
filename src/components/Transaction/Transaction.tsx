@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import makeBlockie from 'ethereum-blockies-base64';
@@ -176,11 +176,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       [fee, gas, maxValue, onChangeAmount, setInputValue, title],
     );
 
-    const arr: string | null = localStorage.getItem(
-      `contacts${zkWallet?.address()}`,
-    );
-    const contacts = JSON.parse(arr as string);
-
     const setWalletName = useCallback(() => {
       if (value && value !== ethId) {
         localStorage.setItem('walletName', value);
@@ -241,8 +236,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const handleFilterContacts = useCallback(
       e => {
-        if (!contacts) return;
-        const searchValue = contacts.filter(({ name, address }) => {
+        if (!searchContacts) return;
+        const searchValue = searchContacts.filter(({ name, address }) => {
           return ADDRESS_VALIDATION['eth'].test(e) &&
             address.toLowerCase().includes(e.toLowerCase())
             ? (setSelectedContact(name),
@@ -255,7 +250,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       },
       [
         addressValue,
-        contacts,
+        searchContacts,
         handleSelect,
         onChangeAddress,
         setFilteredContacts,
@@ -286,20 +281,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
       store,
     ]);
 
-    useMobxEffect(() => {
-      if (
-        title === 'Withdraw' &&
-        zkWallet &&
-        walletAddress.address &&
-        selectedContact !== null
-      ) {
+    useEffect(() => {
+      if (title === 'Withdraw' && zkWallet && selectedContact !== null) {
         store.walletAddress = {
           name: 'Own account',
           address: zkWallet?.address(),
         };
         onChangeAddress(zkWallet?.address());
       }
-    }, []);
+    }, [zkWallet]);
 
     useMobxEffect(() => {
       store.hint = '';
@@ -339,7 +329,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         !selectedContact &&
         title !== 'Withdraw'
       ) {
-        contacts?.filter(el => {
+        searchContacts?.filter(el => {
           if (el.address.toLowerCase().includes(addressValue.toLowerCase())) {
             setSelectedContact(el.name);
             handleSelect(el.name);
@@ -369,7 +359,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [
       addressValue,
       balances,
-      contacts,
+      searchContacts,
       body,
       gas,
       filteredContacts,
@@ -503,6 +493,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           setConditionError('');
           setSelected(true);
           body?.classList.remove('fixed-b');
+          setFilteredContacts([]);
         }}
       >
         <div className='balances-contact-left'>
