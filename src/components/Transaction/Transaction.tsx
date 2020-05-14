@@ -245,8 +245,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         const searchValue = contacts.filter(({ name, address }) => {
           return ADDRESS_VALIDATION['eth'].test(e) &&
             address.toLowerCase().includes(e.toLowerCase())
-            ? (console.log(name),
-              setSelectedContact(name),
+            ? (setSelectedContact(name),
               handleSelect(name),
               (store.walletAddress = { name, address }),
               onChangeAddress(address))
@@ -637,6 +636,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         </div>
         <div className='transaction-wrapper'>
           {unlocked === false &&
+            unlocked !== undefined &&
             !isAccountUnlockingProcess &&
             title !== 'Deposit' && (
               <LockedTx
@@ -657,7 +657,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           )}
           {!isExecuted && (unlocked === undefined || isLoading) && (
             <>
-              {isLoading && (
+              {(unlocked === undefined || isLoading) && (
                 <LoadingTx
                   isAccountUnlockingProcess={isAccountUnlockingProcess}
                   isUnlockingProcess={isUnlockingProcess}
