@@ -1,6 +1,5 @@
 import { useCallback, useState } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
-import { observer } from 'mobx-react-lite';
 
 import { IEthBalance } from 'types/Common';
 import { PriorityOperationReceipt } from 'zksync/build/types';
@@ -65,8 +64,9 @@ export const useTransaction = () => {
     async (receipt: PriorityOperationReceipt) => {
       try {
         if (receipt && zkWallet && tokens) {
-          const zkBalance = (await zkWallet.getAccountState()).committed
-            .balances;
+          const _accountState = await zkWallet.getAccountState();
+          const zkBalance = _accountState.committed.balances;
+          store.awaitedTokens = _accountState.depositing;
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
@@ -158,11 +158,15 @@ export const useTransaction = () => {
               await depositPriorityOperation
                 .awaitEthereumTxCommit()
                 .then(() => {
-                  store.hint = `Your deposit tx has been mined and will be processed after 30 confirmations. Use the link below to track the progress. \n ${+(
+                  store.hint = `Your deposit tx has been mined and will be processed after ${
+                    store.maxConfirmAmount
+                  } confirmations. Use the link below to track the progress. \n ${+(
                     amountValue / Math.pow(10, 18)
                   )}  \n${hash.hash}`;
                   setExecuted(true);
                 });
+              const _accountState = await zkWallet.getAccountState();
+              store.awaitedTokens = _accountState.depositing.balances;
               const receipt = await depositPriorityOperation.awaitReceipt();
               transactions(receipt);
               const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();

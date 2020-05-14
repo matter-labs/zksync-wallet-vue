@@ -203,6 +203,15 @@
         padding-left: 5px;
       }
 
+      & > .balances-token-right.container {
+        display: block;
+
+        .awaited-tokens {
+          color: var(--hints-color);
+          font-size: var(--sm-font-size);
+        }
+      }
+
       & > div {
         display: flex;
         align-items: center;
