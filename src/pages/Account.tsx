@@ -37,13 +37,7 @@ const Account: React.FC = observer(() => {
       await cancelable(loadTokens(syncProvider, syncWallet, accountState)).then(
         async res => {
           const { accountState } = store;
-          store.accountState = await syncWallet.getAccountState();
-          if (
-            JSON.stringify(accountState?.verified.balances) !==
-            JSON.stringify(store.verified)
-          ) {
-            store.verified = accountState?.verified.balances;
-          }
+
           if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
             store.zkBalances = res.zkBalances;
             store.searchBalances = res.zkBalances;
@@ -66,7 +60,8 @@ const Account: React.FC = observer(() => {
   }, [cancelable, store]);
 
   useEffect(() => {
-    if (!store.zkWallet) return;
+    const { zkWallet, accountState } = store;
+    if (!zkWallet) return;
     let t: number | undefined;
     const refreshRec = () => {
       refreshBalances().then(() => {
@@ -75,12 +70,32 @@ const Account: React.FC = observer(() => {
     };
     refreshRec();
 
+    const getAccState = async () => {
+      if (zkWallet) {
+        store.accountState = await zkWallet.getAccountState();
+      }
+    };
+    const int = setInterval(getAccState, 5000);
+    if (
+      JSON.stringify(accountState?.verified.balances) !==
+      JSON.stringify(store.verified)
+    ) {
+      store.verified = accountState?.verified.balances;
+    }
+
     return () => {
+      clearInterval(int);
       if (t !== undefined) {
         clearTimeout(t);
       }
     };
-  }, [refreshBalances, store.zkWallet]);
+  }, [
+    store.zkWallet,
+    store.verified,
+    store.zkBalances,
+    store.accountState,
+    refreshBalances,
+  ]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
