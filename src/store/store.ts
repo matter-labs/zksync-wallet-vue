@@ -44,7 +44,7 @@ export class Store {
   @observable walletName: WalletType = '';
   // TODO: add explicit type
   @observable walletAddress: IContactNameValue = {};
-  @observable zkBalances: IEthBalance[] = [];
+  @observable.shallow zkBalances: IEthBalance[] = [];
   @observable zkBalancesLoaded = false;
   @observable zkWallet: Wallet | null = null;
   @observable zkWalletInitializing = false;
