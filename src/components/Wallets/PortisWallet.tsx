@@ -3,32 +3,18 @@ import Portis from '@portis/web3';
 import { useHistory } from 'react-router-dom';
 
 import useWalletInit from 'hooks/useWalletInit';
-import { useRootData } from 'hooks/useRootData';
 
 import { DEFAULT_ERROR } from 'constants/errors';
+import { useStore } from 'src/store/context';
+import { observer } from 'mobx-react-lite';
 
-const PortisWallet: React.FC = (): JSX.Element => {
+const PortisWallet: React.FC = observer(() => {
   const { connect, getSigner } = useWalletInit();
-
-  const {
-    provider,
-    setError,
-    setProvider,
-    setWalletName,
-    setZkWallet,
-  } = useRootData(
-    ({ provider, setError, setProvider, setWalletName, setZkWallet }) => ({
-      provider: provider.get(),
-      setError,
-      setProvider,
-      setWalletName,
-      setZkWallet,
-    }),
-  );
-
+  const store = useStore();
   const history = useHistory();
 
   useEffect(() => {
+    const { provider } = store;
     try {
       if (!provider) {
         const portis = new Portis(
@@ -36,33 +22,23 @@ const PortisWallet: React.FC = (): JSX.Element => {
           'mainnet',
         );
         const portisProvider = portis.provider;
-        setProvider(portisProvider);
+        store.provider = portisProvider;
         const signer = getSigner(portisProvider);
         connect(portisProvider, signer?.getAddress.bind(signer));
       }
     } catch (err) {
-      err.name && err.message
-        ? setError(
-            `${err.name}: ${err.message}. Maybe you don't have Portis Wallet installed in your browser`,
-          )
-        : setError(DEFAULT_ERROR);
+      store.error =
+        err.name && err.message
+          ? `${err.name}: ${err.message}. Maybe you don't have Portis Wallet installed in your browser`
+          : DEFAULT_ERROR;
       history.push('/');
-      setWalletName('');
-      setZkWallet(null);
-      setProvider(null);
+      store.walletName = '';
+      store.zkWallet = null;
+      store.provider = null;
     }
-  }, [
-    connect,
-    getSigner,
-    history,
-    provider,
-    setError,
-    setProvider,
-    setWalletName,
-    setZkWallet,
-  ]);
+  }, [connect, getSigner, history, store]);
 
-  return <></>;
-};
+  return null;
+});
 
 export default PortisWallet;
