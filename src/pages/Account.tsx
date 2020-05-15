@@ -21,10 +21,32 @@ const Account: React.FC = observer(() => {
   const history = useHistory();
   const store = useStore();
 
+  // const setAwaitingBalance = useCallback((balance: IEthBalance[]) => {
+  //   if (Object.keys(store.awaitedTokens).length > 0) {
+  //     for(const token in store.awaitedTokens) {
+  //       const _list = Object.entries(balance).map(el => el[1].symbol);
+  //       if (_list.indexOf(token) === -1) {
+  //         console.log('empty')
+  //         store.zkBalances = balance.concat([{
+  //           symbol: token,
+  //           balance: 0,
+  //           address: 'awaited'
+  //         }]);
+  //       store.searchBalances = store.zkBalances;
+  //       } else {
+  //         store.zkBalances = balance;
+  //         console.log('new')
+
+  //       }
+  //     }
+  //   } else {
+  //     store.zkBalances = balance;
+  //   }
+  // }, [store.awaitedTokens, store.searchBalances]);
+
   useEffect(() => {
     const { zkWallet, accountState, tokens } = store;
     if (!zkWallet) return;
-
     const getAccState = async () => {
       if (zkWallet && tokens) {
         const _accountState = await zkWallet.getAccountState();
@@ -43,10 +65,25 @@ const Account: React.FC = observer(() => {
         });
         Promise.all(zkBalancePromises)
           .then(res => {
+            if (Object.keys(store.awaitedTokens).length > 0) {
+              for (const token in store.awaitedTokens) {
+                const _list = Object.entries(res).map(el => el[1].symbol);
+                if (_list.indexOf(token) === -1) {
+                  store.zkBalances = res.concat([
+                    {
+                      symbol: token,
+                      balance: 0,
+                      address: 'awaited',
+                    },
+                  ]);
+                } else {
+                  store.zkBalances = res;
+                }
+              }
+            } else {
+              store.zkBalances = res;
+            }
             if (JSON.stringify(res) !== JSON.stringify(zkBalances)) {
-              store.zkBalances = res as IEthBalance[];
-              store.searchBalances = res;
-
               if (accountState?.id) {
                 zkWallet?.isSigningKeySet().then(data => {
                   store.unlocked = data;
@@ -69,7 +106,7 @@ const Account: React.FC = observer(() => {
         store.verified = accountState?.verified.balances;
       }
     };
-    const int = setInterval(getAccState, 2000);
+    const int = setInterval(getAccState, 3000);
 
     return () => {
       clearInterval(int);
@@ -79,6 +116,9 @@ const Account: React.FC = observer(() => {
     store.zkWallet,
     store.accountState,
     store.awaitedTokens,
+    store.tokens,
+    store.zkBalances,
+    store.searchBalances,
     store.verified,
   ]);
 
@@ -110,7 +150,14 @@ const Account: React.FC = observer(() => {
     ) : null;
 
   const VerifiedBal = ({ balance: { address, symbol, balance } }) => (
-    <div key={balance} className='balances-token verified'>
+    <div
+      key={balance}
+      className='balances-token verified'
+      onClick={() => {
+        if (address === 'awaited') return;
+        handleSend(address, balance, symbol);
+      }}
+    >
       <div className='balances-token-left'>
         {'zk'}
         {symbol}
@@ -126,31 +173,44 @@ const Account: React.FC = observer(() => {
                 ).toFixed(2)})`}
               </span>
             )}
+            <div className='balances-token-status'>
+              <span className='label-done'></span>
+            </div>
           </div>
           <div>
-            <span className='awaited-tokens'>
-              {store.awaitedTokens[symbol]?.amount
-                ? `+ ${store.awaitedTokens[symbol]?.amount / Math.pow(10, 18)}`
-                : ''}
-            </span>
+            {store.awaitedTokens[symbol]?.amount && (
+              <>
+                <span className='awaited-tokens'>
+                  {`+ ${store.awaitedTokens[symbol]?.amount /
+                    Math.pow(10, 18)}`}
+                </span>
+                {price && (
+                  <span className='awaited-tokens'>
+                    {`(~$${+(
+                      (store.awaitedTokens[symbol]?.amount / Math.pow(10, 18)) *
+                      +(price && !!price[symbol] ? price[symbol] : 1)
+                    ).toFixed(2)})`}
+                  </span>
+                )}
+                <span className='awaited-tokens'>{'depositing'}</span>
+                <SpinnerWorm />
+              </>
+            )}
           </div>
         </div>
-        <div className='balances-token-status'>
-          <p>{'Verified'}</p>
-          <span className='label-done'></span>
-        </div>
-        <button
-          className='btn-tr'
-          onClick={() => handleSend(address, balance, symbol)}
-        >
-          {'Send'}
-        </button>
       </div>
     </div>
   );
 
   const UnverifiedBal = ({ balance: { address, symbol, balance } }) => (
-    <div key={balance} className='balances-token pending'>
+    <div
+      key={balance}
+      className='balances-token verified'
+      onClick={() => {
+        if (address === 'awaited') return;
+        handleSend(address, balance, symbol);
+      }}
+    >
       <div className='balances-token-left'>
         {'zk'}
         {symbol}
@@ -166,25 +226,31 @@ const Account: React.FC = observer(() => {
                 ).toFixed(2)})`}
               </span>
             )}
+            <div className='balances-token-status'>
+              <span className='label-verifying'></span>
+            </div>
           </div>
           <div>
-            <span className='awaited-tokens'>
-              {store.awaitedTokens[symbol]?.amount
-                ? `+ ${store.awaitedTokens[symbol]?.amount / Math.pow(10, 18)}`
-                : ''}
-            </span>
+            {store.awaitedTokens[symbol]?.amount && (
+              <>
+                <span className='awaited-tokens'>
+                  {`+ ${store.awaitedTokens[symbol]?.amount /
+                    Math.pow(10, 18)}`}
+                </span>
+                {price && (
+                  <span className='awaited-tokens'>
+                    {`(~$${+(
+                      (store.awaitedTokens[symbol]?.amount / Math.pow(10, 18)) *
+                      +(price && !!price[symbol] ? price[symbol] : 1)
+                    ).toFixed(2)})`}
+                  </span>
+                )}
+                <span className='awaited-tokens'>{'depositing'}</span>
+                <SpinnerWorm />
+              </>
+            )}
           </div>
         </div>
-        <div className='balances-token-status'>
-          <p>{'Verifying'}</p>
-          <SpinnerWorm />
-        </div>
-        <button
-          onClick={() => handleSend(address, balance, symbol)}
-          className='pending btn-tr'
-        >
-          {'Send'}
-        </button>
       </div>
     </div>
   );
@@ -212,7 +278,11 @@ const Account: React.FC = observer(() => {
           )
         }
         emptyListComponent={() =>
-          zkBalancesLoaded ? <p>{'No balances yet.'}</p> : <Spinner />
+          zkBalancesLoaded && store.accountState ? (
+            <p>{'No balances yet.'}</p>
+          ) : (
+            <Spinner />
+          )
         }
       />
     </>
