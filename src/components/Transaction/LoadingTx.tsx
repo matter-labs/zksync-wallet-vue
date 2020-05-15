@@ -47,6 +47,11 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
 
     const info = hint?.split('\n');
 
+    const propperTitle =
+      isLoading && (isAccountUnlockingProcess || isUnlockingProcess)
+        ? 'Unlocking'
+        : title;
+
     return (
       <>
         {isLoading && !hint.match(/(?:denied)/i) && (
@@ -58,12 +63,13 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
               }}
               className='transaction-back'
             ></button>
-            <h2 className='transaction-title'>
-              {isLoading && (isAccountUnlockingProcess || isUnlockingProcess)
-                ? 'Unlocking'
-                : title}
-            </h2>
+            <h2 className='transaction-title'>{propperTitle}</h2>
             <Spinner />
+            <p>
+              {propperTitle === 'Unlocking'
+                ? 'Follow the instructions in the pop up'
+                : ''}
+            </p>
             <p>{info[0]}</p>
             {title === 'Send' && !isAccountUnlockingProcess && (
               <span className='transaction-field-title'>

@@ -84,6 +84,8 @@ export class Store {
     this.zkWalletInitializing = false;
     this.searchBalances = [];
     this.searchContacts = [];
+    this.awaitedTokens = {};
+    this.accountState = null;
   }
 
   @action

@@ -1,12 +1,14 @@
 import React, { useMemo, useCallback } from 'react';
+import { ethers } from 'ethers';
+import { useObserver, observer } from 'mobx-react-lite';
+
+import { CURRENT_NETWORK_PREFIX } from 'constants/networks';
 
 import { DataList } from 'components/DataList/DataListNew';
 import { useCheckLogin } from 'hooks/useCheckLogin';
-import { ethers } from 'ethers';
 import { getConfirmationCount } from 'src/utils';
 import { Transaction } from './Transaction';
 import { useStore } from 'src/store/context';
-import { useObserver, observer } from 'mobx-react-lite';
 
 export interface Tx {
   hash: string;
@@ -48,7 +50,7 @@ const Transactions: React.FC = observer(() => {
   const fetchTransactions = useCallback(
     async (amount, offset): Promise<Tx[]> => {
       const txs: Tx[] = await fetch(
-        'https://testnet.zksync.dev/api/v0.1/account/' +
+        `https://${CURRENT_NETWORK_PREFIX}-api.zksync.dev/api/v0.1/account/` +
           `${store.zkWalletAddress}/history/${offset}/${amount}`,
       ).then(r => r.json());
 

@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
 
-import { IEthBalance } from 'types/Common';
 import { PriorityOperationReceipt } from 'zksync/build/types';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
@@ -23,8 +22,6 @@ export const useTransaction = () => {
     walletAddress.address ? walletAddress.address : '',
   );
   const [amountValue, setAmountValue] = useState<any>(0);
-  const [packableAmount, setPackableAmount] = useState<any>();
-  const [packableFee, setPackableFee] = useState<any>();
   const [hash, setHash] = useState<ContractTransaction | string | undefined>();
   const [isExecuted, setExecuted] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -63,28 +60,8 @@ export const useTransaction = () => {
   const transactions = useCallback(
     async (receipt: PriorityOperationReceipt) => {
       try {
-        if (receipt && zkWallet && tokens) {
-          const _accountState = await zkWallet.getAccountState();
-          const zkBalance = _accountState.committed.balances;
-          store.awaitedTokens = _accountState.depositing;
-          const zkBalancePromises = Object.keys(zkBalance).map(async key => {
-            return {
-              address: tokens[key].address,
-              balance: +zkBalance[key] / Math.pow(10, 18),
-              symbol: tokens[key].symbol,
-            };
-          });
-          Promise.all(zkBalancePromises)
-            .then(res => {
-              store.zkBalances = res as IEthBalance[];
-            })
-            .catch(err => {
-              err.name && err.message
-                ? (store.error = `${err.name}: ${err.message}`)
-                : (store.error = DEFAULT_ERROR);
-            });
-          setAmountValue(0);
-        }
+        setAmountValue(0);
+
         if (receipt.executed) {
           setExecuted(true);
           setLoading(false);
@@ -167,10 +144,6 @@ export const useTransaction = () => {
                 });
               const _accountState = await zkWallet.getAccountState();
               store.awaitedTokens = _accountState.depositing.balances;
-              const receipt = await depositPriorityOperation.awaitReceipt();
-              transactions(receipt);
-              const verifyReceipt = await depositPriorityOperation.awaitVerifyReceipt();
-              store.verifyToken = !!verifyReceipt;
             } catch (err) {
               if (err.message.match(/(?:denied)/i)) {
                 store.hint = err.message;
@@ -198,16 +171,17 @@ export const useTransaction = () => {
       amountValue,
       store.hint,
       history,
-      packableAmount,
-      packableFee,
       setHash,
       setLoading,
-      setPackableAmount,
       transactions,
       zkWallet,
       store.error,
-      store.hint,
       store.verifyToken,
+      store.awaitedTokens,
+      store.zkBalances,
+      store.maxConfirmAmount,
+      cancelable,
+      ethBalances,
     ],
   );
 

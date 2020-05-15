@@ -59,8 +59,9 @@ const useWalletInit = () => {
       store.ethWallet = wallet;
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      const syncProvider = await zkSync.getDefaultProvider(network, 'WS');
-
+      const syncProvider = await zkSync.Provider.newWebsocketProvider(
+        'wss://rinkeby-api.zksync.dev/jsrpc-ws',
+      );
       const syncWallet = await zkSync.Wallet.fromEthSigner(
         wallet as ethers.providers.JsonRpcSigner,
         syncProvider,
@@ -68,6 +69,7 @@ const useWalletInit = () => {
 
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
+      store.verified = accountState?.verified.balances;
       const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
 
       store.setBatch({
@@ -136,7 +138,6 @@ const useWalletInit = () => {
         localStorage.getItem(`contacts${store.zkWallet?.address()}`) || '[]',
       );
       store.searchContacts = arr;
-      store.verified = accountState?.verified.balances;
 
       cancelable(
         fetch(

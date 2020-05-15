@@ -159,6 +159,10 @@
     background-color: var(--transparent);
     border-bottom: 1px solid var(--border-color);
     cursor: pointer;
+
+    &-status {
+      margin-left: 20px;
+    }
     
     &.verified {
       background-color: var(--transparent);
@@ -226,14 +230,6 @@
 
     &:hover {
       background-color: var(--copyblock-color);
-
-      .balances-token-status {
-        display: none;
-      }
-
-      button {
-        display: block;
-      }
     }
   }
 
@@ -326,16 +322,23 @@
   }
 }
 
-.label-done {
-  display: none;
-  width: 15px;
-  height: 15px;
-  background-image: url(../../images/success.svg);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  border-radius: 13px;
+.label {
+  &-done, &-verifying {
+    display: block;
+    min-width: 15px;
+    min-height: 15px;
+    background-image: url(../../images/success.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border-radius: 13px;
+  }
+
+  &-verifying {
+    background-image: url(../../images/verifying.svg);
+  }
 }
+
 
 .transaction-history {
   &.transfer, &.deposit, &.withdraw {
