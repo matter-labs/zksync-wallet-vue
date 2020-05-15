@@ -61,13 +61,9 @@ export function DataList<T>({
   const setBinded = bindData && bindData[1];
 
   const getData = useCallback(() => {
-    if (binded) {
-      return binded;
-    } else if (resolvedData.length) {
-      return resolvedData;
-    } else if (data) {
-      return data;
-    }
+    if (data) return data;
+    if (binded) return binded;
+    if (resolvedData.length) return resolvedData;
     return [];
   }, [data, binded, resolvedData]);
 

@@ -15,6 +15,130 @@ import { useStore } from 'src/store/context';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 
+interface BalProps {
+  balance: IEthBalance;
+  handleSend: (address: any, balance: any, symbol: any) => void;
+}
+
+const VerifiedBal: React.FC<BalProps> = observer(
+  ({ handleSend, balance: { address, symbol, balance } }) => {
+    const store = useStore();
+    const { price } = store;
+    return (
+      <div
+        key={balance}
+        className='balances-token verified'
+        onClick={() => {
+          if (address === 'awaited') return;
+          handleSend(address, balance, symbol);
+        }}
+      >
+        <div className='balances-token-left'>
+          {'zk'}
+          {symbol}
+        </div>
+        <div className='balances-token-right'>
+          <div className='balances-token-right container'>
+            <div>
+              <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
+              {price && (
+                <span>
+                  {`(~$${+(
+                    balance * +(price && !!price[symbol] ? price[symbol] : 1)
+                  ).toFixed(2)})`}
+                </span>
+              )}
+              <div className='balances-token-status'>
+                <span className='label-done'></span>
+              </div>
+            </div>
+            <div>
+              {store.awaitedTokens[symbol]?.amount && (
+                <>
+                  <span className='awaited-tokens'>
+                    {`+ ${store.awaitedTokens[symbol]?.amount /
+                      Math.pow(10, 18)}`}
+                  </span>
+                  {price && (
+                    <span className='awaited-tokens'>
+                      {`(~$${+(
+                        (store.awaitedTokens[symbol]?.amount /
+                          Math.pow(10, 18)) *
+                        +(price && !!price[symbol] ? price[symbol] : 1)
+                      ).toFixed(2)})`}
+                    </span>
+                  )}
+                  <span className='awaited-tokens'>{'depositing'}</span>
+                  <SpinnerWorm />
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+);
+
+const UnverifiedBal: React.FC<BalProps> = observer(
+  ({ handleSend, balance: { address, symbol, balance } }) => {
+    const store = useStore();
+    const { price } = store;
+    return (
+      <div
+        className='balances-token verified'
+        onClick={() => {
+          if (address === 'awaited') return;
+          handleSend(address, balance, symbol);
+        }}
+      >
+        <div className='balances-token-left'>
+          {'zk'}
+          {symbol}
+        </div>
+        <div className='balances-token-right'>
+          <div className='balances-token-right container'>
+            <div>
+              <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
+              {price && (
+                <span>
+                  {`(~$${+(
+                    balance * +(price && !!price[symbol] ? price[symbol] : 1)
+                  ).toFixed(2)})`}
+                </span>
+              )}
+              <div className='balances-token-status'>
+                <span className='label-verifying'></span>
+              </div>
+            </div>
+            <div>
+              {store.awaitedTokens[symbol]?.amount && (
+                <>
+                  <span className='awaited-tokens'>
+                    {`+ ${store.awaitedTokens[symbol]?.amount /
+                      Math.pow(10, 18)}`}
+                  </span>
+                  {price && (
+                    <span className='awaited-tokens'>
+                      {`(~$${+(
+                        (store.awaitedTokens[symbol]?.amount /
+                          Math.pow(10, 18)) *
+                        +(price && !!price[symbol] ? price[symbol] : 1)
+                      ).toFixed(2)})`}
+                    </span>
+                  )}
+                  <span className='awaited-tokens'>{'depositing'}</span>
+                  <SpinnerWorm />
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  },
+);
+
 const Account: React.FC = observer(() => {
   const { setMaxValueProp, setSymbolNameProp, setTokenProp } = useTransaction();
 
@@ -149,111 +273,12 @@ const Account: React.FC = observer(() => {
       <p>{'No Conversion Rate Available'}</p>
     ) : null;
 
-  const VerifiedBal = ({ balance: { address, symbol, balance } }) => (
-    <div
-      key={balance}
-      className='balances-token verified'
-      onClick={() => {
-        if (address === 'awaited') return;
-        handleSend(address, balance, symbol);
-      }}
-    >
-      <div className='balances-token-left'>
-        {'zk'}
-        {symbol}
-      </div>
-      <div className='balances-token-right'>
-        <div className='balances-token-right container'>
-          <div>
-            <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
-            {price && (
-              <span>
-                {`(~$${+(
-                  balance * +(price && !!price[symbol] ? price[symbol] : 1)
-                ).toFixed(2)})`}
-              </span>
-            )}
-            <div className='balances-token-status'>
-              <span className='label-done'></span>
-            </div>
-          </div>
-          <div>
-            {store.awaitedTokens[symbol]?.amount && (
-              <>
-                <span className='awaited-tokens'>
-                  {`+ ${store.awaitedTokens[symbol]?.amount /
-                    Math.pow(10, 18)}`}
-                </span>
-                {price && (
-                  <span className='awaited-tokens'>
-                    {`(~$${+(
-                      (store.awaitedTokens[symbol]?.amount / Math.pow(10, 18)) *
-                      +(price && !!price[symbol] ? price[symbol] : 1)
-                    ).toFixed(2)})`}
-                  </span>
-                )}
-                <span className='awaited-tokens'>{'depositing'}</span>
-                <SpinnerWorm />
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const UnverifiedBal = ({ balance: { address, symbol, balance } }) => (
-    <div
-      key={balance}
-      className='balances-token verified'
-      onClick={() => {
-        if (address === 'awaited') return;
-        handleSend(address, balance, symbol);
-      }}
-    >
-      <div className='balances-token-left'>
-        {'zk'}
-        {symbol}
-      </div>
-      <div className='balances-token-right'>
-        <div className='balances-token-right container'>
-          <div>
-            <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
-            {price && (
-              <span>
-                {`(~$${+(
-                  balance * +(price && !!price[symbol] ? price[symbol] : 1)
-                ).toFixed(2)})`}
-              </span>
-            )}
-            <div className='balances-token-status'>
-              <span className='label-verifying'></span>
-            </div>
-          </div>
-          <div>
-            {store.awaitedTokens[symbol]?.amount && (
-              <>
-                <span className='awaited-tokens'>
-                  {`+ ${store.awaitedTokens[symbol]?.amount /
-                    Math.pow(10, 18)}`}
-                </span>
-                {price && (
-                  <span className='awaited-tokens'>
-                    {`(~$${+(
-                      (store.awaitedTokens[symbol]?.amount / Math.pow(10, 18)) *
-                      +(price && !!price[symbol] ? price[symbol] : 1)
-                    ).toFixed(2)})`}
-                  </span>
-                )}
-                <span className='awaited-tokens'>{'depositing'}</span>
-                <SpinnerWorm />
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  const Balance = ({ verified, balance }) =>
+    verified ? (
+      <VerifiedBal handleSend={handleSend} balance={balance} />
+    ) : (
+      <UnverifiedBal handleSend={handleSend} balance={balance} />
+    );
 
   return (
     <>
@@ -270,13 +295,13 @@ const Account: React.FC = observer(() => {
         title='Token balances'
         visible={true}
         footer={ApiFailedHint}
-        renderItem={balance =>
-          isVerified(balance) ? (
-            <VerifiedBal key={balance.address} balance={balance} />
-          ) : (
-            <UnverifiedBal key={balance.address} balance={balance} />
-          )
-        }
+        renderItem={balance => (
+          <Balance
+            key={balance.address}
+            verified={isVerified(balance)}
+            balance={balance}
+          />
+        )}
         emptyListComponent={() =>
           zkBalancesLoaded && store.accountState ? (
             <p>{'No balances yet.'}</p>
