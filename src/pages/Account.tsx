@@ -41,7 +41,7 @@ const Account: React.FC = observer(() => {
   //     }
   //   } else {
   //     store.zkBalances = balance;
-  //   }
+  //  }
   // }, [store.awaitedTokens, store.searchBalances]);
 
   useEffect(() => {
