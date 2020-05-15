@@ -10,13 +10,11 @@ export interface PieProps {
   status: string;
 }
 
-const MAX_CONFIRM = 25;
-
-export function getTxStatus(tx: Tx) {
+export function getTxStatus(tx: Tx, maxConfirmAmount: number) {
   const { commited, verified, confirmCount } = tx;
   if (!commited && !verified) return 'Not commited & unverified';
   if (verified) return 'Verified';
-  return `${confirmCount}/${MAX_CONFIRM} confirmations`;
+  return `${confirmCount}/${maxConfirmAmount} confirmations`;
 }
 
 const percentCoords = percent =>
@@ -70,7 +68,7 @@ const Clock = () => (
 export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
   const store = useStore();
   const isZkSync = tx.hash.startsWith('sync-tx');
-  const status = getTxStatus(tx);
+  const status = getTxStatus(tx, store.maxConfirmAmount);
   const val = tx.confirmCount / (store.maxConfirmAmount || 1);
 
   let content: JSX.Element | null = null;
