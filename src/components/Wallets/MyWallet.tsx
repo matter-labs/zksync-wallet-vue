@@ -1,17 +1,14 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import makeBlockie from 'ethereum-blockies-base64';
-import cl from 'classnames';
 import { observer } from 'mobx-react-lite';
 
 import avatar from 'images/avatar.png';
-import { DataList } from 'components/DataList/DataListNew';
 import Spinner from 'components/Spinner/Spinner';
 import SpinnerWorm from 'components/Spinner/SpinnerWorm';
 import { Transition } from 'components/Transition/Transition';
 
 import { useTimeout } from 'hooks/timers';
-import { useCancelable } from 'hooks/useCancelable';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
 import { useStore } from 'src/store/context';
 
@@ -33,36 +30,8 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
       zkWallet,
     } = store;
 
-    // const {
-    //   setBalances,
-    //   transactionModal,
-    //   zkBalances,
-    //   zkBalancesLoaded,
-    //   verifyToken,
-    //   zkWallet,
-    // } = useRootData(
-    //   ({
-    //     searchBalances,
-    //     transactionModal,
-    //     zkBalances,
-    //     zkBalancesLoaded,
-    //     verifyToken,
-    //     zkWallet,
-    //     ...s
-    //   }) => ({
-    //     ...s,
-    //     searchBalances: searchBalances.get(),
-    //     transactionModal: transactionModal.get(),
-    //     verifyToken: verifyToken.get(),
-    //     zkBalances: zkBalances.get(),
-    //     zkBalancesLoaded: zkBalancesLoaded.get(),
-    //     zkWallet: zkWallet.get(),
-    //   }),
-    // );
-
     const body = document.getElementById('body');
 
-    const [address, setAddress] = useState<string>('');
     const [isCopyModal, openCopyModal] = useState<boolean>(false);
     const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
     const [isAssetsOpen, openAssets] = useState<boolean>(false);

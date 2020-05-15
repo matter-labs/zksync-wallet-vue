@@ -3,63 +3,39 @@ import WalletConnectProvider from '@walletconnect/web3-provider';
 import { useHistory } from 'react-router-dom';
 
 import useWalletInit from 'hooks/useWalletInit';
-import { useRootData } from 'hooks/useRootData';
 
 import { DEFAULT_ERROR } from 'constants/errors';
+import { useStore } from 'src/store/context';
+import { observer } from 'mobx-react-lite';
 
-const WalletConnect: React.FC = () => {
+const WalletConnect: React.FC = observer(() => {
   const { connect, getSigner } = useWalletInit();
-
-  const {
-    provider,
-    setError,
-    setProvider,
-    setWalletName,
-    setZkWallet,
-  } = useRootData(
-    ({ provider, setError, setProvider, setWalletName, setZkWallet }) => ({
-      provider: provider.get(),
-      setError,
-      setProvider,
-      setWalletName,
-      setZkWallet,
-    }),
-  );
-
+  const store = useStore();
   const history = useHistory();
 
   useEffect(() => {
+    const { provider } = store;
     try {
       if (!provider) {
         const wcProvider = new WalletConnectProvider({
           infuraId: process.env.REACT_APP_WALLET_CONNECT,
         });
-        setProvider(wcProvider);
+        store.provider = wcProvider;
         connect(wcProvider, wcProvider?.enable.bind(wcProvider));
       }
     } catch (err) {
-      err.name && err.message
-        ? setError(
-            `${err.name}: ${err.message}. Maybe you don't have Wallet Connect installed in your browser`,
-          )
-        : setError(DEFAULT_ERROR);
+      store.error =
+        err.name && err.message
+          ? `${err.name}: ${err.message}. Maybe you don't have Wallet Connect installed in your browser`
+          : DEFAULT_ERROR;
       history.push('/');
-      setWalletName('');
-      setZkWallet(null);
-      setProvider(null);
+      store.walletName = '';
+      store.zkWallet = null;
+      store.provider = null;
     }
-  }, [
-    connect,
-    getSigner,
-    history,
-    provider,
-    setError,
-    setProvider,
-    setWalletName,
-    setZkWallet,
-  ]);
+  }, [store, connect, getSigner, history]);
 
   return null;
-};
+});
 
 export default WalletConnect;
