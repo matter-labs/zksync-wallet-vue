@@ -32,7 +32,8 @@ const PRIMARY_COLOR = '#8C8DFC';
 const LOADING_COLOR = 'rgba(0, 0, 0, 0.4)';
 
 const Wrapper = ({ children, status }) => (
-  <div className='tx-status' title={status}>
+  <div className='tx-status'>
+    <span className='tooltip'>{status}</span>
     <svg width='35' height='35' viewBox='26 6 26 8'>
       {children}
     </svg>

@@ -47,13 +47,14 @@ export async function getConfirmationCount(
   provider: Web3Provider,
   txHash: string,
 ) {
+  //todo: fixme - do not depend on transaction format, use type of transaction
   if (txHash.startsWith('sync-tx')) return 0;
   try {
     const trx = await provider.getTransaction(txHash);
     const currentBlock = await provider.getBlockNumber();
 
     if (typeof trx.blockNumber === 'undefined') return 0;
-    return currentBlock - trx.blockNumber;
+    return currentBlock - trx.blockNumber + 1;
     // return trx.confirmations;
   } catch (error) {
     return 0;

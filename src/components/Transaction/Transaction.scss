@@ -759,9 +759,27 @@ p.transaction-hash {
 }
 
 .tx-status {
+  position: relative;
   width: 50px;
   height: 50px;
   
+  & .tooltip {
+      bottom: 50px; 
+      display: none;
+      width: auto; 
+      padding: 10px;
+      color: var(--dark-color);
+      text-align: center;
+    }
+
+    &:hover .tooltip { 
+      position: absolute;
+      z-index: 10000;
+      display: block;
+      background: var(--modal-bg-color);  
+      border: 1px solid var(--hints-color); 
+      border-radius: 5px;
+    }
 }
 
 .success-lottie-checkmark {
