@@ -16,7 +16,7 @@ export function getTxStatus(tx: Tx, maxConfirmAmount: number) {
   if (verified) return 'Verified';
   if (tx.tx.type === 'Deposit')
     return `${confirmCount}/${maxConfirmAmount} confirmations`;
-  return 'Committed & unverified';
+  return 'Verification in progress';
 }
 
 const percentCoords = percent =>
