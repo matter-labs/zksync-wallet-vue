@@ -1049,7 +1049,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 <button
                                   onClick={() =>
                                     handleShowHint(
-                                      'You need to call ERC20.approve() for our contract once in order to authorize token deposits.',
+                                      'Click on the switch will call ERC20.approve() for our contract once in order to authorize token deposits.',
                                     )
                                   }
                                   className='hint-question-mark'
