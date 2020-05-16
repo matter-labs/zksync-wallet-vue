@@ -47,9 +47,13 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
 
     const info = hint?.split('\n');
 
+    const unlockingTitle = isAccountUnlockingProcess
+      ? 'Unlock account'
+      : `Unlock ${symbolName} token`;
+
     const propperTitle =
       isLoading && (isAccountUnlockingProcess || isUnlockingProcess)
-        ? 'Unlocking'
+        ? unlockingTitle
         : title;
 
     return (

@@ -39,10 +39,10 @@ const VerifiedBal: React.FC<BalProps> = observer(
             <div className='current-tokens'>
               <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
               {price && (
-                <span>
-                  {`(~$${+(
+                <span className='token-price'>
+                  {`~$${+(
                     balance * +(price && !!price[symbol] ? price[symbol] : 1)
-                  ).toFixed(2)})`}
+                  ).toFixed(2)}`}
                 </span>
               )}
               <div className='balances-token-status'>
@@ -97,15 +97,15 @@ const UnverifiedBal: React.FC<BalProps> = observer(
             <div className='current-tokens'>
               <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
               {price && (
-                <span>
-                  {`(~$${+(
+                <span className='token-price'>
+                  {`~$${+(
                     balance * +(price && !!price[symbol] ? price[symbol] : 1)
-                  ).toFixed(2)})`}
+                  ).toFixed(2)}`}
                 </span>
               )}
               <div className='balances-token-status'>
                 <span className='label-verifying'>
-                  <span className='tooltip'>
+                  <span className='tooltip wide'>
                     {'Awaiting verification (but already disposable in zkSync)'}
                   </span>
                 </span>
@@ -237,9 +237,9 @@ const Account: React.FC = observer(() => {
     (address, balance, symbol) => {
       store.transactionType = 'transfer';
       history.push('/send');
-      setMaxValueProp(balance);
-      setSymbolNameProp(symbol);
-      setTokenProp(symbol ? symbol : address);
+      store.propsMaxValue = balance;
+      store.propsSymbolName = symbol;
+      store.propsToken = symbol ? symbol : address;
     },
     [history, setMaxValueProp, setSymbolNameProp, setTokenProp, store],
   );

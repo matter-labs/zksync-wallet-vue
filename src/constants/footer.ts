@@ -7,7 +7,7 @@ export const FOOTER_LINKS: IFooterLinks[] = [
   },
   {
     title: 'Block explorer',
-    link: 'https://rinkeby.zkscan.dev/explorer/',
+    link: 'https://rinkeby.zkscan.io/explorer/',
   },
   {
     title: 'Terms of Use',
