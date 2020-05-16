@@ -29,6 +29,9 @@ export class Store {
   @observable price?: IPrice;
   // TODO: add explicit type
   @observable provider?: any;
+  @observable propsMaxValue: any;
+  @observable propsSymbolName: any;
+  @observable propsToken: any;
   @observable searchBalances: IEthBalance[] = [];
   // TODO: add explicit type
   @observable searchContacts?: IContacts[] = [];
@@ -86,6 +89,9 @@ export class Store {
     this.searchContacts = [];
     this.awaitedTokens = {};
     this.accountState = null;
+    this.propsMaxValue = null;
+    this.propsSymbolName = null;
+    this.propsToken = null;
   }
 
   @action

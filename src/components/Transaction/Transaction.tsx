@@ -42,9 +42,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     onChangeAddress,
     onChangeAmount,
     price,
-    propsMaxValue,
-    propsSymbolName,
-    propsToken,
     setHash,
     setExecuted,
     setLoading,
@@ -91,15 +88,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
     >(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [maxValue, setMaxValue] = useState<number>(
-      propsMaxValue ? propsMaxValue : 0,
+      store.propsMaxValue ? store.propsMaxValue : 0,
     );
     const [selected, setSelected] = useState<boolean>(false);
     const [selectedBalance, setSelectedBalance] = useState<any | undefined>();
     const [selectedContact, setSelectedContact] = useState<any | undefined>();
     const [symbolName, setSymbolName] = useState<string>(
-      propsSymbolName ? propsSymbolName : '',
+      store.propsSymbolName ? store.propsSymbolName : '',
     );
-    const [token, setToken] = useState<string>(propsToken ? propsToken : '');
+    const [token, setToken] = useState<string>(
+      store.propsToken ? store.propsToken : '',
+    );
     const [unlockFau, setUnlockFau] = useState<boolean>(false);
     const [value, setValue] = useState<string>(
       localStorage.getItem('walletName') || '',
@@ -291,13 +290,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     }, [zkWallet]);
 
-    useMobxEffect(() => {
-      store.hint = '';
-    }, []);
-
     useEffect(() => {
       setExecuted(false);
     }, [zkWallet, setExecuted]);
+
+    useEffect(() => {
+      return () => {
+        store.propsMaxValue = null;
+        store.propsSymbolName = null;
+        store.propsToken = null;
+      };
+    }, []);
 
     useMobxEffect(() => {
       store.searchBalances =
@@ -327,6 +330,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
       if (token && zkWallet && symbolName !== 'ETH') {
         zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
+      }
+      if (store.propsToken) {
+        setSymbol(store.propsToken);
+        setSelectedBalance(store.propsToken);
+        setSelected(true);
+        setConditionError('');
       }
       if (
         ADDRESS_VALIDATION['eth'].test(addressValue) &&
@@ -396,6 +405,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       walletAddress,
       zkWallet,
       store,
+      store.propsToken,
     ]);
 
     const handleShowHint = useCallback(

@@ -16,15 +16,12 @@ export const Send: React.FC = observer(
       hash,
       isExecuted,
       isLoading,
-      maxValueProp,
       setAddressValue,
       setAmountValue,
       setExecuted,
       setHash,
       setLoading,
       setSymbol,
-      symbolNameProp,
-      tokenProp,
       transfer,
     } = useTransaction();
 
@@ -45,9 +42,9 @@ export const Send: React.FC = observer(
         isLoading={isLoading}
         onChangeAddress={(e: string) => setAddressValue(e)}
         onChangeAmount={setAmountValue}
-        propsMaxValue={maxValueProp ? maxValueProp : 0}
-        propsSymbolName={symbolNameProp ? symbolNameProp : ''}
-        propsToken={tokenProp ? tokenProp : ''}
+        propsMaxValue={undefined}
+        propsSymbolName={undefined}
+        propsToken={undefined}
         price={price}
         setHash={setHash}
         setExecuted={setExecuted}

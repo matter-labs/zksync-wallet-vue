@@ -96,7 +96,7 @@ export const Transaction: FC<Tx> = props => {
           )}
           {type === 'Withdraw' && (
             <>
-              <span>{'Withdrawed to:'}</span>
+              <span>{'Withdrawn to:'}</span>
               <p>{to?.replace(to?.slice(6, to?.length - 3), '...')}</p>
             </>
           )}

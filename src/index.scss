@@ -488,6 +488,12 @@ h2 {
   }
 }
 
+.token {
+  &-price {
+    font-size: var(--sm-font-size);
+  }
+}
+
 .contact-manage {
   background-color: var(--modal-bg-color);
 

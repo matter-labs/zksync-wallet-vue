@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { ContractTransaction, ethers } from 'ethers';
 
 import { PriorityOperationReceipt } from 'zksync/build/types';
+import { IEthBalance } from 'types/Common';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { DEFAULT_ERROR } from 'constants/errors';
@@ -60,7 +61,28 @@ export const useTransaction = () => {
   const transactions = useCallback(
     async (receipt: PriorityOperationReceipt) => {
       try {
-        setAmountValue(0);
+        if (receipt && zkWallet && tokens) {
+          const _accountState = await zkWallet.getAccountState();
+          const zkBalance = _accountState.committed.balances;
+          store.awaitedTokens = _accountState.depositing;
+          const zkBalancePromises = Object.keys(zkBalance).map(async key => {
+            return {
+              address: tokens[key].address,
+              balance: +zkBalance[key] / Math.pow(10, 18),
+              symbol: tokens[key].symbol,
+            };
+          });
+          Promise.all(zkBalancePromises)
+            .then(res => {
+              store.zkBalances = res as IEthBalance[];
+            })
+            .catch(err => {
+              err.name && err.message
+                ? (store.error = `${err.name}: ${err.message}`)
+                : (store.error = DEFAULT_ERROR);
+            });
+          setAmountValue(0);
+        }
 
         if (receipt.executed) {
           setExecuted(true);
