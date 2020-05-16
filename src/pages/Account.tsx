@@ -106,7 +106,7 @@ const UnverifiedBal: React.FC<BalProps> = observer(
               <div className='balances-token-status'>
                 <span className='label-verifying'>
                   <span className='tooltip wide'>
-                    {'Awaiting verification (but already disposable in zkSync)'}
+                    {'Verification in progress'}
                   </span>
                 </span>
               </div>
