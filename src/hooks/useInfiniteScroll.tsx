@@ -8,6 +8,7 @@ export function useInfiniteScroll(
   onFetch,
   loadAmount = 5,
   loadMoreThreshold = 10,
+  minimalAmount = 25,
 ) {
   const store = useStore();
   const [hasMore, setHasMore] = useState(true);
@@ -20,8 +21,10 @@ export function useInfiniteScroll(
     { passive: true },
   );
   const refresh = useCallback(() => {
-    onFetch(store.transactions.length, 0).then(txs => store.setTxs(txs));
-  }, [onFetch, store]);
+    onFetch(store.transactions.length || minimalAmount, 0).then(txs =>
+      store.setTxs(txs),
+    );
+  }, [onFetch, store, minimalAmount]);
   useInterval(refresh, 2000, [store]);
 
   useEffect(() => {
@@ -34,13 +37,13 @@ export function useInfiniteScroll(
         loadMoreThreshold;
     if (loadMore) {
       setIsLoadingMore(true);
-      onFetch(loadAmount, store.transactions.length).then(res => {
+      onFetch(store.transactions.length + loadAmount, 0).then(res => {
         setIsLoadingMore(false);
         if (!res.length) {
           setHasMore(false);
           return;
         }
-        store.setTxs(res.concat(store.transactions));
+        store.setTxs(res);
       });
     }
   }, [

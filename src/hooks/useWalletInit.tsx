@@ -82,7 +82,7 @@ const useWalletInit = () => {
 
       const web3Provider = new ethers.providers.Web3Provider(provider);
       const initialTransactions = await fetchTransactions(
-        10,
+        25,
         0,
         syncWallet.address(),
         web3Provider,
