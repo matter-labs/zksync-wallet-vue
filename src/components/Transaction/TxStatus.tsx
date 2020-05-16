@@ -30,7 +30,7 @@ const LOADING_COLOR = 'rgba(0, 0, 0, 0.4)';
 
 const Wrapper = ({ children, status }) => (
   <div className='tx-status' title={status}>
-    <svg width='100%' height='100%' viewBox='-1 -1 2 2'>
+    <svg width='50' height='50' viewBox='26 6 26 8'>
       {children}
     </svg>
   </div>
@@ -38,31 +38,20 @@ const Wrapper = ({ children, status }) => (
 
 const CheckMark = () => (
   <path
-    stroke={PRIMARY_COLOR}
-    strokeWidth='0.4'
-    strokeLinecap='round'
-    fill='transparent'
-    style={{ transform: 'rotate(90deg)' }}
-    d='M -0.7 0.2 L 0 0.8 L 0.9 -0.4'
-  />
+    fill='#58AE67'
+    xmlns='http://www.w3.org/2000/svg'
+    d='M27.923 10.33l5.42 5.47L43.656 5.56l-1.998-1.998-8.065 7.9-3.33-3.355zm8.587 2.908l2.538 2.493L49.36 5.492l-1.998-1.998-8.065 7.9-.447-.378z'
+  ></path>
 );
 
 const Clock = () => (
-  <g style={{ transform: 'rotate(90deg)' }}>
-    <circle
-      fill='transparent'
-      cx='0'
-      cy='0'
-      r='0.8'
-      stroke={PRIMARY_COLOR}
-      strokeWidth='0.3'
-    />
+  <g style={{ transform: 'translate(100%)' }}>
     <path
-      d='M 0 0 L 0.3 -0.2 M 0 0 L 0 -0.4'
-      stroke={PRIMARY_COLOR}
-      strokeWidth='0.2'
-      strokeLinecap='round'
-    />
+      fill='#aa935d'
+      transform='translateX(100px)'
+      xmlns='http://www.w3.org/2000/svg'
+      d='M4.6 10.642l5.42 5.47 10.314-10.24-1.998-1.998-8.065 7.9L6.93 8.43z'
+    ></path>
   </g>
 );
 
