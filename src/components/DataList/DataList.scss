@@ -409,6 +409,7 @@
   }
 
   &-amount {
+    display: inline;
     max-width: 200px;
     margin-left: 18px;
     color: var(--dark-color);
@@ -442,10 +443,6 @@
   }
 
   &-left {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-start;
     width: 135px;
   }
 
@@ -555,7 +552,7 @@
 
   .transaction-history {
     &-hash {
-      margin-bottom: 0;
+      display: inline;
       margin-left: 10px;
     }
   
