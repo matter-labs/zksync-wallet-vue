@@ -1,14 +1,15 @@
 import React, { useMemo, useCallback } from 'react';
 import { ethers } from 'ethers';
-import { useObserver, observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 
 import { CURRENT_NETWORK_PREFIX } from 'constants/networks';
-
 import { DataList } from 'components/DataList/DataListNew';
-import { useCheckLogin } from 'hooks/useCheckLogin';
 import { getConfirmationCount } from 'src/utils';
+
 import { Transaction } from './Transaction';
 import { useStore } from 'src/store/context';
+import Spinner from 'src/components/Spinner/Spinner';
+import { useInfiniteScroll } from 'hooks/useInfiniteScroll';
 
 export interface Tx {
   hash: string;
@@ -37,7 +38,14 @@ export interface Tx {
   commited: boolean;
   verified: boolean;
   confirmCount: number;
+  created_at: Date;
 }
+
+const renderTx = (tx: Tx) => (
+  <Transaction key={tx.hash + tx.tx.amount} {...tx} />
+);
+const filterPredicate = (tx: Tx) => tx.tx.type !== 'ChangePubKey';
+const onSort = arr => arr.slice().reverse();
 
 const Transactions: React.FC = observer(() => {
   const store = useStore();
@@ -48,42 +56,45 @@ const Transactions: React.FC = observer(() => {
   );
 
   const fetchTransactions = useCallback(
-    async (amount, offset): Promise<Tx[]> => {
-      const txs: Tx[] = await fetch(
+    async (amount, offset) => {
+      const { zkWalletAddress } = store;
+      if (!zkWalletAddress) return [];
+      const txs = await fetch(
         `https://${CURRENT_NETWORK_PREFIX}-api.zksync.dev/api/v0.1/account/` +
-          `${store.zkWalletAddress}/history/${offset}/${amount}`,
-      ).then(r => r.json());
+          `${zkWalletAddress}/history/${offset}/${amount}`,
+      )
+        .then(r => r.json())
+        .catch(() => []);
 
       const resolvedTxs = await Promise.all(
         txs.map(async tx =>
           Object.assign(tx, {
             confirmCount: await getConfirmationCount(web3Provider, tx.hash),
+            created_at: new Date(tx.created_at),
           }),
         ),
       );
-      return resolvedTxs.filter(tx => tx.tx.type !== 'ChangePubKey');
+      return resolvedTxs as Tx[];
     },
-    [store.zkWalletAddress, web3Provider],
+    [web3Provider, store],
   );
 
-  const setTxs = useCallback(store.setTxs.bind(store), [store]);
-
-  useCheckLogin();
+  const { isLoadingMore } = useInfiniteScroll(fetchTransactions);
 
   return (
-    <DataList
-      onFetch={fetchTransactions}
-      bindData={[store.transactions, setTxs]}
-      title='Transactions'
-      visible={true}
-      onSort={arr => arr.slice().reverse()}
-      renderItem={tx => <Transaction key={tx.hash} {...tx} />}
-      emptyListComponent={() => (
-        <div className='default-text'>{'History is empty'}</div>
-      )}
-      infScrollInitialCount={30}
-      refreshInterval={store.zkWallet ? 2e3 : 0}
-    />
+    <div>
+      <DataList
+        data={store.transactions}
+        title='Transactions'
+        onSort={onSort}
+        renderItem={renderTx}
+        emptyListComponent={() => (
+          <div className='default-text'>{'History is empty'}</div>
+        )}
+        filterPredicate={filterPredicate}
+      />
+      {isLoadingMore && <Spinner />}
+    </div>
   );
 });
 
