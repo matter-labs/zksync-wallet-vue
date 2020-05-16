@@ -345,8 +345,8 @@
   &-done, &-verifying {
     position: relative;
     display: block;
-    min-width: 50px;
-    min-height: 50px;
+    min-width: 35px;
+    min-height: 35px;
     background-image: url(../../images/1.svg);
     background-repeat: no-repeat;
     background-position: center;
@@ -377,7 +377,7 @@
   }
 
   &-verifying {
-    background-image: url(../../images/commited_new.svg);
+    background-image: url(../../images/2.svg);
   }
 }
 
