@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Tx } from 'src/pages/Transactions';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
+import Spinner from '../Spinner/Spinner';
 
 export interface PieProps {
   value: number;
@@ -14,8 +15,8 @@ export function getTxStatus(tx: Tx, maxConfirmAmount: number) {
   const { commited, verified, confirmCount } = tx;
   if (!commited && !verified) return 'Not commited & unverified';
   if (verified) return 'Verified';
-  if (tx.tx.type === 'Deposit')
-    return `${confirmCount}/${maxConfirmAmount} confirmations`;
+  if (tx.tx.type === 'Deposit') return 'Verification in progress';
+  // return `${confirmCount}/${maxConfirmAmount} confirmations`;
   return 'Committed & unverified';
 }
 
@@ -59,23 +60,27 @@ const Clock = () => (
 
 export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
   const store = useStore();
-  const isZkSync = tx.hash.startsWith('sync-tx');
+  // const isZkSync = tx.hash.startsWith('sync-tx');
   const status = getTxStatus(tx, store.maxConfirmAmount);
-  const val = tx.confirmCount / (store.maxConfirmAmount || 1);
+  // const val = tx.confirmCount / (store.maxConfirmAmount || 1);
 
   let content: JSX.Element | null = null;
 
   if (!tx.verified) {
-    if (isZkSync || val > 1) {
-      content = <Clock />;
-    } else {
-      content =
-        val >= 1 ? (
-          <circle fill={LOADING_COLOR} cx='0' cy='0' r='1' />
-        ) : (
-          <path fill={LOADING_COLOR} d={getPieChartD(val)} />
-        );
+    if (tx.tx.type === 'Deposit') {
+      return <Spinner />;
     }
+    content = <Clock />;
+    // if (isZkSync || val > 1) {
+    //   content = <Clock />;
+    // } else {
+    //   content =
+    //     val >= 1 ? (
+    //       <circle fill={LOADING_COLOR} cx='0' cy='0' r='1' />
+    //     ) : (
+    //       <path fill={LOADING_COLOR} d={getPieChartD(val)} />
+    //     );
+    // }
   } else {
     content = <CheckMark />;
   }
