@@ -68,7 +68,7 @@ const VerifiedBal: React.FC<BalProps> = observer(
                     </span>
                   )}
                   <span className='awaited-tokens'>{'depositing'}</span>
-                  <SpinnerWorm />
+                  <SpinnerWorm title='Verification in progress' />
                 </>
               )}
             </div>
@@ -128,7 +128,7 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                     </span>
                   )}
                   <span className='awaited-tokens'>{'depositing'}</span>
-                  <SpinnerWorm />
+                  <SpinnerWorm title='Verification in progress' />
                 </>
               )}
             </div>
