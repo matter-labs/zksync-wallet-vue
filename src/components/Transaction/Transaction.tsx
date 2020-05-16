@@ -113,6 +113,41 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const history = useHistory();
 
+    const getAccState = async () => {
+      if (zkWallet && tokens) {
+        const _accountState = await zkWallet.getAccountState();
+        if (JSON.stringify(accountState) !== JSON.stringify(_accountState)) {
+          store.accountState = _accountState;
+        }
+        const at = _accountState.depositing.balances;
+        store.awaitedTokens = at;
+        const zkBalance = _accountState.committed.balances;
+        const zkBalancePromises = Object.keys(zkBalance).map(async key => {
+          return {
+            address: tokens[key].address,
+            balance: +zkBalance[key] / Math.pow(10, 18),
+            symbol: tokens[key].symbol,
+          };
+        });
+        Promise.all(zkBalancePromises)
+          .then(res => {
+            store.zkBalances = res;
+          })
+          .catch(err => {
+            err.name && err.message
+              ? (store.error = `${err.name}: ${err.message}`)
+              : (store.error = DEFAULT_ERROR);
+          });
+      }
+
+      if (
+        JSON.stringify(accountState?.verified.balances) !==
+        JSON.stringify(store.verified)
+      ) {
+        store.verified = accountState?.verified.balances;
+      }
+    };
+
     const loadEthTokens = async () => {
       const { tokens } = await loadTokens(
         syncProvider as Provider,
@@ -144,7 +179,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
     };
 
     useEffect(() => {
-      loadEthTokens();
+      if (title === 'Deposit') {
+        loadEthTokens();
+      } else {
+        getAccState();
+      }
     }, [isBalancesListOpen]);
 
     const refreshBalances = useCallback(async () => {
@@ -707,21 +746,19 @@ const Transaction: React.FC<ITransactionProps> = observer(
           )}
           {!isExecuted && (unlocked === undefined || isLoading) && (
             <>
-              {(unlocked === undefined || isLoading) && (
-                <LoadingTx
-                  isAccountUnlockingProcess={isAccountUnlockingProcess}
-                  isUnlockingProcess={isUnlockingProcess}
-                  inputValue={inputValue}
-                  symbolName={symbolName}
-                  addressValue={addressValue}
-                  handleCancel={handleCancel}
-                  isLoading={isLoading}
-                  setWalletName={setWalletName}
-                  title={title}
-                  unlockFau={unlockFau}
-                />
-              )}
-              {hint.match(/(?:denied)/i) && (
+              <LoadingTx
+                isAccountUnlockingProcess={isAccountUnlockingProcess}
+                isUnlockingProcess={isUnlockingProcess}
+                inputValue={inputValue}
+                symbolName={symbolName}
+                addressValue={addressValue}
+                handleCancel={handleCancel}
+                isLoading={isLoading}
+                setWalletName={setWalletName}
+                title={title}
+                unlockFau={unlockFau}
+              />
+              {hint.match(/(?:denied)/i) && !isLoading && (
                 <CanceledTx
                   handleCancel={handleCancel}
                   setWalletName={setWalletName}
