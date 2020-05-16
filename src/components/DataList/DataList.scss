@@ -210,9 +210,28 @@
       & > .balances-token-right.container {
         display: block;
 
+        .current-tokens {
+          display: flex;
+          justify-content: space-between;
+
+          span {
+            margin-right: 10px;
+          }
+
+          .label-done, .label-verifying {
+            margin-right: 0;
+          }
+        }
+
         .awaited-tokens {
+          margin-right: 10px;
           color: var(--hints-color);
           font-size: var(--sm-font-size);
+
+          &-block {
+            display: flex;
+            justify-content: space-between;
+          }
         }
       }
 
@@ -267,12 +286,12 @@
       background-image: url(../../images/mdi_file_copy.svg);
       background-size: 22px;
     }
-  
+    
     &-edit {
       display: flex;
       align-items: center;
       justify-content: space-between;
-
+      /* stylelint-disable no-descending-specificity */
       & > span {
         display: block;
         width: 3px;
@@ -324,6 +343,7 @@
 
 .label {
   &-done, &-verifying {
+    position: relative;
     display: block;
     min-width: 15px;
     min-height: 15px;
@@ -332,6 +352,24 @@
     background-position: center;
     background-size: contain;
     border-radius: 13px;
+
+    & .tooltip {
+      bottom: 30px; 
+      left: 50%;
+      display: none;
+      width: auto; 
+      padding: 10px;
+      text-align: center;
+    }
+
+    &:hover .tooltip { 
+      position: absolute;
+      z-index: 10000;
+      display: block;
+      background: var(--modal-bg-color);  
+      border: 1px solid var(--hints-color); 
+      border-radius: 5px;
+    }
   }
 
   &-verifying {
@@ -396,7 +434,7 @@
     margin-bottom: 10px;
     margin-left: 54px;
     color: var(--dark-color);
-    font-size: var(--sm-font-size);
+    font-size: var(--md-font-size);
   }
 
   &-left {
@@ -408,7 +446,6 @@
   }
 
   &-address {
-    /* stylelint-disable-next-line no-descending-specificity */
     & > p {
       margin-bottom: 0;
       color: var(--dark-color);
@@ -429,7 +466,7 @@
   &-right {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: center;
     width: 100%;
     max-width: 162px;
     margin-left: 54px;

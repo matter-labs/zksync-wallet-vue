@@ -144,6 +144,22 @@ export const useTransaction = () => {
                 });
               const _accountState = await zkWallet.getAccountState();
               store.awaitedTokens = _accountState.depositing.balances;
+              if (Object.keys(store.awaitedTokens).length > 0) {
+                for (const token in store.awaitedTokens) {
+                  const _list = Object.entries(store.zkBalances).map(
+                    el => el[1].symbol,
+                  );
+                  if (_list.indexOf(token) === -1) {
+                    store.zkBalances = store.zkBalances.concat([
+                      {
+                        symbol: token,
+                        balance: 0,
+                        address: 'awaited',
+                      },
+                    ]);
+                  }
+                }
+              }
             } catch (err) {
               if (err.message.match(/(?:denied)/i)) {
                 store.hint = err.message;

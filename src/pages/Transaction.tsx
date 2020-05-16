@@ -1,12 +1,17 @@
 import React, { FC, useState, useRef, useCallback } from 'react';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
+
 import { Tx } from './Transactions';
 import { Transition } from 'src/components/Transition/Transition';
 import { useTimeout } from 'src/hooks/timers';
 import { TxStatus } from 'src/components/Transaction/TxStatus';
-import { FloatingMenu } from 'src/components/Common/FloatingMenu';
 
 import { ZK_EXPLORER, ETHERSCAN_EXPLORER } from 'src/constants/links';
 import { formatDate } from 'src/utils';
+
+library.add(fas);
 
 export const Transaction: FC<Tx> = props => {
   const {
@@ -61,10 +66,7 @@ export const Transaction: FC<Tx> = props => {
                 '...',
               )
           ) : (
-            <>
-              {(priority_op?.token || token) && 'zk'}
-              {type === 'Deposit' ? priority_op?.token : token}
-            </>
+            <>{type === 'Deposit' ? priority_op?.token : token}</>
           )}
         </div>
       </div>
@@ -100,20 +102,16 @@ export const Transaction: FC<Tx> = props => {
           )}
         </div>
       </div>
-      <FloatingMenu>
-        <a
-          className='contact-manage-copy btn-tr'
-          target='_blank'
-          href={`${
-            type === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
-          }/${hash}`}
-        >
-          <p>{'View info on explorer'}</p>
-        </a>
-        <button className='contact-manage-copy btn-tr' onClick={handleCopy}>
-          <p>{'Copy'}</p>
-        </button>
-      </FloatingMenu>
+      <a
+        className='contact-manage-copy btn-tr'
+        target='_blank'
+        href={`${
+          type === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
+        }/${hash}`}
+      >
+        <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
+        <span className='tooltip'>{'View in block explorer'}</span>
+      </a>
     </div>
   );
 };

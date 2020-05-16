@@ -295,6 +295,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
       store.hint = '';
     }, []);
 
+    useEffect(() => {
+      setExecuted(false);
+    }, [zkWallet, setExecuted]);
+
     useMobxEffect(() => {
       store.searchBalances =
         title === 'Deposit' ? store.ethBalances : zkBalances;
@@ -407,10 +411,16 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const handleUnlockERC = useCallback(() => {
       setUnlockingProcess(true);
       setLoading(true);
+      store.hint = 'Follow the instructions in the pop up';
       zkWallet
         ?.approveERC20TokenDeposits(token)
-        .then(res => res)
-        .then(data => data);
+        .then(res => {
+          store.hint = `Waiting for transaction to be ended \n \n ${res.hash}`;
+          return res;
+        })
+        .then(data => {
+          return data;
+        });
       const setUnlocked = async () => {
         const checkApprove = await zkWallet
           ?.isERC20DepositsApproved(token)
@@ -423,7 +433,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       if (!unlockFau) {
         setInterval(() => {
           setUnlocked();
-        }, 3000);
+        }, 1000);
       }
     }, [setLoading, token, unlockFau, zkWallet]);
 
@@ -1019,6 +1029,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   </>
                 )}
                 {unlocked &&
+                  unlocked !== undefined &&
                   !searchBalances.length &&
                   title !== 'Deposit' &&
                   zkBalancesLoaded &&
