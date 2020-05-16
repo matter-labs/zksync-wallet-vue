@@ -67,14 +67,23 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
 
   let content: JSX.Element | null = null;
 
+  if (!tx.commited) {
+    return (
+      <div className='tx-status' style={{ width: 35, height: 35 }}>
+        <span className='tooltip'>{status}</span>
+        <SpinnerWorm />
+      </div>
+    );
+  }
   if (!tx.verified) {
-    if (tx.tx.type === 'Deposit') {
-      return (
-        <div style={{ width: 35, height: 35 }} title={status}>
-          <SpinnerWorm />
-        </div>
-      );
-    }
+    // if (tx.tx.type === 'Deposit') {
+    //   return (
+    //     <div className='tx-status' style={{ width: 35, height: 35 }}>
+    //       <span className='tooltip'>{status}</span>
+    //       <SpinnerWorm />
+    //     </div>
+    //   );
+    // }
     content = <Clock />;
     // if (isZkSync || val > 1) {
     //   content = <Clock />;
