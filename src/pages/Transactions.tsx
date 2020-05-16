@@ -68,12 +68,14 @@ const Transactions: React.FC = observer(() => {
         .catch(() => []);
 
       const resolvedTxs = await Promise.all(
-        txs.map(async tx =>
-          Object.assign(tx, {
-            confirmCount: await getConfirmationCount(web3Provider, tx.hash),
-            created_at: new Date(tx.created_at),
-          }),
-        ),
+        txs
+          .filter((tx, i) => txs.findIndex(t => t.hash === tx.hash) === i)
+          .map(async tx =>
+            Object.assign(tx, {
+              confirmCount: await getConfirmationCount(web3Provider, tx.hash),
+              created_at: new Date(tx.created_at),
+            }),
+          ),
       );
       return resolvedTxs as Tx[];
     },
