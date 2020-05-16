@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Tx } from 'src/pages/Transactions';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
-import Spinner from '../Spinner/Spinner';
+import SpinnerWorm from '../Spinner/SpinnerWorm';
 
 export interface PieProps {
   value: number;
@@ -15,7 +15,7 @@ export function getTxStatus(tx: Tx, maxConfirmAmount: number) {
   const { commited, verified, confirmCount } = tx;
   if (!commited && !verified) return 'Not commited & unverified';
   if (verified) return 'Verified';
-  if (tx.tx.type === 'Deposit') return 'Verification in progress';
+  // if (tx.tx.type === 'Deposit') return 'Verification in progress';
   // return `${confirmCount}/${maxConfirmAmount} confirmations`;
   return 'Committed & unverified';
 }
@@ -69,7 +69,11 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
 
   if (!tx.verified) {
     if (tx.tx.type === 'Deposit') {
-      return <Spinner />;
+      return (
+        <div style={{ width: 35, height: 35 }} title={status}>
+          <SpinnerWorm />
+        </div>
+      );
     }
     content = <Clock />;
     // if (isZkSync || val > 1) {
