@@ -14,7 +14,9 @@ export function getTxStatus(tx: Tx, maxConfirmAmount: number) {
   const { commited, verified, confirmCount } = tx;
   if (!commited && !verified) return 'Not commited & unverified';
   if (verified) return 'Verified';
-  return `${confirmCount}/${maxConfirmAmount} confirmations`;
+  if (tx.tx.type === 'Deposit')
+    return `${confirmCount}/${maxConfirmAmount} confirmations`;
+  return 'Committed & unverified';
 }
 
 const percentCoords = percent =>
