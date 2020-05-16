@@ -1,5 +1,4 @@
 import React, { FC, useState, useRef, useCallback } from 'react';
-import { ethers } from 'ethers';
 import { Tx } from './Transactions';
 import { Transition } from 'src/components/Transition/Transition';
 import { useTimeout } from 'src/hooks/timers';
@@ -7,11 +6,13 @@ import { TxStatus } from 'src/components/Transaction/TxStatus';
 import { FloatingMenu } from 'src/components/Common/FloatingMenu';
 
 import { ZK_EXPLORER, ETHERSCAN_EXPLORER } from 'src/constants/links';
+import { formatDate } from 'src/utils';
 
 export const Transaction: FC<Tx> = props => {
   const {
     hash,
     tx: { amount, priority_op, type, to, token },
+    created_at,
   } = props;
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
@@ -33,18 +34,23 @@ export const Transaction: FC<Tx> = props => {
       <TxStatus tx={props} />
       <div className='transaction-history-left'>
         <div className={`transaction-history ${type}`}></div>
-        <div className='transaction-history-amount'>
-          {!!amount || !!priority_op?.amount
-            ? parseFloat(
-                (
-                  (type === 'Deposit' && priority_op
-                    ? +priority_op.amount
-                    : +amount) / Math.pow(10, 18)
+        <div>
+          <div className='transaction-history-amount'>
+            {!!amount || !!priority_op?.amount
+              ? parseFloat(
+                  (
+                    (type === 'Deposit' && priority_op
+                      ? +priority_op.amount
+                      : +amount) / Math.pow(10, 18)
+                  )
+                    .toFixed(6)
+                    .toString(),
                 )
-                  .toFixed(6)
-                  .toString(),
-              )
-            : 'Unlocking transaction'}
+              : 'Unlocking transaction'}
+          </div>
+          <div className='transaction-history-date'>
+            {formatDate(created_at)}
+          </div>
         </div>
         <div className='transaction-history-hash'>
           {token && token.toString().length > 10 ? (

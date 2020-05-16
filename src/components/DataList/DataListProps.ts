@@ -22,6 +22,7 @@ export interface Props<T> {
    * @param regex `RegExp` instance from search string with ignorecase flag
    */
   searchPredicate?: (e: T, query: string, regex: RegExp) => boolean;
+  filterPredicate?: (e: T) => boolean;
   onSetFiltered?: (data: T[]) => void;
 
   /**
@@ -47,10 +48,14 @@ export interface Props<T> {
   onSort?: (elements: T[]) => T[];
 
   /**
+   * @deprecated
    * Used for two-side data binding (for example,
    * when putting it in global store)
    */
   bindData?: [T[], (predicate: (data: T[]) => T[]) => any];
 
+  /**
+   * @deprecated
+   */
   refreshInterval?: number;
 }

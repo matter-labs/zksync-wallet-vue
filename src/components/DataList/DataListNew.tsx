@@ -1,16 +1,20 @@
-import React, { useState, useMemo, useRef, useCallback } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+  useEffect,
+} from 'react';
 import cl from 'classnames';
 
 import { useAutoFocus } from 'hooks/useAutoFocus';
 import { useDebouncedValue } from 'hooks/debounce';
 import { useListener } from 'hooks/useListener';
 import { useCancelable } from 'hooks/useCancelable';
-import { useMobxEffect } from 'src/hooks/useMobxEffect';
-import { Props } from './DataListProps';
+import { useInterval } from 'hooks/timers';
 
+import { Props } from './DataListProps';
 import './DataList.scss';
-import { useInterval } from 'src/hooks/timers';
-import { whyDidYouUpdate } from 'src/utils';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   if (typeof o === 'object') {
@@ -25,13 +29,12 @@ const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
 
 const noop = () => null;
 
-const didUpdate = whyDidYouUpdate();
 export function DataList<T>({
   data,
   onFetch,
   title = '',
-  // visible = true,
   searchPredicate = DEFAULT_SEARCH,
+  filterPredicate,
   renderItem,
   header = noop,
   footer = noop,
@@ -82,7 +85,7 @@ export function DataList<T>({
         : itemAmount - loadMoreAmount
       : undefined;
 
-    return cancelable(onFetch!(amount, offset)).then(res => {
+    return cancelable(onFetch(amount, offset)).then(res => {
       const pred = d => d.slice(0, offset).concat(res);
       if (setBinded) {
         setBinded(pred);
@@ -100,7 +103,7 @@ export function DataList<T>({
     loadMoreAmount,
   ]);
 
-  useMobxEffect(() => {
+  useEffect(() => {
     if (!hasMore || typeof onFetch !== 'function') return;
     refreshData()?.then(length => {
       if (!length) setHasMore(false);
@@ -114,7 +117,7 @@ export function DataList<T>({
     () => setScrollTop(rootRef.current!.scrollTop),
     { passive: true },
   );
-  useMobxEffect(() => {
+  useEffect(() => {
     const root = rootRef.current;
     if (!(infScrollInitialCount && root && hasMore)) return;
     const loadMore =
@@ -134,7 +137,7 @@ export function DataList<T>({
   useInterval(refreshData, refreshInterval, [], refreshInterval > 0);
 
   // Search hook
-  useMobxEffect(() => {
+  useEffect(() => {
     const resolvedData = getData();
     if (!(searchPredicate && debouncedSearch && resolvedData.length)) return;
     if (!debouncedSearch) {
@@ -166,6 +169,9 @@ export function DataList<T>({
     if (infScrollInitialCount && itemAmount) {
       data = data.slice(0, itemAmount);
     }
+    if (filterPredicate) {
+      data = data.filter(filterPredicate);
+    }
 
     return data.map(renderItem || (e => e as any));
   }, [
@@ -176,6 +182,7 @@ export function DataList<T>({
     onSort,
     debouncedSearch,
     filteredData,
+    filterPredicate,
   ]);
 
   return (

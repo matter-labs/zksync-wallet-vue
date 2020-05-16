@@ -14,13 +14,14 @@ export async function fetchTransactions(
     `https://${CURRENT_NETWORK_PREFIX}-api.zksync.dev/api/v0.1/account/${address}/history/${offset}/${amount}`,
   ).then(r => r.json());
 
-  return await Promise.all(
+  return (await Promise.all(
     txs.map(async tx =>
       Object.assign(tx, {
         confirmCount: web3Provider
           ? await getConfirmationCount(web3Provider!, tx.hash)
           : 0,
+        created_at: new Date(tx.created_at),
       }),
     ),
-  );
+  )) as Tx[];
 }

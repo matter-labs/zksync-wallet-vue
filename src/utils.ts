@@ -56,7 +56,6 @@ export async function getConfirmationCount(
     return currentBlock - trx.blockNumber;
     // return trx.confirmations;
   } catch (error) {
-    console.error('Confirmation count error', error);
     return 0;
   }
 }
@@ -149,3 +148,12 @@ export async function loadTokens(
     error,
   };
 }
+
+export const formatDate = new Intl.DateTimeFormat(undefined, {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+  hour12: false,
+  hour: '2-digit',
+  minute: '2-digit',
+}).format;
