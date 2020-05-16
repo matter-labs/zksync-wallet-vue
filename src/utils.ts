@@ -149,11 +149,26 @@ export async function loadTokens(
   };
 }
 
-export const formatDate = new Intl.DateTimeFormat(undefined, {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour12: false,
-  hour: '2-digit',
-  minute: '2-digit',
-}).format;
+export function formatDate(d: Date) {
+  const date = [
+    d.getFullYear(),
+    d
+      .getMonth()
+      .toString()
+      .padStart(2, '0'),
+    d
+      .getDate()
+      .toString()
+      .padStart(2),
+  ].join('-');
+  const time = d.getHours() + ':' + d.getMinutes();
+  return `${date} ${time} UTC`;
+}
+// export const formatDate = new Intl.DateTimeFormat('it-CH', {
+//   day: '2-digit',
+//   month: '2-digit',
+//   year: 'numeric',
+//   hour12: false,
+//   hour: '2-digit',
+//   minute: '2-digit',
+// }).format;
