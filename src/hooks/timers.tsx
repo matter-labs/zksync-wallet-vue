@@ -14,6 +14,7 @@ export const useTimer = (baseSet, baseClear) => (
   timeout = 250,
   deps: DependencyList = [],
   condition: any = true,
+  performImmediate = false,
 ) => {
   const callback = useRef<Cb>();
 
@@ -24,6 +25,7 @@ export const useTimer = (baseSet, baseClear) => (
     const tick = () => {
       callback.current && callback.current();
     };
+    if (performImmediate) tick();
     const t = baseSet(tick, timeout);
     return () => baseClear(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
