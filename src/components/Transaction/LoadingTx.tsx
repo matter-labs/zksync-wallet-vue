@@ -58,60 +58,60 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
 
     return (
       <>
-        {isLoading && !hint.match(/(?:denied)/i) && (
-          <>
-            <button
-              onClick={() => {
-                handleCancel();
-                history.push('/account');
-              }}
-              className='transaction-back'
-            ></button>
-            <h2 className='transaction-title'>{propperTitle}</h2>
-            <Spinner />
-            <p>{info[0]}</p>
-            {title === 'Send' && !isAccountUnlockingProcess && (
-              <span className='transaction-field-title'>
-                <span>{'Recepient:'}</span>
-                <p>{walletAddress.name && walletAddress.name}</p>
-                <p>{addressValue}</p>
-              </span>
-            )}
-            {!isAccountUnlockingProcess && !isUnlockingProcess && (
-              <span className='transaction-field-title'>
-                {title === 'Send' && 'Amount + fee'}
-                {title === 'Withdraw' && 'Amount'}
-                {title === 'Deposit' && 'Amount:'}
-                <p className='transaction-field-amount'>
-                  {inputValue} {symbolName}
-                </p>
-              </span>
-            )}
-            {info[2] && (
-              <p className='transaction-hash'>
-                <a
-                  target='_blank'
-                  href={`${
-                    title === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
-                  }/${info[2]}`}
-                >
-                  {'Link to the transaction '}
-                  <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
-                </a>
+        <button
+          onClick={() => {
+            handleCancel();
+            history.push('/account');
+          }}
+          className='transaction-back'
+        ></button>
+        <h2 className='transaction-title'>{propperTitle}</h2>
+        <Spinner />
+        <p>{info[0]}</p>
+        {title === 'Send' &&
+          !isAccountUnlockingProcess &&
+          store.unlocked !== undefined && (
+            <span className='transaction-field-title'>
+              <span>{'Recepient:'}</span>
+              <p>{walletAddress.name && walletAddress.name}</p>
+              <p>{addressValue}</p>
+            </span>
+          )}
+        {!isAccountUnlockingProcess &&
+          !isUnlockingProcess &&
+          store.unlocked !== undefined && (
+            <span className='transaction-field-title'>
+              {title === 'Send' && 'Amount + fee'}
+              {title === 'Withdraw' && 'Amount'}
+              {title === 'Deposit' && 'Amount:'}
+              <p className='transaction-field-amount'>
+                {inputValue} {symbolName}
               </p>
-            )}
-
-            <button
-              className='btn submit-button'
-              onClick={() => {
-                handleCancel();
-                history.push('/account');
-              }}
+            </span>
+          )}
+        {info[2] && (
+          <p className='transaction-hash'>
+            <a
+              target='_blank'
+              href={`${
+                title === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
+              }/${info[2]}`}
             >
-              {'Cancel'}
-            </button>
-          </>
+              {'Link to the transaction '}
+              <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
+            </a>
+          </p>
         )}
+
+        <button
+          className='btn submit-button'
+          onClick={() => {
+            handleCancel();
+            history.push('/account');
+          }}
+        >
+          {'Cancel'}
+        </button>
       </>
     );
   },

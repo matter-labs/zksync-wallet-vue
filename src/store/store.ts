@@ -40,7 +40,7 @@ export class Store {
   @observable tokens?: Tokens;
   @observable transactionModal?: ITransaction;
   @observable transactionType?: 'deposit' | 'withdraw' | 'transfer';
-  @observable unlocked = false;
+  @observable unlocked: boolean | undefined = undefined;
   @observable verifyToken = false;
   // TODO: add explicit type
   @observable verified: any;

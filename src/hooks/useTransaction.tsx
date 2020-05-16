@@ -183,6 +183,7 @@ export const useTransaction = () => {
                 }
               }
             } catch (err) {
+              setLoading(false);
               if (err.message.match(/(?:denied)/i)) {
                 store.hint = err.message;
               } else if (err.name && err.message) {
@@ -198,6 +199,7 @@ export const useTransaction = () => {
               executeDeposit(data);
             });
         } catch (err) {
+          setLoading(false);
           err.name && err.message
             ? (store.error = `${err.name}: ${err.message}`)
             : (store.error = DEFAULT_ERROR);
