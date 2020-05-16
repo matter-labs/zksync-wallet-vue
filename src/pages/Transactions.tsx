@@ -45,7 +45,8 @@ const renderTx = (tx: Tx) => (
   <Transaction key={tx.hash + tx.tx.amount} {...tx} />
 );
 const filterPredicate = (tx: Tx) => tx.tx.type !== 'ChangePubKey';
-const onSort = arr => arr.slice().reverse();
+const onSort = (arr: Tx[]) =>
+  arr.slice().sort((a, b) => (a.created_at > b.created_at ? -1 : 1));
 
 const Transactions: React.FC = observer(() => {
   const store = useStore();
