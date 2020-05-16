@@ -211,7 +211,7 @@ const Account: React.FC = observer(() => {
   };
 
   useEffect(() => {
-    getAccState(false);
+    getAccState(true);
   }, []);
 
   useEffect(() => {
