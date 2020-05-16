@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { ethers } from 'ethers';
+import { CURRENT_NETWORK_PREFIX } from 'constants/networks';
 
 import { useCancelable } from 'hooks/useCancelable';
 
@@ -57,6 +58,7 @@ const useWalletInit = () => {
       const provider = store.provider;
       const wallet = getSigner(provider);
       store.ethWallet = wallet;
+
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider = await zkSync.Provider.newWebsocketProvider(
@@ -66,6 +68,18 @@ const useWalletInit = () => {
         wallet as ethers.providers.JsonRpcSigner,
         syncProvider,
       );
+
+      // const network =
+      //   process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
+      // const ethersProvider = await ethers.getDefaultProvider('rinkeby');
+      // const syncProvider = await zkSync.getDefaultProvider(network, 'WS');
+
+      // const ethWallet = ethers.Wallet.createRandom().connect(ethersProvider);
+
+      // const syncWallet = await zkSync.Wallet.fromEthSigner(
+      //   ethWallet,
+      //   syncProvider,
+      // );
 
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();

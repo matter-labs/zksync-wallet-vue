@@ -30,7 +30,7 @@ const LOADING_COLOR = 'rgba(0, 0, 0, 0.4)';
 
 const Wrapper = ({ children, status }) => (
   <div className='tx-status' title={status}>
-    <svg width='50' height='50' viewBox='26 6 26 8'>
+    <svg width='35' height='35' viewBox='26 6 26 8'>
       {children}
     </svg>
   </div>

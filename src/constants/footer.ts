@@ -1,4 +1,5 @@
 import { IFooterLinks } from '../types/Common';
+import { CURRENT_NETWORK_PREFIX } from 'constants/networks';
 
 export const FOOTER_LINKS: IFooterLinks[] = [
   {
@@ -7,7 +8,7 @@ export const FOOTER_LINKS: IFooterLinks[] = [
   },
   {
     title: 'Block explorer',
-    link: 'https://rinkeby.zkscan.io/explorer/',
+    link: `https://${CURRENT_NETWORK_PREFIX}.zkscan.io/explorer/`,
   },
   {
     title: 'Terms of Use',

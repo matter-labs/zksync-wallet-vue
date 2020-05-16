@@ -91,6 +91,14 @@
       margin-right: 27px;
     }
 
+    &-explorer {
+      width: 22px;
+      height: 22px;
+      margin-right: 28px;
+    // stylelint-disable-next-line sh-waqar/declaration-use-variable
+      font-size: 20px;
+    }
+
     &-edit {
       background: url(../../images/icon-edit.svg);
       background-repeat: no-repeat;
@@ -489,9 +497,17 @@ body.dark {
       }
 
       & > .wallet-buttons {
-        & > button {
-          width: 200px;
+        text-align: left;
+
+        a.btn-tr {
+          display: block;
+        }
+
+        & > .btn-tr {
+          align-self: left;
+          width: 300px;
           height: 35px;
+          min-height: 35px;
           margin-left: 0;
           padding: 5px 10px;
           color: var(--dark-color);

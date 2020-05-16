@@ -1,5 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import makeBlockie from 'ethereum-blockies-base64';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import avatar from 'images/avatar.png';
 import ChangeName from './ChangeName';
@@ -7,6 +10,7 @@ import Modal from 'components/Modal/Modal';
 import { Link } from './Link';
 
 import { HEADER_ITEMS } from 'constants/header';
+import { CURRENT_NETWORK_PREFIX } from 'constants/networks';
 
 import { QRCode } from 'components/QRCode/QRCode';
 import { useTimeout } from 'hooks/timers';
@@ -15,7 +19,9 @@ import { ConnectionStatus } from 'components/Header/ConnectionStatus';
 import { useLogout } from 'hooks/useLogout';
 import './Header.scss';
 import { useStore } from 'src/store/context';
-import { useObserver, observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
+
+library.add(fas);
 
 const Header: React.FC = observer(() => {
   const store = useStore();
@@ -131,6 +137,16 @@ const Header: React.FC = observer(() => {
                   {'Show QR code'}
                 </button>
                 <div className='horizontal-line'></div>
+                <a
+                  className='btn-tr'
+                  target='_blank'
+                  href={`https://${CURRENT_NETWORK_PREFIX}.zkscan.io/explorer/accounts/${address}`}
+                >
+                  <span className='icon-explorer'>
+                    <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
+                  </span>
+                  {'View in block explorer'}
+                </a>
                 <button className='btn-tr' onClick={() => openChangeName(true)}>
                   <span className='icon-edit'></span>
                   {'Rename wallet'}
