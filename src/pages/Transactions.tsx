@@ -72,14 +72,14 @@ const Transactions: React.FC = observer(() => {
           .filter((tx, i) => txs.findIndex(t => t.hash === tx.hash) === i)
           .map(async tx =>
             Object.assign(tx, {
-              confirmCount: await getConfirmationCount(web3Provider, tx.hash),
+              // confirmCount: await getConfirmationCount(web3Provider, tx.hash),
               created_at: new Date(tx.created_at),
             }),
           ),
       );
       return resolvedTxs as Tx[];
     },
-    [web3Provider, store],
+    [store],
   );
 
   const { isLoadingMore } = useInfiniteScroll(fetchTransactions);

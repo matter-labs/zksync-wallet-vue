@@ -21,7 +21,11 @@ export function useInfiniteScroll(
     { passive: true },
   );
   const refresh = useCallback(() => {
-    onFetch(store.transactions.length || minimalAmount, 0).then(txs => {
+    const amount =
+      store.transactions.length < minimalAmount
+        ? minimalAmount
+        : store.transactions.length;
+    onFetch(amount, 0).then(txs => {
       if (!txs.length && store.transactions.length) return;
       store.setTxs(txs);
     });
