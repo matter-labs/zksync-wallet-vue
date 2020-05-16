@@ -26,6 +26,7 @@ const getPieChartD = percent =>
   )} L 0 0`;
 
 const PRIMARY_COLOR = '#8C8DFC';
+const LOADING_COLOR = 'rgba(0, 0, 0, 0.4)';
 
 const Wrapper = ({ children, status }) => (
   <div className='tx-status' title={status}>
@@ -79,9 +80,9 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
     } else {
       content =
         val >= 1 ? (
-          <circle fill={PRIMARY_COLOR} cx='0' cy='0' r='1' />
+          <circle fill={LOADING_COLOR} cx='0' cy='0' r='1' />
         ) : (
-          <path fill={PRIMARY_COLOR} d={getPieChartD(val)} />
+          <path fill={LOADING_COLOR} d={getPieChartD(val)} />
         );
     }
   } else {

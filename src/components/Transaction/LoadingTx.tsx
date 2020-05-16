@@ -65,11 +65,6 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
             ></button>
             <h2 className='transaction-title'>{propperTitle}</h2>
             <Spinner />
-            <p>
-              {propperTitle === 'Unlocking'
-                ? 'Follow the instructions in the pop up'
-                : ''}
-            </p>
             <p>{info[0]}</p>
             {title === 'Send' && !isAccountUnlockingProcess && (
               <span className='transaction-field-title'>

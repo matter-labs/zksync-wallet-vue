@@ -33,13 +33,10 @@ const VerifiedBal: React.FC<BalProps> = observer(
           handleSend(address, balance, symbol);
         }}
       >
-        <div className='balances-token-left'>
-          {'zk'}
-          {symbol}
-        </div>
+        <div className='balances-token-left'>{symbol}</div>
         <div className='balances-token-right'>
           <div className='balances-token-right container'>
-            <div>
+            <div className='current-tokens'>
               <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
               {price && (
                 <span>
@@ -49,10 +46,12 @@ const VerifiedBal: React.FC<BalProps> = observer(
                 </span>
               )}
               <div className='balances-token-status'>
-                <span className='label-done'></span>
+                <span className='label-done'>
+                  <span className='tooltip'>{'Verified'}</span>
+                </span>
               </div>
             </div>
-            <div>
+            <div className='awaited-tokens-block'>
               {store.awaitedTokens[symbol]?.amount && (
                 <>
                   <span className='awaited-tokens'>
@@ -92,13 +91,10 @@ const UnverifiedBal: React.FC<BalProps> = observer(
           handleSend(address, balance, symbol);
         }}
       >
-        <div className='balances-token-left'>
-          {'zk'}
-          {symbol}
-        </div>
+        <div className='balances-token-left'>{symbol}</div>
         <div className='balances-token-right'>
           <div className='balances-token-right container'>
-            <div>
+            <div className='current-tokens'>
               <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
               {price && (
                 <span>
@@ -108,10 +104,14 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                 </span>
               )}
               <div className='balances-token-status'>
-                <span className='label-verifying'></span>
+                <span className='label-verifying'>
+                  <span className='tooltip'>
+                    {'Awaiting verification (but already disposable in zkSync)'}
+                  </span>
+                </span>
               </div>
             </div>
-            <div>
+            <div className='awaited-tokens-block'>
               {store.awaitedTokens[symbol]?.amount && (
                 <>
                   <span className='awaited-tokens'>
@@ -144,41 +144,17 @@ const Account: React.FC = observer(() => {
 
   const history = useHistory();
   const store = useStore();
+  const { zkWallet, accountState, tokens } = store;
 
-  // const setAwaitingBalance = useCallback((balance: IEthBalance[]) => {
-  //   if (Object.keys(store.awaitedTokens).length > 0) {
-  //     for(const token in store.awaitedTokens) {
-  //       const _list = Object.entries(balance).map(el => el[1].symbol);
-  //       if (_list.indexOf(token) === -1) {
-  //         console.log('empty')
-  //         store.zkBalances = balance.concat([{
-  //           symbol: token,
-  //           balance: 0,
-  //           address: 'awaited'
-  //         }]);
-  //       store.searchBalances = store.zkBalances;
-  //       } else {
-  //         store.zkBalances = balance;
-  //         console.log('new')
-
-  //       }
-  //     }
-  //   } else {
-  //     store.zkBalances = balance;
-  //  }
-  // }, [store.awaitedTokens, store.searchBalances]);
-
-  useEffect(() => {
-    const { zkWallet, accountState, tokens } = store;
-    if (!zkWallet) return;
-    const getAccState = async () => {
-      if (zkWallet && tokens) {
-        const _accountState = await zkWallet.getAccountState();
-        if (JSON.stringify(accountState) !== JSON.stringify(_accountState)) {
-          store.accountState = _accountState;
-        }
-        const at = _accountState.depositing.balances;
-        store.awaitedTokens = at;
+  const getAccState = async (extended: boolean) => {
+    if (zkWallet && tokens) {
+      const _accountState = await zkWallet.getAccountState();
+      if (JSON.stringify(accountState) !== JSON.stringify(_accountState)) {
+        store.accountState = _accountState;
+      }
+      const at = _accountState.depositing.balances;
+      store.awaitedTokens = at;
+      if (extended) {
         const zkBalance = _accountState.committed.balances;
         const zkBalancePromises = Object.keys(zkBalance).map(async key => {
           return {
@@ -201,11 +177,13 @@ const Account: React.FC = observer(() => {
                     },
                   ]);
                 } else {
-                  store.zkBalances = res;
+                  if (JSON.stringify(store.zkBalances) !== JSON.stringify(res))
+                    store.zkBalances = res;
                 }
               }
             } else {
-              store.zkBalances = res;
+              if (JSON.stringify(store.zkBalances) !== JSON.stringify(res))
+                store.zkBalances = res;
             }
             if (JSON.stringify(res) !== JSON.stringify(zkBalances)) {
               if (accountState?.id) {
@@ -223,14 +201,23 @@ const Account: React.FC = observer(() => {
               : (store.error = DEFAULT_ERROR);
           });
       }
-      if (
-        JSON.stringify(accountState?.verified.balances) !==
-        JSON.stringify(store.verified)
-      ) {
-        store.verified = accountState?.verified.balances;
-      }
-    };
-    const int = setInterval(getAccState, 3000);
+    }
+    if (
+      JSON.stringify(accountState?.verified.balances) !==
+      JSON.stringify(store.verified)
+    ) {
+      store.verified = accountState?.verified.balances;
+    }
+  };
+
+  useEffect(() => {
+    getAccState(false);
+  }, []);
+
+  useEffect(() => {
+    if (!zkWallet) return;
+
+    const int = setInterval(() => getAccState(true), 3000);
 
     return () => {
       clearInterval(int);

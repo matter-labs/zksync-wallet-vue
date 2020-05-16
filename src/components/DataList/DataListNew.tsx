@@ -18,10 +18,7 @@ import './DataList.scss';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   if (typeof o === 'object') {
-    const string = Object.entries(o).reduce(
-      (acc, [_k, v]) => acc + (_k === 'symbol' ? `zk${v}` : v),
-      '',
-    );
+    const string = Object.entries(o).reduce((acc, [_k, v]) => acc + v, '');
     return re.test(string);
   }
   return re.test(o);
@@ -162,7 +159,6 @@ export function DataList<T>({
   // Memoized list with mapped data
   const list = useMemo(() => {
     let data = debouncedSearch ? filteredData : getData();
-
     if (typeof onSort === 'function') {
       data = onSort(data);
     }

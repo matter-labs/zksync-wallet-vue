@@ -491,20 +491,6 @@ h2 {
 .contact-manage {
   background-color: var(--modal-bg-color);
 
-  &-delete,
-  &-edit,
-  &-copy {
-    font-size: var(--md-font-size);
-    > img {
-      width: 1em;
-      margin-right: 10px;
-    }
-    > p {
-      margin: 0px;
-      white-space: nowrap;
-    }
-  }
-
   &-delete {
     position: relative;
     overflow: hidden;
@@ -525,6 +511,47 @@ h2 {
     color: var(--dark-color);
     font-size: var(--md-font-size);
     border-bottom: 1px solid var(--border-color);
+  }
+
+  &-delete,
+  &-edit,
+  &-copy {
+    position: relative;
+    color: var(--button-bg-color);
+    font-size: var(--md-font-size);
+
+    &:hover {
+      border-radius: 4px;
+    }
+    
+    & .tooltip {
+      bottom: 30px; 
+      left: 50%;
+      display: none;
+      width: auto; 
+      padding: 10px;
+      color: var(--dark-color);
+      text-align: center;
+    }
+
+    &:hover .tooltip { 
+      position: absolute;
+      z-index: 10000;
+      display: block;
+      background: var(--modal-bg-color);  
+      border: 1px solid var(--hints-color); 
+      border-radius: 5px;
+    }
+
+
+    > img {
+      width: 1em;
+      margin-right: 10px;
+    }
+    > p {
+      margin: 0px;
+      white-space: nowrap;
+    }
   }
 
   & > button,
