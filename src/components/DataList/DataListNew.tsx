@@ -71,8 +71,16 @@ export function DataList<T>({
   const cancelable = useCancelable();
   const refreshData = useCallback(() => {
     if (typeof onFetch !== 'function') return;
-    const amount = 1000;
-    const offset = 0;
+    const amount = infScrollInitialCount
+      ? itemAmount <= infScrollInitialCount
+        ? infScrollInitialCount
+        : loadMoreAmount
+      : undefined;
+    const offset = infScrollInitialCount
+      ? itemAmount <= infScrollInitialCount
+        ? 0
+        : itemAmount - loadMoreAmount
+      : undefined;
 
     return cancelable(onFetch(amount, offset)).then(res => {
       const pred = d => d.slice(0, offset).concat(res);
@@ -99,6 +107,13 @@ export function DataList<T>({
     });
   }, [refreshData, setHasMore, hasMore, onFetch]);
 
+  // Infinite scroll
+  useListener(
+    rootRef,
+    'scroll',
+    () => setScrollTop(rootRef.current!.scrollTop),
+    { passive: true },
+  );
   useEffect(() => {
     const root = rootRef.current;
     if (!(infScrollInitialCount && root && hasMore)) return;
