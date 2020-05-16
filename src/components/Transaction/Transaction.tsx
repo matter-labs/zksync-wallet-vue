@@ -997,7 +997,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                     <>
                                       {'Max:'}
                                       {maxValue
-                                        ? maxValue.toFixed(6)
+                                        ? maxValue.toFixed(10)
                                         : '0'}{' '}
                                     </>
                                   )}

@@ -37,7 +37,7 @@ const VerifiedBal: React.FC<BalProps> = observer(
         <div className='balances-token-right'>
           <div className='balances-token-right container'>
             <div className='current-tokens'>
-              <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
+              <span>{+balance < 0.0000000001 ? 0 : +balance.toFixed(10)}</span>{' '}
               {price && (
                 <span className='token-price'>
                   {`~$${+(
@@ -95,7 +95,7 @@ const UnverifiedBal: React.FC<BalProps> = observer(
         <div className='balances-token-right'>
           <div className='balances-token-right container'>
             <div className='current-tokens'>
-              <span>{+balance < 0.000001 ? 0 : +balance.toFixed(6)}</span>{' '}
+              <span>{+balance < 0.0000000001 ? 0 : +balance.toFixed(10)}</span>{' '}
               {price && (
                 <span className='token-price'>
                   {`~$${+(

@@ -44,8 +44,8 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
 
     const verifiedState =
       verified && !!zkBalances.length
-        ? +parseFloat(walletBalance).toFixed(6) !==
-          +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(6)
+        ? +parseFloat(walletBalance).toFixed(20) !==
+          +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(10)
         : false;
 
     const inputRef: (HTMLInputElement | null)[] = [];

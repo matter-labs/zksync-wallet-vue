@@ -49,7 +49,7 @@ export const Transaction: FC<Tx> = props => {
                         ? +priority_op.amount
                         : +amount) / Math.pow(10, 18)
                     )
-                      .toFixed(6)
+                      .toFixed(10)
                       .toString(),
                   )
                 : 'Unlocking transaction'}
