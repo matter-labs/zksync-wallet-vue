@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { useStore } from 'src/store/context';
@@ -7,6 +7,7 @@ import Transaction from 'components/Transaction/Transaction';
 
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useTransaction } from 'hooks/useTransaction';
+import { loadTokens } from 'src/utils';
 
 export const Deposit: React.FC = observer(
   (): JSX.Element => {
@@ -27,7 +28,13 @@ export const Deposit: React.FC = observer(
 
     const store = useStore();
 
-    const { ethBalances, price } = store;
+    const {
+      ethBalances,
+      syncProvider,
+      syncWallet,
+      accountState,
+      price,
+    } = store;
 
     useCheckLogin();
 
