@@ -28,13 +28,7 @@ export const Deposit: React.FC = observer(
 
     const store = useStore();
 
-    const {
-      ethBalances,
-      syncProvider,
-      syncWallet,
-      accountState,
-      price,
-    } = store;
+    const { ethBalances, price } = store;
 
     useCheckLogin();
 

@@ -104,13 +104,13 @@ export const Transaction: FC<Tx> = props => {
       </div>
       <a
         className='contact-manage-copy btn-tr'
+        title='View in block explorer'
         target='_blank'
         href={`${
           type === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
         }/${hash}`}
       >
         <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
-        <span className='tooltip'>{'View in block explorer'}</span>
       </a>
     </div>
   );

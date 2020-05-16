@@ -95,13 +95,10 @@ const useWalletInit = () => {
       });
 
       const web3Provider = new ethers.providers.Web3Provider(provider);
-      const initialTransactions = await fetchTransactions(
-        25,
-        0,
-        syncWallet.address(),
-        web3Provider,
-      );
-      store.transactions = initialTransactions;
+
+      await fetchTransactions(25, 0, syncWallet.address(), web3Provider)
+        .then(res => (store.transactions = res))
+        .catch(err => console.error(err));
 
       const { error, tokens, zkBalances } = await loadTokens(
         syncProvider,
