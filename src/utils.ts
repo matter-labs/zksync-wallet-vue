@@ -162,7 +162,16 @@ export function formatDate(d: Date) {
       .toString()
       .padStart(2),
   ].join('-');
-  const time = d.getHours() + ':' + d.getMinutes();
+  const time =
+    d
+      .getHours()
+      .toString()
+      .padStart(2, '0') +
+    ':' +
+    d
+      .getMinutes()
+      .toString()
+      .padStart(2, '0');
   return `${date} ${time} UTC`;
 }
 // export const formatDate = new Intl.DateTimeFormat('it-CH', {
