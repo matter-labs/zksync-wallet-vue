@@ -41,6 +41,18 @@ export const Transaction: FC<Tx> = props => {
         <div>
           <div className={`transaction-history ${type}`}></div>
           <div>
+            <div className='transaction-history-hash'>
+              {token && token.toString().length > 10
+                ? token
+                    .toString()
+                    .replace(
+                      token.toString().slice(6, token.toString().length - 3),
+                      '...',
+                    )
+                : type === 'Deposit'
+                ? priority_op?.token
+                : token}
+            </div>
             <div className='transaction-history-amount'>
               {!!amount || !!priority_op?.amount
                 ? parseFloat(
@@ -53,18 +65,6 @@ export const Transaction: FC<Tx> = props => {
                       .toString(),
                   )
                 : 'Unlocking transaction'}
-            </div>
-            <div className='transaction-history-hash'>
-              {token && token.toString().length > 10
-                ? token
-                    .toString()
-                    .replace(
-                      token.toString().slice(6, token.toString().length - 3),
-                      '...',
-                    )
-                : type === 'Deposit'
-                ? priority_op?.token
-                : token}
             </div>
           </div>
         </div>{' '}
