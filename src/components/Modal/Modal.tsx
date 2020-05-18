@@ -119,6 +119,20 @@ const Modal: React.FC<ModalProps> = observer(
       );
     };
 
+    const errorAppearence = () => (
+      <>
+        {store.hint && info && info[0].match(/(?:install)/i) && (
+          <p>
+            {info[0]}{' '}
+            <a href={info[1]} target='_blank' rel='noopener noreferrer'>
+              {'here'}
+            </a>
+          </p>
+        )}
+        {!store.error.match(/(?:detected)/i) && <p>{error}</p>}
+      </>
+    );
+
     const errorModalContent = () => {
       const { zkWallet, error, provider, hint, walletName } = store;
       return (
@@ -153,29 +167,11 @@ const Modal: React.FC<ModalProps> = observer(
                 provider.networkVersion === RIGHT_NETWORK_ID ? null : (
                   <div className='wrong-network-logo'></div>
                 )}
-                {store.hint && info && info[0].match(/(?:install)/i) && (
-                  <p>
-                    {info[0]}{' '}
-                    <a href={info[1]} target='_blank' rel='noopener noreferrer'>
-                      {'here'}
-                    </a>
-                  </p>
-                )}
-                {!store.error.match(/(?:detected)/i) && <p>{error}</p>}
+                {errorAppearence()}
               </div>
             </>
           ) : (
-            <>
-              {store.hint && info && info[0].match(/(?:install)/i) && (
-                <p>
-                  {info[0]}{' '}
-                  <a href={info[1]} target='_blank' rel='noopener noreferrer'>
-                    {'here'}
-                  </a>
-                </p>
-              )}
-              {!store.error.match(/(?:detected)/i) && <p>{error}</p>}
-            </>
+            errorAppearence()
           )}
           {!zkWallet && (
             <button

@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 
+import deleteicon from 'images/mdi_delete.svg';
+
 import { useStore } from 'src/store/context';
 
 import Modal from 'components/Modal/Modal';
@@ -22,8 +24,16 @@ const Contacts: React.FC = observer(
       address: string;
     }
 
+    interface IDeletedContact {
+      name: string;
+      address: string;
+      index: number;
+    }
+
+    const [id, setId] = useState<any>();
     const [contacts, setContacts] = useState<any>();
     const [oldContact, setOldContact] = useState<IOldContacts>();
+    const [deletedContact, setDeletedContact] = useState<IDeletedContact>();
 
     const updateContactList = useCallback(() => {
       const arr: string | null = localStorage.getItem(
@@ -36,7 +46,12 @@ const Contacts: React.FC = observer(
     const handleDelete = useCallback(
       name => {
         const selectedItem = contacts.findIndex(el => {
-          return el.name === name;
+          return el.name === id;
+        });
+        setDeletedContact({
+          name: contacts[selectedItem].name,
+          address: contacts[selectedItem].address,
+          index: selectedItem,
         });
         const newContacts = contacts;
         newContacts.splice(selectedItem, 1);
@@ -49,61 +64,95 @@ const Contacts: React.FC = observer(
       [contacts, store.modalSpecifier, zkWallet],
     );
 
+    const returnDeletedContact = useCallback(() => {
+      const _c = contacts;
+      _c.splice(deletedContact?.index, 0, {
+        name: deletedContact?.name,
+        address: deletedContact?.address,
+      });
+      localStorage.setItem(
+        `contacts${zkWallet?.address()}`,
+        JSON.stringify(_c),
+      );
+      updateContactList();
+      setDeletedContact(undefined);
+    }, [contacts, deletedContact, zkWallet]);
+
     useCheckLogin();
 
     return (
-      <DataList
-        data={(contacts as any[]) || []}
-        title='Contacts'
-        visible={true}
-        header={() => (
-          <>
-            <Modal
-              visible={false}
-              classSpecifier='add-contact addressless'
-              background={true}
-              centered
-            >
-              <SaveContacts
-                title='Add contact'
-                addressValue=''
-                addressInput={true}
-                onSaveContact={updateContactList}
-              />
-            </Modal>
-            <Modal
-              visible={false}
-              classSpecifier='add-contact edit-contact'
-              background={true}
-              centered
-            >
-              <SaveContacts
-                oldContact={oldContact}
-                title='Edit contact'
-                addressValue=''
-                addressInput={true}
-                onSaveContact={updateContactList}
-              />
-            </Modal>
-            <button
-              className='add-contact-button btn-tr'
-              onClick={() => (store.modalSpecifier = 'add-contact addressless')}
-            >
-              <span></span>
-              <p>{'Add a contact'}</p>
-            </button>
-          </>
+      <>
+        {!!deletedContact && (
+          <p className='undo-text'>
+            {`Contact "${deletedContact.name}" deleted.`}
+            <span onClick={returnDeletedContact} className='undo-btn'>
+              {'Undo'}
+            </span>
+          </p>
         )}
-        emptyListComponent={() => <p>{'The contact list is empty'}</p>}
-        renderItem={contact => (
-          <Contact
-            key={contact.address}
-            onSetOldContact={setOldContact}
-            onDelete={handleDelete}
-            {...contact}
-          />
-        )}
-      />
+        <DataList
+          data={(contacts as any[]) || []}
+          title='Contacts'
+          visible={true}
+          header={() => (
+            <>
+              <Modal
+                visible={false}
+                classSpecifier='add-contact addressless'
+                background={true}
+                centered
+              >
+                <SaveContacts
+                  title='Add contact'
+                  addressValue=''
+                  addressInput={true}
+                  onSaveContact={updateContactList}
+                />
+              </Modal>
+              <Modal
+                visible={false}
+                classSpecifier='add-contact edit-contact'
+                background={true}
+                centered
+              >
+                <SaveContacts
+                  oldContact={oldContact}
+                  title='Edit contact'
+                  addressValue=''
+                  addressInput={true}
+                  onSaveContact={updateContactList}
+                />
+                <button
+                  className='btn btn-cancel btn-tr delete'
+                  onClick={handleDelete}
+                >
+                  <img src={deleteicon} alt='edit' />
+                  {'delete'}
+                </button>
+              </Modal>
+              <button
+                className='add-contact-button btn-tr'
+                onClick={() =>
+                  (store.modalSpecifier = 'add-contact addressless')
+                }
+              >
+                <span></span>
+                <p>{'Add a contact'}</p>
+              </button>
+            </>
+          )}
+          emptyListComponent={() => <p>{'The contact list is empty'}</p>}
+          renderItem={contact => (
+            <Contact
+              key={contact.address}
+              onSetOldContact={setOldContact}
+              onDelete={handleDelete}
+              setId={setId}
+              {...contact}
+            />
+          )}
+        />
+      </>
     );
   },
 );
