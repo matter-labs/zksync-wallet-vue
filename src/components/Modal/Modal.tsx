@@ -79,6 +79,8 @@ const Modal: React.FC<ModalProps> = observer(
     const { createWallet } = useWalletInit();
     const metaMaskConnected = store.hint?.match(/login/i);
 
+    const info = store.hint.split('\n');
+
     const accessModalContent = () => {
       const { walletName, zkWalletInitializing } = store;
       return (
@@ -129,9 +131,13 @@ const Modal: React.FC<ModalProps> = observer(
             )}
           {!zkWallet && (
             <h3 className='title-connecting'>
-              {`${
-                hint && hint.match(/(?:login)/i) ? hint : 'Connecting to '
-              } ${walletName}`}
+              {!error.match(/(?:detected)/i) &&
+                `${
+                  error && hint && hint.match(/(?:login)/i)
+                    ? hint
+                    : 'Connecting to '
+                } ${walletName}`}
+              {error.match(/(?:detected)/i) && error}
             </h3>
           )}
           {provider && provider.networkVersion !== RIGHT_NETWORK_ID ? (
@@ -147,11 +153,29 @@ const Modal: React.FC<ModalProps> = observer(
                 provider.networkVersion === RIGHT_NETWORK_ID ? null : (
                   <div className='wrong-network-logo'></div>
                 )}
-                <p>{error}</p>
+                {store.hint && info && info[0].match(/(?:install)/i) && (
+                  <p>
+                    {info[0]}{' '}
+                    <a href={info[1]} target='_blank' rel='noopener noreferrer'>
+                      {'here'}
+                    </a>
+                  </p>
+                )}
+                {!store.error.match(/(?:detected)/i) && <p>{error}</p>}
               </div>
             </>
           ) : (
-            <p>{error}</p>
+            <>
+              {store.hint && info && info[0].match(/(?:install)/i) && (
+                <p>
+                  {info[0]}{' '}
+                  <a href={info[1]} target='_blank' rel='noopener noreferrer'>
+                    {'here'}
+                  </a>
+                </p>
+              )}
+              {!store.error.match(/(?:detected)/i) && <p>{error}</p>}
+            </>
           )}
           {!zkWallet && (
             <button

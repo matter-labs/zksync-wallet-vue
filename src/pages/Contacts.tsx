@@ -94,7 +94,7 @@ const Contacts: React.FC = observer(
             </button>
           </>
         )}
-        emptyListComponent={() => <p>{"You don't have contacts yet..."}</p>}
+        emptyListComponent={() => <p>{'The contact list is empty'}</p>}
         renderItem={contact => (
           <Contact
             key={contact.address}

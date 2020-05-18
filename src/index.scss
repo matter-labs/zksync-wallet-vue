@@ -798,6 +798,10 @@ body.dark > #root {
     background-image: url(./images/arrow-back-dark.svg);
   }
 
+  .beta-text {
+    color: var(--links-color);
+  }
+
   .withdraw-button {
     & > span {
       margin-top: 4px;

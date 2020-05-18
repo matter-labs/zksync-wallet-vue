@@ -528,7 +528,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const handleInputWidth = useCallback(e => {
       const el = myRef.current;
       if (el) {
-        el.style.width = (e.toString().length + 1) * 16 + 'px';
+        el.style.width = (el.value.length + 1) * 16 + 'px';
       }
     }, []);
 
@@ -684,9 +684,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 <ContactList address={contact.address} name={contact.name} />
               )}
               emptyListComponent={() =>
-                !searchContacts ? (
-                  <p>{"You don't have contacts yet..."}</p>
-                ) : null
+                !searchContacts ? <p>{'The contact list is empty'}</p> : null
               }
             />
           )}
