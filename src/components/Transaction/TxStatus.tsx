@@ -66,6 +66,9 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
   if (tx.verified) {
     status = 'Verified';
     content = <DoubleCheckMark />;
+  } else if (tx.commited && tx.tx.type === 'Withdraw') {
+    status = 'Withdrawal in progress';
+    content = <SpinnerWorm />;
   } else if (tx.commited) {
     status = 'Verification in progress';
     content = <CheckMark />;

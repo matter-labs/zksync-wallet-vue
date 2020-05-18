@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
+import ethers from 'ethers';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';

@@ -211,6 +211,16 @@ button {
     background-color: var(--transparent);
     border: none;
     border-radius: 13px;
+
+    &.delete {
+      display: flex;
+      align-items: center;
+    }
+    
+
+    img {
+      margin-right: 10px;
+    }
   }
 }
 
@@ -494,6 +504,24 @@ h2 {
   }
 }
 
+.undo {
+  &-text {
+    margin-top: 15px;
+  }
+
+  &-btn {
+    margin-left: 10px;
+    color: var(--button-bg-color);
+    font-weight: var(--semibold-font-weight);
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}
+
 .contact-manage {
   background-color: var(--modal-bg-color);
 
@@ -514,9 +542,13 @@ h2 {
   }
 
   &-edit {
+    width: 32px;
+    height: 32px;
+    margin-left: 10px;
     color: var(--dark-color);
     font-size: var(--md-font-size);
-    border-bottom: 1px solid var(--border-color);
+    background-color: var(--transparent);
+    border: none;
   }
 
   &-delete,
@@ -796,6 +828,10 @@ input[type='radio']:focus + .contact-manage {
 body.dark > #root {
   .transaction-back {
     background-image: url(./images/arrow-back-dark.svg);
+  }
+
+  .beta-text {
+    color: var(--links-color);
   }
 
   .withdraw-button {

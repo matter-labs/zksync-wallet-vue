@@ -35,7 +35,9 @@ const useWalletInit = () => {
                 : DEFAULT_ERROR;
           });
       } else {
-        store.error = `${store.walletName} not found`;
+        store.isAccessModalOpen = false;
+        store.hint = 'Please install it \n https://metamask.io/';
+        store.error = `${store.walletName} not detected`;
       }
     },
     [store],

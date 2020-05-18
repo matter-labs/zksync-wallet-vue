@@ -271,8 +271,6 @@
     }
 
     &-send {
-      background-image: url(../../images/send_dark.svg);
-
       & > a {
         display: block;
         width: 100%;
@@ -280,10 +278,13 @@
       }
     }
 
+    .balances-contact-send {
+      visibility: hidden;
+    }
+
     &-copy {
       display: none;
       height: 26px;
-      background-image: url(../../images/mdi_file_copy.svg);
       background-size: 22px;
     }
     
@@ -304,7 +305,7 @@
     &-send, &-edit, &-copy {
       width: 32px;
       height: 32px;
-      margin-left: 15px;
+      margin-left: 10px;
       padding: 5px;
       background-color: var(--transparent);
       background-repeat: no-repeat;
@@ -323,20 +324,37 @@
       display: flex;
       flex-direction: column;
       text-align: left;
+
+      &.container {
+        flex-direction: row;
+        align-items: center;
+
+        img {
+          width: 30px;
+          height: 30px;
+          margin-right: 20px;
+          border-radius: 100%;
+        }
+      }
     }
 
     &-name {
       color: var(--dark-color);
-      font-size: var(--md-font-size);
+      font-size: var(--xl-font-size);
+      line-height: var(--xl-font-size);
     }
 
     &-address {
-      color: var(--hints-color);
+      color: var(--dark-color);
       font-size: var(--xs-font-size);
     }
 
     &:hover {
       background-color: var(--bg-block-color);
+      
+      .balances-contact-send {
+        visibility: visible;
+      }
     }
   }
 }
