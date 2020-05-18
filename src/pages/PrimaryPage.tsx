@@ -59,7 +59,6 @@ const PrimaryPage: React.FC = observer(() => {
   const selectWallet = useCallback(
     (key: WalletType) => () => {
       if (wallets.includes(key)) {
-        console.log(window['web3']);
         if (key === 'WalletConnect') {
           store.modalSpecifier = 'wc';
         } else {
