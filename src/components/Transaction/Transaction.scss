@@ -241,6 +241,8 @@
   height: 30px;
   overflow: hidden;
   overflow-x: scroll;
+  scrollbar-color: var(--button-bg-color) var(--transparent);
+  scrollbar-width: thin;
 
   & > .currency-input {
     min-width: 60px;
