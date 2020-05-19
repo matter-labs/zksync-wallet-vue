@@ -89,6 +89,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [gas, setGas] = useState<string>('');
     const [fee, setFee] = useState<string>('');
     const [filteredContacts, setFilteredContacts] = useState<any>([]);
+    const [independentHint, setIndependentHint] = useState<boolean>();
     const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
     const [isContactsListOpen, openContactsList] = useState<boolean>(false);
     const [isHintUnlocked, setHintUnlocked] = useState<string>('');
@@ -117,6 +118,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [refreshTimer, setRefreshTimer] = useState<number | null>(null);
 
     const history = useHistory();
+
+    const handleHints = useCallback(() => {
+      setIndependentHint(true);
+      setTimeout(() => {
+        setIndependentHint(false);
+      }, 3000);
+    }, [setIndependentHint]);
 
     const getAccState = async () => {
       if (zkWallet && tokens) {
@@ -174,10 +182,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
       await Promise.all(balancePromises)
         .then(res => {
-          const _b = res.filter(token => token);
-
-          const sortedBalances = _b.sort(sortBalancesById);
-          store.ethBalances = sortedBalances as IEthBalance[];
+          const _balances = res
+            .filter(token => token && token.balance > 0)
+            .sort(sortBalancesById);
+          const _balancesEmpty = res.filter(token => token?.balance === 0);
+          _balances.push(..._balancesEmpty);
+          store.ethBalances = _balances as IEthBalance[];
         })
         .catch(err => {
           err.name && err.message
@@ -664,6 +674,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           <button
             onClick={e => {
               e.stopPropagation();
+              handleHints();
               symbol === 'ETH'
                 ? window.open('https://faucet.rinkeby.io/')
                 : mintTestERC20Tokens(zkWallet as Wallet, symbol as TokenLike);
@@ -685,6 +696,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     return (
       <>
+        {independentHint && (
+          <div className='hint-independent'>
+            {'Follow the instructions in Metamask'}
+          </div>
+        )}
         <Modal visible={false} classSpecifier='add-contact' background={true}>
           <SaveContacts
             title='Add contact'
