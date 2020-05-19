@@ -110,7 +110,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
             history.push('/account');
           }}
         >
-          {'Cancel'}
+          {'Close'}
         </button>
       </>
     );
