@@ -3,6 +3,9 @@ import { useHistory } from 'react-router-dom';
 import { ethers } from 'ethers';
 import makeBlockie from 'ethereum-blockies-base64';
 import { observer } from 'mobx-react-lite';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import { DataList } from 'components/DataList/DataListNew';
 import Modal from 'components/Modal/Modal';
@@ -35,6 +38,8 @@ import { DEFAULT_ERROR } from 'constants/errors';
 import { IEthBalance } from '../../types/Common';
 
 import './Transaction.scss';
+
+library.add(fas);
 
 const Transaction: React.FC<ITransactionProps> = observer(
   ({
@@ -148,7 +153,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     };
 
-    const loadEthTokens = async () => {
+    const loadEthTokens = useCallback(async () => {
       const { tokens } = await loadTokens(
         syncProvider as Provider,
         syncWallet as Wallet,
@@ -170,6 +175,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       await Promise.all(balancePromises)
         .then(res => {
           const _b = res.filter(token => token);
+
           const sortedBalances = _b.sort(sortBalancesById);
           store.ethBalances = sortedBalances as IEthBalance[];
         })
@@ -178,7 +184,20 @@ const Transaction: React.FC<ITransactionProps> = observer(
             ? (store.error = `${err.name}: ${err.message}`)
             : (store.error = DEFAULT_ERROR);
         });
-    };
+    }, [
+      accountState,
+      store.error,
+      store.ethBalances,
+      syncWallet,
+      syncProvider,
+    ]);
+
+    useEffect(() => {
+      const _t = setInterval(() => loadEthTokens(), 3000);
+      return () => {
+        clearInterval(_t);
+      };
+    }, [loadEthTokens]);
 
     useEffect(() => {
       if (title === 'Deposit') {
@@ -651,7 +670,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
             }}
             className='undo-btn'
           >
-            {symbol === 'ETH' ? 'Get some Rinkeby ETH' : 'Mint tokens for test'}
+            {symbol === 'ETH' ? (
+              <>
+                {'Get some Rinkeby ETH '}
+                <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
+              </>
+            ) : (
+              'Click to mint some tokens'
+            )}
           </button>
         </div>
       </div>

@@ -146,69 +146,84 @@ const Account: React.FC = observer(() => {
   const store = useStore();
   const { zkWallet, accountState, tokens } = store;
 
-  const getAccState = async (extended: boolean) => {
-    if (zkWallet && tokens) {
-      const _accountState = await zkWallet.getAccountState();
-      if (JSON.stringify(accountState) !== JSON.stringify(_accountState)) {
-        store.accountState = _accountState;
-      }
-      const at = _accountState.depositing.balances;
-      store.awaitedTokens = at;
-      if (extended) {
-        const zkBalance = _accountState.committed.balances;
-        const zkBalancePromises = Object.keys(zkBalance).map(async key => {
-          return {
-            address: tokens[key].address,
-            balance: +zkBalance[key] / Math.pow(10, 18),
-            symbol: tokens[key].symbol,
-          };
-        });
-        Promise.all(zkBalancePromises)
-          .then(res => {
-            if (Object.keys(store.awaitedTokens).length > 0) {
-              for (const token in store.awaitedTokens) {
-                const _list = Object.entries(res).map(el => el[1].symbol);
-                if (_list.indexOf(token) === -1) {
-                  store.zkBalances = res.concat([
-                    {
-                      symbol: token,
-                      balance: 0,
-                      address: 'awaited',
-                    },
-                  ]);
+  const getAccState = useCallback(
+    async (extended: boolean) => {
+      if (zkWallet && tokens) {
+        const _accountState = await zkWallet.getAccountState();
+        if (JSON.stringify(accountState) !== JSON.stringify(_accountState)) {
+          store.accountState = _accountState;
+        }
+        const at = _accountState.depositing.balances;
+        store.awaitedTokens = at;
+        if (extended) {
+          const zkBalance = _accountState.committed.balances;
+          const zkBalancePromises = Object.keys(zkBalance).map(async key => {
+            return {
+              address: tokens[key].address,
+              balance: +zkBalance[key] / Math.pow(10, 18),
+              symbol: tokens[key].symbol,
+            };
+          });
+          Promise.all(zkBalancePromises)
+            .then(res => {
+              if (Object.keys(store.awaitedTokens).length > 0) {
+                for (const token in store.awaitedTokens) {
+                  const _list = Object.entries(res).map(el => el[1].symbol);
+                  if (_list.indexOf(token) === -1) {
+                    store.zkBalances = res.concat([
+                      {
+                        symbol: token,
+                        balance: 0,
+                        address: 'awaited',
+                      },
+                    ]);
+                  } else {
+                    if (
+                      JSON.stringify(store.zkBalances) !== JSON.stringify(res)
+                    )
+                      store.zkBalances = res;
+                  }
+                }
+              } else {
+                if (JSON.stringify(store.zkBalances) !== JSON.stringify(res))
+                  store.zkBalances = res;
+              }
+              if (JSON.stringify(res) !== JSON.stringify(zkBalances)) {
+                if (accountState?.id) {
+                  zkWallet?.isSigningKeySet().then(data => {
+                    store.unlocked = data;
+                  });
                 } else {
-                  if (JSON.stringify(store.zkBalances) !== JSON.stringify(res))
-                    store.zkBalances = res;
+                  store.unlocked = true;
                 }
               }
-            } else {
-              if (JSON.stringify(store.zkBalances) !== JSON.stringify(res))
-                store.zkBalances = res;
-            }
-            if (JSON.stringify(res) !== JSON.stringify(zkBalances)) {
-              if (accountState?.id) {
-                zkWallet?.isSigningKeySet().then(data => {
-                  store.unlocked = data;
-                });
-              } else {
-                store.unlocked = true;
-              }
-            }
-          })
-          .catch(err => {
-            err.name && err.message
-              ? (store.error = `${err.name}: ${err.message}`)
-              : (store.error = DEFAULT_ERROR);
-          });
+            })
+            .catch(err => {
+              err.name && err.message
+                ? (store.error = `${err.name}: ${err.message}`)
+                : (store.error = DEFAULT_ERROR);
+            });
+        }
       }
-    }
-    if (
-      JSON.stringify(accountState?.verified.balances) !==
-      JSON.stringify(store.verified)
-    ) {
-      store.verified = accountState?.verified.balances;
-    }
-  };
+      if (
+        JSON.stringify(accountState?.verified.balances) !==
+        JSON.stringify(store.verified)
+      ) {
+        store.verified = accountState?.verified.balances;
+      }
+    },
+    [
+      accountState,
+      store.accountState,
+      store.awaitedTokens,
+      store.error,
+      store.unlocked,
+      store.verified,
+      store.zkBalances,
+      tokens,
+      zkWallet,
+    ],
+  );
 
   useEffect(() => {
     getAccState(true);

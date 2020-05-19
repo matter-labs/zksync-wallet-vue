@@ -7,6 +7,7 @@ import Modal from 'components/Modal/Modal';
 import { IAppProps } from 'types/Common';
 
 import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
+import { WRONG_NETWORK } from 'constants/regExs';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 import { WalletType } from './constants/Wallets';
 import { useInterval } from './hooks/timers';
@@ -52,6 +53,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           walletName === 'Metamask'
         ) {
           store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
+          store.isAccessModalOpen = false;
         } else {
           store.error = '';
         }
@@ -154,7 +156,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         cancelAction={() => {
           store.error = '';
         }}
-        visible={!!store.error}
+        visible={!!store.error && !store.error.match(WRONG_NETWORK)}
         classSpecifier='error'
         background={true}
         centered

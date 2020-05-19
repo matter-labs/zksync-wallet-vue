@@ -252,9 +252,10 @@
 .scroll-wrapper::-webkit-scrollbar{
   width: 6px;
   height: 4px;
+  overflow-x: scroll;
   background: var(--transparent);
   cursor: pointer;
-
+  scrollbar-color: var(--transparent);
 }
 
 .scroll-wrapper::-webkit-scrollbar-thumb:horizontal{
