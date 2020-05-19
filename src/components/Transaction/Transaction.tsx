@@ -556,12 +556,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     }, [setLoading, token, unlockFau, zkWallet]);
 
-    const handleInputWidth = useCallback(e => {
-      const el = myRef.current;
-      if (el) {
-        el.style.width = (el.value.length + 1) * 16 + 'px';
-      }
-    }, []);
+    const handleInputWidth = useCallback(
+      e => {
+        const el = myRef.current;
+        if (el) {
+          el.style.width =
+            (e === maxValue ? e.toString().length : el.value.length + 1) * 16 +
+            'px';
+        }
+      },
+      [inputValue, maxValue],
+    );
 
     const handleSumbit = useCallback(() => {
       if (submitCondition) {
@@ -671,25 +676,30 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 : parseFloat(balance.toFixed(8).toString())}
             </p>
           </span>
-          <button
-            onClick={e => {
-              e.stopPropagation();
-              handleHints();
-              symbol === 'ETH'
-                ? window.open('https://faucet.rinkeby.io/')
-                : mintTestERC20Tokens(zkWallet as Wallet, symbol as TokenLike);
-            }}
-            className='undo-btn'
-          >
-            {symbol === 'ETH' ? (
-              <>
-                {'Get some Rinkeby ETH '}
-                <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
-              </>
-            ) : (
-              'Click to mint some tokens'
-            )}
-          </button>
+          {title === 'Deposit' && (
+            <button
+              onClick={e => {
+                e.stopPropagation();
+                handleHints();
+                symbol === 'ETH'
+                  ? window.open('https://faucet.rinkeby.io/')
+                  : mintTestERC20Tokens(
+                      zkWallet as Wallet,
+                      symbol as TokenLike,
+                    );
+              }}
+              className='undo-btn'
+            >
+              {symbol === 'ETH' ? (
+                <>
+                  {'Get some Rinkeby ETH '}
+                  <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
+                </>
+              ) : (
+                'Click to mint some tokens'
+              )}
+            </button>
+          )}
         </div>
       </div>
     );
@@ -963,7 +973,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               placeholder={selectedBalance ? '0.00' : ''}
                               className='currency-input'
                               key='input1'
-                              type='number'
+                              type='tel'
                               ref={myRef}
                               onChange={e => {
                                 validateNumbers(+e.target.value);
