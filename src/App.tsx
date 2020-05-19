@@ -56,10 +56,11 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           store.error = '';
         }
       };
-
-      networkChangeListener();
-      provider.on('networkChanged', networkChangeListener);
-      return () => provider.off('networkChanged', networkChangeListener);
+      if (walletName === 'Metamask') {
+        networkChangeListener();
+        provider.on('networkChanged', networkChangeListener);
+        return () => provider.off('networkChanged', networkChangeListener);
+      }
     }
   });
 
@@ -70,13 +71,35 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (zkWallet) {
       store.isAccessModalOpen = false;
     }
-    if (!provider || walletName !== 'Metamask') return;
+    if (walletName === 'Injected') {
+      sessionStorage.setItem('walletName', walletName);
+    }
+    const _sw = sessionStorage.getItem('walletName');
+    if (
+      _sw === 'Injected' &&
+      !zkWallet &&
+      window.location.pathname.length > 1
+    ) {
+      store.setBatch({
+        walletName: _sw,
+        zkWallet: null,
+        zkBalances: [],
+        isAccessModalOpen: true,
+        transactions: [],
+        zkWalletInitializing: false,
+        searchBalances: [],
+        searchContacts: [],
+        ethBalances: [],
+      });
+    }
+    if (!provider && !walletName) return;
     const accountChangeListener = () => {
       if (
         zkWallet &&
         provider &&
         store.zkWalletAddress?.toLowerCase() !==
-          provider.selectedAddress.toLowerCase()
+          provider.selectedAddress.toLowerCase() &&
+        walletName === 'Metamask'
       ) {
         sessionStorage.setItem('walletName', walletName);
         const savedWalletName = sessionStorage.getItem(
@@ -97,8 +120,10 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         });
       }
     };
-    provider.on('accountsChanged', accountChangeListener);
-    return () => provider.off('accountsChanged', accountChangeListener);
+    if (walletName === 'Metamask') {
+      provider.on('accountsChanged', accountChangeListener);
+      return () => provider.off('accountsChanged', accountChangeListener);
+    }
   });
 
   useEffect(() => {
@@ -144,7 +169,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           store.isAccessModalOpen &&
           window.location.pathname.length > 1 &&
           store.provider &&
-          store.provider.networkVersion === RIGHT_NETWORK_ID
+          (store.provider.networkVersion === RIGHT_NETWORK_ID ||
+            store.walletName === 'Injected')
         }
         classSpecifier='metamask'
         background={true}
