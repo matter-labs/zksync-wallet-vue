@@ -125,9 +125,12 @@ const useWalletInit = () => {
 
       await Promise.all(balancePromises)
         .then(res => {
-          const _b = res.filter(token => token);
-          const sortedBalances = _b.sort(sortBalancesById);
-          store.ethBalances = sortedBalances as IEthBalance[];
+          const _balances = res
+            .filter(token => token && token.balance > 0)
+            .sort(sortBalancesById);
+          const _balancesEmpty = res.filter(token => token?.balance === 0);
+          _balances.push(..._balancesEmpty);
+          store.ethBalances = _balances as IEthBalance[];
         })
         .catch(err => {
           err.name && err.message

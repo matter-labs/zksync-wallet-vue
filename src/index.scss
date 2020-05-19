@@ -827,6 +827,22 @@ input[type='radio']:focus + .contact-manage {
   background-size: contain;
 }
 
+.hint-independent {
+  position: fixed;
+  top: 50%;
+  right: 40px;
+  z-index: 10000;
+  display: block;
+  width: auto;
+  min-width: 200px;
+  max-width: 300px;
+  padding: 10px;
+  text-align: center;
+  background: var(--modal-bg-color);
+  border: 1px solid var(--button-bg-color);
+  border-radius: 5px;
+}
+
 body.dark > #root {
   .transaction-back {
     background-image: url(./images/arrow-back-dark.svg);
