@@ -9,7 +9,7 @@ import Spinner from 'components/Spinner/Spinner';
 
 import { useQuery } from 'hooks/useQuery';
 
-import { MOBILE_DEVICE, OPERA_DETECT } from 'constants/regExs';
+import { MOBILE_DEVICE } from 'constants/regExs';
 import { RIGHT_NETWORK_ID } from 'constants/networks';
 import {
   BRAVE_NON_WORKING_WALLETS,

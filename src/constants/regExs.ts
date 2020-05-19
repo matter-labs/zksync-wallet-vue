@@ -9,6 +9,4 @@ export const INPUT_VALIDATION = {
 
 export const MOBILE_DEVICE = /mobi/i;
 
-export const OPERA_DETECT = navigator.userAgent.match(/Opera|OPR\//);
-
 export const WRONG_NETWORK = /(?:wrong\snetwork)|deployed/i;
