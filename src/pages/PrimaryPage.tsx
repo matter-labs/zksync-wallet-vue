@@ -54,10 +54,7 @@ const PrimaryPage: React.FC = observer(() => {
 
   const walletsWithInjected = () => {
     const _w = Object.keys(WALLETS);
-    if (
-      (mobileCheck || navigator['brave'] || OPERA_DETECT) &&
-      providerWalletName === undefined
-    ) {
+    if (!!window['web3'] && !providerWalletName) {
       return _w.filter(el => el !== 'Metamask');
     } else {
       return _w.filter(el => el !== 'Injected');
