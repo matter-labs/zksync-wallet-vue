@@ -90,7 +90,8 @@ const Modal: React.FC<ModalProps> = observer(
             {walletName}
           </h3>
           <div
-            className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
+            className={`${walletName &&
+              walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
           ></div>
           {zkWalletInitializing && (
             <>

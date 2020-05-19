@@ -25,7 +25,7 @@ import { useCancelable } from 'hooks/useCancelable';
 import { useStore } from 'src/store/context';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
-import { loadTokens } from 'src/utils';
+import { loadTokens, sortBalancesById } from 'src/utils';
 
 import { AccountState } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
@@ -159,6 +159,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         if (tokens[key].symbol && syncWallet) {
           const balance = await syncWallet.getEthereumBalance(key);
           return {
+            id: tokens[key].id,
             address: tokens[key].address,
             balance: +balance / Math.pow(10, 18),
             symbol: tokens[key].symbol,
@@ -168,8 +169,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
       await Promise.all(balancePromises)
         .then(res => {
-          const balance = res.filter(token => token);
-          store.ethBalances = balance as IEthBalance[];
+          const _b = res.filter(token => token);
+          const sortedBalances = _b.sort(sortBalancesById);
+          store.ethBalances = sortedBalances as IEthBalance[];
         })
         .catch(err => {
           err.name && err.message
@@ -626,14 +628,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
         className='balances-token'
       >
         <div className='balances-token-left'>
-          <div className={`logo ${symbol}`}></div>
+          {/* <div className={`logo ${symbol}`}></div> */}
           <div className='balances-token-name'>
             <p>{symbol}</p>
-            <span>
-              {symbol === 'ETH' && 'Ethereum'}
-              {symbol === 'DAI' && 'Dai'}
-              {symbol === 'FAU' && 'Faucet'}
-            </span>
           </div>
         </div>
         <div className='balances-token-right'>

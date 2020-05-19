@@ -1,8 +1,10 @@
 import { Web3Provider } from 'ethers/providers';
+import ethers from 'ethers';
 import { Provider, Wallet } from 'zksync';
+
 import { IEthBalance } from './types/Common';
 import { DEFAULT_ERROR } from './constants/errors';
-import { Tokens, AccountState } from 'zksync/build/types';
+import { Tokens, AccountState, TokenLike } from 'zksync/build/types';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider = window['ethereum'];
@@ -90,6 +92,57 @@ export function whyDidYouUpdate() {
   };
 }
 
+export const sortBalancesById = (a, b) => {
+  if (a.id < b.id) {
+    return -1;
+  }
+  if (a.id > b.id) {
+    return 1;
+  }
+  return 0;
+};
+
+export const mintTestERC20Tokens = async (wallet: Wallet, token: TokenLike) => {
+  const tokenAddress = wallet.provider.tokenSet.resolveTokenAddress(token);
+  const ABI = [
+    {
+      constant: false,
+      inputs: [
+        {
+          internalType: 'address',
+          name: '_to',
+          type: 'address',
+        },
+        {
+          internalType: 'uint256',
+          name: '_amount',
+          type: 'uint256',
+        },
+      ],
+      name: 'mint',
+      outputs: [
+        {
+          internalType: 'bool',
+          name: '',
+          type: 'bool',
+        },
+      ],
+      payable: false,
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+  ];
+  const erc20Mintable = new ethers.Contract(
+    tokenAddress,
+    ABI,
+    wallet.ethSigner,
+  );
+  return await erc20Mintable.mint(
+    wallet.address(),
+    ethers.utils.parseEther('100'),
+  );
+};
+
 export async function loadTokens(
   syncProvider: Provider,
   syncWallet: Wallet,
@@ -104,6 +157,7 @@ export async function loadTokens(
     return { tokens: {}, ethBalances: [], zkBalances: [], error: undefined };
   }
   const tokens = await syncProvider.getTokens();
+
   let error: string | undefined;
   const zkBalance = accountState.committed.balances;
 
@@ -111,6 +165,7 @@ export async function loadTokens(
     .filter(t => t[1].symbol)
     .map(async ([key, value]) => {
       return {
+        id: value.id,
         address: value.address,
         balance: +zkBalance[key] / Math.pow(10, 18),
         symbol: value.symbol,

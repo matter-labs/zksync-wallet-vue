@@ -10,7 +10,7 @@ import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
 import { fetchTransactions } from 'src/api';
 import { useLogout } from './useLogout';
-import { loadTokens } from 'src/utils';
+import { loadTokens, sortBalancesById } from 'src/utils';
 import { useStore } from 'src/store/context';
 
 const useWalletInit = () => {
@@ -115,6 +115,7 @@ const useWalletInit = () => {
         if (tokens[key].symbol) {
           const balance = await syncWallet.getEthereumBalance(key);
           return {
+            id: tokens[key].id,
             address: tokens[key].address,
             balance: +balance / Math.pow(10, 18),
             symbol: tokens[key].symbol,
@@ -124,8 +125,9 @@ const useWalletInit = () => {
 
       await Promise.all(balancePromises)
         .then(res => {
-          const balance = res.filter(token => token);
-          store.ethBalances = balance as IEthBalance[];
+          const _b = res.filter(token => token);
+          const sortedBalances = _b.sort(sortBalancesById);
+          store.ethBalances = sortedBalances as IEthBalance[];
         })
         .catch(err => {
           err.name && err.message

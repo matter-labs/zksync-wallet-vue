@@ -1,6 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
-import ethers from 'ethers';
+import Web3 from 'web3';
+import { observer } from 'mobx-react-lite';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';
@@ -19,8 +20,9 @@ import {
 } from 'constants/Wallets';
 import { useLogout } from 'src/hooks/useLogout';
 import { useStore } from 'src/store/context';
-import { observer } from 'mobx-react-lite';
+import useWalletInit from 'src/hooks/useWalletInit';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
+import { getWalletNameFromProvider } from '../utils';
 
 const PrimaryPage: React.FC = observer(() => {
   const store = useStore();
@@ -30,6 +32,10 @@ const PrimaryPage: React.FC = observer(() => {
     () => MOBILE_DEVICE.test(navigator.userAgent),
     [],
   );
+
+  const { createWallet } = useWalletInit();
+
+  const providerWalletName = getWalletNameFromProvider();
 
   const filterWallets = (list: string[]) => {
     if (!!navigator['brave']) list.push(...BRAVE_NON_WORKING_WALLETS);
@@ -46,6 +52,15 @@ const PrimaryPage: React.FC = observer(() => {
     [mobileCheck],
   );
 
+  const walletsWithInjected = () => {
+    const _w = Object.keys(WALLETS);
+    if (!!window['web3'] && !providerWalletName) {
+      return _w.filter(el => el !== 'Metamask');
+    } else {
+      return _w.filter(el => el !== 'Injected');
+    }
+  };
+
   useMobxEffect(() => {
     const { provider, walletName } = store;
     if (!(provider && walletName === 'Metamask')) return;
@@ -53,12 +68,25 @@ const PrimaryPage: React.FC = observer(() => {
       store.isAccessModalOpen = true;
       store.walletName = 'Metamask';
     };
-    store.provider.on('networkChanged', listener);
-    return () => store.provider.off('networkChanged', listener);
+    if (store.walletName === 'Metamask') {
+      store.provider.on('networkChanged', listener);
+      return () => store.provider.off('networkChanged', listener);
+    }
   });
 
   const selectWallet = useCallback(
     (key: WalletType) => () => {
+      if (key === 'Injected') {
+        store.zkWalletInitializing = true;
+        const web3 = new Web3(window['web3'].getDefaultProvider);
+        window['ethereum'].enable().then(() => {
+          web3.eth.getAccounts((error, accounts) => {
+            console.log(accounts);
+            createWallet();
+          });
+        });
+      }
+
       if (wallets.includes(key)) {
         if (key === 'WalletConnect') {
           store.modalSpecifier = 'wc';
@@ -145,7 +173,7 @@ const PrimaryPage: React.FC = observer(() => {
               <p>{'Connect a wallet'}</p>
             </div>
             <div className='wallets-wrapper'>
-              {Object.keys(WALLETS).map(key => (
+              {Object.values(walletsWithInjected()).map(key => (
                 <button key={key} className='wallet-block'>
                   <div
                     className={`btn wallet-button ${key}`}

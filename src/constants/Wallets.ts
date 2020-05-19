@@ -1,6 +1,7 @@
 export type WalletType = keyof typeof WALLETS | '';
 
 export const WALLETS = {
+  Injected: () => import('../components/Wallets/BrowserWallet'),
   Metamask: () => import('../components/Wallets/BrowserWallet'),
   WalletConnect: () => import('../components/Wallets/WalletConnect'),
   // 'Coinbase Wallet': () => import('../components/Wallets/BrowserWallet'),  /** TODO: for demo only */
