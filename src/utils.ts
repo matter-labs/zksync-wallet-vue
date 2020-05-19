@@ -1,5 +1,5 @@
 import { Web3Provider } from 'ethers/providers';
-import ethers from 'ethers';
+import ethers, { Contract, utils } from 'ethers';
 import { Provider, Wallet } from 'zksync';
 
 import { IEthBalance } from './types/Common';
@@ -132,15 +132,8 @@ export const mintTestERC20Tokens = async (wallet: Wallet, token: TokenLike) => {
       type: 'function',
     },
   ];
-  const erc20Mintable = new ethers.Contract(
-    tokenAddress,
-    ABI,
-    wallet.ethSigner,
-  );
-  return await erc20Mintable.mint(
-    wallet.address(),
-    ethers.utils.parseEther('100'),
-  );
+  const erc20Mintable = new Contract(tokenAddress, ABI, wallet.ethSigner);
+  return await erc20Mintable.mint(wallet.address(), utils.parseEther('100'));
 };
 
 export async function loadTokens(

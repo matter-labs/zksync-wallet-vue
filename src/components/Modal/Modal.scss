@@ -327,8 +327,27 @@
 
     & .balances-token-right {
       display: flex;
+      flex-direction: column;
+      align-items: flex-end;
       height: 100%;
+      margin-top: 35px;
       padding-bottom: 5px;
+
+      & > .undo-btn {
+        display: block;
+        margin-left: 10px;
+        color: var(--button-bg-color);
+        font-weight: var(--semibold-font-weight);
+        text-decoration: underline;
+        background-color: var(--transparent);
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: none;
+          background-color: var(--transparent);
+        }
+      }
 
       span {
         align-self: flex-end;

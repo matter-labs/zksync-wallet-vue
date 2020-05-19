@@ -120,7 +120,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         });
       }
     };
-    if (walletName === 'Metamask') {
+    if (walletName === 'Metamask' && provider) {
       provider.on('accountsChanged', accountChangeListener);
       return () => provider.off('accountsChanged', accountChangeListener);
     }
