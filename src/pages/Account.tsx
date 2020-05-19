@@ -225,8 +225,16 @@ const Account: React.FC = observer(() => {
     ],
   );
 
+  const getVerified = async () => {
+    if (zkWallet) {
+      store.verified = await (await zkWallet.getAccountState()).verified
+        .balances;
+    }
+  };
+
   useEffect(() => {
     getAccState(true);
+    getVerified();
   }, []);
 
   useEffect(() => {

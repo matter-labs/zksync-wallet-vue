@@ -561,8 +561,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
         const el = myRef.current;
         if (el) {
           el.style.width =
-            (e === maxValue ? e.toString().length : el.value.length + 1) * 16 +
-            'px';
+            (e === maxValue && e.toString() !== '0'
+              ? e.toString().length
+              : el.value.length + 1) + 'ch';
         }
       },
       [inputValue, maxValue],
@@ -834,7 +835,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   setWalletName();
                 }}
               >
-                {'Cancel'}
+                {'Close'}
               </button>
             </>
           )}
