@@ -25,9 +25,9 @@ import { useCancelable } from 'hooks/useCancelable';
 import { useStore } from 'src/store/context';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
-import { loadTokens, sortBalancesById } from 'src/utils';
+import { loadTokens, sortBalancesById, mintTestERC20Tokens } from 'src/utils';
 
-import { AccountState } from 'zksync/build/types';
+import { AccountState, TokenLike } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
 
 import { DEFAULT_ERROR } from 'constants/errors';
@@ -635,13 +635,24 @@ const Transaction: React.FC<ITransactionProps> = observer(
         </div>
         <div className='balances-token-right'>
           <span>
-            {window?.innerWidth > WIDTH_BP && 'balance:'}{' '}
+            {window?.innerWidth > WIDTH_BP && 'balance:'}
             <p className='datalist-balance'>
               {+balance < 0.000001
                 ? 0
                 : parseFloat(balance.toFixed(8).toString())}
             </p>
           </span>
+          <button
+            onClick={e => {
+              e.stopPropagation();
+              symbol === 'ETH'
+                ? window.open('https://faucet.rinkeby.io/')
+                : mintTestERC20Tokens(zkWallet as Wallet, symbol as TokenLike);
+            }}
+            className='undo-btn'
+          >
+            {symbol === 'ETH' ? 'Get some Rinkeby ETH' : 'Mint tokens for test'}
+          </button>
         </div>
       </div>
     );
@@ -786,7 +797,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                     handleCancel();
                     store.walletAddress = {};
                     setTransactionType(undefined);
-                    history.push('/account');
+                    history.goBack();
                   }}
                   className='transaction-back'
                 ></button>
@@ -925,7 +936,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 value={inputValue.toString().replace(/-/g, '')}
                               />
                             </div>
-
                             <div className='custom-selector balances'>
                               <div
                                 onClick={() => {
@@ -991,9 +1001,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   {selectedBalance && (
                                     <>
                                       {'Max:'}
-                                      {maxValue
-                                        ? maxValue.toFixed(10)
-                                        : '0'}{' '}
+                                      {maxValue ? maxValue.toFixed(10) : '0'}
                                     </>
                                   )}
                                   {symbolName ? symbolName : ''}
@@ -1027,18 +1035,16 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   <p>
                                     {symbolName.length
                                       ? symbolName
-                                      : balances?.length &&
-                                        balances[0].symbol}{' '}
-                                    {'token unlocked'}
+                                      : balances?.length && balances[0].symbol}
+                                    {' token unlocked'}
                                   </p>
                                 ) : (
                                   <p>
-                                    {'Unlock'}{' '}
+                                    {'Unlock'}
                                     {symbolName.length
                                       ? symbolName
-                                      : balances?.length &&
-                                        balances[0].symbol}{' '}
-                                    {'token'}
+                                      : balances?.length && balances[0].symbol}
+                                    {' token'}
                                   </p>
                                 )}
                                 <button
@@ -1087,7 +1093,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             : conditionError}
                         </p>
                       </div>
-
                       <button
                         className={`btn submit-button ${
                           (!unlockFau && title === 'Deposit') ||
@@ -1112,7 +1117,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             !!submitCondition &&
                             !!inputValue && (
                               <>
-                                {'Fee:'}{' '}
+                                {'Fee: '}
                                 {title === 'Deposit' &&
                                   (+inputValue * 0.01 < 0.000001
                                     ? ''
@@ -1120,7 +1125,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 {title !== 'Deposit' &&
                                   (+fee / Math.pow(10, 18) < 0.000001
                                     ? ''
-                                    : +fee / Math.pow(10, 18))}{' '}
+                                    : +fee / Math.pow(10, 18))}
                               </>
                             )}
                         </p>

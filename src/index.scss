@@ -25,6 +25,7 @@
   --input-border-focus: rgba(0, 0, 0, 0.2);
   --error-color: rgba(255, 101, 35, 0.17);
   --delete-color: #ae1e1e;
+  --delete-color-light: #ff0000; 
   --links-color: #4e529a;
   --success-color: #5cb85c;
   --transparent: transparent;
@@ -215,6 +216,7 @@ button {
     &.delete {
       display: flex;
       align-items: center;
+      color: var(--delete-color-light);
     }
     
 
@@ -506,7 +508,7 @@ h2 {
 
 .undo {
   &-text {
-    margin-top: 15px;
+    margin: 25px 0 5px;
   }
 
   &-btn {
@@ -949,21 +951,6 @@ body.dark > #root {
 
   .balances-search {
     background-image: url(./images/mdi_search_dark.svg);
-  }
-
-  .balances-contact {
-    &-copy {
-      background-image: url(./images/mdi_file_copy_dark.svg);
-    }
-
-    &-edit {
-      background-image: url(./images/mdi_more_horiz_dark.svg);
-    }
-
-    &-send {
-      background-image: url(./images/send_white.svg);
-      opacity: 0.9;
-    }
   }
 }
 

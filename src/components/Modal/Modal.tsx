@@ -114,7 +114,7 @@ const Modal: React.FC<ModalProps> = observer(
             onClick={() => handleLogOut(false, '')}
             className='btn btn-cancel btn-tr '
           >
-            {'Cancel'}
+            {zkWalletInitializing ? 'Close' : 'Cancel'}
           </button>
         </>
       );
