@@ -161,7 +161,7 @@
     cursor: pointer;
 
     &-status {
-      margin-left: 20px;
+      margin-left: 10px;
     }
     
     &.verified {
@@ -247,8 +247,17 @@
       }
     }
 
+    .send-icon.wallet {
+      height: 25px;
+      visibility: hidden;
+    }
+
     &:hover {
       background-color: var(--copyblock-color);
+
+      .send-icon.wallet {
+        visibility: visible;
+      }
     }
   }
 

@@ -102,7 +102,11 @@ export const sortBalancesById = (a, b) => {
   return 0;
 };
 
-export const mintTestERC20Tokens = async (wallet: Wallet, token: TokenLike) => {
+export const mintTestERC20Tokens = async (
+  wallet: Wallet,
+  token: TokenLike,
+  store,
+) => {
   const tokenAddress = wallet.provider.tokenSet.resolveTokenAddress(token);
   const ABI = [
     {
@@ -133,7 +137,11 @@ export const mintTestERC20Tokens = async (wallet: Wallet, token: TokenLike) => {
     },
   ];
   const erc20Mintable = new Contract(tokenAddress, ABI, wallet.ethSigner);
-  return await erc20Mintable.mint(wallet.address(), utils.parseEther('100'));
+  const _mint = await erc20Mintable
+    .mint(wallet.address(), utils.parseEther('100'))
+    .then(() => (store.modalSpecifier = ''))
+    .catch(() => (store.modalSpecifier = ''));
+  return _mint;
 };
 
 export async function loadTokens(

@@ -681,12 +681,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <button
               onClick={e => {
                 e.stopPropagation();
-                handleHints();
+                store.modalSpecifier = 'sign-metamask';
                 symbol === 'ETH'
                   ? window.open('https://faucet.rinkeby.io/')
                   : mintTestERC20Tokens(
                       zkWallet as Wallet,
                       symbol as TokenLike,
+                      store,
                     );
               }}
               className='undo-btn'
@@ -707,11 +708,22 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     return (
       <>
-        {independentHint && (
-          <div className='hint-independent'>
-            {'Follow the instructions in Metamask'}
-          </div>
-        )}
+        <Modal
+          visible={false}
+          classSpecifier='sign-metamask'
+          background={false}
+          centered={true}
+        >
+          <h2 className='transaction-title'>{'Minting token'}</h2>
+          <p>{'Follow the instructions in the pop up'}</p>
+          <Spinner />
+          <button
+            onClick={() => (store.modalSpecifier = '')}
+            className='btn btn-cancel btn-tr '
+          >
+            {'Close'}
+          </button>
+        </Modal>
         <Modal visible={false} classSpecifier='add-contact' background={true}>
           <SaveContacts
             title='Add contact'
