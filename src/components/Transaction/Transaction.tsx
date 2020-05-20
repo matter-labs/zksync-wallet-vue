@@ -89,7 +89,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [gas, setGas] = useState<string>('');
     const [fee, setFee] = useState<string>('');
     const [filteredContacts, setFilteredContacts] = useState<any>([]);
-    const [independentHint, setIndependentHint] = useState<boolean>();
     const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
     const [isContactsListOpen, openContactsList] = useState<boolean>(false);
     const [isHintUnlocked, setHintUnlocked] = useState<string>('');
@@ -118,13 +117,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [refreshTimer, setRefreshTimer] = useState<number | null>(null);
 
     const history = useHistory();
-
-    const handleHints = useCallback(() => {
-      setIndependentHint(true);
-      setTimeout(() => {
-        setIndependentHint(false);
-      }, 3000);
-    }, [setIndependentHint]);
 
     const getAccState = async () => {
       if (zkWallet && tokens) {
