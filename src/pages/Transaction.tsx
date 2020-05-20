@@ -38,21 +38,9 @@ export const Transaction: FC<Tx> = props => {
     <div className='transaction-history-wrapper' key={hash}>
       <TxStatus tx={props} />
       <div className='transaction-history-left'>
+        <div className='transaction-history-date'>{formatDate(created_at)}</div>
         <div>
-          <div className={`transaction-history ${type}`}></div>
-          <div>
-            <div className='transaction-history-hash'>
-              {token && token.toString().length > 10
-                ? token
-                    .toString()
-                    .replace(
-                      token.toString().slice(6, token.toString().length - 3),
-                      '...',
-                    )
-                : type === 'Deposit'
-                ? priority_op?.token
-                : token}
-            </div>
+          <div className={`transaction-history ${type}`}>
             <div className='transaction-history-amount'>
               {!!amount || !!priority_op?.amount
                 ? parseFloat(
@@ -66,9 +54,20 @@ export const Transaction: FC<Tx> = props => {
                   )
                 : 'Unlocking transaction'}
             </div>
+            <div className='transaction-history-hash'>
+              {token && token.toString().length > 10
+                ? token
+                    .toString()
+                    .replace(
+                      token.toString().slice(6, token.toString().length - 3),
+                      '...',
+                    )
+                : type === 'Deposit'
+                ? priority_op?.token
+                : token}
+            </div>
           </div>
         </div>{' '}
-        <div className='transaction-history-date'>{formatDate(created_at)}</div>
       </div>
       <input
         type='text'
