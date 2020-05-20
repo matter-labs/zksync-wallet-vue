@@ -102,7 +102,11 @@ export const sortBalancesById = (a, b) => {
   return 0;
 };
 
-export const mintTestERC20Tokens = async (wallet: Wallet, token: TokenLike) => {
+export const mintTestERC20Tokens = async (
+  wallet: Wallet,
+  token: TokenLike,
+  store,
+) => {
   const tokenAddress = wallet.provider.tokenSet.resolveTokenAddress(token);
   const ABI = [
     {
@@ -133,7 +137,11 @@ export const mintTestERC20Tokens = async (wallet: Wallet, token: TokenLike) => {
     },
   ];
   const erc20Mintable = new Contract(tokenAddress, ABI, wallet.ethSigner);
-  return await erc20Mintable.mint(wallet.address(), utils.parseEther('100'));
+  const _mint = await erc20Mintable
+    .mint(wallet.address(), utils.parseEther('100'))
+    .then(() => (store.modalSpecifier = ''))
+    .catch(() => (store.modalSpecifier = ''));
+  return _mint;
 };
 
 export async function loadTokens(
@@ -198,30 +206,40 @@ export async function loadTokens(
   };
 }
 
+export const getTimeZone = () => {
+  const offset = new Date().getTimezoneOffset(),
+    o = offset;
+  if (offset < 0) {
+    return Math.abs(Math.floor(o / 60));
+  } else {
+    return -Math.abs(Math.floor(o / 60));
+  }
+};
+
+export const convertToTimeZoneLocale = (d: Date, timeZoneAmount: number) => {
+  const _year = d.getFullYear();
+  const _month = d.getMonth();
+  const _date = d.getDate();
+  const _hour = d.getHours() + timeZoneAmount;
+  const _minutes = d.getMinutes();
+  const _seconds = d.getSeconds();
+  const convertedDate = new Date(
+    _year,
+    _month,
+    _date,
+    _hour,
+    _minutes,
+    _seconds,
+  )
+    .toLocaleString()
+    .replace(/\//g, '-');
+  return convertedDate;
+};
+
 export function formatDate(d: Date) {
-  const date = [
-    d.getFullYear(),
-    d
-      .getMonth()
-      .toString()
-      .padStart(2, '0'),
-    d
-      .getDate()
-      .toString()
-      .padStart(2),
-  ].join('-');
-  const time =
-    d
-      .getHours()
-      .toString()
-      .padStart(2, '0') +
-    ':' +
-    d
-      .getMinutes()
-      .toString()
-      .padStart(2, '0');
-  return `${date} ${time} UTC`;
+  return convertToTimeZoneLocale(d, getTimeZone());
 }
+
 // export const formatDate = new Intl.DateTimeFormat('it-CH', {
 //   day: '2-digit',
 //   month: '2-digit',

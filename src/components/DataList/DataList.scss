@@ -161,7 +161,7 @@
     cursor: pointer;
 
     &-status {
-      margin-left: 20px;
+      margin-left: 10px;
     }
     
     &.verified {
@@ -247,8 +247,17 @@
       }
     }
 
+    .send-icon.wallet {
+      height: 25px;
+      visibility: hidden;
+    }
+
     &:hover {
       background-color: var(--copyblock-color);
+
+      .send-icon.wallet {
+        visibility: visible;
+      }
     }
   }
 
@@ -400,6 +409,9 @@
 
 
 .transaction-history {
+  display: flex;
+  align-items: center;
+
   &.transfer, &.deposit, &.withdraw {
     width: 36px;
     height: 36px;
@@ -431,6 +443,7 @@
     margin-left: 18px;
     color: var(--dark-color);
     font-size: var(--xl-font-size);
+    line-height: var(--xl-font-size);
     word-wrap: break-word;
   }
 
@@ -455,7 +468,7 @@
     align-self: flex-start;
     margin-left: 18px;
     color: var(--dark-color);
-    font-size: var(--md-font-size);
+    font-size: var(--xl-font-size);
   }
 
   &-left {

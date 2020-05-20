@@ -6,6 +6,7 @@ import { DataList } from 'components/DataList/DataListNew';
 import MyWallet from 'components/Wallets/MyWallet';
 import SpinnerWorm from 'components/Spinner/SpinnerWorm';
 import Spinner from 'src/components/Spinner/Spinner';
+import sendIcon from 'images/send.svg';
 
 import { IEthBalance } from 'types/Common';
 
@@ -45,6 +46,9 @@ const VerifiedBal: React.FC<BalProps> = observer(
                   ).toFixed(2)}`}
                 </span>
               )}
+              <div className='send-icon wallet'>
+                <img src={sendIcon} alt='send' />
+              </div>
               <div className='balances-token-status'>
                 <span className='label-done'>
                   <span className='tooltip'>{'Verified'}</span>
@@ -103,6 +107,9 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                   ).toFixed(2)}`}
                 </span>
               )}
+              <div className='send-icon wallet'>
+                <img src={sendIcon} alt='send' />
+              </div>
               <div className='balances-token-status'>
                 <span className='label-verifying'>
                   <span className='tooltip wide'>
@@ -237,24 +244,24 @@ const Account: React.FC = observer(() => {
     getVerified();
   }, []);
 
-  useEffect(() => {
-    if (!zkWallet) return;
+  // useEffect(() => {
+  //   if (!zkWallet) return;
 
-    const int = setInterval(() => getAccState(true), 3000);
+  //   const int = setInterval(() => getAccState(true), 3000);
 
-    return () => {
-      clearInterval(int);
-    };
-  }, [
-    store,
-    store.zkWallet,
-    store.accountState,
-    store.awaitedTokens,
-    store.tokens,
-    store.zkBalances,
-    store.searchBalances,
-    store.verified,
-  ]);
+  //   return () => {
+  //     clearInterval(int);
+  //   };
+  // }, [
+  //   store,
+  //   store.zkWallet,
+  //   store.accountState,
+  //   store.awaitedTokens,
+  //   store.tokens,
+  //   store.zkBalances,
+  //   store.searchBalances,
+  //   store.verified,
+  // ]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
