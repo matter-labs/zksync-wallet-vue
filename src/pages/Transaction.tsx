@@ -9,7 +9,7 @@ import { useTimeout } from 'src/hooks/timers';
 import { TxStatus } from 'src/components/Transaction/TxStatus';
 import { useStore } from 'src/store/context';
 
-import { ZK_EXPLORER, ETHERSCAN_EXPLORER } from 'src/constants/links';
+import { LINKS_CONFIG } from 'constants/links';
 import { formatDate } from 'src/utils';
 
 library.add(fas);
@@ -122,7 +122,9 @@ export const Transaction: FC<Tx> = props => {
         title='View in block explorer'
         target='_blank'
         href={`${
-          type === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
+          type === 'Deposit'
+            ? `https://${LINKS_CONFIG.STAGE_ZKSYNC.ethBlockExplorer}/tx`
+            : `https://${LINKS_CONFIG.STAGE_ZKSYNC.zkSyncBlockExplorer}/transactions`
         }/${hash}`}
       >
         <FontAwesomeIcon icon={['fas', 'external-link-alt']} />

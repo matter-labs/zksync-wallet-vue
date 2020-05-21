@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react';
 import { ethers } from 'ethers';
-import { CURRENT_NETWORK_PREFIX } from 'constants/networks';
 
 import { useCancelable } from 'hooks/useCancelable';
 
 import { IEthBalance } from 'types/Common';
+
+import { LINKS_CONFIG } from 'constants/links';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
@@ -64,8 +65,7 @@ const useWalletInit = () => {
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider = await zkSync.Provider.newWebsocketProvider(
-        'wss://rinkeby-api.zksync.dev/jsrpc-ws',
-        // 'wss://stage-api.zksync.dev/jsrpc-ws',
+        `wss://${LINKS_CONFIG.STAGE_ZKSYNC.api}/jsrpc-ws`,
       );
       const syncWallet = await zkSync.Wallet.fromEthSigner(
         wallet as ethers.providers.JsonRpcSigner,

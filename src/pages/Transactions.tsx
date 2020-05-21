@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from 'react';
 import { ethers } from 'ethers';
 import { observer } from 'mobx-react-lite';
 
-import { CURRENT_NETWORK_PREFIX } from 'constants/networks';
+import { LINKS_CONFIG } from 'constants/links';
 import { DataList } from 'components/DataList/DataListNew';
 import { getConfirmationCount } from 'src/utils';
 
@@ -61,8 +61,7 @@ const Transactions: React.FC = observer(() => {
       const { zkWalletAddress } = store;
       if (!zkWalletAddress) return [];
       const txs = await fetch(
-        `https://${CURRENT_NETWORK_PREFIX}-api.zksync.dev/api/v0.1/account/` +
-          // 'https://stage-api.zksync.dev/api/v0.1/account/' +
+        `https://${LINKS_CONFIG.STAGE_ZKSYNC.api}/api/v0.1/account/` +
           `${zkWalletAddress}/history/${offset}/${amount}`,
       )
         .then(r => r.json())
