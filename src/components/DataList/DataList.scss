@@ -212,7 +212,8 @@
 
         .current-tokens {
           display: flex;
-          justify-content: space-between;
+          justify-content: flex-end;
+          width: auto;
 
           span {
             margin-right: 10px;
@@ -410,6 +411,7 @@
 
 .transaction-history {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 
   &.transfer, &.deposit, &.withdraw {

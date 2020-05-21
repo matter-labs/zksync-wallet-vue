@@ -62,6 +62,7 @@ const Transactions: React.FC = observer(() => {
       if (!zkWalletAddress) return [];
       const txs = await fetch(
         `https://${CURRENT_NETWORK_PREFIX}-api.zksync.dev/api/v0.1/account/` +
+          // 'https://stage-api.zksync.dev/api/v0.1/account/' +
           `${zkWalletAddress}/history/${offset}/${amount}`,
       )
         .then(r => r.json())

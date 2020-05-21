@@ -12,6 +12,7 @@ export async function fetchTransactions(
 ) {
   const txs: Tx[] = await fetch(
     `https://${CURRENT_NETWORK_PREFIX}-api.zksync.dev/api/v0.1/account/${address}/history/${offset}/${amount}`,
+    // `https://stage-api.zksync.dev/api/v0.1/account/${address}/history/${offset}/${amount}`,
   ).then(r => r.json());
 
   return (await Promise.all(

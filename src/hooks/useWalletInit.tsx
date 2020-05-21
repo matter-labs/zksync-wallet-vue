@@ -65,6 +65,7 @@ const useWalletInit = () => {
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider = await zkSync.Provider.newWebsocketProvider(
         'wss://rinkeby-api.zksync.dev/jsrpc-ws',
+        // 'wss://stage-api.zksync.dev/jsrpc-ws',
       );
       const syncWallet = await zkSync.Wallet.fromEthSigner(
         wallet as ethers.providers.JsonRpcSigner,

@@ -2,6 +2,9 @@ import React, { useMemo, useCallback } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import Web3 from 'web3';
 import { observer } from 'mobx-react-lite';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
 import Modal from 'components/Modal/Modal';
@@ -32,6 +35,8 @@ const PrimaryPage: React.FC = observer(() => {
     () => MOBILE_DEVICE.test(navigator.userAgent),
     [],
   );
+
+  library.add(fas);
 
   const { createWallet } = useWalletInit();
 
@@ -179,7 +184,11 @@ const PrimaryPage: React.FC = observer(() => {
                     className={`btn wallet-button ${key}`}
                     key={key}
                     onClick={selectWallet(key as WalletType)}
-                  ></div>
+                  >
+                    {key === 'Injected' && (
+                      <FontAwesomeIcon icon={['fas', 'globe']} />
+                    )}
+                  </div>
                   <p>{key}</p>
                 </button>
               ))}

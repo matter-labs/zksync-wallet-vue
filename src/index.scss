@@ -374,6 +374,8 @@ h2 {
   &-button {
     width: 85px;
     height: 85px;
+    color: var(--button-bg-color);
+    font-size: var(--xxxl-font-size);
     background-color: var(--light-bg-color);
     background-repeat: no-repeat;
     background-position: center;
@@ -382,6 +384,11 @@ h2 {
     outline: none;
     box-shadow: 0px 4px 8px var(--copyblock-color);
     cursor: pointer;
+
+    .fa-globe {
+      margin-top: 50%;
+      transform: translateY(-50%);
+    }
 
     &.Coinbase {
       background-image: url(./images/coinbase.png);
