@@ -11,6 +11,7 @@ import { Link } from './Link';
 
 import { HEADER_ITEMS } from 'constants/header';
 import { CURRENT_NETWORK_PREFIX } from 'constants/networks';
+import { LINKS_CONFIG } from 'constants/links';
 
 import { QRCode } from 'components/QRCode/QRCode';
 import { useTimeout } from 'hooks/timers';
@@ -75,7 +76,7 @@ const Header: React.FC = observer(() => {
             className='menu-logo'
             to='/'
           ></Link>
-          <p className='beta-text'>{'BETA'}</p>
+          <p className='beta-text'>{'ALPHA'}</p>
         </div>
 
         {address && (
@@ -140,7 +141,7 @@ const Header: React.FC = observer(() => {
                 <a
                   className='btn-tr'
                   target='_blank'
-                  href={`https://${CURRENT_NETWORK_PREFIX}.zkscan.io/explorer/accounts/${address}`}
+                  href={`https://${LINKS_CONFIG.STAGE_ZKSYNC.zkSyncBlockExplorer}/accounts/${address}`}
                 >
                   <span className='icon-explorer'>
                     <FontAwesomeIcon icon={['fas', 'external-link-alt']} />

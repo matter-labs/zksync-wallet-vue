@@ -156,7 +156,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         cancelAction={() => {
           store.error = '';
         }}
-        visible={!!store.error && !store.error.match(WRONG_NETWORK)}
+        visible={!!store.error}
         classSpecifier='error'
         background={true}
         centered

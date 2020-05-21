@@ -531,6 +531,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
         })
         .then(data => {
           return data;
+        })
+        .catch(() => {
+          setLoading(false);
+          setUnlockingProcess(false);
         });
       const setUnlocked = async () => {
         const checkApprove = await zkWallet

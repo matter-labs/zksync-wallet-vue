@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 
 import { useStore } from 'src/store/context';
 
-import { ZK_EXPLORER, ETHERSCAN_EXPLORER } from 'constants/links';
+import { LINKS_CONFIG } from 'constants/links';
 
 import './Transaction.scss';
 import { LottiePlayer } from '../Common/LottiePlayer';
@@ -80,9 +80,11 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
         <p className='transaction-hash'>
           <a
             target='_blank'
-            href={`${title === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER}/${
-              typeof hash === 'string' ? hash : hash?.hash
-            }`}
+            href={`${
+              title === 'Deposit'
+                ? `https://${LINKS_CONFIG.STAGE_ZKSYNC.ethBlockExplorer}/tx`
+                : `https://${LINKS_CONFIG.STAGE_ZKSYNC.zkSyncBlockExplorer}/transactions`
+            }/${typeof hash === 'string' ? hash : hash?.hash}`}
           >
             {'Link to the transaction '}
             <FontAwesomeIcon icon={['fas', 'external-link-alt']} />

@@ -9,7 +9,7 @@ import { useStore } from 'src/store/context';
 
 import Spinner from 'components/Spinner/Spinner';
 
-import { ZK_EXPLORER, ETHERSCAN_EXPLORER } from 'constants/links';
+import { LINKS_CONFIG } from 'constants/links';
 
 import './Transaction.scss';
 
@@ -94,7 +94,9 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
             <a
               target='_blank'
               href={`${
-                title === 'Deposit' ? ETHERSCAN_EXPLORER : ZK_EXPLORER
+                title === 'Deposit'
+                  ? `https://${LINKS_CONFIG.STAGE_ZKSYNC.ethBlockExplorer}/tx`
+                  : `https://${LINKS_CONFIG.STAGE_ZKSYNC.zkSyncBlockExplorer}/transactions`
               }/${info[2]}`}
             >
               {'Link to the transaction '}

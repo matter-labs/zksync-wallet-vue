@@ -244,24 +244,24 @@ const Account: React.FC = observer(() => {
     getVerified();
   }, []);
 
-  // useEffect(() => {
-  //   if (!zkWallet) return;
+  useEffect(() => {
+    if (!zkWallet) return;
 
-  //   const int = setInterval(() => getAccState(true), 3000);
+    const int = setInterval(() => getAccState(true), 3000);
 
-  //   return () => {
-  //     clearInterval(int);
-  //   };
-  // }, [
-  //   store,
-  //   store.zkWallet,
-  //   store.accountState,
-  //   store.awaitedTokens,
-  //   store.tokens,
-  //   store.zkBalances,
-  //   store.searchBalances,
-  //   store.verified,
-  // ]);
+    return () => {
+      clearInterval(int);
+    };
+  }, [
+    store,
+    store.zkWallet,
+    store.accountState,
+    store.awaitedTokens,
+    store.tokens,
+    store.zkBalances,
+    store.searchBalances,
+    store.verified,
+  ]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
