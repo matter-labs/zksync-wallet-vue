@@ -22,8 +22,11 @@ interface ILoadingTXProps {
   inputValue: string;
   symbolName: string;
   setWalletName: any;
+  setUnlockingProcess: React.Dispatch<React.SetStateAction<boolean>>;
+  setAccountUnlockingProcess: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   unlockFau: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 library.add(fas);
@@ -38,6 +41,9 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
     title,
     isUnlockingProcess,
     isAccountUnlockingProcess,
+    setUnlockingProcess,
+    setAccountUnlockingProcess,
+    setLoading,
   }): JSX.Element => {
     const store = useStore();
 
@@ -108,8 +114,14 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
         <button
           className='btn submit-button'
           onClick={() => {
-            handleCancel();
-            history.push('/account');
+            if (!isAccountUnlockingProcess || !isUnlockingProcess) {
+              setLoading(false);
+              setAccountUnlockingProcess(false);
+              setUnlockingProcess(false);
+            } else {
+              handleCancel();
+              history.push('/account');
+            }
           }}
         >
           {'Close'}

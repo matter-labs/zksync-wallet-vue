@@ -28,9 +28,9 @@ const VerifiedBal: React.FC<BalProps> = observer(
     return (
       <div
         key={balance}
-        className='balances-token verified'
+        className={`balances-token verified ${+balance === 0 ? 'empty' : ''}`}
         onClick={() => {
-          if (address === 'awaited') return;
+          if (address === 'awaited' || +balance === 0) return;
           handleSend(address, balance, symbol);
         }}
       >
@@ -89,7 +89,7 @@ const UnverifiedBal: React.FC<BalProps> = observer(
     const { price } = store;
     return (
       <div
-        className='balances-token verified'
+        className={`balances-token verified ${+balance === 0 ? 'empty' : ''}`}
         onClick={() => {
           if (address === 'awaited') return;
           handleSend(address, balance, symbol);
@@ -152,6 +152,12 @@ const Account: React.FC = observer(() => {
   const history = useHistory();
   const store = useStore();
   const { zkWallet, accountState, tokens } = store;
+
+  const getVerified = useCallback(async () => {
+    if (zkWallet) {
+      store.verified = (await zkWallet.getAccountState()).verified.balances;
+    }
+  }, [zkWallet]);
 
   const getAccState = useCallback(
     async (extended: boolean) => {
@@ -229,20 +235,14 @@ const Account: React.FC = observer(() => {
       store.zkBalances,
       tokens,
       zkWallet,
+      getVerified,
     ],
   );
-
-  const getVerified = async () => {
-    if (zkWallet) {
-      store.verified = await (await zkWallet.getAccountState()).verified
-        .balances;
-    }
-  };
 
   useEffect(() => {
     getAccState(true);
     getVerified();
-  }, []);
+  }, [getVerified]);
 
   useEffect(() => {
     if (!zkWallet) return;

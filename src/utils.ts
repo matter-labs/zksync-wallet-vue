@@ -230,9 +230,7 @@ export const convertToTimeZoneLocale = (d: Date, timeZoneAmount: number) => {
     _hour,
     _minutes,
     _seconds,
-  )
-    .toLocaleString()
-    .replace(/\//g, '-');
+  ).toLocaleString();
   return convertedDate;
 };
 
