@@ -57,12 +57,15 @@ const PrimaryPage: React.FC = observer(() => {
     [mobileCheck],
   );
 
-  const walletsWithInjected = () => {
+  const walletsWithWeb3 = () => {
     const _w = Object.keys(WALLETS);
-    if (!!window['web3'] && !providerWalletName) {
+    if (
+      (!!window['web3'] && !providerWalletName) ||
+      (!!window['web3'] && providerWalletName !== 'Metamask')
+    ) {
       return _w.filter(el => el !== 'Metamask');
     } else {
-      return _w.filter(el => el !== 'Injected');
+      return _w.filter(el => el !== 'Web3');
     }
   };
 
@@ -81,7 +84,7 @@ const PrimaryPage: React.FC = observer(() => {
 
   const selectWallet = useCallback(
     (key: WalletType) => () => {
-      if (key === 'Injected') {
+      if (key === 'Web3') {
         store.zkWalletInitializing = true;
         const web3 = new Web3(window['web3'].getDefaultProvider);
         window['ethereum'].enable().then(() => {
@@ -178,14 +181,14 @@ const PrimaryPage: React.FC = observer(() => {
               <p>{'Connect a wallet'}</p>
             </div>
             <div className='wallets-wrapper'>
-              {Object.values(walletsWithInjected()).map(key => (
+              {Object.values(walletsWithWeb3()).map(key => (
                 <button key={key} className='wallet-block'>
                   <div
                     className={`btn wallet-button ${key}`}
                     key={key}
                     onClick={selectWallet(key as WalletType)}
                   >
-                    {key === 'Injected' && (
+                    {key === 'Web3' && (
                       <FontAwesomeIcon icon={['fas', 'globe']} />
                     )}
                   </div>

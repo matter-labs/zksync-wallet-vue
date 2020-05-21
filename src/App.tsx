@@ -73,15 +73,11 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (zkWallet) {
       store.isAccessModalOpen = false;
     }
-    if (walletName === 'Injected') {
+    if (walletName === 'Web3') {
       sessionStorage.setItem('walletName', walletName);
     }
     const _sw = sessionStorage.getItem('walletName');
-    if (
-      _sw === 'Injected' &&
-      !zkWallet &&
-      window.location.pathname.length > 1
-    ) {
+    if (_sw === 'Web3' && !zkWallet && window.location.pathname.length > 1) {
       store.setBatch({
         walletName: _sw,
         zkWallet: null,
@@ -172,7 +168,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           window.location.pathname.length > 1 &&
           store.provider &&
           (store.provider.networkVersion === RIGHT_NETWORK_ID ||
-            store.walletName === 'Injected')
+            store.walletName === 'Web3')
         }
         classSpecifier='metamask'
         background={true}

@@ -160,6 +160,10 @@
     border-bottom: 1px solid var(--border-color);
     cursor: pointer;
 
+    &.empty {
+      cursor: default;
+    }
+
     &-status {
       margin-left: 10px;
     }

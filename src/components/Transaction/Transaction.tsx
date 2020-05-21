@@ -177,7 +177,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
           const _balances = res
             .filter(token => token && token.balance > 0)
             .sort(sortBalancesById);
-          const _balancesEmpty = res.filter(token => token?.balance === 0);
+          const _balancesEmpty = res
+            .filter(token => token?.balance === 0)
+            .sort(sortBalancesById);
           _balances.push(..._balancesEmpty);
           store.ethBalances = _balances as IEthBalance[];
         })
@@ -556,6 +558,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
       e => {
         const el = myRef.current;
         if (el) {
+          el.style.minWidth =
+            (window?.innerWidth > WIDTH_BP ? 260 : 120) + 'px';
           el.style.width =
             (e === maxValue && e.toString() !== '0'
               ? e.toString().length
@@ -824,6 +828,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 setWalletName={setWalletName}
                 title={title}
                 unlockFau={unlockFau}
+                setLoading={setLoading}
+                setAccountUnlockingProcess={setAccountUnlockingProcess}
+                setUnlockingProcess={setUnlockingProcess}
               />
               {hint.match(/(?:denied)/i) && !isLoading && (
                 <CanceledTx
@@ -851,6 +858,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             zkBalancesLoaded &&
             !isLoading &&
             !isExecuted &&
+            unlocked !== undefined &&
             (unlocked || title === 'Deposit') && (
               <>
                 <button

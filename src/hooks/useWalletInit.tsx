@@ -138,7 +138,9 @@ const useWalletInit = () => {
           const _balances = res
             .filter(token => token && token.balance > 0)
             .sort(sortBalancesById);
-          const _balancesEmpty = res.filter(token => token?.balance === 0);
+          const _balancesEmpty = res
+            .filter(token => token?.balance === 0)
+            .sort(sortBalancesById);
           _balances.push(..._balancesEmpty);
           store.ethBalances = _balances as IEthBalance[];
         })
