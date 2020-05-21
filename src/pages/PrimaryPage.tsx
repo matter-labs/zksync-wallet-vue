@@ -171,7 +171,7 @@ const PrimaryPage: React.FC = observer(() => {
           <>
             <div className='beta-container'>
               <div className='logo-textless'></div>
-              <p className='beta-text'>{'BETA'}</p>
+              <p className='beta-text'>{'ALPHA'}</p>
             </div>
             <div className='welcome-text'>
               <h2>{'Simple, fast and secure token transfers'}</h2>

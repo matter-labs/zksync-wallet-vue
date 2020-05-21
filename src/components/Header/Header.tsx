@@ -76,7 +76,7 @@ const Header: React.FC = observer(() => {
             className='menu-logo'
             to='/'
           ></Link>
-          <p className='beta-text'>{'BETA'}</p>
+          <p className='beta-text'>{'ALPHA'}</p>
         </div>
 
         {address && (
