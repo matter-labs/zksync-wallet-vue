@@ -58,7 +58,16 @@ const useWalletInit = () => {
       const zkSync = await import('zksync');
       store.zkWalletInitializing = true;
 
+      if (!store.provider) {
+        store.provider = window['ethereum'];
+      }
       const provider = store.provider;
+
+      if (!provider.selectedAddress) {
+        // Could fail, if there's no Metamask in the browser
+        await provider?.enable();
+      }
+
       const wallet = getSigner(provider);
       store.ethWallet = wallet;
 
