@@ -152,7 +152,14 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         cancelAction={() => {
           store.error = '';
         }}
-        visible={!!store.error}
+        visible={
+          store.zkWallet
+            ? !!store.error
+            : store.provider &&
+              ((store.provider.networkVersion === RIGHT_NETWORK_ID &&
+                !!store.error) ||
+                (store.normalBg && !!store.error))
+        }
         classSpecifier='error'
         background={true}
         centered
@@ -178,6 +185,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       </Modal>
       {store.walletName && <Header />}
       <div className='content'>{children}</div>
+      <div className='content-portal'></div>
       <Footer />
     </div>
   );

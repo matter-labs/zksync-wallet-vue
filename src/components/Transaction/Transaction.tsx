@@ -6,6 +6,8 @@ import { observer } from 'mobx-react-lite';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { AccountState, TokenLike } from 'zksync/build/types';
+import { Wallet, Provider, utils } from 'zksync';
 
 import { DataList } from 'components/DataList/DataListNew';
 import Modal from 'components/Modal/Modal';
@@ -30,14 +32,12 @@ import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 import { loadTokens, sortBalancesById, mintTestERC20Tokens } from 'src/utils';
 
-import { AccountState, TokenLike } from 'zksync/build/types';
-import { Wallet, Provider } from 'zksync';
-
 import { DEFAULT_ERROR } from 'constants/errors';
 
 import { IEthBalance } from '../../types/Common';
 
 import './Transaction.scss';
+import SpinnerWorm from '../Spinner/SpinnerWorm';
 
 library.add(fas);
 
@@ -92,7 +92,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
     const [isContactsListOpen, openContactsList] = useState<boolean>(false);
     const [isHintUnlocked, setHintUnlocked] = useState<string>('');
-    const [isUnlockingProcess, setUnlockingProcess] = useState<boolean>(false);
+    const [isUnlockingProcess, setUnlockingERCProcess] = useState<boolean>(
+      false,
+    );
     const [isAccountUnlockingProcess, setAccountUnlockingProcess] = useState<
       boolean
     >(false);
@@ -432,7 +434,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
         setSymbol(balances[0].symbol);
       }
       if (token && zkWallet && symbolName !== 'ETH') {
-        zkWallet.isERC20DepositsApproved(token).then(res => setUnlockFau(res));
+        zkWallet.isERC20DepositsApproved(token).then(res => {
+          setUnlockFau(res);
+          if (res === true) {
+            const _inUnlocking = store.tokenInUnlockingProgress;
+            const _index = _inUnlocking.indexOf(token);
+            if (_index >= 0) {
+              _inUnlocking.splice(_index, 1);
+              store.tokenInUnlockingProgress = _inUnlocking;
+            }
+          }
+        });
       }
       if (store.propsToken) {
         setSymbol(store.propsToken);
@@ -457,7 +469,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
       if (unlockFau && isUnlockingProcess) {
         setUnlockFau(true);
-        setUnlockingProcess(false);
+        const _inUnlocking = store.tokenInUnlockingProgress;
+        const _index = _inUnlocking.indexOf(token);
+        if (_index >= 0) {
+          _inUnlocking.splice(_index, 1);
+          store.tokenInUnlockingProgress = _inUnlocking;
+        }
+        setUnlockingERCProcess(false);
         setLoading(false);
       }
 
@@ -498,7 +516,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       setSymbolName,
       setToken,
       setUnlockFau,
-      setUnlockingProcess,
+      setUnlockingERCProcess,
       setWalletName,
       symbolName,
       title,
@@ -509,6 +527,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       zkWallet,
       store,
       store.propsToken,
+      store.tokenInUnlockingProgress,
     ]);
 
     const handleShowHint = useCallback(
@@ -522,12 +541,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
     );
 
     const handleUnlockERC = useCallback(() => {
-      setUnlockingProcess(true);
+      setUnlockingERCProcess(true);
       setLoading(true);
       store.hint = 'Follow the instructions in the pop up';
       zkWallet
         ?.approveERC20TokenDeposits(token)
         .then(res => {
+          setLoading(false);
+          setUnlockingERCProcess(false);
+          store.tokenInUnlockingProgress = store.tokenInUnlockingProgress.concat(
+            [token],
+          );
           store.hint = `Waiting for transaction to be mined\n \n ${res.hash}`;
           return res;
         })
@@ -536,23 +560,36 @@ const Transaction: React.FC<ITransactionProps> = observer(
         })
         .catch(() => {
           setLoading(false);
-          setUnlockingProcess(false);
+          setUnlockingERCProcess(false);
         });
       const setUnlocked = async () => {
         const checkApprove = await zkWallet
           ?.isERC20DepositsApproved(token)
           .then(res => res);
         if (checkApprove) {
+          const _inUnlocking = store.tokenInUnlockingProgress;
+          const _index = _inUnlocking.indexOf(token);
+          if (_index >= 0) {
+            _inUnlocking.splice(_index, 1);
+            store.tokenInUnlockingProgress = _inUnlocking;
+          }
           setUnlockFau(checkApprove);
+          setUnlockingERCProcess(false);
         }
       };
       setUnlocked();
-      if (!unlockFau) {
+      if (!unlockFau && store.tokenInUnlockingProgress.includes(token)) {
         setInterval(() => {
           setUnlocked();
         }, 1000);
       }
-    }, [setLoading, token, unlockFau, zkWallet]);
+    }, [
+      setLoading,
+      token,
+      unlockFau,
+      zkWallet,
+      store.tokenInUnlockingProgress,
+    ]);
 
     const handleInputWidth = useCallback(
       e => {
@@ -830,7 +867,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 unlockFau={unlockFau}
                 setLoading={setLoading}
                 setAccountUnlockingProcess={setAccountUnlockingProcess}
-                setUnlockingProcess={setUnlockingProcess}
+                setUnlockingERCProcess={setUnlockingERCProcess}
               />
               {hint.match(/(?:denied)/i) && !isLoading && (
                 <CanceledTx
@@ -1115,20 +1152,24 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               {'?'}
                             </button>
                           </div>
-                          <button
-                            onClick={() =>
-                              !unlockFau
-                                ? handleUnlockERC()
-                                : handleShowHint(
-                                    'Already unlocked. This only needs to be done once per token.',
-                                  )
-                            }
-                            className={`fau-unlock-tocken ${unlockFau}`}
-                          >
-                            <span
-                              className={`fau-unlock-tocken-circle ${unlockFau}`}
-                            ></span>
-                          </button>
+                          {store.tokenInUnlockingProgress.includes(token) ? (
+                            <SpinnerWorm />
+                          ) : (
+                            <button
+                              onClick={() =>
+                                !unlockFau
+                                  ? handleUnlockERC()
+                                  : handleShowHint(
+                                      'Already unlocked. This only needs to be done once per token.',
+                                    )
+                              }
+                              className={`fau-unlock-tocken ${unlockFau}`}
+                            >
+                              <span
+                                className={`fau-unlock-tocken-circle ${unlockFau}`}
+                              ></span>
+                            </button>
+                          )}
                         </div>
                       </>
                     )}
