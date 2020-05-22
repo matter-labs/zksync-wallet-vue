@@ -157,6 +157,15 @@ const useWalletInit = () => {
         zkBalancesLoaded: true,
         maxConfirmAmount,
       });
+      await syncWallet.getAccountState().then(res => {
+        if (res?.id) {
+          cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
+            store.unlocked = data;
+          });
+        } else {
+          store.unlocked = true;
+        }
+      });
       if (accountState?.id) {
         await cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
           store.unlocked = data;

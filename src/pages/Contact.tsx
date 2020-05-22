@@ -110,17 +110,6 @@ export const Contact = ({
             <p>{'Copied!'}</p>
           </div>
         </Transition>
-        <button
-          className='balances-contact-send btn-tr'
-          onClick={e => {
-            e.stopPropagation();
-            store.transactionType = 'transfer';
-            store.walletAddress = { name, address };
-            history.push('/send');
-          }}
-        >
-          <Link to='/'></Link>
-        </button>
         <button className='balances-contact-copy btn-tr' onClick={handleCopy}>
           {copyIcon()}
         </button>

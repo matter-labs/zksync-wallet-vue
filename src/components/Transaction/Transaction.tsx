@@ -350,6 +350,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
               onChangeAddress(address))
             : name.toLowerCase().includes(e.toLowerCase());
         });
+        if (searchValue.length === 0) {
+          handleSelect('');
+          store.walletAddress = {};
+          setSelectedContact('');
+        }
         setFilteredContacts(searchValue);
       },
       [
@@ -420,6 +425,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
       });
     }, [cancelable, store, zkWallet, store.searchBalances, title]);
 
+    const handleManageUnlockingTokens = () => {
+      const _inUnlocking = store.tokenInUnlockingProgress;
+      const _index = _inUnlocking.indexOf(token);
+      if (_index >= 0) {
+        _inUnlocking.splice(_index, 1);
+        store.tokenInUnlockingProgress = _inUnlocking;
+      }
+    };
+
     useMobxEffect(() => {
       if ((token && token === 'ETH') || symbolName === 'ETH') {
         setUnlockFau(true);
@@ -437,12 +451,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         zkWallet.isERC20DepositsApproved(token).then(res => {
           setUnlockFau(res);
           if (res === true) {
-            const _inUnlocking = store.tokenInUnlockingProgress;
-            const _index = _inUnlocking.indexOf(token);
-            if (_index >= 0) {
-              _inUnlocking.splice(_index, 1);
-              store.tokenInUnlockingProgress = _inUnlocking;
-            }
+            handleManageUnlockingTokens();
           }
         });
       }
@@ -469,12 +478,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
       if (unlockFau && isUnlockingProcess) {
         setUnlockFau(true);
-        const _inUnlocking = store.tokenInUnlockingProgress;
-        const _index = _inUnlocking.indexOf(token);
-        if (_index >= 0) {
-          _inUnlocking.splice(_index, 1);
-          store.tokenInUnlockingProgress = _inUnlocking;
-        }
+        handleManageUnlockingTokens();
         setUnlockingERCProcess(false);
         setLoading(false);
       }
@@ -567,12 +571,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           ?.isERC20DepositsApproved(token)
           .then(res => res);
         if (checkApprove) {
-          const _inUnlocking = store.tokenInUnlockingProgress;
-          const _index = _inUnlocking.indexOf(token);
-          if (_index >= 0) {
-            _inUnlocking.splice(_index, 1);
-            store.tokenInUnlockingProgress = _inUnlocking;
-          }
+          handleManageUnlockingTokens();
           setUnlockFau(checkApprove);
           setUnlockingERCProcess(false);
         }
