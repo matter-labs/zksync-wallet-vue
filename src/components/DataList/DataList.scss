@@ -455,6 +455,8 @@
   }
 
   &-date {
+    position: absolute;
+    top: 12px;
     margin-left: 18px;
     color: var(--hints-color);
     font-size: var(--sm-font-size);
@@ -590,6 +592,11 @@
     &-hash {
       display: inline;
       margin-left: 18px;
+    }
+
+    &-date {
+      position: unset;
+      top: 0;
     }
   
     &-left {
