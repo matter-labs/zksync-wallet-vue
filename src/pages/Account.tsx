@@ -6,7 +6,6 @@ import { DataList } from 'components/DataList/DataListNew';
 import MyWallet from 'components/Wallets/MyWallet';
 import SpinnerWorm from 'components/Spinner/SpinnerWorm';
 import Spinner from 'src/components/Spinner/Spinner';
-import sendIcon from 'images/send.svg';
 
 import { IEthBalance } from 'types/Common';
 
@@ -46,9 +45,6 @@ const VerifiedBal: React.FC<BalProps> = observer(
                   ).toFixed(2)}`}
                 </span>
               )}
-              <div className='send-icon wallet'>
-                <img src={sendIcon} alt='send' />
-              </div>
               <div className='balances-token-status'>
                 <span className='label-done'>
                   <span className='tooltip'>{'Verified'}</span>
@@ -107,9 +103,6 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                   ).toFixed(2)}`}
                 </span>
               )}
-              <div className='send-icon wallet'>
-                <img src={sendIcon} alt='send' />
-              </div>
               <div className='balances-token-status'>
                 <span className='label-verifying'>
                   <span className='tooltip wide'>

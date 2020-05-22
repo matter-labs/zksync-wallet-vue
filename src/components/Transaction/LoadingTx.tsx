@@ -22,7 +22,7 @@ interface ILoadingTXProps {
   inputValue: string;
   symbolName: string;
   setWalletName: any;
-  setUnlockingProcess: React.Dispatch<React.SetStateAction<boolean>>;
+  setUnlockingERCProcess: React.Dispatch<React.SetStateAction<boolean>>;
   setAccountUnlockingProcess: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   unlockFau: boolean;
@@ -41,7 +41,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
     title,
     isUnlockingProcess,
     isAccountUnlockingProcess,
-    setUnlockingProcess,
+    setUnlockingERCProcess,
     setAccountUnlockingProcess,
     setLoading,
   }): JSX.Element => {
@@ -117,7 +117,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
             if (!isAccountUnlockingProcess || !isUnlockingProcess) {
               setLoading(false);
               setAccountUnlockingProcess(false);
-              setUnlockingProcess(false);
+              setUnlockingERCProcess(false);
             } else {
               handleCancel();
               history.push('/account');
