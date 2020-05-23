@@ -1101,7 +1101,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 {selectedBalance && (
                                   <>
                                     {'Max:'}
-                                    {maxValue ? maxValue.toFixed(10) : '0'}
+                                    {maxValue ? maxValue.toFixed(10) : '0'}{' '}
                                   </>
                                 )}
                                 {symbolName ? symbolName : ''}

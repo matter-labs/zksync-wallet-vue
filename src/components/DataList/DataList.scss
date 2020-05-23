@@ -477,7 +477,7 @@
     align-self: flex-start;
     margin-left: 18px;
     color: var(--dark-color);
-    font-size: var(--xl-font-size);
+    font-size: var(--md-font-size);
   }
 
   &-left {
@@ -505,11 +505,9 @@
   &-right {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     width: 100%;
-    max-width: 162px;
-    margin-left: 54px;
-
+    max-width: 110px;
   }
 }
 
@@ -592,6 +590,7 @@
     &-hash {
       display: inline;
       margin-left: 18px;
+      font-size: var(--xl-font-size);
     }
 
     &-date {
