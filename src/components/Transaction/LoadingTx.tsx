@@ -114,13 +114,13 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
         <button
           className='btn submit-button'
           onClick={() => {
-            if (!isAccountUnlockingProcess || !isUnlockingProcess) {
+            if (isAccountUnlockingProcess || isUnlockingProcess) {
               setLoading(false);
               setAccountUnlockingProcess(false);
               setUnlockingERCProcess(false);
             } else {
               handleCancel();
-              history.push('/account');
+              history.goBack();
             }
           }}
         >
