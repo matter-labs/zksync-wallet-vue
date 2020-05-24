@@ -146,12 +146,6 @@ const Account: React.FC = observer(() => {
   const store = useStore();
   const { zkWallet, accountState, tokens } = store;
 
-  const getVerified = useCallback(async () => {
-    if (zkWallet) {
-      store.verified = (await zkWallet.getAccountState()).verified.balances;
-    }
-  }, [zkWallet]);
-
   const getAccState = useCallback(
     async (extended: boolean) => {
       if (zkWallet && tokens) {
@@ -213,9 +207,10 @@ const Account: React.FC = observer(() => {
       }
       if (
         JSON.stringify(accountState?.verified.balances) !==
-        JSON.stringify(store.verified)
+          JSON.stringify(store.verified) &&
+        zkWallet
       ) {
-        store.verified = accountState?.verified.balances;
+        store.verified = (await zkWallet.getAccountState()).verified.balances;
       }
     },
     [
@@ -228,9 +223,14 @@ const Account: React.FC = observer(() => {
       store.zkBalances,
       tokens,
       zkWallet,
-      getVerified,
     ],
   );
+
+  const getVerified = useCallback(async () => {
+    if (zkWallet) {
+      store.verified = (await zkWallet.getAccountState()).verified.balances;
+    }
+  }, [zkWallet]);
 
   useEffect(() => {
     getAccState(true);
