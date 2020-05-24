@@ -58,12 +58,8 @@ const Transactions: React.FC = observer(() => {
 
   const fetchTransactions = useCallback(
     async (amount, offset) => {
-      const { zkWalletAddress, zkWallet } = store;
+      const { zkWalletAddress } = store;
       if (!zkWalletAddress) return [];
-      // if(zkWallet) {
-      //   console.log('0')
-      //   store.verified = (await zkWallet.getAccountState()).verified.balances;
-      // }
 
       const txs = await fetch(
         `https://${LINKS_CONFIG.STAGE_ZKSYNC.api}/api/v0.1/account/` +
