@@ -451,7 +451,7 @@
     color: var(--dark-color);
     font-size: var(--xl-font-size);
     line-height: var(--xl-font-size);
-    word-wrap: break-word;
+    word-break: break-all;
   }
 
   &-date {

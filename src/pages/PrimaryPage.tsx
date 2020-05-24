@@ -30,7 +30,6 @@ import { getWalletNameFromProvider } from '../utils';
 const PrimaryPage: React.FC = observer(() => {
   const store = useStore();
   const handleLogOut = useLogout();
-  const { pathname } = useLocation();
   const mobileCheck = useMemo(
     () => MOBILE_DEVICE.test(navigator.userAgent),
     [],
@@ -97,7 +96,12 @@ const PrimaryPage: React.FC = observer(() => {
 
       if (wallets.includes(key)) {
         if (key === 'WalletConnect') {
-          store.modalSpecifier = 'wc';
+          // store.modalSpecifier = 'wc';
+          store.setBatch({
+            walletName: key,
+            normalBg: true,
+            isAccessModalOpen: true,
+          });
         } else {
           store.setBatch({
             walletName: key,
@@ -133,7 +137,7 @@ const PrimaryPage: React.FC = observer(() => {
               ? store.walletName.replace(/\s+/g, '').toLowerCase()
               : 'primary-page'
           }`}
-          visible={store.isAccessModalOpen}
+          visible={store.isAccessModalOpen && !store.error}
           cancelAction={() => handleLogOut(false, '')}
           centered
         >
@@ -152,23 +156,6 @@ const PrimaryPage: React.FC = observer(() => {
               <Spinner />
             </>
           ) : null}
-        </Modal>
-        <Modal
-          background={false}
-          classSpecifier={'wc'}
-          visible={false}
-          cancelAction={() => handleLogOut(false, '')}
-          centered
-        >
-          <h3 className='title-connecting'>
-            {'WalletConnect support will be enabled soon'}
-          </h3>
-          <button
-            className='btn submit-button'
-            onClick={() => handleLogOut(false, '')}
-          >
-            {'OK'}
-          </button>
         </Modal>
         {!walletName && (
           <>

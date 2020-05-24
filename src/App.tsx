@@ -56,6 +56,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           store.isAccessModalOpen = false;
         } else {
           store.error = '';
+          store.isAccessModalOpen = true;
         }
       };
       if (walletName === 'Metamask') {
@@ -152,14 +153,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         cancelAction={() => {
           store.error = '';
         }}
-        visible={
-          store.zkWallet
-            ? !!store.error
-            : store.provider &&
-              ((store.provider.networkVersion === RIGHT_NETWORK_ID &&
-                !!store.error) ||
-                (store.normalBg && !!store.error))
-        }
+        visible={!!store.error}
         classSpecifier='error'
         background={true}
         centered
