@@ -129,63 +129,34 @@ const PrimaryPage: React.FC = observer(() => {
   return (
     <>
       <LazyWallet />
-      <>
-        <Modal
-          background={false}
-          classSpecifier={`metamask ${
-            store.walletName
-              ? store.walletName.replace(/\s+/g, '').toLowerCase()
-              : 'primary-page'
-          }`}
-          visible={store.isAccessModalOpen && !store.error}
-          cancelAction={() => handleLogOut(false, '')}
-          centered
-        >
-          <div
-            className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
-          ></div>
-          {(provider && walletName !== 'Metamask') ||
-          (provider &&
-            walletName === 'Metamask' &&
-            provider.networkVersion === RIGHT_NETWORK_ID) ? ( //TODO: need to change on prod
-            <>
-              <h3 className='title-connecting'>
-                {!!hint && hint.match(/(?:login)/i) ? hint : 'Connecting to '}
-              </h3>
-              <p>{'Follow the instructions in the popup'}</p>
-              <Spinner />
-            </>
-          ) : null}
-        </Modal>
-        {!walletName && (
-          <>
-            <div className='beta-container'>
-              <div className='logo-textless'></div>
-              <p className='beta-text'>{'ALPHA'}</p>
-            </div>
-            <div className='welcome-text'>
-              <h2>{'Simple, fast and secure token transfers'}</h2>
-              <p>{'Connect a wallet'}</p>
-            </div>
-            <div className='wallets-wrapper'>
-              {Object.values(walletsWithWeb3()).map(key => (
-                <button key={key} className='wallet-block'>
-                  <div
-                    className={`btn wallet-button ${key}`}
-                    key={key}
-                    onClick={selectWallet(key as WalletType)}
-                  >
-                    {key === 'Web3' && (
-                      <FontAwesomeIcon icon={['fas', 'globe']} />
-                    )}
-                  </div>
-                  <p>{key}</p>
-                </button>
-              ))}
-            </div>
-          </>
-        )}
-      </>
+      {!walletName && (
+        <>
+          <div className='beta-container'>
+            <div className='logo-textless'></div>
+            <p className='beta-text'>{'ALPHA'}</p>
+          </div>
+          <div className='welcome-text'>
+            <h2>{'Simple, fast and secure token transfers'}</h2>
+            <p>{'Connect a wallet'}</p>
+          </div>
+          <div className='wallets-wrapper'>
+            {Object.values(walletsWithWeb3()).map(key => (
+              <button key={key} className='wallet-block'>
+                <div
+                  className={`btn wallet-button ${key}`}
+                  key={key}
+                  onClick={selectWallet(key as WalletType)}
+                >
+                  {key === 'Web3' && (
+                    <FontAwesomeIcon icon={['fas', 'globe']} />
+                  )}
+                </div>
+                <p>{key}</p>
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 });

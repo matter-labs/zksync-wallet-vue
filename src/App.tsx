@@ -164,13 +164,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         cancelAction={() => {
           store.isAccessModalOpen = false;
         }}
-        visible={
-          store.isAccessModalOpen &&
-          window.location.pathname.length > 1 &&
-          store.provider &&
-          (store.provider.networkVersion === RIGHT_NETWORK_ID ||
-            store.walletName === 'Web3')
-        }
+        visible={store.isAccessModalOpen && !store.error}
         classSpecifier='metamask'
         background={true}
         centered
