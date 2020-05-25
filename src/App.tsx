@@ -140,7 +140,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (
       store.modalSpecifier ||
       store.isAccessModalOpen ||
-      store.transactionModal
+      store.transactionModal ||
+      store.error
     ) {
       document.body.classList.add('fixed');
       return () => document.body.classList.remove('fixed');

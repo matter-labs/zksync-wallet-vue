@@ -13,6 +13,7 @@ import { Wallet, Provider } from 'zksync';
 import { WSTransport } from 'zksync/build/transport';
 import { WalletType } from 'constants/Wallets';
 import { Tx } from 'src/pages/Transactions';
+import { ethers } from 'ethers';
 
 export class Store {
   @observable awaitedTokens = {};
@@ -20,7 +21,7 @@ export class Store {
   @observable error = '';
   @observable ethBalances: IEthBalance[] = [];
   @observable ethId = '';
-  @observable ethWallet?: JsonRpcSigner;
+  @observable ethWallet?: JsonRpcSigner | ethers.Signer;
   @observable hint = '';
   @observable normalBg = false;
   @observable isAccessModalOpen = false;

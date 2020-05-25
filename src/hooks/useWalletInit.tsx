@@ -63,13 +63,16 @@ const useWalletInit = () => {
       }
       const provider = store.provider;
 
-      if (!provider.selectedAddress) {
+      if (!provider.selectedAddress && store.walletName !== 'BurnerWallet') {
         // Could fail, if there's no Metamask in the browser
         await provider?.enable();
       }
 
       const wallet = getSigner(provider);
-      store.ethWallet = wallet;
+
+      if (store.walletName !== 'BurnerWallet') {
+        store.ethWallet = wallet;
+      }
 
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
@@ -77,7 +80,9 @@ const useWalletInit = () => {
         `wss://${LINKS_CONFIG.STAGE_ZKSYNC.api}/jsrpc-ws`,
       );
       const syncWallet = await zkSync.Wallet.fromEthSigner(
-        wallet as ethers.providers.JsonRpcSigner,
+        (store.walletName
+          ? store.ethWallet
+          : wallet) as ethers.providers.JsonRpcSigner,
         syncProvider,
       );
 

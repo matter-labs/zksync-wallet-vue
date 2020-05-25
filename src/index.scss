@@ -334,6 +334,7 @@ h2 {
     margin-bottom: 0;
     font-weight: var(--medium-font-weight);
     font-size: var(--large-font-size);
+    word-break: break-all;
   }
 
   &-logo {
