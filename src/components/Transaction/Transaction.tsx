@@ -338,6 +338,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     }, [setAccountUnlockingProcess, setLoading, zkWallet]);
 
+    useEffect(() => {
+      if (store.walletName === 'BurnerWallet' && !store.unlocked) {
+        handleUnlock();
+      }
+    }, []);
+
     const handleFilterContacts = useCallback(
       e => {
         if (!searchContacts) return;
