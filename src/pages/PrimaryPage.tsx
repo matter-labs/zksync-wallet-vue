@@ -94,6 +94,16 @@ const PrimaryPage: React.FC = observer(() => {
         });
       }
 
+      if (key === 'BurnerWallet') {
+        store.setBatch({
+          walletName: key,
+          normalBg: true,
+          isAccessModalOpen: true,
+          zkWalletInitializing: true,
+        });
+        createWallet();
+      }
+
       if (wallets.includes(key)) {
         if (key === 'WalletConnect') {
           // store.modalSpecifier = 'wc';
