@@ -401,6 +401,11 @@ h2 {
       background-size: 63px;
     }
 
+    &.BurnerWallet {
+      background-image: url(./images/burnerwallet.png);
+      background-size: contain;
+    }
+
     &.Metamask {
       background-image: url(./images/metamask.png);
       background-size: 54px 50px;

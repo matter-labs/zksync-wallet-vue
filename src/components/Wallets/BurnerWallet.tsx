@@ -24,11 +24,7 @@ const BurnerWallet: React.FC = observer(() => {
             'https://rinkeby.infura.io/v3/85d8408593834bf6889554d624be0193',
           ),
         );
-        const provider = await getDefaultProvider('rinkeby');
-        const randomWallet = await Wallet.createRandom();
-        const walletWithProvider = await randomWallet.connect(provider);
         store.provider = web3.currentProvider;
-        store.ethWallet = walletWithProvider as ethers.ethers.Signer;
       };
       createAccount();
     } catch (err) {

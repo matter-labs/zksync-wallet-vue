@@ -74,11 +74,15 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (zkWallet) {
       store.isAccessModalOpen = false;
     }
-    if (walletName === 'Web3') {
+    if (walletName === 'Web3' || walletName === 'BurnerWallet') {
       sessionStorage.setItem('walletName', walletName);
     }
     const _sw = sessionStorage.getItem('walletName');
-    if (_sw === 'Web3' && !zkWallet && window.location.pathname.length > 1) {
+    if (
+      (_sw === 'Web3' || _sw === 'BurnerWallet') &&
+      !zkWallet &&
+      window.location.pathname.length > 1
+    ) {
       store.setBatch({
         walletName: _sw,
         zkWallet: null,
