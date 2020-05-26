@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { ethers } from 'ethers';
+import { ethers, Wallet, getDefaultProvider, providers } from 'ethers';
 
 import { useCancelable } from 'hooks/useCancelable';
 
@@ -63,13 +63,36 @@ const useWalletInit = () => {
       }
       const provider = store.provider;
 
-      if (!provider.selectedAddress) {
+      if (!provider.selectedAddress && store.walletName !== 'BurnerWallet') {
         // Could fail, if there's no Metamask in the browser
         await provider?.enable();
       }
 
+      if (store.walletName === 'BurnerWallet') {
+        const burnerWallet = localStorage.getItem('burnerWallet');
+        const provider = await getDefaultProvider('rinkeby');
+        if (!!burnerWallet) {
+          const walletWithProvider = new Wallet(
+            JSON.parse(burnerWallet),
+            provider,
+          );
+          store.ethWallet = walletWithProvider as ethers.Signer;
+        } else {
+          const randomWallet = await Wallet.createRandom();
+          const walletWithProvider = await randomWallet.connect(provider);
+          store.ethWallet = walletWithProvider as ethers.Signer;
+          localStorage.setItem(
+            'burnerWallet',
+            JSON.stringify(randomWallet.privateKey),
+          );
+        }
+      }
+
       const wallet = getSigner(provider);
-      store.ethWallet = wallet;
+
+      if (store.walletName !== 'BurnerWallet') {
+        store.ethWallet = wallet;
+      }
 
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
@@ -77,7 +100,9 @@ const useWalletInit = () => {
         `wss://${LINKS_CONFIG.STAGE_ZKSYNC.api}/jsrpc-ws`,
       );
       const syncWallet = await zkSync.Wallet.fromEthSigner(
-        wallet as ethers.providers.JsonRpcSigner,
+        (store.walletName
+          ? store.ethWallet
+          : wallet) as ethers.providers.JsonRpcSigner,
         syncProvider,
       );
 

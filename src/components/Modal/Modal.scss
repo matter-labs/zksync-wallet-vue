@@ -186,7 +186,25 @@
 
     & > .wallet-buttons {
       padding-top: 28px;
+      text-align: left;
 
+      & > .btn-tr {
+        width: 300px;
+        height: 35px;
+        min-height: 35px;
+        margin-left: 0;
+        padding: 5px 10px;
+        color: var(--dark-color);
+        background-color: var(--transparent);
+        border: none;
+        border-radius: 5px;
+        outline: none;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--copyblock-color);
+        }
+      }
 
       & > button {
         display: flex;
@@ -522,25 +540,8 @@ body.dark {
         }
 
         & > .btn-tr {
-          align-self: left;
-          width: 300px;
-          height: 35px;
-          min-height: 35px;
-          margin-left: 0;
-          padding: 5px 10px;
-          color: var(--dark-color);
-          background-color: var(--transparent);
-          border: none;
-          border-radius: 5px;
-          outline: none;
-          cursor: pointer;
-
           &:first-child {
             display: none;
-          }
-
-          &:hover {
-            background-color: var(--copyblock-color);
           }
         }
       }

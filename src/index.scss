@@ -334,6 +334,7 @@ h2 {
     margin-bottom: 0;
     font-weight: var(--medium-font-weight);
     font-size: var(--large-font-size);
+    word-break: break-all;
   }
 
   &-logo {
@@ -398,6 +399,11 @@ h2 {
     &.WalletConnect {
       background-image: url(./images/walletconnect.png);
       background-size: 63px;
+    }
+
+    &.BurnerWallet {
+      background-image: url(./images/burnerwallet.png);
+      background-size: contain;
     }
 
     &.Metamask {
