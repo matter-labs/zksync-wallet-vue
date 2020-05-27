@@ -38,6 +38,7 @@ import { IEthBalance } from '../../types/Common';
 
 import './Transaction.scss';
 import SpinnerWorm from '../Spinner/SpinnerWorm';
+import BurnerWallet from '../Wallets/BurnerWallet';
 
 library.add(fas);
 
@@ -119,6 +120,33 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [refreshTimer, setRefreshTimer] = useState<number | null>(null);
 
     const history = useHistory();
+
+    const handleUnlock = useCallback(
+      async (withLoading: boolean) => {
+        try {
+          store.hint = 'Follow the instructions in the pop up';
+          if (withLoading === true) {
+            setAccountUnlockingProcess(true);
+            setLoading(true);
+          }
+          const changePubkey = await zkWallet?.setSigningKey();
+          store.hint = 'Confirmed! \n Waiting for transaction to be mined';
+          const receipt = await changePubkey?.awaitReceipt();
+          store.unlocked = !!receipt;
+          setAccountUnlockingProcess(!receipt);
+          setLoading(!receipt);
+        } catch {
+          history.push('/account');
+        }
+      },
+      [setAccountUnlockingProcess, setLoading, zkWallet],
+    );
+
+    useEffect(() => {
+      if (store.walletName === 'BurnerWallet' && !store.unlocked && zkWallet) {
+        handleUnlock(true);
+      }
+    }, [store.unlocked, store.walletName]);
 
     const getAccState = async () => {
       if (zkWallet && tokens) {
@@ -257,6 +285,19 @@ const Transaction: React.FC<ITransactionProps> = observer(
       +inputValue > 0 &&
       +inputValue <= maxValue;
 
+    useEffect(() => {
+      if (
+        addressValue.length > 0 &&
+        !ADDRESS_VALIDATION['eth'].test(addressValue)
+      ) {
+        setConditionError(
+          `Error: "${addressValue}" doesn't match ethereum address format`,
+        );
+      } else {
+        setConditionError('');
+      }
+    }, [addressValue]);
+
     const validateNumbers = useCallback(
       e => {
         const amountNumber = ethers.utils.parseEther(e.toString());
@@ -321,28 +362,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
         );
       }
     }, [addressValue, setConditionError, store]);
-
-    const handleUnlock = useCallback(async () => {
-      try {
-        store.hint = 'Follow the instructions in the pop up';
-        setAccountUnlockingProcess(true);
-        setLoading(true);
-        const changePubkey = await zkWallet?.setSigningKey();
-        store.hint = 'Confirmed! \n Waiting for transaction to be mined';
-        const receipt = await changePubkey?.awaitReceipt();
-        store.unlocked = !!receipt;
-        setAccountUnlockingProcess(!receipt);
-        setLoading(!receipt);
-      } catch {
-        history.push('/account');
-      }
-    }, [setAccountUnlockingProcess, setLoading, zkWallet]);
-
-    useEffect(() => {
-      if (store.walletName === 'BurnerWallet' && !store.unlocked) {
-        handleUnlock();
-      }
-    }, []);
 
     const handleFilterContacts = useCallback(
       e => {
@@ -427,7 +446,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           ? cancelable(zkWallet?.isSigningKeySet()).then(
               data => (store.unlocked = data),
             )
-          : (store.unlocked = true);
+          : (store.unlocked = undefined);
       });
     }, [cancelable, store, zkWallet, store.searchBalances, title]);
 
@@ -748,6 +767,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
       </div>
     );
 
+    const burnerWalletAccountUnlockCondition =
+      store.walletName === 'BurnerWallet' && !store.unlocked;
+
     return (
       <>
         <Modal
@@ -766,7 +788,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
             {'Close'}
           </button>
         </Modal>
-        <Modal visible={false} classSpecifier='add-contact' background={true}>
+        <Modal
+          visible={false}
+          classSpecifier='add-contact'
+          clickOutside={false}
+          background={true}
+        >
           <SaveContacts
             title='Add contact'
             addressValue={addressValue}
@@ -840,10 +867,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
           {unlocked === false &&
             unlocked !== undefined &&
             !isAccountUnlockingProcess &&
-            title !== 'Deposit' && (
+            title !== 'Deposit' &&
+            store.walletName !== 'BurnerWallet' && (
               <LockedTx
                 handleCancel={handleCancel}
-                handleUnlock={handleUnlock}
+                handleUnlock={() => handleUnlock(true)}
               />
             )}
           {isExecuted && (
@@ -857,51 +885,39 @@ const Transaction: React.FC<ITransactionProps> = observer(
               title={title}
             />
           )}
-          {!isExecuted && (unlocked === undefined || isLoading) && (
-            <>
-              <LoadingTx
-                isAccountUnlockingProcess={isAccountUnlockingProcess}
-                isUnlockingProcess={isUnlockingProcess}
-                inputValue={inputValue}
-                symbolName={symbolName}
-                addressValue={addressValue}
-                handleCancel={handleCancel}
-                isLoading={isLoading}
-                setWalletName={setWalletName}
-                title={title}
-                unlockFau={unlockFau}
-                setLoading={setLoading}
-                setAccountUnlockingProcess={setAccountUnlockingProcess}
-                setUnlockingERCProcess={setUnlockingERCProcess}
-              />
-              {hint.match(/(?:denied)/i) && !isLoading && (
-                <CanceledTx
+          {!isExecuted &&
+            (unlocked === undefined || isLoading || !zkBalancesLoaded) && (
+              <>
+                <LoadingTx
+                  isAccountUnlockingProcess={isAccountUnlockingProcess}
+                  isUnlockingProcess={isUnlockingProcess}
+                  inputValue={inputValue}
+                  symbolName={symbolName}
+                  addressValue={addressValue}
                   handleCancel={handleCancel}
+                  isLoading={isLoading}
                   setWalletName={setWalletName}
+                  title={title}
+                  unlockFau={unlockFau}
+                  setLoading={setLoading}
+                  setAccountUnlockingProcess={setAccountUnlockingProcess}
+                  setUnlockingERCProcess={setUnlockingERCProcess}
                 />
-              )}
-            </>
-          )}
-          {(!zkBalancesLoaded || !zkWallet) && (
-            <>
-              <Spinner />
-              <button
-                className='btn submit-button'
-                onClick={() => {
-                  handleCancel();
-                  setWalletName();
-                }}
-              >
-                {'Close'}
-              </button>
-            </>
-          )}
+                {hint.match(/(?:denied)/i) && !isLoading && (
+                  <CanceledTx
+                    handleCancel={handleCancel}
+                    setWalletName={setWalletName}
+                  />
+                )}
+              </>
+            )}
           {zkWallet &&
             zkBalancesLoaded &&
             !isLoading &&
             !isExecuted &&
             unlocked !== undefined &&
-            (unlocked || title === 'Deposit') && (
+            (unlocked || title === 'Deposit') &&
+            !burnerWalletAccountUnlockCondition && (
               <>
                 <button
                   onClick={() => {
@@ -1139,7 +1155,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               </p>
                             ) : (
                               <p>
-                                {'Unlock'}
+                                {'Unlock '}
                                 {symbolName.length
                                   ? symbolName
                                   : balances?.length && balances[0].symbol}

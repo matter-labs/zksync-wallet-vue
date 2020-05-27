@@ -101,6 +101,7 @@ const Contacts: React.FC = observer(
                 classSpecifier='add-contact addressless'
                 background={true}
                 centered
+                clickOutside={false}
               >
                 <SaveContacts
                   title='Add contact'
@@ -114,6 +115,7 @@ const Contacts: React.FC = observer(
                 classSpecifier='add-contact edit-contact'
                 background={true}
                 centered
+                clickOutside={false}
               >
                 <SaveContacts
                   oldContact={oldContact}
