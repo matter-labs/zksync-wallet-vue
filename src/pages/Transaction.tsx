@@ -91,7 +91,11 @@ export const Transaction: FC<Tx> = props => {
         <div className='transaction-history-address'>
           {type === 'Transfer' && (
             <>
-              <span>{'Sent to:'}</span>
+              <span>
+                {to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
+                  ? 'Received from:'
+                  : 'Sent to:'}
+              </span>
               <p>
                 {handleFindContactName(to)?.name
                   ? handleFindContactName(to).name

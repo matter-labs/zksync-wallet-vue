@@ -43,14 +43,14 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
 
   // Listen for network change
   useMobxEffect(() => {
-    const { provider, walletName } = store;
-    if (provider && walletName === 'Metamask') {
+    const { provider } = store;
+    const _sw = sessionStorage.getItem('walletName');
+    if (provider && _sw === 'Metamask') {
       window['ethereum'].autoRefreshOnNetworkChange = false;
-
       const networkChangeListener = () => {
         if (
           provider.networkVersion !== RIGHT_NETWORK_ID &&
-          walletName === 'Metamask'
+          store.walletName === 'Metamask'
         ) {
           store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
           store.isAccessModalOpen = false;
@@ -59,13 +59,13 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           store.isAccessModalOpen = true;
         }
       };
-      if (walletName === 'Metamask') {
+      if (store.walletName === 'Metamask') {
         networkChangeListener();
         provider.on('networkChanged', networkChangeListener);
         return () => provider.off('networkChanged', networkChangeListener);
       }
     }
-  });
+  }, [store.walletName, store]);
 
   // Listen for account change
   useMobxEffect(() => {

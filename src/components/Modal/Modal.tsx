@@ -24,10 +24,18 @@ export interface ModalProps {
   visible: boolean;
   transition?: 'scale' | 'fly';
   centered?: boolean;
+  clickOutside?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = observer(
-  ({ cancelAction, children, classSpecifier, visible, centered = false }) => {
+  ({
+    cancelAction,
+    children,
+    classSpecifier,
+    visible,
+    centered = false,
+    clickOutside = true,
+  }) => {
     const store = useStore();
     const overlayRef = useRef<HTMLDivElement>(null);
     const history = useHistory();
@@ -36,7 +44,7 @@ const Modal: React.FC<ModalProps> = observer(
 
     const handleClickOutside = useCallback(
       e => {
-        if (e.target !== overlayRef.current) return;
+        if (e.target !== overlayRef.current || clickOutside === false) return;
         if (
           e.target.getAttribute('data-name') &&
           !store.error.match(WRONG_NETWORK) &&

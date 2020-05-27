@@ -54,11 +54,13 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
     const info = hint?.split('\n');
 
     const unlockingTitle = isAccountUnlockingProcess
-      ? 'Unlock account'
-      : `Unlock ${symbolName} token`;
+      ? 'Unlocking account'
+      : `Unlocking ${symbolName} token`;
 
     const propperTitle =
-      isLoading && (isAccountUnlockingProcess || isUnlockingProcess)
+      isLoading &&
+      (isAccountUnlockingProcess || isUnlockingProcess) &&
+      store.zkWallet
         ? unlockingTitle
         : title;
 
@@ -73,10 +75,11 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
         ></button>
         <h2 className='transaction-title'>{propperTitle}</h2>
         <Spinner />
-        <p>{info[0]}</p>
+        {store.zkWallet && <p>{info[0]}</p>}
         {title === 'Send' &&
           !isAccountUnlockingProcess &&
-          store.unlocked !== undefined && (
+          store.unlocked !== undefined &&
+          store.zkBalancesLoaded && (
             <span className='transaction-field-title'>
               <span>{'Recepient:'}</span>
               <p>{walletAddress.name && walletAddress.name}</p>
@@ -85,7 +88,8 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
           )}
         {!isAccountUnlockingProcess &&
           !isUnlockingProcess &&
-          store.unlocked !== undefined && (
+          store.unlocked !== undefined &&
+          store.zkBalancesLoaded && (
             <span className='transaction-field-title'>
               {title === 'Send' && 'Amount + fee'}
               {title === 'Withdraw' && 'Amount'}
