@@ -188,15 +188,11 @@ const Account: React.FC = observer(() => {
                 if (JSON.stringify(store.zkBalances) !== JSON.stringify(res))
                   store.zkBalances = res;
               }
-              if (JSON.stringify(res) !== JSON.stringify(zkBalances)) {
-                if (accountState?.id) {
-                  zkWallet?.isSigningKeySet().then(data => {
-                    store.unlocked = data;
-                  });
-                } else {
-                  store.unlocked = true;
-                }
-              }
+            })
+            .then(() => {
+              zkWallet?.isSigningKeySet().then(data => {
+                store.unlocked = data;
+              });
             })
             .catch(err => {
               err.name && err.message
