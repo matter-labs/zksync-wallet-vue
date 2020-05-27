@@ -139,11 +139,16 @@ const Transaction: React.FC<ITransactionProps> = observer(
           history.push('/account');
         }
       },
-      [setAccountUnlockingProcess, setLoading, zkWallet],
+      [setAccountUnlockingProcess, setLoading, zkWallet, store.unlocked],
     );
 
     useEffect(() => {
-      if (store.walletName === 'BurnerWallet' && !store.unlocked && zkWallet) {
+      if (
+        store.walletName === 'BurnerWallet' &&
+        !store.unlocked &&
+        zkWallet &&
+        title !== 'Deposit'
+      ) {
         handleUnlock(true);
       }
     }, [store.unlocked, store.walletName]);
@@ -248,16 +253,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
         ).then(async res => {
           if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
             store.zkBalances = res.zkBalances;
-            await cancelable(zkWallet?.getAccountState()).then((res: any) => {
-              store.verified = res?.verified.balances;
-              if (res?.id) {
+            await cancelable(zkWallet?.getAccountState())
+              .then((res: any) => {
+                store.verified = res?.verified.balances;
+              })
+              .then(() => {
                 zkWallet?.isSigningKeySet().then(data => {
                   store.unlocked = data;
                 });
-              } else {
-                store.unlocked = true;
-              }
-            });
+              });
           }
           if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
             store.tokens = res.tokens;
@@ -275,6 +279,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       store,
       tokens,
       title,
+      store.unlocked,
     ]);
 
     const submitCondition =
@@ -440,15 +445,23 @@ const Transaction: React.FC<ITransactionProps> = observer(
     useMobxEffect(() => {
       store.searchBalances =
         title === 'Deposit' ? store.ethBalances : zkBalances;
-      cancelable(zkWallet?.getAccountState()).then((res: any) => {
-        store.verified = res?.verified.balances;
-        res?.id
-          ? cancelable(zkWallet?.isSigningKeySet()).then(
-              data => (store.unlocked = data),
-            )
-          : (store.unlocked = undefined);
-      });
-    }, [cancelable, store, zkWallet, store.searchBalances, title]);
+      cancelable(zkWallet?.getAccountState())
+        .then((res: any) => {
+          store.verified = res?.verified.balances;
+        })
+        .then(() => {
+          cancelable(zkWallet?.isSigningKeySet()).then(
+            data => (store.unlocked = data),
+          );
+        });
+    }, [
+      cancelable,
+      store,
+      zkWallet,
+      store.searchBalances,
+      title,
+      store.unlocked,
+    ]);
 
     const handleManageUnlockingTokens = () => {
       const _inUnlocking = store.tokenInUnlockingProgress;
@@ -885,32 +898,33 @@ const Transaction: React.FC<ITransactionProps> = observer(
               title={title}
             />
           )}
-          {!isExecuted &&
-            (unlocked === undefined || isLoading || !zkBalancesLoaded) && (
-              <>
-                <LoadingTx
-                  isAccountUnlockingProcess={isAccountUnlockingProcess}
-                  isUnlockingProcess={isUnlockingProcess}
-                  inputValue={inputValue}
-                  symbolName={symbolName}
-                  addressValue={addressValue}
+          {((!isExecuted &&
+            (unlocked === undefined || isLoading || !zkBalancesLoaded)) ||
+            burnerWalletAccountUnlockCondition) && (
+            <>
+              <LoadingTx
+                isAccountUnlockingProcess={isAccountUnlockingProcess}
+                isUnlockingProcess={isUnlockingProcess}
+                inputValue={inputValue}
+                symbolName={symbolName}
+                addressValue={addressValue}
+                handleCancel={handleCancel}
+                isLoading={isLoading}
+                setWalletName={setWalletName}
+                title={title}
+                unlockFau={unlockFau}
+                setLoading={setLoading}
+                setAccountUnlockingProcess={setAccountUnlockingProcess}
+                setUnlockingERCProcess={setUnlockingERCProcess}
+              />
+              {hint.match(/(?:denied)/i) && !isLoading && (
+                <CanceledTx
                   handleCancel={handleCancel}
-                  isLoading={isLoading}
                   setWalletName={setWalletName}
-                  title={title}
-                  unlockFau={unlockFau}
-                  setLoading={setLoading}
-                  setAccountUnlockingProcess={setAccountUnlockingProcess}
-                  setUnlockingERCProcess={setUnlockingERCProcess}
                 />
-                {hint.match(/(?:denied)/i) && !isLoading && (
-                  <CanceledTx
-                    handleCancel={handleCancel}
-                    setWalletName={setWalletName}
-                  />
-                )}
-              </>
-            )}
+              )}
+            </>
+          )}
           {zkWallet &&
             zkBalancesLoaded &&
             !isLoading &&
