@@ -21,7 +21,7 @@ const PortisWallet: React.FC = observer(() => {
     } catch (err) {
       store.error =
         err.name && err.message
-          ? `${err.name}: ${err.message}. Maybe you don't have Portis Wallet installed in your browser`
+          ? `${err.name}: ${err.message}.`
           : DEFAULT_ERROR;
       history.push('/');
       store.walletName = '';

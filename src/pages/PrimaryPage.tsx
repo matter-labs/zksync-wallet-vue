@@ -68,8 +68,6 @@ const PrimaryPage: React.FC = observer(() => {
     [mobileCheck],
   );
 
-  console.log(Object.values(wallets));
-
   useMobxEffect(() => {
     const { provider, walletName } = store;
     if (!(provider && walletName === 'Metamask')) return;

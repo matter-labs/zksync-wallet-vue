@@ -30,7 +30,7 @@ const BurnerWallet: React.FC = observer(() => {
     } catch (err) {
       store.error =
         err.name && err.message
-          ? `${err.name}: ${err.message}. Maybe you don't have Metamask or Coinbase installed in your browser`
+          ? `${err.name}: ${err.message}.`
           : DEFAULT_ERROR;
       history.push('/');
       store.setBatch({

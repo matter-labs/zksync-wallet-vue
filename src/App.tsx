@@ -59,7 +59,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       localStorage.removeItem('walletconnect');
     }
   }, [store.zkWallet, store.isAccessModalOpen]);
-
   // Listen for network change
   useMobxEffect(() => {
     const { provider } = store;
