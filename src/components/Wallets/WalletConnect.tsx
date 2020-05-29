@@ -17,12 +17,12 @@ const WalletConnect: React.FC = observer(() => {
 
   useEffect(() => {
     try {
-      walletConnectConnector(store, connect);
+      if (!store.provider) {
+        walletConnectConnector(store, connect);
+      }
     } catch (err) {
       store.error =
-        err.name && err.message
-          ? `${err.name}: ${err.message}. Maybe you don't have Wallet Connect installed in your browser`
-          : DEFAULT_ERROR;
+        err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
       history.push('/');
       store.walletName = '';
       store.zkWallet = null;

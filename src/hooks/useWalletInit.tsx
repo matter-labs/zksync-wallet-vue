@@ -66,7 +66,8 @@ const useWalletInit = () => {
       if (
         !store.provider &&
         store.walletName !== 'Portis' &&
-        store.walletName !== 'Fortmatic'
+        store.walletName !== 'Fortmatic' &&
+        store.walletName !== 'WalletConnect'
       ) {
         store.provider = window['ethereum'];
       } else if (store.walletName === 'Portis') {
@@ -78,11 +79,12 @@ const useWalletInit = () => {
       }
 
       const provider = store.provider;
-
       if (
         !provider.selectedAddress &&
         store.walletName !== 'BurnerWallet' &&
-        store.walletName !== 'Portis'
+        store.walletName !== 'Portis' &&
+        store.walletName !== 'WalletConnect' &&
+        store.walletName !== 'Fortmatic'
       ) {
         // Could fail, if there's no Metamask in the browser
         await provider?.enable();
