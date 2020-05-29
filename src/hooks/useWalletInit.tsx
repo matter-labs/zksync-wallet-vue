@@ -1,7 +1,12 @@
 import { useCallback, useState } from 'react';
-import { ethers, Wallet, getDefaultProvider, providers } from 'ethers';
+import { ethers, Wallet, getDefaultProvider } from 'ethers';
 
 import { useCancelable } from 'hooks/useCancelable';
+import {
+  portisConnector,
+  fortmaticConnector,
+  walletConnectConnector,
+} from 'components/Wallets/walletConnectors';
 
 import { IEthBalance } from 'types/Common';
 
@@ -58,12 +63,27 @@ const useWalletInit = () => {
       const zkSync = await import('zksync');
       store.zkWalletInitializing = true;
 
-      if (!store.provider) {
+      if (
+        !store.provider &&
+        store.walletName !== 'Portis' &&
+        store.walletName !== 'Fortmatic'
+      ) {
         store.provider = window['ethereum'];
+      } else if (store.walletName === 'Portis') {
+        portisConnector(store, connect, getSigner);
+      } else if (store.walletName === 'Fortmatic') {
+        fortmaticConnector(store, connect, getSigner);
+      } else if (store.walletName === 'WalletConnect') {
+        walletConnectConnector(store, connect);
       }
+
       const provider = store.provider;
 
-      if (!provider.selectedAddress && store.walletName !== 'BurnerWallet') {
+      if (
+        !provider.selectedAddress &&
+        store.walletName !== 'BurnerWallet' &&
+        store.walletName !== 'Portis'
+      ) {
         // Could fail, if there's no Metamask in the browser
         await provider?.enable();
       }
@@ -105,18 +125,6 @@ const useWalletInit = () => {
           : wallet) as ethers.providers.JsonRpcSigner,
         syncProvider,
       );
-
-      // const network =
-      //   process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      // const ethersProvider = await ethers.getDefaultProvider('rinkeby');
-      // const syncProvider = await zkSync.getDefaultProvider(network, 'WS');
-
-      // const ethWallet = ethers.Wallet.createRandom().connect(ethersProvider);
-
-      // const syncWallet = await zkSync.Wallet.fromEthSigner(
-      //   ethWallet,
-      //   syncProvider,
-      // );
 
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
@@ -222,7 +230,6 @@ const useWalletInit = () => {
         .catch(err => {
           console.error(err);
         });
-
       store.zkWalletInitializing = false;
     } catch (err) {
       store.zkWalletInitializing = false;

@@ -806,6 +806,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           classSpecifier='add-contact'
           clickOutside={false}
           background={true}
+          centered
         >
           <SaveContacts
             title='Add contact'
@@ -846,7 +847,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           {isBalancesListOpen && (
             <DataList
               data={searchBalances}
-              title='Token balances'
+              title='Balances in L2'
               header={() => (
                 <button
                   onClick={() => {
@@ -1169,7 +1170,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               </p>
                             ) : (
                               <p>
-                                {'Unlock '}
+                                {'Unlocking '}
                                 {symbolName.length
                                   ? symbolName
                                   : balances?.length && balances[0].symbol}

@@ -4,6 +4,8 @@ import { useHistory } from 'react-router-dom';
 
 import useWalletInit from 'hooks/useWalletInit';
 
+import { walletConnectConnector } from './walletConnectors';
+
 import { DEFAULT_ERROR } from 'constants/errors';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
@@ -14,15 +16,8 @@ const WalletConnect: React.FC = observer(() => {
   const history = useHistory();
 
   useEffect(() => {
-    const { provider } = store;
     try {
-      if (!provider) {
-        const wcProvider = new WalletConnectProvider({
-          infuraId: process.env.REACT_APP_WALLET_CONNECT,
-        });
-        store.provider = wcProvider;
-        connect(wcProvider, wcProvider?.enable.bind(wcProvider));
-      }
+      walletConnectConnector(store, connect);
     } catch (err) {
       store.error =
         err.name && err.message

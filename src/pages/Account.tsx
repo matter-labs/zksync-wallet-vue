@@ -275,9 +275,7 @@ const Account: React.FC = observer(() => {
 
   const { ethBalances, price, zkBalances, zkBalancesLoaded } = store;
   const ApiFailedHint = () =>
-    !store.price && store.zkBalancesLoaded ? (
-      <p>{'No Conversion Rate Available'}</p>
-    ) : null;
+    !store.price && store.zkBalancesLoaded ? null : null;
 
   const Balance = ({ verified, balance }) =>
     verified ? (
@@ -298,7 +296,7 @@ const Account: React.FC = observer(() => {
       />
       <DataList
         data={zkBalances}
-        title='Token balances'
+        title='Balances in L2'
         visible={true}
         footer={ApiFailedHint}
         renderItem={balance => (

@@ -16,10 +16,13 @@ import { useStore } from './store/context';
 import { useMobxEffect } from './hooks/useMobxEffect';
 import { useLocation } from 'react-router-dom';
 import { getWalletNameFromProvider } from './utils';
+import { useLogout } from 'hooks/useLogout';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
   const { pathname } = useLocation();
+
+  const handleLogout = useLogout();
 
   useWSHeartBeat();
   const [curAddress, setCurAddress] = useState<string>(
@@ -40,6 +43,22 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       setCurAddress(store.provider?.selectedAddress);
     }
   }, 5000);
+
+  useEffect(() => {
+    if (store.zkWallet) {
+      sessionStorage.setItem('walletName', store.walletName);
+    } else if (!store.zkWallet && window.location.pathname.length > 1) {
+      store.walletName = sessionStorage.getItem('walletName') as WalletType;
+      store.normalBg = true;
+      store.isAccessModalOpen = true;
+    }
+  }, [store.zkWallet]);
+
+  useEffect(() => {
+    if (!store.zkWallet && !store.isAccessModalOpen) {
+      localStorage.removeItem('walletconnect');
+    }
+  }, [store.zkWallet, store.isAccessModalOpen]);
 
   // Listen for network change
   useMobxEffect(() => {
@@ -68,32 +87,11 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [store.walletName, store]);
 
   // Listen for account change
-  useMobxEffect(() => {
-    const { provider, walletName, zkWallet } = store;
+  const { provider, walletName, zkWallet } = store;
 
+  useEffect(() => {
     if (zkWallet) {
       store.isAccessModalOpen = false;
-    }
-    if (walletName === 'Web3' || walletName === 'BurnerWallet') {
-      sessionStorage.setItem('walletName', walletName);
-    }
-    const _sw = sessionStorage.getItem('walletName');
-    if (
-      (_sw === 'Web3' || _sw === 'BurnerWallet') &&
-      !zkWallet &&
-      window.location.pathname.length > 1
-    ) {
-      store.setBatch({
-        walletName: _sw,
-        zkWallet: null,
-        zkBalances: [],
-        isAccessModalOpen: true,
-        transactions: [],
-        zkWalletInitializing: false,
-        searchBalances: [],
-        searchContacts: [],
-        ethBalances: [],
-      });
     }
     if (!provider && !walletName) return;
     const accountChangeListener = () => {
@@ -108,9 +106,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         const savedWalletName = sessionStorage.getItem(
           'walletName',
         ) as WalletType;
-        if (savedWalletName) {
-          store.walletName = savedWalletName;
-        }
+        store.walletName = 'Metamask';
         store.setBatch({
           zkWallet: null,
           zkBalances: [],
@@ -127,7 +123,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       provider.on('accountsChanged', accountChangeListener);
       return () => provider.off('accountsChanged', accountChangeListener);
     }
-  });
+  }, [provider, store, walletName, zkWallet, store.walletName]);
 
   useEffect(() => {
     const { zkWallet, provider, walletName } = store;
@@ -136,7 +132,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     store.setBatch({
       isAccessModalOpen: true,
       provider: window['ethereum'],
-      walletName: getWalletNameFromProvider() as WalletType,
     });
   }, [pathname, store]);
 
