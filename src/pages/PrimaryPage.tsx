@@ -7,13 +7,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
-import Modal from 'components/Modal/Modal';
-import Spinner from 'components/Spinner/Spinner';
 
 import { useQuery } from 'hooks/useQuery';
 
 import { MOBILE_DEVICE } from 'constants/regExs';
-import { RIGHT_NETWORK_ID } from 'constants/networks';
+import { WIDTH_BP } from 'constants/magicNumbers';
+
 import {
   BRAVE_NON_WORKING_WALLETS,
   DESKTOP_ONLY_WALLETS,
@@ -31,7 +30,8 @@ const PrimaryPage: React.FC = observer(() => {
   const store = useStore();
   const handleLogOut = useLogout();
   const mobileCheck = useMemo(
-    () => MOBILE_DEVICE.test(navigator.userAgent),
+    () =>
+      MOBILE_DEVICE.test(navigator.userAgent) || window?.innerWidth < WIDTH_BP,
     [],
   );
 
@@ -46,16 +46,6 @@ const PrimaryPage: React.FC = observer(() => {
     return list;
   };
 
-  const wallets = useMemo(
-    () =>
-      Object.keys(WALLETS).filter(el =>
-        mobileCheck
-          ? !filterWallets(DESKTOP_ONLY_WALLETS).includes(el)
-          : !filterWallets(MOBILE_ONLY_WALLETS).includes(el),
-      ),
-    [mobileCheck],
-  );
-
   const walletsWithWeb3 = () => {
     const _w = Object.keys(WALLETS);
     if (
@@ -67,6 +57,18 @@ const PrimaryPage: React.FC = observer(() => {
       return _w.filter(el => el !== 'Web3');
     }
   };
+
+  const wallets = useMemo(
+    () =>
+      walletsWithWeb3().filter(el =>
+        mobileCheck
+          ? !filterWallets(DESKTOP_ONLY_WALLETS).includes(el)
+          : !filterWallets(MOBILE_ONLY_WALLETS).includes(el),
+      ),
+    [mobileCheck],
+  );
+
+  console.log(Object.values(wallets));
 
   useMobxEffect(() => {
     const { provider, walletName } = store;
@@ -93,7 +95,6 @@ const PrimaryPage: React.FC = observer(() => {
           });
         });
       }
-
       if (key === 'BurnerWallet') {
         store.setBatch({
           walletName: key,
@@ -150,7 +151,7 @@ const PrimaryPage: React.FC = observer(() => {
             <p>{'Connect a wallet'}</p>
           </div>
           <div className='wallets-wrapper'>
-            {Object.values(walletsWithWeb3()).map(key => (
+            {Object.values(wallets).map(key => (
               <button key={key} className='wallet-block'>
                 <div
                   className={`btn wallet-button ${key}`}

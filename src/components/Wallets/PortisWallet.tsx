@@ -7,6 +7,7 @@ import useWalletInit from 'hooks/useWalletInit';
 import { DEFAULT_ERROR } from 'constants/errors';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
+import { portisConnector } from './walletConnectors';
 
 const PortisWallet: React.FC = observer(() => {
   const { connect, getSigner } = useWalletInit();
@@ -16,16 +17,7 @@ const PortisWallet: React.FC = observer(() => {
   useEffect(() => {
     const { provider } = store;
     try {
-      if (!provider) {
-        const portis = new Portis(
-          process.env.REACT_APP_PORTIS || '',
-          'mainnet',
-        );
-        const portisProvider = portis.provider;
-        store.provider = portisProvider;
-        const signer = getSigner(portisProvider);
-        connect(portisProvider, signer?.getAddress.bind(signer));
-      }
+      portisConnector(store, connect, getSigner);
     } catch (err) {
       store.error =
         err.name && err.message

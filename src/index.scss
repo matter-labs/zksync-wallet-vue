@@ -867,10 +867,9 @@ body.dark > #root {
 
   .withdraw-button {
     & > span {
-      margin-top: 4px;
-      background-image: url(./images/mdi_arrow_downward_dark_disable.svg);
+      background-image: url(./images/mdi_arrow_downward.svg);
       background-repeat: no-repeat;
-      background-size: 13px;
+      background-size: 20px;
     }
   }
 

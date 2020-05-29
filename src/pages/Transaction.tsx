@@ -17,10 +17,9 @@ library.add(fas);
 export const Transaction: FC<Tx> = props => {
   const {
     hash,
-    tx: { amount, priority_op, type, to, token },
+    tx: { amount, from, priority_op, type, to, token },
     created_at,
   } = props;
-
   const store = useStore();
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
@@ -39,8 +38,29 @@ export const Transaction: FC<Tx> = props => {
     openCopyModal(true);
   }, [ref, openCopyModal]);
 
-  const handleFindContactName = address =>
-    contacts.filter(c => c.address.toLowerCase() === address.toLowerCase())[0];
+  const handleFindContactName = (to, from, reciever) => {
+    if (reciever) {
+      return contacts.filter(
+        c => c.address.toLowerCase() === from.toLowerCase(),
+      )[0];
+    } else {
+      return contacts.filter(
+        c => c.address.toLowerCase() === to.toLowerCase(),
+      )[0];
+    }
+  };
+
+  const addressAppearence = handleFindContactName(
+    to,
+    from,
+    to?.toLowerCase() === store.zkWalletAddress?.toLowerCase(),
+  )?.name
+    ? handleFindContactName(
+        to,
+        from,
+        to?.toLowerCase() === store.zkWalletAddress?.toLowerCase(),
+      )?.name
+    : to?.replace(to?.slice(6, to?.length - 3), '...');
 
   return (
     <div className='transaction-history-wrapper' key={hash}>
@@ -96,11 +116,7 @@ export const Transaction: FC<Tx> = props => {
                   ? 'Received from:'
                   : 'Sent to:'}
               </span>
-              <p>
-                {handleFindContactName(to)?.name
-                  ? handleFindContactName(to).name
-                  : to?.replace(to?.slice(6, to?.length - 3), '...')}
-              </p>
+              <p>{addressAppearence}</p>
             </>
           )}
           {type === 'Deposit' && (
@@ -112,11 +128,7 @@ export const Transaction: FC<Tx> = props => {
           {type === 'Withdraw' && (
             <>
               <span>{'Withdrawn to:'}</span>
-              <p>
-                {handleFindContactName(to)?.name
-                  ? handleFindContactName(to).name
-                  : to?.replace(to?.slice(6, to?.length - 3), '...')}
-              </p>
+              <p>{addressAppearence}</p>
             </>
           )}
         </div>
