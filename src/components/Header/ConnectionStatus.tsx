@@ -49,10 +49,12 @@ export const ConnectionStatus = observer(() => {
     >
       {status === ConnStatus.DISCONNECTED ? (
         <div className='ws-status__disconnected'>
-          {'Websocket connection closed.'}
+          {'Internet connection lost.'}
         </div>
       ) : (
-        <div className='ws-status__reconnected'>{'Websocket connected'}</div>
+        <div className='ws-status__reconnected'>
+          {'Internet connection restored'}
+        </div>
       )}
     </Transition>
   );

@@ -181,6 +181,9 @@ export function DataList<T>({
     filterPredicate,
   ]);
 
+  const makeFirstLetterToLowerCase = string =>
+    string?.charAt(0).toLowerCase() + string?.slice(1);
+
   return (
     <div ref={rootRef} className={cl('balances-wrapper', 'open')}>
       <h3 className='balances-title'>{title}</h3>
@@ -189,7 +192,10 @@ export function DataList<T>({
         ref={focusInput}
         onChange={e => setSearch(e.target.value)}
         value={searchValue}
-        placeholder={`Filter ${title.toLowerCase().replace(/.?(select )/, '')}`}
+        placeholder={`Filter ${makeFirstLetterToLowerCase(title).replace(
+          /.?(select )/,
+          '',
+        )}`}
         className='balances-search'
       />
       {header()}

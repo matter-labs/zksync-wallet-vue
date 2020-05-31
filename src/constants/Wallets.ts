@@ -12,5 +12,5 @@ export const WALLETS = {
 };
 
 export const DESKTOP_ONLY_WALLETS = ['Metamask', 'WalletConnect'];
-export const MOBILE_ONLY_WALLETS = ['Coinbase Wallet'];
+export const MOBILE_ONLY_WALLETS = [];
 export const BRAVE_NON_WORKING_WALLETS = ['Portis'];

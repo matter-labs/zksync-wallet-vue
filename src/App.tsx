@@ -62,8 +62,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   // Listen for network change
   useMobxEffect(() => {
     const { provider } = store;
-    const _sw = sessionStorage.getItem('walletName');
-    if (provider && _sw === 'Metamask') {
+    if (provider && store.walletName === 'Metamask') {
       window['ethereum'].autoRefreshOnNetworkChange = false;
       const networkChangeListener = () => {
         if (
