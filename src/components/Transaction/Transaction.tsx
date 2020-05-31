@@ -847,7 +847,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           {isBalancesListOpen && (
             <DataList
               data={searchBalances}
-              title='Balances in L2'
+              title={`Balances in ${title === 'Deposit' ? 'L1' : 'L2'}`}
               header={() => (
                 <button
                   onClick={() => {
@@ -1170,7 +1170,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               </p>
                             ) : (
                               <p>
-                                {'Unlocking '}
+                                {`${
+                                  store.tokenInUnlockingProgress.includes(token)
+                                    ? 'Unlocking'
+                                    : 'Unlock'
+                                } `}
                                 {symbolName.length
                                   ? symbolName
                                   : balances?.length && balances[0].symbol}

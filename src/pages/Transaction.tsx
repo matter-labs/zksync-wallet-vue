@@ -40,11 +40,11 @@ export const Transaction: FC<Tx> = props => {
 
   const handleFindContactName = (to, from, reciever) => {
     if (reciever) {
-      return contacts.filter(
+      return contacts?.filter(
         c => c.address.toLowerCase() === from.toLowerCase(),
       )[0];
     } else {
-      return contacts.filter(
+      return contacts?.filter(
         c => c.address.toLowerCase() === to.toLowerCase(),
       )[0];
     }

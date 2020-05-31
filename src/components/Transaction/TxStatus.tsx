@@ -17,7 +17,7 @@ export function getTxStatus(tx: Tx, maxConfirmAmount: number) {
   if (tx.tx.type === 'Deposit' && !commited && !verified)
     return 'Deposit in progress';
   if (verified) return 'Verified';
-  return 'Verification in progress';
+  return 'Pending';
 }
 
 const percentCoords = percent =>
@@ -70,7 +70,7 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
     status = 'Withdrawal in progress';
     content = <SpinnerWorm />;
   } else if (tx.commited) {
-    status = 'Verification in progress';
+    status = 'Pending';
     content = <CheckMark />;
   } else {
     status = tx.tx.type === 'Deposit' ? 'Deposit in progress' : status;

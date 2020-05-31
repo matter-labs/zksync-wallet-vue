@@ -68,7 +68,7 @@ const VerifiedBal: React.FC<BalProps> = observer(
                     </span>
                   )}
                   <span className='awaited-tokens'>{'depositing'}</span>
-                  <SpinnerWorm title='Verification in progress' />
+                  <SpinnerWorm title='Pending' />
                 </>
               )}
             </div>
@@ -105,9 +105,7 @@ const UnverifiedBal: React.FC<BalProps> = observer(
               )}
               <div className='balances-token-status'>
                 <span className='label-verifying'>
-                  <span className='tooltip wide'>
-                    {'Verification in progress'}
-                  </span>
+                  <span className='tooltip wide'>{'Pending'}</span>
                 </span>
               </div>
             </div>
@@ -128,7 +126,7 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                     </span>
                   )}
                   <span className='awaited-tokens'>{'depositing'}</span>
-                  <SpinnerWorm title='Verification in progress' />
+                  <SpinnerWorm title='Pending' />
                 </>
               )}
             </div>
