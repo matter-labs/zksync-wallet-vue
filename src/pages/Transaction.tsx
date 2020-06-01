@@ -39,13 +39,13 @@ export const Transaction: FC<Tx> = props => {
   }, [ref, openCopyModal]);
 
   const handleFindContactName = (to, from, reciever) => {
-    if (reciever) {
+    if (reciever && to && from) {
       return contacts?.filter(
-        c => c.address.toLowerCase() === from.toLowerCase(),
+        c => c?.address?.toLowerCase() === from?.toLowerCase(),
       )[0];
     } else {
       return contacts?.filter(
-        c => c.address.toLowerCase() === to.toLowerCase(),
+        c => c?.address?.toLowerCase() === to?.toLowerCase(),
       )[0];
     }
   };

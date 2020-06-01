@@ -225,13 +225,14 @@
   }
 
   &.Withdraw {
-    background-image: url(../../images/mdi_arrow_downward_white.svg);
-    background-size: 17px;
+    display: block;
+    width: 15px;
+    height: 2px;
+    margin-right: 8px;
+    background-color: var(--button-text-color);
 
     &.false{
-      background-image: url(../../images/mdi_arrow_downward_active.svg);
-      background-size: 20px;
-
+      background-color: var(--hints-color);
     }
   }
 }
