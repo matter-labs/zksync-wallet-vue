@@ -334,6 +334,21 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     }, [ethId, value]);
 
+    const handleFee = useCallback(
+      (e, symbol?) => {
+        if (title !== 'Deposit') {
+          zkWallet?.provider
+            .getTransactionFee(
+              title === 'Withdraw' ? 'Withdraw' : 'Transfer',
+              (e * Math.pow(10, 18)).toString(),
+              symbol ? symbol : symbolName,
+            )
+            .then(res => setFee(res.toString()));
+        }
+      },
+      [symbolName, title, zkWallet],
+    );
+
     const handleSelect = useCallback(
       name => {
         if (isContactsListOpen) {
@@ -343,7 +358,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
           setSelectedBalance(name);
         }
       },
-      [isBalancesListOpen, isContactsListOpen, onChangeAddress],
+      [
+        isBalancesListOpen,
+        isContactsListOpen,
+        onChangeAddress,
+        handleFee,
+        inputValue,
+      ],
     );
 
     const handleClickOutside = useCallback(
@@ -664,21 +685,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       unlockFau,
     ]);
 
-    const handleFee = useCallback(
-      e => {
-        if (title !== 'Deposit') {
-          zkWallet?.provider
-            .getTransactionFee(
-              title === 'Withdraw' ? 'Withdraw' : 'Transfer',
-              (e * Math.pow(10, 18)).toString(),
-              symbolName,
-            )
-            .then(res => setFee(res.toString()));
-        }
-      },
-      [inputValue, symbolName, title, zkWallet],
-    );
-
     const selectFilteredContact = (name, address) => {
       handleSelect(name);
       store.walletAddress = { name, address };
@@ -731,6 +737,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           openBalancesList(false);
           setSelected(true);
           setConditionError('');
+          handleFee(inputValue, symbol);
           body?.classList.remove('fixed-b');
         }}
         key={address}
