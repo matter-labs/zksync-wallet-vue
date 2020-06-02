@@ -10,7 +10,7 @@ import { TxStatus } from 'src/components/Transaction/TxStatus';
 import { useStore } from 'src/store/context';
 
 import { LINKS_CONFIG } from 'constants/links';
-import { formatDate } from 'src/utils';
+import { formatDate, handleFormatToken } from 'src/utils';
 
 library.add(fas);
 
@@ -70,17 +70,22 @@ export const Transaction: FC<Tx> = props => {
         <div>
           <div className={`transaction-history ${type}`}>
             <div className='transaction-history-amount'>
-              {!!amount || !!priority_op?.amount
-                ? parseFloat(
-                    (
-                      (type === 'Deposit' && priority_op
-                        ? +priority_op.amount
-                        : +amount) / Math.pow(10, 18)
+              {store.zkWallet &&
+                (!!amount || !!priority_op?.amount
+                  ? parseFloat(
+                      (+handleFormatToken(
+                        store.zkWallet,
+                        type === 'Deposit'
+                          ? (priority_op?.token as string)
+                          : (token as string),
+                        type === 'Deposit' && priority_op
+                          ? priority_op.amount.toString()
+                          : amount.toString(),
+                      ))
+                        .toFixed(6)
+                        .toString(),
                     )
-                      .toFixed(6)
-                      .toString(),
-                  )
-                : 'Unlocking transaction'}
+                  : 'Unlocking transaction')}
             </div>
             <div className='transaction-history-hash'>
               {token && token.toString().length > 10

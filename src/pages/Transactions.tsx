@@ -23,14 +23,14 @@ export interface Tx {
       amount: string;
       from: string;
       to: string;
-      token: number;
+      token: string;
     };
     signature: {
       pubKey: string;
       signature: string;
     };
     to?: string;
-    token?: number;
+    token?: string;
     type: 'Transfer' | 'Withdraw' | 'Deposit' | 'ChangePubKey';
   };
   success: boolean;

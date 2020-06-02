@@ -10,6 +10,8 @@ import { ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
 import { useCancelable } from 'hooks/useCancelable';
 import { useStore } from 'src/store/context';
 
+import { handleFormatToken } from 'src/utils';
+
 const TOKEN = 'ETH';
 
 export const useTransaction = () => {
@@ -68,7 +70,11 @@ export const useTransaction = () => {
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
-              balance: +zkBalance[key] / Math.pow(10, 18),
+              balance: +handleFormatToken(
+                zkWallet,
+                tokens[key].symbol,
+                +zkBalance[key] ? zkBalance[key].toString() : '0',
+              ),
               symbol: tokens[key].symbol,
             };
           });
@@ -107,6 +113,7 @@ export const useTransaction = () => {
   const deposit = useCallback(
     async (token = TOKEN) => {
       if (zkWallet) {
+        const zkSync = await import('zksync');
         try {
           store.hint = 'Follow the instructions in the pop up';
           setLoading(true);
@@ -125,33 +132,24 @@ export const useTransaction = () => {
                   token: token,
                   amount: ethers.utils.bigNumberify(
                     (
-                      await import('zksync').then(module =>
-                        module.closestPackableTransactionAmount(
-                          (amountValue ===
-                          +ethers.utils.parseEther(
-                            handleMax[0]?.balance.toString(),
-                          )
-                            ? amountValue -
-                              +estimateGas -
-                              2 * ZK_FEE_MULTIPLIER * +gas
-                            : amountValue
-                          )?.toString(),
-                        ),
+                      await zkSync.closestPackableTransactionAmount(
+                        (amountValue ===
+                        +ethers.utils.parseEther(
+                          handleMax[0]?.balance.toString(),
+                        )
+                          ? amountValue - +estimateGas
+                          : amountValue
+                        )?.toString(),
                       )
                     ).toString(),
                   ),
                 }),
               );
               const hash = depositPriorityOperation.ethTx;
-              history(
-                +(amountValue / Math.pow(10, 18)) || 0,
-                hash.hash,
-                zkWallet.address(),
-                'deposit',
-                symbol,
-              );
-              store.hint = `Waiting for transaction to be mined. \n ${+(
-                amountValue / Math.pow(10, 18)
+              store.hint = `Waiting for transaction to be mined. \n ${+handleFormatToken(
+                zkWallet,
+                token,
+                amountValue.toString(),
               )}  \n${hash.hash}`;
               setHash(hash);
               await depositPriorityOperation
@@ -159,8 +157,10 @@ export const useTransaction = () => {
                 .then(() => {
                   store.hint = `Your deposit tx has been mined and will be processed after ${
                     store.maxConfirmAmount
-                  } confirmations. Use the link below to track the progress. \n ${+(
-                    amountValue / Math.pow(10, 18)
+                  } confirmations. Use the link below to track the progress. \n ${+handleFormatToken(
+                    zkWallet,
+                    token,
+                    amountValue.toString(),
                   )}  \n${hash.hash}`;
                   setExecuted(true);
                 });
@@ -226,21 +226,21 @@ export const useTransaction = () => {
   );
 
   const transfer = useCallback(
-    async (token = TOKEN) => {
+    async (address?, type?, symbol = TOKEN) => {
       try {
-        if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
+        const fee = await zkWallet?.provider
+          .getTransactionFee('Transfer', address, symbol)
+          .then(res => res.zkpFee);
+        if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
           setLoading(true);
           store.hint = 'Follow the instructions in the pop up';
           const handleMax = zkBalances.filter(
-            balance => balance.symbol === token || balance.address === token,
+            balance => balance.symbol === symbol || balance.address === symbol,
           );
-          const fee = await zkWallet?.provider
-            .getTransactionFee('Transfer', amountValue.toString(), token)
-            .then(res => res.toString());
           const zkSync = await import('zksync');
           const transferTransaction = await zkWallet.syncTransfer({
             to: addressValue,
-            token: token,
+            token: symbol,
             amount: ethers.utils.bigNumberify(
               (
                 await zkSync.closestPackableTransactionAmount(
@@ -255,15 +255,12 @@ export const useTransaction = () => {
             fee: zkSync.closestPackableTransactionFee(fee),
           });
           const hash = transferTransaction.txHash;
-          history(
-            +(amountValue / Math.pow(10, 18)) || 0,
-            hash,
-            addressValue,
-            'transfer',
-            symbol,
-          );
           setHash(hash);
-          store.hint = ` \n ${+(amountValue / Math.pow(10, 18))}. \n${hash}`;
+          store.hint = ` \n ${+handleFormatToken(
+            zkWallet,
+            symbol,
+            amountValue.toString(),
+          )}. \n${hash}`;
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
           const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
@@ -295,21 +292,21 @@ export const useTransaction = () => {
   );
 
   const withdraw = useCallback(
-    async (token = TOKEN) => {
+    async (address?, type?, symbol = TOKEN) => {
       try {
-        if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet) {
+        const fee = await zkWallet?.provider
+          .getTransactionFee('Withdraw', address, symbol)
+          .then(res => res.zkpFee);
+        if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
           setLoading(true);
           store.hint = 'Follow the instructions in the pop up';
           const handleMax = zkBalances.filter(
-            balance => balance.symbol === token || balance.address === token,
+            balance => balance.symbol === symbol || balance.address === symbol,
           );
-          const fee = await zkWallet?.provider
-            .getTransactionFee('Withdraw', amountValue.toString(), token)
-            .then(res => res.toString());
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
             {
               ethAddress: addressValue,
-              token: token,
+              token: symbol,
               amount: ethers.utils.bigNumberify(
                 (
                   await import('zksync').then(module =>
@@ -329,20 +326,17 @@ export const useTransaction = () => {
             },
           );
           const hash = withdrawTransaction.txHash;
-          history(
-            +(amountValue / Math.pow(10, 18)) || 0,
-            hash,
-            addressValue,
-            'withdraw',
-            symbol,
-          );
           setHash(hash);
-          store.hint = `Waiting for the transaction to be mined.. \n ${+(
-            amountValue / Math.pow(10, 18)
+          store.hint = `Waiting for the transaction to be mined.. \n ${+handleFormatToken(
+            zkWallet,
+            symbol,
+            amountValue.toString(),
           )} \n${hash}`;
           if (!!withdrawTransaction) {
-            store.hint = `Your withdrawal will be processed in short. \n ${+(
-              amountValue / Math.pow(10, 18)
+            store.hint = `Your withdrawal will be processed in short. \n ${+handleFormatToken(
+              zkWallet,
+              symbol,
+              amountValue.toString(),
             )} \n${hash}`;
           }
           const receipt = await withdrawTransaction.awaitReceipt();

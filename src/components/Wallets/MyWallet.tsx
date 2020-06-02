@@ -253,7 +253,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
               }}
             >
               <span className='send-icon'></span>
-              {' Transfer tokens'}
+              {' Transfer'}
             </button>
           </>
         )}

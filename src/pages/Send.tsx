@@ -53,7 +53,7 @@ export const Send: React.FC = observer(
         setTransactionType={t => {
           store.transactionType = t;
         }}
-        title='Transfer tokens'
+        title='Transfer'
         transactionAction={transfer}
         type='sync'
       />

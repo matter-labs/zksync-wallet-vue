@@ -25,6 +25,6 @@ export interface ITransactionProps {
   setExecuted: React.Dispatch<React.SetStateAction<boolean>>;
   setSymbol: React.Dispatch<React.SetStateAction<string>>;
   title: string;
-  transactionAction: (token?: any, type?: any) => Promise<void>;
+  transactionAction: (address?: any, type?: any, symbol?: any) => Promise<void>;
   type?: string;
 }

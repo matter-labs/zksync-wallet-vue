@@ -78,12 +78,12 @@
 }
 
 .withdraw-button {
-  padding-left: 28px;
+  padding-left: 32px;
   color: var(--button-bg-color);
 
   & > span {
     display: block;
-    width: 15px;
+    width: 12px;
     height: 2px;
     margin-left: 8px;
     background-color: var(--button-bg-color);
@@ -316,13 +316,10 @@
     margin-bottom: 36px;
     padding-left: 27px;
     font-size: var(--large-font-size);
+  }
 
-    & > span { 
-      width: 23px;
-      height: 23px;
-      background-size: cover;
-      transform: translateY(-52%);
-    }
+  .withdraw-button {
+    padding-left: 32px;
   }
 
   .mywallet {

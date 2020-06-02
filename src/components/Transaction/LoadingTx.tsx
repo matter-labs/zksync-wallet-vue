@@ -76,7 +76,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
         <h2 className='transaction-title'>{propperTitle}</h2>
         <Spinner />
         {store.zkWallet && <p>{info[0]}</p>}
-        {title === 'Transfer tokens' &&
+        {title === 'Transfer' &&
           !isAccountUnlockingProcess &&
           store.unlocked !== undefined &&
           store.zkBalancesLoaded && (
@@ -91,7 +91,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
           store.unlocked !== undefined &&
           store.zkBalancesLoaded && (
             <span className='transaction-field-title'>
-              {title === 'Transfer tokens' && 'Amount + fee'}
+              {title === 'Transfer' && 'Amount + fee'}
               {title === 'Withdraw' && 'Amount'}
               {title === 'Deposit' && 'Amount:'}
               <p className='transaction-field-amount'>
