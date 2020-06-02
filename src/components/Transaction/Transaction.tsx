@@ -22,6 +22,8 @@ import { LockedTx } from './LockedTx';
 
 import { ITransactionProps } from './Types';
 
+import { handleFormatToken } from 'src/utils';
+
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { INPUT_VALIDATION } from 'constants/regExs';
 import { WIDTH_BP, ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
@@ -88,7 +90,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [amount, setAmount] = useState<number>(0);
     const [conditionError, setConditionError] = useState('');
     const [gas, setGas] = useState<string>('');
-    const [fee, setFee] = useState<string>('');
+    const [fee, setFee] = useState<any>();
     const [filteredContacts, setFilteredContacts] = useState<any>([]);
     const [isBalancesListOpen, openBalancesList] = useState<boolean>(false);
     const [isContactsListOpen, openContactsList] = useState<boolean>(false);
@@ -165,7 +167,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
         const zkBalancePromises = Object.keys(zkBalance).map(async key => {
           return {
             address: tokens[key].address,
-            balance: +zkBalance[key] / Math.pow(10, 18),
+            balance: +handleFormatToken(
+              zkWallet,
+              tokens[key].symbol,
+              zkBalance[key] ? zkBalance[key].toString() : '0',
+            ),
             symbol: tokens[key].symbol,
           };
         });
@@ -201,7 +207,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
           return {
             id: tokens[key].id,
             address: tokens[key].address,
-            balance: +balance / Math.pow(10, 18),
+            balance: +handleFormatToken(
+              syncWallet,
+              tokens[key].symbol,
+              +balance ? balance.toString() : '0',
+            ),
             symbol: tokens[key].symbol,
           };
         }
@@ -305,21 +315,27 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const validateNumbers = useCallback(
       e => {
-        const amountNumber = ethers.utils.parseEther(e.toString());
-        if (INPUT_VALIDATION.digits.test(e)) {
+        const amountBigNumber = store.zkWallet?.provider.tokenSet.parseToken(
+          symbolName,
+          e.toString(),
+        );
+        const maxBigValue = store.zkWallet?.provider.tokenSet.parseToken(
+          symbolName,
+          maxValue.toString(),
+        );
+        if (INPUT_VALIDATION.digits.test(e) && amountBigNumber && maxBigValue) {
           setInputValue(e);
           title === 'Deposit'
             ? onChangeAmount(
-                +amountNumber + +gas >
-                  +ethers.utils.parseEther(maxValue.toString())
-                  ? +amountNumber
-                  : +amountNumber,
+                +amountBigNumber + +gas > +maxBigValue
+                  ? +amountBigNumber
+                  : +amountBigNumber,
               )
             : onChangeAmount(
-                +amountNumber + +fee >=
+                +amountBigNumber + +fee >=
                   +ethers.utils.parseEther(maxValue.toString())
-                  ? +amountNumber
-                  : +amountNumber,
+                  ? +amountBigNumber
+                  : +amountBigNumber,
               );
         }
       },
@@ -340,13 +356,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
           zkWallet?.provider
             .getTransactionFee(
               title === 'Withdraw' ? 'Withdraw' : 'Transfer',
-              (e * Math.pow(10, 18)).toString(),
+              token,
               symbol ? symbol : symbolName,
             )
-            .then(res => setFee(res.toString()));
+            .then(res => setFee(res.zkpFee));
         }
       },
-      [symbolName, title, zkWallet],
+      [symbolName, title, zkWallet, token],
     );
 
     const handleSelect = useCallback(
@@ -499,7 +515,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
       if (balances?.length === 1) {
         setToken(
-          !!balances[0].address ? balances[0].address : balances[0].symbol,
+          !!balances[0].address || balances[0].symbol === 'ETH'
+            ? balances[0].address
+            : balances[0].symbol,
         );
         setMaxValue(balances[0].balance);
         setSelectedBalance(balances[0].symbol);
@@ -666,7 +684,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const handleSumbit = useCallback(() => {
       if (submitCondition) {
-        transactionAction(token, type);
+        transactionAction(token, type, symbolName);
       }
       if (!selectedBalance || (inputValue && +inputValue <= 0) || !inputValue) {
         setConditionError('Please select token and amount value');
@@ -729,7 +747,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const BalancesList = ({ address, symbol, balance }) => (
       <div
         onClick={() => {
-          setToken(!!+address ? address : symbol);
+          setToken(address);
           setMaxValue(balance);
           setSymbolName(symbol);
           setSymbol(symbol);
@@ -788,7 +806,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
     );
 
     const burnerWalletAccountUnlockCondition =
-      store.walletName === 'BurnerWallet' && !store.unlocked;
+      store.walletName === 'BurnerWallet' &&
+      !store.unlocked && title !== 'Deposit';
 
     return (
       <>
@@ -1260,17 +1279,18 @@ const Transaction: React.FC<ITransactionProps> = observer(
                       <p key={maxValue} className='transaction-fee'>
                         {!!selectedBalance &&
                           !!submitCondition &&
-                          !!inputValue && (
+                          !!inputValue &&
+                          title !== 'Deposit' && (
                             <>
                               {'Fee: '}
-                              {title === 'Deposit' &&
-                                (+inputValue * 0.01 < 0.000001
-                                  ? ''
-                                  : +inputValue * 0.01)}
-                              {title !== 'Deposit' &&
-                                (+fee / Math.pow(10, 18) < 0.000001
-                                  ? ''
-                                  : +fee / Math.pow(10, 18))}
+                              {store.zkWallet &&
+                                symbolName &&
+                                fee &&
+                                handleFormatToken(
+                                  store.zkWallet,
+                                  symbolName,
+                                  fee.toString(),
+                                )}
                             </>
                           )}
                       </p>

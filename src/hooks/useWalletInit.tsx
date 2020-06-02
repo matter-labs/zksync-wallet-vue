@@ -18,6 +18,7 @@ import { fetchTransactions } from 'src/api';
 import { useLogout } from './useLogout';
 import { loadTokens, sortBalancesById } from 'src/utils';
 import { useStore } from 'src/store/context';
+import { handleFormatToken } from 'src/utils';
 
 const useWalletInit = () => {
   const store = useStore();
@@ -157,12 +158,16 @@ const useWalletInit = () => {
       }
 
       const balancePromises = Object.keys(tokens).map(async key => {
-        if (tokens[key].symbol) {
+        if (tokens[key].symbol && syncWallet) {
           const balance = await syncWallet.getEthereumBalance(key);
           return {
             id: tokens[key].id,
             address: tokens[key].address,
-            balance: +balance / Math.pow(10, 18),
+            balance: +handleFormatToken(
+              syncWallet,
+              tokens[key].symbol,
+              +balance ? balance.toString() : '0',
+            ),
             symbol: tokens[key].symbol,
           };
         }

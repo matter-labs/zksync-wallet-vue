@@ -58,11 +58,11 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
         <h2 className='transaction-title'>
           {title === 'Deposit' && 'Deposit initiated'}
           {title === 'Withdraw' && 'Withdrawal initiated'}
-          {title === 'Transfer tokens' && 'Transfer complete'}
+          {title === 'Transfer' && 'Transfer complete'}
         </h2>
         <LottiePlayer src={JSON.stringify(successCheckmark)} />
-        {title !== 'Transfer tokens' && <p>{info[0]}</p>}
-        {title === 'Transfer tokens' && (
+        {title !== 'Transfer' && <p>{info[0]}</p>}
+        {title === 'Transfer' && (
           <span className='transaction-field-title'>
             {'Recepient:'}
             <h3>{walletAddress.name && walletAddress.name}</h3>
@@ -70,7 +70,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
           </span>
         )}
         <span className='transaction-field-title'>
-          {title === 'Transfer tokens' && 'Amount + fee:'}
+          {title === 'Transfer' && 'Amount + fee:'}
           {title === 'Withdraw' && 'Withdrawn:'}
           {title === 'Deposit' && 'Deposited:'}
           <p className='transaction-field-amount'>

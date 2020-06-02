@@ -13,6 +13,8 @@ import { useTransaction } from 'hooks/useTransaction';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useStore } from 'src/store/context';
 
+import { handleFormatToken } from 'src/utils';
+
 import { DEFAULT_ERROR } from 'constants/errors';
 
 interface BalProps {
@@ -55,18 +57,33 @@ const VerifiedBal: React.FC<BalProps> = observer(
               {store.awaitedTokens[symbol]?.amount && (
                 <>
                   <span className='awaited-tokens'>
-                    {`+ ${store.awaitedTokens[symbol]?.amount /
-                      Math.pow(10, 18)}`}
+                    {`+ ${store.zkWallet &&
+                      +handleFormatToken(
+                        store.zkWallet,
+                        symbol,
+                        store.awaitedTokens[symbol]?.amount
+                          ? store.awaitedTokens[symbol]?.amount.toString()
+                          : '0',
+                      )}`}
+                    {/* handleFormatToken(store.zkWallet, symbol, +balance ? store.awaitedTokens[symbol]?.amount ? store.awaitedTokens[symbol]?.amount.toString() : '0') */}
                   </span>
-                  {price && (
-                    <span className='awaited-tokens'>
-                      {`(~$${+(
-                        (store.awaitedTokens[symbol]?.amount /
-                          Math.pow(10, 18)) *
-                        +(price && !!price[symbol] ? price[symbol] : 1)
-                      ).toFixed(2)})`}
-                    </span>
-                  )}
+                  {price &&
+                    store.zkWallet &&
+                    store.awaitedTokens[symbol]?.amount &&
+                    symbol && (
+                      <span className='awaited-tokens'>
+                        {`(~$${+(
+                          (store.zkWallet &&
+                            +handleFormatToken(
+                              store.zkWallet,
+                              symbol,
+                              store.awaitedTokens[symbol]?.amount
+                                ? store.awaitedTokens[symbol]?.amount.toString()
+                                : '0',
+                            )) * +(price && !!price[symbol] ? price[symbol] : 1)
+                        ).toFixed(2)})`}
+                      </span>
+                    )}
                   <span className='awaited-tokens'>{'depositing'}</span>
                   <SpinnerWorm title='Pending' />
                 </>
@@ -113,18 +130,32 @@ const UnverifiedBal: React.FC<BalProps> = observer(
               {store.awaitedTokens[symbol]?.amount && (
                 <>
                   <span className='awaited-tokens'>
-                    {`+ ${store.awaitedTokens[symbol]?.amount /
-                      Math.pow(10, 18)}`}
+                    {`+ ${store.zkWallet &&
+                      +handleFormatToken(
+                        store.zkWallet,
+                        symbol,
+                        store.awaitedTokens[symbol]?.amount
+                          ? store.awaitedTokens[symbol]?.amount.toString()
+                          : '0',
+                      )}`}
                   </span>
-                  {price && (
-                    <span className='awaited-tokens'>
-                      {`(~$${+(
-                        (store.awaitedTokens[symbol]?.amount /
-                          Math.pow(10, 18)) *
-                        +(price && !!price[symbol] ? price[symbol] : 1)
-                      ).toFixed(2)})`}
-                    </span>
-                  )}
+                  {price &&
+                    store.zkWallet &&
+                    store.awaitedTokens[symbol]?.amount &&
+                    symbol && (
+                      <span className='awaited-tokens'>
+                        {`(~$${+(
+                          (store.zkWallet &&
+                            +handleFormatToken(
+                              store.zkWallet,
+                              symbol,
+                              store.awaitedTokens[symbol]?.amount
+                                ? store.awaitedTokens[symbol]?.amount.toString()
+                                : '0',
+                            )) * +(price && !!price[symbol] ? price[symbol] : 1)
+                        ).toFixed(2)})`}
+                      </span>
+                    )}
                   <span className='awaited-tokens'>{'depositing'}</span>
                   <SpinnerWorm title='Pending' />
                 </>
@@ -158,7 +189,11 @@ const Account: React.FC = observer(() => {
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
-              balance: +zkBalance[key] / Math.pow(10, 18),
+              balance: +handleFormatToken(
+                zkWallet,
+                tokens[key].symbol,
+                +zkBalance[key] ? zkBalance[key].toString() : '0',
+              ),
               symbol: tokens[key].symbol,
             };
           });
@@ -266,8 +301,19 @@ const Account: React.FC = observer(() => {
   const isVerified = ({ address, symbol, balance }) => {
     return (
       store.verified &&
-      (+balance === +store.verified[address] / Math.pow(10, 18) ||
-        +balance === +store.verified[symbol] / Math.pow(10, 18))
+      store.zkWallet &&
+      (+balance ===
+        +handleFormatToken(
+          store.zkWallet,
+          symbol,
+          +store.verified[address] ? store.verified[address].toString() : '0',
+        ) ||
+        +balance ===
+          +handleFormatToken(
+            store.zkWallet,
+            symbol,
+            +store.verified[symbol] ? store.verified[symbol].toString() : '0',
+          ))
     );
   };
 

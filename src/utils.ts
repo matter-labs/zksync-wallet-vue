@@ -144,6 +144,12 @@ export const mintTestERC20Tokens = async (
   return _mint;
 };
 
+export const handleFormatToken = (
+  wallet: Wallet,
+  symbol: string,
+  amount: string,
+) => wallet.provider.tokenSet.formatToken(symbol, amount);
+
 export async function loadTokens(
   syncProvider: Provider,
   syncWallet: Wallet,
@@ -168,7 +174,10 @@ export async function loadTokens(
       return {
         id: value.id,
         address: value.address,
-        balance: +zkBalance[key] / Math.pow(10, 18),
+        balance: +syncWallet.provider.tokenSet.formatToken(
+          value.symbol,
+          zkBalance[key] ? zkBalance[key].toString() : '0',
+        ),
         symbol: value.symbol,
       };
     });
@@ -186,7 +195,10 @@ export async function loadTokens(
 
   const zkBalancePromises = Object.keys(zkBalance).map(async key => ({
     address: tokens[key].address,
-    balance: +zkBalance[key] / Math.pow(10, 18),
+    balance: +syncWallet.provider.tokenSet.formatToken(
+      tokens[key].symbol,
+      zkBalance[key] ? zkBalance[key].toString() : '0',
+    ),
     symbol: tokens[key].symbol,
   }));
 

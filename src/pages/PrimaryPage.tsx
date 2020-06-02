@@ -102,7 +102,17 @@ const PrimaryPage: React.FC = observer(() => {
         });
         createWallet();
       }
-
+      if (key === 'Metamask') {
+        store.setBatch({
+          walletName: key,
+          normalBg: true,
+          isAccessModalOpen: true,
+        });
+        if (window['ethereum'].selectedAddress) {
+          store.zkWalletInitializing = true;
+          createWallet();
+        }
+      }
       if (wallets.includes(key)) {
         if (key === 'WalletConnect') {
           // store.modalSpecifier = 'wc';
@@ -145,7 +155,7 @@ const PrimaryPage: React.FC = observer(() => {
             <p className='beta-text'>{'ALPHA'}</p>
           </div>
           <div className='welcome-text'>
-            <h2>{'Simple, fast and secure token transfers'}</h2>
+            <h2>{'Simple, fast and secure value transfers'}</h2>
             <p>{'Connect a wallet'}</p>
           </div>
           <div className='wallets-wrapper'>
