@@ -315,14 +315,18 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const validateNumbers = useCallback(
       e => {
-        const amountBigNumber = store.zkWallet?.provider.tokenSet.parseToken(
-          symbolName,
-          e.toString(),
-        );
-        const maxBigValue = store.zkWallet?.provider.tokenSet.parseToken(
-          symbolName,
-          maxValue.toString(),
-        );
+        const amountBigNumber =
+          symbolName &&
+          store.zkWallet?.provider.tokenSet.parseToken(
+            symbolName,
+            e.toString(),
+          );
+        const maxBigValue =
+          symbolName &&
+          store.zkWallet?.provider.tokenSet.parseToken(
+            symbolName,
+            maxValue.toString(),
+          );
         if (INPUT_VALIDATION.digits.test(e) && amountBigNumber && maxBigValue) {
           setInputValue(e);
           title === 'Deposit'
@@ -351,18 +355,18 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [ethId, value]);
 
     const handleFee = useCallback(
-      (e, symbol?) => {
-        if (title !== 'Deposit') {
+      (e, symbol?, t?) => {
+        if (title !== 'Deposit' && (t || token) && (symbol || symbolName)) {
           zkWallet?.provider
             .getTransactionFee(
               title === 'Withdraw' ? 'Withdraw' : 'Transfer',
-              token,
+              t ? t : token,
               symbol ? symbol : symbolName,
             )
             .then(res => setFee(res.zkpFee));
         }
       },
-      [symbolName, title, zkWallet, token],
+      [symbolName, title, zkWallet, token, inputValue, selectedBalance, token],
     );
 
     const handleSelect = useCallback(
@@ -755,7 +759,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           openBalancesList(false);
           setSelected(true);
           setConditionError('');
-          handleFee(inputValue, symbol);
+          handleFee(inputValue, symbol, address);
           body?.classList.remove('fixed-b');
         }}
         key={address}
@@ -807,7 +811,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const burnerWalletAccountUnlockCondition =
       store.walletName === 'BurnerWallet' &&
-      !store.unlocked && title !== 'Deposit';
+      !store.unlocked &&
+      title !== 'Deposit';
 
     return (
       <>
@@ -1164,7 +1169,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 {selectedBalance && (
                                   <>
                                     {'Max:'}
-                                    {maxValue ? maxValue.toFixed(10) : '0'}{' '}
+                                    {maxValue
+                                      ? parseFloat(maxValue.toString())
+                                      : '0'}{' '}
                                   </>
                                 )}
                                 {symbolName ? symbolName : ''}
