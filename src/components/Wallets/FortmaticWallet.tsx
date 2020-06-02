@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import useWalletInit from 'hooks/useWalletInit';
 import { fortmaticConnector } from './walletConnectors';
 
-import { DEFAULT_ERROR } from 'constants/errors';
 import { useStore } from 'src/store/context';
 
 const FortmaticWallet: React.FC = () => {
@@ -18,10 +17,9 @@ const FortmaticWallet: React.FC = () => {
     try {
       fortmaticConnector(store, connect, getSigner);
     } catch (err) {
-      store.error =
-        err.name && err.message
-          ? `${err.name}: ${err.message}.`
-          : DEFAULT_ERROR;
+      if (err.name && err.message) {
+        store.error = `${err.name}: ${err.message}`;
+      }
       history.push('/');
       store.walletName = '';
       store.zkWallet = null;

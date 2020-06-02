@@ -47,12 +47,22 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   useEffect(() => {
     if (store.zkWallet) {
       sessionStorage.setItem('walletName', store.walletName);
+      localStorage.setItem('walletName', store.walletName);
     } else if (!store.zkWallet && window.location.pathname.length > 1) {
-      store.walletName = sessionStorage.getItem('walletName') as WalletType;
-      store.normalBg = true;
-      store.isAccessModalOpen = true;
+      if (
+        localStorage.getItem('walletName') ||
+        sessionStorage.getItem('walletName')
+      ) {
+        store.walletName = localStorage.getItem('walletName')
+          ? (localStorage.getItem('walletName') as WalletType)
+          : (sessionStorage.getItem('walletName') as WalletType);
+        store.normalBg = true;
+        store.isAccessModalOpen = true;
+      } else {
+        handleLogout(false, '');
+      }
     }
-  }, [store.zkWallet]);
+  }, [store.zkWallet, store.isAccessModalOpen]);
 
   useEffect(() => {
     if (!store.zkWallet && !store.isAccessModalOpen) {
@@ -166,9 +176,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         classSpecifier='metamask'
         background={true}
         centered
-      >
-        <p>{'Please make sign in the pop up'}</p>
-      </Modal>
+      />
       {store.walletName && <Header />}
       <div className='content'>{children}</div>
       <div className='content-portal'></div>

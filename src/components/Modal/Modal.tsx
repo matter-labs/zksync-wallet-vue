@@ -105,7 +105,9 @@ const Modal: React.FC<ModalProps> = observer(
             <>
               <Spinner />
               <p className='modal-instructions'>
-                {'Follow the instructions in the pop up'}
+                {store.walletName !== 'Fortmatic' &&
+                  store.walletName !== 'BurnerWallet' &&
+                  'Follow the instructions in the pop up'}
               </p>
             </>
           )}
@@ -117,13 +119,15 @@ const Modal: React.FC<ModalProps> = observer(
               {`Login with ${walletName}`}
             </button>
           )}
-
-          <button
-            onClick={() => handleLogOut(false, '')}
-            className='btn btn-cancel btn-tr '
-          >
-            {zkWalletInitializing ? 'Close' : 'Cancel'}
-          </button>
+          {store.walletName !== 'BurnerWallet' ||
+            (store.walletName === 'BurnerWallet' && !zkWalletInitializing && (
+              <button
+                onClick={() => handleLogOut(false, '')}
+                className='btn btn-cancel btn-tr '
+              >
+                {zkWalletInitializing ? 'Close' : 'Cancel'}
+              </button>
+            ))}
         </>
       );
     };

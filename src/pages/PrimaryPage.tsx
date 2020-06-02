@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import Web3 from 'web3';
 import { observer } from 'mobx-react-lite';
@@ -80,6 +80,12 @@ const PrimaryPage: React.FC = observer(() => {
       return () => store.provider.off('networkChanged', listener);
     }
   });
+
+  useEffect(() => {
+    if (!store.walletName && window.location.pathname.length === 1) {
+      store.isAccessModalOpen = false;
+    }
+  }, [store.zkWallet, store.walletName, store.isAccessModalOpen]);
 
   const selectWallet = useCallback(
     (key: WalletType) => () => {
