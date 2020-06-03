@@ -36,10 +36,12 @@ const useWalletInit = () => {
             store.isAccessModalOpen = true;
           })
           .catch(err => {
-            store.error =
-              err.name && err.message
-                ? `${err.name}: ${err.message}`
-                : DEFAULT_ERROR;
+            if (err.name && err.message) {
+              store.error = `${err.name}: ${err.message}`;
+            }
+            store.walletName = '';
+            store.zkWallet = null;
+            store.provider = null;
           });
       } else {
         store.isAccessModalOpen = false;

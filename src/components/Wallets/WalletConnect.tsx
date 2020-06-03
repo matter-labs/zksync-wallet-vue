@@ -6,7 +6,6 @@ import useWalletInit from 'hooks/useWalletInit';
 
 import { walletConnectConnector } from './walletConnectors';
 
-import { DEFAULT_ERROR } from 'constants/errors';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
 
@@ -21,8 +20,9 @@ const WalletConnect: React.FC = observer(() => {
         walletConnectConnector(store, connect);
       }
     } catch (err) {
-      store.error =
-        err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
+      if (err.name && err.message) {
+        store.error = `${err.name}: ${err.message}`;
+      }
       history.push('/');
       store.walletName = '';
       store.zkWallet = null;

@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 
 import useWalletInit from 'hooks/useWalletInit';
 
-import { DEFAULT_ERROR } from 'constants/errors';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
 import { portisConnector } from './walletConnectors';
@@ -19,10 +18,9 @@ const PortisWallet: React.FC = observer(() => {
     try {
       portisConnector(store, connect, getSigner);
     } catch (err) {
-      store.error =
-        err.name && err.message
-          ? `${err.name}: ${err.message}.`
-          : DEFAULT_ERROR;
+      if (err.name && err.message) {
+        store.error = `${err.name}: ${err.message}`;
+      }
       history.push('/');
       store.walletName = '';
       store.zkWallet = null;
