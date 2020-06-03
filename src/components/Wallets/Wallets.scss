@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 22px 0 15px;
+  margin-top: 22px;
   padding: 20px;
   color: var(--dark-color);
   font-size: var(--large-font-size);
@@ -125,6 +125,7 @@
     height: 45px;
     margin-top: 10px;
     margin-bottom: 0;
+    margin-bottom: 20px;
     font-size: var(--xl-font-size);
 
     & > span {
@@ -151,14 +152,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     margin-top: 90px;
+    text-align: center;
 
     &.none {
       margin-top: 20px;
     }
 
     & > p {
-      margin-top: 30px;
       color: var(--dark-color);
     }
   }
@@ -273,6 +275,12 @@
     text-align: center;
     background-color: var(--modal-bg-color);
     border-radius: 4px;
+
+    &.datalist {
+      margin-top: 0;
+      margin-bottom: 20px;
+      padding: 0;
+    }
 
     & .copy-block {
       font-size: var(--sm-font-size);

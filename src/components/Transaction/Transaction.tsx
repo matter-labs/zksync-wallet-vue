@@ -126,7 +126,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const handleUnlock = useCallback(
       async (withLoading: boolean) => {
         try {
-          store.hint = 'Follow the instructions in the pop up';
+          if (store.walletName !== 'BurnerWallet') {
+            store.hint = 'Follow the instructions in the pop up';
+          }
           if (withLoading === true) {
             setAccountUnlockingProcess(true);
             setLoading(true);
@@ -363,7 +365,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               t ? t : token,
               symbol ? symbol : symbolName,
             )
-            .then(res => setFee(res.zkpFee));
+            .then(res => setFee(res.totalFee));
         }
       },
       [symbolName, title, zkWallet, token, inputValue, selectedBalance, token],
@@ -628,7 +630,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const handleUnlockERC = useCallback(() => {
       setUnlockingERCProcess(true);
       setLoading(true);
-      store.hint = 'Follow the instructions in the pop up';
+      if (store.walletName !== 'BurnerWallet') {
+        store.hint = 'Follow the instructions in the pop up';
+      }
       zkWallet
         ?.approveERC20TokenDeposits(token)
         .then(res => {
@@ -643,7 +647,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
         .then(data => {
           return data;
         })
-        .catch(() => {
+        .catch(err => {
+          if (!!`${err}`.match(/insufficient/)) {
+            store.error = 'Insufficient ETH founds';
+          }
           setLoading(false);
           setUnlockingERCProcess(false);
         });
@@ -823,7 +830,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
           centered={true}
         >
           <h2 className='transaction-title'>{'Minting token'}</h2>
-          <p>{'Follow the instructions in the pop up'}</p>
+          {store.walletName !== 'BurnerWallet' && (
+            <p>{'Follow the instructions in the pop up'}</p>
+          )}
           <Spinner />
           <button
             onClick={() => (store.modalSpecifier = '')}
@@ -1275,11 +1284,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
                       }`}
                       onClick={handleSumbit}
                     >
-                      <span
-                        className={`submit-label ${title} ${
-                          submitCondition ? true : false
-                        }`}
-                      ></span>
+                      {title !== 'Deposit' && title !== 'Withdraw' && (
+                        <span
+                          className={`submit-label ${title} ${
+                            submitCondition ? true : false
+                          }`}
+                        ></span>
+                      )}
+
                       {title}
                     </button>
                     <div className='transaction-fee-wrapper'>
@@ -1298,6 +1310,23 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   symbolName,
                                   fee.toString(),
                                 )}
+                              {store.zkWallet && fee && (
+                                <span>
+                                  {'~$'}
+                                  {
+                                    +(
+                                      +(price && !!price[selectedBalance]
+                                        ? price[selectedBalance]
+                                        : 1) *
+                                      +handleFormatToken(
+                                        store.zkWallet,
+                                        symbolName,
+                                        fee.toString(),
+                                      )
+                                    ).toFixed(2)
+                                  }
+                                </span>
+                              )}
                             </>
                           )}
                       </p>

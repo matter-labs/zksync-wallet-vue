@@ -136,9 +136,13 @@ export const mintTestERC20Tokens = async (
       type: 'function',
     },
   ];
+  store.zkWallet?.provider.tokenSet.parseToken(token, '100');
   const erc20Mintable = new Contract(tokenAddress, ABI, wallet.ethSigner);
   const _mint = await erc20Mintable
-    .mint(wallet.address(), utils.parseEther('100'))
+    .mint(
+      wallet.address(),
+      store.zkWallet?.provider.tokenSet.parseToken(token, '100'),
+    )
     .then(() => (store.modalSpecifier = ''))
     .catch(() => (store.modalSpecifier = ''));
   return _mint;

@@ -6,12 +6,15 @@ import React, {
   useEffect,
 } from 'react';
 import cl from 'classnames';
+import { useHistory } from 'react-router-dom';
 
 import { useAutoFocus } from 'hooks/useAutoFocus';
 import { useDebouncedValue } from 'hooks/debounce';
 import { useListener } from 'hooks/useListener';
 import { useCancelable } from 'hooks/useCancelable';
 import { useInterval } from 'hooks/timers';
+import { useStore } from 'src/store/context';
+import Spinner from 'src/components/Spinner/Spinner';
 
 import { Props } from './DataListProps';
 import './DataList.scss';
@@ -35,6 +38,7 @@ export function DataList<T>({
   renderItem,
   header = noop,
   footer = noop,
+  setTransactionType,
   onSetFiltered = noop,
   emptyListComponent = noop,
   infScrollInitialCount,
@@ -47,6 +51,8 @@ export function DataList<T>({
   const [debouncedSearch, setSearch, searchValue] = useDebouncedValue('', 500);
   const focusInput = useAutoFocus();
   const rootRef = useRef<HTMLDivElement>(null);
+  const store = useStore();
+  const history = useHistory();
 
   const [debScrollTop, setScrollTop] = useDebouncedValue(0);
   const [hasMore, setHasMore] = useState(true);
@@ -184,9 +190,76 @@ export function DataList<T>({
   const makeFirstLetterToLowerCase = string =>
     string?.charAt(0).toLowerCase() + string?.slice(1);
 
+  const { zkBalances, zkBalancesLoaded, price } = store;
+
   return (
     <div ref={rootRef} className={cl('balances-wrapper', 'open')}>
       <h3 className='balances-title'>{title}</h3>
+      {!!zkBalances?.length && zkBalancesLoaded && setTransactionType && (
+        <div className='mywallet-wrapper datalist'>
+          <div
+            className={`mywallet-buttons-container ${
+              price && !!price.length ? '' : 'none'
+            }`}
+          >
+            <button
+              onClick={() => {
+                setTransactionType('deposit');
+                history.push('/deposit');
+              }}
+              className='btn deposit-button btn-tr'
+            >
+              <span></span>
+              {' Deposit'}
+            </button>
+            <button
+              onClick={() => {
+                setTransactionType('withdraw');
+                history.push('/withdraw');
+              }}
+              className='btn withdraw-button btn-tr'
+            >
+              <span></span>
+              {' Withdraw'}
+            </button>
+          </div>
+          <button
+            className='btn submit-button'
+            onClick={() => {
+              setTransactionType('transfer');
+              history.push('/send');
+            }}
+          >
+            <span className='send-icon'></span>
+            {' Transfer'}
+          </button>
+        </div>
+      )}
+      {!zkBalances?.length && zkBalancesLoaded && setTransactionType && (
+        <>
+          <div
+            className={`mywallet-buttons-container ${
+              price && !!price.length ? '' : 'none'
+            }`}
+          >
+            <p>
+              {
+                'No balances yet, please make a deposit or request money from someone!'
+              }
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setTransactionType('deposit');
+              history.push('/deposit');
+            }}
+            className='btn deposit-button btn-tr big'
+          >
+            <span></span>
+            {' Deposit'}
+          </button>
+        </>
+      )}
       <input
         type='text'
         ref={focusInput}

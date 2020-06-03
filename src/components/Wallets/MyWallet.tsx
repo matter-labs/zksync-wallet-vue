@@ -120,7 +120,18 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
           !!transactionModal?.title ? 'closed' : 'open'
         }`}
       >
-        <h2 className='mywallet-title'>{'My wallet'}</h2>
+        <div className='hint-wrapper'>
+          <h2 className='mywallet-title'>{'My wallet'}</h2>
+          {/* <button
+            onClick={() => {
+              store.modalHintMessage = 'test';
+              store.modalSpecifier = 'modal-hint';
+            }}
+            className='hint-question-mark'
+          >
+            {'?'}
+          </button> */}
+        </div>
         <div
           onClick={() => handleCopy(zkWallet?.address())}
           className='copy-block'
@@ -217,72 +228,6 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
             </span>
           </div>
         </div>
-        {!!zkBalances?.length && zkBalancesLoaded && (
-          <>
-            <div
-              className={`mywallet-buttons-container ${
-                price && !!price.length ? '' : 'none'
-              }`}
-            >
-              <button
-                onClick={() => {
-                  setTransactionType('deposit');
-                  history.push('/deposit');
-                }}
-                className='btn deposit-button btn-tr'
-              >
-                <span></span>
-                {' Deposit'}
-              </button>
-              <button
-                onClick={() => {
-                  setTransactionType('withdraw');
-                  history.push('/withdraw');
-                }}
-                className='btn withdraw-button btn-tr'
-              >
-                <span></span>
-                {' Withdraw'}
-              </button>
-            </div>
-            <button
-              className='btn submit-button'
-              onClick={() => {
-                setTransactionType('transfer');
-                history.push('/send');
-              }}
-            >
-              <span className='send-icon'></span>
-              {' Transfer'}
-            </button>
-          </>
-        )}
-        {!zkBalances?.length && zkBalancesLoaded && (
-          <>
-            <div
-              className={`mywallet-buttons-container ${
-                price && !!price.length ? '' : 'none'
-              }`}
-            >
-              <p>
-                {
-                  'No balances yet, please make a deposit or request money from someone!'
-                }
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                setTransactionType('deposit');
-                history.push('/deposit');
-              }}
-              className='btn deposit-button btn-tr big'
-            >
-              <span></span>
-              {' Deposit'}
-            </button>
-          </>
-        )}
-        {!zkBalancesLoaded && <Spinner />}
       </div>
     );
   },

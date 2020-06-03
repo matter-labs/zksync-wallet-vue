@@ -216,16 +216,7 @@ const Modal: React.FC<ModalProps> = observer(
             data-name='modal-wrapper'
             className='modal-wrapper'
           >
-            <div className={`modal ${classSpecifier}`}>
-              {((isAccessModalOpen && !error) || (!zkWallet && !error)) &&
-                classSpecifier !== 'wc' &&
-                accessModalContent()}
-              {/*//TODO: remove classSpecifier === 'wc' */}
-              {error && errorModalContent()}
-              {((zkWallet && !error) || classSpecifier === 'wc') &&
-                plainModalContent()}
-              {/*//TODO: remove classSpecifier === 'wc' */}
-            </div>
+            <div className={`modal ${classSpecifier}`}>{children}</div>
           </div>
         </Transition>
       </Portal>
