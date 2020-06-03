@@ -230,7 +230,7 @@ export const useTransaction = () => {
       try {
         const fee = await zkWallet?.provider
           .getTransactionFee('Transfer', address, symbol)
-          .then(res => res.zkpFee);
+          .then(res => res.totalFee);
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
           setLoading(true);
           store.hint = 'Follow the instructions in the pop up';
@@ -294,14 +294,31 @@ export const useTransaction = () => {
   const withdraw = useCallback(
     async (address?, type?, symbol = TOKEN) => {
       try {
+        const zkSync = await import('zksync');
         const fee = await zkWallet?.provider
           .getTransactionFee('Withdraw', address, symbol)
-          .then(res => res.zkpFee);
+          .then(res => res.totalFee);
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
           setLoading(true);
           store.hint = 'Follow the instructions in the pop up';
           const handleMax = zkBalances.filter(
             balance => balance.symbol === symbol || balance.address === symbol,
+          );
+          console.log(
+            ethers.utils
+              .bigNumberify(
+                (
+                  await zkSync.closestPackableTransactionAmount(
+                    (amountValue ===
+                    +ethers.utils.parseEther(handleMax[0]?.balance.toString())
+                      ? amountValue - +fee
+                      : amountValue
+                    )?.toString(),
+                  )
+                ).toString(),
+              )
+              .toString(),
+            fee.toString(),
           );
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
             {
@@ -309,20 +326,16 @@ export const useTransaction = () => {
               token: symbol,
               amount: ethers.utils.bigNumberify(
                 (
-                  await import('zksync').then(module =>
-                    module.closestPackableTransactionAmount(
-                      (amountValue ===
-                      +ethers.utils.parseEther(handleMax[0]?.balance.toString())
-                        ? amountValue - +fee
-                        : amountValue
-                      )?.toString(),
-                    ),
+                  await zkSync.closestPackableTransactionAmount(
+                    (amountValue ===
+                    +ethers.utils.parseEther(handleMax[0]?.balance.toString())
+                      ? amountValue - +fee
+                      : amountValue
+                    )?.toString(),
                   )
                 ).toString(),
               ),
-              fee: await import('zksync').then(module =>
-                module.closestPackableTransactionFee(fee),
-              ),
+              fee: zkSync.closestPackableTransactionFee(fee),
             },
           );
           const hash = withdrawTransaction.txHash;

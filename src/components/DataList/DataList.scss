@@ -408,6 +408,14 @@
     }
   }
 
+  &-done {
+    &.small {
+      display: inline-block;
+      min-width: 20px;
+      min-height: 20px;
+    }
+  }
+
   &-verifying {
     background-image: url(../../images/2.svg);
   }

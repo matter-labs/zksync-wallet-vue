@@ -12,6 +12,7 @@ import { useQuery } from 'hooks/useQuery';
 
 import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
+import { RIGHT_NETWORK_ID } from 'constants/networks';
 
 import {
   BRAVE_NON_WORKING_WALLETS,
@@ -72,7 +73,6 @@ const PrimaryPage: React.FC = observer(() => {
     const { provider, walletName } = store;
     if (!(provider && walletName === 'Metamask')) return;
     const listener = () => {
-      store.isAccessModalOpen = true;
       store.walletName = 'Metamask';
     };
     if (store.walletName === 'Metamask') {
@@ -114,14 +114,16 @@ const PrimaryPage: React.FC = observer(() => {
           normalBg: true,
           isAccessModalOpen: true,
         });
-        if (window['ethereum'].selectedAddress) {
+        if (
+          window['ethereum'].selectedAddress &&
+          store.provider.networkVersion === RIGHT_NETWORK_ID
+        ) {
           store.zkWalletInitializing = true;
           createWallet();
         }
       }
       if (wallets.includes(key)) {
         if (key === 'WalletConnect') {
-          // store.modalSpecifier = 'wc';
           store.setBatch({
             walletName: key,
             normalBg: true,

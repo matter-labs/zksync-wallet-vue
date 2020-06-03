@@ -23,6 +23,7 @@ export class Store {
   @observable ethId = '';
   @observable ethWallet?: JsonRpcSigner | ethers.Signer;
   @observable hint = '';
+  @observable modalHintMessage = '';
   @observable normalBg = false;
   @observable isAccessModalOpen = false;
   @observable modalSpecifier = '';

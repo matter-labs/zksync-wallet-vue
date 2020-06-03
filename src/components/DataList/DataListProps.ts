@@ -16,6 +16,9 @@ export interface Props<T> {
   header?: () => ReactComp;
   footer?: () => ReactComp;
   emptyListComponent?: () => ReactComp;
+  setTransactionType?: (
+    transaction: 'deposit' | 'withdraw' | 'transfer' | undefined,
+  ) => void;
 
   /**
    * @param query Search string

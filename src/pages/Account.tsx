@@ -122,7 +122,7 @@ const UnverifiedBal: React.FC<BalProps> = observer(
               )}
               <div className='balances-token-status'>
                 <span className='label-verifying'>
-                  <span className='tooltip wide'>{'Pending'}</span>
+                  <span className='tooltip'>{'Pending'}</span>
                 </span>
               </div>
             </div>
@@ -343,6 +343,9 @@ const Account: React.FC = observer(() => {
         title='Balances in L2'
         visible={true}
         footer={ApiFailedHint}
+        setTransactionType={t => {
+          store.transactionType = t;
+        }}
         renderItem={balance => (
           <Balance
             key={balance.address}

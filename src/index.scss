@@ -318,6 +318,16 @@ h2 {
     border: 1px solid var(--light-border-color);
     border-radius: 5px;
   }
+
+  &-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .mywallet-title {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .wrong-network {
@@ -334,7 +344,6 @@ h2 {
     margin-bottom: 0;
     font-weight: var(--medium-font-weight);
     font-size: var(--large-font-size);
-    word-break: break-all;
   }
 
   &-logo {
