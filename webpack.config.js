@@ -17,7 +17,7 @@ const fs = require('fs');
 const BUILD_DIR = path.resolve('build/');
 const DEV = process.env.NODE_ENV === 'development';
 
-const gitCommand = 'git rev-parse HEAD';
+const gitCommand = 'git rev-parse --short HEAD';
 
 const getGitCommitHash = () => {
   return execSync(gitCommand).toString().trim();

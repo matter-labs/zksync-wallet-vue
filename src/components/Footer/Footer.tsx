@@ -15,7 +15,7 @@ const Footer: React.FC = (): JSX.Element => {
   const [darkTheme, setDarkTheme] = useState<boolean>(false);
 
   const shortedGitHash = !!LINKS_CONFIG.lastGitCommitHash
-    ? `.${LINKS_CONFIG.lastGitCommitHash.toString().slice(-6)}`
+    ? `.${LINKS_CONFIG.lastGitCommitHash.toString()}`
     : '';
 
   const handleSwitch = useCallback(() => {
