@@ -95,6 +95,9 @@ RUN --mount=type=bind,source=.firebaserc,target=.firebaserc \
     --mount=type=bind,source=/opt/app/node_modules,target=node_modules,from=install-project-dependencies \
     npm run deploy_hosting
 
+FROM scratch AS export-frontend-bundle
+COPY --from=build-frontend-bundle /opt/app/build ./
+
 FROM scratch AS firebase-application
 COPY --from=audit-node-dependencies /opt/app/audit.html ./
 COPY --from=list-npm-settings /opt/app/npm.json ./
