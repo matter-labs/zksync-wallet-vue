@@ -49,10 +49,13 @@ const PrimaryPage: React.FC = observer(() => {
 
   const walletsWithWeb3 = () => {
     const _w = Object.keys(WALLETS);
-    if (!!window['web3'] && providerWalletName !== 'Metamask') {
+    if (!!window['ethereum']?._metamask) {
+      return _w.filter(el => el !== 'Web3');
+    }
+    if (!window['ethereum']?._metamask && !!window['web3']) {
       return _w.filter(el => el !== 'Metamask');
     } else {
-      return _w.filter(el => el !== 'Web3');
+      return _w.filter(el => el !== 'Metamask' && el !== 'Web3');
     }
   };
 
