@@ -22,7 +22,11 @@ import { LockedTx } from './LockedTx';
 
 import { ITransactionProps } from './Types';
 
-import { handleFormatToken, handleExponentialNumbers } from 'src/utils';
+import {
+  handleFormatToken,
+  handleExponentialNumbers,
+  checkForEmptyBalance,
+} from 'src/utils';
 import { LINKS_CONFIG, FAUCET_TOKEN_API } from 'src/config';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
@@ -1173,7 +1177,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 />
               )}
               emptyListComponent={() =>
-                !searchBalances.length ? (
+                !store.isAccountBalanceNotEmpty ? (
                   <p>
                     {
                       'No balances yet, please make a deposit or request money from someone!'
@@ -1190,6 +1194,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             !isAccountUnlockingProcess &&
             title !== 'Deposit' &&
             zkBalancesLoaded &&
+            !!store.isAccountBalanceNotEmpty &&
             store.walletName !== 'BurnerWallet' && (
               <LockedTx
                 handleCancel={handleCancel}
@@ -1275,9 +1280,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   className='transaction-back'
                 ></button>
                 <h2 className='transaction-title'>{title}</h2>
+
                 {(unlocked || title === 'Deposit') &&
                 unlocked !== undefined &&
-                searchBalances.length ? (
+                ((title === 'Deposit' && searchBalances.length) ||
+                  (title !== 'Deposit' && store.isAccountBalanceNotEmpty)) ? (
                   <>
                     <div className={`inputs-wrapper ${title}`}>
                       {isInput && (
@@ -1711,29 +1718,45 @@ const Transaction: React.FC<ITransactionProps> = observer(
                     </div>
                   </>
                 ) : null}
-                {unlocked &&
-                  unlocked !== undefined &&
-                  !searchBalances.length &&
-                  title !== 'Deposit' &&
-                  zkBalancesLoaded &&
-                  zkWallet && (
-                    <>
-                      <p>
-                        {
-                          'No balances yet, please make a deposit or request money from someone!'
-                        }
-                      </p>
-                      <button
-                        className='btn submit-button'
-                        onClick={() => {
-                          store.transactionType = 'deposit';
-                          history.push('/deposit');
-                        }}
-                      >
-                        {'Deposit'}
-                      </button>
-                    </>
-                  )}
+              </>
+            )}
+          {!isAccountUnlockingProcess &&
+            !isExecuted &&
+            !store.isAccountBalanceNotEmpty &&
+            title !== 'Deposit' &&
+            store.zkBalancesLoaded &&
+            store.zkWallet && (
+              <>
+                {!unlocked && (
+                  <>
+                    <button
+                      onClick={() => {
+                        handleCancel();
+                        store.walletAddress = {};
+                        setTransactionType(undefined);
+                        store.txButtonUnlocked = true;
+                        history.goBack();
+                      }}
+                      className='transaction-back'
+                    ></button>
+                    <h2 className='transaction-title'>{title}</h2>
+                  </>
+                )}
+
+                <p>
+                  {
+                    'No balances yet, please make a deposit or request money from someone!'
+                  }
+                </p>
+                <button
+                  className='btn submit-button'
+                  onClick={() => {
+                    store.transactionType = 'deposit';
+                    history.push('/deposit');
+                  }}
+                >
+                  {'Deposit'}
+                </button>
               </>
             )}
         </div>

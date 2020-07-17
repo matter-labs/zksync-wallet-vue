@@ -17,7 +17,7 @@ import { useStore } from 'src/store/context';
 import { handleFormatToken, getConfirmationCount } from 'src/utils';
 import { fetchTransactions } from 'src/api';
 import { LINKS_CONFIG } from 'src/config';
-import { handleExponentialNumbers } from 'src/utils';
+import { handleExponentialNumbers, checkForEmptyBalance } from 'src/utils';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 
@@ -247,6 +247,7 @@ const Account: React.FC = observer(() => {
         }
         if (extended) {
           const zkBalance = _accountState.committed.balances;
+
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
@@ -457,7 +458,9 @@ const Account: React.FC = observer(() => {
           />
         )}
         emptyListComponent={() =>
-          zkBalancesLoaded && store.accountState ? null : <Spinner />
+          zkBalancesLoaded && !store.isAccountBalanceLoading ? null : (
+            <Spinner />
+          )
         }
       />
     </>

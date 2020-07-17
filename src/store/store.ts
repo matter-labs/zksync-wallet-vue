@@ -22,6 +22,8 @@ export class Store {
   @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
   @observable error = '';
+  @observable isAccountBalanceNotEmpty = false;
+  @observable isAccountBalanceLoading = true;
   @observable newContactName = '';
   @observable newContactAddress = '';
   @observable ethBalances: IEthBalance[] = [];
@@ -107,6 +109,8 @@ export class Store {
     this.propsMaxValue = null;
     this.propsSymbolName = null;
     this.propsToken = null;
+    this.isAccountBalanceLoading = true;
+    this.isAccountBalanceNotEmpty = false;
   }
 
   @action

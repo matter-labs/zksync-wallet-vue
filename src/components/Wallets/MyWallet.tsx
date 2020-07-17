@@ -176,7 +176,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
         </div>
         <div
           className={`mywallet-currency-block ${
-            price && !!price.length ? '' : 'none'
+            !!price?.length ? '' : 'none'
           } ${verifiedState ? 'unverified' : ''} ${
             isBalancesListOpen ? 'borderless' : ''
           }`}
@@ -202,13 +202,13 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
                   <p>zk{symbolName}</p>
                 ) : (
                   <p>
-                    {!!zkBalances.length &&
+                    {!!store.isAccountBalanceNotEmpty &&
                       (selectedBalance?.symbol ? (
                         <span>zk{selectedBalance?.symbol}</span>
                       ) : (
                         <span>zk{zkBalances[0].symbol}</span>
                       ))}
-                    {!zkBalances.length &&
+                    {!store.isAccountBalanceNotEmpty &&
                       (!zkBalancesLoaded ? (
                         <Spinner />
                       ) : (

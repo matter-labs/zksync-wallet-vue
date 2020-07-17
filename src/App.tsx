@@ -20,6 +20,7 @@ import { useLocation } from 'react-router-dom';
 import { useLogout } from 'hooks/useLogout';
 import useWalletInit from 'src/hooks/useWalletInit';
 import { LINKS_CONFIG, RIGHT_NETWORK_NAME } from 'src/config';
+import { checkForEmptyBalance } from 'src/utils';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
@@ -132,7 +133,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
   }, [store.walletName, store.isMetamaskWallet, provider]);
 
-
   useEffect(() => {
     if (zkWallet) {
       store.isAccessModalOpen = false;
@@ -146,7 +146,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       if (
         zkWallet &&
         provider &&
-        store.zkWalletAddress?.toLowerCase() !== newAddress[0]?.toLowerCase() &&
+        store.zkWallet?.address().toLowerCase() !==
+          newAddress[0]?.toLowerCase() &&
         store.isMetamaskWallet
       ) {
         sessionStorage.setItem('walletName', walletName);
@@ -163,6 +164,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           searchBalances: [],
           searchContacts: [],
           ethBalances: [],
+          isAccountBalanceLoading: true,
+          isAccountBalanceNotEmpty: false,
         });
       }
     };
@@ -180,6 +183,10 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     setCurAddress,
     curAddress,
   ]);
+
+  useEffect(() => {
+    checkForEmptyBalance(store, store.zkBalances);
+  }, [store.zkBalances, store]);
 
   useEffect(() => {
     const { zkWallet, provider, walletName } = store;

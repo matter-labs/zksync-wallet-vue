@@ -12,6 +12,7 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
     echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
 
 FROM enable-package-caching AS prepare-node-environment
+
 ENV NODE_OPTIONS='--max_old_space_size=6144'
 
 FROM prepare-node-environment AS install-system-dependencies
@@ -19,6 +20,7 @@ ENV BASIC_DEPS='ca-certificates apt-transport-https curl' \
     BUILD_DEPS='build-essential g++ python make git gnupg' \
     CWEBP_DEPS='libglu1 libxi6 libjpeg62 libpng16-16'
 ENV DEPS="${BASIC_DEPS} ${BUILD_DEPS} ${CWEBP_DEPS}"
+
 RUN --mount=type=cache,target=/var/cache/apt,id=apt-cache_cache,sharing=locked \
     --mount=type=cache,target=/var/cache/debconf,id=debconf-cache_cache,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,id=apt-lib_cache,sharing=locked \
@@ -61,6 +63,24 @@ RUN --mount=type=bind,source=package.json,target=package.json \
 
 FROM install-latest-npm AS lint-source-code-css
 RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=package-lock.json,target=package-lock.json \
+    --mount=type=bind,source=src,target=src \
+    --mount=type=bind,source=public,target=public \
+    --mount=type=bind,source=/opt/app/node_modules,target=node_modules,from=install-project-dependencies \
+    npm run lint-css
+
+FROM install-latest-npm AS prepare-build-environment
+ARG FIREBASE_PROJECT
+ENV NODE_ENV='production'
+
+FROM prepare-build-environment AS build-frontend-bundle
+RUN --mount=type=bind,source=environments,target=environments \
+    cp environments/.env.${FIREBASE_PROJECT} .env
+RUN --mount=type=cache,target=./.gzip_cache,id=webpack-compression-gzip_cache,sharing=locked \
+    --mount=type=cache,target=./.brotli_cache,id=brotli-compression-gzip_cache,sharing=locked \
+    --mount=type=cache,target=./.assets_cache,id=imagemin-assets_cache,sharing=locked \
+    --mount=type=bind,source=.git,target=.git \
+    --mount=type=bind,source=package.json,target=package.json \
     --mount=type=bind,source=src,target=src \
     --mount=type=bind,source=/opt/app/node_modules,target=node_modules,from=install-project-dependencies \
     npm run lint-css

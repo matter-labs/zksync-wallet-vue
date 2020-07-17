@@ -96,7 +96,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
         <Spinner />
         {store.zkWallet && (
           <>
-            <p>{info[0]}</p>
+            <p>{info[0] !== 'Connecting to ' && info[0]}</p>
             {isAccountUnlockingProcess && (
               <div className={`hint-walleticon ${store.walletName}`}>
                 {store.walletName === 'Web3' && (

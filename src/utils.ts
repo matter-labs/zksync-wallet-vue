@@ -9,6 +9,7 @@ import { IEthBalance } from './types/Common';
 import { DEFAULT_ERROR } from './constants/errors';
 import { Tokens, AccountState, TokenLike } from 'zksync/build/types';
 import { LINKS_CONFIG } from 'src/config';
+import { Store } from './store/store';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider = window['ethereum'];
@@ -95,6 +96,18 @@ export function whyDidYouUpdate() {
     console.log(eqCheck);
   };
 }
+
+export const checkForEmptyBalance = (store: Store, balance) => {
+  const tokensWithBalance = balance.filter(el => el.balance > 0);
+  if (tokensWithBalance.length > 0) {
+    store.isAccountBalanceNotEmpty = true;
+    store.isAccountBalanceLoading = false;
+  }
+  if (!!store.zkWallet && tokensWithBalance.length === 0) {
+    store.isAccountBalanceNotEmpty = false;
+    store.isAccountBalanceLoading = false;
+  }
+};
 
 export const sortBalancesById = (a, b) => {
   if (a.id < b.id) {

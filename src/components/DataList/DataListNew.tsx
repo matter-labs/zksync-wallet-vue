@@ -286,80 +286,85 @@ export function DataList<T>({
       ) : (
         <h3 className='balances-title'>{title}</h3>
       )}
-      {!!zkBalances?.length && zkBalancesLoaded && setTransactionType && (
-        <div className='mywallet-wrapper datalist'>
-          <div
-            className={`mywallet-buttons-container ${
-              price && !!price.length ? '' : 'none'
-            }`}
-          >
+      {store.isAccountBalanceNotEmpty &&
+        zkBalancesLoaded &&
+        setTransactionType && (
+          <div className='mywallet-wrapper datalist'>
+            <div
+              className={`mywallet-buttons-container ${
+                !!price?.length ? '' : 'none'
+              }`}
+            >
+              <button
+                onClick={() => {
+                  setTransactionType('deposit');
+                  history.push('/deposit');
+                }}
+                className='btn deposit-button btn-tr'
+              >
+                <span></span>
+                {' Deposit'}
+              </button>
+              <button
+                onClick={() => {
+                  setTransactionType('withdraw');
+                  history.push('/withdraw');
+                }}
+                className='btn withdraw-button btn-tr'
+              >
+                <span></span>
+                {' Withdraw'}
+              </button>
+            </div>
+            <button
+              className='btn submit-button'
+              onClick={() => {
+                setTransactionType('transfer');
+                history.push('/transfer');
+              }}
+            >
+              <span className='send-icon'></span>
+              {' Transfer'}
+            </button>
+          </div>
+        )}
+      {!store.isAccountBalanceNotEmpty &&
+        !store.isAccountBalanceLoading &&
+        zkBalancesLoaded &&
+        setTransactionType && (
+          <>
+            <div
+              className={`mywallet-buttons-container ${
+                !!price?.length ? '' : 'none'
+              }`}
+            >
+              <p>
+                {
+                  'No balances yet, please make a deposit or request money from someone!'
+                }
+              </p>
+            </div>
             <button
               onClick={() => {
                 setTransactionType('deposit');
                 history.push('/deposit');
               }}
-              className='btn deposit-button btn-tr'
+              className='btn deposit-button btn-tr big'
             >
               <span></span>
               {' Deposit'}
             </button>
-            <button
-              onClick={() => {
-                setTransactionType('withdraw');
-                history.push('/withdraw');
-              }}
-              className='btn withdraw-button btn-tr'
-            >
-              <span></span>
-              {' Withdraw'}
-            </button>
-          </div>
-          <button
-            className='btn submit-button'
-            onClick={() => {
-              setTransactionType('transfer');
-              history.push('/transfer');
-            }}
-          >
-            <span className='send-icon'></span>
-            {' Transfer'}
-          </button>
-        </div>
-      )}
-      {!zkBalances?.length && zkBalancesLoaded && setTransactionType && (
-        <>
-          <div
-            className={`mywallet-buttons-container ${
-              price && !!price.length ? '' : 'none'
-            }`}
-          >
-            <p>
-              {
-                'No balances yet, please make a deposit or request money from someone!'
-              }
-            </p>
-          </div>
-          <button
-            onClick={() => {
-              setTransactionType('deposit');
-              history.push('/deposit');
-            }}
-            className='btn deposit-button btn-tr big'
-          >
-            <span></span>
-            {' Deposit'}
-          </button>
 
-          <div className='cta-wrapper'>
-            <button
-              onClick={handleClaimTokens}
-              className='btn submit-button margin'
-            >
-              {'⚡ Get some trial tokens! ⚡'}
-            </button>
-          </div>
-        </>
-      )}
+            <div className='cta-wrapper'>
+              <button
+                onClick={handleClaimTokens}
+                className='btn submit-button margin'
+              >
+                {'⚡ Get some trial tokens! ⚡'}
+              </button>
+            </div>
+          </>
+        )}
       {(store.zkBalances.length || window.location.pathname !== '/account') && (
         <input
           type='text'

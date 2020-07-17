@@ -79,17 +79,6 @@ const PrimaryPage: React.FC = observer(() => {
   );
 
   useEffect(() => {
-    const { provider, walletName } = store;
-    if (!(provider && store.isMetamaskWallet)) return;
-    const listener = () => {
-      store.walletName = 'Metamask';
-    };
-    if (store.isMetamaskWallet) {
-      store.provider.on('chainChanged', listener);
-    }
-  }, [store.walletName, store.provider, store.isMetamaskWallet]);
-
-  useEffect(() => {
     if (!store.walletName && window.location.pathname.length === 1) {
       store.isAccessModalOpen = false;
     }
