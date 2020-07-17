@@ -1,9 +1,14 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
+import { getDefaultProvider } from 'ethers';
+
 import { Tx } from 'src/pages/Transactions';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
 import SpinnerWorm from '../Spinner/SpinnerWorm';
-import Spinner from '../Spinner/Spinner';
+import { MAX_WITHDRAWAL_TIME } from 'src/config';
+import { getConfirmationCount, handleGetUTCHours } from 'src/utils';
+import { LINKS_CONFIG } from 'src/config';
+import { ALL_APPLE_DEVICES } from 'src/constants/regExs';
 
 export interface PieProps {
   value: number;
@@ -12,10 +17,14 @@ export interface PieProps {
   status: string;
 }
 
-export function getTxStatus(tx: Tx, maxConfirmAmount: number) {
+export function getTxStatus(tx: Tx, confirmCmount: number, store) {
   const { commited, verified, confirmCount } = tx;
   if (tx.tx.type === 'Deposit' && !commited && !verified)
-    return 'Deposit in progress';
+    return `(${
+      confirmCmount > store.maxConfirmAmount
+        ? store.maxConfirmAmount
+        : confirmCmount
+    }/${store.maxConfirmAmount} confirmations)`;
   if (verified) return 'Verified';
   return 'Pending';
 }
@@ -46,7 +55,6 @@ const CheckMark = () => (
     <g style={{ transform: 'translate(100%)' }}>
       <path
         fill='#aa935d'
-        transform='translateX(100px)'
         xmlns='http://www.w3.org/2000/svg'
         d='M4.6 10.642l5.42 5.47 10.314-10.24-1.998-1.998-8.065 7.9L6.93 8.43z'
       />
@@ -55,25 +63,76 @@ const CheckMark = () => (
 );
 
 export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
+  const [confirmation, setConfirmation] = useState<number>(0);
   const store = useStore();
-  // const isZkSync = tx.hash.startsWith('sync-tx');
-  // const status = getTxStatus(tx, store.maxConfirmAmount);
-  // const val = tx.confirmCount / (store.maxConfirmAmount || 1);
+  const isZkSync = tx.hash.startsWith('sync-tx');
+  const provider = getDefaultProvider(LINKS_CONFIG.network);
+  !isZkSync
+    ? getConfirmationCount(provider, tx.hash).then(res => {
+        setConfirmation(res);
+        return res;
+      })
+    : 0;
+  let status = getTxStatus(tx, confirmation, store);
+  const val = tx.confirmCount / (store.maxConfirmAmount || 1);
 
   let content: JSX.Element | null = null;
-  let status = 'Unknown';
-
+  const d = new Date();
+  const handleTimeLeft = () => {
+    const currentTimeInSeconds = parseInt(
+      (handleGetUTCHours(d).getTime() / 1000).toString(),
+    );
+    const createdAtInSeconds = parseInt(
+      (
+        (navigator.userAgent.match(ALL_APPLE_DEVICES)
+          ? handleGetUTCHours(new Date(tx.created_at)).getTime()
+          : new Date(tx.created_at).getTime()) / 1000
+      ).toString(),
+    );
+    const timeLeft =
+      MAX_WITHDRAWAL_TIME - (currentTimeInSeconds - createdAtInSeconds);
+    const timeLeftInMunutes = [
+      Math.floor(timeLeft / 60),
+      timeLeft - 60 * Math.floor(timeLeft / 60),
+      timeLeft,
+    ];
+    return timeLeftInMunutes;
+  };
   if (tx.verified) {
     status = 'Verified';
     content = <DoubleCheckMark />;
   } else if (tx.commited && tx.tx.type === 'Withdraw') {
-    status = 'Withdrawal in progress';
+    // status = 'Withdrawal in progress — it should take max. 60 min';
+    status =
+      handleTimeLeft()[0] < 0
+        ? 'Operation is taking a bit longer than usual, it should be right there!'
+        : `Max ${
+            isNaN(handleTimeLeft()[2])
+              ? MAX_WITHDRAWAL_TIME
+              : `${handleTimeLeft()[0]} min ${handleTimeLeft()[1]} sec`
+          }s left`;
     content = <SpinnerWorm />;
   } else if (tx.commited) {
     status = 'Pending';
     content = <CheckMark />;
   } else {
-    status = tx.tx.type === 'Deposit' ? 'Deposit in progress' : status;
+    if (tx.tx.type === 'Deposit') {
+      status = status;
+    } else {
+      if (!tx.commited && tx.tx.type === 'Withdraw') {
+        // status = 'Withdrawal in progress — it should take max. 60 min';
+        status =
+          handleTimeLeft()[0] < 0
+            ? 'Operation is taking a bit longer than usual, it should be right there!'
+            : `Max ${
+                isNaN(handleTimeLeft()[2])
+                  ? `${handleTimeLeft()[0]} min ${handleTimeLeft()[1]} sec`
+                  : MAX_WITHDRAWAL_TIME
+              } left`;
+      } else {
+        status = 'Transaction in progress';
+      }
+    }
     content = <SpinnerWorm />;
   }
 

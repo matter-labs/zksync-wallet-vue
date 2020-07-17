@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import useWalletInit from 'hooks/useWalletInit';
@@ -15,11 +15,28 @@ const BrowserWallet: React.FC = observer(() => {
 
   useMobxEffect(() => {
     const { provider, zkWallet, walletName } = store;
+
     try {
       if (!provider && !zkWallet && walletName) {
-        const browserProvider = window?.['ethereum'];
-        store.provider = browserProvider;
-        connect(browserProvider, browserProvider?.enable.bind(browserProvider));
+        const enableBrowserWallet = async () => {
+          const _accs = await window['ethereum']?.request({
+            method: 'eth_accounts',
+          });
+          const browserProvider = window?.['ethereum'];
+          store.provider = browserProvider;
+          const signUpFunction = store.isMetamaskWallet
+            ? browserProvider?.request.bind(browserProvider, {
+                method: 'eth_requestAccounts',
+              })
+            : browserProvider?.enable.bind(browserProvider);
+          const prevState = store.isMetamaskWallet
+            ? await _accs[0]
+            : window['ethereum'].selectedAddress;
+          if (!!browserProvider) {
+            connect(browserProvider, signUpFunction, prevState);
+          }
+        };
+        enableBrowserWallet();
       }
     } catch (err) {
       if (err.name && err.message) {

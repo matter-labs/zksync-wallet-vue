@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 
 import { FOOTER_LINKS } from 'constants/footer';
+import { LINKS_CONFIG } from 'src/config';
 
 import { CookieBar } from './CookieBar';
 
@@ -13,6 +14,10 @@ const Footer: React.FC = (): JSX.Element => {
   const body = document.querySelector('body');
   const [darkTheme, setDarkTheme] = useState<boolean>(false);
 
+  const shortedGitHash = !!LINKS_CONFIG.lastGitCommitHash
+    ? `.${LINKS_CONFIG.lastGitCommitHash.toString().slice(-6)}`
+    : '';
+
   const handleSwitch = useCallback(() => {
     if (body) {
       darkTheme ? body.classList.add('dark') : body.classList.remove('dark');
@@ -21,7 +26,7 @@ const Footer: React.FC = (): JSX.Element => {
   }, [body, darkTheme]);
 
   useMobxEffect(() => {
-    const theme = localStorage.getItem('darkTheme');
+    const theme = window.localStorage?.getItem('darkTheme');
     if (theme) {
       try {
         setDarkTheme(JSON.parse(theme));
@@ -33,7 +38,7 @@ const Footer: React.FC = (): JSX.Element => {
 
   useMobxEffect(() => {
     localStorage
-      ? localStorage.setItem('darkTheme', JSON.stringify(darkTheme))
+      ? window.localStorage?.setItem('darkTheme', JSON.stringify(darkTheme))
       : console.log('localStorage is not available');
     if (body) {
       darkTheme ? body.classList.add('dark') : body.classList.remove('dark');
@@ -44,27 +49,21 @@ const Footer: React.FC = (): JSX.Element => {
     <div className='footer-wrapper'>
       <button className='theme-switch' onClick={handleSwitch}></button>
       <div className='footer-menu'>
-        <div>
-          <span className='footer-links-block'>
-            {FOOTER_LINKS.map(({ title, link }) => (
-              <a
-                target='_blank'
-                key={title}
-                className='footer-link'
-                href={link}
-              >
-                {title}
-              </a>
-            ))}
+        {/* <div> */}
+        {FOOTER_LINKS.map(({ title, link }) => (
+          <a target='_blank' key={title} className='footer-link' href={link}>
+            {title}
+          </a>
+        ))}
+        <p>
+          {'Made with ❤️ by Matter Labs'}
+          <span>
+            {' v. '}
+            {process.env.VERSION}
+            {shortedGitHash}
           </span>
-          <p>
-            {'Made with ❤️ by Matter Labs'}
-            <span>
-              {' v. '}
-              {process.env.VERSION}
-            </span>
-          </p>
-        </div>
+        </p>
+        {/* </div> */}
       </div>
       <CookieBar />
     </div>

@@ -42,6 +42,13 @@
   }
 }
 
+.withdraw {
+  &-hint {
+    margin-top: 10px;
+    color: var(--hints-color);
+  }
+}
+
 .success-block {
   display: flex;
   align-items: center;
@@ -102,11 +109,15 @@
 
   &-input {
     max-width: 130px;
-    padding: 10px 0;
+    height: 40px;
+    min-height: 40px;
+    max-height: 40px;
+    padding: 0;
+    overflow: visible;
     color: var(--dark-color);
     font-size: var(--md-font-size);
     line-height: var(--xl-font-size);
-    background-color: var(--transparent);
+    background-color: var(--modal-bg-color);
     border: none;
     outline: none;
 
@@ -119,7 +130,7 @@
       max-height: 50px;
       padding: 0;
       color: var(--dark-color);
-      font-size: var(--md-font-size);
+      font-size: var(--xs-font-size);
       white-space: nowrap;
       text-overflow: ellipsis;
       background-color: var(--transparent);
@@ -130,7 +141,7 @@
         border: none;
       }
     }
-    /* stylelint-disable-next-line no-descending-specificity */
+    /* stylelint-disable no-descending-specificity */
     &-wrapper {
       display: flex;
       align-items: center; 
@@ -154,9 +165,10 @@
     }
 
     &::placeholder {
+      overflow: visible;
       color: var(--hints-color);
       font-size: var(--xl-font-size);
-      line-height: 40px;
+      line-height: 20px;
     }
   }
 }
@@ -181,6 +193,13 @@
   border: none;
   border-radius: 5px;
   outline: none;
+
+  &-empty {
+    margin-bottom: 0;
+    padding: 0 10px;
+    color: var(--dark-color);
+    font-size: var(--sm-font-size);
+  }
 
   &-wrapper {
     display: flex;
@@ -266,6 +285,15 @@
   border-radius: 10px;
 }
 
+.inputs-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  &.Transfer {
+    flex-direction: column-reverse;
+  }
+}
+
 .transaction {
   &-title {
     margin: 8px 0 30px 10px;
@@ -298,7 +326,7 @@
 
   &-hash {
     margin-top: 18px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
     color: var(--dark-color);
     font-size: var(--sm-font-size);
 
@@ -363,7 +391,6 @@
       margin: 20px 0;
     }
 
-    /* stylelint-disable-next-line no-descending-specificity */
     & > p {
       align-self: center;
       width: 100%;
@@ -404,7 +431,12 @@
     border: 1px solid var(--border-color);
     border-radius: 4px;
 
+    &-price {
+      font-size: var(--sm-font-size);
+    }
+
     &-amount {
+      margin-bottom: 0;
       color: var(--dark-color);
       font-size: var(--xl-font-size);
       word-break: break-word;
@@ -414,8 +446,9 @@
       flex-direction: column;
       align-items: flex-start;
       height: 80px;
-      max-height: 100px;
+      max-height: 120px;
       padding-top: 10px;
+      cursor: text;
 
       & .arrow-down {
         min-width: 10px;
@@ -460,6 +493,7 @@
         &.border {
           width: 100%;
           height: 60px;
+          min-height: 60px;
           padding: 0 15px;
         }
 
@@ -492,21 +526,59 @@
     }
 
     &-title {
-      display: block;
-      margin-bottom: 10px;
-      color: var(--hints-color);
+      & > span {
+        color: var(--hints-color);
+      }  
+
+      & > p {
+        word-break: break-all;
+      }
+
+      &.plain {
+        display: block;
+        margin-bottom: 7px;
+        color: var(--hints-color);
+      }
+
+      &.row {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 15px;
+        color: var(--hints-color);
+
+        & > span {
+          margin-right: 10px;
+          font-size: var(--xl-font-size);
+        }
+      }
+
+      &.fee {
+        & > span {
+          margin-right: 6px;
+          font-size: var(--md-font-size);
+        }
+
+        & > .transaction-field-amount {
+          font-size: var(--md-font-size);
+        } 
+      }
+
+      & > h3 {
+        margin-bottom: 5px;
+      }
     }
   }
 }
 
 p.transaction-field-amount {
   align-self: start;
+  margin-bottom: 0;
   text-align: left;
 }
 
 p.transaction-hash {
-  align-self: flex-start;
-  text-align: left;
+  align-self: center;
+  text-align: center;
   word-break: break-all;
 
   & > a {
@@ -606,6 +678,10 @@ p.transaction-hash {
       margin-right: 5px;
       margin-bottom: 30px;
       border-radius: 100%;
+
+      &.contact {
+        margin-bottom: 0;
+      } 
     }
   
     &-fee {
@@ -649,7 +725,7 @@ p.transaction-hash {
       padding-top: 5px;
 
       &.contacts {
-        height: 100px;
+        height: 120px;
         min-height: 72px;
 
         & .arrow-down {
@@ -702,7 +778,7 @@ p.transaction-hash {
 
         &.true {
           position: relative;
-          padding-left: 40px;
+          padding-left: 20px;
 
           .label-done {
             position: absolute;

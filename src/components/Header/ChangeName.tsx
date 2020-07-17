@@ -14,7 +14,9 @@ const ChangeName: React.FC<IChangeNameProps> = observer(({ setModalOpen }) => {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const oldName = localStorage.getItem(zkWallet ? zkWallet.address() : '');
+  const oldName = window.localStorage?.getItem(
+    zkWallet ? zkWallet.address() : '',
+  );
 
   const [newName, setNewName] = useState<string>(oldName ? oldName : '');
 
@@ -22,7 +24,7 @@ const ChangeName: React.FC<IChangeNameProps> = observer(({ setModalOpen }) => {
     e => {
       e.preventDefault();
       if (zkWallet) {
-        localStorage.setItem(zkWallet.address(), newName.trim());
+        window.localStorage?.setItem(zkWallet.address(), newName.trim());
       }
       setModalOpen(false);
     },

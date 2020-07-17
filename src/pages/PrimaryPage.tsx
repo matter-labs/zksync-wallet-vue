@@ -12,7 +12,7 @@ import { useQuery } from 'hooks/useQuery';
 
 import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
-import { RIGHT_NETWORK_ID } from 'constants/networks';
+import { LINKS_CONFIG } from 'src/config';
 
 import {
   BRAVE_NON_WORKING_WALLETS,
@@ -21,20 +21,20 @@ import {
   WALLETS,
   WalletType,
 } from 'constants/Wallets';
-import { useLogout } from 'src/hooks/useLogout';
 import { useStore } from 'src/store/context';
 import useWalletInit from 'src/hooks/useWalletInit';
-import { useMobxEffect } from 'src/hooks/useMobxEffect';
 import { getWalletNameFromProvider } from '../utils';
 
 const PrimaryPage: React.FC = observer(() => {
   const store = useStore();
-  const handleLogOut = useLogout();
   const mobileCheck = useMemo(
     () =>
       MOBILE_DEVICE.test(navigator.userAgent) || window?.innerWidth < WIDTH_BP,
     [],
   );
+
+  const params = useQuery();
+  const wcMainSessionStorageFlag = 'wcMain';
 
   library.add(fas);
 
@@ -49,43 +49,58 @@ const PrimaryPage: React.FC = observer(() => {
 
   const walletsWithWeb3 = () => {
     const _w = Object.keys(WALLETS);
-    if (
-      (!!window['web3'] && !providerWalletName) ||
-      (!!window['web3'] && providerWalletName !== 'Metamask')
-    ) {
+    if (!!window['web3'] && providerWalletName !== 'Metamask') {
       return _w.filter(el => el !== 'Metamask');
     } else {
       return _w.filter(el => el !== 'Web3');
     }
   };
 
+  const isAndroid = /(android)/i.test(navigator.userAgent);
+
+  const detectAndroidPlatform = () => {
+    const indexOfMetamask = DESKTOP_ONLY_WALLETS.indexOf('Metamask');
+    if (isAndroid && !!window['web3']) {
+      DESKTOP_ONLY_WALLETS.splice(indexOfMetamask, 1);
+    }
+    return DESKTOP_ONLY_WALLETS;
+  };
+
   const wallets = useMemo(
     () =>
-      walletsWithWeb3().filter(el =>
-        mobileCheck
-          ? !filterWallets(DESKTOP_ONLY_WALLETS).includes(el)
-          : !filterWallets(MOBILE_ONLY_WALLETS).includes(el),
-      ),
-    [mobileCheck],
+      walletsWithWeb3()
+        .filter(el =>
+          mobileCheck
+            ? !filterWallets(detectAndroidPlatform()).includes(el)
+            : !filterWallets(MOBILE_ONLY_WALLETS).includes(el),
+        )
+        .concat(['Other']),
+    [mobileCheck, DESKTOP_ONLY_WALLETS],
   );
 
-  useMobxEffect(() => {
+  useEffect(() => {
     const { provider, walletName } = store;
-    if (!(provider && walletName === 'Metamask')) return;
+    if (!(provider && store.isMetamaskWallet)) return;
     const listener = () => {
       store.walletName = 'Metamask';
     };
-    if (store.walletName === 'Metamask') {
-      store.provider.on('networkChanged', listener);
-      return () => store.provider.off('networkChanged', listener);
+    if (store.isMetamaskWallet) {
+      store.provider.on('chainChanged', listener);
     }
-  });
+  }, [store.walletName, store.provider, store.isMetamaskWallet]);
 
   useEffect(() => {
     if (!store.walletName && window.location.pathname.length === 1) {
       store.isAccessModalOpen = false;
     }
   }, [store.zkWallet, store.walletName, store.isAccessModalOpen]);
+
+  useEffect(() => {
+    sessionStorage.setItem(wcMainSessionStorageFlag, 'true');
+  }, [store.zkWallet, store.isAccessModalOpen]);
+
+  const WCEnabledParams = params.get('wc');
+  const WCEnabledSession = sessionStorage.getItem(wcMainSessionStorageFlag);
 
   const selectWallet = useCallback(
     (key: WalletType) => () => {
@@ -98,6 +113,10 @@ const PrimaryPage: React.FC = observer(() => {
             createWallet();
           });
         });
+      }
+      if (key === 'Other') {
+        store.modalHintMessage = 'OtherWallets';
+        store.modalSpecifier = 'modal-hint';
       }
       if (key === 'BurnerWallet') {
         store.setBatch({
@@ -114,16 +133,25 @@ const PrimaryPage: React.FC = observer(() => {
           normalBg: true,
           isAccessModalOpen: true,
         });
+        if (!store.provider) {
+          store.hint = 'Connecting to ';
+        }
         if (
-          window['ethereum'].selectedAddress &&
-          store.provider.networkVersion === RIGHT_NETWORK_ID
+          window['ethereum'] &&
+          +window['ethereum'].chainId === +LINKS_CONFIG.networkId
         ) {
           store.zkWalletInitializing = true;
+          createWallet();
+        } else if (!window['ethereum'].chainId && !!isAndroid) {
           createWallet();
         }
       }
       if (wallets.includes(key)) {
+        if (key === 'Other') return;
         if (key === 'WalletConnect') {
+          if (!store.provider) {
+            store.hint = 'Connecting to ';
+          }
           store.setBatch({
             walletName: key,
             normalBg: true,
@@ -143,10 +171,8 @@ const PrimaryPage: React.FC = observer(() => {
         store.error = `Your browser doesn't support ${key}, please select another wallet or switch browser`;
       }
     },
-    [store, wallets],
+    [store, wallets, store.ethId],
   );
-
-  const params = useQuery();
 
   const { walletName, provider, hint } = store;
   if (store.zkWallet) {
@@ -158,12 +184,14 @@ const PrimaryPage: React.FC = observer(() => {
       <LazyWallet />
       {!walletName && (
         <>
-          <div className='beta-container'>
-            <div className='logo-textless'></div>
-            <p className='beta-text'>{'ALPHA'}</p>
-          </div>
+          <a href='//zksync.io' target='_blank' rel='noopener noreferrer'>
+            <div className='beta-container'>
+              <div className='logo-textless'></div>
+              <p className='beta-text'>{'BETA'}</p>
+            </div>
+          </a>
           <div className='welcome-text'>
-            <h2>{'Simple, fast and secure value transfers'}</h2>
+            <h2>{'Trustless, scalable crypto payments'}</h2>
             <p>{'Connect a wallet'}</p>
           </div>
           <div className='wallets-wrapper'>

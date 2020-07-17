@@ -96,10 +96,14 @@
     width: 90vw;
     max-width: 505px;
     margin-top: 16px;
-    padding-top: 27px;
-    padding-bottom: 22px;
+    padding: 27px 0 22px;
     background-color: var(--modal-bg-color);
     border-radius: 5px;
+
+    & > .cta-wrapper {
+      width: 100%;
+      padding: 0 25px;
+    }
 
     & > input {
       margin-bottom: 15px;
@@ -129,6 +133,7 @@
     position: relative;
     width: calc(100% - 45px);
     height: 36px;
+    margin-top: 25px;
     padding-left: 42px;
     color: var(--dark-color);
     background-color: var(--input-color);
@@ -142,6 +147,7 @@
   }
 
   &-title {
+    margin-bottom: 0;
     color: var(--dark-color);
     font-weight: var(--bold-font-weight);
     font-size: var(--large-font-size);
@@ -162,6 +168,10 @@
 
     &.empty {
       cursor: default;
+    }
+
+    &-left {
+      margin-right: 15px;
     }
 
     &-status {
@@ -221,6 +231,7 @@
 
           span {
             margin-right: 10px;
+            word-break: break-all;
           }
 
           .label-done, .label-verifying {
@@ -389,7 +400,8 @@
       bottom: 30px; 
       left: 50%;
       display: none;
-      width: auto; 
+      width: auto;
+      min-width: 100px; 
       padding: 10px;
       text-align: center;
 
@@ -496,6 +508,11 @@
     & > p {
       margin-bottom: 0;
       color: var(--dark-color);
+
+      &.undo-btn {
+        margin-left: 0;
+        color: var(--button-bg-color);
+      }
     }
 
     & > span {
@@ -582,6 +599,7 @@
     }
 
     &-title {
+      margin-bottom: 0;
       font-size: var(--xl-font-size);
     }
 

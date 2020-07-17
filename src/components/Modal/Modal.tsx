@@ -9,7 +9,7 @@ import { Transition } from 'components/Transition/Transition';
 import Spinner from 'components/Spinner/Spinner';
 
 import { WRONG_NETWORK } from 'constants/regExs.ts';
-import { RIGHT_NETWORK_ID } from 'constants/networks';
+import { LINKS_CONFIG } from 'src/config';
 
 import './Modal.scss';
 import useWalletInit from 'src/hooks/useWalletInit';
@@ -66,8 +66,8 @@ const Modal: React.FC<ModalProps> = observer(
     }, [handleClickOutside]);
 
     const closeHandler = useCallback(() => {
-      if (store.error.match(WRONG_NETWORK) && store.zkWallet) {
-        return;
+      if (store.error.match(WRONG_NETWORK)) {
+        handleLogOut(false, '');
       } else {
         if (cancelAction) {
           cancelAction();
@@ -84,130 +84,6 @@ const Modal: React.FC<ModalProps> = observer(
       }
     }, [cancelAction, history, store]);
 
-    const { createWallet } = useWalletInit();
-    const metaMaskConnected = store.hint?.match(/login/i);
-
-    const info = store.hint.split('\n');
-
-    const accessModalContent = () => {
-      const { walletName, zkWalletInitializing } = store;
-      return (
-        <>
-          <h3 className='title-connecting'>
-            {metaMaskConnected ? 'Connected to ' : 'Connecting to '}
-            {walletName}
-          </h3>
-          <div
-            className={`${walletName &&
-              walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
-          ></div>
-          {zkWalletInitializing && (
-            <>
-              <Spinner />
-              <p className='modal-instructions'>
-                {store.walletName !== 'Fortmatic' &&
-                  store.walletName !== 'BurnerWallet' &&
-                  'Follow the instructions in the pop up'}
-              </p>
-            </>
-          )}
-          {!zkWalletInitializing && (
-            <button
-              className='btn submit-button'
-              onClick={() => createWallet()}
-            >
-              {`Login with ${walletName}`}
-            </button>
-          )}
-          {store.walletName !== 'BurnerWallet' ||
-            (store.walletName === 'BurnerWallet' && !zkWalletInitializing && (
-              <button
-                onClick={() => handleLogOut(false, '')}
-                className='btn btn-cancel btn-tr '
-              >
-                {zkWalletInitializing ? 'Close' : 'Cancel'}
-              </button>
-            ))}
-        </>
-      );
-    };
-
-    const errorAppearence = () => (
-      <>
-        {store.hint && info && info[0].match(/(?:install)/i) && (
-          <p>
-            {info[0]}{' '}
-            <a href={info[1]} target='_blank' rel='noopener noreferrer'>
-              {'here'}
-            </a>
-          </p>
-        )}
-        {!store.error.match(/(?:detected)/i) && <p>{error}</p>}
-      </>
-    );
-
-    const errorModalContent = () => {
-      const { zkWallet, error, provider, hint, walletName } = store;
-      return (
-        <>
-          {zkWallet &&
-            error &&
-            provider &&
-            provider.networkVersion === RIGHT_NETWORK_ID && (
-              <button onClick={closeHandler} className='close-icon' />
-            )}
-          {!zkWallet && (
-            <h3 className='title-connecting'>
-              {!error.match(/(?:detected)/i) &&
-                `${
-                  error && hint && hint.match(/(?:login)/i)
-                    ? hint
-                    : 'Connecting to '
-                } ${walletName}`}
-              {error.match(/(?:detected)/i) && error}
-            </h3>
-          )}
-          {provider && provider.networkVersion !== RIGHT_NETWORK_ID ? (
-            <>
-              <div
-                className={`${walletName
-                  .replace(/\s+/g, '')
-                  .toLowerCase()}-logo`}
-              ></div>
-              <div className='wrong-network'>
-                {provider &&
-                walletName === 'Metamask' &&
-                provider.networkVersion === RIGHT_NETWORK_ID ? null : (
-                  <div className='wrong-network-logo'></div>
-                )}
-                {errorAppearence()}
-              </div>
-            </>
-          ) : (
-            errorAppearence()
-          )}
-          {!zkWallet && (
-            <button
-              className='btn submit-button'
-              onClick={() => handleLogOut(false, '')}
-            >
-              {`Disconnect ${walletName}`}
-            </button>
-          )}
-        </>
-      );
-    };
-
-    const plainModalContent = () => (
-      <>
-        {classSpecifier !== 'wc' && (
-          <button onClick={closeHandler} className='close-icon' />
-        )}
-        {children}
-      </>
-    );
-
-    const { isAccessModalOpen, error, zkWallet } = store;
     return (
       <Portal className={cl(centered && 'center')}>
         <Transition type='modal' trigger={shown}>
@@ -216,7 +92,14 @@ const Modal: React.FC<ModalProps> = observer(
             data-name='modal-wrapper'
             className='modal-wrapper'
           >
-            <div className={`modal ${classSpecifier}`}>{children}</div>
+            <div className={`modal ${classSpecifier}`}>
+              {(!!store.zkWallet ||
+                store.modalSpecifier === 'modal-hint' ||
+                (!store.zkWallet && !!store.error)) && (
+                <button onClick={closeHandler} className='close-icon' />
+              )}
+              {children}
+            </div>
           </div>
         </Transition>
       </Portal>

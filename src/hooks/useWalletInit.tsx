@@ -6,11 +6,12 @@ import {
   portisConnector,
   fortmaticConnector,
   walletConnectConnector,
+  burnerWalletConnector,
 } from 'components/Wallets/walletConnectors';
 
 import { IEthBalance } from 'types/Common';
 
-import { LINKS_CONFIG } from 'constants/links';
+import { LINKS_CONFIG } from 'src/config';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
@@ -25,14 +26,25 @@ const useWalletInit = () => {
   const cancelable = useCancelable();
 
   const connect = useCallback(
-    (provider, signUp) => {
+    (provider, signUp, prevProviderState?) => {
       store.zkWalletInitializing = true;
-
-      if (provider) {
+      const wCQRScanned = localStorage.getItem('walletconnect');
+      if (provider && !store.isMetamaskWallet) {
         signUp()
           .then(async res => {
             store.ethId = res;
-            store.zkWalletInitializing = false;
+            if (!wCQRScanned && store.walletName === 'WalletConnect') {
+              store.zkWalletInitializing = false;
+            }
+            if (store.walletName === 'WalletConnect') {
+              store.hint = 'Connected to ';
+              if (store.walletName !== 'WalletConnect') {
+                store.zkWalletInitializing = false;
+              }
+            }
+            if (store.walletName === 'WalletConnect' && !!prevProviderState) {
+              store.hint = 'Connecting to ';
+            }
             store.isAccessModalOpen = true;
           })
           .catch(err => {
@@ -42,7 +54,15 @@ const useWalletInit = () => {
             store.walletName = '';
             store.zkWallet = null;
             store.provider = null;
+            store.isAccessModalOpen = false;
           });
+      } else if (store.isMetamaskWallet) {
+        if (!prevProviderState) {
+          store.hint = 'Connected to ';
+        } else {
+          store.hint = 'Connecting to ';
+        }
+        store.isAccessModalOpen = true;
       } else {
         store.isAccessModalOpen = false;
         store.hint = 'Please install it \n https://metamask.io/';
@@ -53,7 +73,7 @@ const useWalletInit = () => {
   );
 
   const getSigner = useCallback(provider => {
-    if (provider) {
+    if (provider && store.walletName !== 'BurnerWallet') {
       const signer = new ethers.providers.Web3Provider(provider).getSigner();
       return signer;
     }
@@ -70,7 +90,8 @@ const useWalletInit = () => {
         !store.provider &&
         store.walletName !== 'Portis' &&
         store.walletName !== 'Fortmatic' &&
-        store.walletName !== 'WalletConnect'
+        store.walletName !== 'WalletConnect' &&
+        store.walletName !== 'BurnerWallet'
       ) {
         store.provider = window['ethereum'];
       } else if (store.walletName === 'Portis') {
@@ -79,10 +100,12 @@ const useWalletInit = () => {
         fortmaticConnector(store, connect, getSigner);
       } else if (store.walletName === 'WalletConnect') {
         walletConnectConnector(store, connect);
+      } else if (store.walletName === 'BurnerWallet') {
+        burnerWalletConnector(store);
       }
-
       const provider = store.provider;
       if (
+        provider &&
         !provider.selectedAddress &&
         store.walletName !== 'BurnerWallet' &&
         store.walletName !== 'Portis' &&
@@ -90,12 +113,32 @@ const useWalletInit = () => {
         store.walletName !== 'Fortmatic'
       ) {
         // Could fail, if there's no Metamask in the browser
-        await provider?.enable();
+        if (store.isMetamaskWallet) {
+          const _accs = await window['ethereum']?.request({
+            method: 'eth_accounts',
+          });
+          if (!_accs[0]) {
+            await store.provider.request({ method: 'eth_requestAccounts' });
+          }
+        } else {
+          window['ethereum'].enable();
+        }
+        store.hint = 'Connected to ';
+      }
+
+      if (
+        provider &&
+        !provider.selectedAddress &&
+        store.walletName !== 'BurnerWallet' &&
+        store.walletName !== 'Portis' &&
+        store.walletName !== 'Fortmatic'
+      ) {
+        store.hint = 'Connected to ';
       }
 
       if (store.walletName === 'BurnerWallet') {
-        const burnerWallet = localStorage.getItem('burnerWallet');
-        const provider = await getDefaultProvider('rinkeby');
+        const burnerWallet = window.localStorage?.getItem('burnerWallet');
+        const provider = await getDefaultProvider(LINKS_CONFIG.network);
         if (!!burnerWallet) {
           const walletWithProvider = new Wallet(
             JSON.parse(burnerWallet),
@@ -106,13 +149,12 @@ const useWalletInit = () => {
           const randomWallet = await Wallet.createRandom();
           const walletWithProvider = await randomWallet.connect(provider);
           store.ethWallet = walletWithProvider as ethers.Signer;
-          localStorage.setItem(
+          window.localStorage?.setItem(
             'burnerWallet',
             JSON.stringify(randomWallet.privateKey),
           );
         }
       }
-
       const wallet = getSigner(provider);
 
       if (store.walletName !== 'BurnerWallet') {
@@ -122,10 +164,10 @@ const useWalletInit = () => {
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider = await zkSync.Provider.newWebsocketProvider(
-        `wss://${LINKS_CONFIG.STAGE_ZKSYNC.api}/jsrpc-ws`,
+        LINKS_CONFIG.ws_api,
       );
       const syncWallet = await zkSync.Wallet.fromEthSigner(
-        (store.walletName
+        (store.walletName === 'BurnerWallet'
           ? store.ethWallet
           : wallet) as ethers.providers.JsonRpcSigner,
         syncProvider,
@@ -136,19 +178,47 @@ const useWalletInit = () => {
       store.verified = accountState?.verified.balances;
       const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
 
-      store.setBatch({
-        syncProvider: syncProvider,
-        syncWallet: syncWallet,
-        wsTransport: transport,
-        zkWallet: syncWallet,
-        accountState,
-      });
+      if (store.isAccessModalOpen) {
+        store.setBatch({
+          syncProvider: syncProvider,
+          syncWallet: syncWallet,
+          wsTransport: transport,
+          zkWallet: syncWallet,
+          accountState,
+        });
+      }
 
-      const web3Provider = new ethers.providers.Web3Provider(provider);
+      const arr = window.localStorage?.getItem(
+        `contacts${store.syncWallet?.address()}`,
+      );
+      if (arr) {
+        store.searchContacts = JSON.parse(arr);
+      }
 
-      await fetchTransactions(25, 0, syncWallet.address(), web3Provider)
+      await fetchTransactions(25, 0, syncWallet.address())
         .then(res => (store.transactions = res))
         .catch(err => console.error(err));
+
+      fetch(
+        'https://ticker-nhq6ta45ia-ez.a.run.app/cryptocurrency/listings/latest',
+        {
+          referrerPolicy: 'strict-origin-when-cross-origin',
+          body: null,
+          method: 'GET',
+          mode: 'cors',
+        },
+      )
+        .then((res: any) => res.json())
+        .then(data => {
+          store.price = Object.entries(data.data).reduce(
+            (acc, [el, val]: [any, any]) =>
+              Object.assign(acc, { [val.symbol]: val.quote.USD.price }),
+            {},
+          );
+        })
+        .catch(err => {
+          console.error(err);
+        });
 
       const { error, tokens, zkBalances } = await loadTokens(
         syncProvider,
@@ -168,7 +238,7 @@ const useWalletInit = () => {
             balance: +handleFormatToken(
               syncWallet,
               tokens[key].symbol,
-              +balance ? balance.toString() : '0',
+              +balance ? +balance : 0,
             ),
             symbol: tokens[key].symbol,
           };
@@ -212,33 +282,7 @@ const useWalletInit = () => {
           store.unlocked = data;
         });
       }
-      const arr = JSON.parse(
-        localStorage.getItem(`contacts${store.zkWallet?.address()}`) || '[]',
-      );
-      store.searchContacts = arr;
 
-      cancelable(
-        fetch(
-          'https://ticker-nhq6ta45ia-ez.a.run.app/cryptocurrency/listings/latest',
-          {
-            referrerPolicy: 'strict-origin-when-cross-origin',
-            body: null,
-            method: 'GET',
-            mode: 'cors',
-          },
-        ),
-      )
-        .then((res: any) => res.json())
-        .then(data => {
-          store.price = Object.entries(data.data).reduce(
-            (acc, [el, val]: [any, any]) =>
-              Object.assign(acc, { [val.symbol]: val.quote.USD.price }),
-            {},
-          );
-        })
-        .catch(err => {
-          console.error(err);
-        });
       store.zkWalletInitializing = false;
     } catch (err) {
       store.zkWalletInitializing = false;
@@ -248,6 +292,7 @@ const useWalletInit = () => {
       if (error) {
         logout(false, '');
       }
+      store.walletName = '';
       console.error('CreateWallet error', err);
     }
   }, [cancelable, getSigner, logout, store]);

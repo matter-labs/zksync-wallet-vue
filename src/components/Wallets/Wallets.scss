@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 22px;
+  margin-top: 2px;
   padding: 20px;
   color: var(--dark-color);
   font-size: var(--large-font-size);
@@ -68,8 +68,8 @@
     position: absolute;
     top: 50%;
     left: 0;
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
@@ -112,7 +112,12 @@
   /* stylelint-disable-next-line no-descending-specificity */
   & > span {
     background: url(../../images/deposit.svg);
-    background-size: 20px;
+    background-size: cover;
+  }
+
+  &.get-tokens {
+    margin-top: 20px;
+    margin-bottom: 0;
   }
 
   &:hover {
@@ -153,12 +158,8 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin-top: 90px;
+    margin-top: 5px;
     text-align: center;
-
-    &.none {
-      margin-top: 20px;
-    }
 
     & > p {
       color: var(--dark-color);
@@ -321,7 +322,7 @@
 
 @media screen and (min-width: 760px) {
   .deposit-button, .withdraw-button {
-    margin-bottom: 36px;
+    margin-bottom: 20px;
     padding-left: 27px;
     font-size: var(--large-font-size);
   }

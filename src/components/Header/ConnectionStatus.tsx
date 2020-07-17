@@ -48,13 +48,9 @@ export const ConnectionStatus = observer(() => {
       type='opacity'
     >
       {status === ConnStatus.DISCONNECTED ? (
-        <div className='ws-status__disconnected'>
-          {'Internet connection lost.'}
-        </div>
+        <div className='ws-status__disconnected'>{'Connection lost.'}</div>
       ) : (
-        <div className='ws-status__reconnected'>
-          {'Internet connection restored'}
-        </div>
+        <div className='ws-status__reconnected'>{'Connection restored'}</div>
       )}
     </Transition>
   );

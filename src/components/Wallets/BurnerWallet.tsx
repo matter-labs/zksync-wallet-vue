@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import Web3 from 'web3';
+import { burnerWalletConnector } from 'components/Wallets/walletConnectors';
 
 import useWalletInit from 'hooks/useWalletInit';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
@@ -16,15 +16,7 @@ const BurnerWallet: React.FC = observer(() => {
 
   useMobxEffect(() => {
     try {
-      const createAccount = async () => {
-        const web3 = new Web3(
-          new Web3.providers.HttpProvider(
-            'https://rinkeby.infura.io/v3/85d8408593834bf6889554d624be0193',
-          ),
-        );
-        store.provider = web3.currentProvider;
-      };
-      createAccount();
+      burnerWalletConnector(store);
     } catch (err) {
       if (err.name && err.message) {
         store.error = `${err.name}: ${err.message}`;

@@ -12,7 +12,7 @@ export interface Props<T> {
   title?: string;
   visible?: boolean;
 
-  renderItem?: (i: T) => ReactComp;
+  renderItem?: (i: T) => ReactComp | undefined | null | false;
   header?: () => ReactComp;
   footer?: () => ReactComp;
   emptyListComponent?: () => ReactComp;

@@ -88,9 +88,8 @@ export const Contact = ({
       className='balances-contact'
       onClick={e => {
         e.stopPropagation();
-        store.transactionType = 'transfer';
         store.walletAddress = { name, address };
-        history.push('/send');
+        history.push(`/contacts/${address.toLowerCase()}`);
       }}
     >
       <div className='balances-contact-left container'>
@@ -125,6 +124,7 @@ export const Contact = ({
             setId(name);
             e.stopPropagation();
             handleEdit();
+            store.isContact = true;
           }}
         >
           {editIcon()}

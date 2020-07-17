@@ -29,7 +29,8 @@
       "functions/*": ["src/functions/*"],
       "images/*": ["src/images/*"],
       "types/*": ["src/types/*"]
-    }
+    },
+    "incremental": true
   },
   "include": ["./src/**/**/*", "**/*.d.ts"],
   "exclude": ["node_modules"]

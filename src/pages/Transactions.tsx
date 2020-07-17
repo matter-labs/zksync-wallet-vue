@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from 'react';
 import { ethers } from 'ethers';
 import { observer } from 'mobx-react-lite';
 
-import { LINKS_CONFIG } from 'constants/links';
+import { LINKS_CONFIG } from 'src/config';
 import { DataList } from 'components/DataList/DataListNew';
 import { getConfirmationCount } from 'src/utils';
 
@@ -14,6 +14,7 @@ import { useInfiniteScroll } from 'hooks/useInfiniteScroll';
 export interface Tx {
   hash: string;
   pq_id?: any;
+  eth_block: number;
   tx: {
     amount: string;
     fee: string;
@@ -62,7 +63,7 @@ const Transactions: React.FC = observer(() => {
       if (!zkWalletAddress) return [];
 
       const txs = await fetch(
-        `https://${LINKS_CONFIG.STAGE_ZKSYNC.api}/api/v0.1/account/` +
+        `https://${LINKS_CONFIG.api}/api/v0.1/account/` +
           `${zkWalletAddress}/history/${offset}/${amount}`,
       )
         .then(r => r.json())
@@ -73,7 +74,7 @@ const Transactions: React.FC = observer(() => {
           .filter((tx, i) => txs.findIndex(t => t.hash === tx.hash) === i)
           .map(async tx =>
             Object.assign(tx, {
-              // confirmCount: await getConfirmationCount(web3Provider, tx.hash),
+              confirmCount: await getConfirmationCount(web3Provider, tx.hash),
               created_at: new Date(tx.created_at),
             }),
           ),

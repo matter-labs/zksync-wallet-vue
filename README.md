@@ -1,1 +1,2 @@
-# ZKSYNC
+# zkSync wallet frontend
+

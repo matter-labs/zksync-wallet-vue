@@ -9,7 +9,6 @@ import HintBody from 'src/components/Modal/HintBody';
 
 import { IAppProps } from 'types/Common';
 
-import { RIGHT_NETWORK_ID, RIGHT_NETWORK_NAME } from 'constants/networks';
 import { WRONG_NETWORK } from 'constants/regExs';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 import { WalletType } from './constants/Wallets';
@@ -18,9 +17,9 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from './store/context';
 import { useMobxEffect } from './hooks/useMobxEffect';
 import { useLocation } from 'react-router-dom';
-import { getWalletNameFromProvider } from './utils';
 import { useLogout } from 'hooks/useLogout';
 import useWalletInit from 'src/hooks/useWalletInit';
+import { LINKS_CONFIG, RIGHT_NETWORK_NAME } from 'src/config';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
@@ -30,39 +29,52 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
 
   const handleLogout = useLogout();
   useWSHeartBeat();
-  const [curAddress, setCurAddress] = useState<string>(
-    store.provider?.selectedAddress,
-  );
+  const [curAddress, setCurAddress] = useState<string>();
 
-  useMobxEffect(() => {
+  useEffect(() => {
     if (store.provider && store.walletName) {
-      setCurAddress(store.provider.selectedAddress);
+      if (store.isMetamaskWallet) {
+        store.provider
+          ?.request({ method: 'eth_accounts' })
+          .then(res => setCurAddress(res[0]));
+      } else {
+        setCurAddress(store.provider.selectedAddress);
+      }
     }
     if (curAddress && store.walletName) {
       store.hint = `Login with ${store.walletName}`;
     }
-  });
+  }, []);
 
   useInterval(() => {
-    if (!curAddress && store.walletName && store.provider?.selectedAddress) {
-      setCurAddress(store.provider?.selectedAddress);
+    if (!curAddress && store.walletName && store.provider) {
+      if (store.isMetamaskWallet) {
+        store.provider
+          ?.request({ method: 'eth_accounts' })
+          .then(res => setCurAddress(res[0]));
+      } else {
+        store.provider?.selectedAddress;
+      }
     }
   }, 5000);
 
   useEffect(() => {
     if (store.zkWallet) {
       sessionStorage.setItem('walletName', store.walletName);
-      localStorage.setItem('walletName', store.walletName);
+      window.localStorage?.setItem('walletName', store.walletName);
     } else if (!store.zkWallet && window.location.pathname.length > 1) {
       if (
-        localStorage.getItem('walletName') ||
+        window.localStorage?.getItem('walletName') ||
         sessionStorage.getItem('walletName')
       ) {
-        store.walletName = localStorage.getItem('walletName')
-          ? (localStorage.getItem('walletName') as WalletType)
+        store.walletName = window.localStorage?.getItem('walletName')
+          ? (window.localStorage?.getItem('walletName') as WalletType)
           : (sessionStorage.getItem('walletName') as WalletType);
         store.normalBg = true;
         store.isAccessModalOpen = true;
+        if (store.isMetamaskWallet || store.walletName === 'WalletConnect') {
+          store.hint = 'Connecting to ';
+        }
       } else {
         handleLogout(false, '');
       }
@@ -71,49 +83,71 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
 
   useEffect(() => {
     if (!store.zkWallet && !store.isAccessModalOpen) {
-      localStorage.removeItem('walletconnect');
+      window.localStorage?.removeItem('walletconnect');
     }
   }, [store.zkWallet, store.isAccessModalOpen]);
   // Listen for network change
   useMobxEffect(() => {
     const { provider } = store;
-    if (provider && store.walletName === 'Metamask') {
+    if (provider && store.isMetamaskWallet) {
       window['ethereum'].autoRefreshOnNetworkChange = false;
       const networkChangeListener = () => {
         if (
-          provider.networkVersion !== RIGHT_NETWORK_ID &&
-          store.walletName === 'Metamask'
+          provider?.chainId !== undefined &&
+          +provider.chainId !== +LINKS_CONFIG.networkId &&
+          store.isMetamaskWallet
         ) {
           store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
           store.isAccessModalOpen = false;
+          store.zkWalletInitializing = false;
         } else {
           store.error = '';
-          store.isAccessModalOpen = true;
+          if (!store.zkWallet) {
+            store.isAccessModalOpen = true;
+            store.zkWalletInitializing = false;
+          }
         }
       };
-      if (store.walletName === 'Metamask') {
-        networkChangeListener();
-        provider.on('networkChanged', networkChangeListener);
-        return () => provider.off('networkChanged', networkChangeListener);
+      if (store.isMetamaskWallet) {
+        provider.on('chainChanged', networkChangeListener);
+        return () => provider.off('chainChanged', networkChangeListener);
       }
     }
-  }, [store.walletName, store]);
+  }, [store.walletName, store.isMetamaskWallet, store.provider, store]);
 
   // Listen for account change
   const { provider, walletName, zkWallet } = store;
+
+  useEffect(() => {
+    if (
+      provider?.chainId !== undefined &&
+      +provider.chainId !== +LINKS_CONFIG.networkId &&
+      store.isMetamaskWallet
+    ) {
+      store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
+      store.isAccessModalOpen = false;
+      store.zkWalletInitializing = false;
+    } else {
+      store.error = '';
+    }
+  }, [store.walletName, store.isMetamaskWallet, provider]);
+
 
   useEffect(() => {
     if (zkWallet) {
       store.isAccessModalOpen = false;
     }
     if (!provider && !walletName) return;
-    const accountChangeListener = () => {
+    const accountChangeListener = async () => {
+      const newAddress = await window['ethereum']?.request({
+        method: 'eth_accounts',
+      });
+      setCurAddress(newAddress[0]);
       if (
         zkWallet &&
         provider &&
-        store.zkWalletAddress?.toLowerCase() !==
-          provider.selectedAddress.toLowerCase() &&
-        walletName === 'Metamask'
+        store.zkWalletAddress?.toLowerCase() !== newAddress[0]?.toLowerCase() &&
+        store.isMetamaskWallet
       ) {
         sessionStorage.setItem('walletName', walletName);
         const savedWalletName = sessionStorage.getItem(
@@ -132,11 +166,20 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         });
       }
     };
-    if (walletName === 'Metamask' && provider) {
+    if (store.isMetamaskWallet && provider) {
       provider.on('accountsChanged', accountChangeListener);
       return () => provider.off('accountsChanged', accountChangeListener);
     }
-  }, [provider, store, walletName, zkWallet, store.walletName]);
+  }, [
+    provider,
+    store,
+    walletName,
+    zkWallet,
+    store.walletName,
+    store.isMetamaskWallet,
+    setCurAddress,
+    curAddress,
+  ]);
 
   useEffect(() => {
     const { zkWallet, provider, walletName } = store;
@@ -161,9 +204,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   });
 
   const metaMaskConnected = store.hint?.match(/login/i);
-
   const info = store.hint.split('\n');
-
   const errorAppearence = () => (
     <>
       {store.hint && info && info[0].match(/(?:install)/i) && (
@@ -174,13 +215,13 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           </a>
         </p>
       )}
-      {!store.error.match(/(?:detected)/i) && <p>{store.error}</p>}
+      {<p>{store.error}</p>}
     </>
   );
 
   const closeHandler = useCallback(() => {
     if (store.error.match(WRONG_NETWORK) && store.zkWallet) {
-      return;
+      handleLogout(false, '');
     } else {
       store.error = '';
       if (!store.zkWallet && !!store.walletName) {
@@ -193,13 +234,21 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
   }, [history, store]);
 
+  useEffect(() => {
+    if (store.modalSpecifier !== 'claim-tokens') {
+      store.MLTTclaimed = false;
+    }
+  }, [store.modalSpecifier, store.MLTTclaimed]);
+
   return (
     <div className={`content-wrapper ${store.walletName ? '' : 'start-page'}`}>
       <Modal
         cancelAction={() => {
           store.error = '';
         }}
-        visible={!!store.error}
+        visible={
+          !!store.error && !store.error.match(/closed/i) && !!store.walletName
+        }
         classSpecifier='error'
         background={true}
         centered
@@ -210,18 +259,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           )}
           {!zkWallet && (
             <h3 className='title-connecting'>
-              {!store.error.match(/(?:detected)/i) &&
+              {!store.error?.match(/(?:detected)/i) &&
                 `${
                   store.error && store.hint && store.hint.match(/(?:login)/i)
                     ? store.hint
                     : 'Connecting to '
                 } ${walletName}`}
-              {store.error.match(/(?:detected)/i) && store.error}
+              {store.error?.match(/(?:detected)/i) && store.error}
             </h3>
           )}
-          {provider &&
-          provider.networkVersion !== RIGHT_NETWORK_ID &&
-          store.walletName === 'Metamask' ? (
+          {+provider?.chainId !== +LINKS_CONFIG.networkId &&
+          store.isMetamaskWallet ? (
             <>
               <div
                 className={`${walletName
@@ -229,9 +277,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
                   .toLowerCase()}-logo`}
               ></div>
               <div className='wrong-network'>
-                {provider &&
-                walletName === 'Metamask' &&
-                provider.networkVersion === RIGHT_NETWORK_ID ? null : (
+                {store.isMetamaskWallet &&
+                +provider?.chainId === +LINKS_CONFIG.networkId ? null : (
                   <div className='wrong-network-logo'></div>
                 )}
                 {errorAppearence()}
@@ -261,7 +308,9 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       >
         <>
           <h3 className='title-connecting'>
-            {metaMaskConnected ? 'Connected to ' : 'Connecting to '}
+            {store.isMetamaskWallet || store.walletName === 'WalletConnect'
+              ? store.hint
+              : 'Connecting to '}
             {walletName}
           </h3>
           <div
@@ -280,22 +329,22 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           )}
           {!store.zkWalletInitializing && (
             <button
-              className='btn submit-button'
+              className='btn submit-button margin'
               onClick={() => createWallet()}
             >
-              {`Login with ${walletName}`}
+              {'Login'}
             </button>
           )}
-          {store.walletName !== 'BurnerWallet' ||
+          {(store.walletName !== 'BurnerWallet' ||
             (store.walletName === 'BurnerWallet' &&
-              !store.zkWalletInitializing && (
-                <button
-                  onClick={() => handleLogout(false, '')}
-                  className='btn btn-cancel btn-tr '
-                >
-                  {store.zkWalletInitializing ? 'Close' : 'Cancel'}
-                </button>
-              ))}
+              !store.zkWalletInitializing)) && (
+            <button
+              onClick={() => handleLogout(false, '')}
+              className='btn btn-cancel btn-tr '
+            >
+              {store.zkWalletInitializing ? 'Close' : 'Cancel'}
+            </button>
+          )}
         </>
       </Modal>
       <Modal

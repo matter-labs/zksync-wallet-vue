@@ -7,6 +7,10 @@ import React, {
 } from 'react';
 import cl from 'classnames';
 import { useHistory } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { LottiePlayer } from '../Common/LottiePlayer';
+import successCheckmark from 'images/success-checkmark.json';
+import { LINKS_CONFIG } from 'src/config';
 
 import { useAutoFocus } from 'hooks/useAutoFocus';
 import { useDebouncedValue } from 'hooks/debounce';
@@ -14,10 +18,13 @@ import { useListener } from 'hooks/useListener';
 import { useCancelable } from 'hooks/useCancelable';
 import { useInterval } from 'hooks/timers';
 import { useStore } from 'src/store/context';
-import Spinner from 'src/components/Spinner/Spinner';
+import { FAUCET_TOKEN_API, RECAPTCHA_SITE_KEY } from 'src/config';
 
 import { Props } from './DataListProps';
+import Spinner from 'components/Spinner/Spinner';
 import './DataList.scss';
+import SpinnerWorm from '../Spinner/SpinnerWorm';
+import Modal from '../Modal/Modal';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
   if (typeof o === 'object') {
@@ -57,6 +64,8 @@ export function DataList<T>({
   const [debScrollTop, setScrollTop] = useDebouncedValue(0);
   const [hasMore, setHasMore] = useState(true);
   const [itemAmount, setItemAmount] = useState(infScrollInitialCount || 0);
+  const [isCaptchaAppear, setCaptchaAppear] = useState<boolean>(false);
+  const [isTokensRequested, setTokensRequested] = useState<boolean>(false);
 
   // Used for local holding ONLY fetched data, not `data` or `bindData`
   const [resolvedData, setResolvedData] = useState(data || []);
@@ -174,7 +183,6 @@ export function DataList<T>({
     if (filterPredicate) {
       data = data.filter(filterPredicate);
     }
-
     return data.map(renderItem || (e => e as any));
   }, [
     itemAmount,
@@ -192,9 +200,92 @@ export function DataList<T>({
 
   const { zkBalances, zkBalancesLoaded, price } = store;
 
+  const onChange = async e => {
+    const res = await fetch(`${FAUCET_TOKEN_API}/ask_money`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        address: store.zkWallet?.address(),
+        'g-recaptcha-response': e,
+      }),
+    }).then(() => {
+      setTokensRequested(true);
+      setCaptchaAppear(false);
+    });
+    setTimeout(() => {
+      setTokensRequested(false);
+    }, 3000);
+  };
+
+  const handleClaimTokens = () => {
+    const getTwitted = localStorage.getItem(
+      `twittMade${store.zkWallet?.address()}`,
+    );
+    if (!getTwitted) {
+      store.modalHintMessage = 'makeTwitToClaim';
+      store.modalSpecifier = 'modal-hint';
+    } else {
+      setCaptchaAppear(true);
+      store.modalSpecifier = 'claim-tokens';
+    }
+  };
+
   return (
     <div ref={rootRef} className={cl('balances-wrapper', 'open')}>
-      <h3 className='balances-title'>{title}</h3>
+      <Modal
+        cancelAction={() => {
+          store.modalSpecifier = '';
+          store.MLTTclaimed = false;
+        }}
+        visible={false}
+        classSpecifier='claim-tokens'
+        background={true}
+        centered
+      >
+        <div>
+          <h2 className='transaction-title'>
+            {store.MLTTclaimed
+              ? 'Your $MLTT has been granted!'
+              : 'Claiming $MLTT: Matter Labs Trial Token…'}
+          </h2>
+          {isCaptchaAppear ? (
+            <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={onChange} />
+          ) : store.MLTTclaimed ? (
+            <LottiePlayer src={JSON.stringify(successCheckmark)} />
+          ) : (
+            <Spinner />
+          )}
+          <button
+            onClick={() => {
+              store.modalSpecifier = '';
+              store.MLTTclaimed = false;
+            }}
+            className='btn submit-button margin'
+          >
+            {'Close'}
+          </button>
+        </div>
+      </Modal>
+      {setTransactionType ? (
+        <div className='hint-block'>
+          <div className='hint-wrapper'>
+            <h3 className='balances-title'>{title}</h3>
+            <button
+              onClick={() => {
+                store.modalHintMessage = 'BalancesInL2';
+                store.modalSpecifier = 'modal-hint';
+              }}
+              className='hint-question-mark'
+            >
+              {'?'}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <h3 className='balances-title'>{title}</h3>
+      )}
       {!!zkBalances?.length && zkBalancesLoaded && setTransactionType && (
         <div className='mywallet-wrapper datalist'>
           <div
@@ -227,7 +318,7 @@ export function DataList<T>({
             className='btn submit-button'
             onClick={() => {
               setTransactionType('transfer');
-              history.push('/send');
+              history.push('/transfer');
             }}
           >
             <span className='send-icon'></span>
@@ -258,19 +349,31 @@ export function DataList<T>({
             <span></span>
             {' Deposit'}
           </button>
+
+          <div className='cta-wrapper'>
+            <button
+              onClick={handleClaimTokens}
+              className='btn submit-button margin'
+            >
+              {'⚡ Get some trial tokens! ⚡'}
+            </button>
+          </div>
         </>
       )}
-      <input
-        type='text'
-        ref={focusInput}
-        onChange={e => setSearch(e.target.value)}
-        value={searchValue}
-        placeholder={`Filter ${makeFirstLetterToLowerCase(title).replace(
-          /.?(select )/,
-          '',
-        )}`}
-        className='balances-search'
-      />
+      {(store.zkBalances.length || window.location.pathname !== '/account') && (
+        <input
+          type='text'
+          ref={focusInput}
+          onChange={e => setSearch(e.target.value)}
+          value={searchValue}
+          placeholder={`Filter ${makeFirstLetterToLowerCase(title).replace(
+            /.?(select )/,
+            '',
+          )}`}
+          className='balances-search'
+        />
+      )}
+
       {header()}
       {list.length ? list : emptyListComponent()}
       {footer()}

@@ -1,10 +1,14 @@
-import { Web3Provider } from 'ethers/providers';
-import ethers, { Contract, utils } from 'ethers';
+import ethers, {
+  Contract,
+  getDefaultProvider as getDefaultProviderEthers,
+} from 'ethers';
 import { Provider, Wallet } from 'zksync';
+import JSBI from 'jsbi';
 
 import { IEthBalance } from './types/Common';
 import { DEFAULT_ERROR } from './constants/errors';
 import { Tokens, AccountState, TokenLike } from 'zksync/build/types';
+import { LINKS_CONFIG } from 'src/config';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider = window['ethereum'];
@@ -46,17 +50,17 @@ export function getWalletNameFromProvider(): string | undefined {
 }
 
 export async function getConfirmationCount(
-  provider: Web3Provider,
+  provider: any,
   txHash: string,
+  maxBlock?: number,
 ) {
   //todo: fixme - do not depend on transaction format, use type of transaction
   if (txHash.startsWith('sync-tx')) return 0;
   try {
     const trx = await provider.getTransaction(txHash);
     const currentBlock = await provider.getBlockNumber();
-
     if (typeof trx.blockNumber === 'undefined') return 0;
-    return currentBlock - trx.blockNumber + 1;
+    return maxBlock ? maxBlock - currentBlock : currentBlock - trx.blockNumber;
     // return trx.confirmations;
   } catch (error) {
     return 0;
@@ -143,7 +147,24 @@ export const mintTestERC20Tokens = async (
       wallet.address(),
       store.zkWallet?.provider.tokenSet.parseToken(token, '100'),
     )
-    .then(() => (store.modalSpecifier = ''))
+    .then(res => {
+      store.hint = 'Waiting for transaction to be mined';
+      const p = getDefaultProviderEthers(LINKS_CONFIG.network);
+      const _r: string[] = [];
+      const _int = setInterval(() => {
+        p.getTransactionReceipt(res.hash).then(res => {
+          if (res) {
+            if (store.withCloseMintModal) {
+              store.modalSpecifier = '';
+              store.hint = '';
+            }
+            store.withCloseMintModal = true;
+            clearInterval(_int);
+          }
+        });
+      }, 1000);
+      return res;
+    })
     .catch(() => (store.modalSpecifier = ''));
   return _mint;
 };
@@ -151,8 +172,24 @@ export const mintTestERC20Tokens = async (
 export const handleFormatToken = (
   wallet: Wallet,
   symbol: string,
-  amount: string,
-) => wallet.provider.tokenSet.formatToken(symbol, amount);
+  amount: number,
+) => {
+  const safeAmount = JSBI.BigInt(+amount).toString();
+  return wallet.provider.tokenSet.formatToken(symbol, safeAmount);
+};
+
+export const handleExponentialNumbers = n => {
+  if (!n.toString().match(/[eE]/)) return n;
+  const splitedByE = n.toString().split(/[eE]/);
+  const zeros = parseInt(splitedByE[1].replace(/-/, '')) - 1;
+  const nums = splitedByE[0].replace(/\./, '');
+  const splitedString = ['0.'];
+  for (let i = 0; i < zeros; i++) {
+    splitedString.push('0');
+  }
+  const complextString = splitedString.join('') + nums;
+  return complextString;
+};
 
 export async function loadTokens(
   syncProvider: Provider,
@@ -233,20 +270,7 @@ export const getTimeZone = () => {
 };
 
 export const convertToTimeZoneLocale = (d: Date, timeZoneAmount: number) => {
-  const _year = d.getFullYear();
-  const _month = d.getMonth();
-  const _date = d.getDate();
-  const _hour = d.getHours() + timeZoneAmount;
-  const _minutes = d.getMinutes();
-  const _seconds = d.getSeconds();
-  const convertedDate = new Date(
-    _year,
-    _month,
-    _date,
-    _hour,
-    _minutes,
-    _seconds,
-  ).toLocaleString();
+  const convertedDate = new Date(d.getTime() + timeZoneAmount * 60 * 60 * 1000);
   return convertedDate;
 };
 
@@ -254,11 +278,13 @@ export function formatDate(d: Date) {
   return convertToTimeZoneLocale(d, getTimeZone());
 }
 
-// export const formatDate = new Intl.DateTimeFormat('it-CH', {
-//   day: '2-digit',
-//   month: '2-digit',
-//   year: 'numeric',
-//   hour12: false,
-//   hour: '2-digit',
-//   minute: '2-digit',
-// }).format;
+export const handleGetUTCHours = (d: Date) => {
+  const _year = d.getFullYear();
+  const _month = d.getMonth();
+  const _date = d.getDate();
+  const _hour = d.getUTCHours();
+  const _minutes = d.getMinutes();
+  const _seconds = d.getSeconds();
+  const dateWithUTC = new Date(_year, _month, _date, _hour, _minutes, _seconds);
+  return dateWithUTC;
+};

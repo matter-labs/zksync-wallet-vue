@@ -1,6 +1,9 @@
 {
   "projects": {
+    "mainnet": "zksync-base",
     "master": "zksync-demo",
-    "production": "zksync-wallet"
+    "reddit": "zksync-reddit",
+    "rinkeby": "zksync-wallet",
+    "ropsten": "zksync-ropsten"
   }
 }

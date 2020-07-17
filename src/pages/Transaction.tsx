@@ -2,15 +2,19 @@ import React, { FC, useState, useRef, useCallback } from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
+import { useHistory } from 'react-router-dom';
 
 import { Tx } from './Transactions';
 import { Transition } from 'src/components/Transition/Transition';
-import { useTimeout } from 'src/hooks/timers';
 import { TxStatus } from 'src/components/Transaction/TxStatus';
 import { useStore } from 'src/store/context';
 
-import { LINKS_CONFIG } from 'constants/links';
-import { formatDate, handleFormatToken } from 'src/utils';
+import { LINKS_CONFIG } from 'src/config';
+import {
+  formatDate,
+  handleFormatToken,
+  handleExponentialNumbers,
+} from 'src/utils';
 
 library.add(fas);
 
@@ -21,12 +25,14 @@ export const Transaction: FC<Tx> = props => {
     created_at,
   } = props;
   const store = useStore();
+  const history = useHistory();
 
   const [isCopyModal, openCopyModal] = useState<boolean>(false);
   const ref = useRef<HTMLInputElement>(null);
 
   const contacts = JSON.parse(
-    localStorage.getItem(`contacts${store.zkWallet?.address()}`) || '[]',
+    window.localStorage?.getItem(`contacts${store.zkWallet?.address()}`) ||
+      '[]',
   );
 
   const handleCopy = useCallback(() => {
@@ -50,40 +56,40 @@ export const Transaction: FC<Tx> = props => {
     }
   };
 
-  const addressAppearence = handleFindContactName(
+  const nameHandler = handleFindContactName(
     to,
     from,
     to?.toLowerCase() === store.zkWalletAddress?.toLowerCase(),
-  )?.name
-    ? handleFindContactName(
-        to,
-        from,
-        to?.toLowerCase() === store.zkWalletAddress?.toLowerCase(),
-      )?.name
+  )?.name;
+
+  const addressAppearence = nameHandler
+    ? nameHandler
+    : to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
+    ? from?.replace(from?.slice(6, from?.length - 3), '...')
     : to?.replace(to?.slice(6, to?.length - 3), '...');
 
   return (
     <div className='transaction-history-wrapper' key={hash}>
       <TxStatus tx={props} />
       <div className='transaction-history-left'>
-        <div className='transaction-history-date'>{formatDate(created_at)}</div>
+        <div className='transaction-history-date'>
+          {formatDate(created_at).toLocaleString()}
+        </div>
         <div>
           <div className={`transaction-history ${type}`}>
             <div className='transaction-history-amount'>
               {store.zkWallet &&
                 (!!amount || !!priority_op?.amount
-                  ? parseFloat(
-                      (+handleFormatToken(
+                  ? handleExponentialNumbers(
+                      +handleFormatToken(
                         store.zkWallet,
                         type === 'Deposit'
                           ? (priority_op?.token as string)
                           : (token as string),
                         type === 'Deposit' && priority_op
-                          ? priority_op.amount.toString()
-                          : amount.toString(),
-                      ))
-                        .toFixed(6)
-                        .toString(),
+                          ? +priority_op.amount
+                          : +amount,
+                      ),
                     )
                   : 'Unlocking transaction')}
             </div>
@@ -121,19 +127,61 @@ export const Transaction: FC<Tx> = props => {
                   ? 'Received from:'
                   : 'Sent to:'}
               </span>
-              <p>{addressAppearence}</p>
+              <p
+                className='pointer undo-btn'
+                onClick={e => {
+                  e.stopPropagation();
+                  store.walletAddress = {
+                    name: nameHandler ? nameHandler : '',
+                    address:
+                      to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
+                        ? from
+                        : to,
+                  };
+                  history.push(
+                    `/contacts/${(to?.toLowerCase() ===
+                    store.zkWalletAddress?.toLowerCase()
+                      ? from
+                      : to
+                    )?.toLowerCase()}`,
+                  );
+                }}
+              >
+                {addressAppearence}
+              </p>
             </>
           )}
           {type === 'Deposit' && (
             <>
-              <span>{'Deposited to:'}</span>
+              <span>{'Deposit to:'}</span>
               <p>{'Your account'}</p>
             </>
           )}
           {type === 'Withdraw' && (
             <>
               <span>{'Withdrawn to:'}</span>
-              <p>{addressAppearence}</p>
+              <p
+                className='pointer undo-btn'
+                onClick={e => {
+                  e.stopPropagation();
+                  store.walletAddress = {
+                    name: nameHandler ? nameHandler : '',
+                    address:
+                      to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
+                        ? from
+                        : to,
+                  };
+                  history.push(
+                    `/contacts/${(to?.toLowerCase() ===
+                    store.zkWalletAddress?.toLowerCase()
+                      ? from
+                      : to
+                    )?.toLowerCase()}`,
+                  );
+                }}
+              >
+                {to?.replace(to?.slice(6, to?.length - 3), '...')}
+              </p>
             </>
           )}
         </div>
@@ -144,8 +192,8 @@ export const Transaction: FC<Tx> = props => {
         target='_blank'
         href={`${
           type === 'Deposit'
-            ? `https://${LINKS_CONFIG.STAGE_ZKSYNC.ethBlockExplorer}/tx`
-            : `https://${LINKS_CONFIG.STAGE_ZKSYNC.zkSyncBlockExplorer}/transactions`
+            ? `https://${LINKS_CONFIG.ethBlockExplorer}/tx`
+            : `https://${LINKS_CONFIG.zkSyncBlockExplorer}/transactions`
         }/${hash}`}
       >
         <FontAwesomeIcon icon={['fas', 'external-link-alt']} />

@@ -1,3 +1,5 @@
+import { LINKS_CONFIG } from 'src/config';
+
 export const NETWORKS_LIST = {
   '1': 'Ethereum Main Network',
   '2': 'Morden Test network',
@@ -7,6 +9,5 @@ export const NETWORKS_LIST = {
   '42': 'Kovan Test Network',
 };
 export const RIGHT_NETWORK_ID = '4';
-export const RIGHT_NETWORK_NAME = NETWORKS_LIST[RIGHT_NETWORK_ID];
 
 export const CURRENT_NETWORK_PREFIX = 'rinkeby';

@@ -58,6 +58,18 @@
   border-radius: 8px;
   transition: opacity 200ms ease-in-out;
 
+  &.claim-tokens {
+    & > div {
+      & > div {
+        & > div {
+          & > div {
+            margin: 0 auto;
+          }
+        }
+      }
+    }
+  }
+
   &-instructions {
     margin-bottom: 40px;
   }
@@ -189,6 +201,7 @@
       text-align: left;
 
       & > .btn-tr {
+        display: flex;
         width: 300px;
         height: 35px;
         min-height: 35px;
@@ -596,8 +609,30 @@ body.dark {
       display: flex;
       align-items: center;
       justify-content: center;
+      padding-right: 20px;
       perspective: 1000px;
       perspective-origin: center;
+    }
+  }
+}
+
+@media screen and (min-width: 760px) {
+  .modal {
+    &.wallet {
+      & > .wallet-buttons {
+        a.btn-tr {
+          display: block;
+      
+          &.mob {
+            display: none;
+          }
+        }
+        & > .btn-tr {
+          &:first-child {
+            display: none;
+          }
+        }
+      }
     }
   }
 }

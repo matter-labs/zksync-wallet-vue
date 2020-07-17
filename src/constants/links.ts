@@ -14,12 +14,12 @@ export const LINKS_CONFIG = {
     network: CURRENT_NETWORK_PREFIX,
   },
   MAIN_ZKSYNC: {
-    api: 'api.zksync.dev',
+    api: 'api.zksync.io',
     zkSyncBlockExplorer: 'zkscan.io/explorer',
-    ethBlockExplorer: 'mainnet.etherscan.io',
+    ethBlockExplorer: 'etherscan.io',
     network: 'mainnet',
   },
-};
+}.STAGE_ZKSYNC;
 
 export const COMMON = {
   ABOUT: {
@@ -33,6 +33,14 @@ export const COMMON = {
   PRIVACY_POLICY: {
     title: 'Privacy Policy',
     link: 'https://zksync.io/legal/privacy.html',
+  },
+  DOCS: {
+    title: 'Docs',
+    link: '//zksync.io/faq/intro.html',
+  },
+  CONTACTS: {
+    title: 'Contact',
+    link: '//zksync.io/contact.html',
   },
 };
 

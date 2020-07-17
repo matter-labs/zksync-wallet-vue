@@ -1,0 +1,55 @@
+name: deploy_to_firebase_hosting
+
+on:
+  push:
+    branches:
+      - reddit
+      - master
+      - rinkeby
+      - ropsten
+      - mainnet
+
+jobs:
+  buildx:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: 'Checkout the source code'
+        uses: actions/checkout@v2
+      - name: 'Set up Docker Buildx environment'
+        uses: crazy-max/ghaction-docker-buildx@v3
+      - name: 'Set up Docker Buildx cache'
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: 'Build container image'
+        run: |
+          docker buildx build \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
+            --platform "linux/amd64" \
+            -o .reports \
+            --build-arg FIREBASE_TOKEN=${{ secrets.FIREBASE_TOKEN }} \
+            --build-arg FIREBASE_PROJECT=${GITHUB_REF##*/} \
+            --tag "zksync.matter/firebase:latest" \
+            --target "firebase-application" \
+            --file "./Dockerfile" \
+            "./"
+      - name: 'Upload dependencies audit report'
+        uses: actions/upload-artifact@v2
+        with:
+          name: npm-audit
+          path: .reports/audit.html
+      - name: 'Upload dependencies licenses report'
+        uses: actions/upload-artifact@v2
+        with:
+          name: licenses
+          path: .reports/licenses.json
+      - name: 'Upload NodeJS environment settings'
+        uses: actions/upload-artifact@v2
+        with:
+          name: runtime
+          path: .reports/npm.json

@@ -5,6 +5,32 @@
     background-color: var(--modal-bg-color);
   }
 
+  &-right {
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    &-route {
+      display: none;
+      margin-right: 25px;
+      color: var(--dark-color);
+      font-weight: var(--medium-font-weight);
+      font-size: var(--md-font-size);
+      font-family: var(--font-family);
+      text-decoration: none;
+
+      & > .icon-explorer-link {
+        margin-left: 5px;
+        color: var(--hints-color);
+        font-size: var(--xs-font-size);
+      }
+
+      &:visited {
+        text-decoration: none;
+      }
+    }
+  }
+
   &-logo {
     width: 140px;
     height: 30px;
@@ -95,6 +121,16 @@
 
 @media screen and (min-width: 760px) {
   .menu {
+    &-right {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      &-route {
+        display: inline;
+      }
+    }
+
     &-wallet {
       width: auto;
       max-width: 260px;

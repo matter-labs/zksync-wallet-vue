@@ -110,7 +110,7 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
+#.env
 
 # next.js build output
 .next
@@ -177,3 +177,9 @@ yarn.lock
 README.md
 LICENSE
 bamboo-specs
+commitlint.config.js
+.prettierrc.js
+.github
+.gitignore
+.dockerignore
+Dockerfile

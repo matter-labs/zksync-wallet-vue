@@ -17,11 +17,19 @@ import { ethers } from 'ethers';
 
 export class Store {
   @observable awaitedTokens = {};
+  @observable awaitedTokensConfirmations = {};
   @observable depositModal = false;
+  @observable withCloseMintModal = true;
+  @observable txButtonUnlocked = true;
   @observable error = '';
+  @observable newContactName = '';
+  @observable newContactAddress = '';
   @observable ethBalances: IEthBalance[] = [];
   @observable ethId = '';
   @observable ethWallet?: JsonRpcSigner | ethers.Signer;
+  @observable EIP1271Signature = false;
+  @observable isContact = false;
+  @observable MLTTclaimed = false;
   @observable hint = '';
   @observable modalHintMessage = '';
   @observable normalBg = false;
@@ -64,6 +72,10 @@ export class Store {
 
   @computed get zkWalletAddress() {
     return this.zkWallet?.address();
+  }
+
+  @computed get isMetamaskWallet() {
+    return this.walletName === 'Metamask';
   }
 
   @action

@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+
 :root {
   --font-family: 'IBM Plex Sans', sans-serif;
   font-family: var(--font-family);
@@ -30,6 +32,9 @@
   --success-color: #5cb85c;
   --transparent: transparent;
   --backdrop-color: rgba(0, 0, 0, 0.4);
+  --typing-color: #2f008a;
+  --twitter-color: #1DA1F2;
+  --yellow-color: yellow;
 
   --xs-font-size: 11px;
   --xs-font-size: 12px;
@@ -46,6 +51,7 @@
 }
 
 body.dark {
+  --typing-color: #1DA1F2;
   --input-border-focus: rgba(255, 255, 255, 0.2);
   --light-bg-color: #fff;
   --button-text-color: #1d2039;
@@ -190,6 +196,17 @@ button {
   cursor: pointer;
 }
 
+*.pointer {
+  cursor: pointer;
+}
+
+.edit-icon {
+  width: 20px;
+  height: 20px;
+  background-image: url(./images/icon-edit-blue.svg);
+  background-size: contain;
+}
+
 .btn {
   &-tr {
     margin-top: 0;
@@ -212,6 +229,11 @@ button {
     background-color: var(--transparent);
     border: none;
     border-radius: 13px;
+
+    &.dark {
+      width: 300px;
+      color: var(--hints-color);
+    }
 
     &.delete {
       display: flex;
@@ -242,8 +264,7 @@ h2 {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  min-height: calc(100vh - 320px);
-
+  min-height: calc(100vh - 220px);
   &-wrapper {
     width: 100%;
     min-height: 100vh;
@@ -274,7 +295,24 @@ h2 {
   }
 }
 
+
+
 .hint {
+  &-link {
+    font-weight: var(--bold-font-weight);
+  } 
+
+  &-datalist {
+    &-wrapper {
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 50px;
+    }
+  }
+
   &-question-mark {
     width: 20px;
     height: 20px;
@@ -284,6 +322,93 @@ h2 {
     background-color: var(--input-border-focus);
     border: none;
     border-radius: 10px;
+
+    &.marginless {
+      margin-left: 5px;
+    }
+  }
+
+  &-block {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 20px 0;
+
+    .hint-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 40px;
+  
+      & > .hint-question-mark {
+        position: absolute;
+        right: 0;
+        visibility: hidden;
+      }
+  
+      .mywallet-title {
+        margin-bottom: 0;
+      }
+    }
+
+    &:hover {
+      .hint-wrapper {
+        & > .hint-question-mark {
+          visibility: visible;
+        }
+      } 
+    }
+  }
+
+  &-walleticon {
+    width: 30px;
+    height: 30px;
+    margin: 20px auto;
+    color: var(--button-bg-color);
+    font-size: var(--xxl-font-size);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+
+    &.Metamask {
+      background-image: url(./images/metamask.png);
+    }
+
+    &.Coinbase {
+      background-image: url(./images/coinbase.png);
+    }
+
+    &.WalletConnect {
+      background-image: url(./images/walletconnect.png);
+    }
+
+    &.Portis {
+      background-image: url(./images/portis.png);
+    }
+
+    &.Fortmatic {
+      background-image: url(./images/fortmatic.png);
+    }
+  }
+
+  &-body {
+    margin-top: 30px;
+    text-align: left;
+
+    p {
+      & > a {
+        color: var(--button-bg-color);
+        font-weight: var(--medium-font-weight);
+        text-decoration: underline;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+    
   }
 
   &-unlocked {
@@ -318,17 +443,30 @@ h2 {
     border: 1px solid var(--light-border-color);
     border-radius: 5px;
   }
+}
+
+.typing {
+  &-cursor {
+    display: none;
+  }
 
   &-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .mywallet-title {
-      margin-bottom: 0;
-    }
+    width: 100%;
+    min-height: 60px;
+    margin: 1.2rem 0 0;
   }
 }
+
+.lfm__typing_effect {
+  display: block;
+  color: var(--typing-color);
+  font-weight: var(--medium-font-weight);
+  font-size: var(--large-font-size);
+
+  &_text {
+    background-color: var(--yellow-color);
+  }
+}  
 
 .wrong-network {
   width: 90%;
@@ -400,6 +538,11 @@ h2 {
       transform: translateY(-50%);
     }
 
+    &.Other {
+      background-image: url(./images/Ethereum.png);
+      background-size: 80px;
+    }
+
     &.Coinbase {
       background-image: url(./images/coinbase.png);
       background-size: 50px;
@@ -446,6 +589,59 @@ h2 {
   outline: none;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+
+  & > .twitter {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    background-image: url(./images/twitter.svg);
+  }
+
+  &.margin {
+    margin: 25px 0 25px;
+  }
+
+  &.twitter {
+    width: 150px;
+    height: 80px;
+    margin: 0 auto;
+    background-color: var(--twitter-color);
+    border-radius: 6px;
+  }
+
+  &.transparent {
+    margin-bottom: 30px;
+    color: var(--button-bg-color);
+    background-color: var(--transparent);
+    border: 2px solid var(--button-bg-color);
+
+    &:hover {
+      color: var(--button-bg-hover);
+      background-color: var(--transparent);
+      border: 2px solid var(--button-bg-hover);
+    }
+
+    &:active {
+      color: var(--links-color);
+      background-color: var(--transparent);
+      border: 2px solid var(--links-color);
+      box-shadow: none;
+    }
+  }
+
+  &.small {
+    height: 40px;
+    border: 1px solid var(--light-border-color);
+    box-shadow: none;
+
+    &:hover {
+      border: 1px solid var(--light-border-color);
+    }
+
+    &:active {
+      border: 1px solid var(--light-border-color);
+    }
+  }
 
   &.disabled {
     color: var(--hints-color);
@@ -538,7 +734,19 @@ h2 {
     color: var(--button-bg-color);
     font-weight: var(--semibold-font-weight);
     text-decoration: underline;
+    background: var(--transparent);
+    border: none;
     cursor: pointer;
+
+    &.margin {
+      display: block;
+      margin: 15px auto 25px;
+    }
+
+    &.large {
+      margin-top: 25px;
+      font-size: var(--md-font-size);
+    }
 
     &:hover {
       text-decoration: none;
@@ -573,6 +781,17 @@ h2 {
     font-size: var(--md-font-size);
     background-color: var(--transparent);
     border: none;
+
+    &.contact-page {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 70px;
+      
+      & > span {
+        margin-top: 5px;
+      }
+    }
   }
 
   &-delete,
@@ -655,6 +874,10 @@ input[type='radio']:focus + .contact-manage {
   outline: none;
 }
 
+#walletconnect-qrcode-close {
+  cursor: pointer;
+}
+
 .balances-contact-edit {
   width: 20px;
   padding: 15px;
@@ -697,7 +920,6 @@ input[type='radio']:focus + .contact-manage {
     text-overflow: ellipsis;
     cursor: pointer;
 
-    /* stylelint-disable-next-line no-descending-specificity*/
     & > p {
       margin-bottom: 0;
       padding-right: 10px;
@@ -874,6 +1096,23 @@ body.dark > #root {
     color: var(--links-color);
   }
 
+  .lfm__typing_effect {
+    display: block;
+    color: var(--yellow-color);
+    font-weight: var(--medium-font-weight);
+    font-size: var(--large-font-size);
+  
+    &_text {
+      background-color: var(--transparent);
+    }
+  } 
+
+  .submit-button {
+    .send-icon {
+      background-image: url(./images/send_dark.svg);
+    }
+  }
+
   .withdraw-button {
     & > span {
       background-image: url(./images/mdi_arrow_downward.svg);
@@ -883,7 +1122,7 @@ body.dark > #root {
   }
 
   .logo-textless {
-    background-image: url(./images/logo_text_dark.svg);
+    background-image: url(./images/ZK_dark.svg);
   }
 
   .custom-selector {
@@ -1155,8 +1394,8 @@ body.dark > #root {
   }
 
   .wallets-wrapper {
-    grid-template-columns: repeat(auto-fit, 215px);
-    max-width: 645px;
+    grid-template-columns: repeat(auto-fit, 190px);
+    max-width: 860px;
     margin: 0 auto;
   }
 }

@@ -36,7 +36,7 @@ const Contacts: React.FC = observer(
     const [deletedContact, setDeletedContact] = useState<IDeletedContact>();
 
     const updateContactList = useCallback(() => {
-      const arr: string | null = localStorage.getItem(
+      const arr: string | null = window.localStorage?.getItem(
         `contacts${zkWallet?.address()}`,
       );
       setContacts(JSON.parse(arr as string));
@@ -55,7 +55,7 @@ const Contacts: React.FC = observer(
         });
         const newContacts = contacts;
         newContacts.splice(selectedItem, 1);
-        localStorage.setItem(
+        window.localStorage?.setItem(
           `contacts${zkWallet?.address()}`,
           JSON.stringify(newContacts),
         );
@@ -70,7 +70,7 @@ const Contacts: React.FC = observer(
         name: deletedContact?.name,
         address: deletedContact?.address,
       });
-      localStorage.setItem(
+      window.localStorage?.setItem(
         `contacts${zkWallet?.address()}`,
         JSON.stringify(_c),
       );
@@ -134,9 +134,10 @@ const Contacts: React.FC = observer(
               </Modal>
               <button
                 className='add-contact-button btn-tr'
-                onClick={() =>
-                  (store.modalSpecifier = 'add-contact addressless')
-                }
+                onClick={() => {
+                  store.isContact = false;
+                  store.modalSpecifier = 'add-contact addressless';
+                }}
               >
                 <span></span>
                 <p>{'Add a contact'}</p>

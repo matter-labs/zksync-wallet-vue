@@ -25,7 +25,6 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
       oldContact?.address ? oldContact?.address : '',
     );
     const [conditionError, setConditionError] = useState<string>('');
-
     const store = useStore();
 
     const { zkWallet } = store;
@@ -44,7 +43,8 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
           ADDRESS_VALIDATION['eth'].test(address)
         ) {
           const contacts = JSON.parse(
-            localStorage.getItem(`contacts${zkWallet?.address()}`) || '[]',
+            window.localStorage?.getItem(`contacts${zkWallet?.address()}`) ||
+              '[]',
           );
           const isContact = contacts.findIndex(
             ({ address: contactAddress, name: contactName }) =>
@@ -57,29 +57,38 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
           if (edit && oldContactIndex > -1) {
             const newContacts = contacts;
             newContacts.splice(oldContactIndex, 1, { address, name });
-            localStorage.setItem(
+            window.localStorage?.setItem(
               `contacts${zkWallet?.address()}`,
               JSON.stringify(newContacts),
             );
+            store.newContactAddress = address;
+            store.newContactName = name;
           }
-          if (isContact === -1 && !edit) {
+          if (store.isContact === false && !edit) {
             const newContacts = JSON.stringify([
               { address, name },
               ...contacts,
             ]);
-            localStorage.setItem(`contacts${zkWallet?.address()}`, newContacts);
+            window.localStorage?.setItem(
+              `contacts${zkWallet?.address()}`,
+              newContacts,
+            );
+            store.newContactAddress = address;
+            store.newContactName = name;
           }
-          if (isContact > -1) {
+          if (store.isContact === true) {
             const newContacts = contacts;
             newContacts.splice(isContact, 1, { address, name });
-            localStorage.setItem(
+            window.localStorage?.setItem(
               `contacts${zkWallet?.address()}`,
               JSON.stringify(newContacts),
             );
+            store.newContactAddress = address;
+            store.newContactName = name;
           }
           if (onSaveContact) onSaveContact();
           store.modalSpecifier = '';
-          const arr: string | null = localStorage.getItem(
+          const arr: string | null = window.localStorage?.getItem(
             `contacts${zkWallet?.address()}`,
           );
           const parsedContacts = JSON.parse(arr as string);
@@ -114,7 +123,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
       <form>
         <h3>{title}</h3>
         <div className='horizontal-line'></div>
-        <span className='transaction-field-title'>{'Contact name'}</span>
+        <span className='transaction-field-title plain'>{'Contact name'}</span>
         <input
           placeholder='Name here'
           ref={focusRef}
@@ -123,7 +132,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
         />
         {addressInput && (
           <>
-            <span className='transaction-field-title'>{'Address'}</span>
+            <span className='transaction-field-title plain'>{'Address'}</span>
             <input
               placeholder='0x address'
               value={address}

@@ -120,18 +120,21 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
           !!transactionModal?.title ? 'closed' : 'open'
         }`}
       >
-        <div className='hint-wrapper'>
-          <h2 className='mywallet-title'>{'My wallet'}</h2>
-          {/* <button
-            onClick={() => {
-              store.modalHintMessage = 'test';
-              store.modalSpecifier = 'modal-hint';
-            }}
-            className='hint-question-mark'
-          >
-            {'?'}
-          </button> */}
+        <div className='hint-block'>
+          <div className='hint-wrapper'>
+            <h2 className='mywallet-title'>{'My wallet'}</h2>
+            <button
+              onClick={() => {
+                store.modalHintMessage = 'myWallet';
+                store.modalSpecifier = 'modal-hint';
+              }}
+              className='hint-question-mark'
+            >
+              {'?'}
+            </button>
+          </div>
         </div>
+
         <div
           onClick={() => handleCopy(zkWallet?.address())}
           className='copy-block'
@@ -193,9 +196,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
                     body.classList.add('fixed-b');
                   }
                 }}
-                className={`custom-selector-title ${
-                  !zkBalances.length && zkBalancesLoaded ? '' : ''
-                }`}
+                className={'custom-selector-title'}
               >
                 {symbolName ? (
                   <p>zk{symbolName}</p>

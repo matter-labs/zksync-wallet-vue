@@ -1,7 +1,7 @@
 import { InjectedConnector } from '@web3-react/injected-connector';
 
-import { RIGHT_NETWORK_ID } from 'constants/networks';
+import { LINKS_CONFIG } from 'src/config';
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [parseInt(RIGHT_NETWORK_ID)],
+  supportedChainIds: [parseInt(LINKS_CONFIG.networkId)],
 });

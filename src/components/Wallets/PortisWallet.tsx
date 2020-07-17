@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import Portis from '@portis/web3';
+import React, { useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import useWalletInit from 'hooks/useWalletInit';
@@ -13,10 +12,9 @@ const PortisWallet: React.FC = observer(() => {
   const store = useStore();
   const history = useHistory();
 
-  useEffect(() => {
-    const { provider } = store;
+  const run = useCallback(async () => {
     try {
-      portisConnector(store, connect, getSigner);
+      await portisConnector(store, connect, getSigner);
     } catch (err) {
       if (err.name && err.message) {
         store.error = `${err.name}: ${err.message}`;
@@ -27,6 +25,10 @@ const PortisWallet: React.FC = observer(() => {
       store.provider = null;
     }
   }, [connect, getSigner, history, store]);
+
+  useEffect(() => {
+    run();
+  }, [run]);
 
   return null;
 });
