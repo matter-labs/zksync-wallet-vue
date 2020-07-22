@@ -28,6 +28,11 @@ export const NETWORKS_LIST = {
   '42': 'Kovan Test Network',
 };
 
+export const ETH_MINT_ADDRESS =
+  LINKS_CONFIG.network === 'rinkeby'
+    ? 'https://faucet.rinkeby.io/'
+    : 'https://faucet.ropsten.be/';
+
 export const FAUCET_TOKEN_API = `https://${
   LINKS_CONFIG.api === 'stage-api.zksync.dev' ? 'stage' : LINKS_CONFIG.network
 }-faucet.zksync.dev`;

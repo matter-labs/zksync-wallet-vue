@@ -27,7 +27,7 @@ import {
   handleExponentialNumbers,
   checkForEmptyBalance,
 } from 'src/utils';
-import { LINKS_CONFIG, FAUCET_TOKEN_API } from 'src/config';
+import { LINKS_CONFIG, FAUCET_TOKEN_API, ETH_MINT_ADDRESS } from 'src/config';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { INPUT_VALIDATION } from 'constants/regExs';
@@ -1022,7 +1022,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               {handleExponentialNumbers(balance)}
             </p>
           </span>
-          {title === 'Deposit' && LINKS_CONFIG.network === 'rinkeby' && (
+          {title === 'Deposit' && LINKS_CONFIG.network !== 'mainnet' && (
             <button
               onClick={e => {
                 e.stopPropagation();
@@ -1030,7 +1030,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   store.hint = 'Follow the instructions in the pop up';
                 store.modalSpecifier = 'sign-metamask';
                 symbol === 'ETH'
-                  ? window.open('https://faucet.rinkeby.io/')
+                  ? window.open(ETH_MINT_ADDRESS)
                   : mintTestERC20Tokens(
                       zkWallet as Wallet,
                       symbol as TokenLike,

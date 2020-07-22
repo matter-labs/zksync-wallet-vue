@@ -355,14 +355,16 @@ export function DataList<T>({
               {' Deposit'}
             </button>
 
-            <div className='cta-wrapper'>
-              <button
-                onClick={handleClaimTokens}
-                className='btn submit-button margin'
-              >
-                {'⚡ Get some trial tokens! ⚡'}
-              </button>
-            </div>
+            {LINKS_CONFIG.network !== 'ropsten' && (
+              <div className='cta-wrapper'>
+                <button
+                  onClick={handleClaimTokens}
+                  className='btn submit-button margin'
+                >
+                  {'⚡ Get some trial tokens! ⚡'}
+                </button>
+              </div>
+            )}
           </>
         )}
       {(store.zkBalances.length || window.location.pathname !== '/account') && (
