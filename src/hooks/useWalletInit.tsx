@@ -199,27 +199,6 @@ const useWalletInit = () => {
         .then(res => (store.transactions = res))
         .catch(err => console.error(err));
 
-      fetch(
-        'https://ticker-nhq6ta45ia-ez.a.run.app/cryptocurrency/listings/latest',
-        {
-          referrerPolicy: 'strict-origin-when-cross-origin',
-          body: null,
-          method: 'GET',
-          mode: 'cors',
-        },
-      )
-        .then((res: any) => res.json())
-        .then(data => {
-          store.price = Object.entries(data.data).reduce(
-            (acc, [el, val]: [any, any]) =>
-              Object.assign(acc, { [val.symbol]: val.quote.USD.price }),
-            {},
-          );
-        })
-        .catch(err => {
-          console.error(err);
-        });
-
       const { error, tokens, zkBalances } = await loadTokens(
         syncProvider,
         syncWallet,
@@ -268,6 +247,15 @@ const useWalletInit = () => {
         zkBalancesLoaded: true,
         maxConfirmAmount,
       });
+
+      const prices = {};
+      store.ethBalances.map(async balance => {
+        //TODO: replace with Promise.All
+        const price = store.syncProvider?.getTokenPrice(balance.symbol);
+        prices[balance.symbol] = await price;
+        store.price = prices;
+      });
+
       await syncWallet
         .getAccountState()
         .then(res => res)
