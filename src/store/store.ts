@@ -80,6 +80,14 @@ export class Store {
     return this.walletName === 'Metamask';
   }
 
+  @computed get isBraveBrowser() {
+    return !!navigator['brave'];
+  }
+
+  @computed get doesMetamaskUsesNewEthereumAPI() {
+    return !!window['ethereum'].request;
+  }
+
   @action
   setTxs(transactions: ((prev: Tx[]) => Tx[]) | Tx[]) {
     if (typeof transactions === 'function') {

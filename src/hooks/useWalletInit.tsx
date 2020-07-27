@@ -113,7 +113,7 @@ const useWalletInit = () => {
         store.walletName !== 'Fortmatic'
       ) {
         // Could fail, if there's no Metamask in the browser
-        if (store.isMetamaskWallet) {
+        if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
           const _accs = await window['ethereum']?.request({
             method: 'eth_accounts',
           });

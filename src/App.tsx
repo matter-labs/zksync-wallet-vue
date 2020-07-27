@@ -32,9 +32,19 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   useWSHeartBeat();
   const [curAddress, setCurAddress] = useState<string>();
 
+  const wrongNetworkDetector = () => {
+    if (store.doesMetamaskUsesNewEthereumAPI) {
+      return (
+        provider?.chainId !== undefined &&
+        +provider.chainId !== +LINKS_CONFIG.networkId
+      );
+    }
+    return provider?.networkVersion !== LINKS_CONFIG.networkId;
+  };
+
   useEffect(() => {
     if (store.provider && store.walletName) {
-      if (store.isMetamaskWallet) {
+      if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
         store.provider
           ?.request({ method: 'eth_accounts' })
           .then(res => setCurAddress(res[0]));
@@ -49,7 +59,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
 
   useInterval(() => {
     if (!curAddress && store.walletName && store.provider) {
-      if (store.isMetamaskWallet) {
+      if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
         store.provider
           ?.request({ method: 'eth_accounts' })
           .then(res => setCurAddress(res[0]));
@@ -93,11 +103,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (provider && store.isMetamaskWallet) {
       window['ethereum'].autoRefreshOnNetworkChange = false;
       const networkChangeListener = () => {
-        if (
-          provider?.chainId !== undefined &&
-          +provider.chainId !== +LINKS_CONFIG.networkId &&
-          store.isMetamaskWallet
-        ) {
+        if (wrongNetworkDetector() && store.isMetamaskWallet) {
           store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
           store.isAccessModalOpen = false;
           store.zkWalletInitializing = false;
@@ -110,28 +116,45 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         }
       };
       if (store.isMetamaskWallet) {
-        provider.on('chainChanged', networkChangeListener);
-        return () => provider.off('chainChanged', networkChangeListener);
+        if (store.doesMetamaskUsesNewEthereumAPI) {
+          provider.on('chainChanged', networkChangeListener);
+          return () => provider.off('chainChanged', networkChangeListener);
+        } else {
+          provider.on('networkChanged', networkChangeListener);
+          return () => provider.off('networkChanged', networkChangeListener);
+        }
       }
     }
-  }, [store.walletName, store.isMetamaskWallet, store.provider, store]);
+  }, [
+    store.walletName,
+    store.isMetamaskWallet,
+    store.provider,
+    store.doesMetamaskUsesNewEthereumAPI,
+    store,
+  ]);
 
   // Listen for account change
   const { provider, walletName, zkWallet } = store;
 
   useEffect(() => {
-    if (
-      provider?.chainId !== undefined &&
-      +provider.chainId !== +LINKS_CONFIG.networkId &&
-      store.isMetamaskWallet
-    ) {
+    if (wrongNetworkDetector() && store.isMetamaskWallet) {
       store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
       store.isAccessModalOpen = false;
       store.zkWalletInitializing = false;
     } else {
       store.error = '';
+      if (store.walletName) {
+        store.isAccessModalOpen = true;
+      }
     }
   }, [store.walletName, store.isMetamaskWallet, provider]);
+
+  useEffect(() => {
+    if (!store.walletName) {
+      history.push('/');
+      store.isAccessModalOpen = false;
+    }
+  }, [store.walletName]);
 
   useEffect(() => {
     if (zkWallet) {
@@ -275,8 +298,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
               {store.error?.match(/(?:detected)/i) && store.error}
             </h3>
           )}
-          {+provider?.chainId !== +LINKS_CONFIG.networkId &&
-          store.isMetamaskWallet ? (
+          {wrongNetworkDetector() && store.isMetamaskWallet ? (
             <>
               <div
                 className={`${walletName
@@ -284,8 +306,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
                   .toLowerCase()}-logo`}
               ></div>
               <div className='wrong-network'>
-                {store.isMetamaskWallet &&
-                +provider?.chainId === +LINKS_CONFIG.networkId ? null : (
+                {store.isMetamaskWallet && wrongNetworkDetector() ? null : (
                   <div className='wrong-network-logo'></div>
                 )}
                 {errorAppearence()}
