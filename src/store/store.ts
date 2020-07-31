@@ -85,7 +85,7 @@ export class Store {
   }
 
   @computed get doesMetamaskUsesNewEthereumAPI() {
-    return !!window['ethereum'].request;
+    return !!window['ethereum']?.request;
   }
 
   @action
