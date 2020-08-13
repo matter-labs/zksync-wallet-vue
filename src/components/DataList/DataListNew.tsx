@@ -220,6 +220,12 @@ export function DataList<T>({
   };
 
   const handleClaimTokens = () => {
+    if (LINKS_CONFIG.network === 'mainnet') {
+      return (
+        (store.modalHintMessage = 'MLTTonMainnet'),
+        (store.modalSpecifier = 'modal-hint')
+      );
+    }
     const getTwitted = localStorage.getItem(
       `twittMade${store.zkWallet?.address()}`,
     );

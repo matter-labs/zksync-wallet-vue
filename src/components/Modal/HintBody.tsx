@@ -126,6 +126,18 @@ const DoNoTSendToExchanges = () => (
   </>
 );
 
+const MLTTonMainnet = () => (
+  <p>
+    {
+      'MLTT trial token is currently unavailable om mainnet. You can try it on our '
+    }
+    <a href='//rinkeby.zksync.io/' target='_blank' rel='noopener noreferrer'>
+      {'Rinkeby testnet'}
+    </a>{' '}
+    {' for now.'}
+  </p>
+);
+
 const WalletConnectLater = () => (
   <p>
     {'WalletConnect will be enabled on mainnet shortly! You can try it on our '}
@@ -263,6 +275,7 @@ export const HintBody: React.FC = observer(
           modalHintMessage === 'makeTwitToClaim') && <MakeTwitToWithdraw />}
         {modalHintMessage === 'TroubleSeeingAToken' && <TroubleSeeingAToken />}
         {modalHintMessage === 'MLTTBlockModal' && <MLTTBlockModal />}
+        {modalHintMessage === 'MLTTonMainnet' && <MLTTonMainnet />}
       </div>
     );
   },
