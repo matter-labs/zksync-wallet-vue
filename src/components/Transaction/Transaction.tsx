@@ -683,6 +683,18 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     };
 
+    const handleUpdateTokenPrice = async symbol => {
+      if (!store.price) return;
+      const tokenPrice = await store.syncProvider?.getTokenPrice(symbol);
+      store.price[symbol] = tokenPrice as number;
+    };
+
+    useEffect(() => {
+      if (!!symbolName) {
+        handleUpdateTokenPrice(symbolName);
+      }
+    }, []);
+
     useEffect(() => {
       if (balances?.length === 1) {
         setToken(
@@ -691,6 +703,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             : balances[0].symbol,
         );
         setMaxValue(balances[0].balance);
+        handleUpdateTokenPrice(balances[0].symbol);
         setSelectedBalance(balances[0].symbol);
         setSymbolName(balances[0].symbol);
         setSymbol(balances[0].symbol);
@@ -993,6 +1006,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           if (address === 'awaited') {
             return;
           } else {
+            handleUpdateTokenPrice(symbol);
             setToken(address);
             setMaxValue(balance);
             setSymbolName(symbol);
