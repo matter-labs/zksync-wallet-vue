@@ -80,6 +80,30 @@ export class Store {
     return this.walletName === 'Metamask';
   }
 
+  @computed get isPortisWallet() {
+    return this.walletName === 'Portis';
+  }
+
+  @computed get isWeb3() {
+    return this.walletName === 'Web3';
+  }
+
+  @computed get isFortmaticWallet() {
+    return this.walletName === 'Fortmatic';
+  }
+
+  @computed get isBurnerWallet() {
+    return this.walletName === 'BurnerWallet';
+  }
+
+  @computed get isWalletConnect() {
+    return this.walletName === 'WalletConnect';
+  }
+
+  @computed get isCoinbaseWallet() {
+    return this.walletName === 'Coinbase Wallet';
+  }
+
   @computed get isBraveBrowser() {
     return !!navigator['brave'];
   }

@@ -408,7 +408,7 @@ const Account: React.FC = observer(() => {
 
   useCheckLogin();
 
-  const isVerified = ({ address, symbol, balance }) => {
+  const isVerified = ({ symbol }) => {
     const filtered = transactionsList
       .filter(tx =>
         tx.tx.type === 'Deposit'

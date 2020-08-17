@@ -83,9 +83,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           : (sessionStorage.getItem('walletName') as WalletType);
         store.normalBg = true;
         store.isAccessModalOpen = true;
-        if (store.isMetamaskWallet || store.walletName === 'WalletConnect') {
-          store.hint = 'Connecting to ';
-        }
+        store.hint = 'Connecting to ';
       } else {
         handleLogout(false, '');
       }
@@ -336,7 +334,10 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       >
         <>
           <h3 className='title-connecting'>
-            {store.isMetamaskWallet || store.walletName === 'WalletConnect'
+            {store.isMetamaskWallet ||
+            store.isWalletConnect ||
+            store.isPortisWallet ||
+            store.isFortmaticWallet
               ? store.hint
               : 'Connecting to '}
             {walletName}
@@ -349,8 +350,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
             <>
               <Spinner />
               <p className='modal-instructions'>
-                {store.walletName !== 'Fortmatic' &&
-                  store.walletName !== 'BurnerWallet' &&
+                {!store.isFortmaticWallet &&
+                  !store.isBurnerWallet &&
                   'Follow the instructions in the pop up'}
               </p>
             </>
@@ -363,9 +364,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
               {'Login'}
             </button>
           )}
-          {(store.walletName !== 'BurnerWallet' ||
-            (store.walletName === 'BurnerWallet' &&
-              !store.zkWalletInitializing)) && (
+          {(!store.isBurnerWallet ||
+            (store.isBurnerWallet && !store.zkWalletInitializing)) && (
             <button
               onClick={() => handleLogout(false, '')}
               className='btn btn-cancel btn-tr '

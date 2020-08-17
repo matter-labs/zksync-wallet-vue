@@ -120,7 +120,7 @@ export const useTransaction = () => {
       if (zkWallet) {
         const zkSync = await import('zksync');
         try {
-          if (store.walletName !== 'BurnerWallet')
+          if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
           setLoading(true);
           const handleMax = ethBalances.filter(
@@ -271,7 +271,7 @@ export const useTransaction = () => {
         store.txButtonUnlocked = false;
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
           setLoading(true);
-          if (store.walletName !== 'BurnerWallet')
+          if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
           const handleMax = zkBalances.filter(
             balance => balance.symbol === symbol || balance.address === symbol,
@@ -346,7 +346,7 @@ export const useTransaction = () => {
         store.txButtonUnlocked = false;
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
           setLoading(true);
-          if (store.walletName !== 'BurnerWallet')
+          if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
           const handleMax = zkBalances.filter(
             balance => balance.symbol === symbol || balance.address === symbol,

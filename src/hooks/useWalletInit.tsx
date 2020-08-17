@@ -33,16 +33,29 @@ const useWalletInit = () => {
         signUp()
           .then(async res => {
             store.ethId = res;
-            if (!wCQRScanned && store.walletName === 'WalletConnect') {
+
+            if (!wCQRScanned && store.isWalletConnect) {
               store.zkWalletInitializing = false;
             }
-            if (store.walletName === 'WalletConnect') {
+            if (store.isPortisWallet) {
+              store.zkWalletInitializing = false;
+            }
+            if (store.isFortmaticWallet) {
+              if (store.hint === 'Connected to ') {
+                store.zkWalletInitializing = true;
+              }
+              if (!!store.provider && store.hint !== 'Connected to ') {
+                store.zkWalletInitializing = false;
+                store.hint = 'Connected to ';
+              }
+            }
+            if (store.isWalletConnect || store.isPortisWallet) {
               store.hint = 'Connected to ';
-              if (store.walletName !== 'WalletConnect') {
+              if (!store.isWalletConnect) {
                 store.zkWalletInitializing = false;
               }
             }
-            if (store.walletName === 'WalletConnect' && !!prevProviderState) {
+            if (store.isWalletConnect && !!prevProviderState) {
               store.hint = 'Connecting to ';
             }
             store.isAccessModalOpen = true;
@@ -73,7 +86,7 @@ const useWalletInit = () => {
   );
 
   const getSigner = useCallback(provider => {
-    if (provider && store.walletName !== 'BurnerWallet') {
+    if (provider && !store.isBurnerWallet) {
       const signer = new ethers.providers.Web3Provider(provider).getSigner();
       return signer;
     }
@@ -85,32 +98,32 @@ const useWalletInit = () => {
     try {
       const zkSync = await import('zksync');
       store.zkWalletInitializing = true;
-
       if (
         !store.provider &&
-        store.walletName !== 'Portis' &&
-        store.walletName !== 'Fortmatic' &&
-        store.walletName !== 'WalletConnect' &&
-        store.walletName !== 'BurnerWallet'
+        !store.isPortisWallet &&
+        !store.isFortmaticWallet &&
+        !store.isWalletConnect &&
+        !store.isBurnerWallet
       ) {
         store.provider = window['ethereum'];
-      } else if (store.walletName === 'Portis') {
-        portisConnector(store, connect, getSigner);
-      } else if (store.walletName === 'Fortmatic') {
+      } else if (store.isPortisWallet && window.location.pathname.length > 1) {
+        await portisConnector(store, connect, getSigner);
+      } else if (store.isFortmaticWallet) {
         fortmaticConnector(store, connect, getSigner);
-      } else if (store.walletName === 'WalletConnect') {
+        store.zkWalletInitializing = true;
+      } else if (store.isWalletConnect) {
         walletConnectConnector(store, connect);
-      } else if (store.walletName === 'BurnerWallet') {
+      } else if (store.isBurnerWallet) {
         burnerWalletConnector(store);
       }
       const provider = store.provider;
       if (
         provider &&
         !provider.selectedAddress &&
-        store.walletName !== 'BurnerWallet' &&
-        store.walletName !== 'Portis' &&
-        store.walletName !== 'WalletConnect' &&
-        store.walletName !== 'Fortmatic'
+        !store.isBurnerWallet &&
+        !store.isPortisWallet &&
+        !store.isWalletConnect &&
+        !store.isFortmaticWallet
       ) {
         // Could fail, if there's no Metamask in the browser
         if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
@@ -129,14 +142,13 @@ const useWalletInit = () => {
       if (
         provider &&
         !provider.selectedAddress &&
-        store.walletName !== 'BurnerWallet' &&
-        store.walletName !== 'Portis' &&
-        store.walletName !== 'Fortmatic'
+        !store.isBurnerWallet &&
+        !store.isFortmaticWallet
       ) {
         store.hint = 'Connected to ';
       }
 
-      if (store.walletName === 'BurnerWallet') {
+      if (store.isBurnerWallet) {
         const burnerWallet = window.localStorage?.getItem('burnerWallet');
         const provider = await getDefaultProvider(LINKS_CONFIG.network);
         if (!!burnerWallet) {
@@ -157,7 +169,7 @@ const useWalletInit = () => {
       }
       const wallet = getSigner(provider);
 
-      if (store.walletName !== 'BurnerWallet') {
+      if (!store.isBurnerWallet) {
         store.ethWallet = wallet;
       }
 
@@ -167,7 +179,7 @@ const useWalletInit = () => {
         LINKS_CONFIG.ws_api,
       );
       const syncWallet = await zkSync.Wallet.fromEthSigner(
-        (store.walletName === 'BurnerWallet'
+        (store.isBurnerWallet
           ? store.ethWallet
           : wallet) as ethers.providers.JsonRpcSigner,
         syncProvider,
@@ -269,7 +281,6 @@ const useWalletInit = () => {
           store.unlocked = data;
         });
       }
-
       store.zkWalletInitializing = false;
     } catch (err) {
       store.zkWalletInitializing = false;

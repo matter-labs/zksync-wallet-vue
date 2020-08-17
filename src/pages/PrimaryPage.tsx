@@ -14,6 +14,8 @@ import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
 import { LINKS_CONFIG } from 'src/config';
 
+import { portisConnector } from 'src/components/Wallets/walletConnectors';
+
 import {
   BRAVE_NON_WORKING_WALLETS,
   DESKTOP_ONLY_WALLETS,
@@ -38,7 +40,7 @@ const PrimaryPage: React.FC = observer(() => {
 
   library.add(fas);
 
-  const { createWallet } = useWalletInit();
+  const { connect, getSigner, createWallet } = useWalletInit();
 
   const providerWalletName = getWalletNameFromProvider();
 
@@ -98,8 +100,8 @@ const PrimaryPage: React.FC = observer(() => {
     (key: WalletType) => () => {
       if (key === 'Web3') {
         store.zkWalletInitializing = true;
-        const web3 = new Web3(window['web3'].getDefaultProvider);
-        window['ethereum'].enable().then(() => {
+        const web3 = new Web3(window['web3']?.getDefaultProvider);
+        window['ethereum']?.enable().then(() => {
           web3.eth.getAccounts((error, accounts) => {
             console.log(accounts);
             createWallet();
@@ -138,6 +140,15 @@ const PrimaryPage: React.FC = observer(() => {
           createWallet();
         }
       }
+      if (key === 'Portis') {
+        store.setBatch({
+          walletName: key,
+          normalBg: true,
+          isAccessModalOpen: true,
+        });
+        portisConnector(store, connect, getSigner);
+        store.hint = 'Connecting to ';
+      }
       if (wallets.includes(key)) {
         if (key === 'Other') return;
         if (key === 'WalletConnect') {
@@ -155,6 +166,7 @@ const PrimaryPage: React.FC = observer(() => {
             normalBg: true,
             isAccessModalOpen: true,
           });
+          store.hint = 'Connecting to ';
         }
         if (store.provider?.selectedAddress) {
           store.zkWalletInitializing = true;

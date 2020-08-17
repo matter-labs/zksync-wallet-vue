@@ -151,7 +151,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       async (withLoading: boolean) => {
         try {
           store.txButtonUnlocked = false;
-          if (store.walletName !== 'BurnerWallet') {
+          if (!store.isBurnerWallet) {
             store.hint = 'Follow the instructions in the pop up';
           }
           if (withLoading === true) {
@@ -191,7 +191,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     useEffect(() => {
       if (
-        store.walletName === 'BurnerWallet' &&
+        store.isBurnerWallet &&
         !store.unlocked &&
         zkWallet &&
         title !== 'Deposit'
@@ -816,7 +816,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const handleUnlockERC = useCallback(() => {
       setUnlockingERCProcess(true);
       setLoading(true);
-      if (store.walletName !== 'BurnerWallet') {
+      if (!store.isBurnerWallet) {
         store.hint = 'Follow the instructions in the pop up';
       }
       zkWallet
@@ -1040,7 +1040,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <button
               onClick={e => {
                 e.stopPropagation();
-                if (store.walletName !== 'BurnerWallet')
+                if (!store.isBurnerWallet)
                   store.hint = 'Follow the instructions in the pop up';
                 store.modalSpecifier = 'sign-metamask';
                 symbol === 'ETH'
@@ -1068,9 +1068,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     );
 
     const burnerWalletAccountUnlockCondition =
-      store.walletName === 'BurnerWallet' &&
-      !store.unlocked &&
-      title !== 'Deposit';
+      store.isBurnerWallet && !store.unlocked && title !== 'Deposit';
 
     const calculateMaxValue = () => {
       if (store.zkWallet) {
@@ -1104,7 +1102,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           }}
         >
           <h2 className='transaction-title'>{'Minting token'}</h2>
-          {store.walletName !== 'BurnerWallet' && <p>{store.hint}</p>}
+          {!store.isBurnerWallet && <p>{store.hint}</p>}
           <Spinner />
           <button
             onClick={() => (store.modalSpecifier = '')}
@@ -1209,7 +1207,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             title !== 'Deposit' &&
             zkBalancesLoaded &&
             !!store.isAccountBalanceNotEmpty &&
-            store.walletName !== 'BurnerWallet' && (
+            !store.isBurnerWallet && (
               <LockedTx
                 handleCancel={handleCancel}
                 handleUnlock={() => handleUnlock(true)}
