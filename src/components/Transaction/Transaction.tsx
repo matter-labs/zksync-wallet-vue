@@ -27,7 +27,12 @@ import {
   handleExponentialNumbers,
   checkForEmptyBalance,
 } from 'src/utils';
-import { LINKS_CONFIG, FAUCET_TOKEN_API, ETH_MINT_ADDRESS } from 'src/config';
+import {
+  LINKS_CONFIG,
+  FAUCET_TOKEN_API,
+  ETH_MINT_ADDRESS,
+  MAX_WITHDRAWAL_TIME,
+} from 'src/config';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { INPUT_VALIDATION } from 'constants/regExs';
@@ -1687,7 +1692,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
                     {title === 'Withdraw' && (
                       <p className='withdraw-hint'>
-                        {'Your withdrawal should take max. 60 minutes'}
+                        {`Your withdrawal should take max. ${MAX_WITHDRAWAL_TIME /
+                          3600} hours`}
                       </p>
                     )}
                     <div className='transaction-fee-wrapper'>

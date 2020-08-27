@@ -91,25 +91,35 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
     );
     const timeLeft =
       MAX_WITHDRAWAL_TIME - (currentTimeInSeconds - createdAtInSeconds);
-    const timeLeftInMunutes = [
-      Math.floor(timeLeft / 60),
-      timeLeft - 60 * Math.floor(timeLeft / 60),
-      timeLeft,
-    ];
+    const timeLeftInMunutes = {
+      minutes: Math.floor(timeLeft / 60),
+      seconds: timeLeft - 60 * Math.floor(timeLeft / 60),
+      timeLeft: timeLeft,
+      hours: Math.floor(timeLeft / 3600),
+    };
     return timeLeftInMunutes;
   };
+  const handleCheckForHours =
+    handleTimeLeft().hours > 0 ? `${handleTimeLeft().hours} hours ` : '';
+  const minutesRelativelyToHours =
+    handleTimeLeft().hours > 0
+      ? handleTimeLeft().minutes - handleTimeLeft().hours * 60
+      : handleTimeLeft().minutes;
+
   if (tx.verified) {
     status = 'Verified';
     content = <DoubleCheckMark />;
   } else if (tx.commited && tx.tx.type === 'Withdraw') {
     // status = 'Withdrawal in progress — it should take max. 60 min';
     status =
-      handleTimeLeft()[0] < 0
+      handleTimeLeft().minutes < 0
         ? 'Operation is taking a bit longer than usual, it should be right there!'
         : `Max ${
-            isNaN(handleTimeLeft()[2])
+            isNaN(handleTimeLeft().timeLeft)
               ? MAX_WITHDRAWAL_TIME
-              : `${handleTimeLeft()[0]} min ${handleTimeLeft()[1]} sec`
+              : `${handleCheckForHours}${minutesRelativelyToHours} min ${
+                  handleTimeLeft().seconds
+                } sec`
           }s left`;
     content = <SpinnerWorm />;
   } else if (tx.commited) {
@@ -122,13 +132,15 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
       if (!tx.commited && tx.tx.type === 'Withdraw') {
         // status = 'Withdrawal in progress — it should take max. 60 min';
         status =
-          handleTimeLeft()[0] < 0
+          handleTimeLeft().minutes < 0
             ? 'Operation is taking a bit longer than usual, it should be right there!'
             : `Max ${
-                isNaN(handleTimeLeft()[2])
-                  ? `${handleTimeLeft()[0]} min ${handleTimeLeft()[1]} sec`
-                  : MAX_WITHDRAWAL_TIME
-              } left`;
+                isNaN(handleTimeLeft().timeLeft)
+                  ? MAX_WITHDRAWAL_TIME
+                  : `${handleCheckForHours}${minutesRelativelyToHours} min ${
+                      handleTimeLeft().seconds
+                    } sec`
+              }s left`;
       } else {
         status = 'Transaction in progress';
       }

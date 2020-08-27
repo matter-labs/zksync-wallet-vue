@@ -4,7 +4,7 @@ export const DESKTOP_WALLETS = ['Metamask'];
 export const MOBILE_WALLETS = ['Coinbase Wallet'];
 
 export const MAX_DEPOSIT_TIME = 200;
-export const MAX_WITHDRAWAL_TIME = 3600;
+export const MAX_WITHDRAWAL_TIME = 10800;
 
 export const LINKS_CONFIG = {
   api: process.env.REACT_APP_ZKSYNC_API_LINK || 'stage-api.zksync.dev',
