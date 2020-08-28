@@ -16,6 +16,9 @@ import { Tx } from 'src/pages/Transactions';
 import { ethers } from 'ethers';
 
 export class Store {
+  @observable autoLoginRequestStatus = sessionStorage.getItem(
+    'autoLoginStatus',
+  );
   @observable awaitedTokens = {};
   @observable awaitedTokensConfirmations = {};
   @observable depositModal = false;

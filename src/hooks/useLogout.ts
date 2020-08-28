@@ -20,6 +20,7 @@ export function useLogout() {
         history.push('/');
       }
       store.performLogout(accessModal, walletName);
+      sessionStorage.setItem('autoLoginStatus', 'changeWallet');
     },
     [history, pathname, store],
   );
