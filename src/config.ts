@@ -47,6 +47,7 @@ export const AUTOLOGIN_WALLETS = [
   'Portis',
   'Fortmatic',
 ];
+
 export const INFURA_ID = '85d8408593834bf6889554d624be0193';
 
 export const COMMON = {
