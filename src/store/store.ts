@@ -17,6 +17,9 @@ import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
 
 export class Store {
+  @observable autoLoginRequestStatus = sessionStorage.getItem(
+    'autoLoginStatus',
+  );
   @observable awaitedTokens = {};
   @observable awaitedTokensConfirmations = {};
   @observable depositModal = false;

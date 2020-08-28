@@ -19,7 +19,11 @@ import { useMobxEffect } from './hooks/useMobxEffect';
 import { useLocation } from 'react-router-dom';
 import { useLogout } from 'hooks/useLogout';
 import useWalletInit from 'src/hooks/useWalletInit';
-import { LINKS_CONFIG, RIGHT_NETWORK_NAME } from 'src/config';
+import {
+  LINKS_CONFIG,
+  RIGHT_NETWORK_NAME,
+  AUTOLOGIN_WALLETS,
+} from 'src/config';
 import { checkForEmptyBalance } from 'src/utils';
 import {
   coinBaseConnector,
@@ -91,6 +95,13 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       return;
     store.externalWalletInitializing = false;
   }, [store.zkWallet]);
+  const savedWalletName =
+    window.localStorage?.getItem('walletName') ||
+    sessionStorage.getItem('walletName');
+  const imidiateLoginCondition: boolean =
+    window.location.pathname.length <= 1 &&
+    store.autoLoginRequestStatus !== 'changeWallet' &&
+    AUTOLOGIN_WALLETS.includes(savedWalletName ?? '');
 
   useEffect(() => {
     if (store.zkWallet) {
@@ -107,8 +118,38 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
     if (savedDoesNotExistOnLogin) {
       handleLogout(false, '');
+      sessionStorage.setItem('autoLoginStatus', 'autoLogin');
+    } else if (
+      !store.zkWallet &&
+      (window.location.pathname.length > 1 || imidiateLoginCondition)
+    ) {
+      if (
+        window.localStorage?.getItem('walletName') ||
+        sessionStorage.getItem('walletName')
+      ) {
+        if (store.autoLoginRequestStatus !== 'changeWallet')
+          sessionStorage.setItem('autoLoginStatus', 'autoLogin');
+        store.walletName = window.localStorage?.getItem('walletName')
+          ? (window.localStorage?.getItem('walletName') as WalletType)
+          : (sessionStorage.getItem('walletName') as WalletType);
+        if (store.isMetamaskWallet || store.isWalletConnect) {
+          createWallet();
+        }
+        store.normalBg = true;
+        store.isAccessModalOpen = true;
+        store.hint = 'Connecting to ';
+      } else {
+        handleLogout(false, '');
+      }
     }
-  }, [store.zkWallet, store.isAccessModalOpen]);
+  }, [store.zkWallet, store.autoLoginRequestStatus]);
+
+  /* Need to save for the possible future bugs  **/
+  // useEffect(() => {
+  //   if (!store.zkWallet && !store.isAccessModalOpen) {
+  //     window.localStorage?.removeItem('walletconnect');
+  //   }
+  // }, [store.zkWallet, store.isAccessModalOpen]);
 
   useEffect(() => {
     if (!store.isCoinbaseWallet && store.isPrimaryPage) return;
@@ -118,11 +159,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       : coinBaseConnector(store, connect);
   }, [store, store.walletName]);
 
-  useEffect(() => {
-    if (!store.zkWallet && !store.isAccessModalOpen) {
-      window.localStorage?.removeItem('walletconnect');
-    }
-  }, [store.zkWallet, store.isAccessModalOpen]);
   // Listen for network change
   useMobxEffect(() => {
     const { provider } = store;

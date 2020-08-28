@@ -26,6 +26,26 @@ export const browserWalletConnector = async (store: Store, connect) => {
   }
 };
 
+export const browserWalletConnector = async (store, connect) => {
+  const browserProvider = window?.['ethereum'];
+  store.provider = browserProvider;
+
+  if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
+    const _accs = await window['ethereum']?.request({
+      method: 'eth_accounts',
+    });
+    const signUpFunction = browserProvider?.request.bind(browserProvider, {
+      method: 'eth_requestAccounts',
+    });
+    const prevState = await _accs[0];
+    connect(browserProvider, signUpFunction, prevState);
+  } else {
+    const signUpFunction = browserProvider?.enable.bind(browserProvider);
+    const prevState = window['ethereum'].selectedAddress;
+    connect(browserProvider, signUpFunction, prevState);
+  }
+};
+
 export const portisConnector = async (store, connect, getSigner) => {
   const Portis = (await import('@portis/web3')).default;
   const portis = new Portis(

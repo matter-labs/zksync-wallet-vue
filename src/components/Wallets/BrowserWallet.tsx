@@ -5,6 +5,8 @@ import { observer } from 'mobx-react-lite';
 import useWalletInit from 'hooks/useWalletInit';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
+import { browserWalletConnector } from './walletConnectors';
+
 import { useStore } from 'src/store/context';
 
 import { browserWalletConnector } from './walletConnectors';
