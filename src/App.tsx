@@ -100,7 +100,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     sessionStorage.getItem('walletName');
   const imidiateLoginCondition: boolean =
     window.location.pathname.length <= 1 &&
-    store.autoLoginRequestStatus !== 'changeWallet' &&
+    sessionStorage.getItem('autoLoginStatus') !== 'changeWallet' &&
     AUTOLOGIN_WALLETS.includes(savedWalletName ?? '');
 
   useEffect(() => {
