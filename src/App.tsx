@@ -132,12 +132,12 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         store.walletName = window.localStorage?.getItem('walletName')
           ? (window.localStorage?.getItem('walletName') as WalletType)
           : (sessionStorage.getItem('walletName') as WalletType);
-        if (store.isMetamaskWallet || store.isWalletConnect) {
-          createWallet();
-        }
         store.normalBg = true;
         store.isAccessModalOpen = true;
         store.hint = 'Connecting to ';
+        if (store.isMetamaskWallet || store.isWalletConnect) {
+          createWallet();
+        }
       } else {
         handleLogout(false, '');
       }
@@ -145,11 +145,11 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [store.zkWallet, store.autoLoginRequestStatus]);
 
   /* Need to save for the possible future bugs  **/
-  // useEffect(() => {
-  //   if (!store.zkWallet && !store.isAccessModalOpen) {
-  //     window.localStorage?.removeItem('walletconnect');
-  //   }
-  // }, [store.zkWallet, store.isAccessModalOpen]);
+  useEffect(() => {
+    if (!store.zkWallet && !store.isAccessModalOpen) {
+      window.localStorage?.removeItem('walletconnect');
+    }
+  }, [store.zkWallet, store.isAccessModalOpen]);
 
   useEffect(() => {
     if (!store.isCoinbaseWallet && store.isPrimaryPage) return;

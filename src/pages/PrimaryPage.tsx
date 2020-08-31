@@ -15,7 +15,10 @@ import { WIDTH_BP } from 'constants/magicNumbers';
 import { LINKS_CONFIG } from 'src/config';
 import { BackButton } from 'src/components/Common/BackButton';
 
-import { portisConnector } from 'src/components/Wallets/walletConnectors';
+import {
+  portisConnector,
+  walletConnectConnector,
+} from 'src/components/Wallets/walletConnectors';
 
 import {
   BRAVE_NON_WORKING_WALLETS,
@@ -169,7 +172,11 @@ const PrimaryPage: React.FC = observer(() => {
             isAccessModalOpen: true,
           });
           const wCQRScanned = localStorage.getItem('walletconnect');
-          if (!!wCQRScanned) createWallet();
+          if (!!wCQRScanned) {
+            createWallet();
+          } else {
+            walletConnectConnector(store, connect);
+          }
         } else {
           store.setBatch({
             walletName: key,
