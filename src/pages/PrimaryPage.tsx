@@ -160,6 +160,8 @@ const PrimaryPage: React.FC = observer(() => {
             normalBg: true,
             isAccessModalOpen: true,
           });
+          const wCQRScanned = localStorage.getItem('walletconnect');
+          if (!!wCQRScanned) createWallet();
         } else {
           store.setBatch({
             walletName: key,
