@@ -114,11 +114,11 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [store.zkWallet, store.autoLoginRequestStatus]);
 
   /* Need to save for the possible future bugs  **/
-  useEffect(() => {
-    if (!store.zkWallet && !store.isAccessModalOpen) {
-      window.localStorage?.removeItem('walletconnect');
-    }
-  }, [store.zkWallet, store.isAccessModalOpen]);
+  // useEffect(() => {
+  //   if (!store.zkWallet && !store.isAccessModalOpen) {
+  //     window.localStorage?.removeItem('walletconnect');
+  //   }
+  // }, [store.zkWallet, store.isAccessModalOpen]);
 
   // Listen for network change
   useMobxEffect(() => {
