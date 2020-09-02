@@ -28,12 +28,13 @@ import { checkForEmptyBalance } from 'src/utils';
 import {
   coinBaseConnector,
   browserWalletConnector,
+  portisConnector
 } from 'src/components/Wallets/walletConnectors';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
   const { pathname } = useLocation();
-  const { createWallet, connect } = useWalletInit();
+  const { createWallet, connect, getSigner } = useWalletInit();
   const history = useHistory();
 
   const handleLogout = useLogout();
@@ -137,6 +138,9 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         store.hint = 'Connecting to ';
         if (store.isMetamaskWallet || store.isWalletConnect) {
           createWallet();
+        }
+        if (store.isPortisWallet) {
+          portisConnector(store, connect, getSigner);
         }
       } else {
         handleLogout(false, '');
