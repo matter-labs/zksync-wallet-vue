@@ -7,7 +7,7 @@ import Modal from 'components/Modal/Modal';
 import Spinner from 'components/Spinner/Spinner';
 import HintBody from 'src/components/Modal/HintBody';
 
-import { browserWalletConnector } from 'src/components/Wallets/walletConnectors';
+import { portisConnector } from 'src/components/Wallets/walletConnectors';
 
 import { IAppProps } from 'types/Common';
 
@@ -31,7 +31,7 @@ import { checkForEmptyBalance } from 'src/utils';
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
   const { pathname } = useLocation();
-  const { createWallet, connect } = useWalletInit();
+  const { createWallet, connect, getSigner } = useWalletInit();
   const history = useHistory();
 
   const handleLogout = useLogout();
@@ -106,6 +106,9 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         store.hint = 'Connecting to ';
         if (store.isMetamaskWallet || store.isWalletConnect) {
           createWallet();
+        }
+        if (store.isPortisWallet) {
+          portisConnector(store, connect, getSigner);
         }
       } else {
         handleLogout(false, '');

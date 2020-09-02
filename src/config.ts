@@ -41,7 +41,7 @@ export const RIGHT_NETWORK_NAME = NETWORKS_LIST[LINKS_CONFIG.networkId];
 
 export const RECAPTCHA_SITE_KEY = '6LdEBqUZAAAAAMAr2XDTxJHuXOxpQ7rfkn2BBfUo';
 
-export const AUTOLOGIN_WALLETS = ['Metamask', 'WalletConnect'];
+export const AUTOLOGIN_WALLETS = ['Metamask', 'WalletConnect', 'Portis'];
 
 export const COMMON = {
   ABOUT: {
