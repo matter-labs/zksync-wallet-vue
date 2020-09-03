@@ -14,6 +14,8 @@ import { WSTransport } from 'zksync/build/transport';
 import { WalletType } from 'constants/Wallets';
 import { Tx } from 'src/pages/Transactions';
 import { ethers } from 'ethers';
+import { MOBILE_DEVICE } from 'constants/regExs';
+import { WIDTH_BP } from 'constants/magicNumbers';
 
 export class Store {
   @observable autoLoginRequestStatus = sessionStorage.getItem(
@@ -22,6 +24,7 @@ export class Store {
   @observable awaitedTokens = {};
   @observable awaitedTokensConfirmations = {};
   @observable depositModal = false;
+  @observable darkMode = false;
   @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
   @observable error = '';
@@ -74,6 +77,18 @@ export class Store {
   @observable syncProvider?: Provider;
   @observable transactions: Tx[] = [];
   @observable maxConfirmAmount = 25;
+  @observable windowEthereumProvider: any = window['ethereum'];
+  @observable walletLinkObject: any = {};
+
+  @computed get isPrimaryPage() {
+    return window.location.pathname.length <= 1;
+  }
+
+  @computed get isMobileDevice() {
+    return (
+      MOBILE_DEVICE.test(navigator.userAgent) || window?.innerWidth < WIDTH_BP
+    );
+  }
 
   @computed get zkWalletAddress() {
     return this.zkWallet?.address();
@@ -112,7 +127,7 @@ export class Store {
   }
 
   @computed get doesMetamaskUsesNewEthereumAPI() {
-    return !!window['ethereum']?.request;
+    return !!this.windowEthereumProvider?.request;
   }
 
   @action

@@ -7,10 +7,16 @@ export const WALLETS = {
   Fortmatic: () => import('../components/Wallets/FortmaticWallet'),
   BurnerWallet: () => import('../components/Wallets/BurnerWallet'),
   WalletConnect: () => import('../components/Wallets/WalletConnect'),
-  // 'Coinbase Wallet': () =>
-  //   import('../components/Wallets/BrowserWallet'),
+  'Coinbase Wallet': () => import('../components/Wallets/CoinBaseWallet'),
 };
 
 export const DESKTOP_ONLY_WALLETS = ['Metamask'];
 export const MOBILE_ONLY_WALLETS = [];
 export const BRAVE_NON_WORKING_WALLETS = ['Portis'];
+
+export const COINBASE_LOCALSTORAGE_KEYS = [
+  '-walletlink:https://www.walletlink.org:session:secret',
+  '-walletlink:https://www.walletlink.org:session:linked',
+  '-walletlink:https://www.walletlink.org:Addresses',
+  '-walletlink:https://www.walletlink.org:session:id',
+];

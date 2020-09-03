@@ -147,6 +147,27 @@ const WalletConnectLater = () => (
     {' for now.'}
   </p>
 );
+
+const UnlinkCoinBase = () => {
+  const store = useStore();
+
+  return (
+    <>
+      <p>
+        {
+          'If you are meeting some troubles or want to change your coinbase wallet you can unlink the current account and scan QR code again.'
+        }
+      </p>
+      <button
+        onClick={() => store.walletLinkObject.deactivate()}
+        className='btn btn-cancel btn-tr center'
+      >
+        {'Unlink account'}
+      </button>
+    </>
+  );
+};
+
 const MakeTwitToWithdraw = observer(() => {
   const store = useStore();
 
@@ -276,6 +297,7 @@ export const HintBody: React.FC = observer(
         {modalHintMessage === 'TroubleSeeingAToken' && <TroubleSeeingAToken />}
         {modalHintMessage === 'MLTTBlockModal' && <MLTTBlockModal />}
         {modalHintMessage === 'MLTTonMainnet' && <MLTTonMainnet />}
+        {modalHintMessage === 'UnlinkCoinBase' && <UnlinkCoinBase />}
       </div>
     );
   },

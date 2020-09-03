@@ -9,10 +9,13 @@ import { useMobxEffect } from 'src/hooks/useMobxEffect';
 
 import '../../index.scss';
 import './Footer.scss';
+import { useStore } from 'src/store/context';
 
 const Footer: React.FC = (): JSX.Element => {
   const body = document.querySelector('body');
   const [darkTheme, setDarkTheme] = useState<boolean>(false);
+
+  const store = useStore();
 
   const shortedGitHash = !!LINKS_CONFIG.lastGitCommitHash
     ? `.${LINKS_CONFIG.lastGitCommitHash.toString()}`
@@ -24,6 +27,10 @@ const Footer: React.FC = (): JSX.Element => {
     }
     setDarkTheme(!darkTheme);
   }, [body, darkTheme]);
+
+  useEffect(() => {
+    store.darkMode = darkTheme;
+  }, [darkTheme]);
 
   useMobxEffect(() => {
     const theme = window.localStorage?.getItem('darkTheme');

@@ -27,6 +27,10 @@ import {
   AUTOLOGIN_WALLETS,
 } from 'src/config';
 import { checkForEmptyBalance } from 'src/utils';
+import {
+  coinBaseConnector,
+  browserWalletConnector,
+} from 'src/components/Wallets/walletConnectors';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
@@ -82,6 +86,18 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     window.location.pathname.length <= 1 &&
     sessionStorage.getItem('autoLoginStatus') !== 'changeWallet' &&
     AUTOLOGIN_WALLETS.includes(savedWalletName ?? '');
+  const savedWalletExistsOnLogin =
+    !store.zkWallet &&
+    !store.isPrimaryPage &&
+    (window.localStorage?.getItem('walletName') ||
+      sessionStorage.getItem('walletName'));
+
+  const savedDoesNotExistOnLogin =
+    !store.isPrimaryPage &&
+    !(
+      window.localStorage?.getItem('walletName') ||
+      sessionStorage.getItem('walletName')
+    );
 
   useEffect(() => {
     if (store.zkWallet) {
@@ -123,11 +139,24 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   //   }
   // }, [store.zkWallet, store.isAccessModalOpen]);
 
+  useEffect(() => {
+    if (!store.isCoinbaseWallet && store.isPrimaryPage) return;
+    store.isMobileDevice
+      ? (browserWalletConnector(store, connect),
+        (store.zkWalletInitializing = false))
+      : coinBaseConnector(store, connect);
+  }, [store, store.walletName]);
+
+  useEffect(() => {
+    if (!store.zkWallet && !store.isAccessModalOpen) {
+      window.localStorage?.removeItem('walletconnect');
+    }
+  }, [store.zkWallet, store.isAccessModalOpen]);
   // Listen for network change
   useMobxEffect(() => {
     const { provider } = store;
     if (provider && store.isMetamaskWallet) {
-      window['ethereum'].autoRefreshOnNetworkChange = false;
+      store.windowEthereumProvider.autoRefreshOnNetworkChange = false;
       const networkChangeListener = () => {
         if (wrongNetworkDetector() && store.isMetamaskWallet) {
           store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
@@ -188,7 +217,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
     if (!provider && !walletName) return;
     const accountChangeListener = async () => {
-      const newAddress = await window['ethereum']?.request({
+      const newAddress = await store.windowEthereumProvider?.request({
         method: 'eth_accounts',
       });
       setCurAddress(newAddress[0]);
@@ -243,7 +272,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (zkWallet || pathname === '/') return;
     store.setBatch({
       isAccessModalOpen: true,
-      provider: window['ethereum'],
+      provider: store.windowEthereumProvider,
     });
   }, [pathname, store]);
 
@@ -400,6 +429,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
             >
               {store.zkWalletInitializing ? 'Close' : 'Cancel'}
             </button>
+          )}
+          {store.isCoinbaseWallet && (
+            <span
+              onClick={() => {
+                store.modalHintMessage = 'UnlinkCoinBase';
+                store.modalSpecifier = 'modal-hint';
+              }}
+              className='undo-btn block'
+            >
+              {'Unlink account'}
+            </span>
           )}
         </>
       </Modal>
