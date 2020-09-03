@@ -1,6 +1,31 @@
 import Fortmatic from 'fortmatic';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { LINKS_CONFIG } from 'src/config';
+
+import { WalletLinkConnector } from './WalletLinkExtended/WalletLinkExtended';
+
+import { Store } from 'src/store/store';
+
+import { LINKS_CONFIG, INFURA_ID } from 'src/config';
+
+export const browserWalletConnector = async (store: Store, connect) => {
+  const browserProvider: any = window?.['ethereum'];
+  store.provider = browserProvider;
+
+  if (store.doesMetamaskUsesNewEthereumAPI) {
+    const _accs = await browserProvider?.request({
+      method: 'eth_accounts',
+    });
+    const signUpFunction = browserProvider?.request.bind(browserProvider, {
+      method: 'eth_requestAccounts',
+    });
+    const prevState = await _accs[0];
+    connect(browserProvider, signUpFunction, prevState);
+  } else {
+    const signUpFunction = browserProvider?.enable.bind(browserProvider);
+    const prevState = browserProvider?.selectedAddress;
+    connect(browserProvider, signUpFunction, prevState);
+  }
+};
 
 export const portisConnector = async (store, connect, getSigner) => {
   const Portis = (await import('@portis/web3')).default;
@@ -39,4 +64,24 @@ export const burnerWalletConnector = store => {
     //dummy for future
   };
   createAccount();
+};
+
+export const coinBaseConnector = (store: Store, connect?) => {
+  if (store.isMobileDevice && connect) {
+    browserWalletConnector(store, connect);
+  } else {
+    const walletLink = new WalletLinkConnector({
+      url: `https://${LINKS_CONFIG.network}.infura.io/v3/${INFURA_ID}`,
+      appName: 'zkSync',
+      chainId: parseInt(LINKS_CONFIG.networkId),
+      darkMode: store.darkMode,
+      appLogoUrl: '//zksync.io/LogoHero.svg',
+    });
+    walletLink.activate().then(res => {
+      store.zkWalletInitializing = false;
+      store.provider = res.provider;
+      store.ethId = res.account as string;
+    });
+    store.walletLinkObject = walletLink;
+  }
 };

@@ -39,6 +39,7 @@ const useWalletInit = () => {
             }
             if (store.isPortisWallet) {
               store.zkWalletInitializing = false;
+              store.hint = 'Connected to ';
             }
             if (store.isFortmaticWallet) {
               if (store.hint === 'Connected to ') {
@@ -98,15 +99,9 @@ const useWalletInit = () => {
     try {
       const zkSync = await import('zksync');
       store.zkWalletInitializing = true;
-      if (
-        !store.provider &&
-        !store.isPortisWallet &&
-        !store.isFortmaticWallet &&
-        !store.isWalletConnect &&
-        !store.isBurnerWallet
-      ) {
-        store.provider = window['ethereum'];
-      } else if (store.isPortisWallet && window.location.pathname.length > 1) {
+      if (!store.provider && (store.isMetamaskWallet || store.isWeb3)) {
+        store.provider = store.windowEthereumProvider;
+      } else if (store.isPortisWallet && !store.isPrimaryPage) {
         await portisConnector(store, connect, getSigner);
       } else if (store.isFortmaticWallet) {
         fortmaticConnector(store, connect, getSigner);
@@ -120,21 +115,18 @@ const useWalletInit = () => {
       if (
         provider &&
         !provider.selectedAddress &&
-        !store.isBurnerWallet &&
-        !store.isPortisWallet &&
-        !store.isWalletConnect &&
-        !store.isFortmaticWallet
+        (store.isMetamaskWallet || store.isWeb3)
       ) {
         // Could fail, if there's no Metamask in the browser
         if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
-          const _accs = await window['ethereum']?.request({
+          const _accs = await store.windowEthereumProvider?.request({
             method: 'eth_accounts',
           });
           if (!_accs[0]) {
             await store.provider.request({ method: 'eth_requestAccounts' });
           }
         } else {
-          window['ethereum'].enable();
+          store.windowEthereumProvider?.enable();
         }
         store.hint = 'Connected to ';
       }
@@ -169,7 +161,7 @@ const useWalletInit = () => {
       }
       const wallet = getSigner(provider);
 
-      if (!store.isBurnerWallet) {
+      if (!store.isBurnerWallet && !store.isCoinbaseWallet) {
         store.ethWallet = wallet;
       }
 
@@ -184,7 +176,6 @@ const useWalletInit = () => {
           : wallet) as ethers.providers.JsonRpcSigner,
         syncProvider,
       );
-
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
       store.verified = accountState?.verified.balances;

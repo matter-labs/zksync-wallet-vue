@@ -21,11 +21,15 @@ import { useLogout } from 'hooks/useLogout';
 import useWalletInit from 'src/hooks/useWalletInit';
 import { LINKS_CONFIG, RIGHT_NETWORK_NAME } from 'src/config';
 import { checkForEmptyBalance } from 'src/utils';
+import {
+  coinBaseConnector,
+  browserWalletConnector,
+} from 'src/components/Wallets/walletConnectors';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
   const { pathname } = useLocation();
-  const { createWallet } = useWalletInit();
+  const { createWallet, connect } = useWalletInit();
   const history = useHistory();
 
   const handleLogout = useLogout();
@@ -69,26 +73,44 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
   }, 5000);
 
+  const savedWalletExistsOnLogin =
+    !store.zkWallet &&
+    !store.isPrimaryPage &&
+    (window.localStorage?.getItem('walletName') ||
+      sessionStorage.getItem('walletName'));
+
+  const savedDoesNotExistOnLogin =
+    !store.isPrimaryPage &&
+    !(
+      window.localStorage?.getItem('walletName') ||
+      sessionStorage.getItem('walletName')
+    );
+
   useEffect(() => {
     if (store.zkWallet) {
       sessionStorage.setItem('walletName', store.walletName);
       window.localStorage?.setItem('walletName', store.walletName);
-    } else if (!store.zkWallet && window.location.pathname.length > 1) {
-      if (
-        window.localStorage?.getItem('walletName') ||
-        sessionStorage.getItem('walletName')
-      ) {
-        store.walletName = window.localStorage?.getItem('walletName')
-          ? (window.localStorage?.getItem('walletName') as WalletType)
-          : (sessionStorage.getItem('walletName') as WalletType);
-        store.normalBg = true;
-        store.isAccessModalOpen = true;
-        store.hint = 'Connecting to ';
-      } else {
-        handleLogout(false, '');
-      }
+    }
+    if (savedWalletExistsOnLogin) {
+      store.walletName = window.localStorage?.getItem('walletName')
+        ? (window.localStorage?.getItem('walletName') as WalletType)
+        : (sessionStorage.getItem('walletName') as WalletType);
+      store.normalBg = true;
+      store.isAccessModalOpen = true;
+      store.hint = 'Connecting to ';
+    }
+    if (savedDoesNotExistOnLogin) {
+      handleLogout(false, '');
     }
   }, [store.zkWallet, store.isAccessModalOpen]);
+
+  useEffect(() => {
+    if (!store.isCoinbaseWallet && store.isPrimaryPage) return;
+    store.isMobileDevice
+      ? (browserWalletConnector(store, connect),
+        (store.zkWalletInitializing = false))
+      : coinBaseConnector(store, connect);
+  }, [store, store.walletName]);
 
   useEffect(() => {
     if (!store.zkWallet && !store.isAccessModalOpen) {
@@ -99,7 +121,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   useMobxEffect(() => {
     const { provider } = store;
     if (provider && store.isMetamaskWallet) {
-      window['ethereum'].autoRefreshOnNetworkChange = false;
+      store.windowEthereumProvider.autoRefreshOnNetworkChange = false;
       const networkChangeListener = () => {
         if (wrongNetworkDetector() && store.isMetamaskWallet) {
           store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
@@ -160,7 +182,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
     if (!provider && !walletName) return;
     const accountChangeListener = async () => {
-      const newAddress = await window['ethereum']?.request({
+      const newAddress = await store.windowEthereumProvider?.request({
         method: 'eth_accounts',
       });
       setCurAddress(newAddress[0]);
@@ -215,7 +237,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (zkWallet || pathname === '/') return;
     store.setBatch({
       isAccessModalOpen: true,
-      provider: window['ethereum'],
+      provider: store.windowEthereumProvider,
     });
   }, [pathname, store]);
 
@@ -372,6 +394,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
             >
               {store.zkWalletInitializing ? 'Close' : 'Cancel'}
             </button>
+          )}
+          {store.isCoinbaseWallet && (
+            <span
+              onClick={() => {
+                store.modalHintMessage = 'UnlinkCoinBase';
+                store.modalSpecifier = 'modal-hint';
+              }}
+              className='undo-btn block'
+            >
+              {'Unlink account'}
+            </span>
           )}
         </>
       </Modal>

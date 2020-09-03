@@ -20,6 +20,7 @@ export function useLogout() {
         history.push('/');
       }
       store.performLogout(accessModal, walletName);
+      window.location.reload();
     },
     [history, pathname, store],
   );

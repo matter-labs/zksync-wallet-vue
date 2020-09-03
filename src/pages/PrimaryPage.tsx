@@ -51,10 +51,10 @@ const PrimaryPage: React.FC = observer(() => {
 
   const walletsWithWeb3 = () => {
     const _w = Object.keys(WALLETS);
-    if (!!window['ethereum']?._metamask) {
+    if (!!store.windowEthereumProvider?._metamask) {
       return _w.filter(el => el !== 'Web3');
     }
-    if (!window['ethereum']?._metamask && !!window['web3']) {
+    if (!store.windowEthereumProvider?._metamask && !!window['web3']) {
       return _w.filter(el => el !== 'Metamask');
     } else {
       return _w.filter(el => el !== 'Metamask' && el !== 'Web3');
@@ -84,7 +84,7 @@ const PrimaryPage: React.FC = observer(() => {
   );
 
   useEffect(() => {
-    if (!store.walletName && window.location.pathname.length === 1) {
+    if (!store.walletName && store.isPrimaryPage) {
       store.isAccessModalOpen = false;
     }
   }, [store.zkWallet, store.walletName, store.isAccessModalOpen]);
@@ -98,12 +98,14 @@ const PrimaryPage: React.FC = observer(() => {
 
   const selectWallet = useCallback(
     (key: WalletType) => () => {
-      if (key === 'Web3') {
+      if (
+        key === 'Web3' ||
+        (key === 'Coinbase Wallet' && store.isMobileDevice)
+      ) {
         store.zkWalletInitializing = true;
         const web3 = new Web3(window['web3']?.getDefaultProvider);
-        window['ethereum']?.enable().then(() => {
-          web3.eth.getAccounts((error, accounts) => {
-            console.log(accounts);
+        store.windowEthereumProvider?.enable().then(() => {
+          web3.eth.getAccounts(() => {
             createWallet();
           });
         });
@@ -131,12 +133,12 @@ const PrimaryPage: React.FC = observer(() => {
           store.hint = 'Connecting to ';
         }
         if (
-          window['ethereum'] &&
-          +window['ethereum'].chainId === +LINKS_CONFIG.networkId
+          store.windowEthereumProvider &&
+          +store.windowEthereumProvider?.chainId === +LINKS_CONFIG.networkId
         ) {
           store.zkWalletInitializing = true;
           createWallet();
-        } else if (!window['ethereum'].chainId && !!isAndroid) {
+        } else if (!store.windowEthereumProvider?.chainId && !!isAndroid) {
           createWallet();
         }
       }
@@ -146,6 +148,9 @@ const PrimaryPage: React.FC = observer(() => {
           normalBg: true,
           isAccessModalOpen: true,
         });
+        if (!store.provider) {
+          store.hint = 'Connecting to ';
+        }
         portisConnector(store, connect, getSigner);
         store.hint = 'Connecting to ';
       }

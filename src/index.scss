@@ -221,9 +221,9 @@ button {
   }
 
   &-cancel {
-    width: 100px;
     height: 26px;
     margin-top: 10px;
+    padding: 0 25px;
     color: var(--delete-color);
     font-size: var(--md-font-size);
     background-color: var(--transparent);
@@ -233,6 +233,11 @@ button {
     &.dark {
       width: 300px;
       color: var(--hints-color);
+    }
+
+    &.center {
+      display: block;
+      margin: 10px auto;
     }
 
     &.delete {
@@ -741,6 +746,12 @@ h2 {
     &.margin {
       display: block;
       margin: 15px auto 25px;
+    }
+
+    &.block {
+      display: block;
+      margin-top: 20px;
+      margin-left: 0;
     }
 
     &.large {
