@@ -51,6 +51,7 @@ export const AUTOLOGIN_WALLETS = [
   'WalletConnect',
   'Portis',
   'Fortmatic',
+  'Coinbase Wallet',
 ];
 
 export const COMMON = {
