@@ -78,19 +78,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
   }, 5000);
 
-  const savedWalletExistsOnLogin =
-    !store.zkWallet &&
-    !store.isPrimaryPage &&
-    (window.localStorage?.getItem('walletName') ||
-      sessionStorage.getItem('walletName'));
-
-  const savedDoesNotExistOnLogin =
-    !store.isPrimaryPage &&
-    !(
-      window.localStorage?.getItem('walletName') ||
-      sessionStorage.getItem('walletName')
-    );
-
   useEffect(() => {
     if (!store.zkWallet && store.modalHintMessage === 'ExternalWalletLogin')
       return;
@@ -103,6 +90,18 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     window.location.pathname.length <= 1 &&
     sessionStorage.getItem('autoLoginStatus') !== 'changeWallet' &&
     AUTOLOGIN_WALLETS.includes(savedWalletName ?? '');
+  const savedWalletExistsOnLogin =
+    !store.zkWallet &&
+    !store.isPrimaryPage &&
+    (window.localStorage?.getItem('walletName') ||
+      sessionStorage.getItem('walletName'));
+
+  const savedDoesNotExistOnLogin =
+    !store.isPrimaryPage &&
+    !(
+      window.localStorage?.getItem('walletName') ||
+      sessionStorage.getItem('walletName')
+    );
 
   useEffect(() => {
     if (store.zkWallet) {

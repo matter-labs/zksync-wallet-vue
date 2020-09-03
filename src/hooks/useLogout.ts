@@ -22,6 +22,7 @@ export function useLogout() {
       store.performLogout(accessModal, walletName);
       window.location.reload();
       sessionStorage.setItem('autoLoginStatus', 'changeWallet');
+      window.location.reload();
     },
     [history, pathname, store],
   );
