@@ -46,6 +46,7 @@ export const AUTOLOGIN_WALLETS = [
   'WalletConnect',
   'Portis',
   'Fortmatic',
+  'Coinbase Wallet',
 ];
 
 export const INFURA_ID = '85d8408593834bf6889554d624be0193';

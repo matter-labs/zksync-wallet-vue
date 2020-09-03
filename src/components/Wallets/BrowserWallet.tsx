@@ -9,8 +9,6 @@ import { browserWalletConnector } from './walletConnectors';
 
 import { useStore } from 'src/store/context';
 
-import { browserWalletConnector } from './walletConnectors';
-
 const BrowserWallet: React.FC = observer(() => {
   const { connect } = useWalletInit();
   const store = useStore();

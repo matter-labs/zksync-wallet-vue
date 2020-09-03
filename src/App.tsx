@@ -7,8 +7,6 @@ import Modal from 'components/Modal/Modal';
 import Spinner from 'components/Spinner/Spinner';
 import HintBody from 'src/components/Modal/HintBody';
 
-import { portisConnector } from 'src/components/Wallets/walletConnectors';
-
 import { IAppProps } from 'types/Common';
 
 import { WRONG_NETWORK } from 'constants/regExs';
@@ -30,6 +28,7 @@ import { checkForEmptyBalance } from 'src/utils';
 import {
   coinBaseConnector,
   browserWalletConnector,
+  portisConnector,
 } from 'src/components/Wallets/walletConnectors';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
@@ -79,13 +78,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
   }, 5000);
 
-  const savedWalletName =
-    window.localStorage?.getItem('walletName') ||
-    sessionStorage.getItem('walletName');
-  const imidiateLoginCondition: boolean =
-    window.location.pathname.length <= 1 &&
-    sessionStorage.getItem('autoLoginStatus') !== 'changeWallet' &&
-    AUTOLOGIN_WALLETS.includes(savedWalletName ?? '');
   const savedWalletExistsOnLogin =
     !store.zkWallet &&
     !store.isPrimaryPage &&
@@ -99,36 +91,43 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       sessionStorage.getItem('walletName')
     );
 
+  const savedWalletName =
+    window.localStorage?.getItem('walletName') ||
+    sessionStorage.getItem('walletName');
+
+  const imidiateLoginCondition: boolean =
+    store.isPrimaryPage &&
+    sessionStorage.getItem('autoLoginStatus') !== 'changeWallet' &&
+    AUTOLOGIN_WALLETS.includes(savedWalletName ?? '');
+
   useEffect(() => {
     if (store.zkWallet) {
       sessionStorage.setItem('walletName', store.walletName);
       window.localStorage?.setItem('walletName', store.walletName);
       sessionStorage.setItem('autoLoginStatus', 'autoLogin');
-    } else if (
+    }
+    if (
       !store.zkWallet &&
-      (window.location.pathname.length > 1 || imidiateLoginCondition)
+      savedWalletName &&
+      (!store.isPrimaryPage || imidiateLoginCondition)
     ) {
-      if (
-        window.localStorage?.getItem('walletName') ||
-        sessionStorage.getItem('walletName')
-      ) {
-        if (store.autoLoginRequestStatus !== 'changeWallet')
-          sessionStorage.setItem('autoLoginStatus', 'autoLogin');
-        store.walletName = window.localStorage?.getItem('walletName')
-          ? (window.localStorage?.getItem('walletName') as WalletType)
-          : (sessionStorage.getItem('walletName') as WalletType);
-        store.normalBg = true;
-        store.isAccessModalOpen = true;
-        store.hint = 'Connecting to ';
-        if (store.isMetamaskWallet || store.isWalletConnect) {
-          createWallet();
-        }
-        if (store.isPortisWallet) {
-          portisConnector(store, connect, getSigner);
-        }
-      } else {
-        handleLogout(false, '');
+      if (store.autoLoginRequestStatus !== 'changeWallet')
+        sessionStorage.setItem('autoLoginStatus', 'autoLogin');
+      store.walletName = window.localStorage?.getItem('walletName')
+        ? (window.localStorage?.getItem('walletName') as WalletType)
+        : (sessionStorage.getItem('walletName') as WalletType);
+      store.normalBg = true;
+      store.isAccessModalOpen = true;
+      store.hint = 'Connecting to ';
+      if (store.isMetamaskWallet || store.isWalletConnect) {
+        createWallet();
       }
+      if (store.isPortisWallet) {
+        portisConnector(store, connect, getSigner);
+      }
+    }
+    if (!store.isPrimaryPage && !savedWalletName) {
+      handleLogout(false, '');
     }
   }, [store.zkWallet, store.autoLoginRequestStatus]);
 
