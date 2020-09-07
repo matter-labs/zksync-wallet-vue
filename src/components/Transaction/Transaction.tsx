@@ -164,16 +164,21 @@ const Transaction: React.FC<ITransactionProps> = observer(
             setLoading(true);
           }
           let changePubkey;
+          const isOnchainAuthSigningKeySet = await zkWallet?.isOnchainAuthSigningKeySet();
+          const isSigningKeySet = await zkWallet?.isSigningKeySet();
           if (
             store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271'
           ) {
-            if (!(await zkWallet?.isOnchainAuthSigningKeySet())) {
+            if (!isOnchainAuthSigningKeySet) {
               const onchainAuthTransaction = await zkWallet?.onchainAuthSigningKey();
               await onchainAuthTransaction?.wait();
               changePubkey = await zkWallet?.setSigningKey('committed', true);
             }
+            if (!!isOnchainAuthSigningKeySet && !isSigningKeySet) {
+              changePubkey = await zkWallet?.setSigningKey('committed', true);
+            }
           } else {
-            if (!(await zkWallet?.isOnchainAuthSigningKeySet())) {
+            if (!isOnchainAuthSigningKeySet) {
               changePubkey = await zkWallet?.setSigningKey();
             }
           }
