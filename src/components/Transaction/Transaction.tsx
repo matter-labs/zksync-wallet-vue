@@ -10,6 +10,7 @@ import { AccountState, TokenLike } from 'zksync/build/types';
 import { Wallet, Provider, utils } from 'zksync';
 
 import { DataList } from 'components/DataList/DataListNew';
+import { CheckBox } from 'src/components/Common/CheckBox';
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
 import Spinner from 'components/Spinner/Spinner';
@@ -517,7 +518,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [ethId, value]);
 
     const handleFee = useCallback(
-      (e?, symbol?, address?) => {
+      (e?, symbol?, address?, fastFee?) => {
         if (
           title !== 'Deposit' &&
           (symbol || symbolName) &&
@@ -1098,6 +1099,48 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const MLTTFeePrice = symbolName === 'MLTT' ? 1 : 0;
 
+    const WithdrawTypeBlock = observer(() => {
+      const showFeeCondition: boolean =
+        symbolName && fee && ADDRESS_VALIDATION['eth'].test(addressValue);
+
+      return (
+        <>
+          {!!showFeeCondition && store.zkWallet && (
+            <div
+              className='withdraw-type-block'
+              onClick={() => {
+                store.fastWithdrawal = !store.fastWithdrawal;
+              }}
+            >
+              <CheckBox checked={!store.fastWithdrawal} />
+              <p className='checkbox-text'>{`Normal (fee ${handleFormatToken(
+                store.zkWallet,
+                symbolName,
+                +fee,
+              )} ${symbolName}), processing time ${MAX_WITHDRAWAL_TIME /
+                60 /
+                60} hours`}</p>
+            </div>
+          )}
+          {!!showFeeCondition && store.zkWallet && (
+            <div
+              className='withdraw-type-block'
+              onClick={() => {
+                store.fastWithdrawal = !store.fastWithdrawal;
+              }}
+            >
+              <CheckBox checked={store.fastWithdrawal} />
+              <p className='checkbox-text'>{`Fast (fee ${handleFormatToken(
+                store.zkWallet,
+                symbolName,
+                +fee,
+              )} ${symbolName}), processing time 10 minutes`}</p>
+            </div>
+          )}
+        </>
+      );
+    });
+
     return (
       <>
         <Modal
@@ -1578,6 +1621,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                         </div>
                       </div>
                     </div>
+                    {title === 'Withdraw' && <WithdrawTypeBlock />}
                     <div className={`hint-unlocked ${!!isHintUnlocked}`}>
                       {isHintUnlocked}
                     </div>

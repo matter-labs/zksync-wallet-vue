@@ -10,7 +10,7 @@ import { LINKS_CONFIG, INFURA_ID } from 'src/config';
 export const browserWalletConnector = async (store: Store, connect) => {
   const browserProvider: any = window?.['ethereum'];
   store.provider = browserProvider;
-
+  console.log(store.provider);
   if (store.doesMetamaskUsesNewEthereumAPI) {
     const _accs = await browserProvider?.request({
       method: 'eth_accounts',
@@ -67,21 +67,23 @@ export const burnerWalletConnector = store => {
 };
 
 export const coinBaseConnector = (store: Store, connect?) => {
-  if (store.isMobileDevice && connect) {
-    browserWalletConnector(store, connect);
-  } else {
-    const walletLink = new WalletLinkConnector({
-      url: `https://${LINKS_CONFIG.network}.infura.io/v3/${INFURA_ID}`,
-      appName: 'zkSync',
-      chainId: parseInt(LINKS_CONFIG.networkId),
-      darkMode: store.darkMode,
-      appLogoUrl: '//zksync.io/LogoHero.svg',
-    });
-    walletLink.activate().then(res => {
-      store.zkWalletInitializing = false;
-      store.provider = res.provider;
-      store.ethId = res.account as string;
-    });
-    store.walletLinkObject = walletLink;
+  if (store.isCoinbaseWallet) {
+    if (store.isMobileDevice && connect) {
+      browserWalletConnector(store, connect);
+    } else {
+      const walletLink = new WalletLinkConnector({
+        url: `https://${LINKS_CONFIG.network}.infura.io/v3/${INFURA_ID}`,
+        appName: 'zkSync',
+        chainId: parseInt(LINKS_CONFIG.networkId),
+        darkMode: store.darkMode,
+        appLogoUrl: '//zksync.io/LogoHero.svg',
+      });
+      walletLink.activate().then(res => {
+        store.zkWalletInitializing = false;
+        store.provider = res.provider;
+        store.ethId = res.account as string;
+      });
+      store.walletLinkObject = walletLink;
+    }
   }
 };

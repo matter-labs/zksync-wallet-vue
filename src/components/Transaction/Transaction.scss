@@ -47,6 +47,15 @@
     margin-top: 10px;
     color: var(--hints-color);
   }
+
+  &-type {
+    &-block {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+  }
 }
 
 .success-block {

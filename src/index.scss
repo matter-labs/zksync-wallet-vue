@@ -264,6 +264,50 @@ h2 {
   color: var(--dark-color);
 }
 
+.checkbox {
+  width: 15px;
+  height: 15px;
+  overflow: hidden;
+  border: 1px solid var(--input-border-focus);
+  border-radius: 2px;
+
+  &-text {
+    margin-bottom: 0;
+    margin-left: 30px;
+  }
+
+  &-check {
+    position: relative;
+    width: 15px;
+    height: 15px;
+    background-color: var(--success-color);
+
+    &::before {
+      position: absolute;
+      top: 3px;
+      left: 7px;
+      width: 2px;
+      height: 7px;
+      color: var(--light-bg-color);
+      background-color: var(--light-bg-color);
+      transform: rotate(45deg);
+      content: '';
+    }
+
+    &::after {
+      position: absolute;
+      top: 5px;
+      left: 4px;
+      width: 2px;
+      height: 4px;
+      color: var(--light-bg-color);
+      background-color: var(--light-bg-color);
+      transform: rotate(135deg);
+      content: '';
+    }
+  }
+}
+
 .content {
   display: flex;
   flex-direction: column;

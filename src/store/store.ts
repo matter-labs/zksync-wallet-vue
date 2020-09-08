@@ -22,6 +22,8 @@ export class Store {
   @observable awaitedTokensConfirmations = {};
   @observable depositModal = false;
   @observable darkMode = false;
+  @observable fastFee = 0;
+  @observable fastWithdrawal = false;
   @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
   @observable error = '';
