@@ -185,7 +185,13 @@ const Header: React.FC = observer(() => {
                   {'Rename wallet'}
                 </button>
                 <div className='horizontal-line'></div>
-                <button className='btn-tr' onClick={() => logout(false, '')}>
+                <button
+                  className='btn-tr'
+                  onClick={() => {
+                    store.isAccessModalOpen = false;
+                    logout(false, '');
+                  }}
+                >
                   <span className='icon-disconnect'></span>
                   {'Disconnect wallet'}
                 </button>

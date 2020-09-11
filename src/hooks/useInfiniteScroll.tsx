@@ -30,7 +30,7 @@ export function useInfiniteScroll(
       store.setTxs(txs);
     });
   }, [onFetch, store, minimalAmount]);
-  useInterval(refresh, 1000, [store], true, true);
+  useInterval(refresh, 5000, [store], true, true);
 
   useEffect(() => {
     if (!hasMore) return;

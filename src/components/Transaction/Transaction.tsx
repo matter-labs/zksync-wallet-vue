@@ -518,7 +518,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [ethId, value]);
 
     const handleFee = useCallback(
-      (e?, symbol?, address?, fastFee?) => {
+      (e?, symbol?, address?) => {
+        const symbolProp = symbol ? symbol : symbolName;
+        const addressProp = address ? address : addressValue;
         if (
           title !== 'Deposit' &&
           (symbol || symbolName) &&
@@ -527,10 +529,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
           zkWallet?.provider
             .getTransactionFee(
               title === 'Withdraw' ? 'Withdraw' : 'Transfer',
-              address ? address : addressValue,
-              symbol ? symbol : symbolName,
+              addressProp,
+              symbolProp,
             )
             .then(res => setFee(res.totalFee));
+        }
+        if (title === 'Withdraw') {
+          zkWallet?.provider
+            .getTransactionFee('FastWithdraw', addressProp, symbolProp)
+            .then(res => (store.fastFee = res.totalFee));
         }
       },
       [
@@ -1133,7 +1140,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               <p className='checkbox-text'>{`Fast (fee ${handleFormatToken(
                 store.zkWallet,
                 symbolName,
-                +fee,
+                +store.fastFee,
               )} ${symbolName}), processing time 10 minutes`}</p>
             </div>
           )}

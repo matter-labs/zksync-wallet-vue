@@ -143,7 +143,7 @@ export const useTransaction = () => {
                   ? zkWallet.depositToSyncFromEthereum({
                       depositTo: zkWallet.address(),
                       token: token,
-                      amount: utils.bigNumberify(
+                      amount: ethers.BigNumber.from(
                         (
                           await zkSync.closestPackableTransactionAmount(
                             JSBI.BigInt(
@@ -163,7 +163,7 @@ export const useTransaction = () => {
                   : zkWallet.depositToSyncFromEthereum({
                       depositTo: zkWallet.address(),
                       token: token,
-                      amount: utils.bigNumberify(
+                      amount: ethers.BigNumber.from(
                         (
                           await zkSync.closestPackableTransactionAmount(
                             JSBI.BigInt(
@@ -284,7 +284,7 @@ export const useTransaction = () => {
           const transferTransaction = await zkWallet.syncTransfer({
             to: addressValue,
             token: symbol,
-            amount: utils.bigNumberify(
+            amount: ethers.BigNumber.from(
               (
                 await zkSync.closestPackableTransactionAmount(
                   JSBI.BigInt(
@@ -343,8 +343,16 @@ export const useTransaction = () => {
         const fee = await zkWallet?.provider
           .getTransactionFee('Withdraw', addressValue, symbol)
           .then(res => res.totalFee);
+        const fastFee = await zkWallet?.provider
+          .getTransactionFee('FastWithdraw', addressValue, symbol)
+          .then(res => res.totalFee);
         store.txButtonUnlocked = false;
-        if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
+        if (
+          ADDRESS_VALIDATION['eth'].test(addressValue) &&
+          zkWallet &&
+          fee &&
+          fastFee
+        ) {
           setLoading(true);
           if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
@@ -355,11 +363,12 @@ export const useTransaction = () => {
             symbol,
             handleMax[0]?.balance.toString(),
           );
+          ethers.BigNumber;
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
             {
               ethAddress: addressValue,
               token: symbol,
-              amount: utils.bigNumberify(
+              amount: ethers.BigNumber.from(
                 (
                   await zkSync.closestPackableTransactionAmount(
                     JSBI.BigInt(
@@ -370,7 +379,10 @@ export const useTransaction = () => {
                   )
                 ).toString(),
               ),
-              fee: zkSync.closestPackableTransactionFee(fee),
+              fee: zkSync.closestPackableTransactionFee(
+                store.fastWithdrawal ? fastFee : fee,
+              ),
+              fastProcessing: store.fastWithdrawal,
             },
           );
           const hash = withdrawTransaction.txHash;
@@ -418,6 +430,7 @@ export const useTransaction = () => {
       transactions,
       zkWallet,
       store.hint,
+      store.fastWithdrawal,
     ],
   );
 

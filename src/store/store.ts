@@ -7,7 +7,6 @@ import {
   ITransaction,
   IContactNameValue,
 } from '../types/Common';
-import { JsonRpcSigner } from 'ethers/providers/json-rpc-provider';
 import { Tokens, AccountState } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
 import { WSTransport } from 'zksync/build/transport';
@@ -22,7 +21,7 @@ export class Store {
   @observable awaitedTokensConfirmations = {};
   @observable depositModal = false;
   @observable darkMode = false;
-  @observable fastFee = 0;
+  @observable fastFee: ethers.BigNumberish = 0;
   @observable fastWithdrawal = false;
   @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
@@ -33,7 +32,7 @@ export class Store {
   @observable newContactAddress = '';
   @observable ethBalances: IEthBalance[] = [];
   @observable ethId = '';
-  @observable ethWallet?: JsonRpcSigner | ethers.Signer;
+  @observable ethWallet?: ethers.providers.JsonRpcSigner | ethers.Signer;
   @observable EIP1271Signature = false;
   @observable isContact = false;
   @observable MLTTclaimed = false;

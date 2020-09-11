@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { observer } from 'mobx-react-lite';
 

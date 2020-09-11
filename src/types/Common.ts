@@ -1,7 +1,7 @@
-import { utils } from 'ethers';
+import ethers from 'ethers';
 
 export interface IBalances {
-  [token: string]: utils.BigNumberish;
+  [token: string]: ethers.BigNumberish;
 }
 
 export interface IEthBalance {
