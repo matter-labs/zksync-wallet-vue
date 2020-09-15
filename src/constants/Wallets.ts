@@ -7,7 +7,7 @@ export const WALLETS = {
   // Fortmatic: () => import('../components/Wallets/FortmaticWallet'),
   BurnerWallet: () => import('../components/Wallets/BurnerWallet'),
   WalletConnect: () => import('../components/Wallets/WalletConnect'),
-  'Coinbase Wallet': () => import('../components/Wallets/CoinBaseWallet'),
+  // 'Coinbase Wallet': () => import('../components/Wallets/CoinBaseWallet'),
 };
 
 export const DESKTOP_ONLY_WALLETS = ['Metamask'];
