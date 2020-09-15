@@ -276,6 +276,19 @@ const MLTTBlockModal = () => {
   );
 };
 
+const ExternalWalletLogin = observer(() => {
+  const store = useStore();
+  return (
+    <>
+      <p>{'Address:'}</p>
+      <input
+        onChange={e => (store.externalWalletAddress = e.target.value)}
+        type='text'
+      />
+    </>
+  );
+});
+
 export const HintBody: React.FC = observer(
   (): JSX.Element => {
     const { modalHintMessage } = useStore();
@@ -298,6 +311,7 @@ export const HintBody: React.FC = observer(
         {modalHintMessage === 'MLTTBlockModal' && <MLTTBlockModal />}
         {modalHintMessage === 'MLTTonMainnet' && <MLTTonMainnet />}
         {modalHintMessage === 'UnlinkCoinBase' && <UnlinkCoinBase />}
+        {modalHintMessage === 'ExternalWalletLogin' && <ExternalWalletLogin />}
       </div>
     );
   },

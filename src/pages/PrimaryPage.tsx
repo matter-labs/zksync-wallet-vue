@@ -110,10 +110,14 @@ const PrimaryPage: React.FC = observer(() => {
           });
         });
       }
+      if (key === 'External') {
+        store.isAccessModalOpen = false;
+      }
       if (key === 'Other') {
         store.modalHintMessage = 'OtherWallets';
         store.modalSpecifier = 'modal-hint';
       }
+
       if (key === 'BurnerWallet') {
         store.setBatch({
           walletName: key,

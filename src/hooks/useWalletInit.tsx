@@ -165,16 +165,32 @@ const useWalletInit = () => {
         store.ethWallet = wallet;
       }
 
+      const externalWalletInstance = {
+        provider: await getDefaultProvider(LINKS_CONFIG.network),
+        address: store.externalWalletAddress,
+      };
+
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider = await zkSync.Provider.newWebsocketProvider(
         LINKS_CONFIG.ws_api,
       );
+
+      const burnerWalletBased = store.isBurnerWallet ? store.ethWallet : wallet;
+
+      const externalWalletBased = store.isExternalWallet
+        ? externalWalletInstance
+        : burnerWalletBased;
+
+      const syncWalletArgs = {
+        ethWallet: externalWalletBased as ethers.providers.JsonRpcSigner,
+        provider: syncProvider,
+        signer: zkSync.Signer.fromSeed(),
+      };
+
       const syncWallet = await zkSync.Wallet.fromEthSigner(
-        (store.isBurnerWallet
-          ? store.ethWallet
-          : wallet) as ethers.providers.JsonRpcSigner,
-        syncProvider,
+        syncWalletArgs.ethWallet,
+        syncWalletArgs.provider,
       );
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();

@@ -25,6 +25,7 @@ export class Store {
   @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
   @observable error = '';
+  @observable externalWalletAddress = '';
   @observable isAccountBalanceNotEmpty = false;
   @observable isAccountBalanceLoading = true;
   @observable newContactName = '';
@@ -117,6 +118,10 @@ export class Store {
 
   @computed get isCoinbaseWallet() {
     return this.walletName === 'Coinbase Wallet';
+  }
+
+  @computed get isExternalWallet() {
+    return this.walletName === 'External';
   }
 
   @computed get isBraveBrowser() {
