@@ -15,9 +15,6 @@ export async function fetchTransactions(
   return (await Promise.all(
     txs.map(async tx =>
       Object.assign(tx, {
-        // confirmCount: web3Provider
-        //   ? await getConfirmationCount(web3Provider!, tx.hash)
-        //   : 0,
         created_at: new Date(tx.created_at),
       }),
     ),

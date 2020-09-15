@@ -18,7 +18,7 @@ export interface PieProps {
 }
 
 export function getTxStatus(tx: Tx, confirmCmount: number, store) {
-  const { commited, verified, confirmCount } = tx;
+  const { commited, verified } = tx;
   if (tx.tx.type === 'Deposit' && !commited && !verified)
     return `(${
       confirmCmount > store.maxConfirmAmount
@@ -67,14 +67,16 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
   const store = useStore();
   const isZkSync = tx.hash.startsWith('sync-tx');
   const provider = getDefaultProvider(LINKS_CONFIG.network);
-  !isZkSync
-    ? getConfirmationCount(provider, tx.hash).then(res => {
-        setConfirmation(res);
-        return res;
-      })
-    : 0;
+  if (!tx.commited && !tx.verified) {
+    !isZkSync
+      ? getConfirmationCount(provider, tx.hash).then(res => {
+          setConfirmation(res);
+          return res;
+        })
+      : 0;
+  }
+
   let status = getTxStatus(tx, confirmation, store);
-  const val = tx.confirmCount / (store.maxConfirmAmount || 1);
 
   let content: JSX.Element | null = null;
   const d = new Date();

@@ -191,6 +191,13 @@ const useWalletInit = () => {
         });
       }
 
+      fetch('https://stage-api.zksync.dev/api/v0.1/withdrawal_processing_time')
+        .then(res => res.json())
+        .then(data => {
+          store.withdrawalProcessingTime = data.normal;
+          store.fastWithdrawalProcessingTime = data.fast;
+        });
+
       const arr = window.localStorage?.getItem(
         `contacts${store.syncWallet?.address()}`,
       );

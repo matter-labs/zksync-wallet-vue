@@ -23,6 +23,8 @@ export class Store {
   @observable darkMode = false;
   @observable fastFee: ethers.BigNumberish = 0;
   @observable fastWithdrawal = false;
+  @observable withdrawalProcessingTime = 0;
+  @observable fastWithdrawalProcessingTime = 0;
   @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
   @observable error = '';

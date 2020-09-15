@@ -1110,6 +1110,27 @@ const Transaction: React.FC<ITransactionProps> = observer(
       const showFeeCondition: boolean =
         symbolName && fee && ADDRESS_VALIDATION['eth'].test(addressValue);
 
+      const timeCalc = (timeInSec: number) => {
+        const hours = Math.floor(timeInSec / 60 / 60);
+        const minutes = Math.floor(timeInSec / 60) - hours * 60;
+        const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
+
+        return {
+          hours: hours,
+          minutes: minutes,
+          seconds: seconds,
+        };
+      };
+
+      const fastWithdrawalTime = timeCalc(store.fastWithdrawalProcessingTime);
+      const withdrawalTime = timeCalc(store.withdrawalProcessingTime);
+
+      const timeStempString = ({ hours, minutes, seconds }) => {
+        return `${hours ? `${hours} hours` : ''} ${
+          minutes ? `${minutes} minutes` : ''
+        } ${seconds ? `${seconds} seconds` : ''}`;
+      };
+
       return (
         <>
           {!!showFeeCondition && store.zkWallet && (
@@ -1124,9 +1145,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 store.zkWallet,
                 symbolName,
                 +fee,
-              )} ${symbolName}), processing time ${MAX_WITHDRAWAL_TIME /
-                60 /
-                60} hours`}</p>
+              )} ${symbolName}), processing time ${timeStempString(
+                withdrawalTime,
+              )}`}</p>
             </div>
           )}
           {!!showFeeCondition && store.zkWallet && (
@@ -1141,7 +1162,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 store.zkWallet,
                 symbolName,
                 +store.fastFee,
-              )} ${symbolName}), processing time 10 minutes`}</p>
+              )} ${symbolName}), processing time ${timeStempString(
+                fastWithdrawalTime,
+              )}`}</p>
             </div>
           )}
         </>
