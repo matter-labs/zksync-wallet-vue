@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { ethers, Wallet, getDefaultProvider } from 'ethers';
+import crypto from 'crypto';
 
 import { useCancelable } from 'hooks/useCancelable';
 import {
@@ -182,16 +183,26 @@ const useWalletInit = () => {
         ? externalWalletInstance
         : burnerWalletBased;
 
+      const generatedRandomSeed = crypto.randomBytes(32);
+
+      const walletBasedSigner = store.isExternalWallet
+        ? zkSync.Signer.fromSeed(generatedRandomSeed)
+        : undefined;
+
       const syncWalletArgs = {
         ethWallet: externalWalletBased as ethers.providers.JsonRpcSigner,
         provider: syncProvider,
-        signer: zkSync.Signer.fromSeed(),
+        signer: walletBasedSigner,
       };
 
       const syncWallet = await zkSync.Wallet.fromEthSigner(
         syncWalletArgs.ethWallet,
         syncWalletArgs.provider,
+        syncWalletArgs.signer,
+        undefined,
+        ethers.providers.JsonRpcSigner,
       );
+
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
       store.verified = accountState?.verified.balances;

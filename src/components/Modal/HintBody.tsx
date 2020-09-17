@@ -4,6 +4,7 @@ import { useStore, storeContext } from 'src/store/context';
 import { useHistory } from 'react-router-dom';
 import crypto from 'crypto';
 import { FAUCET_TOKEN_API } from 'src/config';
+import useWalletInit from 'src/hooks/useWalletInit';
 
 const MyWallet = () => (
   <>
@@ -278,13 +279,19 @@ const MLTTBlockModal = () => {
 
 const ExternalWalletLogin = observer(() => {
   const store = useStore();
+  const { createWallet } = useWalletInit();
+
   return (
     <>
-      <p>{'Address:'}</p>
+      <span className='transaction-field-title plain'>{'Address:'}</span>
       <input
         onChange={e => (store.externalWalletAddress = e.target.value)}
         type='text'
+        placeholder='0x address'
       />
+      <button className='btn submit-button' onClick={createWallet}>
+        {'Connect'}
+      </button>
     </>
   );
 });
