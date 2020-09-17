@@ -67,6 +67,7 @@ export const burnerWalletConnector = store => {
 };
 
 export const coinBaseConnector = (store: Store, connect?) => {
+  if (!store.isCoinbaseWallet) return;
   if (store.isMobileDevice && connect) {
     browserWalletConnector(store, connect);
   } else {
