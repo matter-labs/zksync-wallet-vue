@@ -19,6 +19,7 @@ import { FilteredContactList } from './FilteredContactList';
 import { ExecutedTx } from './ExecutedTx';
 import { LoadingTx } from './LoadingTx';
 import { LockedTx } from './LockedTx';
+import { BackButton } from 'src/components/Common/BackButton';
 
 import { ITransactionProps } from './Types';
 
@@ -301,18 +302,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       syncWallet,
       syncProvider,
     ]);
-
-    useEffect(() => {
-      if (!isExecuted) {
-        const _t = setInterval(() => {
-          loadEthTokens();
-          getAccState();
-        }, 3000);
-        return () => {
-          clearInterval(_t);
-        };
-      }
-    }, [loadEthTokens]);
 
     useEffect(() => {
       if (title === 'Deposit') {
@@ -1291,16 +1280,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
             (unlocked || title === 'Deposit') &&
             !burnerWalletAccountUnlockCondition && (
               <>
-                <button
-                  onClick={() => {
+                <BackButton
+                  cb={() => {
                     handleCancel();
                     store.walletAddress = {};
                     setTransactionType(undefined);
                     store.txButtonUnlocked = true;
                     history.goBack();
                   }}
-                  className='transaction-back'
-                ></button>
+                />
                 <h2 className='transaction-title'>{title}</h2>
 
                 {(unlocked || title === 'Deposit') &&
@@ -1752,16 +1740,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
               <>
                 {!unlocked && (
                   <>
-                    <button
-                      onClick={() => {
+                    <BackButton
+                      cb={() => {
                         handleCancel();
                         store.walletAddress = {};
                         setTransactionType(undefined);
                         store.txButtonUnlocked = true;
                         history.goBack();
                       }}
-                      className='transaction-back'
-                    ></button>
+                    />
                     <h2 className='transaction-title'>{title}</h2>
                   </>
                 )}

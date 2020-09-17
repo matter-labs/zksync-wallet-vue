@@ -13,6 +13,7 @@ import { useQuery } from 'hooks/useQuery';
 import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
 import { LINKS_CONFIG } from 'src/config';
+import { BackButton } from 'src/components/Common/BackButton';
 
 import { portisConnector } from 'src/components/Wallets/walletConnectors';
 
@@ -112,6 +113,12 @@ const PrimaryPage: React.FC = observer(() => {
       }
       if (key === 'External') {
         store.isAccessModalOpen = false;
+        store.setBatch({
+          walletName: key,
+          normalBg: true,
+          zkWalletInitializing: true,
+        });
+        createWallet();
       }
       if (key === 'Other') {
         store.modalHintMessage = 'OtherWallets';
@@ -189,7 +196,11 @@ const PrimaryPage: React.FC = observer(() => {
 
   const { walletName, provider, hint } = store;
   if (store.zkWallet) {
-    return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
+    if (store.isExternalWallet) {
+      return <Redirect to={`/${params.get('redirect') || 'withdraw'}`} />;
+    } else {
+      return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
+    }
   }
 
   return (

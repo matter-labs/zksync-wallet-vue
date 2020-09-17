@@ -8,7 +8,8 @@ export const WALLETS = {
   BurnerWallet: () => import('../components/Wallets/BurnerWallet'),
   WalletConnect: () => import('../components/Wallets/WalletConnect'),
   'Coinbase Wallet': () => import('../components/Wallets/CoinBaseWallet'),
-  External: () => import('../components/Wallets/externalAccount'),
+  // External: () => import('../components/Wallets/externalAccount'),
+  External: () => import('../components/Wallets/BurnerWallet'),
 };
 
 export const DESKTOP_ONLY_WALLETS = ['Metamask'];

@@ -88,7 +88,7 @@ const useWalletInit = () => {
   );
 
   const getSigner = useCallback(provider => {
-    if (provider && !store.isBurnerWallet) {
+    if (provider && !store.isBurnerWallet && !store.isExternalWallet) {
       const signer = new ethers.providers.Web3Provider(provider).getSigner();
       return signer;
     }
@@ -109,7 +109,7 @@ const useWalletInit = () => {
         store.zkWalletInitializing = true;
       } else if (store.isWalletConnect) {
         walletConnectConnector(store, connect);
-      } else if (store.isBurnerWallet) {
+      } else if (store.isBurnerWallet || store.isExternalWallet) {
         burnerWalletConnector(store);
       }
       const provider = store.provider;
@@ -141,7 +141,8 @@ const useWalletInit = () => {
         store.hint = 'Connected to ';
       }
 
-      if (store.isBurnerWallet) {
+      // if (store.isBurnerWallet) {
+      if (store.isBurnerWallet || store.isExternalWallet) {
         const burnerWallet = window.localStorage?.getItem('burnerWallet');
         const provider = await getDefaultProvider(LINKS_CONFIG.network);
         if (!!burnerWallet) {
@@ -162,7 +163,11 @@ const useWalletInit = () => {
       }
       const wallet = getSigner(provider);
 
-      if (!store.isBurnerWallet && !store.isCoinbaseWallet) {
+      if (
+        !store.isBurnerWallet &&
+        !store.isCoinbaseWallet &&
+        !store.isExternalWallet
+      ) {
         store.ethWallet = wallet;
       }
 
@@ -177,10 +182,17 @@ const useWalletInit = () => {
         LINKS_CONFIG.ws_api,
       );
 
-      const burnerWalletBased = store.isBurnerWallet ? store.ethWallet : wallet;
+      const burnerWalletBased =
+        store.isBurnerWallet || store.isExternalWallet
+          ? store.ethWallet
+          : wallet;
+
+      // const externalWalletBased = store.isExternalWallet
+      //   ? externalWalletInstance
+      //   : burnerWalletBased;
 
       const externalWalletBased = store.isExternalWallet
-        ? externalWalletInstance
+        ? burnerWalletBased
         : burnerWalletBased;
 
       const generatedRandomSeed = crypto.randomBytes(32);
@@ -188,6 +200,10 @@ const useWalletInit = () => {
       const walletBasedSigner = store.isExternalWallet
         ? zkSync.Signer.fromSeed(generatedRandomSeed)
         : undefined;
+
+      // const walletBasedSigner = store.isExternalWallet
+      // ? undefined
+      // : undefined;
 
       const syncWalletArgs = {
         ethWallet: externalWalletBased as ethers.providers.JsonRpcSigner,
@@ -200,7 +216,6 @@ const useWalletInit = () => {
         syncWalletArgs.provider,
         syncWalletArgs.signer,
         undefined,
-        ethers.providers.JsonRpcSigner,
       );
 
       const transport = syncProvider.transport as WSTransport;
@@ -217,6 +232,8 @@ const useWalletInit = () => {
           accountState,
         });
       }
+
+      // if (store.isExternalWallet) return;
 
       const arr = window.localStorage?.getItem(
         `contacts${store.syncWallet?.address()}`,
@@ -237,7 +254,6 @@ const useWalletInit = () => {
       if (error) {
         store.error = error;
       }
-
       const balancePromises = Object.keys(tokens).map(async key => {
         if (tokens[key].symbol && syncWallet) {
           const balance = await syncWallet.getEthereumBalance(key);
