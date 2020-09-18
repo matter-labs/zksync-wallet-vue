@@ -1381,12 +1381,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 <div className='custom-selector balances external'>
                   <div
                     onClick={() => {
-                      // if (!store.isAccountBalanceNotEmpty) {
-                      //   store.modalSpecifier = 'wallet-external-instructions';
-                      // } else {
                       openBalancesList(!isBalancesListOpen);
                       body?.classList.add('fixed-b');
-                      // }
                     }}
                     className='custom-selector-title external'
                   >
@@ -1454,7 +1450,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 setAccountUnlockingProcess={setAccountUnlockingProcess}
                 setUnlockingERCProcess={setUnlockingERCProcess}
               />
-              {/* } */}
 
               {hint.match(/(?:denied)/i) && !isLoading && (
                 <CanceledTx

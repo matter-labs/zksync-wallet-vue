@@ -86,8 +86,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       sessionStorage.getItem('walletName')
     );
 
-  // if (store.zkWallet && store.isExternalWallet)
-
   useEffect(() => {
     if (store.zkWallet) {
       sessionStorage.setItem('walletName', store.walletName);

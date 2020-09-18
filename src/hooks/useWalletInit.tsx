@@ -194,19 +194,11 @@ const useWalletInit = () => {
         ? externalWalletInstance
         : burnerWalletBased;
 
-      // const externalWalletBased = store.isExternalWallet
-      //   ? burnerWalletBased
-      //   : burnerWalletBased;
-
       const generatedRandomSeed = crypto.randomBytes(32);
 
       const walletBasedSigner = store.isExternalWallet
         ? zkSync.Signer.fromSeed(generatedRandomSeed)
         : undefined;
-
-      // const walletBasedSigner = store.isExternalWallet
-      // ? undefined
-      // : undefined;
 
       const syncWalletArgs = {
         ethWallet: externalWalletBased as ethers.providers.JsonRpcSigner,
@@ -263,7 +255,6 @@ const useWalletInit = () => {
       if (error) {
         store.error = error;
       }
-      // store.zkBalances = accountState.committed.balances;
       store.setBatch({
         tokens: tokens,
         searchBalances: zkBalances,

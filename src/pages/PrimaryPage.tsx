@@ -111,12 +111,6 @@ const PrimaryPage: React.FC = observer(() => {
       }
       if (key === 'External') {
         store.isAccessModalOpen = false;
-        // store.setBatch({
-        //   walletName: key,
-        //   normalBg: true,
-        //   zkWalletInitializing: true,
-        // });
-        // createWallet();
       }
       if (key === 'Other') {
         store.modalHintMessage = 'OtherWallets';
