@@ -5,6 +5,8 @@ import { useHistory } from 'react-router-dom';
 import crypto from 'crypto';
 import { FAUCET_TOKEN_API } from 'src/config';
 import useWalletInit from 'src/hooks/useWalletInit';
+import Spinner from '../Spinner/Spinner';
+import { useLogout } from 'hooks/useLogout';
 
 const MyWallet = () => (
   <>
@@ -280,18 +282,34 @@ const MLTTBlockModal = () => {
 const ExternalWalletLogin = observer(() => {
   const store = useStore();
   const { createWallet } = useWalletInit();
+  const logout = useLogout();
+
+  const mainBtnCb = () => {
+    if (!store.externalWalletInitializing) {
+      store.externalWalletInitializing = true;
+      createWallet();
+    } else {
+      logout(false, '');
+    }
+  };
 
   return (
     <>
-      <span className='transaction-field-title plain'>{'Address:'}</span>
-      <input
-        onChange={e => (store.externalWalletAddress = e.target.value)}
-        type='text'
-        placeholder='0x address'
-        className='external-address'
-      />
-      <button className='btn submit-button' onClick={createWallet}>
-        {'Connect'}
+      {store.externalWalletInitializing ? (
+        <Spinner />
+      ) : (
+        <>
+          <span className='transaction-field-title plain'>{'Address:'}</span>
+          <input
+            onChange={e => (store.externalWalletAddress = e.target.value)}
+            type='text'
+            placeholder='0x address'
+            className='external-address'
+          />
+        </>
+      )}
+      <button className='btn submit-button margin' onClick={mainBtnCb}>
+        {store.externalWalletInitializing ? 'Cancel' : 'Connect'}
       </button>
     </>
   );

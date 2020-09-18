@@ -30,6 +30,7 @@ export class Store {
   @observable externalWalletAccountId = 0;
   @observable externalWalletContractBalance = 0;
   @observable externalWalletEthersSigner: any = {};
+  @observable externalWalletInitializing = false;
   @observable isAccountBalanceNotEmpty = false;
   @observable isAccountBalanceLoading = true;
   @observable newContactName = '';
@@ -158,6 +159,7 @@ export class Store {
     this.provider = false;
     this.hint = '';
     this.zkWalletInitializing = false;
+    this.externalWalletInitializing = false;
     this.searchBalances = [];
     this.searchContacts = [];
     this.awaitedTokens = {};
