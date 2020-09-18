@@ -258,7 +258,6 @@ const useWalletInit = () => {
       if (error) {
         store.error = error;
       }
-      console.log(tokens, zkBalances);
       store.setBatch({
         tokens: tokens,
         searchBalances: zkBalances,
@@ -268,7 +267,6 @@ const useWalletInit = () => {
       });
       store.modalSpecifier = '';
       store.modalHintMessage = '';
-      console.log(tokens);
       if (store.isExternalWallet) return;
 
       const balancePromises = Object.keys(tokens).map(async key => {

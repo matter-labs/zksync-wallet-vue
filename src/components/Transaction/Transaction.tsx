@@ -1070,11 +1070,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
           store.externalWalletContractBalances = obj;
         });
       });
-    }, [store.zkWallet, store.externalWalletEthersSigner, store.tokens]);
+    }, [
+      store.zkWallet,
+      store.externalWalletEthersSigner,
+      store.tokens,
+      store.modalSpecifier,
+    ]);
 
     useEffect(() => {
       if (!store.zkWallet) return;
-      console.log(store.externalWalletContractBalances);
     }, [store.externalWalletContractBalances, store.zkWallet]);
 
     const mainContract = store.zkWallet?.provider.contractAddress.mainContract;
