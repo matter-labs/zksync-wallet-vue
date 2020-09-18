@@ -1053,6 +1053,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     }
 
+    const mainContract = store.zkWallet?.provider.contractAddress.mainContract;
+    const etherscanContracLink = `//${LINKS_CONFIG.ethBlockExplorer}/address/${mainContract}#writeProxyContract`;
+
     const BalancesList = ({ address, symbol, balance }) => (
       <div
         onClick={() => {
@@ -1060,7 +1063,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             const ewTokens = localStorage.getItem('ewTokens');
             const _t = {
               tokenAddress: address,
-              contract: store.zkWallet?.provider.contractAddress.mainContract,
+              contract: mainContract,
               symbol: symbol,
             };
             if (ewTokens) {
@@ -1235,20 +1238,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <div className='grey-block'>
               <p>{`For now, for external wallets we only support withdrawals to L1. You can perform a withdrawal in 2 transactions initiated from ${store.zkWallet?.address()}. In the first step, you need to request withdrawal by calling the following method`}</p>
               <h3>{'Contract:'}</h3>
-              <a
-                target='_blank'
-                href={`//${LINKS_CONFIG.ethBlockExplorer}/address/${store.zkWallet?.provider.contractAddress.mainContract}#writeProxyContract`}
-              >
-                {store.zkWallet?.provider.contractAddress.mainContract}
+              <a target='_blank' href={etherscanContracLink}>
+                {mainContract}
               </a>{' '}
               (
               <a
                 target='_blank'
                 href={`//api${LINKS_CONFIG.network === 'mainnet' ? '.' : '-'}${
                   LINKS_CONFIG.ethBlockExplorer
-                }/api?module=contract&action=getabi&address=${
-                  store.zkWallet?.provider.contractAddress.mainContract
-                }&format=raw`}
+                }/api?module=contract&action=getabi&address=${mainContract}&format=raw`}
               >
                 {'ABI'}
               </a>
@@ -1261,20 +1259,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <div className='grey-block'>
               <p>{`Once the request is processed, tokens will be accrued to your on-chain balance. To complete the withdrawal, call this method from ${store.zkWallet?.address()}:`}</p>
               <h3>{'Contract:'}</h3>
-              <a
-                target='_blank'
-                href={`//${LINKS_CONFIG.ethBlockExplorer}/address/${store.zkWallet?.provider.contractAddress.mainContract}#writeProxyContract`}
-              >
-                {store.zkWallet?.provider.contractAddress.mainContract}
+              <a target='_blank' href={etherscanContracLink}>
+                {mainContract}
               </a>{' '}
               (
               <a
                 target='_blank'
                 href={`//api${LINKS_CONFIG.network === 'mainnet' ? '.' : '-'}${
                   LINKS_CONFIG.ethBlockExplorer
-                }/api?module=contract&action=getabi&address=${
-                  store.zkWallet?.provider.contractAddress.mainContract
-                }&format=raw`}
+                }/api?module=contract&action=getabi&address=${mainContract}&format=raw`}
               >
                 {'ABI'}
               </a>
@@ -1283,7 +1276,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               <h3>{'Arguments:'}</h3>
               <p>{`[${token}, "${maxValue}"]`}</p>
             </div>
-            {localStorage.getItem('ewTokens')}
+            {/* {localStorage.getItem('ewTokens')} */}
           </div>
         </Modal>
         <div
@@ -1324,12 +1317,19 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 <div className='hint-datalist-wrapper'>
                   <button
                     onClick={() => {
-                      store.modalHintMessage = 'TroubleSeeingAToken';
-                      store.modalSpecifier = 'modal-hint';
+                      if (store.isExternalWallet) {
+                        openBalancesList(false);
+                        store.modalSpecifier = 'external-wallet-instructions';
+                      } else {
+                        store.modalHintMessage = 'TroubleSeeingAToken';
+                        store.modalSpecifier = 'modal-hint';
+                      }
                     }}
                     className='undo-btn large'
                   >
-                    {'Can’t find a token?'}
+                    {store.isExternalWallet && !store.isAccountBalanceNotEmpty
+                      ? 'Open withdrawal guide'
+                      : 'Can’t find a token?'}
                   </button>
                 </div>
               )}
@@ -1381,12 +1381,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 <div className='custom-selector balances external'>
                   <div
                     onClick={() => {
-                      if (!store.isAccountBalanceNotEmpty) {
-                        store.modalSpecifier = 'external-wallet-instructions';
-                      } else {
-                        openBalancesList(!isBalancesListOpen);
-                        body?.classList.add('fixed-b');
-                      }
+                      // if (!store.isAccountBalanceNotEmpty) {
+                      //   store.modalSpecifier = 'wallet-external-instructions';
+                      // } else {
+                      openBalancesList(!isBalancesListOpen);
+                      body?.classList.add('fixed-b');
+                      // }
                     }}
                     className='custom-selector-title external'
                   >
@@ -1428,53 +1428,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
             (store.unlocked === undefined || isLoading || !zkBalancesLoaded)) ||
             burnerWalletAccountUnlockCondition) && (
             <>
-              {/* {store.isExternalWallet ? 
-                <>
-                  <DataList
-                    data={title === 'Deposit' ? store.ethBalances : store.zkBalances}
-                    title={`Balances in ${title === 'Deposit' ? 'L1' : 'L2'}`}
-                    footer={() => (
-                      <div className='hint-datalist-wrapper'>
-                        <button
-                          onClick={() => {
-                            store.modalHintMessage = 'TroubleSeeingAToken';
-                            store.modalSpecifier = 'modal-hint';
-                          }}
-                          className='undo-btn large'
-                        >
-                          {'Can’t find a token?'}
-                        </button>
-                      </div>
-                    )}
-                    header={() => (
-                      <button
-                        onClick={() => {
-                          openBalancesList(false);
-                          body?.classList.remove('fixed-b');
-                        }}
-                        className='close-icon'
-                      ></button>
-                    )}
-                    visible={true}
-                    renderItem={({ address, symbol, balance }) => (
-                      <BalancesList
-                        address={address}
-                        symbol={symbol}
-                        balance={balance}
-                      />
-                    )}
-                    emptyListComponent={() =>
-                      !store.isAccountBalanceNotEmpty ? (
-                        <p>
-                          {
-                            'No balances yet, please make a deposit or request money from someone!'
-                          }
-                        </p>
-                      ) : null
-                    }
-                />
-                </>
-              : */}
               <LoadingTx
                 fee={
                   title === 'Transfer' &&
