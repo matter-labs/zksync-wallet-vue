@@ -88,12 +88,15 @@ const useWalletInit = () => {
     [store],
   );
 
-  const getSigner = useCallback(provider => {
-    if (provider && !store.isBurnerWallet && !store.isExternalWallet) {
-      const signer = new ethers.providers.Web3Provider(provider).getSigner();
-      return signer;
-    }
-  }, []);
+  const getSigner = useCallback(
+    provider => {
+      if (provider && !store.isBurnerWallet && !store.isExternalWallet) {
+        const signer = new ethers.providers.Web3Provider(provider).getSigner();
+        return signer;
+      }
+    },
+    [store.isBurnerWallet, store.isExternalWallet],
+  );
 
   const logout = useLogout();
 
@@ -332,7 +335,7 @@ const useWalletInit = () => {
       store.walletName = '';
       console.error('CreateWallet error', err);
     }
-  }, [cancelable, getSigner, logout, store]);
+  }, [cancelable, connect, getSigner, logout, store]);
 
   return {
     connect,

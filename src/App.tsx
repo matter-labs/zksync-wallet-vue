@@ -204,6 +204,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           'walletName',
         ) as WalletType;
         store.walletName = 'Metamask';
+        window.location.reload();
         store.setBatch({
           zkWallet: null,
           zkBalances: [],

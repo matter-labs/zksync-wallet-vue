@@ -31,6 +31,7 @@ export class Store {
   @observable externalWalletContractBalance = 0;
   @observable externalWalletEthersSigner: any = {};
   @observable externalWalletInitializing = false;
+  @observable externalWalletContractBalances: any = {};
   @observable isAccountBalanceNotEmpty = false;
   @observable isAccountBalanceLoading = true;
   @observable newContactName = '';

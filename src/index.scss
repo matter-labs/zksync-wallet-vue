@@ -320,6 +320,15 @@ h2 {
   &-address {
     margin-bottom: 30px;
   }
+
+  &-wallet {
+    &-wrapper {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 505px;
+    }
+  }
 }
 
 .hint {

@@ -45,6 +45,7 @@ export function DataList<T>({
   renderItem,
   header = noop,
   footer = noop,
+  classSpecifier = '',
   setTransactionType,
   onSetFiltered = noop,
   emptyListComponent = noop,
@@ -239,7 +240,10 @@ export function DataList<T>({
   };
 
   return (
-    <div ref={rootRef} className={cl('balances-wrapper', 'open')}>
+    <div
+      ref={rootRef}
+      className={cl(`balances-wrapper ${classSpecifier}`, 'open')}
+    >
       <Modal
         cancelAction={() => {
           store.modalSpecifier = '';
