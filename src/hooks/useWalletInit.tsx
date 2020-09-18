@@ -1,5 +1,7 @@
 import { useCallback, useState } from 'react';
 import { ethers, Wallet, getDefaultProvider } from 'ethers';
+import crypto from 'crypto';
+import { EthSignerType } from 'zksync/build/types';
 
 import { useCancelable } from 'hooks/useCancelable';
 import {
@@ -87,7 +89,7 @@ const useWalletInit = () => {
   );
 
   const getSigner = useCallback(provider => {
-    if (provider && !store.isBurnerWallet) {
+    if (provider && !store.isBurnerWallet && !store.isExternalWallet) {
       const signer = new ethers.providers.Web3Provider(provider).getSigner();
       return signer;
     }
@@ -108,7 +110,7 @@ const useWalletInit = () => {
         store.zkWalletInitializing = true;
       } else if (store.isWalletConnect) {
         walletConnectConnector(store, connect);
-      } else if (store.isBurnerWallet) {
+      } else if (store.isBurnerWallet || store.isExternalWallet) {
         burnerWalletConnector(store);
       }
       const provider = store.provider;
@@ -161,27 +163,70 @@ const useWalletInit = () => {
       }
       const wallet = getSigner(provider);
 
-      if (!store.isBurnerWallet && !store.isCoinbaseWallet) {
+      if (
+        !store.isBurnerWallet &&
+        !store.isCoinbaseWallet &&
+        !store.isExternalWallet
+      ) {
         store.ethWallet = wallet;
       }
+
+      const externalWalletInstance = {
+        provider: await getDefaultProvider(LINKS_CONFIG.network),
+        address: store.externalWalletAddress,
+        getAddress: async () => {
+          return externalWalletInstance.address;
+        },
+      };
 
       const network =
         process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
       const syncProvider = await zkSync.Provider.newWebsocketProvider(
         LINKS_CONFIG.ws_api,
       );
-      const syncWallet = await zkSync.Wallet.fromEthSigner(
-        (store.isBurnerWallet
+
+      const burnerWalletBased =
+        store.isBurnerWallet || store.isExternalWallet
           ? store.ethWallet
-          : wallet) as ethers.providers.JsonRpcSigner,
-        syncProvider,
+          : wallet;
+
+      const externalWalletBased = store.isExternalWallet
+        ? externalWalletInstance
+        : burnerWalletBased;
+
+      const generatedRandomSeed = crypto.randomBytes(32);
+
+      const walletBasedSigner = store.isExternalWallet
+        ? zkSync.Signer.fromSeed(generatedRandomSeed)
+        : undefined;
+
+      const syncWalletArgs = {
+        ethWallet: externalWalletBased as ethers.providers.JsonRpcSigner,
+        provider: syncProvider,
+        signer: walletBasedSigner,
+      };
+
+      const verificationMethod: EthSignerType = {
+        verificationMethod: 'ECDSA',
+        isSignedMsgPrefixed: true,
+      };
+
+      store.externalWalletEthersSigner = walletBasedSigner;
+
+      const syncWallet = await zkSync.Wallet.fromEthSigner(
+        syncWalletArgs.ethWallet,
+        syncWalletArgs.provider,
+        syncWalletArgs.signer,
+        undefined,
+        verificationMethod,
       );
+
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
       store.verified = accountState?.verified.balances;
       const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
 
-      if (store.isAccessModalOpen) {
+      if (store.isAccessModalOpen || store.isExternalWallet) {
         store.setBatch({
           syncProvider: syncProvider,
           syncWallet: syncWallet,
@@ -210,6 +255,16 @@ const useWalletInit = () => {
       if (error) {
         store.error = error;
       }
+      store.setBatch({
+        tokens: tokens,
+        searchBalances: zkBalances,
+        zkBalances: zkBalances,
+        zkBalancesLoaded: true,
+        maxConfirmAmount,
+      });
+      store.modalSpecifier = '';
+      store.modalHintMessage = '';
+      if (store.isExternalWallet) return;
 
       const balancePromises = Object.keys(tokens).map(async key => {
         if (tokens[key].symbol && syncWallet) {
@@ -243,13 +298,6 @@ const useWalletInit = () => {
             ? (store.error = `${err.name}: ${err.message}`)
             : (store.error = DEFAULT_ERROR);
         });
-      store.setBatch({
-        tokens: tokens,
-        searchBalances: zkBalances,
-        zkBalances: zkBalances,
-        zkBalancesLoaded: true,
-        maxConfirmAmount,
-      });
 
       const prices = {};
       store.ethBalances.map(async balance => {

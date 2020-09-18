@@ -6,6 +6,7 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { observer } from 'mobx-react-lite';
 
 import { useStore } from 'src/store/context';
+import { BackButton } from 'src/components/Common/BackButton';
 
 import Spinner from 'components/Spinner/Spinner';
 
@@ -70,13 +71,12 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
 
     return (
       <>
-        <button
-          onClick={() => {
+        <BackButton
+          cb={() => {
             handleCancel();
             history.push('/account');
           }}
-          className='transaction-back'
-        ></button>
+        />
         <h2 className='transaction-title'>{propperTitle}</h2>
         {info[2] && (
           <p className='transaction-hash'>
@@ -93,7 +93,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
             </a>
           </p>
         )}
-        <Spinner />
+        {!store.isExternalWallet && <Spinner />}
         {store.zkWallet && (
           <>
             <p>{info[0] !== 'Connecting to ' && info[0]}</p>

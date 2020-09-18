@@ -4,6 +4,7 @@ import { useStore, storeContext } from 'src/store/context';
 import { useHistory } from 'react-router-dom';
 import crypto from 'crypto';
 import { FAUCET_TOKEN_API } from 'src/config';
+import useWalletInit from 'src/hooks/useWalletInit';
 
 const MyWallet = () => (
   <>
@@ -276,6 +277,26 @@ const MLTTBlockModal = () => {
   );
 };
 
+const ExternalWalletLogin = observer(() => {
+  const store = useStore();
+  const { createWallet } = useWalletInit();
+
+  return (
+    <>
+      <span className='transaction-field-title plain'>{'Address:'}</span>
+      <input
+        onChange={e => (store.externalWalletAddress = e.target.value)}
+        type='text'
+        placeholder='0x address'
+        className='external-address'
+      />
+      <button className='btn submit-button' onClick={createWallet}>
+        {'Connect'}
+      </button>
+    </>
+  );
+});
+
 export const HintBody: React.FC = observer(
   (): JSX.Element => {
     const { modalHintMessage } = useStore();
@@ -298,6 +319,7 @@ export const HintBody: React.FC = observer(
         {modalHintMessage === 'MLTTBlockModal' && <MLTTBlockModal />}
         {modalHintMessage === 'MLTTonMainnet' && <MLTTonMainnet />}
         {modalHintMessage === 'UnlinkCoinBase' && <UnlinkCoinBase />}
+        {modalHintMessage === 'ExternalWalletLogin' && <ExternalWalletLogin />}
       </div>
     );
   },

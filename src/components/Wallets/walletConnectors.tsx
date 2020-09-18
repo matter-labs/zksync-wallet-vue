@@ -66,6 +66,12 @@ export const burnerWalletConnector = store => {
   createAccount();
 };
 
+export const externalAccountConnector = (store: Store) => {
+  store.isAccessModalOpen = false;
+  store.modalHintMessage = 'ExternalWalletLogin';
+  store.modalSpecifier = 'modal-hint';
+};
+
 export const coinBaseConnector = (store: Store, connect?) => {
   if (!store.isCoinbaseWallet) return;
   if (store.isMobileDevice && connect) {

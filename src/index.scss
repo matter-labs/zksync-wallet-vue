@@ -207,6 +207,22 @@ button {
   background-size: contain;
 }
 
+.grey-block {
+  width: 100%;
+  margin-bottom: 30px;
+  padding: 15px;
+  text-align: left;
+  word-break: break-word;
+  background-color: var(--copyblock-color);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+
+  & > h3 {
+    margin-top: 25px;
+    margin-bottom: 15px;
+  }
+}
+
 .btn {
   &-tr {
     margin-top: 0;
@@ -300,7 +316,11 @@ h2 {
   }
 }
 
-
+.external {
+  &-address {
+    margin-bottom: 30px;
+  }
+}
 
 .hint {
   &-link {
@@ -543,7 +563,7 @@ h2 {
       transform: translateY(-50%);
     }
 
-    &.Other {
+    &.External {
       background-image: url(./images/Ethereum.png);
       background-size: 80px;
     }
@@ -989,6 +1009,15 @@ input[type='radio']:focus + .contact-manage {
       margin-top: 0;
       padding: 5px;
 
+      &.external {
+        width: 100%;
+        max-width: 560px;
+
+        & >span {
+          width: 100%;
+        }
+      }
+
       &.empty {
         margin-top: -5px;
       }
@@ -1304,6 +1333,10 @@ body.dark > #root {
     width: 100%;
     height: 22px;
 
+    &.external {
+      height: 40px;
+    }
+
     &-title {
       display: flex;
       align-items: center;
@@ -1313,6 +1346,14 @@ body.dark > #root {
       text-overflow: ellipsis;
       border-radius: 6px;
       cursor: pointer;
+
+      &.external {
+
+        & > span {
+          width: 100%;
+          font-size: var(--xl-font-size);
+        }
+      }
 
       &:hover {
         background-color: var(--copyblock-color);
@@ -1368,6 +1409,12 @@ body.dark > #root {
 
         &.empty {
           margin-top: -10px;
+        }
+
+        &.external {
+          & > span {
+            font-size: var(--large-font-size);
+          }
         }
 
         & > span {
