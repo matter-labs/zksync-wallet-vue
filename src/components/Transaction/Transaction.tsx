@@ -1128,15 +1128,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
               {handleExponentialNumbers(balance)}
             </p>
           </span>
-          {store.isExternalWallet && (
-            <span>
-              {window?.innerWidth > WIDTH_BP && 'contract balance:'}
-              <p className='datalist-balance'>
-                {store.externalWalletContractBalance}
-              </p>
-            </span>
-          )}
-
           {title === 'Deposit' && LINKS_CONFIG.network !== 'mainnet' && (
             <button
               onClick={e => {
@@ -1163,6 +1154,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 'Click to mint some tokens'
               )}
             </button>
+          )}
+          {store.isExternalWallet && (
+            <span>
+              {window?.innerWidth > WIDTH_BP && 'contract balance:'}
+              <p className='datalist-balance'>
+                {store.externalWalletContractBalance}
+              </p>
+            </span>
           )}
         </div>
       </div>
