@@ -88,12 +88,15 @@ const useWalletInit = () => {
     [store],
   );
 
-  const getSigner = useCallback(provider => {
-    if (provider && !store.isBurnerWallet && !store.isExternalWallet) {
-      const signer = new ethers.providers.Web3Provider(provider).getSigner();
-      return signer;
-    }
-  }, []);
+  const getSigner = useCallback(
+    provider => {
+      if (provider && !store.isBurnerWallet && !store.isExternalWallet) {
+        const signer = new ethers.providers.Web3Provider(provider).getSigner();
+        return signer;
+      }
+    },
+    [store.isBurnerWallet, store.isExternalWallet],
+  );
 
   const logout = useLogout();
 
@@ -255,6 +258,7 @@ const useWalletInit = () => {
       if (error) {
         store.error = error;
       }
+      console.log(tokens, zkBalances);
       store.setBatch({
         tokens: tokens,
         searchBalances: zkBalances,
@@ -264,6 +268,7 @@ const useWalletInit = () => {
       });
       store.modalSpecifier = '';
       store.modalHintMessage = '';
+      console.log(tokens);
       if (store.isExternalWallet) return;
 
       const balancePromises = Object.keys(tokens).map(async key => {
@@ -332,7 +337,7 @@ const useWalletInit = () => {
       store.walletName = '';
       console.error('CreateWallet error', err);
     }
-  }, [cancelable, getSigner, logout, store]);
+  }, [cancelable, connect, getSigner, logout, store]);
 
   return {
     connect,
