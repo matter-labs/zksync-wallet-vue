@@ -159,6 +159,23 @@
     }
   }
 
+  &.external-wallet-instructions {
+    padding: 25px 0 25px 0;
+    overflow-x: hidden;
+
+    & > .scroll-content { 
+      width: calc(100% + 30px); 
+      max-height: 70vh; 
+      padding: 0 50px 0 30px; 
+      overflow-x: hidden;
+      overflow-y: scroll;
+
+      & > h3 {
+        text-align: left;
+      }
+    }
+  }
+
   &.metamask {
     width: calc(100% - 32px);
     padding: 16px;

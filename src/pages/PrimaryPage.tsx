@@ -74,13 +74,11 @@ const PrimaryPage: React.FC = observer(() => {
 
   const wallets = useMemo(
     () =>
-      walletsWithWeb3()
-        .filter(el =>
-          mobileCheck
-            ? !filterWallets(detectAndroidPlatform()).includes(el)
-            : !filterWallets(MOBILE_ONLY_WALLETS).includes(el),
-        )
-        .concat(['Other']),
+      walletsWithWeb3().filter(el =>
+        mobileCheck
+          ? !filterWallets(detectAndroidPlatform()).includes(el)
+          : !filterWallets(MOBILE_ONLY_WALLETS).includes(el),
+      ),
     [mobileCheck, DESKTOP_ONLY_WALLETS],
   );
 
@@ -113,12 +111,12 @@ const PrimaryPage: React.FC = observer(() => {
       }
       if (key === 'External') {
         store.isAccessModalOpen = false;
-        store.setBatch({
-          walletName: key,
-          normalBg: true,
-          zkWalletInitializing: true,
-        });
-        createWallet();
+        // store.setBatch({
+        //   walletName: key,
+        //   normalBg: true,
+        //   zkWalletInitializing: true,
+        // });
+        // createWallet();
       }
       if (key === 'Other') {
         store.modalHintMessage = 'OtherWallets';

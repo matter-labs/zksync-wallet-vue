@@ -26,6 +26,10 @@ export class Store {
   @observable txButtonUnlocked = true;
   @observable error = '';
   @observable externalWalletAddress = '';
+  @observable externalWalletTokenId = 0;
+  @observable externalWalletAccountId = 0;
+  @observable externalWalletContractBalance = 0;
+  @observable externalWalletEthersSigner: any = {};
   @observable isAccountBalanceNotEmpty = false;
   @observable isAccountBalanceLoading = true;
   @observable newContactName = '';

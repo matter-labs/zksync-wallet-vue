@@ -93,7 +93,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
             </a>
           </p>
         )}
-        <Spinner />
+        {!store.isExternalWallet && <Spinner />}
         {store.zkWallet && (
           <>
             <p>{info[0] !== 'Connecting to ' && info[0]}</p>

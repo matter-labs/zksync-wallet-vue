@@ -288,6 +288,7 @@ const ExternalWalletLogin = observer(() => {
         onChange={e => (store.externalWalletAddress = e.target.value)}
         type='text'
         placeholder='0x address'
+        className='external-address'
       />
       <button className='btn submit-button' onClick={createWallet}>
         {'Connect'}
