@@ -9,6 +9,9 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { AccountState, TokenLike } from 'zksync/build/types';
 import { Wallet, Provider, utils } from 'zksync';
 
+import { useTimeout } from 'src/hooks/timers';
+import { Transition } from 'components/Transition/Transition';
+
 import { DataList } from 'components/DataList/DataListNew';
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
@@ -101,6 +104,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const myRef = useRef<HTMLInputElement>(null);
     const autoFocus = useAutoFocus();
 
+    const [copyOpened, setCopyOpened] = useState(false);
+    useTimeout(() => copyOpened && setCopyOpened(false), 2000, [copyOpened]);
+    const [copyRef, setCopyRef] = useState('');
     const [amount, setAmount] = useState<number>(0);
     const [conditionError, setConditionError] = useState('');
     const [gas, setGas] = useState<string>('');
@@ -1058,6 +1064,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       if (!store.zkWallet || !store.externalWalletEthersSigner || !store.tokens)
         return;
       const obj: any = {};
+      console.log('a');
       Object.keys(store.tokens).map(key => {
         getBalanceOnContract(
           store.zkWallet?.ethSigner as ethers.Signer,
@@ -1074,7 +1081,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       store.zkWallet,
       store.externalWalletEthersSigner,
       store.tokens,
-      store.modalSpecifier,
+      symbolName,
     ]);
 
     useEffect(() => {
@@ -1271,6 +1278,39 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     };
 
+    const handleCopy = useCallback(
+      e => {
+        navigator.clipboard.writeText(e);
+        setCopyRef(e);
+        setCopyOpened(true);
+      },
+      [copyRef, copyOpened],
+    );
+
+    const CopyBlock = ({ text }) => {
+      const visible = copyRef === text;
+
+      return (
+        <div className='copy-block'>
+          {visible && (
+            <Transition type='fly' timeout={200} trigger={copyOpened}>
+              <div className={'hint-copied open'}>
+                <p>{'Copied!'}</p>
+              </div>
+            </Transition>
+          )}
+
+          <p className='copy-block-text'>{text}</p>
+          <button
+            onClick={() => {
+              handleCopy(text);
+            }}
+            className='copy-block-button btn-tr'
+          ></button>
+        </div>
+      );
+    };
+
     useEffect(() => {
       store.txButtonUnlocked = true;
     }, [store.zkWallet, selectedBalance]);
@@ -1348,10 +1388,16 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 {'ABI'}
               </a>
               )<h3>{'Method:'}</h3>
-              <p>{'fullExit'}</p>
+              <CopyBlock text={'fullExit'} />
               <h3>{'Arguments:'}</h3>
-              <p>{`[${store.accountState?.id}, "${token}"]`}</p>
+              <CopyBlock text={store.accountState?.id} />
+              <CopyBlock text={token} />
             </div>
+            <p>
+              {
+                'Once the request is processed (this can take several hours), tokens will be accrued to your on-chain balance and a button "Complete withdrawal" will appear in this UI.'
+              }
+            </p>
           </div>
         </Modal>
         <Modal
@@ -1363,11 +1409,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
         >
           <div className='scroll-content'>
             <h2 className='transaction-title'>{`Complete withdrawing ${symbolName}`}</h2>
-            <p>
-              {
-                'Once the request is processed (this can take several hours), tokens will be accrued to your on-chain balance and a button "Complete withdrawal" will appear in this UI.'
-              }
-            </p>
             <div className='grey-block'>
               <h3>{'Contract:'}</h3>
               <a target='_blank' href={etherscanContracLink}>
@@ -1389,9 +1430,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 {'ABI'}
               </a>
               )<h3>{'Method:'}</h3>
-              <p>{symbolName === 'ETH' ? 'withdrawETH' : 'withdrawERC20'}</p>
+              <CopyBlock
+                text={symbolName === 'ETH' ? 'withdrawETH' : 'withdrawERC20'}
+              />
               <h3>{'Arguments:'}</h3>
-              <p>{`["${token}", ${store.externalWalletContractBalances[symbolName]}]`}</p>
+              <CopyBlock text={token} />
+              <CopyBlock
+                text={store.externalWalletContractBalances[symbolName]}
+              />
             </div>
           </div>
         </Modal>
