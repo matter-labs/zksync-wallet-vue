@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore, storeContext } from 'src/store/context';
 import { useHistory } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { FAUCET_TOKEN_API } from 'src/config';
 import useWalletInit from 'src/hooks/useWalletInit';
 import Spinner from '../Spinner/Spinner';
 import { useLogout } from 'hooks/useLogout';
+import { ADDRESS_VALIDATION } from 'constants/regExs';
 
 const MyWallet = () => (
   <>
@@ -283,6 +284,7 @@ const ExternalWalletLogin = observer(() => {
   const store = useStore();
   const { createWallet } = useWalletInit();
   const logout = useLogout();
+  const [conditionError, setConditionError] = useState(false);
 
   const mainBtnCb = () => {
     if (!store.externalWalletInitializing) {
@@ -292,6 +294,15 @@ const ExternalWalletLogin = observer(() => {
       logout(false, '');
     }
   };
+
+  const isAddressValid = ADDRESS_VALIDATION['eth'].test(
+    store.externalWalletAddress,
+  );
+  const connectBtnDisabled = conditionError || !store.externalWalletAddress;
+
+  useEffect(() => {
+    setConditionError(false);
+  }, [store.externalWalletAddress]);
 
   return (
     <>
@@ -308,7 +319,16 @@ const ExternalWalletLogin = observer(() => {
           />
         </>
       )}
-      <button className='btn submit-button margin' onClick={mainBtnCb}>
+      <div className='error-container'>
+        <p className={`error-text ${conditionError && 'visible'}`}>
+          {`Error: "${store.externalWalletAddress}" doesn't match ethereum address format`}
+        </p>
+      </div>
+      <button
+        className={`btn submit-button margin ${connectBtnDisabled &&
+          'disabled'}`}
+        onClick={() => (isAddressValid ? mainBtnCb() : setConditionError(true))}
+      >
         {store.externalWalletInitializing ? 'Cancel' : 'Connect'}
       </button>
     </>
