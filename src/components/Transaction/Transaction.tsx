@@ -1106,30 +1106,30 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const MLTTFeePrice = symbolName === 'MLTT' ? 1 : 0;
 
+    const timeCalc = (timeInSec: number) => {
+      const hours = Math.floor(timeInSec / 60 / 60);
+      const minutes = Math.floor(timeInSec / 60) - hours * 60;
+      const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
+
+      return {
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+      };
+    };
+
+    const fastWithdrawalTime = timeCalc(store.fastWithdrawalProcessingTime);
+    const withdrawalTime = timeCalc(store.withdrawalProcessingTime);
+
+    const timeStempString = ({ hours, minutes, seconds }) => {
+      return `${hours ? `${hours} hours` : ''} ${
+        minutes ? `${minutes} minutes` : ''
+      } ${seconds ? `${seconds} seconds` : ''}`;
+    };
+
     const WithdrawTypeBlock = observer(() => {
       const showFeeCondition: boolean =
         symbolName && fee && ADDRESS_VALIDATION['eth'].test(addressValue);
-
-      const timeCalc = (timeInSec: number) => {
-        const hours = Math.floor(timeInSec / 60 / 60);
-        const minutes = Math.floor(timeInSec / 60) - hours * 60;
-        const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
-
-        return {
-          hours: hours,
-          minutes: minutes,
-          seconds: seconds,
-        };
-      };
-
-      const fastWithdrawalTime = timeCalc(store.fastWithdrawalProcessingTime);
-      const withdrawalTime = timeCalc(store.withdrawalProcessingTime);
-
-      const timeStempString = ({ hours, minutes, seconds }) => {
-        return `${hours ? `${hours} hours` : ''} ${
-          minutes ? `${minutes} minutes` : ''
-        } ${seconds ? `${seconds} seconds` : ''}`;
-      };
 
       return (
         <>
@@ -1771,8 +1771,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
                     {title === 'Withdraw' && (
                       <p className='withdraw-hint'>
-                        {`Your withdrawal should take max. ${MAX_WITHDRAWAL_TIME /
-                          3600} hours`}
+                        {`Your withdrawal should take max. ${timeStempString(
+                          store.fastWithdrawal
+                            ? fastWithdrawalTime
+                            : withdrawalTime,
+                        )} hours`}
                       </p>
                     )}
                     <div className='transaction-fee-wrapper'>

@@ -16,6 +16,7 @@ export interface Tx {
   pq_id?: any;
   eth_block: number;
   tx: {
+    fast: boolean;
     amount: string;
     fee: string;
     from: string;

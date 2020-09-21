@@ -78,6 +78,10 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
 
   let status = getTxStatus(tx, confirmation, store);
 
+  const withdrawalTime = tx.tx.fast
+    ? store.fastWithdrawalProcessingTime
+    : store.withdrawalProcessingTime;
+
   let content: JSX.Element | null = null;
   const d = new Date();
   const handleTimeLeft = () => {
@@ -92,7 +96,7 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
       ).toString(),
     );
     const timeLeft =
-      MAX_WITHDRAWAL_TIME - (currentTimeInSeconds - createdAtInSeconds);
+      withdrawalTime - (currentTimeInSeconds - createdAtInSeconds);
     const timeLeftInMunutes = {
       minutes: Math.floor(timeLeft / 60),
       seconds: timeLeft - 60 * Math.floor(timeLeft / 60),
@@ -140,7 +144,7 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
             ? 'Operation is taking a bit longer than usual, it should be right there!'
             : `Max ${
                 isNaN(handleTimeLeft().timeLeft)
-                  ? MAX_WITHDRAWAL_TIME
+                  ? withdrawalTime
                   : `${handleCheckForHours}${minutesRelativelyToHours} min ${
                       handleTimeLeft().seconds
                     } sec`
