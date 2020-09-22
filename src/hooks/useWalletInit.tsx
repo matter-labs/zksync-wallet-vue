@@ -269,39 +269,6 @@ const useWalletInit = () => {
       store.modalHintMessage = '';
       if (store.isExternalWallet) return;
 
-      const balancePromises = Object.keys(tokens).map(async key => {
-        if (tokens[key].symbol && syncWallet) {
-          const balance = await syncWallet.getEthereumBalance(key);
-          return {
-            id: tokens[key].id,
-            address: tokens[key].address,
-            balance: +handleFormatToken(
-              syncWallet,
-              tokens[key].symbol,
-              +balance ? +balance : 0,
-            ),
-            symbol: tokens[key].symbol,
-          };
-        }
-      });
-
-      await Promise.all(balancePromises)
-        .then(res => {
-          const _balances = res
-            .filter(token => token && token.balance > 0)
-            .sort(sortBalancesById);
-          const _balancesEmpty = res
-            .filter(token => token?.balance === 0)
-            .sort(sortBalancesById);
-          _balances.push(..._balancesEmpty);
-          store.ethBalances = _balances as IEthBalance[];
-        })
-        .catch(err => {
-          err.name && err.message
-            ? (store.error = `${err.name}: ${err.message}`)
-            : (store.error = DEFAULT_ERROR);
-        });
-
       const prices = {};
       store.ethBalances.map(async balance => {
         //TODO: replace with Promise.All

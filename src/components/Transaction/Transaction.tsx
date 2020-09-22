@@ -248,6 +248,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         Promise.all(zkBalancePromises)
           .then(res => {
             store.zkBalances = res;
+            store.zkBalancesLoaded = true;
           })
           .catch(err => {
             err.name && err.message
@@ -326,6 +327,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         ).then(async res => {
           if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
             store.zkBalances = res.zkBalances;
+            store.zkBalancesLoaded = true;
             await cancelable(zkWallet?.getAccountState())
               .then((res: any) => {
                 store.verified = res?.verified.balances;
@@ -1655,7 +1657,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
                 {(unlocked || title === 'Deposit') &&
                 unlocked !== undefined &&
-                ((title === 'Deposit' && searchBalances.length) ||
+                ((title === 'Deposit' && zkBalancesLoaded) ||
                   (title !== 'Deposit' && store.isAccountBalanceNotEmpty)) ? (
                   <>
                     <div className={`inputs-wrapper ${title}`}>
