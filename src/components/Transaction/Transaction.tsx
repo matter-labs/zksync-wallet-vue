@@ -13,6 +13,7 @@ import { useTimeout } from 'src/hooks/timers';
 import { Transition } from 'components/Transition/Transition';
 
 import { DataList } from 'components/DataList/DataListNew';
+import { CheckBox } from 'src/components/Common/CheckBox';
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
 import Spinner from 'components/Spinner/Spinner';
@@ -517,6 +518,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const handleFee = useCallback(
       (e?, symbol?, address?) => {
+        const symbolProp = symbol ? symbol : symbolName;
+        const addressProp = address ? address : addressValue;
         if (
           title !== 'Deposit' &&
           (symbol || symbolName) &&
@@ -525,10 +528,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
           zkWallet?.provider
             .getTransactionFee(
               title === 'Withdraw' ? 'Withdraw' : 'Transfer',
-              address ? address : addressValue,
-              symbol ? symbol : symbolName,
+              addressProp,
+              symbolProp,
             )
             .then(res => setFee(res.totalFee));
+        }
+        if (title === 'Withdraw') {
+          zkWallet?.provider
+            .getTransactionFee('FastWithdraw', addressProp, symbolProp)
+            .then(res => (store.fastFee = res.totalFee));
         }
       },
       [
@@ -1319,6 +1327,71 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const MLTTFeePrice = symbolName === 'MLTT' ? 1 : 0;
 
+    const timeCalc = (timeInSec: number) => {
+      const hours = Math.floor(timeInSec / 60 / 60);
+      const minutes = Math.floor(timeInSec / 60) - hours * 60;
+      const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
+
+      return {
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+      };
+    };
+
+    const fastWithdrawalTime = timeCalc(store.fastWithdrawalProcessingTime);
+    const withdrawalTime = timeCalc(store.withdrawalProcessingTime);
+
+    const timeStempString = ({ hours, minutes, seconds }) => {
+      return `${hours ? `${hours} hours` : ''} ${
+        minutes ? `${minutes} minutes` : ''
+      } ${seconds ? `${seconds} seconds` : ''}`;
+    };
+
+    const WithdrawTypeBlock = observer(() => {
+      const showFeeCondition: boolean =
+        symbolName && fee && ADDRESS_VALIDATION['eth'].test(addressValue);
+
+      return (
+        <>
+          {!!showFeeCondition && store.zkWallet && (
+            <div
+              className='withdraw-type-block'
+              onClick={() => {
+                store.fastWithdrawal = !store.fastWithdrawal;
+              }}
+            >
+              <CheckBox checked={!store.fastWithdrawal} />
+              <p className='checkbox-text'>{`Normal (fee ${handleFormatToken(
+                store.zkWallet,
+                symbolName,
+                +fee,
+              )} ${symbolName}), processing time ${timeStempString(
+                withdrawalTime,
+              )}`}</p>
+            </div>
+          )}
+          {!!showFeeCondition && store.zkWallet && (
+            <div
+              className='withdraw-type-block'
+              onClick={() => {
+                store.fastWithdrawal = !store.fastWithdrawal;
+              }}
+            >
+              <CheckBox checked={store.fastWithdrawal} />
+              <p className='checkbox-text'>{`Fast (fee ${handleFormatToken(
+                store.zkWallet,
+                symbolName,
+                +store.fastFee,
+              )} ${symbolName}), processing time ${timeStempString(
+                fastWithdrawalTime,
+              )}`}</p>
+            </div>
+          )}
+        </>
+      );
+    });
+
     return (
       <>
         <Modal
@@ -1930,6 +2003,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                         </div>
                       </div>
                     </div>
+                    {title === 'Withdraw' && <WithdrawTypeBlock />}
                     <div className={`hint-unlocked ${!!isHintUnlocked}`}>
                       {isHintUnlocked}
                     </div>
@@ -2049,8 +2123,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
                     {title === 'Withdraw' && (
                       <p className='withdraw-hint'>
-                        {`Your withdrawal should take max. ${MAX_WITHDRAWAL_TIME /
-                          3600} hours`}
+                        {`Your withdrawal should take max. ${timeStempString(
+                          store.fastWithdrawal
+                            ? fastWithdrawalTime
+                            : withdrawalTime,
+                        )}.`}
                       </p>
                     )}
                     <div className='transaction-fee-wrapper'>

@@ -18,7 +18,7 @@ export interface PieProps {
 }
 
 export function getTxStatus(tx: Tx, confirmCmount: number, store) {
-  const { commited, verified, confirmCount } = tx;
+  const { commited, verified } = tx;
   if (tx.tx.type === 'Deposit' && !commited && !verified)
     return `(${
       confirmCmount > store.maxConfirmAmount
@@ -67,14 +67,20 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
   const store = useStore();
   const isZkSync = tx.hash.startsWith('sync-tx');
   const provider = getDefaultProvider(LINKS_CONFIG.network);
-  !isZkSync
-    ? getConfirmationCount(provider, tx.hash).then(res => {
-        setConfirmation(res);
-        return res;
-      })
-    : 0;
+  if (!tx.commited && !tx.verified) {
+    !isZkSync
+      ? getConfirmationCount(provider, tx.hash).then(res => {
+          setConfirmation(res);
+          return res;
+        })
+      : 0;
+  }
+
   let status = getTxStatus(tx, confirmation, store);
-  const val = tx.confirmCount / (store.maxConfirmAmount || 1);
+
+  const withdrawalTime = tx.tx.fast
+    ? store.fastWithdrawalProcessingTime
+    : store.withdrawalProcessingTime;
 
   let content: JSX.Element | null = null;
   const d = new Date();
@@ -90,7 +96,7 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
       ).toString(),
     );
     const timeLeft =
-      MAX_WITHDRAWAL_TIME - (currentTimeInSeconds - createdAtInSeconds);
+      withdrawalTime - (currentTimeInSeconds - createdAtInSeconds);
     const timeLeftInMunutes = {
       minutes: Math.floor(timeLeft / 60),
       seconds: timeLeft - 60 * Math.floor(timeLeft / 60),
@@ -110,20 +116,10 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
     status = 'Verified';
     content = <DoubleCheckMark />;
   } else if (tx.commited && tx.tx.type === 'Withdraw') {
-    // status = 'Withdrawal in progress — it should take max. 60 min';
-    status =
-      handleTimeLeft().minutes < 0
-        ? 'Operation is taking a bit longer than usual, it should be right there!'
-        : `Max ${
-            isNaN(handleTimeLeft().timeLeft)
-              ? MAX_WITHDRAWAL_TIME
-              : `${handleCheckForHours}${minutesRelativelyToHours} min ${
-                  handleTimeLeft().seconds
-                } sec`
-          }s left`;
-    content = <SpinnerWorm />;
+    status = 'Commited';
+    content = <CheckMark />;
   } else if (tx.commited) {
-    status = 'Pending';
+    status = 'Commited';
     content = <CheckMark />;
   } else {
     if (tx.tx.type === 'Deposit') {
@@ -136,7 +132,7 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
             ? 'Operation is taking a bit longer than usual, it should be right there!'
             : `Max ${
                 isNaN(handleTimeLeft().timeLeft)
-                  ? MAX_WITHDRAWAL_TIME
+                  ? withdrawalTime
                   : `${handleCheckForHours}${minutesRelativelyToHours} min ${
                       handleTimeLeft().seconds
                     } sec`

@@ -47,6 +47,15 @@
     margin-top: 10px;
     color: var(--hints-color);
   }
+
+  &-type {
+    &-block {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+    }
+  }
 }
 
 .success-block {
@@ -831,7 +840,7 @@ p.transaction-hash {
   }
 
   .scroll-wrapper {
-    height: 60px;
+    height: 40px;
 
     & > .currency-input {
       min-width: 80px;

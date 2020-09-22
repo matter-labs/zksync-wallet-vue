@@ -10,7 +10,6 @@ import { LINKS_CONFIG, INFURA_ID } from 'src/config';
 export const browserWalletConnector = async (store: Store, connect) => {
   const browserProvider: any = window?.['ethereum'];
   store.provider = browserProvider;
-
   if (store.doesMetamaskUsesNewEthereumAPI) {
     const _accs = await browserProvider?.request({
       method: 'eth_accounts',

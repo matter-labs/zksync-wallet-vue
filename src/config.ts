@@ -37,6 +37,10 @@ export const FAUCET_TOKEN_API = `https://${
   LINKS_CONFIG.api === 'stage-api.zksync.dev' ? 'stage' : LINKS_CONFIG.network
 }-faucet.zksync.dev`;
 
+export const WITHDRAWAL_PROCESSING_TIME_ENDPOINT = 'withdrawal_processing_time';
+
+export const WITHDRAWAL_PROCESSING_TIME_LINK = `https://${LINKS_CONFIG.api}/api/v0.1/${WITHDRAWAL_PROCESSING_TIME_ENDPOINT}`;
+
 export const RIGHT_NETWORK_NAME = NETWORKS_LIST[LINKS_CONFIG.networkId];
 
 export const RECAPTCHA_SITE_KEY = '6LdEBqUZAAAAAMAr2XDTxJHuXOxpQ7rfkn2BBfUo';

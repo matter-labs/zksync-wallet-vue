@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { observer } from 'mobx-react-lite';
 
@@ -16,6 +16,7 @@ export interface Tx {
   pq_id?: any;
   eth_block: number;
   tx: {
+    fast: boolean;
     amount: string;
     fee: string;
     from: string;
@@ -74,7 +75,6 @@ const Transactions: React.FC = observer(() => {
           .filter((tx, i) => txs.findIndex(t => t.hash === tx.hash) === i)
           .map(async tx =>
             Object.assign(tx, {
-              confirmCount: await getConfirmationCount(web3Provider, tx.hash),
               created_at: new Date(tx.created_at),
             }),
           ),

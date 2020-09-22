@@ -13,7 +13,7 @@ import {
 
 import { IEthBalance } from 'types/Common';
 
-import { LINKS_CONFIG } from 'src/config';
+import { LINKS_CONFIG, WITHDRAWAL_PROCESSING_TIME_LINK } from 'src/config';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
@@ -238,6 +238,13 @@ const useWalletInit = () => {
           accountState,
         });
       }
+
+      fetch(WITHDRAWAL_PROCESSING_TIME_LINK)
+        .then(res => res.json())
+        .then(data => {
+          store.withdrawalProcessingTime = data.normal;
+          store.fastWithdrawalProcessingTime = data.fast;
+        });
 
       const arr = window.localStorage?.getItem(
         `contacts${store.syncWallet?.address()}`,
