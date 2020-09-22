@@ -275,12 +275,11 @@ const useWalletInit = () => {
       store.modalSpecifier = '';
       store.modalHintMessage = '';
       if (store.isExternalWallet) return;
-
       const prices = {};
-      store.ethBalances.map(async balance => {
+      Object.keys(tokens).map(async symbol => {
         //TODO: replace with Promise.All
-        const price = store.syncProvider?.getTokenPrice(balance.symbol);
-        prices[balance.symbol] = await price;
+        const price = store.syncProvider?.getTokenPrice(symbol);
+        prices[symbol] = await price;
         store.price = prices;
       });
 
