@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
 import { useStore } from 'src/store/context';
+import { BackButton } from 'src/components/Common/BackButton';
 
 import './Transaction.scss';
 
@@ -21,8 +22,8 @@ export const CanceledTx: React.FC<ICanceledTxProps> = observer(
 
     return (
       <>
-        <button
-          onClick={() => {
+        <BackButton
+          cb={() => {
             handleCancel();
             store.walletAddress = {};
             store.transactionType = undefined;
@@ -30,8 +31,7 @@ export const CanceledTx: React.FC<ICanceledTxProps> = observer(
             store.hint = '';
             history.push('/account');
           }}
-          className='transaction-back'
-        ></button>
+        />
         <h1>{'Transaction canceled'}</h1>
         <p>{hint}</p>
       </>

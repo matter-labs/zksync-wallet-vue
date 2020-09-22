@@ -159,12 +159,6 @@
     }
   }
 
-  &.metamask {
-    width: calc(100% - 32px);
-    padding: 16px;
-    text-align: center;
-  }
-
   &.error {
     min-height: 135px;
     padding-top: 54px;
@@ -172,6 +166,29 @@
     & > p {
       word-break: break-all;
     }
+  }
+
+  &.external-wallet-instructions {
+    padding: 25px 0 25px 0;
+    overflow-x: hidden;
+
+    & > .scroll-content { 
+      width: calc(100% + 30px); 
+      max-height: 70vh; 
+      padding: 0 50px 0 30px; 
+      overflow-x: hidden;
+      overflow-y: scroll;
+  
+      & > h3, p {
+        text-align: left;
+      } 
+    }
+  }
+
+  &.metamask {
+    width: calc(100% - 32px);
+    padding: 16px;
+    text-align: center;
   }
 
   &.change-name {

@@ -265,6 +265,7 @@ const Account: React.FC = observer(() => {
                 for (const token in store.awaitedTokens) {
                   const _list = Object.entries(res).map(el => el[1].symbol);
                   if (_list.indexOf(token) === -1) {
+                    store.zkBalancesLoaded = true;
                     store.zkBalances = res.concat([
                       {
                         symbol: token,
@@ -295,6 +296,7 @@ const Account: React.FC = observer(() => {
                       ) {
                         store.MLTTclaimed = true;
                       }
+                      store.zkBalancesLoaded = true;
                       store.zkBalances = res;
                     }
                   }
@@ -320,6 +322,7 @@ const Account: React.FC = observer(() => {
                   ) {
                     store.MLTTclaimed = true;
                   }
+                  store.zkBalancesLoaded = true;
                   store.zkBalances = res;
                 }
               }

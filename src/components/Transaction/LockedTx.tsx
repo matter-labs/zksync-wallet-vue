@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
 import { useStore } from 'src/store/context';
+import { BackButton } from 'src/components/Common/BackButton';
 
 import './Transaction.scss';
 
@@ -19,15 +20,14 @@ export const LockedTx: React.FC<ILockedTx> = observer(
 
     return (
       <>
-        <button
-          onClick={() => {
+        <BackButton
+          cb={() => {
             handleCancel();
             store.walletAddress = {};
             store.transactionType = undefined;
             history.push('/account');
           }}
-          className='transaction-back'
-        ></button>
+        />
         <div className='info-block center'>
           <p>
             {

@@ -86,6 +86,7 @@ export const useTransaction = () => {
           Promise.all(zkBalancePromises)
             .then(res => {
               store.zkBalances = res as IEthBalance[];
+              store.zkBalancesLoaded = true;
             })
             .catch(err => {
               err.name && err.message
@@ -207,6 +208,7 @@ export const useTransaction = () => {
                     el => el[1].symbol,
                   );
                   if (_list.indexOf(token) === -1) {
+                    store.zkBalancesLoaded = true;
                     store.zkBalances = store.zkBalances.concat([
                       {
                         symbol: token,

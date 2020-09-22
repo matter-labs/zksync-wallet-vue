@@ -93,12 +93,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90vw;
+    width: 100%;
     max-width: 505px;
     margin-top: 16px;
     padding: 27px 0 22px;
     background-color: var(--modal-bg-color);
     border-radius: 5px;
+
+    &.external {
+      padding: 27px 0 0;
+    }
 
     & > .cta-wrapper {
       width: 100%;
@@ -158,6 +162,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    max-width: 505px;
     height: 72px;
     padding: 22px;
     color: var(--dark-color);
@@ -195,7 +200,6 @@
       }
 
       & > button {
-        display: none;
         min-width: 87px;
         height: 27px;
         margin-left: 10px;

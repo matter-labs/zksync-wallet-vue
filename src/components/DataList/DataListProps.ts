@@ -11,7 +11,7 @@ export interface Props<T> {
   onFetch?: (amount?: number, offset?: number) => Promise<T[]>;
   title?: string;
   visible?: boolean;
-
+  classSpecifier?: string;
   renderItem?: (i: T) => ReactComp | undefined | null | false;
   header?: () => ReactComp;
   footer?: () => ReactComp;

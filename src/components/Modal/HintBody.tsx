@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore, storeContext } from 'src/store/context';
 import { useHistory } from 'react-router-dom';
 import crypto from 'crypto';
 import { FAUCET_TOKEN_API } from 'src/config';
+import useWalletInit from 'src/hooks/useWalletInit';
+import Spinner from '../Spinner/Spinner';
+import { useLogout } from 'hooks/useLogout';
+import { ADDRESS_VALIDATION } from 'constants/regExs';
 
 const MyWallet = () => (
   <>
@@ -276,6 +280,61 @@ const MLTTBlockModal = () => {
   );
 };
 
+const ExternalWalletLogin = observer(() => {
+  const store = useStore();
+  const { createWallet } = useWalletInit();
+  const logout = useLogout();
+  const [conditionError, setConditionError] = useState(false);
+
+  const mainBtnCb = () => {
+    if (!store.externalWalletInitializing) {
+      store.externalWalletInitializing = true;
+      createWallet();
+    } else {
+      logout(false, '');
+    }
+  };
+
+  const isAddressValid = ADDRESS_VALIDATION['eth'].test(
+    store.externalWalletAddress,
+  );
+  const connectBtnDisabled = conditionError || !store.externalWalletAddress;
+
+  useEffect(() => {
+    setConditionError(false);
+  }, [store.externalWalletAddress]);
+
+  return (
+    <>
+      {store.externalWalletInitializing ? (
+        <Spinner />
+      ) : (
+        <>
+          <span className='transaction-field-title plain'>{'Address:'}</span>
+          <input
+            onChange={e => (store.externalWalletAddress = e.target.value)}
+            type='text'
+            placeholder='0x address'
+            className='external-address'
+          />
+        </>
+      )}
+      <div className='error-container'>
+        <p className={`error-text ${conditionError && 'visible'}`}>
+          {`Error: "${store.externalWalletAddress}" doesn't match ethereum address format`}
+        </p>
+      </div>
+      <button
+        className={`btn submit-button margin ${connectBtnDisabled &&
+          'disabled'}`}
+        onClick={() => (isAddressValid ? mainBtnCb() : setConditionError(true))}
+      >
+        {store.externalWalletInitializing ? 'Cancel' : 'Connect'}
+      </button>
+    </>
+  );
+});
+
 export const HintBody: React.FC = observer(
   (): JSX.Element => {
     const { modalHintMessage } = useStore();
@@ -298,6 +357,7 @@ export const HintBody: React.FC = observer(
         {modalHintMessage === 'MLTTBlockModal' && <MLTTBlockModal />}
         {modalHintMessage === 'MLTTonMainnet' && <MLTTonMainnet />}
         {modalHintMessage === 'UnlinkCoinBase' && <UnlinkCoinBase />}
+        {modalHintMessage === 'ExternalWalletLogin' && <ExternalWalletLogin />}
       </div>
     );
   },
