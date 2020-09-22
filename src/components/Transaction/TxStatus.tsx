@@ -116,18 +116,6 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
     status = 'Verified';
     content = <DoubleCheckMark />;
   } else if (tx.commited && tx.tx.type === 'Withdraw') {
-    // status = 'Withdrawal in progress — it should take max. 60 min';
-    // status =
-    //   handleTimeLeft().minutes < 0
-    //     ? 'Operation is taking a bit longer than usual, it should be right there!'
-    //     : `Max ${
-    //         isNaN(handleTimeLeft().timeLeft)
-    //           ? MAX_WITHDRAWAL_TIME
-    //           : `${handleCheckForHours}${minutesRelativelyToHours} min ${
-    //               handleTimeLeft().seconds
-    //             } sec`
-    //       }s left`;
-    // content = <SpinnerWorm />;
     status = 'Commited';
     content = <CheckMark />;
   } else if (tx.commited) {
