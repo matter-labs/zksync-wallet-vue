@@ -122,11 +122,10 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       savedWalletName &&
       (!store.isPrimaryPage || imidiateLoginCondition)
     ) {
-      if (store.autoLoginRequestStatus !== 'changeWallet')
+      if (store.autoLoginRequestStatus !== 'changeWallet') {
         sessionStorage.setItem('autoLoginStatus', 'autoLogin');
-      store.walletName = window.localStorage?.getItem('walletName')
-        ? (window.localStorage?.getItem('walletName') as WalletType)
-        : (sessionStorage.getItem('walletName') as WalletType);
+      }
+      store.walletName = savedWalletName as WalletType;
       store.normalBg = true;
       store.isAccessModalOpen = true;
       store.hint = 'Connecting to ';
@@ -136,6 +135,12 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       if (store.isPortisWallet) {
         portisConnector(store, connect, getSigner);
       }
+      if (store.isPortisWallet) {
+        portisConnector(store, connect, getSigner);
+      }
+    }
+    if (!store.isPrimaryPage && !savedWalletName) {
+      handleLogout(false, '');
     }
     if (!store.isPrimaryPage && !savedWalletName) {
       handleLogout(false, '');
@@ -331,6 +336,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
   }, [store.modalSpecifier, store.MLTTclaimed]);
 
+  const handleOpenUnlinkModal = () => {
+    store.modalHintMessage = 'UnlinkCoinBase';
+    store.modalSpecifier = 'modal-hint';
+  };
+
+  const UnlinkAcccountBtn = () => (
+    <span onClick={handleOpenUnlinkModal} className='undo-btn block'>
+      {'Unlink account'}
+    </span>
+  );
+
   return (
     <div className={`content-wrapper ${store.walletName ? '' : 'start-page'}`}>
       <Modal
@@ -436,17 +452,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
               {store.zkWalletInitializing ? 'Close' : 'Cancel'}
             </button>
           )}
-          {store.isCoinbaseWallet && (
-            <span
-              onClick={() => {
-                store.modalHintMessage = 'UnlinkCoinBase';
-                store.modalSpecifier = 'modal-hint';
-              }}
-              className='undo-btn block'
-            >
-              {'Unlink account'}
-            </span>
-          )}
+          {store.isCoinbaseWallet && <UnlinkAcccountBtn />}
         </>
       </Modal>
       <Modal
