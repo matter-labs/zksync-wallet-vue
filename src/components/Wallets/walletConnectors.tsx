@@ -65,24 +65,29 @@ export const burnerWalletConnector = store => {
   createAccount();
 };
 
+export const externalAccountConnector = (store: Store) => {
+  store.isAccessModalOpen = false;
+  store.modalHintMessage = 'ExternalWalletLogin';
+  store.modalSpecifier = 'modal-hint';
+};
+
 export const coinBaseConnector = (store: Store, connect?) => {
-  if (store.isCoinbaseWallet) {
-    if (store.isMobileDevice && connect) {
-      browserWalletConnector(store, connect);
-    } else {
-      const walletLink = new WalletLinkConnector({
-        url: `https://${LINKS_CONFIG.network}.infura.io/v3/${INFURA_ID}`,
-        appName: 'zkSync',
-        chainId: parseInt(LINKS_CONFIG.networkId),
-        darkMode: store.darkMode,
-        appLogoUrl: '//zksync.io/LogoHero.svg',
-      });
-      walletLink.activate().then(res => {
-        store.zkWalletInitializing = false;
-        store.provider = res.provider;
-        store.ethId = res.account as string;
-      });
-      store.walletLinkObject = walletLink;
-    }
+  if (!store.isCoinbaseWallet) return;
+  if (store.isMobileDevice && connect) {
+    browserWalletConnector(store, connect);
+  } else {
+    const walletLink = new WalletLinkConnector({
+      url: `https://${LINKS_CONFIG.network}.infura.io/v3/${INFURA_ID}`,
+      appName: 'zkSync',
+      chainId: parseInt(LINKS_CONFIG.networkId),
+      darkMode: store.darkMode,
+      appLogoUrl: '//zksync.io/LogoHero.svg',
+    });
+    walletLink.activate().then(res => {
+      store.zkWalletInitializing = false;
+      store.provider = res.provider;
+      store.ethId = res.account as string;
+    });
+    store.walletLinkObject = walletLink;
   }
 };

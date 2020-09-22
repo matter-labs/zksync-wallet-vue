@@ -11,6 +11,10 @@
   border-radius: 4px;
   cursor: pointer;
 
+  &-text {
+    margin-bottom: 0;
+  }
+
   &-input {
     position: absolute;
     left: -10000px;

@@ -14,6 +14,7 @@ import { LINKS_CONFIG } from 'src/config';
 import './Transaction.scss';
 import { LottiePlayer } from '../Common/LottiePlayer';
 import successCheckmark from 'images/success-checkmark.json';
+import { BackButton } from 'src/components/Common/BackButton';
 
 interface IExecutedTxProps {
   fee?: string | null;
@@ -99,13 +100,12 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
 
     return (
       <>
-        <button
-          onClick={() => {
+        <BackButton
+          cb={() => {
             handleCancel();
             history.push('/account');
           }}
-          className='transaction-back'
-        ></button>
+        />
         <h2 className='transaction-title'>
           {title === 'Deposit' && 'Deposit initiated'}
           {title === 'Withdraw' && 'Withdrawal initiated'}

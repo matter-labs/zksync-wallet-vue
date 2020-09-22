@@ -13,6 +13,7 @@ import { useQuery } from 'hooks/useQuery';
 import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
 import { LINKS_CONFIG } from 'src/config';
+import { BackButton } from 'src/components/Common/BackButton';
 
 import { portisConnector } from 'src/components/Wallets/walletConnectors';
 
@@ -73,13 +74,11 @@ const PrimaryPage: React.FC = observer(() => {
 
   const wallets = useMemo(
     () =>
-      walletsWithWeb3()
-        .filter(el =>
-          mobileCheck
-            ? !filterWallets(detectAndroidPlatform()).includes(el)
-            : !filterWallets(MOBILE_ONLY_WALLETS).includes(el),
-        )
-        .concat(['Other']),
+      walletsWithWeb3().filter(el =>
+        mobileCheck
+          ? !filterWallets(detectAndroidPlatform()).includes(el)
+          : !filterWallets(MOBILE_ONLY_WALLETS).includes(el),
+      ),
     [mobileCheck, DESKTOP_ONLY_WALLETS],
   );
 
@@ -110,10 +109,14 @@ const PrimaryPage: React.FC = observer(() => {
           });
         });
       }
+      if (key === 'External') {
+        store.isAccessModalOpen = false;
+      }
       if (key === 'Other') {
         store.modalHintMessage = 'OtherWallets';
         store.modalSpecifier = 'modal-hint';
       }
+
       if (key === 'BurnerWallet') {
         store.setBatch({
           walletName: key,
@@ -185,7 +188,11 @@ const PrimaryPage: React.FC = observer(() => {
 
   const { walletName, provider, hint } = store;
   if (store.zkWallet) {
-    return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
+    if (store.isExternalWallet) {
+      return <Redirect to={`/${params.get('redirect') || 'withdraw'}`} />;
+    } else {
+      return <Redirect to={`/${params.get('redirect') || 'account'}`} />;
+    }
   }
 
   return (

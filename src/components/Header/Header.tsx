@@ -215,6 +215,7 @@ const Header: React.FC = observer(() => {
       </div>
       <div className='menu-routes'>
         {address &&
+          !store.isExternalWallet &&
           HEADER_ITEMS.map(({ title, link }) => (
             <div className='menu-route-wrapper' key={title}>
               <Link

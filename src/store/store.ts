@@ -28,6 +28,13 @@ export class Store {
   @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
   @observable error = '';
+  @observable externalWalletAddress = '';
+  @observable externalWalletTokenId = 0;
+  @observable externalWalletAccountId = 0;
+  @observable externalWalletContractBalance = 0;
+  @observable externalWalletEthersSigner: any = {};
+  @observable externalWalletInitializing = false;
+  @observable externalWalletContractBalances: any = {};
   @observable isAccountBalanceNotEmpty = false;
   @observable isAccountBalanceLoading = true;
   @observable newContactName = '';
@@ -122,6 +129,10 @@ export class Store {
     return this.walletName === 'Coinbase Wallet';
   }
 
+  @computed get isExternalWallet() {
+    return this.walletName === 'External';
+  }
+
   @computed get isBraveBrowser() {
     return !!navigator['brave'];
   }
@@ -152,6 +163,7 @@ export class Store {
     this.provider = false;
     this.hint = '';
     this.zkWalletInitializing = false;
+    this.externalWalletInitializing = false;
     this.searchBalances = [];
     this.searchContacts = [];
     this.awaitedTokens = {};

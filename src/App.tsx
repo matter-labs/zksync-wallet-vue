@@ -87,6 +87,12 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     );
 
   useEffect(() => {
+    if (!store.zkWallet && store.modalHintMessage === 'ExternalWalletLogin')
+      return;
+    store.externalWalletInitializing = false;
+  }, [store.zkWallet]);
+
+  useEffect(() => {
     if (store.zkWallet) {
       sessionStorage.setItem('walletName', store.walletName);
       window.localStorage?.setItem('walletName', store.walletName);
@@ -198,6 +204,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           'walletName',
         ) as WalletType;
         store.walletName = 'Metamask';
+        window.location.reload();
         store.setBatch({
           zkWallet: null,
           zkBalances: [],
