@@ -13,7 +13,7 @@ import {
 
 import { IEthBalance } from 'types/Common';
 
-import { LINKS_CONFIG } from 'src/config';
+import { LINKS_CONFIG, WITHDRAWAL_PROCESSING_TIME_LINK } from 'src/config';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
@@ -239,7 +239,7 @@ const useWalletInit = () => {
         });
       }
 
-      fetch('https://stage-api.zksync.dev/api/v0.1/withdrawal_processing_time')
+      fetch(WITHDRAWAL_PROCESSING_TIME_LINK)
         .then(res => res.json())
         .then(data => {
           store.withdrawalProcessingTime = data.normal;
