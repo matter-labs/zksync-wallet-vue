@@ -1775,7 +1775,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                           store.fastWithdrawal
                             ? fastWithdrawalTime
                             : withdrawalTime,
-                        )} hours`}
+                        )}.`}
                       </p>
                     )}
                     <div className='transaction-fee-wrapper'>
