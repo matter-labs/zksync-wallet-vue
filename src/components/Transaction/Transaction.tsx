@@ -30,7 +30,11 @@ import { ITransactionProps } from './Types';
 import {
   handleFormatToken,
   handleExponentialNumbers,
-  checkForEmptyBalance,
+  intervalAsyncStateUpdater,
+  loadTokens,
+  sortBalancesById,
+  mintTestERC20Tokens,
+  sortBalancesByBalance,
 } from 'src/utils';
 import {
   LINKS_CONFIG,
@@ -47,8 +51,6 @@ import { useCancelable } from 'hooks/useCancelable';
 import { storeContext, useStore } from 'src/store/context';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
 import { useAutoFocus } from 'hooks/useAutoFocus';
-
-import { loadTokens, sortBalancesById, mintTestERC20Tokens } from 'src/utils';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 
@@ -248,8 +250,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
         });
         Promise.all(zkBalancePromises)
           .then(res => {
-            store.zkBalances = res;
-            store.zkBalancesLoaded = true;
+            const _balances = res.sort(sortBalancesByBalance);
+            if (
+              JSON.stringify(_balances) !== JSON.stringify(store.zkBalances)
+            ) {
+              store.zkBalances = _balances;
+              store.zkBalancesLoaded = true;
+            }
           })
           .catch(err => {
             err.name && err.message
@@ -298,7 +305,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
             .filter(token => token?.balance === 0)
             .sort(sortBalancesById);
           _balances.push(..._balancesEmpty);
-          store.ethBalances = _balances as IEthBalance[];
+          if (JSON.stringify(_balances) !== JSON.stringify(store.ethBalances)) {
+            store.ethBalances = _balances as IEthBalance[];
+          }
         })
         .catch(err => {
           err.name && err.message
@@ -314,49 +323,22 @@ const Transaction: React.FC<ITransactionProps> = observer(
     ]);
 
     useEffect(() => {
+      if (!store.zkWallet || !store.tokens) return;
+      if (title === 'Deposit') {
+        intervalAsyncStateUpdater(loadEthTokens, [], 3000, cancelable);
+      } else {
+        intervalAsyncStateUpdater(getAccState, [], 3000, cancelable);
+      }
+    }, [store.zkWallet, store.tokens]);
+
+    useEffect(() => {
+      if (!store.zkWallet || !store.tokens) return;
       if (title === 'Deposit') {
         loadEthTokens();
       } else {
         getAccState();
       }
-    }, [isBalancesListOpen]);
-
-    const refreshBalances = useCallback(async () => {
-      if (zkWallet && syncProvider && syncWallet && accountState) {
-        await cancelable(
-          loadTokens(syncProvider, syncWallet, accountState),
-        ).then(async res => {
-          if (JSON.stringify(zkBalances) !== JSON.stringify(res.zkBalances)) {
-            store.zkBalances = res.zkBalances;
-            store.zkBalancesLoaded = true;
-            await cancelable(zkWallet?.getAccountState())
-              .then((res: any) => {
-                store.verified = res?.verified.balances;
-              })
-              .then(() => {
-                zkWallet?.isSigningKeySet().then(data => {
-                  store.unlocked = data;
-                });
-              });
-          }
-          if (JSON.stringify(tokens) !== JSON.stringify(res.tokens)) {
-            store.tokens = res.tokens;
-          }
-        });
-      }
-      const timeout = setTimeout(refreshBalances, 2000);
-      setRefreshTimer(timeout as any);
-    }, [
-      accountState,
-      syncProvider,
-      syncWallet,
-      zkWallet,
-      zkBalances,
-      store,
-      tokens,
-      title,
-      store.unlocked,
-    ]);
+    }, [store.zkWallet, store.tokens]);
 
     const submitCondition =
       (ADDRESS_VALIDATION['eth'].test(addressValue) ||

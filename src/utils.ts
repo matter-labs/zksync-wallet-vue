@@ -120,6 +120,16 @@ export const sortBalancesById = (a, b) => {
   return 0;
 };
 
+export const sortBalancesByBalance = (a, b) => {
+  if (a.balance > b.balance) {
+    return -1;
+  }
+  if (a.balance < b.balance) {
+    return 1;
+  }
+  return 0;
+};
+
 export const mintTestERC20Tokens = async (
   wallet: Wallet,
   token: TokenLike,
@@ -301,4 +311,27 @@ export const handleGetUTCHours = (d: Date) => {
   const _seconds = d.getSeconds();
   const dateWithUTC = new Date(_year, _month, _date, _hour, _minutes, _seconds);
   return dateWithUTC;
+};
+
+export const intervalAsyncStateUpdater = (
+  func,
+  funcArguments,
+  timeout: number,
+  cancelable,
+) => {
+  cancelable(func(...funcArguments))
+    .then(res =>
+      setTimeout(
+        () =>
+          intervalAsyncStateUpdater(func, [funcArguments], timeout, cancelable),
+        timeout,
+      ),
+    )
+    .catch(err =>
+      setTimeout(
+        () =>
+          intervalAsyncStateUpdater(func, [funcArguments], timeout, cancelable),
+        timeout,
+      ),
+    );
 };
