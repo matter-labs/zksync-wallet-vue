@@ -223,7 +223,6 @@ const useWalletInit = () => {
         undefined,
         verificationMethod,
       );
-
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
       store.verified = accountState?.verified.balances;

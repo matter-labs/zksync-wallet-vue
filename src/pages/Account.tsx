@@ -17,7 +17,7 @@ import { useStore } from 'src/store/context';
 import { handleFormatToken, getConfirmationCount } from 'src/utils';
 import { fetchTransactions } from 'src/api';
 import { LINKS_CONFIG } from 'src/config';
-import { handleExponentialNumbers, checkForEmptyBalance } from 'src/utils';
+import { handleExponentialNumbers, sortBalancesByBalance } from 'src/utils';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 
@@ -266,13 +266,15 @@ const Account: React.FC = observer(() => {
                   const _list = Object.entries(res).map(el => el[1].symbol);
                   if (_list.indexOf(token) === -1) {
                     store.zkBalancesLoaded = true;
-                    store.zkBalances = res.concat([
-                      {
-                        symbol: token,
-                        balance: 0,
-                        address: 'awaited',
-                      },
-                    ]);
+                    store.zkBalances = res
+                      .concat([
+                        {
+                          symbol: token,
+                          balance: 0,
+                          address: 'awaited',
+                        },
+                      ])
+                      .sort(sortBalancesByBalance);
                   } else {
                     if (
                       JSON.stringify(store.zkBalances) !== JSON.stringify(res)
@@ -297,7 +299,7 @@ const Account: React.FC = observer(() => {
                         store.MLTTclaimed = true;
                       }
                       store.zkBalancesLoaded = true;
-                      store.zkBalances = res;
+                      store.zkBalances = res.sort(sortBalancesByBalance);
                     }
                   }
                 }
@@ -323,7 +325,7 @@ const Account: React.FC = observer(() => {
                     store.MLTTclaimed = true;
                   }
                   store.zkBalancesLoaded = true;
-                  store.zkBalances = res;
+                  store.zkBalances = res.sort(sortBalancesByBalance);
                 }
               }
             })

@@ -19,17 +19,22 @@ import { useMobxEffect } from './hooks/useMobxEffect';
 import { useLocation } from 'react-router-dom';
 import { useLogout } from 'hooks/useLogout';
 import useWalletInit from 'src/hooks/useWalletInit';
-import { LINKS_CONFIG, RIGHT_NETWORK_NAME } from 'src/config';
+import {
+  LINKS_CONFIG,
+  RIGHT_NETWORK_NAME,
+  AUTOLOGIN_WALLETS,
+} from 'src/config';
 import { checkForEmptyBalance } from 'src/utils';
 import {
   coinBaseConnector,
   browserWalletConnector,
+  portisConnector,
 } from 'src/components/Wallets/walletConnectors';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
   const { pathname } = useLocation();
-  const { createWallet, connect } = useWalletInit();
+  const { createWallet, connect, getSigner } = useWalletInit();
   const history = useHistory();
 
   const handleLogout = useLogout();
@@ -86,11 +91,14 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       sessionStorage.getItem('walletName')
     );
 
-  useEffect(() => {
-    if (!store.zkWallet && store.modalHintMessage === 'ExternalWalletLogin')
-      return;
-    store.externalWalletInitializing = false;
-  }, [store.zkWallet]);
+  const savedWalletName =
+    window.localStorage?.getItem('walletName') ||
+    sessionStorage.getItem('walletName');
+
+  const imidiateLoginCondition: boolean =
+    store.isPrimaryPage &&
+    sessionStorage.getItem('autoLoginStatus') !== 'changeWallet' &&
+    AUTOLOGIN_WALLETS.includes(savedWalletName ?? '');
 
   useEffect(() => {
     if (store.zkWallet) {
@@ -107,8 +115,44 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
     if (savedDoesNotExistOnLogin) {
       handleLogout(false, '');
+      sessionStorage.setItem('autoLoginStatus', 'autoLogin');
     }
-  }, [store.zkWallet, store.isAccessModalOpen]);
+    if (
+      !store.zkWallet &&
+      savedWalletName &&
+      (!store.isPrimaryPage || imidiateLoginCondition)
+    ) {
+      if (store.autoLoginRequestStatus !== 'changeWallet') {
+        sessionStorage.setItem('autoLoginStatus', 'autoLogin');
+      }
+      store.walletName = savedWalletName as WalletType;
+      store.normalBg = true;
+      store.isAccessModalOpen = true;
+      store.hint = 'Connecting to ';
+      if (store.isMetamaskWallet || store.isWalletConnect) {
+        createWallet();
+      }
+      if (store.isPortisWallet) {
+        portisConnector(store, connect, getSigner);
+      }
+      if (store.isPortisWallet) {
+        portisConnector(store, connect, getSigner);
+      }
+    }
+    if (!store.isPrimaryPage && !savedWalletName) {
+      handleLogout(false, '');
+    }
+    if (!store.isPrimaryPage && !savedWalletName) {
+      handleLogout(false, '');
+    }
+  }, [store.zkWallet, store.autoLoginRequestStatus]);
+
+  /* Need to save for the possible future bugs  **/
+  // useEffect(() => {
+  //   if (!store.zkWallet && !store.isAccessModalOpen) {
+  //     window.localStorage?.removeItem('walletconnect');
+  //   }
+  // }, [store.zkWallet, store.isAccessModalOpen]);
 
   useEffect(() => {
     if (!store.isCoinbaseWallet && store.isPrimaryPage) return;
@@ -118,11 +162,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       : coinBaseConnector(store, connect);
   }, [store, store.walletName]);
 
-  useEffect(() => {
-    if (!store.zkWallet && !store.isAccessModalOpen) {
-      window.localStorage?.removeItem('walletconnect');
-    }
-  }, [store.zkWallet, store.isAccessModalOpen]);
   // Listen for network change
   useMobxEffect(() => {
     const { provider } = store;
@@ -297,6 +336,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     }
   }, [store.modalSpecifier, store.MLTTclaimed]);
 
+  const handleOpenUnlinkModal = () => {
+    store.modalHintMessage = 'UnlinkCoinBase';
+    store.modalSpecifier = 'modal-hint';
+  };
+
+  const UnlinkAcccountBtn = () => (
+    <span onClick={handleOpenUnlinkModal} className='undo-btn block'>
+      {'Unlink account'}
+    </span>
+  );
+
   return (
     <div className={`content-wrapper ${store.walletName ? '' : 'start-page'}`}>
       <Modal
@@ -402,17 +452,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
               {store.zkWalletInitializing ? 'Close' : 'Cancel'}
             </button>
           )}
-          {store.isCoinbaseWallet && (
-            <span
-              onClick={() => {
-                store.modalHintMessage = 'UnlinkCoinBase';
-                store.modalSpecifier = 'modal-hint';
-              }}
-              className='undo-btn block'
-            >
-              {'Unlink account'}
-            </span>
-          )}
+          {store.isCoinbaseWallet && <UnlinkAcccountBtn />}
         </>
       </Modal>
       <Modal
