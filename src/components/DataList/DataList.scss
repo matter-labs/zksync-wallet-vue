@@ -171,6 +171,10 @@
     border-bottom: 1px solid var(--border-color);
     cursor: pointer;
 
+    &.external {
+      cursor: default;
+    }
+
     &.empty {
       cursor: default;
     }

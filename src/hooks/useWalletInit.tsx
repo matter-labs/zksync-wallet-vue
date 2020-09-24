@@ -295,7 +295,6 @@ const useWalletInit = () => {
           store.unlocked = data;
         });
       }
-      store.zkWalletInitializing = false;
     } catch (err) {
       store.zkWalletInitializing = false;
       const error = err.message

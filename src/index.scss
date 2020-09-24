@@ -365,6 +365,11 @@ h2 {
     margin-bottom: 30px;
   }
 
+  &-argument {
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+
   &-wallet {
     &-wrapper {
       display: flex;
@@ -1319,6 +1324,16 @@ body.dark > #root {
 
   .balances-search {
     background-image: url(./images/mdi_search_dark.svg);
+  }
+}
+
+.title {
+  &-connecting {
+    margin: 27px 0 36px;
+    color: var(--dark-color);
+    font-weight: var(--bold-font-weight);
+    font-size: var(--large-font-size);
+    text-align: center;
   }
 }
 

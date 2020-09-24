@@ -73,11 +73,12 @@
     margin-bottom: 40px;
   }
 
-  & > h3 {
+  & .h3 {
     margin: 27px 0 36px;
     color: var(--dark-color);
     font-weight: var(--bold-font-weight);
     font-size: var(--large-font-size);
+    text-align: center;
   }
 
   & input {

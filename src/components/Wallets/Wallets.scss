@@ -11,6 +11,10 @@
   border-radius: 4px;
   cursor: pointer;
 
+  &.external {
+    cursor: default;
+  }
+
   &-text {
     margin-bottom: 0;
   }

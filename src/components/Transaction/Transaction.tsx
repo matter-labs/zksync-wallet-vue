@@ -755,14 +755,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
         setUnlockingERCProcess(false);
         setLoading(false);
       }
-
-      ethers
-        .getDefaultProvider(LINKS_CONFIG.network)
-        .getGasPrice()
-        .then(res => res.toString())
-        .then(data => {
-          setGas(data);
-        });
       document.addEventListener('click', handleClickOutside, true);
       return () => {
         document.removeEventListener('click', handleClickOutside, true);
@@ -806,6 +798,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
       store.propsToken,
       store.tokenInUnlockingProgress,
     ]);
+
+    useEffect(() => {
+      if (!store.zkWallet) return;
+      ethers
+        .getDefaultProvider(LINKS_CONFIG.network)
+        .getGasPrice()
+        .then(res => res.toString())
+        .then(data => {
+          setGas(data);
+        });
+    }, [isBalancesListOpen, store.zkWallet]);
 
     const handleShowHint = useCallback(
       text => {
@@ -1238,7 +1241,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           }
         }}
         key={address}
-        className='balances-token'
+        className={`balances-token ${store.isExternalWallet && 'external'}`}
       >
         {store.isExternalWallet ? (
           <ExternalWalletBalance balance={balance} symbol={symbol} />
@@ -1279,11 +1282,22 @@ const Transaction: React.FC<ITransactionProps> = observer(
       [copyRef, copyOpened],
     );
 
-    const CopyBlock = ({ text }) => {
+    interface ICopyBlockProps {
+      children?: React.ReactNode;
+      copyProp?: string;
+      text?: string | number | undefined;
+    }
+
+    const CopyBlock: React.FC<ICopyBlockProps> = ({
+      text,
+      children,
+      copyProp,
+    }) => {
       const visible = copyRef === text;
+      const copyArg = copyProp || text;
 
       return (
-        <div className='copy-block'>
+        <div className='copy-block external'>
           {visible && (
             <Transition type='fly' timeout={200} trigger={copyOpened}>
               <div className={'hint-copied open'}>
@@ -1292,10 +1306,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
             </Transition>
           )}
 
-          <p className='copy-block-text'>{text}</p>
+          {text && <p className='copy-block-text'>{text}</p>}
+          {children}
           <button
             onClick={() => {
-              handleCopy(text);
+              handleCopy(copyArg);
             }}
             className='copy-block-button btn-tr'
           ></button>
@@ -1329,6 +1344,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
         minutes ? `${minutes} minutes` : ''
       } ${seconds ? `${seconds} seconds` : ''}`;
     };
+
+    useEffect(() => {
+      if (!store.zkWallet) return;
+      fetch(
+        '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw',
+      )
+        .then(res => res.text())
+        .then(data => (store.abiText = data));
+    }, [store.zkWallet]);
 
     const WithdrawTypeBlock = observer(() => {
       const showFeeCondition: boolean =
@@ -1423,31 +1447,40 @@ const Transaction: React.FC<ITransactionProps> = observer(
               {'Amount to withdraw: '}
               {maxValue}
             </h3>
-            <p>{`For now, for external wallets we only support withdrawals to L1. You can perform a withdrawal in 2 transactions initiated from ${store.zkWallet?.address()}. In the first step, you need to request withdrawal by calling the following method`}</p>
+            <p>{`For now, for external wallets we only support withdrawals to L1. You can perform a withdrawal in 2 transactions initiated from ${store.zkWallet?.address()}. In the first step, you need to request withdrawal by calling the following method:`}</p>
             <div className='grey-block'>
               <h3>{'Contract:'}</h3>
-              <a target='_blank' href={etherscanContracLink}>
-                {mainContract}
-              </a>{' '}
-              (
+              <CopyBlock copyProp={mainContract}>
+                <a target='_blank' href={etherscanContracLink}>
+                  {mainContract}
+                </a>{' '}
+              </CopyBlock>
               {/* <a
                 target='_blank'
                 href={`//api${LINKS_CONFIG.network === 'mainnet' ? '.' : '-'}${
                   LINKS_CONFIG.ethBlockExplorer
                 }/api?module=contract&action=getabi&address=${mainContract}&format=raw`}
               > */}
-              <a
-                target='_blank'
-                href={
-                  '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw'
-                }
-              >
-                {'ABI'}
-              </a>
-              )<h3>{'Method:'}</h3>
+              <CopyBlock copyProp={store.abiText}>
+                <span>
+                  (
+                  <a
+                    target='_blank'
+                    href={
+                      '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw'
+                    }
+                  >
+                    {'ABI'}
+                  </a>
+                  )
+                </span>
+              </CopyBlock>
+              <h3>{'Method:'}</h3>
               <CopyBlock text={'fullExit'} />
               <h3>{'Arguments:'}</h3>
+              <p className='external-argument'>{'_accountId'}</p>
               <CopyBlock text={store.accountState?.id} />
+              <p className='external-argument'>{'_token'}</p>
               <CopyBlock text={token} />
             </div>
             <p>
@@ -1468,30 +1501,44 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <h2 className='transaction-title'>{`Complete withdrawing ${symbolName}`}</h2>
             <div className='grey-block'>
               <h3>{'Contract:'}</h3>
-              <a target='_blank' href={etherscanContracLink}>
-                {mainContract}
-              </a>{' '}
-              (
+              <CopyBlock copyProp={mainContract}>
+                <a target='_blank' href={etherscanContracLink}>
+                  {mainContract}
+                </a>{' '}
+              </CopyBlock>
+
               {/* <a
                 target='_blank'
                 href={`//api${LINKS_CONFIG.network === 'mainnet' ? '.' : '-'}${
                   LINKS_CONFIG.ethBlockExplorer
                 }/api?module=contract&action=getabi&address=${mainContract}&format=raw`}
               > */}
-              <a
-                target='_blank'
-                href={
-                  '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw'
-                }
-              >
-                {'ABI'}
-              </a>
-              )<h3>{'Method:'}</h3>
+              <CopyBlock copyProp={store.abiText}>
+                <span>
+                  (
+                  <a
+                    target='_blank'
+                    href={
+                      '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw'
+                    }
+                  >
+                    {'ABI'}
+                  </a>
+                  )
+                </span>
+              </CopyBlock>
+              <h3>{'Method:'}</h3>
               <CopyBlock
                 text={symbolName === 'ETH' ? 'withdrawETH' : 'withdrawERC20'}
               />
               <h3>{'Arguments:'}</h3>
-              <CopyBlock text={token} />
+              {symbolName !== 'ETH' && (
+                <>
+                  <p className='external-argument'>{'_token'}</p>
+                  <CopyBlock text={token} />
+                </>
+              )}
+              <p className='external-argument'>{'_amount'}</p>
               <CopyBlock
                 text={store.externalWalletContractBalances[symbolName]}
               />
@@ -1621,7 +1668,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   }
                 />
                 {checkForContractWithoutZk().map(key => (
-                  <div className='balances-token' key={key}>
+                  <div className='balances-token external' key={key}>
                     <ExternalWalletBalance
                       balance={store.externalWalletContractBalances.key}
                       symbol={key}

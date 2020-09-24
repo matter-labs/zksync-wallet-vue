@@ -8,6 +8,7 @@ import useWalletInit from 'src/hooks/useWalletInit';
 import Spinner from '../Spinner/Spinner';
 import { useLogout } from 'hooks/useLogout';
 import { ADDRESS_VALIDATION } from 'constants/regExs';
+import './Modal.scss';
 
 const MyWallet = () => (
   <>
@@ -306,6 +307,7 @@ const ExternalWalletLogin = observer(() => {
 
   return (
     <>
+      <h3 className='title-connecting'>{'External wallet'}</h3>
       {store.externalWalletInitializing ? (
         <Spinner />
       ) : (
