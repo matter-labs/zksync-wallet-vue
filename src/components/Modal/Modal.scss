@@ -171,19 +171,38 @@
 
   &.external-wallet-instructions {
     padding: 25px 0 25px 0;
-    overflow-x: hidden;
 
     & > .scroll-content { 
-      width: calc(100% + 30px); 
+      width: 100%; 
       max-height: 70vh; 
       padding: 0 50px 0 30px; 
       overflow-x: hidden;
-      overflow-y: scroll;
-  
+      
+      &::-webkit-scrollbar-track
+      {
+        background-color: var(--transparent);
+        border-radius: 10px;
+      }
+
+      &::-webkit-scrollbar
+      {
+        width: 10px;
+        background-color: var(--transparent);
+      }
+
+      &::-webkit-scrollbar-thumb
+      {
+        background-color: var(--input-border-focus);
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
       & > h3, p {
         text-align: left;
       } 
     }
+
+    
   }
 
   &.metamask {
@@ -610,8 +629,6 @@ body.dark {
     overflow-x: hidden;
 
     & > .balances-wrapper {
-      width: calc(100% + 30px);
-      margin-right: -15px;
       padding-right: 5px;
     }
   }

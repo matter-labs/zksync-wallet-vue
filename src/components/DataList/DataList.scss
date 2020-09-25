@@ -100,6 +100,25 @@
     background-color: var(--modal-bg-color);
     border-radius: 5px;
 
+    &::-webkit-scrollbar-track
+      {
+        background-color: var(--transparent);
+        border-radius: 10px;
+      }
+
+      &::-webkit-scrollbar
+      {
+        width: 10px;
+        background-color: var(--transparent);
+      }
+
+      &::-webkit-scrollbar-thumb
+      {
+        background-color: var(--input-border-focus);
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
     &.external {
       padding: 27px 0 0;
     }

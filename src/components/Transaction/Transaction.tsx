@@ -1059,19 +1059,20 @@ const Transaction: React.FC<ITransactionProps> = observer(
       if (!store.zkWallet || !store.externalWalletEthersSigner || !store.tokens)
         return;
       const obj: any = {};
-      console.log('a');
-      Object.keys(store.tokens).map(key => {
-        getBalanceOnContract(
-          store.zkWallet?.ethSigner as ethers.Signer,
-          store.zkWallet?.provider as Provider,
-          key,
-        ).then(res => {
-          if (+res > 0) {
-            obj[key] = +res;
-          }
-          store.externalWalletContractBalances = obj;
-        });
-      });
+      Promise.all(
+        Object.keys(store.tokens).map(key => {
+          return getBalanceOnContract(
+            store.zkWallet?.ethSigner as ethers.Signer,
+            store.zkWallet?.provider as Provider,
+            key,
+          ).then(res => {
+            if (+res > 0) {
+              obj[key] = +res;
+            }
+            store.externalWalletContractBalances = obj;
+          });
+        }),
+      ).then(() => (store.externalWalletContractBalancesLoaded = true));
     }, [
       store.zkWallet,
       store.externalWalletEthersSigner,
@@ -1651,11 +1652,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   visible={true}
                   classSpecifier='external'
                   renderItem={({ address, symbol, balance }) => (
-                    <BalancesList
-                      address={address}
-                      symbol={symbol}
-                      balance={balance}
-                    />
+                    <>
+                      {store.externalWalletContractBalancesLoaded ? (
+                        <BalancesList
+                          address={address}
+                          symbol={symbol}
+                          balance={balance}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </>
                   )}
                   emptyListComponent={() =>
                     !store.isAccountBalanceNotEmpty ? (
@@ -1667,14 +1674,20 @@ const Transaction: React.FC<ITransactionProps> = observer(
                     ) : null
                   }
                 />
-                {checkForContractWithoutZk().map(key => (
-                  <div className='balances-token external' key={key}>
-                    <ExternalWalletBalance
-                      balance={store.externalWalletContractBalances.key}
-                      symbol={key}
-                    />
-                  </div>
-                ))}
+                {store.externalWalletContractBalancesLoaded ? (
+                  <>
+                    {checkForContractWithoutZk().map(key => (
+                      <div className='balances-token external' key={key}>
+                        <ExternalWalletBalance
+                          balance={store.externalWalletContractBalances.key}
+                          symbol={key}
+                        />
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <Spinner />
+                )}
               </>
             ))}
           {isExecuted && (
@@ -1703,38 +1716,65 @@ const Transaction: React.FC<ITransactionProps> = observer(
             (store.unlocked === undefined || isLoading || !zkBalancesLoaded)) ||
             burnerWalletAccountUnlockCondition) && (
             <>
-              <LoadingTx
-                fee={
-                  title === 'Transfer' &&
-                  fee &&
-                  store.zkWallet &&
-                  handleFormatToken(store.zkWallet, symbolName, +fee)
-                }
-                price={
-                  +(price && !!price[selectedBalance]
-                    ? price[selectedBalance]
-                    : 0)
-                }
-                isAccountUnlockingProcess={isAccountUnlockingProcess}
-                isUnlockingProcess={isUnlockingProcess}
-                inputValue={inputValue}
-                symbolName={symbolName}
-                addressValue={addressValue}
-                handleCancel={handleCancel}
-                isLoading={isLoading}
-                setWalletName={setWalletName}
-                title={title}
-                unlockFau={unlockFau}
-                setLoading={setLoading}
-                setAccountUnlockingProcess={setAccountUnlockingProcess}
-                setUnlockingERCProcess={setUnlockingERCProcess}
-              />
-
-              {hint.match(/(?:denied)/i) && !isLoading && (
-                <CanceledTx
-                  handleCancel={handleCancel}
-                  setWalletName={setWalletName}
+              {store.isExternalWallet ? (
+                <DataList
+                  data={store.zkBalances}
+                  title={'Balances in L2'}
+                  visible={true}
+                  classSpecifier='external'
+                  renderItem={({ address, symbol, balance }) => (
+                    <>
+                      {store.externalWalletContractBalancesLoaded ? (
+                        <BalancesList
+                          address={address}
+                          symbol={symbol}
+                          balance={balance}
+                        />
+                      ) : (
+                        <></>
+                      )}
+                    </>
+                  )}
+                  emptyListComponent={() =>
+                    !store.isAccountBalanceNotEmpty ? <Spinner /> : null
+                  }
                 />
+              ) : (
+                <>
+                  <LoadingTx
+                    fee={
+                      title === 'Transfer' &&
+                      fee &&
+                      store.zkWallet &&
+                      handleFormatToken(store.zkWallet, symbolName, +fee)
+                    }
+                    price={
+                      +(price && !!price[selectedBalance]
+                        ? price[selectedBalance]
+                        : 0)
+                    }
+                    isAccountUnlockingProcess={isAccountUnlockingProcess}
+                    isUnlockingProcess={isUnlockingProcess}
+                    inputValue={inputValue}
+                    symbolName={symbolName}
+                    addressValue={addressValue}
+                    handleCancel={handleCancel}
+                    isLoading={isLoading}
+                    setWalletName={setWalletName}
+                    title={title}
+                    unlockFau={unlockFau}
+                    setLoading={setLoading}
+                    setAccountUnlockingProcess={setAccountUnlockingProcess}
+                    setUnlockingERCProcess={setUnlockingERCProcess}
+                  />
+
+                  {hint.match(/(?:denied)/i) && !isLoading && (
+                    <CanceledTx
+                      handleCancel={handleCancel}
+                      setWalletName={setWalletName}
+                    />
+                  )}
+                </>
               )}
             </>
           )}
