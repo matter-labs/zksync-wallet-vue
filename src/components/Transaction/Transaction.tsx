@@ -85,6 +85,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
   }): JSX.Element => {
     const store = useStore();
 
+    const { ExternaWalletStore, TransactionStore } = store;
+
     const {
       ethId,
       hint,
@@ -107,7 +109,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const myRef = useRef<HTMLInputElement>(null);
     const autoFocus = useAutoFocus();
 
-    const [pureInputValue, setPureInputValue] = useState<string>('');
     const [copyOpened, setCopyOpened] = useState(false);
     useTimeout(() => copyOpened && setCopyOpened(false), 2000, [copyOpened]);
     const [copyRef, setCopyRef] = useState('');
@@ -1065,7 +1066,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }
 
     useEffect(() => {
-      if (!store.zkWallet || !store.externalWalletEthersSigner || !store.tokens)
+      if (
+        !store.zkWallet ||
+        !ExternaWalletStore.externalWalletEthersSigner ||
+        !store.tokens
+      )
         return;
       const obj: any = {};
       Promise.all(
@@ -1078,20 +1083,22 @@ const Transaction: React.FC<ITransactionProps> = observer(
             if (+res > 0) {
               obj[key] = +res;
             }
-            store.externalWalletContractBalances = obj;
+            ExternaWalletStore.externalWalletContractBalances = obj;
           });
         }),
-      ).then(() => (store.externalWalletContractBalancesLoaded = true));
+      ).then(
+        () => (ExternaWalletStore.externalWalletContractBalancesLoaded = true),
+      );
     }, [
       store.zkWallet,
-      store.externalWalletEthersSigner,
+      ExternaWalletStore.externalWalletEthersSigner,
       store.tokens,
       symbolName,
     ]);
 
     useEffect(() => {
       if (!store.zkWallet) return;
-    }, [store.externalWalletContractBalances, store.zkWallet]);
+    }, [ExternaWalletStore.externalWalletContractBalances, store.zkWallet]);
 
     const mainContract = store.zkWallet?.provider.contractAddress.mainContract;
     const etherscanContracLink = `//${LINKS_CONFIG.ethBlockExplorer}/address/${mainContract}#writeProxyContract`;
@@ -1118,25 +1125,28 @@ const Transaction: React.FC<ITransactionProps> = observer(
             {'Start withdraw'}
           </button>
         )}
-        {store.externalWalletContractBalances[symbol] && store.zkWallet && (
-          <button
-            onClick={() => {
-              store.modalSpecifier = 'external-wallet-instructions 2';
-              setSymbolName(symbol);
-              setToken(
-                store.zkWallet?.provider.tokenSet.resolveTokenAddress(
-                  symbol,
-                ) as string,
-              );
-              setMaxValue(store.externalWalletContractBalances[symbol]);
-            }}
-            className='undo-btn'
-          >{`Complete withdraw of ${handleFormatToken(
-            store.zkWallet,
-            symbol,
-            store.externalWalletContractBalances[symbol],
-          )} ${symbol}`}</button>
-        )}
+        {ExternaWalletStore.externalWalletContractBalances[symbol] &&
+          store.zkWallet && (
+            <button
+              onClick={() => {
+                store.modalSpecifier = 'external-wallet-instructions 2';
+                setSymbolName(symbol);
+                setToken(
+                  store.zkWallet?.provider.tokenSet.resolveTokenAddress(
+                    symbol,
+                  ) as string,
+                );
+                setMaxValue(
+                  ExternaWalletStore.externalWalletContractBalances[symbol],
+                );
+              }}
+              className='undo-btn'
+            >{`Complete withdraw of ${handleFormatToken(
+              store.zkWallet,
+              symbol,
+              ExternaWalletStore.externalWalletContractBalances[symbol],
+            )} ${symbol}`}</button>
+          )}
       </div>
     );
 
@@ -1185,7 +1195,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <span>
               {window?.innerWidth > WIDTH_BP && 'contract balance:'}
               <p className='datalist-balance'>
-                {store.externalWalletContractBalance}
+                {ExternaWalletStore.externalWalletContractBalance}
               </p>
             </span>
           )}
@@ -1197,39 +1207,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       <div
         onClick={() => {
           if (store.isExternalWallet) {
-            // const ewTokens = localStorage.getItem('ewTokens');
-            // const _t = {
-            //   tokenAddress: address,
-            //   contract: mainContract,
-            //   symbol: symbol,
-            // };
-            // if (ewTokens) {
-            //   const ewTokensParsed = JSON.parse(ewTokens);
-            //   ewTokensParsed.symbol = _t;
-            //   localStorage.setItem('ewTokens', JSON.stringify(ewTokensParsed));
-            // } else {
-            //   if (store.isAccountBalanceNotEmpty) {
-            //     const ewTokensObject = {
-            //       symbol: _t,
-            //     };
-            //     localStorage.setItem(
-            //       'ewTokens',
-            //       JSON.stringify(ewTokensObject),
-            //     );
-            //   }
-            // }
-            // setToken(address);
-            // setMaxValue(balance);
-            // setSymbolName(symbol);
-            // getBalanceOnContract(
-            //   store.externalWalletEthersSigner,
-            //   store.zkWallet?.provider as Provider,
-            //   symbol,
-            // ).then(res => {
-            //   store.externalWalletContractBalance = res;
-            // });
-            // openBalancesList(false);
-            // store.modalSpecifier = 'external-wallet-instructions';
             return;
           }
           if (address === 'awaited') {
@@ -1246,7 +1223,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             setConditionError('');
             handleInputWidth(1);
             validateNumbers('');
-            setPureInputValue('');
+            TransactionStore.pureAmountInputValue = '';
             handleFee(inputValue, symbol);
             body?.classList.remove('fixed-b');
           }
@@ -1264,9 +1241,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const checkForContractWithoutZk = () => {
       const zkBalanceKeys = store.zkBalances.map(el => el.symbol);
-      return Object.keys(store.externalWalletContractBalances).filter(
-        key => !zkBalanceKeys.includes(key),
-      );
+      return Object.keys(
+        ExternaWalletStore.externalWalletContractBalances,
+      ).filter(key => !zkBalanceKeys.includes(key));
     };
 
     const burnerWalletAccountUnlockCondition =
@@ -1274,13 +1251,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const calculateMaxValue = () => {
       if (store.zkWallet) {
-        // if (title === 'Deposit') {
         return handleExponentialNumbers(maxValue).toString();
-        // } else if(maxValue > +handleFormatToken(store.zkWallet, symbolName, +fee)) {
-        //   return (
-        //     maxValue - +handleFormatToken(store.zkWallet, symbolName, +fee)
-        //   ).toString();
-        // }
       }
     };
 
@@ -1304,7 +1275,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       children,
       copyProp,
     }) => {
-      const visible = copyRef === text;
+      const visible = copyRef === text || copyRef === copyProp;
       const copyArg = copyProp || text;
 
       return (
@@ -1383,13 +1354,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
       const valueHandler = () => {
         const maxValueInSelected =
-          +pureInputValue +
+          +TransactionStore.pureAmountInputValue +
             +handleFormatToken(store.zkWallet as Wallet, symbolName, fee) >=
           +maxValue;
 
         if (store.fastWithdrawal && !!maxValueInSelected) {
           return (
-            +pureInputValue -
+            +TransactionStore.pureAmountInputValue -
             +handleFormatToken(
               store.zkWallet as Wallet,
               symbolName,
@@ -1399,11 +1370,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
         }
         if (!store.fastWithdrawal && !!maxValueInSelected) {
           return (
-            +pureInputValue -
+            +TransactionStore.pureAmountInputValue -
             +handleFormatToken(store.zkWallet as Wallet, symbolName, +fee)
           );
         } else {
-          return +pureInputValue;
+          return +TransactionStore.pureAmountInputValue;
         }
       };
 
@@ -1419,7 +1390,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         setAmount(valueHandler() as number);
         handleInputWidth(valueHandler() as number);
         setConditionError('');
-        setPureInputValue(valueHandler()?.toString());
+        TransactionStore.pureAmountInputValue = valueHandler()?.toString();
       };
 
       return (
@@ -1519,7 +1490,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               <CopyBlock copyProp={mainContract}>
                 <a target='_blank' href={etherscanContracLink}>
                   {mainContract}
-                </a>{' '}
+                </a>
               </CopyBlock>
               <CopyBlock text='ABI' copyProp={store.abiText} />
               <h3>{'Method:'}</h3>
@@ -1551,7 +1522,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               <CopyBlock copyProp={mainContract}>
                 <a target='_blank' href={etherscanContracLink}>
                   {mainContract}
-                </a>{' '}
+                </a>
               </CopyBlock>
               <CopyBlock text='ABI' copyProp={store.abiText} />
               <h3>{'Method:'}</h3>
@@ -1567,7 +1538,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
               )}
               <p className='external-argument'>{'_amount'}</p>
               <CopyBlock
-                text={store.externalWalletContractBalances[symbolName]}
+                text={
+                  ExternaWalletStore.externalWalletContractBalances[symbolName]
+                }
               />
             </div>
           </div>
@@ -1679,7 +1652,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   classSpecifier='external'
                   renderItem={({ address, symbol, balance }) => (
                     <>
-                      {store.externalWalletContractBalancesLoaded ? (
+                      {ExternaWalletStore.externalWalletContractBalancesLoaded ? (
                         <BalancesList
                           address={address}
                           symbol={symbol}
@@ -1700,12 +1673,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
                     ) : null
                   }
                 />
-                {store.externalWalletContractBalancesLoaded ? (
+                {ExternaWalletStore.externalWalletContractBalancesLoaded ? (
                   <>
                     {checkForContractWithoutZk().map(key => (
                       <div className='balances-token external' key={key}>
                         <ExternalWalletBalance
-                          balance={store.externalWalletContractBalances.key}
+                          balance={
+                            ExternaWalletStore.externalWalletContractBalances
+                              .key
+                          }
                           symbol={key}
                         />
                       </div>
@@ -1750,7 +1726,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   classSpecifier='external'
                   renderItem={({ address, symbol, balance }) => (
                     <>
-                      {store.externalWalletContractBalancesLoaded ? (
+                      {ExternaWalletStore.externalWalletContractBalancesLoaded ? (
                         <BalancesList
                           address={address}
                           symbol={symbol}
@@ -1979,7 +1955,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   validateNumbers(e.target.value);
                                   setAmount(+e.target.value);
                                   handleInputWidth(+e.target.value);
-                                  setPureInputValue(e.target.value);
+                                  TransactionStore.pureAmountInputValue =
+                                    e.target.value;
                                 }}
                                 value={
                                   inputValue
@@ -2051,9 +2028,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                             calculateMaxValue() as string,
                                           ),
                                         );
-                                        setPureInputValue(
-                                          calculateMaxValue().toString(),
-                                        );
+                                        TransactionStore.pureAmountInputValue = calculateMaxValue().toString();
                                       }
                                     }}
                                   >

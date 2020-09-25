@@ -25,6 +25,9 @@ import { handleFormatToken, checkForEmptyBalance } from 'src/utils';
 
 const useWalletInit = () => {
   const store = useStore();
+
+  const { ExternaWalletStore } = store;
+
   const cancelable = useCancelable();
 
   const connect = useCallback(
@@ -176,7 +179,7 @@ const useWalletInit = () => {
 
       const externalWalletInstance = {
         provider: await getDefaultProvider(LINKS_CONFIG.network),
-        address: store.externalWalletAddress,
+        address: ExternaWalletStore.externalWalletAddress,
         getAddress: async () => {
           return externalWalletInstance.address;
         },
@@ -214,7 +217,7 @@ const useWalletInit = () => {
         isSignedMsgPrefixed: true,
       };
 
-      store.externalWalletEthersSigner = walletBasedSigner;
+      ExternaWalletStore.externalWalletEthersSigner = walletBasedSigner;
 
       const syncWallet = await zkSync.Wallet.fromEthSigner(
         syncWalletArgs.ethWallet,

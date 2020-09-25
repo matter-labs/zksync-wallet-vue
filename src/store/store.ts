@@ -7,6 +7,8 @@ import {
   ITransaction,
   IContactNameValue,
 } from '../types/Common';
+import { ExternaWalletStore } from './externalWalletStore';
+import { TransactionStore } from './transactionStore';
 import { Tokens, AccountState } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
 import { WSTransport } from 'zksync/build/transport';
@@ -17,6 +19,9 @@ import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
 
 export class Store {
+  @observable ExternaWalletStore = new ExternaWalletStore();
+  @observable TransactionStore = new TransactionStore();
+
   @observable abiText: any = '';
   @observable autoLoginRequestStatus = sessionStorage.getItem(
     'autoLoginStatus',
@@ -32,14 +37,6 @@ export class Store {
   @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
   @observable error = '';
-  @observable externalWalletAddress = '';
-  @observable externalWalletTokenId = 0;
-  @observable externalWalletAccountId = 0;
-  @observable externalWalletContractBalance = 0;
-  @observable externalWalletEthersSigner: any = {};
-  @observable externalWalletInitializing = false;
-  @observable externalWalletContractBalances: any = {};
-  @observable externalWalletContractBalancesLoaded = false;
   @observable isAccountBalanceNotEmpty = false;
   @observable isAccountBalanceLoading = true;
   @observable newContactName = '';
@@ -168,7 +165,7 @@ export class Store {
     this.provider = false;
     this.hint = '';
     this.zkWalletInitializing = false;
-    this.externalWalletInitializing = false;
+    this.ExternaWalletStore.externalWalletInitializing = false;
     this.searchBalances = [];
     this.searchContacts = [];
     this.awaitedTokens = {};

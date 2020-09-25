@@ -283,13 +283,16 @@ const MLTTBlockModal = () => {
 
 const ExternalWalletLogin = observer(() => {
   const store = useStore();
+
+  const { ExternaWalletStore } = store;
+
   const { createWallet } = useWalletInit();
   const logout = useLogout();
   const [conditionError, setConditionError] = useState(false);
 
   const mainBtnCb = () => {
-    if (!store.externalWalletInitializing) {
-      store.externalWalletInitializing = true;
+    if (!ExternaWalletStore.externalWalletInitializing) {
+      ExternaWalletStore.externalWalletInitializing = true;
       createWallet();
     } else {
       logout(false, '');
@@ -297,24 +300,27 @@ const ExternalWalletLogin = observer(() => {
   };
 
   const isAddressValid = ADDRESS_VALIDATION['eth'].test(
-    store.externalWalletAddress,
+    ExternaWalletStore.externalWalletAddress,
   );
-  const connectBtnDisabled = conditionError || !store.externalWalletAddress;
+  const connectBtnDisabled =
+    conditionError || !ExternaWalletStore.externalWalletAddress;
 
   useEffect(() => {
     setConditionError(false);
-  }, [store.externalWalletAddress]);
+  }, [ExternaWalletStore.externalWalletAddress]);
 
   return (
     <>
       <h3 className='title-connecting'>{'External wallet'}</h3>
-      {store.externalWalletInitializing ? (
+      {ExternaWalletStore.externalWalletInitializing ? (
         <Spinner />
       ) : (
         <>
           <span className='transaction-field-title plain'>{'Address:'}</span>
           <input
-            onChange={e => (store.externalWalletAddress = e.target.value)}
+            onChange={e =>
+              (ExternaWalletStore.externalWalletAddress = e.target.value)
+            }
             type='text'
             placeholder='0x address'
             className='external-address'
@@ -323,7 +329,7 @@ const ExternalWalletLogin = observer(() => {
       )}
       <div className='error-container'>
         <p className={`error-text ${conditionError && 'visible'}`}>
-          {`Error: "${store.externalWalletAddress}" doesn't match ethereum address format`}
+          {`Error: "${ExternaWalletStore.externalWalletAddress}" doesn't match ethereum address format`}
         </p>
       </div>
       <button
@@ -331,7 +337,7 @@ const ExternalWalletLogin = observer(() => {
           'disabled'}`}
         onClick={() => (isAddressValid ? mainBtnCb() : setConditionError(true))}
       >
-        {store.externalWalletInitializing ? 'Cancel' : 'Connect'}
+        {ExternaWalletStore.externalWalletInitializing ? 'Cancel' : 'Connect'}
       </button>
     </>
   );
