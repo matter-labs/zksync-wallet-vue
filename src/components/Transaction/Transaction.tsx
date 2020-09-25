@@ -12,6 +12,8 @@ import { Wallet, Provider, utils } from 'zksync';
 import { useTimeout } from 'src/hooks/timers';
 import { Transition } from 'components/Transition/Transition';
 
+import { ABI_CONTRACT_INTERFACE_DESCRIPTION } from 'src/constants/abiInterface';
+
 import { DataList } from 'components/DataList/DataListNew';
 import { CheckBox } from 'src/components/Common/CheckBox';
 import Modal from 'components/Modal/Modal';
@@ -1346,15 +1348,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       } ${seconds ? `${seconds} seconds` : ''}`;
     };
 
-    useEffect(() => {
-      if (!store.zkWallet) return;
-      fetch(
-        '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw',
-      )
-        .then(res => res.text())
-        .then(data => (store.abiText = data));
-    }, [store.zkWallet]);
-
     const WithdrawTypeBlock = observer(() => {
       const showFeeCondition: boolean =
         symbolName && fee && ADDRESS_VALIDATION['eth'].test(addressValue);
@@ -1456,26 +1449,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   {mainContract}
                 </a>{' '}
               </CopyBlock>
-              {/* <a
-                target='_blank'
-                href={`//api${LINKS_CONFIG.network === 'mainnet' ? '.' : '-'}${
-                  LINKS_CONFIG.ethBlockExplorer
-                }/api?module=contract&action=getabi&address=${mainContract}&format=raw`}
-              > */}
-              <CopyBlock copyProp={store.abiText}>
-                <span>
-                  (
-                  <a
-                    target='_blank'
-                    href={
-                      '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw'
-                    }
-                  >
-                    {'ABI'}
-                  </a>
-                  )
-                </span>
-              </CopyBlock>
+              <CopyBlock
+                text='ABI'
+                copyProp={ABI_CONTRACT_INTERFACE_DESCRIPTION}
+              />
               <h3>{'Method:'}</h3>
               <CopyBlock text={'fullExit'} />
               <h3>{'Arguments:'}</h3>
@@ -1507,27 +1484,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   {mainContract}
                 </a>{' '}
               </CopyBlock>
-
-              {/* <a
-                target='_blank'
-                href={`//api${LINKS_CONFIG.network === 'mainnet' ? '.' : '-'}${
-                  LINKS_CONFIG.ethBlockExplorer
-                }/api?module=contract&action=getabi&address=${mainContract}&format=raw`}
-              > */}
-              <CopyBlock copyProp={store.abiText}>
-                <span>
-                  (
-                  <a
-                    target='_blank'
-                    href={
-                      '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw'
-                    }
-                  >
-                    {'ABI'}
-                  </a>
-                  )
-                </span>
-              </CopyBlock>
+              <CopyBlock
+                text='ABI'
+                copyProp={ABI_CONTRACT_INTERFACE_DESCRIPTION}
+              />
               <h3>{'Method:'}</h3>
               <CopyBlock
                 text={symbolName === 'ETH' ? 'withdrawETH' : 'withdrawERC20'}

@@ -17,7 +17,6 @@ import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
 
 export class Store {
-  @observable abiText: any = '';
   @observable autoLoginRequestStatus = sessionStorage.getItem(
     'autoLoginStatus',
   );
