@@ -282,7 +282,9 @@ h2 {
 
 .checkbox {
   width: 15px;
+  min-width: 15px;
   height: 15px;
+  min-height: 15px;
   overflow: hidden;
   border: 1px solid var(--input-border-focus);
   border-radius: 2px;
