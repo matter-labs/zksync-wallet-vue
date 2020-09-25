@@ -215,7 +215,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [store.walletName, store.isMetamaskWallet, provider]);
 
   useEffect(() => {
-    if (!store.walletName) {
+    if (!store.walletName || store.isExternalWallet) {
       history.push('/');
       store.isAccessModalOpen = false;
     }

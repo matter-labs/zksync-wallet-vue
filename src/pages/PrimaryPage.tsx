@@ -112,9 +112,6 @@ const PrimaryPage: React.FC = observer(() => {
           });
         });
       }
-      if (key === 'External') {
-        store.isAccessModalOpen = false;
-      }
       if (key === 'Other') {
         store.modalHintMessage = 'OtherWallets';
         store.modalSpecifier = 'modal-hint';
@@ -181,9 +178,11 @@ const PrimaryPage: React.FC = observer(() => {
           store.setBatch({
             walletName: key,
             normalBg: true,
-            isAccessModalOpen: true,
           });
           store.hint = 'Connecting to ';
+          if (!store.isExternalWallet) {
+            store.isAccessModalOpen = true;
+          }
         }
         if (store.provider?.selectedAddress) {
           store.zkWalletInitializing = true;
