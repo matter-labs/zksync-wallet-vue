@@ -54,6 +54,9 @@ export const AUTOLOGIN_WALLETS = [
   'Coinbase Wallet',
 ];
 
+export const ABI_DEFAULT_INTERFACE =
+  '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw';
+
 export const COMMON = {
   ABOUT: {
     title: 'About',

@@ -12,8 +12,6 @@ import { Wallet, Provider, utils } from 'zksync';
 import { useTimeout } from 'src/hooks/timers';
 import { Transition } from 'components/Transition/Transition';
 
-import { ABI_CONTRACT_INTERFACE_DESCRIPTION } from 'src/constants/abiInterface';
-
 import { DataList } from 'components/DataList/DataListNew';
 import { CheckBox } from 'src/components/Common/CheckBox';
 import Modal from 'components/Modal/Modal';
@@ -42,7 +40,7 @@ import {
   LINKS_CONFIG,
   FAUCET_TOKEN_API,
   ETH_MINT_ADDRESS,
-  MAX_WITHDRAWAL_TIME,
+  ABI_DEFAULT_INTERFACE,
 } from 'src/config';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
@@ -1348,6 +1346,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
       } ${seconds ? `${seconds} seconds` : ''}`;
     };
 
+    useEffect(() => {
+      if (!store.zkWallet) return;
+      fetch(ABI_DEFAULT_INTERFACE)
+        .then(res => res.text())
+        .then(data => (store.abiText = data));
+    }, [store.zkWallet]);
+
     const WithdrawTypeBlock = observer(() => {
       const showFeeCondition: boolean =
         symbolName && fee && ADDRESS_VALIDATION['eth'].test(addressValue);
@@ -1449,10 +1454,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   {mainContract}
                 </a>{' '}
               </CopyBlock>
-              <CopyBlock
-                text='ABI'
-                copyProp={ABI_CONTRACT_INTERFACE_DESCRIPTION}
-              />
+              <CopyBlock text='ABI' copyProp={store.abiText} />
               <h3>{'Method:'}</h3>
               <CopyBlock text={'fullExit'} />
               <h3>{'Arguments:'}</h3>
@@ -1484,10 +1486,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   {mainContract}
                 </a>{' '}
               </CopyBlock>
-              <CopyBlock
-                text='ABI'
-                copyProp={ABI_CONTRACT_INTERFACE_DESCRIPTION}
-              />
+              <CopyBlock text='ABI' copyProp={store.abiText} />
               <h3>{'Method:'}</h3>
               <CopyBlock
                 text={symbolName === 'ETH' ? 'withdrawETH' : 'withdrawERC20'}
