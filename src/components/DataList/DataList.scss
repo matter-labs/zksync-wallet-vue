@@ -631,6 +631,8 @@
     }
 
     &-wrapper {
+      min-width: 505px;
+
       &.open {
         .add-contact-button {
           top: 35px;
