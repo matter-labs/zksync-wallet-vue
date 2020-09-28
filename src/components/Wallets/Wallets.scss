@@ -13,6 +13,11 @@
 
   &.external {
     cursor: default;
+
+    & > .copy-block-text.small {
+      font-size: var(--sm-font-size);
+
+    }
   }
 
   &-text {

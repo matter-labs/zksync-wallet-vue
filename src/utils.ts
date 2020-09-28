@@ -51,6 +51,16 @@ export function getWalletNameFromProvider(): string | undefined {
   }
 }
 
+export const addressMiddleCutter = (
+  address: string,
+  firstNumberOfLetters: number,
+  secondNumberOfLetters: number,
+) => {
+  return `${address?.substring(0, firstNumberOfLetters)}...${address?.substring(
+    address.length - secondNumberOfLetters,
+  )}`;
+};
+
 export async function getConfirmationCount(
   provider: any,
   txHash: string,

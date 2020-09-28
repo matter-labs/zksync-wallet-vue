@@ -6,7 +6,7 @@ import { observer } from 'mobx-react-lite';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { AccountState, TokenLike } from 'zksync/build/types';
+import { AccountState, Tokens, TokenLike } from 'zksync/build/types';
 import { Wallet, Provider, utils } from 'zksync';
 
 import { useTimeout } from 'src/hooks/timers';
@@ -35,6 +35,7 @@ import {
   sortBalancesById,
   mintTestERC20Tokens,
   sortBalancesByBalance,
+  addressMiddleCutter,
 } from 'src/utils';
 import {
   LINKS_CONFIG,
@@ -1072,28 +1073,38 @@ const Transaction: React.FC<ITransactionProps> = observer(
         !store.tokens
       )
         return;
-      const obj: any = {};
-      Promise.all(
-        Object.keys(store.tokens).map(key => {
-          return getBalanceOnContract(
-            store.zkWallet?.ethSigner as ethers.Signer,
-            store.zkWallet?.provider as Provider,
-            key,
-          ).then(res => {
-            if (+res > 0) {
-              obj[key] = +res;
-            }
+
+      const storeContractBalances = () => {
+        const obj: any = {};
+        Promise.all(
+          Object.keys(store.tokens as Tokens).map(key => {
+            return getBalanceOnContract(
+              store.zkWallet?.ethSigner as ethers.Signer,
+              store.zkWallet?.provider as Provider,
+              key,
+            ).then(res => {
+              if (+res > 0) {
+                obj[key] = +res;
+              }
+            });
+          }),
+        ).then(() => {
+          if (
+            JSON.stringify(
+              ExternaWalletStore.externalWalletContractBalances,
+            ) !== JSON.stringify(obj)
+          ) {
             ExternaWalletStore.externalWalletContractBalances = obj;
-          });
-        }),
-      ).then(
-        () => (ExternaWalletStore.externalWalletContractBalancesLoaded = true),
-      );
+          }
+          ExternaWalletStore.externalWalletContractBalancesLoaded = true;
+        });
+      };
+
+      intervalAsyncStateUpdater(storeContractBalances, [], 10000, cancelable);
     }, [
       store.zkWallet,
       ExternaWalletStore.externalWalletEthersSigner,
       store.tokens,
-      symbolName,
     ]);
 
     useEffect(() => {
@@ -1122,7 +1133,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             }}
             className='undo-btn'
           >
-            {'Start withdraw'}
+            {'Start withdrawal'}
           </button>
         )}
         {ExternaWalletStore.externalWalletContractBalances[symbol] &&
@@ -1268,12 +1279,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
       children?: React.ReactNode;
       copyProp?: string;
       text?: string | number | undefined;
+      classSpecifier?: string;
     }
 
     const CopyBlock: React.FC<ICopyBlockProps> = ({
       text,
       children,
       copyProp,
+      classSpecifier,
     }) => {
       const visible = copyRef === text || copyRef === copyProp;
       const copyArg = copyProp || text;
@@ -1288,7 +1301,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
             </Transition>
           )}
 
-          {text && <p className='copy-block-text'>{text}</p>}
+          {text && (
+            <p className={`copy-block-text ${classSpecifier}`}>{text}</p>
+          )}
           {children}
           <button
             onClick={() => {
@@ -1484,28 +1499,43 @@ const Transaction: React.FC<ITransactionProps> = observer(
               {'Amount to withdraw: '}
               {maxValue}
             </h3>
-            <p>{`For now, for external wallets we only support withdrawals to L1. You can perform a withdrawal in 2 transactions initiated from ${store.zkWallet?.address()}. In the first step, you need to request withdrawal by calling the following method:`}</p>
+            <p>
+              {
+                'At the moment, we only support withdrawals to L1 for external wallets.'
+              }
+            </p>
+            <p>{`A withdrawal is performed in 2 steps. First, a FullExit transactions must initiated from your account (${addressMiddleCutter(
+              store.zkWallet?.address() as string,
+              6,
+              4,
+            )}) — the details are provided below.`}</p>
+            <p>
+              {
+                'After the transaction is mined, the token balance will disappear from the list until the next rollup block is verified (maximum 3 hours). Once this happens, the balance will re-appear in this UI with a button to complete your withdrawal.'
+              }
+            </p>
             <div className='grey-block'>
               <h3>{'Contract:'}</h3>
+              <p className='external-argument'>{'Address'}</p>
               <CopyBlock copyProp={mainContract}>
                 <a target='_blank' href={etherscanContracLink}>
                   {mainContract}
                 </a>
               </CopyBlock>
-              <CopyBlock text='ABI' copyProp={store.abiText} />
+              <p className='external-argument'>{'ABI'}</p>
+              <CopyBlock
+                classSpecifier='small'
+                text={`${store.abiText?.substring(0, 40)}...`}
+                copyProp={store.abiText}
+              />
               <h3>{'Method:'}</h3>
               <CopyBlock text={'fullExit'} />
               <h3>{'Arguments:'}</h3>
-              <p className='external-argument'>{'_accountId'}</p>
+              <p className='external-argument'>{'_accountId (uint32)'}</p>
               <CopyBlock text={store.accountState?.id} />
-              <p className='external-argument'>{'_token'}</p>
+              <p className='external-argument'>{'_token (address)'}</p>
               <CopyBlock text={token} />
             </div>
-            <p>
-              {
-                'Once the request is processed (this can take several hours), tokens will be accrued to your on-chain balance and a button "Complete withdrawal" will appear in this UI.'
-              }
-            </p>
           </div>
         </Modal>
         <Modal
@@ -1516,15 +1546,21 @@ const Transaction: React.FC<ITransactionProps> = observer(
           centered
         >
           <div className='scroll-content'>
-            <h2 className='transaction-title'>{`Complete withdrawing ${symbolName}`}</h2>
+            <h2 className='transaction-title'>{`Complete withdrawal ${symbolName}`}</h2>
             <div className='grey-block'>
               <h3>{'Contract:'}</h3>
+              <p className='external-argument'>{'Address'}</p>
               <CopyBlock copyProp={mainContract}>
                 <a target='_blank' href={etherscanContracLink}>
                   {mainContract}
                 </a>
               </CopyBlock>
-              <CopyBlock text='ABI' copyProp={store.abiText} />
+              <p className='external-argument'>{'ABI'}</p>
+              <CopyBlock
+                classSpecifier='small'
+                text={`${store.abiText?.substring(0, 40)}...`}
+                copyProp={store.abiText}
+              />
               <h3>{'Method:'}</h3>
               <CopyBlock
                 text={symbolName === 'ETH' ? 'withdrawETH' : 'withdrawERC20'}
@@ -1532,11 +1568,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
               <h3>{'Arguments:'}</h3>
               {symbolName !== 'ETH' && (
                 <>
-                  <p className='external-argument'>{'_token'}</p>
+                  <p className='external-argument'>{'_token (address)'}</p>
                   <CopyBlock text={token} />
                 </>
               )}
-              <p className='external-argument'>{'_amount'}</p>
+              <p className='external-argument'>{'_amount (uint128)'}</p>
               <CopyBlock
                 text={
                   ExternaWalletStore.externalWalletContractBalances[symbolName]
