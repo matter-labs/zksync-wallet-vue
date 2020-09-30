@@ -13,7 +13,7 @@ export const WALLETS = {
 
 export const DESKTOP_ONLY_WALLETS = ['Metamask'];
 export const MOBILE_ONLY_WALLETS = [];
-export const BRAVE_NON_WORKING_WALLETS = ['Portis'];
+export const BRAVE_NON_WORKING_WALLETS = [];
 
 export const COINBASE_LOCALSTORAGE_KEYS = [
   '-walletlink:https://www.walletlink.org:session:secret',

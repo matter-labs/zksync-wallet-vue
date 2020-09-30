@@ -12,7 +12,7 @@ import { IAppProps } from 'types/Common';
 import { WRONG_NETWORK } from 'constants/regExs';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
 import { WalletType } from './constants/Wallets';
-import { useInterval } from './hooks/timers';
+import { useInterval, useTimeout } from './hooks/timers';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './store/context';
 import { useMobxEffect } from './hooks/useMobxEffect';

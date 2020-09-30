@@ -221,6 +221,10 @@ button {
     margin-top: 25px;
     margin-bottom: 15px;
   }
+
+  p, a {
+    font-size: var(--md-font-size);
+  }
 }
 
 .btn {
@@ -527,6 +531,9 @@ h2 {
     background-color: var(--modal-bg-color);
     border: 1px solid var(--light-border-color);
     border-radius: 5px;
+    & > p {
+      text-align: center;
+    }
   }
 }
 

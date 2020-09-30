@@ -14,6 +14,12 @@
   &.external {
     cursor: default;
 
+    & > .hint-copied {
+      p {
+        text-align: center;
+      }
+    }
+
     & > .copy-block-text.small {
       font-size: var(--sm-font-size);
 
@@ -122,7 +128,7 @@
 
 .deposit-button {
   color: var(--button-bg-color);
-  /* stylelint-disable-next-line no-descending-specificity */
+  /* stylelint-disable no-descending-specificity */
   & > span {
     background: url(../../images/deposit.svg);
     background-size: cover;
@@ -173,7 +179,6 @@
     width: 100%;
     margin-top: 5px;
     text-align: center;
-
     & > p {
       color: var(--dark-color);
     }
@@ -306,7 +311,6 @@
       & div {
         height: 15px;
       }
-
       p {
         height: 20px;
         margin-top: 0;

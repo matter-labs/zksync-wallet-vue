@@ -46,10 +46,10 @@ import {
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { INPUT_VALIDATION } from 'constants/regExs';
-import { WIDTH_BP, ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
+import { WIDTH_BP } from 'constants/magicNumbers';
 
 import { useCancelable } from 'hooks/useCancelable';
-import { storeContext, useStore } from 'src/store/context';
+import { useStore } from 'src/store/context';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
 import { useAutoFocus } from 'hooks/useAutoFocus';
 
@@ -63,6 +63,54 @@ import 'src/components/TokenInfo/TokenInfo.scss';
 import SpinnerWorm from '../Spinner/SpinnerWorm';
 
 library.add(fas);
+
+interface ICopyBlockProps {
+  children?: React.ReactNode;
+  copyProp?: string;
+  text?: string | number | undefined;
+  classSpecifier?: string;
+}
+
+const CopyBlock: React.FC<ICopyBlockProps> = ({
+  text,
+  children,
+  copyProp,
+  classSpecifier,
+}) => {
+  const [copyOpened, setCopyOpened] = useState(false);
+  useTimeout(() => copyOpened && setCopyOpened(false), 2000, [copyOpened]);
+  const [copyRef, setCopyRef] = useState('');
+
+  const handleCopy = useCallback(
+    e => {
+      navigator.clipboard.writeText(e);
+      setCopyRef(e);
+      setCopyOpened(true);
+    },
+    [copyRef, copyOpened],
+  );
+
+  const copyArg = copyProp || text;
+
+  return (
+    <div className='copy-block external'>
+      <Transition type='fly' timeout={200} trigger={copyOpened}>
+        <div className={'hint-copied open'}>
+          <p>{'Copied!'}</p>
+        </div>
+      </Transition>
+
+      {text && <p className={`copy-block-text ${classSpecifier}`}>{text}</p>}
+      {children}
+      <button
+        onClick={() => {
+          handleCopy(copyArg);
+        }}
+        className='copy-block-button btn-tr'
+      ></button>
+    </div>
+  );
+};
 
 const Transaction: React.FC<ITransactionProps> = observer(
   ({
@@ -110,9 +158,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const myRef = useRef<HTMLInputElement>(null);
     const autoFocus = useAutoFocus();
 
-    const [copyOpened, setCopyOpened] = useState(false);
-    useTimeout(() => copyOpened && setCopyOpened(false), 2000, [copyOpened]);
-    const [copyRef, setCopyRef] = useState('');
     const [amount, setAmount] = useState<number>(0);
     const [conditionError, setConditionError] = useState('');
     const [gas, setGas] = useState<string>('');
@@ -512,7 +557,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
         const symbolProp = symbol ? symbol : symbolName;
         const addressProp = address ? address : addressValue;
         if (!store.zkWallet || !symbolProp || !addressProp) return;
-        console.log(addressProp, symbolProp);
         if (
           title !== 'Deposit' &&
           (symbol || symbolName) &&
@@ -1266,54 +1310,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     };
 
-    const handleCopy = useCallback(
-      e => {
-        navigator.clipboard.writeText(e);
-        setCopyRef(e);
-        setCopyOpened(true);
-      },
-      [copyRef, copyOpened],
-    );
-
     interface ICopyBlockProps {
       children?: React.ReactNode;
       copyProp?: string;
       text?: string | number | undefined;
       classSpecifier?: string;
     }
-
-    const CopyBlock: React.FC<ICopyBlockProps> = ({
-      text,
-      children,
-      copyProp,
-      classSpecifier,
-    }) => {
-      const visible = copyRef === text || copyRef === copyProp;
-      const copyArg = copyProp || text;
-
-      return (
-        <div className='copy-block external'>
-          {visible && (
-            <Transition type='fly' timeout={200} trigger={copyOpened}>
-              <div className={'hint-copied open'}>
-                <p>{'Copied!'}</p>
-              </div>
-            </Transition>
-          )}
-
-          {text && (
-            <p className={`copy-block-text ${classSpecifier}`}>{text}</p>
-          )}
-          {children}
-          <button
-            onClick={() => {
-              handleCopy(copyArg);
-            }}
-            className='copy-block-button btn-tr'
-          ></button>
-        </div>
-      );
-    };
 
     useEffect(() => {
       store.txButtonUnlocked = true;
@@ -1504,7 +1506,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 'At the moment, we only support withdrawals to L1 for external wallets.'
               }
             </p>
-            <p>{`A withdrawal is performed in 2 steps. First, a FullExit transactions must initiated from your account (${addressMiddleCutter(
+            <p>{`A withdrawal is performed in 2 steps. First, a FullExit transaction must initiated from your account (${addressMiddleCutter(
               store.zkWallet?.address() as string,
               6,
               4,
@@ -1524,7 +1526,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
               </CopyBlock>
               <p className='external-argument'>{'ABI'}</p>
               <CopyBlock
-                classSpecifier='small'
                 text={`${store.abiText?.substring(0, 40)}...`}
                 copyProp={store.abiText}
               />
@@ -1557,7 +1558,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
               </CopyBlock>
               <p className='external-argument'>{'ABI'}</p>
               <CopyBlock
-                classSpecifier='small'
                 text={`${store.abiText?.substring(0, 40)}...`}
                 copyProp={store.abiText}
               />
