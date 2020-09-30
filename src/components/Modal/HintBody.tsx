@@ -329,7 +329,8 @@ const ExternalWalletLogin = observer(() => {
       )}
       <div className='error-container'>
         <p className={`error-text ${conditionError && 'visible'}`}>
-          {`Error: "${ExternaWalletStore.externalWalletAddress}" doesn't match ethereum address format`}
+          {`Error: "${conditionError &&
+            ExternaWalletStore.externalWalletAddress}" doesn't match ethereum address format`}
         </p>
       </div>
       <button
