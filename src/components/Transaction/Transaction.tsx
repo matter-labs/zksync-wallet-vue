@@ -93,7 +93,12 @@ const CopyBlock: React.FC<ICopyBlockProps> = ({
   const copyArg = copyProp || text;
 
   return (
-    <div className='copy-block external'>
+    <div
+      className='copy-block'
+      onClick={() => {
+        handleCopy(copyArg);
+      }}
+    >
       <Transition type='fly' timeout={200} trigger={copyOpened}>
         <div className={'hint-copied open'}>
           <p>{'Copied!'}</p>
@@ -279,7 +284,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const getAccState = async () => {
       if (zkWallet && tokens) {
         const _accountState = await zkWallet.getAccountState();
-        if (JSON.stringify(accountState) !== JSON.stringify(_accountState)) {
+        if (
+          JSON.stringify(store.accountState) !== JSON.stringify(_accountState)
+        ) {
           store.accountState = _accountState;
         }
         const at = _accountState.depositing.balances;
@@ -1518,11 +1525,16 @@ const Transaction: React.FC<ITransactionProps> = observer(
             </p>
             <div className='grey-block'>
               <h3>{'Contract:'}</h3>
-              <p className='external-argument'>{'Address'}</p>
-              <CopyBlock copyProp={mainContract}>
+              <p className='external-argument'>
+                {'Address ('}
                 <a target='_blank' href={etherscanContracLink}>
-                  {mainContract}
+                  {'View on Etherscan '}
+                  <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
                 </a>
+                {')'}
+              </p>
+              <CopyBlock copyProp={mainContract}>
+                <p>{mainContract}</p>
               </CopyBlock>
               <p className='external-argument'>{'ABI'}</p>
               <CopyBlock
@@ -1550,11 +1562,16 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <h2 className='transaction-title'>{`Complete withdrawal ${symbolName}`}</h2>
             <div className='grey-block'>
               <h3>{'Contract:'}</h3>
-              <p className='external-argument'>{'Address'}</p>
-              <CopyBlock copyProp={mainContract}>
+              <p className='external-argument'>
+                {'Address ('}
                 <a target='_blank' href={etherscanContracLink}>
-                  {mainContract}
+                  {'View on Etherscan '}
+                  <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
                 </a>
+                {')'}
+              </p>
+              <CopyBlock copyProp={mainContract}>
+                <p>{mainContract}</p>
               </CopyBlock>
               <p className='external-argument'>{'ABI'}</p>
               <CopyBlock

@@ -107,6 +107,7 @@
       width: 22px;
       height: 22px;
       margin-right: 28px;
+    /* stylelint-disable no-descending-specificity */ 
     // stylelint-disable-next-line sh-waqar/declaration-use-variable
       font-size: 20px;
     }
@@ -172,6 +173,10 @@
   &.external-wallet-instructions {
     padding: 25px 0 25px 0;
 
+    & h3, p {
+      text-align: left;
+    }
+
     & > .scroll-content { 
       width: 100%; 
       max-height: 70vh; 
@@ -196,13 +201,7 @@
         border-radius: 10px;
         cursor: pointer;
       }
-
-      & > h3, p {
-        text-align: left;
-      } 
     }
-
-    
   }
 
   &.metamask {

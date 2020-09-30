@@ -11,14 +11,14 @@
   border-radius: 4px;
   cursor: pointer;
 
+  & > .hint-copied {
+    & > p {
+      text-align: center;
+    }
+  }
+
   &.external {
     cursor: default;
-
-    & > .hint-copied {
-      p {
-        text-align: center;
-      }
-    }
 
     & > .copy-block-text.small {
       font-size: var(--sm-font-size);
@@ -129,6 +129,7 @@
 .deposit-button {
   color: var(--button-bg-color);
   /* stylelint-disable no-descending-specificity */
+
   & > span {
     background: url(../../images/deposit.svg);
     background-size: cover;
