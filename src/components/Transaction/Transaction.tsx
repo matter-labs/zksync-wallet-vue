@@ -883,7 +883,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         .then(data => {
           setGas(data);
         });
-    }, [isBalancesListOpen, store.zkWallet]);
+    }, [store.zkWallet]);
 
     const handleShowHint = useCallback(
       text => {
