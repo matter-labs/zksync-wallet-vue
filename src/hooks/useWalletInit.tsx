@@ -216,6 +216,10 @@ const useWalletInit = () => {
         isSignedMsgPrefixed: true,
       };
 
+      const walletBasedVerificationMethod = store.isExternalWallet
+        ? verificationMethod
+        : undefined;
+
       ExternaWalletStore.externalWalletEthersSigner = walletBasedSigner;
 
       const syncWallet = await zkSync.Wallet.fromEthSigner(
@@ -223,7 +227,7 @@ const useWalletInit = () => {
         syncWalletArgs.provider,
         syncWalletArgs.signer,
         undefined,
-        verificationMethod,
+        walletBasedVerificationMethod,
       );
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
