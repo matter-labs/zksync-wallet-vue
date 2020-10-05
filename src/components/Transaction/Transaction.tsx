@@ -139,7 +139,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
   }): JSX.Element => {
     const store = useStore();
 
-    const { ExternaWalletStore, TransactionStore } = store;
+    const { ExternaWalletStore, TransactionStore, AccountStore } = store;
 
     const {
       ethId,
@@ -1082,48 +1082,44 @@ const Transaction: React.FC<ITransactionProps> = observer(
       </div>
     );
 
+    const ABI = [
+      {
+        constant: true,
+        inputs: [
+          {
+            internalType: 'address',
+            name: '_address',
+            type: 'address',
+          },
+          {
+            internalType: 'uint16',
+            name: '_tokenId',
+            type: 'uint16',
+          },
+        ],
+        name: 'getBalanceToWithdraw',
+        outputs: [
+          {
+            internalType: 'uint128',
+            name: '',
+            type: 'uint128',
+          },
+        ],
+        payable: false,
+        stateMutability: 'view',
+        type: 'function',
+      },
+    ];
+
     async function getBalanceOnContract(
       ethSigner: ethers.Signer,
       zksyncProvider: Provider,
       token: TokenLike,
     ) {
       const tokenId = zksyncProvider.tokenSet.resolveTokenId(token);
-      const ABI = [
-        {
-          constant: true,
-          inputs: [
-            {
-              internalType: 'address',
-              name: '_address',
-              type: 'address',
-            },
-            {
-              internalType: 'uint16',
-              name: '_tokenId',
-              type: 'uint16',
-            },
-          ],
-          name: 'getBalanceToWithdraw',
-          outputs: [
-            {
-              internalType: 'uint128',
-              name: '',
-              type: 'uint128',
-            },
-          ],
-          payable: false,
-          stateMutability: 'view',
-          type: 'function',
-        },
-      ];
       if (ethSigner.provider) {
-        const zksContract = new ethers.Contract(
-          zksyncProvider.contractAddress.mainContract,
-          ABI,
-          ethSigner.provider,
-        );
-        const contractBalance = await zksContract.getBalanceToWithdraw(
-          await ethSigner.getAddress(),
+        const contractBalance = await AccountStore.zksContract?.getBalanceToWithdraw(
+          AccountStore.ethSignerAddress,
           tokenId,
         );
         return contractBalance;
@@ -1131,10 +1127,30 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }
 
     useEffect(() => {
+      const getSignerAddress = async () => {
+        if (!store.zkWallet) return;
+
+        const ethSigner = await store.zkWallet?.ethSigner;
+
+        const zksContract = new ethers.Contract(
+          store.zkWallet?.provider.contractAddress.mainContract,
+          ABI,
+          ethSigner.provider,
+        );
+
+        AccountStore.zksContract = zksContract;
+        AccountStore.ethSignerAddress = (await store.zkWallet?.ethSigner.getAddress()) as string;
+      };
+      getSignerAddress();
+    }, [store.zkWallet]);
+
+    useEffect(() => {
       if (
         !store.zkWallet ||
         !ExternaWalletStore.externalWalletEthersSigner ||
-        !store.tokens
+        !store.tokens ||
+        !AccountStore.ethSignerAddress ||
+        !AccountStore.zksContract
       )
         return;
 
@@ -1169,6 +1185,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
       store.zkWallet,
       ExternaWalletStore.externalWalletEthersSigner,
       store.tokens,
+      AccountStore.ethSignerAddress,
+      AccountStore.zksContract,
     ]);
 
     useEffect(() => {

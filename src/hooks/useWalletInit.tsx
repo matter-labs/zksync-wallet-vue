@@ -19,9 +19,8 @@ import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
 import { fetchTransactions } from 'src/api';
 import { useLogout } from './useLogout';
-import { loadTokens, sortBalancesById } from 'src/utils';
+import { loadTokens } from 'src/utils';
 import { useStore } from 'src/store/context';
-import { handleFormatToken, checkForEmptyBalance } from 'src/utils';
 
 const useWalletInit = () => {
   const store = useStore();

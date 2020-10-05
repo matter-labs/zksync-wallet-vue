@@ -10,7 +10,6 @@ import { DEFAULT_ERROR } from './constants/errors';
 import { Tokens, AccountState, TokenLike } from 'zksync/build/types';
 import { LINKS_CONFIG } from 'src/config';
 import { Store } from './store/store';
-import { COINBASE_LOCALSTORAGE_KEYS } from 'src/constants/Wallets';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider: any = window['ethereum'];

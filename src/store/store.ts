@@ -9,6 +9,8 @@ import {
 } from '../types/Common';
 import { ExternaWalletStore } from './externalWalletStore';
 import { TransactionStore } from './transactionStore';
+import { AccountStore } from './accountStore';
+
 import { Tokens, AccountState } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
 import { WSTransport } from 'zksync/build/transport';
@@ -21,6 +23,7 @@ import { WIDTH_BP } from 'constants/magicNumbers';
 export class Store {
   @observable ExternaWalletStore = new ExternaWalletStore();
   @observable TransactionStore = new TransactionStore();
+  @observable AccountStore = new AccountStore();
 
   @observable abiText: any = '';
   @observable autoLoginRequestStatus = sessionStorage.getItem(
