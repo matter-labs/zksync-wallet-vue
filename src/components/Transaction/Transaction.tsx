@@ -1181,7 +1181,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const ExternalWalletBalance = ({ balance, symbol }) => (
       <div className='external-wallet-wrapper'>
         <div>
-          {symbol} {balance}
+          {symbol} {balance && handleExponentialNumbers(balance)}
         </div>
         {balance && (
           <button
@@ -1236,7 +1236,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           <span>
             {window?.innerWidth > WIDTH_BP && 'balance:'}
             <p className='datalist-balance'>
-              {handleExponentialNumbers(balance)}
+              {balance && handleExponentialNumbers(balance)}
             </p>
           </span>
           {title === 'Deposit' && LINKS_CONFIG.network !== 'mainnet' && (
@@ -1605,7 +1605,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
               <p className='external-argument'>{'_amount (uint128)'}</p>
               <CopyBlock
                 text={
-                  ExternaWalletStore.externalWalletContractBalances[symbolName]
+                  ExternaWalletStore.externalWalletContractBalances[
+                    symbolName
+                  ] &&
+                  handleExponentialNumbers(
+                    ExternaWalletStore.externalWalletContractBalances[
+                      symbolName
+                    ],
+                  )
                 }
               />
             </div>
