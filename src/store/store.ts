@@ -31,6 +31,7 @@ export class Store {
   );
   @observable awaitedTokens = {};
   @observable awaitedTokensConfirmations = {};
+  @observable сhangePubKeyFee = 0;
   @observable depositModal = false;
   @observable darkMode = false;
   @observable fastFee: ethers.BigNumberish = 0;

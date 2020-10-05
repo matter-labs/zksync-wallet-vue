@@ -17,7 +17,11 @@ import { useStore } from 'src/store/context';
 import { handleFormatToken, getConfirmationCount } from 'src/utils';
 import { fetchTransactions } from 'src/api';
 import { LINKS_CONFIG } from 'src/config';
-import { handleExponentialNumbers, sortBalancesByBalance } from 'src/utils';
+import {
+  handleExponentialNumbers,
+  sortBalancesByBalance,
+  sortBalancesById,
+} from 'src/utils';
 
 import { DEFAULT_ERROR } from 'constants/errors';
 
@@ -192,7 +196,7 @@ const Account: React.FC = observer(() => {
 
   const history = useHistory();
   const store = useStore();
-  const { zkWallet, accountState, tokens } = store;
+  const { zkWallet, accountState, tokens, TransactionStore } = store;
   const [transactionsList, setTransactionList] = useState<any>([]);
 
   const getAccState = useCallback(
@@ -257,6 +261,7 @@ const Account: React.FC = observer(() => {
                 +zkBalance[key] ? +zkBalance[key] : 0,
               ),
               symbol: tokens[key].symbol,
+              id: tokens[key].id,
             };
           });
           Promise.all(zkBalancePromises)
@@ -272,9 +277,10 @@ const Account: React.FC = observer(() => {
                           symbol: token,
                           balance: 0,
                           address: 'awaited',
+                          id: 999,
                         },
                       ])
-                      .sort(sortBalancesByBalance);
+                      .sort(sortBalancesById);
                   } else {
                     if (
                       JSON.stringify(store.zkBalances) !== JSON.stringify(res)
@@ -299,7 +305,7 @@ const Account: React.FC = observer(() => {
                         store.MLTTclaimed = true;
                       }
                       store.zkBalancesLoaded = true;
-                      store.zkBalances = res.sort(sortBalancesByBalance);
+                      store.zkBalances = res.sort(sortBalancesById);
                     }
                   }
                 }
@@ -325,7 +331,7 @@ const Account: React.FC = observer(() => {
                     store.MLTTclaimed = true;
                   }
                   store.zkBalancesLoaded = true;
-                  store.zkBalances = res.sort(sortBalancesByBalance);
+                  store.zkBalances = res.sort(sortBalancesById);
                 }
               }
             })
@@ -405,7 +411,9 @@ const Account: React.FC = observer(() => {
     (address, balance, symbol) => {
       history.push(`/account/${symbol.toLowerCase()}`);
       store.propsMaxValue = balance;
+      TransactionStore.maxValue = balance;
       store.propsSymbolName = symbol;
+      TransactionStore.symbolName = symbol;
       store.propsToken = address;
     },
     [history, setMaxValueProp, setSymbolNameProp, setTokenProp, store],

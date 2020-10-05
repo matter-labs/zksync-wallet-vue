@@ -841,6 +841,12 @@ h2 {
       margin-left: 0;
     }
 
+    &.unlock {
+      display: block;
+      margin: 20px auto;
+      font-size: var(--md-font-size);
+    }
+
     &.large {
       margin-top: 25px;
       font-size: var(--md-font-size);
@@ -849,6 +855,36 @@ h2 {
     &:hover {
       text-decoration: none;
     }
+  }
+}
+
+.md-font {
+  font-size: var(--md-font-size);
+}
+
+.lg-font {
+  font-size: var(--large-font-size);
+}
+
+.dropdown {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 50px;
+  margin: 15px 0;
+  padding: 0 15px;
+  background-color: var(--transparent);
+  border: 1px solid var(--light-border-color);
+  border-radius: 5px;
+  cursor: pointer;
+
+  &-item {
+    margin: 0;
+  }
+
+  &:hover {
+    border: 1px solid var(--hints-color);
   }
 }
 
@@ -1253,6 +1289,10 @@ body.dark > #root {
 
     &.unlock {
       background-image: url(./images/lock_dark.svg);
+
+      &.locked {
+        background-image: url(./images/lock_dark_disabled.svg);
+      }
     }
 
     &.Send {

@@ -12,7 +12,7 @@ import { useCancelable } from 'hooks/useCancelable';
 import { useStore } from 'src/store/context';
 import { LINKS_CONFIG } from 'src/config';
 
-import { handleFormatToken } from 'src/utils';
+import { handleFormatToken, sortBalancesById } from 'src/utils';
 
 const TOKEN = 'ETH';
 
@@ -85,7 +85,7 @@ export const useTransaction = () => {
           });
           Promise.all(zkBalancePromises)
             .then(res => {
-              store.zkBalances = res as IEthBalance[];
+              store.zkBalances = res.sort(sortBalancesById) as IEthBalance[];
               store.zkBalancesLoaded = true;
             })
             .catch(err => {
@@ -209,13 +209,16 @@ export const useTransaction = () => {
                   );
                   if (_list.indexOf(token) === -1) {
                     store.zkBalancesLoaded = true;
-                    store.zkBalances = store.zkBalances.concat([
-                      {
-                        symbol: token,
-                        balance: 0,
-                        address: 'awaited',
-                      },
-                    ]);
+                    store.zkBalances = store.zkBalances
+                      .concat([
+                        {
+                          symbol: token,
+                          balance: 0,
+                          address: 'awaited',
+                          id: 999,
+                        },
+                      ])
+                      .sort(sortBalancesById);
                   }
                 }
               }

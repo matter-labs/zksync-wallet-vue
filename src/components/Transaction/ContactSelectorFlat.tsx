@@ -7,41 +7,38 @@ import './Transaction.scss';
 
 interface IContactSelectorFlatProps {
   body: Element | null;
-  isContactsListOpen: boolean;
-  openContactsList: React.Dispatch<React.SetStateAction<boolean>>;
   selectedContact: any;
 }
 
 export const ContactSelectorFlat: React.FC<IContactSelectorFlatProps> = observer(
-  ({
-    body,
-    isContactsListOpen,
-    openContactsList,
-    selectedContact,
-  }): JSX.Element => {
+  ({ body, selectedContact }): JSX.Element => {
     const store = useStore();
 
-    const { walletAddress } = store;
+    const { TransactionStore } = store;
 
     return (
       <div
         className={`custom-selector contacts ${
-          !!walletAddress.name || !!selectedContact ? '' : 'disabled'
+          !!store.walletAddress.name || !!selectedContact ? '' : 'disabled'
         }`}
         onClick={() => {
-          if (walletAddress.name || selectedContact) {
-            openContactsList(!isContactsListOpen);
+          if (store.walletAddress.name || selectedContact) {
+            TransactionStore.isContactsListOpen = !TransactionStore.isContactsListOpen;
             body?.classList.add('fixed-b');
           }
         }}
       >
         <div
           className={`custom-selector-title ${
-            !!walletAddress.name || !!selectedContact ? '' : 'disabled'
+            !!store.walletAddress.name || !!selectedContact ? '' : 'disabled'
           }`}
         >
-          <p>{walletAddress.name ? walletAddress.name : selectedContact}</p>
-          {(selectedContact || walletAddress.name) && (
+          <p>
+            {store.walletAddress.name
+              ? store.walletAddress.name
+              : selectedContact}
+          </p>
+          {(selectedContact || store.walletAddress.name) && (
             <div className='arrow-down'></div>
           )}
         </div>

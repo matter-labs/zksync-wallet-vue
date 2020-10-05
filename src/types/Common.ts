@@ -8,6 +8,7 @@ export interface IEthBalance {
   address: string;
   balance: number;
   symbol: string;
+  id?: number;
 }
 
 export interface IContacts {

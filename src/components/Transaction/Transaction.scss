@@ -234,6 +234,10 @@
 
   &.unlock {
     background-image: url(../../images/lock.svg);
+
+    &.locked {
+      background-image: url(../../images/lock_disabled.svg);
+    }
   }
 
   &.Deposit {
