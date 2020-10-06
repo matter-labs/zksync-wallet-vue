@@ -128,6 +128,7 @@ export const LockedTx: React.FC<ILockedTx> = observer(
             store.walletAddress = {};
             store.transactionType = undefined;
             history.push('/account');
+            TransactionStore.symbolName = '';
           }}
         />
         <div className='info-block center'>

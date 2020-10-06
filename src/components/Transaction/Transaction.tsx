@@ -1975,6 +1975,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                     setTransactionType(undefined);
                     store.txButtonUnlocked = true;
                     history.goBack();
+                    TransactionStore.symbolName = '';
                   }}
                 />
                 <h2 className='transaction-title'>{title}</h2>
@@ -2449,6 +2450,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                         setTransactionType(undefined);
                         store.txButtonUnlocked = true;
                         history.goBack();
+                        TransactionStore.symbolName = '';
                       }}
                     />
                     {!store.isExternalWallet && (

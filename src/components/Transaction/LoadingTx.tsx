@@ -52,7 +52,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
   }): JSX.Element => {
     const store = useStore();
 
-    const { hint, walletAddress } = store;
+    const { hint, walletAddress, TransactionStore } = store;
 
     const history = useHistory();
 
@@ -75,6 +75,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
           cb={() => {
             handleCancel();
             history.push('/account');
+            TransactionStore.symbolName = '';
           }}
         />
         <h2 className='transaction-title'>{propperTitle}</h2>

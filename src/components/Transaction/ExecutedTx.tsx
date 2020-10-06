@@ -48,7 +48,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
 
     const [gasPrice, setGasPrice] = useState<any>(0);
 
-    const { hint, walletAddress } = store;
+    const { hint, walletAddress, TransactionStore } = store;
 
     const info = hint?.split('\n');
 
@@ -104,6 +104,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
           cb={() => {
             handleCancel();
             history.push('/account');
+            TransactionStore.symbolName = '';
           }}
         />
         <h2 className='transaction-title'>

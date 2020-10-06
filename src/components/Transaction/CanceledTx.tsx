@@ -16,7 +16,7 @@ export const CanceledTx: React.FC<ICanceledTxProps> = observer(
   ({ handleCancel, setWalletName }): JSX.Element => {
     const store = useStore();
 
-    const { hint } = store;
+    const { hint, TransactionStore } = store;
 
     const history = useHistory();
 
@@ -27,6 +27,7 @@ export const CanceledTx: React.FC<ICanceledTxProps> = observer(
             handleCancel();
             store.walletAddress = {};
             store.transactionType = undefined;
+            TransactionStore.symbolName = '';
             setWalletName();
             store.hint = '';
             history.push('/account');
