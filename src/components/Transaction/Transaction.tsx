@@ -153,6 +153,85 @@ const Transaction: React.FC<ITransactionProps> = observer(
       checkForOnChain();
     }, [store.zkWallet]);
 
+    // const handleUnlock = useCallback(
+    //   async (withLoading: boolean) => {
+    //     try {
+    //       store.txButtonUnlocked = false;
+    //       if (!store.isBurnerWallet) {
+    //         store.hint = 'Follow the instructions in the pop up';
+    //       }
+    //       if (withLoading === true) {
+    //         setAccountUnlockingProcess(true);
+    //         setLoading(true);
+    //       }
+    //       let changePubkey;
+    //       const isSigningKeySet = await zkWallet?.isSigningKeySet();
+    //       if (
+    //         store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271'
+    //       ) {
+    //         if (!AccountStore.isOnchainAuthSigningKeySet) {
+    //           const onchainAuthTransaction = await zkWallet?.onchainAuthSigningKey();
+    //           await onchainAuthTransaction?.wait();
+    //           changePubkey = await zkWallet?.setSigningKey({
+    //             feeToken: TransactionStore.symbolName,
+    //             fee: handleSafeAmount(
+    //               TransactionStore.changePubKeyFees[
+    //                 TransactionStore.symbolName
+    //               ],
+    //             ),
+    //             nonce: 'committed',
+    //             onchainAuth: true,
+    //           });
+    //         }
+    //         if (!!AccountStore.isOnchainAuthSigningKeySet && !isSigningKeySet) {
+    //           changePubkey = await zkWallet?.setSigningKey({
+    //             feeToken: TransactionStore.symbolName,
+    //             fee: handleSafeAmount(
+    //               TransactionStore.changePubKeyFees[
+    //                 TransactionStore.symbolName
+    //               ],
+    //             ),
+    //             nonce: 'committed',
+    //             onchainAuth: true,
+    //           });
+    //         }
+    //       } else {
+    //         if (!AccountStore.isOnchainAuthSigningKeySet) {
+    //           changePubkey = await zkWallet?.setSigningKey({
+    //             feeToken: TransactionStore.symbolName,
+    //             fee: handleSafeAmount(
+    //               TransactionStore.changePubKeyFees[
+    //                 TransactionStore.symbolName
+    //               ],
+    //             ),
+    //           });
+    //         }
+    //       }
+    //       store.hint = 'Confirmed! \n Waiting for transaction to be mined';
+    //       const receipt = await changePubkey?.awaitReceipt();
+
+    //       store.unlocked = !!receipt;
+    //       if (!!receipt) {
+    //         store.txButtonUnlocked = true;
+    //       }
+    //       setAccountUnlockingProcess(!receipt);
+    //       setLoading(!receipt);
+    //     } catch (err) {
+    //       store.error = `${err.name}: ${err.message}`;
+    //       store.txButtonUnlocked = true;
+    //     }
+    //   },
+    //   [
+    //     setAccountUnlockingProcess,
+    //     setLoading,
+    //     zkWallet,
+    //     store.unlocked,
+    //     AccountStore.isOnchainAuthSigningKeySet,
+    //     TransactionStore.symbolName,
+    //     TransactionStore.changePubKeyFees,
+    //   ],
+    // );
+
     const handleUnlock = useCallback(
       async (withLoading: boolean) => {
         try {
@@ -165,45 +244,34 @@ const Transaction: React.FC<ITransactionProps> = observer(
             setLoading(true);
           }
           let changePubkey;
+          const isOnchainAuthSigningKeySet = await zkWallet?.isOnchainAuthSigningKeySet();
           const isSigningKeySet = await zkWallet?.isSigningKeySet();
           if (
             store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271'
           ) {
-            if (!AccountStore.isOnchainAuthSigningKeySet) {
+            if (!isOnchainAuthSigningKeySet) {
               const onchainAuthTransaction = await zkWallet?.onchainAuthSigningKey();
               await onchainAuthTransaction?.wait();
               changePubkey = await zkWallet?.setSigningKey({
-                feeToken: TransactionStore.symbolName,
-                fee: handleSafeAmount(
-                  TransactionStore.changePubKeyFees[
-                    TransactionStore.symbolName
-                  ],
-                ),
+                feeToken: 'ETH',
+                fee: 0,
                 nonce: 'committed',
                 onchainAuth: true,
               });
             }
-            if (!!AccountStore.isOnchainAuthSigningKeySet && !isSigningKeySet) {
+            if (!!isOnchainAuthSigningKeySet && !isSigningKeySet) {
               changePubkey = await zkWallet?.setSigningKey({
-                feeToken: TransactionStore.symbolName,
-                fee: handleSafeAmount(
-                  TransactionStore.changePubKeyFees[
-                    TransactionStore.symbolName
-                  ],
-                ),
+                feeToken: 'ETH',
+                fee: 0,
                 nonce: 'committed',
                 onchainAuth: true,
               });
             }
           } else {
-            if (!AccountStore.isOnchainAuthSigningKeySet) {
+            if (!isOnchainAuthSigningKeySet) {
               changePubkey = await zkWallet?.setSigningKey({
-                feeToken: TransactionStore.symbolName,
-                fee: handleSafeAmount(
-                  TransactionStore.changePubKeyFees[
-                    TransactionStore.symbolName
-                  ],
-                ),
+                feeToken: 'ETH',
+                fee: 0,
               });
             }
           }
@@ -221,15 +289,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           store.txButtonUnlocked = true;
         }
       },
-      [
-        setAccountUnlockingProcess,
-        setLoading,
-        zkWallet,
-        store.unlocked,
-        AccountStore.isOnchainAuthSigningKeySet,
-        TransactionStore.symbolName,
-        TransactionStore.changePubKeyFees,
-      ],
+      [setAccountUnlockingProcess, setLoading, zkWallet, store.unlocked],
     );
 
     useEffect(() => {
@@ -1807,11 +1867,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
             (!!store.isAccountBalanceNotEmpty || store.isExternalWallet) &&
             !store.isBurnerWallet &&
             (!store.isExternalWallet ? (
+              // <LockedTx
+              //   handleCancel={handleCancel}
+              //   handleUnlock={() => handleUnlock(true)}
+              //   symbolName={TransactionStore.symbolName}
+              //   handleSelectBalance={autoSelectBalanceForUnlock}
+              // />
               <LockedTx
                 handleCancel={handleCancel}
                 handleUnlock={() => handleUnlock(true)}
-                symbolName={TransactionStore.symbolName}
-                handleSelectBalance={autoSelectBalanceForUnlock}
               />
             ) : (
               <>
