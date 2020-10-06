@@ -33,6 +33,7 @@ import {
   sortBalancesById,
   mintTestERC20Tokens,
   addressMiddleCutter,
+  handleSafeAmount,
 } from 'src/utils';
 import {
   LINKS_CONFIG,
@@ -171,10 +172,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
             if (!AccountStore.isOnchainAuthSigningKeySet) {
               const onchainAuthTransaction = await zkWallet?.onchainAuthSigningKey();
               await onchainAuthTransaction?.wait();
-              console.log('a');
               changePubkey = await zkWallet?.setSigningKey({
                 feeToken: TransactionStore.symbolName,
-                fee: TransactionStore.changePubKeyFee,
+                fee: handleSafeAmount(
+                  TransactionStore.changePubKeyFees[
+                    TransactionStore.symbolName
+                  ],
+                ),
                 nonce: 'committed',
                 onchainAuth: true,
               });
@@ -182,7 +186,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
             if (!!AccountStore.isOnchainAuthSigningKeySet && !isSigningKeySet) {
               changePubkey = await zkWallet?.setSigningKey({
                 feeToken: TransactionStore.symbolName,
-                fee: TransactionStore.changePubKeyFee,
+                fee: handleSafeAmount(
+                  TransactionStore.changePubKeyFees[
+                    TransactionStore.symbolName
+                  ],
+                ),
                 nonce: 'committed',
                 onchainAuth: true,
               });
@@ -191,7 +199,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
             if (!AccountStore.isOnchainAuthSigningKeySet) {
               changePubkey = await zkWallet?.setSigningKey({
                 feeToken: TransactionStore.symbolName,
-                fee: TransactionStore.changePubKeyFee,
+                fee: handleSafeAmount(
+                  TransactionStore.changePubKeyFees[
+                    TransactionStore.symbolName
+                  ],
+                ),
               });
             }
           }
@@ -216,6 +228,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         store.unlocked,
         AccountStore.isOnchainAuthSigningKeySet,
         TransactionStore.symbolName,
+        TransactionStore.changePubKeyFees,
       ],
     );
 

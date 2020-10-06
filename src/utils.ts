@@ -211,6 +211,8 @@ export const handleFormatToken = (
   return wallet.provider.tokenSet.formatToken(symbol, safeAmount);
 };
 
+export const handleSafeAmount = amount => JSBI.BigInt(amount).toString();
+
 export const handleExponentialNumbers = n => {
   if (!n.toString().match(/[eE]/)) return n;
   const splitedByE = n.toString().split(/[eE]/);
