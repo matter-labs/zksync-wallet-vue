@@ -415,6 +415,7 @@ const Account: React.FC = observer(() => {
       store.propsSymbolName = symbol;
       TransactionStore.symbolName = symbol;
       store.propsToken = address;
+      TransactionStore.tokenAddress = address;
     },
     [history, setMaxValueProp, setSymbolNameProp, setTokenProp, store],
   );

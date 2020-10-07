@@ -20,6 +20,10 @@ import { FilteredContactList } from './FilteredContactList';
 import { ExecutedTx } from './ExecutedTx';
 import { LoadingTx } from './LoadingTx';
 import { LockedTx } from './LockedTx';
+import {
+  AmountToWithdraw,
+  CompleteWithdrawal,
+} from './ExternalWalletComponents';
 import { CopyBlock } from 'src/components/Common/CopyBlock';
 import { handleUnlock, getAccState } from './TransactionFunctions';
 import { BackButton } from 'src/components/Common/BackButton';
@@ -114,9 +118,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [selected, setSelected] = useState<boolean>(false);
     const [selectedBalance, setSelectedBalance] = useState<any | undefined>();
     const [selectedContact, setSelectedContact] = useState<any | undefined>();
-    const [token, setToken] = useState<string>(
-      store.propsToken ? store.propsToken : '',
-    );
     const [unlockFau, setUnlockFau] = useState<boolean>(false);
     const [value, setValue] = useState<string>(
       window.localStorage?.getItem('walletName') || '',
@@ -248,7 +249,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
       (ADDRESS_VALIDATION['eth'].test(addressValue) ||
         (title === 'Deposit' &&
           (unlockFau ||
-            store.tokenInUnlockingProgress.includes(token) ||
+            store.tokenInUnlockingProgress.includes(
+              TransactionStore.tokenAddress,
+            ) ||
             !!store.EIP1271Signature))) &&
       !TransactionStore.conditionError.length &&
       selectedBalance &&
@@ -270,7 +273,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const feeBasedOntype = store.fastWithdrawal
       ? store.fastFee
-      : TransactionStore.fee;
+      : TransactionStore.fee[TransactionStore.symbolName];
 
     const validateNumbers = useCallback(
       (e, max?: boolean) => {
@@ -468,7 +471,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               addressProp,
               symbolProp,
             )
-            .then(res => (TransactionStore.fee = res.totalFee));
+            .then(res => (TransactionStore.fee[symbolProp] = res.totalFee));
         }
         if (title === 'Withdraw') {
           store.zkWallet?.provider
@@ -487,9 +490,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
         selectedContact,
         title,
         zkWallet,
-        token,
+        TransactionStore.tokenAddress,
         selectedBalance,
-        token,
         addressValue,
         store.unlocked,
         AccountStore.isOnchainAuthSigningKeySet,
@@ -497,6 +499,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     );
 
     useEffect(() => {
+      if (title !== 'Withdraw') return;
       handleFee(undefined, undefined, store.zkWallet?.address());
     }, [
       store.unlocked,
@@ -644,7 +647,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const handleManageUnlockingTokens = () => {
       const _inUnlocking = store.tokenInUnlockingProgress;
-      const _index = _inUnlocking.indexOf(token);
+      const _index = _inUnlocking.indexOf(TransactionStore.tokenAddress);
       if (_index >= 0) {
         _inUnlocking.splice(_index, 1);
         store.tokenInUnlockingProgress = _inUnlocking;
@@ -665,11 +668,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const autoSelectBalance = (balances, id) => {
       if (!balances?.length) return;
-      setToken(
+      TransactionStore.tokenAddress =
         !!balances[id].address || balances[id].symbol === 'ETH'
           ? balances[id].address
-          : balances[id].symbol,
-      );
+          : balances[id].symbol;
       TransactionStore.maxValue = balances[id].balance;
       handleUpdateTokenPrice(balances[id].symbol);
       setSelectedBalance(balances[id].symbol);
@@ -723,22 +725,28 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [title, selectedContact, selectedBalance]);
 
     useMobxEffect(() => {
-      if ((token && token === 'ETH') || TransactionStore.symbolName === 'ETH') {
+      if (
+        (TransactionStore.tokenAddress &&
+          TransactionStore.tokenAddress === 'ETH') ||
+        TransactionStore.symbolName === 'ETH'
+      ) {
         setUnlockFau(true);
       }
 
       if (
-        token &&
+        TransactionStore.tokenAddress &&
         zkWallet &&
         TransactionStore.symbolName !== 'ETH' &&
         !store.isExternalWallet
       ) {
-        zkWallet.isERC20DepositsApproved(token).then(res => {
-          setUnlockFau(res);
-          if (res === true) {
-            handleManageUnlockingTokens();
-          }
-        });
+        zkWallet
+          .isERC20DepositsApproved(TransactionStore.tokenAddress)
+          .then(res => {
+            setUnlockFau(res);
+            if (res === true) {
+              handleManageUnlockingTokens();
+            }
+          });
       }
       if (store.propsToken) {
         setSymbol(store.propsToken);
@@ -792,13 +800,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
       setSelectedContact,
       setSymbol,
       TransactionStore.symbolName,
-      setToken,
       setUnlockFau,
       setUnlockingERCProcess,
       setWalletName,
       TransactionStore.symbolName,
       title,
-      token,
+      TransactionStore.tokenAddress,
       unlocked,
       unlockFau,
       walletAddress,
@@ -836,12 +843,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
         store.hint = 'Follow the instructions in the pop up';
       }
       store.zkWallet
-        ?.approveERC20TokenDeposits(token)
+        ?.approveERC20TokenDeposits(TransactionStore.tokenAddress)
         .then(res => {
           TransactionStore.isLoading = false;
           setUnlockingERCProcess(false);
           store.tokenInUnlockingProgress = store.tokenInUnlockingProgress.concat(
-            [token],
+            [TransactionStore.tokenAddress],
           );
           store.hint = `Waiting for transaction to be mined\n \n ${res.hash}`;
           return res;
@@ -858,7 +865,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         });
       const setUnlocked = async () => {
         const checkApprove = await zkWallet
-          ?.isERC20DepositsApproved(token)
+          ?.isERC20DepositsApproved(TransactionStore.tokenAddress)
           .then(res => res);
         if (checkApprove) {
           handleManageUnlockingTokens();
@@ -867,13 +874,16 @@ const Transaction: React.FC<ITransactionProps> = observer(
         }
       };
       setUnlocked();
-      if (!unlockFau && store.tokenInUnlockingProgress.includes(token)) {
+      if (
+        !unlockFau &&
+        store.tokenInUnlockingProgress.includes(TransactionStore.tokenAddress)
+      ) {
         setInterval(() => {
           setUnlocked();
         }, 1000);
       }
     }, [
-      token,
+      TransactionStore.tokenAddress,
       unlockFau,
       zkWallet,
       store.tokenInUnlockingProgress,
@@ -953,7 +963,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
           // twitExist();
         } else {
           store.txButtonUnlocked = false;
-          transactionAction(token, type, TransactionStore.symbolName);
+          transactionAction(
+            TransactionStore.tokenAddress,
+            type,
+            TransactionStore.symbolName,
+          );
         }
       }
       if (!selectedBalance || (inputValue && +inputValue <= 0) || !inputValue) {
@@ -1146,11 +1160,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
             onClick={() => {
               store.modalSpecifier = 'external-wallet-instructions 1';
               TransactionStore.symbolName = symbol;
-              setToken(
-                store.zkWallet?.provider.tokenSet.resolveTokenAddress(
-                  symbol,
-                ) as string,
-              );
+              TransactionStore.tokenAddress = store.zkWallet?.provider.tokenSet.resolveTokenAddress(
+                symbol,
+              ) as string;
               TransactionStore.maxValue = balance;
             }}
             className='undo-btn'
@@ -1164,11 +1176,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
               onClick={() => {
                 store.modalSpecifier = 'external-wallet-instructions 2';
                 TransactionStore.symbolName = symbol;
-                setToken(
-                  store.zkWallet?.provider.tokenSet.resolveTokenAddress(
-                    symbol,
-                  ) as string,
-                );
+                TransactionStore.tokenAddress = store.zkWallet?.provider.tokenSet.resolveTokenAddress(
+                  symbol,
+                ) as string;
                 TransactionStore.maxValue =
                   ExternaWalletStore.externalWalletContractBalances[symbol];
               }}
@@ -1245,7 +1255,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             return;
           } else {
             handleUpdateTokenPrice(symbol);
-            setToken(address);
+            TransactionStore.tokenAddress = address;
             TransactionStore.maxValue = balance;
             TransactionStore.symbolName = symbol;
             setSymbol(symbol);
@@ -1356,7 +1366,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             +handleFormatToken(
               store.zkWallet as Wallet,
               TransactionStore.symbolName,
-              TransactionStore.fee,
+              TransactionStore.fee[TransactionStore.symbolName],
             ) >=
           +TransactionStore.maxValue;
 
@@ -1376,7 +1386,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             +handleFormatToken(
               store.zkWallet as Wallet,
               TransactionStore.symbolName,
-              +TransactionStore.fee,
+              +TransactionStore.fee[TransactionStore.symbolName],
             )
           );
         } else {
@@ -1404,15 +1414,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <div
               className='withdraw-type-block'
               onClick={() => {
-                checkboxCb(TransactionStore.fee);
+                checkboxCb(TransactionStore.fee[TransactionStore.symbolName]);
               }}
             >
               <CheckBox checked={!store.fastWithdrawal} />
-              <p className='checkbox-text'>{`Normal (fee ${TransactionStore.fee &&
+              <p className='checkbox-text'>{`Normal (fee ${TransactionStore.fee[
+                TransactionStore.symbolName
+              ] &&
                 handleFormatToken(
                   store.zkWallet,
                   TransactionStore.symbolName,
-                  +TransactionStore.fee,
+                  +TransactionStore.fee[TransactionStore.symbolName],
                 )} ${
                 TransactionStore.symbolName
               }), processing time ${timeStempString(withdrawalTime)}`}</p>
@@ -1483,54 +1495,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           background={true}
           centered
         >
-          <div className='scroll-content'>
-            <h2 className='transaction-title'>{`Start withdrawing ${TransactionStore.symbolName}`}</h2>
-            <h3>
-              {'Amount to withdraw: '}
-              {TransactionStore.maxValue}
-            </h3>
-            <p>
-              {
-                'At the moment, we only support withdrawals to L1 for external wallets.'
-              }
-            </p>
-            <p>{`A withdrawal is performed in 2 steps. First, a FullExit transaction must initiated from your account (${addressMiddleCutter(
-              store.zkWallet?.address() as string,
-              6,
-              4,
-            )}) — the details are provided below.`}</p>
-            <p>
-              {
-                'After the transaction is mined, the token balance will disappear from the list until the next rollup block is verified (maximum 3 hours). Once this happens, the balance will re-appear in this UI with a button to complete your withdrawal.'
-              }
-            </p>
-            <div className='grey-block'>
-              <h3>{'Contract:'}</h3>
-              <p className='external-argument'>
-                {'Address ('}
-                <a target='_blank' href={etherscanContracLink}>
-                  {'View on Etherscan '}
-                  <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
-                </a>
-                {')'}
-              </p>
-              <CopyBlock copyProp={mainContract}>
-                <p>{mainContract}</p>
-              </CopyBlock>
-              <p className='external-argument'>{'ABI'}</p>
-              <CopyBlock
-                text={`${store.abiText?.substring(0, 40)}...`}
-                copyProp={store.abiText}
-              />
-              <h3>{'Method:'}</h3>
-              <CopyBlock text={'fullExit'} />
-              <h3>{'Arguments:'}</h3>
-              <p className='external-argument'>{'_accountId (uint32)'}</p>
-              <CopyBlock text={store.accountState?.id} />
-              <p className='external-argument'>{'_token (address)'}</p>
-              <CopyBlock text={token} />
-            </div>
-          </div>
+          <AmountToWithdraw />
         </Modal>
         <Modal
           visible={false}
@@ -1539,56 +1504,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           background={true}
           centered
         >
-          <div className='scroll-content'>
-            <h2 className='transaction-title'>{`Complete withdrawal ${TransactionStore.symbolName}`}</h2>
-            <div className='grey-block'>
-              <h3>{'Contract:'}</h3>
-              <p className='external-argument'>
-                {'Address ('}
-                <a target='_blank' href={etherscanContracLink}>
-                  {'View on Etherscan '}
-                  <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
-                </a>
-                {')'}
-              </p>
-              <CopyBlock copyProp={mainContract}>
-                <p>{mainContract}</p>
-              </CopyBlock>
-              <p className='external-argument'>{'ABI'}</p>
-              <CopyBlock
-                text={`${store.abiText?.substring(0, 40)}...`}
-                copyProp={store.abiText}
-              />
-              <h3>{'Method:'}</h3>
-              <CopyBlock
-                text={
-                  TransactionStore.symbolName === 'ETH'
-                    ? 'withdrawETH'
-                    : 'withdrawERC20'
-                }
-              />
-              <h3>{'Arguments:'}</h3>
-              {TransactionStore.symbolName !== 'ETH' && (
-                <>
-                  <p className='external-argument'>{'_token (address)'}</p>
-                  <CopyBlock text={token} />
-                </>
-              )}
-              <p className='external-argument'>{'_amount (uint128)'}</p>
-              <CopyBlock
-                text={
-                  ExternaWalletStore.externalWalletContractBalances[
-                    TransactionStore.symbolName
-                  ] &&
-                  handleExponentialNumbers(
-                    ExternaWalletStore.externalWalletContractBalances[
-                      TransactionStore.symbolName
-                    ],
-                  )
-                }
-              />
-            </div>
-          </div>
+          <CompleteWithdrawal />
         </Modal>
         <div
           className={`assets-wrapper ${
@@ -1806,12 +1722,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   <LoadingTx
                     fee={
                       title === 'Transfer' &&
-                      TransactionStore.fee &&
+                      TransactionStore.fee[TransactionStore.symbolName] &&
                       store.zkWallet &&
                       handleFormatToken(
                         store.zkWallet,
                         TransactionStore.symbolName,
-                        +TransactionStore.fee,
+                        +TransactionStore.fee[TransactionStore.symbolName],
                       )
                     }
                     price={
@@ -1981,7 +1897,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                     handleFilterContacts('');
                                     store.walletAddress = {};
                                     setSelectedContact(null);
-                                    TransactionStore.fee = undefined;
+                                    TransactionStore.fee = {};
                                   }}
                                 ></button>
                               )}
@@ -2055,7 +1971,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             (!!balances?.length ? (
                               <div
                                 className='currency-input-wrapper'
-                                key={token}
+                                key={TransactionStore.tokenAddress}
                               >
                                 <div className='all-balance-wrapper'>
                                   {selectedBalance && (
@@ -2101,7 +2017,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                         )) ||
                                         title === 'Deposit') && (
                                         <>
-                                          {'Max:'}
+                                          {'Max: '}
                                           {handleExponentialNumbers(
                                             TransactionStore.maxValue,
                                           )}{' '}
@@ -2122,7 +2038,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   !!selectedBalance &&
                                   title !== 'Deposit' && (
                                     <p className='all-balance-empty'>
-                                      {'Max:'}
+                                      {'Max: '}
                                       {handleExponentialNumbers(
                                         TransactionStore.maxValue,
                                       )}{' '}
@@ -2133,7 +2049,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             ) : (
                               <div
                                 className='currency-input-wrapper'
-                                key={token}
+                                key={TransactionStore.tokenAddress}
                               >
                                 <span>{'You have no balances'}</span>
                               </div>
@@ -2146,7 +2062,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                       {isHintUnlocked}
                     </div>
                     {title === 'Deposit' &&
-                      token !== 'ETH' &&
+                      TransactionStore.tokenAddress !== 'ETH' &&
                       selectedBalance &&
                       !store.EIP1271Signature && (
                         <>
@@ -2166,7 +2082,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 <p>
                                   {`${
                                     store.tokenInUnlockingProgress.includes(
-                                      token,
+                                      TransactionStore.tokenAddress,
                                     )
                                       ? 'Unlocking'
                                       : 'Unlock'
@@ -2187,7 +2103,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 {'?'}
                               </button>
                             </div>
-                            {store.tokenInUnlockingProgress.includes(token) ? (
+                            {store.tokenInUnlockingProgress.includes(
+                              TransactionStore.tokenAddress,
+                            ) ? (
                               <SpinnerWorm />
                             ) : (
                               <button
@@ -2233,7 +2151,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
                         className={`btn submit-button ${
                           (!unlockFau &&
                             !store.EIP1271Signature &&
-                            !store.tokenInUnlockingProgress.includes(token) &&
+                            !store.tokenInUnlockingProgress.includes(
+                              TransactionStore.tokenAddress,
+                            ) &&
                             title === 'Deposit') ||
                           !inputValue ||
                           (!!inputValue &&

@@ -6,7 +6,7 @@ export class TransactionStore {
   @observable changePubKeyFees: any = {};
   @observable conditionError = '';
   @observable gas = '';
-  @observable fee: any = '';
+  @observable fee: any = {};
   @observable filteredContacts: any = [];
   @observable isBalancesListOpen = false;
   @observable isContactsListOpen = false;
