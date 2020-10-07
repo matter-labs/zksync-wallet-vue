@@ -15,12 +15,10 @@ export const Send: React.FC = observer(
       amountValue,
       hash,
       isExecuted,
-      isLoading,
       setAddressValue,
       setAmountValue,
       setExecuted,
       setHash,
-      setLoading,
       setSymbol,
       transfer,
     } = useTransaction();
@@ -39,7 +37,6 @@ export const Send: React.FC = observer(
         hash={hash}
         isExecuted={isExecuted}
         isInput={true}
-        isLoading={isLoading}
         onChangeAddress={(e: string) => setAddressValue(e)}
         onChangeAmount={setAmountValue}
         propsMaxValue={undefined}
@@ -48,7 +45,6 @@ export const Send: React.FC = observer(
         price={price}
         setHash={setHash}
         setExecuted={setExecuted}
-        setLoading={setLoading}
         setSymbol={setSymbol}
         setTransactionType={t => {
           store.transactionType = t;

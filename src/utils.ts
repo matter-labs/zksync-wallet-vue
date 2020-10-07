@@ -10,6 +10,7 @@ import { DEFAULT_ERROR } from './constants/errors';
 import { Tokens, AccountState, TokenLike } from 'zksync/build/types';
 import { LINKS_CONFIG } from 'src/config';
 import { Store } from './store/store';
+import { useCallback } from 'react';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider: any = window['ethereum'];
@@ -49,6 +50,9 @@ export function getWalletNameFromProvider(): string | undefined {
     return 'localhost';
   }
 }
+
+export const useCallbackWrapper = (func, funcArguments, ucbParams) =>
+  useCallback(func.bind(null, ...funcArguments), ucbParams);
 
 export const addressMiddleCutter = (
   address: string,
@@ -410,14 +414,14 @@ export const intervalAsyncStateUpdater = (
     .then(res =>
       setTimeout(
         () =>
-          intervalAsyncStateUpdater(func, [funcArguments], timeout, cancelable),
+          intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable),
         timeout,
       ),
     )
     .catch(err =>
       setTimeout(
         () =>
-          intervalAsyncStateUpdater(func, [funcArguments], timeout, cancelable),
+          intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable),
         timeout,
       ),
     );

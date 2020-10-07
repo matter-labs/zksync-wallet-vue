@@ -11,5 +11,7 @@ export class TransactionStore {
   @observable isBalancesListOpen = false;
   @observable isContactsListOpen = false;
   @observable symbolName = '';
+  @observable tokenAddress = '';
   @observable maxValue = 0;
+  @observable isLoading = false;
 }

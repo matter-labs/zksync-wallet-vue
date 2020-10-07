@@ -18,18 +18,14 @@ interface ILoadingTXProps {
   addressValue: string;
   fee?: string | null;
   handleCancel: () => void;
-  isAccountUnlockingProcess: boolean;
-  isLoading: boolean;
   isUnlockingProcess: boolean;
   inputValue: string;
   price?: number;
   symbolName: string;
   setWalletName: any;
   setUnlockingERCProcess: React.Dispatch<React.SetStateAction<boolean>>;
-  setAccountUnlockingProcess: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   unlockFau: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 library.add(fas);
@@ -42,29 +38,25 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
     symbolName,
     addressValue,
     handleCancel,
-    isLoading,
     title,
     isUnlockingProcess,
-    isAccountUnlockingProcess,
     setUnlockingERCProcess,
-    setAccountUnlockingProcess,
-    setLoading,
   }): JSX.Element => {
     const store = useStore();
 
-    const { hint, walletAddress, TransactionStore } = store;
+    const { hint, walletAddress, TransactionStore, AccountStore } = store;
 
     const history = useHistory();
 
     const info = hint?.split('\n');
 
-    const unlockingTitle = isAccountUnlockingProcess
+    const unlockingTitle = AccountStore.isAccountUnlockingProcess
       ? 'Unlocking account'
       : `Unlocking ${symbolName} token`;
 
     const propperTitle =
-      isLoading &&
-      (isAccountUnlockingProcess || isUnlockingProcess) &&
+      TransactionStore.isLoading &&
+      (AccountStore.isAccountUnlockingProcess || isUnlockingProcess) &&
       store.zkWallet
         ? unlockingTitle
         : title;
@@ -98,7 +90,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
         {store.zkWallet && (
           <>
             <p>{info[0] !== 'Connecting to ' && info[0]}</p>
-            {isAccountUnlockingProcess && (
+            {AccountStore.isAccountUnlockingProcess && (
               <div className={`hint-walleticon ${store.walletName}`}>
                 {store.walletName === 'Web3' && (
                   <FontAwesomeIcon icon={['fas', 'globe']} />
@@ -108,7 +100,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
           </>
         )}
         {title === 'Transfer' &&
-          !isAccountUnlockingProcess &&
+          !AccountStore.isAccountUnlockingProcess &&
           store.unlocked !== undefined &&
           store.zkBalancesLoaded && (
             <>
@@ -130,7 +122,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
               )}
             </>
           )}
-        {!isAccountUnlockingProcess &&
+        {!AccountStore.isAccountUnlockingProcess &&
           !isUnlockingProcess &&
           store.unlocked !== undefined &&
           store.zkBalancesLoaded && (
@@ -166,9 +158,9 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
         <button
           className='btn submit-button margin'
           onClick={() => {
-            if (isAccountUnlockingProcess || isUnlockingProcess) {
-              setLoading(false);
-              setAccountUnlockingProcess(false);
+            if (AccountStore.isAccountUnlockingProcess || isUnlockingProcess) {
+              TransactionStore.isLoading = false;
+              AccountStore.isAccountUnlockingProcess = false;
               setUnlockingERCProcess(false);
             } else {
               handleCancel();

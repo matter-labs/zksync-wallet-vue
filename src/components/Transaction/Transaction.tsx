@@ -20,7 +20,8 @@ import { FilteredContactList } from './FilteredContactList';
 import { ExecutedTx } from './ExecutedTx';
 import { LoadingTx } from './LoadingTx';
 import { LockedTx } from './LockedTx';
-import { CopyBlock } from './CopyBlock';
+import { CopyBlock } from 'src/components/Common/CopyBlock';
+import { handleUnlock, getAccState } from './TransactionFunctions';
 import { BackButton } from 'src/components/Common/BackButton';
 
 import { ITransactionProps } from './Types';
@@ -33,7 +34,7 @@ import {
   sortBalancesById,
   mintTestERC20Tokens,
   addressMiddleCutter,
-  handleSafeAmount,
+  useCallbackWrapper,
 } from 'src/utils';
 import {
   LINKS_CONFIG,
@@ -68,13 +69,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
     hash,
     isExecuted,
     isInput,
-    isLoading,
     onChangeAddress,
     onChangeAmount,
     price,
     setHash,
     setExecuted,
-    setLoading,
     setTransactionType,
     setSymbol,
     title,
@@ -111,9 +110,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [isUnlockingProcess, setUnlockingERCProcess] = useState<boolean>(
       false,
     );
-    const [isAccountUnlockingProcess, setAccountUnlockingProcess] = useState<
-      boolean
-    >(false);
     const [inputValue, setInputValue] = useState<string>('');
     const [selected, setSelected] = useState<boolean>(false);
     const [selectedBalance, setSelectedBalance] = useState<any | undefined>();
@@ -153,143 +149,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
       checkForOnChain();
     }, [store.zkWallet]);
 
-    // const handleUnlock = useCallback(
-    //   async (withLoading: boolean) => {
-    //     try {
-    //       store.txButtonUnlocked = false;
-    //       if (!store.isBurnerWallet) {
-    //         store.hint = 'Follow the instructions in the pop up';
-    //       }
-    //       if (withLoading === true) {
-    //         setAccountUnlockingProcess(true);
-    //         setLoading(true);
-    //       }
-    //       let changePubkey;
-    //       const isSigningKeySet = await zkWallet?.isSigningKeySet();
-    //       if (
-    //         store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271'
-    //       ) {
-    //         if (!AccountStore.isOnchainAuthSigningKeySet) {
-    //           const onchainAuthTransaction = await zkWallet?.onchainAuthSigningKey();
-    //           await onchainAuthTransaction?.wait();
-    //           changePubkey = await zkWallet?.setSigningKey({
-    //             feeToken: TransactionStore.symbolName,
-    //             fee: handleSafeAmount(
-    //               TransactionStore.changePubKeyFees[
-    //                 TransactionStore.symbolName
-    //               ],
-    //             ),
-    //             nonce: 'committed',
-    //             onchainAuth: true,
-    //           });
-    //         }
-    //         if (!!AccountStore.isOnchainAuthSigningKeySet && !isSigningKeySet) {
-    //           changePubkey = await zkWallet?.setSigningKey({
-    //             feeToken: TransactionStore.symbolName,
-    //             fee: handleSafeAmount(
-    //               TransactionStore.changePubKeyFees[
-    //                 TransactionStore.symbolName
-    //               ],
-    //             ),
-    //             nonce: 'committed',
-    //             onchainAuth: true,
-    //           });
-    //         }
-    //       } else {
-    //         if (!AccountStore.isOnchainAuthSigningKeySet) {
-    //           changePubkey = await zkWallet?.setSigningKey({
-    //             feeToken: TransactionStore.symbolName,
-    //             fee: handleSafeAmount(
-    //               TransactionStore.changePubKeyFees[
-    //                 TransactionStore.symbolName
-    //               ],
-    //             ),
-    //           });
-    //         }
-    //       }
-    //       store.hint = 'Confirmed! \n Waiting for transaction to be mined';
-    //       const receipt = await changePubkey?.awaitReceipt();
-
-    //       store.unlocked = !!receipt;
-    //       if (!!receipt) {
-    //         store.txButtonUnlocked = true;
-    //       }
-    //       setAccountUnlockingProcess(!receipt);
-    //       setLoading(!receipt);
-    //     } catch (err) {
-    //       store.error = `${err.name}: ${err.message}`;
-    //       store.txButtonUnlocked = true;
-    //     }
-    //   },
-    //   [
-    //     setAccountUnlockingProcess,
-    //     setLoading,
-    //     zkWallet,
-    //     store.unlocked,
-    //     AccountStore.isOnchainAuthSigningKeySet,
-    //     TransactionStore.symbolName,
-    //     TransactionStore.changePubKeyFees,
-    //   ],
-    // );
-
-    const handleUnlock = useCallback(
-      async (withLoading: boolean) => {
-        try {
-          store.txButtonUnlocked = false;
-          if (!store.isBurnerWallet) {
-            store.hint = 'Follow the instructions in the pop up';
-          }
-          if (withLoading === true) {
-            setAccountUnlockingProcess(true);
-            setLoading(true);
-          }
-          let changePubkey;
-          const isOnchainAuthSigningKeySet = await zkWallet?.isOnchainAuthSigningKeySet();
-          const isSigningKeySet = await zkWallet?.isSigningKeySet();
-          if (
-            store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271'
-          ) {
-            if (!isOnchainAuthSigningKeySet) {
-              const onchainAuthTransaction = await zkWallet?.onchainAuthSigningKey();
-              await onchainAuthTransaction?.wait();
-              changePubkey = await zkWallet?.setSigningKey({
-                feeToken: 'ETH',
-                fee: 0,
-                nonce: 'committed',
-                onchainAuth: true,
-              });
-            }
-            if (!!isOnchainAuthSigningKeySet && !isSigningKeySet) {
-              changePubkey = await zkWallet?.setSigningKey({
-                feeToken: 'ETH',
-                fee: 0,
-                nonce: 'committed',
-                onchainAuth: true,
-              });
-            }
-          } else {
-            if (!isOnchainAuthSigningKeySet) {
-              changePubkey = await zkWallet?.setSigningKey({
-                feeToken: 'ETH',
-                fee: 0,
-              });
-            }
-          }
-          store.hint = 'Confirmed! \n Waiting for transaction to be mined';
-          const receipt = await changePubkey?.awaitReceipt();
-
-          store.unlocked = !!receipt;
-          if (!!receipt) {
-            store.txButtonUnlocked = true;
-          }
-          setAccountUnlockingProcess(!receipt);
-          setLoading(!receipt);
-        } catch (err) {
-          store.error = `${err.name}: ${err.message}`;
-          store.txButtonUnlocked = true;
-        }
-      },
-      [setAccountUnlockingProcess, setLoading, zkWallet, store.unlocked],
+    const handleUnlockWithUseCallBack = useCallbackWrapper(
+      handleUnlock,
+      [store, true],
+      [
+        AccountStore.isAccountUnlockingProcess,
+        store.zkWallet,
+        store.unlocked,
+        TransactionStore.isLoading,
+      ],
     );
 
     useEffect(() => {
@@ -303,59 +171,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
           .then((res: any) => res)
           .then(() => {
             cancelable(zkWallet?.isSigningKeySet()).then(data =>
-              data ? null : handleUnlock(true),
+              data ? null : handleUnlockWithUseCallBack(),
             );
           });
       }
     }, [store.unlocked, store.walletName]);
-
-    const getAccState = async () => {
-      if (zkWallet && tokens) {
-        const _accountState = await zkWallet.getAccountState();
-        if (
-          JSON.stringify(store.accountState) !== JSON.stringify(_accountState)
-        ) {
-          store.accountState = _accountState;
-        }
-        const at = _accountState.depositing.balances;
-        store.awaitedTokens = at;
-        const zkBalance = _accountState.committed.balances;
-        const zkBalancePromises = Object.keys(zkBalance).map(async key => {
-          return {
-            address: tokens[key].address,
-            balance: +handleFormatToken(
-              zkWallet,
-              tokens[key].symbol,
-              zkBalance[key] ? +zkBalance[key] : 0,
-            ),
-            symbol: tokens[key].symbol,
-            id: tokens[key].id,
-          };
-        });
-        Promise.all(zkBalancePromises)
-          .then(res => {
-            const _balances = res.sort(sortBalancesById);
-            if (
-              JSON.stringify(_balances) !== JSON.stringify(store.zkBalances)
-            ) {
-              store.zkBalances = _balances;
-              store.zkBalancesLoaded = true;
-            }
-          })
-          .catch(err => {
-            err.name && err.message
-              ? (store.error = `${err.name}: ${err.message}`)
-              : (store.error = DEFAULT_ERROR);
-          });
-      }
-
-      if (
-        JSON.stringify(accountState?.verified.balances) !==
-        JSON.stringify(store.verified)
-      ) {
-        store.verified = accountState?.verified.balances;
-      }
-    };
 
     const loadEthTokens = useCallback(async () => {
       const { tokens } = await loadTokens(
@@ -411,7 +231,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       if (title === 'Deposit') {
         intervalAsyncStateUpdater(loadEthTokens, [], 3000, cancelable);
       } else {
-        intervalAsyncStateUpdater(getAccState, [], 3000, cancelable);
+        intervalAsyncStateUpdater(getAccState, [store], 3000, cancelable);
       }
     }, [store.zkWallet, store.tokens]);
 
@@ -420,7 +240,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       if (title === 'Deposit') {
         loadEthTokens();
       } else {
-        getAccState();
+        getAccState(store);
       }
     }, [store.zkWallet, store.tokens]);
 
@@ -761,7 +581,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       setHash('');
       setExecuted(false);
       store.walletAddress = {};
-      setLoading(false);
+      TransactionStore.isLoading = false;
       setSelectedBalance('');
       setSelectedContact('');
       onChangeAddress('');
@@ -771,11 +591,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
       onChangeAddress,
       setExecuted,
       setHash,
-      setLoading,
       setSelectedBalance,
       setSelectedContact,
       setTransactionType,
       store,
+      TransactionStore.isLoading,
     ]);
 
     useEffect(() => {
@@ -945,7 +765,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         setUnlockFau(true);
         handleManageUnlockingTokens();
         setUnlockingERCProcess(false);
-        setLoading(false);
+        TransactionStore.isLoading = false;
       }
       document.addEventListener('click', handleClickOutside, true);
       return () => {
@@ -963,12 +783,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
       TransactionStore.isBalancesListOpen,
       TransactionStore.isContactsListOpen,
       isUnlockingProcess,
-      isLoading,
       onChangeAddress,
       selected,
       selectedContact,
       TransactionStore.filteredContacts,
-      setLoading,
       TransactionStore.maxValue,
       setSelected,
       setSelectedContact,
@@ -1013,14 +831,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const handleUnlockERC = useCallback(() => {
       setUnlockingERCProcess(true);
-      setLoading(true);
+      TransactionStore.isLoading = true;
       if (!store.isBurnerWallet) {
         store.hint = 'Follow the instructions in the pop up';
       }
-      zkWallet
+      store.zkWallet
         ?.approveERC20TokenDeposits(token)
         .then(res => {
-          setLoading(false);
+          TransactionStore.isLoading = false;
           setUnlockingERCProcess(false);
           store.tokenInUnlockingProgress = store.tokenInUnlockingProgress.concat(
             [token],
@@ -1035,7 +853,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           if (!!`${err}`.match(/insufficient/)) {
             store.error = 'Insufficient ETH founds';
           }
-          setLoading(false);
+          TransactionStore.isLoading = false;
           setUnlockingERCProcess(false);
         });
       const setUnlocked = async () => {
@@ -1055,11 +873,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
         }, 1000);
       }
     }, [
-      setLoading,
       token,
       unlockFau,
       zkWallet,
       store.tokenInUnlockingProgress,
+      TransactionStore.isLoading,
     ]);
 
     useEffect(() => {
@@ -1861,7 +1679,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         <div className='transaction-wrapper'>
           {store.unlocked === false &&
             store.unlocked !== undefined &&
-            !isAccountUnlockingProcess &&
+            !AccountStore.isAccountUnlockingProcess &&
             title !== 'Deposit' &&
             zkBalancesLoaded &&
             (!!store.isAccountBalanceNotEmpty || store.isExternalWallet) &&
@@ -1875,7 +1693,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               // />
               <LockedTx
                 handleCancel={handleCancel}
-                handleUnlock={() => handleUnlock(true)}
+                handleUnlock={() => handleUnlockWithUseCallBack()}
               />
             ) : (
               <>
@@ -1955,7 +1773,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
             />
           )}
           {((!isExecuted &&
-            (store.unlocked === undefined || isLoading || !zkBalancesLoaded)) ||
+            (store.unlocked === undefined ||
+              TransactionStore.isLoading ||
+              !zkBalancesLoaded)) ||
             burnerWalletAccountUnlockCondition) && (
             <>
               {store.isExternalWallet ? (
@@ -1999,22 +1819,18 @@ const Transaction: React.FC<ITransactionProps> = observer(
                         ? price[selectedBalance]
                         : 0)
                     }
-                    isAccountUnlockingProcess={isAccountUnlockingProcess}
                     isUnlockingProcess={isUnlockingProcess}
                     inputValue={inputValue}
                     symbolName={TransactionStore.symbolName}
                     addressValue={addressValue}
                     handleCancel={handleCancel}
-                    isLoading={isLoading}
                     setWalletName={setWalletName}
                     title={title}
                     unlockFau={unlockFau}
-                    setLoading={setLoading}
-                    setAccountUnlockingProcess={setAccountUnlockingProcess}
                     setUnlockingERCProcess={setUnlockingERCProcess}
                   />
 
-                  {hint.match(/(?:denied)/i) && !isLoading && (
+                  {hint.match(/(?:denied)/i) && !TransactionStore.isLoading && (
                     <CanceledTx
                       handleCancel={handleCancel}
                       setWalletName={setWalletName}
@@ -2026,7 +1842,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           )}
           {zkWallet &&
             zkBalancesLoaded &&
-            !isLoading &&
+            !TransactionStore.isLoading &&
             !isExecuted &&
             unlocked !== undefined &&
             (unlocked || title === 'Deposit') &&
@@ -2498,7 +2314,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 ) : null}
               </>
             )}
-          {!isAccountUnlockingProcess &&
+          {!AccountStore.isAccountUnlockingProcess &&
             !isExecuted &&
             !store.isAccountBalanceNotEmpty &&
             title !== 'Deposit' &&

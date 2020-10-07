@@ -17,12 +17,10 @@ export const Deposit: React.FC = observer(
       deposit,
       hash,
       isExecuted,
-      isLoading,
       setAddressValue,
       setAmountValue,
       setHash,
       setExecuted,
-      setLoading,
       setSymbol,
     } = useTransaction();
 
@@ -40,13 +38,11 @@ export const Deposit: React.FC = observer(
         hash={hash}
         isExecuted={isExecuted}
         isInput={false}
-        isLoading={isLoading}
         onChangeAddress={(e: string) => setAddressValue(e)}
         onChangeAmount={setAmountValue}
         price={price}
         setHash={setHash}
         setExecuted={setExecuted}
-        setLoading={setLoading}
         setSymbol={setSymbol}
         setTransactionType={t => {
           store.transactionType = t;

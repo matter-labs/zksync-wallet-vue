@@ -14,12 +14,10 @@ export const Withdraw: React.FC = observer(
       amountValue,
       hash,
       isExecuted,
-      isLoading,
       setAddressValue,
       setAmountValue,
       setHash,
       setExecuted,
-      setLoading,
       setSymbol,
       withdraw,
     } = useTransaction();
@@ -38,13 +36,11 @@ export const Withdraw: React.FC = observer(
         hash={hash}
         isExecuted={isExecuted}
         isInput={true}
-        isLoading={isLoading}
         onChangeAddress={(e: string) => setAddressValue(e)}
         onChangeAmount={setAmountValue}
         price={price}
         setHash={setHash}
         setExecuted={setExecuted}
-        setLoading={setLoading}
         setTransactionType={t => (store.transactionType = t)}
         setSymbol={setSymbol}
         title='Withdraw'

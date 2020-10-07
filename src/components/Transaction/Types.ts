@@ -8,7 +8,6 @@ export interface ITransactionProps {
   hash: ContractTransaction | string | undefined;
   isExecuted: boolean;
   isInput: boolean;
-  isLoading: boolean;
   onChangeAddress: (e: string) => void;
   onChangeAmount: React.Dispatch<React.SetStateAction<number | undefined>>;
   price: any;
@@ -18,7 +17,6 @@ export interface ITransactionProps {
   setHash: React.Dispatch<
     React.SetStateAction<string | ContractTransaction | undefined>
   >;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setTransactionType: (
     transaction: 'deposit' | 'withdraw' | 'transfer' | undefined,
   ) => void;

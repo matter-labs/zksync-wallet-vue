@@ -19,7 +19,14 @@ const TOKEN = 'ETH';
 export const useTransaction = () => {
   const store = useStore();
 
-  const { ethBalances, tokens, walletAddress, zkBalances, zkWallet } = store;
+  const {
+    ethBalances,
+    tokens,
+    walletAddress,
+    zkBalances,
+    zkWallet,
+    TransactionStore,
+  } = store;
 
   const cancelable = useCancelable();
 
@@ -29,7 +36,6 @@ export const useTransaction = () => {
   const [amountValue, setAmountValue] = useState<any>(0);
   const [hash, setHash] = useState<ContractTransaction | string | undefined>();
   const [isExecuted, setExecuted] = useState<boolean>(false);
-  const [isLoading, setLoading] = useState<boolean>(false);
   const [symbol, setSymbol] = useState<string>('');
 
   const [maxValueProp, setMaxValueProp] = useState<number>(0);
@@ -98,7 +104,7 @@ export const useTransaction = () => {
 
         if (receipt.executed) {
           setExecuted(true);
-          setLoading(false);
+          TransactionStore.isLoading = false;
         }
       } catch (err) {
         err.name && err.message
@@ -108,7 +114,7 @@ export const useTransaction = () => {
     },
     [
       setAmountValue,
-      setLoading,
+      TransactionStore.isLoading,
       tokens,
       zkWallet,
       store.error,
@@ -123,7 +129,7 @@ export const useTransaction = () => {
         try {
           if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
-          setLoading(true);
+          TransactionStore.isLoading = true;
           const handleMax = ethBalances.filter(
             balance => balance.symbol === token || balance.address === token,
           );
@@ -223,7 +229,7 @@ export const useTransaction = () => {
                 }
               }
             } catch (err) {
-              setLoading(false);
+              TransactionStore.isLoading = false;
               if (err.message.match(/(?:denied)/i)) {
                 store.hint = err.message;
               } else if (err.name && err.message) {
@@ -241,7 +247,7 @@ export const useTransaction = () => {
               executeDeposit(data);
             });
         } catch (err) {
-          setLoading(false);
+          TransactionStore.isLoading = false;
           err.name && err.message
             ? (store.error = `${err.name}: ${err.message}`)
             : (store.error = DEFAULT_ERROR);
@@ -254,7 +260,7 @@ export const useTransaction = () => {
       store.hint,
       history,
       setHash,
-      setLoading,
+      TransactionStore.isLoading,
       transactions,
       zkWallet,
       store.error,
@@ -275,7 +281,7 @@ export const useTransaction = () => {
           .then(res => res.totalFee);
         store.txButtonUnlocked = false;
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
-          setLoading(true);
+          TransactionStore.isLoading = true;
           if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
           const handleMax = zkBalances.filter(
@@ -326,7 +332,7 @@ export const useTransaction = () => {
         } else {
           store.error = DEFAULT_ERROR;
         }
-        setLoading(false);
+        TransactionStore.isLoading = false;
       }
     },
     [
@@ -358,7 +364,7 @@ export const useTransaction = () => {
           fee &&
           fastFee
         ) {
-          setLoading(true);
+          TransactionStore.isLoading = true;
           if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
           const handleMax = zkBalances.filter(
@@ -421,7 +427,7 @@ export const useTransaction = () => {
         } else {
           store.error = DEFAULT_ERROR;
         }
-        setLoading(false);
+        TransactionStore.isLoading = false;
       }
     },
     [
@@ -430,7 +436,7 @@ export const useTransaction = () => {
       history,
       store.error,
       setHash,
-      setLoading,
+      TransactionStore.isLoading,
       store.verifyToken,
       transactions,
       zkWallet,
@@ -445,13 +451,11 @@ export const useTransaction = () => {
     deposit,
     hash,
     isExecuted,
-    isLoading,
     maxValueProp,
     setAddressValue,
     setAmountValue,
     setExecuted,
     setHash,
-    setLoading,
     setMaxValueProp,
     setSymbol,
     setSymbolNameProp,

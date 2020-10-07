@@ -100,19 +100,17 @@ export const TokenPage = observer(() => {
   return (
     <>
       <TokenInfo />
-      <div>
-        <DataList
-          data={store.transactions}
-          title='Transactions'
-          onSort={onSort}
-          renderItem={renderTx}
-          emptyListComponent={() => (
-            <div className='default-text'>{'History is empty'}</div>
-          )}
-          filterPredicate={filterPredicate}
-        />
-        {isLoadingMore && <Spinner />}
-      </div>
+      <DataList
+        data={store.transactions}
+        title='Transactions'
+        onSort={onSort}
+        renderItem={renderTx}
+        emptyListComponent={() => (
+          <div className='default-text'>{'History is empty'}</div>
+        )}
+        filterPredicate={filterPredicate}
+      />
+      {isLoadingMore && <Spinner />}
     </>
   );
 });
