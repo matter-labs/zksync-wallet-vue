@@ -30,7 +30,7 @@
     "react-typing-effect": "^2.0.3",
     "walletlink": "^2.0.2",
     "web3": "^1.2.7",
-    "zksync": "^0.7.3"
+    "zksync": "^0.7.4"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server",
