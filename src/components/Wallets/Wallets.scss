@@ -11,12 +11,6 @@
   border-radius: 4px;
   cursor: pointer;
 
-  & > .hint-copied {
-    & > p {
-      text-align: center;
-    }
-  }
-
   &.external {
     cursor: default;
 
@@ -40,21 +34,61 @@
   }
 
   &-button {
-    width: 32px;
-    min-width: 32px;
-    height: 32px;
-    background-color: var(--transparent);
-    background-image: url(../../images/mdi_file_copy.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 22px;
-    border: none;
-    border-radius: 5px;
-    outline: none;
-    cursor: pointer;
+    &:not(.contact-manage-copy) {
+      position: relative;
+      width: 32px;
+      min-width: 32px;
+      height: 32px;
+      background-color: var(--transparent);
+      background-image: url(../../images/mdi_file_copy.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 22px;
+      border: none;
+      border-radius: 5px;
+      outline: none;
+      cursor: pointer;
+  
+      &:hover {
+        background-color: var(--copyblock-color);
+      }
+  
+      &::before {
+        opacity: 0;
+        transition: opacity .2s;
+        content: '';
+      }
+      
+      &.copied {
+        &::before {
+          position: absolute;
+          bottom: 40px;
+          left: 50%;
+          display: block;
+          min-width: 120px;
+          height: 30px;
+          padding: 5px 10px;
+          color: var(--dark-color);
+          font-size: var(--md-font-size) !important;
+          line-height: 20px;
+          background-color: var(--modal-bg-color);
+          border: 1px solid var(--light-border-color);
+          border-radius: 5px;
+          transform: translateX(-50%);
+          opacity: 1;
+          content: 'Copied!';
+        }
+      }
+    }
+  }
+}
 
-    &:hover {
-      background-color: var(--copyblock-color);
+.balances-wrapper {
+  .balances-contact {
+    .balances-contact-right {
+      & > .copy-block-button {
+        background-image: none;
+      }
     }
   }
 }
@@ -305,11 +339,15 @@
     & .copy-block {
       font-size: var(--sm-font-size);
 
+      .hint-copied {
+        right: -30px;
+      }
+
       &-left {
         display: flex;
       }
 
-      & div {
+      & div:not(.hint-copied) {
         height: 15px;
       }
       p {

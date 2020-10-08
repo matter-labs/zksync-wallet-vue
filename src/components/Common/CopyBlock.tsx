@@ -39,19 +39,13 @@ export const CopyBlock: React.FC<ICopyBlockProps> = observer(
           handleCopy(copyArg);
         }}
       >
-        <Transition type='fly' timeout={200} trigger={copyOpened}>
-          <div className={'hint-copied open'}>
-            <p>{'Copied!'}</p>
-          </div>
-        </Transition>
-
         {text && <p className={`copy-block-text ${classSpecifier}`}>{text}</p>}
         {children}
         <button
           onClick={() => {
             handleCopy(copyArg);
           }}
-          className='copy-block-button btn-tr'
+          className={`copy-block-button btn-tr ${copyOpened ? 'copied' : ''}`}
         ></button>
       </div>
     );

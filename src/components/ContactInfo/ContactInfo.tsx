@@ -7,7 +7,6 @@ import makeBlockie from 'ethereum-blockies-base64';
 import Modal from 'src/components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
 import { useTimeout } from 'hooks/timers';
-import { Transition } from 'components/Transition/Transition';
 import deleteicon from 'images/mdi_delete.svg';
 
 import { WIDTH_BP } from 'constants/magicNumbers';
@@ -228,14 +227,11 @@ export const ContactInfo: React.FC<IContactInfoProps> = observer(
                     )}
               </p>
               <button
-                className='copy-block-button btn-tr'
+                className={`copy-block-button btn-tr ${
+                  isCopyModal ? 'copied' : ''
+                }`}
                 onClick={() => handleCopy(displayedAddress)}
               ></button>
-              <Transition type='fly' timeout={200} trigger={isCopyModal}>
-                <div className={'hint-copied open'}>
-                  <p>{'Copied!'}</p>
-                </div>
-              </Transition>
               <input
                 type='text'
                 className='copy-block-input'

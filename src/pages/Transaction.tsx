@@ -5,7 +5,6 @@ import { fas } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
 
 import { Tx } from './Transactions';
-import { Transition } from 'src/components/Transition/Transition';
 import { TxStatus } from 'src/components/Transaction/TxStatus';
 import { useStore } from 'src/store/context';
 
@@ -115,9 +114,6 @@ export const Transaction: FC<Tx> = props => {
         value={hash.toString()}
         ref={ref}
       />
-      <Transition trigger={isCopyModal} timeout={200} type='fly'>
-        <div className={'hint-copied open'}>{'Copied!'}</div>
-      </Transition>
       <div className='transaction-history-right'>
         <div className='transaction-history-address'>
           {type === 'Transfer' && (
@@ -187,7 +183,9 @@ export const Transaction: FC<Tx> = props => {
         </div>
       </div>
       <a
-        className='contact-manage-copy btn-tr'
+        className={`contact-manage-copy copy-block-button btn-tr ${
+          isCopyModal ? 'copied' : ''
+        }`}
         title='View in block explorer'
         target='_blank'
         href={`${

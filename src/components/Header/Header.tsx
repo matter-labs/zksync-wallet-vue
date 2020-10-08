@@ -14,7 +14,6 @@ import { LINKS_CONFIG } from 'src/config';
 
 import { QRCode } from 'components/QRCode/QRCode';
 import { useTimeout } from 'hooks/timers';
-import { Transition } from 'components/Transition/Transition';
 import { ConnectionStatus } from 'components/Header/ConnectionStatus';
 import { useLogout } from 'hooks/useLogout';
 import './Header.scss';
@@ -130,11 +129,6 @@ const Header: React.FC = observer(() => {
                 </p>
               </div>
               <div onClick={handleCopy} className='copy-block'>
-                <Transition type='fly' timeout={200} trigger={isCopyModal}>
-                  <div className='hint-copied open'>
-                    <p>{'Copied!'}</p>
-                  </div>
-                </Transition>
                 <input
                   readOnly
                   className='copy-block-input'
@@ -143,7 +137,9 @@ const Header: React.FC = observer(() => {
                 />
                 <p>{address}</p>
                 <button
-                  className='copy-block-button btn-tr'
+                  className={`copy-block-button btn-tr ${
+                    isCopyModal ? 'copied' : ''
+                  }`}
                   onClick={handleCopy}
                 />
               </div>

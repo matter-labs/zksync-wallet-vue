@@ -6,7 +6,6 @@ import { observer } from 'mobx-react-lite';
 import avatar from 'images/avatar.png';
 import Spinner from 'components/Spinner/Spinner';
 import SpinnerWorm from 'components/Spinner/SpinnerWorm';
-import { Transition } from 'components/Transition/Transition';
 
 import { useTimeout } from 'hooks/timers';
 import { useMobxEffect } from 'src/hooks/useMobxEffect';
@@ -139,11 +138,6 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
           onClick={() => handleCopy(zkWallet?.address())}
           className='copy-block'
         >
-          <Transition type='fly' timeout={200} trigger={isCopyModal}>
-            <div className={'hint-copied open'}>
-              <p>{'Copied!'}</p>
-            </div>
-          </Transition>
           <input
             type='text'
             className='copy-block-input'
@@ -170,7 +164,9 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
             </p>
           </div>
           <button
-            className='copy-block-button btn-tr'
+            className={`copy-block-button btn-tr ${
+              isCopyModal ? 'copied' : ''
+            }`}
             onClick={() => handleCopy(zkWallet?.address())}
           ></button>
         </div>

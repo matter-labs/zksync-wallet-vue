@@ -502,12 +502,6 @@
 
 body.dark {
   & .modal {
-    & .copy-block {
-      & > .copy-block-button {
-        background-image: url(../../images/mdi_file_copy_dark.svg);
-      }
-    }
-
     & .icon {
       &-qr {
         background: url(../../images/icon-qr_dark.svg);

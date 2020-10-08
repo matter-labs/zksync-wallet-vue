@@ -273,8 +273,6 @@ button {
   }
 }
 
-
-
 h2 {
   font-weight: var(--bold-font-weight);
   font-size: var(--xl-font-size);
@@ -524,15 +522,51 @@ h2 {
     top: -20px;
     right: 20px;
     min-width: 120px;
-    min-height: 30px;
-    max-height: 40px;
+    min-height: 20px;
+    max-height: 30px;
     padding: 5px 10px;
     color: var(--dark-color);
+    line-height: 20px;
     background-color: var(--modal-bg-color);
     border: 1px solid var(--light-border-color);
     border-radius: 5px;
     & > p {
+      font-size: var(--md-font-size) !important;
       text-align: center;
+    }
+  }
+}
+
+.copy-block {
+  & > .copy-block-button {
+    &:not(.contact-manage-copy) {
+      position: relative;
+      background-image: url(./images/mdi_file_copy.svg);
+    }
+    &::before {
+      opacity: 0;
+      transition: opacity .2s;
+      content: '';
+    }
+    &.copied {
+      &::before {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        display: block;
+        min-width: 120px;
+        height: 30px;
+        padding: 5px 10px;
+        color: var(--dark-color);
+        font-size: var(--md-font-size) !important;
+        line-height: 20px;
+        background-color: var(--modal-bg-color);
+        border: 1px solid var(--light-border-color);
+        border-radius: 5px;
+        transform: translateX(-50%);
+        opacity: 1;
+        content: 'Copied!';
+      }
     }
   }
 }
@@ -1350,13 +1384,13 @@ body.dark > #root {
             }
           }
         }
-
-        & > .copy-block {
-          & > .copy-block-button {
-            background-image: url(./images/mdi_file_copy_dark.svg);
-          }
-        }
       }
+    }
+  }
+
+  .copy-block {
+    & > .copy-block-button {
+      background-image: url(./images/mdi_file_copy_dark.svg);
     }
   }
 

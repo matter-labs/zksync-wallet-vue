@@ -7,7 +7,6 @@ import editicon from 'images/icon-edit.svg';
 import sendIcon from 'images/send.svg';
 
 import { WIDTH_BP } from 'constants/magicNumbers';
-import { Transition } from 'components/Transition/Transition';
 import { FloatingMenu } from 'src/components/Common/FloatingMenu';
 
 import { useStore } from 'src/store/context';
@@ -104,12 +103,10 @@ export const Contact = ({
         </div>
       </div>
       <div className='balances-contact-right'>
-        <Transition type='fly' timeout={200} trigger={copyOpened}>
-          <div className={'hint-copied open'}>
-            <p>{'Copied!'}</p>
-          </div>
-        </Transition>
-        <button className='balances-contact-copy btn-tr' onClick={handleCopy}>
+        <button
+          className={`copy-block-button btn-tr ${copyOpened ? 'copied' : ''}`}
+          onClick={handleCopy}
+        >
           {copyIcon()}
         </button>
         <input
