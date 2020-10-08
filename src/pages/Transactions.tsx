@@ -87,7 +87,7 @@ const Transactions: React.FC = observer(() => {
   const { isLoadingMore } = useInfiniteScroll(fetchTransactions);
 
   return (
-    <div>
+    <>
       <DataList
         data={store.transactions}
         title='Transactions'
@@ -99,7 +99,7 @@ const Transactions: React.FC = observer(() => {
         filterPredicate={filterPredicate}
       />
       {isLoadingMore && <Spinner />}
-    </div>
+    </>
   );
 });
 
