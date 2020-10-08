@@ -148,7 +148,7 @@ export const mintTestERC20Tokens = async (
   token: TokenLike,
   store,
 ) => {
-  const tokenAddress = wallet.provider.tokenSet.resolveTokenAddress(token);
+  const tokenAddress = wallet?.provider.tokenSet.resolveTokenAddress(token);
   const ABI = [
     {
       constant: false,
@@ -212,7 +212,7 @@ export const handleFormatToken = (
   amount: number,
 ) => {
   const safeAmount = JSBI.BigInt(+amount).toString();
-  return wallet.provider.tokenSet.formatToken(symbol, safeAmount);
+  return wallet?.provider?.tokenSet.formatToken(symbol, safeAmount);
 };
 
 export const handleSafeAmount = amount => JSBI.BigInt(amount).toString();
@@ -330,7 +330,7 @@ export async function loadTokens(
       return {
         id: value.id,
         address: value.address,
-        balance: +syncWallet.provider.tokenSet.formatToken(
+        balance: +syncWallet?.provider.tokenSet.formatToken(
           value.symbol,
           zkBalance[key] ? zkBalance[key].toString() : '0',
         ),
@@ -351,7 +351,7 @@ export async function loadTokens(
 
   const zkBalancePromises = Object.keys(zkBalance).map(async key => ({
     address: tokens[key].address,
-    balance: +syncWallet.provider.tokenSet.formatToken(
+    balance: +syncWallet?.provider.tokenSet.formatToken(
       tokens[key].symbol,
       zkBalance[key] ? zkBalance[key].toString() : '0',
     ),

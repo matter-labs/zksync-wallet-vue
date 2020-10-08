@@ -34,7 +34,7 @@ export const AmountToWithdraw = observer(() => {
   const mainContract = store.zkWallet?.provider.contractAddress.mainContract;
   const etherscanContracLink = `//${LINKS_CONFIG.ethBlockExplorer}/address/${mainContract}#writeProxyContract`;
 
-  const { TransactionStore } = store;
+  const { TransactionStore, AccountStore } = store;
 
   return (
     <div className='scroll-content'>
@@ -80,7 +80,7 @@ export const AmountToWithdraw = observer(() => {
         <CopyBlock text={'fullExit'} />
         <h3>{'Arguments:'}</h3>
         <p className='external-argument'>{'_accountId (uint32)'}</p>
-        <CopyBlock text={store.accountState?.id} />
+        <CopyBlock text={AccountStore.accountId} />
         <p className='external-argument'>{'_token (address)'}</p>
         <CopyBlock text={TransactionStore.tokenAddress} />
       </div>

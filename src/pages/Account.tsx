@@ -10,6 +10,7 @@ import Spinner from 'src/components/Spinner/Spinner';
 
 import { IEthBalance } from 'types/Common';
 
+import { useCancelable } from 'hooks/useCancelable';
 import { useTransaction } from 'hooks/useTransaction';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useStore } from 'src/store/context';
@@ -19,7 +20,7 @@ import { fetchTransactions } from 'src/api';
 import { LINKS_CONFIG } from 'src/config';
 import {
   handleExponentialNumbers,
-  sortBalancesByBalance,
+  intervalAsyncStateUpdater,
   sortBalancesById,
 } from 'src/utils';
 
@@ -194,24 +195,31 @@ const UnverifiedBal: React.FC<BalProps> = observer(
 const Account: React.FC = observer(() => {
   const { setMaxValueProp, setSymbolNameProp, setTokenProp } = useTransaction();
 
+  const cancelable = useCancelable();
+
   const history = useHistory();
   const store = useStore();
-  const { zkWallet, accountState, tokens, TransactionStore } = store;
-  const [transactionsList, setTransactionList] = useState<any>([]);
+  const {
+    zkWallet,
+    accountState,
+    tokens,
+    TransactionStore,
+    AccountStore,
+  } = store;
 
   const getAccState = useCallback(
     async (extended: boolean) => {
       const { zkWallet, accountState, tokens } = store;
       if (zkWallet && tokens) {
         const _accountState = await zkWallet.getAccountState();
-        if (JSON.stringify(accountState) !== JSON.stringify(_accountState)) {
-          store.accountState = _accountState;
-        }
         const txs = fetchTransactions(
           25,
           0,
           store.zkWalletAddress as string,
-        ).then(res => setTransactionList(res));
+        ).then(res => res);
+        if (JSON.stringify(AccountStore.txs) !== JSON.stringify(await txs)) {
+          AccountStore.txs = await txs;
+        }
         const at = _accountState.depositing.balances;
         const atKeys = Object.keys(at);
         if (!!atKeys.length) {
@@ -220,7 +228,7 @@ const Account: React.FC = observer(() => {
             0,
             store.zkWalletAddress as string,
           ).then(res => res);
-          const sortedByTypeTxs = transactionsList.filter(
+          const sortedByTypeTxs = AccountStore.txs.filter(
             tx => tx.commited === false && tx.tx.type === 'Deposit',
           );
           sortedByTypeTxs.map(tx => {
@@ -283,7 +291,8 @@ const Account: React.FC = observer(() => {
                       .sort(sortBalancesById);
                   } else {
                     if (
-                      JSON.stringify(store.zkBalances) !== JSON.stringify(res)
+                      JSON.stringify(store.zkBalances) !==
+                      JSON.stringify(res.sort(sortBalancesById))
                     ) {
                       const MLTTAccountBalance = store.zkBalances.filter(
                         t => t.symbol === 'MLTT',
@@ -310,7 +319,10 @@ const Account: React.FC = observer(() => {
                   }
                 }
               } else {
-                if (JSON.stringify(store.zkBalances) !== JSON.stringify(res)) {
+                if (
+                  JSON.stringify(store.zkBalances) !==
+                  JSON.stringify(res.sort(sortBalancesById))
+                ) {
                   const MLTTAccountBalance = store.zkBalances.filter(
                     t => t.symbol === 'MLTT',
                   );
@@ -337,7 +349,7 @@ const Account: React.FC = observer(() => {
             })
             .then(() => {
               zkWallet?.isSigningKeySet().then(data => {
-                store.unlocked = data;
+                if (store.unlocked !== data) store.unlocked = data;
               });
             })
             .catch(err => {
@@ -347,13 +359,6 @@ const Account: React.FC = observer(() => {
             });
         }
       }
-      if (
-        JSON.stringify(accountState?.verified.balances) !==
-          JSON.stringify(store.verified) &&
-        zkWallet
-      ) {
-        store.verified = (await zkWallet.getAccountState()).verified.balances;
-      }
     },
     [
       accountState,
@@ -361,26 +366,12 @@ const Account: React.FC = observer(() => {
       store.awaitedTokens,
       store.error,
       store.unlocked,
-      store.verified,
       store.zkBalances,
       tokens,
       zkWallet,
-      transactionsList,
-      setTransactionList,
+      AccountStore.txs,
     ],
   );
-
-  const getVerified = useCallback(async () => {
-    if (zkWallet) {
-      store.verified = (await zkWallet.getAccountState()).verified.balances;
-    }
-  }, [zkWallet]);
-
-  useEffect(() => {
-    if (!store.zkWallet) return;
-    getAccState(true);
-    getVerified();
-  }, [getVerified, store.zkWallet, store.zkBalancesLoaded, store.tokens]);
 
   useEffect(() => {
     store.propsSymbolName = '';
@@ -391,21 +382,8 @@ const Account: React.FC = observer(() => {
   useEffect(() => {
     if (!zkWallet) return;
 
-    const int = setInterval(() => getAccState(true), 3000);
-
-    return () => {
-      clearInterval(int);
-    };
-  }, [
-    store,
-    store.zkWallet,
-    store.accountState,
-    store.awaitedTokens,
-    store.tokens,
-    store.zkBalances,
-    store.searchBalances,
-    store.verified,
-  ]);
+    intervalAsyncStateUpdater(getAccState, [true], 3000, cancelable);
+  }, [store.zkWallet]);
 
   const handleSend = useCallback(
     (address, balance, symbol) => {
@@ -423,7 +401,7 @@ const Account: React.FC = observer(() => {
   useCheckLogin();
 
   const isVerified = ({ symbol }) => {
-    const filtered = transactionsList
+    const filtered = AccountStore.txs
       .filter(tx =>
         tx.tx.type === 'Deposit'
           ? tx.tx.priority_op?.token === symbol
@@ -457,7 +435,7 @@ const Account: React.FC = observer(() => {
         }}
       />
       <DataList
-        data={zkBalances}
+        data={store.zkBalances}
         title='Balances in L2'
         visible={true}
         footer={ApiFailedHint}

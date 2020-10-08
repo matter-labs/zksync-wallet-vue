@@ -34,7 +34,7 @@ import { AccountStore } from './store/accountStore';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
-  const { AccountStore } = store;
+  const { AccountStore, TransactionStore } = store;
   const { pathname } = useLocation();
   const { createWallet, connect, getSigner } = useWalletInit();
   const history = useHistory();
@@ -129,6 +129,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         store.walletName = 'Metamask';
         AccountStore.accountChanging = true;
         store.setBatch({
+          hint: '',
           zkWallet: null,
           zkBalances: [],
           isAccessModalOpen: true,
@@ -139,8 +140,14 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           ethBalances: [],
           isAccountBalanceLoading: true,
           isAccountBalanceNotEmpty: false,
+          tokenInUnlockingProgress: [],
         });
         store.isAccessModalOpen = true;
+        TransactionStore.isBalancesListOpen = false;
+        TransactionStore.isContactsListOpen = false;
+        TransactionStore.symbolName = '';
+        TransactionStore.maxValue = 0;
+        AccountStore.isAccountUnlockingProcess = false;
       }
     };
     if (store.isMetamaskWallet && provider) {

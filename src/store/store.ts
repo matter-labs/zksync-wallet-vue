@@ -169,6 +169,8 @@ export class Store {
     this.transactions = [];
     this.provider = false;
     this.hint = '';
+    this.syncWallet = undefined;
+    this.syncProvider = undefined;
     this.zkWalletInitializing = false;
     this.ExternaWalletStore.externalWalletInitializing = false;
     this.searchBalances = [];

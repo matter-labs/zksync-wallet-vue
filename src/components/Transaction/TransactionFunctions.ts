@@ -11,11 +11,10 @@ export const getAccState = async (store: Store) => {
 
   if (tokens && zkWallet) {
     const _accountState = await zkWallet.getAccountState();
-    if (JSON.stringify(store.accountState) !== JSON.stringify(_accountState)) {
-      store.accountState = _accountState;
-    }
     const at = _accountState.depositing.balances;
-    store.awaitedTokens = at;
+    if (JSON.stringify(at) !== JSON.stringify(store.awaitedTokens)) {
+      store.awaitedTokens = at;
+    }
     const zkBalance = _accountState.committed.balances;
     const zkBalancePromises = Object.keys(zkBalance).map(async key => {
       return {
@@ -42,13 +41,6 @@ export const getAccState = async (store: Store) => {
           ? (store.error = `${err.name}: ${err.message}`)
           : (store.error = DEFAULT_ERROR);
       });
-  }
-
-  if (
-    JSON.stringify(store.accountState?.verified.balances) !==
-    JSON.stringify(store.verified)
-  ) {
-    store.verified = store.accountState?.verified.balances;
   }
 };
 

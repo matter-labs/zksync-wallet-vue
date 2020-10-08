@@ -19,13 +19,13 @@ import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
 import { fetchTransactions } from 'src/api';
 import { useLogout } from './useLogout';
-import { loadTokens } from 'src/utils';
+import { loadTokens, sortBalancesById } from 'src/utils';
 import { useStore } from 'src/store/context';
 
 const useWalletInit = () => {
   const store = useStore();
 
-  const { ExternaWalletStore } = store;
+  const { ExternaWalletStore, AccountStore } = store;
 
   const cancelable = useCancelable();
 
@@ -231,7 +231,6 @@ const useWalletInit = () => {
       );
       const transport = syncProvider.transport as WSTransport;
       const accountState = await syncWallet.getAccountState();
-      store.verified = accountState?.verified.balances;
       const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
 
       if (store.isAccessModalOpen || store.isExternalWallet) {
@@ -242,6 +241,7 @@ const useWalletInit = () => {
           zkWallet: syncWallet,
           accountState,
         });
+        AccountStore.accountId = accountState.id as number;
       }
 
       fetch(WITHDRAWAL_PROCESSING_TIME_LINK)
@@ -273,7 +273,7 @@ const useWalletInit = () => {
       store.setBatch({
         tokens: tokens,
         searchBalances: zkBalances,
-        zkBalances: zkBalances,
+        zkBalances: zkBalances.sort(sortBalancesById),
         zkBalancesLoaded: true,
         maxConfirmAmount,
       });
@@ -290,7 +290,10 @@ const useWalletInit = () => {
 
       await syncWallet
         .getAccountState()
-        .then(res => res)
+        .then(res => {
+          store.accountState = res;
+          AccountStore.accountId = res.id as number;
+        })
         .then(() => {
           cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
             store.unlocked = data;

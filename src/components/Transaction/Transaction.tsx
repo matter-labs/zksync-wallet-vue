@@ -127,6 +127,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const history = useHistory();
 
     useEffect(() => {
+      if (!store.zkWallet) {
+        setSelectedBalance('');
+        setUnlockFau(false);
+      }
+    }, [store.zkWallet]);
+
+    useEffect(() => {
       const arr = window.localStorage?.getItem(
         `contacts${store.zkWallet?.address()}`,
       );
@@ -180,20 +187,20 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [store.unlocked, store.walletName]);
 
     const loadEthTokens = useCallback(async () => {
+      if (!store.zkWallet || !store.syncProvider || !store.accountState) return;
       const { tokens } = await loadTokens(
-        syncProvider as Provider,
-        syncWallet as Wallet,
-        accountState as AccountState,
+        store.syncProvider as Provider,
+        store.zkWallet as Wallet,
+        store.accountState as AccountState,
       );
-
       const balancePromises = Object.keys(tokens).map(async key => {
-        if (tokens[key].symbol && syncWallet) {
-          const balance = await syncWallet.getEthereumBalance(key);
+        if (tokens[key].symbol && store.zkWallet) {
+          const balance = await store.zkWallet.getEthereumBalance(key);
           return {
             id: tokens[key].id,
             address: tokens[key].address,
             balance: +handleFormatToken(
-              syncWallet,
+              store.zkWallet,
               tokens[key].symbol,
               +balance ? +balance : 0,
             ),
@@ -207,6 +214,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           const _balances = res
             .filter(token => token && token.balance > 0)
             .sort(sortBalancesById);
+
           const _balancesEmpty = res
             .filter(token => token?.balance === 0)
             .sort(sortBalancesById);
@@ -221,11 +229,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
             : (store.error = DEFAULT_ERROR);
         });
     }, [
-      accountState,
+      store.accountState,
       store.error,
       store.ethBalances,
-      syncWallet,
-      syncProvider,
+      store.syncWallet,
+      store.syncProvider,
+      store.zkWallet,
     ]);
 
     useEffect(() => {
@@ -426,6 +435,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         AccountStore.isOnchainAuthSigningKeySet === undefined
       )
         return;
+
       const obj: any = {};
       Promise.all(
         store.zkBalances.map(balance => {
@@ -453,6 +463,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [
       store.zkWallet,
       store.zkBalancesLoaded,
+      store.zkBalances,
       AccountStore.isOnchainAuthSigningKeySet,
     ]);
 
@@ -629,9 +640,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       store.searchBalances =
         title === 'Deposit' ? store.ethBalances : zkBalances;
       cancelable(zkWallet?.getAccountState())
-        .then((res: any) => {
-          store.verified = res?.verified.balances;
-        })
+        .then((res: any) => res)
         .then(() => {
           cancelable(zkWallet?.isSigningKeySet()).then(
             data => (store.unlocked = data),
