@@ -1,6 +1,10 @@
 import { Store } from 'src/store/store';
 import { DEFAULT_ERROR } from 'constants/errors';
-import { handleFormatToken, sortBalancesById } from 'src/utils';
+import {
+  handleFormatToken,
+  sortBalancesById,
+  handleSafeAmount,
+} from 'src/utils';
 
 export const getAccState = async (store: Store) => {
   const { tokens, zkWallet } = store;
@@ -105,82 +109,64 @@ export const handleUnlock = async (store: Store, withLoading: boolean) => {
   }
 };
 
-// const handleUnlock = useCallback(
-//   async (withLoading: boolean) => {
-//     try {
-//       store.txButtonUnlocked = false;
-//       if (!store.isBurnerWallet) {
-//         store.hint = 'Follow the instructions in the pop up';
-//       }
-//       if (withLoading === true) {
-//         AccountStore.isAccountUnlockingProcess = true;
-//         TransactionStore.isLoading = true;
-//       }
-//       let changePubkey;
-//       const isSigningKeySet = await zkWallet?.isSigningKeySet();
-//       if (
-//         store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271'
-//       ) {
-//         if (!AccountStore.isOnchainAuthSigningKeySet) {
-//           const onchainAuthTransaction = await zkWallet?.onchainAuthSigningKey();
-//           await onchainAuthTransaction?.wait();
-//           changePubkey = await zkWallet?.setSigningKey({
-//             feeToken: TransactionStore.symbolName,
-//             fee: handleSafeAmount(
-//               TransactionStore.changePubKeyFees[
-//                 TransactionStore.symbolName
-//               ],
-//             ),
-//             nonce: 'committed',
-//             onchainAuth: true,
-//           });
-//         }
-//         if (!!AccountStore.isOnchainAuthSigningKeySet && !isSigningKeySet) {
-//           changePubkey = await zkWallet?.setSigningKey({
-//             feeToken: TransactionStore.symbolName,
-//             fee: handleSafeAmount(
-//               TransactionStore.changePubKeyFees[
-//                 TransactionStore.symbolName
-//               ],
-//             ),
-//             nonce: 'committed',
-//             onchainAuth: true,
-//           });
-//         }
-//       } else {
-//         if (!AccountStore.isOnchainAuthSigningKeySet) {
-//           changePubkey = await zkWallet?.setSigningKey({
-//             feeToken: TransactionStore.symbolName,
-//             fee: handleSafeAmount(
-//               TransactionStore.changePubKeyFees[
-//                 TransactionStore.symbolName
-//               ],
-//             ),
-//           });
-//         }
-//       }
-//       store.hint = 'Confirmed! \n Waiting for transaction to be mined';
-//       const receipt = await changePubkey?.awaitReceipt();
+export const handleUnlockNew = async (store: Store, withLoading: boolean) => {
+  const { AccountStore, TransactionStore } = store;
 
-//       store.unlocked = !!receipt;
-//       if (!!receipt) {
-//         store.txButtonUnlocked = true;
-//       }
-//       AccountStore.isAccountUnlockingProcess = !receipt;
-//       TransactionStore.isLoading = !receipt;
-//     } catch (err) {
-//       store.error = `${err.name}: ${err.message}`;
-//       store.txButtonUnlocked = true;
-//     }
-//   },
-//   [
-//     AccountStore.isAccountUnlockingProcess,
-//     setLoading,
-//     zkWallet,
-//     store.unlocked,
-//     AccountStore.isOnchainAuthSigningKeySet,
-//     TransactionStore.symbolName,
-//     TransactionStore.changePubKeyFees,
-//     TransactionStore.isLoading
-//   ],
-// );
+  try {
+    store.txButtonUnlocked = false;
+    if (!store.isBurnerWallet) {
+      store.hint = 'Follow the instructions in the pop up';
+    }
+    if (withLoading === true) {
+      AccountStore.isAccountUnlockingProcess = true;
+      TransactionStore.isLoading = true;
+    }
+    let changePubkey;
+    const isSigningKeySet = await store.zkWallet?.isSigningKeySet();
+    if (store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271') {
+      if (!AccountStore.isOnchainAuthSigningKeySet) {
+        const onchainAuthTransaction = await store.zkWallet?.onchainAuthSigningKey();
+        await onchainAuthTransaction?.wait();
+        changePubkey = await store.zkWallet?.setSigningKey({
+          feeToken: TransactionStore.symbolName,
+          fee: handleSafeAmount(
+            TransactionStore.changePubKeyFees[TransactionStore.symbolName],
+          ),
+          nonce: 'committed',
+          onchainAuth: true,
+        });
+      }
+      if (!!AccountStore.isOnchainAuthSigningKeySet && !isSigningKeySet) {
+        changePubkey = await store.zkWallet?.setSigningKey({
+          feeToken: TransactionStore.symbolName,
+          fee: handleSafeAmount(
+            TransactionStore.changePubKeyFees[TransactionStore.symbolName],
+          ),
+          nonce: 'committed',
+          onchainAuth: true,
+        });
+      }
+    } else {
+      if (!AccountStore.isOnchainAuthSigningKeySet) {
+        changePubkey = await store.zkWallet?.setSigningKey({
+          feeToken: TransactionStore.symbolName,
+          fee: handleSafeAmount(
+            TransactionStore.changePubKeyFees[TransactionStore.symbolName],
+          ),
+        });
+      }
+    }
+    store.hint = 'Confirmed! \n Waiting for transaction to be mined';
+    const receipt = await changePubkey?.awaitReceipt();
+
+    store.unlocked = !!receipt;
+    if (!!receipt) {
+      store.txButtonUnlocked = true;
+    }
+    AccountStore.isAccountUnlockingProcess = !receipt;
+    TransactionStore.isLoading = !receipt;
+  } catch (err) {
+    store.error = `${err.name}: ${err.message}`;
+    store.txButtonUnlocked = true;
+  }
+};

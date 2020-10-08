@@ -19,13 +19,15 @@ import { ContactSelectorFlat } from './ContactSelectorFlat';
 import { FilteredContactList } from './FilteredContactList';
 import { ExecutedTx } from './ExecutedTx';
 import { LoadingTx } from './LoadingTx';
-import { LockedTx } from './LockedTx';
+import { LockedTxNew as LockedTx } from './LockedTx';
 import {
   AmountToWithdraw,
   CompleteWithdrawal,
 } from './ExternalWalletComponents';
-import { CopyBlock } from 'src/components/Common/CopyBlock';
-import { handleUnlock, getAccState } from './TransactionFunctions';
+import {
+  handleUnlockNew as handleUnlock,
+  getAccState,
+} from './TransactionFunctions';
 import { BackButton } from 'src/components/Common/BackButton';
 
 import { ITransactionProps } from './Types';
@@ -37,7 +39,6 @@ import {
   loadTokens,
   sortBalancesById,
   mintTestERC20Tokens,
-  addressMiddleCutter,
   useCallbackWrapper,
 } from 'src/utils';
 import {
@@ -1601,15 +1602,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
             (!!store.isAccountBalanceNotEmpty || store.isExternalWallet) &&
             !store.isBurnerWallet &&
             (!store.isExternalWallet ? (
-              // <LockedTx
-              //   handleCancel={handleCancel}
-              //   handleUnlock={() => handleUnlock(true)}
-              //   symbolName={TransactionStore.symbolName}
-              //   handleSelectBalance={autoSelectBalanceForUnlock}
-              // />
               <LockedTx
                 handleCancel={handleCancel}
                 handleUnlock={() => handleUnlockWithUseCallBack()}
+                symbolName={TransactionStore.symbolName}
+                handleSelectBalance={autoSelectBalanceForUnlock}
               />
             ) : (
               <>
