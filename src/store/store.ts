@@ -158,6 +158,7 @@ export class Store {
 
   @action
   performLogout(accessModal: boolean, walletName: WalletType) {
+    this.AccountStore.accountChanging = true;
     this.modalSpecifier = '';
     this.error = '';
     this.walletName = walletName;

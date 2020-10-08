@@ -131,7 +131,8 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
             TransactionStore.symbolName = '';
           }}
         />
-        <div className='info-block center'>
+        <h2 className='transaction-title'>{'Unlock account'}</h2>
+        <div className='info-block'>
           <p className='lg-font'>
             {
               'To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH signatures with zero-knowledge proofs. Please bear with us!'

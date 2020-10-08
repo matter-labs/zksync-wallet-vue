@@ -73,6 +73,7 @@
   align-items: center;
   justify-content: space-between;
   margin-top: 50px;
+  margin-bottom: 25px;
   padding: 15px;
   color: var(--info-message-text-color);
   background-color: var(--info-message-color);
@@ -81,16 +82,11 @@
 
   & > p {
     margin-bottom: 0;
-    font-size: var(--md-font-size);
+    font-size: var(--large-font-size);
   }
 
   &.center {
-    margin-bottom: 25px;
     text-align: center;
-
-    & > p {
-      font-size: var(--large-font-size);
-    }
   }
 }
 

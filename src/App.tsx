@@ -30,9 +30,11 @@ import {
   browserWalletConnector,
   portisConnector,
 } from 'src/components/Wallets/walletConnectors';
+import { AccountStore } from './store/accountStore';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
+  const { AccountStore } = store;
   const { pathname } = useLocation();
   const { createWallet, connect, getSigner } = useWalletInit();
   const history = useHistory();
@@ -100,12 +102,68 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     sessionStorage.getItem('autoLoginStatus') !== 'changeWallet' &&
     AUTOLOGIN_WALLETS.includes(savedWalletName ?? '');
 
+  // Listen for account change
+  const { provider, walletName, zkWallet } = store;
+
+  useEffect(() => {
+    if (zkWallet) {
+      store.isAccessModalOpen = false;
+    }
+    if (!provider && !walletName) return;
+    const accountChangeListener = async () => {
+      const newAddress = await store.windowEthereumProvider?.request({
+        method: 'eth_accounts',
+      });
+      setCurAddress(newAddress[0]);
+      if (
+        zkWallet &&
+        provider &&
+        store.zkWallet?.address().toLowerCase() !==
+          newAddress[0]?.toLowerCase() &&
+        store.isMetamaskWallet
+      ) {
+        sessionStorage.setItem('walletName', walletName);
+        const savedWalletName = sessionStorage.getItem(
+          'walletName',
+        ) as WalletType;
+        store.walletName = 'Metamask';
+        AccountStore.accountChanging = true;
+        store.setBatch({
+          zkWallet: null,
+          zkBalances: [],
+          isAccessModalOpen: true,
+          transactions: [],
+          zkWalletInitializing: false,
+          searchBalances: [],
+          searchContacts: [],
+          ethBalances: [],
+          isAccountBalanceLoading: true,
+          isAccountBalanceNotEmpty: false,
+        });
+        store.isAccessModalOpen = true;
+      }
+    };
+    if (store.isMetamaskWallet && provider) {
+      provider.on('accountsChanged', accountChangeListener);
+      return () => provider.off('accountsChanged', accountChangeListener);
+    }
+  }, [
+    provider,
+    store,
+    walletName,
+    zkWallet,
+    store.walletName,
+    store.isMetamaskWallet,
+    setCurAddress,
+    curAddress,
+  ]);
+
   useEffect(() => {
     if (store.zkWallet) {
       sessionStorage.setItem('walletName', store.walletName);
       window.localStorage?.setItem('walletName', store.walletName);
     }
-    if (savedWalletExistsOnLogin) {
+    if (savedWalletExistsOnLogin && !AccountStore.accountChanging) {
       store.walletName = window.localStorage?.getItem('walletName')
         ? (window.localStorage?.getItem('walletName') as WalletType)
         : (sessionStorage.getItem('walletName') as WalletType);
@@ -120,6 +178,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (
       !store.zkWallet &&
       savedWalletName &&
+      !AccountStore.accountChanging &&
       (!store.isPrimaryPage || imidiateLoginCondition)
     ) {
       if (store.autoLoginRequestStatus !== 'changeWallet') {
@@ -130,10 +189,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       store.isAccessModalOpen = true;
       store.hint = 'Connecting to ';
       if (store.isMetamaskWallet || store.isWalletConnect) {
+        if (!!AccountStore.accountChanging) return;
         createWallet();
-      }
-      if (store.isPortisWallet) {
-        portisConnector(store, connect, getSigner);
       }
       if (store.isPortisWallet) {
         portisConnector(store, connect, getSigner);
@@ -198,9 +255,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     store,
   ]);
 
-  // Listen for account change
-  const { provider, walletName, zkWallet } = store;
-
   useEffect(() => {
     if (wrongNetworkDetector() && store.isMetamaskWallet) {
       store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
@@ -208,7 +262,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       store.zkWalletInitializing = false;
     } else {
       store.error = '';
-      if (store.walletName) {
+      if (store.walletName && !AccountStore.accountChanging) {
         store.isAccessModalOpen = true;
       }
     }
@@ -220,58 +274,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       store.isAccessModalOpen = false;
     }
   }, [store.walletName]);
-
-  useEffect(() => {
-    if (zkWallet) {
-      store.isAccessModalOpen = false;
-    }
-    if (!provider && !walletName) return;
-    const accountChangeListener = async () => {
-      const newAddress = await store.windowEthereumProvider?.request({
-        method: 'eth_accounts',
-      });
-      setCurAddress(newAddress[0]);
-      if (
-        zkWallet &&
-        provider &&
-        store.zkWallet?.address().toLowerCase() !==
-          newAddress[0]?.toLowerCase() &&
-        store.isMetamaskWallet
-      ) {
-        sessionStorage.setItem('walletName', walletName);
-        const savedWalletName = sessionStorage.getItem(
-          'walletName',
-        ) as WalletType;
-        store.walletName = 'Metamask';
-        window.location.reload();
-        store.setBatch({
-          zkWallet: null,
-          zkBalances: [],
-          isAccessModalOpen: true,
-          transactions: [],
-          zkWalletInitializing: false,
-          searchBalances: [],
-          searchContacts: [],
-          ethBalances: [],
-          isAccountBalanceLoading: true,
-          isAccountBalanceNotEmpty: false,
-        });
-      }
-    };
-    if (store.isMetamaskWallet && provider) {
-      provider.on('accountsChanged', accountChangeListener);
-      return () => provider.off('accountsChanged', accountChangeListener);
-    }
-  }, [
-    provider,
-    store,
-    walletName,
-    zkWallet,
-    store.walletName,
-    store.isMetamaskWallet,
-    setCurAddress,
-    curAddress,
-  ]);
 
   useEffect(() => {
     checkForEmptyBalance(store, store.zkBalances);
@@ -298,6 +300,11 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       return () => document.body.classList.remove('fixed');
     }
   });
+
+  useEffect(() => {
+    if (!store.zkWallet) return;
+    AccountStore.accountChanging = false;
+  }, [store.zkWallet]);
 
   const metaMaskConnected = store.hint?.match(/login/i);
   const info = store.hint.split('\n');
