@@ -29,9 +29,3 @@
 .menu-trigger:hover {
   background-color: var(--border-color);
 }
-
-body.dark {
-  .menu-trigger {
-    filter: invert(1);
-  }
-}

@@ -1,4 +1,5 @@
 /* stylelint-disable no-descending-specificity */
+@import './dark';
 
 :root {
   --font-family: 'IBM Plex Sans', sans-serif;
@@ -48,33 +49,6 @@
   --medium-font-weight: 500;
   --semibold-font-weight: 600;
   --bold-font-weight: 700;
-}
-
-body.dark {
-  --typing-color: #1DA1F2;
-  --input-border-focus: rgba(255, 255, 255, 0.2);
-  --light-bg-color: #fff;
-  --button-text-color: #1d2039;
-  --modal-bg-color: #1d2039;
-  --dark-color: rgba(255, 255, 255, 0.9);
-  --hints-color: rgba(255, 255, 255, 0.4);
-  --hints-color-active: rgba(255, 255, 255, 0.5);
-  --button-bg-color: #8c8dfc;
-  --button-bg-hover: #797afb;
-  --main-bg-color: #11142b;
-  --main-light-bg-color: #11142b;
-  --bg-block-color: #1d2039;
-  --light-border-color: rgba(255, 255, 255, 0.08);
-  --border-color: rgba(255, 255, 255, 0.08);
-  --copyblock-color: rgba(255, 255, 255, 0.08);
-  --input-color: rgba(255, 255, 255, 0.02);
-  --currency-block-color: rgba(255, 255, 255, 0.1);
-  --links-color: #4e529a;
-  --info-message-color: rgba(255, 248, 222, 0.1);
-  --info-message-text-color: #aa935d;
-  --error-color: rgba(255, 101, 35, 0.17);
-  --success-color: #27ae60;
-  --transparent: transparent;
 }
 
 .beta {
@@ -222,7 +196,12 @@ button {
     margin-bottom: 15px;
   }
 
-  p, a {
+  p {
+    font-size: var(--md-font-size);
+  }
+
+  a {
+    color: var(--links-color);
     font-size: var(--md-font-size);
   }
 }
@@ -1262,152 +1241,6 @@ input[type='radio']:focus + .contact-manage {
   background: var(--modal-bg-color);
   border: 1px solid var(--button-bg-color);
   border-radius: 5px;
-}
-
-body.dark > #root {
-  .transaction-back {
-    background-image: url(./images/arrow-back-dark.svg);
-  }
-
-  .beta-text {
-    color: var(--links-color);
-  }
-
-  .lfm__typing_effect {
-    display: block;
-    color: var(--yellow-color);
-    font-weight: var(--medium-font-weight);
-    font-size: var(--large-font-size);
-  
-    &_text {
-      background-color: var(--transparent);
-    }
-  } 
-
-  .submit-button {
-    .send-icon {
-      background-image: url(./images/send_dark.svg);
-    }
-  }
-
-  .withdraw-button {
-    & > span {
-      background-image: url(./images/mdi_arrow_downward.svg);
-      background-repeat: no-repeat;
-      background-size: 20px;
-    }
-  }
-
-  .logo-textless {
-    background-image: url(./images/ZK_dark.svg);
-  }
-
-  .custom-selector {
-    &.contacts {
-      .custom-selector-title {
-        & > span {
-          background-image: url(./images/mdi_people_dark.svg);
-        }
-      }
-    }
-  }
-
-  .submit-label {
-    &.Deposit {
-      background-image: url(./images/deposit_dark.svg);
-
-      &.false {
-        background-image: url(./images/deposit_dark_disable.svg);
-      }
-    }
-
-    &.unlock {
-      background-image: url(./images/lock_dark.svg);
-
-      &.locked {
-        background-image: url(./images/lock_dark_disabled.svg);
-      }
-    }
-
-    &.Send {
-      background-image: url(./images/send_dark.svg);
-
-      &.false {
-        background-image: url(./images/send_dark_disable.svg);
-      }
-    }
-
-    &.Withdraw {
-      background-color: var(--button-text-color);
-
-      &.false {
-        background-color: var(--hints-color);
-      }
-    }
-  }
-
-  & > .content-wrapper {
-    & .menu-top {
-      & .menu-logo {
-        background-image: url(./images/ZK_dark.svg);
-      }
-    }
-
-    &.start-page {
-      background: var(--main-bg-color);
-    }
-
-    & > .footer {
-      &-wrapper {
-        & > .theme-switch {
-          background-image: url(./images/mdi_wb_sunny.svg);
-        }
-      }
-    }
-
-    & > .content {
-      & > .mywallet-wrapper {
-        & > .submit-button {
-          & > span {
-            background-image: url(./images/send_dark.svg);
-          }
-        }
-
-        & > .mywallet-currency-block {
-          background-color: var(--currency-block-color);
-          border-bottom: 1px solid var(--copyblock-color);
-          border-left: none;
-
-          & > .mywallet-currency-wrapper {
-            & > .mywallet-currency-selector {
-              background-image: url(./images/arrow-select-dark.svg);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  .copy-block {
-    & > .copy-block-button {
-      background-image: url(./images/mdi_file_copy_dark.svg);
-    }
-  }
-
-  & .arrow-down {
-    background-image: url(./images/arrow-select-dark.svg);
-  }
-
-  .arrow-select {
-    background: url(./images/arrow-select-dark.svg);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-  }
-
-  .balances-search {
-    background-image: url(./images/mdi_search_dark.svg);
-  }
 }
 
 .title {

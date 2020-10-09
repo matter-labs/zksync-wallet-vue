@@ -500,30 +500,6 @@
   }
 }
 
-body.dark {
-  & .modal {
-    & .icon {
-      &-qr {
-        background: url(../../images/icon-qr_dark.svg);
-        background-repeat: no-repeat;
-        background-size: contain;
-      }
-
-      &-disconnect {
-        background: url(../../images/icon-disconnect_dark.svg);
-        background-repeat: no-repeat;
-        background-size: contain;
-      }
-
-      &-edit {
-        background: url(../../images/icon-edit_dark.svg);
-        background-repeat: no-repeat;
-        background-size: contain;
-      }
-    }
-  }
-}
-
 .close-icon {
   position: absolute;
   top: 15px;
