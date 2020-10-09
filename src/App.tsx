@@ -351,7 +351,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [store.modalSpecifier, store.MLTTclaimed]);
 
   const handleOpenUnlinkModal = () => {
-    store.modalHintMessage = 'UnlinkCoinBase';
+    store.modalHintMessage = `Unlink${store.walletName}`;
     store.modalSpecifier = 'modal-hint';
   };
 
@@ -457,6 +457,9 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
               {'Login'}
             </button>
           )}
+          {(store.isCoinbaseWallet || store.isWalletConnect) && (
+            <UnlinkAcccountBtn />
+          )}
           {(!store.isBurnerWallet ||
             (store.isBurnerWallet && !store.zkWalletInitializing)) && (
             <button
@@ -466,7 +469,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
               {store.zkWalletInitializing ? 'Close' : 'Cancel'}
             </button>
           )}
-          {store.isCoinbaseWallet && <UnlinkAcccountBtn />}
         </>
       </Modal>
       <Modal

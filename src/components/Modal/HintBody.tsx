@@ -9,6 +9,9 @@ import Spinner from '../Spinner/Spinner';
 import { useLogout } from 'hooks/useLogout';
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import './Modal.scss';
+import { addressMiddleCutter } from 'src/utils';
+
+import { walletConnectConnector } from 'src/components/Wallets/walletConnectors';
 
 const MyWallet = () => (
   <>
@@ -165,6 +168,38 @@ const UnlinkCoinBase = () => {
       </p>
       <button
         onClick={() => store.walletLinkObject.deactivate()}
+        className='btn btn-cancel btn-tr center'
+      >
+        {'Unlink account'}
+      </button>
+    </>
+  );
+};
+
+const UnlinkWalletConnect = () => {
+  const store = useStore();
+  const handleLogout = useLogout();
+
+  const { connect } = useWalletInit();
+
+  return (
+    <>
+      <p>
+        {
+          'If you are meeting some troubles or want to change your Wallet Connect account you can unlink the current account and scan QR code again.'
+        }
+      </p>
+      <button
+        onClick={() => {
+          localStorage.removeItem('walletconnect');
+          store.modalHintMessage = '';
+          store.modalSpecifier = '';
+          handleLogout(false, '');
+          // store.walletName = 'WalletConnect';
+          // store.normalBg = true;
+          // store.isAccessModalOpen = true;
+          // walletConnectConnector(store, connect);
+        }}
         className='btn btn-cancel btn-tr center'
       >
         {'Unlink account'}
@@ -330,7 +365,11 @@ const ExternalWalletLogin = observer(() => {
       <div className='error-container'>
         <p className={`error-text ${conditionError && 'visible'}`}>
           {`Error: "${conditionError &&
-            ExternaWalletStore.externalWalletAddress}" doesn't match ethereum address format`}
+            addressMiddleCutter(
+              ExternaWalletStore.externalWalletAddress,
+              6,
+              6,
+            )}" doesn't match ethereum address format`}
         </p>
       </div>
       <button
@@ -366,6 +405,7 @@ export const HintBody: React.FC = observer(
         {modalHintMessage === 'MLTTBlockModal' && <MLTTBlockModal />}
         {modalHintMessage === 'MLTTonMainnet' && <MLTTonMainnet />}
         {modalHintMessage === 'UnlinkCoinBase' && <UnlinkCoinBase />}
+        {modalHintMessage === 'UnlinkWalletConnect' && <UnlinkWalletConnect />}
         {modalHintMessage === 'ExternalWalletLogin' && <ExternalWalletLogin />}
       </div>
     );

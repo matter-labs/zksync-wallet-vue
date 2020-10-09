@@ -12,7 +12,11 @@ import { useCancelable } from 'hooks/useCancelable';
 import { useStore } from 'src/store/context';
 import { LINKS_CONFIG } from 'src/config';
 
-import { handleFormatToken, sortBalancesById } from 'src/utils';
+import {
+  handleFormatToken,
+  sortBalancesById,
+  addressMiddleCutter,
+} from 'src/utils';
 
 const TOKEN = 'ETH';
 
@@ -321,7 +325,11 @@ export const useTransaction = () => {
           const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
           store.verifyToken = !!verifyReceipt;
         } else {
-          store.error = `Address: "${addressValue}" doesn't match ethereum address format`;
+          store.error = `Address: "${addressMiddleCutter(
+            addressValue,
+            6,
+            6,
+          )}" doesn't match ethereum address format`;
         }
       } catch (err) {
         store.txButtonUnlocked = true;
@@ -416,7 +424,11 @@ export const useTransaction = () => {
           const verifyReceipt = await withdrawTransaction.awaitVerifyReceipt();
           store.verifyToken = !!verifyReceipt;
         } else {
-          store.error = `Address: "${addressValue}" doesn't match ethereum address format`;
+          store.error = `Address: "${addressMiddleCutter(
+            addressValue,
+            6,
+            6,
+          )}" doesn't match ethereum address format`;
         }
       } catch (err) {
         store.txButtonUnlocked = true;

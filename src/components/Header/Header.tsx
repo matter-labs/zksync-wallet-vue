@@ -19,6 +19,7 @@ import { useLogout } from 'hooks/useLogout';
 import './Header.scss';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
+import { addressMiddleCutter } from 'src/utils';
 
 library.add(fas);
 
@@ -109,9 +110,7 @@ const Header: React.FC = observer(() => {
                 store.modalSpecifier = 'wallet';
               }}
             >
-              <p>
-                {userName || `${address.slice(0, 11)}...${address.slice(-4)}`}
-              </p>
+              <p>{userName || addressMiddleCutter(address, 11, 4)}</p>
               <img
                 src={store.zkWallet ? makeBlockie(address) : avatar}
                 alt='avatar'
@@ -124,9 +123,7 @@ const Header: React.FC = observer(() => {
                   src={store.zkWallet ? makeBlockie(address) : avatar}
                   alt='avatar'
                 />{' '}
-                <p>
-                  {userName || `${address.slice(0, 8)}...${address.slice(-4)}`}
-                </p>
+                <p>{userName || addressMiddleCutter(address, 8, 4)}</p>
               </div>
               <div onClick={handleCopy} className='copy-block'>
                 <input

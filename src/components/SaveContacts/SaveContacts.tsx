@@ -9,6 +9,8 @@ import { ISaveContactsProps } from './Types';
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { useAutoFocus } from 'src/hooks/useAutoFocus';
 
+import { addressMiddleCutter } from 'src/utils';
+
 const SaveContacts: React.FC<ISaveContactsProps> = observer(
   ({
     addressInput,
@@ -97,8 +99,10 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
           setConditionError('Error: name cannot be empty');
         } else {
           setConditionError(
-            `Error: "${address?.slice(0, 6)}...${address?.slice(
-              address?.length - 6,
+            `Error: "${addressMiddleCutter(
+              address,
+              6,
+              6,
             )}" doesn't match ethereum address format`,
           );
         }

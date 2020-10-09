@@ -13,6 +13,7 @@ import {
   formatDate,
   handleFormatToken,
   handleExponentialNumbers,
+  addressMiddleCutter,
 } from 'src/utils';
 
 library.add(fas);
@@ -64,8 +65,8 @@ export const Transaction: FC<Tx> = props => {
   const addressAppearence = nameHandler
     ? nameHandler
     : to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
-    ? from?.replace(from?.slice(6, from?.length - 3), '...')
-    : to?.replace(to?.slice(6, to?.length - 3), '...');
+    ? addressMiddleCutter(from, 6, 3)
+    : addressMiddleCutter(to as string, 6, 3);
 
   return (
     <div className='transaction-history-wrapper' key={hash}>
@@ -176,7 +177,7 @@ export const Transaction: FC<Tx> = props => {
                   );
                 }}
               >
-                {to?.replace(to?.slice(6, to?.length - 3), '...')}
+                {addressMiddleCutter(to as string, 6, 3)}
               </p>
             </>
           )}

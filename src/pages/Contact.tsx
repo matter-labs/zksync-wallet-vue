@@ -1,16 +1,13 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 import makeBlockie from 'ethereum-blockies-base64';
 
-import editicon from 'images/icon-edit.svg';
-import sendIcon from 'images/send.svg';
-
 import { WIDTH_BP } from 'constants/magicNumbers';
-import { FloatingMenu } from 'src/components/Common/FloatingMenu';
 
 import { useStore } from 'src/store/context';
 import { useTimeout } from 'src/hooks/timers';
+
+import { addressMiddleCutter } from 'src/utils';
 
 const editIcon = () => (
   <svg
@@ -98,7 +95,7 @@ export const Contact = ({
           <span className='balances-contact-address'>
             {window?.innerWidth > WIDTH_BP
               ? address
-              : address.replace(address.slice(14, address.length - 4), '...')}
+              : addressMiddleCutter(address, 14, 4)}
           </span>
         </div>
       </div>

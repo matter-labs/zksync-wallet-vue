@@ -831,7 +831,7 @@ h2 {
 
 .undo {
   &-text {
-    margin: 25px 0 5px;
+    margin: 25px 0 0;
   }
 
   &-btn {
@@ -851,6 +851,7 @@ h2 {
     &.block {
       display: block;
       margin-top: 20px;
+      margin-bottom: 20px;
       margin-left: 0;
     }
 

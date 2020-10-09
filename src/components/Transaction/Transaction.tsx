@@ -33,6 +33,7 @@ import { BackButton } from 'src/components/Common/BackButton';
 import { ITransactionProps } from './Types';
 
 import {
+  addressMiddleCutter,
   handleFormatToken,
   handleExponentialNumbers,
   intervalAsyncStateUpdater,
@@ -275,7 +276,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
         addressValue.length > 0 &&
         !ADDRESS_VALIDATION['eth'].test(addressValue)
       ) {
-        TransactionStore.conditionError = `Error: "${addressValue}" doesn't match ethereum address format`;
+        TransactionStore.conditionError = `Error: "${addressMiddleCutter(
+          addressValue,
+          6,
+          6,
+        )}" doesn't match ethereum address format`;
       } else {
         TransactionStore.conditionError = '';
       }
@@ -556,7 +561,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
         store.modalSpecifier = 'add-contact';
         store.isContact = false;
       } else {
-        TransactionStore.conditionError = `Error: "${addressValue}" doesn't match ethereum address format`;
+        TransactionStore.conditionError = `Error: "${addressMiddleCutter(
+          addressValue,
+          6,
+          6,
+        )}" doesn't match ethereum address format`;
       }
     }, [addressValue, TransactionStore.conditionError, store]);
 
@@ -1036,10 +1045,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           <span className='balances-contact-address'>
             {window?.innerWidth > WIDTH_BP
               ? address
-              : address?.replace(
-                  address?.slice(14, address?.length - 4),
-                  '...',
-                )}
+              : addressMiddleCutter(address, 14, 4)}
           </span>
         </div>
         <div className='balances-contact-right'></div>

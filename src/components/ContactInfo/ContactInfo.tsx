@@ -11,6 +11,8 @@ import deleteicon from 'images/mdi_delete.svg';
 
 import { WIDTH_BP } from 'constants/magicNumbers';
 
+import { addressMiddleCutter } from 'src/utils';
+
 import './ContactInfo.scss';
 import 'src/components/TokenInfo/TokenInfo.scss';
 
@@ -221,10 +223,7 @@ export const ContactInfo: React.FC<IContactInfoProps> = observer(
               <p>
                 {window?.innerWidth > WIDTH_BP
                   ? displayedAddress
-                  : displayedAddress.replace(
-                      displayedAddress.slice(14, displayedAddress?.length - 4),
-                      '...',
-                    )}
+                  : addressMiddleCutter(displayedAddress, 14, 4)}
               </p>
               <button
                 className={`copy-block-button btn-tr ${

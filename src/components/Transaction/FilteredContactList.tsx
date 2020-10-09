@@ -2,6 +2,8 @@ import React from 'react';
 
 import { WIDTH_BP } from 'constants/magicNumbers';
 
+import { addressMiddleCutter } from 'src/utils';
+
 import './Transaction.scss';
 
 interface IFilteredContactListProps {
@@ -28,10 +30,7 @@ export const FilteredContactList: React.FC<IFilteredContactListProps> = ({
             <span className='balances-contact-address'>
               {window?.innerWidth > WIDTH_BP
                 ? address
-                : address?.replace(
-                    address?.slice(14, address?.length - 4),
-                    '...',
-                  )}
+                : addressMiddleCutter(address, 14, 4)}
             </span>
           </div>
           <div className='balances-contact-right'></div>

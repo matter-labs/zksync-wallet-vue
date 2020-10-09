@@ -59,6 +59,10 @@ export const addressMiddleCutter = (
   firstNumberOfLetters: number,
   secondNumberOfLetters: number,
 ) => {
+  if (typeof address !== 'string') return;
+  if (address.length - firstNumberOfLetters - secondNumberOfLetters <= 0) {
+    return address;
+  }
   return `${address?.substring(0, firstNumberOfLetters)}...${address?.substring(
     address.length - secondNumberOfLetters,
   )}`;

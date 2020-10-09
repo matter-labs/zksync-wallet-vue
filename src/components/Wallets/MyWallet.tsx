@@ -13,6 +13,8 @@ import { useStore } from 'src/store/context';
 
 import { IMyWalletProps } from './Types';
 
+import { addressMiddleCutter } from 'src/utils';
+
 import { WIDTH_BP } from 'constants/magicNumbers';
 
 import './Wallets.scss';
@@ -153,14 +155,8 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
             <p>
               {window?.innerWidth > WIDTH_BP
                 ? zkWallet?.address()
-                : zkWallet
-                    ?.address()
-                    .replace(
-                      zkWallet
-                        ?.address()
-                        .slice(14, zkWallet?.address().length - 4),
-                      '...',
-                    )}
+                : zkWallet?.address() &&
+                  addressMiddleCutter(zkWallet?.address() as string, 14, 4)}
             </p>
           </div>
           <button
