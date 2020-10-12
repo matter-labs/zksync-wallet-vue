@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore, storeContext } from 'src/store/context';
 import { useHistory } from 'react-router-dom';
@@ -324,8 +324,12 @@ const ExternalWalletLogin = observer(() => {
   const { createWallet } = useWalletInit();
   const logout = useLogout();
   const [conditionError, setConditionError] = useState(false);
+  const isAddressValid = ADDRESS_VALIDATION['eth'].test(
+    ExternaWalletStore.externalWalletAddress,
+  );
 
   const mainBtnCb = () => {
+    if (!isAddressValid) return setConditionError(true);
     if (!ExternaWalletStore.externalWalletInitializing) {
       ExternaWalletStore.externalWalletInitializing = true;
       createWallet();
@@ -334,15 +338,23 @@ const ExternalWalletLogin = observer(() => {
     }
   };
 
-  const isAddressValid = ADDRESS_VALIDATION['eth'].test(
-    ExternaWalletStore.externalWalletAddress,
-  );
   const connectBtnDisabled =
     conditionError || !ExternaWalletStore.externalWalletAddress;
 
   useEffect(() => {
     setConditionError(false);
   }, [ExternaWalletStore.externalWalletAddress]);
+
+  const onKeyUp = useCallback(e => {
+    e.key === 'Enter' && mainBtnCb();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('keyup', onKeyUp);
+    return () => {
+      window.removeEventListener('keyup', onKeyUp);
+    };
+  }, [onKeyUp]);
 
   return (
     <>
@@ -375,7 +387,7 @@ const ExternalWalletLogin = observer(() => {
       <button
         className={`btn submit-button margin ${connectBtnDisabled &&
           'disabled'}`}
-        onClick={() => (isAddressValid ? mainBtnCb() : setConditionError(true))}
+        onClick={mainBtnCb}
       >
         {ExternaWalletStore.externalWalletInitializing ? 'Cancel' : 'Connect'}
       </button>
