@@ -76,7 +76,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     isExecuted,
     isInput,
     onChangeAddress,
-    onChangeAmount,
     price,
     setHash,
     setExecuted,
@@ -94,15 +93,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
       ethId,
       hint,
       searchContacts,
-      syncProvider,
-      syncWallet,
-      tokens,
       unlocked,
       walletAddress,
       zkBalances,
       zkBalancesLoaded,
       zkWallet,
-      accountState,
     } = store;
 
     const cancelable = useCancelable();
@@ -203,7 +198,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             balance: +handleFormatToken(
               store.zkWallet,
               tokens[key].symbol,
-              +balance ? +balance : 0,
+              balance ? balance : 0,
             ),
             symbol: tokens[key].symbol,
           };
@@ -287,7 +282,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [addressValue]);
 
     const feeBasedOntype = store.fastWithdrawal
-      ? store.fastFee
+      ? TransactionStore.fastFee
       : TransactionStore.fee[TransactionStore.symbolName];
 
     const validateNumbers = useCallback(
@@ -325,8 +320,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 e.toString(),
               );
 
-        if (maxBigValue && amountBigNumber && feeBasedOntype) {
-        }
         if (
           store.zkWallet &&
           feeBasedOntype &&
@@ -389,32 +382,68 @@ const Transaction: React.FC<ITransactionProps> = observer(
           TransactionStore.conditionError =
             'Not enough ETH to perform a transaction on mainnet';
         }
-        if (INPUT_VALIDATION.digits.test(e) && amountBigNumber && maxBigValue) {
-          title === 'Deposit'
-            ? onChangeAmount(
-                +amountBigNumber + +TransactionStore.gas > +maxBigValue
-                  ? +amountBigNumber
-                  : +amountBigNumber,
-              )
-            : onChangeAmount(
-                +amountBigNumber + +feeBasedOntype >= +maxBigValue
-                  ? +amountBigNumber
-                  : +amountBigNumber,
+        if (
+          INPUT_VALIDATION.digits.test(e) &&
+          TransactionStore.maxValue &&
+          TransactionStore.amountValue
+        ) {
+          if (!store.zkWallet) return;
+          if (title === 'Deposit') {
+            const formattedGas = handleFormatToken(
+              store.zkWallet,
+              TransactionStore.symbolName,
+              TransactionStore.gas,
+            );
+
+            if (TransactionStore.symbolName === 'ETH') {
+              const amount =
+                TransactionStore.amountValue + +formattedGas >=
+                TransactionStore.maxValue
+                  ? TransactionStore.amountValue - +formattedGas
+                  : TransactionStore.amountValue;
+              TransactionStore.amountBigValue = store.zkWallet.provider.tokenSet.parseToken(
+                TransactionStore.symbolName,
+                amount.toString(),
               );
+            } else {
+              const amount = TransactionStore.amountValue;
+              TransactionStore.amountBigValue = store.zkWallet.provider.tokenSet.parseToken(
+                TransactionStore.symbolName,
+                amount.toString(),
+              );
+            }
+          } else {
+            const formattedFee = handleFormatToken(
+              store.zkWallet,
+              TransactionStore.symbolName,
+              feeBasedOntype,
+            );
+            const amount =
+              TransactionStore.amountValue + +formattedFee >=
+              TransactionStore.maxValue
+                ? TransactionStore.amountValue - +formattedFee
+                : TransactionStore.amountValue;
+            TransactionStore.amountBigValue = store.zkWallet.provider.tokenSet.parseToken(
+              TransactionStore.symbolName,
+              amount.toString(),
+            );
+          }
         }
       },
       [
         TransactionStore.fee,
         TransactionStore.gas,
-        store.fastFee,
+        TransactionStore.amountValue,
+        TransactionStore.amountBigValue,
+        TransactionStore.fastFee,
         feeBasedOntype,
         store.fastWithdrawal,
         TransactionStore.symbolName,
         store.ethBalances,
         store.zkWallet,
         TransactionStore.maxValue,
-        onChangeAmount,
         setInputValue,
+        TransactionStore.conditionError,
         title,
       ],
     );
@@ -448,7 +477,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           return store.zkWallet?.provider
             .getTransactionFee(feeType, store.zkWallet?.address(), symbol)
             .then(res => {
-              obj[symbol] = +res.totalFee;
+              obj[symbol] = res.totalFee;
             });
         }),
       ).then(() => {
@@ -493,7 +522,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         if (title === 'Withdraw') {
           store.zkWallet?.provider
             .getTransactionFee('FastWithdraw', addressProp, symbolProp)
-            .then(res => (store.fastFee = res.totalFee));
+            .then(res => (TransactionStore.fastFee = res.totalFee));
         }
 
         if (!store.unlocked) {
@@ -1134,7 +1163,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               key,
             ).then(res => {
               if (+res > 0) {
-                obj[key] = +res;
+                obj[key] = res;
               }
             });
           }),
@@ -1281,6 +1310,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             TransactionStore.conditionError = '';
             handleInputWidth(1);
             validateNumbers('');
+            TransactionStore.amountValue = 0;
             TransactionStore.pureAmountInputValue = '';
             handleFee(inputValue, symbol);
             body?.classList.remove('fixed-b');
@@ -1370,7 +1400,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             +handleFormatToken(
               store.zkWallet as Wallet,
               TransactionStore.symbolName,
-              +feeArg,
+              feeArg,
             ) >=
           +TransactionStore.maxValue
         );
@@ -1392,7 +1422,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             +handleFormatToken(
               store.zkWallet as Wallet,
               TransactionStore.symbolName,
-              +store.fastFee,
+              TransactionStore.fastFee,
             )
           );
         }
@@ -1402,7 +1432,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             +handleFormatToken(
               store.zkWallet as Wallet,
               TransactionStore.symbolName,
-              +TransactionStore.fee[TransactionStore.symbolName],
+              TransactionStore.fee[TransactionStore.symbolName],
             )
           );
         } else {
@@ -1417,6 +1447,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           return (TransactionStore.conditionError =
             'Not enough funds: amount + fee exceeds your balance');
         }
+        TransactionStore.amountValue = valueHandler();
         validateNumbers(valueHandler()?.toString());
         setAmount(valueHandler() as number);
         handleInputWidth(valueHandler() as number);
@@ -1440,7 +1471,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 handleFormatToken(
                   store.zkWallet,
                   TransactionStore.symbolName,
-                  +TransactionStore.fee[TransactionStore.symbolName],
+                  TransactionStore.fee[TransactionStore.symbolName],
                 )} ${
                 TransactionStore.symbolName
               }), processing time ${timeStempString(withdrawalTime)}`}</p>
@@ -1450,15 +1481,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <div
               className='withdraw-type-block'
               onClick={() => {
-                checkboxCb(store.fastFee);
+                checkboxCb(TransactionStore.fastFee);
               }}
             >
               <CheckBox checked={store.fastWithdrawal} />
-              <p className='checkbox-text'>{`Fast (fee ${+store.fastFee &&
+              <p className='checkbox-text'>{`Fast (fee ${+TransactionStore.fastFee &&
                 handleFormatToken(
                   store.zkWallet,
                   TransactionStore.symbolName,
-                  +store.fastFee,
+                  TransactionStore.fastFee,
                 )} ${
                 TransactionStore.symbolName
               }), processing time ${timeStempString(fastWithdrawalTime)}`}</p>
@@ -1683,7 +1714,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 handleFormatToken(
                   store.zkWallet,
                   TransactionStore.symbolName,
-                  +feeBasedOntype,
+                  feeBasedOntype,
                 )
               }
               price={
@@ -1739,7 +1770,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                       handleFormatToken(
                         store.zkWallet,
                         TransactionStore.symbolName,
-                        +TransactionStore.fee[TransactionStore.symbolName],
+                        TransactionStore.fee[TransactionStore.symbolName],
                       )
                     }
                     price={
@@ -1942,6 +1973,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 autoFocus={title === 'Transfer' ? true : false}
                                 onChange={e => {
                                   if (!TransactionStore.symbolName) return;
+                                  TransactionStore.amountValue = +e.target
+                                    .value;
                                   validateNumbers(e.target.value);
                                   setAmount(+e.target.value);
                                   handleInputWidth(+e.target.value);
@@ -2007,6 +2040,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                     className='all-balance btn-tr'
                                     onClick={() => {
                                       if (store.zkWallet) {
+                                        TransactionStore.amountValue =
+                                          TransactionStore.maxValue;
                                         validateNumbers(
                                           TransactionStore.maxValue.toString(),
                                           true,
@@ -2219,7 +2254,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 handleFormatToken(
                                   store.zkWallet,
                                   TransactionStore.symbolName,
-                                  +feeBasedOntype,
+                                  feeBasedOntype,
                                 )}
                               {store.zkWallet && feeBasedOntype && (
                                 <span>
@@ -2232,7 +2267,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                       +handleFormatToken(
                                         store.zkWallet,
                                         TransactionStore.symbolName,
-                                        +feeBasedOntype,
+                                        feeBasedOntype,
                                       )
                                     ).toFixed(2)
                                   }

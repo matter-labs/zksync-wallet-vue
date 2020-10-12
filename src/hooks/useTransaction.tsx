@@ -1,13 +1,11 @@
 import { useCallback, useState } from 'react';
 import { ContractTransaction, ethers, utils } from 'ethers';
 import { PriorityOperationReceipt } from 'zksync/build/types';
-import JSBI from 'jsbi';
 
 import { IEthBalance } from 'types/Common';
 
 import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { DEFAULT_ERROR } from 'constants/errors';
-import { ZK_FEE_MULTIPLIER } from 'constants/magicNumbers';
 import { useCancelable } from 'hooks/useCancelable';
 import { useStore } from 'src/store/context';
 import { LINKS_CONFIG } from 'src/config';
@@ -37,7 +35,6 @@ export const useTransaction = () => {
   const [addressValue, setAddressValue] = useState<string>(
     walletAddress.address ? walletAddress.address : '',
   );
-  const [amountValue, setAmountValue] = useState<any>(0);
   const [hash, setHash] = useState<ContractTransaction | string | undefined>();
   const [isExecuted, setExecuted] = useState<boolean>(false);
   const [symbol, setSymbol] = useState<string>('');
@@ -88,7 +85,7 @@ export const useTransaction = () => {
               balance: +handleFormatToken(
                 zkWallet,
                 tokens[key].symbol,
-                +zkBalance[key] ? +zkBalance[key] : 0,
+                zkBalance[key] ? zkBalance[key] : 0,
               ),
               symbol: tokens[key].symbol,
             };
@@ -103,7 +100,7 @@ export const useTransaction = () => {
                 ? (store.error = `${err.name}: ${err.message}`)
                 : (store.error = DEFAULT_ERROR);
             });
-          setAmountValue(0);
+          TransactionStore.amountBigValue = 0;
         }
 
         if (receipt.executed) {
@@ -117,7 +114,7 @@ export const useTransaction = () => {
       }
     },
     [
-      setAmountValue,
+      TransactionStore.amountValue,
       TransactionStore.isLoading,
       tokens,
       zkWallet,
@@ -147,6 +144,7 @@ export const useTransaction = () => {
             token,
             handleMax[0]?.balance.toString(),
           );
+
           const executeDeposit = async gas => {
             try {
               const depositPriorityOperation = await cancelable(
@@ -157,15 +155,7 @@ export const useTransaction = () => {
                       amount: ethers.BigNumber.from(
                         (
                           await zkSync.closestPackableTransactionAmount(
-                            JSBI.BigInt(
-                              token ===
-                                '0x0000000000000000000000000000000000000000' &&
-                                estimateGas &&
-                                maxBigValue &&
-                                amountValue === +maxBigValue
-                                ? amountValue - +estimateGas
-                                : amountValue,
-                            )?.toString(),
+                            TransactionStore.amountBigValue,
                           )
                         ).toString(),
                       ),
@@ -177,15 +167,7 @@ export const useTransaction = () => {
                       amount: ethers.BigNumber.from(
                         (
                           await zkSync.closestPackableTransactionAmount(
-                            JSBI.BigInt(
-                              token ===
-                                '0x0000000000000000000000000000000000000000' &&
-                                estimateGas &&
-                                maxBigValue &&
-                                amountValue === +maxBigValue
-                                ? amountValue - +estimateGas
-                                : amountValue,
-                            )?.toString(),
+                            TransactionStore.amountBigValue,
                           )
                         ).toString(),
                       ),
@@ -195,7 +177,7 @@ export const useTransaction = () => {
               store.hint = `Waiting for transaction to be mined. \n ${+handleFormatToken(
                 zkWallet,
                 token,
-                +amountValue,
+                TransactionStore.amountBigValue,
               )}  \n${hash.hash}`;
               setHash(hash);
               await depositPriorityOperation
@@ -206,7 +188,7 @@ export const useTransaction = () => {
                   } confirmations. Use the link below to track the progress. \n ${+handleFormatToken(
                     zkWallet,
                     token,
-                    +amountValue,
+                    TransactionStore.amountBigValue,
                   )}  \n${hash.hash}`;
                   setExecuted(true);
                 });
@@ -259,8 +241,10 @@ export const useTransaction = () => {
       }
     },
     [
+      TransactionStore.amountBigValue,
+      TransactionStore.amountValue,
+      TransactionStore.symbolName,
       symbol,
-      amountValue,
       store.hint,
       history,
       setHash,
@@ -302,11 +286,7 @@ export const useTransaction = () => {
             amount: ethers.BigNumber.from(
               (
                 await zkSync.closestPackableTransactionAmount(
-                  JSBI.BigInt(
-                    maxBigValue && amountValue === +maxBigValue
-                      ? amountValue - +fee
-                      : amountValue,
-                  )?.toString(),
+                  TransactionStore.amountBigValue,
                 )
               ).toString(),
             ),
@@ -317,7 +297,7 @@ export const useTransaction = () => {
           store.hint = ` \n ${+handleFormatToken(
             zkWallet,
             symbol,
-            +amountValue,
+            TransactionStore.amountBigValue,
           )}. \n${hash}`;
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
@@ -344,8 +324,8 @@ export const useTransaction = () => {
       }
     },
     [
+      TransactionStore.amountBigValue,
       addressValue,
-      amountValue,
       history,
       store.verifyToken,
       store.error,
@@ -390,11 +370,7 @@ export const useTransaction = () => {
               amount: ethers.BigNumber.from(
                 (
                   await zkSync.closestPackableTransactionAmount(
-                    JSBI.BigInt(
-                      maxBigValue && amountValue === +maxBigValue
-                        ? amountValue - +fee
-                        : amountValue,
-                    )?.toString(),
+                    TransactionStore.amountBigValue,
                   )
                 ).toString(),
               ),
@@ -409,13 +385,13 @@ export const useTransaction = () => {
           store.hint = `Waiting for the transaction to be mined.. \n ${+handleFormatToken(
             zkWallet,
             symbol,
-            +amountValue,
+            TransactionStore.amountBigValue,
           )} \n${hash}`;
           if (!!withdrawTransaction) {
             store.hint = `Your withdrawal will be processed shortly. \n ${+handleFormatToken(
               zkWallet,
               symbol,
-              +amountValue,
+              TransactionStore.amountBigValue,
             )} \n${hash}`;
           }
           const receipt = await withdrawTransaction.awaitReceipt();
@@ -443,8 +419,8 @@ export const useTransaction = () => {
       }
     },
     [
+      TransactionStore.amountBigValue,
       addressValue,
-      amountValue,
       history,
       store.error,
       setHash,
@@ -459,13 +435,11 @@ export const useTransaction = () => {
 
   return {
     addressValue,
-    amountValue,
     deposit,
     hash,
     isExecuted,
     maxValueProp,
     setAddressValue,
-    setAmountValue,
     setExecuted,
     setHash,
     setMaxValueProp,

@@ -195,16 +195,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       store.normalBg = true;
       store.isAccessModalOpen = true;
       store.hint = 'Connecting to ';
-      if (store.isMetamaskWallet || store.isWalletConnect) {
-        if (!!AccountStore.accountChanging) return;
+      const wCQRScanned = localStorage.getItem('walletconnect');
+      if (!!AccountStore.accountChanging) return;
+      if (store.isMetamaskWallet) {
+        createWallet();
+      }
+      if (store.isWalletConnect && (!store.isPrimaryPage || wCQRScanned)) {
         createWallet();
       }
       if (store.isPortisWallet) {
         portisConnector(store, connect, getSigner);
       }
-    }
-    if (!store.isPrimaryPage && !savedWalletName) {
-      handleLogout(false, '');
     }
     if (!store.isPrimaryPage && !savedWalletName) {
       handleLogout(false, '');

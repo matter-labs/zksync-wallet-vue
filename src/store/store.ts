@@ -34,7 +34,6 @@ export class Store {
   @observable сhangePubKeyFee = 0;
   @observable depositModal = false;
   @observable darkMode = false;
-  @observable fastFee: ethers.BigNumberish = 0;
   @observable fastWithdrawal = false;
   @observable withdrawalProcessingTime = 0;
   @observable fastWithdrawalProcessingTime = 0;

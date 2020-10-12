@@ -87,8 +87,8 @@ export const Transaction: FC<Tx> = props => {
                           ? (priority_op?.token as string)
                           : (token as string),
                         type === 'Deposit' && priority_op
-                          ? +priority_op.amount
-                          : +amount,
+                          ? priority_op.amount
+                          : amount,
                       ),
                     )
                   : 'Unlocking transaction')}

@@ -1,9 +1,9 @@
 import ethers, {
+  Bytes,
   Contract,
   getDefaultProvider as getDefaultProviderEthers,
 } from 'ethers';
 import { Provider, Wallet } from 'zksync';
-import JSBI from 'jsbi';
 
 import { IEthBalance } from './types/Common';
 import { DEFAULT_ERROR } from './constants/errors';
@@ -11,6 +11,7 @@ import { Tokens, AccountState, TokenLike } from 'zksync/build/types';
 import { LINKS_CONFIG } from 'src/config';
 import { Store } from './store/store';
 import { useCallback } from 'react';
+import { type } from 'os';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider: any = window['ethereum'];
@@ -213,13 +214,13 @@ export const mintTestERC20Tokens = async (
 export const handleFormatToken = (
   wallet: Wallet,
   symbol: string,
-  amount: number,
+  amount: ethers.BigNumberish,
 ) => {
-  const safeAmount = JSBI.BigInt(+amount).toString();
-  return wallet?.provider?.tokenSet.formatToken(symbol, safeAmount);
+  if (typeof amount === 'number') {
+    return wallet?.provider?.tokenSet.formatToken(symbol, amount.toString());
+  }
+  return wallet?.provider?.tokenSet.formatToken(symbol, amount);
 };
-
-export const handleSafeAmount = amount => JSBI.BigInt(amount).toString();
 
 // export const handleExponentialNumbers = n => {
 //   if (!n.toString().match(/[eE]/)) return n;

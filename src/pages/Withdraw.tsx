@@ -11,11 +11,9 @@ export const Withdraw: React.FC = observer(
   (): JSX.Element => {
     const {
       addressValue,
-      amountValue,
       hash,
       isExecuted,
       setAddressValue,
-      setAmountValue,
       setHash,
       setExecuted,
       setSymbol,
@@ -31,13 +29,11 @@ export const Withdraw: React.FC = observer(
     return (
       <Transaction
         addressValue={addressValue}
-        amountValue={amountValue}
         balances={zkBalances}
         hash={hash}
         isExecuted={isExecuted}
         isInput={true}
         onChangeAddress={(e: string) => setAddressValue(e)}
-        onChangeAmount={setAmountValue}
         price={price}
         setHash={setHash}
         setExecuted={setExecuted}

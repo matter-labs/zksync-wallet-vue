@@ -72,7 +72,7 @@ const VerifiedBal: React.FC<BalProps> = observer(
                           store.zkWallet,
                           symbol,
                           store.awaitedTokens[symbol]?.amount
-                            ? +store.awaitedTokens[symbol]?.amount
+                            ? store.awaitedTokens[symbol]?.amount
                             : 0,
                         ),
                       )}`}
@@ -88,7 +88,7 @@ const VerifiedBal: React.FC<BalProps> = observer(
                               store.zkWallet,
                               symbol,
                               store.awaitedTokens[symbol]?.amount
-                                ? +store.awaitedTokens[symbol]?.amount
+                                ? store.awaitedTokens[symbol]?.amount
                                 : 0,
                             )) * +(price && !!price[symbol] ? price[symbol] : 0)
                         ).toFixed(2)})`}
@@ -152,7 +152,7 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                           store.zkWallet,
                           symbol,
                           store.awaitedTokens[symbol]?.amount
-                            ? +store.awaitedTokens[symbol]?.amount
+                            ? store.awaitedTokens[symbol]?.amount
                             : 0,
                         ),
                       )}`}
@@ -168,7 +168,7 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                               store.zkWallet,
                               symbol,
                               store.awaitedTokens[symbol]?.amount
-                                ? +store.awaitedTokens[symbol]?.amount
+                                ? store.awaitedTokens[symbol]?.amount
                                 : 0,
                             )) * +(price && !!price[symbol] ? price[symbol] : 0)
                         ).toFixed(2)})`}
@@ -266,7 +266,7 @@ const Account: React.FC = observer(() => {
               balance: +handleFormatToken(
                 zkWallet,
                 tokens[key].symbol,
-                +zkBalance[key] ? +zkBalance[key] : 0,
+                zkBalance[key] ? zkBalance[key] : 0,
               ),
               symbol: tokens[key].symbol,
               id: tokens[key].id,

@@ -1,10 +1,6 @@
 import { Store } from 'src/store/store';
 import { DEFAULT_ERROR } from 'constants/errors';
-import {
-  handleFormatToken,
-  sortBalancesById,
-  handleSafeAmount,
-} from 'src/utils';
+import { handleFormatToken, sortBalancesById } from 'src/utils';
 
 export const getAccState = async (store: Store) => {
   const { tokens, zkWallet } = store;
@@ -22,7 +18,7 @@ export const getAccState = async (store: Store) => {
         balance: +handleFormatToken(
           zkWallet,
           tokens[key].symbol,
-          zkBalance[key] ? +zkBalance[key] : 0,
+          zkBalance[key] ? zkBalance[key] : 0,
         ),
         symbol: tokens[key].symbol,
         id: tokens[key].id,
@@ -121,9 +117,7 @@ export const handleUnlockNew = async (store: Store, withLoading: boolean) => {
         await onchainAuthTransaction?.wait();
         changePubkey = await store.zkWallet?.setSigningKey({
           feeToken: TransactionStore.symbolName,
-          fee: handleSafeAmount(
-            TransactionStore.changePubKeyFees[TransactionStore.symbolName],
-          ),
+          fee: TransactionStore.changePubKeyFees[TransactionStore.symbolName],
           nonce: 'committed',
           onchainAuth: true,
         });
@@ -131,9 +125,7 @@ export const handleUnlockNew = async (store: Store, withLoading: boolean) => {
       if (!!AccountStore.isOnchainAuthSigningKeySet && !isSigningKeySet) {
         changePubkey = await store.zkWallet?.setSigningKey({
           feeToken: TransactionStore.symbolName,
-          fee: handleSafeAmount(
-            TransactionStore.changePubKeyFees[TransactionStore.symbolName],
-          ),
+          fee: TransactionStore.changePubKeyFees[TransactionStore.symbolName],
           nonce: 'committed',
           onchainAuth: true,
         });
@@ -142,9 +134,7 @@ export const handleUnlockNew = async (store: Store, withLoading: boolean) => {
       if (!AccountStore.isOnchainAuthSigningKeySet) {
         changePubkey = await store.zkWallet?.setSigningKey({
           feeToken: TransactionStore.symbolName,
-          fee: handleSafeAmount(
-            TransactionStore.changePubKeyFees[TransactionStore.symbolName],
-          ),
+          fee: TransactionStore.changePubKeyFees[TransactionStore.symbolName],
         });
       }
     }

@@ -13,12 +13,10 @@ export const Deposit: React.FC = observer(
   (): JSX.Element => {
     const {
       addressValue,
-      amountValue,
       deposit,
       hash,
       isExecuted,
       setAddressValue,
-      setAmountValue,
       setHash,
       setExecuted,
       setSymbol,
@@ -33,13 +31,11 @@ export const Deposit: React.FC = observer(
     return (
       <Transaction
         addressValue={addressValue}
-        amountValue={amountValue}
         balances={ethBalances}
         hash={hash}
         isExecuted={isExecuted}
         isInput={false}
         onChangeAddress={(e: string) => setAddressValue(e)}
-        onChangeAmount={setAmountValue}
         price={price}
         setHash={setHash}
         setExecuted={setExecuted}

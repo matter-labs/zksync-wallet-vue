@@ -12,11 +12,9 @@ export const Send: React.FC = observer(
   (): JSX.Element => {
     const {
       addressValue,
-      amountValue,
       hash,
       isExecuted,
       setAddressValue,
-      setAmountValue,
       setExecuted,
       setHash,
       setSymbol,
@@ -32,13 +30,11 @@ export const Send: React.FC = observer(
     return (
       <Transaction
         addressValue={addressValue}
-        amountValue={amountValue}
         balances={zkBalances}
         hash={hash}
         isExecuted={isExecuted}
         isInput={true}
         onChangeAddress={(e: string) => setAddressValue(e)}
-        onChangeAmount={setAmountValue}
         propsMaxValue={undefined}
         propsSymbolName={undefined}
         propsToken={undefined}
