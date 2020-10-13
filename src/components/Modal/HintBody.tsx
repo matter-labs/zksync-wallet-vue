@@ -156,14 +156,14 @@ const WalletConnectLater = () => (
   </p>
 );
 
-const UnlinkCoinBase = () => {
+const UnlinkCoinBase = observer(() => {
   const store = useStore();
 
   return (
     <>
       <p>
         {
-          'If you are meeting some troubles or want to change your coinbase wallet you can unlink the current account and scan QR code again.'
+          'If you are meeting some troubles or want to change your Coinbase wallet you can unlink the current account and scan QR code again.'
         }
       </p>
       <button
@@ -174,9 +174,63 @@ const UnlinkCoinBase = () => {
       </button>
     </>
   );
-};
+});
 
-const UnlinkWalletConnect = () => {
+const UnlinkPortis = observer(() => {
+  const store = useStore();
+  const handleLogout = useLogout();
+
+  return (
+    <>
+      <p>
+        {
+          'If you are meeting some troubles or want to change your Portis wallet you can unlink the current account and scan QR code again.'
+        }
+      </p>
+      <button
+        onClick={() => {
+          store.portisObject.logout().then(() => {
+            store.modalSpecifier = '';
+            store.modalHintMessage = '';
+            store.isAccessModalOpen = false;
+            store.walletName = '';
+          });
+        }}
+        className='btn btn-cancel btn-tr center'
+      >
+        {'Unlink account'}
+      </button>
+    </>
+  );
+});
+
+const UnlinkFortmatic = observer(() => {
+  const store = useStore();
+
+  return (
+    <>
+      <p>
+        {
+          'If you are meeting some troubles or want to change your Fortmatic wallet you can unlink the current account and scan QR code again.'
+        }
+      </p>
+      <button
+        onClick={() => {
+          store.fortmaticObject?.user?.logout();
+          store.modalSpecifier = '';
+          store.modalHintMessage = '';
+          store.isAccessModalOpen = false;
+          store.walletName = '';
+        }}
+        className='btn btn-cancel btn-tr center'
+      >
+        {'Unlink account'}
+      </button>
+    </>
+  );
+});
+
+const UnlinkWalletConnect = observer(() => {
   const store = useStore();
   const handleLogout = useLogout();
 
@@ -206,7 +260,7 @@ const UnlinkWalletConnect = () => {
       </button>
     </>
   );
-};
+});
 
 const MakeTwitToWithdraw = observer(() => {
   const store = useStore();
@@ -416,8 +470,10 @@ export const HintBody: React.FC = observer(
         {modalHintMessage === 'TroubleSeeingAToken' && <TroubleSeeingAToken />}
         {modalHintMessage === 'MLTTBlockModal' && <MLTTBlockModal />}
         {modalHintMessage === 'MLTTonMainnet' && <MLTTonMainnet />}
-        {modalHintMessage === 'UnlinkCoinBase' && <UnlinkCoinBase />}
+        {modalHintMessage === 'UnlinkCoinbase Wallet' && <UnlinkCoinBase />}
         {modalHintMessage === 'UnlinkWalletConnect' && <UnlinkWalletConnect />}
+        {modalHintMessage === 'UnlinkFortmatic' && <UnlinkFortmatic />}
+        {modalHintMessage === 'UnlinkPortis' && <UnlinkPortis />}
         {modalHintMessage === 'ExternalWalletLogin' && <ExternalWalletLogin />}
       </div>
     );

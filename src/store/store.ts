@@ -40,6 +40,7 @@ export class Store {
   @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
   @observable error = '';
+  @observable fortmaticObject: any = {};
   @observable isAccountBalanceNotEmpty = false;
   @observable isAccountBalanceLoading = true;
   @observable newContactName = '';
@@ -62,6 +63,7 @@ export class Store {
   @observable propsMaxValue: any;
   @observable propsSymbolName: any;
   @observable propsToken: any;
+  @observable portisObject: any = {};
   @observable searchBalances: IEthBalance[] = [];
   // TODO: add explicit type
   @observable searchContacts?: IContacts[] = [];

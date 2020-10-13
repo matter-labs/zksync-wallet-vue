@@ -47,18 +47,15 @@ const useWalletInit = () => {
             }
             if (store.isFortmaticWallet) {
               if (store.hint === 'Connected to ') {
-                store.zkWalletInitializing = true;
+                store.zkWalletInitializing = false;
               }
               if (!!store.provider && store.hint !== 'Connected to ') {
                 store.zkWalletInitializing = false;
                 store.hint = 'Connected to ';
               }
             }
-            if (store.isWalletConnect || store.isPortisWallet) {
+            if (store.isWalletConnect) {
               store.hint = 'Connected to ';
-              if (!store.isWalletConnect) {
-                store.zkWalletInitializing = false;
-              }
             }
             if (store.isWalletConnect && !!prevProviderState) {
               store.hint = 'Connecting to ';

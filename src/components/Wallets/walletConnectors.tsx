@@ -7,6 +7,8 @@ import { Store } from 'src/store/store';
 
 import { LINKS_CONFIG, INFURA_ID } from 'src/config';
 
+import { COINBASE_LOCALSTORAGE_KEYS } from 'src/constants/Wallets';
+
 export const browserWalletConnector = async (store: Store, connect) => {
   const browserProvider: any = window?.['ethereum'];
   store.provider = browserProvider;
@@ -26,27 +28,46 @@ export const browserWalletConnector = async (store: Store, connect) => {
   }
 };
 
-export const portisConnector = async (store, connect, getSigner) => {
+export const portisConnector = async (
+  store: Store,
+  connect,
+  getSigner,
+  withConnect?,
+) => {
   const Portis = (await import('@portis/web3')).default;
+  store.zkWalletInitializing = true;
   const portis = new Portis(
     process.env.REACT_APP_PORTIS || '',
     LINKS_CONFIG.network,
   );
+  store.portisObject = portis;
   const portisProvider = portis.provider;
   store.provider = portisProvider;
   const signer = getSigner(portisProvider);
-  connect(portisProvider, signer?.getAddress.bind(signer));
+  if (!!withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
 };
 
-export const fortmaticConnector = (store, connect, getSigner) => {
+export const fortmaticConnector = (
+  store: Store,
+  connect,
+  getSigner,
+  withConnect?,
+) => {
   const fm = new Fortmatic(process.env.REACT_APP_FORTMATIC);
+  store.fortmaticObject = fm;
   const fmProvider = fm.getProvider();
   store.provider = fmProvider;
+  fm?.user?.isLoggedIn().then(res => {
+    store.AccountStore.isLoggedIn = res;
+    if (res) {
+      store.hint = 'Connected to ';
+    }
+  });
   const signer = getSigner(fmProvider);
-  connect(fmProvider, signer?.getAddress.bind(signer));
+  if (!!withConnect) connect(fmProvider, signer?.getAddress.bind(signer));
 };
 
-export const walletConnectConnector = (store, connect) => {
+export const walletConnectConnector = (store: Store, connect) => {
   const wcProvider = new WalletConnectProvider({
     infuraId: process.env.REACT_APP_WALLET_CONNECT,
   });
@@ -73,6 +94,13 @@ export const externalAccountConnector = (store: Store) => {
 
 export const coinBaseConnector = (store: Store, connect?) => {
   if (!store.isCoinbaseWallet) return;
+  const logged = localStorage.getItem(COINBASE_LOCALSTORAGE_KEYS.addresses);
+  if (!!logged) {
+    store.zkWalletInitializing = false;
+    store.hint = 'Connected to ';
+  } else {
+    store.zkWalletInitializing = true;
+  }
   if (store.isMobileDevice && connect) {
     browserWalletConnector(store, connect);
   } else {
@@ -85,6 +113,7 @@ export const coinBaseConnector = (store: Store, connect?) => {
     });
     walletLink.activate().then(res => {
       store.zkWalletInitializing = false;
+      store.hint = 'Connected to ';
       store.provider = res.provider;
       store.ethId = res.account as string;
     });

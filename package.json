@@ -9,7 +9,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@fortawesome/react-fontawesome": "^0.1.9",
     "@lottiefiles/lottie-player": "^0.5.1",
-    "@portis/web3": "^2.0.0-beta.57",
+    "@portis/web3": "^2.0.0-beta.59",
     "@types/yargs": "^15.0.4",
     "@walletconnect/web3-provider": "^1.0.11",
     "classnames": "^2.2.6",

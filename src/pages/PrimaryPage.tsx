@@ -16,6 +16,7 @@ import { LINKS_CONFIG } from 'src/config';
 import { BackButton } from 'src/components/Common/BackButton';
 
 import {
+  fortmaticConnector,
   portisConnector,
   walletConnectConnector,
 } from 'src/components/Wallets/walletConnectors';

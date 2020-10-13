@@ -29,8 +29,8 @@ import {
   coinBaseConnector,
   browserWalletConnector,
   portisConnector,
+  fortmaticConnector,
 } from 'src/components/Wallets/walletConnectors';
-import { AccountStore } from './store/accountStore';
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
@@ -225,6 +225,16 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       ? (browserWalletConnector(store, connect),
         (store.zkWalletInitializing = false))
       : coinBaseConnector(store, connect);
+  }, [store, store.walletName]);
+
+  useEffect(() => {
+    if (!store.isFortmaticWallet && store.isPrimaryPage) return;
+    fortmaticConnector(store, connect, getSigner, true);
+  }, [store, store.walletName]);
+
+  useEffect(() => {
+    if (!store.isPortisWallet && store.isPrimaryPage) return;
+    portisConnector(store, connect, getSigner, true);
   }, [store, store.walletName]);
 
   // Listen for network change
@@ -431,7 +441,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
             {store.isMetamaskWallet ||
             store.isWalletConnect ||
             store.isPortisWallet ||
-            store.isFortmaticWallet
+            store.isFortmaticWallet ||
+            store.isCoinbaseWallet
               ? store.hint
               : 'Connecting to '}
             {walletName}
@@ -458,9 +469,10 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
               {'Login'}
             </button>
           )}
-          {(store.isCoinbaseWallet || store.isWalletConnect) && (
-            <UnlinkAcccountBtn />
-          )}
+          {(store.isCoinbaseWallet ||
+            store.isWalletConnect ||
+            store.isFortmaticWallet ||
+            store.isPortisWallet) && <UnlinkAcccountBtn />}
           {(!store.isBurnerWallet ||
             (store.isBurnerWallet && !store.zkWalletInitializing)) && (
             <button
