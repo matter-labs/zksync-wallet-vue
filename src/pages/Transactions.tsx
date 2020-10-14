@@ -98,7 +98,7 @@ const Transactions: React.FC = observer(() => {
         )}
         filterPredicate={filterPredicate}
       />
-      {isLoadingMore && <Spinner />}
+      <div className='spinner-wrapper'>{isLoadingMore && <Spinner />}</div>
     </>
   );
 });

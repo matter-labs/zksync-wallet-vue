@@ -12,6 +12,10 @@
   text-align: center;
   background: var(--transparent);
 }
+
+.spinner-wrapper {
+  min-height: 32px;
+}
     
 .spinner {
   position: relative;
