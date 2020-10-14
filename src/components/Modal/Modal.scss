@@ -47,8 +47,9 @@
 .modal {
   position: absolute;
   z-index: 3000;
-  width: 100%;
-  max-width: 100vw;
+  width: 90vw;
+  max-width: 505px;
+  margin: 0 auto;
   padding: 28px;
   color: var(--dark-color);
   text-align: center;
@@ -541,8 +542,6 @@
   }
 
   .modal {
-    max-width: 505px;
-
     &.wallet {
       top: 16px;
       right: 16px;
