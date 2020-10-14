@@ -27,6 +27,12 @@
 
             &.name {
                 display: flex;
+                h2 {
+                    max-width: 360px;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
             }
 
             &-address {

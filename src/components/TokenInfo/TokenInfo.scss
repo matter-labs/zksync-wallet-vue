@@ -7,6 +7,15 @@
         padding: 30px;
         background-color: var(--modal-bg-color);
         border-radius: 4px;
+
+        .submit-button {
+            .send-title {
+                max-width: 80%;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
     }  
 
     &-title-block {

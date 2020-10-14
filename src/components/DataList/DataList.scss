@@ -392,9 +392,13 @@
     }
 
     &-name {
+      max-width: 300px;
+      overflow: hidden;
       color: var(--dark-color);
       font-size: var(--xl-font-size);
       line-height: var(--xl-font-size);
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     &-address {

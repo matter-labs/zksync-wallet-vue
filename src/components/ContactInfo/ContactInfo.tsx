@@ -252,11 +252,13 @@ export const ContactInfo: React.FC<IContactInfoProps> = observer(
             }}
           >
             <span className='send-icon'></span>
-            {`Transfer ${
-              store.walletAddress.name || store.newContactName
-                ? `to ${displayedName}`
-                : ''
-            }`}
+            <span className='send-title'>
+              {`Transfer ${
+                store.walletAddress.name || store.newContactName
+                  ? `to ${displayedName}`
+                  : ''
+              }`}
+            </span>
           </button>
         </div>
       </>
