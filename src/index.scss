@@ -935,7 +935,9 @@ h2 {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 70px;
+      width: 80px;
+      margin-top: 2px;
+      padding: 5px 10px 10px;
       
       & > span {
         margin-top: 5px;
