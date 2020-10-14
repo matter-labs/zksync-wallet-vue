@@ -221,12 +221,12 @@ const PrimaryPage: React.FC = observer(() => {
           </div>
           <div className='wallets-wrapper'>
             {Object.values(wallets).map(key => (
-              <button key={key} className='wallet-block'>
-                <div
-                  className={`btn wallet-button ${key}`}
-                  key={key}
-                  onClick={selectWallet(key as WalletType)}
-                >
+              <button
+                key={key}
+                className='wallet-block'
+                onClick={selectWallet(key as WalletType)}
+              >
+                <div className={`btn wallet-button ${key}`} key={key}>
                   {key === 'Web3' && (
                     <FontAwesomeIcon icon={['fas', 'globe']} />
                   )}
