@@ -688,6 +688,7 @@ h2 {
   height: 50px;
   color: var(--button-text-color);
   font-size: var(--md-font-size);
+  line-height: 50px;
   background-color: var(--button-bg-color);
   border: none;
   border-radius: 25px;
@@ -1258,6 +1259,7 @@ input[type='radio']:focus + .contact-manage {
   .submit-button {
     height: 72px;
     font-size: var(--large-font-size);
+    line-height: 72px;
     border-radius: 36px;
   }
 
