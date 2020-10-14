@@ -34,6 +34,7 @@ export const portisConnector = async (
   getSigner,
   withConnect?,
 ) => {
+  if (!store.isPortisWallet) return;
   const Portis = (await import('@portis/web3')).default;
   store.zkWalletInitializing = true;
   const portis = new Portis(
@@ -53,6 +54,7 @@ export const fortmaticConnector = (
   getSigner,
   withConnect?,
 ) => {
+  if (!store.isFortmaticWallet) return;
   const fm = new Fortmatic(process.env.REACT_APP_FORTMATIC);
   store.fortmaticObject = fm;
   const fmProvider = fm.getProvider();
@@ -68,6 +70,7 @@ export const fortmaticConnector = (
 };
 
 export const walletConnectConnector = (store: Store, connect) => {
+  if (!store.isWalletConnect) return;
   const wcProvider = new WalletConnectProvider({
     infuraId: process.env.REACT_APP_WALLET_CONNECT,
   });
