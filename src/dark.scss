@@ -191,6 +191,11 @@ body.dark {
         }
     }
 
+    .contact-info-address-container {
+        &>.copy-block-button {
+            background-image: url(./images/mdi_file_copy_dark.svg);
+        }
+    }
 
     .copy-block {
         &>.copy-block-button {
