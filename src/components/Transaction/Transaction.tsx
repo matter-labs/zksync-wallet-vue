@@ -10,7 +10,7 @@ import { AccountState, Tokens, TokenLike } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
 
 import { DataList } from 'components/DataList/DataListNew';
-import { CheckBox } from 'src/components/Common/CheckBox';
+import { RadioButton } from 'src/components/Common/RadioButton';
 import Modal from 'components/Modal/Modal';
 import SaveContacts from 'components/SaveContacts/SaveContacts';
 import Spinner from 'components/Spinner/Spinner';
@@ -1343,13 +1343,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     };
 
-    interface ICopyBlockProps {
-      children?: React.ReactNode;
-      copyProp?: string;
-      text?: string | number | undefined;
-      classSpecifier?: string;
-    }
-
     useEffect(() => {
       store.txButtonUnlocked = true;
     }, [store.zkWallet, selectedBalance]);
@@ -1440,7 +1433,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         }
       };
 
-      const checkboxCb = fee => {
+      const radioButtonCb = fee => {
         store.fastWithdrawal = !store.fastWithdrawal;
         if (!inputValue) return;
         if (exceedBalanceTrigger(fee)) {
@@ -1461,10 +1454,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <div
               className='withdraw-type-block'
               onClick={() => {
-                checkboxCb(TransactionStore.fee[TransactionStore.symbolName]);
+                radioButtonCb(
+                  TransactionStore.fee[TransactionStore.symbolName],
+                );
               }}
             >
-              <CheckBox checked={!store.fastWithdrawal} />
+              <RadioButton selected={!store.fastWithdrawal} />
               <p className='checkbox-text'>{`Normal (fee ${TransactionStore.fee[
                 TransactionStore.symbolName
               ] &&
@@ -1481,10 +1476,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <div
               className='withdraw-type-block'
               onClick={() => {
-                checkboxCb(TransactionStore.fastFee);
+                radioButtonCb(TransactionStore.fastFee);
               }}
             >
-              <CheckBox checked={store.fastWithdrawal} />
+              <RadioButton selected={store.fastWithdrawal} />
               <p className='checkbox-text'>{`Fast (fee ${+TransactionStore.fastFee &&
                 handleFormatToken(
                   store.zkWallet,
@@ -2227,15 +2222,16 @@ const Transaction: React.FC<ITransactionProps> = observer(
                       <Spinner />
                     )}
 
-                    {title === 'Withdraw' && (
-                      <p className='withdraw-hint'>
-                        {`Your withdrawal should take max. ${timeStempString(
-                          store.fastWithdrawal
-                            ? fastWithdrawalTime
-                            : withdrawalTime,
-                        )}.`}
-                      </p>
-                    )}
+                    {title === 'Withdraw' &&
+                      (fastWithdrawalTime || withdrawalTime) && (
+                        <p className='withdraw-hint'>
+                          {`Your withdrawal should take max. ${timeStempString(
+                            store.fastWithdrawal
+                              ? fastWithdrawalTime
+                              : withdrawalTime,
+                          )}.`}
+                        </p>
+                      )}
                     <div className='transaction-fee-wrapper'>
                       <p
                         key={TransactionStore.maxValue}

@@ -261,6 +261,36 @@ h2 {
   color: var(--dark-color);
 }
 
+.radiobutton {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
+  overflow: hidden;
+  border: 1px solid var(--input-border-focus);
+  border-radius: 100%;
+
+  &-selected {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    background-color: var(--success-color);
+
+    &::before {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      color: var( --light-bg-color);
+      background-color: var( --light-bg-color);
+      border-radius: 100%;
+      transform: translate(-50%, -50%);
+      content: '';
+    }
+  }
+}
+
 .checkbox {
   width: 15px;
   min-width: 15px;
