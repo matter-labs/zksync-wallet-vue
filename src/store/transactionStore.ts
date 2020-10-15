@@ -10,6 +10,8 @@ export class TransactionStore {
   @observable conditionError = '';
   @observable gas = '';
   @observable fee: any = {};
+  @observable transferFeeToken = '';
+  @observable feeTokenSelection = false;
   @observable filteredContacts: any = [];
   @observable isBalancesListOpen = false;
   @observable isContactsListOpen = false;

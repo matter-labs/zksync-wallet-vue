@@ -268,6 +268,7 @@ export const useTransaction = () => {
           .getTransactionFee('Transfer', addressValue, symbol)
           .then(res => res.totalFee);
         store.txButtonUnlocked = false;
+        let nonce = await store.zkWallet?.getNonce('committed');
         if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
           TransactionStore.isLoading = true;
           if (!store.isBurnerWallet)
@@ -280,9 +281,11 @@ export const useTransaction = () => {
             handleMax[0]?.balance.toString(),
           );
           const zkSync = await import('zksync');
-          const transferTransaction = await zkWallet.syncTransfer({
+          if (!nonce) return;
+          const transferTx = {
+            fee: 0,
+            nonce,
             to: addressValue,
-            token: symbol,
             amount: ethers.BigNumber.from(
               (
                 await zkSync.closestPackableTransactionAmount(
@@ -290,19 +293,32 @@ export const useTransaction = () => {
                 )
               ).toString(),
             ),
-            fee: zkSync.closestPackableTransactionFee(fee),
-          });
-          const hash = transferTransaction.txHash;
+            token: symbol,
+          };
+          nonce += 1;
+          const feeTx = {
+            to: store.zkWallet?.address() as string,
+            token: TransactionStore.transferFeeToken,
+            amount: 0,
+            fee: TransactionStore.fee[TransactionStore.transferFeeToken],
+            nonce,
+          };
+          const transferTransaction = await store.zkWallet?.syncMultiTransfer([
+            transferTx,
+            feeTx,
+          ]);
+          if (!transferTransaction) return;
+          const hash = transferTransaction[0].txHash;
           setHash(hash);
           store.hint = ` \n ${+handleFormatToken(
             zkWallet,
             symbol,
             TransactionStore.amountBigValue,
           )}. \n${hash}`;
-          const receipt = await transferTransaction.awaitReceipt();
+          const receipt = await transferTransaction[0].awaitReceipt();
           transactions(receipt);
           if (!!receipt) store.txButtonUnlocked = true;
-          const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
+          const verifyReceipt = await transferTransaction[0].awaitVerifyReceipt();
           store.verifyToken = !!verifyReceipt;
         } else {
           store.error = `Address: "${addressMiddleCutter(
