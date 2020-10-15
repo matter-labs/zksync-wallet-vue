@@ -1291,7 +1291,30 @@ input[type='radio']:focus + .contact-manage {
   }
 }
 
-@media screen and (min-width: 760px) {
+.scroll-wrapper {
+  width: 200px;
+  height: 35px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scrollbar-color: var(--button-bg-color) var(--transparent);
+  scrollbar-width: thin;
+}
+
+.scroll-wrapper::-webkit-scrollbar{
+  width: 6px;
+  height: 4px;
+  overflow-x: scroll;
+  background: var(--transparent);
+  cursor: pointer;
+  scrollbar-color: var(--transparent);
+}
+
+.scroll-wrapper::-webkit-scrollbar-thumb:horizontal{
+  background: var(--button-bg-color);
+  border-radius: 10px;
+}
+
+@media screen and (min-width: 768px) {
   .submit-button {
     height: 72px;
     font-size: var(--large-font-size);

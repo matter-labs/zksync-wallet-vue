@@ -68,6 +68,20 @@ export const Transaction: FC<Tx> = props => {
     ? addressMiddleCutter(from, 6, 3)
     : addressMiddleCutter(to as string, 6, 3);
 
+  const handledAmount =
+    store.zkWallet &&
+    (!!amount || !!priority_op?.amount
+      ? handleExponentialNumbers(
+          +handleFormatToken(
+            store.zkWallet,
+            type === 'Deposit'
+              ? (priority_op?.token as string)
+              : (token as string),
+            type === 'Deposit' && priority_op ? +priority_op.amount : +amount,
+          ),
+        )
+      : 'Unlocking transaction');
+
   return (
     <div className='transaction-history-wrapper' key={hash}>
       <TxStatus tx={props} />
@@ -76,37 +90,29 @@ export const Transaction: FC<Tx> = props => {
           {formatDate(created_at).toLocaleString()}
         </div>
         <div>
-          <div className={`transaction-history ${type}`}>
-            <div className='transaction-history-amount'>
-              {store.zkWallet &&
-                (!!amount || !!priority_op?.amount
-                  ? handleExponentialNumbers(
-                      +handleFormatToken(
-                        store.zkWallet,
-                        type === 'Deposit'
-                          ? (priority_op?.token as string)
-                          : (token as string),
-                        type === 'Deposit' && priority_op
-                          ? priority_op.amount
-                          : amount,
-                      ),
-                    )
-                  : 'Unlocking transaction')}
-            </div>
-            <div className='transaction-history-hash'>
-              {token && token.toString().length > 10
-                ? token
-                    .toString()
-                    .replace(
-                      token.toString().slice(6, token.toString().length - 3),
-                      '...',
-                    )
-                : type === 'Deposit'
-                ? priority_op?.token
-                : token}
+          <div className={`transaction-history ${type} scroll-wrapper`}>
+            <div
+              className='transaction-history-amount'
+              style={{
+                width: `${!!handledAmount ? `${handledAmount}`.length : 0}ch`,
+              }}
+            >
+              {!!handledAmount && handledAmount}
             </div>
           </div>
-        </div>{' '}
+          <div className='transaction-history-hash'>
+            {token && token.toString().length > 10
+              ? token
+                  .toString()
+                  .replace(
+                    token.toString().slice(6, token.toString().length - 3),
+                    '...',
+                  )
+              : type === 'Deposit'
+              ? priority_op?.token
+              : token}
+          </div>
+        </div>
       </div>
       <input
         type='text'
@@ -177,7 +183,7 @@ export const Transaction: FC<Tx> = props => {
                   );
                 }}
               >
-                {addressMiddleCutter(to as string, 6, 3)}
+                {to?.replace(to?.slice(6, to?.length - 3), '...')}
               </p>
             </>
           )}

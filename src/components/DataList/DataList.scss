@@ -465,11 +465,9 @@
   }
 }
 
-
 .transaction-history {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  position: relative;
+  display: block;
 
   &.transfer, &.deposit, &.withdraw {
     width: 36px;
@@ -496,20 +494,20 @@
     background-size: 22px;
   }
 
-  &-amount {
-    display: inline;
-    max-width: 200px;
-    margin-left: 18px;
-    color: var(--dark-color);
-    font-size: var(--xl-font-size);
-    line-height: var(--xl-font-size);
-    word-break: break-all;
+  &.scroll-wrapper {
+    width: 165px;
+    margin: 10px 0;
+    .transaction-history-amount {
+      display: block;
+      color: var(--dark-color);
+      font-size: var(--xl-font-size);
+      line-height: var(--xl-font-size);
+    }
   }
 
   &-date {
     position: absolute;
     top: 12px;
-    margin-left: 18px;
     color: var(--hints-color);
     font-size: var(--sm-font-size);
   }
@@ -527,19 +525,22 @@
 
   &-hash {
     align-self: flex-start;
-    margin-left: 18px;
     color: var(--dark-color);
     font-size: var(--md-font-size);
   }
 
   &-left {
-    width: 135px;
+    width: 165px;
   }
 
   &-address {
+    max-width: 100px;
     & > p {
       margin-bottom: 0;
+      overflow: hidden;
       color: var(--dark-color);
+      white-space: nowrap;
+      text-overflow: ellipsis;
 
       &.undo-btn {
         margin-left: 0;
@@ -595,7 +596,51 @@
   }
 }
 
-@media screen and (min-width: 760px) {
+@media screen and (max-width: 767px) {
+  .transaction-history-wrapper {
+    flex-direction: column;
+    .transaction-history-left {
+      width: 100%;
+      .transaction-history {
+        width: 220px;
+        margin: 15px auto 5px;
+        text-align: center;
+        .transaction-history-amount {
+          height: 35px;
+          margin: 0 auto;
+          text-align: center;
+        }
+      }
+      .transaction-history-hash {
+        margin: 0 auto;
+        text-align: center;
+      }
+      .transaction-history-date {
+        top: 10px;
+        left: 50%;
+        width: 100%;
+        margin: 0;
+        text-align: center;
+        transform: translateX(-50%);
+      }
+    }
+    .transaction-history-right {
+      justify-content: center;
+      max-width: 100%;
+      .transaction-history-address {
+        text-align: center;
+        .pointer {
+          margin-top: 15px;
+        }
+      }
+    }
+    .tx-status {
+      margin-top: 15px;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) {
 
   .add-contact {
     &-button {
@@ -643,34 +688,6 @@
         .add-contact-button {
           top: 35px;
         }
-      }
-    }
-  }
-
-  .transaction-history {
-    &-hash {
-      display: inline;
-      margin-left: 18px;
-      font-size: var(--xl-font-size);
-    }
-
-    &-date {
-      position: unset;
-      top: 0;
-    }
-  
-    &-left {
-      flex-wrap: nowrap;
-      width: 100%;
-    }
-  
-    &-right {
-      margin-left: 0;
-
-      & > .balances-contact-edit {
-        position: relative;
-        right: 0;
-        transform: translateY(0);
       }
     }
   }
