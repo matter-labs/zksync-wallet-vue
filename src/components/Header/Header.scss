@@ -115,6 +115,8 @@
       margin: 0;
       overflow: hidden;
       font-size: var(--md-font-size);
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
   }
 }
