@@ -962,6 +962,7 @@ h2 {
     margin-left: 10px;
     color: var(--dark-color);
     font-size: var(--md-font-size);
+    line-height: 34px !important;
     background-color: var(--transparent);
     border: none;
 
@@ -983,8 +984,12 @@ h2 {
   &-edit,
   &-copy {
     position: relative;
+    width: 32px;
+    height: 32px;
     color: var(--button-bg-color);
     font-size: var(--md-font-size);
+    line-height: 32px;
+    text-align: center;
 
     &:hover {
       border-radius: 4px;
@@ -1604,4 +1609,10 @@ $scale: 0.95;
       }
     }
   }
+}
+
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

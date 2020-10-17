@@ -198,10 +198,12 @@
   justify-content: space-between;
   width: auto;
   max-width: 220px;
+  height: 24px;
   margin-left: -10px;
   padding: 0 10px;
   color: var(--links-color);
   font-size: var(--sm-font-size);
+  line-height: 24px;
   text-decoration: underline;
   background-color: var(--modal-bg-color);
   border: none;

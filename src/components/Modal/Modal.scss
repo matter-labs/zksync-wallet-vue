@@ -376,13 +376,13 @@
   top: 108px;
   z-index: 8000;
   width: 100%;
-  max-width: 550px;
+  max-width: 505px;
   background-color: var(--modal-bg-color);
   border-radius: 5px;
 
   & > .balances-wrapper {
     width: 100%;
-    max-width: 565px;
+    max-width: 505px;
     height: 60vh;
     margin: 0 auto;
     padding-top: 20px;
@@ -611,7 +611,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding-right: 20px;
+      padding-right: 15px;
       perspective: 1000px;
       perspective-origin: center;
     }

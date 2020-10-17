@@ -21,8 +21,10 @@
       align-items: center;
       justify-content: space-between;
       width: 80px;
+      height: 32px;
       color: var(--links-color);
       font-size: var(--xs-font-size);
+      line-height: 32px;
       background-color: var(--transparent);
       border: none;
       outline: none;
@@ -33,7 +35,7 @@
         display: block;
         width: 18px;
         height: 18px;
-        margin: 0 5px 2px;
+        margin: 0 5px 0;
         border: 2px solid var(--links-color);
         border-radius: 9px;
 
@@ -585,6 +587,7 @@
       padding: 5px;
       color: var(--dark-color);
       font-size: var(--sm-font-size);
+      line-height: 32px;
       background-color: var(--transparent);
       border: none;
       border-top: 1px solid var(--border-color);

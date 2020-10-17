@@ -110,7 +110,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
             <>
               <span className='transaction-field-title'>
                 <span>{'Recepient:'}</span>
-                <h3>{walletAddress.name}</h3>
+                <h3 className='truncate'>{walletAddress.name}</h3>
                 <p>{addressValue}</p>
               </span>
               {!walletAddress.name && (
