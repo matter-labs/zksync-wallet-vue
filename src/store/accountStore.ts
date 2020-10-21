@@ -9,5 +9,6 @@ export class AccountStore {
   @observable isAccountUnlockingProcess = false;
   @observable isOnchainAuthSigningKeySet: boolean | undefined = undefined;
   @observable ethSignerAddress = '';
+  @observable accountAddress: string | undefined = undefined;
   @observable zksContract: ethers.Contract | undefined = undefined;
 }

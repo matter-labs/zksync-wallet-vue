@@ -11,7 +11,6 @@ import { Tokens, AccountState, TokenLike } from 'zksync/build/types';
 import { LINKS_CONFIG } from 'src/config';
 import { Store } from './store/store';
 import { useCallback } from 'react';
-import { type } from 'os';
 
 export function getWalletNameFromProvider(): string | undefined {
   const provider: any = window['ethereum'];
@@ -51,6 +50,29 @@ export function getWalletNameFromProvider(): string | undefined {
     return 'localhost';
   }
 }
+
+export const handleUnlinkAccount = (store: Store) => {
+  if (store.isCoinbaseWallet) {
+    store.walletLinkObject.deactivate();
+  }
+  if (store.isPortisWallet) {
+    store.portisObject.logout();
+    store.modalSpecifier = '';
+    store.modalHintMessage = '';
+    store.isAccessModalOpen = false;
+    store.walletName = '';
+    store.normalBg = false;
+    store.portisObject = null;
+  }
+  if (store.isFortmaticWallet) {
+    store.fortmaticObject?.user?.logout();
+    store.modalSpecifier = '';
+    store.modalHintMessage = '';
+    store.isAccessModalOpen = false;
+    store.walletName = '';
+    store.normalBg = false;
+  }
+};
 
 export const useCallbackWrapper = (func, funcArguments, ucbParams) =>
   useCallback(func.bind(null, ...funcArguments), ucbParams);

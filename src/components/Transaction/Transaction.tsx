@@ -169,23 +169,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       ],
     );
 
-    useEffect(() => {
-      if (
-        store.isBurnerWallet &&
-        !store.unlocked &&
-        zkWallet &&
-        title !== 'Deposit'
-      ) {
-        cancelable(zkWallet?.getAccountState())
-          .then((res: any) => res)
-          .then(() => {
-            cancelable(zkWallet?.isSigningKeySet()).then(data =>
-              data ? null : handleUnlockWithUseCallBack(),
-            );
-          });
-      }
-    }, [store.unlocked, store.walletName]);
-
     const loadEthTokens = useCallback(async () => {
       if (!store.zkWallet || !store.syncProvider || !store.accountState) return;
       const { tokens } = await loadTokens(
@@ -1488,9 +1471,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       ).filter(key => !zkBalanceKeys.includes(key));
     };
 
-    const burnerWalletAccountUnlockCondition =
-      store.isBurnerWallet && !store.unlocked && title !== 'Deposit';
-
     const calculateMaxValue = () => {
       if (store.zkWallet) {
         return handleExponentialNumbers(TransactionStore.maxValue).toString();
@@ -1795,7 +1775,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
             title !== 'Deposit' &&
             zkBalancesLoaded &&
             (!!store.isAccountBalanceNotEmpty || store.isExternalWallet) &&
-            !store.isBurnerWallet &&
             (!store.isExternalWallet ? (
               <LockedTx
                 handleCancel={handleCancel}
@@ -1880,81 +1859,80 @@ const Transaction: React.FC<ITransactionProps> = observer(
               title={title}
             />
           )}
-          {((!isExecuted &&
+          {!isExecuted &&
             (store.unlocked === undefined ||
               TransactionStore.isLoading ||
-              !zkBalancesLoaded)) ||
-            burnerWalletAccountUnlockCondition) && (
-            <>
-              {store.isExternalWallet ? (
-                <DataList
-                  data={store.zkBalances}
-                  title={'Balances in L2'}
-                  visible={true}
-                  classSpecifier='external'
-                  renderItem={({ address, symbol, balance }) => (
-                    <>
-                      {ExternaWalletStore.externalWalletContractBalancesLoaded ? (
-                        <BalancesList
-                          address={address}
-                          symbol={symbol}
-                          balance={balance}
-                        />
-                      ) : (
-                        <></>
-                      )}
-                    </>
-                  )}
-                  emptyListComponent={() =>
-                    !store.isAccountBalanceNotEmpty ? <Spinner /> : null
-                  }
-                />
-              ) : (
-                <>
-                  <LoadingTx
-                    fee={
-                      title === 'Transfer' &&
-                      TransactionStore.fee[TransactionStore.symbolName] &&
-                      store.zkWallet &&
-                      handleFormatToken(
-                        store.zkWallet,
-                        TransactionStore.symbolName,
-                        TransactionStore.fee[TransactionStore.symbolName],
-                      )
+              !zkBalancesLoaded) && (
+              <>
+                {store.isExternalWallet ? (
+                  <DataList
+                    data={store.zkBalances}
+                    title={'Balances in L2'}
+                    visible={true}
+                    classSpecifier='external'
+                    renderItem={({ address, symbol, balance }) => (
+                      <>
+                        {ExternaWalletStore.externalWalletContractBalancesLoaded ? (
+                          <BalancesList
+                            address={address}
+                            symbol={symbol}
+                            balance={balance}
+                          />
+                        ) : (
+                          <></>
+                        )}
+                      </>
+                    )}
+                    emptyListComponent={() =>
+                      !store.isAccountBalanceNotEmpty ? <Spinner /> : null
                     }
-                    price={
-                      +(price && !!price[selectedBalance]
-                        ? price[selectedBalance]
-                        : 0)
-                    }
-                    isUnlockingProcess={isUnlockingProcess}
-                    inputValue={inputValue}
-                    symbolName={TransactionStore.symbolName}
-                    addressValue={addressValue}
-                    handleCancel={handleCancel}
-                    setWalletName={setWalletName}
-                    title={title}
-                    unlockFau={unlockFau}
-                    setUnlockingERCProcess={setUnlockingERCProcess}
                   />
-
-                  {hint.match(/(?:denied)/i) && !TransactionStore.isLoading && (
-                    <CanceledTx
+                ) : (
+                  <>
+                    <LoadingTx
+                      fee={
+                        title === 'Transfer' &&
+                        TransactionStore.fee[TransactionStore.symbolName] &&
+                        store.zkWallet &&
+                        handleFormatToken(
+                          store.zkWallet,
+                          TransactionStore.symbolName,
+                          TransactionStore.fee[TransactionStore.symbolName],
+                        )
+                      }
+                      price={
+                        +(price && !!price[selectedBalance]
+                          ? price[selectedBalance]
+                          : 0)
+                      }
+                      isUnlockingProcess={isUnlockingProcess}
+                      inputValue={inputValue}
+                      symbolName={TransactionStore.symbolName}
+                      addressValue={addressValue}
                       handleCancel={handleCancel}
                       setWalletName={setWalletName}
+                      title={title}
+                      unlockFau={unlockFau}
+                      setUnlockingERCProcess={setUnlockingERCProcess}
                     />
-                  )}
-                </>
-              )}
-            </>
-          )}
+
+                    {hint.match(/(?:denied)/i) &&
+                      !TransactionStore.isLoading && (
+                        <CanceledTx
+                          handleCancel={handleCancel}
+                          setWalletName={setWalletName}
+                        />
+                      )}
+                  </>
+                )}
+              </>
+            )}
           {zkWallet &&
             zkBalancesLoaded &&
             !TransactionStore.isLoading &&
             !isExecuted &&
             unlocked !== undefined &&
-            (unlocked || title === 'Deposit') &&
-            !burnerWalletAccountUnlockCondition && (
+            (unlocked || title === 'Deposit') && (
               <>
                 <BackButton
                   cb={() => {

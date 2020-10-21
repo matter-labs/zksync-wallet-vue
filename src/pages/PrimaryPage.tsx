@@ -207,7 +207,7 @@ const PrimaryPage: React.FC = observer(() => {
   return (
     <>
       <LazyWallet />
-      {!walletName && (
+      {!store.normalBg && (
         <>
           <a href='//zksync.io' target='_blank' rel='noopener noreferrer'>
             <div className='beta-container'>

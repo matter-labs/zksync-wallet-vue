@@ -8,7 +8,7 @@ interface Props extends Record<string, any> {
 }
 
 export const Transition: FC<Props> = ({
-  timeout = 200,
+  timeout = 0,
   trigger,
   type,
   children,

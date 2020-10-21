@@ -9,7 +9,11 @@ import { LINKS_CONFIG, INFURA_ID } from 'src/config';
 
 import { COINBASE_LOCALSTORAGE_KEYS } from 'src/constants/Wallets';
 
-export const browserWalletConnector = async (store: Store, connect) => {
+export const browserWalletConnector = async (
+  store: Store,
+  connect,
+  withConnect?,
+) => {
   const browserProvider: any = window?.['ethereum'];
   store.provider = browserProvider;
   if (store.doesMetamaskUsesNewEthereumAPI) {
@@ -20,11 +24,11 @@ export const browserWalletConnector = async (store: Store, connect) => {
       method: 'eth_requestAccounts',
     });
     const prevState = await _accs[0];
-    connect(browserProvider, signUpFunction, prevState);
+    if (!!withConnect) connect(browserProvider, signUpFunction, prevState);
   } else {
     const signUpFunction = browserProvider?.enable.bind(browserProvider);
     const prevState = browserProvider?.selectedAddress;
-    connect(browserProvider, signUpFunction, prevState);
+    if (!!withConnect) connect(browserProvider, signUpFunction, prevState);
   }
 };
 
@@ -35,17 +39,19 @@ export const portisConnector = async (
   withConnect?,
 ) => {
   if (!store.isPortisWallet) return;
-  const Portis = (await import('@portis/web3')).default;
-  store.zkWalletInitializing = true;
-  const portis = new Portis(
-    process.env.REACT_APP_PORTIS || '',
-    LINKS_CONFIG.network,
-  );
-  store.portisObject = portis;
-  const portisProvider = portis.provider;
-  store.provider = portisProvider;
-  const signer = getSigner(portisProvider);
-  if (!!withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
+  if (!store.portisObject) {
+    const Portis = (await import('@portis/web3')).default;
+    store.zkWalletInitializing = true;
+    const portis = new Portis(
+      process.env.REACT_APP_PORTIS || '',
+      LINKS_CONFIG.network,
+    );
+    store.portisObject = portis;
+    const portisProvider = portis.provider;
+    store.provider = portisProvider;
+    const signer = getSigner(portisProvider);
+    if (!!withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
+  }
 };
 
 export const fortmaticConnector = (
@@ -119,6 +125,8 @@ export const coinBaseConnector = (store: Store, connect?) => {
       store.hint = 'Connected to ';
       store.provider = res.provider;
       store.ethId = res.account as string;
+      if (res.provider?._addresses)
+        store.AccountStore.accountAddress = res.provider?._addresses[0];
     });
     store.walletLinkObject = walletLink;
   }

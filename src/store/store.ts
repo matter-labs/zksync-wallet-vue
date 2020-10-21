@@ -63,7 +63,7 @@ export class Store {
   @observable propsMaxValue: any;
   @observable propsSymbolName: any;
   @observable propsToken: any;
-  @observable portisObject: any = {};
+  @observable portisObject: any = null;
   @observable searchBalances: IEthBalance[] = [];
   // TODO: add explicit type
   @observable searchContacts?: IContacts[] = [];
@@ -159,30 +159,31 @@ export class Store {
 
   @action
   performLogout(accessModal: boolean, walletName: WalletType) {
-    this.AccountStore.accountChanging = true;
+    /* Need to save commented in order of future bugs **/
     this.modalSpecifier = '';
-    this.error = '';
-    this.walletName = walletName;
     this.isAccessModalOpen = accessModal;
+    this.normalBg = false;
     this.zkWallet = null;
-    this.zkBalances = [];
-    this.zkBalancesLoaded = false;
-    this.transactions = [];
-    this.provider = false;
-    this.hint = '';
-    this.syncWallet = undefined;
-    this.syncProvider = undefined;
-    this.zkWalletInitializing = false;
-    this.ExternaWalletStore.externalWalletInitializing = false;
-    this.searchBalances = [];
-    this.searchContacts = [];
-    this.awaitedTokens = {};
-    this.accountState = null;
-    this.propsMaxValue = null;
-    this.propsSymbolName = null;
-    this.propsToken = null;
-    this.isAccountBalanceLoading = true;
-    this.isAccountBalanceNotEmpty = false;
+    // this.AccountStore.accountChanging = true;
+    // this.error = '';
+    // this.zkBalances = [];
+    // this.zkBalancesLoaded = false;
+    // this.transactions = [];
+    // this.provider = false;
+    // this.hint = '';
+    // this.syncWallet = undefined;
+    // this.syncProvider = undefined;
+    // this.zkWalletInitializing = false;
+    // this.ExternaWalletStore.externalWalletInitializing = false;
+    // this.searchBalances = [];
+    // this.searchContacts = [];
+    // this.awaitedTokens = {};
+    // this.accountState = null;
+    // this.propsMaxValue = null;
+    // this.propsSymbolName = null;
+    // this.propsToken = null;
+    // this.isAccountBalanceLoading = true;
+    // this.isAccountBalanceNotEmpty = false;
   }
 
   @action

@@ -24,7 +24,7 @@ import {
   RIGHT_NETWORK_NAME,
   AUTOLOGIN_WALLETS,
 } from 'src/config';
-import { checkForEmptyBalance } from 'src/utils';
+import { checkForEmptyBalance, handleUnlinkAccount } from 'src/utils';
 import {
   coinBaseConnector,
   browserWalletConnector,
@@ -197,15 +197,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       store.hint = 'Connecting to ';
       const wCQRScanned = localStorage.getItem('walletconnect');
       if (!!AccountStore.accountChanging) return;
-      if (store.isMetamaskWallet) {
+      if (store.isBurnerWallet) {
         createWallet();
       }
-      if (store.isWalletConnect && (!store.isPrimaryPage || wCQRScanned)) {
-        createWallet();
-      }
-      if (store.isPortisWallet) {
-        portisConnector(store, connect, getSigner);
-      }
+      store.zkWalletInitializing = false;
+      /* Need to save for the possible future bugs  **/
+      // if (store.isWalletConnect && (!store.isPrimaryPage || wCQRScanned)) {
+      //   createWallet();
+      // }
+      // if (store.isPortisWallet) {
+      //   portisConnector(store, connect, getSigner);
+      // }
     }
     if (!store.isPrimaryPage && !savedWalletName) {
       handleLogout(false, '');
@@ -367,7 +369,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   };
 
   const UnlinkAcccountBtn = () => (
-    <span onClick={handleOpenUnlinkModal} className='undo-btn block'>
+    <span onClick={() => handleUnlinkAccount(store)} className='undo-btn block'>
       {'Unlink account'}
     </span>
   );
@@ -447,6 +449,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
               : 'Connecting to '}
             {walletName}
           </h3>
+          <p className='name'>{store.AccountStore.accountAddress}</p>
           <div
             className={`${walletName &&
               walletName.replace(/\s+/g, '').toLowerCase()}-logo`}
@@ -496,7 +499,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       >
         <HintBody />
       </Modal>
-      {store.walletName && <Header />}
+      {store.normalBg && <Header />}
       <div className='content'>{children}</div>
       <div className='content-portal'></div>
       <Footer />
