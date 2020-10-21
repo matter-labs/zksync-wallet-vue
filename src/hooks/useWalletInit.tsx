@@ -37,7 +37,6 @@ const useWalletInit = () => {
         signUp()
           .then(async res => {
             store.ethId = res;
-            store.AccountStore.accountAddress = provider.accounts[0];
 
             if (!wCQRScanned && store.isWalletConnect) {
               store.zkWalletInitializing = false;
@@ -56,6 +55,7 @@ const useWalletInit = () => {
               }
             }
             if (store.isWalletConnect) {
+              AccountStore.accountAddress = provider.accounts[0];
               store.hint = 'Connected to ';
             }
             if (store.isWalletConnect && !!prevProviderState) {

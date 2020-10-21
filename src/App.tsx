@@ -499,7 +499,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       >
         <HintBody />
       </Modal>
-      {store.normalBg && <Header />}
+      {store.normalBg && store.walletName && <Header />}
       <div className='content'>{children}</div>
       <div className='content-portal'></div>
       <Footer />

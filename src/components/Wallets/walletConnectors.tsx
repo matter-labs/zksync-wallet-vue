@@ -25,12 +25,12 @@ export const browserWalletConnector = async (
     });
     const prevState = await _accs[0];
     store.AccountStore.accountAddress = prevState;
-    connect(browserProvider, signUpFunction, prevState);
+    if (!!withConnect) connect(browserProvider, signUpFunction, prevState);
   } else {
     const signUpFunction = browserProvider?.enable.bind(browserProvider);
     const prevState = browserProvider?.selectedAddress;
     store.AccountStore.accountAddress = prevState;
-    connect(browserProvider, signUpFunction, prevState);
+    if (!!withConnect) connect(browserProvider, signUpFunction, prevState);
   }
 };
 
@@ -41,19 +41,21 @@ export const portisConnector = async (
   withConnect?,
 ) => {
   if (!store.isPortisWallet) return;
-  const Portis = (await import('@portis/web3')).default;
-  store.zkWalletInitializing = true;
-  const portis = new Portis(
-    process.env.REACT_APP_PORTIS || '',
-    LINKS_CONFIG.network,
-  );
-  store.portisObject = portis;
-  const portisProvider = portis.provider;
-  store.provider = portisProvider;
-  const signer = getSigner(portisProvider);
-  const address = await signer.getAddress(signer);
-  store.AccountStore.accountAddress = address;
-  if (!!withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
+  if (!store.portisObject) {
+    const Portis = (await import('@portis/web3')).default;
+    store.zkWalletInitializing = true;
+    const portis = new Portis(
+      process.env.REACT_APP_PORTIS || '',
+      LINKS_CONFIG.network,
+    );
+    store.portisObject = portis;
+    const portisProvider = portis.provider;
+    store.provider = portisProvider;
+    const signer = getSigner(portisProvider);
+    const address = await signer.getAddress(signer);
+    store.AccountStore.accountAddress = address;
+    if (!!withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
+  }
 };
 
 export const fortmaticConnector = async (
