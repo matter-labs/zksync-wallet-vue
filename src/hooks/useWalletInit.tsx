@@ -37,6 +37,7 @@ const useWalletInit = () => {
         signUp()
           .then(async res => {
             store.ethId = res;
+            store.AccountStore.accountAddress = provider.accounts[0];
 
             if (!wCQRScanned && store.isWalletConnect) {
               store.zkWalletInitializing = false;
@@ -129,6 +130,8 @@ const useWalletInit = () => {
           if (!_accs[0]) {
             await store.provider.request({ method: 'eth_requestAccounts' });
           }
+          AccountStore.accountAddress =
+            store.windowEthereumProvider.selectedAddress;
         } else {
           store.windowEthereumProvider?.enable();
         }
@@ -152,6 +155,8 @@ const useWalletInit = () => {
             JSON.parse(burnerWallet),
             provider,
           );
+          const address = await walletWithProvider.getAddress();
+          store.AccountStore.accountAddress = address;
           store.ethWallet = walletWithProvider as ethers.Signer;
         } else {
           const randomWallet = await Wallet.createRandom();
