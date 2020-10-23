@@ -60,6 +60,7 @@ export function DataList<T>({
   const focusInput = useAutoFocus();
   const rootRef = useRef<HTMLDivElement>(null);
   const store = useStore();
+  const { TransactionStore } = store;
   const history = useHistory();
 
   const [debScrollTop, setScrollTop] = useDebouncedValue(0);
@@ -309,6 +310,7 @@ export function DataList<T>({
                 onClick={() => {
                   setTransactionType('deposit');
                   history.push('/deposit');
+                  TransactionStore.symbolName = '';
                 }}
                 className='btn deposit-button btn-tr'
               >
@@ -319,6 +321,7 @@ export function DataList<T>({
                 onClick={() => {
                   setTransactionType('withdraw');
                   history.push('/withdraw');
+                  TransactionStore.symbolName = '';
                 }}
                 className='btn withdraw-button btn-tr'
               >
@@ -331,6 +334,7 @@ export function DataList<T>({
               onClick={() => {
                 setTransactionType('transfer');
                 history.push('/transfer');
+                TransactionStore.symbolName = '';
               }}
             >
               <span className='send-icon'></span>

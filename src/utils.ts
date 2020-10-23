@@ -237,6 +237,7 @@ export const handleFormatToken = (
   symbol: string,
   amount: ethers.BigNumberish,
 ) => {
+  if (!amount) return '0';
   if (typeof amount === 'number') {
     return wallet?.provider?.tokenSet.formatToken(symbol, amount.toString());
   }

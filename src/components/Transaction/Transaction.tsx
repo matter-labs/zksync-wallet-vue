@@ -887,9 +887,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
             }
           });
       }
-      if (TransactionStore.propsToken) {
-        TransactionStore.symbolName = TransactionStore.propsToken;
-        setSelectedBalance(TransactionStore.propsToken);
+      if (TransactionStore.propsSymbolName) {
+        TransactionStore.symbolName = TransactionStore.propsSymbolName;
+        setSelectedBalance(TransactionStore.propsSymbolName);
         setSelected(true);
       }
       if (
@@ -1439,6 +1439,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
     useEffect(() => {
       store.txButtonUnlocked = true;
     }, [store.zkWallet, selectedBalance]);
+
+    useEffect(() => {
+      return () => {
+        TransactionStore.symbolName = '';
+        TransactionStore.recepientAddress = '';
+        store.walletAddress = {};
+      };
+    }, []);
 
     const MLTTFeePrice = TransactionStore.symbolName === 'MLTT' ? 1 : 0;
 

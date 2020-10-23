@@ -30,6 +30,7 @@ interface IContactInfoProps {
 export const ContactInfo: React.FC<IContactInfoProps> = observer(
   ({ deletedContact, setDeletedContact }) => {
     const store = useStore();
+    const { TransactionStore } = store;
     const history = useHistory();
 
     const displayedName = store.newContactName
@@ -244,6 +245,7 @@ export const ContactInfo: React.FC<IContactInfoProps> = observer(
                 address: displayedAddress,
               };
               store.transactionType = 'transfer';
+              TransactionStore.recepientAddress = displayedAddress;
             }}
           >
             <span className='send-icon'></span>
