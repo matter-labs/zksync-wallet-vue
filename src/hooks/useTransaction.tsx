@@ -21,27 +21,16 @@ const TOKEN = 'ETH';
 export const useTransaction = () => {
   const store = useStore();
 
-  const {
-    ethBalances,
-    tokens,
-    walletAddress,
-    zkBalances,
-    zkWallet,
-    TransactionStore,
-  } = store;
+  const { TokensStore } = store;
+  const { tokens } = TokensStore;
+
+  const { walletAddress, zkWallet, TransactionStore } = store;
 
   const cancelable = useCancelable();
 
-  const [addressValue, setAddressValue] = useState<string>(
-    walletAddress.address ? walletAddress.address : '',
-  );
-  const [hash, setHash] = useState<ContractTransaction | string | undefined>();
-  const [isExecuted, setExecuted] = useState<boolean>(false);
-  const [symbol, setSymbol] = useState<string>('');
-
-  const [maxValueProp, setMaxValueProp] = useState<number>(0);
-  const [symbolNameProp, setSymbolNameProp] = useState<string>('');
-  const [tokenProp, setTokenProp] = useState<string>('');
+  // const [addressValue, setAddressValue] = useState<string>(
+  //   walletAddress.address ? walletAddress.address : '',
+  // );
 
   const history = useCallback(
     (
@@ -78,7 +67,7 @@ export const useTransaction = () => {
         if (receipt && zkWallet && tokens) {
           const _accountState = await zkWallet.getAccountState();
           const zkBalance = _accountState.committed.balances;
-          store.awaitedTokens = _accountState.depositing;
+          TokensStore.awaitedTokens = _accountState.depositing;
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
@@ -92,8 +81,10 @@ export const useTransaction = () => {
           });
           Promise.all(zkBalancePromises)
             .then(res => {
-              store.zkBalances = res.sort(sortBalancesById) as IEthBalance[];
-              store.zkBalancesLoaded = true;
+              TokensStore.zkBalances = res.sort(
+                sortBalancesById,
+              ) as IEthBalance[];
+              TokensStore.zkBalancesLoaded = true;
             })
             .catch(err => {
               err.name && err.message
@@ -104,7 +95,7 @@ export const useTransaction = () => {
         }
 
         if (receipt.executed) {
-          setExecuted(true);
+          TransactionStore.isTransactionExecuted = true;
           TransactionStore.isLoading = false;
         }
       } catch (err) {
@@ -117,9 +108,13 @@ export const useTransaction = () => {
       TransactionStore.amountValue,
       TransactionStore.isLoading,
       tokens,
-      zkWallet,
+      store.zkWallet,
       store.error,
-      store.zkBalances,
+      TokensStore.zkBalances,
+      TokensStore.awaitedTokens,
+      TokensStore.zkBalancesLoaded,
+      TransactionStore.amountBigValue,
+      TransactionStore.isTransactionExecuted,
     ],
   );
 
@@ -131,7 +126,7 @@ export const useTransaction = () => {
           if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
           TransactionStore.isLoading = true;
-          const handleMax = ethBalances.filter(
+          const handleMax = TokensStore.ethBalances.filter(
             balance => balance.symbol === token || balance.address === token,
           );
           const estimateGas =
@@ -179,7 +174,7 @@ export const useTransaction = () => {
                 token,
                 TransactionStore.amountBigValue,
               )}  \n${hash.hash}`;
-              setHash(hash);
+              TransactionStore.transactionHash = hash;
               await depositPriorityOperation
                 .awaitEthereumTxCommit()
                 .then(res => {
@@ -190,18 +185,18 @@ export const useTransaction = () => {
                     token,
                     TransactionStore.amountBigValue,
                   )}  \n${hash.hash}`;
-                  setExecuted(true);
+                  TransactionStore.isTransactionExecuted = true;
                 });
               const _accountState = await zkWallet.getAccountState();
-              store.awaitedTokens = _accountState.depositing.balances;
-              if (Object.keys(store.awaitedTokens).length > 0) {
-                for (const token in store.awaitedTokens) {
-                  const _list = Object.entries(store.zkBalances).map(
+              TokensStore.awaitedTokens = _accountState.depositing.balances;
+              if (Object.keys(TokensStore.awaitedTokens).length > 0) {
+                for (const token in TokensStore.awaitedTokens) {
+                  const _list = Object.entries(TokensStore.zkBalances).map(
                     el => el[1].symbol,
                   );
                   if (_list.indexOf(token) === -1) {
-                    store.zkBalancesLoaded = true;
-                    store.zkBalances = store.zkBalances
+                    TokensStore.zkBalancesLoaded = true;
+                    TokensStore.zkBalances = TokensStore.zkBalances
                       .concat([
                         {
                           symbol: token,
@@ -244,20 +239,24 @@ export const useTransaction = () => {
       TransactionStore.amountBigValue,
       TransactionStore.amountValue,
       TransactionStore.symbolName,
-      symbol,
+      TransactionStore.transactionHash,
       store.hint,
       history,
-      setHash,
       TransactionStore.isLoading,
       transactions,
       zkWallet,
       store.error,
       store.verifyToken,
-      store.awaitedTokens,
-      store.zkBalances,
+      TokensStore.awaitedTokens,
+      TokensStore.zkBalances,
       store.maxConfirmAmount,
       cancelable,
-      ethBalances,
+      TokensStore.ethBalances,
+      TokensStore.zkBalancesLoaded,
+      TransactionStore.isTransactionExecuted,
+      store.EIP1271Signature,
+      store.isBurnerWallet,
+      store.zkWallet,
     ],
   );
 
@@ -265,27 +264,31 @@ export const useTransaction = () => {
     async (address?, type?, symbol = TOKEN) => {
       try {
         const fee = await zkWallet?.provider
-          .getTransactionFee('Transfer', addressValue, symbol)
+          .getTransactionFee(
+            'Transfer',
+            TransactionStore.recepientAddress,
+            symbol,
+          )
           .then(res => res.totalFee);
         store.txButtonUnlocked = false;
         let nonce = await store.zkWallet?.getNonce('committed');
-        if (ADDRESS_VALIDATION['eth'].test(addressValue) && zkWallet && fee) {
+        if (
+          ADDRESS_VALIDATION['eth'].test(TransactionStore.recepientAddress) &&
+          zkWallet &&
+          fee
+        ) {
           TransactionStore.isLoading = true;
           if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
-          const handleMax = zkBalances.filter(
+          const handleMax = TokensStore.zkBalances.filter(
             balance => balance.symbol === symbol || balance.address === symbol,
-          );
-          const maxBigValue = store.zkWallet?.provider.tokenSet.parseToken(
-            symbol,
-            handleMax[0]?.balance.toString(),
           );
           const zkSync = await import('zksync');
           if (!nonce) return;
           const transferTx = {
             fee: 0,
             nonce,
-            to: addressValue,
+            to: TransactionStore.recepientAddress,
             amount: ethers.BigNumber.from(
               (
                 await zkSync.closestPackableTransactionAmount(
@@ -303,26 +306,46 @@ export const useTransaction = () => {
             fee: TransactionStore.fee[TransactionStore.transferFeeToken],
             nonce,
           };
-          const transferTransaction = await store.zkWallet?.syncMultiTransfer([
-            transferTx,
-            feeTx,
-          ]);
+          const handleTransferTransaction = async () => {
+            if (symbol === TransactionStore.transferFeeToken) {
+              const transferTransaction = await zkWallet.syncTransfer({
+                to: TransactionStore.recepientAddress,
+                token: symbol,
+                amount: ethers.BigNumber.from(
+                  (
+                    await zkSync.closestPackableTransactionAmount(
+                      TransactionStore.amountBigValue,
+                    )
+                  ).toString(),
+                ),
+                fee: TransactionStore.fee[TransactionStore.transferFeeToken],
+              });
+              if (!!transferTransaction) return transferTransaction;
+            } else {
+              const transferTransaction = await store.zkWallet?.syncMultiTransfer(
+                [transferTx, feeTx],
+              );
+              if (!!transferTransaction) return transferTransaction[0];
+            }
+          };
+          const transferTransaction = await handleTransferTransaction();
           if (!transferTransaction) return;
-          const hash = transferTransaction[0].txHash;
-          setHash(hash);
+
+          const hash = transferTransaction.txHash;
+          TransactionStore.transactionHash = hash;
           store.hint = ` \n ${+handleFormatToken(
             zkWallet,
             symbol,
             TransactionStore.amountBigValue,
           )}. \n${hash}`;
-          const receipt = await transferTransaction[0].awaitReceipt();
+          const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
           if (!!receipt) store.txButtonUnlocked = true;
-          const verifyReceipt = await transferTransaction[0].awaitVerifyReceipt();
+          const verifyReceipt = await transferTransaction.awaitVerifyReceipt();
           store.verifyToken = !!verifyReceipt;
         } else {
           store.error = `Address: "${addressMiddleCutter(
-            addressValue,
+            TransactionStore.recepientAddress,
             6,
             6,
           )}" doesn't match ethereum address format`;
@@ -340,14 +363,22 @@ export const useTransaction = () => {
       }
     },
     [
+      TransactionStore.recepientAddress,
       TransactionStore.amountBigValue,
-      addressValue,
+      TransactionStore.transactionHash,
       history,
       store.verifyToken,
       store.error,
       store.hint,
       transactions,
       zkWallet,
+      TokensStore.zkBalances,
+      TransactionStore.fee,
+      TransactionStore.isLoading,
+      TransactionStore.transferFeeToken,
+      store.isBurnerWallet,
+      store.txButtonUnlocked,
+      store.zkWallet,
     ],
   );
 
@@ -356,14 +387,22 @@ export const useTransaction = () => {
       try {
         const zkSync = await import('zksync');
         const fee = await zkWallet?.provider
-          .getTransactionFee('Withdraw', addressValue, symbol)
+          .getTransactionFee(
+            'Withdraw',
+            TransactionStore.recepientAddress,
+            symbol,
+          )
           .then(res => res.totalFee);
         const fastFee = await zkWallet?.provider
-          .getTransactionFee('FastWithdraw', addressValue, symbol)
+          .getTransactionFee(
+            'FastWithdraw',
+            TransactionStore.recepientAddress,
+            symbol,
+          )
           .then(res => res.totalFee);
         store.txButtonUnlocked = false;
         if (
-          ADDRESS_VALIDATION['eth'].test(addressValue) &&
+          ADDRESS_VALIDATION['eth'].test(TransactionStore.recepientAddress) &&
           zkWallet &&
           fee &&
           fastFee
@@ -371,7 +410,7 @@ export const useTransaction = () => {
           TransactionStore.isLoading = true;
           if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
-          const handleMax = zkBalances.filter(
+          const handleMax = TokensStore.zkBalances.filter(
             balance => balance.symbol === symbol || balance.address === symbol,
           );
           const maxBigValue = store.zkWallet?.provider.tokenSet.parseToken(
@@ -381,7 +420,7 @@ export const useTransaction = () => {
           ethers.BigNumber;
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
             {
-              ethAddress: addressValue,
+              ethAddress: TransactionStore.recepientAddress,
               token: symbol,
               amount: ethers.BigNumber.from(
                 (
@@ -391,13 +430,13 @@ export const useTransaction = () => {
                 ).toString(),
               ),
               fee: zkSync.closestPackableTransactionFee(
-                store.fastWithdrawal ? fastFee : fee,
+                TransactionStore.fastWithdrawal ? fastFee : fee,
               ),
-              fastProcessing: store.fastWithdrawal,
+              fastProcessing: TransactionStore.fastWithdrawal,
             },
           );
           const hash = withdrawTransaction.txHash;
-          setHash(hash);
+          TransactionStore.transactionHash = hash;
           store.hint = `Waiting for the transaction to be mined.. \n ${+handleFormatToken(
             zkWallet,
             symbol,
@@ -417,7 +456,7 @@ export const useTransaction = () => {
           store.verifyToken = !!verifyReceipt;
         } else {
           store.error = `Address: "${addressMiddleCutter(
-            addressValue,
+            TransactionStore.recepientAddress,
             6,
             6,
           )}" doesn't match ethereum address format`;
@@ -436,34 +475,25 @@ export const useTransaction = () => {
     },
     [
       TransactionStore.amountBigValue,
-      addressValue,
+      TransactionStore.recepientAddress,
       history,
       store.error,
-      setHash,
       TransactionStore.isLoading,
       store.verifyToken,
       transactions,
       zkWallet,
       store.hint,
-      store.fastWithdrawal,
+      TransactionStore.fastWithdrawal,
+      store.zkWallet,
+      TokensStore.zkBalances,
+      TransactionStore.transactionHash,
+      store.isBurnerWallet,
+      store.txButtonUnlocked,
     ],
   );
 
   return {
-    addressValue,
     deposit,
-    hash,
-    isExecuted,
-    maxValueProp,
-    setAddressValue,
-    setExecuted,
-    setHash,
-    setMaxValueProp,
-    setSymbol,
-    setSymbolNameProp,
-    setTokenProp,
-    symbolNameProp,
-    tokenProp,
     transfer,
     withdraw,
   };

@@ -34,7 +34,7 @@ import {
 
 const App: React.FC<IAppProps> = observer(({ children }) => {
   const store = useStore();
-  const { AccountStore, TransactionStore } = store;
+  const { AccountStore, TransactionStore, TokensStore } = store;
   const { pathname } = useLocation();
   const { createWallet, connect, getSigner } = useWalletInit();
   const history = useHistory();
@@ -131,22 +131,22 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         store.setBatch({
           hint: '',
           zkWallet: null,
-          zkBalances: [],
           isAccessModalOpen: true,
           transactions: [],
           zkWalletInitializing: false,
           searchBalances: [],
           searchContacts: [],
-          ethBalances: [],
-          isAccountBalanceLoading: true,
-          isAccountBalanceNotEmpty: false,
-          tokenInUnlockingProgress: [],
         });
+        TokensStore.ethBalances = [];
+        TokensStore.isAccountBalanceLoading = true;
+        TokensStore.isAccountBalanceNotEmpty = false;
+        TokensStore.zkBalances = [];
         store.isAccessModalOpen = true;
         TransactionStore.isBalancesListOpen = false;
         TransactionStore.isContactsListOpen = false;
         TransactionStore.symbolName = '';
         TransactionStore.maxValue = 0;
+        TransactionStore.tokenInUnlockingProgress = [];
         AccountStore.isAccountUnlockingProcess = false;
       }
     };
@@ -296,8 +296,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [store.walletName]);
 
   useEffect(() => {
-    checkForEmptyBalance(store, store.zkBalances);
-  }, [store.zkBalances, store]);
+    checkForEmptyBalance(store, TokensStore.zkBalances);
+  }, [TokensStore.zkBalances, store]);
 
   useEffect(() => {
     const { zkWallet, provider, walletName } = store;
@@ -359,9 +359,9 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
 
   useEffect(() => {
     if (store.modalSpecifier !== 'claim-tokens') {
-      store.MLTTclaimed = false;
+      TokensStore.MLTTclaimed = false;
     }
-  }, [store.modalSpecifier, store.MLTTclaimed]);
+  }, [store.modalSpecifier, TokensStore.MLTTclaimed]);
 
   const handleOpenUnlinkModal = () => {
     store.modalHintMessage = `Unlink${store.walletName}`;

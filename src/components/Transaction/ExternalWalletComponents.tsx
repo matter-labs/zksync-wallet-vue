@@ -4,23 +4,9 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
-import {
-  LINKS_CONFIG,
-  FAUCET_TOKEN_API,
-  ETH_MINT_ADDRESS,
-  ABI_DEFAULT_INTERFACE,
-} from 'src/config';
+import { LINKS_CONFIG } from 'src/config';
 
-import {
-  handleFormatToken,
-  handleExponentialNumbers,
-  intervalAsyncStateUpdater,
-  loadTokens,
-  sortBalancesById,
-  mintTestERC20Tokens,
-  addressMiddleCutter,
-  useCallbackWrapper,
-} from 'src/utils';
+import { handleExponentialNumbers, addressMiddleCutter } from 'src/utils';
 
 import { CopyBlock } from 'src/components/Common/CopyBlock';
 

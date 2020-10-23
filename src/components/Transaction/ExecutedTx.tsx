@@ -18,37 +18,21 @@ import { BackButton } from 'src/components/Common/BackButton';
 
 interface IExecutedTxProps {
   fee?: string | null;
-  price?: number;
-  addressValue: string;
+  feeToken: string;
   handleCancel: () => void;
-  hash: string | ethers.ContractTransaction | undefined;
   inputValue: string;
-  setTransactionType: (
-    transaction: 'deposit' | 'withdraw' | 'transfer' | undefined,
-  ) => void;
-  symbolName: string;
   title: string;
 }
 
 library.add(fas);
 
 export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
-  ({
-    addressValue,
-    fee,
-    hash,
-    handleCancel,
-    inputValue,
-    price,
-    setTransactionType,
-    symbolName,
-    title,
-  }): JSX.Element => {
+  ({ fee, handleCancel, feeToken, inputValue, title }): JSX.Element => {
     const store = useStore();
 
     const [gasPrice, setGasPrice] = useState<any>(0);
 
-    const { hint, walletAddress, TransactionStore } = store;
+    const { hint, walletAddress, TransactionStore, TokensStore } = store;
 
     const info = hint?.split('\n');
 
@@ -69,34 +53,17 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
     const gasSpendOnETHTx = 21000;
     const gasSpendOnERC20Tx = 80000;
     const actualGasSpend =
-      symbolName === 'ETH' ? gasSpendOnETHTx : gasSpendOnERC20Tx;
+      feeToken === 'ETH' ? gasSpendOnETHTx : gasSpendOnERC20Tx;
 
     const costFactor =
-      store.price &&
+      TokensStore.tokenPrices &&
       fee &&
       Math.ceil(
-        (+utils.formatEther(+gasPrice * actualGasSpend) * +store.price['ETH']) /
-          (+fee * +store.price[symbolName]),
+        (+utils.formatEther(+gasPrice * actualGasSpend) *
+          +TokensStore.tokenPrices['ETH']) /
+          (+fee * +TokensStore.tokenPrices[feeToken]),
       );
     const delay = Math.pow(10, 9);
-
-    useEffect(() => {
-      if (title === 'Transfer') {
-        console.log(
-          `Gas: (${+gasPrice} * ${actualGasSpend}):` +
-            +gasPrice * actualGasSpend,
-        );
-        if (store.price)
-          console.log('Ethereum price in USD' + store.price['ETH']);
-        if (fee)
-          console.log(
-            'fee: ' +
-              store.zkWallet?.provider.tokenSet.parseToken(symbolName, fee),
-          );
-        if (store.price)
-          console.log('Token price in USD:' + store.price[symbolName]);
-      }
-    }, [gasPrice, title]);
 
     return (
       <>
@@ -119,7 +86,11 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
               title === 'Deposit'
                 ? `https://${LINKS_CONFIG.ethBlockExplorer}/tx`
                 : `https://${LINKS_CONFIG.zkSyncBlockExplorer}/transactions`
-            }/${typeof hash === 'string' ? hash : hash?.hash}`}
+            }/${
+              typeof TransactionStore.transactionHash === 'string'
+                ? TransactionStore.transactionHash
+                : TransactionStore.transactionHash?.hash
+            }`}
           >
             {'Link to the transaction '}
             <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
@@ -131,8 +102,8 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
           <>
             <span className='transaction-field-title'>
               <span>{'Recepient:'}</span>
-              <h3 className='truncate'>{walletAddress.name}</h3>
-              <p>{addressValue}</p>
+              <h3>{walletAddress.name}</h3>
+              <p>{TransactionStore.recepientAddress}</p>
             </span>
             {!walletAddress.name && (
               <button
@@ -154,10 +125,15 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
             {title === 'Deposit' && 'Amount: '}
           </span>
           <p className='transaction-field-amount'>
-            {inputValue} {symbolName}{' '}
+            {inputValue} {TransactionStore.symbolName}{' '}
             <span className='transaction-field-price'>
               {'~$'}
-              {price && (price * +inputValue).toFixed(2)}
+              {TokensStore.tokenPrices &&
+                TokensStore.tokenPrices[TransactionStore.symbolName] &&
+                (
+                  +TokensStore.tokenPrices[TransactionStore.symbolName] *
+                  +inputValue
+                ).toFixed(2)}
             </span>
           </p>
         </span>
@@ -165,23 +141,26 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
           <span className='transaction-field-title row fee'>
             <span>{title === 'Transfer' && 'Fee:'}</span>
             <p className='transaction-field-amount'>
-              {fee} {symbolName}{' '}
+              {fee} {feeToken}{' '}
               <span className='transaction-field-price'>
                 {'~$'}
-                {price && fee && (price * +fee).toFixed(2)}
+                {TokensStore.tokenPrices &&
+                  TokensStore.tokenPrices[feeToken] &&
+                  fee &&
+                  (+TokensStore.tokenPrices[feeToken] * +fee).toFixed(2)}
               </span>
             </p>
           </span>
         )}
         {title === 'Transfer' && (
           <div className='typing-wrapper'>
-            {((costFactor !== 0 && !!costFactor) || symbolName === 'MLTT') && (
+            {((costFactor !== 0 && !!costFactor) || feeToken === 'MLTT') && (
               <ReactTypingEffect
                 text={
-                  symbolName === 'ETH'
+                  feeToken === 'ETH'
                     ? `On mainnet, this transaction would’ve been ${costFactor}x more expensive (${costFactor &&
                         costFactor * 4}x for an ERC20 token!)`
-                    : symbolName === 'MLTT'
+                    : feeToken === 'MLTT'
                     ? 'For other ERC20 tokens, a tx like this would be ~100x more expensive on mainnet!'
                     : `On mainnet, this transaction would’ve been ${costFactor}x more expensive!`
                 }

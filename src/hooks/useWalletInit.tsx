@@ -25,7 +25,12 @@ import { useStore } from 'src/store/context';
 const useWalletInit = () => {
   const store = useStore();
 
-  const { ExternaWalletStore, AccountStore } = store;
+  const {
+    ExternaWalletStore,
+    AccountStore,
+    TransactionStore,
+    TokensStore,
+  } = store;
 
   const cancelable = useCancelable();
 
@@ -249,8 +254,8 @@ const useWalletInit = () => {
       fetch(WITHDRAWAL_PROCESSING_TIME_LINK)
         .then(res => res.json())
         .then(data => {
-          store.withdrawalProcessingTime = data.normal;
-          store.fastWithdrawalProcessingTime = data.fast;
+          TransactionStore.withdrawalProcessingTime = data.normal;
+          TransactionStore.fastWithdrawalProcessingTime = data.fast;
         });
 
       const arr = window.localStorage?.getItem(
@@ -273,12 +278,12 @@ const useWalletInit = () => {
         store.error = error;
       }
       store.setBatch({
-        tokens: tokens,
         searchBalances: zkBalances,
-        zkBalances: zkBalances.sort(sortBalancesById),
-        zkBalancesLoaded: true,
         maxConfirmAmount,
       });
+      TokensStore.zkBalances = zkBalances.sort(sortBalancesById);
+      TokensStore.zkBalancesLoaded = true;
+      TokensStore.tokens = tokens;
       store.modalSpecifier = '';
       store.modalHintMessage = '';
       if (store.isExternalWallet) return;
@@ -287,7 +292,7 @@ const useWalletInit = () => {
         //TODO: replace with Promise.All
         const price = store.syncProvider?.getTokenPrice(symbol);
         prices[symbol] = await price;
-        store.price = prices;
+        TokensStore.tokenPrices = prices;
       });
 
       await syncWallet

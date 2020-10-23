@@ -11,35 +11,19 @@ import { loadTokens } from 'src/utils';
 
 export const Deposit: React.FC = observer(
   (): JSX.Element => {
-    const {
-      addressValue,
-      deposit,
-      hash,
-      isExecuted,
-      setAddressValue,
-      setHash,
-      setExecuted,
-      setSymbol,
-    } = useTransaction();
+    const { deposit } = useTransaction();
 
     const store = useStore();
 
-    const { ethBalances, price } = store;
+    const { TokensStore } = store;
 
     useCheckLogin();
 
     return (
       <Transaction
-        addressValue={addressValue}
-        balances={ethBalances}
-        hash={hash}
-        isExecuted={isExecuted}
+        balances={TokensStore.ethBalances}
         isInput={false}
-        onChangeAddress={(e: string) => setAddressValue(e)}
-        price={price}
-        setHash={setHash}
-        setExecuted={setExecuted}
-        setSymbol={setSymbol}
+        price={TokensStore.tokenPrices}
         setTransactionType={t => {
           store.transactionType = t;
         }}

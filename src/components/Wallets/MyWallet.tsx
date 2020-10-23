@@ -22,14 +22,9 @@ import './Wallets.scss';
 const MyWallet: React.FC<IMyWalletProps> = observer(
   ({ price, setTransactionType }): JSX.Element => {
     const store = useStore();
+    const { TokensStore } = store;
 
-    const {
-      transactionModal,
-      zkBalances,
-      zkBalancesLoaded,
-      verifyToken,
-      zkWallet,
-    } = store;
+    const { transactionModal, verifyToken, zkWallet } = store;
 
     const body = document.getElementById('body');
 
@@ -38,13 +33,13 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
     const [isAssetsOpen, openAssets] = useState<boolean>(false);
     const [selectedBalance, setSelectedBalance] = useState<any>();
     const [symbolName, setSymbolName] = useState<any>(
-      !!zkBalances?.length ? zkBalances[0].symbol : '',
+      !!TokensStore.zkBalances?.length ? TokensStore.zkBalances[0].symbol : '',
     );
     const [verified, setVerified] = useState<any>();
     const [walletBalance, setWalletBalance] = useState<string>('');
 
     const verifiedState =
-      verified && !!zkBalances.length
+      verified && !!TokensStore.zkBalances.length
         ? +parseFloat(walletBalance).toFixed(20) !==
           +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(10)
         : false;
@@ -191,17 +186,26 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
                 className={'custom-selector-title'}
               >
                 {symbolName ? (
-                  <p>zk{symbolName}</p>
+                  <p>
+                    {'zk'}
+                    {symbolName}
+                  </p>
                 ) : (
                   <p>
-                    {!!store.isAccountBalanceNotEmpty &&
+                    {!!TokensStore.isAccountBalanceNotEmpty &&
                       (selectedBalance?.symbol ? (
-                        <span>zk{selectedBalance?.symbol}</span>
+                        <span>
+                          {'zk'}
+                          {selectedBalance?.symbol}
+                        </span>
                       ) : (
-                        <span>zk{zkBalances[0].symbol}</span>
+                        <span>
+                          {'zk'}
+                          {TokensStore.zkBalances[0].symbol}
+                        </span>
                       ))}
-                    {!store.isAccountBalanceNotEmpty &&
-                      (!zkBalancesLoaded ? (
+                    {!TokensStore.isAccountBalanceNotEmpty &&
+                      (!TokensStore.zkBalancesLoaded ? (
                         <Spinner />
                       ) : (
                         <span>{'zkETH'}</span>

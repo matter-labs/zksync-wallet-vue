@@ -15,13 +15,11 @@ import { LINKS_CONFIG } from 'src/config';
 import './Transaction.scss';
 
 interface ILoadingTXProps {
-  addressValue: string;
   fee?: string | null;
+  feeToken: string;
   handleCancel: () => void;
   isUnlockingProcess: boolean;
   inputValue: string;
-  price?: number;
-  symbolName: string;
   setWalletName: any;
   setUnlockingERCProcess: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
@@ -34,17 +32,21 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
   ({
     fee,
     inputValue,
-    price,
-    symbolName,
-    addressValue,
     handleCancel,
+    feeToken,
     title,
     isUnlockingProcess,
     setUnlockingERCProcess,
   }): JSX.Element => {
     const store = useStore();
 
-    const { hint, walletAddress, TransactionStore, AccountStore } = store;
+    const {
+      hint,
+      walletAddress,
+      TransactionStore,
+      AccountStore,
+      TokensStore,
+    } = store;
 
     const history = useHistory();
 
@@ -52,7 +54,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
 
     const unlockingTitle = AccountStore.isAccountUnlockingProcess
       ? 'Unlocking account'
-      : `Unlocking ${symbolName} token`;
+      : `Unlocking ${TransactionStore.symbolName} token`;
 
     const propperTitle =
       TransactionStore.isLoading &&
@@ -106,12 +108,12 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
         {title === 'Transfer' &&
           !AccountStore.isAccountUnlockingProcess &&
           store.unlocked !== undefined &&
-          store.zkBalancesLoaded && (
+          TokensStore.zkBalancesLoaded && (
             <>
               <span className='transaction-field-title'>
                 <span>{'Recepient:'}</span>
-                <h3 className='truncate'>{walletAddress.name}</h3>
-                <p>{addressValue}</p>
+                <h3>{walletAddress.name}</h3>
+                <p>{TransactionStore.recepientAddress}</p>
               </span>
               {!walletAddress.name && (
                 <button
@@ -129,7 +131,7 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
         {!AccountStore.isAccountUnlockingProcess &&
           !isUnlockingProcess &&
           store.unlocked !== undefined &&
-          store.zkBalancesLoaded && (
+          TokensStore.zkBalancesLoaded && (
             <>
               <span className='transaction-field-title row'>
                 <span>
@@ -138,10 +140,15 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
                   {title === 'Deposit' && 'Amount: '}
                 </span>
                 <p className='transaction-field-amount'>
-                  {inputValue} {symbolName}{' '}
+                  {inputValue} {TransactionStore.symbolName}{' '}
                   <span className='transaction-field-price'>
                     {'~$'}
-                    {price && (price * +inputValue).toFixed(2)}
+                    {TokensStore.tokenPrices &&
+                      TokensStore.tokenPrices[TransactionStore.symbolName] &&
+                      (
+                        +TokensStore.tokenPrices[TransactionStore.symbolName] *
+                        +inputValue
+                      ).toFixed(2)}
                   </span>
                 </p>
               </span>
@@ -149,10 +156,14 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
                 <span className='transaction-field-title row fee'>
                   <span>{title === 'Transfer' && 'Fee:'}</span>
                   <p className='transaction-field-amount'>
-                    {fee} {symbolName}{' '}
+                    {fee} {feeToken}{' '}
                     <span className='transaction-field-price'>
                       {'~$'}
-                      {price && fee && (price * +fee).toFixed(2)}
+                      {TokensStore.tokenPrices &&
+                        TokensStore.tokenPrices[feeToken] &&
+                        (
+                          +TokensStore.tokenPrices[feeToken] * +inputValue
+                        ).toFixed(2)}
                     </span>
                   </p>
                 </span>

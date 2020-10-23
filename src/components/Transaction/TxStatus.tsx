@@ -65,6 +65,9 @@ const CheckMark = () => (
 export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
   const [confirmation, setConfirmation] = useState<number>(0);
   const store = useStore();
+
+  const { TransactionStore } = store;
+
   const isZkSync = tx.hash.startsWith('sync-tx');
   const provider = getDefaultProvider(LINKS_CONFIG.network);
   if (!tx.commited && !tx.verified) {
@@ -79,8 +82,8 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
   let status = getTxStatus(tx, confirmation, store);
 
   const withdrawalTime = tx.tx.fast
-    ? store.fastWithdrawalProcessingTime
-    : store.withdrawalProcessingTime;
+    ? TransactionStore.fastWithdrawalProcessingTime
+    : TransactionStore.withdrawalProcessingTime;
 
   let content: JSX.Element | null = null;
   const d = new Date();

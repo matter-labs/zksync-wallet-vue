@@ -10,6 +10,7 @@ import {
 import { ExternaWalletStore } from './externalWalletStore';
 import { TransactionStore } from './transactionStore';
 import { AccountStore } from './accountStore';
+import { TokensStore } from './tokensStore';
 
 import { Tokens, AccountState } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
@@ -24,55 +25,40 @@ export class Store {
   @observable ExternaWalletStore = new ExternaWalletStore();
   @observable TransactionStore = new TransactionStore();
   @observable AccountStore = new AccountStore();
+  @observable TokensStore = new TokensStore();
 
   @observable abiText: any = '';
   @observable autoLoginRequestStatus = sessionStorage.getItem(
     'autoLoginStatus',
   );
-  @observable awaitedTokens = {};
-  @observable awaitedTokensConfirmations = {};
   @observable сhangePubKeyFee = 0;
   @observable depositModal = false;
   @observable darkMode = false;
-  @observable fastWithdrawal = false;
-  @observable withdrawalProcessingTime = 0;
-  @observable fastWithdrawalProcessingTime = 0;
-  @observable withCloseMintModal = true;
   @observable txButtonUnlocked = true;
   @observable error = '';
   @observable fortmaticObject: any = {};
-  @observable isAccountBalanceNotEmpty = false;
-  @observable isAccountBalanceLoading = true;
   @observable newContactName = '';
   @observable newContactAddress = '';
-  @observable ethBalances: IEthBalance[] = [];
   @observable ethId = '';
   @observable ethWallet?: ethers.providers.JsonRpcSigner | ethers.Signer;
   @observable EIP1271Signature = false;
   @observable isContact = false;
-  @observable MLTTclaimed = false;
   @observable hint = '';
   @observable modalHintMessage = '';
   @observable normalBg = false;
   @observable isAccessModalOpen = false;
   @observable modalSpecifier = '';
   // path = observable.box<string>(window?.location.pathname);
-  @observable price?: IPrice;
   // TODO: add explicit type
   @observable provider?: any;
-  @observable propsMaxValue: any;
-  @observable propsSymbolName: any;
-  @observable propsToken: any;
-  @observable portisObject: any = null;
+  @observable portisObject: any = {};
   @observable searchBalances: IEthBalance[] = [];
   // TODO: add explicit type
   @observable searchContacts?: IContacts[] = [];
   // TODO: add explicit type
   @observable searchTransactions?: any;
-  @observable tokens?: Tokens;
   @observable transactionModal?: ITransaction;
   @observable transactionType?: 'deposit' | 'withdraw' | 'transfer';
-  @observable tokenInUnlockingProgress: string[] = [];
   @observable unlocked: boolean | undefined = undefined;
   @observable verifyToken = false;
   // TODO: add explicit type
@@ -80,8 +66,6 @@ export class Store {
   @observable walletName: WalletType = '';
   // TODO: add explicit type
   @observable walletAddress: IContactNameValue = {};
-  @observable.shallow zkBalances: IEthBalance[] = [];
-  @observable zkBalancesLoaded = false;
   @observable zkWallet: Wallet | null = null;
   @observable zkWalletInitializing = false;
   @observable wsTransport: WSTransport | null = null;

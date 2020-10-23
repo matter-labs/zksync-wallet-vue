@@ -199,7 +199,7 @@ export function DataList<T>({
   const makeFirstLetterToLowerCase = string =>
     string?.charAt(0).toLowerCase() + string?.slice(1);
 
-  const { zkBalances, zkBalancesLoaded, price } = store;
+  const { TokensStore } = store;
 
   const onChange = async e => {
     const res = await fetch(`${FAUCET_TOKEN_API}/ask_money`, {
@@ -247,7 +247,7 @@ export function DataList<T>({
       <Modal
         cancelAction={() => {
           store.modalSpecifier = '';
-          store.MLTTclaimed = false;
+          TokensStore.MLTTclaimed = false;
         }}
         visible={false}
         classSpecifier='claim-tokens'
@@ -256,13 +256,13 @@ export function DataList<T>({
       >
         <div>
           <h2 className='transaction-title'>
-            {store.MLTTclaimed
+            {TokensStore.MLTTclaimed
               ? 'Your $MLTT has been granted!'
               : 'Claiming $MLTT: Matter Labs Trial Token…'}
           </h2>
           {isCaptchaAppear ? (
             <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={onChange} />
-          ) : store.MLTTclaimed ? (
+          ) : TokensStore.MLTTclaimed ? (
             <LottiePlayer src={JSON.stringify(successCheckmark)} />
           ) : (
             <Spinner />
@@ -270,7 +270,7 @@ export function DataList<T>({
           <button
             onClick={() => {
               store.modalSpecifier = '';
-              store.MLTTclaimed = false;
+              TokensStore.MLTTclaimed = false;
             }}
             className='btn submit-button margin'
           >
@@ -296,13 +296,13 @@ export function DataList<T>({
       ) : (
         <h3 className='balances-title'>{title}</h3>
       )}
-      {store.isAccountBalanceNotEmpty &&
-        zkBalancesLoaded &&
+      {TokensStore.isAccountBalanceNotEmpty &&
+        TokensStore.zkBalancesLoaded &&
         setTransactionType && (
           <div className='mywallet-wrapper datalist'>
             <div
               className={`mywallet-buttons-container ${
-                !!price?.length ? '' : 'none'
+                !!TokensStore.tokenPrices?.length ? '' : 'none'
               }`}
             >
               <button
@@ -338,14 +338,14 @@ export function DataList<T>({
             </button>
           </div>
         )}
-      {!store.isAccountBalanceNotEmpty &&
-        !store.isAccountBalanceLoading &&
-        zkBalancesLoaded &&
+      {!TokensStore.isAccountBalanceNotEmpty &&
+        !TokensStore.isAccountBalanceLoading &&
+        TokensStore.zkBalancesLoaded &&
         setTransactionType && (
           <>
             <div
               className={`mywallet-buttons-container ${
-                !!price?.length ? '' : 'none'
+                !!TokensStore.tokenPrices?.length ? '' : 'none'
               }`}
             >
               <p>
@@ -377,7 +377,8 @@ export function DataList<T>({
             )}
           </>
         )}
-      {(store.zkBalances.length || window.location.pathname !== '/account') && (
+      {(TokensStore.zkBalances.length ||
+        window.location.pathname !== '/account') && (
         <input
           type='text'
           ref={focusInput}

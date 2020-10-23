@@ -150,11 +150,7 @@ export const ContactInfo: React.FC<IContactInfoProps> = observer(
           background={true}
           centered
         >
-          <SaveContacts
-            title='Add contact'
-            addressValue={store.walletAddress.address}
-            addressInput={false}
-          />
+          <SaveContacts title='Add contact' addressInput={false} />
         </Modal>
         <Modal
           visible={false}
@@ -166,7 +162,6 @@ export const ContactInfo: React.FC<IContactInfoProps> = observer(
           <SaveContacts
             oldContact={oldContact}
             title='Edit contact'
-            addressValue=''
             addressInput={true}
           />
           <button

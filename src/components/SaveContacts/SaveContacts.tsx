@@ -12,14 +12,7 @@ import { useAutoFocus } from 'src/hooks/useAutoFocus';
 import { addressMiddleCutter } from 'src/utils';
 
 const SaveContacts: React.FC<ISaveContactsProps> = observer(
-  ({
-    addressInput,
-    addressValue,
-    edit,
-    oldContact,
-    title,
-    onSaveContact,
-  }): JSX.Element => {
+  ({ addressInput, edit, oldContact, title, onSaveContact }): JSX.Element => {
     const [name, setName] = useState<string>(
       oldContact?.name ? oldContact.name : '',
     );
@@ -29,19 +22,19 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
     const [conditionError, setConditionError] = useState<string>('');
     const store = useStore();
 
-    const { zkWallet } = store;
+    const { zkWallet, TransactionStore } = store;
 
     useMobxEffect(() => {
-      if (addressValue) {
-        setAddress(addressValue);
+      if (TransactionStore.recepientAddress) {
+        setAddress(TransactionStore.recepientAddress);
       }
-    }, [addressValue, setAddress, store.modalSpecifier]);
+    }, [TransactionStore.recepientAddress, setAddress, store.modalSpecifier]);
 
     const handleSave = useCallback(
       e => {
         e.preventDefault();
         if (
-          ((address && name) || (addressValue && name)) &&
+          ((address && name) || (TransactionStore.recepientAddress && name)) &&
           ADDRESS_VALIDATION['eth'].test(address)
         ) {
           const contacts = JSON.parse(
@@ -109,7 +102,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
       },
       [
         address,
-        addressValue,
+        TransactionStore.recepientAddress,
         edit,
         name,
         setConditionError,

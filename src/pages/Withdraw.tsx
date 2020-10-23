@@ -9,36 +9,20 @@ import { useStore } from 'src/store/context';
 
 export const Withdraw: React.FC = observer(
   (): JSX.Element => {
-    const {
-      addressValue,
-      hash,
-      isExecuted,
-      setAddressValue,
-      setHash,
-      setExecuted,
-      setSymbol,
-      withdraw,
-    } = useTransaction();
+    const { withdraw } = useTransaction();
 
     const store = useStore();
 
-    const { price, zkBalances } = store;
+    const { TokensStore } = store;
 
     useCheckLogin();
 
     return (
       <Transaction
-        addressValue={addressValue}
-        balances={zkBalances}
-        hash={hash}
-        isExecuted={isExecuted}
+        balances={TokensStore.zkBalances}
         isInput={true}
-        onChangeAddress={(e: string) => setAddressValue(e)}
-        price={price}
-        setHash={setHash}
-        setExecuted={setExecuted}
+        price={TokensStore.tokenPrices}
         setTransactionType={t => (store.transactionType = t)}
-        setSymbol={setSymbol}
         title='Withdraw'
         transactionAction={withdraw}
         type='eth'

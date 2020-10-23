@@ -10,38 +10,22 @@ import { useTransaction } from 'hooks/useTransaction';
 
 export const Send: React.FC = observer(
   (): JSX.Element => {
-    const {
-      addressValue,
-      hash,
-      isExecuted,
-      setAddressValue,
-      setExecuted,
-      setHash,
-      setSymbol,
-      transfer,
-    } = useTransaction();
+    const { transfer } = useTransaction();
 
     const store = useStore();
 
-    const { price, zkBalances } = store;
+    const { TokensStore } = store;
 
     useCheckLogin();
 
     return (
       <Transaction
-        addressValue={addressValue}
-        balances={zkBalances}
-        hash={hash}
-        isExecuted={isExecuted}
+        balances={TokensStore.zkBalances}
         isInput={true}
-        onChangeAddress={(e: string) => setAddressValue(e)}
         propsMaxValue={undefined}
         propsSymbolName={undefined}
         propsToken={undefined}
-        price={price}
-        setHash={setHash}
-        setExecuted={setExecuted}
-        setSymbol={setSymbol}
+        price={TokensStore.tokenPrices}
         setTransactionType={t => {
           store.transactionType = t;
         }}

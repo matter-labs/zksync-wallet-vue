@@ -9,13 +9,20 @@ import './TokenInfo.scss';
 
 export const TokenInfo = observer(() => {
   const store = useStore();
+
+  const { TransactionStore, TokensStore } = store;
+
   const history = useHistory();
 
   useEffect(() => {
-    if (store.zkWallet && !store.propsSymbolName) {
+    if (store.zkWallet && !TransactionStore.propsSymbolName) {
       history.push('/account');
     }
-  }, [store.zkWallet, store.propsSymbolName, store.price]);
+  }, [
+    store.zkWallet,
+    TransactionStore.propsSymbolName,
+    TokensStore.tokenPrices,
+  ]);
 
   return (
     <div className='token-info-wrapper'>
@@ -27,17 +34,19 @@ export const TokenInfo = observer(() => {
       ></button>
       <div className='token-info-title-block'>
         <div>
-          <h3>{store.propsSymbolName}</h3>
+          <h3>{TransactionStore.propsSymbolName}</h3>
         </div>
-        {store.price && (
+        {TokensStore.tokenPrices && (
           <p className='token-info-title-price'>{'Token price:'}</p>
         )}
         <p>
-          {store.price && store.propsSymbolName && (
+          {TokensStore.tokenPrices && TransactionStore.propsSymbolName && (
             <>
               {'$'}
-              {store.price[store.propsSymbolName]
-                ? store.price[store.propsSymbolName].toFixed(2)
+              {TokensStore.tokenPrices[TransactionStore.propsSymbolName]
+                ? TokensStore.tokenPrices[
+                    TransactionStore.propsSymbolName
+                  ].toFixed(2)
                 : 0}
             </>
           )}
@@ -50,16 +59,16 @@ export const TokenInfo = observer(() => {
         <div className='token-info-balance'>
           <div>
             <h2>
-              {store.propsSymbolName}{' '}
-              {store.propsMaxValue &&
-                handleExponentialNumbers(+store.propsMaxValue)}
+              {TransactionStore.propsSymbolName}{' '}
+              {TransactionStore.propsMaxValue &&
+                handleExponentialNumbers(+TransactionStore.propsMaxValue)}
             </h2>
             <p>
-              {store.price &&
+              {TokensStore.tokenPrices &&
                 `~$${(
-                  +(store.price[store.propsSymbolName]
-                    ? store.price[store.propsSymbolName]
-                    : 0) * store.propsMaxValue
+                  +(TokensStore.tokenPrices[TransactionStore.propsSymbolName]
+                    ? TokensStore.tokenPrices[TransactionStore.propsSymbolName]
+                    : 0) * TransactionStore.propsMaxValue
                 ).toFixed(2)}`}
             </p>
           </div>

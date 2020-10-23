@@ -34,14 +34,16 @@ const ErrorBoundary = Bugsnag.getPlugin('react')!.createErrorBoundary(React);
 const Index = observer(() => {
   const store = useStore();
 
+  const { TransactionStore } = store;
+
   return (
     <BrowserRouter>
       <App>
         <Switch>
-          {!!store.propsSymbolName && (
+          {!!TransactionStore.propsSymbolName && (
             <Route
-              path={`/account/${store.propsSymbolName &&
-                store.propsSymbolName.toLowerCase()}`}
+              path={`/account/${TransactionStore.propsSymbolName &&
+                TransactionStore.propsSymbolName.toLowerCase()}`}
               exact
               component={TokenPage}
             />

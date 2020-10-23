@@ -105,7 +105,6 @@ const Contacts: React.FC = observer(
               >
                 <SaveContacts
                   title='Add contact'
-                  addressValue=''
                   addressInput={true}
                   onSaveContact={updateContactList}
                 />
@@ -120,7 +119,6 @@ const Contacts: React.FC = observer(
                 <SaveContacts
                   oldContact={oldContact}
                   title='Edit contact'
-                  addressValue=''
                   addressInput={true}
                   onSaveContact={updateContactList}
                 />

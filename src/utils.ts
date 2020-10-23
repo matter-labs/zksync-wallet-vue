@@ -1,5 +1,4 @@
 import ethers, {
-  Bytes,
   Contract,
   getDefaultProvider as getDefaultProviderEthers,
 } from 'ethers';
@@ -141,12 +140,12 @@ export function whyDidYouUpdate() {
 export const checkForEmptyBalance = (store: Store, balance) => {
   const tokensWithBalance = balance.filter(el => el.balance > 0);
   if (tokensWithBalance.length > 0) {
-    store.isAccountBalanceNotEmpty = true;
-    store.isAccountBalanceLoading = false;
+    store.TokensStore.isAccountBalanceNotEmpty = true;
+    store.TokensStore.isAccountBalanceLoading = false;
   }
   if (!!store.zkWallet && tokensWithBalance.length === 0) {
-    store.isAccountBalanceNotEmpty = false;
-    store.isAccountBalanceLoading = false;
+    store.TokensStore.isAccountBalanceNotEmpty = false;
+    store.TokensStore.isAccountBalanceLoading = false;
   }
 };
 
@@ -218,11 +217,11 @@ export const mintTestERC20Tokens = async (
       const _int = setInterval(() => {
         p.getTransactionReceipt(res.hash).then(res => {
           if (res) {
-            if (store.withCloseMintModal) {
+            if (store.TransactionStore.withCloseMintModal) {
               store.modalSpecifier = '';
               store.hint = '';
             }
-            store.withCloseMintModal = true;
+            store.TransactionStore.withCloseMintModal = true;
             clearInterval(_int);
           }
         });

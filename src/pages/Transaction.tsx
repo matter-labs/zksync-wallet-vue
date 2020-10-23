@@ -68,19 +68,25 @@ export const Transaction: FC<Tx> = props => {
     ? addressMiddleCutter(from, 6, 3)
     : addressMiddleCutter(to as string, 6, 3);
 
-  const handledAmount =
-    store.zkWallet &&
-    (!!amount || !!priority_op?.amount
-      ? handleExponentialNumbers(
-          +handleFormatToken(
-            store.zkWallet,
-            type === 'Deposit'
-              ? (priority_op?.token as string)
-              : (token as string),
-            type === 'Deposit' && priority_op ? +priority_op.amount : +amount,
-          ),
-        )
-      : 'Unlocking transaction');
+  const handleAmountType = () => {
+    if (!store.zkWallet) return;
+    if (!!props.tx.fee && props.tx.fee !== '0' && props.tx.amount === '0') {
+      return 'Fee transaction';
+    }
+    if (!!amount || !!priority_op?.amount) {
+      return handleExponentialNumbers(
+        +handleFormatToken(
+          store.zkWallet,
+          type === 'Deposit'
+            ? (priority_op?.token as string)
+            : (token as string),
+          type === 'Deposit' && priority_op ? +priority_op.amount : +amount,
+        ),
+      );
+    } else {
+      return 'Unlocking transaction';
+    }
+  };
 
   return (
     <div className='transaction-history-wrapper' key={hash}>
@@ -94,10 +100,12 @@ export const Transaction: FC<Tx> = props => {
             <div
               className='transaction-history-amount'
               style={{
-                width: `${!!handledAmount ? `${handledAmount}`.length : 0}ch`,
+                width: `${
+                  !!handleAmountType() ? handleAmountType().length : 0
+                }ch`,
               }}
             >
-              {!!handledAmount && handledAmount}
+              {!!handleAmountType() && handleAmountType()}
             </div>
           </div>
           <div className='transaction-history-hash'>

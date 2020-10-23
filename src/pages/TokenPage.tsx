@@ -20,10 +20,12 @@ const onSort = (arr: Tx[]) =>
 export const TokenPage = observer(() => {
   const store = useStore();
 
+  const { TransactionStore } = store;
+
   const renderTx = (tx: Tx) => {
     return (
       (tx.tx.type === 'Deposit' ? tx.tx.priority_op?.token : tx.tx.token) ===
-        store.propsSymbolName && (
+        TransactionStore.propsSymbolName && (
         <Transaction key={tx.hash + tx.tx.amount} {...tx} />
       )
     );
@@ -71,9 +73,11 @@ export const TokenPage = observer(() => {
           const filterTxs = res => {
             const filtered = res.filter(t => {
               if (t.tx.type === 'Deposit') {
-                return t.tx.priority_op.token === store.propsSymbolName;
+                return (
+                  t.tx.priority_op.token === TransactionStore.propsSymbolName
+                );
               } else {
-                return t.tx.token === store.propsSymbolName;
+                return t.tx.token === TransactionStore.propsSymbolName;
               }
             });
             return filtered;

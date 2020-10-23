@@ -23,7 +23,7 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
 
     const [conditionError, setConditionError] = useState<string>('');
 
-    const { TransactionStore } = store;
+    const { TransactionStore, TokensStore } = store;
 
     const history = useHistory();
 
@@ -37,10 +37,10 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
         TransactionStore.changePubKeyFees[TransactionStore.symbolName],
       );
     const feePrice = formattedFee &&
-      store.price &&
+      TokensStore.tokenPrices &&
       TransactionStore.symbolName && (
         <span className='md-font'>{` ~$${(
-          +store.price[TransactionStore.symbolName] * +formattedFee
+          +TokensStore.tokenPrices[TransactionStore.symbolName] * +formattedFee
         ).toFixed(2)}`}</span>
       );
 
@@ -49,14 +49,14 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
     useEffect(() => {
       if (
         !store.zkWallet ||
-        !store.zkBalancesLoaded ||
-        _cpkKeys.length < store.zkBalances.length
+        !TokensStore.zkBalancesLoaded ||
+        _cpkKeys.length < TokensStore.zkBalances.length
       )
         return;
       handleSelectBalance();
     }, [
       store.zkWallet,
-      store.zkBalancesLoaded,
+      TokensStore.zkBalancesLoaded,
       TransactionStore.changePubKeyFees,
     ]);
 
@@ -118,7 +118,7 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
     ));
 
     const loadingCondition =
-      !store.zkWallet || _cpkKeys.length < store.zkBalances.length;
+      !store.zkWallet || _cpkKeys.length < TokensStore.zkBalances.length;
 
     return (
       <>
