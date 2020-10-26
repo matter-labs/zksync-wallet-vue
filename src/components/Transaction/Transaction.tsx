@@ -174,23 +174,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [store.zkWallet]);
 
     useEffect(() => {
-      if (
-        store.isBurnerWallet &&
-        !store.unlocked &&
-        zkWallet &&
-        title !== 'Deposit'
-      ) {
-        cancelable(zkWallet?.getAccountState())
-          .then((res: any) => res)
-          .then(() => {
-            cancelable(zkWallet?.isSigningKeySet()).then(data =>
-              data ? null : handleUnlockWithUseCallBack(),
-            );
-          });
-      }
-    }, [store.unlocked, store.walletName]);
-
-    useEffect(() => {
       if (!store.zkWallet || !TokensStore.tokens) return;
       if (title === 'Deposit') {
         intervalAsyncStateUpdater(
