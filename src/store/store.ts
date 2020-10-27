@@ -39,6 +39,7 @@ export class Store {
   @observable fortmaticObject: any = {};
   @observable newContactName = '';
   @observable newContactAddress = '';
+  @observable loginCounter = 0;
   @observable ethId = '';
   @observable ethWallet?: ethers.providers.JsonRpcSigner | ethers.Signer;
   @observable EIP1271Signature = false;
