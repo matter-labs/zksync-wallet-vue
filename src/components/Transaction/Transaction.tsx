@@ -2017,7 +2017,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             </div>
                           </div>
                           {!!TransactionStore.filteredContacts.length &&
-                            TransactionStore.recepientAddress && (
+                            !TransactionStore.recepientAddress && (
                               <FilteredContactList
                                 filteredContacts={
                                   TransactionStore.filteredContacts
