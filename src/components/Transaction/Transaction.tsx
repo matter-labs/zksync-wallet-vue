@@ -707,9 +707,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       setSelectedBalance('');
       setSelectedContact('');
       TransactionStore.recepientAddress = '';
-      handleFilterContacts('');
     }, [
-      handleFilterContacts,
       TransactionStore.recepientAddress,
       TransactionStore.isTransactionExecuted,
       TransactionStore.transactionHash,
@@ -740,6 +738,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         TransactionStore.propsMaxValue = null;
         TransactionStore.propsSymbolName = null;
         TransactionStore.propsToken = null;
+        TransactionStore.filteredContacts = [];
       };
     }, []);
 
@@ -2016,15 +2015,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               )}
                             </div>
                           </div>
-                          {!!TransactionStore.filteredContacts.length &&
-                            !TransactionStore.recepientAddress && (
-                              <FilteredContactList
-                                filteredContacts={
-                                  TransactionStore.filteredContacts
-                                }
-                                selectFilteredContact={selectFilteredContact}
-                              />
-                            )}
+                          {!!TransactionStore.filteredContacts.length && (
+                            <FilteredContactList
+                              filteredContacts={
+                                TransactionStore.filteredContacts
+                              }
+                              selectFilteredContact={selectFilteredContact}
+                            />
+                          )}
                         </div>
                       )}
                       <div>
