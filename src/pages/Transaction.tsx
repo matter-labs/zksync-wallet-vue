@@ -88,6 +88,11 @@ export const Transaction: FC<Tx> = props => {
     }
   };
 
+  const notNumberClass =
+    !!parseFloat(handleAmountType()) || handleAmountType() === '0'
+      ? ''
+      : 'not-number';
+
   return (
     <div className='transaction-history-wrapper' key={hash}>
       <TxStatus tx={props} />
@@ -98,7 +103,7 @@ export const Transaction: FC<Tx> = props => {
         <div>
           <div className={`transaction-history ${type} scroll-wrapper`}>
             <div
-              className='transaction-history-amount'
+              className={`transaction-history-amount ${notNumberClass}`}
               style={{
                 width: `${
                   !!handleAmountType() ? handleAmountType().length : 0
