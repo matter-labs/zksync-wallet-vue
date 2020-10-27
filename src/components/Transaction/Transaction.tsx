@@ -235,7 +235,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       : TransactionStore.fee[feeToken];
 
     const validateNumbers = useCallback(
-      (e, max?: boolean) => {
+      (e, max?: boolean, maxValue?: number) => {
         const maxBigValue =
           TransactionStore.symbolName &&
           store.zkWallet?.provider.tokenSet.parseToken(
@@ -256,6 +256,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
             } catch {
               return;
             }
+          } else {
+            setInputValue(handleExponentialNumbers(e));
+            TransactionStore.amountValue = +e;
+            TransactionStore.pureAmountInputValue = e;
+            TransactionStore.conditionError = '';
           }
         } else {
           return;
@@ -350,6 +355,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
             balance => feeToken === balance.symbol,
           );
           if (
+            !!TransactionStore.symbolName &&
+            maxValue &&
+            +amount > +maxValue
+          ) {
+            TransactionStore.conditionError =
+              'Not enough funds: amount + fee exceeds your balance';
+          } else if (
+            !!TransactionStore.symbolName &&
             TransactionStore.symbolName === TransactionStore.transferFeeToken &&
             +TransactionStore.amountValue + +formattedFee >
               +TransactionStore.maxValue
@@ -358,7 +371,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               'Not enough funds: amount + fee exceeds your balance';
           } else if (
             TransactionStore.symbolName !== TransactionStore.transferFeeToken &&
-            +formattedFee > +feeTokenBalance[0].balance
+            +formattedFee > +feeTokenBalance[0]?.balance
           ) {
             TransactionStore.conditionError =
               'Not enough funds: amount + fee exceeds your balance';
@@ -430,6 +443,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         }
       },
       [
+        TransactionStore.transferFeeToken,
         TransactionStore.fee,
         TransactionStore.gas,
         TransactionStore.amountValue,
@@ -1358,11 +1372,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 'Not enough funds: amount + fee exceeds your balance';
             } else {
               TransactionStore.conditionError = '';
-              validateNumbers(+TransactionStore.amountValue);
+              validateNumbers(TransactionStore.amountValue?.toString());
               setAmount(+TransactionStore.amountValue);
               handleInputWidth(+TransactionStore.amountValue);
-              TransactionStore.conditionError = '';
-              TransactionStore.pureAmountInputValue = (+TransactionStore.amountValue)?.toString();
+              TransactionStore.pureAmountInputValue = TransactionStore.amountValue?.toString();
             }
             TransactionStore.transferFeeToken = symbol;
             TransactionStore.feeTokenSelection = false;
@@ -1381,11 +1394,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
             handleSelect(symbol);
             TransactionStore.isBalancesListOpen = false;
             setSelected(true);
-            TransactionStore.conditionError = '';
-            handleInputWidth(1);
-            validateNumbers('');
-            TransactionStore.amountValue = 0;
-            TransactionStore.pureAmountInputValue = '';
+            if (TransactionStore.amountValue !== 0) {
+              validateNumbers(
+                TransactionStore.amountValue.toString(),
+                false,
+                balance,
+              );
+            }
+            setAmount(+TransactionStore.amountValue);
+            handleInputWidth(+TransactionStore.amountValue);
             if (title === 'Transfer') {
               TransactionStore.transferFeeToken = symbol;
               TransactionStore.recepientAddress && handleTransferFee(symbol);
@@ -1425,7 +1442,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     useEffect(() => {
       return () => {
+        TransactionStore.amountValue = 0;
+        TransactionStore.pureAmountInputValue = '';
         TransactionStore.symbolName = '';
+        TransactionStore.maxValue = 0;
+        TransactionStore.tokenAddress = '';
         TransactionStore.recepientAddress = '';
         store.walletAddress = {};
       };
@@ -2042,7 +2063,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 ref={myRef}
                                 autoFocus={title === 'Transfer' ? true : false}
                                 onChange={e => {
-                                  if (!TransactionStore.symbolName) return;
                                   TransactionStore.amountValue = +e.target
                                     .value;
                                   validateNumbers(e.target.value);
@@ -2153,7 +2173,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                       : ''}
                                   </button>
                                 )}
-                                {!feeBasedOntype &&
+                                {(!feeBasedOntype ||
+                                  !ADDRESS_VALIDATION['eth'].test(
+                                    TransactionStore.recepientAddress,
+                                  )) &&
                                   !!selectedBalance &&
                                   title !== 'Deposit' && (
                                     <p className='all-balance-empty'>
