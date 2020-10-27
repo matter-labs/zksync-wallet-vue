@@ -145,10 +145,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [store.zkWallet]);
 
     useEffect(() => {
-      TransactionStore.transferFeeToken = '';
-    }, [store.zkWallet]);
-
-    useEffect(() => {
       const arr = window.localStorage?.getItem(
         `contacts${store.zkWallet?.address()}`,
       );
@@ -750,6 +746,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     useEffect(() => {
       return () => {
         TransactionStore.propsMaxValue = null;
+        TransactionStore.transferFeeToken = '';
         TransactionStore.propsSymbolName = null;
         TransactionStore.propsToken = null;
         TransactionStore.filteredContacts = [];
@@ -1371,7 +1368,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 'Not enough funds: amount + fee exceeds your balance';
             } else {
               TransactionStore.conditionError = '';
-              validateNumbers(TransactionStore.amountValue?.toString());
+              validateNumbers(+TransactionStore.amountValue);
               setAmount(+TransactionStore.amountValue);
               handleInputWidth(+TransactionStore.amountValue);
               TransactionStore.pureAmountInputValue = TransactionStore.amountValue?.toString();
@@ -2356,15 +2353,20 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   feeToken,
                                   feeBasedOntype,
                                 )}
-                              <button
-                                onClick={() => {
-                                  TransactionStore.feeTokenSelection = true;
-                                  TransactionStore.isBalancesListOpen = true;
-                                }}
-                                className='undo-btn marginless'
-                              >
-                                {feeToken}
-                              </button>
+                              {title === 'Transfer' ? (
+                                <button
+                                  onClick={() => {
+                                    TransactionStore.feeTokenSelection = true;
+                                    TransactionStore.isBalancesListOpen = true;
+                                  }}
+                                  className='undo-btn marginless'
+                                >
+                                  {feeToken}
+                                </button>
+                              ) : (
+                                ` ${TransactionStore.symbolName}`
+                              )}
+
                               {store.zkWallet && feeBasedOntype && (
                                 <span>
                                   {' ~$'}
