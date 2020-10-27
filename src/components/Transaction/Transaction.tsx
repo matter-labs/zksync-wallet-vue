@@ -102,7 +102,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const [isUnlockingProcess, setUnlockingERCProcess] = useState<boolean>(
       false,
     );
-    const [inputValue, setInputValue] = useState<string>('');
     const [selected, setSelected] = useState<boolean>(false);
     const [selectedBalance, setSelectedBalance] = useState<any | undefined>();
     const [selectedContact, setSelectedContact] = useState<any | undefined>();
@@ -223,10 +222,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
             !!store.EIP1271Signature))) &&
       !TransactionStore.conditionError.length &&
       selectedBalance &&
-      inputValue &&
+      TransactionStore.amountShowedValue &&
       !!store.txButtonUnlocked &&
-      +inputValue > 0 &&
-      +inputValue <= TransactionStore.maxValue;
+      +TransactionStore.amountShowedValue > 0 &&
+      +TransactionStore.amountShowedValue <= TransactionStore.maxValue;
 
     useEffect(() => {
       if (
@@ -260,7 +259,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             handleExponentialNumbers(TransactionStore.maxValue).toString(),
           );
         if (e.length === 0) {
-          setInputValue(e);
+          TransactionStore.amountShowedValue = e;
         }
         if (INPUT_VALIDATION.digits.test(e)) {
           if (TransactionStore.symbolName) {
@@ -269,7 +268,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 TransactionStore.symbolName,
                 e,
               );
-              setInputValue(handleExponentialNumbers(e));
+              TransactionStore.amountShowedValue = handleExponentialNumbers(e);
             } catch {
               return;
             }
@@ -301,7 +300,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
           if (+e - +formattedFee > 0) {
             if (max) {
               if (title !== 'Transfer') {
-                setInputValue((+e - +formattedFee).toString());
+                TransactionStore.amountShowedValue = (
+                  +e - +formattedFee
+                ).toString();
                 TransactionStore.amountValue = +e - +formattedFee;
               }
               if (
@@ -309,7 +310,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 TransactionStore.symbolName ===
                   TransactionStore.transferFeeToken
               ) {
-                setInputValue((+e - +formattedFee).toString());
+                TransactionStore.amountShowedValue = (
+                  +e - +formattedFee
+                ).toString();
                 TransactionStore.amountValue = +e - +formattedFee;
               }
               if (
@@ -317,7 +320,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 TransactionStore.symbolName !==
                   TransactionStore.transferFeeToken
               ) {
-                setInputValue(e);
+                TransactionStore.amountShowedValue = e;
                 TransactionStore.amountValue = +e;
               }
             } else {
@@ -458,10 +461,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
         TokensStore.ethBalances,
         store.zkWallet,
         TransactionStore.maxValue,
-        setInputValue,
+        TransactionStore.amountShowedValue,
         TransactionStore.conditionError,
         title,
-        inputValue,
+        TransactionStore.amountShowedValue,
       ],
     );
 
@@ -645,7 +648,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         TransactionStore.isContactsListOpen,
         TransactionStore.recepientAddress,
         handleFee,
-        inputValue,
+        TransactionStore.amountShowedValue,
       ],
     );
 
@@ -1069,7 +1072,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               : el.value.length + 1) + 'ch';
         }
       },
-      [inputValue, TransactionStore.maxValue],
+      [TransactionStore.amountShowedValue, TransactionStore.maxValue],
     );
 
     const handleSumbit = useCallback(() => {
@@ -1115,7 +1118,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
           );
         }
       }
-      if (!selectedBalance || (inputValue && +inputValue <= 0) || !inputValue) {
+      if (
+        !selectedBalance ||
+        (TransactionStore.amountShowedValue &&
+          +TransactionStore.amountShowedValue <= 0) ||
+        !TransactionStore.amountShowedValue
+      ) {
         TransactionStore.conditionError = `Please select the token and set the ${title.toLowerCase()} amount`;
       }
       if (
@@ -1127,7 +1135,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     }, [
       TransactionStore.recepientAddress,
-      inputValue,
+      TransactionStore.amountShowedValue,
       selectedBalance,
       TransactionStore.conditionError,
       unlockFau,
@@ -1407,7 +1415,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               TransactionStore.transferFeeToken = symbol;
               TransactionStore.recepientAddress && handleTransferFee(symbol);
             } else {
-              handleFee(inputValue, symbol);
+              handleFee(TransactionStore.amountShowedValue, symbol);
             }
             body?.classList.remove('fixed-b');
           }
@@ -1492,7 +1500,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
       const exceedBalanceTrigger = feeArg => {
         return (
-          +inputValue +
+          +TransactionStore.amountShowedValue +
             +handleFormatToken(
               store.zkWallet as Wallet,
               TransactionStore.symbolName,
@@ -1538,7 +1546,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
       const radioButtonCb = fee => {
         TransactionStore.fastWithdrawal = !TransactionStore.fastWithdrawal;
-        if (!inputValue) return;
+        if (!TransactionStore.amountShowedValue) return;
         if (exceedBalanceTrigger(fee)) {
           return (TransactionStore.conditionError =
             'Not enough funds: amount + fee exceeds your balance');
@@ -1816,7 +1824,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               }
               feeToken={feeToken}
               handleCancel={handleCancel}
-              inputValue={inputValue}
+              inputValue={TransactionStore.amountShowedValue}
               title={title}
             />
           )}
@@ -1856,7 +1864,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                   }
                   feeToken={feeToken}
                   isUnlockingProcess={isUnlockingProcess}
-                  inputValue={inputValue}
+                  inputValue={TransactionStore.amountShowedValue}
                   handleCancel={handleCancel}
                   setWalletName={setWalletName}
                   title={title}
@@ -2069,9 +2077,11 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                     e.target.value;
                                 }}
                                 value={
-                                  inputValue
+                                  TransactionStore.amountShowedValue
                                     ? // ? handleExponentialNumbers(+inputValue.toString().replace(/-/g, ''))
-                                      inputValue.toString().replace(/-/g, '')
+                                      TransactionStore.amountShowedValue
+                                        .toString()
+                                        .replace(/-/g, '')
                                     : ''
                                 }
                               />
@@ -2114,8 +2124,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                           +(price && !!price[selectedBalance]
                                             ? price[selectedBalance]
                                             : 0) *
-                                          (inputValue
-                                            ? Math.abs(+inputValue)
+                                          (TransactionStore.amountShowedValue
+                                            ? Math.abs(
+                                                +TransactionStore.amountShowedValue,
+                                              )
                                             : 0)
                                         ).toFixed(2)
                                       }
@@ -2265,21 +2277,23 @@ const Transaction: React.FC<ITransactionProps> = observer(
                     <div className='error-container'>
                       <p
                         className={`error-text ${
-                          (!!inputValue &&
+                          (!!TransactionStore.amountShowedValue &&
                             ADDRESS_VALIDATION['eth'].test(
                               TransactionStore.recepientAddress,
                             ) &&
                             selectedBalance &&
-                            +inputValue >= TransactionStore.maxValue) ||
+                            +TransactionStore.amountShowedValue >=
+                              TransactionStore.maxValue) ||
                           !!TransactionStore.conditionError
                             ? 'visible'
                             : ''
                         }`}
                       >
-                        {!!inputValue &&
+                        {!!TransactionStore.amountShowedValue &&
                         selectedBalance &&
                         title !== 'Deposit' &&
-                        +inputValue > TransactionStore.maxValue
+                        +TransactionStore.amountShowedValue >
+                          TransactionStore.maxValue
                           ? 'Not enough funds: amount + fee exceeds your balance'
                           : TransactionStore.conditionError}
                       </p>
@@ -2293,9 +2307,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               TransactionStore.tokenAddress,
                             ) &&
                             title === 'Deposit') ||
-                          !inputValue ||
-                          (!!inputValue &&
-                            +inputValue > TransactionStore.maxValue) ||
+                          !TransactionStore.amountShowedValue ||
+                          (!!TransactionStore.amountShowedValue &&
+                            +TransactionStore.amountShowedValue >
+                              TransactionStore.maxValue) ||
                           !submitCondition
                             ? 'disabled'
                             : ''
