@@ -498,15 +498,16 @@
 
   &.scroll-wrapper {
     width: 165px;
-    margin: 10px 0;
+    margin: 5px 0;
     .transaction-history-amount {
       display: block;
       color: var(--dark-color);
       font-size: var(--xl-font-size);
       line-height: var(--xl-font-size);
       &.not-number {
-        font-size: var(--sm-font-size);
-        line-height: var(--sm-font-size);
+        color: var(--hints-color);
+        font-size: var(--md-font-size);
+        line-height: var(--xl-font-size);
       }
     }
   }
