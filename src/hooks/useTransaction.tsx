@@ -140,7 +140,6 @@ export const useTransaction = () => {
             token,
             handleMax[0]?.balance.toString(),
           );
-
           const executeDeposit = async gas => {
             try {
               const depositPriorityOperation = await cancelable(
@@ -293,7 +292,9 @@ export const useTransaction = () => {
             to: store.zkWallet?.address() as string,
             token: TransactionStore.transferFeeToken,
             amount: 0,
-            fee: TransactionStore.fee[TransactionStore.transferFeeToken],
+            fee: zkSync.closestPackableTransactionFee(
+              TransactionStore.fee[TransactionStore.transferFeeToken],
+            ),
             nonce,
           };
           const handleTransferTransaction = async () => {
@@ -310,7 +311,9 @@ export const useTransaction = () => {
                     )
                   ).toString(),
                 ),
-                fee: TransactionStore.fee[TransactionStore.transferFeeToken],
+                fee: zkSync.closestPackableTransactionFee(
+                  TransactionStore.fee[TransactionStore.transferFeeToken],
+                ),
               });
               if (!!transferTransaction) return transferTransaction;
             } else {

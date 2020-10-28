@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ethers } from 'ethers';
+import * as ethers from 'ethers';
 import makeBlockie from 'ethereum-blockies-base64';
 import { observer } from 'mobx-react-lite';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -271,7 +271,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 TransactionStore.symbolName,
                 e.toString(),
               );
-
         if (
           store.zkWallet &&
           feeBasedOntype &&
@@ -284,23 +283,37 @@ const Transaction: React.FC<ITransactionProps> = observer(
             feeToken,
             feeBasedOntype,
           );
-          if (+e - +formattedFee > 0) {
+          const amountBigValue =
+            TransactionStore.symbolName &&
+            e &&
+            store.zkWallet?.provider.tokenSet.parseToken(
+              TransactionStore.symbolName,
+              e,
+            );
+          TransactionStore.amountBigValue = amountBigValue;
+          if (TransactionStore.amountBigValue.sub(feeBasedOntype).gt(0)) {
             if (max) {
               if (title !== 'Transfer') {
-                TransactionStore.amountShowedValue = (
-                  +e - +formattedFee
-                ).toString();
-                TransactionStore.amountValue = +e - +formattedFee;
+                const _amount = handleFormatToken(
+                  store.zkWallet,
+                  TransactionStore.symbolName,
+                  amountBigValue.sub(feeBasedOntype),
+                );
+                TransactionStore.amountShowedValue = _amount;
+                TransactionStore.amountValue = +_amount;
               }
               if (
                 title === 'Transfer' &&
                 TransactionStore.symbolName ===
                   TransactionStore.transferFeeToken
               ) {
-                TransactionStore.amountShowedValue = (
-                  +e - +formattedFee
-                ).toString();
-                TransactionStore.amountValue = +e - +formattedFee;
+                const _amount = handleFormatToken(
+                  store.zkWallet,
+                  TransactionStore.symbolName,
+                  amountBigValue.sub(feeBasedOntype),
+                );
+                TransactionStore.amountShowedValue = _amount;
+                TransactionStore.amountValue = +_amount;
               }
               if (
                 title === 'Transfer' &&
@@ -356,6 +369,21 @@ const Transaction: React.FC<ITransactionProps> = observer(
           const feeTokenBalance = TokensStore.zkBalances?.filter(
             balance => feeToken === balance.symbol,
           );
+          const _amountBigValue =
+            TransactionStore.symbolName &&
+            e &&
+            store.zkWallet?.provider.tokenSet.parseToken(
+              TransactionStore.symbolName,
+              TransactionStore.amountValue.toString(),
+            );
+
+          const _maxBigValue =
+            TransactionStore.symbolName &&
+            e &&
+            store.zkWallet?.provider.tokenSet.parseToken(
+              TransactionStore.symbolName,
+              TransactionStore.maxValue.toString(),
+            );
           if (
             !!TransactionStore.symbolName &&
             maxValue &&
@@ -366,8 +394,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           } else if (
             !!TransactionStore.symbolName &&
             TransactionStore.symbolName === TransactionStore.transferFeeToken &&
-            +TransactionStore.amountValue + +formattedFee >
-              +TransactionStore.maxValue
+            _amountBigValue.add(feeBasedOntype).gt(_maxBigValue)
           ) {
             TransactionStore.conditionError =
               'Not enough funds: amount + fee exceeds your balance';
@@ -408,30 +435,31 @@ const Transaction: React.FC<ITransactionProps> = observer(
               TransactionStore.symbolName,
               TransactionStore.gas,
             );
-
+            const _amountBigValue =
+              TransactionStore.symbolName &&
+              e &&
+              store.zkWallet?.provider.tokenSet.parseToken(
+                TransactionStore.symbolName,
+                TransactionStore.amountValue.toString(),
+              );
             if (TransactionStore.symbolName === 'ETH') {
-              const amount =
-                TransactionStore.amountValue + +formattedGas >=
-                TransactionStore.maxValue
-                  ? TransactionStore.amountValue - +formattedGas
-                  : TransactionStore.amountValue;
-              TransactionStore.amountBigValue = store.zkWallet.provider.tokenSet.parseToken(
-                TransactionStore.symbolName,
-                amount.toString(),
-              );
+              const _maxBigValue =
+                TransactionStore.symbolName &&
+                e &&
+                store.zkWallet?.provider.tokenSet.parseToken(
+                  TransactionStore.symbolName,
+                  TransactionStore.maxValue.toString(),
+                );
+              const _amountPlusGas = _amountBigValue.add(TransactionStore.gas);
+
+              const _amount = _amountPlusGas.gte(_maxBigValue)
+                ? _amountBigValue.sub(TransactionStore.gas)
+                : _amountBigValue;
+              TransactionStore.amountBigValue = _amount;
             } else {
-              const amount = TransactionStore.amountValue;
-              TransactionStore.amountBigValue = store.zkWallet.provider.tokenSet.parseToken(
-                TransactionStore.symbolName,
-                amount.toString(),
-              );
+              TransactionStore.amountBigValue = _amountBigValue;
             }
           } else {
-            const formattedFee = handleFormatToken(
-              store.zkWallet,
-              feeToken,
-              feeBasedOntype,
-            );
             TransactionStore.amountBigValue = store.zkWallet.provider.tokenSet.parseToken(
               TransactionStore.symbolName,
               TransactionStore.amountValue.toString(),
