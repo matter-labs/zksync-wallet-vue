@@ -749,16 +749,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       TransactionStore.isTransactionExecuted = false;
     }, [store.zkWallet]);
 
-    useEffect(() => {
-      return () => {
-        TransactionStore.propsMaxValue = null;
-        TransactionStore.transferFeeToken = '';
-        TransactionStore.propsSymbolName = null;
-        TransactionStore.propsToken = null;
-        TransactionStore.filteredContacts = [];
-      };
-    }, []);
-
     useMobxEffect(() => {
       store.searchBalances =
         title === 'Deposit' ? TokensStore.ethBalances : TokensStore.zkBalances;
@@ -1461,12 +1451,20 @@ const Transaction: React.FC<ITransactionProps> = observer(
     useEffect(() => {
       return () => {
         TransactionStore.amountValue = 0;
+        TransactionStore.amountBigValue = 0;
+        TransactionStore.propsMaxValue = null;
+        TransactionStore.amountShowedValue = '';
+        TransactionStore.amountValue = 0;
         TransactionStore.pureAmountInputValue = '';
         TransactionStore.symbolName = '';
         TransactionStore.maxValue = 0;
         TransactionStore.tokenAddress = '';
         TransactionStore.recepientAddress = '';
+        TransactionStore.transferFeeToken = '';
+        TransactionStore.propsSymbolName = null;
         store.walletAddress = {};
+        TransactionStore.propsToken = null;
+        TransactionStore.filteredContacts = [];
       };
     }, []);
 
