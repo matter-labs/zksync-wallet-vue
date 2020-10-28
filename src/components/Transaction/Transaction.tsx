@@ -432,14 +432,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
               feeToken,
               feeBasedOntype,
             );
-            const amount =
-              TransactionStore.amountValue + +formattedFee >=
-              TransactionStore.maxValue
-                ? TransactionStore.amountValue - +formattedFee
-                : TransactionStore.amountValue;
             TransactionStore.amountBigValue = store.zkWallet.provider.tokenSet.parseToken(
               TransactionStore.symbolName,
-              amount.toString(),
+              TransactionStore.amountValue.toString(),
             );
           }
         }
