@@ -192,6 +192,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     }, [store.zkWallet, TokensStore.tokens]);
 
+    const tokenRightCondition =
+      selectedBalance &&
+      inputValue &&
+      !!store.txButtonUnlocked &&
+      +inputValue > 0 &&
+      +inputValue <= TransactionStore.maxValue;
+
     const submitCondition =
       (ADDRESS_VALIDATION['eth'].test(TransactionStore.recepientAddress) ||
         (title === 'Deposit' &&
@@ -201,11 +208,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             ) ||
             !!store.EIP1271Signature))) &&
       !TransactionStore.conditionError.length &&
-      selectedBalance &&
-      inputValue &&
-      !!store.txButtonUnlocked &&
-      +inputValue > 0 &&
-      +inputValue <= TransactionStore.maxValue;
+      tokenRightCondition;
 
     useEffect(() => {
       if (
@@ -802,6 +805,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
       TransactionStore.maxValue = balances[id].balance;
       handleUpdateTokenPrice(balances[id].symbol);
       setSelectedBalance(balances[id].symbol);
+      setSelected(true);
+      if (title === 'Transfer') {
+        TransactionStore.transferFeeToken = balances[id].symbol;
+      }
       TransactionStore.symbolName = balances[id].symbol;
       if (!store.unlocked) return;
       handleFee(
@@ -851,10 +858,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
     ]);
 
     useEffect(() => {
-      if (balances?.length === 1 && store.unlocked) {
+      if (balances?.length === 1 && store.unlocked && store.zkWallet) {
         autoSelectBalance(balances, 0);
       }
-    }, [title, selectedContact, selectedBalance]);
+    }, [
+      title,
+      selectedContact,
+      selectedBalance,
+      balances,
+      store.unlocked,
+      store.zkWallet,
+    ]);
 
     useMobxEffect(() => {
       if (
