@@ -40,22 +40,22 @@ export const portisConnector = async (
   getSigner,
   withConnect?,
 ) => {
+  store.loginCounter += 1;
+  if (store.loginCounter === 1) return;
   if (!store.isPortisWallet) return;
-  if (!store.portisObject) {
-    const Portis = (await import('@portis/web3')).default;
-    store.zkWalletInitializing = true;
-    const portis = new Portis(
-      process.env.REACT_APP_PORTIS || '',
-      LINKS_CONFIG.network,
-    );
-    store.portisObject = portis;
-    const portisProvider = portis.provider;
-    store.provider = portisProvider;
-    const signer = getSigner(portisProvider);
-    const address = await signer.getAddress(signer);
-    store.AccountStore.accountAddress = address;
-    if (!!withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
-  }
+  const Portis = (await import('@portis/web3')).default;
+  store.zkWalletInitializing = true;
+  const portis = new Portis(
+    process.env.REACT_APP_PORTIS || '',
+    LINKS_CONFIG.network,
+  );
+  store.portisObject = portis;
+  const portisProvider = portis.provider;
+  store.provider = portisProvider;
+  const signer = getSigner(portisProvider);
+  const address = await signer.getAddress(signer);
+  store.AccountStore.accountAddress = address;
+  if (!!withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
 };
 
 export const fortmaticConnector = async (
@@ -64,21 +64,32 @@ export const fortmaticConnector = async (
   getSigner,
   withConnect?,
 ) => {
-  if (!store.isFortmaticWallet) return;
-  const fm = new Fortmatic(process.env.REACT_APP_FORTMATIC);
-  store.fortmaticObject = fm;
-  const fmProvider = fm.getProvider();
-  store.provider = fmProvider;
-  fm?.user?.isLoggedIn().then(res => {
-    store.AccountStore.isLoggedIn = res;
-    if (res) {
-      store.hint = 'Connected to ';
-    }
-  });
-  const signer = getSigner(fmProvider);
-  const address = await signer.getAddress(signer);
-  store.AccountStore.accountAddress = address;
-  if (!!withConnect) connect(fmProvider, signer?.getAddress.bind(signer));
+  try {
+    store.loginCounter += 1;
+    if (store.loginCounter === 1) return;
+    if (!store.isFortmaticWallet) return;
+    store.zkWalletInitializing = true;
+    const fm = new Fortmatic(process.env.REACT_APP_FORTMATIC);
+    store.fortmaticObject = fm;
+    const fmProvider = fm.getProvider();
+    store.provider = fmProvider;
+    fm?.user?.isLoggedIn().then(res => {
+      store.AccountStore.isLoggedIn = res;
+      if (res) {
+        store.hint = 'Connected to ';
+        store.zkWalletInitializing = false;
+      }
+    });
+    const signer = getSigner(fmProvider);
+    const address = await signer.getAddress(signer);
+    store.zkWalletInitializing = false;
+    store.AccountStore.accountAddress = address;
+    if (!!withConnect) connect(fmProvider, signer?.getAddress.bind(signer));
+  } catch (err) {
+    store.walletName = '';
+    store.isAccessModalOpen = false;
+    window.location.reload();
+  }
 };
 
 export const walletConnectConnector = (store: Store, connect) => {
