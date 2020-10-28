@@ -161,9 +161,8 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
                       {'~$'}
                       {TokensStore.tokenPrices &&
                         TokensStore.tokenPrices[feeToken] &&
-                        (
-                          +TokensStore.tokenPrices[feeToken] * +inputValue
-                        ).toFixed(2)}
+                        fee &&
+                        (+TokensStore.tokenPrices[feeToken] * +fee).toFixed(2)}
                     </span>
                   </p>
                 </span>
