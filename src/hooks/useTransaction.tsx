@@ -274,15 +274,21 @@ export const useTransaction = () => {
             store.hint = 'Follow the instructions in the pop up';
           const zkSync = await import('zksync');
           if (!nonce) return;
+          const amountBigValue =
+            TransactionStore.symbolName &&
+            TransactionStore.amountValue.toString() &&
+            store.zkWallet?.provider.tokenSet.parseToken(
+              TransactionStore.symbolName,
+              TransactionStore.amountValue.toString(),
+            );
+          if (!amountBigValue) return;
           const transferTx = {
             fee: 0,
             nonce,
             to: TransactionStore.recepientAddress,
             amount: ethers.BigNumber.from(
               (
-                await zkSync.closestPackableTransactionAmount(
-                  TransactionStore.amountBigValue,
-                )
+                await zkSync.closestPackableTransactionAmount(amountBigValue)
               ).toString(),
             ),
             token: TransactionStore.symbolName,
@@ -307,7 +313,7 @@ export const useTransaction = () => {
                 amount: ethers.BigNumber.from(
                   (
                     await zkSync.closestPackableTransactionAmount(
-                      TransactionStore.amountBigValue,
+                      amountBigValue,
                     )
                   ).toString(),
                 ),
@@ -331,7 +337,7 @@ export const useTransaction = () => {
           store.hint = ` \n ${+handleFormatToken(
             zkWallet,
             TransactionStore.symbolName,
-            TransactionStore.amountBigValue,
+            amountBigValue,
           )}. \n${hash}`;
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
