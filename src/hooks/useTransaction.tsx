@@ -77,6 +77,7 @@ export const useTransaction = () => {
                 zkBalance[key] ? zkBalance[key] : 0,
               ),
               symbol: tokens[key].symbol,
+              id: tokens[key].id,
             };
           });
           Promise.all(zkBalancePromises)

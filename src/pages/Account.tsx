@@ -361,7 +361,8 @@ const Account: React.FC = observer(() => {
                     TokensStore.MLTTclaimed = true;
                   }
                   TokensStore.zkBalancesLoaded = true;
-                  TokensStore.zkBalances = res.sort(sortBalancesById);
+                  const _balances = res.sort(sortBalancesById);
+                  TokensStore.zkBalances = _balances;
                 }
               }
             })
@@ -452,7 +453,7 @@ const Account: React.FC = observer(() => {
         }}
       />
       <DataList
-        data={TokensStore.zkBalances}
+        data={TokensStore.zkBalances.sort(sortBalancesById)}
         title='Balances in L2'
         visible={true}
         footer={ApiFailedHint}
