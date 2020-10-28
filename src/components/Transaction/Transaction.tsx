@@ -255,7 +255,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               return;
             }
           } else {
-            setInputValue(handleExponentialNumbers(e));
+            TransactionStore.amountShowedValue = handleExponentialNumbers(e);
             TransactionStore.amountValue = +e;
             TransactionStore.pureAmountInputValue = e;
             TransactionStore.conditionError = '';
