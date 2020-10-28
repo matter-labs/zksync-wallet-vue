@@ -383,6 +383,7 @@ export async function loadTokens(
       zkBalance[key] ? zkBalance[key].toString() : '0',
     ),
     symbol: tokens[key].symbol,
+    id: tokens[key].id,
   }));
 
   const zkBalances: IEthBalance[] = await Promise.all(zkBalancePromises).catch(
