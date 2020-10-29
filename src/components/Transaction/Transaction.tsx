@@ -1081,13 +1081,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
     ]);
 
     const handleInputWidth = useCallback(
-      e => {
+      (e, synthetic?) => {
         const el = myRef.current;
         if (el) {
           el.style.minWidth =
             (window?.innerWidth > WIDTH_BP ? 260 : 120) + 'px';
           el.style.width =
-            (e === TransactionStore.maxValue && e.toString() !== '0'
+            ((e === TransactionStore.maxValue && e.toString() !== '0') ||
+            !!synthetic
               ? e.toString().length
               : el.value.length + 1) + 'ch';
         }
@@ -1434,6 +1435,19 @@ const Transaction: React.FC<ITransactionProps> = observer(
             }
             setAmount(+TransactionStore.amountValue);
             handleInputWidth(+TransactionStore.amountValue);
+            const decimals = TransactionStore.amountShowedValue.split('.')[1];
+            if (
+              decimals &&
+              TokensStore.tokens &&
+              decimals.length > TokensStore.tokens[symbol].decimals
+            ) {
+              TransactionStore.amountValue = 0;
+              TransactionStore.amountShowedValue = '';
+              TransactionStore.pureAmountInputValue = '';
+              TransactionStore.amountBigValue = 0;
+              setAmount(0);
+              handleInputWidth(1, true);
+            }
             if (title === 'Transfer') {
               TransactionStore.transferFeeToken = symbol;
               TransactionStore.recepientAddress && handleTransferFee(symbol);
@@ -2101,6 +2115,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 ref={myRef}
                                 autoFocus={title === 'Transfer' ? true : false}
                                 onChange={e => {
+                                  if (e.target.value === '00') return;
                                   TransactionStore.amountValue = +e.target
                                     .value;
                                   validateNumbers(e.target.value);

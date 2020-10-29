@@ -369,7 +369,10 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   };
 
   const UnlinkAcccountBtn = () => (
-    <span onClick={() => handleUnlinkAccount(store)} className='undo-btn block'>
+    <span
+      onClick={() => handleUnlinkAccount(store, handleLogout)}
+      className='undo-btn block'
+    >
       {'Unlink account'}
     </span>
   );
