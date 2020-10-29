@@ -276,10 +276,10 @@ export const useTransaction = () => {
           if (!nonce) return;
           const amountBigValue =
             TransactionStore.symbolName &&
-            TransactionStore.amountValue.toString() &&
+            TransactionStore.amountShowedValue &&
             store.zkWallet?.provider.tokenSet.parseToken(
               TransactionStore.symbolName,
-              TransactionStore.amountValue.toString(),
+              TransactionStore.amountShowedValue,
             );
           if (!amountBigValue) return;
           const transferTx = {
