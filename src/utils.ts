@@ -50,7 +50,7 @@ export function getWalletNameFromProvider(): string | undefined {
   }
 }
 
-export const handleUnlinkAccount = (store: Store) => {
+export const handleUnlinkAccount = (store: Store, handleLogout) => {
   if (store.isCoinbaseWallet) {
     store.walletLinkObject.deactivate();
   }
@@ -70,6 +70,16 @@ export const handleUnlinkAccount = (store: Store) => {
     store.isAccessModalOpen = false;
     store.walletName = '';
     store.normalBg = false;
+  }
+  if (store.isWalletConnect) {
+    localStorage.removeItem('walletconnect');
+    store.modalHintMessage = '';
+    store.modalSpecifier = '';
+    handleLogout(false, '');
+    // store.walletName = 'WalletConnect';
+    // store.normalBg = true;
+    // store.isAccessModalOpen = true;
+    // walletConnectConnector(store, connect);
   }
 };
 
