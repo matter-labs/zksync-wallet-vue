@@ -393,6 +393,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
               'Not enough funds: amount + fee exceeds your balance';
           } else if (
             !!TransactionStore.symbolName &&
+            _amountBigValue &&
+            feeBasedOntype &&
+            _maxBigValue &&
             TransactionStore.symbolName === TransactionStore.transferFeeToken &&
             _amountBigValue.add(feeBasedOntype).gt(_maxBigValue)
           ) {
@@ -1419,6 +1422,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
           if (address === 'awaited') {
             return;
           } else {
+            TransactionStore.propsSymbolName = symbol;
+            TransactionStore.propsMaxValue = balance;
+            TransactionStore.propsToken = address;
             handleUpdateTokenPrice(symbol);
             TransactionStore.tokenAddress = address;
             TransactionStore.maxValue = balance;
