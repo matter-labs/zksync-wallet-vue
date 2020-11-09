@@ -1,9 +1,10 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Redirect } from 'react-router-dom';
 import Web3 from 'web3';
 import { observer } from 'mobx-react-lite';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ReactTooltip from 'react-tooltip';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
@@ -13,10 +14,8 @@ import { useQuery } from 'hooks/useQuery';
 import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
 import { LINKS_CONFIG } from 'src/config';
-import { BackButton } from 'src/components/Common/BackButton';
 
 import {
-  fortmaticConnector,
   portisConnector,
   walletConnectConnector,
 } from 'src/components/Wallets/walletConnectors';
@@ -101,6 +100,10 @@ const PrimaryPage: React.FC = observer(() => {
 
   const selectWallet = useCallback(
     (key: WalletType) => () => {
+      if (key === 'External') {
+        return;
+      }
+
       if (
         key === 'Web3' ||
         (key === 'Coinbase Wallet' && store.isMobileDevice)
@@ -223,8 +226,15 @@ const PrimaryPage: React.FC = observer(() => {
             {Object.values(wallets).map(key => (
               <button
                 key={key}
-                className='wallet-block'
                 onClick={selectWallet(key as WalletType)}
+                className={`wallet-block ${key}-block ${
+                  key === 'External' ? store.ExternalWallerAfterClick : ''
+                }`}
+                data-event={`click ${
+                  store.ExternalWallerAfterClick ? 'hover' : ''
+                }`}
+                data-tip={key === 'External'}
+                data-for={key === 'External' ? 'ExternalTooltip' : ''}
               >
                 <div className={`btn wallet-button ${key}`} key={key}>
                   {key === 'Web3' && (
@@ -232,6 +242,80 @@ const PrimaryPage: React.FC = observer(() => {
                   )}
                 </div>
                 <p>{key}</p>
+                {key === 'External' && (
+                  <ReactTooltip
+                    id='ExternalTooltip'
+                    delayHide={500}
+                    delayShow={200}
+                    delayUpdate={200}
+                    clickable={true}
+                    afterShow={() => {
+                      store.ExternalWallerAfterClick = 'externalClicked';
+                    }}
+                    border={false}
+                    type={'light'}
+                    place='right'
+                    effect='solid'
+                    className='additionalTooltip'
+                  >
+                    <h3>
+                      <strong>{'Better'}</strong> {'External Wallet'}
+                    </h3>
+                    <span className='description'>
+                      {
+                        'External Wallet functionality is under reconstruction in order to improve your experience.'
+                      }
+                    </span>
+                    <a
+                      className='expandTooltip'
+                      onMouseDown={event => {
+                        store.ExternalWallerShowWithdraw = !store.ExternalWallerShowWithdraw;
+                      }}
+                    >
+                      {'Contact us to withdraw funds'}
+                    </a>
+                    <div
+                      className={`withdrawBlock ${
+                        store.ExternalWallerShowWithdraw ? 'showBlock' : ''
+                      }`}
+                    >
+                      <span className='withdrawConditions'>
+                        {
+                          'Until the release we’ll serve withdrawals 7 days a week from 10 a.m. till 7p.m.'
+                        }
+                      </span>
+                      <ul>
+                        <li>
+                          <a
+                            href='https://twitter.com/the_matter_labs'
+                            target='_blank'
+                            className='twitterWithdraw'
+                          >
+                            {'DM us on twitter'}
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href='https://discord.gg/px2aR7w'
+                            target='_blank'
+                            className='discordWithdraw'
+                          >
+                            {'Use Discord'}
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href='mailto:hello@matter-labs.io'
+                            target='_blank'
+                            className='emailWithdraw'
+                          >
+                            {'mail to hello@matter-labs.io'}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </ReactTooltip>
+                )}
               </button>
             ))}
           </div>
