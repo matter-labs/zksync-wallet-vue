@@ -103,23 +103,23 @@
     border-radius: 5px;
 
     &::-webkit-scrollbar-track
-      {
-        background-color: var(--transparent);
-        border-radius: 10px;
-      }
+    {
+      background-color: var(--transparent);
+      border-radius: 10px;
+    }
 
-      &::-webkit-scrollbar
-      {
-        width: 10px;
-        background-color: var(--transparent);
-      }
+    &::-webkit-scrollbar
+    {
+      width: 10px;
+      background-color: var(--transparent);
+    }
 
-      &::-webkit-scrollbar-thumb
-      {
-        background-color: var(--input-border-focus);
-        border-radius: 10px;
-        cursor: pointer;
-      }
+    &::-webkit-scrollbar-thumb
+    {
+      background-color: var(--input-border-focus);
+      border-radius: 10px;
+      cursor: pointer;
+    }
 
     &.external {
       width: 100%;
@@ -208,7 +208,7 @@
     &-status {
       margin-left: 10px;
     }
-    
+
     &.verified {
       background-color: var(--transparent);
     }
@@ -233,12 +233,12 @@
         background-color: var(--modal-bg-color);
         border: 1px solid var(--border-color);
         border-radius: 5px;
-  
+
         &.pending {
           background-color: var(--copyblock-color);
           cursor: auto;
         }
-  
+
         &:hover {
           background-color: var(--copyblock-color);
         }
@@ -287,7 +287,6 @@
 
         & > p {
           margin: 0 10px;
-          margin-bottom: 0;
           color: var(--hints-color);
         }
       }
@@ -342,7 +341,7 @@
       height: 26px;
       background-size: 22px;
     }
-    
+
     &-edit {
       display: flex;
       align-items: center;
@@ -410,7 +409,7 @@
 
     &:hover {
       background-color: var(--bg-block-color);
-      
+
       .balances-contact-send {
         visibility: visible;
       }
@@ -431,11 +430,11 @@
     border-radius: 13px;
 
     & .tooltip {
-      bottom: 30px; 
+      bottom: 30px;
       left: 50%;
       display: none;
       width: auto;
-      min-width: 100px; 
+      min-width: 100px;
       padding: 10px;
       text-align: center;
 
@@ -444,12 +443,12 @@
       }
     }
 
-    &:hover .tooltip { 
+    &:hover .tooltip {
       position: absolute;
       z-index: 10000;
       display: block;
-      background: var(--modal-bg-color);  
-      border: 1px solid var(--hints-color); 
+      background: var(--modal-bg-color);
+      border: 1px solid var(--hints-color);
       border-radius: 5px;
     }
   }
@@ -479,7 +478,7 @@
     background-position: center;
     background-size: 18px;
     border-radius: 18px;
-  } 
+  }
 
   &.withdraw {
     background-color: var(--success-color);
@@ -570,7 +569,7 @@
   &-right {
     display: flex;
     align-items: center;
-    justify-content: start;
+    justify-content: flex-start;
     width: 100%;
     max-width: 110px;
   }
@@ -664,7 +663,7 @@
       & > p {
         display: inline;
       }
-    
+
       & > span {
         margin-right: 15px;
       }
