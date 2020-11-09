@@ -1,3 +1,4 @@
+/* stylelint-disable plugin/no-low-performance-animation-properties */
 @mixin absolute-center {
   position: absolute;
   top: 0;
@@ -16,7 +17,7 @@
 .spinner-wrapper {
   min-height: 32px;
 }
-    
+
 .spinner {
   position: relative;
   display: block;
@@ -24,7 +25,7 @@
   height: 1em;
   margin: 0 auto;
   font-size: var(--xxl-font-size);
-  
+
   &.center {
     @include absolute-center;
   }
@@ -35,13 +36,13 @@
     height: 18px;
     margin-right: 10px;
     animation: rotate 2s linear infinite;
-    
+
     & .path {
       animation: dash 1.5s ease-in-out infinite;
       stroke: var(--button-bg-color);
       stroke-linecap: round;
     }
-    
+
   }
 
   @keyframes rotate {
@@ -93,7 +94,7 @@
   0% {
     background-color: var(--button-bg-color);
   }
-  
+
   100% {
     background-color: var(--transparent);
   }

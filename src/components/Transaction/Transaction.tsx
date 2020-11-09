@@ -1398,10 +1398,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
             return;
           }
           if (TransactionStore.feeTokenSelection) {
+            const _amountBigValue = store.zkWallet?.provider.tokenSet.parseToken(
+              TransactionStore.symbolName,
+              TransactionStore.amountShowedValue,
+            );
+            const _maxBigValue = store.zkWallet?.provider.tokenSet.parseToken(
+              TransactionStore.symbolName,
+              handleExponentialNumbers(TransactionStore.maxValue).toString(),
+            );
             if (
               TransactionStore.symbolName === symbol &&
-              +TransactionStore.amountValue + +formattedFee >
-                +TransactionStore.maxValue
+              _amountBigValue.add(feeBasedOntype).gt(_maxBigValue)
             ) {
               TransactionStore.conditionError =
                 'Not enough funds: amount + fee exceeds your balance';
