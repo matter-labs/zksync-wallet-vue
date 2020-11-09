@@ -65,6 +65,8 @@ export class Store {
   // TODO: add explicit type
   @observable verified: any;
   @observable walletName: WalletType = '';
+  // TODO: remove in favor of the component
+  @observable ExternalWallerShowWithdraw = false;
   // TODO: add explicit type
   @observable walletAddress: IContactNameValue = {};
   @observable zkWallet: Wallet | null = null;
