@@ -1,4 +1,5 @@
 /* stylelint-disable no-descending-specificity */
+/* stylelint-disable plugin/no-low-performance-animation-properties */
 @import './dark';
 
 :root {
@@ -28,7 +29,7 @@
   --input-border-focus: rgba(0, 0, 0, 0.2);
   --error-color: rgba(255, 101, 35, 0.17);
   --delete-color: #ae1e1e;
-  --delete-color-light: #ff0000; 
+  --delete-color-light: #ff0000;
   --links-color: #4e529a;
   --success-color: #5cb85c;
   --transparent: transparent;
@@ -37,7 +38,6 @@
   --twitter-color: #1DA1F2;
   --yellow-color: yellow;
 
-  --xs-font-size: 11px;
   --xs-font-size: 12px;
   --sm-font-size: 14px;
   --md-font-size: 18px;
@@ -244,7 +244,6 @@ button {
       align-items: center;
       color: var(--delete-color-light);
     }
-    
 
     img {
       margin-right: 10px;
@@ -282,8 +281,8 @@ h2 {
       left: 50%;
       width: 10px;
       height: 10px;
-      color: var( --light-bg-color);
-      background-color: var( --light-bg-color);
+      color: var(--light-bg-color);
+      background-color: var(--light-bg-color);
       border-radius: 100%;
       transform: translate(-50%, -50%);
       content: '';
@@ -396,7 +395,7 @@ h2 {
 .hint {
   &-link {
     font-weight: var(--bold-font-weight);
-  } 
+  }
 
   &-datalist {
     &-wrapper {
@@ -436,13 +435,13 @@ h2 {
       align-items: center;
       justify-content: center;
       padding: 0 40px;
-  
+
       & > .hint-question-mark {
         position: absolute;
         right: 0;
         visibility: hidden;
       }
-  
+
       .mywallet-title {
         margin-bottom: 0;
       }
@@ -453,7 +452,7 @@ h2 {
         & > .hint-question-mark {
           visibility: visible;
         }
-      } 
+      }
     }
   }
 
@@ -504,7 +503,6 @@ h2 {
         }
       }
     }
-    
   }
 
   &-unlocked {
@@ -601,7 +599,7 @@ h2 {
   &_text {
     background-color: var(--yellow-color);
   }
-}  
+}
 
 .wrong-network {
   width: 90%;
@@ -652,6 +650,28 @@ h2 {
       font-size: var(--sm-font-size);
       cursor: pointer;
     }
+
+    &.externalClicked {
+      position: relative;
+      .btn
+      {
+        opacity:0.4;
+      }
+
+      &::before {
+        position: absolute;
+        top: -19px;
+        right: 11px;
+        z-index: 100;
+        width: 48px;
+        height: 48px;
+        background: transparent url('./images/External/lock.svg') 50% 50% no-repeat;
+        background-size: cover;
+        opacity: 1;
+        filter: drop-shadow(0px 10px 40px rgba(0, 0, 0, 0.1));
+        content: "";
+      }
+    }
   }
 
   &-button {
@@ -665,7 +685,7 @@ h2 {
     border: none;
     border-radius: 27px;
     outline: none;
-    box-shadow: 0px 4px 8px var(--copyblock-color);
+    box-shadow: 0 4px 8px var(--copyblock-color);
     cursor: pointer;
 
     .fa-globe {
@@ -674,6 +694,7 @@ h2 {
     }
 
     &.External {
+      position: relative;
       background-image: url(./images/Ethereum.png);
       background-size: 80px;
     }
@@ -710,6 +731,128 @@ h2 {
   }
 }
 
+.additionalTooltip {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  max-width: 330px !important;
+  padding: 20px 30px !important;
+  background-color: var(--bg-block-color);
+  border-radius: 10px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15)) !important;
+  @media screen and (max-width: 768px) {
+    top: 30vh !important;
+    left: 5vw !important;
+    min-width: 80vw;
+    min-height: fit-content !important;
+    max-height: max-content !important;
+    padding-bottom: 0 !important;
+  }
+
+  &::after {
+    @media screen and (max-width: 768px) {
+      display: none !important;
+      content: none !important;
+    }
+  }
+
+  h3 {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    font: 500 22px/29px 'IBM Plex Sans', sans-serif;
+    text-align: center !important;
+  }
+
+  span.description {
+    display: block;
+    margin-bottom: 20px;
+    color: var(--text-black);
+    font: 300 16px/21px 'IBM Plex Sans', sans-serif;
+    text-align: left;
+  }
+
+  a.expandTooltip {
+    /* --links-color */
+    display: flex;
+    margin: 0 auto 20px;
+    padding: 11px 20px 11px 14px;
+    color: var(--button-text-color);
+    font: 500 14px/18px 'IBM Plex Sans', sans-serif;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    background: #4E529A;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+
+  .withdrawBlock {
+    display: none;
+
+    &.showBlock {
+      display: block !important;
+    }
+
+    span.withdrawConditions {
+      flex-basis: 100%;
+      margin-bottom: 10px;
+      padding: 0 10px;
+      font: normal 12px/16px 'IBM Plex Sans', sans-serif;
+
+      /* SystemBackground */
+    }
+
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      padding: 0;
+      list-style: none;
+
+      & > li {
+        width: 48px;
+        height: 48px;
+        list-style: none;
+
+        a {
+          display: block;
+          width: 48px;
+          height: 48px;
+          overflow: hidden;
+          text-indent: -1000px;
+          background: var(--bg-block-color) 50% 50% no-repeat;
+          background-size: cover;
+          border-radius: 50%;
+          opacity: 1;
+          filter: drop-shadow(0px 10px 40px rgba(0, 0, 0, 0.1));
+          transition: opacity 400ms ease-in;
+
+          &:hover {
+            opacity: 0.75;
+          }
+
+          &.twitterWithdraw {
+            background-image: url('./images/External/Twitter_white.svg');
+          }
+
+          &.discordWithdraw {
+            background-image: url('./images/External/discord.svg');
+          }
+
+          &.emailWithdraw {
+            background-image: url('./images/External/Mail.svg');
+          }
+        }
+      }
+    }
+  }
+}
+
 .submit-button {
   display: flex;
   align-items: center;
@@ -723,7 +866,7 @@ h2 {
   border: none;
   border-radius: 25px;
   outline: none;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 
   & > .twitter {
@@ -973,7 +1116,7 @@ h2 {
       width: 80px;
       margin-top: 2px;
       padding: 5px 10px 10px;
-      
+
       & > span {
         margin-top: 5px;
       }
@@ -994,23 +1137,23 @@ h2 {
     &:hover {
       border-radius: 4px;
     }
-    
+
     & .tooltip {
-      bottom: 30px; 
+      bottom: 30px;
       left: 50%;
       display: none;
-      width: auto; 
+      width: auto;
       padding: 10px;
       color: var(--dark-color);
       text-align: center;
     }
 
-    &:hover .tooltip { 
+    &:hover .tooltip {
       position: absolute;
       z-index: 10000;
       display: block;
-      background: var(--modal-bg-color);  
-      border: 1px solid var(--hints-color); 
+      background: var(--modal-bg-color);
+      border: 1px solid var(--hints-color);
       border-radius: 5px;
     }
 
@@ -1019,8 +1162,9 @@ h2 {
       width: 1em;
       margin-right: 10px;
     }
+
     > p {
-      margin: 0px;
+      margin: 0;
       white-space: nowrap;
     }
   }
@@ -1033,7 +1177,7 @@ h2 {
     width: 100%;
     height: 50%;
     padding-left: 18px;
-    overflow: none;
+    overflow: hidden;
     text-align: left;
     background-color: var(--transparent);
     border: none;
@@ -1172,7 +1316,7 @@ input[type='radio']:focus + .contact-manage {
         width: 100%;
         max-width: 560px;
 
-        & >span {
+        & > span {
           width: 100%;
         }
       }
@@ -1264,9 +1408,7 @@ input[type='radio']:focus + .contact-manage {
 .arrow-select {
   width: 14px;
   height: 15px;
-  background: url(./images/arrow-select.svg);
-  background-repeat: no-repeat;
-  background-position: center;
+  background: url(./images/arrow-select.svg) no-repeat center;
   background-size: contain;
 }
 
@@ -1305,7 +1447,7 @@ input[type='radio']:focus + .contact-manage {
   scrollbar-width: thin;
 }
 
-.scroll-wrapper::-webkit-scrollbar{
+.scroll-wrapper::-webkit-scrollbar {
   width: 6px;
   height: 4px;
   overflow-x: scroll;
@@ -1314,7 +1456,7 @@ input[type='radio']:focus + .contact-manage {
   scrollbar-color: var(--transparent);
 }
 
-.scroll-wrapper::-webkit-scrollbar-thumb:horizontal{
+.scroll-wrapper::-webkit-scrollbar-thumb:horizontal {
   background: var(--button-bg-color);
   border-radius: 10px;
 }
@@ -1517,6 +1659,7 @@ $scale: 0.95;
       transform: scale($scale);
       opacity: 0;
     }
+
     &-enter-active {
       transform: scale(1);
       opacity: 1;
@@ -1527,12 +1670,14 @@ $scale: 0.95;
       transform: scale(1);
       opacity: 1;
     }
+
     &-exit-active {
       transform: scale(0.9);
       opacity: 0;
       transition: opacity $dur, transform $dur;
     }
   }
+
   &-opacity {
     &-enter {
       opacity: 0;

@@ -31,7 +31,7 @@ export class Store {
   @observable autoLoginRequestStatus = sessionStorage.getItem(
     'autoLoginStatus',
   );
-  @observable сhangePubKeyFee = 0;
+  @observable changePubKeyFee = 0;
   @observable depositModal = false;
   @observable darkMode = false;
   @observable txButtonUnlocked = true;
@@ -65,6 +65,9 @@ export class Store {
   // TODO: add explicit type
   @observable verified: any;
   @observable walletName: WalletType = '';
+  // TODO: remove in favor of the component
+  @observable ExternalWallerShowWithdraw = false;
+  @observable ExternalWallerAfterClick = '';
   // TODO: add explicit type
   @observable walletAddress: IContactNameValue = {};
   @observable zkWallet: Wallet | null = null;
