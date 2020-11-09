@@ -1,5 +1,5 @@
-import React, { useMemo, useCallback, useEffect } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Redirect } from 'react-router-dom';
 import Web3 from 'web3';
 import { observer } from 'mobx-react-lite';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -14,10 +14,8 @@ import { useQuery } from 'hooks/useQuery';
 import { MOBILE_DEVICE } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
 import { LINKS_CONFIG } from 'src/config';
-import { BackButton } from 'src/components/Common/BackButton';
 
 import {
-  fortmaticConnector,
   portisConnector,
   walletConnectConnector,
 } from 'src/components/Wallets/walletConnectors';
@@ -228,10 +226,15 @@ const PrimaryPage: React.FC = observer(() => {
             {Object.values(wallets).map(key => (
               <button
                 key={key}
-                className={`wallet-block ${key}-block`}
+                onClick={selectWallet(key as WalletType)}
+                className={`wallet-block ${key}-block ${
+                  key === 'External' ? store.ExternalWallerAfterClick : ''
+                }`}
+                data-event={`click ${
+                  store.ExternalWallerAfterClick ? 'hover' : ''
+                }`}
                 data-tip={key === 'External'}
                 data-for={key === 'External' ? 'ExternalTooltip' : ''}
-                onClick={selectWallet(key as WalletType)}
               >
                 <div className={`btn wallet-button ${key}`} key={key}>
                   {key === 'Web3' && (
@@ -243,14 +246,17 @@ const PrimaryPage: React.FC = observer(() => {
                   <ReactTooltip
                     id='ExternalTooltip'
                     delayHide={500}
-                    delayShow={100}
-                    delayUpdate={500}
+                    delayShow={200}
+                    delayUpdate={200}
+                    clickable={true}
+                    afterShow={() => {
+                      store.ExternalWallerAfterClick = 'externalClicked';
+                    }}
                     border={false}
                     type={'light'}
                     place='right'
                     effect='solid'
                     className='additionalTooltip'
-                    clickable={true}
                   >
                     <h3>
                       <strong>{'Better'}</strong> {'External Wallet'}
@@ -262,7 +268,7 @@ const PrimaryPage: React.FC = observer(() => {
                     </span>
                     <a
                       className='expandTooltip'
-                      onClick={() => {
+                      onMouseDown={event => {
                         store.ExternalWallerShowWithdraw = !store.ExternalWallerShowWithdraw;
                       }}
                     >
