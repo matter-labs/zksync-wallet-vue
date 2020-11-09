@@ -4,6 +4,7 @@ import Web3 from 'web3';
 import { observer } from 'mobx-react-lite';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ReactTooltip from 'react-tooltip';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 
 import LazyWallet from 'components/Wallets/LazyWallet';
@@ -101,6 +102,10 @@ const PrimaryPage: React.FC = observer(() => {
 
   const selectWallet = useCallback(
     (key: WalletType) => () => {
+      if (key === 'External') {
+        return;
+      }
+
       if (
         key === 'Web3' ||
         (key === 'Coinbase Wallet' && store.isMobileDevice)
@@ -223,7 +228,9 @@ const PrimaryPage: React.FC = observer(() => {
             {Object.values(wallets).map(key => (
               <button
                 key={key}
-                className='wallet-block'
+                className={`wallet-block ${key}-block`}
+                data-tip={key === 'External'}
+                data-for={key === 'External' ? 'ExternalTooltip' : ''}
                 onClick={selectWallet(key as WalletType)}
               >
                 <div className={`btn wallet-button ${key}`} key={key}>
@@ -232,6 +239,77 @@ const PrimaryPage: React.FC = observer(() => {
                   )}
                 </div>
                 <p>{key}</p>
+                {key === 'External' && (
+                  <ReactTooltip
+                    id='ExternalTooltip'
+                    delayHide={500}
+                    delayShow={100}
+                    delayUpdate={500}
+                    border={false}
+                    type={'light'}
+                    place='right'
+                    effect='solid'
+                    className='additionalTooltip'
+                    clickable={true}
+                  >
+                    <h3>
+                      <strong>{'Better'}</strong> {'External Wallet'}
+                    </h3>
+                    <span className='description'>
+                      {
+                        'External Wallet functionality is under reconstruction in order to improve your experience.'
+                      }
+                    </span>
+                    <a
+                      className='expandTooltip'
+                      onClick={() => {
+                        store.ExternalWallerShowWithdraw = !store.ExternalWallerShowWithdraw;
+                      }}
+                    >
+                      {'Contact us to withdraw funds'}
+                    </a>
+                    <div
+                      className={`withdrawBlock ${
+                        store.ExternalWallerShowWithdraw ? 'showBlock' : ''
+                      }`}
+                    >
+                      <span className='withdrawConditions'>
+                        {
+                          'Until the release we’ll serve withdrawals 7 days a week from 10 a.m. till 7p.m.'
+                        }
+                      </span>
+                      <ul>
+                        <li>
+                          <a
+                            href='https://twitter.com/the_matter_labs'
+                            target='_blank'
+                            className='twitterWithdraw'
+                          >
+                            {'DM us on twitter'}
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href='https://discord.gg/px2aR7w'
+                            target='_blank'
+                            className='discordWithdraw'
+                          >
+                            {'Use Discord'}
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href='mailto:hello@matter-labs.io'
+                            target='_blank'
+                            className='emailWithdraw'
+                          >
+                            {'mail to hello@matter-labs.io'}
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </ReactTooltip>
+                )}
               </button>
             ))}
           </div>
