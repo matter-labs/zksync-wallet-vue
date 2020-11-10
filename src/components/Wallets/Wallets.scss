@@ -49,36 +49,15 @@
       border-radius: 5px;
       outline: none;
       cursor: pointer;
-  
+
       &:hover {
         background-color: var(--copyblock-color);
       }
-  
+
       &::before {
         opacity: 0;
         transition: opacity .2s;
         content: '';
-      }
-      
-      &.copied {
-        &::before {
-          position: absolute;
-          bottom: 40px;
-          left: 50%;
-          display: block;
-          min-width: 120px;
-          height: 30px;
-          padding: 5px 10px;
-          color: var(--dark-color);
-          font-size: var(--md-font-size) !important;
-          line-height: 20px;
-          background-color: var(--modal-bg-color);
-          border: 1px solid var(--light-border-color);
-          border-radius: 5px;
-          transform: translateX(-50%);
-          opacity: 1;
-          content: 'Copied!';
-        }
       }
     }
   }
@@ -122,7 +101,7 @@
   outline: none;
   cursor: pointer;
 
-  & > span { 
+  & > span {
     position: absolute;
     top: 50%;
     left: 0;
@@ -188,7 +167,6 @@
     width: 150px;
     height: 45px;
     margin-top: 10px;
-    margin-bottom: 0;
     margin-bottom: 20px;
     font-size: var(--xl-font-size);
 
@@ -203,9 +181,7 @@
     color: var(--links-color);
 
     & > span {
-      background: url(../../images/deposit_active.svg);
-      background-repeat: no-repeat;
-      background-position: center;
+      background: url(../../images/deposit_active.svg) no-repeat center;
       background-size: contain;
     }
   }
@@ -224,7 +200,7 @@
     }
   }
 
-  .arrow-down { 
+  .arrow-down {
     right: -27px;
   }
 
@@ -266,7 +242,7 @@
       font-size: var(--sm-font-size);
       background: var(--transparent);
       background-image: url(../../images/arrow-select.svg);
-      background-repeat: no-repeat;  
+      background-repeat: no-repeat;
       background-position: right;
       border: none;
       outline: none;
@@ -315,7 +291,7 @@
           display: none;
         }
       }
-    }  
+    }
 
     &-wrapper {
       display: flex;
@@ -323,7 +299,7 @@
       justify-content: space-between;
       margin-top: -10px;
     }
-  } 
+  }
 
   &-wrapper {
     position: relative;
@@ -435,6 +411,6 @@
       &-selector {
         font-size: var(--large-font-size);
       }
-    }  
+    }
   }
 }
