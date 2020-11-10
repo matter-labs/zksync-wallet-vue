@@ -253,7 +253,7 @@ const PrimaryPage: React.FC = observer(() => {
                       store.ExternalWallerAfterClick = 'externalClicked';
                     }}
                     border={false}
-                    type={'light'}
+                    type={store.darkMode ? 'dark' : 'light'}
                     place='right'
                     effect='solid'
                     className='additionalTooltip'
