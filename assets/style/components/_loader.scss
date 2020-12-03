@@ -1,0 +1,46 @@
+.loader {
+    animation: loaderAnim 2s linear infinite;
+    &.medium {
+        width: 100px;
+        height: 100px;
+    }
+    &.white .loaderCircle {
+        stroke: #d8d8d8;
+    }
+    &.black .loaderCircle {
+        stroke: $black;
+    }
+
+    .loaderCircle {
+        fill: none;
+        animation: loaderCircleAnim 1.5s ease-in-out infinite;
+        stroke-width: 3;
+        stroke-linecap: round;
+        stroke-dasharray: 89,200;
+        stroke-dashoffset: 0;
+    }
+    .loaderSVG {
+        width: 100%;
+        height: 100%;
+    }
+}
+@keyframes loaderAnim {
+    to {
+        transform: rotate(360deg);
+    }
+}
+@keyframes loaderCircleAnim {
+    0% {
+        stroke-dasharray: 1,200;
+        stroke-dashoffset: 0;
+    }
+    
+    50% {
+        stroke-dasharray: 89,200;
+        stroke-dashoffset: -35;
+    }
+    100% {
+        stroke-dasharray: 89,200;
+        stroke-dashoffset: -124;
+    }
+}

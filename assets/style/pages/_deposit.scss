@@ -1,0 +1,84 @@
+.depositPage {
+    .tokensTile {
+        height: calc(100vh - 105px - 110px);
+        display: flex;
+        flex-direction: column;
+    }
+    .tokenListContainer {
+        height: 100%;
+        overflow: auto;
+        &::-webkit-scrollbar {
+            width: 10px;
+            background-color: transparent;
+        }
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        &::-webkit-scrollbar-track {
+            background-color: transparent;
+            border-radius: 10px;
+        }
+
+        .tokenItem {
+            width: 100%;
+            height: 104px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid;
+            transition: background-color $transition1;
+            cursor: pointer;
+            &:hover {
+                background-color: transparentize($color: $gray, $amount: 0.9);
+            }
+
+            .tokenLabel {
+                font-size: 22px;
+            }
+            .rightSide {
+                display: flex;
+                flex-direction: column;
+                text-align: right;
+
+                .balance {
+                    font-size: 18px;
+                }
+            }
+        }
+        .nothingFound {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+    }
+}
+
+body.inkline { 
+    &.-light {
+        .depositPage .tokenListContainer {
+            &::-webkit-scrollbar-thumb {
+                background-color: $input-border-color-focus-light;
+            }
+
+            .tokenItem {
+                border-color: $input-border-color-light;
+            }
+        }
+    }
+    &.-dark {
+        .depositPage .tokenListContainer {
+            &::-webkit-scrollbar-thumb {
+                background-color: $input-border-color-focus-dark;
+            }
+
+            .tokenItem {
+                border-color: $input-border-color-dark;
+            }
+        }
+    }
+}

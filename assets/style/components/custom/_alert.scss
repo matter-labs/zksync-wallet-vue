@@ -1,0 +1,34 @@
+.alert {
+    width: 100%;
+    height: max-content;
+    display: grid;
+    grid-template-columns: 20px 1fr 20px;
+    grid-template-rows: 100%;
+    align-items: center;
+    background-color: $lighterGray;
+    border-radius: 5px;
+    border: 1px solid #BABABA;
+    padding: 15px 20px;
+    box-sizing: border-box;
+
+    .alertIcon {
+        color: $darkerGray;
+        font-size: 18px;
+    }
+    .alertCloseIcon {
+        color: #BABABA;
+        font-size: 18px;
+        margin-right: 15px;
+        transition: color .2s ease;
+        cursor: pointer;
+        &:hover {
+            color: $darkerGray;
+        }
+    }
+    .slotContainer {
+        padding: 0 15px;
+        box-sizing: border-box;
+        text-align: left;
+        color: $darkerGray;
+    }
+}
