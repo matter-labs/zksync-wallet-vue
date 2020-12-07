@@ -411,7 +411,7 @@ const Account: React.FC = observer(() => {
       TransactionStore.maxValue = balance;
       TransactionStore.propsSymbolName = symbol;
       TransactionStore.symbolName = symbol;
-      TransactionStore.transferFeeToken = symbol;
+      TransactionStore.setTransferFeeToken(symbol);
       TransactionStore.propsToken = address;
       TransactionStore.tokenAddress = address;
     },
