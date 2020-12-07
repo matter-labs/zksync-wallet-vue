@@ -45,6 +45,8 @@ export const RIGHT_NETWORK_NAME = NETWORKS_LIST[LINKS_CONFIG.networkId];
 
 export const RECAPTCHA_SITE_KEY = '6LdEBqUZAAAAAMAr2XDTxJHuXOxpQ7rfkn2BBfUo';
 
+export const RESTRICTED_TOKENS = ['LAMB'];
+
 export const INFURA_ID = '85d8408593834bf6889554d624be0193';
 export const AUTOLOGIN_WALLETS = [
   'Metamask',

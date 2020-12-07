@@ -287,9 +287,9 @@ export const useTransaction = () => {
             nonce,
             to: TransactionStore.recepientAddress,
             amount: ethers.BigNumber.from(
-              (
-                await zkSync.closestPackableTransactionAmount(amountBigValue)
-              ).toString(),
+              zkSync
+                .closestPackableTransactionAmount(amountBigValue)
+                .toString(),
             ),
             token: TransactionStore.symbolName,
           };
@@ -412,17 +412,16 @@ export const useTransaction = () => {
           TransactionStore.isLoading = true;
           if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
-          ethers.BigNumber;
           const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
             {
               ethAddress: TransactionStore.recepientAddress,
               token: TransactionStore.symbolName,
               amount: ethers.BigNumber.from(
-                (
-                  await zkSync.closestPackableTransactionAmount(
+                zkSync
+                  .closestPackableTransactionAmount(
                     TransactionStore.amountBigValue,
                   )
-                ).toString(),
+                  .toString(),
               ),
               fee: zkSync.closestPackableTransactionFee(
                 TransactionStore.fastWithdrawal ? fastFee : fee,
