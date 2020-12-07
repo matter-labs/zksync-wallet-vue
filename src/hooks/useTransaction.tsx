@@ -148,11 +148,11 @@ export const useTransaction = () => {
                       depositTo: zkWallet.address(),
                       token: token,
                       amount: ethers.BigNumber.from(
-                        (
-                          await zkSync.closestPackableTransactionAmount(
+                        zkSync
+                          .closestPackableTransactionAmount(
                             TransactionStore.amountBigValue,
                           )
-                        ).toString(),
+                          .toString(),
                       ),
                       approveDepositAmountForERC20: true,
                     })
@@ -160,11 +160,11 @@ export const useTransaction = () => {
                       depositTo: zkWallet.address(),
                       token: token,
                       amount: ethers.BigNumber.from(
-                        (
-                          await zkSync.closestPackableTransactionAmount(
+                        zkSync
+                          .closestPackableTransactionAmount(
                             TransactionStore.amountBigValue,
                           )
-                        ).toString(),
+                          .toString(),
                       ),
                     }),
               );
