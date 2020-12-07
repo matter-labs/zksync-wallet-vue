@@ -1,5 +1,6 @@
-import { ethers, ContractTransaction } from 'ethers';
-import { observable, action, computed } from 'mobx';
+import { ContractTransaction, ethers } from 'ethers';
+import { action, observable } from 'mobx';
+import { RESTRICTED_TOKENS } from 'src/config';
 
 export class TransactionStore {
   @observable recepientAddress = '';
@@ -32,4 +33,20 @@ export class TransactionStore {
   @observable propsMaxValue: any;
   @observable propsSymbolName: any;
   @observable propsToken: any;
+
+  /**
+   * Setting up the token filter
+   * @param {string} feeToken
+   */
+  @action
+  setTransferFeeToken(feeToken: string) {
+    if (
+      RESTRICTED_TOKENS &&
+      RESTRICTED_TOKENS.includes(feeToken.toUpperCase())
+    ) {
+      this.transferFeeToken = this.symbolName;
+    } else {
+      this.transferFeeToken = feeToken;
+    }
+  }
 }
