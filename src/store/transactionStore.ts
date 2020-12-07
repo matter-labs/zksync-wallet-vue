@@ -40,9 +40,6 @@ export class TransactionStore {
    */
   @action
   setTransferFeeToken(feeToken: string) {
-    console.log(RESTRICTED_TOKENS);
-    console.log(feeToken);
-    console.log(RESTRICTED_TOKENS.includes(feeToken));
     if (!RESTRICTED_TOKENS || !RESTRICTED_TOKENS.includes(feeToken)) {
       this.transferFeeToken = feeToken;
     } else {
