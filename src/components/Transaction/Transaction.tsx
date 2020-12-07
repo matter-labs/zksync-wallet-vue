@@ -545,16 +545,23 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const handleTransferFee = useCallback(
       async (symbol, address?) => {
-        if (title !== 'Transfer') return;
-        const batchFee = await store.zkWallet?.provider.getTransactionsBatchFee(
-          ['Transfer', 'Transfer'],
-          [
-            address ? address : TransactionStore.recepientAddress,
-            store.zkWallet?.address(),
-          ],
-          symbol,
-        );
-        TransactionStore.fee[symbol] = batchFee;
+        TransactionStore.conditionError = '';
+        if (title !== 'Transfer' || !symbol) return;
+        store.zkWallet?.provider
+          .getTransactionsBatchFee(
+            ['Transfer', 'Transfer'],
+            [
+              address ? address : TransactionStore.recepientAddress,
+              store.zkWallet?.address(),
+            ],
+            symbol,
+          )
+          .then(response => {
+            TransactionStore.fee[symbol] = response;
+          })
+          .catch(error => {
+            TransactionStore.conditionError = `Fee can't be charged in ${symbol}. Choose the other one from your balances`;
+          });
       },
       [TransactionStore.recepientAddress, store.zkWallet],
     );
@@ -826,7 +833,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       setSelectedBalance(balances[id].symbol);
       setSelected(true);
       if (title === 'Transfer') {
-        TransactionStore.transferFeeToken = balances[id].symbol;
+        TransactionStore.setTransferFeeToken(balances[id].symbol);
       }
       TransactionStore.symbolName = balances[id].symbol;
       if (!store.unlocked) return;
@@ -1419,7 +1426,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               handleInputWidth(+TransactionStore.amountValue);
               TransactionStore.pureAmountInputValue = TransactionStore.amountValue?.toString();
             }
-            TransactionStore.transferFeeToken = symbol;
+            TransactionStore.setTransferFeeToken(symbol);
             TransactionStore.feeTokenSelection = false;
             TransactionStore.isBalancesListOpen = false;
             return (
@@ -1462,7 +1469,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               handleInputWidth(1, true);
             }
             if (title === 'Transfer') {
-              TransactionStore.transferFeeToken = symbol;
+              TransactionStore.setTransferFeeToken(symbol);
               TransactionStore.recepientAddress && handleTransferFee(symbol);
             } else {
               handleFee(TransactionStore.amountShowedValue, symbol);
@@ -2019,6 +2026,19 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 value={TransactionStore.recepientAddress}
                                 id='addressInput'
                                 onChange={e => {
+                                  /**
+                                   * Validate introduced address first
+                                   */
+                                  if (
+                                    !ADDRESS_VALIDATION['eth'].test(
+                                      e.target.value,
+                                    )
+                                  ) {
+                                    TransactionStore.conditionError =
+                                      "Entered value isn't a valid address";
+                                    return;
+                                  }
+                                  TransactionStore.conditionError = '';
                                   TransactionStore.recepientAddress =
                                     e.target.value;
                                   handleFilterContacts(e.target.value);
@@ -2030,13 +2050,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   );
                                   TransactionStore.recepientAddress &&
                                     handleTransferFee(feeToken, e.target.value);
-                                  if (
-                                    ADDRESS_VALIDATION['eth'].test(
-                                      TransactionStore.recepientAddress,
-                                    )
-                                  ) {
-                                    TransactionStore.conditionError = '';
-                                  }
                                 }}
                                 className='currency-input-address'
                               />
