@@ -40,10 +40,13 @@ export class TransactionStore {
    */
   @action
   setTransferFeeToken(feeToken: string) {
-    if (!RESTRICTED_TOKENS || !RESTRICTED_TOKENS.includes(feeToken)) {
-      this.transferFeeToken = feeToken;
+    if (
+      RESTRICTED_TOKENS &&
+      RESTRICTED_TOKENS.includes(feeToken.toUpperCase())
+    ) {
+      this.transferFeeToken = this.symbolName;
     } else {
-      this.transferFeeToken = '';
+      this.transferFeeToken = feeToken;
     }
   }
 }

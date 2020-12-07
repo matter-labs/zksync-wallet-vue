@@ -520,6 +520,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
             .getTransactionFee(feeType, store.zkWallet?.address(), symbol)
             .then(res => {
               obj[symbol] = res.totalFee;
+            })
+            .catch(error => {
+              obj[symbol] = 0;
             });
         }),
       ).then(() => {
@@ -1411,7 +1414,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             );
             const _maxBigValue = store.zkWallet?.provider.tokenSet.parseToken(
               TransactionStore.symbolName,
-              handleExponentialNumbers(TransactionStore.maxValue).toString(),
+              TransactionStore.maxValue.toString(),
             );
             if (
               TransactionStore.symbolName === symbol &&
@@ -2139,7 +2142,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 key='input1'
                                 type='text'
                                 ref={myRef}
-                                autoFocus={title === 'Transfer' ? true : false}
+                                autoFocus={title === 'Transfer'}
                                 onChange={e => {
                                   if (e.target.value === '00') return;
                                   TransactionStore.amountValue = +e.target
@@ -2477,6 +2480,21 @@ const Transaction: React.FC<ITransactionProps> = observer(
                               )}
                             </>
                           )}
+                        {TransactionStore.conditionError &&
+                        title === 'Transfer' &&
+                        TransactionStore.amountValue ? (
+                          <button
+                            onClick={() => {
+                              TransactionStore.feeTokenSelection = true;
+                              TransactionStore.isBalancesListOpen = true;
+                            }}
+                            className='undo-btn marginless'
+                          >
+                            Choose fee token
+                          </button>
+                        ) : (
+                          ''
+                        )}
                       </p>
                     </div>
                   </>
