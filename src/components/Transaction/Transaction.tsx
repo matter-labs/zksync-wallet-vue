@@ -1414,7 +1414,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             );
             const _maxBigValue = store.zkWallet?.provider.tokenSet.parseToken(
               TransactionStore.symbolName,
-              TransactionStore.maxValue.toString(),
+              handleExponentialNumbers(TransactionStore.maxValue).toString(),
             );
             if (
               TransactionStore.symbolName === symbol &&
@@ -2401,9 +2401,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                           title !== 'Withdraw' &&
                           title !== 'Transfer' && (
                             <span
-                              className={`submit-label ${title} ${
-                                submitCondition ? true : false
-                              }`}
+                              className={`submit-label ${title} ${!!submitCondition}`}
                             ></span>
                           )}
 
@@ -2429,6 +2427,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
                         className='transaction-fee'
                       >
                         {!!selectedBalance &&
+                          TransactionStore.amountValue &&
+                          !TransactionStore.conditionError &&
                           feeBasedOntype &&
                           ADDRESS_VALIDATION['eth'].test(
                             TransactionStore.recepientAddress,
