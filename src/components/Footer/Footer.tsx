@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { FOOTER_LINKS } from 'constants/footer';
 import { LINKS_CONFIG } from 'src/config';
@@ -30,7 +30,7 @@ const Footer: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     store.darkMode = darkTheme;
-  }, [darkTheme]);
+  }, [darkTheme, store.darkMode]);
 
   useMobxEffect(() => {
     const theme = window.localStorage?.getItem('darkTheme');

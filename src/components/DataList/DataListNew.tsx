@@ -1,16 +1,10 @@
-import React, {
-  useState,
-  useMemo,
-  useRef,
-  useCallback,
-  useEffect,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import cl from 'classnames';
 import { useHistory } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { LottiePlayer } from '../Common/LottiePlayer';
 import successCheckmark from 'images/success-checkmark.json';
-import { LINKS_CONFIG } from 'src/config';
+import { FAUCET_TOKEN_API, LINKS_CONFIG, RECAPTCHA_SITE_KEY } from 'src/config';
 
 import { useAutoFocus } from 'hooks/useAutoFocus';
 import { useDebouncedValue } from 'hooks/debounce';
@@ -18,7 +12,6 @@ import { useListener } from 'hooks/useListener';
 import { useCancelable } from 'hooks/useCancelable';
 import { useInterval } from 'hooks/timers';
 import { useStore } from 'src/store/context';
-import { FAUCET_TOKEN_API, RECAPTCHA_SITE_KEY } from 'src/config';
 
 import { Props } from './DataListProps';
 import Spinner from 'components/Spinner/Spinner';

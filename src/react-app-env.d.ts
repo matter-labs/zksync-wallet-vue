@@ -1,3 +1,3 @@
-/// <reference types="react-scripts" />
-declare module '*.svg';
-declare module '*.png';
+// / <reference types="react-scripts" />
+declare module "*.svg";
+declare module "*.png";

@@ -11,11 +11,11 @@ import { IAppProps } from 'types/Common';
 
 import { WRONG_NETWORK } from 'constants/regExs';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
-import { WalletType } from './constants/Wallets';
-import { useInterval, useTimeout } from './hooks/timers';
+import { WalletType } from 'constants/Wallets';
+import { useInterval} from 'hooks/timers';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './store/context';
-import { useMobxEffect } from './hooks/useMobxEffect';
+import { useMobxEffect } from 'hooks/useMobxEffect';
 import { useLocation } from 'react-router-dom';
 import { useLogout } from 'hooks/useLogout';
 import useWalletInit from 'src/hooks/useWalletInit';
@@ -185,7 +185,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (
       !store.zkWallet &&
       savedWalletName &&
-      !AccountStore.accountChanging &&
+      !AccountStore?.accountChanging &&
       (!store.isPrimaryPage || imidiateLoginCondition)
     ) {
       if (store.autoLoginRequestStatus !== 'changeWallet') {
@@ -196,7 +196,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       store.isAccessModalOpen = true;
       store.hint = 'Connecting to ';
       const wCQRScanned = localStorage.getItem('walletconnect');
-      if (!!AccountStore.accountChanging) return;
+      if (AccountStore.accountChanging) return;
       if (store.isBurnerWallet) {
         createWallet();
       }
@@ -282,7 +282,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       store.zkWalletInitializing = false;
     } else {
       store.error = '';
-      if (store.walletName && !AccountStore.accountChanging) {
+      if (store.walletName && !AccountStore?.accountChanging) {
         store.isAccessModalOpen = true;
       }
     }
@@ -296,8 +296,8 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [store.walletName]);
 
   useEffect(() => {
-    checkForEmptyBalance(store, TokensStore.zkBalances);
-  }, [TokensStore.zkBalances, store]);
+    checkForEmptyBalance(store, TokensStore?.zkBalances);
+  }, [TokensStore?.zkBalances, store]);
 
   useEffect(() => {
     const { zkWallet, provider, walletName } = store;
@@ -327,7 +327,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [store.zkWallet]);
 
   const metaMaskConnected = store.hint?.match(/login/i);
-  const info = store.hint.split('\n');
+  const info = store.hint?.split('\n');
   const errorAppearence = () => (
     <>
       {store.hint && info && info[0].match(/(?:install)/i) && (
@@ -358,10 +358,10 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [history, store]);
 
   useEffect(() => {
-    if (store.modalSpecifier !== 'claim-tokens') {
+    if (TokensStore?.MLTTclaimed && store.modalSpecifier !== 'claim-tokens') {
       TokensStore.MLTTclaimed = false;
     }
-  }, [store.modalSpecifier, TokensStore.MLTTclaimed]);
+  }, [store.modalSpecifier, TokensStore]);
 
   const handleOpenUnlinkModal = () => {
     store.modalHintMessage = `Unlink${store.walletName}`;
@@ -452,7 +452,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
               : 'Connecting to '}
             {walletName}
           </h3>
-          <p className='name'>{store.AccountStore.accountAddress}</p>
+          <p className='name'>{store.AccountStore?.accountAddress}</p>
           <div
             className={`${walletName &&
               walletName.replace(/\s+/g, '').toLowerCase()}-logo`}

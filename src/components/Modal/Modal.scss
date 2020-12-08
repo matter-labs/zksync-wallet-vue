@@ -26,7 +26,7 @@ div[class$="logo"] {
     margin: 58px auto 36px;
   }
 
-  
+
 
   & > p {
     color: var(--dark-color);
@@ -114,29 +114,23 @@ div[class$="logo"] {
       width: 22px;
       height: 22px;
       margin-right: 28px;
-    /* stylelint-disable no-descending-specificity */ 
+    /* stylelint-disable no-descending-specificity */
     // stylelint-disable-next-line sh-waqar/declaration-use-variable
       font-size: 20px;
     }
 
     &-edit {
-      background: url(../../images/icon-edit.svg);
-      background-repeat: no-repeat;
-      background-position: center;
+      background: url(../../images/icon-edit.svg) no-repeat center;
       background-size: contain;
     }
 
     &-qr {
-      background: url(../../images/icon-qr.svg);
-      background-repeat: no-repeat;
-      background-position: center;
+      background: url(../../images/icon-qr.svg) no-repeat center;
       background-size: contain;
     }
 
     &-disconnect {
-      background: url(../../images/icon-disconnect.svg);
-      background-repeat: no-repeat;
-      background-position: center;
+      background: url(../../images/icon-disconnect.svg) no-repeat center;
       background-size: contain;
     }
   }
@@ -162,7 +156,7 @@ div[class$="logo"] {
       }
 
       & > .transaction-field-title {
-        align-self: start;
+        align-self: flex-start;
         margin-top: 20px;
       }
     }
@@ -184,12 +178,12 @@ div[class$="logo"] {
       text-align: left;
     }
 
-    & > .scroll-content { 
-      width: 100%; 
-      max-height: 70vh; 
-      padding: 0 50px 0 30px; 
+    & > .scroll-content {
+      width: 100%;
+      max-height: 70vh;
+      padding: 0 50px 0 30px;
       overflow-x: hidden;
-      
+
       &::-webkit-scrollbar-track
       {
         background-color: var(--transparent);
@@ -630,7 +624,7 @@ div[class$="logo"] {
       & > .wallet-buttons {
         a.btn-tr {
           display: block;
-      
+
           &.mob {
             display: none;
           }
