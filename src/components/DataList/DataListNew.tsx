@@ -175,17 +175,17 @@ export function DataList<T>({
 
   // Memoized list with mapped data
   const list = useMemo(() => {
-    let data = debouncedSearch ? filteredData : getData();
+    let memoData = debouncedSearch ? filteredData : getData();
     if (typeof onSort === 'function') {
-      data = onSort(data);
+      memoData = onSort(memoData);
     }
     if (infScrollInitialCount && itemAmount) {
-      data = data.slice(0, itemAmount);
+      memoData = memoData.slice(0, itemAmount);
     }
     if (filterPredicate) {
-      data = data.filter(filterPredicate);
+      memoData = memoData.filter(filterPredicate);
     }
-    return data.map(renderItem || (e => e as any));
+    return memoData.map(renderItem || (e => e as any));
   }, [
     itemAmount,
     renderItem,

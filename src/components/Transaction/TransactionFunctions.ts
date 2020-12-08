@@ -1,11 +1,11 @@
-import { AccountState, Tokens, TokenLike } from 'zksync/build/types';
-import { Wallet, Provider } from 'zksync';
+import { AccountState, TokenLike, Tokens } from 'zksync/build/types';
+import { Provider, Wallet } from 'zksync';
 import { ethers } from 'ethers';
 
 import { Store } from 'src/store/store';
 import { DEFAULT_ERROR } from 'constants/errors';
-import { handleFormatToken, sortBalancesById, loadTokens } from 'src/utils';
-import { IEthBalance } from '../../types/Common';
+import { handleFormatToken, loadTokens, sortBalancesById } from 'src/utils';
+import { IEthBalance } from 'types/Common';
 
 async function getBalanceOnContract(
   ethSigner: ethers.Signer,
@@ -16,11 +16,10 @@ async function getBalanceOnContract(
   const { AccountStore } = store;
   const tokenId = zksyncProvider.tokenSet.resolveTokenId(token);
   if (ethSigner.provider) {
-    const contractBalance = await AccountStore.zksContract?.getBalanceToWithdraw(
+    return await AccountStore.zksContract?.getBalanceToWithdraw(
       AccountStore.ethSignerAddress,
       tokenId,
     );
-    return contractBalance;
   }
 }
 
@@ -76,7 +75,7 @@ export const getAccState = async (store: Store) => {
     });
     Promise.all(zkBalancePromises)
       .then(res => {
-        const _balances = res.sort(sortBalancesById);
+        const _balances = res.slice().sort(sortBalancesById);
         if (
           JSON.stringify(_balances) !== JSON.stringify(TokensStore.zkBalances)
         ) {
@@ -92,63 +91,6 @@ export const getAccState = async (store: Store) => {
   }
 };
 
-export const handleUnlock = async (store: Store, withLoading: boolean) => {
-  const { AccountStore, TransactionStore } = store;
-
-  try {
-    store.txButtonUnlocked = false;
-    if (!store.isBurnerWallet) {
-      store.hint = 'Follow the instructions in the pop up';
-    }
-    if (withLoading === true) {
-      AccountStore.isAccountUnlockingProcess = true;
-      TransactionStore.isLoading = true;
-    }
-    let changePubkey;
-    const isOnchainAuthSigningKeySet = await store.zkWallet?.isOnchainAuthSigningKeySet();
-    const isSigningKeySet = await store.zkWallet?.isSigningKeySet();
-    if (store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271') {
-      if (!isOnchainAuthSigningKeySet) {
-        const onchainAuthTransaction = await store.zkWallet?.onchainAuthSigningKey();
-        await onchainAuthTransaction?.wait();
-        changePubkey = await store.zkWallet?.setSigningKey({
-          feeToken: 'ETH',
-          fee: 0,
-          nonce: 'committed',
-          onchainAuth: true,
-        });
-      }
-      if (!!isOnchainAuthSigningKeySet && !isSigningKeySet) {
-        changePubkey = await store.zkWallet?.setSigningKey({
-          feeToken: 'ETH',
-          fee: 0,
-          nonce: 'committed',
-          onchainAuth: true,
-        });
-      }
-    } else {
-      if (!isOnchainAuthSigningKeySet) {
-        changePubkey = await store.zkWallet?.setSigningKey({
-          feeToken: 'ETH',
-          fee: 0,
-        });
-      }
-    }
-    store.hint = 'Confirmed! \n Waiting for transaction to be mined';
-    const receipt = await changePubkey?.awaitReceipt();
-
-    store.unlocked = !!receipt;
-    if (!!receipt) {
-      store.txButtonUnlocked = true;
-    }
-    AccountStore.isAccountUnlockingProcess = !receipt;
-    TransactionStore.isLoading = !receipt;
-  } catch (err) {
-    store.error = `${err.name}: ${err.message}`;
-    store.txButtonUnlocked = true;
-  }
-};
-
 export const handleUnlockNew = async (store: Store, withLoading: boolean) => {
   const { AccountStore, TransactionStore } = store;
 
@@ -157,7 +99,7 @@ export const handleUnlockNew = async (store: Store, withLoading: boolean) => {
     if (!store.isBurnerWallet) {
       store.hint = 'Follow the instructions in the pop up';
     }
-    if (withLoading === true) {
+    if (withLoading) {
       AccountStore.isAccountUnlockingProcess = true;
       TransactionStore.isLoading = true;
     }

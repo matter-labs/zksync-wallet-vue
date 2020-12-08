@@ -411,7 +411,10 @@ const Account: React.FC = observer(() => {
       TransactionStore.maxValue = balance;
       TransactionStore.propsSymbolName = symbol;
       TransactionStore.symbolName = symbol;
-      TransactionStore.setTransferFeeToken(symbol);
+      TransactionStore.setTransferFeeToken(
+        symbol,
+        TokensStore.getNotEmptyFeeToken(),
+      );
       TransactionStore.propsToken = address;
       TransactionStore.tokenAddress = address;
     },
@@ -453,7 +456,7 @@ const Account: React.FC = observer(() => {
         }}
       />
       <DataList
-        data={TokensStore.zkBalances.sort(sortBalancesById)}
+        data={TokensStore.getAccountsSorted()}
         title='Balances in L2'
         visible={true}
         footer={ApiFailedHint}
