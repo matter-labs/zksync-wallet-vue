@@ -38,6 +38,15 @@ export class TransactionStore {
   @observable waitingCalculation = false;
 
   /**
+   * Withdrawal process local states:
+   * TokenAmount
+   */
+  @observable withdrawalFeeAmount: ethers.BigNumberish = 0;
+  @observable withdrawalFeeToken: string = '';
+  @observable withdrawalAmount: ethers.BigNumberish = 0;
+  @observable withdrawalToken: string = '';
+
+  /**
    * Setting up the token filter
    * @param {string} symbol
    * @param {string} defaultSymbol

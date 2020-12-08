@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
-import { ContractTransaction, ethers, utils } from 'ethers';
+import { BigNumber, BigNumberish, ContractTransaction, ethers, utils } from 'ethers';
 import { PriorityOperationReceipt } from 'zksync/build/types';
+import { Wallet } from 'zksync';
 
 import { IEthBalance } from 'types/Common';
 
@@ -15,6 +16,10 @@ import {
   sortBalancesById,
   addressMiddleCutter,
 } from 'src/utils';
+
+import  {
+  syncMultiTransferWithdrawal
+} from 'src/store/transactionStore';
 
 const TOKEN = 'ETH';
 
@@ -385,24 +390,35 @@ export const useTransaction = () => {
   );
 
   const withdraw = useCallback(
-    async (address?, type?, symbol = TOKEN) => {
+    async (address?, type?, symbol = TOKEN, feeSymbol = TOKEN) => {
       try {
         const zkSync = await import('zksync');
         const fee = await zkWallet?.provider
           .getTransactionFee(
             'Withdraw',
             TransactionStore.recepientAddress,
-            TransactionStore.symbolName,
+            TransactionStore.withdrawalToken,
           )
           .then(res => res.totalFee);
         const fastFee = await zkWallet?.provider
           .getTransactionFee(
             'FastWithdraw',
             TransactionStore.recepientAddress,
-            TransactionStore.symbolName,
+            TransactionStore.withdrawalToken,
           )
           .then(res => res.totalFee);
         store.txButtonUnlocked = false;
+          
+        // We already get the total fee
+        const batchWithdrawFee = TransactionStore.withdrawalFeeToken ? 
+          await zkWallet?.provider
+              .getTransactionsBatchFee(
+                  ['Withdraw', 'Transfer'],
+                  [TransactionStore.recepientAddress, zkWallet?.address()],
+                  TransactionStore.withdrawalFeeToken
+              )
+              : undefined;
+
         if (
           ADDRESS_VALIDATION['eth'].test(TransactionStore.recepientAddress) &&
           zkWallet &&
@@ -412,34 +428,69 @@ export const useTransaction = () => {
           TransactionStore.isLoading = true;
           if (!store.isBurnerWallet)
             store.hint = 'Follow the instructions in the pop up';
-          const withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
-            {
-              ethAddress: TransactionStore.recepientAddress,
-              token: TransactionStore.symbolName,
-              amount: ethers.BigNumber.from(
-                zkSync
+          
+          let withdrawTransaction;
+
+          // If there is no withdraw token or if it is the same as the main
+          // one, there should be only one transaction to allow fast processing
+          if(!TransactionStore.withdrawalFeeToken 
+            || TransactionStore.withdrawalFeeToken === TransactionStore.withdrawalToken
+          ) {
+            withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
+              {
+                ethAddress: TransactionStore.recepientAddress,
+                token: TransactionStore.symbolName,
+                amount: ethers.BigNumber.from(
+                  zkSync
                   .closestPackableTransactionAmount(
-                    TransactionStore.amountBigValue,
+                      TransactionStore.amountBigValue,
                   )
                   .toString(),
-              ),
-              fee: zkSync.closestPackableTransactionFee(
-                TransactionStore.fastWithdrawal ? fastFee : fee,
-              ),
-              fastProcessing: TransactionStore.fastWithdrawal,
-            },
-          );
+                ),
+                fee: zkSync.closestPackableTransactionFee(
+                  TransactionStore.fastWithdrawal ? fastFee : fee,
+                ),
+                fastProcessing: TransactionStore.fastWithdrawal,
+              },
+            );
+          } else {
+            const [withdrawTx, _] = await syncMultiTransferWithdrawal(
+              store.zkWallet as Wallet,
+              [
+                {
+                  ethAddress: TransactionStore.recepientAddress,
+                  amount: zkSync.closestPackableTransactionAmount(
+                    TransactionStore.withdrawalAmount
+                  ),
+                  fee: '0',
+                  token: TransactionStore.withdrawalToken
+                }
+              ],
+              [
+                {
+                  to: store.zkWallet!.address(),
+                  token: TransactionStore.withdrawalFeeToken,
+                  amount: '0',
+                  fee: zkSync.closestPackableTransactionFee(
+                    batchWithdrawFee as BigNumberish
+                  )
+                }
+              ]
+            )
+
+            withdrawTransaction = withdrawTx;
+          }
           const hash = withdrawTransaction.txHash;
           TransactionStore.transactionHash = hash;
           store.hint = `Waiting for the transaction to be mined.. \n ${+handleFormatToken(
             zkWallet,
-            TransactionStore.symbolName,
+            TransactionStore.withdrawalToken,
             TransactionStore.amountBigValue,
           )} \n${hash}`;
           if (!!withdrawTransaction) {
             store.hint = `Your withdrawal will be processed shortly. \n ${+handleFormatToken(
               zkWallet,
-              TransactionStore.symbolName,
+              TransactionStore.withdrawalToken,
               TransactionStore.amountBigValue,
             )} \n${hash}`;
           }
@@ -484,6 +535,10 @@ export const useTransaction = () => {
       TransactionStore.transactionHash,
       store.isBurnerWallet,
       store.txButtonUnlocked,
+      TransactionStore.withdrawalFeeAmount,
+      TransactionStore.withdrawalFeeToken,
+      TransactionStore.withdrawalToken,
+      TransactionStore.withdrawalAmount
     ],
   );
 
