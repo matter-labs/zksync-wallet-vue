@@ -82,9 +82,9 @@ export const useTransaction = () => {
           });
           Promise.all(zkBalancePromises)
             .then(res => {
-              TokensStore.zkBalances = res.sort(
-                sortBalancesById,
-              ) as IEthBalance[];
+              TokensStore.zkBalances = res
+                .slice()
+                .sort(sortBalancesById) as IEthBalance[];
               TokensStore.zkBalancesLoaded = true;
             })
             .catch(err => {

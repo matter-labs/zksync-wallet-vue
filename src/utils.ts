@@ -242,6 +242,15 @@ export const mintTestERC20Tokens = async (
   return _mint;
 };
 
+/**
+ * Wrapper around errors from zkSync
+ * @param error
+ * @return {any}
+ */
+export const processZkSyncError = error => {
+  return error.jrpcError ? error.jrpcError.message : error.message;
+};
+
 export const handleFormatToken = (
   wallet: Wallet,
   symbol: string,
@@ -253,21 +262,6 @@ export const handleFormatToken = (
   }
   return wallet?.provider?.tokenSet.formatToken(symbol, amount);
 };
-
-// export const handleExponentialNumbers = n => {
-//   if (!n.toString().match(/[eE]/)) return n;
-//   const splitedByE = n.toString().split(/[eE]/);
-//   const zerosMinus = parseInt(splitedByE[1].replace(/-/, '')) - 1;
-//   const zerosPlus = parseInt(splitedByE[1].replace(/\+/, '')) - 1;
-//   const nums = splitedByE[0].replace(/\./, '');
-//   const splitedString = ['0.'];
-//   const plusDetect = splitedByE[1].includes('+') ? zerosPlus : zerosMinus;
-//   for (let i = 0; i < plusDetect; i++) {
-//     splitedString.push('0');
-//   }
-//   const complextString = splitedString.join('') + nums;
-//   return complextString;
-// };
 
 export function getExponentialParts(num) {
   return Array.isArray(num) ? num : String(num).split(/[eE]/);

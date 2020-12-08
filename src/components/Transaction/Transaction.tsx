@@ -6,8 +6,8 @@ import { observer } from 'mobx-react-lite';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fas } from '@fortawesome/free-solid-svg-icons';
-import { Tokens, TokenLike } from 'zksync/build/types';
-import { Wallet, Provider } from 'zksync';
+import { TokenLike } from 'zksync/build/types';
+import { Wallet } from 'zksync';
 
 import { DataList } from 'components/DataList/DataListNew';
 import { RadioButton } from 'src/components/Common/RadioButton';
@@ -41,17 +41,18 @@ import {
   handleExponentialNumbers,
   intervalAsyncStateUpdater,
   mintTestERC20Tokens,
+  processZkSyncError,
   useCallbackWrapper,
 } from 'src/utils';
 import {
-  LINKS_CONFIG,
-  FAUCET_TOKEN_API,
-  ETH_MINT_ADDRESS,
   ABI_DEFAULT_INTERFACE,
+  ETH_MINT_ADDRESS,
+  FAUCET_TOKEN_API,
+  LINKS_CONFIG,
+  RESTRICTED_TOKENS,
 } from 'src/config';
 
-import { ADDRESS_VALIDATION } from 'constants/regExs';
-import { INPUT_VALIDATION } from 'constants/regExs';
+import { ADDRESS_VALIDATION, INPUT_VALIDATION } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
 
 import { useCancelable } from 'hooks/useCancelable';
@@ -153,11 +154,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
     }, [store.zkWallet]);
 
     useEffect(() => {
-      if (store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271') {
-        store.EIP1271Signature = true;
-      } else {
-        store.EIP1271Signature = false;
-      }
+      store.EIP1271Signature =
+        store.zkWallet?.ethSignerType?.verificationMethod === 'ERC-1271';
     }, [store.zkWallet]);
 
     useEffect(() => {
@@ -194,7 +192,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const tokenRightCondition =
       selectedBalance &&
       TransactionStore.amountShowedValue &&
-      !!store.txButtonUnlocked &&
+      store.txButtonUnlocked &&
       +TransactionStore.amountShowedValue > 0 &&
       +TransactionStore.amountShowedValue <= TransactionStore.maxValue;
 
@@ -205,8 +203,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
             TransactionStore.tokenInUnlockingProgress.includes(
               TransactionStore.tokenAddress,
             ) ||
-            !!store.EIP1271Signature))) &&
+            store.EIP1271Signature))) &&
       !TransactionStore.conditionError.length &&
+      !TransactionStore.waitingCalculation &&
       tokenRightCondition;
 
     useEffect(() => {
@@ -455,10 +454,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 );
               const _amountPlusGas = _amountBigValue.add(TransactionStore.gas);
 
-              const _amount = _amountPlusGas.gte(_maxBigValue)
+              TransactionStore.amountBigValue = _amountPlusGas.gte(_maxBigValue)
                 ? _amountBigValue.sub(TransactionStore.gas)
                 : _amountBigValue;
-              TransactionStore.amountBigValue = _amount;
             } else {
               TransactionStore.amountBigValue = _amountBigValue;
             }
@@ -504,6 +502,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
       },
     };
 
+    /**
+     * Method to grab changePubKey Fee amount
+     */
     const getChangePubKeyFees = useCallback(() => {
       if (
         !store.zkWallet ||
@@ -516,14 +517,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
       Promise.all(
         TokensStore.zkBalances.map(balance => {
           const symbol = balance.symbol;
-          return store.zkWallet?.provider
-            .getTransactionFee(feeType, store.zkWallet?.address(), symbol)
-            .then(res => {
-              obj[symbol] = res.totalFee;
-            })
-            .catch(error => {
-              obj[symbol] = 0;
-            });
+          if (!RESTRICTED_TOKENS?.includes(balance.symbol)) {
+            store.zkWallet?.provider
+              .getTransactionFee(feeType, store.zkWallet?.address(), symbol)
+              .then(res => {
+                obj[balance.symbol] = res.totalFee;
+              })
+              .catch(error => {
+                // TransactionStore.conditionError = `Fee can't be charged in ${symbol}. Choose any excepted token with positive balance`;
+                TransactionStore.conditionError = `Fee can't be charged in ${balance.symbol}. Choose any excepted token with positive balance`;
+              });
+          }
         }),
       ).then(() => {
         TransactionStore.changePubKeyFees = obj;
@@ -547,9 +551,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
     ]);
 
     const handleTransferFee = useCallback(
-      async (symbol, address?) => {
+      async (symbol?, address?) => {
+        TransactionStore.waitingCalculation = true;
         TransactionStore.conditionError = '';
-        if (title !== 'Transfer' || !symbol) return;
+        symbol = TransactionStore.setTransferFeeToken(
+          symbol,
+          TokensStore.getNotEmptyFeeToken(),
+        );
+        address = address ? address : TransactionStore.recepientAddress;
+        if (title !== 'Transfer' || !address) {
+          return;
+        }
         store.zkWallet?.provider
           .getTransactionsBatchFee(
             ['Transfer', 'Transfer'],
@@ -561,9 +573,12 @@ const Transaction: React.FC<ITransactionProps> = observer(
           )
           .then(response => {
             TransactionStore.fee[symbol] = response;
+            TransactionStore.waitingCalculation = false;
           })
           .catch(error => {
-            TransactionStore.conditionError = `Fee can't be charged in ${symbol}. Choose the other one from your balances`;
+            TransactionStore.conditionError = processZkSyncError(error);
+            TransactionStore.waitingCalculation = true;
+            // TransactionStore.conditionError = `Fee can't be charged in ${symbol}. Choose any excepted token with positive balance`;
           });
       },
       [TransactionStore.recepientAddress, store.zkWallet],
@@ -603,7 +618,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const handleFee = useCallback(
       (e?, symbol?, address?) => {
-        const symbolProp = symbol ? symbol : TransactionStore.symbolName;
+        const symbolProp = TransactionStore.setTransferFeeToken(
+          symbol,
+          TokensStore.getNotEmptyFeeToken(),
+        );
         const addressProp = address
           ? address
           : TransactionStore.recepientAddress;
@@ -616,23 +634,31 @@ const Transaction: React.FC<ITransactionProps> = observer(
           return;
         if (
           title !== 'Deposit' &&
-          (symbol || TransactionStore.symbolName) &&
+          (symbolProp || TransactionStore.symbolName) &&
           ADDRESS_VALIDATION['eth'].test(
             address ? address : TransactionStore.recepientAddress,
           )
         ) {
+          TransactionStore.waitingCalculation = true;
           store.zkWallet?.provider
             .getTransactionFee(
               title === 'Withdraw' ? 'Withdraw' : 'Transfer',
               addressProp,
               symbolProp,
             )
-            .then(res => (TransactionStore.fee[symbolProp] = res.totalFee));
+            .then(res => {
+              TransactionStore.fee[symbolProp] = res.totalFee;
+              TransactionStore.waitingCalculation = false;
+            });
         }
         if (title === 'Withdraw') {
+          TransactionStore.waitingCalculation = true;
           store.zkWallet?.provider
             .getTransactionFee('FastWithdraw', addressProp, symbolProp)
-            .then(res => (TransactionStore.fastFee = res.totalFee));
+            .then(res => {
+              TransactionStore.fastFee = res.totalFee;
+              TransactionStore.waitingCalculation = false;
+            });
         }
 
         if (!store.unlocked) {
@@ -672,7 +698,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
         if (TransactionStore.isBalancesListOpen) {
           setSelectedBalance(name);
           handleFee();
-          TransactionStore.recepientAddress && handleTransferFee(name);
+          TransactionStore.recepientAddress &&
+            handleTransferFee(name, TransactionStore.recepientAddress);
         }
       },
       [
@@ -725,7 +752,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
             ? (setSelectedContact(name),
               handleSelect(name),
               handleFee(undefined, undefined, address),
-              TransactionStore.recepientAddress && handleTransferFee(feeToken),
+              TransactionStore.recepientAddress &&
+                handleTransferFee(TransactionStore.getFeeToken),
               (store.walletAddress = { name, address }),
               (TransactionStore.recepientAddress = address))
             : name.toLowerCase().includes(e.toLowerCase());
@@ -746,7 +774,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
         setSelectedContact,
         store,
         TransactionStore.symbolName,
-        feeToken,
       ],
     );
 
@@ -835,9 +862,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       handleUpdateTokenPrice(balances[id].symbol);
       setSelectedBalance(balances[id].symbol);
       setSelected(true);
-      if (title === 'Transfer') {
-        TransactionStore.setTransferFeeToken(balances[id].symbol);
-      }
       TransactionStore.symbolName = balances[id].symbol;
       if (!store.unlocked) return;
       handleFee(
@@ -918,7 +942,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           .isERC20DepositsApproved(TransactionStore.tokenAddress)
           .then(res => {
             setUnlockFau(res);
-            if (res === true) {
+            if (res) {
               handleManageUnlockingTokens();
             }
           });
@@ -945,7 +969,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             TransactionStore.recepientAddress = el.address;
             handleFee(undefined, undefined, el.address);
             TransactionStore.recepientAddress &&
-              handleTransferFee(feeToken, el.address);
+              handleTransferFee(TransactionStore.getFeeToken(), el.address);
           }
         });
       }
@@ -1187,7 +1211,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
       handleFee(undefined, undefined, address),
         (TransactionStore.isContactsListOpen = false);
       setSelectedContact(name);
-      TransactionStore.recepientAddress && handleTransferFee(feeToken, address);
+      TransactionStore.recepientAddress &&
+        handleTransferFee(TransactionStore.getFeeToken(), address);
       TransactionStore.conditionError = '';
       body?.classList.remove('fixed-b');
       TransactionStore.filteredContacts = [];
@@ -1204,7 +1229,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           handleFee(undefined, undefined, address),
             (TransactionStore.isContactsListOpen = false);
           TransactionStore.recepientAddress &&
-            handleTransferFee(feeToken, address);
+            handleTransferFee(TransactionStore.getFeeToken(), address);
           TransactionStore.conditionError = '';
           setSelected(true);
           body?.classList.remove('fixed-b');
@@ -1396,8 +1421,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
         onClick={() => {
           if (!store.zkWallet) return;
           const formattedFee =
-            feeToken &&
-            feeBasedOntype &&
+            TransactionStore.getFeeToken() &&
+            TransactionStore.getFeeBasedOnType() &&
             TransactionStore.fee[symbol] &&
             handleFormatToken(
               store.zkWallet,
@@ -1418,7 +1443,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
             );
             if (
               TransactionStore.symbolName === symbol &&
-              _amountBigValue.add(feeBasedOntype).gt(_maxBigValue)
+              _amountBigValue
+                .add(TransactionStore.getFeeBasedOnType())
+                .gt(_maxBigValue)
             ) {
               TransactionStore.conditionError =
                 'Not enough funds: amount + fee exceeds your balance';
@@ -1429,7 +1456,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
               handleInputWidth(+TransactionStore.amountValue);
               TransactionStore.pureAmountInputValue = TransactionStore.amountValue?.toString();
             }
-            TransactionStore.setTransferFeeToken(symbol);
             TransactionStore.feeTokenSelection = false;
             TransactionStore.isBalancesListOpen = false;
             return (
@@ -1471,8 +1497,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
               setAmount(0);
               handleInputWidth(1, true);
             }
+
             if (title === 'Transfer') {
-              TransactionStore.setTransferFeeToken(symbol);
               TransactionStore.recepientAddress && handleTransferFee(symbol);
             } else {
               handleFee(TransactionStore.amountShowedValue, symbol);
@@ -1567,7 +1593,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       if (!store.zkWallet) return null;
       const showFeeCondition: boolean =
         TransactionStore.symbolName &&
-        feeBasedOntype &&
+        TransactionStore.getFeeBasedOnType() &&
         ADDRESS_VALIDATION['eth'].test(TransactionStore.recepientAddress);
 
       const exceedBalanceTrigger = feeArg => {
@@ -1592,7 +1618,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             ) >=
           +TransactionStore.maxValue;
 
-        if (TransactionStore.fastWithdrawal && !!maxValueInSelected) {
+        if (TransactionStore.fastWithdrawal && maxValueInSelected) {
           return (
             +TransactionStore.pureAmountInputValue -
             +handleFormatToken(
@@ -1602,7 +1628,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             )
           );
         }
-        if (!TransactionStore.fastWithdrawal && !!maxValueInSelected) {
+        if (!TransactionStore.fastWithdrawal && maxValueInSelected) {
           return (
             +TransactionStore.pureAmountInputValue -
             +handleFormatToken(
@@ -1633,7 +1659,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
       return (
         <>
-          {!!showFeeCondition && store.zkWallet && (
+          {showFeeCondition && store.zkWallet && (
             <div
               className='withdraw-type-block'
               onClick={() => {
@@ -1765,7 +1791,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
               data={
                 title === 'Deposit'
                   ? TokensStore.ethBalances
-                  : TokensStore.zkBalances
+                  : TokensStore.getZkBalances(
+                      TransactionStore.feeTokenSelection,
+                    )
               }
               title={`Balances in ${title === 'Deposit' ? 'L1' : 'L2'}`}
               footer={() => (
@@ -1820,12 +1848,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
         </div>
         <div className='transaction-wrapper'>
           {store.unlocked === false &&
-            store.unlocked !== undefined &&
             !AccountStore.isAccountUnlockingProcess &&
             title !== 'Deposit' &&
             TokensStore.zkBalancesLoaded &&
-            (!!TokensStore.isAccountBalanceNotEmpty ||
-              store.isExternalWallet) &&
+            (TokensStore.isAccountBalanceNotEmpty || store.isExternalWallet) &&
             (!store.isExternalWallet ? (
               <LockedTx
                 handleCancel={handleCancel}
@@ -1890,11 +1916,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
             <ExecutedTx
               fee={
                 title === 'Transfer' &&
-                feeBasedOntype &&
+                TransactionStore.getFeeBasedOnType() &&
                 store.zkWallet &&
-                handleFormatToken(store.zkWallet, feeToken, feeBasedOntype)
+                handleFormatToken(
+                  store.zkWallet,
+                  TransactionStore.getFeeToken(),
+                  TransactionStore.getFeeBasedOnType(),
+                )
               }
-              feeToken={feeToken}
+              feeToken={TransactionStore.getFeeToken()}
               handleCancel={handleCancel}
               inputValue={TransactionStore.amountShowedValue}
               title={title}
@@ -1932,9 +1962,13 @@ const Transaction: React.FC<ITransactionProps> = observer(
                     title === 'Transfer' &&
                     TransactionStore.fee[TransactionStore.symbolName] &&
                     store.zkWallet &&
-                    handleFormatToken(store.zkWallet, feeToken, feeBasedOntype)
+                    handleFormatToken(
+                      store.zkWallet,
+                      TransactionStore.getFeeToken(),
+                      TransactionStore.getFeeBasedOnType(),
+                    )
                   }
-                  feeToken={feeToken}
+                  feeToken={TransactionStore.getFeeToken()}
                   isUnlockingProcess={isUnlockingProcess}
                   inputValue={TransactionStore.amountShowedValue}
                   handleCancel={handleCancel}
@@ -1972,7 +2006,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                 <h2 className='transaction-title'>{title}</h2>
 
                 {(unlocked || title === 'Deposit') &&
-                unlocked !== undefined &&
+                true &&
                 ((title === 'Deposit' && TokensStore.zkBalancesLoaded) ||
                   (title !== 'Deposit' &&
                     TokensStore.isAccountBalanceNotEmpty)) ? (
@@ -2029,19 +2063,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 value={TransactionStore.recepientAddress}
                                 id='addressInput'
                                 onChange={e => {
-                                  /**
-                                   * Validate introduced address first
-                                   */
-                                  if (
-                                    !ADDRESS_VALIDATION['eth'].test(
-                                      e.target.value,
-                                    )
-                                  ) {
-                                    TransactionStore.conditionError =
-                                      "Entered value isn't a valid address";
-                                    return;
-                                  }
-                                  TransactionStore.conditionError = '';
                                   TransactionStore.recepientAddress =
                                     e.target.value;
                                   handleFilterContacts(e.target.value);
@@ -2052,7 +2073,17 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                     e.target.value,
                                   );
                                   TransactionStore.recepientAddress &&
-                                    handleTransferFee(feeToken, e.target.value);
+                                    handleTransferFee(
+                                      TransactionStore.getFeeToken(),
+                                      e.target.value,
+                                    );
+                                  if (
+                                    ADDRESS_VALIDATION['eth'].test(
+                                      TransactionStore.recepientAddress,
+                                    )
+                                  ) {
+                                    TransactionStore.conditionError = '';
+                                  }
                                 }}
                                 className='currency-input-address'
                               />
@@ -2152,6 +2183,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   handleInputWidth(+e.target.value);
                                   TransactionStore.pureAmountInputValue =
                                     e.target.value;
+                                  handleFee(e);
                                 }}
                                 value={
                                   TransactionStore.amountShowedValue
@@ -2211,7 +2243,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                     </span>
                                   )}
                                 </div>
-                                {(feeBasedOntype || title === 'Deposit') && (
+                                {(TransactionStore.getFeeBasedOnType() ||
+                                  title === 'Deposit') && (
                                   <button
                                     className='all-balance btn-tr'
                                     onClick={() => {
@@ -2225,7 +2258,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                         handleInputWidth(calculateMaxValue());
                                         handleFee(calculateMaxValue());
                                         TransactionStore.recepientAddress &&
-                                          handleTransferFee(feeToken);
+                                          handleTransferFee(
+                                            TransactionStore.getFeeToken(),
+                                          );
                                         setAmount(
                                           parseFloat(
                                             calculateMaxValue() as string,
@@ -2236,7 +2271,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                     }}
                                   >
                                     {selectedBalance &&
-                                      ((feeBasedOntype &&
+                                      ((TransactionStore.getFeeBasedOnType() &&
                                         ADDRESS_VALIDATION['eth'].test(
                                           TransactionStore.recepientAddress,
                                         )) ||
@@ -2250,7 +2285,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                       )}
                                     {TransactionStore.symbolName &&
                                     selectedBalance &&
-                                    ((feeBasedOntype &&
+                                    ((TransactionStore.getFeeBasedOnType() &&
                                       ADDRESS_VALIDATION['eth'].test(
                                         TransactionStore.recepientAddress,
                                       )) ||
@@ -2259,7 +2294,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                       : ''}
                                   </button>
                                 )}
-                                {(!feeBasedOntype ||
+                                {(!TransactionStore.getFeeBasedOnType() ||
                                   !ADDRESS_VALIDATION['eth'].test(
                                     TransactionStore.recepientAddress,
                                   )) &&
@@ -2429,7 +2464,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                         {!!selectedBalance &&
                           TransactionStore.amountValue &&
                           !TransactionStore.conditionError &&
-                          feeBasedOntype &&
+                          TransactionStore.getFeeBasedOnType() &&
                           ADDRESS_VALIDATION['eth'].test(
                             TransactionStore.recepientAddress,
                           ) &&
@@ -2437,15 +2472,15 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             <>
                               {'Fee: '}
                               {store.zkWallet &&
-                                feeToken &&
-                                feeBasedOntype &&
+                                TransactionStore.getFeeToken() &&
+                                TransactionStore.getFeeBasedOnType() &&
                                 ADDRESS_VALIDATION['eth'].test(
                                   TransactionStore.recepientAddress,
                                 ) &&
                                 handleFormatToken(
                                   store.zkWallet,
-                                  feeToken,
-                                  feeBasedOntype,
+                                  TransactionStore.getFeeToken(),
+                                  TransactionStore.getFeeBasedOnType(),
                                 )}
                               {title === 'Transfer' ? (
                                 <button
@@ -2455,33 +2490,38 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   }}
                                   className='undo-btn marginless'
                                 >
-                                  {feeToken}
+                                  {TransactionStore.getFeeToken()}
                                 </button>
                               ) : (
-                                ` ${TransactionStore.symbolName}`
+                                `${TransactionStore.symbolName}`
                               )}
-
-                              {store.zkWallet && feeBasedOntype && (
-                                <span>
-                                  {' ~$'}
-                                  {
-                                    +(
-                                      +(price && !!price[feeToken]
-                                        ? price[feeToken]
-                                        : MLTTFeePrice) *
-                                      +handleFormatToken(
-                                        store.zkWallet,
-                                        feeToken,
-                                        feeBasedOntype,
-                                      )
-                                    ).toFixed(2)
-                                  }
-                                </span>
-                              )}
+                              {store.zkWallet &&
+                                TransactionStore.getFeeBasedOnType() && (
+                                  <span>
+                                    {' ~$'}
+                                    {
+                                      +(
+                                        +(price &&
+                                        !!price[TransactionStore.getFeeToken()]
+                                          ? price[
+                                              TransactionStore.getFeeToken()
+                                            ]
+                                          : MLTTFeePrice) *
+                                        +handleFormatToken(
+                                          store.zkWallet,
+                                          TransactionStore.getFeeToken(),
+                                          TransactionStore.getFeeBasedOnType(),
+                                        )
+                                      ).toFixed(2)
+                                    }
+                                  </span>
+                                )}
                             </>
                           )}
-                        {TransactionStore.conditionError &&
-                        title === 'Transfer' &&
+
+                        {((TransactionStore.conditionError &&
+                          title === 'Transfer') ||
+                          title === 'Withdraw') &&
                         TransactionStore.amountValue ? (
                           <button
                             onClick={() => {
