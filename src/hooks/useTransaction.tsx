@@ -439,7 +439,7 @@ export const useTransaction = () => {
             withdrawTransaction = await zkWallet.withdrawFromSyncToEthereum(
               {
                 ethAddress: TransactionStore.recepientAddress,
-                token: TransactionStore.symbolName,
+                token: TransactionStore.withdrawalToken,
                 amount: ethers.BigNumber.from(
                   zkSync
                   .closestPackableTransactionAmount(
