@@ -1,7 +1,8 @@
-import { ContractTransaction, ethers } from 'ethers';
+import { ContractTransaction, ethers, BigNumberish } from 'ethers';
 import { action, observable } from 'mobx';
 import { LINKS_CONFIG, RESTRICTED_TOKENS } from 'src/config';
 import BigNumber from 'bignumber.js';
+import { Wallet, Provider, types as SyncTypes } from 'zksync';
 
 export class TransactionStore {
   @observable recepientAddress = '';
@@ -93,4 +94,169 @@ export class TransactionStore {
       }
     });
   }
+}
+
+/*
+
+These classes are private in zksync.js and we've got no choice,
+but to copy-paste them
+
+*/
+
+class ZKSyncTxError extends Error {
+  constructor(
+    message: string,
+    public value:
+      | SyncTypes.PriorityOperationReceipt
+      | SyncTypes.TransactionReceipt,
+  ) {
+    super(message);
+  }
+}
+
+class Transaction {
+  state: 'Sent' | 'Committed' | 'Verified' | 'Failed';
+  error?: ZKSyncTxError;
+
+  constructor(
+    public txData: any,
+    public txHash: string,
+    public sidechainProvider: Provider,
+  ) {
+    this.state = 'Sent';
+  }
+
+  async awaitReceipt(): Promise<SyncTypes.TransactionReceipt> {
+    this.throwErrorIfFailedState();
+
+    // Got absolutely no idea how it compiled in zksync.js
+    /* @ts-ignore */
+    if (this.state !== 'Sent') return;
+
+    const receipt = await this.sidechainProvider.notifyTransaction(
+      this.txHash,
+      'COMMIT',
+    );
+
+    if (!receipt.success) {
+      this.setErrorState(
+        new ZKSyncTxError(
+          `zkSync transaction failed: ${receipt.failReason}`,
+          receipt,
+        ),
+      );
+      this.throwErrorIfFailedState();
+    }
+
+    this.state = 'Committed';
+    return receipt;
+  }
+
+  async awaitVerifyReceipt(): Promise<SyncTypes.TransactionReceipt> {
+    await this.awaitReceipt();
+    const receipt = await this.sidechainProvider.notifyTransaction(
+      this.txHash,
+      'VERIFY',
+    );
+
+    this.state = 'Verified';
+    return receipt;
+  }
+
+  private setErrorState(error: ZKSyncTxError) {
+    this.state = 'Failed';
+    this.error = error;
+  }
+
+  private throwErrorIfFailedState() {
+    if (this.state === 'Failed') throw this.error;
+  }
+}
+
+async function setRequiredAccountIdFromServer(
+  wallet: Wallet,
+  actionName: string,
+) {
+  if (wallet.accountId === undefined) {
+    const accountIdFromServer = await wallet.getAccountId();
+    if (accountIdFromServer == null) {
+      throw new Error(
+        `Failed to ${actionName}: Account does not exist in the zkSync network`,
+      );
+    } else {
+      wallet.accountId = accountIdFromServer;
+    }
+  }
+}
+
+export async function syncMultiTransferWithdrawal(
+  wallet: Wallet,
+  withdrawals: {
+    ethAddress: string;
+    token: string;
+    amount: BigNumberish;
+    fee: BigNumberish;
+    nonce?: number | 'committed';
+  }[],
+  transfers: {
+    to: string;
+    token: string;
+    amount: BigNumberish;
+    fee: BigNumberish;
+    nonce?: number | 'committed';
+  }[],
+): Promise<Transaction[]> {
+  if (!wallet.signer) {
+    throw new Error(
+      'ZKSync signer is required for sending zksync transactions.',
+    );
+  }
+
+  if (transfers.length == 0) return [];
+
+  await setRequiredAccountIdFromServer(wallet, 'Transfer funds');
+
+  const signedTransactions: any[] = [];
+
+  let nextNonce =
+    transfers[0].nonce != null
+      ? await wallet.getNonce(transfers[0].nonce)
+      : await wallet.getNonce();
+
+  for (let i = 0; i < withdrawals.length; i++) {
+    const withdrawal = withdrawals[i];
+    const nonce = nextNonce;
+    nextNonce += 1;
+
+    const {
+      tx,
+      ethereumSignature,
+    } = await wallet.signWithdrawFromSyncToEthereum({
+      ...withdrawal,
+      nonce,
+    });
+
+    signedTransactions.push({ tx, signature: ethereumSignature });
+  }
+
+  for (let i = 0; i < transfers.length; i++) {
+    const transfer = transfers[i];
+    const nonce = nextNonce;
+    nextNonce += 1;
+
+    const { tx, ethereumSignature } = await wallet.signSyncTransfer({
+      ...transfer,
+      nonce,
+    });
+
+    signedTransactions.push({ tx, signature: ethereumSignature });
+  }
+
+  const transactionHashes = await wallet.provider.submitTxsBatch(
+    signedTransactions,
+  );
+  return transactionHashes.map(
+    (txHash, idx) =>
+      new Transaction(signedTransactions[idx], txHash, wallet.provider),
+  );
 }
