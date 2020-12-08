@@ -8,7 +8,7 @@ export const LottiePlayer = ({ src }) => (
       // @ts-ignore */}
     <lottie-player
       src={src}
-      autoplay
+      autoplay="autoplay"
       background='transparent'
       speed='1'
       style={{ width: '200px', height: '200px' }}
