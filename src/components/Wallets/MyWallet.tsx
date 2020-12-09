@@ -20,7 +20,7 @@ import { WIDTH_BP } from 'constants/magicNumbers';
 import './Wallets.scss';
 
 const MyWallet: React.FC<IMyWalletProps> = observer(
-  (price): JSX.Element => {
+  ({ price, setTransactionType }): JSX.Element => {
     const store = useStore();
     const { TokensStore } = store;
 
@@ -33,14 +33,15 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
     const [isAssetsOpen, openAssets] = useState<boolean>(false);
     const [selectedBalance, setSelectedBalance] = useState<any>();
     const [symbolName, setSymbolName] = useState<any>(
-      TokensStore.zkBalances?.length ? TokensStore.zkBalances[0].symbol : '',
+      !!TokensStore.zkBalances?.length ? TokensStore.zkBalances[0].symbol : '',
     );
     const [verified, setVerified] = useState<any>();
     const [walletBalance, setWalletBalance] = useState<string>('');
 
     const verifiedState =
-      verified && TokensStore.zkBalances.length
-        ? +parseFloat(walletBalance).toFixed(20) !== +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(10)
+      verified && !!TokensStore.zkBalances.length
+        ? +parseFloat(walletBalance).toFixed(20) !==
+          +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(10)
         : false;
 
     const inputRef: (HTMLInputElement | null)[] = [];
@@ -74,6 +75,13 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
 
     useTimeout(() => isCopyModal && openCopyModal(false), 2000, [isCopyModal]);
 
+    const handleSelect = useCallback(
+      name => {
+        setSelectedBalance(name);
+      },
+      [setSelectedBalance],
+    );
+
     const handleClickOutside = useCallback(
       e => {
         if (e.target.getAttribute('data-name')) {
@@ -91,10 +99,21 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
       return () => {
         document.removeEventListener('click', handleClickOutside, true);
       };
-    }, [body, handleClickOutside, isBalancesListOpen, setSelectedBalance, setWalletBalance, verifyToken]);
+    }, [
+      body,
+      handleClickOutside,
+      isBalancesListOpen,
+      setSelectedBalance,
+      setWalletBalance,
+      verifyToken,
+    ]);
 
     return (
-      <div className={`mywallet-wrapper ${transactionModal?.title ? 'closed' : 'open'}`}>
+      <div
+        className={`mywallet-wrapper ${
+          !!transactionModal?.title ? 'closed' : 'open'
+        }`}
+      >
         <div className='hint-block'>
           <div className='hint-wrapper'>
             <h2 className='mywallet-title'>{'My wallet'}</h2>
@@ -132,7 +151,9 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
           ></button>
         </div>
         <div
-          className={`mywallet-currency-block ${price ? '' : 'none'} ${verifiedState ? 'unverified' : ''} ${
+          className={`mywallet-currency-block ${
+            !!price?.length ? '' : 'none'
+          } ${verifiedState ? 'unverified' : ''} ${
             isBalancesListOpen ? 'borderless' : ''
           }`}
         >
@@ -158,7 +179,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
                   </p>
                 ) : (
                   <p>
-                    {TokensStore.isAccountBalanceNotEmpty &&
+                    {!!TokensStore.isAccountBalanceNotEmpty &&
                       (selectedBalance?.symbol ? (
                         <span>
                           {'zk'}
@@ -171,7 +192,11 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
                         </span>
                       ))}
                     {!TokensStore.isAccountBalanceNotEmpty &&
-                      (!TokensStore.zkBalancesLoaded ? <Spinner /> : <span>{'zkETH'}</span>)}
+                      (!TokensStore.zkBalancesLoaded ? (
+                        <Spinner />
+                      ) : (
+                        <span>{'zkETH'}</span>
+                      ))}
                   </p>
                 )}
                 <div className='arrow-down'></div>
