@@ -1017,7 +1017,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         .then(res => res.toString())
         .then(data => {
           TransactionStore.gas = data;
-        });
+      });
     }, [store.zkWallet]);
 
     const handleShowHint = useCallback(
@@ -1240,30 +1240,30 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const ABI = [
       {
-        constant: true,
-        inputs: [
+        "constant": true,
+        "inputs": [
           {
-            internalType: 'address',
-            name: '_address',
-            type: 'address',
+            "internalType": 'address',
+            "name": '_address',
+            "type": 'address',
           },
           {
-            internalType: 'uint16',
-            name: '_tokenId',
+            "internalType": 'uint16',
+            "name": '_tokenId',
             type: 'uint16',
           },
         ],
-        name: 'getBalanceToWithdraw',
-        outputs: [
+        "name": 'getBalanceToWithdraw',
+        "outputs": [
           {
-            internalType: 'uint128',
-            name: '',
-            type: 'uint128',
+            "internalType": 'uint128',
+            "name": '',
+            "type": 'uint128',
           },
         ],
-        payable: false,
-        stateMutability: 'view',
-        type: 'function',
+        "payable": false,
+        "stateMutability": 'view',
+        "type": 'function',
       },
     ];
 
@@ -1274,9 +1274,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
         const ethSigner = store.zkWallet?.ethSigner;
 
         const zksContract = new ethers.Contract(
-          store.zkWallet?.provider.contractAddress.mainContract,
-          ABI,
-          ethSigner.provider,
+                store.zkWallet?.provider.contractAddress.mainContract,
+                ABI,
+                ethSigner.provider,
         );
 
         AccountStore.zksContract = zksContract;

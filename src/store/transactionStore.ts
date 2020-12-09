@@ -42,9 +42,9 @@ export class TransactionStore {
    * TokenAmount
    */
   @observable withdrawalFeeAmount: ethers.BigNumberish = 0;
-  @observable withdrawalFeeToken: string = '';
+  @observable withdrawalFeeToken = '';
   @observable withdrawalAmount: ethers.BigNumberish = 0;
-  @observable withdrawalToken: string = '';
+  @observable withdrawalToken = '';
 
   /**
    * Setting up the token filter
@@ -146,7 +146,7 @@ export async function syncMultiTransferWithdrawal(
     );
   }
 
-  if (transfers.length == 0) return [];
+  if (transfers.length === 0) return [];
 
   await setRequiredAccountIdFromServer(wallet, 'Transfer funds');
 

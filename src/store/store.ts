@@ -129,7 +129,7 @@ export class Store {
   }
 
   @computed get isBraveBrowser() {
-    return !!navigator['brave'];
+    return navigator['brave'];
   }
 
   @computed get doesMetamaskUsesNewEthereumAPI() {

@@ -11,7 +11,7 @@ import Spinner from 'src/components/Spinner/Spinner';
 import { IEthBalance } from 'types/Common';
 
 import { useCancelable } from 'hooks/useCancelable';
-import { useTransaction } from 'hooks/useTransaction';
+import { useTransaction } from 'hooks/transactions/useTransaction';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useStore } from 'src/store/context';
 
@@ -245,7 +245,7 @@ const Account: React.FC = observer(() => {
                         store.zkWalletAddress as string,
                 ).then(res => res);
                 const sortedByTypeTxs = AccountStore.txs.filter(
-            tx => tx.commited === false && tx.tx.type === 'Deposit',
+            tx => !tx.commited && tx.tx.type === 'Deposit',
                 );
                 sortedByTypeTxs.map(tx => {
                   const _token = tx.tx.priority_op?.token;

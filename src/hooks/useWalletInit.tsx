@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import { EthSignerType } from 'zksync/build/types';
 
 import { useCancelable } from 'hooks/useCancelable';
+
 import {
   portisConnector,
   fortmaticConnector,
@@ -204,7 +205,7 @@ const useWalletInit = () => {
 
       const walletBasedVerificationMethod = store.isExternalWallet ? verificationMethod : undefined;
 
-        ExternaWalletStore.externalWalletEthersSigner = walletBasedSigner;
+      ExternaWalletStore.externalWalletEthersSigner = walletBasedSigner;
 
       const syncWallet = await zkSync.Wallet.fromEthSigner(
         syncWalletArgs.ethWallet,
@@ -225,14 +226,14 @@ const useWalletInit = () => {
           zkWallet: syncWallet,
           accountState,
         });
-          AccountStore.accountId = accountState.id as number;
-        }
+        AccountStore.accountId = accountState.id as number;
+      }
 
       fetch(WITHDRAWAL_PROCESSING_TIME_LINK)
         .then(res => res.json())
         .then(data => {
-            TransactionStore.withdrawalProcessingTime = data.normal;
-            TransactionStore.fastWithdrawalProcessingTime = data.fast;
+          TransactionStore.withdrawalProcessingTime = data.normal;
+          TransactionStore.fastWithdrawalProcessingTime = data.fast;
         });
 
       const arr = window.localStorage?.getItem(
@@ -259,8 +260,8 @@ const useWalletInit = () => {
         maxConfirmAmount,
       });
       TokensStore.zkBalances = zkBalances.sort(sortBalancesById);
-        TokensStore.zkBalancesLoaded = true;
-        TokensStore.tokens = tokens;
+      TokensStore.zkBalancesLoaded = true;
+      TokensStore.tokens = tokens;
       store.modalSpecifier = '';
       store.modalHintMessage = '';
       if (store.isExternalWallet) return;
@@ -269,14 +270,14 @@ const useWalletInit = () => {
         //TODO: replace with Promise.All
         const price = store.syncProvider?.getTokenPrice(symbol);
         prices[symbol] = await price;
-          TokensStore.tokenPrices = prices;
+        TokensStore.tokenPrices = prices;
       });
 
       await syncWallet
         .getAccountState()
         .then(res => {
           store.accountState = res;
-            AccountStore.accountId = res.id as number;
+          AccountStore.accountId = res.id as number;
         })
         .then(() => {
           cancelable(store.zkWallet?.isSigningKeySet()).then(data => {

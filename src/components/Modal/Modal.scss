@@ -379,15 +379,18 @@ div[class$="logo"] {
   max-width: 505px;
   background-color: var(--modal-bg-color);
   border-radius: 5px;
+  height: fit-content;
+  max-height: 100vh;
 
   & > .balances-wrapper {
     width: 100%;
     max-width: 505px;
-    height: 60vh;
     margin: 0 auto;
     padding-top: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
+    height: fit-content;
+    max-height: 100vh;
 
     & span {
       color: var(--hints-color);

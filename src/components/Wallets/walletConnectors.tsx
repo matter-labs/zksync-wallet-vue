@@ -5,16 +5,12 @@ import { WalletLinkConnector } from './WalletLinkExtended/WalletLinkExtended';
 
 import { Store } from 'src/store/store';
 
-import { LINKS_CONFIG, INFURA_ID } from 'src/config';
+import { INFURA_ID, LINKS_CONFIG } from 'src/config';
 
 import { COINBASE_LOCALSTORAGE_KEYS } from 'src/constants/Wallets';
 
-export const browserWalletConnector = async (
-  store: Store,
-  connect,
-  withConnect?,
-) => {
-  const browserProvider: any = window?.['ethereum'];
+export const browserWalletConnector = async (store: Store, connect, withConnect?) => {
+  const browserProvider: any = window?.ethereum;
   store.provider = browserProvider;
   if (store.doesMetamaskUsesNewEthereumAPI) {
     const _accs = await browserProvider?.request({
@@ -25,12 +21,12 @@ export const browserWalletConnector = async (
     });
     const prevState = await _accs[0];
     store.AccountStore.accountAddress = prevState;
-    if (!!withConnect) connect(browserProvider, signUpFunction, prevState);
+    if (withConnect) connect(browserProvider, signUpFunction, prevState);
   } else {
     const signUpFunction = browserProvider?.enable.bind(browserProvider);
     const prevState = browserProvider?.selectedAddress;
-      store.AccountStore.accountAddress = prevState;
-    if (!!withConnect) connect(browserProvider, signUpFunction, prevState);
+    store.AccountStore.accountAddress = prevState;
+    if (withConnect) connect(browserProvider, signUpFunction, prevState);
   }
 };
 
@@ -53,9 +49,8 @@ export const portisConnector = async (
   const portisProvider = portis.provider;
   store.provider = portisProvider;
   const signer = getSigner(portisProvider);
-  const address = await signer.getAddress(signer);
-  store.AccountStore.accountAddress = address;
-  if (!!withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
+  store.AccountStore.accountAddress = await signer.getAddress(signer);
+  if (withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
 };
 
 export const fortmaticConnector = async (
@@ -84,7 +79,7 @@ export const fortmaticConnector = async (
     const address = await signer.getAddress(signer);
     store.zkWalletInitializing = false;
     store.AccountStore.accountAddress = address;
-    if (!!withConnect) connect(fmProvider, signer?.getAddress.bind(signer));
+    if (withConnect) connect(fmProvider, signer?.getAddress.bind(signer));
   } catch (err) {
     store.walletName = '';
     store.isAccessModalOpen = false;
@@ -99,7 +94,7 @@ export const walletConnectConnector = (store: Store, connect) => {
   });
   store.provider = wcProvider;
   const wCQRScanned = localStorage.getItem('walletconnect');
-  if (!!wCQRScanned) {
+  if (wCQRScanned) {
     store.zkWalletInitializing = true;
   }
   connect(wcProvider, wcProvider?.enable.bind(wcProvider));
@@ -107,7 +102,7 @@ export const walletConnectConnector = (store: Store, connect) => {
 
 export const burnerWalletConnector = store => {
   const createAccount = async () => {
-    //dummy for future
+    // dummy for future
   };
   createAccount();
 };
@@ -121,7 +116,7 @@ export const externalAccountConnector = (store: Store) => {
 export const coinBaseConnector = (store: Store, connect?) => {
   if (!store.isCoinbaseWallet) return;
   const logged = localStorage.getItem(COINBASE_LOCALSTORAGE_KEYS.addresses);
-  if (!!logged) {
+  if (logged) {
     store.zkWalletInitializing = false;
     store.hint = 'Connected to ';
   } else {
@@ -129,7 +124,8 @@ export const coinBaseConnector = (store: Store, connect?) => {
   }
   if (store.isMobileDevice && connect) {
     browserWalletConnector(store, connect);
-  } else {
+  } else
+    {
     const walletLink = new WalletLinkConnector({
       url: `https://${LINKS_CONFIG.network}.infura.io/v3/${INFURA_ID}`,
       appName: 'zkSync',
