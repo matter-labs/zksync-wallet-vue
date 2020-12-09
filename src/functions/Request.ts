@@ -7,7 +7,7 @@ const parseJSON = (response: any) =>
         json,
       }),
     ),
-  )
+  );
 
 export const request = (url: string, options: any = {}) =>
   new Promise((resolve, reject) => {
@@ -15,14 +15,13 @@ export const request = (url: string, options: any = {}) =>
       .then(parseJSON)
       .then((res: any) => {
         if (res.ok) {
-          return resolve(res.json)
+          return resolve(res.json);
         }
-
-        return reject(res.json.meta.error)
+        return reject(res.json.meta.error);
       })
       .catch(error =>
         reject({
           networkError: error.message,
         }),
-      )
-  })
+      );
+  });

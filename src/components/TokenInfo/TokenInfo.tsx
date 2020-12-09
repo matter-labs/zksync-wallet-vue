@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
@@ -18,11 +18,7 @@ export const TokenInfo = observer(() => {
     if (store.zkWallet && !TransactionStore.propsSymbolName) {
       history.push('/account');
     }
-  }, [
-    store.zkWallet,
-    TransactionStore.propsSymbolName,
-    TokensStore.tokenPrices,
-  ]);
+  }, [store.zkWallet, TransactionStore.propsSymbolName, TokensStore.tokenPrices]);
 
   return (
     <div className='token-info-wrapper'>
@@ -36,17 +32,13 @@ export const TokenInfo = observer(() => {
         <div>
           <h3>{TransactionStore.propsSymbolName}</h3>
         </div>
-        {TokensStore.tokenPrices && (
-          <p className='token-info-title-price'>{'Token price:'}</p>
-        )}
+        {TokensStore.tokenPrices && <p className='token-info-title-price'>{'Token price:'}</p>}
         <p>
           {TokensStore.tokenPrices && TransactionStore.propsSymbolName && (
             <>
               {'$'}
               {TokensStore.tokenPrices[TransactionStore.propsSymbolName]
-                ? TokensStore.tokenPrices[
-                    TransactionStore.propsSymbolName
-                  ].toFixed(2)
+                ? TokensStore.tokenPrices[TransactionStore.propsSymbolName].toFixed(2)
                 : 0}
             </>
           )}
@@ -60,8 +52,7 @@ export const TokenInfo = observer(() => {
           <div>
             <h2>
               {TransactionStore.propsSymbolName}{' '}
-              {TransactionStore.propsMaxValue &&
-                handleExponentialNumbers(+TransactionStore.propsMaxValue)}
+              {TransactionStore.propsMaxValue && handleExponentialNumbers(+TransactionStore.propsMaxValue)}
             </h2>
             <p>
               {TokensStore.tokenPrices &&

@@ -16,7 +16,6 @@ import { useStore } from 'src/store/context';
 import { Props } from './DataListProps';
 import Spinner from 'components/Spinner/Spinner';
 import './DataList.scss';
-import SpinnerWorm from '../Spinner/SpinnerWorm';
 import Modal from '../Modal/Modal';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
@@ -129,8 +128,7 @@ export function DataList<T>({
     if (!(infScrollInitialCount && root && hasMore)) return;
     const loadMore =
       root.scrollHeight !== root.offsetHeight &&
-      root.scrollHeight - (root.scrollTop + root.offsetHeight) <
-        loadMoreThreshold;
+      root.scrollHeight - (root.scrollTop + root.offsetHeight) < loadMoreThreshold;
     if (!loadMore) return;
     setItemAmount(i => i! + loadMoreAmount);
   }, [
@@ -190,8 +188,7 @@ export function DataList<T>({
     filterPredicate,
   ]);
 
-  const makeFirstLetterToLowerCase = string =>
-    string?.charAt(0).toLowerCase() + string?.slice(1);
+  const makeFirstLetterToLowerCase = string => string?.charAt(0).toLowerCase() + string?.slice(1);
 
   const { TokensStore } = store;
 
@@ -234,10 +231,7 @@ export function DataList<T>({
   };
 
   return (
-    <div
-      ref={rootRef}
-      className={cl(`balances-wrapper ${classSpecifier}`, 'open')}
-    >
+    <div ref={rootRef} className={cl(`balances-wrapper ${classSpecifier}`, 'open')}>
       <Modal
         cancelAction={() => {
           store.modalSpecifier = '';
@@ -264,7 +258,7 @@ export function DataList<T>({
           <button
             onClick={() => {
               store.modalSpecifier = '';
-              TokensStore.MLTTclaimed = false;
+                TokensStore.MLTTclaimed = false;
             }}
             className='btn submit-button margin'
           >
@@ -293,63 +287,51 @@ export function DataList<T>({
       {TokensStore.isAccountBalanceNotEmpty &&
         TokensStore.zkBalancesLoaded &&
         setTransactionType && (
-          <div className='mywallet-wrapper datalist'>
-            <div
-              className={`mywallet-buttons-container ${
-                !!TokensStore.tokenPrices?.length ? '' : 'none'
-              }`}
-            >
-              <button
-                onClick={() => {
-                  setTransactionType('deposit');
-                  history.push('/deposit');
-                  TransactionStore.symbolName = '';
-                }}
-                className='btn deposit-button btn-tr'
-              >
-                <span></span>
-                {' Deposit'}
-              </button>
-              <button
-                onClick={() => {
-                  setTransactionType('withdraw');
-                  history.push('/withdraw');
-                  TransactionStore.symbolName = '';
-                }}
-                className='btn withdraw-button btn-tr'
-              >
-                <span></span>
-                {' Withdraw'}
-              </button>
-            </div>
+        <div className='mywallet-wrapper datalist'>
+          <div className={`mywallet-buttons-container ${!!TokensStore.tokenPrices?.length ? '' : 'none'}`}>
             <button
-              className='btn submit-button'
               onClick={() => {
-                setTransactionType('transfer');
-                history.push('/transfer');
-                TransactionStore.symbolName = '';
+                setTransactionType('deposit');
+                history.push('/deposit');
+                  TransactionStore.symbolName = '';
               }}
+              className='btn deposit-button btn-tr'
             >
-              <span className='send-icon'></span>
-              {' Transfer'}
+              <span></span>
+              {' Deposit'}
+            </button>
+            <button
+              onClick={() => {
+                setTransactionType('withdraw');
+                history.push('/withdraw');
+                  TransactionStore.symbolName = '';
+              }}
+              className='btn withdraw-button btn-tr'
+            >
+              <span></span>
+              {' Withdraw'}
             </button>
           </div>
-        )}
+          <button
+            className='btn submit-button'
+            onClick={() => {
+              setTransactionType('transfer');
+              history.push('/transfer');
+                TransactionStore.symbolName = '';
+            }}
+          >
+            <span className='send-icon'></span>
+            {' Transfer'}
+          </button>
+        </div>
+      )}
       {!TokensStore.isAccountBalanceNotEmpty &&
         !TokensStore.isAccountBalanceLoading &&
         TokensStore.zkBalancesLoaded &&
         setTransactionType && (
           <>
-            <div
-              className={`mywallet-buttons-container ${
-                !!TokensStore.tokenPrices?.length ? '' : 'none'
-              }`}
-            >
-              <p>
-                {
-                  'No balances yet, please make a deposit or request money from someone!'
-                }
-              </p>
+            <div className={`mywallet-buttons-container ${!!TokensStore.tokenPrices?.length ? '' : 'none'}`}>
+              <p>{'No balances yet, please make a deposit or request money from someone!'}</p>
             </div>
             <button
               onClick={() => {
@@ -364,10 +346,7 @@ export function DataList<T>({
 
             {LINKS_CONFIG.network !== 'ropsten' && (
               <div className='cta-wrapper'>
-                <button
-                  onClick={handleClaimTokens}
-                  className='btn submit-button margin'
-                >
+                <button onClick={handleClaimTokens} className='btn submit-button margin'>
                   {'⚡ Get some trial tokens! ⚡'}
                 </button>
               </div>

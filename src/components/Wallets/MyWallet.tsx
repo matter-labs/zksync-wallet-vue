@@ -40,8 +40,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
 
     const verifiedState =
       verified && !!TokensStore.zkBalances.length
-        ? +parseFloat(walletBalance).toFixed(20) !==
-          +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(10)
+        ? +parseFloat(walletBalance).toFixed(20) !== +(verified[selectedBalance] / Math.pow(10, 18)).toFixed(10)
         : false;
 
     const inputRef: (HTMLInputElement | null)[] = [];
@@ -111,11 +110,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
     ]);
 
     return (
-      <div
-        className={`mywallet-wrapper ${
-          !!transactionModal?.title ? 'closed' : 'open'
-        }`}
-      >
+      <div className={`mywallet-wrapper ${!!transactionModal?.title ? 'closed' : 'open'}`}>
         <div className='hint-block'>
           <div className='hint-wrapper'>
             <h2 className='mywallet-title'>{'My wallet'}</h2>
@@ -131,10 +126,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
           </div>
         </div>
 
-        <div
-          onClick={() => handleCopy(zkWallet?.address())}
-          className='copy-block'
-        >
+        <div onClick={() => handleCopy(zkWallet?.address())} className='copy-block'>
           <input
             type='text'
             className='copy-block-input'
@@ -143,36 +135,26 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
             ref={e => inputRef.push(e)}
           />
           <div className='copy-block-left'>
-            <img
-              src={zkWallet ? makeBlockie(zkWallet.address()) : avatar}
-              alt='avatar'
-            />{' '}
+            <img src={zkWallet ? makeBlockie(zkWallet.address()) : avatar} alt='avatar' />{' '}
             <p>
               {window?.innerWidth > WIDTH_BP
                 ? zkWallet?.address()
-                : zkWallet?.address() &&
-                  addressMiddleCutter(zkWallet?.address() as string, 14, 4)}
+                : zkWallet?.address() && addressMiddleCutter(zkWallet?.address() as string, 14, 4)}
             </p>
           </div>
           <button
-            className={`copy-block-button btn-tr ${
-              isCopyModal ? 'copied' : ''
-            }`}
+            className={`copy-block-button btn-tr ${isCopyModal ? 'copied' : ''}`}
             onClick={() => handleCopy(zkWallet?.address())}
           ></button>
         </div>
         <div
-          className={`mywallet-currency-block ${
-            !!price?.length ? '' : 'none'
-          } ${verifiedState ? 'unverified' : ''} ${
+          className={`mywallet-currency-block ${!!price?.length ? '' : 'none'} ${verifiedState ? 'unverified' : ''} ${
             isBalancesListOpen ? 'borderless' : ''
           }`}
         >
           <div
             data-name='custom-selector'
-            className={`mywallet-currency-block-shadow ${
-              isBalancesListOpen ? 'open' : 'closed'
-            }`}
+            className={`mywallet-currency-block-shadow ${isBalancesListOpen ? 'open' : 'closed'}`}
           ></div>
           <div className='mywallet-currency-wrapper'>
             <div className='custom-selector balances mywallet'>
@@ -192,7 +174,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
                   </p>
                 ) : (
                   <p>
-                    {!!TokensStore.isAccountBalanceNotEmpty &&
+                    {TokensStore.isAccountBalanceNotEmpty &&
                       (selectedBalance?.symbol ? (
                         <span>
                           {'zk'}

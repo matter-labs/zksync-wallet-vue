@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     browser: true,
-    node: true,
+    node: true
   },
   root: true,
   plugins: ['@typescript-eslint', 'react-hooks', 'react'],
@@ -16,13 +16,33 @@ module.exports = {
     'prettier/@typescript-eslint',
   ],
   parserOptions: {
-    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
+    ecmaVersion: 6, // Allows for the parsing of modern ECMAScript features
     sourceType: 'module', // Allows for the use of imports
     ecmaFeatures: {
+      modules: true,
       jsx: true, // Allows for the parsing of JSX
     },
   },
   rules: {
+    'prefer-promise-reject-errors': 'off',
+    'no-prototype-builtins': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
+    '@typescript-eslint/no-this-alias': 'off',
+    '@typescript-eslint/no-empty-interface': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
+    'react/jsx-no-target-blank': 'off',
+    'react/prop-types': 'off',
+    'react/jsx-no-literals': 'warn',
+    'react/jsx-no-useless-fragment': 'warn',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'off',
+    'no-use-before-define': 'off',
     'plugin/no-low-performance-animation-properties': 0,
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. '@typescript-eslint/explicit-function-return-type': 'off',

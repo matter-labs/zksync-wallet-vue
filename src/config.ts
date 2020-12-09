@@ -63,19 +63,19 @@ export const COMMON = {
   ABOUT: {
     title: 'About',
     link: 'https://docs.zksync.io/',
-  },
+    },
   TERMS: {
     title: 'Terms of Use',
     link: 'https://zksync.io/legal/terms.html',
-  },
+    },
   PRIVACY_POLICY: {
     title: 'Privacy Policy',
     link: 'https://zksync.io/legal/privacy.html',
-  },
+    },
   DOCS: {
     title: 'Docs',
     link: '//zksync.io/faq/intro.html',
-  },
+    },
   CONTACTS: {
     title: 'Contact',
     link: '//zksync.io/contact.html',

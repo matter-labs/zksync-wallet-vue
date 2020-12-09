@@ -29,7 +29,7 @@ export const browserWalletConnector = async (
   } else {
     const signUpFunction = browserProvider?.enable.bind(browserProvider);
     const prevState = browserProvider?.selectedAddress;
-    store.AccountStore.accountAddress = prevState;
+      store.AccountStore.accountAddress = prevState;
     if (!!withConnect) connect(browserProvider, signUpFunction, prevState);
   }
 };
@@ -142,8 +142,7 @@ export const coinBaseConnector = (store: Store, connect?) => {
       store.hint = 'Connected to ';
       store.provider = res.provider;
       store.ethId = res.account as string;
-      if (res.provider?._addresses)
-        store.AccountStore.accountAddress = res.provider?._addresses[0];
+      if (res.provider?._addresses) store.AccountStore.accountAddress = res.provider?._addresses[0];
     });
     store.walletLinkObject = walletLink;
   }

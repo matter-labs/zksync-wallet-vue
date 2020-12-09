@@ -136,7 +136,7 @@ export const handleUnlockNew = async (store: Store, withLoading: boolean) => {
     const receipt = await changePubkey?.awaitReceipt();
 
     store.unlocked = !!receipt;
-    if (!!receipt) {
+    if (receipt) {
       store.txButtonUnlocked = true;
     }
     AccountStore.isAccountUnlockingProcess = !receipt;
@@ -165,7 +165,7 @@ export const loadEthTokens = async store => {
         balance: +handleFormatToken(
           store.zkWallet,
           tokens[key].symbol,
-          balance ? balance : 0,
+          balance || 0,
         ),
         symbol: tokens[key].symbol,
       };

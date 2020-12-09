@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import * as ethers from 'ethers';
+import { BigNumber } from 'ethers';
 import makeBlockie from 'ethereum-blockies-base64';
 import { observer } from 'mobx-react-lite';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -21,13 +22,10 @@ import { FilteredContactList } from './FilteredContactList';
 import { ExecutedTx } from './ExecutedTx';
 import { LoadingTx } from './LoadingTx';
 import { LockedTxNew as LockedTx } from './LockedTx';
+import { AmountToWithdraw, CompleteWithdrawal } from './ExternalWalletComponents';
 import {
-  AmountToWithdraw,
-  CompleteWithdrawal,
-} from './ExternalWalletComponents';
-import {
-  handleUnlockNew as handleUnlock,
   getAccState,
+  handleUnlockNew as handleUnlock,
   loadEthTokens,
   storeContractBalances,
 } from './TransactionFunctions';
@@ -37,20 +35,13 @@ import { ITransactionProps } from './Types';
 
 import {
   addressMiddleCutter,
-  handleFormatToken,
   handleExponentialNumbers,
-  intervalAsyncStateUpdater,
+  handleFormatToken,
   mintTestERC20Tokens,
   processZkSyncError,
   useCallbackWrapper,
 } from 'src/utils';
-import {
-  ABI_DEFAULT_INTERFACE,
-  ETH_MINT_ADDRESS,
-  FAUCET_TOKEN_API,
-  LINKS_CONFIG,
-  RESTRICTED_TOKENS,
-} from 'src/config';
+import { ABI_DEFAULT_INTERFACE, ETH_MINT_ADDRESS, FAUCET_TOKEN_API, LINKS_CONFIG, RESTRICTED_TOKENS } from 'src/config';
 
 import { ADDRESS_VALIDATION, INPUT_VALIDATION } from 'constants/regExs';
 import { WIDTH_BP } from 'constants/magicNumbers';
@@ -169,14 +160,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
     useEffect(() => {
       if (!store.zkWallet || !TokensStore.tokens) return;
       if (title === 'Deposit') {
-        intervalAsyncStateUpdater(
+        AccountStore.intervalAsyncStateUpdater(
           loadEthTokensWithUseCallBack,
           [],
           3000,
           cancelable,
         );
       } else {
-        intervalAsyncStateUpdater(getAccState, [store], 3000, cancelable);
+        AccountStore.intervalAsyncStateUpdater(getAccState, [store], 3000, cancelable);
       }
     }, [store.zkWallet, TokensStore.tokens]);
 
@@ -289,7 +280,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
               TransactionStore.symbolName,
               e,
             );
-          TransactionStore.amountBigValue = amountBigValue;
+          TransactionStore.amountBigValue = BigNumber.from(amountBigValue);
           if (TransactionStore.amountBigValue.sub(feeBasedOntype).gt(0)) {
             if (max) {
               if (title !== 'Transfer') {
@@ -1208,8 +1199,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       handleSelect(name);
       store.walletAddress = { name, address };
       TransactionStore.recepientAddress = address;
-      handleFee(undefined, undefined, address),
-        (TransactionStore.isContactsListOpen = false);
+      handleFee(undefined, undefined, address), (TransactionStore.isContactsListOpen = false);
       setSelectedContact(name);
       TransactionStore.recepientAddress &&
         handleTransferFee(TransactionStore.getFeeToken(), address);
@@ -1281,7 +1271,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       const getSignerAddress = async () => {
         if (!store.zkWallet) return;
 
-        const ethSigner = await store.zkWallet?.ethSigner;
+        const ethSigner = store.zkWallet?.ethSigner;
 
         const zksContract = new ethers.Contract(
           store.zkWallet?.provider.contractAddress.mainContract,
@@ -1305,7 +1295,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       )
         return;
 
-      intervalAsyncStateUpdater(storeContractBalances, [], 10000, cancelable);
+      AccountStore.intervalAsyncStateUpdater(storeContractBalances, [], 10000, cancelable);
     }, [
       store.zkWallet,
       ExternaWalletStore.externalWalletEthersSigner,
@@ -1524,11 +1514,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
       ).filter(key => !zkBalanceKeys.includes(key));
     };
 
-    const calculateMaxValue = () => {
-      if (store.zkWallet) {
-        return handleExponentialNumbers(TransactionStore.maxValue).toString();
-      }
-    };
+    const calculateMaxValue = () => (store.zkWallet ?
+            handleExponentialNumbers(TransactionStore.maxValue).toString() :
+            '');
 
     useEffect(() => {
       store.txButtonUnlocked = true;

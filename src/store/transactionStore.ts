@@ -1,7 +1,6 @@
 import { ContractTransaction, ethers } from 'ethers';
 import { action, observable } from 'mobx';
 import { LINKS_CONFIG, RESTRICTED_TOKENS } from 'src/config';
-import BigNumber from 'bignumber.js';
 
 export class TransactionStore {
   @observable recepientAddress = '';
@@ -37,6 +36,15 @@ export class TransactionStore {
   @observable waitingCalculation = false;
 
   /**
+   * Withdrawal process local states:
+   * TokenAmount
+   */
+  @observable withdrawalFeeAmount: ethers.BigNumberish = 0;
+  @observable withdrawalFeeToken = '';
+  @observable withdrawalAmount: ethers.BigNumberish = 0;
+  @observable withdrawalToken = '';
+
+  /**
    * Setting up the token filter
    * @param {string} symbol
    * @param {string} defaultSymbol
@@ -44,7 +52,7 @@ export class TransactionStore {
    */
   @action
   setTransferFeeToken(symbol: string, defaultSymbol = '') {
-    symbol = symbol ? symbol : this.symbolName;
+    symbol = symbol || this.symbolName;
     return (this.transferFeeToken = RESTRICTED_TOKENS?.includes(symbol)
       ? defaultSymbol
       : symbol);

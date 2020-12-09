@@ -1,3 +1,4 @@
+/* eslint-disable dot-notation */
 import { WSTransport } from 'zksync/build/transport';
 import { useCallback, useState } from 'react';
 import { useStore } from 'src/store/context';
@@ -77,9 +78,9 @@ export function useWSHeartBeat() {
   );
 
   useMobxEffect(() => {
-    if (!store.wsTransport) return;
-    const hb = setHeartBeat(store.wsTransport);
-
-    return hb;
+    if (store.wsTransport) {
+      return setHeartBeat(store.wsTransport);
+    }
+    return useCallback;
   }, [setHeartBeat, refresh]);
 }

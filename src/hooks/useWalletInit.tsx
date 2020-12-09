@@ -122,11 +122,7 @@ const useWalletInit = () => {
         burnerWalletConnector(store);
       }
       const provider = store.provider;
-      if (
-        provider &&
-        !provider.selectedAddress &&
-        (store.isMetamaskWallet || store.isWeb3)
-      ) {
+      if (provider && !provider.selectedAddress && (store.isMetamaskWallet || store.isWeb3)) {
         // Could fail, if there's no Metamask in the browser
         if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
           const _accs = await store.windowEthereumProvider?.request({
@@ -135,20 +131,14 @@ const useWalletInit = () => {
           if (!_accs[0]) {
             await store.provider.request({ method: 'eth_requestAccounts' });
           }
-          AccountStore.accountAddress =
-            store.windowEthereumProvider.selectedAddress;
+          AccountStore.accountAddress = store.windowEthereumProvider.selectedAddress;
         } else {
           store.windowEthereumProvider?.enable();
         }
         store.hint = 'Connected to ';
       }
 
-      if (
-        provider &&
-        !provider.selectedAddress &&
-        !store.isBurnerWallet &&
-        !store.isFortmaticWallet
-      ) {
+      if (provider && !provider.selectedAddress && !store.isBurnerWallet && !store.isFortmaticWallet) {
         store.hint = 'Connected to ';
       }
 
@@ -175,11 +165,7 @@ const useWalletInit = () => {
       }
       const wallet = getSigner(provider);
 
-      if (
-        !store.isBurnerWallet &&
-        !store.isCoinbaseWallet &&
-        !store.isExternalWallet
-      ) {
+      if (!store.isBurnerWallet && !store.isCoinbaseWallet && !store.isExternalWallet) {
         store.ethWallet = wallet;
       }
 
@@ -197,20 +183,13 @@ const useWalletInit = () => {
         LINKS_CONFIG.ws_api,
       );
 
-      const burnerWalletBased =
-        store.isBurnerWallet || store.isExternalWallet
-          ? store.ethWallet
-          : wallet;
+      const burnerWalletBased = store.isBurnerWallet || store.isExternalWallet ? store.ethWallet : wallet;
 
-      const externalWalletBased = store.isExternalWallet
-        ? externalWalletInstance
-        : burnerWalletBased;
+      const externalWalletBased = store.isExternalWallet ? externalWalletInstance : burnerWalletBased;
 
       const generatedRandomSeed = crypto.randomBytes(32);
 
-      const walletBasedSigner = store.isExternalWallet
-        ? zkSync.Signer.fromSeed(generatedRandomSeed)
-        : undefined;
+      const walletBasedSigner = store.isExternalWallet ? zkSync.Signer.fromSeed(generatedRandomSeed) : undefined;
 
       const syncWalletArgs = {
         ethWallet: externalWalletBased as ethers.providers.JsonRpcSigner,
@@ -223,11 +202,9 @@ const useWalletInit = () => {
         isSignedMsgPrefixed: true,
       };
 
-      const walletBasedVerificationMethod = store.isExternalWallet
-        ? verificationMethod
-        : undefined;
+      const walletBasedVerificationMethod = store.isExternalWallet ? verificationMethod : undefined;
 
-      ExternaWalletStore.externalWalletEthersSigner = walletBasedSigner;
+        ExternaWalletStore.externalWalletEthersSigner = walletBasedSigner;
 
       const syncWallet = await zkSync.Wallet.fromEthSigner(
         syncWalletArgs.ethWallet,
@@ -248,14 +225,14 @@ const useWalletInit = () => {
           zkWallet: syncWallet,
           accountState,
         });
-        AccountStore.accountId = accountState.id as number;
-      }
+          AccountStore.accountId = accountState.id as number;
+        }
 
       fetch(WITHDRAWAL_PROCESSING_TIME_LINK)
         .then(res => res.json())
         .then(data => {
-          TransactionStore.withdrawalProcessingTime = data.normal;
-          TransactionStore.fastWithdrawalProcessingTime = data.fast;
+            TransactionStore.withdrawalProcessingTime = data.normal;
+            TransactionStore.fastWithdrawalProcessingTime = data.fast;
         });
 
       const arr = window.localStorage?.getItem(
@@ -282,8 +259,8 @@ const useWalletInit = () => {
         maxConfirmAmount,
       });
       TokensStore.zkBalances = zkBalances.sort(sortBalancesById);
-      TokensStore.zkBalancesLoaded = true;
-      TokensStore.tokens = tokens;
+        TokensStore.zkBalancesLoaded = true;
+        TokensStore.tokens = tokens;
       store.modalSpecifier = '';
       store.modalHintMessage = '';
       if (store.isExternalWallet) return;
@@ -292,14 +269,14 @@ const useWalletInit = () => {
         //TODO: replace with Promise.All
         const price = store.syncProvider?.getTokenPrice(symbol);
         prices[symbol] = await price;
-        TokensStore.tokenPrices = prices;
+          TokensStore.tokenPrices = prices;
       });
 
       await syncWallet
         .getAccountState()
         .then(res => {
           store.accountState = res;
-          AccountStore.accountId = res.id as number;
+            AccountStore.accountId = res.id as number;
         })
         .then(() => {
           cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
@@ -313,9 +290,7 @@ const useWalletInit = () => {
       }
     } catch (err) {
       store.zkWalletInitializing = false;
-      const error = err.message
-        ? !!err.message.match(/(?:denied)/i)
-        : !!err.match(/(?:denied)/i);
+      const error = err.message ? !!err.message.match(/(?:denied)/i) : !!err.match(/(?:denied)/i);
       if (error) {
         logout(false, '');
       }
