@@ -81,11 +81,7 @@ export const useDeposit = () => {
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
-              balance: +handleFormatToken(
-                zkWallet,
-                tokens[key].symbol,
-                zkBalance[key] ? zkBalance[key] : 0,
-              ),
+              balance: +handleFormatToken(zkWallet, tokens[key].symbol, zkBalance[key] ? zkBalance[key] : 0),
               symbol: tokens[key].symbol,
               id: tokens[key].id,
             };
@@ -171,20 +167,12 @@ export const useDeposit = () => {
                                     }),
                     );
                     const hash = depositPriorityOperation.ethTx;
-                    store.hint = `Waiting for transaction to be mined. \n ${+handleFormatToken(
-                            zkWallet,
-                            token,
-                            TransactionStore.amountBigValue,
-                    )}  \n${hash.hash}`;
+                    store.hint = `Waiting for transaction to be mined. \n ${+handleFormatToken(zkWallet, token, TransactionStore.amountBigValue)}  \n${hash.hash}`;
                     TransactionStore.transactionHash = hash;
                     await depositPriorityOperation.awaitEthereumTxCommit().then(res => {
                       store.hint = `Your deposit tx has been mined and will be processed after ${
                               store.maxConfirmAmount
-                      } confirmations. Use the link below to track the progress. \n ${+handleFormatToken(
-                              zkWallet,
-                              token,
-                              TransactionStore.amountBigValue,
-                      )}  \n${hash.hash}`;
+                      } confirmations. Use the link below to track the progress. \n ${+handleFormatToken(zkWallet, token, TransactionStore.amountBigValue)}  \n${hash.hash}`;
                       TransactionStore.isTransactionExecuted = true;
                     });
                     const _accountState = await zkWallet.getAccountState();

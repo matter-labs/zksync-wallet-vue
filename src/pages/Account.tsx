@@ -71,13 +71,9 @@ const VerifiedBal: React.FC<BalProps> = observer(
                   <span className='awaited-tokens'>
                     {`+ ${store.zkWallet &&
                     handleExponentialNumbers(
-                            +handleFormatToken(
-                                    store.zkWallet,
-                                    symbol,
-                                    TokensStore.awaitedTokens[symbol]?.amount
-                                            ? TokensStore.awaitedTokens[symbol]?.amount
-                                            : 0,
-                            ),
+                            +handleFormatToken(store.zkWallet, symbol, TokensStore.awaitedTokens[symbol]?.amount
+                              ? TokensStore.awaitedTokens[symbol]?.amount
+                              : 0),
                     )}`}
                   </span>
                                     {TokensStore.tokenPrices &&
@@ -87,13 +83,9 @@ const VerifiedBal: React.FC<BalProps> = observer(
                                             <span className='awaited-tokens'>
                         {`(~$${+(
                                 (store.zkWallet &&
-                                        +handleFormatToken(
-                                                store.zkWallet,
-                                                symbol,
-                                                TokensStore.awaitedTokens[symbol]?.amount
-                                                        ? TokensStore.awaitedTokens[symbol]?.amount
-                                                        : 0,
-                                        )) *
+                                        +handleFormatToken(store.zkWallet, symbol, TokensStore.awaitedTokens[symbol]?.amount
+                                          ? TokensStore.awaitedTokens[symbol]?.amount
+                                          : 0)) *
                                 +(TokensStore.tokenPrices &&
                                 !!TokensStore.tokenPrices[symbol]
                                         ? TokensStore.tokenPrices[symbol]
@@ -160,13 +152,9 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                   <span className='awaited-tokens'>
                     {`+ ${store.zkWallet &&
                     handleExponentialNumbers(
-                            +handleFormatToken(
-                                    store.zkWallet,
-                                    symbol,
-                                    TokensStore.awaitedTokens[symbol]?.amount
-                                            ? TokensStore.awaitedTokens[symbol]?.amount
-                                            : 0,
-                            ),
+                            +handleFormatToken(store.zkWallet, symbol, TokensStore.awaitedTokens[symbol]?.amount
+                              ? TokensStore.awaitedTokens[symbol]?.amount
+                              : 0),
                     )}`}
                   </span>
                                     {TokensStore.tokenPrices &&
@@ -176,13 +164,9 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                                             <span className='awaited-tokens'>
                         {`(~$${+(
                                 (store.zkWallet &&
-                                        +handleFormatToken(
-                                                store.zkWallet,
-                                                symbol,
-                                                TokensStore.awaitedTokens[symbol]?.amount
-                                                        ? TokensStore.awaitedTokens[symbol]?.amount
-                                                        : 0,
-                                        )) *
+                                        +handleFormatToken(store.zkWallet, symbol, TokensStore.awaitedTokens[symbol]?.amount
+                                          ? TokensStore.awaitedTokens[symbol]?.amount
+                                          : 0)) *
                                 +(TokensStore.tokenPrices &&
                                 !!TokensStore.tokenPrices[symbol]
                                         ? TokensStore.tokenPrices[symbol]
@@ -280,11 +264,7 @@ const Account: React.FC = observer(() => {
                 const zkBalancePromises = Object.keys(zkBalance).map(async key => {
                   return {
                     address: tokens[key].address,
-                    balance: +handleFormatToken(
-                            zkWallet,
-                            tokens[key].symbol,
-                            zkBalance[key] ? zkBalance[key] : 0,
-                    ),
+                    balance: +handleFormatToken(zkWallet, tokens[key].symbol, zkBalance[key] ? zkBalance[key] : 0),
                     symbol: tokens[key].symbol,
                     id: tokens[key].id,
                   };

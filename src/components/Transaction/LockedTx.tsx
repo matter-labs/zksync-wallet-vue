@@ -31,11 +31,7 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
       store.zkWallet &&
       TransactionStore.symbolName &&
       TransactionStore.changePubKeyFees[TransactionStore.symbolName] &&
-      handleFormatToken(
-        store.zkWallet,
-        TransactionStore.symbolName,
-        TransactionStore.changePubKeyFees[TransactionStore.symbolName],
-      );
+      handleFormatToken(store.zkWallet, TransactionStore.symbolName, TransactionStore.changePubKeyFees[TransactionStore.symbolName]);
     const feePrice = formattedFee &&
       TokensStore.tokenPrices &&
       TransactionStore.symbolName && (

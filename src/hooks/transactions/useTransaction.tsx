@@ -88,11 +88,7 @@ export const useTransaction = () => {
           const zkBalancePromises = Object.keys(zkBalance).map(async key => {
             return {
               address: tokens[key].address,
-              balance: +handleFormatToken(
-                zkWallet,
-                tokens[key].symbol,
-                zkBalance[key] ? zkBalance[key] : 0,
-                ),
+              balance: +handleFormatToken(zkWallet, tokens[key].symbol, zkBalance[key] ? zkBalance[key] : 0),
               symbol: tokens[key].symbol,
               id: tokens[key].id,
             };
@@ -199,11 +195,7 @@ export const useTransaction = () => {
 
           const hash = transferTransaction.txHash;
           TransactionStore.transactionHash = hash;
-          store.hint = ` \n ${+handleFormatToken(
-            zkWallet,
-            TransactionStore.symbolName,
-            amountBigValue,
-          )}. \n${hash}`;
+          store.hint = ` \n ${+handleFormatToken(zkWallet, TransactionStore.symbolName, amountBigValue)}. \n${hash}`;
           const receipt = await transferTransaction.awaitReceipt();
           transactions(receipt);
           if (receipt) store.txButtonUnlocked = true;
@@ -308,17 +300,9 @@ export const useTransaction = () => {
           }
           const hash = withdrawTransaction.txHash;
           TransactionStore.transactionHash = hash;
-          store.hint = `Waiting for the transaction to be mined.. \n ${+handleFormatToken(
-            zkWallet,
-            TransactionStore.withdrawalToken,
-            TransactionStore.amountBigValue,
-          )} \n${hash}`;
+          store.hint = `Waiting for the transaction to be mined.. \n ${+handleFormatToken(zkWallet, TransactionStore.withdrawalToken, TransactionStore.amountBigValue)} \n${hash}`;
           if (withdrawTransaction) {
-            store.hint = `Your withdrawal will be processed shortly. \n ${+handleFormatToken(
-              zkWallet,
-              TransactionStore.withdrawalToken,
-              TransactionStore.amountBigValue,
-            )} \n${hash}`;
+            store.hint = `Your withdrawal will be processed shortly. \n ${+handleFormatToken(zkWallet, TransactionStore.withdrawalToken, TransactionStore.amountBigValue)} \n${hash}`;
           }
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(receipt);

@@ -37,6 +37,11 @@ export class TransactionStore {
   @observable propsToken: any;
   @observable waitingCalculation = false;
 
+  @observable amount: any = 0;
+  @observable selectedBalance: string = '';
+  @observable selectedContact: string = '';
+
+
   /**
    * Withdrawal process local states:
    * TokenAmount
@@ -77,7 +82,7 @@ export class TransactionStore {
    */
   @action
   getFeeBasedOnType() {
-    return this.fastWithdrawal ? this.fastFee : this.fee[this.getFeeToken()];
+    return this.fastWithdrawal ? this.fastFee : (this.fee[this.getFeeToken()]);
   }
 
   /**

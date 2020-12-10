@@ -15,11 +15,6 @@ ij_smart_tabs = false
 ij_visual_guides = 120
 ij_wrap_on_typing = true
 
-[*.blade.php]
-indent_size = 4
-tab_width = 4
-ij_blade_keep_indents_on_empty_lines = false
-
 [*.css]
 indent_size = 4
 tab_width = 4

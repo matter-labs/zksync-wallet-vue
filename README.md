@@ -5,7 +5,8 @@
 
 It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, published and ready for mass adoption.
 
-> **zkWallet's** closest goal is to enable **Paypal-scale** throughput for any dApp / wallet or smart-contract&nbsp;🚀
+> The nearest milestone for **zkWallet**  will enable **Paypal-scale** throughput for any dApp, wallet or smart
+>-contract &nbsp;🚀
 
 ## Released features
 

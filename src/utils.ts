@@ -82,11 +82,11 @@ export const useCallbackWrapper = (func, funcArguments, ucbParams) =>
   useCallback(func.bind(null, ...funcArguments), ucbParams);
 
 export const addressMiddleCutter = (address: string, firstNumberOfLetters: number, secondNumberOfLetters: number) => {
-  if (address.length - firstNumberOfLetters - secondNumberOfLetters <= 0) {
+  if (address?.length - firstNumberOfLetters - secondNumberOfLetters <= 0) {
     return address;
   }
   return `${address?.substring(0, firstNumberOfLetters)}...${address?.substring(
-    address.length - secondNumberOfLetters,
+    address?.length - secondNumberOfLetters,
   )}`;
 };
 
@@ -212,13 +212,17 @@ export const processZkSyncError = error => {
   return error.jrpcError ? error.jrpcError.message : error.message;
 };
 
-export const handleFormatToken = (wallet: Wallet, symbol: string, amount: ethers.BigNumberish) => {
-  if (!amount) return '0';
-  if (typeof amount === 'number') {
-    return wallet?.provider?.tokenSet.formatToken(symbol, amount.toString());
-  }
-  return wallet?.provider?.tokenSet.formatToken(symbol, amount);
-};
+export const handleFormatToken = (
+  wallet: Wallet,
+  symbol: string,
+  amount: ethers.BigNumberish,
+) => {
+   if (!amount) return '';
+   if (typeof amount === 'number') {
+     return wallet?.provider?.tokenSet.formatToken(symbol, amount.toString());
+   }
+   return wallet?.provider?.tokenSet.formatToken(symbol, amount);
+ };
 
 export function getExponentialParts(num) {
   return Array.isArray(num) ? num : String(num).split(/[eE]/);
@@ -377,4 +381,27 @@ export const handleGetUTCHours = (d: Date) => {
   const _minutes = d.getMinutes();
   const _seconds = d.getSeconds();
   return new Date(_year, _month, _date, _hour, _minutes, _seconds);
+};
+
+export const intervalAsyncStateUpdater = (
+  func,
+  funcArguments,
+  timeout: number,
+  cancelable,
+) => {
+  cancelable(func(...funcArguments))
+    .then(res =>
+      setTimeout(
+        () =>
+          intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable),
+        timeout,
+      ),
+    )
+    .catch(err =>
+      setTimeout(
+        () =>
+          intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable),
+        timeout,
+      ),
+    );
 };
