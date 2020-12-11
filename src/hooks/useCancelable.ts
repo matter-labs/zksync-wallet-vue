@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export function useCancelable() {
   const isCancelled = useRef<boolean>(false);
@@ -9,22 +9,28 @@ export function useCancelable() {
     };
   }, [isCancelled]);
 
-  const cb = useCallback(
-    <T>(fn: Promise<T> | (() => Promise<T>) | undefined) => {
-      return new Promise<T>((resolve, reject) => {
-        if (isCancelled.current) return;
-        if (!fn) return resolve();
-        const p = typeof fn === 'function' ? fn() : fn;
-
-        p.then(res => {
-          if (!isCancelled.current) return resolve(res);
-        }).catch(err => {
-          if (!isCancelled.current) return reject(err);
-        });
+  return useCallback(<T>(fn: Promise<T> | (() => Promise<T>) | undefined) => {
+    return new Promise<T>((resolve, reject) => {
+      if (isCancelled.current || !fn) {
+        reject(isCancelled.current ? 'callback is canceled' : 'No function for calling found');
+      } else {
+        const callbackResult = typeof fn === 'function' ? fn() : fn;
+        callbackResult
+          .then(receivedResult => {
+            if (isCancelled.current) {
+              reject('callback is canceled');
+            } else {
+              resolve(receivedResult);
+            }
+          })
+          .catch(err => {
+            if (isCancelled.current) {
+              reject('callback is canceled');
+            } else {
+              reject(err);
+            }
       });
-    },
-    [],
-  );
-
-  return cb;
+      }
+    });
+  }, []);
 }

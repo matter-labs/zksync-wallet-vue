@@ -4,7 +4,7 @@ import { WIDTH_BP } from 'constants/magicNumbers';
 
 import { addressMiddleCutter } from 'src/utils';
 
-import './Transaction.scss';
+import 'src/components/Transaction/Transaction.scss';
 
 interface IFilteredContactListProps {
   filteredContacts: any;

@@ -38,8 +38,7 @@ export function useInfiniteScroll(
 
     const loadMore =
       root.scrollHeight !== root.offsetHeight &&
-      root.scrollHeight - (debScrollTop + root.offsetHeight) <
-        loadMoreThreshold;
+      root.scrollHeight - (debScrollTop + root.offsetHeight) < loadMoreThreshold;
     if (loadMore) {
       setIsLoadingMore(true);
       onFetch(store.transactions.length + loadAmount, 0).then(res => {

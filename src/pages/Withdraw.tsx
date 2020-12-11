@@ -1,15 +1,16 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 
+
 import Transaction from 'components/Transaction/Transaction';
 
-import { useTransaction } from 'hooks/useTransaction';
+import { useWithdraw } from 'hooks/transactions/useWithdraw';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useStore } from 'src/store/context';
 
 export const Withdraw: React.FC = observer(
   (): JSX.Element => {
-    const { withdraw } = useTransaction();
+    const { withdraw } = useWithdraw();
 
     const store = useStore();
 

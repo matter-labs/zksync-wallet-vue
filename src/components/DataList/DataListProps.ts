@@ -4,6 +4,7 @@ type ReactComp = ReactElement | string | null;
 
 export interface Props<T> {
   data?: T[];
+
   /**
    * @param amount Amount to fetch (will be appended to existing data).
    * Pass `undefined` to skip pagination
