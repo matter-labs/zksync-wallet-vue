@@ -92,7 +92,7 @@ export const useWithdraw = () => {
             TransactionStore.withdrawalToken,
             TransactionStore.amountBigValue,
           )} \n${hash}`;
-          if (!!withdrawTransaction) {
+          if (withdrawTransaction) {
             store.hint = `Your withdrawal will be processed shortly. \n ${+handleFormatToken(
               zkWallet,
               TransactionStore.withdrawalToken,
@@ -101,7 +101,7 @@ export const useWithdraw = () => {
           }
           const receipt = await withdrawTransaction.awaitReceipt();
           transactions(store, receipt);
-          if (!!receipt) store.txButtonUnlocked = true;
+          if (receipt) store.txButtonUnlocked = true;
           const verifyReceipt = await withdrawTransaction.awaitVerifyReceipt();
           store.verifyToken = !!verifyReceipt;
         } else {

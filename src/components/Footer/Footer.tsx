@@ -17,7 +17,7 @@ const Footer: React.FC = (): JSX.Element => {
 
   const store = useStore();
 
-  const shortedGitHash = !!LINKS_CONFIG.lastGitCommitHash ? `.${LINKS_CONFIG.lastGitCommitHash.toString()}` : '';
+  const shortedGitHash = LINKS_CONFIG.lastGitCommitHash ? `.${LINKS_CONFIG.lastGitCommitHash.toString()}` : '';
 
   const handleSwitch = useCallback(() => {
     if (body) {

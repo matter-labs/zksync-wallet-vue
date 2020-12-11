@@ -18,7 +18,7 @@ const ChangeName: React.FC<IChangeNameProps> = observer(({ setModalOpen }) => {
     zkWallet ? zkWallet.address() : '',
   );
 
-  const [newName, setNewName] = useState<string>(oldName ? oldName : '');
+  const [newName, setNewName] = useState<string>(oldName || '');
 
   const handleChangeName = useCallback(
     e => {

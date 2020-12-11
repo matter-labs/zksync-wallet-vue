@@ -7,18 +7,14 @@ parserOptions:
   ecmaFeatures:
     modules: true
 extends:
-  - 'standard'
-  - 'eslint:recommended'
-  - 'plugin:react/recommended'
-  - 'plugin:react-hooks/recommended'
   - 'plugin:@typescript-eslint/recommended'
-  - 'prettier'
-  - 'prettier/@typescript-eslint'
+  - 'plugin:react/recommended'
 plugins:
   - '@typescript-eslint'
   - 'react'
   - 'react-hooks'
 rules:
+  'dot-notation': off
   'prefer-promise-reject-errors': off
   'no-prototype-builtins': off
   '@typescript-eslint/explicit-module-boundary-types': off
@@ -31,14 +27,19 @@ rules:
   '@typescript-eslint/no-this-alias': off
   '@typescript-eslint/no-empty-interface': off
   '@typescript-eslint/no-non-null-assertion': off
+  'react/jsx-wrap-multilines': off
   'react/jsx-no-target-blank': off
   'react/prop-types': off
   'react/jsx-no-literals': warn
-  'react/jsx-no-useless-fragment': warn
+  'react/jsx-no-useless-fragment': off
   'react-hooks/rules-of-hooks': error
   'react-hooks/exhaustive-deps': off
   'no-use-before-define': off
-  'plugin/no-low-performance-animation-properties': 0,
+  'no-return-assign': off
+  'no-unused-expressions': off
+  'no-sequences': off
+  'camelcase': off
+  'plugin/no-low-performance-animation-properties': 0
   '@typescript-eslint/ban-ts-comment': off
   quotes:
     - warn

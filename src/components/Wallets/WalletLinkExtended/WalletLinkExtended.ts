@@ -24,10 +24,10 @@ export abstract class AbstractConnector extends EventEmitter {
     this.supportedChainIds = supportedChainIds;
   }
 
-  public abstract async activate(): Promise<ConnectorUpdate>;
-  public abstract async getProvider(): Promise<any>;
+  public abstract activate(): Promise<ConnectorUpdate>;
+  public abstract getProvider(): Promise<any>;
   public abstract getChainId(): number | string;
-  public abstract async getAccount(): Promise<null | string>;
+  public abstract getAccount(): Promise<null | string>;
   public abstract deactivate(): void;
 
   protected emitUpdate(update: ConnectorUpdate): void {

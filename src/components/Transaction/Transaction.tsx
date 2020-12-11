@@ -204,7 +204,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     useEffect(() => {
       if (
         TransactionStore.recepientAddress.length > 0 &&
-        !ADDRESS_VALIDATION['eth'].test(TransactionStore.recepientAddress)
+        !ADDRESS_VALIDATION.eth.test(TransactionStore.recepientAddress)
       ) {
         TransactionStore.conditionError = `Error: "${addressMiddleCutter(
           TransactionStore.recepientAddress,
@@ -289,7 +289,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           TokensStore.getNotEmptyFeeToken(),
         );
         address = address || TransactionStore.recepientAddress;
-        if ((title != 'Transfer' && title != 'Withdraw') || !address) {
+        if ((title !== 'Transfer' && title !== 'Withdraw') || !address) {
           return;
         }
         store.zkWallet?.provider
@@ -387,7 +387,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     const handleSave = useCallback(() => {
       if (
         TransactionStore.recepientAddress &&
-        ADDRESS_VALIDATION['eth'].test(TransactionStore.recepientAddress)
+        ADDRESS_VALIDATION.eth.test(TransactionStore.recepientAddress)
       ) {
         store.modalSpecifier = 'add-contact';
         store.isContact = false;
@@ -483,8 +483,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
             data => (store.unlocked = data),
           );
         }).catch((error) => {
-          console.log('account state cancelable error', error)
-      })
+          console.log('account state cancelable error', error);
+      });
     }, [
       cancelable,
       store,
@@ -510,7 +510,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
     };
 
     useEffect(() => {
-      if (!!TransactionStore.symbolName) {
+      if (TransactionStore.symbolName) {
         handleUpdateTokenPrice(TransactionStore.symbolName);
       }
     }, []);
@@ -612,7 +612,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         setSelected(true);
       }
       if (
-        ADDRESS_VALIDATION['eth'].test(TransactionStore.recepientAddress) &&
+        ADDRESS_VALIDATION.eth.test(TransactionStore.recepientAddress) &&
         !TransactionStore.selectedContact &&
         title !== 'Withdraw'
       ) {
@@ -681,9 +681,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
       ethers
         .getDefaultProvider(LINKS_CONFIG.network)
         .getGasPrice()
-        .then(res => res.toString())
-        .then(data => {
-          TransactionStore.gas = data;
+        .then((res) => {
+          TransactionStore.gas = res.toString();
+        }).catch(error => {
+          console.log('Gas price fetching failed with error: ', error);
       });
     }, [store.zkWallet]);
 
@@ -718,7 +719,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           return data;
         })
         .catch(err => {
-          if (!!`${err}`.match(/insufficient/)) {
+          if (`${err}`.match(/insufficient/)) {
             store.error = 'Insufficient ETH founds';
           }
           TransactionStore.isLoading = false;
@@ -764,8 +765,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
         if (isTwitExist === 'false') {
           store.modalHintMessage = 'makeTwitToWithdraw';
           store.modalSpecifier = 'modal-hint';
-        } else {
-          return;
         }
       }
     }, [
@@ -775,7 +774,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
       isTwitExist,
     ]);
 
-    const handleSumbit = useCallback((event) => {
+    const handleSumbit = useCallback(async () => {
       if (submitCondition) {
         if (
           TransactionStore.symbolName === 'MLTT' &&
@@ -793,7 +792,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
             TransactionStore.withdrawalToken = TransactionStore.symbolName;
           }
           store.txButtonUnlocked = false;
-          transactionAction(
+          await transactionAction(
             TransactionStore.tokenAddress,
             type,
             TransactionStore.symbolName,
@@ -809,7 +808,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
         TransactionStore.conditionError = `Please select the token and set the ${title.toLowerCase()} amount`;
       }
       if (
-        !ADDRESS_VALIDATION['eth'].test(TransactionStore.recepientAddress) &&
+        !ADDRESS_VALIDATION.eth.test(TransactionStore.recepientAddress) &&
         title !== 'Deposit'
       ) {
         TransactionStore.conditionError =
@@ -873,30 +872,30 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const ABI = [
       {
-        "constant": true,
-        "inputs": [
+        'constant': true,
+        'inputs': [
           {
-            "internalType": 'address',
-            "name": '_address',
-            "type": 'address',
+            'internalType': 'address',
+            'name': '_address',
+            'type': 'address',
           },
           {
-            "internalType": 'uint16',
-            "name": '_tokenId',
+            'internalType': 'uint16',
+            'name': '_tokenId',
             type: 'uint16',
           },
         ],
-        "name": 'getBalanceToWithdraw',
-        "outputs": [
+        'name': 'getBalanceToWithdraw',
+        'outputs': [
           {
-            "internalType": 'uint128',
-            "name": '',
-            "type": 'uint128',
+            'internalType': 'uint128',
+            'name': '',
+            'type': 'uint128',
           },
         ],
-        "payable": false,
-        "stateMutability": 'view',
-        "type": 'function',
+        'payable': false,
+        'stateMutability': 'view',
+        'type': 'function',
       },
     ];
 
@@ -934,10 +933,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       AccountStore.ethSignerAddress,
       AccountStore.zksContract,
     ]);
-
-    useEffect(() => {
-      if (!store.zkWallet) return;
-    }, [ExternaWalletStore.externalWalletContractBalances, store.zkWallet]);
 
     const ExternalWalletBalance = ({ balance, symbol }) => (
       <div className='external-wallet-wrapper'>
@@ -1486,16 +1481,14 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 el?.focus();
                               }
                             }}
-                            className={`transaction-field contacts ${ADDRESS_VALIDATION[
-                              'eth'
-                            ].test(TransactionStore.recepientAddress)}`}
+                            className={`transaction-field contacts ${ADDRESS_VALIDATION.eth.test(TransactionStore.recepientAddress)}`}
                           >
                             <ContactSelectorFlat
                               body={body}
                               selectedContact={TransactionStore.selectedContact}
                             />
                             <div className='currency-input-wrapper'>
-                              {ADDRESS_VALIDATION['eth'].test(
+                              {ADDRESS_VALIDATION.eth.test(
                                 TransactionStore.recepientAddress,
                               ) && (
                                 <img
@@ -1525,7 +1518,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                       e.target.value,
                                     );
                                   if (
-                                    ADDRESS_VALIDATION['eth'].test(
+                                    ADDRESS_VALIDATION.eth.test(
                                       TransactionStore.recepientAddress,
                                     )
                                   ) {
@@ -1534,7 +1527,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                 }}
                                 className='currency-input-address'
                               />
-                              {ADDRESS_VALIDATION['eth'].test(
+                              {ADDRESS_VALIDATION.eth.test(
                                 TransactionStore.recepientAddress,
                               ) &&
                                 !TransactionStore.selectedContact &&
@@ -1666,7 +1659,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             </div>
                           </div>
                           {TokensStore.zkBalancesLoaded &&
-                            (!!balances?.length ? (
+                            (balances?.length ? (
                               <div
                                 className='currency-input-wrapper'
                                 key={TransactionStore.tokenAddress}
@@ -1719,7 +1712,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   >
                                     {selectedBalance &&
                                       ((TransactionStore.getFeeBasedOnType() &&
-                                        ADDRESS_VALIDATION['eth'].test(
+                                        ADDRESS_VALIDATION.eth.test(
                                           TransactionStore.recepientAddress,
                                         )) ||
                                         title === 'Deposit') && (
@@ -1742,7 +1735,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                                   </button>
                                 )}
                                 {(!TransactionStore.getFeeBasedOnType() ||
-                                  !ADDRESS_VALIDATION['eth'].test(
+                                  !ADDRESS_VALIDATION.eth.test(
                                     TransactionStore.recepientAddress,
                                   )) &&
                                   !!selectedBalance &&
@@ -1863,7 +1856,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                           : TransactionStore.conditionError}
                       </p>
                     </div>
-                    {!!store.txButtonUnlocked ? (
+                    {store.txButtonUnlocked ? (
                       <button
                         className={`btn submit-button ${
                           (!unlockFau &&
@@ -1906,7 +1899,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                           TransactionStore.amountValue &&
                           !TransactionStore.conditionError &&
                           TransactionStore.getFeeBasedOnType() &&
-                          ADDRESS_VALIDATION['eth'].test(
+                          ADDRESS_VALIDATION.eth.test(
                             TransactionStore.recepientAddress,
                           ) &&
                           title !== 'Deposit' && (
@@ -1959,7 +1952,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             }}
                             className='undo-btn marginless'
                           >
-                            Choose fee token
+                            {'Choose fee token'}
                           </button>
                         ) : (
                           ''
@@ -2019,3 +2012,5 @@ const Transaction: React.FC<ITransactionProps> = observer(
     );
   },
 );
+
+export default Transaction;

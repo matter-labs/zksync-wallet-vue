@@ -28,6 +28,7 @@ const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
 
 const noop = () => null;
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function DataList<T>({
   data,
   onFetch,

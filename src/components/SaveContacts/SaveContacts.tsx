@@ -127,7 +127,7 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
           </>
         )}
         <div className='error-container'>
-          <p className={`error-text ${!!conditionError ? 'visible' : ''}`}>{conditionError}</p>
+          <p className={`error-text ${conditionError ? 'visible' : ''}`}>{conditionError}</p>
         </div>
         <button type='submit' className='btn submit-button' onClick={handleSave}>
           {'Save'}

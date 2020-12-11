@@ -258,7 +258,7 @@ const MakeTwitToWithdraw = observer(() => {
   const store = useStore();
 
   const generateSalt = () => {
-    if (!!localStorage.getItem('twitsalt')) {
+    if (localStorage.getItem('twitsalt')) {
       const salt = localStorage.getItem('twitsalt');
       return salt;
     } else {
@@ -347,7 +347,7 @@ const MLTTBlockModal = () => {
       <h2>{'Out of free MLTT withdrawals!'}</h2>
       <p>
         {
-          "Sorry, we've run out of free MLTT withdrawals :( But don't worry, you will be able to withdraw your MLTT nonetheless! We are soon adding an option to pay for your withdrawal with a different token."
+          'Sorry, we\'ve run out of free MLTT withdrawals :( But don\'t worry, you will be able to withdraw your MLTT nonetheless! We are soon adding an option to pay for your withdrawal with a different token.'
         }
       </p>
       <p>
@@ -393,7 +393,7 @@ const ExternalWalletLogin = observer(() => {
 
   const onKeyUp = useCallback(e => {
     e.key === 'Enter' && mainBtnCb();
-  }, []);
+  }, [mainBtnCb]);
 
   useEffect(() => {
     window.addEventListener('keyup', onKeyUp);

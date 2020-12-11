@@ -1,5 +1,5 @@
 import {IFooterLinks} from 'types/Common';
-import {COMMON} from "./links";
+import {COMMON} from './links';
 
 export const FOOTER_LINKS: IFooterLinks[] = [
     COMMON.DOCS,

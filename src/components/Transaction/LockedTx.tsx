@@ -104,7 +104,7 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
         <div className='error-container'>
           <p
             className={`error-text lg-font ${
-              !!conditionError ? 'visible' : ''
+              conditionError ? 'visible' : ''
             }`}
           >
             {conditionError}

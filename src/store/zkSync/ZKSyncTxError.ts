@@ -1,4 +1,4 @@
-import { types as SyncTypes } from 'zksync'
+import { types as SyncTypes } from 'zksync';
 
 // The class is private in zkSync and we've got
 // no choice but to copy-paste it
