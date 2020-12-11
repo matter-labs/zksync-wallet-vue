@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore, storeContext } from 'src/store/context';
 import { useHistory } from 'react-router-dom';
@@ -15,22 +15,14 @@ import { walletConnectConnector } from 'src/components/Wallets/walletConnectors'
 
 const MyWallet = () => (
   <>
-    <h4>
-      {'Your zkSync address is the same as your Ethereum account address.'}
-    </h4>
+    <h4>{'Your zkSync address is the same as your Ethereum account address.'}</h4>
     <p>
       {
         'As long as you control your Ethereum account you also own all the L2 balances under its address in zkSync. Nobody can freeze or take them away from you. Once your balance has been verified ('
       }
       <span className='label-done small'></span>
-      {
-        '), you can always recover your tokens from zkSync — even if its validators are ever shut down.'
-      }{' '}
-      <a
-        href='//zksync.io/faq/security.html'
-        target='_blank'
-        rel='noopener noreferrer'
-      >
+      {'), you can always recover your tokens from zkSync — even if its validators are ever shut down.'}{' '}
+      <a href='//zksync.io/faq/security.html' target='_blank' rel='noopener noreferrer'>
         {'Learn more.'}
       </a>{' '}
     </p>
@@ -266,7 +258,7 @@ const MakeTwitToWithdraw = observer(() => {
   const store = useStore();
 
   const generateSalt = () => {
-    if (!!localStorage.getItem('twitsalt')) {
+    if (localStorage.getItem('twitsalt')) {
       const salt = localStorage.getItem('twitsalt');
       return salt;
     } else {
@@ -355,7 +347,7 @@ const MLTTBlockModal = () => {
       <h2>{'Out of free MLTT withdrawals!'}</h2>
       <p>
         {
-          "Sorry, we've run out of free MLTT withdrawals :( But don't worry, you will be able to withdraw your MLTT nonetheless! We are soon adding an option to pay for your withdrawal with a different token."
+          'Sorry, we\'ve run out of free MLTT withdrawals :( But don\'t worry, you will be able to withdraw your MLTT nonetheless! We are soon adding an option to pay for your withdrawal with a different token.'
         }
       </p>
       <p>
@@ -401,7 +393,7 @@ const ExternalWalletLogin = observer(() => {
 
   const onKeyUp = useCallback(e => {
     e.key === 'Enter' && mainBtnCb();
-  }, []);
+  }, [mainBtnCb]);
 
   useEffect(() => {
     window.addEventListener('keyup', onKeyUp);

@@ -13,7 +13,6 @@ import { LINKS_CONFIG } from 'src/config';
 
 import './Transaction.scss';
 import { LottiePlayer } from '../Common/LottiePlayer';
-import successCheckmark from 'images/success-checkmark.json';
 import { BackButton } from 'src/components/Common/BackButton';
 
 interface IExecutedTxProps {
@@ -52,15 +51,13 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
 
     const gasSpendOnETHTx = 21000;
     const gasSpendOnERC20Tx = 80000;
-    const actualGasSpend =
-      feeToken === 'ETH' ? gasSpendOnETHTx : gasSpendOnERC20Tx;
+    const actualGasSpend = feeToken === 'ETH' ? gasSpendOnETHTx : gasSpendOnERC20Tx;
 
     const costFactor =
       TokensStore.tokenPrices &&
       fee &&
       Math.ceil(
-        (+utils.formatEther(+gasPrice * actualGasSpend) *
-          +TokensStore.tokenPrices['ETH']) /
+        (+utils.formatEther(+gasPrice * actualGasSpend) * +TokensStore.tokenPrices.ETH) /
           (+fee * +TokensStore.tokenPrices[feeToken]),
       );
     const delay = Math.pow(10, 9);
@@ -96,7 +93,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
             <FontAwesomeIcon icon={['fas', 'external-link-alt']} />
           </a>
         </p>
-        <LottiePlayer src={JSON.stringify(successCheckmark)} />
+        <LottiePlayer />
         {title !== 'Transfer' && <p>{info[0]}</p>}
         {title === 'Transfer' && (
           <>
@@ -130,10 +127,7 @@ export const ExecutedTx: React.FC<IExecutedTxProps> = observer(
               {'~$'}
               {TokensStore.tokenPrices &&
                 TokensStore.tokenPrices[TransactionStore.symbolName] &&
-                (
-                  +TokensStore.tokenPrices[TransactionStore.symbolName] *
-                  +inputValue
-                ).toFixed(2)}
+                (+TokensStore.tokenPrices[TransactionStore.symbolName] * +inputValue).toFixed(2)}
             </span>
           </p>
         </span>

@@ -5,9 +5,9 @@ import { Tx } from 'src/pages/Transactions';
 import { useStore } from 'src/store/context';
 import { observer } from 'mobx-react-lite';
 import SpinnerWorm from '../Spinner/SpinnerWorm';
-import { MAX_WITHDRAWAL_TIME } from 'src/config';
+import { MAX_WITHDRAWAL_TIME , LINKS_CONFIG } from 'src/config';
 import { getConfirmationCount, handleGetUTCHours } from 'src/utils';
-import { LINKS_CONFIG } from 'src/config';
+
 import { ALL_APPLE_DEVICES } from 'src/constants/regExs';
 
 export interface PieProps {
@@ -125,9 +125,7 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
     status = 'Commited';
     content = <CheckMark />;
   } else {
-    if (tx.tx.type === 'Deposit') {
-      status = status;
-    } else {
+    if (tx.tx.type !== 'Deposit') {
       if (!tx.commited && tx.tx.type === 'Withdraw') {
         // status = 'Withdrawal in progress — it should take max. 60 min';
         status =

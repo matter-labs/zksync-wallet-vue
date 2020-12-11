@@ -49,13 +49,13 @@ const PrimaryPage: React.FC = observer(() => {
   const providerWalletName = getWalletNameFromProvider();
 
   const filterWallets = (list: string[]) => {
-    if (!!navigator['brave']) list.push(...BRAVE_NON_WORKING_WALLETS);
+    if (navigator['brave']) list.push(...BRAVE_NON_WORKING_WALLETS);
     return list;
   };
 
   const walletsWithWeb3 = () => {
     const _w = Object.keys(WALLETS);
-    if (!!store.windowEthereumProvider?._metamask) {
+    if (store.windowEthereumProvider?._metamask) {
       return _w.filter(el => el !== 'Web3');
     }
     if (!store.windowEthereumProvider?._metamask && !!window['web3']) {
@@ -99,14 +99,14 @@ const PrimaryPage: React.FC = observer(() => {
   const WCEnabledSession = sessionStorage.getItem(wcMainSessionStorageFlag);
 
   const selectWallet = useCallback(
-    (key: WalletType) => () => {
+    (key: WalletType) => async () => {
       if (key === 'External') {
         return;
       }
 
       if (
-        key === 'Web3' ||
-        (key === 'Coinbase Wallet' && store.isMobileDevice)
+              key === 'Web3' ||
+              (key === 'Coinbase Wallet' && store.isMobileDevice)
       ) {
         store.zkWalletInitializing = true;
         const web3 = new Web3(window['web3']?.getDefaultProvider);
@@ -128,7 +128,7 @@ const PrimaryPage: React.FC = observer(() => {
           isAccessModalOpen: true,
           zkWalletInitializing: true,
         });
-        createWallet();
+        await createWallet();
       }
       if (key === 'Metamask') {
         store.setBatch({
@@ -140,13 +140,13 @@ const PrimaryPage: React.FC = observer(() => {
           store.hint = 'Connecting to ';
         }
         if (
-          store.windowEthereumProvider &&
-          +store.windowEthereumProvider?.chainId === +LINKS_CONFIG.networkId
+                store.windowEthereumProvider &&
+                +store.windowEthereumProvider?.chainId === +LINKS_CONFIG.networkId
         ) {
           store.zkWalletInitializing = true;
-          createWallet();
-        } else if (!store.windowEthereumProvider?.chainId && !!isAndroid) {
-          createWallet();
+          await createWallet();
+        } else if (!store.windowEthereumProvider?.chainId && isAndroid) {
+          await createWallet();
         }
       }
       if (key === 'Portis') {
@@ -158,7 +158,7 @@ const PrimaryPage: React.FC = observer(() => {
         if (!store.provider) {
           store.hint = 'Connecting to ';
         }
-        portisConnector(store, connect, getSigner);
+        await portisConnector(store, connect, getSigner);
         store.hint = 'Connecting to ';
       }
       if (wallets.includes(key)) {
@@ -173,8 +173,8 @@ const PrimaryPage: React.FC = observer(() => {
             isAccessModalOpen: true,
           });
           const wCQRScanned = localStorage.getItem('walletconnect');
-          if (!!wCQRScanned) {
-            createWallet();
+          if (wCQRScanned) {
+            await createWallet();
           } else {
             walletConnectConnector(store, connect);
           }
@@ -191,7 +191,8 @@ const PrimaryPage: React.FC = observer(() => {
         if (store.provider?.selectedAddress) {
           store.zkWalletInitializing = true;
         }
-      } else {
+      }
+      else {
         store.error = `Your browser doesn't support ${key}, please select another wallet or switch browser`;
       }
     },
@@ -268,7 +269,7 @@ const PrimaryPage: React.FC = observer(() => {
                     </span>
                     <a
                       className='expandTooltip'
-                      onMouseDown={event => {
+                      onMouseDown={() => {
                         store.ExternalWallerShowWithdraw = !store.ExternalWallerShowWithdraw;
                       }}
                     >

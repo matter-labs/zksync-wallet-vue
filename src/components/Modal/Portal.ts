@@ -9,12 +9,15 @@ interface Props {
 const Portal: FC<Props> = ({ children, className = '' }) => {
   const rootDiv = useRef(document.createElement('div'));
   useLayoutEffect(() => {
-    const modal = rootDiv.current;
+            const modal = rootDiv.current;
     modal.setAttribute('class', cl('modal-container', className));
-    document.body.appendChild(modal);
-    return () => {
-      document.body.removeChild(modal);
-    };
+            document.body.appendChild(modal);
+
+            return () => {
+
+                document.body.removeChild(modal);
+
+            };
   }, [className]);
 
   return createPortal(children, rootDiv.current);

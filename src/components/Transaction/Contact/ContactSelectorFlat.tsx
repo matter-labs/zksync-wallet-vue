@@ -3,7 +3,7 @@ import { observer } from 'mobx-react-lite';
 
 import { useStore } from 'src/store/context';
 
-import './Transaction.scss';
+import 'src/components/Transaction/Transaction.scss';
 
 interface IContactSelectorFlatProps {
   body: Element | null;

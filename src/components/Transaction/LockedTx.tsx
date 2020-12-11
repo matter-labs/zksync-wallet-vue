@@ -31,11 +31,7 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
       store.zkWallet &&
       TransactionStore.symbolName &&
       TransactionStore.changePubKeyFees[TransactionStore.symbolName] &&
-      handleFormatToken(
-        store.zkWallet,
-        TransactionStore.symbolName,
-        TransactionStore.changePubKeyFees[TransactionStore.symbolName],
-      );
+      handleFormatToken(store.zkWallet, TransactionStore.symbolName, TransactionStore.changePubKeyFees[TransactionStore.symbolName]);
     const feePrice = formattedFee &&
       TokensStore.tokenPrices &&
       TransactionStore.symbolName && (
@@ -44,13 +40,12 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
         ).toFixed(2)}`}</span>
       );
 
-    const _cpkKeys = Object.keys(TransactionStore.changePubKeyFees);
 
     useEffect(() => {
       if (
         !store.zkWallet ||
         !TokensStore.zkBalancesLoaded ||
-        _cpkKeys.length < TokensStore.zkBalances.length
+        TransactionStore.changePubKeyFees.length < TokensStore.zkBalances.length
       )
         return;
       handleSelectBalance();
@@ -108,7 +103,7 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
         <div className='error-container'>
           <p
             className={`error-text lg-font ${
-              !!conditionError ? 'visible' : ''
+              conditionError ? 'visible' : ''
             }`}
           >
             {conditionError}
@@ -118,7 +113,7 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
     ));
 
     const loadingCondition =
-      !store.zkWallet || _cpkKeys.length < TokensStore.zkBalances.length;
+      !store.zkWallet || (TransactionStore.changePubKeyFees.length < TokensStore.zkBalances.length);
 
     return (
       <>

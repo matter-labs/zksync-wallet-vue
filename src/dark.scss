@@ -154,10 +154,8 @@ body.dark {
         }
 
         .arrow-select {
-            background: url(./images/arrow-select-dark.svg);
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
+          background: url(./images/arrow-select-dark.svg) no-repeat center;
+          background-size: contain;
         }
 
         .balances-search {
@@ -172,21 +170,18 @@ body.dark {
     .modal {
         & .icon {
             &-qr {
-                background: url(./images/icon-qr_dark.svg);
-                background-repeat: no-repeat;
-                background-size: contain;
+              background: url(./images/icon-qr_dark.svg) no-repeat;
+              background-size: contain;
             }
 
             &-disconnect {
-                background: url(./images/icon-disconnect_dark.svg);
-                background-repeat: no-repeat;
-                background-size: contain;
+              background: url(./images/icon-disconnect_dark.svg) no-repeat;
+              background-size: contain;
             }
 
             &-edit {
-                background: url(./images/icon-edit_dark.svg);
-                background-repeat: no-repeat;
-                background-size: contain;
+              background: url(./images/icon-edit_dark.svg) no-repeat;
+              background-size: contain;
             }
         }
     }

@@ -46,7 +46,7 @@ export const Transaction: FC<Tx> = props => {
 
   const handleFindContactName = (to, from, reciever) => {
     if (reciever && to && from) {
-      return contacts?.filter(
+    return contacts?.filter(
         c => c?.address?.toLowerCase() === from?.toLowerCase(),
       )[0];
     } else {
@@ -62,11 +62,9 @@ export const Transaction: FC<Tx> = props => {
     to?.toLowerCase() === store.zkWalletAddress?.toLowerCase(),
   )?.name;
 
-  const addressAppearence = nameHandler
-    ? nameHandler
-    : to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
+  const addressAppearence = nameHandler || (to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
     ? addressMiddleCutter(from, 6, 3)
-    : addressMiddleCutter(to as string, 6, 3);
+    : addressMiddleCutter(to as string, 6, 3));
 
   const handleAmountType = () => {
     if (!store.zkWallet) return;
@@ -75,13 +73,9 @@ export const Transaction: FC<Tx> = props => {
     }
     if (!!amount || !!priority_op?.amount) {
       return handleExponentialNumbers(
-        +handleFormatToken(
-          store.zkWallet,
-          type === 'Deposit'
-            ? (priority_op?.token as string)
-            : (token as string),
-          type === 'Deposit' && priority_op ? +priority_op.amount : +amount,
-        ),
+        +handleFormatToken(store.zkWallet, type === 'Deposit'
+          ? (priority_op?.token as string)
+          : (token as string), type === 'Deposit' && priority_op ? +priority_op.amount : +amount),
       );
     } else {
       return 'Unlocking transaction';
@@ -106,7 +100,7 @@ export const Transaction: FC<Tx> = props => {
               className={`transaction-history-amount ${notNumberClass}`}
               style={{
                 width: `${
-                  !!handleAmountType() ? handleAmountType().length : 0
+                  handleAmountType() ? handleAmountType().length : 0
                 }ch`,
               }}
             >
@@ -148,7 +142,7 @@ export const Transaction: FC<Tx> = props => {
                 onClick={e => {
                   e.stopPropagation();
                   store.walletAddress = {
-                    name: nameHandler ? nameHandler : '',
+                    name: nameHandler || '',
                     address:
                       to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
                         ? from
@@ -181,7 +175,7 @@ export const Transaction: FC<Tx> = props => {
                 onClick={e => {
                   e.stopPropagation();
                   store.walletAddress = {
-                    name: nameHandler ? nameHandler : '',
+                    name: nameHandler || '',
                     address:
                       to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
                         ? from

@@ -3,7 +3,7 @@ import { Transition } from 'components/Transition/Transition';
 import { getCookie, setCookie } from 'src/utils';
 
 const COOKIE_TEXT =
-  "We use cookies to ensure that we give you the best experience on our website. If you continue without changing your settings, we'll assume that you are happy with it.";
+  'We use cookies to ensure that we give you the best experience on our website. If you continue without changing your settings, we\'ll assume that you are happy with it.';
 
 export const CookieBar = () => {
   const [accepted, setAccepted] = useState(
