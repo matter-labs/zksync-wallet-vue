@@ -1,18 +1,15 @@
-import ethers, {
-  Contract,
-  getDefaultProvider as getDefaultProviderEthers,
-} from 'ethers';
+import ethers, { Contract, getDefaultProvider as getDefaultProviderEthers } from 'ethers';
 import { Provider, Wallet } from 'zksync';
 
-import { IEthBalance } from './types/Common';
-import { DEFAULT_ERROR } from './constants/errors';
-import { Tokens, AccountState, TokenLike } from 'zksync/build/types';
+import { IEthBalance } from 'types/Common';
+import { DEFAULT_ERROR } from 'constants/errors';
+import { AccountState, TokenLike, Tokens } from 'zksync/build/types';
 import { LINKS_CONFIG } from 'src/config';
 import { Store } from './store/store';
 import { useCallback } from 'react';
 
 export function getWalletNameFromProvider(): string | undefined {
-  const provider: any = window['ethereum'];
+  const provider: any = window.ethereum;
   if (!provider) return;
 
   if (provider.isTorus) {
@@ -76,36 +73,22 @@ export const handleUnlinkAccount = (store: Store, handleLogout) => {
     store.modalHintMessage = '';
     store.modalSpecifier = '';
     handleLogout(false, '');
-    // store.walletName = 'WalletConnect';
-    // store.normalBg = true;
-    // store.isAccessModalOpen = true;
-    // walletConnectConnector(store, connect);
   }
 };
 
-export const useCallbackWrapper = (func, funcArguments, ucbParams) =>
-  useCallback(func.bind(null, ...funcArguments), ucbParams);
+export const useCallbackWrapper = (func, funcArguments, ucbParams) => useCallback(func.bind(null, ...funcArguments), ucbParams);
 
-export const addressMiddleCutter = (
-  address: string,
-  firstNumberOfLetters: number,
-  secondNumberOfLetters: number,
-) => {
-  if (typeof address !== 'string') return;
-  if (address.length - firstNumberOfLetters - secondNumberOfLetters <= 0) {
+export const addressMiddleCutter = (address: string, firstNumberOfLetters: number, secondNumberOfLetters: number) => {
+  if (address?.length - firstNumberOfLetters - secondNumberOfLetters <= 0) {
     return address;
   }
   return `${address?.substring(0, firstNumberOfLetters)}...${address?.substring(
-    address.length - secondNumberOfLetters,
+    address?.length - secondNumberOfLetters,
   )}`;
 };
 
-export async function getConfirmationCount(
-  provider: any,
-  txHash: string,
-  maxBlock?: number,
-) {
-  //todo: fixme - do not depend on transaction format, use type of transaction
+export async function getConfirmationCount(provider: any, txHash: string, maxBlock?: number) {
+  // todo: fixme - do not depend on transaction format, use type of transaction
   if (txHash.startsWith('sync-tx')) return 0;
   try {
     const trx = await provider.getTransaction(txHash);
@@ -131,31 +114,16 @@ export function setCookie(name: string, value, exp?: Date) {
   document.cookie = val;
 }
 
-export function whyDidYouUpdate() {
-  const prevFields = {};
-  return fields => {
-    const eqCheck = {};
-    for (const k in fields) {
-      if (!(k in prevFields) || prevFields[k] !== fields[k]) {
-        eqCheck[k] = false;
-      } else {
-        eqCheck[k] = true;
-      }
-      prevFields[k] = fields[k];
-    }
-    console.log(eqCheck);
-  };
-}
-
 export const checkForEmptyBalance = (store: Store, balance) => {
-  const tokensWithBalance = balance.filter(el => el.balance > 0);
-  if (tokensWithBalance.length > 0) {
+  const tokensWithBalance = balance?.filter(el => el.balance > 0);
+  if (tokensWithBalance?.length > 0) {
     store.TokensStore.isAccountBalanceNotEmpty = true;
     store.TokensStore.isAccountBalanceLoading = false;
-  }
-  if (!!store.zkWallet && tokensWithBalance.length === 0) {
-    store.TokensStore.isAccountBalanceNotEmpty = false;
-    store.TokensStore.isAccountBalanceLoading = false;
+  } else {
+    if (store.zkWallet) {
+      store.TokensStore.isAccountBalanceNotEmpty = false;
+      store.TokensStore.isAccountBalanceLoading = false;
+    }
   }
 };
 
@@ -179,11 +147,7 @@ export const sortBalancesByBalance = (a, b) => {
   return 0;
 };
 
-export const mintTestERC20Tokens = async (
-  wallet: Wallet,
-  token: TokenLike,
-  store,
-) => {
+export const mintTestERC20Tokens = async (wallet: Wallet, token: TokenLike, store) => {
   const tokenAddress = wallet?.provider.tokenSet.resolveTokenAddress(token);
   const ABI = [
     {
@@ -215,15 +179,11 @@ export const mintTestERC20Tokens = async (
   ];
   store.zkWallet?.provider.tokenSet.parseToken(token, '100');
   const erc20Mintable = new Contract(tokenAddress, ABI, wallet.ethSigner);
-  const _mint = await erc20Mintable
-    .mint(
-      wallet.address(),
-      store.zkWallet?.provider.tokenSet.parseToken(token, '100'),
-    )
+  return await erc20Mintable
+    .mint(wallet.address(), store.zkWallet?.provider.tokenSet.parseToken(token, '100'))
     .then(res => {
       store.hint = 'Waiting for transaction to be mined';
       const p = getDefaultProviderEthers(LINKS_CONFIG.network);
-      const _r: string[] = [];
       const _int = setInterval(() => {
         p.getTransactionReceipt(res.hash).then(res => {
           if (res) {
@@ -239,35 +199,24 @@ export const mintTestERC20Tokens = async (
       return res;
     })
     .catch(() => (store.modalSpecifier = ''));
-  return _mint;
 };
 
-export const handleFormatToken = (
-  wallet: Wallet,
-  symbol: string,
-  amount: ethers.BigNumberish,
-) => {
-  if (!amount) return '0';
+/**
+ * Wrapper around errors from zkSync
+ * @param error
+ * @return {any}
+ */
+export const processZkSyncError = error => {
+  return error.jrpcError ? error.jrpcError.message : error.message;
+};
+
+export const handleFormatToken = (wallet: Wallet, symbol: string, amount: ethers.BigNumberish) => {
+  if (!amount) return '';
   if (typeof amount === 'number') {
     return wallet?.provider?.tokenSet.formatToken(symbol, amount.toString());
   }
   return wallet?.provider?.tokenSet.formatToken(symbol, amount);
 };
-
-// export const handleExponentialNumbers = n => {
-//   if (!n.toString().match(/[eE]/)) return n;
-//   const splitedByE = n.toString().split(/[eE]/);
-//   const zerosMinus = parseInt(splitedByE[1].replace(/-/, '')) - 1;
-//   const zerosPlus = parseInt(splitedByE[1].replace(/\+/, '')) - 1;
-//   const nums = splitedByE[0].replace(/\./, '');
-//   const splitedString = ['0.'];
-//   const plusDetect = splitedByE[1].includes('+') ? zerosPlus : zerosMinus;
-//   for (let i = 0; i < plusDetect; i++) {
-//     splitedString.push('0');
-//   }
-//   const complextString = splitedString.join('') + nums;
-//   return complextString;
-// };
 
 export function getExponentialParts(num) {
   return Array.isArray(num) ? num : String(num).split(/[eE]/);
@@ -298,15 +247,9 @@ export function handleExponentialNumbers(num) {
     const countWholeAfterTransform = wholeDigits.length + e;
     if (countWholeAfterTransform > 0) {
       // transform whole to fraction
-      const wholeDigitsAfterTransform = wholeDigits.substr(
-        0,
-        countWholeAfterTransform,
-      );
-      const wholeDigitsTransformedToFracton = wholeDigits.substr(
-        countWholeAfterTransform,
-      );
-      return `${sign +
-        wholeDigitsAfterTransform}.${wholeDigitsTransformedToFracton}${fractionDigits}`;
+      const wholeDigitsAfterTransform = wholeDigits.substr(0, countWholeAfterTransform);
+      const wholeDigitsTransformedToFracton = wholeDigits.substr(countWholeAfterTransform);
+      return `${sign + wholeDigitsAfterTransform}.${wholeDigitsTransformedToFracton}${fractionDigits}`;
     } else {
       // not enough whole digits: prepend with fractional zeros
 
@@ -327,9 +270,7 @@ export function handleExponentialNumbers(num) {
       // countTransformedFractionToWhole = e
       const fractionDigitsAfterTransform = fractionDigits.substr(e);
       const fractionDigitsTransformedToWhole = fractionDigits.substr(0, e);
-      return `${sign +
-        wholeDigits +
-        fractionDigitsTransformedToWhole}.${fractionDigitsAfterTransform}`;
+      return `${sign + wholeDigits + fractionDigitsTransformedToWhole}.${fractionDigitsAfterTransform}`;
     } else {
       // not enough fractions: append whole zeros
       let zerosCount = -countFractionAfterTransform;
@@ -381,8 +322,7 @@ export async function loadTokens(
       return balance as IEthBalance[];
     })
     .catch(err => {
-      error =
-        err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
+      error = err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
       return [];
     });
 
@@ -396,25 +336,22 @@ export async function loadTokens(
     id: tokens[key].id,
   }));
 
-  const zkBalances: IEthBalance[] = await Promise.all(zkBalancePromises).catch(
-    err => {
-      error =
-        err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
-      return [];
-    },
-  );
+  const zkBalances: IEthBalance[] = await Promise.all(zkBalancePromises).catch(err => {
+    error = err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
+    return [];
+  });
 
   return {
     tokens,
     zkBalances,
     ethBalances,
-    error,
+    error
   };
 }
 
 export const getTimeZone = () => {
-  const offset = new Date().getTimezoneOffset(),
-    o = offset;
+  const offset = new Date().getTimezoneOffset();
+  const o = offset;
   if (offset < 0) {
     return Math.abs(Math.floor(o / 60));
   } else {
@@ -423,8 +360,7 @@ export const getTimeZone = () => {
 };
 
 export const convertToTimeZoneLocale = (d: Date, timeZoneAmount: number) => {
-  const convertedDate = new Date(d.getTime() + timeZoneAmount * 60 * 60 * 1000);
-  return convertedDate;
+  return new Date(d.getTime() + timeZoneAmount * 60 * 60 * 1000);
 };
 
 export function formatDate(d: Date) {
@@ -438,29 +374,5 @@ export const handleGetUTCHours = (d: Date) => {
   const _hour = d.getUTCHours();
   const _minutes = d.getMinutes();
   const _seconds = d.getSeconds();
-  const dateWithUTC = new Date(_year, _month, _date, _hour, _minutes, _seconds);
-  return dateWithUTC;
-};
-
-export const intervalAsyncStateUpdater = (
-  func,
-  funcArguments,
-  timeout: number,
-  cancelable,
-) => {
-  cancelable(func(...funcArguments))
-    .then(res =>
-      setTimeout(
-        () =>
-          intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable),
-        timeout,
-      ),
-    )
-    .catch(err =>
-      setTimeout(
-        () =>
-          intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable),
-        timeout,
-      ),
-    );
+  return new Date(_year, _month, _date, _hour, _minutes, _seconds);
 };

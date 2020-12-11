@@ -3,9 +3,9 @@ import { getConfirmationCount } from './utils';
 
 import { LINKS_CONFIG } from 'src/config';
 
-export async function fetchTransactions(
-  amount: number,
-  offset: number,
+export async function fetchTransactions (
+    amount: number,
+    offset: number,
   address: string,
 ) {
   const txs: Tx[] = await fetch(

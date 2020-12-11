@@ -3,16 +3,15 @@ import { observable, action, computed } from 'mobx';
 import {
   IContacts,
   IEthBalance,
-  IPrice,
   ITransaction,
   IContactNameValue,
-} from '../types/Common';
+} from 'types/Common';
 import { ExternaWalletStore } from './externalWalletStore';
 import { TransactionStore } from './transactionStore';
 import { AccountStore } from './accountStore';
 import { TokensStore } from './tokensStore';
 
-import { Tokens, AccountState } from 'zksync/build/types';
+import { AccountState } from 'zksync/build/types';
 import { Wallet, Provider } from 'zksync';
 import { WSTransport } from 'zksync/build/transport';
 import { WalletType } from 'constants/Wallets';
@@ -31,6 +30,7 @@ export class Store {
   @observable autoLoginRequestStatus = sessionStorage.getItem(
     'autoLoginStatus',
   );
+
   @observable changePubKeyFee = 0;
   @observable depositModal = false;
   @observable darkMode = false;
@@ -79,7 +79,7 @@ export class Store {
   @observable syncProvider?: Provider;
   @observable transactions: Tx[] = [];
   @observable maxConfirmAmount = 25;
-  @observable windowEthereumProvider: any = window['ethereum'];
+  @observable windowEthereumProvider: any = window.ethereum;
   @observable walletLinkObject: any = {};
 
   @computed get isPrimaryPage() {
@@ -128,10 +128,6 @@ export class Store {
     return this.walletName === 'External';
   }
 
-  @computed get isBraveBrowser() {
-    return !!navigator['brave'];
-  }
-
   @computed get doesMetamaskUsesNewEthereumAPI() {
     return !!this.windowEthereumProvider?.request;
   }
@@ -146,7 +142,7 @@ export class Store {
   }
 
   @action
-  performLogout(accessModal: boolean, walletName: WalletType) {
+  performLogout(accessModal: boolean) {
     /* Need to save commented in order of future bugs **/
     this.modalSpecifier = '';
     this.isAccessModalOpen = accessModal;

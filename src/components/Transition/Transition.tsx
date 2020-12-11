@@ -14,13 +14,13 @@ export const Transition: FC<Props> = ({
   children,
   ...rest
 }) => (
-  <CSSTransition
-    classNames={`transition-${type}`}
-    unmountOnExit
-    timeout={timeout}
-    in={trigger}
-    {...rest}
-  >
-    {children}
-  </CSSTransition>
+        <CSSTransition
+                classNames={`transition-${type}`}
+                unmountOnExit
+                timeout={timeout}
+                in={trigger}
+                {...rest}
+        >
+          {children}
+        </CSSTransition>
 );

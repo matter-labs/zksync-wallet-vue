@@ -6,7 +6,7 @@ import { useStore } from 'src/store/context';
 import Transaction from 'components/Transaction/Transaction';
 
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
-import { useTransaction } from 'hooks/useTransaction';
+import { useTransaction } from 'hooks/transactions/useTransaction';
 
 export const Send: React.FC = observer(
   (): JSX.Element => {

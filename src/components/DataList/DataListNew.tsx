@@ -1,16 +1,10 @@
-import React, {
-  useState,
-  useMemo,
-  useRef,
-  useCallback,
-  useEffect,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import cl from 'classnames';
 import { useHistory } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { LottiePlayer } from '../Common/LottiePlayer';
-import successCheckmark from 'images/success-checkmark.json';
-import { LINKS_CONFIG } from 'src/config';
+
+import { FAUCET_TOKEN_API, LINKS_CONFIG, RECAPTCHA_SITE_KEY } from 'src/config';
 
 import { useAutoFocus } from 'hooks/useAutoFocus';
 import { useDebouncedValue } from 'hooks/debounce';
@@ -18,12 +12,10 @@ import { useListener } from 'hooks/useListener';
 import { useCancelable } from 'hooks/useCancelable';
 import { useInterval } from 'hooks/timers';
 import { useStore } from 'src/store/context';
-import { FAUCET_TOKEN_API, RECAPTCHA_SITE_KEY } from 'src/config';
 
 import { Props } from './DataListProps';
 import Spinner from 'components/Spinner/Spinner';
 import './DataList.scss';
-import SpinnerWorm from '../Spinner/SpinnerWorm';
 import Modal from '../Modal/Modal';
 
 const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
@@ -36,6 +28,7 @@ const DEFAULT_SEARCH = (o: any, _q: string, re: RegExp) => {
 
 const noop = () => null;
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function DataList<T>({
   data,
   onFetch,
@@ -108,14 +101,7 @@ export function DataList<T>({
       }
       return res.length;
     });
-  }, [
-    onFetch,
-    itemAmount,
-    setBinded,
-    cancelable,
-    infScrollInitialCount,
-    loadMoreAmount,
-  ]);
+  }, [onFetch, itemAmount, setBinded, cancelable, infScrollInitialCount, loadMoreAmount]);
 
   useEffect(() => {
     if (!hasMore || typeof onFetch !== 'function') return;
@@ -125,28 +111,16 @@ export function DataList<T>({
   }, [refreshData, setHasMore, hasMore, onFetch]);
 
   // Infinite scroll
-  useListener(
-    rootRef,
-    'scroll',
-    () => setScrollTop(rootRef.current!.scrollTop),
-    { passive: true },
-  );
+  useListener(rootRef, 'scroll', () => setScrollTop(rootRef.current!.scrollTop), { passive: true });
   useEffect(() => {
     const root = rootRef.current;
     if (!(infScrollInitialCount && root && hasMore)) return;
     const loadMore =
       root.scrollHeight !== root.offsetHeight &&
-      root.scrollHeight - (root.scrollTop + root.offsetHeight) <
-        loadMoreThreshold;
+      root.scrollHeight - (root.scrollTop + root.offsetHeight) < loadMoreThreshold;
     if (!loadMore) return;
     setItemAmount(i => i! + loadMoreAmount);
-  }, [
-    debScrollTop,
-    hasMore,
-    infScrollInitialCount,
-    loadMoreAmount,
-    loadMoreThreshold,
-  ]);
+  }, [debScrollTop, hasMore, infScrollInitialCount, loadMoreAmount, loadMoreThreshold]);
 
   useInterval(refreshData, refreshInterval, [], refreshInterval > 0);
 
@@ -159,46 +133,27 @@ export function DataList<T>({
       return;
     }
     const re = new RegExp(debouncedSearch, 'i');
-    const filtered = resolvedData.filter(e =>
-      searchPredicate(e, debouncedSearch, re),
-    );
+    const filtered = resolvedData.filter(e => searchPredicate(e, debouncedSearch, re));
     setFiltered(filtered);
     onSetFiltered(filtered);
-  }, [
-    debouncedSearch,
-    filteredData.length,
-    getData,
-    setFiltered,
-    onSetFiltered,
-    searchPredicate,
-  ]);
+  }, [debouncedSearch, filteredData.length, getData, setFiltered, onSetFiltered, searchPredicate]);
 
   // Memoized list with mapped data
   const list = useMemo(() => {
-    let data = debouncedSearch ? filteredData : getData();
+    let memoData = debouncedSearch ? filteredData : getData();
     if (typeof onSort === 'function') {
-      data = onSort(data);
+      memoData = onSort(memoData);
     }
     if (infScrollInitialCount && itemAmount) {
-      data = data.slice(0, itemAmount);
+      memoData = memoData.slice(0, itemAmount);
     }
     if (filterPredicate) {
-      data = data.filter(filterPredicate);
+      memoData = memoData.filter(filterPredicate);
     }
-    return data.map(renderItem || (e => e as any));
-  }, [
-    itemAmount,
-    renderItem,
-    getData,
-    infScrollInitialCount,
-    onSort,
-    debouncedSearch,
-    filteredData,
-    filterPredicate,
-  ]);
+    return memoData.map(renderItem || (e => e as any));
+  }, [itemAmount, renderItem, getData, infScrollInitialCount, onSort, debouncedSearch, filteredData, filterPredicate]);
 
-  const makeFirstLetterToLowerCase = string =>
-    string?.charAt(0).toLowerCase() + string?.slice(1);
+  const makeFirstLetterToLowerCase = string => string?.charAt(0).toLowerCase() + string?.slice(1);
 
   const { TokensStore } = store;
 
@@ -223,14 +178,9 @@ export function DataList<T>({
 
   const handleClaimTokens = () => {
     if (LINKS_CONFIG.network === 'mainnet') {
-      return (
-        (store.modalHintMessage = 'MLTTonMainnet'),
-        (store.modalSpecifier = 'modal-hint')
-      );
+      return (store.modalHintMessage = 'MLTTonMainnet'), (store.modalSpecifier = 'modal-hint');
     }
-    const getTwitted = localStorage.getItem(
-      `twittMade${store.zkWallet?.address()}`,
-    );
+    const getTwitted = localStorage.getItem(`twittMade${store.zkWallet?.address()}`);
     if (!getTwitted) {
       store.modalHintMessage = 'makeTwitToClaim';
       store.modalSpecifier = 'modal-hint';
@@ -241,10 +191,7 @@ export function DataList<T>({
   };
 
   return (
-    <div
-      ref={rootRef}
-      className={cl(`balances-wrapper ${classSpecifier}`, 'open')}
-    >
+    <div ref={rootRef} className={cl(`balances-wrapper ${classSpecifier}`, 'open')}>
       <Modal
         cancelAction={() => {
           store.modalSpecifier = '';
@@ -257,14 +204,12 @@ export function DataList<T>({
       >
         <div>
           <h2 className='transaction-title'>
-            {TokensStore.MLTTclaimed
-              ? 'Your $MLTT has been granted!'
-              : 'Claiming $MLTT: Matter Labs Trial Token…'}
+            {TokensStore.MLTTclaimed ? 'Your $MLTT has been granted!' : 'Claiming $MLTT: Matter Labs Trial Token…'}
           </h2>
           {isCaptchaAppear ? (
             <ReCAPTCHA sitekey={RECAPTCHA_SITE_KEY} onChange={onChange} />
           ) : TokensStore.MLTTclaimed ? (
-            <LottiePlayer src={JSON.stringify(successCheckmark)} />
+            <LottiePlayer />
           ) : (
             <Spinner />
           )}
@@ -297,66 +242,52 @@ export function DataList<T>({
       ) : (
         <h3 className='balances-title'>{title}</h3>
       )}
-      {TokensStore.isAccountBalanceNotEmpty &&
-        TokensStore.zkBalancesLoaded &&
-        setTransactionType && (
-          <div className='mywallet-wrapper datalist'>
-            <div
-              className={`mywallet-buttons-container ${
-                !!TokensStore.tokenPrices?.length ? '' : 'none'
-              }`}
-            >
-              <button
-                onClick={() => {
-                  setTransactionType('deposit');
-                  history.push('/deposit');
-                  TransactionStore.symbolName = '';
-                }}
-                className='btn deposit-button btn-tr'
-              >
-                <span></span>
-                {' Deposit'}
-              </button>
-              <button
-                onClick={() => {
-                  setTransactionType('withdraw');
-                  history.push('/withdraw');
-                  TransactionStore.symbolName = '';
-                }}
-                className='btn withdraw-button btn-tr'
-              >
-                <span></span>
-                {' Withdraw'}
-              </button>
-            </div>
+      {TokensStore.isAccountBalanceNotEmpty && TokensStore.zkBalancesLoaded && setTransactionType && (
+        <div className='mywallet-wrapper datalist'>
+          <div className={`mywallet-buttons-container ${TokensStore.tokenPrices?.length ? '' : 'none'}`}>
             <button
-              className='btn submit-button'
               onClick={() => {
-                setTransactionType('transfer');
-                history.push('/transfer');
+                setTransactionType('deposit');
+                history.push('/deposit');
                 TransactionStore.symbolName = '';
               }}
+              className='btn deposit-button btn-tr'
             >
-              <span className='send-icon'></span>
-              {' Transfer'}
+              <span></span>
+              {' Deposit'}
+            </button>
+            <button
+              onClick={() => {
+                setTransactionType('withdraw');
+                history.push('/withdraw');
+                TransactionStore.symbolName = '';
+              }}
+              className='btn withdraw-button btn-tr'
+            >
+              <span></span>
+              {' Withdraw'}
             </button>
           </div>
-        )}
+          <button
+            className='btn submit-button'
+            onClick={() => {
+              setTransactionType('transfer');
+              history.push('/transfer');
+              TransactionStore.symbolName = '';
+            }}
+          >
+            <span className='send-icon'></span>
+            {' Transfer'}
+          </button>
+        </div>
+      )}
       {!TokensStore.isAccountBalanceNotEmpty &&
         !TokensStore.isAccountBalanceLoading &&
         TokensStore.zkBalancesLoaded &&
         setTransactionType && (
           <>
-            <div
-              className={`mywallet-buttons-container ${
-                !!TokensStore.tokenPrices?.length ? '' : 'none'
-              }`}
-            >
-              <p>
-                {
-                  'No balances yet, please make a deposit or request money from someone!'
-                }
-              </p>
+            <div className={`mywallet-buttons-container ${TokensStore.tokenPrices?.length ? '' : 'none'}`}>
+              <p>{'No balances yet, please make a deposit or request money from someone!'}</p>
             </div>
             <button
               onClick={() => {
@@ -371,27 +302,20 @@ export function DataList<T>({
 
             {LINKS_CONFIG.network !== 'ropsten' && (
               <div className='cta-wrapper'>
-                <button
-                  onClick={handleClaimTokens}
-                  className='btn submit-button margin'
-                >
+                <button onClick={handleClaimTokens} className='btn submit-button margin'>
                   {'⚡ Get some trial tokens! ⚡'}
                 </button>
               </div>
             )}
           </>
         )}
-      {(TokensStore.zkBalances.length ||
-        window.location.pathname !== '/account') && (
+      {(TokensStore.zkBalances.length || window.location.pathname !== '/account') && (
         <input
           type='text'
           ref={focusInput}
           onChange={e => setSearch(e.target.value)}
           value={searchValue}
-          placeholder={`Filter ${makeFirstLetterToLowerCase(title).replace(
-            /.?(select )/,
-            '',
-          )}`}
+          placeholder={`Filter ${makeFirstLetterToLowerCase(title).replace(/.?(select )/, '')}`}
           className='balances-search'
         />
       )}

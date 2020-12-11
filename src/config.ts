@@ -8,11 +8,8 @@ export const MAX_WITHDRAWAL_TIME = 10800;
 
 export const LINKS_CONFIG = {
   api: process.env.REACT_APP_ZKSYNC_API_LINK || 'stage-api.zksync.dev',
-  zkSyncBlockExplorer:
-    process.env.REACT_APP_ZKSYNC_BLOCK_EXPLORER || 'stage.zksync.dev/explorer',
-  ethBlockExplorer:
-    process.env.REACT_APP_ETH_BLOCK_EXPLORER ||
-    `${CURRENT_NETWORK_PREFIX}.etherscan.io`,
+  zkSyncBlockExplorer: process.env.REACT_APP_ZKSYNC_BLOCK_EXPLORER || 'stage.zksync.dev/explorer',
+  ethBlockExplorer: process.env.REACT_APP_ETH_BLOCK_EXPLORER || `${CURRENT_NETWORK_PREFIX}.etherscan.io`,
   network: process.env.REACT_APP_CURRENT_NETWORK || CURRENT_NETWORK_PREFIX,
   ws_api: process.env.REACT_APP_WS_API || 'wss://stage-api.zksync.dev/jsrpc-ws',
   networkId: process.env.REACT_APP_CURRENT_NETWORK_ID || RIGHT_NETWORK_ID,
@@ -29,9 +26,7 @@ export const NETWORKS_LIST = {
 };
 
 export const ETH_MINT_ADDRESS =
-  LINKS_CONFIG.network === 'rinkeby'
-    ? 'https://faucet.rinkeby.io/'
-    : 'https://faucet.ropsten.be/';
+  LINKS_CONFIG.network === 'rinkeby' ? 'https://faucet.rinkeby.io/' : 'https://faucet.ropsten.be/';
 
 export const FAUCET_TOKEN_API = `https://${
   LINKS_CONFIG.api === 'stage-api.zksync.dev' ? 'stage' : LINKS_CONFIG.network
@@ -45,14 +40,10 @@ export const RIGHT_NETWORK_NAME = NETWORKS_LIST[LINKS_CONFIG.networkId];
 
 export const RECAPTCHA_SITE_KEY = '6LdEBqUZAAAAAMAr2XDTxJHuXOxpQ7rfkn2BBfUo';
 
+export const RESTRICTED_TOKENS = ['PHNX'];
+
 export const INFURA_ID = '85d8408593834bf6889554d624be0193';
-export const AUTOLOGIN_WALLETS = [
-  'Metamask',
-  'WalletConnect',
-  'Portis',
-  'Fortmatic',
-  'Coinbase Wallet',
-];
+export const AUTOLOGIN_WALLETS = ['Metamask', 'WalletConnect', 'Portis', 'Fortmatic', 'Coinbase Wallet'];
 
 export const ABI_DEFAULT_INTERFACE =
   '//api-rinkeby.etherscan.io/api?module=contract&action=getabi&address=0x38700b2551e81e933b3cb7425af029cdee6c4b67&format=raw';
