@@ -1,14 +1,12 @@
 import React from 'react';
 import '@lottiefiles/lottie-player';
+import successCheckmark from 'images/success-checkmark.json';
 
-export const LottiePlayer = ({ src }) => (
+export const LottiePlayer = () => (
   <div className='success-lottie-checkmark'>
-    {/* eslint-disable-next-line @typescript-eslint/ban-ts-ignore */}
-    {/*
-      // @ts-ignore */}
     <lottie-player
-      src={src}
-      autoplay="autoplay"
+      src={JSON.stringify(successCheckmark)}
+      autoplay='autoplay'
       background='transparent'
       speed='1'
       style={{ width: '200px', height: '200px' }}
