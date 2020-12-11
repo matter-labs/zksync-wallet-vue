@@ -396,7 +396,7 @@ export const handleFee = (title: string, store: Store, e?, symbol?, address?) =>
   };
   if (symbol)
   {
-    TransactionStore.setTransferFeeToken(symbol, TokensStore.getNotEmptyFeeToken())
+    TransactionStore.setTransferFeeToken(symbol, TokensStore.getNotEmptyFeeToken());
   }
   const symbolProp = TransactionStore.getFeeToken();
   const addressProp = address || TransactionStore.recepientAddress;
@@ -434,4 +434,4 @@ export const handleFee = (title: string, store: Store, e?, symbol?, address?) =>
       .getTransactionFee(feeType, zkWallet?.address(), symbolProp)
       .then(res => (TransactionStore.changePubKeyFee = +res.totalFee));
   }
-}
+};

@@ -19,6 +19,7 @@ plugins:
   - 'react'
   - 'react-hooks'
 rules:
+  'dot-notation': off
   'prefer-promise-reject-errors': off
   'no-prototype-builtins': off
   '@typescript-eslint/explicit-module-boundary-types': off
@@ -38,7 +39,7 @@ rules:
   'react-hooks/rules-of-hooks': error
   'react-hooks/exhaustive-deps': off
   'no-use-before-define': off
-  'plugin/no-low-performance-animation-properties': 0,
+  'plugin/no-low-performance-animation-properties': 0
   '@typescript-eslint/ban-ts-comment': off
   quotes:
     - warn

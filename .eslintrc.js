@@ -26,6 +26,7 @@ module.exports = {
   rules: {
     'prefer-promise-reject-errors': 'off',
     'no-prototype-builtins': 'off',
+    'dot-notation': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
     '@typescript-eslint/camelcase': 'off',

@@ -41,7 +41,7 @@ export function useWSHeartBeat() {
         });
       }
 
-      window.nativeWS = transport.ws.ws;
+      window['nativeWS'] = transport.ws.ws;
 
       function pongListener(m) {
         // Pong received
@@ -78,8 +78,6 @@ export function useWSHeartBeat() {
 
   useMobxEffect(() => {
     if (!store.wsTransport) return;
-    const hb = setHeartBeat(store.wsTransport);
-
-    return hb;
+    return setHeartBeat(store.wsTransport);
   }, [setHeartBeat, refresh]);
 }
