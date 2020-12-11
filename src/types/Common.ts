@@ -1,9 +1,3 @@
-import ethers from 'ethers';
-
-export interface IBalances {
-  [token: string]: ethers.BigNumberish;
-}
-
 export interface IEthBalance {
   address: string;
   balance: number;

@@ -52,9 +52,9 @@ export const LoadingTx: React.FC<ILoadingTXProps> = observer(
 
     const info = hint?.split('\n');
 
-    const unlockingTitle = AccountStore.isAccountUnlockingProcess
+    const unlockingTitle = AccountStore?.isAccountUnlockingProcess
       ? 'Unlocking account'
-      : `Unlocking ${TransactionStore.symbolName} token`;
+      : `Unlocking ${TransactionStore?.symbolName} token`;
 
     const propperTitle =
       TransactionStore.isLoading &&

@@ -12,12 +12,13 @@ const dotenv = require('dotenv');
 const { EnvironmentPlugin } = require('webpack');
 const packageJson = require('./package.json');
 const { execSync } =  require('child_process');
-const fs = require('fs');
+const webpack = require('./node_modules/webpack')
 
 const BUILD_DIR = path.resolve('build/');
 const DEV = process.env.NODE_ENV === 'development';
 
 const gitCommand = 'git rev-parse --short HEAD';
+
 
 const getGitCommitHash = () => {
   return execSync(gitCommand).toString().trim();
@@ -98,6 +99,13 @@ const config = {
         ignore: ['index.html'],
       },
     ]),
+    new webpack.ContextReplacementPlugin(
+      /\/package-name\//,
+      (data) => {
+        delete data.dependencies[0].critical;
+        return data;
+      },
+    ),
   ],
   resolve: {
     extensions: ['.js', '.ts', '.tsx', '.wasm'],
@@ -111,7 +119,7 @@ const config = {
   },
   optimization: {
     minimize: false,
-  },
+  }
 };
 
 if (!DEV) {
@@ -163,5 +171,7 @@ if (!DEV) {
     }),
   );
 }
+
+
 
 module.exports = config;

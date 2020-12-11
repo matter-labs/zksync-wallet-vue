@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 
 import { useStore } from 'src/store/context';
@@ -6,12 +6,12 @@ import { useStore } from 'src/store/context';
 import Transaction from 'components/Transaction/Transaction';
 
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
-import { useTransaction } from 'hooks/useTransaction';
+import { useDeposit } from 'hooks/transactions/useDeposit';
 import { loadTokens } from 'src/utils';
 
 export const Deposit: React.FC = observer(
   (): JSX.Element => {
-    const { deposit } = useTransaction();
+    const { deposit } = useDeposit();
 
     const store = useStore();
 
