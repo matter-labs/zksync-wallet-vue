@@ -376,19 +376,3 @@ export const handleGetUTCHours = (d: Date) => {
   const _seconds = d.getSeconds();
   return new Date(_year, _month, _date, _hour, _minutes, _seconds);
 };
-
-/**
- * Update status once per {timeout}
- * @param func
- * @param funcArguments
- * @param {number} timeout
- * @param cancelable
- */
-export const intervalAsyncStateUpdater = (func, funcArguments, timeout: number, cancelable) => {
-  cancelable(func(...funcArguments))
-    .then(() => setTimeout(() => intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable), timeout))
-    .catch(err => {
-      console.log(err);
-      setTimeout(() => intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable), timeout);
-    });
-};

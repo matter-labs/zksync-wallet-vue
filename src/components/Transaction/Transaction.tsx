@@ -515,6 +515,23 @@ const Transaction: React.FC<ITransactionProps> = observer(
       }
     }, []);
 
+    /**
+     * Upgraded version of the Balance
+     *
+     * @param singleBalance
+     */
+    const autoSelectBalance2 = (singleBalance) => {
+      TransactionStore.tokenAddress = singleBalance.address || singleBalance.symbol === 'ETH' ? singleBalance.address : singleBalance.symbol;
+      TransactionStore.maxValue = singleBalance.balance;
+      handleUpdateTokenPrice(singleBalance.symbol);
+      setSelectedBalance(singleBalance.symbol);
+      setSelected(true);
+      TransactionStore.symbolName = singleBalance.symbol;
+      if (!store.unlocked) return;
+      handleFee(title, store, undefined, singleBalance.symbol,TransactionStore.recepientAddress);
+      TransactionStore.recepientAddress && handleTransferFee(singleBalance.symbol);
+    };
+
     const autoSelectBalance = (balances, id) => {
       if (!balances?.length) return;
       TransactionStore.tokenAddress =
@@ -538,28 +555,20 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const autoSelectBalanceForUnlock = useCallback(() => {
       TransactionStore.symbolName = '';
-      for (let i = 0; i < TokensStore.zkBalances.length; i++) {
-        const formattedFee =
-          store.zkWallet &&
-          TokensStore.zkBalances &&
-          TransactionStore.changePubKeyFees[TokensStore.zkBalances[i].symbol] &&
-          handleFormatToken(store.zkWallet, TokensStore.zkBalances[i].symbol, TransactionStore.changePubKeyFees[TokensStore.zkBalances[i].symbol]);
-        const lastBalanceId = TokensStore.zkBalances.length - 1;
-        if (!formattedFee) return;
 
-        if (
-          !TransactionStore.symbolName &&
-          TokensStore.zkBalances[i].balance > +formattedFee
-        ) {
-          autoSelectBalance(TokensStore.zkBalances, i);
+      const zkBalancesList = TokensStore.getZkBalances(true);
+
+      zkBalancesList.forEach(balance => {
+        const formattedFee = TransactionStore.changePubKeyFees[balance.symbol] && handleFormatToken(store.zkWallet as Wallet, balance.symbol, TransactionStore.changePubKeyFees[balance.symbol]);
+        if (!formattedFee) {return;}
+
+        if (!TransactionStore.symbolName && balance.balance > +formattedFee) {
+          autoSelectBalance2(autoSelectBalance2);
         }
-        if (
-          i === lastBalanceId &&
-          !TransactionStore.symbolName &&
-          TokensStore.zkBalances[i].balance < +formattedFee
-        ) {
-          autoSelectBalance(TokensStore.zkBalances, 0);
-        }
+      });
+      if (!TransactionStore.symbolName && zkBalancesList.length > 0)
+      {
+        autoSelectBalance2(zkBalancesList.shift());
       }
     }, [
       TokensStore.zkBalances,
@@ -604,7 +613,9 @@ const Transaction: React.FC<ITransactionProps> = observer(
             if (res) {
               handleManageUnlockingTokens();
             }
-          });
+          }).catch((error) => {
+          console.log('error on unlocking', error);
+        });
       }
       if (TransactionStore.propsSymbolName) {
         TransactionStore.symbolName = TransactionStore.propsSymbolName;

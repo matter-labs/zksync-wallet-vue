@@ -1,5 +1,5 @@
 import { Provider, types as SyncTypes } from 'zksync';
-import { ZKSyncTxError } from './ZKSyncTxError';
+import { ZKSyncTxError } from 'src/store/zkSync/ZKSyncTxError';
 
 // The class is private in zkSync and we've got
 // no choice but to copy-paste it
@@ -15,15 +15,15 @@ export class Transaction {
     this.state = 'Sent';
   }
 
+  /**
+   * async method with LOOOONG timeout.
+   */
   async awaitReceipt(): Promise<SyncTypes.TransactionReceipt|null> {
     this.throwErrorIfFailedState();
 
-    // Got absolutely no idea how it compiled in zksync.js
-    /*  eslint-disabled:@typescript-eslint/ban-ts-comment */
-    /* @ts-ignore */
-    if (this.state !== 'Sent') return;
+    if (this.state !== 'Sent') return null;
 
-    const receipt = await this.sidechainProvider.notifyTransaction(
+    const receipt:SyncTypes.TransactionReceipt = await this.sidechainProvider.notifyTransaction(
       this.txHash,
       'COMMIT',
     );
