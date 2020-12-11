@@ -1,6 +1,6 @@
 {
-  "short_name": "zkSync",
-  "name": "zkSync by Matter Labs",
+  "short_name": "zkWallet",
+  "name": "zkWallet by Matter Labs",
   "icons": [
     {
       "src": "favicon.ico",
@@ -16,7 +16,7 @@
       "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
-    }	 
+    }
   ],
   "start_url": ".",
   "display": "standalone",

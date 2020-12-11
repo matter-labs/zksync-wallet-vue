@@ -42,12 +42,10 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
               '[]',
           );
           const isContact = contacts.findIndex(
-            ({ address: contactAddress, name: contactName }) =>
-              contactAddress === address || contactName === name,
+            ({ address: contactAddress, name: contactName }) => contactAddress === address || contactName === name,
           );
           const oldContactIndex = contacts.findIndex(
-            ({ name, address }) =>
-              oldContact?.address === address || oldContact?.name === name,
+            ({ name, address }) => oldContact?.address === address || oldContact?.name === name,
           );
           if (edit && oldContactIndex > -1) {
             const newContacts = contacts;
@@ -121,32 +119,17 @@ const SaveContacts: React.FC<ISaveContactsProps> = observer(
         <h3>{title}</h3>
         <div className='horizontal-line'></div>
         <span className='transaction-field-title plain'>{'Contact name'}</span>
-        <input
-          placeholder='Name here'
-          ref={focusRef}
-          value={name}
-          onChange={e => setName(e.target.value)}
-        />
+        <input placeholder='Name here' ref={focusRef} value={name} onChange={e => setName(e.target.value)} />
         {addressInput && (
           <>
             <span className='transaction-field-title plain'>{'Address'}</span>
-            <input
-              placeholder='0x address'
-              value={address}
-              onChange={e => setAddress(e.target.value)}
-            />
+            <input placeholder='0x address' value={address} onChange={e => setAddress(e.target.value)} />
           </>
         )}
         <div className='error-container'>
-          <p className={`error-text ${!!conditionError ? 'visible' : ''}`}>
-            {conditionError}
-          </p>
+          <p className={`error-text ${!!conditionError ? 'visible' : ''}`}>{conditionError}</p>
         </div>
-        <button
-          type='submit'
-          className='btn submit-button'
-          onClick={handleSave}
-        >
+        <button type='submit' className='btn submit-button' onClick={handleSave}>
           {'Save'}
         </button>
       </form>

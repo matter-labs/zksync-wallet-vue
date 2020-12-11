@@ -56,9 +56,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   useEffect(() => {
     if (store.provider && store.walletName) {
       if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
-        store.provider
-          ?.request({ method: 'eth_accounts' })
-          .then(res => setCurAddress(res[0]));
+        store.provider?.request({ method: 'eth_accounts' }).then(res => setCurAddress(res[0]));
       } else {
         setCurAddress(store.provider.selectedAddress);
       }
@@ -71,9 +69,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   useInterval(() => {
     if (!curAddress && store.walletName && store.provider) {
       if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
-        store.provider
-          ?.request({ method: 'eth_accounts' })
-          .then(res => setCurAddress(res[0]));
+        store.provider?.request({ method: 'eth_accounts' }).then(res => setCurAddress(res[0]));
       } else {
         store.provider?.selectedAddress;
       }
@@ -83,19 +79,12 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   const savedWalletExistsOnLogin =
     !store.zkWallet &&
     !store.isPrimaryPage &&
-    (window.localStorage?.getItem('walletName') ||
-      sessionStorage.getItem('walletName'));
+    (window.localStorage?.getItem('walletName') || sessionStorage.getItem('walletName'));
 
   const savedDoesNotExistOnLogin =
-    !store.isPrimaryPage &&
-    !(
-      window.localStorage?.getItem('walletName') ||
-      sessionStorage.getItem('walletName')
-    );
+    !store.isPrimaryPage && !(window.localStorage?.getItem('walletName') || sessionStorage.getItem('walletName'));
 
-  const savedWalletName =
-    window.localStorage?.getItem('walletName') ||
-    sessionStorage.getItem('walletName');
+  const savedWalletName = window.localStorage?.getItem('walletName') || sessionStorage.getItem('walletName');
 
   const imidiateLoginCondition: boolean =
     store.isPrimaryPage &&
@@ -118,8 +107,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       if (
         zkWallet &&
         provider &&
-        store.zkWallet?.address().toLowerCase() !==
-          newAddress[0]?.toLowerCase() &&
+        store.zkWallet?.address().toLowerCase() !== newAddress[0]?.toLowerCase() &&
         store.isMetamaskWallet
       ) {
         sessionStorage.setItem('walletName', walletName);
@@ -137,17 +125,17 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
           searchBalances: [],
           searchContacts: [],
         });
-        TokensStore.ethBalances = [];
-        TokensStore.isAccountBalanceLoading = true;
-        TokensStore.isAccountBalanceNotEmpty = false;
-        TokensStore.zkBalances = [];
+          TokensStore.ethBalances = [];
+          TokensStore.isAccountBalanceLoading = true;
+          TokensStore.isAccountBalanceNotEmpty = false;
+          TokensStore.zkBalances = [];
         store.isAccessModalOpen = true;
-        TransactionStore.isBalancesListOpen = false;
-        TransactionStore.isContactsListOpen = false;
-        TransactionStore.symbolName = '';
-        TransactionStore.maxValue = 0;
-        TransactionStore.tokenInUnlockingProgress = [];
-        AccountStore.isAccountUnlockingProcess = false;
+          TransactionStore.isBalancesListOpen = false;
+          TransactionStore.isContactsListOpen = false;
+          TransactionStore.symbolName = '';
+          TransactionStore.maxValue = 0;
+          TransactionStore.tokenInUnlockingProgress = [];
+          AccountStore.isAccountUnlockingProcess = false;
       }
     };
     if (store.isMetamaskWallet && provider) {
@@ -224,8 +212,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   useEffect(() => {
     if (!store.isCoinbaseWallet && store.isPrimaryPage) return;
     store.isMobileDevice
-      ? (browserWalletConnector(store, connect),
-        (store.zkWalletInitializing = false))
+      ? (browserWalletConnector(store, connect), (store.zkWalletInitializing = false))
       : coinBaseConnector(store, connect);
   }, [store, store.walletName]);
 
@@ -243,7 +230,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   useMobxEffect(() => {
     const { provider } = store;
     if (provider && store.isMetamaskWallet) {
-      store.windowEthereumProvider.autoRefreshOnNetworkChange = false;
+        store.windowEthereumProvider.autoRefreshOnNetworkChange = false;
       const networkChangeListener = () => {
         if (wrongNetworkDetector() && store.isMetamaskWallet) {
           store.error = `Wrong network, please switch to the ${RIGHT_NETWORK_NAME}`;
@@ -310,12 +297,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   }, [pathname, store]);
 
   useMobxEffect(() => {
-    if (
-      store.modalSpecifier ||
-      store.isAccessModalOpen ||
-      store.transactionModal ||
-      store.error
-    ) {
+    if (store.modalSpecifier || store.isAccessModalOpen || store.transactionModal || store.error) {
       document.body.classList.add('fixed');
       return () => document.body.classList.remove('fixed');
     }
@@ -369,10 +351,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   };
 
   const UnlinkAcccountBtn = () => (
-    <span
-      onClick={() => handleUnlinkAccount(store, handleLogout)}
-      className='undo-btn block'
-    >
+    <span onClick={() => handleUnlinkAccount(store, handleLogout)} className='undo-btn block'>
       {'Unlink account'}
     </span>
   );
@@ -383,9 +362,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
         cancelAction={() => {
           store.error = '';
         }}
-        visible={
-          !!store.error && !store.error.match(/closed/i) && !!store.walletName
-        }
+        visible={!!store.error && !store.error.match(/closed/i) && !!store.walletName}
         classSpecifier='error'
         background={true}
         centered
@@ -398,20 +375,14 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
             <h3 className='title-connecting'>
               {!store.error?.match(/(?:detected)/i) &&
                 `${
-                  store.error && store.hint && store.hint.match(/(?:login)/i)
-                    ? store.hint
-                    : 'Connecting to '
+                  store.error && store.hint && store.hint.match(/(?:login)/i) ? store.hint : 'Connecting to '
                 } ${walletName}`}
               {store.error?.match(/(?:detected)/i) && store.error}
             </h3>
           )}
           {wrongNetworkDetector() && store.isMetamaskWallet ? (
             <>
-              <div
-                className={`${walletName
-                  .replace(/\s+/g, '')
-                  .toLowerCase()}-logo`}
-              ></div>
+              <div className={`${walletName.replace(/\s+/g, '').toLowerCase()}-logo`}></div>
               <div className='wrong-network'>
                 {store.isMetamaskWallet && wrongNetworkDetector() ? null : (
                   <div className='wrong-network-logo'></div>
@@ -423,10 +394,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
             errorAppearence()
           )}
           {!zkWallet && (
-            <button
-              className='btn submit-button'
-              onClick={() => handleLogout(false, '')}
-            >
+            <button className='btn submit-button' onClick={() => handleLogout(false, '')}>
               {`Disconnect ${walletName}`}
             </button>
           )}
@@ -461,17 +429,12 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
             <>
               <Spinner />
               <p className='modal-instructions'>
-                {!store.isFortmaticWallet &&
-                  !store.isBurnerWallet &&
-                  'Follow the instructions in the pop up'}
+                {!store.isFortmaticWallet && !store.isBurnerWallet && 'Follow the instructions in the pop up'}
               </p>
             </>
           )}
           {!store.zkWalletInitializing && (
-            <button
-              className='btn submit-button margin'
-              onClick={() => createWallet()}
-            >
+            <button className='btn submit-button margin' onClick={() => createWallet()}>
               {'Login'}
             </button>
           )}

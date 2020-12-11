@@ -6,13 +6,13 @@ export const LINKS_CONFIG = {
     zkSyncBlockExplorer: 'stage.zksync.dev/explorer',
     ethBlockExplorer: `${CURRENT_NETWORK_PREFIX}.etherscan.io`,
     network: CURRENT_NETWORK_PREFIX,
-  },
+    },
   PRODUCTION_ZKSYNC: {
     api: `${CURRENT_NETWORK_PREFIX}-api.zksync.dev`,
     zkSyncBlockExplorer: `${CURRENT_NETWORK_PREFIX}.zkscan.io/explorer`,
     ethBlockExplorer: `${CURRENT_NETWORK_PREFIX}.etherscan.io`,
     network: CURRENT_NETWORK_PREFIX,
-  },
+    },
   MAIN_ZKSYNC: {
     api: 'api.zksync.io',
     zkSyncBlockExplorer: 'zkscan.io/explorer',
@@ -29,19 +29,19 @@ export const COMMON = {
   TERMS: {
     title: 'Terms of Use',
     link: 'https://zksync.io/legal/terms.html',
-  },
+    },
   PRIVACY_POLICY: {
     title: 'Privacy Policy',
     link: 'https://zksync.io/legal/privacy.html',
-  },
+    },
   DOCS: {
     title: 'Docs',
     link: '//zksync.io/faq/intro.html',
-  },
+    },
   CONTACTS: {
     title: 'Contact',
     link: '//zksync.io/contact.html',
-  },
+    },
 };
 
 export const ZK_EXPLORER = `https://${CURRENT_NETWORK_PREFIX}.zkscan.io/explorer/transactions`;

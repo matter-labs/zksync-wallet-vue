@@ -46,7 +46,7 @@ export const Transaction: FC<Tx> = props => {
 
   const handleFindContactName = (to, from, reciever) => {
     if (reciever && to && from) {
-      return contacts?.filter(
+    return contacts?.filter(
         c => c?.address?.toLowerCase() === from?.toLowerCase(),
       )[0];
     } else {
@@ -75,13 +75,9 @@ export const Transaction: FC<Tx> = props => {
     }
     if (!!amount || !!priority_op?.amount) {
       return handleExponentialNumbers(
-        +handleFormatToken(
-          store.zkWallet,
-          type === 'Deposit'
-            ? (priority_op?.token as string)
-            : (token as string),
-          type === 'Deposit' && priority_op ? +priority_op.amount : +amount,
-        ),
+        +handleFormatToken(store.zkWallet, type === 'Deposit'
+          ? (priority_op?.token as string)
+          : (token as string), type === 'Deposit' && priority_op ? +priority_op.amount : +amount),
       );
     } else {
       return 'Unlocking transaction';

@@ -1,5 +1,3 @@
-export type WalletType = keyof typeof WALLETS | '' | string;
-
 export const WALLETS = {
   Web3: () => import('../components/Wallets/BrowserWallet'),
   Metamask: () => import('../components/Wallets/BrowserWallet'),
@@ -10,6 +8,8 @@ export const WALLETS = {
   // 'Coinbase Wallet': () => import('../components/Wallets/CoinBaseWallet'),
   External: () => import('../components/Wallets/ExternalWallet'),
 };
+
+export type WalletType = keyof typeof WALLETS | '' | string;
 
 export const DESKTOP_ONLY_WALLETS = ['Metamask'];
 export const MOBILE_ONLY_WALLETS = [];

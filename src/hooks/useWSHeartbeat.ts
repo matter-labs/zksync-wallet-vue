@@ -41,7 +41,7 @@ export function useWSHeartBeat() {
         });
       }
 
-      window['nativeWS'] = transport.ws.ws;
+      window.nativeWS = transport.ws.ws;
 
       function pongListener(m) {
         // Pong received

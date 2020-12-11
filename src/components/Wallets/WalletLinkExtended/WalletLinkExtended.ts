@@ -104,9 +104,7 @@ export class WalletLinkConnector extends AbstractConnector {
   }
 
   public async getAccount(): Promise<null | string> {
-    return this.provider
-      .send('eth_accounts')
-      .then((accounts: string[]): string => accounts[0]);
+    return this.provider.send('eth_accounts').then((accounts: string[]): string => accounts[0]);
   }
 
   public async close() {

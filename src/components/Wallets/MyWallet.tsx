@@ -51,9 +51,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
     const handleCopy = useCallback(
       address => {
         if (navigator.userAgent.match(/ipad|iphone/i)) {
-          const input: any = document.getElementsByClassName(
-            'copy-block-input',
-          )[0];
+          const input: any = document.getElementsByClassName('copy-block-input')[0];
           const range = document.createRange();
           range.selectNodeContents(input);
           const selection = window.getSelection();
@@ -131,10 +129,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
           </div>
         </div>
 
-        <div
-          onClick={() => handleCopy(zkWallet?.address())}
-          className='copy-block'
-        >
+        <div onClick={() => handleCopy(zkWallet?.address())} className='copy-block'>
           <input
             type='text'
             className='copy-block-input'
@@ -143,21 +138,15 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
             ref={e => inputRef.push(e)}
           />
           <div className='copy-block-left'>
-            <img
-              src={zkWallet ? makeBlockie(zkWallet.address()) : avatar}
-              alt='avatar'
-            />{' '}
+            <img src={zkWallet ? makeBlockie(zkWallet.address()) : avatar} alt='avatar' />{' '}
             <p>
               {window?.innerWidth > WIDTH_BP
                 ? zkWallet?.address()
-                : zkWallet?.address() &&
-                  addressMiddleCutter(zkWallet?.address() as string, 14, 4)}
+                : zkWallet?.address() && addressMiddleCutter(zkWallet?.address() as string, 14, 4)}
             </p>
           </div>
           <button
-            className={`copy-block-button btn-tr ${
-              isCopyModal ? 'copied' : ''
-            }`}
+            className={`copy-block-button btn-tr ${isCopyModal ? 'copied' : ''}`}
             onClick={() => handleCopy(zkWallet?.address())}
           ></button>
         </div>
@@ -170,9 +159,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
         >
           <div
             data-name='custom-selector'
-            className={`mywallet-currency-block-shadow ${
-              isBalancesListOpen ? 'open' : 'closed'
-            }`}
+            className={`mywallet-currency-block-shadow ${isBalancesListOpen ? 'open' : 'closed'}`}
           ></div>
           <div className='mywallet-currency-wrapper'>
             <div className='custom-selector balances mywallet'>

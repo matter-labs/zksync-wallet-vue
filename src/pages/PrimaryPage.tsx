@@ -105,8 +105,8 @@ const PrimaryPage: React.FC = observer(() => {
       }
 
       if (
-        key === 'Web3' ||
-        (key === 'Coinbase Wallet' && store.isMobileDevice)
+              key === 'Web3' ||
+              (key === 'Coinbase Wallet' && store.isMobileDevice)
       ) {
         store.zkWalletInitializing = true;
         const web3 = new Web3(window['web3']?.getDefaultProvider);
@@ -140,8 +140,8 @@ const PrimaryPage: React.FC = observer(() => {
           store.hint = 'Connecting to ';
         }
         if (
-          store.windowEthereumProvider &&
-          +store.windowEthereumProvider?.chainId === +LINKS_CONFIG.networkId
+                store.windowEthereumProvider &&
+                +store.windowEthereumProvider?.chainId === +LINKS_CONFIG.networkId
         ) {
           store.zkWalletInitializing = true;
           createWallet();
@@ -191,7 +191,8 @@ const PrimaryPage: React.FC = observer(() => {
         if (store.provider?.selectedAddress) {
           store.zkWalletInitializing = true;
         }
-      } else {
+      }
+      else {
         store.error = `Your browser doesn't support ${key}, please select another wallet or switch browser`;
       }
     },
@@ -268,7 +269,7 @@ const PrimaryPage: React.FC = observer(() => {
                     </span>
                     <a
                       className='expandTooltip'
-                      onMouseDown={event => {
+                      onMouseDown={() => {
                         store.ExternalWallerShowWithdraw = !store.ExternalWallerShowWithdraw;
                       }}
                     >
