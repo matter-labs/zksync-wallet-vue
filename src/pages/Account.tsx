@@ -222,7 +222,7 @@ const Account: React.FC = observer(() => {
               }
               const at = _accountState.depositing.balances;
               const atKeys = Object.keys(at);
-              if (!!atKeys.length) {
+              if (atKeys.length) {
           const txs = fetchTransactions(
                         25,
                         0,
@@ -233,7 +233,7 @@ const Account: React.FC = observer(() => {
                 );
                 sortedByTypeTxs.map(tx => {
                   const _token = tx.tx.priority_op?.token;
-                  if (!!TokensStore.awaitedTokens[_token as string]) {
+                  if (TokensStore.awaitedTokens[_token as string]) {
                     const arr = sortedByTypeTxs.filter(
                             _tx => _tx.tx.priority_op?.token === _token,
                     );
@@ -358,30 +358,20 @@ const Account: React.FC = observer(() => {
               }
             }
           },
-          [
-            accountState,
-            store.accountState,
-      TokensStore.awaitedTokens,
-            store.error,
-            store.unlocked,
-      TokensStore.zkBalances,
-      TokensStore.tokens,
-            zkWallet,
-      AccountStore.txs,
-          ],
+          [store, TokensStore, AccountStore],
   );
 
   useEffect(() => {
       TransactionStore.propsSymbolName = '';
       TransactionStore.propsMaxValue = '';
       TransactionStore.propsToken = '';
-  }, []);
+  }, [TransactionStore]);
 
   useEffect(() => {
     if (!zkWallet) return;
 
     AccountStore.intervalAsyncStateUpdater(getAccState, [true], 3000, cancelable);
-  }, [store.zkWallet]);
+  }, [AccountStore, cancelable, getAccState, store.zkWallet, zkWallet]);
 
   const handleSend = useCallback(
           (address, balance, symbol) => {
@@ -397,7 +387,7 @@ const Account: React.FC = observer(() => {
             TransactionStore.propsToken = address;
             TransactionStore.tokenAddress = address;
           },
-          [history, store],
+          [TokensStore, TransactionStore, history],
   );
 
   useCheckLogin();
@@ -417,7 +407,7 @@ const Account: React.FC = observer(() => {
   const ApiFailedHint = () => null; // Temporarly disable
 
   const Balance = ({ verified, balance }) => {
-    return !!verified ? (
+    return verified ? (
             <VerifiedBal handleSend={handleSend} balance={balance}/>
     ) : (
             <UnverifiedBal handleSend={handleSend} balance={balance}/>

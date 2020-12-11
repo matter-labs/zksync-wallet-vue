@@ -33,7 +33,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
     const [isAssetsOpen, openAssets] = useState<boolean>(false);
     const [selectedBalance, setSelectedBalance] = useState<any>();
     const [symbolName, setSymbolName] = useState<any>(
-      !!TokensStore.zkBalances?.length ? TokensStore.zkBalances[0].symbol : '',
+      TokensStore.zkBalances?.length ? TokensStore.zkBalances[0].symbol : '',
     );
     const [verified, setVerified] = useState<any>();
     const [walletBalance, setWalletBalance] = useState<string>('');
@@ -111,7 +111,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
     return (
       <div
         className={`mywallet-wrapper ${
-          !!transactionModal?.title ? 'closed' : 'open'
+          transactionModal?.title ? 'closed' : 'open'
         }`}
       >
         <div className='hint-block'>
@@ -152,7 +152,7 @@ const MyWallet: React.FC<IMyWalletProps> = observer(
         </div>
         <div
           className={`mywallet-currency-block ${
-            !!price?.length ? '' : 'none'
+            price?.length ? '' : 'none'
           } ${verifiedState ? 'unverified' : ''} ${
             isBalancesListOpen ? 'borderless' : ''
           }`}

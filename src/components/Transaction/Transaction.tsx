@@ -289,7 +289,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
           TokensStore.getNotEmptyFeeToken(),
         );
         address = address || TransactionStore.recepientAddress;
-        if ((title != 'Transfer' && title != 'Withdraw') || !address) {
+        if ((title !== 'Transfer' && title !== 'Withdraw') || !address) {
           return;
         }
         store.zkWallet?.provider
@@ -483,8 +483,8 @@ const Transaction: React.FC<ITransactionProps> = observer(
             data => (store.unlocked = data),
           );
         }).catch((error) => {
-          console.log('account state cancelable error', error)
-      })
+          console.log('account state cancelable error', error);
+      });
     }, [
       cancelable,
       store,
@@ -681,9 +681,10 @@ const Transaction: React.FC<ITransactionProps> = observer(
       ethers
         .getDefaultProvider(LINKS_CONFIG.network)
         .getGasPrice()
-        .then(res => res.toString())
-        .then(data => {
-          TransactionStore.gas = data;
+        .then((res) => {
+          TransactionStore.gas = res.toString();
+        }).catch(error => {
+          console.log('Gas price fetching failed with error: ', error);
       });
     }, [store.zkWallet]);
 
@@ -871,30 +872,30 @@ const Transaction: React.FC<ITransactionProps> = observer(
 
     const ABI = [
       {
-        "constant": true,
-        "inputs": [
+        'constant': true,
+        'inputs': [
           {
-            "internalType": 'address',
-            "name": '_address',
-            "type": 'address',
+            'internalType': 'address',
+            'name': '_address',
+            'type': 'address',
           },
           {
-            "internalType": 'uint16',
-            "name": '_tokenId',
+            'internalType': 'uint16',
+            'name': '_tokenId',
             type: 'uint16',
           },
         ],
-        "name": 'getBalanceToWithdraw',
-        "outputs": [
+        'name': 'getBalanceToWithdraw',
+        'outputs': [
           {
-            "internalType": 'uint128',
-            "name": '',
-            "type": 'uint128',
+            'internalType': 'uint128',
+            'name': '',
+            'type': 'uint128',
           },
         ],
-        "payable": false,
-        "stateMutability": 'view',
-        "type": 'function',
+        'payable': false,
+        'stateMutability': 'view',
+        'type': 'function',
       },
     ];
 
@@ -932,10 +933,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
       AccountStore.ethSignerAddress,
       AccountStore.zksContract,
     ]);
-
-    useEffect(() => {
-      if (!store.zkWallet) return;
-    }, [ExternaWalletStore.externalWalletContractBalances, store.zkWallet]);
 
     const ExternalWalletBalance = ({ balance, symbol }) => (
       <div className='external-wallet-wrapper'>
@@ -1955,7 +1952,7 @@ const Transaction: React.FC<ITransactionProps> = observer(
                             }}
                             className='undo-btn marginless'
                           >
-                            Choose fee token
+                            {'Choose fee token'}
                           </button>
                         ) : (
                           ''

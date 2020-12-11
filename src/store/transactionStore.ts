@@ -99,13 +99,11 @@ export class TransactionStore {
         ethers
           .getDefaultProvider(LINKS_CONFIG.network)
           .getGasPrice()
-          .then(res => {
+          .then((res) => {
             this.gas = ethers.BigNumber.from(res.toString());
             resolve(this.gas);
           })
-          .catch(error => {
-            reject(error.message);
-          });
+          .catch(reject);
       } else {
         resolve(this.gas);
       }

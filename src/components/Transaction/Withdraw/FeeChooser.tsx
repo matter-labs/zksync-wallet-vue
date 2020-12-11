@@ -27,7 +27,7 @@ export const FeeChooser: React.FC<IFeeChooserProps> = observer(
 
           const feeToken = TransactionStore.getFeeToken();
           const withdrawToken = TransactionStore.symbolName;
-          const fastFeeDisabled = feeToken != withdrawToken;
+          const fastFeeDisabled = feeToken !== withdrawToken;
           /**
            * stop processing in case any part is missing
            */
@@ -90,7 +90,7 @@ export const FeeChooser: React.FC<IFeeChooserProps> = observer(
               ${feeToken}), processing time ${timeStempString(timeCalc(TransactionStore.withdrawalProcessingTime))}`}</p>
                     </div>)}
                     {((fastFeeDisabled) || (<div className='withdraw-type-block' onClick={
-                      () => {radioButtonCb(TransactionStore.fastFee)}
+                      () => {radioButtonCb(TransactionStore.fastFee);}
                     }>
                       <RadioButton
                           selected={TransactionStore.fastWithdrawal}

@@ -62,11 +62,9 @@ export const Transaction: FC<Tx> = props => {
     to?.toLowerCase() === store.zkWalletAddress?.toLowerCase(),
   )?.name;
 
-  const addressAppearence = nameHandler
-    ? nameHandler
-    : to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
+  const addressAppearence = nameHandler || (to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
     ? addressMiddleCutter(from, 6, 3)
-    : addressMiddleCutter(to as string, 6, 3);
+    : addressMiddleCutter(to as string, 6, 3));
 
   const handleAmountType = () => {
     if (!store.zkWallet) return;
@@ -102,7 +100,7 @@ export const Transaction: FC<Tx> = props => {
               className={`transaction-history-amount ${notNumberClass}`}
               style={{
                 width: `${
-                  !!handleAmountType() ? handleAmountType().length : 0
+                  handleAmountType() ? handleAmountType().length : 0
                 }ch`,
               }}
             >
@@ -144,7 +142,7 @@ export const Transaction: FC<Tx> = props => {
                 onClick={e => {
                   e.stopPropagation();
                   store.walletAddress = {
-                    name: nameHandler ? nameHandler : '',
+                    name: nameHandler || '',
                     address:
                       to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
                         ? from
@@ -177,7 +175,7 @@ export const Transaction: FC<Tx> = props => {
                 onClick={e => {
                   e.stopPropagation();
                   store.walletAddress = {
-                    name: nameHandler ? nameHandler : '',
+                    name: nameHandler || '',
                     address:
                       to?.toLowerCase() === store.zkWalletAddress?.toLowerCase()
                         ? from

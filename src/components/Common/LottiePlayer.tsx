@@ -7,11 +7,11 @@ export const LottiePlayer = () => (
   <div className='success-lottie-checkmark'>
     <Player
       autoplay={true}
-      loop={true}
+      loop={false}
       controls={false}
       speed={1}
       src={JSON.stringify(successCheckmark)}
       style={{ height: '200px', width: '200px' }}
     ></Player>
   </div>
-)
+);

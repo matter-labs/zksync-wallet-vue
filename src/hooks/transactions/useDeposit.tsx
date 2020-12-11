@@ -102,7 +102,7 @@ export const useDeposit = () => {
                       }
                     }
                   } catch (err) {
-                    errorProcessing(store, err)
+                    errorProcessing(store, err);
                   }
                 };
                 cancelable(

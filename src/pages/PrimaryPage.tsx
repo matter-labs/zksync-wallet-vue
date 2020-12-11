@@ -49,13 +49,13 @@ const PrimaryPage: React.FC = observer(() => {
   const providerWalletName = getWalletNameFromProvider();
 
   const filterWallets = (list: string[]) => {
-    if (!!navigator['brave']) list.push(...BRAVE_NON_WORKING_WALLETS);
+    if (navigator['brave']) list.push(...BRAVE_NON_WORKING_WALLETS);
     return list;
   };
 
   const walletsWithWeb3 = () => {
     const _w = Object.keys(WALLETS);
-    if (!!store.windowEthereumProvider?._metamask) {
+    if (store.windowEthereumProvider?._metamask) {
       return _w.filter(el => el !== 'Web3');
     }
     if (!store.windowEthereumProvider?._metamask && !!window['web3']) {
@@ -173,7 +173,7 @@ const PrimaryPage: React.FC = observer(() => {
             isAccessModalOpen: true,
           });
           const wCQRScanned = localStorage.getItem('walletconnect');
-          if (!!wCQRScanned) {
+          if (wCQRScanned) {
             createWallet();
           } else {
             walletConnectConnector(store, connect);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory , useLocation } from 'react-router-dom';
 
 import Footer from 'components/Footer/Footer';
 import Header from 'components/Header/Header';
@@ -16,7 +16,7 @@ import { useInterval, useTimeout } from './hooks/timers';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './store/context';
 import { useMobxEffect } from './hooks/useMobxEffect';
-import { useLocation } from 'react-router-dom';
+
 import { useLogout } from 'hooks/useLogout';
 import useWalletInit from 'src/hooks/useWalletInit';
 import {
@@ -70,8 +70,6 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
     if (!curAddress && store.walletName && store.provider) {
       if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
         store.provider?.request({ method: 'eth_accounts' }).then(res => setCurAddress(res[0]));
-      } else {
-        store.provider?.selectedAddress;
       }
     }
   }, 5000);
@@ -184,7 +182,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
       store.isAccessModalOpen = true;
       store.hint = 'Connecting to ';
       const wCQRScanned = localStorage.getItem('walletconnect');
-      if (!!AccountStore.accountChanging) return;
+      if (AccountStore.accountChanging) return;
       if (store.isBurnerWallet) {
         createWallet();
       }
@@ -211,6 +209,7 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
 
   useEffect(() => {
     if (!store.isCoinbaseWallet && store.isPrimaryPage) return;
+    // eslint-disable-next-line no-unused-expressions
     store.isMobileDevice
       ? (browserWalletConnector(store, connect), (store.zkWalletInitializing = false))
       : coinBaseConnector(store, connect);
