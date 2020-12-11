@@ -1,15 +1,17 @@
 import React from 'react';
-import '@lottiefiles/lottie-player';
+import { Player } from '@lottiefiles/react-lottie-player';
+
 import successCheckmark from 'images/success-checkmark.json';
 
 export const LottiePlayer = () => (
   <div className='success-lottie-checkmark'>
-    <lottie-player
+    <Player
+      autoplay={true}
+      loop={true}
+      controls={false}
+      speed={1}
       src={JSON.stringify(successCheckmark)}
-      autoplay='autoplay'
-      background='transparent'
-      speed='1'
-      style={{ width: '200px', height: '200px' }}
-    />
+      style={{ height: '200px', width: '200px' }}
+    ></Player>
   </div>
-);
+)

@@ -1,4 +1,4 @@
-import { ContractTransaction, ethers, BigNumberish } from 'ethers';
+import { BigNumberish, ContractTransaction, ethers } from 'ethers';
 import { action, observable } from 'mobx';
 import { LINKS_CONFIG, RESTRICTED_TOKENS } from 'src/config';
 import { Wallet } from 'zksync';
@@ -38,9 +38,8 @@ export class TransactionStore {
   @observable waitingCalculation = false;
 
   @observable amount: any = 0;
-  @observable selectedBalance: string = '';
-  @observable selectedContact: string = '';
-
+  @observable selectedBalance = '';
+  @observable selectedContact = '';
 
   /**
    * Withdrawal process local states:
@@ -60,19 +59,23 @@ export class TransactionStore {
   @action
   setTransferFeeToken(symbol: string, defaultSymbol = '') {
     symbol = symbol || this.symbolName;
-    return (this.transferFeeToken = RESTRICTED_TOKENS?.includes(symbol)
-      ? defaultSymbol
-      : symbol);
+    if (symbol && !RESTRICTED_TOKENS?.includes(symbol)) {
+      this.transferFeeToken = symbol;
+    }
+    else {
+      this.transferFeeToken = defaultSymbol;
+    }
+
+    return this.transferFeeToken;
   }
 
   /**
    * Get fee token or replace it with symbolName if empty
    * @return {string}
    */
-  @action
-  getFeeToken() {
+  @action getFeeToken() {
     if (!this.transferFeeToken) {
-      this.setTransferFeeToken(this.symbolName);
+      this.transferFeeToken = RESTRICTED_TOKENS?.includes(this.symbolName) ? '' : this.symbolName;
     }
     return this.transferFeeToken;
   }
@@ -82,7 +85,7 @@ export class TransactionStore {
    */
   @action
   getFeeBasedOnType() {
-    return this.fastWithdrawal ? this.fastFee : (this.fee[this.getFeeToken()]);
+    return this.fastWithdrawal ? this.fastFee : this.fee[this.getFeeToken()];
   }
 
   /**
@@ -112,16 +115,11 @@ export class TransactionStore {
 
 // This function is private in zkSync and thus
 // had to be copy-pasted
-async function setRequiredAccountIdFromServer(
-  wallet: Wallet,
-  actionName: string,
-) {
+async function setRequiredAccountIdFromServer(wallet: Wallet, actionName: string) {
   if (wallet.accountId === undefined) {
     const accountIdFromServer = await wallet.getAccountId();
     if (accountIdFromServer == null) {
-      throw new Error(
-        `Failed to ${actionName}: Account does not exist in the zkSync network`,
-      );
+      throw new Error(`Failed to ${actionName}: Account does not exist in the zkSync network`);
     } else {
       wallet.accountId = accountIdFromServer;
     }
@@ -146,9 +144,7 @@ export async function syncMultiTransferWithdrawal(
   }[],
 ): Promise<Transaction[]> {
   if (!wallet.signer) {
-    throw new Error(
-      'ZKSync signer is required for sending zksync transactions.',
-    );
+    throw new Error('ZKSync signer is required for sending zksync transactions.');
   }
 
   if (transfers.length === 0) return [];
@@ -157,20 +153,14 @@ export async function syncMultiTransferWithdrawal(
 
   const signedTransactions: any[] = [];
 
-  let nextNonce =
-    transfers[0].nonce != null
-      ? await wallet.getNonce(transfers[0].nonce)
-      : await wallet.getNonce();
+  let nextNonce = transfers[0].nonce != null ? await wallet.getNonce(transfers[0].nonce) : await wallet.getNonce();
 
   for (let i = 0; i < withdrawals.length; i++) {
     const withdrawal = withdrawals[i];
     const nonce = nextNonce;
     nextNonce += 1;
 
-    const {
-      tx,
-      ethereumSignature,
-    } = await wallet.signWithdrawFromSyncToEthereum({
+    const { tx, ethereumSignature } = await wallet.signWithdrawFromSyncToEthereum({
       ...withdrawal,
       nonce,
     });

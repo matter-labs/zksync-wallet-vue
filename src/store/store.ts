@@ -128,10 +128,6 @@ export class Store {
     return this.walletName === 'External';
   }
 
-  @computed get isBraveBrowser() {
-    return navigator['brave'];
-  }
-
   @computed get doesMetamaskUsesNewEthereumAPI() {
     return !!this.windowEthereumProvider?.request;
   }

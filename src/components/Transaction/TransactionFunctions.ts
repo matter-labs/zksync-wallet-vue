@@ -388,21 +388,27 @@ export const timeStempString = ({ hours, minutes, seconds }) => {
 };
 
 export const handleFee = (title: string, store: Store, e?, symbol?, address?) => {
-  const { TokensStore, TransactionStore, zkWallet, AccountStore } = store;
+  const { TransactionStore, zkWallet, AccountStore, TokensStore } = store;
   const feeType = {
     ChangePubKey: {
       onchainPubkeyAuth: AccountStore.isOnchainAuthSigningKeySet as boolean,
     },
   };
-
+  if (symbol)
+  {
+    TransactionStore.setTransferFeeToken(symbol, TokensStore.getNotEmptyFeeToken())
+  }
   const symbolProp = TransactionStore.getFeeToken();
-  const addressProp = address ? address : TransactionStore.recepientAddress;
+  const addressProp = address || TransactionStore.recepientAddress;
 
-  if (!zkWallet || !symbolProp || !addressProp || title === 'Transfer') return;
+  if (!zkWallet || !symbolProp || !addressProp || title === 'Transfer')
+  {
+    return;
+  }
   if (
     title !== 'Deposit' &&
     (symbolProp || TransactionStore.symbolName) &&
-    ADDRESS_VALIDATION['eth'].test(address ? address : TransactionStore.recepientAddress)
+    ADDRESS_VALIDATION.eth.test(address || TransactionStore.recepientAddress)
   ) {
     TransactionStore.waitingCalculation = true;
     zkWallet?.provider
@@ -410,6 +416,9 @@ export const handleFee = (title: string, store: Store, e?, symbol?, address?) =>
       .then(res => {
         TransactionStore.fee[symbolProp] = res.totalFee;
         TransactionStore.waitingCalculation = false;
+      }).catch(error => {
+      TransactionStore.conditionError = error.message;
+
       });
   }
   if (title === 'Withdraw') {
@@ -425,4 +434,4 @@ export const handleFee = (title: string, store: Store, e?, symbol?, address?) =>
       .getTransactionFee(feeType, zkWallet?.address(), symbolProp)
       .then(res => (TransactionStore.changePubKeyFee = +res.totalFee));
   }
-};
+}

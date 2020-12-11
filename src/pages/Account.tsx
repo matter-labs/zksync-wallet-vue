@@ -15,13 +15,13 @@ import { useTransaction } from 'hooks/transactions/useTransaction';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useStore } from 'src/store/context';
 
-import { handleFormatToken, getConfirmationCount } from 'src/utils';
-import { fetchTransactions } from 'src/api';
-import { LINKS_CONFIG } from 'src/config';
-import {
+import { handleFormatToken, getConfirmationCount ,
   handleExponentialNumbers,
   sortBalancesById,
 } from 'src/utils';
+import { fetchTransactions } from 'src/api';
+import { LINKS_CONFIG } from 'src/config';
+
 
 import { DEFAULT_ERROR } from 'constants/errors';
 

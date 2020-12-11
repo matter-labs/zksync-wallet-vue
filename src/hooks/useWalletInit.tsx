@@ -1,18 +1,22 @@
-import { useCallback } from 'react';
-import { ethers, getDefaultProvider, Wallet } from 'ethers';
+import { useCallback, useState } from 'react';
+import { ethers, Wallet, getDefaultProvider } from 'ethers';
 import crypto from 'crypto';
 import { EthSignerType } from 'zksync/build/types';
 
 import { useCancelable } from 'hooks/useCancelable';
 
 import {
-  burnerWalletConnector,
-  fortmaticConnector,
   portisConnector,
+  fortmaticConnector,
   walletConnectConnector,
+  burnerWalletConnector,
 } from 'components/Wallets/walletConnectors';
 
+import { IEthBalance } from 'types/Common';
+
 import { LINKS_CONFIG, WITHDRAWAL_PROCESSING_TIME_LINK } from 'src/config';
+
+import { DEFAULT_ERROR } from 'constants/errors';
 import { WSTransport } from 'zksync/build/transport';
 import { fetchTransactions } from 'src/api';
 import { useLogout } from './useLogout';
@@ -22,7 +26,12 @@ import { useStore } from 'src/store/context';
 const useWalletInit = () => {
   const store = useStore();
 
-  const { ExternaWalletStore, AccountStore, TransactionStore, TokensStore } = store;
+  const {
+    ExternaWalletStore,
+    AccountStore,
+    TransactionStore,
+    TokensStore,
+  } = store;
 
   const cancelable = useCancelable();
 
@@ -105,7 +114,7 @@ const useWalletInit = () => {
       } else if (store.isPortisWallet && !store.isPrimaryPage) {
         await portisConnector(store, connect, getSigner);
       } else if (store.isFortmaticWallet) {
-        await fortmaticConnector(store, connect, getSigner);
+        fortmaticConnector(store, connect, getSigner);
         store.zkWalletInitializing = true;
       } else if (store.isWalletConnect) {
         walletConnectConnector(store, connect);
@@ -136,15 +145,22 @@ const useWalletInit = () => {
       if (store.isBurnerWallet) {
         const burnerWallet = window.localStorage?.getItem('burnerWallet');
         const provider = await getDefaultProvider(LINKS_CONFIG.network);
-        if (!!burnerWallet) {
-          const walletWithProvider = new Wallet(JSON.parse(burnerWallet), provider);
-          store.AccountStore.accountAddress = await walletWithProvider.getAddress();
+        if (burnerWallet) {
+          const walletWithProvider = new Wallet(
+            JSON.parse(burnerWallet),
+            provider,
+          );
+          const address = await walletWithProvider.getAddress();
+          store.AccountStore.accountAddress = address;
           store.ethWallet = walletWithProvider as ethers.Signer;
         } else {
           const randomWallet = await Wallet.createRandom();
           const walletWithProvider = await randomWallet.connect(provider);
           store.ethWallet = walletWithProvider as ethers.Signer;
-          window.localStorage?.setItem('burnerWallet', JSON.stringify(randomWallet.privateKey));
+          window.localStorage?.setItem(
+            'burnerWallet',
+            JSON.stringify(randomWallet.privateKey),
+          );
         }
       }
       const wallet = getSigner(provider);
@@ -161,7 +177,11 @@ const useWalletInit = () => {
         },
       };
 
-      const syncProvider = await zkSync.Provider.newWebsocketProvider(LINKS_CONFIG.ws_api);
+      const network =
+        process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
+      const syncProvider = await zkSync.Provider.newWebsocketProvider(
+        LINKS_CONFIG.ws_api,
+      );
 
       const burnerWalletBased = store.isBurnerWallet || store.isExternalWallet ? store.ethWallet : wallet;
 
@@ -198,6 +218,7 @@ const useWalletInit = () => {
       const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
 
       if (store.isAccessModalOpen || store.isExternalWallet) {
+
         store.setBatch({
           syncProvider: syncProvider,
           syncWallet: syncWallet,
@@ -215,7 +236,9 @@ const useWalletInit = () => {
           TransactionStore.fastWithdrawalProcessingTime = data.fast;
         });
 
-      const arr = window.localStorage?.getItem(`contacts${store.syncWallet?.address()}`);
+      const arr = window.localStorage?.getItem(
+        `contacts${store.syncWallet?.address()}`,
+      );
       if (arr) {
         store.searchContacts = JSON.parse(arr);
       }
@@ -224,7 +247,11 @@ const useWalletInit = () => {
         .then(res => (store.transactions = res))
         .catch(err => console.error(err));
 
-      const { error, tokens, zkBalances } = await loadTokens(syncProvider, syncWallet, accountState);
+      const { error, tokens, zkBalances } = await loadTokens(
+        syncProvider,
+        syncWallet,
+        accountState,
+      );
       if (error) {
         store.error = error;
       }
@@ -240,7 +267,7 @@ const useWalletInit = () => {
       if (store.isExternalWallet) return;
       const prices = {};
       Object.keys(tokens).map(async symbol => {
-        //TODO: replace with Promise.All
+        // TODO: replace with Promise.All
         const price = store.syncProvider?.getTokenPrice(symbol);
         prices[symbol] = await price;
         TokensStore.tokenPrices = prices;
@@ -249,14 +276,14 @@ const useWalletInit = () => {
       await syncWallet
         .getAccountState()
         .then(res => {
-          store.accountState = res;
-          AccountStore.accountId = res.id as number;
+        store.accountState = res;
+        AccountStore.accountId = res.id as number;
         })
         .then(() => {
-          cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
-            store.unlocked = data;
-          });
+        cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
+          store.unlocked = data;
         });
+      });
       if (accountState?.id) {
         await cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
           store.unlocked = data;

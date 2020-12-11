@@ -44,6 +44,7 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'off',
     'no-use-before-define': 'off',
     'plugin/no-low-performance-animation-properties': 0,
+    "@typescript-eslint/ban-ts-comment": "off"
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. '@typescript-eslint/explicit-function-return-type': 'off',
   },

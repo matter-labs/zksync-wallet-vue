@@ -7,7 +7,6 @@ import Transaction from 'components/Transaction/Transaction';
 
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useTransaction } from 'hooks/transactions/useTransaction';
-import { loadTokens } from 'src/utils';
 
 export const Send: React.FC = observer(
   (): JSX.Element => {

@@ -1,19 +1,14 @@
 import { useCallback} from 'react';
 import { ethers} from 'ethers';
-import { PriorityOperationReceipt } from 'zksync/build/types';
 
-import { IEthBalance } from 'types/Common';
-
-import { ADDRESS_VALIDATION } from 'constants/regExs';
 import { DEFAULT_ERROR } from 'constants/errors';
 import { useCancelable } from 'hooks/useCancelable';
 import { useStore } from 'src/store/context';
 import { LINKS_CONFIG } from 'src/config';
-
+import { errorProcessing } from 'hooks/transactions/Base';
 import {
   handleFormatToken,
   sortBalancesById,
-  addressMiddleCutter,
 } from 'src/utils';
 
 const TOKEN = 'ETH';
@@ -22,102 +17,11 @@ export const useDeposit = () => {
   const store = useStore();
 
   const { TokensStore } = store;
-  const { tokens } = TokensStore;
 
   const { zkWallet, TransactionStore } = store;
 
-  /**
-   * Common errorProcessing handler
-   * @param err
-   */
-  const errorProcessing = (err) => {
-    store.txButtonUnlocked = true;
-    if (err.message.match(/(?:denied)/i)) {
-      store.hint = err.message;
-    } else if (err.name && err.message) {
-      store.error = `${err.name}: ${err.message}`;
-    } else {
-      store.error = DEFAULT_ERROR;
-    }
-    TransactionStore.isLoading = false;
-  }
 
   const cancelable = useCancelable();
-
-  const history = useCallback(
-    (
-      amount: number,
-      hash: string | undefined,
-      to: string,
-      type: string,
-      token: string,
-    ) => {
-      try {
-        const history = JSON.parse(
-          window.localStorage?.getItem(`history${zkWallet?.address()}`) || '[]',
-        );
-        const newHistory = JSON.stringify([
-          { amount, date: new Date(), hash, to, type, token },
-          ...history,
-        ]);
-        window.localStorage?.setItem(
-          `history${zkWallet?.address()}`,
-          newHistory,
-        );
-      } catch (err) {
-        err.name && err.message ? (store.error = `${err.name}: ${err.message}`) : (store.error = DEFAULT_ERROR);
-      }
-    },
-    [store.error, zkWallet],
-  );
-
-  const transactions = useCallback(
-    async (receipt: PriorityOperationReceipt) => {
-      try {
-        if (receipt && zkWallet && tokens) {
-          const _accountState = await zkWallet.getAccountState();
-          const zkBalance = _accountState.committed.balances;
-          TokensStore.awaitedTokens = _accountState.depositing;
-          const zkBalancePromises = Object.keys(zkBalance).map(async key => {
-            return {
-              address: tokens[key].address,
-              balance: +handleFormatToken(zkWallet, tokens[key].symbol, zkBalance[key] ? zkBalance[key] : 0),
-              symbol: tokens[key].symbol,
-              id: tokens[key].id,
-            };
-          });
-          Promise.all(zkBalancePromises)
-            .then(res => {
-              TokensStore.zkBalances = res.slice().sort(sortBalancesById) as IEthBalance[];
-              TokensStore.zkBalancesLoaded = true;
-            })
-            .catch(err => {
-              err.name && err.message ? (store.error = `${err.name}: ${err.message}`) : (store.error = DEFAULT_ERROR);
-            });
-          TransactionStore.amountBigValue = 0;
-        }
-
-        if (receipt.executed) {
-          TransactionStore.isTransactionExecuted = true;
-          TransactionStore.isLoading = false;
-        }
-      } catch (err) {
-        err.name && err.message ? (store.error = `${err.name}: ${err.message}`) : (store.error = DEFAULT_ERROR);
-      }
-    },
-    [
-      TransactionStore.amountValue,
-      TransactionStore.isLoading,
-      tokens,
-      store.zkWallet,
-      store.error,
-      TokensStore.zkBalances,
-      TokensStore.awaitedTokens,
-      TokensStore.zkBalancesLoaded,
-      TransactionStore.amountBigValue,
-      TransactionStore.isTransactionExecuted,
-    ],
-  );
 
   const deposit = useCallback(
           async (token = TOKEN) => {
@@ -198,14 +102,7 @@ export const useDeposit = () => {
                       }
                     }
                   } catch (err) {
-                    TransactionStore.isLoading = false;
-                    if (err.message.match(/(?:denied)/i)) {
-                      store.hint = err.message;
-                    } else if (err.name && err.message) {
-                      store.error = `${err.name}: ${err.message}`;
-                    } else {
-                      store.error = DEFAULT_ERROR;
-                    }
+                    errorProcessing(store, err)
                   }
                 };
                 cancelable(
@@ -227,9 +124,7 @@ export const useDeposit = () => {
             TransactionStore.symbolName,
             TransactionStore.transactionHash,
             store.hint,
-            history,
             TransactionStore.isLoading,
-            transactions,
             zkWallet,
             store.error,
             store.verifyToken,

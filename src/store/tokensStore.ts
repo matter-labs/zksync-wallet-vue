@@ -45,7 +45,7 @@ export class TokensStore {
           singleBalance.balance > 0,
       )
       .shift();
-    return zkTokenBalance?.symbol ? zkTokenBalance.symbol : '';
+    return (zkTokenBalance && zkTokenBalance.symbol) ? zkTokenBalance.symbol : '';
   }
 
   /**

@@ -377,20 +377,20 @@ div[class$="logo"] {
   z-index: 8000;
   width: 100%;
   max-width: 505px;
-  background-color: var(--modal-bg-color);
-  border-radius: 5px;
   height: fit-content;
   max-height: 100vh;
+  background-color: var(--modal-bg-color);
+  border-radius: 5px;
 
   & > .balances-wrapper {
     width: 100%;
     max-width: 505px;
+    height: fit-content;
+    max-height: 100vh;
     margin: 0 auto;
     padding-top: 20px;
     overflow-x: hidden;
     overflow-y: scroll;
-    height: fit-content;
-    max-height: 100vh;
 
     & span {
       color: var(--hints-color);

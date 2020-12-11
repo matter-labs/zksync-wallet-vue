@@ -15,10 +15,11 @@ export class Transaction {
     this.state = 'Sent';
   }
 
-  async awaitReceipt(): Promise<SyncTypes.TransactionReceipt> {
+  async awaitReceipt(): Promise<SyncTypes.TransactionReceipt|null> {
     this.throwErrorIfFailedState();
 
     // Got absolutely no idea how it compiled in zksync.js
+    /*  eslint-disabled:@typescript-eslint/ban-ts-comment */
     /* @ts-ignore */
     if (this.state !== 'Sent') return;
 

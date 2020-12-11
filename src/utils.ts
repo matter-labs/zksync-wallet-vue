@@ -8,8 +8,6 @@ import { LINKS_CONFIG } from 'src/config';
 import { Store } from './store/store';
 import { useCallback } from 'react';
 
-
-
 export function getWalletNameFromProvider(): string | undefined {
   const provider: any = window.ethereum;
   if (!provider) return;
@@ -78,8 +76,7 @@ export const handleUnlinkAccount = (store: Store, handleLogout) => {
   }
 };
 
-export const useCallbackWrapper = (func, funcArguments, ucbParams) =>
-  useCallback(func.bind(null, ...funcArguments), ucbParams);
+export const useCallbackWrapper = (func, funcArguments, ucbParams) => useCallback(func.bind(null, ...funcArguments), ucbParams);
 
 export const addressMiddleCutter = (address: string, firstNumberOfLetters: number, secondNumberOfLetters: number) => {
   if (address?.length - firstNumberOfLetters - secondNumberOfLetters <= 0) {
@@ -118,14 +115,15 @@ export function setCookie(name: string, value, exp?: Date) {
 }
 
 export const checkForEmptyBalance = (store: Store, balance) => {
-  const tokensWithBalance = balance.filter(el => el.balance > 0);
-  if (tokensWithBalance.length > 0) {
+  const tokensWithBalance = balance?.filter(el => el.balance > 0);
+  if (tokensWithBalance?.length > 0) {
     store.TokensStore.isAccountBalanceNotEmpty = true;
     store.TokensStore.isAccountBalanceLoading = false;
-  }
-  if (!!store.zkWallet && tokensWithBalance.length === 0) {
-    store.TokensStore.isAccountBalanceNotEmpty = false;
-    store.TokensStore.isAccountBalanceLoading = false;
+  } else {
+    if (store.zkWallet) {
+      store.TokensStore.isAccountBalanceNotEmpty = false;
+      store.TokensStore.isAccountBalanceLoading = false;
+    }
   }
 };
 
@@ -212,17 +210,13 @@ export const processZkSyncError = error => {
   return error.jrpcError ? error.jrpcError.message : error.message;
 };
 
-export const handleFormatToken = (
-  wallet: Wallet,
-  symbol: string,
-  amount: ethers.BigNumberish,
-) => {
-   if (!amount) return '';
-   if (typeof amount === 'number') {
-     return wallet?.provider?.tokenSet.formatToken(symbol, amount.toString());
-   }
-   return wallet?.provider?.tokenSet.formatToken(symbol, amount);
- };
+export const handleFormatToken = (wallet: Wallet, symbol: string, amount: ethers.BigNumberish) => {
+  if (!amount) return '';
+  if (typeof amount === 'number') {
+    return wallet?.provider?.tokenSet.formatToken(symbol, amount.toString());
+  }
+  return wallet?.provider?.tokenSet.formatToken(symbol, amount);
+};
 
 export function getExponentialParts(num) {
   return Array.isArray(num) ? num : String(num).split(/[eE]/);
@@ -351,7 +345,7 @@ export async function loadTokens(
     tokens,
     zkBalances,
     ethBalances,
-    error,
+    error
   };
 }
 
@@ -383,25 +377,18 @@ export const handleGetUTCHours = (d: Date) => {
   return new Date(_year, _month, _date, _hour, _minutes, _seconds);
 };
 
-export const intervalAsyncStateUpdater = (
-  func,
-  funcArguments,
-  timeout: number,
-  cancelable,
-) => {
+/**
+ * Update status once per {timeout}
+ * @param func
+ * @param funcArguments
+ * @param {number} timeout
+ * @param cancelable
+ */
+export const intervalAsyncStateUpdater = (func, funcArguments, timeout: number, cancelable) => {
   cancelable(func(...funcArguments))
-    .then(res =>
-      setTimeout(
-        () =>
-          intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable),
-        timeout,
-      ),
-    )
-    .catch(err =>
-      setTimeout(
-        () =>
-          intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable),
-        timeout,
-      ),
-    );
+    .then(() => setTimeout(() => intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable), timeout))
+    .catch(err => {
+      console.log(err);
+      setTimeout(() => intervalAsyncStateUpdater(func, funcArguments, timeout, cancelable), timeout);
+    });
 };
