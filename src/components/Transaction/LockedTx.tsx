@@ -40,13 +40,12 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
         ).toFixed(2)}`}</span>
       );
 
-    const _cpkKeys = Object.keys(TransactionStore.changePubKeyFees);
 
     useEffect(() => {
       if (
         !store.zkWallet ||
         !TokensStore.zkBalancesLoaded ||
-        _cpkKeys.length < TokensStore.zkBalances.length
+        TransactionStore.changePubKeyFees.length < TokensStore.zkBalances.length
       )
         return;
       handleSelectBalance();
@@ -114,7 +113,7 @@ export const LockedTxNew: React.FC<ILockedTxNew> = observer(
     ));
 
     const loadingCondition =
-      !store.zkWallet || _cpkKeys.length < TokensStore.zkBalances.length;
+      !store.zkWallet || (TransactionStore.changePubKeyFees.length < TokensStore.zkBalances.length);
 
     return (
       <>

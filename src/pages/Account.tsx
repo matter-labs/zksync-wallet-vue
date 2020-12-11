@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { getDefaultProvider } from 'ethers';
@@ -11,17 +11,12 @@ import Spinner from 'src/components/Spinner/Spinner';
 import { IEthBalance } from 'types/Common';
 
 import { useCancelable } from 'hooks/useCancelable';
-import { useTransaction } from 'hooks/transactions/useTransaction';
 import { useCheckLogin } from 'src/hooks/useCheckLogin';
 import { useStore } from 'src/store/context';
 
-import { handleFormatToken, getConfirmationCount ,
-  handleExponentialNumbers,
-  sortBalancesById,
-} from 'src/utils';
+import { getConfirmationCount, handleExponentialNumbers, handleFormatToken, sortBalancesById, } from 'src/utils';
 import { fetchTransactions } from 'src/api';
 import { LINKS_CONFIG } from 'src/config';
-
 
 import { DEFAULT_ERROR } from 'constants/errors';
 
@@ -72,8 +67,8 @@ const VerifiedBal: React.FC<BalProps> = observer(
                     {`+ ${store.zkWallet &&
                     handleExponentialNumbers(
                             +handleFormatToken(store.zkWallet, symbol, TokensStore.awaitedTokens[symbol]?.amount
-                              ? TokensStore.awaitedTokens[symbol]?.amount
-                              : 0),
+                                    ? TokensStore.awaitedTokens[symbol]?.amount
+                                    : 0),
                     )}`}
                   </span>
                                     {TokensStore.tokenPrices &&
@@ -84,8 +79,8 @@ const VerifiedBal: React.FC<BalProps> = observer(
                         {`(~$${+(
                                 (store.zkWallet &&
                                         +handleFormatToken(store.zkWallet, symbol, TokensStore.awaitedTokens[symbol]?.amount
-                                          ? TokensStore.awaitedTokens[symbol]?.amount
-                                          : 0)) *
+                                                ? TokensStore.awaitedTokens[symbol]?.amount
+                                                : 0)) *
                                 +(TokensStore.tokenPrices &&
                                 !!TokensStore.tokenPrices[symbol]
                                         ? TokensStore.tokenPrices[symbol]
@@ -153,8 +148,8 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                     {`+ ${store.zkWallet &&
                     handleExponentialNumbers(
                             +handleFormatToken(store.zkWallet, symbol, TokensStore.awaitedTokens[symbol]?.amount
-                              ? TokensStore.awaitedTokens[symbol]?.amount
-                              : 0),
+                                    ? TokensStore.awaitedTokens[symbol]?.amount
+                                    : 0),
                     )}`}
                   </span>
                                     {TokensStore.tokenPrices &&
@@ -165,8 +160,8 @@ const UnverifiedBal: React.FC<BalProps> = observer(
                         {`(~$${+(
                                 (store.zkWallet &&
                                         +handleFormatToken(store.zkWallet, symbol, TokensStore.awaitedTokens[symbol]?.amount
-                                          ? TokensStore.awaitedTokens[symbol]?.amount
-                                          : 0)) *
+                                                ? TokensStore.awaitedTokens[symbol]?.amount
+                                                : 0)) *
                                 +(TokensStore.tokenPrices &&
                                 !!TokensStore.tokenPrices[symbol]
                                         ? TokensStore.tokenPrices[symbol]
@@ -207,8 +202,7 @@ const Account: React.FC = observer(() => {
   } = store;
 
   const getAccState = useCallback(
-    async (extended: boolean) => {
-      const { zkWallet, accountState } = store;
+          async (extended: boolean) => {
             const { tokens } = TokensStore;
             if (zkWallet && tokens) {
               const _accountState = await zkWallet.getAccountState();
@@ -223,13 +217,13 @@ const Account: React.FC = observer(() => {
               const at = _accountState.depositing.balances;
               const atKeys = Object.keys(at);
               if (atKeys.length) {
-          const txs = fetchTransactions(
+                const txs = fetchTransactions(
                         25,
                         0,
                         store.zkWalletAddress as string,
                 ).then(res => res);
                 const sortedByTypeTxs = AccountStore.txs.filter(
-            tx => !tx.commited && tx.tx.type === 'Deposit',
+                        tx => !tx.commited && tx.tx.type === 'Deposit',
                 );
                 sortedByTypeTxs.map(tx => {
                   const _token = tx.tx.priority_op?.token;
@@ -241,7 +235,7 @@ const Account: React.FC = observer(() => {
                             (a, b) => b.eth_block - a.eth_block,
                     );
                     const _p = getDefaultProvider(LINKS_CONFIG.network);
-              const confirmations = getConfirmationCount(
+                    const confirmations = getConfirmationCount(
                             _p,
                             sortedByBlockTxs[0].hash,
                             TokensStore.awaitedTokens[_token as string].expectedAcceptBlock,
@@ -270,7 +264,7 @@ const Account: React.FC = observer(() => {
                   };
                 });
                 Promise.all(zkBalancePromises)
-            .then(res => {
+                        .then(res => {
                           if (Object.keys(TokensStore.awaitedTokens).length > 0) {
                             for (const token in TokensStore.awaitedTokens) {
                               const _list = Object.entries(res).map(el => el[1].symbol);
@@ -289,7 +283,7 @@ const Account: React.FC = observer(() => {
                               } else {
                                 if (
                                         JSON.stringify(TokensStore.zkBalances) !==
-                      JSON.stringify(res.sort(sortBalancesById))
+                                        JSON.stringify(res.sort(sortBalancesById))
                                 ) {
                                   const MLTTAccountBalance = TokensStore.zkBalances.filter(
                                           t => t.symbol === 'MLTT',
@@ -310,38 +304,37 @@ const Account: React.FC = observer(() => {
                                   ) {
                                     TokensStore.MLTTclaimed = true;
                                   }
-                                    TokensStore.zkBalancesLoaded = true;
-                      TokensStore.zkBalances = res.sort(sortBalancesById);
+                                  TokensStore.zkBalancesLoaded = true;
+                                  TokensStore.zkBalances = res.sort(sortBalancesById);
                                 }
                               }
                             }
                           } else {
                             if (
-                  JSON.stringify(TokensStore.zkBalances) !==
-                  JSON.stringify(res.sort(sortBalancesById))
+                                    JSON.stringify(TokensStore.zkBalances) !==
+                                    JSON.stringify(res.sort(sortBalancesById))
                             ) {
-                  const MLTTAccountBalance = TokensStore.zkBalances.filter(
+                              const MLTTAccountBalance = TokensStore.zkBalances.filter(
                                       t => t.symbol === 'MLTT',
                               );
                               const MLTTIncomingBalance = res.filter(
                                       t => t.symbol === 'MLTT',
                               );
                               if (
-                    MLTTIncomingBalance.length === 1 &&
-                    MLTTAccountBalance.length === 0
-                  ) {
-                    TokensStore.MLTTclaimed = true;
-                  } else if (
-                    MLTTIncomingBalance.length === 1 &&
-                    MLTTAccountBalance.length === 1 &&
-                    MLTTIncomingBalance[0].balance >
-                      MLTTAccountBalance[0].balance
+                                      MLTTIncomingBalance.length === 1 &&
+                                      MLTTAccountBalance.length === 0
+                              ) {
+                                TokensStore.MLTTclaimed = true;
+                              } else if (
+                                      MLTTIncomingBalance.length === 1 &&
+                                      MLTTAccountBalance.length === 1 &&
+                                      MLTTIncomingBalance[0].balance >
+                                      MLTTAccountBalance[0].balance
                               ) {
                                 TokensStore.MLTTclaimed = true;
                               }
                               TokensStore.zkBalancesLoaded = true;
-                  const _balances = res.sort(sortBalancesById);
-                  TokensStore.zkBalances = _balances;
+                              TokensStore.zkBalances = res.sort(sortBalancesById);
                             }
                           }
                         })
@@ -362,9 +355,9 @@ const Account: React.FC = observer(() => {
   );
 
   useEffect(() => {
-      TransactionStore.propsSymbolName = '';
-      TransactionStore.propsMaxValue = '';
-      TransactionStore.propsToken = '';
+    TransactionStore.propsSymbolName = '';
+    TransactionStore.propsMaxValue = '';
+    TransactionStore.propsToken = '';
   }, [TransactionStore]);
 
   useEffect(() => {
@@ -400,8 +393,7 @@ const Account: React.FC = observer(() => {
                             : tx.tx.token === symbol,
             )
             .filter(ftx => ftx.verified !== true);
-    const condition = filtered.length === 0;
-    return condition;
+    return filtered.length === 0;
   };
 
   const ApiFailedHint = () => null; // Temporarly disable
@@ -417,15 +409,15 @@ const Account: React.FC = observer(() => {
   return (
           <>
             <MyWallet
-        balances={TokensStore.ethBalances}
-        price={TokensStore.tokenPrices}
+                    balances={TokensStore.ethBalances}
+                    price={TokensStore.tokenPrices}
                     title='zkSync Wallet'
                     setTransactionType={t => {
                       store.transactionType = t;
                     }}
             />
             <DataList
-        data={TokensStore.getAccountsSorted()}
+                    data={TokensStore.getAccountsSorted()}
                     title='Balances in L2'
                     visible={true}
                     footer={ApiFailedHint}
@@ -439,11 +431,11 @@ const Account: React.FC = observer(() => {
                                     balance={balance}
                             />
                     )}
-        emptyListComponent={() =>
-          TokensStore.zkBalancesLoaded &&
-          !TokensStore.isAccountBalanceLoading ? null : (
-            <Spinner />
-          )
+                    emptyListComponent={() =>
+                            TokensStore.zkBalancesLoaded &&
+                            !TokensStore.isAccountBalanceLoading ? null : (
+                                    <Spinner/>
+                            )
                     }
             />
           </>
