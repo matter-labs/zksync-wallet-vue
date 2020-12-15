@@ -1,8 +1,11 @@
 export default {
-  clearErrors: (errorsObj, vueContext, focusWrong = true) => {
+  clearErrors: (errorsObj, vueContext) => {
     for (let prop in errorsObj) {
+      if (!errorsObj.hasOwnProperty(prop)) {
+        continue;
+      }
       vueContext.$set(errorsObj, prop, typeof prop !== "boolean" ? "" : false);
-      if (vueContext.$refs[prop] && vueContext.$refs[prop].errNow) {
+      if (vueContext.$refs[prop]?.errNow) {
         vueContext.$set(vueContext.$refs[prop], "errNow", typeof prop !== "boolean" ? "" : false);
       }
     }
