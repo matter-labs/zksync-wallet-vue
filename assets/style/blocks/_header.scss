@@ -84,7 +84,7 @@ header {
                 color: darken($color: $gray, $amount: 15);
                 text-align: right;
             }
-            @media screen and (max-width: 576px) {
+            @media screen and (max-width: 768px) {
                 grid-template-columns: 25px 16px;
                 padding-right: 0;
 

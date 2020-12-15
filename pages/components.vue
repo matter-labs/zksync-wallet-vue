@@ -63,7 +63,7 @@
 
             <div class="_margin-top-4">
                 <i-row>
-                    <alert>Use perfect opportunity to save up on gas, here and now!<br>Find out how in brief popup tooltip.</alert>
+                    <alert>Use perfect opprtunity to save up on gas, here and now!<br>Find out how in brief popup tooltip.</alert>
                 </i-row>
             </div>
             <div class="_margin-top-4">

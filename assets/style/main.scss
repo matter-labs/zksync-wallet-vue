@@ -20,10 +20,13 @@
 @import "./components/loader.scss";
 @import "./components/userImg.scss";
 @import "./components/walletAddress.scss";
+@import "./components/checkmark.scss";
 @import "./components/custom/custom.scss";
 
 //Pages
 @import "./pages/index.scss";
 @import "./pages/contacts.scss";
 @import "./pages/transactions.scss";
-@import "./pages/deposit.scss";
+@import "./pages/transaction.scss";
+@import "./pages/account.scss";
+@import "./pages/tokenAccount.scss";

@@ -30,7 +30,7 @@
                     <template slot="body">Add contact</template>
                 </i-tooltip>
             </div>
-            <i-input v-model="search" placeholder="Filter contacts" v-if="search.trim() || displayedContactsList.length!==0">
+            <i-input v-model="search" placeholder="Filter contacts" maxlength="20" v-if="search.trim() || displayedContactsList.length!==0">
                 <i slot="prefix" class="far fa-search"></i>
             </i-input>
             
@@ -101,6 +101,14 @@ export default {
         userImg,
         walletAddress
     },
+    watch: {
+        addContactModal(val) {
+            if(val===false) {
+                this.inputedName='';
+                this.inputedWallet='';
+            }
+        }
+    },
     computed: {
         walletAddressFull: function() {
             return walletData.get().syncWallet.address();
@@ -115,7 +123,7 @@ export default {
             const wallet = this.$route.query.w;
             if(!wallet){return null}
             for(let a=0; a<this.contactsList.length; a++) {
-                if(this.contactsList[a].address===wallet) {
+                if(this.contactsList[a].address.toLowerCase()===wallet.toLowerCase()) {
                     return this.contactsList[a];
                 }
             }
@@ -142,13 +150,16 @@ export default {
         },
         addContact: function() {
             if(this.inputedName.trim().length===0) {
-                this.modalError=`Name can't be empty`
+                this.modalError=`Name can't be empty`;
             }
             else if(this.inputedWallet.trim().length===0) {
-                this.modalError=`Wallet address can't be empty`
+                this.modalError=`Wallet address can't be empty`;
             }
             else if(!validations.eth.test(this.inputedWallet)) {
-                this.modalError=`"${this.inputedWallet}" doesn't match ethereum address format`
+                this.modalError=`"${this.inputedWallet}" doesn't match ethereum address format`;
+            }
+            else if(this.inputedWallet.trim().toLowerCase()===this.walletAddressFull.toLowerCase()) {
+                this.modalError=`You can't add your own account to contacts`;
             }
             else {
                 this.addContactModal = false;
@@ -156,7 +167,7 @@ export default {
                 try {
                     const addressToSearch = this.addContactType==='add'?this.inputedWallet:this.editingWallet.address;
                     for(let a=0; a<this.contactsList.length; a++) {
-                        if(this.contactsList[a].address===addressToSearch) {
+                        if(this.contactsList[a].address.toLowerCase()===addressToSearch.toLowerCase()) {
                             this.contactsList.splice(a,1);
                             break;
                         }
@@ -171,6 +182,7 @@ export default {
             }
         },
         editContact: function(contact) {
+            this.modalError='';
             this.inputedName=contact.name;
             this.inputedWallet=contact.address;
             this.editingWallet=contact;
@@ -179,7 +191,7 @@ export default {
         },
         deleteContact: function() {
             for(let a=0; a<this.contactsList.length; a++) {
-                if(this.contactsList[a].address===this.editingWallet.address) {
+                if(this.contactsList[a].address.toLowerCase()===this.editingWallet.address.toLowerCase()) {
                     this.contactsList[a].deleted=true;
                     break;
                 }
@@ -192,7 +204,7 @@ export default {
         },
         restoreDeleted: function(contact) {
             for(let a=0; a<this.contactsList.length; a++) {
-                if(this.contactsList[a].address===contact.address) {
+                if(this.contactsList[a].address.toLowerCase()===contact.address.toLowerCase()) {
                     this.$set(this.contactsList, a, {...contact, deleted: false});
                     break;
                 }

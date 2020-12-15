@@ -30,6 +30,24 @@
             align-items: center;
             padding: 0 20px;
             border-bottom: 1px solid;
+            @media screen and (max-width: 768px) {
+                grid-template-columns: 100%;
+                grid-template-rows: 35px 80px 50px 40px;
+                grid-gap: 10px;
+                padding: 20px 10px;
+                height: max-content;
+
+                .status {
+                    justify-self: center;
+                }
+                .mainInfo,.actionInfo {
+                    text-align: center !important;
+                }
+                .button {
+                    width: 38px;
+                    justify-self: center;
+                }
+            }
 
             .status {
                 width: 35px;

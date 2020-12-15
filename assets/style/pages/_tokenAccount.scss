@@ -1,0 +1,14 @@
+.tokenAccount {
+    .infoBlock {
+        .headline {
+            font-size: 16px;
+        }
+        .balance {
+            font-size: 20px;
+            .balancePrice {
+                font-size: 16px;
+                color: $gray;
+            }
+        }
+    }
+}

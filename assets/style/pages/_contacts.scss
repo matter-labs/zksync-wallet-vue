@@ -1,111 +1,111 @@
 .contactsPage {
-    .contactTile {
-        height: calc(100vh - 105px - 110px);
-        display: flex;
-        flex-direction: column;
-    }
-    .modalError {
-        text-align: center;
-        color: $red;
-    }
     .isDeleted {
         color: $red;
         text-align: center;
     }
-    .contactsListContainer {
-        height: 100%;
-        overflow: auto;
-        &::-webkit-scrollbar {
-            width: 10px;
-            background-color: transparent;
-        }
-        &::-webkit-scrollbar-thumb {
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        &::-webkit-scrollbar-track {
-            background-color: transparent;
-            border-radius: 10px;
-        }
+}
+.modalError {
+    text-align: center;
+    color: $red;
+}
+.contactTile {
+    height: calc(100vh - 105px - 110px) !important;
+    display: flex;
+    flex-direction: column;
+}
+.contactsListContainer {
+    height: 100%;
+    overflow: auto;
+    &::-webkit-scrollbar {
+        width: 10px;
+        background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+        border-radius: 10px;
+    }
 
-        .contactItem {
-            width: 100%;
-            height: 86px;
-            display: grid;
-            grid-template-columns: 40px 1fr max-content;
-            grid-template-rows: 100%;
-            grid-gap: 10px;
-            align-items: center;
-            padding: 0 20px;
-            border-bottom: 1px solid;
-            transition: background-color $transition1;
-            cursor: pointer;
-            &:hover {
-                background-color: transparentize($color: $gray, $amount: 0.9);
-            }
-            &.deleted {
-                .contactInfo {
-                    color: lighten($color: $red, $amount: 10);
-                }
-            }
-
-            .userImg {
-                width: 30px;
-                height: 30px;
-                pointer-events: none;
-            }
+    .contactItem {
+        width: 100%;
+        height: 86px;
+        display: grid;
+        grid-template-columns: 40px 1fr max-content;
+        grid-template-rows: 100%;
+        grid-gap: 10px;
+        align-items: center;
+        padding: 0 20px;
+        border-bottom: 1px solid;
+        transition: background-color $transition1;
+        cursor: pointer;
+        &:hover {
+            background-color: transparentize($color: $gray, $amount: 0.9);
+        }
+        &.deleted {
             .contactInfo {
-                width: 100%;
-                text-align: left;
-                white-space: nowrap;
-                overflow: hidden;
-                pointer-events: none;
-
-                .contactName {
-                    width: 100%;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                    font-size: 24px;
-                    line-height: 26px;
-                }
-                .contactAddress {
-                    width: 100%;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
-                    font-size: 12px;
-                }
+                color: lighten($color: $red, $amount: 10);
             }
-            .iconsBlock {
-                width: 100%;
-                display: flex;
-                align-items: center;
+        }
 
-                .button {
-                    margin-top: 0 !important;
-                    &.copyAddress {
-                        &:active {
-                            transition: 0.001s;
-                            color: $green !important;
-                            background-color: transparentize($color: $gray, $amount: 0.7) !important;
-                        }
+        .userImg {
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
+        }
+        .contactInfo {
+            width: 100%;
+            text-align: left;
+            white-space: nowrap;
+            overflow: hidden;
+            pointer-events: none;
+
+            .contactName {
+                width: 100%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                font-size: 24px;
+                line-height: 26px;
+            }
+            .contactAddress {
+                width: 100%;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                font-size: 12px;
+            }
+        }
+        .iconsBlock {
+            width: 100%;
+            display: flex;
+            align-items: center;
+
+            .button {
+                margin-top: 0 !important;
+                &.copyAddress {
+                    &:active {
+                        transition: 0.001s;
+                        color: $green !important;
+                        background-color: transparentize($color: $gray, $amount: 0.7) !important;
                     }
                 }
             }
         }
-        .nothingFound {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
+    }
+    .nothingFound {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 }
 
 body.inkline { 
     &.-light {
-        .contactsPage .contactsListContainer {
+        .contactsListContainer {
             &::-webkit-scrollbar-thumb {
                 background-color: $input-border-color-focus-light;
             }
@@ -116,7 +116,7 @@ body.inkline {
         }
     }
     &.-dark {
-        .contactsPage .contactsListContainer {
+        .contactsListContainer {
             &::-webkit-scrollbar-thumb {
                 background-color: $input-border-color-focus-dark;
             }

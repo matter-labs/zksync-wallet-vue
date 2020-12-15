@@ -1,8 +1,8 @@
 {
-  "name": "zksync-wallet",
-  "version": "v.2.0.0-pre-alpha",
-  "description": "zkSync Core dAPP, zkWallet: Trustless, scalable crypto payments made easy",
-  "author": "Matter Most",
+  "name": "flyid",
+  "version": "1.0.0",
+  "description": "FlyID Web App",
+  "author": "Fruitware",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -22,6 +22,7 @@
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.0.22",
     "joi-browser": "latest",
+    "lottie-web": "^5.7.5",
     "moment": "^2.29.1",
     "nuxt": "^2.14.3",
     "nuxt-i18n": "^6.8.1",

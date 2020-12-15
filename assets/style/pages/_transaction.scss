@@ -1,8 +1,46 @@
-.depositPage {
+.transactionPage {
     .tokensTile {
         height: calc(100vh - 105px - 110px);
         display: flex;
         flex-direction: column;
+    }
+    .errorText {
+        color: $red;
+    }
+    .totalPrice {
+        font-size: 16px;
+        color: $gray;
+    }
+    .maxAmount {
+        color: $lightViolet;
+        font-weight: 500;
+        cursor: pointer;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+    .totalAmount {
+        &.smaller {
+            .headline {
+                font-size: 16px;
+            }
+            .amount {
+                font-size: 18px;
+            }
+        }
+        .headline {
+            font-size: 18px;
+        }
+        .amount {
+            font-size: 24px;
+
+            .price {
+                padding-left: 10px;
+            }
+        }
+        .walletContainer {
+            margin-top: 5px;
+        }
     }
     .tokenListContainer {
         height: 100%;
@@ -47,20 +85,21 @@
                 }
             }
         }
-        .nothingFound {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
+    }
+    .nothingFound {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
     }
 }
 
 body.inkline { 
     &.-light {
-        .depositPage .tokenListContainer {
+        .transactionPage .tokenListContainer {
             &::-webkit-scrollbar-thumb {
                 background-color: $input-border-color-focus-light;
             }
@@ -71,7 +110,7 @@ body.inkline {
         }
     }
     &.-dark {
-        .depositPage .tokenListContainer {
+        .transactionPage .tokenListContainer {
             &::-webkit-scrollbar-thumb {
                 background-color: $input-border-color-focus-dark;
             }

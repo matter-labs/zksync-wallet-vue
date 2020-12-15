@@ -1,39 +1,59 @@
-# Welcome to zksync-wallet 👋
-![Version](https://img.shields.io/badge/version-2.0.0--pre--alpha-blue.svg?cacheSeconds=2592000)
-[![Documentation](https://img.shields.io/badge/documentation-yes-brightgreen.svg)](https://github.com/matter-labs/zksync-wallet-dev)
-[![Twitter: the\_matter\_labs](https://img.shields.io/twitter/follow/the\_matter\_labs.svg?style=social)](https://twitter.com/the\_matter\_labs)
+# [zkWallet](https://wallet.zksync.io/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![npm version](https://img.shields.io/npm/v/zksync.svg?style=flat)](https://www.npmjs.com/package/zksync) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Rinkeby](https://img.shields.io/badge/wallet-Live%20on%20Rinkeby-blue)](https://rinkeby.zksync.io) [![Live on Ropsten](https://img.shields.io/badge/wallet-Live%20on%20Ropsten-blue)](https://ropsten.zksync.io) [![Join the technical discussion chat at https://gitter.im/matter-labs/zksync](https://badges.gitter.im/matter-labs/zksync.svg)](https://gitter.im/matter-labs/zksync?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-> zkSync Core dAPP, zkWallet: Trustless, scalable crypto payments made easy
 
-### 🏠 [Homepage](https://zksync.io/sdk/js/)
+# zkWallet v.2.*
 
-### ✨ [Demo](https://wallet.zksync.io)
+A completely different version of the Wallet, built with nuxt+vuejs.
+New architecture, implemented open source design system. Tight roadmap with many awesome features will guide developers into the amazing world of dApps and introduce true
+ reactive interaction, dialog-based UX.
+ 
+**Stay tuned!**
 
-## Install
+It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, published and ready for mass adoption.
 
-```sh
-npm install
-npm run nuxt
+> The nearest milestone for **zkWallet**  will enable **Paypal-scale** throughput for any dApp, wallet or smart
+>-contract &nbsp;🚀
+
+## Released features
+
+✅ ETH and ERC20 token transfers with instant confirmations and 10 min finality on L1;
+
+✅ Zero-cost account creation, simple and universal;
+
+✅ Payments to existing Ethereum addresses (including smart-contracts);
+
+✅ Fees conveniently payable in token of your choice;
+
+✅ Withdrawals to mainnet in under 15 min;
+
+✅ **Ultra-low transaction fees (~ $0.001 per transfer)**
+
+used to unleash the power of zkSync L2 operations to access L2 zkSync features on mainnet ([learn more]())
+
+## Build Setup
+
+``` bash
+# install dependencies
+$ npm install
+
+# serve with hot reload at localhost:3000
+$ npm run dev
+
+# build for production and launch server
+$ npm run build
+$ npm run start
+
+# generate static project
+$ npm run generate
 ```
 
-## Author
+## Used software
 
-👤 **Matter Labs**
+* [Nuxt.js docs](https://nuxtjs.org)
+* [Vue.js v.2.*](https://vuejs.org)
 
-* Website: https://matter-labs.io
-* Twitter: [@the\_matter\_labs](https://twitter.com/the\_matter\_labs)
-* Github: [@keriat](https://github.com/keriat)
+## License
 
-## 🤝 Contributing
+zkWallet is distributed under the terms of both the MIT license, and the Apache License (v.2.0).
 
-Contributions, issues and feature requests are welcome!
-
-Feel free to check [issues page](https://github.com/kefranabg/readme-md-generator/issues). 
-
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
-
-***
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+See [LICENSE-APACHE](LICENSE-APACHE), [LICENSE-MIT](LICENSE-MIT) for details.
