@@ -6,22 +6,22 @@
 
 <script>
 import lottie from "lottie-web";
-import successCheckmark from '@/plugins/successCheckmark.json';
+import successCheckmark from "@/plugins/successCheckmark.json";
 export default {
-    methods: {
-        loadAnimation() {
-            let anim = lottie.loadAnimation({
-                container: this.$el,
-                autoplay: true,
-                loop: false,
-                width: '200px',
-                height: '200px',
-                animationData: successCheckmark
-            });
-        }
+  mounted() {
+    this.loadAnimation();
+  },
+  methods: {
+    loadAnimation() {
+      return lottie.loadAnimation({
+        container: this.$el,
+        autoplay: true,
+        loop: false,
+        width: "200px",
+        height: "200px",
+        animationData: successCheckmark,
+      });
     },
-    mounted() {
-        this.loadAnimation();
-    },
-}
+  },
+};
 </script>

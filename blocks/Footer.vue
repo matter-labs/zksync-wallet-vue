@@ -26,10 +26,10 @@
 
 <script>
 export default {
-    methods: {
-        toggleDarkMode() {
-            this.$inkline.config.variant = this.$inkline.config.variant === 'light' ? 'dark' : 'light';
-        }
-    }
-}
+  methods: {
+    toggleDarkMode() {
+      this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
+    },
+  },
+};
 </script>

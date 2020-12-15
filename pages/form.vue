@@ -32,7 +32,7 @@
                         <div class="icon">
                             <i class="fas fa-bookmark"></i>
                         </div>
-                        <div class="text">Deposit funds from the wallet you’ve used for authentification to proceed</div>
+                        <div class="text">Deposit funds from the wallet you’ve used for authentication to proceed</div>
                     </div>
                     <div class="field">
                         <div class="fieldContent">
@@ -113,7 +113,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 <div class="formFooter">
                     <div class="leftSide">
@@ -147,7 +147,7 @@
                 </div>
                 <div class="messageContent">
                     <div class="messageText">
-                        Vendor behind current checkout session restrics it to exact account/wallet address. And your account/wallet used for the authentification unfortunatelly doesn’t match one specified by the Vendor. <a href="#">Learn more</a>
+                        Vendor behind current checkout session restricts it to exact account/wallet address. And your account/wallet used for the authentication unfortunately doesn't match one specified by the Vendor. <a href="#">Learn more</a>
                     </div>
                     <div class="walletBlock">
                         <div class="leftSide">
@@ -161,7 +161,7 @@
                     <div class="message">
                         <div class="messageHeadline">
                             <i class="fas fa-lightbulb-on"></i>
-                            <span>Simple tip you can follow to meet Vendor’s requirments</span>
+                            <span>Simple tip you can follow to meet Vendor’s requirements</span>
                         </div>
                         <div class="messageContent">
                             <div class="messageText">
@@ -315,7 +315,7 @@
                         <div class="icon">
                             <i class="fas fa-bookmark"></i>
                         </div>
-                        <div class="text">Deposit funds from the wallet you’ve used for authentification to proceed</div>
+                        <div class="text">Deposit funds from the wallet you’ve used for authentication to proceed</div>
                     </div>
                     <div class="field">
                         <div class="fieldContent">
@@ -458,7 +458,7 @@
                         <div class="icon">
                             <i class="fas fa-minus-circle"></i>
                         </div>
-                        <div class="text">Unsufficient funds to make the deposit. Top up your on-chain wallet to proceed. Use the button below to copy your linked account address into the clipboard.</div>
+                        <div class="text">Insufficient funds to make the deposit. Top up your on-chain wallet to proceed. Use the button below to copy your linked account address into the clipboard.</div>
                     </div>
                     <div class="field">
                         <div class="fieldContent">
@@ -493,197 +493,199 @@
 
 <script>
 export default {
-    layout: 'index',
-}
+  layout: "index",
+};
 </script>
 
 <style scoped lang="scss">
-    $white: #fff;
-    $dark: #243955;
-    $violet: #5436D6;
-    $red: #F25F5C;
-    $green: #057A55;
-    $lightGray: #F6F8FA;
-    
-    $firaSans: 'Fira Sans', sans-serif;
-    $firaSansCondensed: 'Fira Sans Condensed', sans-serif;
-    $sourceSansPro: 'Source Sans Pro', sans-serif;
-    $openSans: 'Open Sans', sans-serif;
+$white: #fff;
+$dark: #243955;
+$violet: #5436d6;
+$red: #f25f5c;
+$green: #057a55;
+$lightGray: #f6f8fa;
 
-    @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;500;700&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@300;400;500&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap');
+$firaSans: "Fira Sans", sans-serif;
+$firaSansCondensed: "Fira Sans Condensed", sans-serif;
+$sourceSansPro: "Source Sans Pro", sans-serif;
+$openSans: "Open Sans", sans-serif;
 
-    .mt-3 {
-        margin-top: 30px;
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap");
+
+.mt-3 {
+  margin-top: 30px;
+}
+.mt-4 {
+  margin-top: 40px;
+}
+.formView {
+  width: 100%;
+  max-width: 840px;
+  background-color: #ebf2fa;
+  margin: 0 auto;
+  padding: 50px 0;
+
+  .formHeaderText {
+    width: 90%;
+    text-align: center;
+    max-width: 590px;
+    margin: 0 auto;
+    margin-bottom: 40px;
+
+    .headline {
+      font-family: $firaSans;
+      font-weight: 700;
+      font-size: 24px;
+      color: $dark;
+      &.success {
+        color: $green;
+      }
+      &.danger {
+        color: $red;
+      }
     }
-    .mt-4 {
-        margin-top: 40px;
+    .text {
+      font-family: $firaSans;
+      font-size: 20px;
+      line-height: 30px;
+      font-weight: 300;
+      color: $dark;
+      margin: 0;
+
+      b {
+        font-weight: 700;
+      }
     }
-    .formView {
-        width: 100%;
-        max-width: 840px;
-        background-color: #EBF2FA;
-        margin: 0 auto;
-        padding: 50px 0;
+  }
 
-        .formHeaderText {
-            width: 90%;
-            text-align: center;
-            max-width: 590px;
-            margin: 0 auto;
-            margin-bottom: 40px;
+  @media (max-width: 768px) {
+    padding: 30px 0;
 
-            .headline {
-                font-family: $firaSans;
-                font-weight: 700;
-                font-size: 24px;
-                color: $dark;
-                &.success {
-                    color: $green;
-                }
-                &.danger {
-                    color: $red;
-                }
-            }
-            .text {
-                font-family: $firaSans;
-                font-size: 20px;
-                line-height: 30px;
-                font-weight: 300;
-                color: $dark;
-                margin: 0;
+    .formHeaderText {
+      margin-bottom: 25px;
 
-                b {
-                    font-weight: 700;
-                }
-            }
-        }
-
-        @media (max-width: 768px) {
-            padding: 30px 0;
-
-            .formHeaderText {
-                margin-bottom: 25px;
-
-                .headline {
-                    font-size: 20px;
-                }
-                .text {
-                    font-size: 16px;
-                    line-height: 22px;
-                }
-            }
-        }
+      .headline {
+        font-size: 20px;
+      }
+      .text {
+        font-size: 16px;
+        line-height: 22px;
+      }
     }
-    .formContainer {
-        width: 90%;
-        max-width: 590px;
-        margin: 0 auto;
-        background: $white;
-        box-shadow: 0px 2px 60px rgba(0, 0, 0, 0.06);
-        border-radius: 10px;
+  }
+}
+.formContainer {
+  width: 90%;
+  max-width: 590px;
+  margin: 0 auto;
+  background: $white;
+  box-shadow: 0px 2px 60px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
 
-        .formHeader,.formBody,.formFooter {
-            padding: 15px 36px;
-            box-sizing: border-box;
+  .formHeader,
+  .formBody,
+  .formFooter {
+    padding: 15px 36px;
+    box-sizing: border-box;
+  }
+  .formHeader {
+    display: flex;
+    width: 100%;
+    align-items: center;
+
+    .headerText {
+      width: 100%;
+      font-size: 24px;
+      line-height: 30px;
+      color: $dark;
+      font-weight: 500;
+      font-family: $firaSans;
+    }
+    .headerBtns {
+      display: flex;
+      flex-wrap: nowrap;
+
+      & > * {
+        &:not(:last-child) {
+          margin-right: 5px;
         }
-        .formHeader {
-            display: flex;
-            width: 100%;
-            align-items: center;
+      }
+    }
+  }
+  .formBody {
+    position: relative;
+    background-color: $lightGray;
+    border-top: 2px solid #ebf2fa;
+    border-bottom: 2px solid #ebf2fa;
+    box-sizing: border-box;
 
-            .headerText {
-                width: 100%;
-                font-size: 24px;
-                line-height: 30px;
-                color: $dark;
-                font-weight: 500;
-                font-family: $firaSans;
-            }
-            .headerBtns {
-                display: flex;
-                flex-wrap: nowrap;
+    .formBlocked {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 220px;
+      padding: 20px 0;
+      background: #f6f8fac9;
 
-                & > * {
-                    &:not(:last-child) {
-                        margin-right: 5px;
-                    }
-                }
-            }
+      i {
+        font-size: 180px;
+        color: #bababa;
+        text-align: center;
+      }
+    }
+  }
+  .formFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .leftSide {
+      display: flex;
+      align-items: center;
+
+      .infoItem {
+        font-family: $firaSansCondensed;
+        font-weight: 500;
+        padding: 0 12px;
+        box-sizing: border-box;
+        &:first-child {
+          padding-left: 0;
         }
-        .formBody {
-            position: relative;
-            background-color: $lightGray;
-            border-top: 2px solid #EBF2FA;
-            border-bottom: 2px solid #EBF2FA;
-            box-sizing: border-box;
 
-            .formBlocked {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                height: 220px;
-                padding: 20px 0;
-                background: #f6f8fac9;
-
-                i {
-                    font-size: 180px;
-                    color: #BABABA;
-                    text-align: center;
-                }
-            }
+        .infoLabel {
+          color: #a2a2a2;
+          font-size: 16px;
         }
-        .formFooter {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .infoValue {
+          color: #3c4257;
+          font-size: 14px;
+        }
+      }
+      .separator {
+        height: 21px;
+        width: 1px;
+        background-color: #e1e4e8;
+        margin: 0 2px;
+      }
+    }
+    .zkScan {
+      font-family: $firaSansCondensed;
+      font-size: 16px;
+      font-weight: 500;
+      color: $violet;
+      text-decoration: none;
 
-            .leftSide {
-                display: flex;
-                align-items: center;
-
-                .infoItem {
-                    font-family: $firaSansCondensed;
-                    font-weight: 500;
-                    padding: 0 12px;
-                    box-sizing: border-box;
-                    &:first-child {
-                        padding-left: 0;
-                    }
-
-                    .infoLabel {
-                        color: #A2A2A2;
-                        font-size: 16px;
-                    }
-                    .infoValue {
-                        color: #3C4257;
-                        font-size: 14px;
-                    }
-                }
-                .separator {
-                    height: 21px;
-                    width: 1px;
-                    background-color: #E1E4E8;
-                    margin: 0 2px;
-                }
-            }
-            .zkScan {
-                font-family: $firaSansCondensed;
-                font-size: 16px;
-                font-weight: 500;
-                color: $violet;
-                text-decoration: none;
-
-                i {
-                    color: $dark;
-                    font-size: 14px;
-                    margin-left: 5px;
-                }
-            }
-            /* font-family: $firaSansCondensed;
+      i {
+        color: $dark;
+        font-size: 14px;
+        margin-left: 5px;
+      }
+    }
+    /* font-family: $firaSansCondensed;
             color: #8D9AAC;
             font-size: 16px;
             font-weight: 300;
@@ -692,395 +694,402 @@ export default {
                 color: $dark;
                 font-weight: 500;
             } */
-        }
+  }
 
-        @media (max-width: 768px) {
-            .formHeader,.formBody,.formFooter {
-                padding: 15px 20px;
-            }
-            .formHeader {
-                flex-direction: column;
-
-                .headerText {
-                    font-size: 20px;
-                    line-height: 24px;
-                    text-align: center;
-                    margin-bottom: 10px;
-                }
-            }
-            .formFooter {
-                .leftSide .infoItem {
-                    padding: 0 8px;
-
-                    .infoLabel {
-                        font-size: 14px;
-                    }
-                    .infoValue {
-                        font-size: 12px;
-                    }
-                }
-            }
-        }
+  @media (max-width: 768px) {
+    .formHeader,
+    .formBody,
+    .formFooter {
+      padding: 15px 20px;
     }
-    .customBtn {
-        display: block;
-        background-color: $violet;
-        font-weight: 600;
-        color: $white;
-        font-size: 16px;
-        font-family: $sourceSansPro;
-        white-space: nowrap;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-        border-radius: 4px;
-        padding: 7px 12px;
-        border: none;
-        box-sizing: border-box;
-        outline: none;
-        transition: filter .2s ease;
-        &.danger {
-            background-color: $red;
-        }
-        &.success {
-            background-color: $green;
-        }
-        &:not(:disabled) {
-            cursor: pointer;
-            &:hover {
-                filter: brightness(115%);
-            }
-            &:active {
-                transition: .001s;
-                filter: brightness(100%);
-            }
-        }
-        &:disabled {
-            opacity: .4;
-        }
-        &.icon {
-            min-width: 40px;
-            padding-left: 12px;
-            padding-right: 12px;
-            text-align: center;
+    .formHeader {
+      flex-direction: column;
 
-            i {
-                margin: 0;
-            }
-        }
-
-        i {
-            margin-right: 4px;
-        }
+      .headerText {
+        font-size: 20px;
+        line-height: 24px;
+        text-align: center;
+        margin-bottom: 10px;
+      }
     }
-    .walletBlock {
-        display: flex;
-        width: 100%;
-        border-radius: 10px;
-        padding: 10px;
-        background: $white;
-        border: 1px solid #E1E4E8;
-        box-sizing: border-box;
+    .formFooter {
+      .leftSide .infoItem {
+        padding: 0 8px;
 
-        .leftSide {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            text-align: left;
-            padding-right: 5px;
-            box-sizing: border-box;
-            font-weight: 500;
-            font-family: $firaSansCondensed;
-
-            .headline {
-                color: $dark;
-                font-size: 14px;
-            }
-            .address {
-                color: #5D768E;
-                font-size: 12px;
-                line-height: 14px;
-                padding-top: 2px;
-            }
+        .infoLabel {
+          font-size: 14px;
         }
-        .rightSide {
-            display: flex;
-            & > * {
-                &:not(:last-child) {
-                    margin-right: 5px;
-                }
-            }
+        .infoValue {
+          font-size: 12px;
         }
-
-        @media (max-width: 768px) {
-            flex-direction: column;
-
-            .leftSide {
-                margin-bottom: 10px;
-                text-align: center;
-                white-space: pre-line;
-                word-break: break-word;
-            }
-            .rightSide {
-                justify-content: center;
-            }
-        }
+      }
     }
-    .hintBlock {
-        display: flex;
-        width: 100%;
-        min-height: 20px;
-        margin-bottom: 5px;
-        flex-wrap: nowrap;
-        align-items: center;
-        color: $violet;
+  }
+}
+.customBtn {
+  display: block;
+  background-color: $violet;
+  font-weight: 600;
+  color: $white;
+  font-size: 16px;
+  font-family: $sourceSansPro;
+  white-space: nowrap;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 7px 12px;
+  border: none;
+  box-sizing: border-box;
+  outline: none;
+  transition: filter 0.2s ease;
+  &.danger {
+    background-color: $red;
+  }
+  &.success {
+    background-color: $green;
+  }
+  &:not(:disabled) {
+    cursor: pointer;
+    &:hover {
+      filter: brightness(115%);
+    }
+    &:active {
+      transition: 0.001s;
+      filter: brightness(100%);
+    }
+  }
+  &:disabled {
+    opacity: 0.4;
+  }
+  &.icon {
+    min-width: 40px;
+    padding-left: 12px;
+    padding-right: 12px;
+    text-align: center;
 
-        .icon {
-            width: 20px;
-            margin-right: 10px;
-            font-size: 18px;
-            text-align: center;
-        }
-        .text {
-            font-family: $openSans;
-            font-weight: 400;
-            text-align: left;
-            font-size: 11px;
-            line-height: 14px;
+    i {
+      margin: 0;
+    }
+  }
 
-            b {
-                font-weight: 600;
-            }
-        }
+  i {
+    margin-right: 4px;
+  }
+}
+.walletBlock {
+  display: flex;
+  width: 100%;
+  border-radius: 10px;
+  padding: 10px;
+  background: $white;
+  border: 1px solid #e1e4e8;
+  box-sizing: border-box;
+
+  .leftSide {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding-right: 5px;
+    box-sizing: border-box;
+    font-weight: 500;
+    font-family: $firaSansCondensed;
+
+    .headline {
+      color: $dark;
+      font-size: 14px;
+    }
+    .address {
+      color: #5d768e;
+      font-size: 12px;
+      line-height: 14px;
+      padding-top: 2px;
+    }
+  }
+  .rightSide {
+    display: flex;
+    & > * {
+      &:not(:last-child) {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .leftSide {
+      margin-bottom: 10px;
+      text-align: center;
+      white-space: pre-line;
+      word-break: break-word;
+    }
+    .rightSide {
+      justify-content: center;
+    }
+  }
+}
+.hintBlock {
+  display: flex;
+  width: 100%;
+  min-height: 20px;
+  margin-bottom: 5px;
+  flex-wrap: nowrap;
+  align-items: center;
+  color: $violet;
+
+  .icon {
+    width: 20px;
+    margin-right: 10px;
+    font-size: 18px;
+    text-align: center;
+  }
+  .text {
+    font-family: $openSans;
+    font-weight: 400;
+    text-align: left;
+    font-size: 11px;
+    line-height: 14px;
+
+    b {
+      font-weight: 600;
+    }
+  }
+}
+.message {
+  width: 90%;
+  max-width: 590px;
+  margin: 40px auto;
+  border: 1px solid #e1e4e8;
+  padding: 10px 12px;
+  border-radius: 5px;
+  box-sizing: border-box;
+
+  .messageHeadline {
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-family: $firaSansCondensed;
+    font-weight: 500;
+    color: $violet;
+    margin-bottom: 5px;
+    &.danger {
+      color: $red;
+    }
+    &.success {
+      color: $green;
+    }
+
+    i {
+      margin-right: 5px;
+    }
+  }
+  .messageContent {
+    width: 100%;
+    padding-left: 40px;
+    box-sizing: border-box;
+
+    & > * {
+      &:not(:last-child) {
+        margin: 10px 0;
+      }
+    }
+  }
+  .messageText {
+    font-size: 16px;
+    font-family: $firaSansCondensed;
+    font-weight: 300;
+    color: $dark;
+
+    a {
+      color: $violet;
+      text-decoration: none;
+      font-weight: 700;
+    }
+  }
+  .message {
+    width: 100%;
+    margin: 0;
+
+    .messageHeadline {
+      font-size: 18px;
+    }
+    .messageText {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin: 20px auto;
+
+    .messageContent {
+      padding-left: 20px;
+    }
+    .messageHeadline {
+      font-size: 18px;
+      line-height: 20px;
+    }
+    .messageText {
+      font-size: 14px;
     }
     .message {
-        width: 90%;
-        max-width: 590px;
-        margin: 40px auto;
-        border: 1px solid #E1E4E8;
-        padding: 10px 12px;
-        border-radius: 5px;
-        box-sizing: border-box;
-
-        .messageHeadline {
-            display: flex;
-            align-items: center;
-            font-size: 20px;
-            font-family: $firaSansCondensed;
-            font-weight: 500;
-            color: $violet;
-            margin-bottom: 5px;
-            &.danger {
-                color: $red;
-            }
-            &.success {
-                color: $green;
-            }
-
-            i {
-                margin-right: 5px;
-            }
-        }
-        .messageContent {
-            width: 100%;
-            padding-left: 40px;
-            box-sizing: border-box;
-
-            & > * {
-                &:not(:last-child) {
-                    margin: 10px 0;
-                }
-            }
-        }
-        .messageText {
-            font-size: 16px;
-            font-family: $firaSansCondensed;
-            font-weight: 300;
-            color: $dark;
-            
-            a {
-                color: $violet;
-                text-decoration: none;
-                font-weight: 700;
-            }
-        }
-        .message {
-            width: 100%;
-            margin: 0;
-
-            .messageHeadline {
-                font-size: 18px;
-            }
-            .messageText {
-                font-size: 14px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            margin: 20px auto;
-
-            .messageContent {
-                padding-left: 20px;
-            }
-            .messageHeadline {
-                font-size: 18px;
-                line-height: 20px;
-            }
-            .messageText {
-                font-size: 14px;
-            }
-            .message {
-                .messageHeadline {
-                    font-size: 16px;
-                    line-height: 18px;
-                }
-                .messageText {
-                    font-size: 12px;
-                }
-            }
-        }
+      .messageHeadline {
+        font-size: 16px;
+        line-height: 18px;
+      }
+      .messageText {
+        font-size: 12px;
+      }
     }
-    .field {
-        width: 100%;
-        height: 60px;
-        border-radius: 5px;
-        background-color: $white;
-        padding: 10px;
-        box-sizing: border-box;
-        overflow: hidden;
-        &.loading {
-            padding: 0;
+  }
+}
+.field {
+  width: 100%;
+  height: 60px;
+  border-radius: 5px;
+  background-color: $white;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  &.loading {
+    padding: 0;
 
-            .filedLoader {
-                height: 8px;
-            }
-            .fieldContent {
-                height: 52px;
-                padding: 5px 10px;
-            }
+    .filedLoader {
+      height: 8px;
+    }
+    .fieldContent {
+      height: 52px;
+      padding: 5px 10px;
+    }
+  }
+
+  .filedLoader {
+    width: 100%;
+    height: 0;
+    border-radius: 5px 5px 0 0;
+    background-color: #b8b2eb;
+    transition: height 0.3s ease;
+
+    .filedLoaderProgress {
+      width: 10%;
+      height: 100%;
+      background-color: $violet;
+      transition: width 0.2s ease;
+    }
+  }
+  .fieldContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .leftSide,
+    .rightSide {
+      height: 100%;
+      width: max-content;
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+
+      & > * {
+        &:not(:last-child) {
+          margin-right: 5px;
         }
+      }
+    }
+    .token {
+      display: flex;
+      align-items: center;
+      padding-right: 5px;
+      transition: opacity 0.3s ease;
+      &.disabled {
+        opacity: 0.5;
+      }
 
-        .filedLoader {
-            width: 100%;
-            height: 0;
-            border-radius: 5px 5px 0 0;
-            background-color: #B8B2EB;
-            transition: height .3s ease;
-
-            .filedLoaderProgress {
-                width: 10%;
-                height: 100%;
-                background-color: $violet;
-                transition: width .2s ease;
-            }
+      img {
+        display: block;
+        height: 20px;
+        width: auto;
+        margin-right: 3px;
+      }
+      span {
+        font-weight: 600;
+        font-size: 18px;
+        font-family: $openSans;
+        text-align: left;
+        color: #3c4257;
+        white-space: nowrap;
+      }
+    }
+    .totalPrice {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      &.block {
+        flex-direction: column;
+        justify-content: center;
+        .main,
+        .secondary,
+        .label {
+          text-align: center;
         }
-        .fieldContent {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: space-between;
+      }
+      &.danger {
+        .main,
+        .secondary {
+          color: $red;
+        }
+      }
+      &.success {
+        .main,
+        .secondary {
+          color: $green;
+        }
+      }
 
-            .leftSide,.rightSide {
-                height: 100%;
-                width: max-content;
-                display: flex;
-                flex-wrap: nowrap;
-                align-items: center;
+      .label {
+        font-family: $firaSans;
+        font-weight: 400;
+        font-size: 9px;
+        line-height: 12px;
+        color: #8d9aac;
+        text-align: left;
+        &.danger {
+          color: $red;
+        }
+        &.success {
+          color: $green;
+        }
+      }
+      .main {
+        font-weight: 600;
+        font-size: 18px;
+        font-family: $openSans;
+        text-align: left;
+        color: $violet;
+      }
+      .secondary {
+        font-weight: 300;
+        font-size: 12px;
+        line-height: 12px;
+        font-family: $firaSans;
+        color: #4e529a;
+        text-align: left;
+        margin-left: 5px;
+      }
+      .underline {
+        text-align: center;
+        font-size: 9px;
+        line-height: 10px;
+        font-weight: 400;
+        font-family: $firaSansCondensed;
+      }
+    }
+    .numberInputContainer {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
 
-                & > * {
-                    &:not(:last-child) {
-                        margin-right: 5px;
-                    }
-                }
-            }
-            .token {
-                display: flex;
-                align-items: center;
-                padding-right: 5px;
-                transition: opacity .3s ease;
-                &.disabled {
-                    opacity: .5;
-                }
-
-                img {
-                    display: block;
-                    height: 20px;
-                    width: auto;
-                    margin-right: 3px;
-                }
-                span {
-                    font-weight: 600;
-                    font-size: 18px;
-                    font-family: $openSans;
-                    text-align: left;
-                    color: #3C4257;
-                    white-space: nowrap;
-                }
-            }
-            .totalPrice {
-                display: flex;
-                align-items: center;
-                white-space: nowrap;
-                &.block {
-                    flex-direction: column;
-                    justify-content: center;
-                    .main,.secondary,.label {
-                        text-align: center;
-                    }
-                }
-                &.danger {
-                    .main,.secondary {
-                        color: $red;
-                    }
-                }
-                &.success {
-                    .main,.secondary {
-                        color: $green;
-                    }
-                }
-
-                .label {
-                    font-family: $firaSans;
-                    font-weight: 400;
-                    font-size: 9px;
-                    line-height: 12px;
-                    color: #8D9AAC;
-                    text-align: left;
-                    &.danger {
-                        color: $red;
-                    }
-                    &.success {
-                        color: $green;
-                    }
-                }
-                .main {
-                    font-weight: 600;
-                    font-size: 18px;
-                    font-family: $openSans;
-                    text-align: left;
-                    color: $violet;
-                }
-                .secondary {
-                    font-weight: 300;
-                    font-size: 12px;
-                    line-height: 12px;
-                    font-family: $firaSans;
-                    color: #4E529A;
-                    text-align: left;
-                    margin-left: 5px;
-                }
-                .underline {
-                    text-align: center;
-                    font-size: 9px;
-                    line-height: 10px;
-                    font-weight: 400;
-                    font-family: $firaSansCondensed;
-                }
-            }
-            .numberInputContainer {
-                display: flex;
-                flex-wrap: nowrap;
-                align-items: center;
-
-                /* .numberInputError {
+      /* .numberInputError {
                     margin-right: 5px;
                     text-align: right;
                     font-size: 14px;
@@ -1090,132 +1099,132 @@ export default {
                     font-family: $firaSansCondensed;
                     max-width: 100px;
                 } */
-                .numberInput {
-                    display: grid;
-                    grid-template-columns: 18px 1fr 18px;
-                    grid-template-rows: 100%;
-                    align-items: center;
-                    width: 120px;
-                    height: 47px;
-                    border-radius: 5px;
-                    background-color: $lightGray;
-                    padding: 10px 6px;
-                    box-sizing: border-box;
+      .numberInput {
+        display: grid;
+        grid-template-columns: 18px 1fr 18px;
+        grid-template-rows: 100%;
+        align-items: center;
+        width: 120px;
+        height: 47px;
+        border-radius: 5px;
+        background-color: $lightGray;
+        padding: 10px 6px;
+        box-sizing: border-box;
 
-                    .iconHandle {
-                        width: 100%;
-                        text-align: center;
-                        font-size: 18px;
-                        color: $violet;
-                        transition: color .2s ease;
-                        cursor: pointer;
-                        &.disabled {
-                            opacity: .5;
-                            pointer-events: none;
-                        }
-                        &.mobile {
-                            display: none;
-                        }
-                        &:hover {
-                            color: lighten($color: $violet, $amount: 15);
-                        }
-                        &:active {
-                            transition: .001s;
-                            color: $violet;
-                        }
-                    }
-                    .numbers {
-                        width: 100%;
-                        height: max-content;
-                        padding-bottom: 3px;
+        .iconHandle {
+          width: 100%;
+          text-align: center;
+          font-size: 18px;
+          color: $violet;
+          transition: color 0.2s ease;
+          cursor: pointer;
+          &.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+          }
+          &.mobile {
+            display: none;
+          }
+          &:hover {
+            color: lighten($color: $violet, $amount: 15);
+          }
+          &:active {
+            transition: 0.001s;
+            color: $violet;
+          }
+        }
+        .numbers {
+          width: 100%;
+          height: max-content;
+          padding-bottom: 3px;
 
-                        input {
-                            width: 100%;
-                            height: 16px;
-                            line-height: 16px;
-                            font-size: 16px;
-                            background: none;
-                            padding: 0;
-                            border: none;
-                            text-align: center;
-                            color: $violet;
-                            font-family: $firaSans;
-                            font-weight: 600;
-                            outline: none;
-                        }
-                        .price {
-                            font-family: $firaSans;
-                            font-weight: 300;
-                            color: #8D9AAC;
-                            text-align: center;
-                            font-size: 12px;
-                            line-height: 12px;
-                        }
-                    }
-                }
-            }
-            .statusBlock {
-                display: flex;
-                align-items: center;
-                color: $violet;
-                &.success {
-                    color: $green;
-                }
-                &.danger {
-                    color: $red;
-                }
+          input {
+            width: 100%;
+            height: 16px;
+            line-height: 16px;
+            font-size: 16px;
+            background: none;
+            padding: 0;
+            border: none;
+            text-align: center;
+            color: $violet;
+            font-family: $firaSans;
+            font-weight: 600;
+            outline: none;
+          }
+          .price {
+            font-family: $firaSans;
+            font-weight: 300;
+            color: #8d9aac;
+            text-align: center;
+            font-size: 12px;
+            line-height: 12px;
+          }
+        }
+      }
+    }
+    .statusBlock {
+      display: flex;
+      align-items: center;
+      color: $violet;
+      &.success {
+        color: $green;
+      }
+      &.danger {
+        color: $red;
+      }
 
-                .icon {
-                    width: 25px;
-                    font-size: 16px;
-                    margin-right: 3px;
-                    text-align: center;
-                    transform: translateY(-1px);
-                }
-                .text {
-                    font-weight: 400;
-                    font-size: 14px;
-                    font-family: $firaSansCondensed;
-                    text-align: left;
-                }
-            }
+      .icon {
+        width: 25px;
+        font-size: 16px;
+        margin-right: 3px;
+        text-align: center;
+        transform: translateY(-1px);
+      }
+      .text {
+        font-weight: 400;
+        font-size: 14px;
+        font-family: $firaSansCondensed;
+        text-align: left;
+      }
+    }
 
-            @media (max-width: 768px) {
-                .token {
-                    flex-direction: column;
-                    padding: 0 4px;
-                    box-sizing: border-box;
+    @media (max-width: 768px) {
+      .token {
+        flex-direction: column;
+        padding: 0 4px;
+        box-sizing: border-box;
 
-                    img {
-                        height: 15px;
-                        margin-right: 0;
-                    }
-                    span {
-                        text-align: center;
-                        font-size: 12px;
-                    }
-                }
-                .totalPrice {
-                    flex-direction: column;
+        img {
+          height: 15px;
+          margin-right: 0;
+        }
+        span {
+          text-align: center;
+          font-size: 12px;
+        }
+      }
+      .totalPrice {
+        flex-direction: column;
 
-                    .main {
-                        font-size: 16px;
-                        line-height: 16px;
-                        text-align: center;
-                    }
-                    .secondary {
-                        font-size: 9px;
-                        line-height: 10px;
-                    }
-                }
-                .statusBlock {
-                    .text {
-                        font-size: 12px;
-                        line-height: 15px;
-                    }
-                }
-                .numberInputContainer {
-                    /* .numberInputError {
+        .main {
+          font-size: 16px;
+          line-height: 16px;
+          text-align: center;
+        }
+        .secondary {
+          font-size: 9px;
+          line-height: 10px;
+        }
+      }
+      .statusBlock {
+        .text {
+          font-size: 12px;
+          line-height: 15px;
+        }
+      }
+      .numberInputContainer {
+        /* .numberInputError {
                         font-size: 11px;
                         line-height: 14px;
                         max-width: 65px;
@@ -1223,33 +1232,33 @@ export default {
                             max-width: 50px;
                         }
                     } */
-                    .numberInput {
-                        width: 66px;
-                        grid-template-columns: 1fr 12px;
+        .numberInput {
+          width: 66px;
+          grid-template-columns: 1fr 12px;
 
-                        .iconHandle {
-                            display: none;
-                            &.mobile {
-                                display: block;
-                                font-size: 12px;
-                            }
-                        }
-                        .numbers {
-                            input {
-                                font-size: 12px;
-                                line-height: 12px;
-                                height: 12px;
-                                text-align: left;
-                            }
-                            .price {
-                                font-size: 9px;
-                                text-align: left;
-                                white-space: nowrap;
-                            }
-                        }
-                    }
-                }
+          .iconHandle {
+            display: none;
+            &.mobile {
+              display: block;
+              font-size: 12px;
             }
+          }
+          .numbers {
+            input {
+              font-size: 12px;
+              line-height: 12px;
+              height: 12px;
+              text-align: left;
+            }
+            .price {
+              font-size: 9px;
+              text-align: left;
+              white-space: nowrap;
+            }
+          }
         }
+      }
     }
+  }
+}
 </style>

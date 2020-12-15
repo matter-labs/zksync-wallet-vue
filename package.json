@@ -1,14 +1,16 @@
 {
-  "name": "flyid",
-  "version": "1.0.0",
-  "description": "FlyID Web App",
-  "author": "Fruitware",
-  "private": true,
-  "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
+  "author": "Matter Labs",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "dependencies": {
     "@nuxtjs/auth": "^4.9.1",
@@ -17,25 +19,123 @@
     "@nuxtjs/dotenv": "latest",
     "@nuxtjs/pwa": "latest",
     "@nuxtjs/toast": "latest",
-    "bnc-onboard": "^1.16.0",
+    "bnc-onboard": "latest",
     "dotenv": "latest",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.0.22",
     "joi-browser": "latest",
     "lottie-web": "^5.7.5",
     "moment": "^2.29.1",
-    "nuxt": "^2.14.3",
+    "nuxt": "^2.14.11",
     "nuxt-i18n": "^6.8.1",
+    "vue": "^2.6.12",
     "vue-qrcode": "^0.3.5",
     "vue-scrollto": "^2.17.1",
     "web3": "^1.3.0",
     "zksync": "^0.8.3"
   },
+  "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "devDependencies": {
+    "eslint-plugin-nuxt": "^2.0.0",
+    "lodash": "4.17.20",
     "@inkline/nuxt": "^2.3.5",
+    "@nuxt/telemetry": "^1.3.0",
+    "@nuxt/types": "^2.14.11",
     "@nuxtjs/style-resources": "^1.0.0",
+    "eslint": "^7.15.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-prettier-vue": "^2.1.1",
+    "eslint-plugin-vue": "^7.0.0",
     "fs-extra": "latest",
     "node-sass": "latest",
+    "prettier": "^2.2.1",
     "sass-loader": "latest"
-  }
+  },
+  "eslintConfig": {
+    "extends": "plugin:vue/recommended"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint": "eslint --ext .ts,.js,.vue .",
+  "lint-staged": {
+    "*.{css,scss}": "npm run lint-css",
+    "*.{ts,tsx}": [
+      "npm run lint-ts",
+      "npm run format"
+    ]
+  },
+  "name": "zksync-wallet",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "test": "echo \"Not implemented.\"",
+    "format": "prettier --write",
+    "lint-ts": "eslint --fix \"**/*.ts\"",
+    "lint-css": "stylelint --fix \"**/*.scss\"",
+    "deploy_hosting": "firebase deploy --only hosting --project ${FIREBASE_PROJECT:?firebase project name not set or empty}",
+    "audit_dependencies": "npm audit --package-lock-only --audit-level critical --json | npm-audit-html --output audit.html",
+    "check_licenses": "license-checker --json > licenses.json"
+  },
+  "stylelint": {
+    "extends": [
+      "stylelint-config-recommended",
+      "stylelint-config-rational-order"
+    ],
+    "plugins": [
+      "stylelint-order",
+      "stylelint-scss",
+      "stylelint-config-rational-order/plugin",
+      "stylelint-high-performance-animation",
+      "stylelint-declaration-use-variable"
+    ],
+    "rules": {
+      "no-empty-source": [
+        true,
+        {
+          "severity": "warning"
+        }
+      ],
+      "plugin/no-low-performance-animation-properties": [
+        true,
+        {
+          "severity": "warning"
+        }
+      ],
+      "sh-waqar/declaration-use-variable": [
+        [
+          "/color/",
+          "font-size",
+          "font-family",
+          "font-weight"
+        ]
+      ],
+      "order/properties-order": [],
+      "plugin/rational-order": [
+        true,
+        {
+          "border-in-box-model": false,
+          "empty-line-between-groups": false
+        }
+      ],
+      "selector-type-no-unknown": [
+        true,
+        {
+          "ignore": [
+            "custom-elements"
+          ]
+        }
+      ],
+      "no-descending-specificity": true,
+      "at-rule-no-unknown": null,
+      "scss/at-rule-no-unknown": true
+    }
+  },
+  "version": "2.0.0-beta"
 }

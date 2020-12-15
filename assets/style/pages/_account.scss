@@ -56,7 +56,7 @@
                     .rightSide {
                         display: flex;
                         align-items: center;
-                        
+
                         .total {
                             font-size: 18px;
                             padding-right: 10px;
@@ -72,7 +72,7 @@
                             line-height: 25px;
                             font-size: 20px;
                             text-align: center;
-            
+
                             .verified {
                                 color: $green;
                             }
@@ -90,7 +90,7 @@
     }
 }
 
-body.inkline { 
+body.inkline {
     &.-light {
         .walletPage .balancesList {
             &::-webkit-scrollbar-thumb {

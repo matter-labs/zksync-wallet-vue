@@ -4,7 +4,7 @@
             <div class="tileHeadline h3">
                 <span>{{symbol}}</span>
                 <i-tooltip>
-                    <i @click="$router.push('/account')" class="fas fa-times"></i>
+                    <i class="fas fa-times" @click="$router.push('/account')"></i>
                     <template slot="body">Close</template>
                 </i-tooltip>
             </div>
@@ -33,42 +33,42 @@
 </template>
 
 <script>
-import transactions from '@/blocks/Transactions.vue';
+import transactions from "@/blocks/Transactions.vue";
 export default {
-    data() {
-        return {
-            token: {},
-            loading: true,
+  components: {
+    transactions,
+  },
+  data() {
+    return {
+      token: {},
+      loading: true,
+    };
+  },
+  computed: {
+    symbol: function () {
+      return this.$route.params.symbol.toUpperCase();
+    },
+  },
+  mounted() {
+    this.getData();
+  },
+  methods: {
+    getData: async function () {
+      this.loading = true;
+      const balances = await this.$store.dispatch("wallet/getzkBalances");
+      let found = false;
+      for (let a = 0; a < balances.length; a++) {
+        if (balances[a].symbol === this.symbol) {
+          this.token = balances[a];
+          found = true;
+          this.loading = false;
+          break;
         }
+      }
+      if (found === false) {
+        await this.$router.push("/account");
+      }
     },
-    components: {
-        transactions
-    },
-    computed: {
-        symbol: function() {
-            return this.$route.params.symbol.toUpperCase();
-        }
-    },
-    methods: {
-        getData: async function() {
-            this.loading=true;
-            const balances = await this.$store.dispatch('wallet/getzkBalances');
-            let found = false;
-            for (let a = 0; a < balances.length; a++) {
-                if(balances[a].symbol===this.symbol) {
-                    this.token=balances[a];
-                    found=true;
-                    this.loading=false;
-                    break;
-                }
-            }
-            if(found===false) {
-                this.$router.push('/account');
-            }
-        }
-    },
-    mounted() {
-        this.getData();
-    },
-}
+  },
+};
 </script>

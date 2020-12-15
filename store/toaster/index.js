@@ -5,7 +5,7 @@
  */
 export const state = () => ({
   toasterIsActive: false,
-})
+});
 
 export const mutations = {
   /**
@@ -13,35 +13,35 @@ export const mutations = {
    * @param state
    * @param newToasterState
    */
-  setState (state, newToasterState) {
-    state.toasterIsActive = newToasterState
+  setState(state, newToasterState) {
+    state.toasterIsActive = newToasterState;
   },
-}
+};
 
 export const getters = {
-  isActive (state) {
-    return state.toasterIsActive
+  isActive(state) {
+    return state.toasterIsActive;
   },
-}
+};
 
 export const actions = {
   /**
    * Common method to render a toaster notification
    */
   showToaster: function ({ commit }, { messageText }) {
-    commit('setState', true)
+    commit("setState", true);
     this.$toast.error(messageText, {
       icon: {
-        name: 'fa-times-circle',
+        name: "fa-times-circle",
       },
-      position: 'bottom-right',
+      position: "bottom-right",
       action: {
-        text: 'OK',
+        text: "OK",
         onClick: (e, toastObject) => {
-          toastObject.goAway(100)
+          toastObject.goAway(100);
         },
       },
-    })
+    });
   },
 
   /**
@@ -52,7 +52,7 @@ export const actions = {
    * @returns {Promise<void>}
    * @constructor
    */
-  ERROR ({ dispatch }, messageText) {
-    dispatch('showToaster', { messageText })
+  ERROR({ dispatch }, messageText) {
+    dispatch("showToaster", { messageText });
   },
-}
+};

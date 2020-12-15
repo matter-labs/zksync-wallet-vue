@@ -1,6 +1,6 @@
 <template>
     <div class="fieldGroup">
-        <div class="label" v-if="label">
+        <div v-if="label" class="label">
             {{label}}
         </div>
         <div class="fieldsSlot">
@@ -11,12 +11,12 @@
 
 <script>
 export default {
-    props: {
-        label: {
-            type: String,
-            default: '',
-            required: false
-        }
+  props: {
+    label: {
+      type: String,
+      default: "",
+      required: false,
     },
-}
+  },
+};
 </script>

@@ -29,7 +29,7 @@
                 Rename wallet
             </template>
             <div>
-                <i-input size="lg" placeholder="Name" type="name" v-model="walletName" maxlength="18" />
+                <i-input v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" />
                 <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
             </div>
         </i-modal>
@@ -61,68 +61,67 @@
 </template>
 
 <script>
-import VueQrcode from 'vue-qrcode'
+import VueQrcode from "vue-qrcode";
 
-import logo from '@/blocks/Logo.vue';
-import walletAddress from '@/components/walletAddress.vue';
-import userImg from '@/components/userImg.vue';
-import walletData from '@/plugins/walletData.js';
+import logo from "@/blocks/Logo.vue";
+import walletAddress from "@/components/walletAddress.vue";
+import userImg from "@/components/userImg.vue";
+import walletData from "@/plugins/walletData.js";
 export default {
-    data() {
-        return {
-            infoModal: false,
-            renameWalletModal: false,
-            walletName: '',
+  components: {
+    logo,
+    userImg,
+    walletAddress,
+    VueQrcode,
+  },
+  data() {
+    return {
+      infoModal: false,
+      renameWalletModal: false,
+      walletName: "",
+    };
+  },
+  computed: {
+    walletAddressFull: function () {
+      return walletData.get().syncWallet.address();
+    },
+  },
+  watch: {
+    renameWalletModal: {
+      immediate: true,
+      handler(val) {
+        const walletName = window.localStorage.getItem(this.walletAddressFull);
+        if (walletName && walletName !== this.walletAddressFull) {
+          this.walletName = walletName;
+        } else {
+          let address = this.walletAddressFull;
+          if (address.length > 16) {
+            address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
+          }
+          this.walletName = address;
         }
+      },
     },
-    components: {
-        logo,
-        userImg,
-        walletAddress,
-        VueQrcode
+  },
+  methods: {
+    logout: async function () {
+      this.infoModal = false;
+      await this.$store.dispatch("wallet/logout");
+      await this.$router.push("/");
     },
-    computed: {
-        walletAddressFull: function() {
-            return walletData.get().syncWallet.address();
-        },
+    renameWalletOpen: function () {
+      this.infoModal = false;
+      this.renameWalletModal = true;
+      this.$nextTick(() => {
+        this.walletName = "";
+      });
     },
-    watch: {
-        renameWalletModal: {
-            immediate: true,
-            handler(val) {
-                const walletName = window.localStorage.getItem(this.walletAddressFull);
-                if(walletName && walletName!==this.walletAddressFull) {
-                    this.walletName=walletName;
-                }
-                else {
-                    var address = this.walletAddressFull;
-                    if(address.length>16){
-                        address = address.substr(0,11)+'...'+address.substr(address.length-5,address.length-1);
-                    }
-                    this.walletName=address;
-                }
-            }
-        }
+    renameWallet: function () {
+      this.renameWalletModal = false;
+      if (this.walletName.length > 0 && this.walletName !== this.walletAddressFull) {
+        window.localStorage.setItem(this.walletAddressFull, this.walletName);
+      }
     },
-    methods: {
-        logout: async function() {
-            this.infoModal=false;
-            await this.$store.dispatch('wallet/logout');
-            this.$router.push('/');
-        },
-        renameWalletOpen: function() {
-            this.infoModal=false;
-            this.renameWalletModal=true;
-            this.$nextTick(()=>{
-                this.walletName='';
-            });
-        },
-        renameWallet: function() {
-            this.renameWalletModal=false;
-            if(this.walletName.length>0 && this.walletName!==this.walletAddressFull) {
-                window.localStorage.setItem(this.walletAddressFull, this.walletName);
-            }
-        }
-    },
-}
+  },
+};
 </script>

@@ -3,19 +3,19 @@
 </template>
 
 <script>
-import blockie from 'ethereum-blockies-base64';
+import blockie from "ethereum-blockies-base64";
 export default {
   props: {
     wallet: {
       type: String,
-      default: '',
+      default: "",
       required: true,
-    }
+    },
   },
   computed: {
-    walletImg: function() {
+    walletImg: function () {
       return blockie(this.wallet);
     },
-  }
-}
+  },
+};
 </script>

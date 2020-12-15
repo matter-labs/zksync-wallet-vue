@@ -14,7 +14,7 @@
         <div class="tileBlock">
             <div class="tileHeadline h3">
                 <span>My wallet</span>
-                <i @click="walletInfoModal=true" class="fas fa-question"></i>
+                <i class="fas fa-question" @click="walletInfoModal=true"></i>
             </div>
             <wallet-address :wallet="walletAddress" />
         </div>
@@ -23,24 +23,24 @@
 </template>
 
 <script>
-import walletData from '@/plugins/walletData.js';
-import walletAddress from '@/components/walletAddress.vue';
-import balances from '@/blocks/Balances.vue';
+import walletData from "@/plugins/walletData.js";
+import walletAddress from "@/components/walletAddress.vue";
+import balances from "@/blocks/Balances.vue";
 export default {
-    data() {
-        return {
-            walletInfoModal: false,
-            balanceInfoModal: false,
-        }
+  components: {
+    walletAddress,
+    balances,
+  },
+  data() {
+    return {
+      walletInfoModal: false,
+      balanceInfoModal: false,
+    };
+  },
+  computed: {
+    walletAddress: function () {
+      return walletData.get().syncWallet.address();
     },
-    components: {
-        walletAddress,
-        balances
-    },
-    computed: {
-        walletAddress: function() {
-            return walletData.get().syncWallet.address();
-        }
-    },
-}
+  },
+};
 </script>

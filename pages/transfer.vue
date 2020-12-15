@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import Transaction from '@/blocks/Transaction.vue';
+import Transaction from "@/blocks/Transaction.vue";
 export default {
-    components: {
-        Transaction
-    }
-}
+  components: {
+    Transaction,
+  },
+};
 </script>

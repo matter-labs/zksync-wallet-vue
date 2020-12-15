@@ -23,14 +23,14 @@
                 </amount-input>
             </i-row>
             <i-row class="_margin-top-2">
-                <amount-input placeholder="14.3400" :min="14.3400" :max="20.321" v-model="testInput">
+                <amount-input v-model="testInput" placeholder="14.3400" :min="14.3400" :max="20.321">
                     <template slot="pre">
                         LINK
                     </template>
                 </amount-input>
             </i-row>
             <i-row class="_margin-top-2">
-                <amount-input placeholder="14.3400" success v-model="testInput">
+                <amount-input v-model="testInput" placeholder="14.3400" success>
                     <template slot="pre">
                         LINK
                     </template>
@@ -69,7 +69,7 @@
             <div class="_margin-top-4">
                 <i-row>
                     <fields-group label="Asset / Amount">
-                        <amount-input placeholder="14.3400" disabled loading v-model="testInput">
+                        <amount-input v-model="testInput" placeholder="14.3400" disabled loading>
                             <template slot="pre">
                                 LINK
                             </template>
@@ -95,20 +95,20 @@
 </template>
 
 <script>
-import amountInput from '@/components/custom/input.vue';
-import fieldsGroup from '@/components/custom/fieldsGroup.vue';
-import alert from '@/components/custom/alert.vue';
+import amountInput from "@/components/custom/input.vue";
+import fieldsGroup from "@/components/custom/fieldsGroup.vue";
+import alert from "@/components/custom/alert.vue";
 export default {
-    layout: 'index',
-    data() {
-        return {
-            testInput: 10.000
-        }
-    },
-    components: {
-        amountInput,
-        fieldsGroup,
-        alert
-    }
-}
+  components: {
+    amountInput,
+    fieldsGroup,
+    alert,
+  },
+  layout: "index",
+  data() {
+    return {
+      testInput: 10.0,
+    };
+  },
+};
 </script>

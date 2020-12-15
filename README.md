@@ -28,13 +28,13 @@ It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, publis
 
 ✅ **Ultra-low transaction fees (~ $0.001 per transfer)**
 
-used to unleash the power of zkSync L2 operations to access L2 zkSync features on mainnet ([learn more]())
+zkWallet was created to unleash the power of zkSync L2 operations and give anyone access to L2 zkSync features on mainnet. Visit zksync.io to **[learn more](https://zksync.io/)**
 
 ## Build Setup
 
 ``` bash
-# install dependencies
-$ npm install
+# install dependencies (clear install)
+$ npm install --cache /tmp/empty-cache
 
 # serve with hot reload at localhost:3000
 $ npm run dev
@@ -47,10 +47,23 @@ $ npm run start
 $ npm run generate
 ```
 
+For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+---
+
+## Surge.sh deployment process
+
+As used by alpha-version is deployed to surge.sh 
+
+``` sh
+$ sh cli-update.sh
+``` 
+
 ## Used software
 
 * [Nuxt.js docs](https://nuxtjs.org)
 * [Vue.js v.2.*](https://vuejs.org)
+* ...
 
 ## License
 

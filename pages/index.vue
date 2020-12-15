@@ -62,41 +62,44 @@
 </template>
 
 <script>
-import logo from '@/blocks/Logo.vue';
+import logo from "@/blocks/Logo.vue";
 
 export default {
-    layout: 'index',
-    components: {
-        logo
+  components: {
+    logo,
+  },
+  layout: "index",
+  data() {
+    return {
+      lockVisible: false,
+      contactInfoShown: false,
+    };
+  },
+  methods: {
+    burnerWallet: function () {
+      this.$router.push("/account");
     },
-    data() {
-        return {
-            lockVisible: false,
-            contactInfoShown: false,
-        }
-    },
-    methods: {
-        burnerWallet: function() {
-            this.$router.push('/account');
-        },
-        customWallet: async function() {
-            const onboard = this.$store.getters['wallet/getOnboard'];
-            onboard.config({
-                darkMode: this.$inkline.config.variant === 'light' ? false : true
-            });
-            const walletSelect = await onboard.walletSelect();
-            if(walletSelect===false){return}
-            const walletCheck = await onboard.walletCheck();
-            if(walletCheck===false){return}
+    customWallet: async function () {
+      const onboard = this.$store.getters["wallet/getOnboard"];
+      onboard.config({
+        darkMode: this.$inkline.config.variant !== "light",
+      });
+      const walletSelect = await onboard.walletSelect();
+      if (walletSelect === false) {
+        return;
+      }
+      const walletCheck = await onboard.walletCheck();
+      if (walletCheck === false) {
+        return;
+      }
 
-            const refreshWalletTry = await this.$store.dispatch('wallet/walletRefresh');
-            if(refreshWalletTry!==true) {
-                await this.$store.dispatch('wallet/logout');
-            }
-            else {
-                this.$router.push('/account');
-            }
-        }
+      const refreshWalletTry = await this.$store.dispatch("wallet/walletRefresh");
+      if (refreshWalletTry !== true) {
+        await this.$store.dispatch("wallet/logout");
+      } else {
+        await this.$router.push("/account");
+      }
     },
-}
+  },
+};
 </script>

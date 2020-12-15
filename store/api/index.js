@@ -1,8 +1,8 @@
-export const state = () => ({})
+export const state = () => ({});
 
-export const mutations = {}
+export const mutations = {};
 
-export const getters = {}
+export const getters = {};
 
 export const actions = {
   /* Auth */
@@ -18,4 +18,4 @@ export const actions = {
       return registerResult;
     }
   }, */
-}
+};
