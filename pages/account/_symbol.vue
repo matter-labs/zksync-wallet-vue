@@ -25,7 +25,7 @@
                     </div>
                     <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
                 </div>
-                <i-button block class="_margin-top-1" size="lg" variant="secondary" to="/deposit"><i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer</i-button>
+                <i-button block class="_margin-top-1" size="lg" variant="secondary" to="/transfer"><i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer</i-button>
             </div>
         </div>
         <transactions />

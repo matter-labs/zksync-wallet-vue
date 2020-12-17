@@ -1,6 +1,7 @@
 .transactionsPage {
     .transactionsTile {
         height: calc(100vh - 105px - 110px);
+        min-height: 600px !important;
         display: flex;
         flex-direction: column;
     }
@@ -64,6 +65,9 @@
                 .inProgress {
                     color: $gray;
                 }
+                .rejected {
+                    color: $red;
+                }
             }
             .mainInfo {
                 text-align: left;
@@ -115,7 +119,7 @@
     }
 }
 
-body.inkline { 
+body.inkline {
     &.-light {
         .transactionsPage .transactionsListContainer {
             &::-webkit-scrollbar-thumb {

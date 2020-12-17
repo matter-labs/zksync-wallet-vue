@@ -12,7 +12,7 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: process.env.APP_NAME,
+    title: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.*") + (process.env.APP_CURRENT_NETWORK ? ` |  ETH Network: ${process.env.APP_CURRENT_NETWORK}` : ""),
     titleTemplate: "%s - " + process.env.APP_NAME,
     meta: [
       { charset: "utf-8" },

@@ -1,60 +1,71 @@
 <template>
-    <div class="transactionsPage">
-        <div class="tileBlock transactionsTile">
-            <div class="tileHeadline h3">Transactions</div>
-            <!-- <i-input v-model="search" placeholder="Filter transactions">
-                <i slot="prefix" class="far fa-search"></i>
-            </i-input> -->
-            <div class="transactionsListContainer">
-                <div v-if="loading===true" class="nothingFound">
-                    <i-loader class="_display-block" size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'" />
-                </div>
-                <div v-else-if="transactionsList.length===0" class="nothingFound">
-                    <span>History is empty</span>
-                </div>
-                <div v-for="(item, index) in transactionsList" v-else :key="index" class="transactionItem">
-                    <div class="status">
-                        <i-tooltip>
-                            <i v-if="item.transactionStatus==='Verified'" class="verified far fa-check-double"></i>
-                            <i v-else-if="item.transactionStatus==='Commited'" class="commited far fa-check"></i>
-                            <i v-else-if="item.transactionStatus==='In progress'" class="inProgress fad fa-spinner-third"></i>
-                            <template slot="body">{{item.transactionStatus}}</template>
-                        </i-tooltip>
-                    </div>
-                    <div class="mainInfo">
+  <div class="transactionsPage">
+    <div class="tileBlock transactionsTile">
+      <div class="tileHeadline h3">Transactions</div>
+      <!-- <i-input v-model="search" placeholder="Filter transactions">
+          <em slot="prefix" class="far fa-search"></i>
+      </i-input> -->
+      <div class="transactionsListContainer">
+        <div v-if="loading===true" class="nothingFound">
+          <i-loader class="_display-block" size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+        </div>
+        <div v-else-if="transactionsList.length===0" class="nothingFound">
+          <span>History is empty</span>
+        </div>
+        <div v-for="(item, index) in transactionsList" v-else :key="index" class="transactionItem">
+          <div class="status">
+            <i-tooltip>
+              <em v-if="item.transactionStatus==='Verified'" class="verified far fa-check-double"></em>
+              <em v-else-if="item.transactionStatus==='Commited'" class="commited far fa-check"></em>
+              <em v-else-if="item.transactionStatus==='In progress'" class="inProgress fad fa-spinner-third"></em>
+              <em v-else class="rejected fas fa-times-circle"></em>
+              <template slot="body">{{ item.transactionStatus }}</template>
+            </i-tooltip>
+          </div>
+          <div class="mainInfo">
                         <i-tooltip>
                             <div class="createdAt">{{getTimeAgo(item.created_at)}}</div>
                             <template slot="body">{{getFormatedTime(item.created_at)}}</template>
                         </i-tooltip>
                         <div class="amount">{{getFormatedAmount(item)}}</div>
-                        <div class="token">{{item.tx.priority_op?item.tx.priority_op.token:item.tx.token}}</div>
-                    </div>
-                    <div class="actionInfo">
-                        <div v-if="item.tx.type==='Withdraw'">
-                            <div class="actionType">Withdrawn to:</div>
-                            <div v-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()" class="actionValue">Your L1 account</div>
-                            <nuxt-link v-else class="actionValue" :to="`/contacts?w=${item.tx.to}`">{{getAddressName(item.tx.to)}}</nuxt-link>
-                        </div>
-                        <div v-else-if="item.tx.type==='Deposit'">
-                            <div class="actionType">Deposit to:</div>
-                            <div class="actionValue">Your zkSync account</div>
-                        </div>
-                        <div v-else-if="item.tx.type==='Transfer'">
-                            <div class="actionType">
-                                <span v-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()">Received from:</span>
-                                <span v-else>Sent to:</span>
-                            </div>
-                            <nuxt-link v-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()" class="actionValue" :to="`/contacts?w=${item.tx.from}`">{{getAddressName(item.tx.from)}}</nuxt-link>
-                            <nuxt-link v-else class="actionValue" :to="`/contacts?w=${item.tx.to}`">{{getAddressName(item.tx.to)}}</nuxt-link>
-                        </div>
-                    </div>
-                    <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(item)"><i class="fas fa-external-link"></i></a>
-                </div>
-                <i-button v-if="loadingMore===false && loadMoreAvailable===true" block link size="lg" variant="secondary" @click="loadMore()">Load more</i-button>
-                <i-loader v-else-if="loadingMore===true" class="_display-block _margin-x-auto _margin-y-2" size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'" />
+            <div class="token">{{ item.tx.priority_op ? item.tx.priority_op.token:item.tx.token }}</div>
+          </div>
+          <div class="actionInfo">
+            <div v-if="item.tx.type==='Withdraw'">
+              <div class="actionType">Withdrawn to:</div>
+              <div v-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()" class="actionValue">Your L1
+                account
+              </div>
+              <nuxt-link v-else class="actionValue" :to="`/contacts?w=${item.tx.to}`">{{ getAddressName(item.tx.to) }}
+              </nuxt-link>
             </div>
+            <div v-else-if="item.tx.type==='Deposit'">
+              <div class="actionType">Deposit to:</div>
+              <div class="actionValue">Your zkSync account</div>
+            </div>
+            <div v-else-if="item.tx.type==='Transfer'">
+              <div class="actionType">
+                <span v-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()">Received from:</span>
+                <span v-else>Sent to:</span>
+              </div>
+              <nuxt-link v-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()" class="actionValue"
+                         :to="`/contacts?w=${item.tx.from}`">{{ getAddressName(item.tx.from) }}
+              </nuxt-link>
+              <nuxt-link v-else class="actionValue" :to="`/contacts?w=${item.tx.to}`">{{ getAddressName(item.tx.to) }}
+              </nuxt-link>
+            </div>
+          </div>
+          <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(item)"><i
+              class="fas fa-external-link"></i></a>
         </div>
+        <i-button v-if="loadingMore===false && loadMoreAvailable===true" block link size="lg" variant="secondary"
+                  @click="loadMore()">Load more
+        </i-button>
+        <i-loader v-else-if="loadingMore===true" class="_display-block _margin-x-auto _margin-y-2" size="md"
+                  :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -115,6 +126,9 @@ export default {
       );
     },
     getTransactionStatus: function (transaction) {
+      if (!transaction.success) {
+        return transaction.fail_reason ? transaction.fail_reason : "Rejected";
+      }
       if (transaction.verified) {
         return "Verified";
       } else if (transaction.commited) {
