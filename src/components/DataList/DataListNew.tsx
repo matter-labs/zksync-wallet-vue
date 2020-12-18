@@ -178,9 +178,14 @@ export function DataList<T>({
 
   const handleClaimTokens = () => {
     if (LINKS_CONFIG.network === 'mainnet') {
-      return (store.modalHintMessage = 'MLTTonMainnet'), (store.modalSpecifier = 'modal-hint');
+      return (
+        (store.modalHintMessage = 'MLTTonMainnet'),
+        (store.modalSpecifier = 'modal-hint')
+      );
     }
-    const getTwitted = localStorage.getItem(`twittMade${store.zkWallet?.address()}`);
+    const getTwitted = localStorage.getItem(
+      `twittMade${store.zkWallet?.address()}`,
+    );
     if (!getTwitted) {
       store.modalHintMessage = 'makeTwitToClaim';
       store.modalSpecifier = 'modal-hint';
@@ -244,7 +249,11 @@ export function DataList<T>({
       )}
       {TokensStore.isAccountBalanceNotEmpty && TokensStore.zkBalancesLoaded && setTransactionType && (
         <div className='mywallet-wrapper datalist'>
-          <div className={`mywallet-buttons-container ${TokensStore.tokenPrices?.length ? '' : 'none'}`}>
+            <div
+              className={`mywallet-buttons-container ${
+                TokensStore.tokenPrices?.length ? '' : 'none'
+              }`}
+            >
             <button
               onClick={() => {
                 setTransactionType('deposit');
@@ -286,8 +295,16 @@ export function DataList<T>({
         TokensStore.zkBalancesLoaded &&
         setTransactionType && (
           <>
-            <div className={`mywallet-buttons-container ${TokensStore.tokenPrices?.length ? '' : 'none'}`}>
-              <p>{'No balances yet, please make a deposit or request money from someone!'}</p>
+            <div
+              className={`mywallet-buttons-container ${
+                TokensStore.tokenPrices?.length ? '' : 'none'
+              }`}
+            >
+              <p>
+                {
+                  'No balances yet, please make a deposit or request money from someone!'
+                }
+              </p>
             </div>
             <button
               onClick={() => {

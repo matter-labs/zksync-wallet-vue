@@ -4,7 +4,6 @@ import { ethers} from 'ethers';
 import { DEFAULT_ERROR } from 'constants/errors';
 import { useCancelable } from 'hooks/useCancelable';
 import { useStore } from 'src/store/context';
-import { LINKS_CONFIG } from 'src/config';
 import { errorProcessing } from 'hooks/transactions/Base';
 import {
   handleFormatToken,
@@ -105,13 +104,8 @@ export const useDeposit = () => {
                     errorProcessing(store, err);
                   }
                 };
-                cancelable(
-                        ethers.getDefaultProvider(LINKS_CONFIG.network).getGasPrice(),
-                )
-                        .then(res => res)
-                        .then(data => {
-                          executeDeposit(data);
-                        });
+                const gasPrice =await TokensStore.getGasPrice();
+                cancelable(executeDeposit(gasPrice))
               } catch (err) {
                 TransactionStore.isLoading = false;
                 err.name && err.message ? (store.error = `${err.name}: ${err.message}`) : (store.error = DEFAULT_ERROR);

@@ -19,7 +19,11 @@ async function getBalanceOnContract(
   const { AccountStore } = store;
   const tokenId = zksyncProvider.tokenSet.resolveTokenId(token);
   if (ethSigner.provider) {
-    return await AccountStore.zksContract?.getBalanceToWithdraw(AccountStore.ethSignerAddress, tokenId);
+    const contractBalance = await AccountStore.zksContract?.getBalanceToWithdraw(
+      AccountStore.ethSignerAddress,
+      tokenId,
+    );
+    return contractBalance;
   }
 }
 
@@ -62,7 +66,11 @@ export const getAccState = async (store: Store) => {
     const zkBalancePromises = Object.keys(zkBalance).map(async key => {
       return {
         address: tokens[key].address,
-        balance: +handleFormatToken(zkWallet, tokens[key].symbol, zkBalance[key] ? zkBalance[key] : 0),
+        balance: +handleFormatToken(
+          zkWallet,
+          tokens[key].symbol,
+          zkBalance[key] ? zkBalance[key] : 0
+        ),
         symbol: tokens[key].symbol,
         id: tokens[key].id,
       };
@@ -70,7 +78,8 @@ export const getAccState = async (store: Store) => {
     Promise.all(zkBalancePromises)
       .then(res => {
         const _balances = res.slice().sort(sortBalancesById);
-        if (JSON.stringify(_balances) !== JSON.stringify(TokensStore.zkBalances)) {
+        if (
+          JSON.stringify(_balances) !== JSON.stringify(TokensStore.zkBalances)) {
           TokensStore.zkBalances = _balances;
           TokensStore.zkBalancesLoaded = true;
         }
@@ -266,7 +275,7 @@ export const validateNumbers = async (store: Store, e, title?: string, max?: boo
   } else if (title === 'Transfer' && store.zkWallet) {
     const formattedFee = handleFormatToken(
       store.zkWallet,
-      TransactionStore.getFeeToken(),
+      TransactionStore.getFeeToken() as string,
       TransactionStore.getFeeBasedOnType(),
     );
     const feeTokenBalance = TokensStore.zkBalances?.filter(
@@ -422,8 +431,14 @@ export const handleFee = (title: string, store: Store, e?, symbol?, address?) =>
       });
   }
   if (title === 'Withdraw') {
+    const filteredFeeToken = TokensStore.filterFeeToken(symbolProp);
+
     TransactionStore.waitingCalculation = true;
-    zkWallet?.provider.getTransactionFee('FastWithdraw', addressProp, symbolProp).then(res => {
+    zkWallet?.provider.getTransactionFee(
+      'FastWithdraw',
+      addressProp,
+      TransactionStore.setTransferFeeToken(filteredFeeToken) as string
+    ).then(res => {
       TransactionStore.fastFee = res.totalFee;
       TransactionStore.waitingCalculation = false;
     });

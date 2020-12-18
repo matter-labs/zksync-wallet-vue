@@ -5,7 +5,8 @@ export interface IBalancesProps {
   data: any;
   dataProperty: string;
   ref?: any;
-  setValue: (array: Record<string, unknown>) => void;
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  setValue: (array: object[]) => void;
   title: string;
   visible: boolean;
 }
