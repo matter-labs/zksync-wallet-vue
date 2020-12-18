@@ -254,7 +254,6 @@ const Transaction: React.FC<ITransactionProps> = observer(
                       (res) => {
                 obj[balance.symbol] = res.totalFee;})
               .catch(error => {
-                console.log('error in transaction fee request', error);
                 // TransactionStore.conditionError = `Fee can't be charged in ${symbol}. Choose any excepted token with positive balance`;
                 TransactionStore.conditionError = `Fee can't be charged in ${balance.symbol}. Choose any excepted token with positive balance`;
               });

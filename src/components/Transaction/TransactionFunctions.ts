@@ -432,7 +432,6 @@ export const handleFee = (title: string, store: Store, e?, symbol?, address?) =>
   }
   if (title === 'Withdraw') {
     const filteredFeeToken = TokensStore.filterFeeToken(symbolProp);
-    console.log(filteredFeeToken, symbolProp);
 
     TransactionStore.waitingCalculation = true;
     zkWallet?.provider.getTransactionFee(

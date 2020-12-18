@@ -98,56 +98,43 @@ const useWalletInit = () => {
   const logout = useLogout();
 
   const createWallet = useCallback(async () => {
-    console.log('create wallet ran');
     try {
       const zkSync = await import('zksync');
       store.zkWalletInitializing = true;
       if (!store.provider && (store.isMetamaskWallet || store.isWeb3)) {
-        console.log('condition #1');
         store.provider = store.windowEthereumProvider;
       } else if (store.isPortisWallet && !store.isPrimaryPage) {
-        console.log('condition #2');
         await portisConnector(store, connect, getSigner);
       } else if (store.isFortmaticWallet) {
-        console.log('condition #3');
         fortmaticConnector(store, connect, getSigner);
         store.zkWalletInitializing = true;
       } else if (store.isWalletConnect) {
-        console.log('condition #4');
         walletConnectConnector(store, connect);
       } else if (store.isBurnerWallet || store.isExternalWallet) {
-        console.log('condition #5');
         burnerWalletConnector(store);
       }
       const provider = store.provider;
-      console.log(store.provider);
       if (provider && !provider.selectedAddress && (store.isMetamaskWallet || store.isWeb3)) {
-        console.log('sub-condition #1');
         // Could fail, if there's no Metamask in the browser
         if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
-          console.log('sub-condition #2');
           const _accs = await store.windowEthereumProvider?.request({
             method: 'eth_accounts',
           });
           if (!_accs[0]) {
-            console.log('sub-condition #3');
             await store.provider.request({ method: 'eth_requestAccounts' });
           }
           AccountStore.accountAddress = store.windowEthereumProvider.selectedAddress;
         } else {
-          console.log('sub-condition #4');
           store.windowEthereumProvider?.enable();
         }
         store.hint = 'Connected to ';
       }
 
       if (provider && !provider.selectedAddress && !store.isBurnerWallet && !store.isFortmaticWallet) {
-        console.log('sub-condition #5');
         store.hint = 'Connected to ';
       }
 
       if (store.isBurnerWallet) {
-        console.log('sub-condition #6');
         const burnerWallet = window.localStorage?.getItem('burnerWallet');
         const provider = await getDefaultProvider(LINKS_CONFIG.network);
         if (burnerWallet) {
@@ -170,10 +157,7 @@ const useWalletInit = () => {
       }
       const wallet = getSigner(provider);
 
-      console.log(wallet);
-
       if (!store.isBurnerWallet && !store.isCoinbaseWallet && !store.isExternalWallet) {
-        console.log('sub-condition #7');
         store.ethWallet = wallet;
       }
 
@@ -181,7 +165,6 @@ const useWalletInit = () => {
         provider: await getDefaultProvider(LINKS_CONFIG.network),
         address: ExternaWalletStore.externalWalletAddress,
         getAddress: async () => {
-          console.log('sub-condition #8');
           return externalWalletInstance.address;
         },
       };
@@ -226,7 +209,6 @@ const useWalletInit = () => {
       const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
 
       if (store.isAccessModalOpen || store.isExternalWallet) {
-        console.log('sub-condition #10');
         store.setBatch({
           syncProvider: syncProvider,
           syncWallet: syncWallet,
@@ -246,13 +228,11 @@ const useWalletInit = () => {
 
       const arr = window.localStorage?.getItem(`contacts${store.syncWallet?.address()}`);
       if (arr) {
-        console.log('in-condition #2');
         store.searchContacts = JSON.parse(arr);
       }
 
       await fetchTransactions(25, 0, syncWallet.address())
         .then(res => {
-          console.log('in-condition #3');
           store.transactions = res
         })
         .catch(err => console.error(err));
