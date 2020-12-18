@@ -46,7 +46,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main.js", "@/plugins/walletInit.js"],
+  plugins: ["@/plugins/main.js"],
 
   router: {
     middleware: ["wallet"],

@@ -75,6 +75,13 @@ import handleExponentialNumber from "@/plugins/handleExponentialNumbers.js";
 import handleFormatToken from "@/plugins/handleFormatToken.js";
 
 export default {
+  props: {
+    filter: {
+      type: String,
+      default: "",
+      required: false,
+    },
+  },
   data() {
     return {
       transactionsList: [],
@@ -165,7 +172,11 @@ export default {
       const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
-      return list.filter((e) => e.tx.type !== "ChangePubKey").map((e) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
+      let filteredList = list.filter((e) => e.tx.type !== "ChangePubKey");
+      if (this.filter) {
+        filteredList = filteredList.filter((item) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
+      }
+      return filteredList.map((e) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
     },
     getTransactions: async function () {
       this.loading = true;

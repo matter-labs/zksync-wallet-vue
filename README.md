@@ -3,8 +3,6 @@
 
 # zkWallet v.2.*
 
-> added tags: feature/zk-wallet-vue-2.0.0-beta & beta && v.2.0.0-beta
-
 A completely different version of the Wallet, built with nuxt+vuejs.
 New architecture, implemented open source design system. Tight roadmap with many awesome features will guide developers into the amazing world of dApps and introduce true
  reactive interaction, dialog-based UX.

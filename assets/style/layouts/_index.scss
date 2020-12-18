@@ -33,7 +33,7 @@
             border-radius: 27px;
             padding: 20px;
             transition: $transition1;
-    
+
             img {
                 width: 100%;
                 height: 100%;
@@ -86,10 +86,9 @@
         .contactInfo {
             width: 100%;
             max-width: 255px;
-            margin: 0 auto;
-            margin-top: 15px;
+          margin: 15px auto 0;
 
-            .infoDesciption {
+          .infoDesciption {
                 font-size: 12px;
                 line-height: 15px;
                 text-align: center;
@@ -107,7 +106,7 @@
                     overflow: hidden;
                     border-radius: 50%;
                     background-color: $violet;
-                    
+
                     i {
                         display: block;
                         text-align: center;
@@ -121,7 +120,7 @@
         }
     }
 }
-body.inkline { 
+body.inkline {
     &.-light {
         .indexLayout {
             background-image: url('/indexbg.jpg');

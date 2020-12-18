@@ -15,7 +15,7 @@
         margin-left: auto;
         margin-right: auto;
         transition: background-color $transition1;
-        
+
         .tileHeadline {
             width: 100%;
             display: flex;
@@ -50,6 +50,13 @@
             font-size: 16px;
             text-align: center;
         }
+        .tileTextBg {
+            margin: 5px 0;
+            font-size: 16px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid;
+        }
         /* .form-input-prepend {
             background-color: transparent !important;
         } */
@@ -60,9 +67,17 @@ body.inkline.-light .defaultLayout {
     .tileBlock {
         background: $white;
     }
+    .tileTextBg {
+        background-color: #fff8de1f;
+        border-color: #180d0d14;
+    }
 }
 body.inkline.-dark .defaultLayout {
     .tileBlock {
         background: $darkViolet;
+    }
+    .tileTextBg {
+        background-color: #fff8de1a;
+        border-color: #ffffff14;
     }
 }

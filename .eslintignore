@@ -2,5 +2,7 @@
 node_modules
 # don't ever lint public
 build
+dist
+.nuxt
 # don't lint build output (make sure it's set to your correct build folder name)
 lib

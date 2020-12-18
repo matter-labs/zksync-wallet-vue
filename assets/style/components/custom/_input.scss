@@ -1,156 +1,171 @@
 .amountInputContainer {
+  width: 100%;
+  height: max-content;
+
+  &.status- {
+    &disabled .inputContainer, &loading .inputContainer {
+      background-color: $lighterGray !important;
+
+      .append {
+        border-color: $gray !important;
+      }
+    }
+
+    &error .inputContainer {
+      background-color: $redBg;
+
+      input {
+        color: $red;
+      }
+
+      .append {
+        border-color: $red;
+        color: $red;
+      }
+    }
+
+    &success .inputContainer {
+      input {
+        color: $green;
+      }
+
+      .append {
+        border-color: $green;
+        color: $green;
+      }
+    }
+  }
+
+  .inputContainer {
+    height: 46px;
+    display: grid;
+    grid-template-columns: max-content 1fr 40px;
+    grid-template-rows: 100%;
+    background: $white;
+    align-items: center;
+    padding: 15px 5px;
+    border-radius: 5px;
+    transition: background-color .2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.04);
+
+    .pre {
+      width: max-content;
+      min-width: 75px;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: $violet;
+      font-weight: 600;
+      font-family: $openSans;
+      border-right: 2px solid $purple;
+
+      img {
+        height: 100%;
+        width: auto;
+        margin-right: 6px;
+      }
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: transparent;
+      outline: none !important;
+      font-size: 14px;
+      color: $purpleDark;
+      font-weight: 600;
+      font-family: $openSans;
+      text-align: left;
+      padding: 0 15px;
+      box-sizing: border-box;
+      transition: color .2s ease;
+
+      &::placeholder {
+        color: $gray;
+        font-weight: 600;
+      }
+    }
+
+    .append {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      color: $violet;
+      border-left: 2px solid $purple;
+      transition: color .2s ease, border-color .2s ease;
+    }
+  }
+
+  .hints {
     width: 100%;
     height: max-content;
-    &.status- {
-        &disabled .inputContainer, &loading .inputContainer {
-            background-color: $lighterGray !important;
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: 100%;
+    grid-auto-rows: max-content;
+    grid-gap: 5px;
+    margin-top: 10px;
 
-            .append {
-                border-color: $gray !important;
-            }
-        }
-        &error .inputContainer {
-            background-color: $redBg;
-
-            input {
-                color: $red;
-            }
-            .append {
-                border-color: $red;
-                color: $red;
-            }
-        }
-        &success .inputContainer {
-            input {
-                color: $green;
-            }
-            .append {
-                border-color: $green;
-                color: $green;
-            }
-        }
+    .hintGroup {
+      display: flex;
     }
 
-    .inputContainer {
-        height: 46px;
-        display: grid;
-        grid-template-columns: max-content 1fr 40px;
-        grid-template-rows: 100%;
-        background: $white;
-        align-items: center;
-        padding: 15px 5px;
-        border-radius: 5px;
-        transition: background-color .2s ease;
-        box-shadow: border-box;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.04), 0px 4px 6px rgba(0, 0, 0, 0.04);
+    .hint {
+      display: flex;
+      align-items: center;
+      font-family: $ibm;
+      font-weight: 300;
+      font-size: 12px;
+      line-height: 15px;
+      transition: color .2s ease;
 
-        .pre {
-            width: max-content;
-            min-width: 75px;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            color: $violet;
-            font-weight: 600;
-            font-family: $openSans;
-            border-right: 2px solid $purple;
+      &.red {
+        color: $red;
+      }
 
-            img {
-                height: 100%;
-                width: auto;
-                margin-right: 6px;
-            }
-        }
-        input {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border: none;
-            background-color: transparent;
-            outline: none !important;
-            font-size: 14px;
-            color: $purpleDark;
-            font-weight: 600;
-            font-family: $openSans;
-            text-align: left;
-            padding: 0 15px;
-            box-sizing: border-box;
-            transition: color .2s ease;
-            &::placeholder {
-                color: $gray;
-                font-weight: 600;
-            }
-        }
-        .append {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 14px;
-            color: $violet;
-            border-left: 2px solid $purple;
-            transition: color .2s ease, border-color .2s ease;
-        }
+      &.green {
+        color: $green;
+      }
+
+      &.gray {
+        color: $gray;
+      }
+
+      span, i {
+        display: block;
+      }
+
+      i {
+        font-size: 18px;
+        margin-right: 8px;
+      }
+
+      .separator {
+        height: 17px;
+        width: 1.5px;
+        background-color: $gray;
+        margin: 0 15px;
+      }
     }
-    .hints {
-        width: 100%;
-        height: max-content;
-        display: grid;
-        grid-auto-flow: row;
-        grid-template-columns: 100%;
-        grid-auto-rows: max-content;
-        grid-gap: 5px;
-        margin-top: 10px;
-
-        .hintGroup {
-            display: flex;
-        }
-        .hint {
-            display: flex;
-            align-items: center;
-            font-family: $ibm;
-            font-weight: 300;
-            font-size: 12px;
-            line-height: 15px;
-            transition: color .2s ease;
-            &.red {
-                color: $red;
-            }
-            &.green {
-                color: $green;
-            }
-            &.gray {
-                color: $gray;
-            }
-
-            span,i {
-                display: block;
-            }
-            i {
-                font-size: 18px;
-                margin-right: 8px;
-            }
-            .separator {
-                height: 17px;
-                width: 1.5px;
-                background-color: $gray;
-                margin: 0 15px;
-            }
-        }
-    }
+  }
 }
 
 .fa-spinner-third {
-    animation: spin .5s linear 0s infinite;
+  animation: spin .5s linear 0s infinite;
 }
+
 @keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

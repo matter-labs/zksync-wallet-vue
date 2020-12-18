@@ -15,7 +15,8 @@
                 <i-button class="_margin-top-1" block variant="secondary" size="lg" @click="saveContact()">Save</i-button>
             </div>
         </i-modal>
-        <div v-if="success===true" class="tileBlock">
+        <account-unlock v-if="isAccountLocked && openedTab!=='tokenList'" :choosed-token="choosedToken" @selectToken="openedTab='tokenList'" />
+        <div v-else-if="success===true" class="tileBlock">
             <div class="tileHeadline h3">
                 <span>{{type==='withdraw'?'Withdraw':'Transfer'}}</span>
             </div>
@@ -129,20 +130,24 @@
         <div v-else-if="openedTab==='contactsList'" class="tileBlock contactTile">
             <div class="tileHeadline h3">
                 <span>Contacts</span>
+                <i-tooltip>
+                    <i class="fas fa-times" @click="openedTab='main'"></i>
+                    <template slot="body">Close</template>
+                </i-tooltip>
             </div>
             <i-input v-if="contactSearch.trim() || displayedContactsList.length!==0" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
                 <i slot="prefix" class="far fa-search"></i>
             </i-input>
 
             <div class="contactsListContainer">
-                <div v-if="!contactSearch.trim() && displayedContactsList.length===0" class="nothingFound">
+                <div v-if="!contactSearch.trim() && displayedContactsList.length===0 && type!=='withdraw'" class="nothingFound">
                     <span>The contact list is empty</span>
                 </div>
-                <div v-else-if="displayedContactsList.length===0" class="nothingFound">
+                <div v-else-if="contactSearch.trim() && displayedContactsList.length===0" class="nothingFound">
                     <span>Your search <b>"{{contactSearch}}"</b> did not match any contacts</span>
                 </div>
                 <template v-else>
-                    <div v-if="type==='withdraw'" class="contactItem" @click.self="chooseContact({name: 'Own account', address: ownAddress})">
+                    <div v-if="!contactSearch.trim() && type==='withdraw'" class="contactItem" @click.self="chooseContact({name: 'Own account', address: ownAddress})">
                         <user-img :wallet="ownAddress" />
                         <div class="contactInfo">
                             <div class="contactName">Own account</div>
@@ -174,6 +179,7 @@ import handleExponentialNumber from "@/plugins/handleExponentialNumbers.js";
 import userImg from "@/components/userImg.vue";
 import Checkmark from "@/components/Checkmark.vue";
 import walletAddress from "@/components/walletAddress.vue";
+import AccountUnlock from "@/blocks/AccountUnlock.vue";
 
 const timeCalc = (timeInSec) => {
   const hours = Math.floor(timeInSec / 60 / 60);
@@ -193,6 +199,7 @@ export default {
     userImg,
     Checkmark,
     walletAddress,
+    AccountUnlock,
   },
   props: {
     type: {
@@ -236,6 +243,9 @@ export default {
     };
   },
   computed: {
+    isAccountLocked: function () {
+      return this.$store.getters["wallet/isAccountLocked"];
+    },
     displayedTokenList: function () {
       if (!this.tokenSearch.trim()) {
         return this.tokensList;
@@ -445,7 +455,7 @@ export default {
       await this.$store.dispatch("wallet/getInitialBalances", true).catch((err) => {
         console.log("getInitialBalances", err);
       });
-      await this.$store.dispatch("wallet/getzkBalances", undefined, true).catch((err) => {
+      await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true }).catch((err) => {
         console.log("getzkBalances", err);
       });
       await this.$store.dispatch("wallet/getTransactionsHistory", { force: true }).catch((err) => {
@@ -476,7 +486,7 @@ export default {
       await this.$store.dispatch("wallet/getInitialBalances", true).catch((err) => {
         console.log("getInitialBalances", err);
       });
-      await this.$store.dispatch("wallet/getzkBalances", undefined, true).catch((err) => {
+      await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true }).catch((err) => {
         console.log("getzkBalances", err);
       });
       await this.$store.dispatch("wallet/getTransactionsHistory", { force: true }).catch((err) => {

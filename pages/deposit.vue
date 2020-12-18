@@ -229,7 +229,7 @@ export default {
         await this.$store.dispatch("wallet/getInitialBalances", true).catch((err) => {
           console.log("getInitialBalances", err);
         });
-        await this.$store.dispatch("wallet/getzkBalances", undefined, true).catch((err) => {
+        await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true }).catch((err) => {
           console.log("getzkBalances", err);
         });
         await this.$store.dispatch("wallet/getTransactionsHistory", { force: true }).catch((err) => {

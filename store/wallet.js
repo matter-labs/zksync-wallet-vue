@@ -1,7 +1,6 @@
 import Onboard from "bnc-onboard";
 import { ethers } from "ethers";
 import Crypto from "crypto";
-import * as zksync from "zksync";
 
 import onboardConfig from "@/plugins/onboardConfig.js";
 import web3Wallet from "@/plugins/web3.js";
@@ -32,6 +31,7 @@ const sortBalancesById = (a, b) => {
 
 export const state = () => ({
   onboard: false,
+  isAccountLocked: false,
   zkTokens: {
     lastUpdated: 0,
     list: [],
@@ -50,6 +50,9 @@ export const state = () => ({
 });
 
 export const mutations = {
+  setAccountLockedState(state, accountState) {
+    state.isAccountLocked = accountState;
+  },
   setOnboard(state, obj) {
     state.onboard = obj;
   },
@@ -77,9 +80,27 @@ export const mutations = {
     }
     state.fees[symbol][type][address] = obj;
   },
+  clearDataStorage(state) {
+    state.zkTokens = {
+      lastUpdated: 0,
+      list: [],
+    };
+    state.initialTokens = {
+      lastUpdated: 0,
+      list: [],
+    };
+    state.transactionsHistory = {
+      lastUpdated: 0,
+      list: [],
+    };
+    state.fees = {};
+  },
 };
 
 export const getters = {
+  isAccountLocked(state) {
+    return state.isAccountLocked;
+  },
   getOnboard(state) {
     return state.onboard;
   },
@@ -162,11 +183,11 @@ export const actions = {
       error,
     };
   },
-  async getzkBalances({ commit, dispatch, getters }, accountState, force = false) {
+  async getzkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }) {
     let listCommited = {};
     let listVerified = {};
-    const tokensList = [];
-    const syncWallet = walletData.get().syncWallet;
+    let tokensList = [];
+    let syncWallet = walletData.get().syncWallet;
     if (accountState) {
       listCommited = accountState.committed.balances;
       listVerified = accountState.verified.balances;
@@ -175,7 +196,7 @@ export const actions = {
       if (force === false && localList.lastUpdated > new Date().getTime() - 120000) {
         return localList.list;
       }
-      const syncProvider = walletData.get().syncProvider;
+      let syncProvider = walletData.get().syncProvider;
       if (!syncProvider.transport.ws.isOpened) {
         await syncProvider.transport.ws.open();
       }
@@ -366,7 +387,7 @@ export const actions = {
       }
     }
   },
-  async walletRefresh({ getters, dispatch }) {
+  async walletRefresh({ getters, commit, dispatch }) {
     try {
       dispatch("changeNetworkRemove");
       const walletCheck = await getters["getOnboard"].walletCheck();
@@ -386,10 +407,13 @@ export const actions = {
         return getAccounts[0];
       }
       ethersProvider.address = getAccounts[0]; */
+
+      const zksync = await import("zksync");
+
       const generatedRandomSeed = Crypto.randomBytes(32);
       const syncProvider = await zksync.Provider.newWebsocketProvider(process.env.APP_WS_API);
       const signer = await zksync.Signer.fromSeed(generatedRandomSeed);
-      const syncWallet = await zksync.Wallet.fromEthSigner(
+      const syncWallet = await zkSync.Wallet.fromEthSigner(
         /* {
           provider: ethersProvider,
           address: getAccounts[0],
@@ -409,6 +433,9 @@ export const actions = {
       const accountState = await syncWallet.getAccountState();
       console.log("accountState", accountState);
       walletData.set({ syncProvider, syncWallet, accountState, ethWallet });
+      if (accountState && accountState.committed) {
+        commit("setAccountLockedState", accountState.committed.pubKeyHash === "sync:0000000000000000000000000000000000000000");
+      }
 
       await dispatch("getzkBalances", accountState);
 
@@ -424,16 +451,17 @@ export const actions = {
       return false;
     }
   },
-  async logout({ dispatch }) {
+  async logout({ dispatch, commit }) {
     dispatch("changeNetworkRemove");
     web3Wallet.set(false);
     walletData.set({ syncProvider: null, syncWallet: null, accountState: null });
     localStorage.removeItem("selectedWallet");
+    commit("clearDataStorage");
   },
   async changeNetworkRemove({ dispatch }) {
-    window.ethereum.off("networkChanged", changeNetworkHandle(dispatch, this.$router));
+    window.ethereum && window.ethereum.hasOwnProperty("off") ? window.ethereum.off("networkChanged", changeNetworkHandle(dispatch, this.$router)) : undefined;
   },
   async changeNetworkSet({ dispatch }) {
-    window.ethereum.on("networkChanged", changeNetworkHandle(dispatch, this.$router));
+    window.ethereum && window.ethereum.hasOwnProperty("on") ? window.ethereum.on("networkChanged", changeNetworkHandle(dispatch, this.$router)) : undefined;
   },
 };

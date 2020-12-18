@@ -53,8 +53,8 @@
                                     <div class="numberInput">
                                         <div class="iconHandle minus disabled"><i class="far fa-minus-circle"></i></div>
                                         <div class="numbers">
-                                            <input type="number" value="6.00">
-                                            <div class="price">78.79 $</div>
+                                            <input id="numberDeposit" type="number" value="6.00">
+                                            <div class="price"><label for="numberDeposit">78.79 $</label></div>
                                         </div>
                                         <div class="iconHandle plus"><i class="far fa-plus-circle"></i></div>
                                         <div class="iconHandle mobile"><i class="fas fa-pen"></i></div>
@@ -361,7 +361,7 @@
                                     <div class="icon">
                                         <i class="fad fa-spinner-third"></i>
                                     </div>
-                                    <span class="text">Linking in progress and may take up to 5 mins</span>
+                                    <span class="text">Linking in progress and may take up to 5 minutes</span>
                                 </div>
                             </div>
                             <div class="rightSide">
@@ -390,7 +390,7 @@
                                     <div class="icon">
                                         <i class="fad fa-spinner-third"></i>
                                     </div>
-                                    <span class="text">Linking in progress and may take up to 5 mins</span>
+                                    <span class="text">Linking in progress and may take up to 5 minutes</span>
                                 </div>
                             </div>
                             <div class="rightSide">
@@ -532,8 +532,7 @@ $openSans: "Open Sans", sans-serif;
     width: 90%;
     text-align: center;
     max-width: 590px;
-    margin: 0 auto;
-    margin-bottom: 40px;
+    margin: 0 auto 40px;
 
     .headline {
       font-family: $firaSans;
@@ -582,7 +581,7 @@ $openSans: "Open Sans", sans-serif;
   max-width: 590px;
   margin: 0 auto;
   background: $white;
-  box-shadow: 0px 2px 60px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 60px rgba(0, 0, 0, 0.06);
   border-radius: 10px;
 
   .formHeader,
@@ -734,7 +733,7 @@ $openSans: "Open Sans", sans-serif;
   font-size: 16px;
   font-family: $sourceSansPro;
   white-space: nowrap;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   padding: 7px 12px;
   border: none;
