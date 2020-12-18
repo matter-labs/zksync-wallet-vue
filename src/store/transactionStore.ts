@@ -1,6 +1,6 @@
 import { ContractTransaction, ethers } from 'ethers';
 import { action, observable } from 'mobx';
-import { LINKS_CONFIG, RESTRICTED_TOKENS } from 'src/config';
+import { RESTRICTED_TOKENS } from 'src/config';
 
 export class TransactionStore {
   @observable recepientAddress = '';
@@ -14,7 +14,7 @@ export class TransactionStore {
   @observable gas: ethers.BigNumberish = 0;
   @observable fee: any = {};
   @observable isTransactionExecuted = false;
-  @observable transferFeeToken = '';
+  @observable private transferFeeToken: null | string = '';
   @observable feeTokenSelection = false;
   @observable filteredContacts: any = [];
   @observable isBalancesListOpen = false;
@@ -37,7 +37,7 @@ export class TransactionStore {
 
   @observable amount: any = 0;
   @observable selectedBalance = '';
-  @observable selectedContact = '';
+  @observable selectedContact: string | null = '';
 
   /**
    * Withdrawal process local states:
@@ -59,8 +59,7 @@ export class TransactionStore {
     symbol = symbol || this.symbolName;
     if (symbol && !RESTRICTED_TOKENS?.includes(symbol)) {
       this.transferFeeToken = symbol;
-    }
-    else {
+    } else {
       this.transferFeeToken = defaultSymbol;
     }
 
@@ -68,43 +67,39 @@ export class TransactionStore {
   }
 
   /**
-   * Get fee token or replace it with symbolName if empty
-   * @return {string}
+   * Special action to reset feeToken value
+   *
+   * @return void
    */
-  @action getFeeToken() {
-    if (!this.transferFeeToken) {
-      this.transferFeeToken = RESTRICTED_TOKENS?.includes(this.symbolName) ? '' : this.symbolName;
+  @action
+  clearFeeToken() {
+    this.transferFeeToken = null;
+  }
+
+  /**
+   * Get fee token or replace it with symbolName if empty
+   * @return {string|null}
+   */
+  @action getFeeToken(useDefault = false) {
+    if (!this.transferFeeToken && useDefault) {
+      this.transferFeeToken = RESTRICTED_TOKENS?.includes(this.symbolName) ? null : this.symbolName;
     }
     return this.transferFeeToken;
   }
 
   /**
+   * @todo Add here fee parsing call
    * @return {any}
    */
   @action
   getFeeBasedOnType() {
-    return this.fastWithdrawal ? this.fastFee : this.fee[this.getFeeToken()];
-  }
-
-  /**
-   * Get gas amount needed for the transaction
-   * @return {Promise<unknown>}
-   */
-  @action
-  getGas() {
-    return new Promise((resolve, reject) => {
-      if (!this.gas) {
-        ethers
-          .getDefaultProvider(LINKS_CONFIG.network)
-          .getGasPrice()
-          .then((res) => {
-            this.gas = ethers.BigNumber.from(res.toString());
-            resolve(this.gas);
-          })
-          .catch(reject);
-      } else {
-        resolve(this.gas);
-      }
-    });
+    if (this.fastWithdrawal) {
+      return this.fastFee;
+    }
+    const feeToken = this.getFeeToken();
+    if (feeToken !== null && this.fee.hasOwnProperty(feeToken)) {
+      return this.fee[feeToken];
+    }
+    return 0;
   }
 }

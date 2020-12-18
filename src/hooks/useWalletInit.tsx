@@ -88,7 +88,8 @@ const useWalletInit = () => {
   const getSigner = useCallback(
     provider => {
       if (provider && !store.isBurnerWallet && !store.isExternalWallet) {
-        return new ethers.providers.Web3Provider(provider).getSigner();
+        const signer = new ethers.providers.Web3Provider(provider).getSigner();
+        return signer;
       }
     },
     [store.isBurnerWallet, store.isExternalWallet],
@@ -97,59 +98,82 @@ const useWalletInit = () => {
   const logout = useLogout();
 
   const createWallet = useCallback(async () => {
+    console.log('create wallet ran');
     try {
       const zkSync = await import('zksync');
       store.zkWalletInitializing = true;
       if (!store.provider && (store.isMetamaskWallet || store.isWeb3)) {
+        console.log('condition #1');
         store.provider = store.windowEthereumProvider;
       } else if (store.isPortisWallet && !store.isPrimaryPage) {
+        console.log('condition #2');
         await portisConnector(store, connect, getSigner);
       } else if (store.isFortmaticWallet) {
-        await fortmaticConnector(store, connect, getSigner);
+        console.log('condition #3');
+        fortmaticConnector(store, connect, getSigner);
         store.zkWalletInitializing = true;
       } else if (store.isWalletConnect) {
+        console.log('condition #4');
         walletConnectConnector(store, connect);
       } else if (store.isBurnerWallet || store.isExternalWallet) {
+        console.log('condition #5');
         burnerWalletConnector(store);
       }
       const provider = store.provider;
+      console.log(store.provider);
       if (provider && !provider.selectedAddress && (store.isMetamaskWallet || store.isWeb3)) {
+        console.log('sub-condition #1');
         // Could fail, if there's no Metamask in the browser
         if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
+          console.log('sub-condition #2');
           const _accs = await store.windowEthereumProvider?.request({
             method: 'eth_accounts',
           });
           if (!_accs[0]) {
+            console.log('sub-condition #3');
             await store.provider.request({ method: 'eth_requestAccounts' });
           }
           AccountStore.accountAddress = store.windowEthereumProvider.selectedAddress;
         } else {
+          console.log('sub-condition #4');
           store.windowEthereumProvider?.enable();
         }
         store.hint = 'Connected to ';
       }
 
       if (provider && !provider.selectedAddress && !store.isBurnerWallet && !store.isFortmaticWallet) {
+        console.log('sub-condition #5');
         store.hint = 'Connected to ';
       }
 
       if (store.isBurnerWallet) {
+        console.log('sub-condition #6');
         const burnerWallet = window.localStorage?.getItem('burnerWallet');
         const provider = await getDefaultProvider(LINKS_CONFIG.network);
         if (burnerWallet) {
-          const walletWithProvider = new Wallet(JSON.parse(burnerWallet), provider);
-          store.AccountStore.accountAddress = await walletWithProvider.getAddress();
+          const walletWithProvider = new Wallet(
+            JSON.parse(burnerWallet),
+            provider,
+          );
+          const address = await walletWithProvider.getAddress();
+          store.AccountStore.accountAddress = address;
           store.ethWallet = walletWithProvider as ethers.Signer;
         } else {
           const randomWallet = await Wallet.createRandom();
           const walletWithProvider = await randomWallet.connect(provider);
           store.ethWallet = walletWithProvider as ethers.Signer;
-          window.localStorage?.setItem('burnerWallet', JSON.stringify(randomWallet.privateKey));
+          window.localStorage?.setItem(
+            'burnerWallet',
+            JSON.stringify(randomWallet.privateKey),
+          );
         }
       }
       const wallet = getSigner(provider);
 
+      console.log(wallet);
+
       if (!store.isBurnerWallet && !store.isCoinbaseWallet && !store.isExternalWallet) {
+        console.log('sub-condition #7');
         store.ethWallet = wallet;
       }
 
@@ -157,12 +181,15 @@ const useWalletInit = () => {
         provider: await getDefaultProvider(LINKS_CONFIG.network),
         address: ExternaWalletStore.externalWalletAddress,
         getAddress: async () => {
+          console.log('sub-condition #8');
           return externalWalletInstance.address;
         },
       };
 
       const network = process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      const syncProvider = await zkSync.Provider.newWebsocketProvider(LINKS_CONFIG.ws_api);
+      const syncProvider = await zkSync.Provider.newWebsocketProvider(
+        LINKS_CONFIG.ws_api,
+      );
 
       const burnerWalletBased = store.isBurnerWallet || store.isExternalWallet ? store.ethWallet : wallet;
 
@@ -199,6 +226,7 @@ const useWalletInit = () => {
       const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
 
       if (store.isAccessModalOpen || store.isExternalWallet) {
+        console.log('sub-condition #10');
         store.setBatch({
           syncProvider: syncProvider,
           syncWallet: syncWallet,
@@ -218,11 +246,15 @@ const useWalletInit = () => {
 
       const arr = window.localStorage?.getItem(`contacts${store.syncWallet?.address()}`);
       if (arr) {
+        console.log('in-condition #2');
         store.searchContacts = JSON.parse(arr);
       }
 
       await fetchTransactions(25, 0, syncWallet.address())
-        .then(res => (store.transactions = res))
+        .then(res => {
+          console.log('in-condition #3');
+          store.transactions = res
+        })
         .catch(err => console.error(err));
 
       const { error, tokens, zkBalances } = await loadTokens(syncProvider, syncWallet, accountState);
@@ -256,8 +288,6 @@ const useWalletInit = () => {
         .then(() => {
           cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
             store.unlocked = data;
-          }).catch((error) => {
-            console.log('syncWallet canceled', error);
           });
         });
       if (accountState?.id) {

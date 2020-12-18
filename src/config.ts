@@ -14,6 +14,7 @@ export const LINKS_CONFIG = {
   ws_api: process.env.REACT_APP_WS_API || 'wss://stage-api.zksync.dev/jsrpc-ws',
   networkId: process.env.REACT_APP_CURRENT_NETWORK_ID || RIGHT_NETWORK_ID,
   lastGitCommitHash: process.env.REACT_APP_GIT_REVISION || 1,
+  alchemyApiKey: process.env.REACT_APP_ALCHEMY_API_KEY || ''
 };
 
 export const NETWORKS_LIST = {
@@ -40,9 +41,10 @@ export const RIGHT_NETWORK_NAME = NETWORKS_LIST[LINKS_CONFIG.networkId];
 
 export const RECAPTCHA_SITE_KEY = '6LdEBqUZAAAAAMAr2XDTxJHuXOxpQ7rfkn2BBfUo';
 
-export const RESTRICTED_TOKENS = ['PHNX'];
+export const RESTRICTED_TOKENS = ['PHNX', 'LAMB'];
 
 export const INFURA_ID = '85d8408593834bf6889554d624be0193';
+
 export const AUTOLOGIN_WALLETS = ['Metamask', 'WalletConnect', 'Portis', 'Fortmatic', 'Coinbase Wallet'];
 
 export const ABI_DEFAULT_INTERFACE =

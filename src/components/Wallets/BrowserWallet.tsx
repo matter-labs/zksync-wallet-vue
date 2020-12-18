@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 
@@ -20,9 +20,13 @@ const BrowserWallet: React.FC = observer(() => {
 
     try {
       if (!provider && !zkWallet && walletName) {
+        console.log('browserWalletConnector');
+
         browserWalletConnector(store, connect);
       }
     } catch (err) {
+      console.log('error', err);
+
       if (err.name && err.message) {
         store.error = `${err.name}: ${err.message}. Maybe you don't have Metamask or Coinbase installed in your browser`;
       }
