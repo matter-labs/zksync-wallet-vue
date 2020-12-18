@@ -78,6 +78,8 @@ export function useWSHeartBeat() {
 
   useMobxEffect(() => {
     if (!store.wsTransport) return;
-    return setHeartBeat(store.wsTransport);
+    const hb = setHeartBeat(store.wsTransport);
+
+    return hb;
   }, [setHeartBeat, refresh]);
 }

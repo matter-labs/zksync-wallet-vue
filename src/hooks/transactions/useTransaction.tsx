@@ -52,15 +52,15 @@ export const useTransaction = () => {
           nonce += 1;
           const feeTx = {
             to: store.zkWallet?.address() as string,
-            token: TransactionStore.transferFeeToken,
+            token: TransactionStore.getFeeToken()  as string,
             amount: 0,
             fee: zkSync.closestPackableTransactionFee(
-              TransactionStore.fee[TransactionStore.transferFeeToken],
+              TransactionStore.fee[TransactionStore.getFeeToken() as string],
             ),
             nonce,
           };
           const handleTransferTransaction = async () => {
-            if (TransactionStore.symbolName === TransactionStore.transferFeeToken) {
+            if (TransactionStore.symbolName === TransactionStore.getFeeToken()) {
               const transferTransaction = await zkWallet.syncTransfer({
                 to: TransactionStore.recepientAddress,
                 token: TransactionStore.symbolName,
@@ -72,7 +72,7 @@ export const useTransaction = () => {
                   ).toString(),
                 ),
                 fee: zkSync.closestPackableTransactionFee(
-                  TransactionStore.fee[TransactionStore.transferFeeToken],
+                  TransactionStore.fee[TransactionStore.getFeeToken() as string],
                 ),
               });
               if (transferTransaction) return transferTransaction;
@@ -119,7 +119,7 @@ export const useTransaction = () => {
       TokensStore.zkBalances,
       TransactionStore.fee,
       TransactionStore.isLoading,
-      TransactionStore.transferFeeToken,
+      TransactionStore,
       store.isBurnerWallet,
       store.txButtonUnlocked,
       store.zkWallet,

@@ -49,7 +49,8 @@ export const portisConnector = async (
   const portisProvider = portis.provider;
   store.provider = portisProvider;
   const signer = getSigner(portisProvider);
-  store.AccountStore.accountAddress = await signer.getAddress(signer);
+  const address = await signer.getAddress(signer);
+  store.AccountStore.accountAddress = address;
   if (withConnect) connect(portisProvider, signer?.getAddress.bind(signer));
 };
 

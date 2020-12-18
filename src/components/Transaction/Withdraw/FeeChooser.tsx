@@ -82,11 +82,11 @@ export const FeeChooser: React.FC<IFeeChooserProps> = observer(
           return (
                   <>
                     {(<div className='withdraw-type-block' onClick={() => {
-                      radioButtonCb(TransactionStore.fee[feeToken]);
+                      radioButtonCb(TransactionStore.fee[feeToken as string]);
                     }}>
                       <RadioButton selected={!TransactionStore.fastWithdrawal || fastFeeDisabled}/>
-                      <p className='checkbox-text'>{`Normal (fee ${TransactionStore.fee[feeToken] &&
-                      handleFormatToken(zkWallet as Wallet, feeToken, TransactionStore.fee[feeToken],)}
+                      <p className='checkbox-text'>{`Normal (fee ${TransactionStore.fee[feeToken as string] &&
+                      handleFormatToken(zkWallet as Wallet, feeToken as string, TransactionStore.fee[feeToken as string],)}
               ${feeToken}), processing time ${timeStempString(timeCalc(TransactionStore.withdrawalProcessingTime))}`}</p>
                     </div>)}
                     {((fastFeeDisabled) || (<div className='withdraw-type-block' onClick={
@@ -96,7 +96,7 @@ export const FeeChooser: React.FC<IFeeChooserProps> = observer(
                           selected={TransactionStore.fastWithdrawal}
                       />
                       <p className='checkbox-text'>{`Fast (fee ${+TransactionStore.fastFee &&
-                      handleFormatToken(zkWallet as Wallet, feeToken, TransactionStore.fastFee)} ${feeToken}), processing time ${timeStempString(timeCalc(TransactionStore.fastWithdrawalProcessingTime))}`}</p>
+                      handleFormatToken(zkWallet as Wallet, feeToken as string, TransactionStore.fastFee)} ${feeToken}), processing time ${timeStempString(timeCalc(TransactionStore.fastWithdrawalProcessingTime))}`}</p>
                     </div>))}
                   </>
           );

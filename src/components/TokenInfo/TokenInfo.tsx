@@ -32,7 +32,9 @@ export const TokenInfo = observer(() => {
         <div>
           <h3>{TransactionStore.propsSymbolName}</h3>
         </div>
-        {TokensStore.tokenPrices && <p className='token-info-title-price'>{'Token price:'}</p>}
+        {TokensStore.tokenPrices && (
+          <p className='token-info-title-price'>{'Token price:'}</p>
+        )}
         <p>
           {TokensStore.tokenPrices && TransactionStore.propsSymbolName && (
             <>

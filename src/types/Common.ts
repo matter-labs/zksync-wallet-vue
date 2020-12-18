@@ -1,3 +1,12 @@
+import React from 'react';
+import ethers from 'ethers';
+import { BigNumber } from '@ethersproject/bignumber';
+import DateTimeFormat = Intl.DateTimeFormat;
+
+export interface IBalances {
+  [token: string]: ethers.BigNumberish;
+}
+
 export interface IEthBalance {
   address: string;
   balance: number;
