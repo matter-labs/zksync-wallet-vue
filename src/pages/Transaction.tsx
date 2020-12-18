@@ -75,7 +75,9 @@ export const Transaction: FC<Tx> = props => {
       return handleExponentialNumbers(
         +handleFormatToken(store.zkWallet, type === 'Deposit'
           ? (priority_op?.token as string)
-          : (token as string), type === 'Deposit' && priority_op ? +priority_op.amount : +amount),
+            : (token as string),
+          type === 'Deposit' && priority_op ? +priority_op.amount : +amount,
+        ),
       );
     } else {
       return 'Unlocking transaction';

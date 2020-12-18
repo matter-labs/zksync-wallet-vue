@@ -76,17 +76,6 @@ ij_scss_space_before_opening_brace = true
 ij_scss_use_double_quotes = true
 ij_scss_value_alignment = 0
 
-
-[*.vue]
-ij_continuation_indent_size = 4
-ij_vue_indent_children_of_top_level = template
-ij_vue_interpolation_new_line_after_start_delimiter = true
-ij_vue_interpolation_new_line_before_end_delimiter = true
-ij_vue_interpolation_wrap = off
-ij_vue_keep_indents_on_empty_lines = false
-ij_vue_spaces_within_interpolation_expressions = true
-ij_vue_uniform_indent = true
-
 [.editorconfig]
 ij_editorconfig_align_group_field_declarations = false
 ij_editorconfig_space_after_colon = false

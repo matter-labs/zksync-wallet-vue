@@ -99,7 +99,7 @@ const PrimaryPage: React.FC = observer(() => {
   const WCEnabledSession = sessionStorage.getItem(wcMainSessionStorageFlag);
 
   const selectWallet = useCallback(
-    (key: WalletType) => async () => {
+    (key: WalletType) => () => {
       if (key === 'External') {
         return;
       }
@@ -128,7 +128,7 @@ const PrimaryPage: React.FC = observer(() => {
           isAccessModalOpen: true,
           zkWalletInitializing: true,
         });
-        await createWallet();
+        createWallet();
       }
       if (key === 'Metamask') {
         store.setBatch({
@@ -144,9 +144,9 @@ const PrimaryPage: React.FC = observer(() => {
                 +store.windowEthereumProvider?.chainId === +LINKS_CONFIG.networkId
         ) {
           store.zkWalletInitializing = true;
-          await createWallet();
-        } else if (!store.windowEthereumProvider?.chainId && isAndroid) {
-          await createWallet();
+          createWallet();
+        } else if (!store.windowEthereumProvider?.chainId && !!isAndroid) {
+          createWallet();
         }
       }
       if (key === 'Portis') {
@@ -158,7 +158,7 @@ const PrimaryPage: React.FC = observer(() => {
         if (!store.provider) {
           store.hint = 'Connecting to ';
         }
-        await portisConnector(store, connect, getSigner);
+        portisConnector(store, connect, getSigner);
         store.hint = 'Connecting to ';
       }
       if (wallets.includes(key)) {
@@ -174,7 +174,7 @@ const PrimaryPage: React.FC = observer(() => {
           });
           const wCQRScanned = localStorage.getItem('walletconnect');
           if (wCQRScanned) {
-            await createWallet();
+            createWallet();
           } else {
             walletConnectConnector(store, connect);
           }
@@ -269,7 +269,7 @@ const PrimaryPage: React.FC = observer(() => {
                     </span>
                     <a
                       className='expandTooltip'
-                      onMouseDown={() => {
+                      onMouseDown={event => {
                         store.ExternalWallerShowWithdraw = !store.ExternalWallerShowWithdraw;
                       }}
                     >

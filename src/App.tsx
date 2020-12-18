@@ -11,12 +11,11 @@ import { IAppProps } from 'types/Common';
 
 import { WRONG_NETWORK } from 'constants/regExs';
 import { useWSHeartBeat } from 'hooks/useWSHeartbeat';
-import { WalletType } from './constants/Wallets';
-import { useInterval, useTimeout } from './hooks/timers';
+import { WalletType } from 'constants/Wallets';
+import { useInterval, useTimeout } from 'hooks/timers';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './store/context';
-import { useMobxEffect } from './hooks/useMobxEffect';
-
+import { useMobxEffect } from 'hooks/useMobxEffect';
 import { useLogout } from 'hooks/useLogout';
 import useWalletInit from 'src/hooks/useWalletInit';
 import {
@@ -69,7 +68,11 @@ const App: React.FC<IAppProps> = observer(({ children }) => {
   useInterval(() => {
     if (!curAddress && store.walletName && store.provider) {
       if (store.isMetamaskWallet && store.doesMetamaskUsesNewEthereumAPI) {
-        store.provider?.request({ method: 'eth_accounts' }).then(res => setCurAddress(res[0]));
+        store.provider
+          ?.request({ method: 'eth_accounts' })
+          .then(res => setCurAddress(res[0]));
+      } else {
+        store.provider?.selectedAddress;
       }
     }
   }, 5000);

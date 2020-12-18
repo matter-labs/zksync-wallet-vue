@@ -58,7 +58,7 @@ export const ContactPage = observer(() => {
           `${zkWalletAddress}/history/${offset}/${amount}`,
       )
         .then(r => r.json())
-        .catch(err => console.log(err));
+        .catch(console.error);
       const resolvedTxs = await Promise.all(
         txs
           .filter((tx, i) => txs.findIndex(t => t.hash === tx.hash) === i)
