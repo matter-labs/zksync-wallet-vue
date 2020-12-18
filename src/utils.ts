@@ -88,6 +88,7 @@ export const addressMiddleCutter = (address: string, firstNumberOfLetters: numbe
 };
 
 export async function getConfirmationCount(provider: any, txHash: string, maxBlock?: number) {
+  console.log('get confirmation count called');
   // todo: fixme - do not depend on transaction format, use type of transaction
   if (txHash.startsWith('sync-tx')) return 0;
   try {
@@ -115,16 +116,15 @@ export function setCookie(name: string, value, exp?: Date) {
 }
 
 export const checkForEmptyBalance = (store: Store, balance) => {
-  const tokensWithBalance = balance?.filter(el => el.balance > 0);
-  if (tokensWithBalance?.length > 0) {
+  const tokensWithBalance = balance.filter(el => el.balance > 0);
+  if (tokensWithBalance.length > 0) {
     store.TokensStore.isAccountBalanceNotEmpty = true;
     store.TokensStore.isAccountBalanceLoading = false;
-  } else {
-    if (store.zkWallet) {
+  }
+  if (!!store.zkWallet && tokensWithBalance.length === 0) {
       store.TokensStore.isAccountBalanceNotEmpty = false;
       store.TokensStore.isAccountBalanceLoading = false;
     }
-  }
 };
 
 export const sortBalancesById = (a, b) => {
@@ -179,11 +179,15 @@ export const mintTestERC20Tokens = async (wallet: Wallet, token: TokenLike, stor
   ];
   store.zkWallet?.provider.tokenSet.parseToken(token, '100');
   const erc20Mintable = new Contract(tokenAddress, ABI, wallet.ethSigner);
-  return await erc20Mintable
-    .mint(wallet.address(), store.zkWallet?.provider.tokenSet.parseToken(token, '100'))
+  const _mint = await erc20Mintable
+    .mint(
+      wallet.address(),
+      store.zkWallet?.provider.tokenSet.parseToken(token, '100'),
+    )
     .then(res => {
       store.hint = 'Waiting for transaction to be mined';
       const p = getDefaultProviderEthers(LINKS_CONFIG.network);
+      const _r: string[] = [];
       const _int = setInterval(() => {
         p.getTransactionReceipt(res.hash).then(res => {
           if (res) {
@@ -199,6 +203,7 @@ export const mintTestERC20Tokens = async (wallet: Wallet, token: TokenLike, stor
       return res;
     })
     .catch(() => (store.modalSpecifier = ''));
+  return _mint;
 };
 
 /**
@@ -210,8 +215,12 @@ export const processZkSyncError = error => {
   return error.jrpcError ? error.jrpcError.message : error.message;
 };
 
-export const handleFormatToken = (wallet: Wallet, symbol: string, amount: ethers.BigNumberish) => {
-  if (!amount) return '';
+export const handleFormatToken = (
+  wallet: Wallet,
+  symbol: string,
+  amount: ethers.BigNumberish
+) => {
+  if (!amount) return '0';
   if (typeof amount === 'number') {
     return wallet?.provider?.tokenSet.formatToken(symbol, amount.toString());
   }
@@ -351,7 +360,7 @@ export async function loadTokens(
 
 export const getTimeZone = () => {
   const offset = new Date().getTimezoneOffset();
-  const o = offset;
+    const o = offset;
   if (offset < 0) {
     return Math.abs(Math.floor(o / 60));
   } else {

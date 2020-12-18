@@ -203,6 +203,7 @@ const Account: React.FC = observer(() => {
 
   const getAccState = useCallback(
           async (extended: boolean) => {
+      const { zkWallet, accountState } = store;
             const { tokens } = TokensStore;
             if (zkWallet && tokens) {
               const _accountState = await zkWallet.getAccountState();
@@ -223,11 +224,11 @@ const Account: React.FC = observer(() => {
                         store.zkWalletAddress as string,
                 ).then(res => res);
                 const sortedByTypeTxs = AccountStore.txs.filter(
-                        tx => !tx.commited && tx.tx.type === 'Deposit',
+            tx => tx.commited === false && tx.tx.type === 'Deposit',
                 );
                 sortedByTypeTxs.map(tx => {
                   const _token = tx.tx.priority_op?.token;
-                  if (TokensStore.awaitedTokens[_token as string]) {
+            if (TokensStore.awaitedTokens[_token as string]) {
                     const arr = sortedByTypeTxs.filter(
                             _tx => _tx.tx.priority_op?.token === _token,
                     );
@@ -258,7 +259,11 @@ const Account: React.FC = observer(() => {
                 const zkBalancePromises = Object.keys(zkBalance).map(async key => {
                   return {
                     address: tokens[key].address,
-                    balance: +handleFormatToken(zkWallet, tokens[key].symbol, zkBalance[key] ? zkBalance[key] : 0),
+                    balance: +handleFormatToken(
+                            zkWallet,
+                            tokens[key].symbol,
+                            zkBalance[key] ? zkBalance[key] : 0
+                    ),
                     symbol: tokens[key].symbol,
                     id: tokens[key].id,
                   };
@@ -334,7 +339,8 @@ const Account: React.FC = observer(() => {
                                 TokensStore.MLTTclaimed = true;
                               }
                               TokensStore.zkBalancesLoaded = true;
-                              TokensStore.zkBalances = res.sort(sortBalancesById);
+                  const _balances = res.sort(sortBalancesById);
+                  TokensStore.zkBalances = _balances;
                             }
                           }
                         })
@@ -351,20 +357,30 @@ const Account: React.FC = observer(() => {
               }
             }
           },
-          [store, TokensStore, AccountStore],
+    [
+      accountState,
+      store.accountState,
+      TokensStore.awaitedTokens,
+      store.error,
+      store.unlocked,
+      TokensStore.zkBalances,
+      TokensStore.tokens,
+      zkWallet,
+      AccountStore.txs,
+    ],
   );
 
   useEffect(() => {
     TransactionStore.propsSymbolName = '';
     TransactionStore.propsMaxValue = '';
     TransactionStore.propsToken = '';
-  }, [TransactionStore]);
+  }, []);
 
   useEffect(() => {
     if (!zkWallet) return;
 
-    AccountStore.intervalAsyncStateUpdater(getAccState, [true], 3000, cancelable);
-  }, [AccountStore, cancelable, getAccState, store.zkWallet, zkWallet]);
+    store.AccountStore.intervalAsyncStateUpdater(getAccState, [true], 3000, cancelable);
+  }, [store.zkWallet, store.AccountStore]);
 
   const handleSend = useCallback(
           (address, balance, symbol) => {
@@ -393,7 +409,8 @@ const Account: React.FC = observer(() => {
                             : tx.tx.token === symbol,
             )
             .filter(ftx => ftx.verified !== true);
-    return filtered.length === 0;
+    const condition = filtered.length === 0;
+    return condition;
   };
 
   const ApiFailedHint = () => null; // Temporarly disable

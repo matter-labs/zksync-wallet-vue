@@ -88,7 +88,8 @@ const useWalletInit = () => {
   const getSigner = useCallback(
     provider => {
       if (provider && !store.isBurnerWallet && !store.isExternalWallet) {
-        return new ethers.providers.Web3Provider(provider).getSigner();
+        const signer = new ethers.providers.Web3Provider(provider).getSigner();
+        return signer;
       }
     },
     [store.isBurnerWallet, store.isExternalWallet],
@@ -105,7 +106,7 @@ const useWalletInit = () => {
       } else if (store.isPortisWallet && !store.isPrimaryPage) {
         await portisConnector(store, connect, getSigner);
       } else if (store.isFortmaticWallet) {
-        await fortmaticConnector(store, connect, getSigner);
+        fortmaticConnector(store, connect, getSigner);
         store.zkWalletInitializing = true;
       } else if (store.isWalletConnect) {
         walletConnectConnector(store, connect);
@@ -137,14 +138,21 @@ const useWalletInit = () => {
         const burnerWallet = window.localStorage?.getItem('burnerWallet');
         const provider = await getDefaultProvider(LINKS_CONFIG.network);
         if (burnerWallet) {
-          const walletWithProvider = new Wallet(JSON.parse(burnerWallet), provider);
-          store.AccountStore.accountAddress = await walletWithProvider.getAddress();
+          const walletWithProvider = new Wallet(
+            JSON.parse(burnerWallet),
+            provider,
+          );
+          const address = await walletWithProvider.getAddress();
+          store.AccountStore.accountAddress = address;
           store.ethWallet = walletWithProvider as ethers.Signer;
         } else {
           const randomWallet = await Wallet.createRandom();
           const walletWithProvider = await randomWallet.connect(provider);
           store.ethWallet = walletWithProvider as ethers.Signer;
-          window.localStorage?.setItem('burnerWallet', JSON.stringify(randomWallet.privateKey));
+          window.localStorage?.setItem(
+            'burnerWallet',
+            JSON.stringify(randomWallet.privateKey),
+          );
         }
       }
       const wallet = getSigner(provider);
@@ -162,7 +170,9 @@ const useWalletInit = () => {
       };
 
       const network = process.env.ETH_NETWORK === 'localhost' ? 'localhost' : 'testnet';
-      const syncProvider = await zkSync.Provider.newWebsocketProvider(LINKS_CONFIG.ws_api);
+      const syncProvider = await zkSync.Provider.newWebsocketProvider(
+        LINKS_CONFIG.ws_api,
+      );
 
       const burnerWalletBased = store.isBurnerWallet || store.isExternalWallet ? store.ethWallet : wallet;
 
@@ -222,7 +232,9 @@ const useWalletInit = () => {
       }
 
       await fetchTransactions(25, 0, syncWallet.address())
-        .then(res => (store.transactions = res))
+        .then(res => {
+          store.transactions = res
+        })
         .catch(err => console.error(err));
 
       const { error, tokens, zkBalances } = await loadTokens(syncProvider, syncWallet, accountState);
@@ -256,8 +268,6 @@ const useWalletInit = () => {
         .then(() => {
           cancelable(store.zkWallet?.isSigningKeySet()).then(data => {
             store.unlocked = data;
-          }).catch((error) => {
-            console.log('syncWallet canceled', error);
           });
         });
       if (accountState?.id) {

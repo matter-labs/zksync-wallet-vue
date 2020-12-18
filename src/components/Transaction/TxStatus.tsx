@@ -125,7 +125,9 @@ export const TxStatus: FC<{ tx: Tx }> = observer(({ tx }) => {
     status = 'Commited';
     content = <CheckMark />;
   } else {
-    if (tx.tx.type !== 'Deposit') {
+    if (tx.tx.type === 'Deposit') {
+      status = status;
+    } else {
       if (!tx.commited && tx.tx.type === 'Withdraw') {
         // status = 'Withdrawal in progress — it should take max. 60 min';
         status =

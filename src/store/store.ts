@@ -79,7 +79,7 @@ export class Store {
   @observable syncProvider?: Provider;
   @observable transactions: Tx[] = [];
   @observable maxConfirmAmount = 25;
-  @observable windowEthereumProvider: any = window.ethereum;
+  @observable windowEthereumProvider: any = window['ethereum'];
   @observable walletLinkObject: any = {};
 
   @computed get isPrimaryPage() {
@@ -142,7 +142,7 @@ export class Store {
   }
 
   @action
-  performLogout(accessModal: boolean) {
+  performLogout(accessModal: boolean, walletName: WalletType) {
     /* Need to save commented in order of future bugs **/
     this.modalSpecifier = '';
     this.isAccessModalOpen = accessModal;
