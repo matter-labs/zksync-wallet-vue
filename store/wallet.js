@@ -1,6 +1,5 @@
 import Onboard from "bnc-onboard";
 import { ethers } from "ethers";
-import Crypto from "crypto";
 
 import onboardConfig from "@/plugins/onboardConfig.js";
 import web3Wallet from "@/plugins/web3.js";
@@ -59,7 +58,7 @@ export const mutations = {
   setTokensList(state, obj) {
     state.initialTokens = obj;
   },
-  setzkTokens(state, obj) {
+  setZkTokens(state, obj) {
     state.zkTokens = obj;
   },
   setTokenPrice(state, { symbol, obj }) {
@@ -121,6 +120,14 @@ export const getters = {
   },
   getFees(state) {
     return state.fees;
+  },
+
+  getSyncWallet() {
+    return walletData.get().syncWallet;
+  },
+
+  getProvider() {
+    return walletData.get().syncProvider;
   },
 };
 
@@ -217,7 +224,7 @@ export const actions = {
         tokenPrice: price,
       });
     }
-    commit("setzkTokens", {
+    commit("setZkTokens", {
       lastUpdated: new Date().getTime(),
       list: tokensList,
     });
@@ -390,7 +397,7 @@ export const actions = {
   async walletRefresh({ getters, commit, dispatch }) {
     try {
       dispatch("changeNetworkRemove");
-      const walletCheck = await getters["getOnboard"].walletCheck();
+      const [walletCheck] = await Promise.all([getters["getOnboard"].walletCheck()]);
       if (walletCheck !== true) {
         return false;
       }
@@ -398,46 +405,27 @@ export const actions = {
       if (getAccounts.length === 0) {
         return false;
       }
-      /* const ethersProvider = await getDefaultProvider(process.env.APP_CURRENT_NETWORK, {
-        etherscan: process.env.APP_WS_API_ETHERSCAN_TOKEN,
-      }); */
+
       const ethWallet = new ethers.providers.Web3Provider(web3Wallet.get().eth.currentProvider).getSigner();
-      /* ethersProvider.provider = ethersProvider;
-      ethersProvider.getAddress = async () => {
-        return getAccounts[0];
-      }
-      ethersProvider.address = getAccounts[0]; */
 
-      const zksync = await import("zksync");
+      const zksync = await walletData.zkSync();
+      const syncProvider = await zksync.getDefaultProvider(process.env.APP_CURRENT_NETWORK);
 
-      const generatedRandomSeed = Crypto.randomBytes(32);
-      const syncProvider = await zksync.Provider.newWebsocketProvider(process.env.APP_WS_API);
-      const signer = await zksync.Signer.fromSeed(generatedRandomSeed);
-      const syncWallet = await zkSync.Wallet.fromEthSigner(
-        /* {
-          provider: ethersProvider,
-          address: getAccounts[0],
-          getAddress: async () => {
-            return getAccounts[0];
-          },
-        }, */
-        ethWallet,
-        syncProvider,
-        signer,
-        undefined,
-        {
-          verificationMethod: "ECDSA",
-          isSignedMsgPrefixed: true,
-        },
-      );
+      const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
       const accountState = await syncWallet.getAccountState();
-      console.log("accountState", accountState);
+
       walletData.set({ syncProvider, syncWallet, accountState, ethWallet });
       if (accountState && accountState.committed) {
         commit("setAccountLockedState", accountState.committed.pubKeyHash === "sync:0000000000000000000000000000000000000000");
       }
 
       await dispatch("getzkBalances", accountState);
+
+      const isSigningKeySet = await syncWallet.isSigningKeySet();
+      console.log("isSigningKeySet", isSigningKeySet);
+
+      const getAccountId = await syncWallet.getAccountId();
+      console.log("getAccountId", getAccountId);
 
       /* const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
       console.log('maxConfirmAmount',maxConfirmAmount);

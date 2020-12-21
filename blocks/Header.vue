@@ -2,7 +2,9 @@
     <header>
         <i-container>
             <div class="firstRow">
-                <logo />
+                <nuxt-link to="/account">
+                  <logo />
+                </nuxt-link>
                 <div class="linksContainer">
                     <a target="_blank" class="mainLink desktopOnly" href="//zkscan.io">Block explorer <i class="fas fa-external-link"></i></a>
                     <a target="_blank" class="mainLink desktopOnly" href="//zksync.io/faq/intro.html">Docs <i class="fas fa-external-link"></i></a>

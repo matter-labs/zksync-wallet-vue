@@ -37,6 +37,11 @@ export default {
       balanceInfoModal: false,
     };
   },
+  head() {
+    return {
+      title: "Account",
+    };
+  },
   computed: {
     walletAddress: function () {
       return walletData.get().syncWallet.address();

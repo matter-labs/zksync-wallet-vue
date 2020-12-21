@@ -44,6 +44,11 @@ export default {
       loading: true,
     };
   },
+  head() {
+    return {
+      title: `${this.symbol} account`,
+    };
+  },
   computed: {
     symbol: function () {
       return this.$route.params.symbol.toUpperCase();

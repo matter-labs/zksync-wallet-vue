@@ -173,6 +173,31 @@ button.-lg.-circle {
 
 .modal {
     &.-md {
+        > .header {
+            font-size: 1.5rem;
+
+            & > .close {
+                height: 2.2rem !important;
+                width: 2.2rem !important;
+                line-height: 2rem !important;
+                &::before {
+                    content: "\f00d";
+                    font-family: "Font Awesome 5 Pro";
+                    font-weight: 300;
+                    -webkit-font-smoothing: antialiased;
+                    display: inline-block;
+                    font-style: normal;
+                    font-feature-settings: normal;
+                    font-variant: normal;
+                    text-rendering: auto;
+                    color: $white;
+                    font-size: 2rem;
+                }
+                .icon {
+                    display: none !important;
+                }
+            }
+        }
         .header,.footer,.body {
             padding-left: 28px !important;
             padding-right: 28px !important;
@@ -313,4 +338,20 @@ button.-lg.-circle {
     .form-input-label {
         outline: none;
     }
+}
+
+.recaptchaContainer {
+    & > div {
+        margin: 0 auto;
+    }
+}
+.fa-check-double {
+    display: block;
+    min-width: 35px;
+    min-height: 35px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjI2IDYgMjYgOCIgaGVpZ2h0PSIxMDAiIHdpZHRoPSIxMDAiPjxwYXRoIGZpbGw9JyM1OEFFNjcnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZD0iTTI3LjkyMyAxMC4zM2w1LjQyIDUuNDdMNDMuNjU2IDUuNTZsLTEuOTk4LTEuOTk4LTguMDY1IDcuOS0zLjMzLTMuMzU1em04LjU4NyAyLjkwOGwyLjUzOCAyLjQ5M0w0OS4zNiA1LjQ5MmwtMS45OTgtMS45OTgtOC4wNjUgNy45LS40NDctLjM3OHoiPjwvcGF0aD48L3N2Zz4=);
+    background-repeat: no-repeat;
+    background-position: -2px -6px;
+    background-size: contain;
+    color: transparent !important;
 }

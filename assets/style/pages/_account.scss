@@ -1,6 +1,7 @@
 .walletPage {
   .balancesBlock {
-    height: calc(100vh - 105px - 316px);
+        /* height: calc(100vh - 105px - 316px); */
+        height: max-content;
     min-height: 340px;
 
     .centerBlock {

@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import validation from "@/plugins/helpers/validation.js";
 export default {
   props: {
     placeholder: {

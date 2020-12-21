@@ -42,6 +42,9 @@ export default {
     if (process.client) {
       window.history.scrollRestoration = "manual";
     }
+    if(localStorage.getItem('colorTheme')) {
+      this.$inkline.config.variant = localStorage.getItem('colorTheme');
+    }
   },
 };
 </script>

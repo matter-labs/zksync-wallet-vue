@@ -99,6 +99,11 @@ export default {
       transactionAmount: "",
     };
   },
+  head() {
+    return {
+      title: "Deposit",
+    };
+  },
   computed: {
     displayedTokenList: function () {
       if (!this.search.trim()) {

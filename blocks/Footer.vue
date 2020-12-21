@@ -29,6 +29,7 @@ export default {
   methods: {
     toggleDarkMode() {
       this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
+      localStorage.setItem("colorTheme", this.$inkline.config.variant);
     },
   },
 };

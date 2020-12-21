@@ -101,6 +101,11 @@ export default {
       contactsList: [],
     };
   },
+  head() {
+    return {
+      title: "Contacts",
+    };
+  },
   computed: {
     walletAddressFull: function () {
       return walletData.get().syncWallet.address();

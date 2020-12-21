@@ -25,9 +25,9 @@ export default {
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
-        content: "/favicon.png",
+        content: "/icon.png",
       },
-      { hid: "theme-color", name: "theme-color", content: "#e33d4f" },
+      { hid: "theme-color", name: "theme-color", content: "#4e529a" },
       {
         hid: "msapplication-TileColor",
         property: "msapplication-TileColor",
@@ -83,15 +83,20 @@ export default {
       },
     ],
   ],
-  manifest: {
-    name: "zkSync",
-    short_name: "zkSync",
-    description: "zkSync description",
-    start_url: "/",
-    scope: "/",
-    display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#e33d4f",
+  pwa: {
+    icon: {
+      fileName: 'icon.png'
+    },
+    manifest: {
+      name: "zkSync",
+      short_name: "zkSync",
+      description: "zkSync wallet",
+      start_url: "/",
+      scope: "/",
+      display: "standalone",
+      background_color: "#11142b",
+      theme_color: "#4e529a",
+    },
   },
   toast: {
     position: "bottom-right",
@@ -120,7 +125,7 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: process.env.NUXT_API_BASE_URL || process.env.APP_URL + "/api",
+    //baseURL: process.env.NUXT_API_BASE_URL || process.env.APP_URL + "/api",
   },
   auth: {
     strategies: {
