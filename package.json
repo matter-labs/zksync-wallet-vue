@@ -1,21 +1,13 @@
 {
+  "name": "zksync-zkwallet-vue",
+  "private": true,
   "author": "Matter Labs",
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
+  "version": "2.0.0-beta",
   "license": "MIT",
   "homepage": "https://wallet.zksync.io",
   "bugs": {
-    "url": "https://github.com/vuesion/vuesion/issues"
+    "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
   "dependencies": {
     "@nuxtjs/axios": "latest",
@@ -41,43 +33,6 @@
     "web3": "^1.2.7",
     "zksync": "^0.7.4"
   },
-  "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
-  "devDependencies": {
-    "@inkline/nuxt": "^2.3.5",
-    "@nuxtjs/dotenv": "1.4.1",
-    "@nuxtjs/style-resources": "^1.0.0",
-    "commitlint": "^8.3.5",
-    "dotenv": "8.2.0",
-    "eslint": "^7.16.0",
-    "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-nuxt": "^2.0.0",
-    "eslint-plugin-prettier-vue": "^2.1.1",
-    "eslint-plugin-vue": "^7.0.0",
-    "fs-extra": "latest",
-    "lodash": "4.17.20",
-    "node-sass": "latest",
-    "prettier": "^2.2.1",
-    "sass-loader": "latest"
-  },
-  "eslintConfig": {
-    "extends": "plugin:nuxt/recommended"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "lint": "eslint --ext .ts,.js,.vue .",
-  "lint-staged": {
-    "*.{css,scss}": "npm run lint-css",
-    "*.{ts,tsx}": [
-      "npm run lint-ts",
-      "npm run format"
-    ]
-  },
-  "name": "zksync-zkwallet-dapp",
-  "private": true,
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
@@ -87,9 +42,22 @@
     "format": "prettier --write",
     "lint-ts": "eslint --fix \"**/*.{js, vue}\"",
     "lint-css": "stylelint --fix \"**/*.scss\"",
-    "deploy_hosting": "firebase deploy --only hosting --project ${FIREBASE_PROJECT:?firebase project name not set or empty}",
+    "deploy_hosting": "firebase --project ${FIREBASE_PROJECT:?firebase project name not set or empty} deploy --only hosting",
     "audit_dependencies": "npm audit --package-lock-only --audit-level critical --json | npm-audit-html --output audit.html",
     "check_licenses": "license-checker --json > licenses.json"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "*.{css,scss}": "npm run lint-css",
+    "*.{ts,tsx}": [
+      "npm run lint-ts",
+      "npm run format"
+    ]
   },
   "stylelint": {
     "extends": [
@@ -145,5 +113,36 @@
       "scss/at-rule-no-unknown": true
     }
   },
-  "version": "2.0.0-beta"
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@inkline/nuxt": "^2.3.5",
+    "@nuxtjs/dotenv": "1.4.1",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "commitlint": "^8.3.5",
+    "dotenv": "8.2.0",
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-prettier-vue": "^2.1.1",
+    "eslint-plugin-vue": "^7.0.0",
+    "fs-extra": "latest",
+    "lodash": "4.17.20",
+    "node-sass": "latest",
+    "prettier": "^2.2.1",
+    "sass-loader": "latest"
+  }
 }

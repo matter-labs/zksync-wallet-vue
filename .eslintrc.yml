@@ -1,6 +1,5 @@
 env:
   browser: true
-  root: true
 parser: '@typescript-eslint/parser'
 parserOptions:
   ecmaVersion: 6

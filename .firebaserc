@@ -1,0 +1,21 @@
+{
+  "projects": {
+    "default": "zksync-demo",
+    "beta": "zksync-demo"
+  },
+  "targets": {
+    "zksync-demo": {
+      "hosting": {
+        "mainnet-beta": [
+          "zksync-mainnet-beta"
+        ],
+        "rinkeby-beta": [
+          "zksync-rinkeby-beta"
+        ],
+        "ropsten-beta": [
+          "zksync-ropsten-beta"
+        ]
+      }
+    }
+  }
+}

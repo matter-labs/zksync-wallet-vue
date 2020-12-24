@@ -2,7 +2,8 @@ require("dotenv").config();
 
 export default {
   ssr: false,
-  srcDir: __dirname,
+  srcDir: 'src',
+  buildDir: 'functions/.nuxt',
 
   env: {
     ...process.env,
@@ -64,9 +65,10 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    "@nuxtjs/dotenv",
     "@nuxtjs/axios",
     "@nuxtjs/toast",
+    "@nuxtjs/dotenv",
+    "@nuxtjs/style-resources",
     "@nuxtjs/style-resources",
     "@inkline/nuxt",
     [
