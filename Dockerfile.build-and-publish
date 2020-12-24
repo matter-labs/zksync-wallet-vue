@@ -1,0 +1,21 @@
+FROM node:14.15-stretch AS build
+
+COPY . /app
+WORKDIR /app
+
+RUN \
+  # dependencies \
+  apt-get update -y && apt-get install -y libglu1 libxi6 libjpeg62 libpng16-16
+
+## Install and lint layer
+RUN npm --prefer-offline install npm --silent && \
+    npm run check_licenses && \
+    npm run audit_dependencies && \
+    npm run lint-ts && \
+    npm run lint-css
+
+## Static site publishing layer
+ARG FIREBASE_TOKEN
+ARG FIREBASE_PROJECT
+ARG FIREBASE_HOSTING
+RUN npm run build && npm run deploy_hosting

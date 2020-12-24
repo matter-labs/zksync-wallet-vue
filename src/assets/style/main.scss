@@ -1,0 +1,34 @@
+// Core
+@import "./variables.scss";
+@import "./default.scss";
+@import "./transitions.scss";
+@import "./fonts.scss";
+
+
+//Layouts
+@import "./layouts/default.scss";
+@import "./layouts/index.scss";
+
+
+//Blocks
+@import "./blocks/header.scss";
+@import "./blocks/footer.scss";
+@import "./blocks/logo.scss";
+@import "./blocks/onboard.scss";
+@import "./blocks/cookie.scss";
+
+
+//Components
+@import "./components/loader.scss";
+@import "./components/userImg.scss";
+@import "./components/walletAddress.scss";
+@import "./components/checkmark.scss";
+@import "./components/custom/custom.scss";
+
+//Pages
+@import "./pages/index.scss";
+@import "./pages/contacts.scss";
+@import "./pages/transactions.scss";
+@import "./pages/transaction.scss";
+@import "./pages/account.scss";
+@import "./pages/tokenAccount.scss";

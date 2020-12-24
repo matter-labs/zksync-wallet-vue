@@ -11,6 +11,7 @@ on:
 jobs:
   buildx:
     runs-on: ubuntu-20.04
+    if: ${{ false }}
     steps:
       - name: 'Checkout the source code'
         uses: actions/checkout@v2

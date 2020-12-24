@@ -1,9 +1,21 @@
 {
   "projects": {
-    "mainnet": "zksync-base",
-    "master": "zksync-demo",
-    "reddit": "zksync-reddit",
-    "rinkeby": "zksync-wallet",
-    "ropsten": "zksync-ropsten"
+    "default": "zksync-demo",
+    "beta": "zksync-demo"
+  },
+  "targets": {
+    "zksync-demo": {
+      "hosting": {
+        "mainnet-beta": [
+          "zksync-mainnet-beta"
+        ],
+        "rinkeby-beta": [
+          "zksync-rinkeby-beta"
+        ],
+        "ropsten-beta": [
+          "zksync-ropsten-beta"
+        ]
+      }
+    }
   }
 }

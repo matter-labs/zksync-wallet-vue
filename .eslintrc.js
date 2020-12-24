@@ -1,56 +1,84 @@
 module.exports = {
-  env: {
-    browser: true,
-    node: true
-  },
   root: true,
-  plugins: ['@typescript-eslint', 'react-hooks', 'react'],
-  parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   extends: [
-    'standard',
-    'eslint:recommended',
-    'plugin:react/recommended', // Uses the recommended rules from @eslint-plugin-react
-    'plugin:react-hooks/recommended', // Uses the recommended reach-hooks rules from @eslint-plugin-react-hooks
-    'plugin:@typescript-eslint/recommended', // Uses the recommended rules from @typescript-eslint/eslint-plugin
-    'prettier',
-    'prettier/@typescript-eslint',
+    "plugin:vue/recommended",
+    "plugin:prettier-vue/recommended",
+    // Do not add `'prettier/vue'` if you don't want to use prettier for `<template>` blocks
+    "prettier/vue",
   ],
-  parserOptions: {
-    ecmaVersion: 6, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module', // Allows for the use of imports
-    ecmaFeatures: {
-      modules: true,
-      jsx: true, // Allows for the parsing of JSX
-    },
-  },
-  rules: {
-    'prefer-promise-reject-errors': 'off',
-    'no-prototype-builtins': 'off',
-    'dot-notation': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/camelcase': 'off',
-    '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/interface-name-prefix': 'off',
-    '@typescript-eslint/no-use-before-define': 'off',
-    '@typescript-eslint/no-this-alias': 'off',
-    '@typescript-eslint/no-empty-interface': 'off',
-    '@typescript-eslint/no-non-null-assertion': 'off',
-    'react/jsx-no-target-blank': 'off',
-    'react/prop-types': 'off',
-    'react/jsx-no-literals': 'warn',
-    'react/jsx-no-useless-fragment': 'warn',
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'off',
-    'no-use-before-define': 'off',
-    'plugin/no-low-performance-animation-properties': 0,
-    "@typescript-eslint/ban-ts-comment": "off"
-    // e.g. '@typescript-eslint/explicit-function-return-type': 'off',
-  },
+
   settings: {
-    react: {
-      version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
+    "prettier-vue": {
+      // Settings for how to process Vue SFC Blocks
+      SFCBlocks: {
+        /**
+         * Use prettier to process `<template>` blocks or not
+         *
+         * If set to `false`, remember not to `extends: ['prettier/vue']`, as you need the rules from `eslint-plugin-vue` to lint `<template>` blocks
+         *
+         * @default true
+         */
+        template: false,
+
+        /**
+         * Use prettier to process `<script>` blocks or not
+         *
+         * @default true
+         */
+        script: true,
+
+        /**
+         * Use prettier to process `<style>` blocks or not
+         *
+         * @default true
+         */
+        style: true,
+
+        // Settings for how to process custom blocks
+        customBlocks: {
+          // Treat the `<docs>` block as a `.markdown` file
+          docs: { lang: "markdown" },
+
+          // Treat the `<config>` block as a `.json` file
+          config: { lang: "json" },
+
+          // Treat the `<module>` block as a `.js` file
+          module: { lang: "js" },
+
+          // Ignore `<comments>` block (omit it or set it to `false` to ignore the block)
+          comments: false,
+
+          // Other custom blocks that are not listed here will be ignored
+        },
+      },
+
+      // Use prettierrc for prettier options or not (default: `true`)
+      usePrettierrc: true,
+
+      // Set the options for `prettier.getFileInfo`.
+      // @see https://prettier.io/docs/en/api.html#prettiergetfileinfofilepath-options
+      fileInfoOptions: {
+        // Path to ignore file (default: `'.prettierignore'`)
+        // Notice that the ignore file is only used for this plugin
+        ignorePath: ".testignore",
+
+        // Process the files in `node_modules` or not (default: `false`)
+        withNodeModules: false,
+      },
     },
+  },
+
+  rules: {
+    "prettier-vue/prettier": [
+      "error",
+      {
+        semi: true,
+        trailingComma: "all",
+        singleQuote: false,
+        jsxSingleQuote: false,
+        printWidth: 180,
+        tabWidth: 2,
+      },
+    ],
   },
 };

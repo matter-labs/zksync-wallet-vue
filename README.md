@@ -1,9 +1,13 @@
 # [zkWallet](https://wallet.zksync.io/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![npm version](https://img.shields.io/npm/v/zksync.svg?style=flat)](https://www.npmjs.com/package/zksync) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Rinkeby](https://img.shields.io/badge/wallet-Live%20on%20Rinkeby-blue)](https://rinkeby.zksync.io) [![Live on Ropsten](https://img.shields.io/badge/wallet-Live%20on%20Ropsten-blue)](https://ropsten.zksync.io) [![Join the technical discussion chat at https://gitter.im/matter-labs/zksync](https://badges.gitter.im/matter-labs/zksync.svg)](https://gitter.im/matter-labs/zksync?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
-test
+# zkWallet v.2.*
 
-# zkWallet: zkSync official dApp
+A completely different version of zkWallet, built with nuxt+vuejs.
+New architecture, implemented open source design system. Tight roadmap with many awesome features will guide developers into the amazing world of dApps and introduce true
+ reactive interaction, dialog-based UX.
+ 
+**Stay tuned!**
 
 It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, published and ready for mass adoption.
 
@@ -24,10 +28,44 @@ It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, publis
 
 ✅ **Ultra-low transaction fees (~ $0.001 per transfer)**
 
-used to unleash the power of zkSync L2 operations to access L2 zkSync features on mainnet
-It's become possible because of Zero Confirmation  using L2 zero-confirmation
- ([learn more]())
+zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet. Visit zksync.io to **[learn more](https
+://zksync.io
+/)**
 
+## Build Setup
+
+``` bash
+# install dependencies (clear install)
+$ npm install --cache /tmp/empty-cache
+
+# serve with hot reload at localhost:3000
+$ npm run dev
+
+# build for production and launch server
+$ npm run build
+$ npm run start
+
+# generate static project
+$ npm run generate
+```
+
+For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+---
+
+## Surge.sh deployment process
+
+As used by alpha-version is deployed to surge.sh 
+
+``` sh
+$ sh cli-update.sh
+``` 
+
+## Used software
+
+* [Nuxt.js docs](https://nuxtjs.org)
+* [Vue.js v.2.*](https://vuejs.org)
+* ...
 
 ## License
 

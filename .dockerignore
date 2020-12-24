@@ -182,4 +182,8 @@ commitlint.config.js
 .github
 .gitignore
 .dockerignore
+
+## Fix build invalidation
 Dockerfile
+Dockerfile.*
+node_modules

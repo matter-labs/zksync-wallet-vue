@@ -1,0 +1,72 @@
+{
+  "errors": {
+    "minCharacters": "Minimum number of characters {value}",
+    "maxCharacters": "Maximum number of characters {value}",
+    "minValue": "Minimum number is {value}",
+    "maxValue": "Maximum number is {value}",
+    "shouldBeNumber": "Value should be a number",
+    "empty": "Field can't be empty",
+    "email": "Enter valid email",
+    "emailInUse": "Email is already in use",
+    "passwordsMismatch": "Passwords does not match",
+    "dateRequired": "Введите допустимую дату",
+    "incorrectPassword": "Неверный пароль",
+    "passwordMissmatch": "Password missmatch",
+    "date": "Enter a valid date"
+  },
+  "statuses": {
+    "validated": {
+      "text": "Validated",
+      "color": "green"
+    },
+    "pending": {
+      "text": "Pending",
+      "color": "orange"
+    },
+    "scheduled": {
+      "text": "Scheduled",
+      "color": "orange"
+    },
+    "archive": {
+      "text": "Archive",
+      "color": "gray"
+    },
+    "rejected": {
+      "text": "Rejected",
+      "color": "red"
+    },
+    "inbox": {
+      "text": "Awaits",
+      "color": "orange"
+    }
+  },
+  "dictionary": {
+    "categories": {
+      "Opened": "Opened",
+      "Specific": "Specific",
+      "Certified": "Certified"
+    },
+    "types": {
+      "airplane_classic": "Airplane-classic",
+      "flying_wing": "Flying wing",
+      "hybrid": "Hybrid",
+      "helicopter_classic": "Helicopter-classic",
+      "co_axial": "Co-Axial",
+      "tandem": "Tandem",
+      "multicopter": "Multicopter",
+      "other": "Other"
+    },
+    "propulsion": {
+      "electric": "Electric",
+      "internal_combustion": "Internal combustion",
+      "reagent": "Reagent",
+      "hybrid": "Mixture / Hybrid"
+    },
+    "controllerTypes": {
+      "radio": "Radio Manufacture",
+      "wifi": "Wi-Fi",
+      "pre-programmed": "Pre-programmed",
+      "mobile": "Mobile-device App-Controlled"
+    }
+  }
+}
