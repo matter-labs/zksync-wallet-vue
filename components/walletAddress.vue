@@ -2,9 +2,9 @@
     <div class="walletContainer">
         <user-img :wallet="wallet" />
         <span class="walletValue">{{wallet}}</span>
-        <i-tooltip>
+        <i-tooltip trigger="click">
             <i class="copy fas fa-copy" @click="copyAddress()"></i>
-            <template slot="body">Copy</template>
+            <template slot="body">Copied!</template>
         </i-tooltip>
     </div>
 </template>

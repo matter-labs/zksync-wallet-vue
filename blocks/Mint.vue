@@ -9,7 +9,7 @@
         </p>
       </div>
     </i-modal>
-    <i-modal v-model="mainModal" size="md">
+    <i-modal class="prevent-close" v-model="mainModal" size="md">
       <template slot="header">Matter Labs Trial Token</template>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
       <div v-if="loading===false">
@@ -83,10 +83,15 @@ export default {
   },
   methods: {
     startMint: function () {
-      if (this.step === "tweet") {
-        this.checkForTweet();
+      if(process.env.APP_CURRENT_NETWORK==='mainnet') {
+        this.onlyTestNetModal=true;
       }
-      this.mainModal = true;
+      else {
+        if (this.step === "tweet") {
+          this.checkForTweet();
+        }
+        this.mainModal = true;
+      }
     },
     getTicketFromAddress: function (salt) {
       const preimage = (String(walletData.get().syncWallet.address()).trim() + String(salt).trim()).toLowerCase();
@@ -154,17 +159,9 @@ export default {
           await new Promise((resolve) => {
             setTimeout(() => {
               resolve();
-            }, 2000);
+            }, 7000);
           });
-          await this.$store.dispatch("wallet/getInitialBalances", true).catch((err) => {
-            console.log("getInitialBalances", err);
-          });
-          await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true }).catch((err) => {
-            console.log("getzkBalances", err);
-          });
-          await this.$store.dispatch("wallet/getTransactionsHistory", { force: true }).catch((err) => {
-            console.log("getTransactionsHistory", err);
-          });
+          await this.$store.dispatch("wallet/forceRefreshData");
           this.$emit("received");
           this.tip = "";
           this.step = "success";

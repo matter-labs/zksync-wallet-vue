@@ -1,6 +1,6 @@
 <template>
     <div class="contactsPage">
-        <i-modal v-model="addContactModal" size="md">
+        <i-modal class="prevent-close" v-model="addContactModal" size="md">
             <template slot="header">
                 <span v-if="addContactType==='add'">Add contact</span>
                 <span v-else-if="addContactType==='edit'">Edit contact</span>
@@ -48,7 +48,10 @@
                         <div class="contactAddress">{{item.address}}</div>
                     </div>
                     <div v-if="!item.deleted" class="iconsBlock">
+                      <i-tooltip trigger="click">
                         <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="fal fa-copy"></i></i-button>
+                        <template slot="body">Copied!</template>
+                      </i-tooltip>
                         <i-button block link size="md" variant="secondary" @click="editContact(item)"><i class="fal fa-pen"></i></i-button>
                     </div>
                     <div v-else class="iconsBlock">
@@ -74,7 +77,7 @@
             <i-button v-if="openedContact.notInContacts" block link size="md" variant="secondary" @click="addContactType='add'; inputedWallet=openedContact.address; addContactModal=true;"><i class="fal fa-plus"></i>&nbsp;&nbsp;Add contact</i-button>
             <i-button v-else-if="openedContact.deleted===false" block link size="md" variant="secondary" @click="editContact(openedContact)"><i class="fal fa-pen"></i>&nbsp;&nbsp;Edit contact</i-button>
             <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="fal fa-trash-undo"></i>&nbsp;&nbsp;Restore contact</i-button>
-            <i-button block size="lg" variant="secondary"><i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer to contact</i-button>
+            <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer to contact</i-button>
         </div>
     </div>
 </template>
@@ -99,11 +102,6 @@ export default {
       editingWallet: null,
       modalError: "",
       contactsList: [],
-    };
-  },
-  head() {
-    return {
-      title: "Contacts",
     };
   },
   computed: {

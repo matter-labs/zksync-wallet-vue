@@ -1,9 +1,9 @@
 import walletData from "@/plugins/walletData.js";
 export default (symbol, amount) => {
   if (!amount) return "0";
-  const syncWallet = walletData.get().syncWallet;
+  const syncProvider = walletData.get().syncProvider;
   if (typeof amount === "number") {
-    return syncWallet.provider?.tokenSet.formatToken(symbol, amount.toString());
+    return syncProvider.tokenSet.formatToken(symbol, amount.toString());
   }
-  return syncWallet.provider?.tokenSet.formatToken(symbol, amount);
+  return syncProvider.tokenSet.formatToken(symbol, amount);
 };

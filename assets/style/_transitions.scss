@@ -10,3 +10,11 @@
 .fadeFast-enter, .fadeFast-leave-to {
     opacity: 0;
 }
+
+
+.slide-vertical-enter-active, .slide-vertical-leave-active {
+    transition: transform .5s ease !important;
+}
+.slide-vertical-enter, .slide-vertical-leave-to {
+    transform: translateY(250px);
+}

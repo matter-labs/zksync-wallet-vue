@@ -8,7 +8,7 @@
           need</a>!</p>
       </div>
     </i-modal>
-    <i-modal v-model="saveContactModal" size="md">
+    <i-modal class="prevent-close" v-model="saveContactModal" size="md">
       <template slot="header">Save contact</template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
@@ -19,7 +19,9 @@
     </i-modal>
     <account-unlock v-if="isAccountLocked && openedTab!=='tokenList'" :choosed-token="choosedToken"
                     @selectToken="openedTab='tokenList'"/>
-    <div v-else-if="success===true" class="tileBlock">
+    <choose-fee-token v-else-if="openedTab==='feeTokensList'" v-model="choosedFeeToken"
+                      @selectToken="openedTab='main'"/>
+    <div v-else-if="success === true" class="tileBlock">
       <div class="tileHeadline h3">
         <span>{{ type==='withdraw' ? 'Withdraw':'Transfer' }}</span>
       </div>
@@ -39,13 +41,17 @@
       </div>
       <div class="totalAmount _margin-top-1">
         <div class="headline">Amount:</div>
-        <div class="amount">{{ choosedToken.symbol }} {{ formatMax(transactionAmount) }} <span
-            class="totalPrice">~${{ (transactionAmount * choosedToken.tokenPrice).toFixed(2) }}</span></div>
+        <div class="amount">{{ choosedToken.symbol }} {{ handleExponentialNumber(choosedToken.symbol, transactionAmount) }} <span
+            class="totalPrice">{{getFormattedPrice(choosedToken.tokenPrice, transactionAmount)}}</span></div>
       </div>
       <div class="totalAmount smaller _margin-top-1">
         <div class="headline">Fee:</div>
-        <div class="amount">{{ choosedToken.symbol }} {{ formatMax(transactionFee) }} <span
-            class="totalPrice">~${{ (transactionFee * choosedToken.tokenPrice).toFixed(2) }}</span></div>
+        <div class="amount">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}
+          {{ handleExponentialNumber(choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol, transactionFee) }}
+          <span class="totalPrice">
+            {{getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice:choosedToken.tokenPrice, transactionFee)}}
+          </span>
+        </div>
       </div>
       <i-button block size="lg" variant="secondary" class="_margin-top-2" to="/account">Ok</i-button>
     </div>
@@ -80,7 +86,8 @@
       <br>
 
       <div class="_padding-bottom-1">Amount / asset</div>
-      <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number">
+      <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" :class="{'errorShake': errorShake}"
+               @keydown="filterNumbers">
         <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openedTab='tokenList'">
           Select token
         </i-button>
@@ -89,38 +96,60 @@
         </i-button>
       </i-input>
       <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
-        <div class="totalPrice">~${{ (inputTotalSum * choosedToken.tokenPrice).toFixed(2) }}</div>
-        <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?transactionMaxAmount:0">Max:
-          {{ transactionMaxAmount > 0 ? transactionMaxAmount:0 }}
+        <div class="totalPrice">
+          {{getFormattedPrice(choosedToken.tokenPrice, inputTotalSum)}}
+        </div>
+        <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0">Max:
+          {{ transactionMaxAmount > 0 ? handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0 }}
         </div>
       </div>
       <div v-if="choosedToken && inputTotalSum>transactionMaxAmount" class="errorText _text-center _margin-top-1">
         Not enough {{ choosedToken.symbol }} to perform a transaction
       </div>
 
-      <i-radio-group v-if="choosedToken && type==='withdraw'" v-model="fastWithdraw" class="_margin-top-2">
-        <i-radio :value="false">Normal withdraw (Fee: {{ feesObj.normal }} {{ choosedToken.symbol }}).<br>Processing
-          time: {{ getTimeString(withdrawTime.normal) }}
+      <i-radio-group v-if="choosedToken && type==='withdraw' && (!choosedFeeToken || choosedFeeToken.symbol===choosedToken.symbol)" v-model="fastWithdraw" class="_margin-top-2">
+        <i-radio :value="false">
+          Normal withdraw (Fee: <span v-if="feesObj">{{ feesObj.normal }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span><span class="totalPrice" v-else>Loading...</span>).<br>
+          Processing time: {{ getTimeString(withdrawTime.normal) }}
         </i-radio>
-        <i-radio :value="true">Fast withdraw (Fee: {{ feesObj.fast }} {{ choosedToken.symbol }}).<br>Processing time:
-          {{ getTimeString(withdrawTime.fast) }}
+        <i-radio :value="true">
+          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span><span class="totalPrice" v-else>Loading...</span>).<br>
+          Processing time: {{ getTimeString(withdrawTime.fast) }}
         </i-radio>
       </i-radio-group>
+      <div v-else-if="choosedToken && type==='withdraw'" class="totalPrice _text-center _margin-top-1">Only normal withdraw ({{getTimeString(withdrawTime.normal)}}) is available when using different fee token</div>
 
       <div v-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
 
       <i-button block size="lg" variant="secondary" class="_margin-top-1"
-                :disabled="!inputTotalSum || !choosedToken || inputTotalSum>transactionMaxAmount"
-                @click="commitTransaction()">{{ type==='withdraw' ? 'Withdraw':'Transfer' }}
+                :disabled="!enoughTokenFee || !isAddressValid || !inputTotalSum || inputTotalSum<=0 || !choosedToken || feesLoading || inputTotalSum>transactionMaxAmount"
+                @click="commitTransaction()">
+        <i v-if="type!=='withdraw'" class="far fa-money-bill-wave-alt"></i>
+        <i v-else class="fas fa-hand-holding-usd"></i>
+        {{ type==='withdraw' ? 'Withdraw':'Transfer' }}
       </i-button>
-      <div v-if="feesObj && choosedToken && isAddressValid" class="_text-center _margin-top-1">
+      <div v-if="cantFindFeeToken===true && feesObj && choosedToken && isAddressValid"
+           class="errorText _text-center _margin-top-1">
+        <b>{{ choosedToken.symbol }}</b> is not suitable to pay the fee<br>
+        No available tokens on your balance to pay the fee
+      </div>
+      <div v-else-if="(feesObj || feesLoading) && choosedToken && isAddressValid" class="_text-center _margin-top-1">
         Fee:
         <span v-if="feesLoading" class="totalPrice">Loading...</span>
-        <span v-else>{{ feesObj[fastWithdraw===true ? 'fast':'normal'] }} {{ choosedToken.symbol }} <span
-            class="totalPrice">~${{
-            (feesObj[fastWithdraw===true ? 'fast':'normal'] * choosedToken.tokenPrice).toFixed(2)
-          }}</span></span>
+        <span v-else>
+          {{
+            feesObj[fastWithdraw===true ? 'fast':'normal']
+          }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}
+          <span class="totalPrice">
+            {{getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice:choosedToken.tokenPrice, feesObj[fastWithdraw===true ? 'fast':'normal'])}}
+          </span>
+          <span class="chooseFeeToken" @click="openedTab='feeTokensList'">Choose fee token</span>
+        </span>
+        <div v-if="enoughTokenFee===false && feesLoading===false && choosedFeeToken.symbol!==choosedToken.symbol" class="errorText _text-center _margin-top-1">
+          Not enough <b>{{ choosedFeeToken.symbol }}</b> to pay the fee
+        </div>
       </div>
+
 
     </div>
     <div v-else-if="openedTab==='tokenList'" class="tileBlock tokensTile">
@@ -142,7 +171,7 @@
           <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
             <div class="tokenLabel">{{ item.symbol }}</div>
             <div class="rightSide">
-              <div class="balance">{{ item.balance }}</div>
+              <div class="balance">{{ item.formatedBalance }}</div>
             </div>
           </div>
           <div v-if="tokenSearch && displayedTokenList.length===0" class="nothingFound">
@@ -152,8 +181,8 @@
             <span>No balances yet. Please make a deposit or request money from someone!</span>
           </div>
         </div>
-        <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="cantFindTokenModal=true">Can't
-          find a token?
+        <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="cantFindTokenModal=true">
+          Can't find a token?
         </i-button>
       </template>
     </div>
@@ -202,17 +231,17 @@
 
 <script>
 import AccountUnlock from "@/blocks/AccountUnlock.vue";
-import Checkmark from "@/components/Checkmark.vue";
+import ChooseFeeToken from "@/blocks/ChooseFeeToken.vue";
 
+import Checkmark from "@/components/Checkmark.vue";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
-import handleExponentialNumber from "@/plugins/handleExponentialNumbers.js";
-import handleFormatToken from "@/plugins/handleFormatToken.js";
-import validations from "@/plugins/validations.js";
 
+import { transaction, withdraw } from "@/plugins/walletActions/transaction.js";
+import utils from '@/plugins/utils.js';
+import validations from "@/plugins/validations.js";
 import walletData from "@/plugins/walletData.js";
 import { ethers } from "ethers";
-import { transaction } from "~/middleware/walletActions/transaction";
 
 const timeCalc = (timeInSec) => {
   const hours = Math.floor(timeInSec / 60 / 60);
@@ -233,6 +262,7 @@ export default {
     Checkmark,
     walletAddress,
     AccountUnlock,
+    ChooseFeeToken,
   },
   props: {
     type: {
@@ -243,6 +273,7 @@ export default {
   },
   data() {
     return {
+      errorShake: false,
       openedTab: "main",
 
       mainLoading: true,
@@ -268,6 +299,9 @@ export default {
       choosedToken: false,
       cantFindTokenModal: false,
 
+      choosedFeeToken: false,
+      cantFindFeeToken: false,
+
       tip: "",
       success: false,
       transactionHash: "",
@@ -276,24 +310,6 @@ export default {
     };
   },
   computed: {
-    isAccountLocked: function () {
-      return this.$store.getters["wallet/isAccountLocked"];
-    },
-    displayedTokenList: function () {
-      if (!this.tokenSearch.trim()) {
-        return this.tokensList;
-      }
-      return this.tokensList.filter((e) => e.balance > 0 && e.symbol.toLowerCase().includes(this.tokenSearch.trim().toLowerCase()));
-    },
-    displayedContactsList: function () {
-      if (!this.contactSearch.trim()) {
-        return this.contactsList;
-      }
-      return this.contactsList.filter((e) => e.name.toLowerCase().includes(this.contactSearch.trim().toLowerCase()));
-    },
-    isAddressValid: function () {
-      return validations.eth.test(this.inputAddress);
-    },
     canSaveContact: function () {
       let isInContactList = false;
       for (const item of this.contactsList) {
@@ -308,6 +324,26 @@ export default {
       }
       return !isInContactList && !this.isOwnAddress && !this.choosedContact && this.isAddressValid;
     },
+    isAccountLocked: function () {
+      return this.$store.getters["wallet/isAccountLocked"];
+    },
+    displayedTokenList: function () {
+      if (!this.tokenSearch.trim()) {
+        return this.tokensList.filter((e) => (this.isAccountLocked === true ? e.restricted===false : true));
+      }
+      return this.tokensList.filter(
+        (e) => (this.isAccountLocked === true ? e.restricted===false : true) && e.balance > 0 && e.symbol.toLowerCase().includes(this.tokenSearch.trim().toLowerCase()),
+      );
+    },
+    displayedContactsList: function () {
+      if (!this.contactSearch.trim()) {
+        return this.contactsList;
+      }
+      return this.contactsList.filter((e) => e.name.toLowerCase().includes(this.contactSearch.trim().toLowerCase()));
+    },
+    isAddressValid: function () {
+      return validations.eth.test(this.inputAddress);
+    },
     isOwnAddress: function () {
       return this.inputAddress.toLowerCase() === walletData.get().syncWallet.address().toLowerCase();
     },
@@ -315,7 +351,14 @@ export default {
       return walletData.get().syncWallet.address();
     },
     transactionMaxAmount: function () {
-      return this.formatMax(this.choosedToken.balance - (this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal));
+      if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
+        return (this.choosedToken.balance - (this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal));
+      } else {
+        return this.choosedToken.balance;
+      }
+    },
+    enoughTokenFee: function () {
+      return !(this.feesObj && this.choosedFeeToken && this.choosedFeeToken.balance < (this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal));
     },
     blockExplorerLink: function () {
       return process.env.APP_ZKSYNC_BLOCK_EXPLORER;
@@ -327,7 +370,7 @@ export default {
         this.tokensLoading = true;
         try {
           const list = await this.$store.dispatch("wallet/getzkBalances");
-          this.tokensList = list.map((e) => ({ ...e, balance: this.formatMax(e.balance) }));
+          this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
         } catch (error) {
           console.log(error);
         }
@@ -339,31 +382,86 @@ export default {
         this.getFees();
       }
     },
+    choosedToken: {
+      deep: true,
+      handler(val) {
+        if(this.type==='withdraw' && val && this.choosedFeeToken && val.symbol!==this.choosedFeeToken.symbol) {
+          this.fastWithdraw=false;
+        }
+        this.checkForFeeToken();
+      },
+    },
+    choosedFeeToken: {
+      deep: true,
+      handler(val) {
+        if(this.type==='withdraw' && val && val.symbol!==this.choosedToken.symbol) {
+          this.fastWithdraw=false;
+        }
+        this.getFees();
+      },
+    },
   },
   mounted() {
+    if (this.$route.query["w"]) {
+      this.inputAddress = this.$route.query["w"];
+    }
+    if (this.$route.query["token"]) {
+      this.tokensLoading = true;
+      this.$store.dispatch("wallet/getzkBalances").then((list) => {
+        this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
+        const tokenLoaded = this.tokensList.filter((singleTokenObj) => singleTokenObj.symbol === this.$route.query["token"]).shift();
+        this.chooseToken(tokenLoaded);
+        this.tokensLoading = false;
+      });
+    }
     this.getContactsList();
     if (this.type === "withdraw") {
-      this.getWidthdrawTime();
+      this.getWithdrawalTime();
     } else {
       this.mainLoading = false;
     }
   },
   methods: {
-    getFormatedAmount: function (token, amount) {
-      return handleExponentialNumber(+handleFormatToken(token, +amount));
-    },
-    formatMax: function (val) {
-      if (val === undefined) {
-        return 0;
-      }
-      val = String(val).toString();
-      let parts = val.split(".");
-      if (parts.length > 1) {
-        if (parts[1].length > 8) {
-          parts[1] = parts[1].substr(0, 8);
+    /**
+     * Protecting input field from entering wrong amount
+     * @param keyPressEvent
+     * @return {boolean}
+     */
+    filterNumbers: function (keyPressEvent) {
+      const regex = RegExp("\d\.\,");
+      if (keyPressEvent.key && regex.test(keyPressEvent.key)) {
+        e.stopPropagation();
+        this.errorShake = true;
+        if(!this.errorShake) {
+          setTimeout(() => {
+            this.errorShake = false;
+          }, 300);
         }
+        return false;
       }
-      return parseFloat(parts.join("."));
+      return true;
+    },
+    checkForFeeToken: function() {
+      if (!this.choosedFeeToken && this.choosedToken && this.choosedToken.restricted===true) {
+        for (const token of this.tokensList) {
+          if (token.restricted===false) {
+            this.cantFindFeeToken = false;
+            return (this.choosedFeeToken = token);
+          }
+        }
+        this.cantFindFeeToken = true;
+      } else {
+        this.cantFindFeeToken = false;
+      }
+    },
+    getFormattedAmount: function (token, amount) {
+      return utils.handleFormatToken(token, +amount);
+    },
+    getFormattedPrice: function (price, amount) {
+      return utils.getFormatedTotalPrice(price, amount);
+    },
+    handleExponentialNumber: function (symbol, amount) {
+      return utils.handleExpNum(symbol, amount);
     },
     chooseToken: async function (token) {
       this.tokensLoading = true;
@@ -377,13 +475,13 @@ export default {
       this.inputAddress = contact.address;
       this.openedTab = "main";
     },
-    getWidthdrawTime: async function () {
+    getWithdrawalTime: async function () {
       this.mainLoading = true;
       this.withdrawTime = await this.$store.dispatch("wallet/getWithdrawalProcessingTime");
       this.mainLoading = false;
     },
     getFees: async function () {
-      if (!this.isAddressValid) {
+      if (!this.isAddressValid || (this.choosedToken.restricted && !this.choosedFeeToken)) {
         this.feesObj = false;
         return;
       }
@@ -392,6 +490,7 @@ export default {
       this.feesObj = await this.$store.dispatch("wallet/getFees", {
         address: this.inputAddress,
         symbol: tokenSymbol,
+        feeSymbol: this.choosedFeeToken ? this.choosedFeeToken.symbol : tokenSymbol,
         type: this.type,
       });
       this.feesLoading = false;
@@ -438,7 +537,6 @@ export default {
         console.log(error);
       }
     },
-
     commitTransaction: async function () {
       try {
         if (!this.isAddressValid) {
@@ -446,11 +544,11 @@ export default {
         }
         this.mainError = "";
         this.mainLoading = true;
-        if (!this.inputTotalSum) {
-          throw new Error("Introduce the amount");
-        }
         if (!this.choosedToken) {
           throw new Error("Choose the token first");
+        }
+        if (!this.inputTotalSum || this.inputTotalSum <= 0) {
+          throw new Error("Introduce the amount");
         }
         if (this.inputTotalSum > this.transactionMaxAmount) {
           throw new Error("Insufficient funds");
@@ -459,6 +557,7 @@ export default {
           throw new Error("Destination invalid");
         }
         if (!walletData.get().syncProvider.transport.ws.isOpened) {
+          console.log("walletData.get().syncProvider.transport.ws.isOpened", walletData.get().syncProvider.transport.ws.isOpened);
           await walletData.get().syncProvider.transport.ws.open();
         }
         if (this.type === "withdraw") {
@@ -467,7 +566,10 @@ export default {
           await this.transfer();
         }
       } catch (error) {
-        if (error.message || !error.message.includes("User denied")) {
+        console.log(error);
+        if (error.message && error.message.includes("User denied")) {
+          this.mainError = "";
+        } else if (error.message && String(error.message).length < 60) {
           this.mainError = error.message;
         } else {
           this.mainError = "Transaction error";
@@ -477,47 +579,41 @@ export default {
       this.tip = "";
       return this.mainError === "";
     },
-    withdraw: async function (syncWallet, syncProvider) {
-      await this.$store.dispatch("wallet/walletRefresh");
-      const fee = await syncProvider.getTransactionFee(this.fastWithdraw ? "FastWithdraw" : "Withdraw", this.inputAddress, this.choosedToken.symbol);
+    withdraw: async function () {
+      const syncProvider = walletData.get().syncProvider;
       this.tip = "Confirm the transaction to withdraw";
-      const withdrawTransaction = await syncWallet.withdrawFromSyncToEthereum({
-        ethAddress: this.inputAddress,
-        feeToken: this.choosedToken.symbol,
-        token: this.choosedToken.symbol,
-        amount: ethers.BigNumber.from(
-          (await zksync.closestPackableTransactionAmount(syncWallet.provider.tokenSet.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()))).toString(),
-        ),
-        fee: zksync.closestPackableTransactionFee(fee.totalFee),
-        fastProcessing: this.fastWithdraw,
-      });
+      const withdrawTransaction = await withdraw(
+        this.inputAddress,
+        this.choosedToken.symbol,
+        this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol,
+        this.inputTotalSum.toString(),
+        this.fastWithdraw,
+      );
       console.log("withdrawTransaction", withdrawTransaction);
       this.transactionAmount = parseFloat(this.inputTotalSum);
-      this.transactionHash = withdrawTransaction.txHash;
-      this.transactionFee = this.getFormatedAmount(this.choosedToken.symbol, withdrawTransaction.txData.tx.fee);
-      this.inputAddress = withdrawTransaction.txData.tx.to;
-      this.tip = "Waiting for the transaction to be mined...";
-      const receipt = await withdrawTransaction.awaitReceipt();
-      console.log("receipt", receipt);
-      await this.$store.dispatch("wallet/getInitialBalances", true).catch((err) => {
-        console.log("getInitialBalances", err);
-      });
-      await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true }).catch((err) => {
-        console.log("getzkBalances", err);
-      });
-      await this.$store.dispatch("wallet/getTransactionsHistory", { force: true }).catch((err) => {
-        console.log("getTransactionsHistory", err);
-      });
+      if (!Array.isArray(withdrawTransaction)) {
+        this.transactionHash = withdrawTransaction.txHash;
+        this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, withdrawTransaction.txData.tx.fee);
+        this.inputAddress = withdrawTransaction.txData.tx.to;
+        this.tip = "Waiting for the transaction to be mined...";
+        await withdrawTransaction.awaitReceipt();
+      } else {
+        this.transactionHash = withdrawTransaction[0].txHash;
+        this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, withdrawTransaction[1].txData.tx.fee);
+        this.inputAddress = withdrawTransaction[0].txData.tx.to;
+        this.tip = "Waiting for the transaction to be mined...";
+        await syncProvider.notifyTransaction(withdrawTransaction[0].txHash, "COMMIT");
+      }
+      await this.$store.dispatch("wallet/forceRefreshData");
       this.success = true;
     },
     transfer: async function () {
-      await this.$store.dispatch("wallet/walletRefresh");
       await this.getFees();
       this.tip = "Confirm the transaction to transfer";
       const transferTransaction = await transaction(
         this.inputAddress,
         this.choosedToken.symbol,
-        this.choosedToken.symbol,
+        this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol,
         this.inputTotalSum.toString(),
         this.feesObj.normal.toString(),
       );
@@ -528,21 +624,21 @@ export default {
       // store.verifyToken = !!verifyReceipt;
 
       this.transactionAmount = parseFloat(this.inputTotalSum);
-      this.transactionHash = transferTransaction.txHash;
-      this.transactionFee = this.getFormatedAmount(this.choosedToken.symbol, transferTransaction.txData.tx.fee);
-      this.inputAddress = transferTransaction.txData.tx.to;
-      this.tip = "Waiting for the transaction to be mined...";
-      await transferTransaction.awaitReceipt();
+      if (!Array.isArray(transferTransaction)) {
+        this.transactionHash = transferTransaction.txHash;
+        this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, transferTransaction.txData.tx.fee);
+        this.inputAddress = transferTransaction.txData.tx.to;
+        this.tip = "Waiting for the transaction to be mined...";
+        await transferTransaction.awaitReceipt();
+      } else {
+        this.transactionHash = transferTransaction[0].txHash;
+        this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, transferTransaction[1].txData.tx.fee);
+        this.inputAddress = transferTransaction[0].txData.tx.to;
+        this.tip = "Waiting for the transaction to be mined...";
+        await transferTransaction[0].awaitReceipt();
+      }
       this.tip = "Processing...";
-      await this.$store.dispatch("wallet/getInitialBalances", true).catch((err) => {
-        console.log("getInitialBalances", err);
-      });
-      await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true }).catch((err) => {
-        console.log("getzkBalances", err);
-      });
-      await this.$store.dispatch("wallet/getTransactionsHistory", { force: true }).catch((err) => {
-        console.log("getTransactionsHistory", err);
-      });
+      await this.$store.dispatch("wallet/forceRefreshData");
       this.success = true;
     },
   },

@@ -12,9 +12,12 @@
       "last 1 safari version"
     ]
   },
+  "license": "MIT",
+  "homepage": "https://wallet.zksync.io",
+  "bugs": {
+    "url": "https://github.com/vuesion/vuesion/issues"
+  },
   "dependencies": {
-    "@nuxtjs/auth": "^4.9.1",
-    "@nuxtjs/auth-next": "latest",
     "@nuxtjs/axios": "latest",
     "@nuxtjs/dotenv": "latest",
     "@nuxtjs/pwa": "latest",
@@ -25,8 +28,7 @@
     "dotenv": "latest",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.0.12",
-    "fortmatic": "^1.1.3",
-    "joi-browser": "latest",
+    "js-cookie": "^2.2.1",
     "lottie-web": "^5.7.5",
     "moment": "^2.29.1",
     "nuxt": "^2.14.11",
@@ -41,12 +43,11 @@
   },
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "devDependencies": {
-    "@nuxtjs/dotenv": "1.4.1",
     "@inkline/nuxt": "^2.3.5",
-    "@nuxt/telemetry": "^1.3.0",
-    "@nuxt/types": "^2.14.11",
+    "@nuxtjs/dotenv": "1.4.1",
     "@nuxtjs/style-resources": "^1.0.0",
     "commitlint": "^8.3.5",
+    "dotenv": "8.2.0",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-nuxt": "^2.0.0",
@@ -56,11 +57,10 @@
     "lodash": "4.17.20",
     "node-sass": "latest",
     "prettier": "^2.2.1",
-    "sass-loader": "latest",
-    "vue-cli-plugin-storybook": "~2.0.0"
+    "sass-loader": "latest"
   },
   "eslintConfig": {
-    "extends": "plugin:vue/recommended"
+    "extends": "plugin:nuxt/recommended"
   },
   "husky": {
     "hooks": {
@@ -76,7 +76,7 @@
       "npm run format"
     ]
   },
-  "name": "zksync-wallet",
+  "name": "zksync-zkwallet-dapp",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -85,7 +85,7 @@
     "generate": "nuxt generate",
     "test": "echo \"Not implemented.\"",
     "format": "prettier --write",
-    "lint-ts": "eslint --fix \"**/*.ts\"",
+    "lint-ts": "eslint --fix \"**/*.{js, vue}\"",
     "lint-css": "stylelint --fix \"**/*.scss\"",
     "deploy_hosting": "firebase deploy --only hosting --project ${FIREBASE_PROJECT:?firebase project name not set or empty}",
     "audit_dependencies": "npm audit --package-lock-only --audit-level critical --json | npm-audit-html --output audit.html",

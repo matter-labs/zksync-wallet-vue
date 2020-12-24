@@ -14,7 +14,10 @@
                 <p class="_text-center _margin-top-0">Your deposit tx has been mined and will be processed after 1 confirmations. Use the link below to track the progress.</p>
                 <div class="totalAmount _margin-top-2">
                     <div class="headline">Amount:</div>
-                    <div class="amount">{{choosedToken.symbol}} {{formatMax(transactionAmount)}} <span class="totalPrice">~${{(transactionAmount*choosedToken.price).toFixed(2)}}</span></div>
+                    <div class="amount">
+                      {{choosedToken.symbol}} {{handleExponentialNumber(choosedToken.symbol, transactionAmount)}}
+                      <span class="totalPrice">{{getFormattedPrice(choosedToken.price, transactionAmount)}}</span>
+                    </div>
                 </div>
                 <i-button block size="lg" variant="secondary" class="_margin-top-1" to="/account">Ok</i-button>
             </div>
@@ -26,16 +29,17 @@
                 </i-input>
                 <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
                     <div class="totalPrice">~${{(inputTotalSum*choosedToken.price).toFixed(2)}}</div>
-                    <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?transactionMaxAmount:0">Max: {{transactionMaxAmount>0?transactionMaxAmount:0}}</div>
-                </div>
-                <div v-if="choosedToken && choosedToken.unlocked===true && inputTotalSum>transactionMaxAmount" class="errorText _text-center _margin-top-1">
-                    Not enough {{choosedToken.symbol}} to perform a transaction
+                    <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0">Max: {{transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0}}</div>
                 </div>
                 <div v-if="choosedToken && choosedToken.unlocked===false" class="tokenLocked">
                     <p class="_text-center">You should firstly unlock selected token in order to authorize deposits for <b>{{choosedToken.symbol}}</b></p>
                     <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="unlockToken()"><i class="far fa-lock-open-alt"></i> Unlock</i-button>
                 </div>
-                <i-button v-else block size="lg" variant="secondary" class="_margin-top-1" :disabled="!inputTotalSum || inputTotalSum>transactionMaxAmount" @click="deposit()">Deposit</i-button>
+                <div v-else-if="choosedToken && choosedToken.unlocked===true && inputTotalSum>transactionMaxAmount" class="errorText _text-center _margin-top-1">
+                    Not enough {{choosedToken.symbol}} to perform a transaction
+                </div>
+                <div v-else-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
+                <i-button v-if="choosedToken && choosedToken.unlocked===true" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit</i-button>
             </div>
             <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
                 <p v-if="tip" class="_display-block _text-center">{{tip}}</p>
@@ -61,7 +65,7 @@
                     <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
                         <div class="tokenLabel">{{item.symbol}}</div>
                         <div class="rightSide">
-                            <div class="balance">{{item.balance}}</div>
+                            <div class="balance">{{handleExponentialNumber(item.symbol, item.formatedBalance)}}</div>
                         </div>
                     </div>
                     <div v-if="search && displayedTokenList.length===0" class="nothingFound">
@@ -76,9 +80,8 @@
 
 <script>
 import walletData from "@/plugins/walletData.js";
-import handleFormatToken from "@/plugins/handleFormatToken.js";
+import utils from '@/plugins/utils.js';
 import { ethers } from "ethers";
-import * as zksync from "zksync";
 import Checkmark from "@/components/Checkmark.vue";
 export default {
   components: {
@@ -91,17 +94,13 @@ export default {
       tokenSelectionOpened: false,
       loading: false,
       tip: "",
+      mainError: "",
       tokensList: [],
       choosedToken: false,
       cantFindTokenModal: false,
       success: false,
       transactionHash: "",
       transactionAmount: "",
-    };
-  },
-  head() {
-    return {
-      title: "Deposit",
     };
   },
   computed: {
@@ -112,7 +111,7 @@ export default {
       return this.tokensList.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     transactionMaxAmount: function () {
-      return this.formatMax(this.choosedToken.balance - this.choosedToken.fee);
+      return this.choosedToken.balance - this.choosedToken.fee;
     },
     blockExplorerLink: function () {
       return process.env.APP_ETH_BLOCK_EXPLORER;
@@ -123,28 +122,24 @@ export default {
       if (val === true && this.loading === false) {
         this.loading = true;
         try {
-          /* const balance = await walletData.get().syncWallet.getEthereumBalance("ETH");
-                    console.log(balance);
-                    return; */
           const list = await this.$store.dispatch("wallet/getInitialBalances");
-          this.tokensList = list.map((e) => ({ ...e, balance: this.formatMax(e.balance) }));
+          this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
         } catch (error) {
           console.log(error);
         }
         this.loading = false;
       }
     },
+    inputTotalSum(val) {
+      this.mainError = "";
+    },
   },
   methods: {
-    formatMax: function (val) {
-      val = val.toString();
-      let parts = val.split(".");
-      if (parts.length > 1) {
-        if (parts[1].length > 8) {
-          parts[1] = parts[1].substr(0, 8);
-        }
-      }
-      return parseFloat(parts.join("."));
+    getFormattedPrice: function (price, amount) {
+      return utils.getFormatedTotalPrice(price, amount);
+    },
+    handleExponentialNumber: function (symbol, amount) {
+      return utils.handleExpNum(symbol, amount);
     },
     chooseToken: async function (token) {
       this.loading = true;
@@ -152,16 +147,12 @@ export default {
         token.unlocked = await this.checkTokenState(token);
       }
       if (typeof token.price === "undefined") {
-        token.price = await this.$store.dispatch("wallet/getTokenPrice", token.symbol);
+        token.price = await this.$store.dispatch("tokens/getTokenPrice", token.symbol);
       }
       if (typeof token.fee === "undefined") {
-        /* const wallet = walletData.get().syncWallet;
-                const syncProvider = walletData.get().syncProvider;
-                const foundFee = await syncProvider.getTransactionFee("Transfer", wallet.address(), token.symbol);
-                token.fee = parseFloat(handleFormatToken(token.symbol, foundFee.totalFee));
-                token.feeObj = foundFee.totalFee; */
         token.fee = 0.0002;
       }
+      this.mainError = "";
       this.choosedToken = token;
       this.loading = false;
       this.tokenSelectionOpened = false;
@@ -202,50 +193,44 @@ export default {
       }
     },
     deposit: async function () {
-      if (!this.choosedToken || !this.inputTotalSum) {
-        return;
-      }
-      this.loading = true;
       try {
+        if (!this.choosedToken) {
+          throw new Error("Choose the token first");
+        } else if (!this.inputTotalSum) {
+          throw new Error("Introduce the amount");
+        } else if (this.inputTotalSum > this.transactionMaxAmount) {
+          throw new Error("Insufficient funds");
+        }
+        this.loading = true;
         const wallet = walletData.get().syncWallet;
         this.tip = "Confirm the transaction to deposit";
         const depositResponse = await wallet.depositToSyncFromEthereum({
           depositTo: wallet.address(),
           token: this.choosedToken.symbol,
-          amount: ethers.BigNumber.from(
-            (await zksync.closestPackableTransactionAmount(wallet.provider.tokenSet.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()))).toString(),
-          ),
+          amount: ethers.BigNumber.from(wallet.provider.tokenSet.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()).toString()),
           ethTxOptions: {
             gasLimit: "200000",
           },
         });
-        /* console.log('depositResponse', depositResponse); */
         this.transactionAmount = this.inputTotalSum;
         this.tip = "Waiting for the transaction to be mined...";
         const awaitEthereumTxCommit = await depositResponse.awaitEthereumTxCommit();
-        /* console.log('awaitEthereumTxCommit', awaitEthereumTxCommit); */
         this.transactionHash = depositResponse.ethTx.hash;
         this.tip = "Processing...";
-        await new Promise((resolve) => {
-          setTimeout(() => {
-            resolve();
-          }, 5000);
-        });
-        await this.$store.dispatch("wallet/getInitialBalances", true).catch((err) => {
-          console.log("getInitialBalances", err);
-        });
-        await this.$store.dispatch("wallet/getzkBalances", { accountState: undefined, force: true }).catch((err) => {
-          console.log("getzkBalances", err);
-        });
-        await this.$store.dispatch("wallet/getTransactionsHistory", { force: true }).catch((err) => {
-          console.log("getTransactionsHistory", err);
-        });
+        await this.$store.dispatch("wallet/forceRefreshData");
         this.tip = "";
         this.inputTotalSum = null;
         this.success = true;
       } catch (error) {
         this.tip = "";
         console.log("Deposit error", error);
+        if (error.message && error.message.includes("User denied")) {
+          this.mainError = "";
+        } else if (error.message && String(error.message).length < 60) {
+          this.mainError = error.message;
+        } else {
+          this.mainError = "Transaction error";
+        }
       }
       this.loading = false;
     },

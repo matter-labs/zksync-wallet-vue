@@ -93,7 +93,9 @@ export default {
         return;
       }
 
+      this.$store.commit("showLoader");
       const refreshWalletTry = await this.$store.dispatch("wallet/walletRefresh");
+      this.$store.commit("hideLoader");
       if (refreshWalletTry !== true) {
         await this.$store.dispatch("wallet/logout");
       } else {

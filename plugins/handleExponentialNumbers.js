@@ -1,3 +1,7 @@
+import { ethers } from "ethers";
+import handleFormatToken from "@/plugins/handleFormatToken.js";
+import walletData from "@/plugins/walletData.js";
+
 function getExponentialParts(num) {
   return Array.isArray(num) ? num : String(num).split(/[eE]/);
 }
@@ -5,8 +9,9 @@ function isExponential(num) {
   const eParts = getExponentialParts(num);
   return !Number.isNaN(Number(eParts[1]));
 }
-
 export default (num) => {
+  const syncProvider = walletData.get().syncProvider;
+
   const eParts = getExponentialParts(num);
   if (!isExponential(eParts)) {
     return eParts[0];

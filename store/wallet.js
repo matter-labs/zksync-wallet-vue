@@ -5,19 +5,63 @@ import onboardConfig from "@/plugins/onboardConfig.js";
 import web3Wallet from "@/plugins/web3.js";
 import walletData from "@/plugins/walletData.js";
 import handleFormatToken from "@/plugins/handleFormatToken.js";
+import utils from "@/plugins/utils";
 
 let getTransactionHistoryAgain = false;
+let changeNetworkWasSet = false;
 
-function changeNetworkHandle(dispatch, router) {
+/**
+ * @todo avoid cross-colling
+ * @param dispatch
+ * @param context
+ * @return {function(): Promise<void>}
+ */
+function changeNetworkHandle(dispatch, context) {
+  // context.$toast.info("Blockchain environment (Network) just changed");
   return async () => {
+    if (!walletData.get().syncWallet) {return}
     const refreshWalletResult = await dispatch("walletRefresh");
     if (refreshWalletResult === false) {
-      await router.push("/");
+      await context.$router.push("/");
       await dispatch("logout");
+    } else {
+      await dispatch("forceRefreshData");
     }
   };
 }
 
+/**
+ * @todo avoid cross-colling
+ * @param dispatch
+ * @param context
+ * @return {function(): Promise<void>}
+ */
+function changeAccountHandle(dispatch, context) {
+  // context.$toast.info("Active account changed. Please re-login to used one");
+  return async () => {
+    if (!walletData.get().syncWallet) {return}
+    await dispatch("logout");
+    await context.$router.push("/");
+    await dispatch("clearDataStorage");
+    try {
+      const refreshWalletResult = await dispatch("walletRefresh");
+      if (refreshWalletResult === true) {
+        await context.$router.push("/");
+      } else {
+        await context.$router.push("/account");
+      }
+    } catch (error) {}
+    await context.$router.push("/");
+  };
+}
+
+/**
+ * @todo Optimize sorting
+ *
+ * @param a
+ * @param b
+ * @return {number}
+ */
 const sortBalancesById = (a, b) => {
   if (a.id < b.id) {
     return -1;
@@ -70,14 +114,17 @@ export const mutations = {
   setWithdrawalProcessingTime(state, obj) {
     state.withdrawalProcessingTime = obj;
   },
-  setFees(state, { symbol, type, address, obj }) {
+  setFees(state, { symbol, feeSymbol, type, address, obj }) {
     if (!state.fees.hasOwnProperty(symbol)) {
       state.fees[symbol] = {};
     }
-    if (!state.fees[symbol].hasOwnProperty(type)) {
-      state.fees[symbol][type] = {};
+    if (!state.fees[symbol].hasOwnProperty(feeSymbol)) {
+      state.fees[symbol][feeSymbol] = {};
     }
-    state.fees[symbol][type][address] = obj;
+    if (!state.fees[symbol][feeSymbol].hasOwnProperty(type)) {
+      state.fees[symbol][feeSymbol][type] = {};
+    }
+    state.fees[symbol][feeSymbol][type][address] = obj;
   },
   clearDataStorage(state) {
     state.zkTokens = {
@@ -100,7 +147,7 @@ export const getters = {
   isAccountLocked(state) {
     return state.isAccountLocked;
   },
-  getOnboard(state) {
+  getOnboard(state, dispatch) {
     return state.onboard;
   },
   getTokensList(state) {
@@ -132,6 +179,11 @@ export const getters = {
 };
 
 export const actions = {
+  /**
+   * Initial call, connecting to the walllet
+   * @param commit
+   * @return {Promise<boolean>}
+   */
   async onboard({ commit }) {
     const onboard = Onboard(onboardConfig(this));
     commit("setOnboard", onboard);
@@ -142,54 +194,26 @@ export const actions = {
     const walletSelect = await onboard.walletSelect(previouslySelectedWallet);
     return walletSelect === true;
   },
-  async loadTokens(state, { syncProvider, syncWallet, accountState }) {
-    if (!syncProvider || !syncWallet) {
-      return { tokens: {}, ethBalances: [], zkBalances: [], error: undefined };
+
+  /**
+   * Check if the connection to the sync provider is opened and if not - restore it
+   */
+  async restoreProviderConnection() {
+    const syncProvider = walletData.get().syncProvider;
+    if (!syncProvider.transport.ws.isOpened) {
+      await syncProvider.transport.ws.open();
     }
-    const tokens = await syncProvider.getTokens();
-
-    let error = undefined;
-    const zkBalance = accountState.committed.balances;
-
-    const balancePromises = Object.entries(tokens)
-      .filter((t) => t[1].symbol)
-      .map(async ([key, value]) => {
-        return {
-          id: value.id,
-          address: value.address,
-          balance: +syncWallet?.provider.tokenSet.formatToken(value.symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
-          symbol: value.symbol,
-        };
-      });
-
-    const ethBalances = await Promise.all(balancePromises)
-      .then((res) => {
-        return res.filter((token) => token);
-      })
-      .catch((err) => {
-        error = err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
-        return [];
-      });
-
-    const zkBalancePromises = Object.keys(zkBalance).map(async (key) => ({
-      address: tokens[key].address,
-      balance: +syncWallet?.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
-      symbol: tokens[key].symbol,
-      id: tokens[key].id,
-    }));
-
-    const zkBalances = await Promise.all(zkBalancePromises).catch((err) => {
-      error = err.name && err.message ? `${err.name}: ${err.message}` : DEFAULT_ERROR;
-      return [];
-    });
-
-    return {
-      tokens,
-      zkBalances,
-      ethBalances,
-      error,
-    };
   },
+
+  /**
+   *
+   * @param commit
+   * @param dispatch
+   * @param getters
+   * @param accountState
+   * @param force
+   * @return {Promise<[]|*>}
+   */
   async getzkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }) {
     let listCommited = {};
     let listVerified = {};
@@ -212,16 +236,20 @@ export const actions = {
       listCommited = newAccountState.committed.balances;
       listVerified = newAccountState.verified.balances;
     }
+    const restrictedTokens = this.getters['tokens/getRestrictedTokens'];
     for (const prop in listCommited) {
-      const price = await dispatch("getTokenPrice", prop);
+      const price = await this.dispatch("tokens/getTokenPrice", prop);
       const commitedBalance = +handleFormatToken(prop, listCommited[prop] ? listCommited[prop] : 0);
       const verifiedBalance = +handleFormatToken(prop, listVerified[prop] ? listVerified[prop] : 0);
       tokensList.push({
         symbol: prop,
-        status: commitedBalance > verifiedBalance ? "Pending" : "Verified",
+        status: commitedBalance !== verifiedBalance ? "Pending" : "Verified",
         balance: commitedBalance,
+        formatedBalance: utils.handleExpNum(prop, commitedBalance),
         verifiedBalance: verifiedBalance,
         tokenPrice: price,
+        formatedTotalPrice: utils.getFormatedTotalPrice(price, commitedBalance),
+        restricted: (commitedBalance<=0 || restrictedTokens.hasOwnProperty(prop))===true
       });
     }
     commit("setZkTokens", {
@@ -230,25 +258,15 @@ export const actions = {
     });
     return tokensList;
   },
-  async getTokenPrice({ commit, dispatch, getters }, symbol) {
-    const localList = getters["getTokenPrices"];
-    if (localList.hasOwnProperty(symbol) && localList[symbol].lastUpdated > new Date().getTime() - 3600000) {
-      return localList[symbol].price;
-    }
-    const syncProvider = walletData.get().syncProvider;
-    if (!syncProvider.transport.ws.isOpened) {
-      await syncProvider.transport.ws.open();
-    }
-    const tokenPrice = await syncProvider.getTokenPrice(symbol);
-    commit("setTokenPrice", {
-      symbol: symbol,
-      obj: {
-        lastUpdated: new Date().getTime(),
-        price: tokenPrice,
-      },
-    });
-    return tokenPrice;
-  },
+
+  /**
+   *
+   * @param dispatch
+   * @param commit
+   * @param getters
+   * @param force
+   * @return {Promise<*[]|*>}
+   */
   async getInitialBalances({ dispatch, commit, getters }, force = false) {
     const localList = getters["getTokensList"];
     if (force === false && localList.lastUpdated > new Date().getTime() - 120000) {
@@ -261,50 +279,20 @@ export const actions = {
     const syncWallet = walletData.get().syncWallet;
     const accountState = await syncWallet.getAccountState();
     walletData.set({ accountState });
-    const loadedTokens = await dispatch("loadTokens", { syncProvider, syncWallet, accountState });
+    const loadedTokens = await this.dispatch("tokens/loadTokensAndBalances");
     loadedTokens.zkBalances = loadedTokens.zkBalances.sort(sortBalancesById);
-
-    /* const handleFormatToken = (symbol, amount) => {
-      if (!amount) return '0';
-      if (typeof amount === 'number') {
-        return syncWallet.provider?.tokenSet.formatToken(symbol, amount.toString());
-      }
-      return syncWallet.provider?.tokenSet.formatToken(symbol, amount);
-    } */
-    /* const balancePromises = Object.keys(loadedTokens.tokens).map(async key => {
-      try {
-        if (loadedTokens.tokens[key].symbol) {
-          const balance = await syncWallet.getEthereumBalance(key);
-          return {
-            id: loadedTokens.tokens[key].id,
-            address: loadedTokens.tokens[key].address,
-            balance: +handleFormatToken(
-              loadedTokens.tokens[key].symbol,
-              balance ? balance : 0,
-            ),
-            symbol: loadedTokens.tokens[key].symbol,
-          };
-        }
-      } catch (error) {
-        return {
-          id: loadedTokens.tokens[key].id,
-          address: loadedTokens.tokens[key].address,
-          balance: 0,
-          symbol: loadedTokens.tokens[key].symbol,
-        };
-      }
-    }); */
-
     const balancesResults = [];
 
     for (const key of Object.keys(loadedTokens.tokens)) {
       const currentToken = loadedTokens.tokens[key];
       try {
-        const balance = await syncWallet.getEthereumBalance(key);
+        var balance = await syncWallet.getEthereumBalance(key);
+        balance = +handleFormatToken(currentToken.symbol, balance ? balance : 0);
         balancesResults.push({
           id: currentToken.id,
           address: currentToken.address,
-          balance: +handleFormatToken(currentToken.symbol, balance ? balance : 0),
+          balance: balance,
+          formatedBalance: utils.handleExpNum(currentToken.symbol, balance),
           symbol: currentToken.symbol,
         });
       } catch (error) {
@@ -321,6 +309,15 @@ export const actions = {
     });
     return balances;
   },
+
+  /**
+   *
+   * @param dispatch
+   * @param commit
+   * @param getters
+   * @param options
+   * @return {Promise<any>}
+   */
   async getTransactionsHistory({ dispatch, commit, getters }, options) {
     clearTimeout(getTransactionHistoryAgain);
     const localList = getters["getTransactionsList"];
@@ -365,48 +362,82 @@ export const actions = {
       return withdrawTime.data;
     }
   },
-  async getFees({ getters, commit }, { address, symbol, type }) {
+  async getFees({ getters, commit }, { address, symbol, feeSymbol, type }) {
     const savedFees = getters["getFees"];
-    if (savedFees.hasOwnProperty(symbol) && savedFees[symbol].hasOwnProperty(type) && savedFees[symbol][type].hasOwnProperty(address)) {
-      return savedFees[symbol][type][address];
+    if (
+      savedFees.hasOwnProperty(symbol) &&
+      savedFees[symbol].hasOwnProperty(feeSymbol) &&
+      savedFees[symbol][feeSymbol].hasOwnProperty(type) &&
+      savedFees[symbol][feeSymbol][type].hasOwnProperty(address)
+    ) {
+      return savedFees[symbol][feeSymbol][type][address];
     } else {
       const syncProvider = walletData.get().syncProvider;
+      const syncWallet = walletData.get().syncWallet;
       if (!syncProvider.transport.ws.isOpened) {
         await syncProvider.transport.ws.open();
       }
       if (type === "withdraw") {
-        const foundFeeFast = await syncProvider.getTransactionFee("FastWithdraw", address, symbol);
-        const foundFeeNormal = await syncProvider.getTransactionFee("Withdraw", address, symbol);
-        const feesObj = {
-          fast: parseFloat(handleFormatToken(symbol, foundFeeFast.totalFee)),
-          normal: parseFloat(handleFormatToken(symbol, foundFeeNormal.totalFee)),
-        };
-        commit("setFees", { symbol, type, address, obj: feesObj });
-        return feesObj;
+        if (symbol === feeSymbol) {
+          const foundFeeFast = await syncProvider.getTransactionFee("FastWithdraw", address, symbol);
+          const foundFeeNormal = await syncProvider.getTransactionFee("Withdraw", address, symbol);
+          const feesObj = {
+            fast: parseFloat(handleFormatToken(symbol, foundFeeFast.totalFee)),
+            normal: parseFloat(handleFormatToken(symbol, foundFeeNormal.totalFee)),
+          };
+          commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
+          return feesObj;
+        } else {
+          const batchWithdrawFeeFast = await syncProvider.getTransactionsBatchFee(["FastWithdraw", "Transfer"], [address, syncWallet.address()], feeSymbol);
+          const batchWithdrawFeeNormal = await syncProvider.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet.address()], feeSymbol);
+          const feesObj = {
+            fast: parseFloat(handleFormatToken(feeSymbol, batchWithdrawFeeFast)),
+            normal: parseFloat(handleFormatToken(feeSymbol, batchWithdrawFeeNormal)),
+          };
+          commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
+          return feesObj;
+        }
       } else {
-        const foundFeeNormal = await syncProvider.getTransactionFee("Transfer", address, symbol);
-        const totalFeeValue = parseFloat(handleFormatToken(symbol, foundFeeNormal.totalFee));
-        const feesObj = {
-          normal: totalFeeValue,
-        };
-        commit("setFees", { symbol, type, address, obj: feesObj });
-        return feesObj;
+        if (symbol === feeSymbol) {
+          const foundFeeNormal = await syncProvider.getTransactionFee("Transfer", address, symbol);
+          const totalFeeValue = parseFloat(handleFormatToken(symbol, foundFeeNormal.totalFee));
+          const feesObj = {
+            normal: totalFeeValue,
+          };
+          commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
+          return feesObj;
+        } else {
+          const batchTransferFee = await syncProvider.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet.address()], feeSymbol);
+          const feesObj = {
+            normal: parseFloat(handleFormatToken(feeSymbol, batchTransferFee)),
+          };
+          commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
+          return feesObj;
+        }
       }
     }
   },
   async walletRefresh({ getters, commit, dispatch }) {
     try {
-      dispatch("changeNetworkRemove");
+      /* dispatch("changeNetworkRemove"); */
       const [walletCheck] = await Promise.all([getters["getOnboard"].walletCheck()]);
       if (walletCheck !== true) {
+        return false;
+      }
+      if(!web3Wallet.get().eth) {
         return false;
       }
       const getAccounts = await web3Wallet.get().eth.getAccounts();
       if (getAccounts.length === 0) {
         return false;
       }
+      if (walletData.get().syncWallet) {return true}
 
-      const ethWallet = new ethers.providers.Web3Provider(web3Wallet.get().eth.currentProvider).getSigner();
+      /**
+       * @type {provider|ExternalProvider}
+       */
+      const currentProvider = web3Wallet.get().eth.currentProvider;
+      const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
       const zksync = await walletData.zkSync();
       const syncProvider = await zksync.getDefaultProvider(process.env.APP_CURRENT_NETWORK);
@@ -415,23 +446,12 @@ export const actions = {
       const accountState = await syncWallet.getAccountState();
 
       walletData.set({ syncProvider, syncWallet, accountState, ethWallet });
-      if (accountState && accountState.committed) {
-        commit("setAccountLockedState", accountState.committed.pubKeyHash === "sync:0000000000000000000000000000000000000000");
-      }
 
+      await this.dispatch("tokens/loadTokensAndBalances");
       await dispatch("getzkBalances", accountState);
 
       const isSigningKeySet = await syncWallet.isSigningKeySet();
-      console.log("isSigningKeySet", isSigningKeySet);
-
-      const getAccountId = await syncWallet.getAccountId();
-      console.log("getAccountId", getAccountId);
-
-      /* const maxConfirmAmount = await syncProvider.getConfirmationsForEthOpAmount();
-      console.log('maxConfirmAmount',maxConfirmAmount);
-      const withdrawTime = await this.$axios.get(`https://${process.env.APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
-      console.log('withdrawTime',withdrawTime); */
-
+      commit("setAccountLockedState", isSigningKeySet === false);
       dispatch("changeNetworkSet");
       return true;
     } catch (error) {
@@ -439,17 +459,58 @@ export const actions = {
       return false;
     }
   },
+  async clearDataStorage({ commit }) {
+    commit("clearDataStorage");
+  },
+  async forceRefreshData({ dispatch }) {
+    await dispatch("getInitialBalances", true).catch((err) => {
+      console.log("forceRefreshData | getInitialBalances error", err);
+    });
+    await dispatch("getzkBalances", { accountState: undefined, force: true }).catch((err) => {
+      console.log("forceRefreshData | getzkBalances error", err);
+    });
+    await dispatch("getTransactionsHistory", { force: true }).catch((err) => {
+      console.log("forceRefreshData | getTransactionsHistory error", err);
+    });
+  },
   async logout({ dispatch, commit }) {
-    dispatch("changeNetworkRemove");
-    web3Wallet.set(false);
+    /* dispatch("changeNetworkRemove"); */
+    //web3Wallet.set(false);
     walletData.set({ syncProvider: null, syncWallet: null, accountState: null });
     localStorage.removeItem("selectedWallet");
     commit("clearDataStorage");
   },
-  async changeNetworkRemove({ dispatch }) {
-    window.ethereum && window.ethereum.hasOwnProperty("off") ? window.ethereum.off("networkChanged", changeNetworkHandle(dispatch, this.$router)) : undefined;
-  },
+
+  /**
+   * @todo deprectate in favour of event-bus
+
+   * @param dispatch
+   * @return {Promise<void>}
+   */
+  /* async changeNetworkRemove({ dispatch }) {
+    if (window.ethereum) {
+      window.ethereum.off("chainChanged", changeNetworkHandle(dispatch, this));
+      window.ethereum.off("accountsChanged", changeAccountHandle(dispatch, this));
+    }
+  }, */
+
+  /**
+   * @todo deprecated in favour of event-bus
+   * @param dispatch
+   * @return {Promise<void>}
+   */
   async changeNetworkSet({ dispatch }) {
-    window.ethereum && window.ethereum.hasOwnProperty("on") ? window.ethereum.on("networkChanged", changeNetworkHandle(dispatch, this.$router)) : undefined;
+    if(changeNetworkWasSet===true){return}
+    if (window.ethereum) {
+      changeNetworkWasSet=true;
+      window.ethereum.on("disconnect", () => {
+        /* setTimeout(() => { */
+          this.$toast.error("Connection with your Wallet was lost. Restarting the DAPP");
+          dispatch('logout');
+        /* }, 2000); */
+      });
+      window.ethereum.on("chainChanged", changeNetworkHandle(dispatch, this));
+      window.ethereum.on("accountsChanged", changeAccountHandle(dispatch, this));
+    }
   },
 };

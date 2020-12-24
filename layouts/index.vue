@@ -1,19 +1,25 @@
 <template>
   <div class="indexLayout">
+    <screen-loader />
     <div class="routerContainer">
       <transition name="fade" mode="out-in">
         <nuxt />
       </transition>
     </div>
+    <cookie-component />
     <footer-component/>
   </div>
 </template>
 
 <script>
 import footerComponent from "@/blocks/Footer.vue";
+import cookieComponent from "@/blocks/Cookie.vue";
+import screenLoader from "@/blocks/ScreenLoader.vue";
 export default {
   components: {
     footerComponent,
+    cookieComponent,
+    screenLoader
   },
   computed: {
     screenLoader: function () {

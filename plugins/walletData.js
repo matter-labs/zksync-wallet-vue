@@ -14,7 +14,7 @@ export default {
    * @return {Promise<{ Wallet, Signer, Provider, ETHProxy, closestPackableTransactionFee, closestPackableTransactionAmount, getDefaultProvider, types, utils, crypto, wallet }|null>}
    */
   zkSync: async () => {
-    if (!walletData.zkSync) {
+    if (!walletData["zkSync"]) {
       walletData["zkSync"] = await import("zksync");
     }
     return walletData["zkSync"];

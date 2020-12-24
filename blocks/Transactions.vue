@@ -18,16 +18,16 @@
               <em v-if="item.transactionStatus==='Verified'" class="verified far fa-check-double"></em>
               <em v-else-if="item.transactionStatus==='Commited'" class="commited far fa-check"></em>
               <em v-else-if="item.transactionStatus==='In progress'" class="inProgress fad fa-spinner-third"></em>
-              <em v-else class="rejected fas fa-times-circle"></em>
+              <em v-else class="rejected fal fa-times-circle"></em>
               <template slot="body">{{ item.transactionStatus }}</template>
             </i-tooltip>
           </div>
           <div class="mainInfo">
-                        <i-tooltip>
-                            <div class="createdAt">{{getTimeAgo(item.created_at)}}</div>
-                            <template slot="body">{{getFormatedTime(item.created_at)}}</template>
-                        </i-tooltip>
-                        <div class="amount">{{getFormatedAmount(item)}}</div>
+            <i-tooltip>
+              <div class="createdAt">{{getTimeAgo(item.created_at)}}</div>
+              <template slot="body">{{getFormatedTime(item.created_at)}}</template>
+            </i-tooltip>
+            <div class="amount">{{getFormattedAmount(item)}}</div>
             <div class="token">{{ item.tx.priority_op ? item.tx.priority_op.token:item.tx.token }}</div>
           </div>
           <div class="actionInfo">
@@ -45,10 +45,12 @@
             </div>
             <div v-else-if="item.tx.type==='Transfer'">
               <div class="actionType">
-                <span v-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()">Received from:</span>
+                <span v-if="item.tx.feePayment">Fee transaction</span>
+                <span v-else-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()">Received from:</span>
                 <span v-else>Sent to:</span>
               </div>
-              <nuxt-link v-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()" class="actionValue"
+              <span v-if="item.tx.feePayment===true"></span>
+              <nuxt-link v-else-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()" class="actionValue"
                          :to="`/contacts?w=${item.tx.from}`">{{ getAddressName(item.tx.from) }}
               </nuxt-link>
               <nuxt-link v-else class="actionValue" :to="`/contacts?w=${item.tx.to}`">{{ getAddressName(item.tx.to) }}
@@ -71,16 +73,15 @@
 <script>
 import moment from "moment";
 import walletData from "@/plugins/walletData.js";
-import handleExponentialNumber from "@/plugins/handleExponentialNumbers.js";
-import handleFormatToken from "@/plugins/handleFormatToken.js";
+import utils from '@/plugins/utils.js';
 
 export default {
   props: {
     filter: {
       type: String,
-      default: '',
-      required: false
-    }
+      default: "",
+      required: false,
+    },
   },
   data() {
     return {
@@ -100,11 +101,13 @@ export default {
   mounted() {
     this.getTransactions();
     try {
-      if(!window.localStorage.getItem("contacts-" + this.walletAddressFull)) {
+      if (!window.localStorage.getItem("contacts-" + this.walletAddressFull)) {
         return;
       }
       const contactsList = JSON.parse(window.localStorage.getItem("contacts-" + this.walletAddressFull));
-      if(!contactsList || !Array.isArray(contactsList)){return};
+      if (!contactsList || !Array.isArray(contactsList)) {
+        return;
+      }
       for (const item of contactsList) {
         this.addressToNameMap.set(item.address.toLowerCase(), item.name);
       }
@@ -127,8 +130,16 @@ export default {
     getFormatedTime: function (time) {
       return moment(time).format("M/D/YYYY h:mm:ss A");
     },
-    getFormatedAmount: function ({ tx: { type, priority_op, token, amount } }) {
-      return handleExponentialNumber(+handleFormatToken(type === "Deposit" ? priority_op?.token : token, type === "Deposit" && priority_op ? +priority_op.amount : +amount));
+    getFormattedAmount: function ({ tx: { type, priority_op, token, amount, fee, feePayment } }) {
+      const symbol = (type === "Deposit" ? priority_op.token : token);
+      if(!feePayment) {
+        const formatToken = utils.handleFormatToken(symbol, type === "Deposit" && priority_op ? +priority_op.amount : +amount);
+        return utils.handleExpNum(symbol, formatToken);
+      }
+      else {
+        const formatToken = utils.handleFormatToken(token, +fee);
+        return utils.handleExpNum(symbol, formatToken);
+      }
     },
     getTransactionExplorerLink: function (transaction) {
       return (
@@ -143,42 +154,23 @@ export default {
       if (transaction.verified) {
         return "Verified";
       } else if (transaction.commited) {
-        /* else if (transaction.commited && transaction.tx.type === 'Withdraw') {
-                return 'Commited';
-            } */
         return "Commited";
       } else {
         return "In progress";
-        /* if (tx.tx.type === 'Deposit') {
-                    status = status;
-                }
-                else {
-                    if (!tx.commited && tx.tx.type === 'Withdraw') {
-                        // status = 'Withdrawal in progress — it should take max. 60 min';
-                        status =
-                        handleTimeLeft().minutes < 0
-                            ? 'Operation is taking a bit longer than usual, it should be right there!'
-                            : `Max ${
-                                isNaN(handleTimeLeft().timeLeft)
-                                ? withdrawalTime
-                                : `${handleCheckForHours}${minutesRelativelyToHours} min ${
-                                    handleTimeLeft().seconds
-                                    } sec`
-                            }s left`;
-                    }
-                    else {
-                        status = 'Transaction in progress';
-                    }
-                } */
       }
     },
     loadTransactions: async function (offset = 0) {
       const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
-      var filteredList = list.filter((e) => e.tx.type !== "ChangePubKey")
-      if(this.filter) {
-        filteredList=filteredList.filter(item => (item.tx.priority_op?item.tx.priority_op.token:item.tx.token)===this.filter);
+      var filteredList = list.filter((e) => (e.tx.type !== "ChangePubKey")).map((e)=>{
+        if((e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to)) {
+          e.tx.feePayment = true;
+        }
+        return e;
+      });
+      if (this.filter) {
+        filteredList = filteredList.filter((item) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
       return filteredList.map((e) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
     },

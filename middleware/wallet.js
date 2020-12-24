@@ -1,14 +1,13 @@
-import web3Wallet from "@/plugins/web3.js";
+import walletData from "@/plugins/walletData.js";
 
 export default async (context) => {
-  if (web3Wallet.get() !== false) {
+  if (walletData.get().syncWallet) {
     if (context.route.path === "/") {
       context.redirect("/account");
     }
     return;
   }
   const onboardResult = await context.store.dispatch("wallet/onboard");
-  console.log("Onboard Result: ", onboardResult);
   if (onboardResult !== true) {
     await context.store.dispatch("wallet/logout");
     if (context.route.path !== "/") {

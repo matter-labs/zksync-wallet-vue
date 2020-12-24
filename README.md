@@ -3,7 +3,7 @@
 
 # zkWallet v.2.*
 
-A completely different version of the Wallet, built with nuxt+vuejs.
+A completely different version of zkWallet, built with nuxt+vuejs.
 New architecture, implemented open source design system. Tight roadmap with many awesome features will guide developers into the amazing world of dApps and introduce true
  reactive interaction, dialog-based UX.
  
@@ -28,7 +28,9 @@ It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, publis
 
 ✅ **Ultra-low transaction fees (~ $0.001 per transfer)**
 
-zkWallet was created to unleash the power of zkSync L2 operations and give anyone access to L2 zkSync features on mainnet. Visit zksync.io to **[learn more](https://zksync.io/)**
+zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet. Visit zksync.io to **[learn more](https
+://zksync.io
+/)**
 
 ## Build Setup
 

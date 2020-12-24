@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   extends: [
     "plugin:vue/recommended",
     "plugin:prettier-vue/recommended",
@@ -71,14 +72,12 @@ module.exports = {
     "prettier-vue/prettier": [
       "error",
       {
-        // Override all options of `prettier` here
-        // @see https://prettier.io/docs/en/options.html
-        printWidth: 180,
-        singleQuote: false,
-        jsxSingleQuote: true,
-        tabWidth: 2,
         semi: true,
         trailingComma: "all",
+        singleQuote: false,
+        jsxSingleQuote: false,
+        printWidth: 180,
+        tabWidth: 2,
       },
     ],
   },

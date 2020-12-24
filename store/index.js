@@ -3,15 +3,18 @@ export const state = () => ({
 });
 
 export const mutations = {
-  /* setScreenLoader (state, loaderState) {
-    state.screenLoader = loaderState
-  }, */
+  showLoader(state) {
+    state.screenLoader = true;
+  },
+  hideLoader(state) {
+    state.screenLoader = false;
+  },
 };
 
 export const getters = {
-  /* getScreenLoader (state) {
-    return state.screenLoader
-  }, */
+  getScreenLoader(state) {
+    return state.screenLoader;
+  },
 };
 
 export const actions = {

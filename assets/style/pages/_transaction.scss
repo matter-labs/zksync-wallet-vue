@@ -42,6 +42,17 @@
             margin-top: 5px;
         }
     }
+    .chooseFeeToken {
+        color: $lightViolet;
+        font-weight: 600;
+        font-size: 14px;
+        padding-left: 5px;
+        text-decoration: underline;
+        cursor: pointer;
+        @media (max-width: $mobile) {
+            display: block;
+        }
+    }
     .tokenListContainer {
         height: 100%;
         overflow: auto;

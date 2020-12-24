@@ -32,7 +32,9 @@
                         <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
                         <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
                     </div>
-                    <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"><i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer</i-button>
+                    <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer">
+                      <i class="far fa-money-bill-wave-alt"></i>&nbsp;&nbsp;Transfer
+                    </i-button>
                     <i-input v-model="search" placeholder="Filter tokens" maxlength="6">
                         <i slot="prefix" class="far fa-search"></i>
                     </i-input>
@@ -48,7 +50,7 @@
                     <nuxt-link v-for="(item,index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
                         <div class="symbol">{{item.symbol}}</div>
                         <div class="rightSide">
-                            <div class="total"><span class="balancePrice">~${{(item.tokenPrice*item.balance).toFixed(2)}}</span>&nbsp;&nbsp;{{item.balance}}</div>
+                            <div class="total"><span class="balancePrice">{{item.formatedTotalPrice}}</span>&nbsp;&nbsp;{{item.formatedBalance}}</div>
                             <div class="status">
                                 <i-tooltip>
                                     <i v-if="item.status==='Verified'" class="verified far fa-check-double"></i>

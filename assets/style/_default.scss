@@ -171,6 +171,19 @@ button.-lg.-circle {
     }
 }
 
+.modal-wrapper.prevent-close {
+    .modal {
+        &::before {
+            position: absolute;
+            content: "";
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+    }
+}
 .modal {
     &.-md {
         > .header {
@@ -207,6 +220,9 @@ button.-lg.-circle {
         }
     }
     &.-light {
+        &.-md > .header > .close::before {
+            color: $gray !important;
+        }
         .header,.footer,.body {
             background: $modal-background-light !important;
             border-color: $modal-border-color-light !important;
@@ -302,10 +318,16 @@ button.-lg.-circle {
 .form-group {
     &.-radio {
         margin: 15px 0;
+        /* display: flex;
+        flex-direction: column;
+
+        label {
+            width: 100%;
+        } */
     }
 }
 .form-check.-radio {
-    white-space: pre-line !important;
+    //white-space: pre-line !important;
     &:not(:last-child) {
         margin-bottom: 15px;
     }
@@ -354,4 +376,53 @@ button.-lg.-circle {
     background-position: -2px -6px;
     background-size: contain;
     color: transparent !important;
+}
+.errorShake {
+    border-color: $red !important;
+}
+#nuxt-loading-custom {
+    z-index: 9;
+    background: white;
+    //visibility: hidden;
+    //opacity: 0;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    animation: nuxtLoadingIn 10s ease;
+    -webkit-animation: nuxtLoadingIn 10s ease;
+    animation-fill-mode: forwards;
+    overflow: hidden;
+    
+    background-color: #1d2039 !important;
+
+    & > div {
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+        border: .5rem solid #F5F5F5;
+        border-left: .5rem solid #8c8dfc;
+        transform: translateZ(0);
+        animation: nuxtLoadingCustom 1.1s infinite linear;
+        &, &::after {
+            border-radius: 50%;
+            width: 5rem;
+            height: 5rem;
+        }
+    }
+    @keyframes nuxtLoadingCustom {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 }

@@ -10,9 +10,9 @@ header {
     grid-template-columns: 100%;
     grid-template-rows: 35px 1fr;
     grid-row-gap: 5px;
-        @media screen and (min-width: 1201px) {
-            max-width: 1920px;
-        }
+    @media screen and (min-width: 1201px) {
+      max-width: 1920px;
+    }
   }
 
   .firstRow {
@@ -21,12 +21,23 @@ header {
     display: flex;
     justify-content: space-between;
 
-    .projectLogo {
-      height: 100%;
-      width: auto;
-      @media (max-width: $mobile) {
-        max-width: 130px;
-        object-fit: contain;
+    a {
+      text-decoration: none;
+    }
+
+    .headerWrapper {
+      height: 35px;
+      .projectLogo {
+        height: 100%;
+        width: auto;
+        @media (max-width: $mobile) {
+          max-width: 130px;
+          object-fit: contain;
+        }
+      }
+      .badge {
+        transform: translateY(2px);
+        transition: background-color $transition1;
       }
     }
 
@@ -39,6 +50,13 @@ header {
       grid-auto-columns: max-content;
       align-items: center;
       grid-gap: 25px;
+      @media screen and (min-width: $mobile) and (max-width: 992px) {
+        grid-gap: 15px;
+
+        .mainLink {
+          font-size: 16px;
+        }
+      }
 
       .mainLink {
         font-size: 18px;
@@ -162,6 +180,9 @@ body.inkline.-light header {
   .secondRow a, .linksContainer .mainLink {
     color: $black;
   }
+  .headerWrapper .badge {
+    background-color: $lightViolet !important;
+  }
 }
 
 body.inkline.-dark header {
@@ -169,5 +190,8 @@ body.inkline.-dark header {
 
   .secondRow a, .linksContainer .mainLink {
     color: $white;
+  }
+  .headerWrapper .badge {
+    background-color: $violet !important;
   }
 }

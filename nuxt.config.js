@@ -12,7 +12,7 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.*") + (process.env.APP_CURRENT_NETWORK ? ` |  ETH Network: ${process.env.APP_CURRENT_NETWORK}` : ""),
+    title: `${process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta"} | ${process.env.APP_CURRENT_NETWORK ? `${process.env.APP_CURRENT_NETWORK} | ` : ""}`,
     titleTemplate: "%s - " + process.env.APP_NAME,
     meta: [
       { charset: "utf-8" },
@@ -38,7 +38,11 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: "#4e529a" },
+  loading: {
+    color: "#8c8dfc",
+    continuous: true,
+  },
+  //loadingIndicator: '@/components/loading.vue',
   /*
    ** Global CSS
    */
@@ -60,11 +64,8 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
     "@nuxtjs/dotenv",
     "@nuxtjs/axios",
-    /* '@nuxtjs/auth', */
-    "@nuxtjs/pwa",
     "@nuxtjs/toast",
     "@nuxtjs/style-resources",
     "@inkline/nuxt",
@@ -85,12 +86,12 @@ export default {
   ],
   pwa: {
     icon: {
-      fileName: 'icon.png'
+      fileName: "icon.png",
     },
     manifest: {
-      name: "zkSync",
-      short_name: "zkSync",
-      description: "zkSync wallet",
+      name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` |  ETH Network: ${process.env.APP_CURRENT_NETWORK}` : ""),
+      short_name: "zkWallet DAPP",
+      description: "zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet.",
       start_url: "/",
       scope: "/",
       display: "standalone",
@@ -100,7 +101,7 @@ export default {
   },
   toast: {
     position: "bottom-right",
-    duration: 5000,
+    duration: 2000,
     iconPack: "fontawesome",
   },
   i18n: {
@@ -121,35 +122,9 @@ export default {
   },
 
   /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
-  axios: {
-    //baseURL: process.env.NUXT_API_BASE_URL || process.env.APP_URL + "/api",
-  },
-  auth: {
-    strategies: {
-      local: {
-        endpoints: {
-          login: { url: "/auth/login", method: "post", propertyName: "access_token" },
-          logout: { url: "/auth/logout", method: "post" },
-          user: { url: "/auth/user", method: "post", propertyName: "user" },
-        },
-        redirect: {
-          login: "/auth/login",
-          logout: "/",
-          callback: "/auth/login",
-          home: "/",
-        },
-      },
-    },
-  },
-
-  /*
    ** Build configuration
    */
   build: {
-    analyze: true,
     extend(config, { isDev, isClient }) {
       config.node = {
         fs: "empty",

@@ -132,7 +132,7 @@ export default {
       } else {
         this.error = "";
       }
-      this.$emit("input", parseFloat(this.valNow));
+      return this.$emit("input", parseFloat(this.valNow));
     },
   },
 };

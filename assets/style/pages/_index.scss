@@ -1,3 +1,22 @@
 .indexPage {
-    
+  .headerWrapper .badge {
+    cursor: default;
+    margin-top: -40px;
+    border-radius: 27px;
+    margin-left: 5px;
+    transform: translateY(3.5px);
+    transition: background-color $transition1;
+  }
+}
+
+body.inkline.-light .indexPage {
+  .headerWrapper .badge {
+    background-color: $lightViolet !important;
+  }
+}
+
+body.inkline.-dark .indexPage {
+  .headerWrapper .badge {
+    background-color: $violet !important;
+  }
 }
