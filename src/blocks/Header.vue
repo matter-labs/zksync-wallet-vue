@@ -27,7 +27,7 @@
       </div>
     </i-container>
 
-    <i-modal class="prevent-close" v-model="renameWalletModal" size="md">
+    <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
       <template slot="header">
         Rename wallet
       </template>
@@ -97,6 +97,9 @@ export default {
     renameWalletModal: {
       immediate: true,
       handler() {
+        if (!process.client) {
+          return false;
+        }
         const walletName = window.localStorage.getItem(this.walletAddressFull);
         if (walletName && walletName !== this.walletAddressFull) {
           this.walletName = walletName;
@@ -125,7 +128,7 @@ export default {
     },
     renameWallet: function () {
       this.renameWalletModal = false;
-      if (this.walletName.length > 0 && this.walletName !== this.walletAddressFull) {
+      if (process.client && this.walletName.length > 0 && this.walletName !== this.walletAddressFull) {
         window.localStorage.setItem(this.walletAddressFull, this.walletName);
       }
     },

@@ -111,7 +111,9 @@ export default {
       return this.tokensList.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     transactionMaxAmount: function () {
-      return this.choosedToken.balance - this.choosedToken.fee;
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
+      const bigNumFee = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.fee));
+      return utils.handleFormatToken(this.choosedToken.symbol, (bigNumBalance-bigNumFee));
     },
     blockExplorerLink: function () {
       return process.env.APP_ETH_BLOCK_EXPLORER;

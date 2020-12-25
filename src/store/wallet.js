@@ -19,7 +19,9 @@ let changeNetworkWasSet = false;
 function changeNetworkHandle(dispatch, context) {
   // context.$toast.info("Blockchain environment (Network) just changed");
   return async () => {
-    if (!walletData.get().syncWallet) {return}
+    if (!walletData.get().syncWallet) {
+      return;
+    }
     const refreshWalletResult = await dispatch("walletRefresh");
     if (refreshWalletResult === false) {
       await context.$router.push("/");
@@ -39,7 +41,9 @@ function changeNetworkHandle(dispatch, context) {
 function changeAccountHandle(dispatch, context) {
   // context.$toast.info("Active account changed. Please re-login to used one");
   return async () => {
-    if (!walletData.get().syncWallet) {return}
+    if (!walletData.get().syncWallet) {
+      return;
+    }
     await dispatch("logout");
     await context.$router.push("/");
     await dispatch("clearDataStorage");
@@ -227,16 +231,13 @@ export const actions = {
       if (force === false && localList.lastUpdated > new Date().getTime() - 120000) {
         return localList.list;
       }
-      let syncProvider = walletData.get().syncProvider;
-      if (!syncProvider.transport.ws.isOpened) {
-        await syncProvider.transport.ws.open();
-      }
+      await dispatch("restoreProviderConnection");
       const newAccountState = await syncWallet.getAccountState();
       walletData.set({ accountState: newAccountState });
       listCommited = newAccountState.committed.balances;
       listVerified = newAccountState.verified.balances;
     }
-    const restrictedTokens = this.getters['tokens/getRestrictedTokens'];
+    const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
     for (const prop in listCommited) {
       const price = await this.dispatch("tokens/getTokenPrice", prop);
       const commitedBalance = +handleFormatToken(prop, listCommited[prop] ? listCommited[prop] : 0);
@@ -249,7 +250,7 @@ export const actions = {
         verifiedBalance: verifiedBalance,
         tokenPrice: price,
         formatedTotalPrice: utils.getFormatedTotalPrice(price, commitedBalance),
-        restricted: (commitedBalance<=0 || restrictedTokens.hasOwnProperty(prop))===true
+        restricted: (commitedBalance <= 0 || restrictedTokens.hasOwnProperty(prop)) === true,
       });
     }
     commit("setZkTokens", {
@@ -272,10 +273,7 @@ export const actions = {
     if (force === false && localList.lastUpdated > new Date().getTime() - 120000) {
       return localList.list;
     }
-    const syncProvider = walletData.get().syncProvider;
-    if (!syncProvider.transport.ws.isOpened) {
-      await syncProvider.transport.ws.open();
-    }
+    await dispatch("restoreProviderConnection");
     const syncWallet = walletData.get().syncWallet;
     const accountState = await syncWallet.getAccountState();
     walletData.set({ accountState });
@@ -377,13 +375,14 @@ export const actions = {
       if (!syncProvider.transport.ws.isOpened) {
         await syncProvider.transport.ws.open();
       }
+      const zksync = await walletData.zkSync();
       if (type === "withdraw") {
         if (symbol === feeSymbol) {
           const foundFeeFast = await syncProvider.getTransactionFee("FastWithdraw", address, symbol);
           const foundFeeNormal = await syncProvider.getTransactionFee("Withdraw", address, symbol);
           const feesObj = {
-            fast: parseFloat(handleFormatToken(symbol, foundFeeFast.totalFee)),
-            normal: parseFloat(handleFormatToken(symbol, foundFeeNormal.totalFee)),
+            fast: parseFloat(handleFormatToken(symbol, zksync.closestPackableTransactionFee(foundFeeFast.totalFee.toString()))),
+            normal: parseFloat(handleFormatToken(symbol, zksync.closestPackableTransactionFee(foundFeeNormal.totalFee.toString()))),
           };
           commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
           return feesObj;
@@ -391,8 +390,8 @@ export const actions = {
           const batchWithdrawFeeFast = await syncProvider.getTransactionsBatchFee(["FastWithdraw", "Transfer"], [address, syncWallet.address()], feeSymbol);
           const batchWithdrawFeeNormal = await syncProvider.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet.address()], feeSymbol);
           const feesObj = {
-            fast: parseFloat(handleFormatToken(feeSymbol, batchWithdrawFeeFast)),
-            normal: parseFloat(handleFormatToken(feeSymbol, batchWithdrawFeeNormal)),
+            fast: parseFloat(handleFormatToken(feeSymbol, zksync.closestPackableTransactionFee(batchWithdrawFeeFast.toString()))),
+            normal: parseFloat(handleFormatToken(feeSymbol, zksync.closestPackableTransactionFee(batchWithdrawFeeNormal.toString()))),
           };
           commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
           return feesObj;
@@ -400,7 +399,7 @@ export const actions = {
       } else {
         if (symbol === feeSymbol) {
           const foundFeeNormal = await syncProvider.getTransactionFee("Transfer", address, symbol);
-          const totalFeeValue = parseFloat(handleFormatToken(symbol, foundFeeNormal.totalFee));
+          const totalFeeValue = parseFloat(handleFormatToken(symbol, zksync.closestPackableTransactionFee(foundFeeNormal.totalFee.toString())));
           const feesObj = {
             normal: totalFeeValue,
           };
@@ -409,7 +408,7 @@ export const actions = {
         } else {
           const batchTransferFee = await syncProvider.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet.address()], feeSymbol);
           const feesObj = {
-            normal: parseFloat(handleFormatToken(feeSymbol, batchTransferFee)),
+            normal: parseFloat(handleFormatToken(feeSymbol, zksync.closestPackableTransactionFee(batchTransferFee.toString()))),
           };
           commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
           return feesObj;
@@ -417,21 +416,23 @@ export const actions = {
       }
     }
   },
-  async walletRefresh({ getters, commit, dispatch }) {
+  async walletRefresh({ getters, commit, dispatch }, firstSelect = true) {
     try {
       /* dispatch("changeNetworkRemove"); */
-      const [walletCheck] = await Promise.all([getters["getOnboard"].walletCheck()]);
+      const walletCheck = firstSelect ? await getters["getOnboard"].walletSelect() : await getters["getOnboard"].walletCheck();
       if (walletCheck !== true) {
         return false;
       }
-      if(!web3Wallet.get().eth) {
+      if (!web3Wallet.get().eth) {
         return false;
       }
       const getAccounts = await web3Wallet.get().eth.getAccounts();
       if (getAccounts.length === 0) {
         return false;
       }
-      if (walletData.get().syncWallet) {return true}
+      if (walletData.get().syncWallet) {
+        return true;
+      }
 
       /**
        * @type {provider|ExternalProvider}
@@ -473,9 +474,11 @@ export const actions = {
       console.log("forceRefreshData | getTransactionsHistory error", err);
     });
   },
-  async logout({ dispatch, commit }) {
+  async logout({ dispatch, commit, getters }) {
     /* dispatch("changeNetworkRemove"); */
     //web3Wallet.set(false);
+    const onboard = getters["getOnboard"];
+    onboard.walletReset();
     walletData.set({ syncProvider: null, syncWallet: null, accountState: null });
     localStorage.removeItem("selectedWallet");
     commit("clearDataStorage");
@@ -500,13 +503,15 @@ export const actions = {
    * @return {Promise<void>}
    */
   async changeNetworkSet({ dispatch }) {
-    if(changeNetworkWasSet===true){return}
-    if (window.ethereum) {
-      changeNetworkWasSet=true;
+    if (changeNetworkWasSet === true) {
+      return;
+    }
+    if (process.client && window.ethereum) {
+      changeNetworkWasSet = true;
       window.ethereum.on("disconnect", () => {
         /* setTimeout(() => { */
-          this.$toast.error("Connection with your Wallet was lost. Restarting the DAPP");
-          dispatch('logout');
+        this.$toast.error("Connection with your Wallet was lost. Restarting the DAPP");
+        dispatch("logout");
         /* }, 2000); */
       });
       window.ethereum.on("chainChanged", changeNetworkHandle(dispatch, this));

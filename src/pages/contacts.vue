@@ -1,85 +1,89 @@
 <template>
-    <div class="contactsPage">
-        <i-modal class="prevent-close" v-model="addContactModal" size="md">
-            <template slot="header">
-                <span v-if="addContactType==='add'">Add contact</span>
-                <span v-else-if="addContactType==='edit'">Edit contact</span>
-            </template>
-            <div>
-                <div class="_padding-bottom-1">Contact name</div>
-                <i-input v-model="inputedName" size="lg" placeholder="Name" maxlength="20" />
+  <div class="contactsPage">
+    <i-modal v-model="addContactModal" class="prevent-close" size="md">
+      <template slot="header">
+        <span v-if="addContactType==='add'">Add contact</span>
+        <span v-else-if="addContactType==='edit'">Edit contact</span>
+      </template>
+      <div>
+        <div class="_padding-bottom-1">Contact name</div>
+        <i-input v-model="inputedName" size="lg" placeholder="Name" maxlength="20"/>
 
-                <br>
+        <br>
 
-                <div class="_padding-bottom-1">Address</div>
-                <i-input v-model="inputedWallet" size="lg" placeholder="0x address" maxlength="42" />
+        <div class="_padding-bottom-1">Address</div>
+        <i-input v-model="inputedWallet" size="lg" placeholder="0x address" maxlength="42"/>
 
-                <br>
+        <br>
 
-                <div v-if="modalError" class="modalError _padding-bottom-2">{{modalError}}</div>
+        <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
 
-                <i-button v-if="addContactType==='edit'" block link size="md" variant="secondary" @click="deleteContact()"><i class="fal fa-trash"></i>&nbsp;&nbsp;Delete contact</i-button>
-                <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
-            </div>
-        </i-modal>
-        <div v-if="!openedContact" class="tileBlock contactTile">
-            <div class="tileHeadline h3">
-                <span>Contacts</span>
-                <i-tooltip>
-                    <i class="fas fa-plus" @click="addContactType='add'; addContactModal=true;"></i>
-                    <template slot="body">Add contact</template>
-                </i-tooltip>
-            </div>
-            <i-input v-if="search.trim() || displayedContactsList.length!==0" v-model="search" placeholder="Filter contacts" maxlength="20">
-                <i slot="prefix" class="far fa-search"></i>
-            </i-input>
+        <i-button v-if="addContactType==='edit'" block link size="md" variant="secondary" @click="deleteContact()"><i class="fal fa-trash"></i>&nbsp;&nbsp;Delete contact</i-button>
+        <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
+      </div>
+    </i-modal>
+    <div v-if="!openedContact" class="tileBlock contactTile">
+      <div class="tileHeadline h3">
+        <span>Contacts</span>
+        <i-tooltip>
+          <i class="fas fa-plus" @click="addContactType='add'; addContactModal=true;"></i>
+          <template slot="body">Add contact</template>
+        </i-tooltip>
+      </div>
+      <i-input v-if="search.trim() || displayedContactsList.length!==0" v-model="search" placeholder="Filter contacts" maxlength="20">
+        <i slot="prefix" class="far fa-search"></i>
+      </i-input>
 
-            <div class="contactsListContainer">
-                <div v-if="!search.trim() && displayedContactsList.length===0" class="nothingFound">
-                    <span>The contact list is empty</span>
-                </div>
-                <div v-else-if="displayedContactsList.length===0" class="nothingFound">
-                    <span>Your search <b>"{{search}}"</b> did not match any contacts</span>
-                </div>
-                <div v-for="(item, index) in displayedContactsList" v-else :key="index" class="contactItem" :class="{'deleted': item.deleted===true}" @click.self="openContact(item)">
-                    <user-img :wallet="item.address" />
-                    <div class="contactInfo">
-                        <div class="contactName">{{item.name}}</div>
-                        <div class="contactAddress">{{item.address}}</div>
-                    </div>
-                    <div v-if="!item.deleted" class="iconsBlock">
-                      <i-tooltip trigger="click">
-                        <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="fal fa-copy"></i></i-button>
-                        <template slot="body">Copied!</template>
-                      </i-tooltip>
-                        <i-button block link size="md" variant="secondary" @click="editContact(item)"><i class="fal fa-pen"></i></i-button>
-                    </div>
-                    <div v-else class="iconsBlock">
-                        <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="fal fa-trash-undo"></i></i-button>
-                    </div>
-                    <!-- <div class="rightSide">
-                        <div class="balance">{{item.balance}}</div>
-                    </div> -->
-                </div>
-            </div>
+      <div class="contactsListContainer">
+        <div v-if="!search.trim() && displayedContactsList.length===0" class="nothingFound">
+          <span>The contact list is empty</span>
         </div>
-        <div v-else class="tileBlock">
-            <div class="tileHeadline h3">
-                <span v-if="openedContact.notInContacts">{{openedContact.address.replace(openedContact.address.slice(6, openedContact.address.length - 3), '...')}}</span>
-                <span v-else>{{openedContact.name}}</span>
-                <i-tooltip>
-                    <i class="fas fa-times" @click="$router.push('/contacts')"></i>
-                    <template slot="body">Close</template>
-                </i-tooltip>
-            </div>
-            <div v-if="openedContact.deleted===true" class="isDeleted">Contact is deleted</div>
-            <wallet-address :wallet="openedContact.address" class="_margin-y-1" />
-            <i-button v-if="openedContact.notInContacts" block link size="md" variant="secondary" @click="addContactType='add'; inputedWallet=openedContact.address; addContactModal=true;"><i class="fal fa-plus"></i>&nbsp;&nbsp;Add contact</i-button>
-            <i-button v-else-if="openedContact.deleted===false" block link size="md" variant="secondary" @click="editContact(openedContact)"><i class="fal fa-pen"></i>&nbsp;&nbsp;Edit contact</i-button>
-            <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="fal fa-trash-undo"></i>&nbsp;&nbsp;Restore contact</i-button>
-            <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer to contact</i-button>
+        <div v-else-if="displayedContactsList.length===0" class="nothingFound">
+          <span>Your search <b>"{{ search }}"</b> did not match any contacts</span>
         </div>
+        <div v-for="(item, index) in displayedContactsList" v-else :key="index" class="contactItem" :class="{'deleted': item.deleted===true}" @click.self="openContact(item)">
+          <user-img :wallet="item.address"/>
+          <div class="contactInfo">
+            <div class="contactName">{{ item.name }}</div>
+            <div class="contactAddress">{{ item.address }}</div>
+          </div>
+          <div v-if="!item.deleted" class="iconsBlock">
+            <i-tooltip trigger="click">
+              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="fal fa-copy"></i></i-button>
+              <template slot="body">Copied!</template>
+            </i-tooltip>
+            <i-button block link size="md" variant="secondary" @click="editContact(item)"><i class="fal fa-pen"></i></i-button>
+          </div>
+          <div v-else class="iconsBlock">
+            <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="fal fa-trash-undo"></i></i-button>
+          </div>
+          <!-- <div class="rightSide">
+              <div class="balance">{{item.balance}}</div>
+          </div> -->
+        </div>
+      </div>
     </div>
+    <div v-else class="tileBlock">
+      <div class="tileHeadline h3">
+        <span v-if="openedContact.notInContacts">{{ openedContact.address.replace(openedContact.address.slice(6, openedContact.address.length - 3), "...") }}</span>
+        <span v-else>{{ openedContact.name }}</span>
+        <i-tooltip>
+          <i class="fas fa-times" @click="$router.push('/contacts')"></i>
+          <template slot="body">Close</template>
+        </i-tooltip>
+      </div>
+      <div v-if="openedContact.deleted===true" class="isDeleted">Contact is deleted</div>
+      <wallet-address :wallet="openedContact.address" class="_margin-y-1"/>
+      <i-button v-if="openedContact.notInContacts" block link size="md" variant="secondary"
+                @click="addContactType='add'; inputedWallet=openedContact.address; addContactModal=true;"><i class="fal fa-plus"></i>&nbsp;&nbsp;Add contact
+      </i-button>
+      <i-button v-else-if="openedContact.deleted===false" block link size="md" variant="secondary" @click="editContact(openedContact)"><i class="fal fa-pen"></i>&nbsp;&nbsp;Edit
+        contact
+      </i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="fal fa-trash-undo"></i>&nbsp;&nbsp;Restore contact</i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer to contact</i-button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -87,6 +91,7 @@ import validations from "@/plugins/validations.js";
 import walletData from "@/plugins/walletData.js";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
+
 export default {
   components: {
     userImg,
@@ -142,7 +147,7 @@ export default {
   },
   mounted() {
     try {
-      if (window.localStorage.getItem("contacts-" + this.walletAddressFull)) {
+      if (process.client && window.localStorage.getItem("contacts-" + this.walletAddressFull)) {
         const contactsList = JSON.parse(window.localStorage.getItem("contacts-" + this.walletAddressFull));
         if (Array.isArray(contactsList)) {
           this.contactsList = contactsList.map((e) => ({ ...e, deleted: false }));
@@ -166,7 +171,9 @@ export default {
           contactsList.splice(a, 1);
         }
       }
-      window.localStorage.setItem("contacts-" + this.walletAddressFull, JSON.stringify(contactsList));
+      if (process.client) {
+        window.localStorage.setItem("contacts-" + this.walletAddressFull, JSON.stringify(contactsList));
+      }
     },
     addContact: function () {
       if (this.inputedName.trim().length === 0) {

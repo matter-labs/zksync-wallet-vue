@@ -11,13 +11,13 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "latest",
-    "@nuxtjs/dotenv": "latest",
+    "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/pwa": "latest",
+    "@nuxtjs/sentry": "^4.5.0",
     "@nuxtjs/toast": "latest",
     "@portis/web3": "^2.0.0-beta.59",
     "@walletconnect/web3-provider": "^1.0.11",
     "bnc-onboard": "latest",
-    "dotenv": "latest",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.0.12",
     "js-cookie": "^2.2.1",
@@ -33,18 +33,40 @@
     "web3": "^1.2.7",
     "zksync": "^0.7.4"
   },
+  "devDependencies": {
+    "@inkline/nuxt": "^2.3.5",
+    "@nuxtjs/dotenv": "1.4.1",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "commitlint": "^8.3.5",
+    "dotenv": "8.2.0",
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-prettier-vue": "^2.1.1",
+    "eslint-plugin-vue": "^7.0.0",
+    "fs-extra": "^9.0.1",
+    "lodash": "4.17.20",
+    "node-sass": "latest",
+    "prettier": "^2.2.1",
+    "sass-loader": "latest"
+  },
   "scripts": {
+    "build:firebase:mainnet": "yarn init_env:mainnet && yarn ci && yarn generate",
+    "build:firebase:rinkeby": "yarn init_env:rinkeby && yarn ci && yarn generate",
+    "init_env:mainnet": "cp \"environments/.env.mainnet\" \"src/.env\" && git rev-parse --short HEAD>>\"src/.env\"",
+    "init_env:rinkeby": "cp \"environments/.env.rinkeby\" \"src/.env\" && git rev-parse --short HEAD>>\"src/.env\"",
+    "start:firebase": "firebase serve --only hosting",
+    "deploy": "firebase deploy --only hosting",
+    "ci": "yarn install --frozen-lockfile",
     "dev": "nuxt",
-    "build": "nuxt build",
     "start": "nuxt start",
+    "build": "nuxt build",
     "generate": "nuxt generate",
     "test": "echo \"Not implemented.\"",
     "format": "prettier --write",
     "lint-ts": "eslint --fix \"**/*.{js, vue}\"",
     "lint-css": "stylelint --fix \"**/*.scss\"",
-    "deploy_hosting": "firebase --project ${FIREBASE_PROJECT:?firebase project name not set or empty} deploy --only hosting",
-    "audit_dependencies": "npm audit --package-lock-only --audit-level critical --json | npm-audit-html --output audit.html",
-    "check_licenses": "license-checker --json > licenses.json"
+    "audit_dependencies": "npm audit --package-lock-only --audit-level critical --json | npm-audit-html --output audit.html"
   },
   "husky": {
     "hooks": {
@@ -52,11 +74,14 @@
       "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
     }
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "lint-staged": {
     "*.{css,scss}": "npm run lint-css",
     "*.{ts,tsx}": [
-      "npm run lint-ts",
-      "npm run format"
+      "yarn run lint-ts",
+      "yarn run format"
     ]
   },
   "stylelint": {
@@ -113,9 +138,6 @@
       "scss/at-rule-no-unknown": true
     }
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -127,22 +149,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@inkline/nuxt": "^2.3.5",
-    "@nuxtjs/dotenv": "1.4.1",
-    "@nuxtjs/style-resources": "^1.0.0",
-    "commitlint": "^8.3.5",
-    "dotenv": "8.2.0",
-    "eslint": "^7.16.0",
-    "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-nuxt": "^2.0.0",
-    "eslint-plugin-prettier-vue": "^2.1.1",
-    "eslint-plugin-vue": "^7.0.0",
-    "fs-extra": "latest",
-    "lodash": "4.17.20",
-    "node-sass": "latest",
-    "prettier": "^2.2.1",
-    "sass-loader": "latest"
   }
 }
