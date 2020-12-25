@@ -26,7 +26,7 @@ It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, publis
 
 ✅ Withdrawals to mainnet in ≤ 15 min;
 
-✅ **Ultra-low transaction fees (~ $0.001 per transfer)**
+✅ **Ultra-low transaction fees**
 
 zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet. [Learn more](https://zksync.io/)
 
