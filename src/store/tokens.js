@@ -1,5 +1,4 @@
 import walletData from "@/plugins/walletData.js";
-import handleFormatToken from "@/plugins/handleFormatToken.js";
 
 
 /**
@@ -91,7 +90,7 @@ export const actions = {
     }));
 
     const zkBalances = await Promise.all(zkBalancePromises).catch((err) => {return []});
-    
+
     return {
       tokens,
       zkBalances,

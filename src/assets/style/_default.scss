@@ -70,7 +70,7 @@ input[type=number] {
     backdrop-filter: blur(10px); */
 }
 
-body.inkline { 
+body.inkline {
     .button {
         &.-link {
             text-decoration: none !important;
@@ -94,6 +94,9 @@ body.inkline {
                 }
             }
         }
+        #nuxt-loading-custom {
+            background-color: $white;
+        }
     }
     &.-dark {
         background-color: #11142b;
@@ -108,6 +111,9 @@ body.inkline {
                     background-color: #ffffff14 !important;
                 }
             }
+        }
+        #nuxt-loading-custom {
+            background-color: #1d2039 !important;
         }
     }
 }
@@ -400,8 +406,6 @@ button.-lg.-circle {
     -webkit-animation: nuxtLoadingIn 10s ease;
     animation-fill-mode: forwards;
     overflow: hidden;
-    
-    background-color: #1d2039 !important;
 
     & > div {
         font-size: 10px;

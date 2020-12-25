@@ -17,6 +17,10 @@ function customExpHandle(x) {
     }
     return x;
 }
+const parseToken = (symbol, amount) => {
+    const syncProvider = walletData.get().syncProvider;
+    return syncProvider.tokenSet.parseToken(symbol, amount.toString());
+}
 const handleExpNum = (symbol, amount) => {
     if(!amount){return "0"}
     if(typeof(amount) === "number") {
@@ -44,6 +48,7 @@ const getFormatedTotalPrice = (price, amount) => {
     }
 }
 export default {
+    parseToken,
     handleExpNum,
     handleFormatToken,
     getFormatedTotalPrice

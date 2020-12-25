@@ -122,7 +122,7 @@
       <div v-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
 
       <i-button block size="lg" variant="secondary" class="_margin-top-1"
-                :disabled="!enoughTokenFee || !isAddressValid || !inputTotalSum || inputTotalSum<=0 || !choosedToken || feesLoading || inputTotalSum>transactionMaxAmount"
+                :disabled="!enoughTokenFee || !isAddressValid || !inputTotalSum || inputTotalSum<=0 || !feesObj || !choosedToken || feesLoading || inputTotalSum>transactionMaxAmount"
                 @click="commitTransaction()">
         <i v-if="type!=='withdraw'" class="far fa-money-bill-wave-alt"></i>
         <i v-else class="fas fa-hand-holding-usd"></i>
@@ -130,7 +130,7 @@
       </i-button>
       <div v-if="cantFindFeeToken===true && feesObj && choosedToken && isAddressValid"
            class="errorText _text-center _margin-top-1">
-        <b>{{ choosedToken.symbol }}</b> is not suitable to pay the fee<br>
+        <b>{{ choosedToken.symbol }}</b> is not suitable for paying fees<br>
         No available tokens on your balance to pay the fee
       </div>
       <div v-else-if="(feesObj || feesLoading) && choosedToken && isAddressValid" class="_text-center _margin-top-1">
@@ -352,7 +352,9 @@ export default {
     },
     transactionMaxAmount: function () {
       if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
-        return (this.choosedToken.balance - (this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal));
+        const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
+        const bigNumFee = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, (this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal)));
+        return utils.handleFormatToken(this.choosedToken.symbol, (bigNumBalance-bigNumFee));
       } else {
         return this.choosedToken.balance;
       }

@@ -62,17 +62,17 @@
                     </nuxt-link>
                 </div>
             </div>
-            <mint :display="(balances.length===0 && loading===false)" class="_margin-top-2" @received="getBalances()" />
+            <!-- <mint :display="(balances.length===0 && loading===false)" class="_margin-top-2" @received="getBalances()" /> -->
         </div>
     </div>
 </template>
 
 <script>
-import Mint from "@/blocks/Mint.vue";
+/* import Mint from "@/blocks/Mint.vue"; */
 export default {
-  components: {
+  /* components: {
     Mint,
-  },
+  }, */
   data() {
     return {
       balances: [],

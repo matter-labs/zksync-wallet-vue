@@ -227,10 +227,7 @@ export const actions = {
       if (force === false && localList.lastUpdated > new Date().getTime() - 120000) {
         return localList.list;
       }
-      let syncProvider = walletData.get().syncProvider;
-      if (!syncProvider.transport.ws.isOpened) {
-        await syncProvider.transport.ws.open();
-      }
+      await dispatch('restoreProviderConnection');
       const newAccountState = await syncWallet.getAccountState();
       walletData.set({ accountState: newAccountState });
       listCommited = newAccountState.committed.balances;
@@ -272,10 +269,7 @@ export const actions = {
     if (force === false && localList.lastUpdated > new Date().getTime() - 120000) {
       return localList.list;
     }
-    const syncProvider = walletData.get().syncProvider;
-    if (!syncProvider.transport.ws.isOpened) {
-      await syncProvider.transport.ws.open();
-    }
+    await dispatch('restoreProviderConnection');
     const syncWallet = walletData.get().syncWallet;
     const accountState = await syncWallet.getAccountState();
     walletData.set({ accountState });

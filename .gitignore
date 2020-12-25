@@ -36,3 +36,5 @@ yarn-error.log*
 .assets_cache/
 .buildx-cache/
 .reports/
+/functions/.nuxt/
+/src/static/sw.js
