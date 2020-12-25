@@ -39,3 +39,5 @@ yarn-error.log*
 /functions/.nuxt/
 /src/static/sw.js
 public/*
+!public/.gitignore
+.nuxt

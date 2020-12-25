@@ -4,7 +4,6 @@ export default {
   ssr: false,
   target: "static",
   srcDir: "src/",
-  buildDir: "functions/.nuxt",
 
   env: {
     ...process.env,
@@ -15,7 +14,7 @@ export default {
    */
   head: {
     name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
-    titleTemplate: "%s - " + process.env.APP_NAME,
+    titleTemplate: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -66,12 +65,12 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
+    "@nuxtjs/dotenv",
     "@nuxtjs/pwa",
     "@nuxtjs/axios",
     "@nuxtjs/toast",
-    "@inkline/nuxt",
     "@nuxtjs/google-gtag",
-    "@nuxtjs/dotenv",
+    "@inkline/nuxt",
     "@nuxtjs/style-resources",
     [
       "nuxt-i18n",
@@ -84,7 +83,7 @@ export default {
           },
         ],
         defaultLocale: "en",
-        langDir: "locales/",
+        langDir: "./locales/",
       },
     ],
     "@nuxtjs/sentry",
@@ -118,7 +117,6 @@ export default {
     },
   },
   inkline: {
-    components: ["IIcon", "IContainer", "IBadge", "IModal", "IRow", "IColumn", "IRadio", "IInput", "IButton", "ILoader", "ITooltip"],
     config: {
       autodetectVariant: true,
     },

@@ -13,7 +13,7 @@
             <img src="@/assets/imgs/wallets/external.png" alt="External">
             <i class="tileIcon fas fa-lock"></i>
           </div>
-          <div class="tileName"><i-button variant="secondary" size="lg">Connect your wallet</i-button></div>
+          <div class="tileName">Connect your wallet</div>
         </div>
       </i-row>
     </i-container>

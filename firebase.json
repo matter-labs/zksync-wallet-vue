@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "firebase": "my-ember-cli-app",
     "public": "public",
     "ignore": [
       "firebase.json",

@@ -23,7 +23,7 @@
       <i-row center class="_margin-top-1">
         <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Build with ❤️ by <strong>Matter Labs</strong></a>
         <i-badge variant="outline-white _margin-left-1">
-          v. {{version}}
+          v.{{version}}
         </i-badge>
       </i-row>
     </i-container>
@@ -31,11 +31,11 @@
 </template>
 
 <script>
-import { GIT_REVISION } from "@/plugins/build";
+import { GIT_REVISION_SHORT } from "@/plugins/build";
 export default {
   data() {
     return {
-      version: GIT_REVISION,
+      version: GIT_REVISION_SHORT,
     };
   },
   methods: {
