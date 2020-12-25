@@ -2,8 +2,8 @@ require("dotenv").config();
 
 export default {
   ssr: false,
-  srcDir: 'src',
-  buildDir: 'functions/.nuxt',
+  srcDir: "src/",
+  buildDir: "functions/.nuxt",
 
   env: {
     ...process.env,
@@ -59,17 +59,15 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [],
+  buildModules: ["@nuxtjs/dotenv", "@nuxtjs/style-resources"],
 
   /*
    ** Nuxt.js modules
    */
   modules: [
+    "@nuxtjs/pwa",
     "@nuxtjs/axios",
     "@nuxtjs/toast",
-    "@nuxtjs/dotenv",
-    "@nuxtjs/style-resources",
-    "@nuxtjs/style-resources",
     "@inkline/nuxt",
     [
       "nuxt-i18n",
@@ -110,7 +108,7 @@ export default {
     vueI18n: {
       fallbackLocale: "en",
       messages: {
-        en: require("./locales/en/translations.json"),
+        en: require("./src/locales/en/translations.json"),
       },
     },
   },
@@ -127,6 +125,10 @@ export default {
    ** Build configuration
    */
   build: {
+    ssr: false,
+    extractCSS: {
+      ignoreOrder: true,
+    },
     extend(config, { isDev, isClient }) {
       config.node = {
         fs: "empty",

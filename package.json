@@ -11,13 +11,11 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "latest",
-    "@nuxtjs/dotenv": "latest",
     "@nuxtjs/pwa": "latest",
     "@nuxtjs/toast": "latest",
     "@portis/web3": "^2.0.0-beta.59",
     "@walletconnect/web3-provider": "^1.0.11",
     "bnc-onboard": "latest",
-    "dotenv": "latest",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.0.12",
     "js-cookie": "^2.2.1",
@@ -33,10 +31,29 @@
     "web3": "^1.2.7",
     "zksync": "^0.7.4"
   },
+  "devDependencies": {
+    "@inkline/nuxt": "^2.3.5",
+    "@nuxtjs/dotenv": "1.4.1",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "commitlint": "^8.3.5",
+    "dotenv": "8.2.0",
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-prettier-vue": "^2.1.1",
+    "eslint-plugin-vue": "^7.0.0",
+    "fs-extra": "^9.0.1",
+    "lodash": "4.17.20",
+    "node-sass": "latest",
+    "prettier": "^2.2.1",
+    "sass-loader": "latest"
+  },
   "scripts": {
+    "preci": "rm -fr node_modules",
+    "ci": "yarn install --frozen-lockfile",
     "dev": "nuxt",
+    "start": "cross-env NODE_ENV=production node src/server/index.js",
     "build": "nuxt build",
-    "start": "nuxt start",
     "generate": "nuxt generate",
     "test": "echo \"Not implemented.\"",
     "format": "prettier --write",
@@ -51,6 +68,9 @@
       "pre-commit": "lint-staged",
       "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
     }
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   },
   "lint-staged": {
     "*.{css,scss}": "npm run lint-css",
@@ -113,9 +133,6 @@
       "scss/at-rule-no-unknown": true
     }
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -127,22 +144,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@inkline/nuxt": "^2.3.5",
-    "@nuxtjs/dotenv": "1.4.1",
-    "@nuxtjs/style-resources": "^1.0.0",
-    "commitlint": "^8.3.5",
-    "dotenv": "8.2.0",
-    "eslint": "^7.16.0",
-    "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-nuxt": "^2.0.0",
-    "eslint-plugin-prettier-vue": "^2.1.1",
-    "eslint-plugin-vue": "^7.0.0",
-    "fs-extra": "latest",
-    "lodash": "4.17.20",
-    "node-sass": "latest",
-    "prettier": "^2.2.1",
-    "sass-loader": "latest"
   }
 }
