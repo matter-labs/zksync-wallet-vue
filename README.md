@@ -1,7 +1,7 @@
 # [zkWallet](https://wallet.zksync.io/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![npm version](https://img.shields.io/npm/v/zksync.svg?style=flat)](https://www.npmjs.com/package/zksync) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Rinkeby](https://img.shields.io/badge/wallet-Live%20on%20Rinkeby-blue)](https://rinkeby.zksync.io) [![Live on Ropsten](https://img.shields.io/badge/wallet-Live%20on%20Ropsten-blue)](https://ropsten.zksync.io) [![Join the technical discussion chat at https://gitter.im/matter-labs/zksync](https://badges.gitter.im/matter-labs/zksync.svg)](https://gitter.im/matter-labs/zksync?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
-# zkWallet v.2.*
+# zkWallet v.2.0.0-beta5
 
 A completely different version of zkWallet, built with nuxt+vuejs.
 New architecture, implemented open source design system. Tight roadmap with many awesome features will guide developers into the amazing world of dApps and introduce true
@@ -24,13 +24,11 @@ It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, publis
 
 ✅ Fees conveniently payable in token of your choice;
 
-✅ Withdrawals to mainnet in under 15 min;
+✅ Withdrawals to mainnet in ≤ 15 min;
 
 ✅ **Ultra-low transaction fees (~ $0.001 per transfer)**
 
-zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet. Visit zksync.io to **[learn more](https
-://zksync.io
-/)**
+zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet. [Learn more](https://zksync.io/)
 
 ## Build Setup
 
@@ -61,11 +59,12 @@ As used by alpha-version is deployed to surge.sh
 $ sh cli-update.sh
 ``` 
 
-## Used software
+## Solutions used
 
-* [Nuxt.js docs](https://nuxtjs.org)
-* [Vue.js v.2.*](https://vuejs.org)
-* ...
+* [Nuxt.js](https://nuxtjs.org)
+* [Vue.js](https://vuejs.org)
+* [Sentry.io](https://sentry.io)
+* [Onboarding.js](https://docs.blocknative.com/onboard)
 
 ## License
 

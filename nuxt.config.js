@@ -2,8 +2,9 @@ require("dotenv").config();
 
 export default {
   ssr: false,
-  srcDir: 'src',
-  buildDir: 'functions/.nuxt',
+  target: "static",
+  srcDir: "src/",
+  buildDir: "functions/.nuxt",
 
   env: {
     ...process.env,
@@ -13,7 +14,7 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: `${process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta"} | ${process.env.APP_CURRENT_NETWORK ? `${process.env.APP_CURRENT_NETWORK} | ` : ""}`,
+    name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
     titleTemplate: "%s - " + process.env.APP_NAME,
     meta: [
       { charset: "utf-8" },
@@ -65,12 +66,13 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
+    "@nuxtjs/pwa",
     "@nuxtjs/axios",
     "@nuxtjs/toast",
+    "@inkline/nuxt",
+    "@nuxtjs/google-gtag",
     "@nuxtjs/dotenv",
     "@nuxtjs/style-resources",
-    "@nuxtjs/style-resources",
-    "@inkline/nuxt",
     [
       "nuxt-i18n",
       {
@@ -85,13 +87,14 @@ export default {
         langDir: "locales/",
       },
     ],
+    "@nuxtjs/sentry",
   ],
   pwa: {
     icon: {
       fileName: "icon.png",
     },
     manifest: {
-      name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` |  ETH Network: ${process.env.APP_CURRENT_NETWORK}` : ""),
+      name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
       short_name: "zkWallet DAPP",
       description: "zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet.",
       start_url: "/",
@@ -110,11 +113,12 @@ export default {
     vueI18n: {
       fallbackLocale: "en",
       messages: {
-        en: require("./locales/en/translations.json"),
+        en: require("./src/locales/en/translations.json"),
       },
     },
   },
   inkline: {
+    components: ["IIcon", "IContainer", "IBadge", "IModal", "IRow", "IColumn", "IRadio", "IInput", "IButton", "ILoader", "ITooltip"],
     config: {
       autodetectVariant: true,
     },
@@ -122,15 +126,38 @@ export default {
   styleResources: {
     scss: "./assets/style/_variables.scss",
   },
-
+  sentry: {
+    dsn: "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800",
+    config: {
+      tracesSampleRate: 1.0,
+    },
+  },
+  "google-gtag": {
+    id: "UA-178057628-1",
+    config: {
+      anonymize_ip: true, // anonymize IP
+      send_page_view: true, // might be necessary to avoid duplicated page track on page reload
+    },
+    debug: false, // enable to track in dev mode
+    disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
+  },
   /*
    ** Build configuration
    */
   build: {
+    ssr: false,
+    target: "static",
+    extractCSS: {
+      ignoreOrder: true,
+    },
     extend(config, { isDev, isClient }) {
       config.node = {
         fs: "empty",
       };
     },
+  },
+  generate: {
+    dir: "public",
+    fallback: "404.html",
   },
 };

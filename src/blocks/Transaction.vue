@@ -8,7 +8,7 @@
           need</a>!</p>
       </div>
     </i-modal>
-    <i-modal class="prevent-close" v-model="saveContactModal" size="md">
+    <i-modal v-model="saveContactModal" class="prevent-close" size="md">
       <template slot="header">Save contact</template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
@@ -57,6 +57,9 @@
     </div>
     <div v-else-if="mainLoading===true" class="tileBlock">
       <div class="tileHeadline h3">{{ type==='withdraw' ? 'Withdraw':'Transfer' }}</div>
+      <a v-if="transactionHash" class="_display-block _text-center" target="_blank"
+         :href="`https://${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
+          class="fas fa-external-link"></i></a>
       <p v-if="openedTab==='main' && tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
       <div v-if="mainLoading===true" class="nothingFound _padding-y-2">
         <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
@@ -109,11 +112,11 @@
 
       <i-radio-group v-if="choosedToken && type==='withdraw' && (!choosedFeeToken || choosedFeeToken.symbol===choosedToken.symbol)" v-model="fastWithdraw" class="_margin-top-2">
         <i-radio :value="false">
-          Normal withdraw (Fee: <span v-if="feesObj">{{ feesObj.normal }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span><span class="totalPrice" v-else>Loading...</span>).<br>
+          Normal withdraw (Fee: <span v-if="feesObj">{{ feesObj.normal }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span><span v-else class="totalPrice">Loading...</span>).<br>
           Processing time: {{ getTimeString(withdrawTime.normal) }}
         </i-radio>
         <i-radio :value="true">
-          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span><span class="totalPrice" v-else>Loading...</span>).<br>
+          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span><span v-else class="totalPrice">Loading...</span>).<br>
           Processing time: {{ getTimeString(withdrawTime.fast) }}
         </i-radio>
       </i-radio-group>
@@ -122,15 +125,15 @@
       <div v-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
 
       <i-button block size="lg" variant="secondary" class="_margin-top-1"
-                :disabled="!enoughTokenFee || !isAddressValid || !inputTotalSum || inputTotalSum<=0 || !choosedToken || feesLoading || inputTotalSum>transactionMaxAmount"
+                :disabled="!enoughTokenFee || !isAddressValid || !inputTotalSum || inputTotalSum<=0 || !feesObj || !choosedToken || feesLoading || inputTotalSum>transactionMaxAmount"
                 @click="commitTransaction()">
-        <i v-if="type!=='withdraw'" class="far fa-money-bill-wave-alt"></i>
+        <i v-if="type!=='withdraw'" class="fal fa-paper-plane"></i>
         <i v-else class="fas fa-hand-holding-usd"></i>
         {{ type==='withdraw' ? 'Withdraw':'Transfer' }}
       </i-button>
       <div v-if="cantFindFeeToken===true && feesObj && choosedToken && isAddressValid"
            class="errorText _text-center _margin-top-1">
-        <b>{{ choosedToken.symbol }}</b> is not suitable to pay the fee<br>
+        <b>{{ choosedToken.symbol }}</b> is not suitable for paying fees<br>
         No available tokens on your balance to pay the fee
       </div>
       <div v-else-if="(feesObj || feesLoading) && choosedToken && isAddressValid" class="_text-center _margin-top-1">
@@ -238,7 +241,7 @@ import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 
 import { transaction, withdraw } from "@/plugins/walletActions/transaction.js";
-import utils from '@/plugins/utils.js';
+import utils from "@/plugins/utils.js";
 import validations from "@/plugins/validations.js";
 import walletData from "@/plugins/walletData.js";
 import { ethers } from "ethers";
@@ -329,10 +332,10 @@ export default {
     },
     displayedTokenList: function () {
       if (!this.tokenSearch.trim()) {
-        return this.tokensList.filter((e) => (this.isAccountLocked === true ? e.restricted===false : true));
+        return this.tokensList.filter((e) => (this.isAccountLocked === true ? e.restricted === false : true));
       }
       return this.tokensList.filter(
-        (e) => (this.isAccountLocked === true ? e.restricted===false : true) && e.balance > 0 && e.symbol.toLowerCase().includes(this.tokenSearch.trim().toLowerCase()),
+        (e) => (this.isAccountLocked === true ? e.restricted === false : true) && e.balance > 0 && e.symbol.toLowerCase().includes(this.tokenSearch.trim().toLowerCase()),
       );
     },
     displayedContactsList: function () {
@@ -352,7 +355,12 @@ export default {
     },
     transactionMaxAmount: function () {
       if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
-        return (this.choosedToken.balance - (this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal));
+        const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
+        const bigNumFee = utils.parseToken(
+          this.choosedToken.symbol,
+          utils.handleExpNum(this.choosedToken.symbol, this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal),
+        );
+        return utils.handleFormatToken(this.choosedToken.symbol, bigNumBalance - bigNumFee);
       } else {
         return this.choosedToken.balance;
       }
@@ -385,8 +393,8 @@ export default {
     choosedToken: {
       deep: true,
       handler(val) {
-        if(this.type==='withdraw' && val && this.choosedFeeToken && val.symbol!==this.choosedFeeToken.symbol) {
-          this.fastWithdraw=false;
+        if (this.type === "withdraw" && val && this.choosedFeeToken && val.symbol !== this.choosedFeeToken.symbol) {
+          this.fastWithdraw = false;
         }
         this.checkForFeeToken();
       },
@@ -394,8 +402,8 @@ export default {
     choosedFeeToken: {
       deep: true,
       handler(val) {
-        if(this.type==='withdraw' && val && val.symbol!==this.choosedToken.symbol) {
-          this.fastWithdraw=false;
+        if (this.type === "withdraw" && val && val.symbol !== this.choosedToken.symbol) {
+          this.fastWithdraw = false;
         }
         this.getFees();
       },
@@ -432,7 +440,7 @@ export default {
       if (keyPressEvent.key && regex.test(keyPressEvent.key)) {
         e.stopPropagation();
         this.errorShake = true;
-        if(!this.errorShake) {
+        if (!this.errorShake) {
           setTimeout(() => {
             this.errorShake = false;
           }, 300);
@@ -441,10 +449,10 @@ export default {
       }
       return true;
     },
-    checkForFeeToken: function() {
-      if (!this.choosedFeeToken && this.choosedToken && this.choosedToken.restricted===true) {
+    checkForFeeToken: function () {
+      if (!this.choosedFeeToken && this.choosedToken && this.choosedToken.restricted === true) {
         for (const token of this.tokensList) {
-          if (token.restricted===false) {
+          if (token.restricted === false) {
             this.cantFindFeeToken = false;
             return (this.choosedFeeToken = token);
           }
@@ -502,7 +510,7 @@ export default {
     getContactsList: function () {
       try {
         const walletAddress = walletData.get().syncWallet.address();
-        if (window.localStorage.getItem("contacts-" + walletAddress)) {
+        if (process.client && window.localStorage.getItem("contacts-" + walletAddress)) {
           const contactsList = JSON.parse(window.localStorage.getItem("contacts-" + walletAddress));
           if (Array.isArray(contactsList)) {
             this.contactsList = contactsList;
@@ -528,7 +536,9 @@ export default {
           }
         }
         this.contactsList.push({ name: this.saveContactInput.trim(), address: this.inputAddress });
-        window.localStorage.setItem("contacts-" + walletData.get().syncWallet.address(), JSON.stringify(this.contactsList));
+        if (process.client) {
+          window.localStorage.setItem("contacts-" + walletData.get().syncWallet.address(), JSON.stringify(this.contactsList));
+        }
         this.getContactsList();
         this.saveContactModal = false;
         this.saveContactInput = "";
@@ -538,6 +548,11 @@ export default {
       }
     },
     commitTransaction: async function () {
+      try {
+        utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
+      } catch (error) {
+        return (this.mainError = "Invalid amount inputed");
+      }
       try {
         if (!this.isAddressValid) {
           throw new Error("Inputed address doesn't match ethereum address format");
@@ -582,12 +597,14 @@ export default {
     withdraw: async function () {
       const syncProvider = walletData.get().syncProvider;
       this.tip = "Confirm the transaction to withdraw";
+      console.log(this.feesObj[this.fastWithdraw === true ? "fast" : "normal"]);
       const withdrawTransaction = await withdraw(
         this.inputAddress,
         this.choosedToken.symbol,
         this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol,
         this.inputTotalSum.toString(),
         this.fastWithdraw,
+        this.feesObj[this.fastWithdraw === true ? "fast" : "normal"],
       );
       console.log("withdrawTransaction", withdrawTransaction);
       this.transactionAmount = parseFloat(this.inputTotalSum);

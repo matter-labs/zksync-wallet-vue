@@ -19,12 +19,7 @@ export default {
   components: {
     footerComponent,
     cookieComponent,
-    screenLoader
-  },
-  computed: {
-    screenLoader: function () {
-      return this.$store.getters.getScreenLoader;
-    },
+    screenLoader,
   },
   watch: {
     $route: {
@@ -48,8 +43,8 @@ export default {
     if (process.client) {
       window.history.scrollRestoration = "manual";
     }
-    if(localStorage.getItem('colorTheme')) {
-      this.$inkline.config.variant = localStorage.getItem('colorTheme');
+    if (localStorage.getItem("colorTheme")) {
+      this.$inkline.config.variant = localStorage.getItem("colorTheme");
     }
   },
 };

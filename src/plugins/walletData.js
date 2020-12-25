@@ -10,10 +10,10 @@ const walletData = {
 };
 
 export default {
-  /*
-   * @return {Promise<{ Wallet, Signer, Provider, ETHProxy, closestPackableTransactionFee, closestPackableTransactionAmount, getDefaultProvider, types, utils, crypto, wallet }|null>}
-   */
   zkSync: async () => {
+    if (!process.client) {
+      return null;
+    }
     if (!walletData["zkSync"]) {
       walletData["zkSync"] = await import("zksync");
     }

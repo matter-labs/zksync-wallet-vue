@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import utils from "@/plugins/utils";
 import walletData from "@/plugins/walletData";
 
 /**
@@ -12,10 +13,9 @@ import walletData from "@/plugins/walletData";
  */
 export const transaction = async (address, token, feeToken, amount, fees) => {
   const syncWallet = walletData.get().syncWallet;
-  const zksync = await walletData.zkSync();
   let nonce = await syncWallet.getNonce("committed");
-  const amountBigValue = ethers.BigNumber.from(syncWallet.provider.tokenSet.parseToken(token, amount).toString());
-  const feeBigValue = ethers.BigNumber.from(zksync.closestPackableTransactionFee(syncWallet.provider.tokenSet.parseToken(feeToken, fees).toString())).toString();
+  const amountBigValue = ethers.BigNumber.from(utils.parseToken(token, utils.handleExpNum(token, amount)).toString());
+  const feeBigValue = ethers.BigNumber.from(utils.parseToken(feeToken, utils.handleExpNum(feeToken, fees)).toString());
   const transferTx = {
     fee: 0,
     nonce: nonce,
@@ -61,22 +61,19 @@ export const transaction = async (address, token, feeToken, amount, fees) => {
  * @param fastWithdraw
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
-export const withdraw = async (address, token, feeToken, amount, fastWithdraw) => {
+export const withdraw = async (address, token, feeToken, amount, fastWithdraw, fees) => {
   const syncWallet = walletData.get().syncWallet;
-  const syncProvider = walletData.get().syncProvider;
-  const zksync = await walletData.zkSync();
-  const amountBigValue = ethers.BigNumber.from(syncWallet.provider.tokenSet.parseToken(token, amount).toString());
+  const amountBigValue = ethers.BigNumber.from(utils.parseToken(token, utils.handleExpNum(token, amount)).toString());
+  const feeBigValue = ethers.BigNumber.from(utils.parseToken(feeToken, utils.handleExpNum(feeToken, fees)).toString());
   if (token === feeToken) {
-    const fee = await syncProvider.getTransactionFee(fastWithdraw ? "FastWithdraw" : "Withdraw", address, feeToken);
     return await syncWallet.withdrawFromSyncToEthereum({
       ethAddress: address,
       token: token,
       amount: amountBigValue,
-      fee: zksync.closestPackableTransactionFee(fee.totalFee),
+      fee: feeBigValue,
       fastProcessing: !!fastWithdraw,
     });
   } else {
-    const batchWithdrawFee = await syncProvider.getTransactionsBatchFee([fastWithdraw ? "FastWithdraw" : "Withdraw", "Transfer"], [address, syncWallet.address()], feeToken);
     const withdrawals = [
       {
         ethAddress: address,
@@ -90,7 +87,7 @@ export const withdraw = async (address, token, feeToken, amount, fastWithdraw) =
         to: syncWallet.address(),
         token: feeToken,
         amount: "0",
-        fee: zksync.closestPackableTransactionFee(batchWithdrawFee),
+        fee: feeBigValue,
       },
     ];
     if (!syncWallet.signer) {

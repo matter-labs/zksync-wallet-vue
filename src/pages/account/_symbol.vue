@@ -30,7 +30,7 @@
           </i-button>
         </div>
         <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`">
-          <i class="far fa-money-bill-wave-alt"></i>&nbsp;&nbsp;Transfer
+          <i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer
         </i-button>
       </div>
     </div>
@@ -40,7 +40,7 @@
 
 <script>
 import transactions from "@/blocks/Transactions.vue";
-import utils from '@/plugins/utils.js';
+import utils from "@/plugins/utils.js";
 
 export default {
   components: {
