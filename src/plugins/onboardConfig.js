@@ -51,7 +51,6 @@ export default () => {
     darkMode: true,
     subscriptions: {
       wallet: (wallet) => {
-        console.log('wallet.name', wallet.name);
         web3Wallet.set(new Web3(wallet.provider));
         window.localStorage.setItem("selectedWallet", wallet.name);
       },

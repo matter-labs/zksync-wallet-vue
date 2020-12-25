@@ -12,6 +12,7 @@
   "dependencies": {
     "@nuxtjs/axios": "latest",
     "@nuxtjs/pwa": "latest",
+    "@nuxtjs/sentry": "^4.5.0",
     "@nuxtjs/toast": "latest",
     "@portis/web3": "^2.0.0-beta.59",
     "@walletconnect/web3-provider": "^1.0.11",

@@ -8,9 +8,9 @@
                 <span class="h2 _font-weight-normal">Trustless, scalable crypto payments</span>
             </i-row>
             <i-row center>
-                <span class="h5 _font-weight-normal">Connect a wallet</span>
+                <span class="h5 _font-weight-normal"><!-- Connect a wallet --></span>
             </i-row>
-            <i-row center class="_padding-top-1">
+            <i-row center class="_padding-top-2">
                 <!-- <div class="tileContainer _padding-x-2 _padding-top-1" @click="burnerWallet()">
                     <div class="tile">
                         <img src="@/assets/imgs/wallets/burner.png" alt="Burner Wallet">
@@ -28,7 +28,7 @@
                         <img src="@/assets/imgs/wallets/external.png" alt="External">
                         <i class="tileIcon fas fa-lock"></i>
                     </div>
-                    <div class="tileName">External</div>
+                    <div class="tileName">Connect a wallet</div>
                 </div>
                 <!-- <i-popover class="externalWalletPopover" placement="right">
                     <div class="tileContainer _padding-x-2 _padding-top-1" @click="lockVisible=true" :class="{'lockVisible': lockVisible===true}">
