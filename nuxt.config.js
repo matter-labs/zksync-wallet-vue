@@ -2,6 +2,7 @@ require("dotenv").config();
 
 export default {
   ssr: false,
+  target: "static",
   srcDir: "src/",
   buildDir: "functions/.nuxt",
 
@@ -13,7 +14,7 @@ export default {
    ** Headers of the page
    */
   head: {
-    title: `${process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta"} | ${process.env.APP_CURRENT_NETWORK ? `${process.env.APP_CURRENT_NETWORK} | ` : ""}`,
+    name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
     titleTemplate: "%s - " + process.env.APP_NAME,
     meta: [
       { charset: "utf-8" },
@@ -59,7 +60,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxtjs/dotenv", "@nuxtjs/style-resources"],
+  buildModules: [],
 
   /*
    ** Nuxt.js modules
@@ -69,6 +70,9 @@ export default {
     "@nuxtjs/axios",
     "@nuxtjs/toast",
     "@inkline/nuxt",
+    "@nuxtjs/google-gtag",
+    "@nuxtjs/dotenv",
+    "@nuxtjs/style-resources",
     [
       "nuxt-i18n",
       {
@@ -90,7 +94,7 @@ export default {
       fileName: "icon.png",
     },
     manifest: {
-      name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` |  ETH Network: ${process.env.APP_CURRENT_NETWORK}` : ""),
+      name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
       short_name: "zkWallet DAPP",
       description: "zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet.",
       start_url: "/",
@@ -114,6 +118,7 @@ export default {
     },
   },
   inkline: {
+    components: ["IIcon", "IContainer", "IBadge", "IModal", "IRow", "IColumn", "IRadio", "IInput", "IButton", "ILoader", "ITooltip"],
     config: {
       autodetectVariant: true,
     },
@@ -127,12 +132,21 @@ export default {
       tracesSampleRate: 1.0,
     },
   },
-
+  "google-gtag": {
+    id: "UA-178057628-1",
+    config: {
+      anonymize_ip: true, // anonymize IP
+      send_page_view: true, // might be necessary to avoid duplicated page track on page reload
+    },
+    debug: false, // enable to track in dev mode
+    disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
+  },
   /*
    ** Build configuration
    */
   build: {
     ssr: false,
+    target: "static",
     extractCSS: {
       ignoreOrder: true,
     },
@@ -141,5 +155,9 @@ export default {
         fs: "empty",
       };
     },
+  },
+  generate: {
+    dir: "public",
+    fallback: "404.html",
   },
 };

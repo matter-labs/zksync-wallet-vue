@@ -9,7 +9,7 @@
         </p>
       </div>
     </i-modal>
-    <i-modal class="prevent-close" v-model="mainModal" size="md">
+    <i-modal v-model="mainModal" class="prevent-close" size="md">
       <template slot="header">Matter Labs Trial Token</template>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
       <div v-if="loading===false">
@@ -83,10 +83,9 @@ export default {
   },
   methods: {
     startMint: function () {
-      if(process.env.APP_CURRENT_NETWORK==='mainnet') {
-        this.onlyTestNetModal=true;
-      }
-      else {
+      if (process.env.APP_CURRENT_NETWORK === "mainnet") {
+        this.onlyTestNetModal = true;
+      } else {
         if (this.step === "tweet") {
           this.checkForTweet();
         }

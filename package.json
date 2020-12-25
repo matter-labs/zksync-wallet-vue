@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "latest",
+    "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/pwa": "latest",
     "@nuxtjs/sentry": "^4.5.0",
     "@nuxtjs/toast": "latest",
@@ -50,19 +51,23 @@
     "sass-loader": "latest"
   },
   "scripts": {
-    "preci": "rm -fr node_modules",
+    "build:firebase:mainnet": "yarn preci && yarn init_env:mainnet && yarn ci && yarn generate",
+    "build:firebase:rinkeby": "yarn preci && yarn init_env:rinkeby && yarn ci && yarn generate",
+    "init_env:mainnet": "cp \"environments/.env.mainnet\" \"src/.env\" && git rev-parse --short HEAD>>\"src/.env\"",
+    "init_env:rinkeby": "cp \"environments/.env.rinkeby\" \"src/.env\" && git rev-parse --short HEAD>>\"src/.env\"",
+    "start:firebase": "firebase serve --only hosting",
+    "deploy": "firebase deploy --only hosting",
+    "preci": "rm -fr node_modules && rm -rf \"public/**\"",
     "ci": "yarn install --frozen-lockfile",
     "dev": "nuxt",
-    "start": "cross-env NODE_ENV=production node src/server/index.js",
+    "start": "nuxt start",
     "build": "nuxt build",
     "generate": "nuxt generate",
     "test": "echo \"Not implemented.\"",
     "format": "prettier --write",
     "lint-ts": "eslint --fix \"**/*.{js, vue}\"",
     "lint-css": "stylelint --fix \"**/*.scss\"",
-    "deploy_hosting": "firebase --project ${FIREBASE_PROJECT:?firebase project name not set or empty} deploy --only hosting",
-    "audit_dependencies": "npm audit --package-lock-only --audit-level critical --json | npm-audit-html --output audit.html",
-    "check_licenses": "license-checker --json > licenses.json"
+    "audit_dependencies": "npm audit --package-lock-only --audit-level critical --json | npm-audit-html --output audit.html"
   },
   "husky": {
     "hooks": {
