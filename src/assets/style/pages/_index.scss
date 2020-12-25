@@ -1,4 +1,20 @@
 .indexPage {
+  height: calc(100vh - 175px);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+
+  @media (max-width: $mobile) {
+    display: block;
+    height: auto;
+
+    .headerWrapper {
+      width: 85%;
+      padding-top: 50px;
+    }
+  }
+
   .headerWrapper .badge {
     cursor: default;
     margin-top: -40px;

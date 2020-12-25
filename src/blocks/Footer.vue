@@ -22,7 +22,7 @@
       </i-row>
       <i-row center class="_margin-top-1">
         <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Build with ❤️ by <strong>Matter Labs</strong></a>
-        <i-badge variant="outline-white _margin-left-1">
+        <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
           v.{{version}}
         </i-badge>
       </i-row>

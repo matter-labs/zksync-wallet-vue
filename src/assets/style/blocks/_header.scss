@@ -26,18 +26,26 @@ header {
     }
 
     .headerWrapper {
-      height: 35px;
+      height: 35px !important;
+
       .projectLogo {
-        height: 100%;
-        width: auto;
-        @media (max-width: $mobile) {
-          max-width: 130px;
-          object-fit: contain;
-        }
+        height: 100% !important;
+        width: auto !important;
       }
       .badge {
-        transform: translateY(2px);
+        margin-top: -30px;
         transition: background-color $transition1;
+      }
+      @media (max-width: $mobile) {
+        padding-top: 0 !important;
+
+        .projectLogo {
+          max-width: 130px !important;
+          object-fit: contain !important;
+        }
+        .badge {
+          margin-top: 0 !important;
+        }
       }
     }
 
@@ -171,6 +179,11 @@ header {
     width: 210px;
     height: 210px;
     margin: 20px auto;
+
+    @media (max-width: $mobile) {
+      width: 160px;
+      height: 160px;
+    }
   }
 }
 

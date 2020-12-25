@@ -141,10 +141,7 @@ export default {
       }
     },
     getTransactionExplorerLink: function (transaction) {
-      return (
-        (transaction.tx.type === "Deposit" ? `https://${process.env.APP_ETH_BLOCK_EXPLORER}/tx` : `https://${process.env.APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) +
-        `/${transaction.hash}`
-      );
+      return (transaction.tx.type === "Deposit" ? `https://${APP_ETH_BLOCK_EXPLORER}/tx` : `https://${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
     },
     getTransactionStatus: function (transaction) {
       if (!transaction.success) {
@@ -162,7 +159,7 @@ export default {
       const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
-      var filteredList = list
+      let filteredList = list
         .filter((e) => e.tx.type !== "ChangePubKey")
         .map((e) => {
           if (e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) {

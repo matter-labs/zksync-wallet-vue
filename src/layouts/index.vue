@@ -1,6 +1,6 @@
 <template>
   <div class="indexLayout">
-    <screen-loader />
+    <logging-in-loader />
     <div class="routerContainer">
       <transition name="fade" mode="out-in">
         <nuxt />
@@ -14,12 +14,12 @@
 <script>
 import footerComponent from "@/blocks/Footer.vue";
 import cookieComponent from "@/blocks/Cookie.vue";
-import screenLoader from "@/blocks/ScreenLoader.vue";
+import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 export default {
   components: {
     footerComponent,
     cookieComponent,
-    screenLoader,
+    loggingInLoader,
   },
   watch: {
     $route: {

@@ -2,7 +2,7 @@
   <div class="indexPage">
     <i-container>
       <i-row center>
-        <logo class="_padding-top-7"/>
+        <logo />
       </i-row>
       <i-row center>
         <span class="h1 _font-weight-normal">Trustless, scalable crypto payments</span>

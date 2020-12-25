@@ -210,6 +210,13 @@ button.-lg.-circle {
                     display: none !important;
                 }
             }
+            @media (max-width: $mobile) {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                font-size: 1rem;
+            }
         }
         .header,.footer,.body {
             padding-left: 28px !important;

@@ -67,6 +67,7 @@
 import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
+import { APP_ZK_SCAN } from "@/plugins/build";
 import walletData from "@/plugins/walletData.js";
 import VueQrcode from "vue-qrcode";
 
@@ -89,8 +90,7 @@ export default {
       return walletData.get().syncWallet.address();
     },
     getZkScanBaseUrl: function () {
-      const networkName = `${process.env.APP_CURRENT_NETWORK}`;
-      return `https://${networkName !== "mainnet" ? `${networkName}.` : ""}zkscan.io`;
+      return APP_ZK_SCAN;
     },
   },
   watch: {

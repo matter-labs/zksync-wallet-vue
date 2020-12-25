@@ -1,0 +1,83 @@
+.loggingInLoader {
+  z-index: 9;
+  background: white;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  animation-fill-mode: forwards;
+  overflow: hidden;
+
+    .projectLogo {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+    }
+  h1 {
+    font-size: 36px;
+        margin: 0;
+    }
+    .hint {
+        font-size: 18px;
+        margin-bottom: 0;
+  }
+
+  .cancelButton {
+    max-width: 150px;
+    margin-top: 30px;
+  }
+
+  & > .loaderSpinner {
+    font-size: 10px;
+    position: relative;
+    text-indent: -9999em;
+    border: .5rem solid #F5F5F5;
+    border-left: .5rem solid #8c8dfc;
+    transform: translateZ(0);
+    animation: nuxtLoadingCustom 1.1s infinite linear;
+
+    &, &::after {
+      border-radius: 50%;
+      width: 5rem;
+      height: 5rem;
+    }
+  }
+
+  @keyframes nuxtLoadingCustom {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+    @media (max-width: $mobile) {
+        padding: 0 5vw;
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+        .hint {
+            font-size: 16px;
+            text-align: center;
+        }
+    }
+}
+
+body.inkline {
+    &.-light .loggingInLoader {
+    background-color: $white;
+  }
+    &.-dark .loggingInLoader {
+    background-color: #1d2039;
+  }
+}

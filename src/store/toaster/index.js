@@ -1,8 +1,3 @@
-/**
- * Toaster wrapper to simplify and control rendering process
- *
- * @returns {{toasterIsActive: boolean}}
- */
 export const state = () => ({
   toasterIsActive: false,
 });

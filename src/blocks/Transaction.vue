@@ -89,8 +89,7 @@
       <br>
 
       <div class="_padding-bottom-1">Amount / asset</div>
-      <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" :class="{'errorShake': errorShake}"
-               @keydown="filterNumbers">
+      <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" :class="{'errorShake': errorShake}"><!-- @keydown="filterNumbers" -->
         <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openedTab='tokenList'">
           Select token
         </i-button>
@@ -244,7 +243,6 @@ import { transaction, withdraw } from "@/plugins/walletActions/transaction.js";
 import utils from "@/plugins/utils.js";
 import validations from "@/plugins/validations.js";
 import walletData from "@/plugins/walletData.js";
-import { ethers } from "ethers";
 
 const timeCalc = (timeInSec) => {
   const hours = Math.floor(timeInSec / 60 / 60);
@@ -360,7 +358,7 @@ export default {
           this.choosedToken.symbol,
           utils.handleExpNum(this.choosedToken.symbol, this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal),
         );
-        return utils.handleFormatToken(this.choosedToken.symbol, bigNumBalance - bigNumFee);
+        return +utils.handleFormatToken(this.choosedToken.symbol, bigNumBalance - bigNumFee);
       } else {
         return this.choosedToken.balance;
       }
@@ -369,7 +367,7 @@ export default {
       return !(this.feesObj && this.choosedFeeToken && this.choosedFeeToken.balance < (this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal));
     },
     blockExplorerLink: function () {
-      return process.env.APP_ZKSYNC_BLOCK_EXPLORER;
+      return APP_ZKSYNC_BLOCK_EXPLORER;
     },
   },
   watch: {
@@ -388,6 +386,15 @@ export default {
     inputAddress() {
       if (this.isAddressValid) {
         this.getFees();
+      }
+    },
+    inputTotalSum(val) {
+      if (val.toString().length === 0) {
+        return;
+      }
+      const validate = utils.validateNumber(val);
+      if (val !== validate) {
+        this.inputTotalSum = validate;
       }
     },
     choosedToken: {
@@ -435,7 +442,7 @@ export default {
      * @param keyPressEvent
      * @return {boolean}
      */
-    filterNumbers: function (keyPressEvent) {
+    /* filterNumbers: function (keyPressEvent) {
       const regex = RegExp("\d\.\,");
       if (keyPressEvent.key && regex.test(keyPressEvent.key)) {
         e.stopPropagation();
@@ -448,7 +455,7 @@ export default {
         return false;
       }
       return true;
-    },
+    }, */
     checkForFeeToken: function () {
       if (!this.choosedFeeToken && this.choosedToken && this.choosedToken.restricted === true) {
         for (const token of this.tokensList) {
@@ -551,6 +558,7 @@ export default {
       try {
         utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
       } catch (error) {
+        this.$store.dispatch("toaster");
         return (this.mainError = "Invalid amount inputed");
       }
       try {
@@ -571,10 +579,7 @@ export default {
         if (!this.isAddressValid) {
           throw new Error("Destination invalid");
         }
-        if (!walletData.get().syncProvider.transport.ws.isOpened) {
-          console.log("walletData.get().syncProvider.transport.ws.isOpened", walletData.get().syncProvider.transport.ws.isOpened);
-          await walletData.get().syncProvider.transport.ws.open();
-        }
+        await this.$store.dispatch("wallet/restoreProviderConnection");
         if (this.type === "withdraw") {
           await this.withdraw();
         } else {
@@ -597,7 +602,6 @@ export default {
     withdraw: async function () {
       const syncProvider = walletData.get().syncProvider;
       this.tip = "Confirm the transaction to withdraw";
-      console.log(this.feesObj[this.fastWithdraw === true ? "fast" : "normal"]);
       const withdrawTransaction = await withdraw(
         this.inputAddress,
         this.choosedToken.symbol,
@@ -606,8 +610,7 @@ export default {
         this.fastWithdraw,
         this.feesObj[this.fastWithdraw === true ? "fast" : "normal"],
       );
-      console.log("withdrawTransaction", withdrawTransaction);
-      this.transactionAmount = parseFloat(this.inputTotalSum);
+      this.transactionAmount = utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
       if (!Array.isArray(withdrawTransaction)) {
         this.transactionHash = withdrawTransaction.txHash;
         this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, withdrawTransaction.txData.tx.fee);
@@ -640,7 +643,7 @@ export default {
       // console.log(verifyReceipt);
       // store.verifyToken = !!verifyReceipt;
 
-      this.transactionAmount = parseFloat(this.inputTotalSum);
+      this.transactionAmount = utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum)
       if (!Array.isArray(transferTransaction)) {
         this.transactionHash = transferTransaction.txHash;
         this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, transferTransaction.txData.tx.fee);

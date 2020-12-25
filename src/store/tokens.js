@@ -102,6 +102,10 @@ export const actions = {
 
   /**
    *
+   * @param commit
+   * @param getters
+   * @param commit
+   * @param getters
    * @param symbol
    * @return {Promise<{n: number, d: number}|number|*>}
    */

@@ -59,6 +59,7 @@ export const transaction = async (address, token, feeToken, amount, fees) => {
  * @param feeToken
  * @param amount
  * @param fastWithdraw
+ * @param fees
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
 export const withdraw = async (address, token, feeToken, amount, fastWithdraw, fees) => {

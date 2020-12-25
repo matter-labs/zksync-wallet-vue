@@ -1,5 +1,9 @@
 require("dotenv").config();
 
+const pageTitle = `zkSync (wallet v.2-beta) ${
+  process.env.APP_CURRENT_NETWORK && process.env.APP_CURRENT_NETWORK !== "mainnet" ? " | NETWORK:" + process.env.APP_CURRENT_NETWORK : ""
+}`;
+
 export default {
   ssr: false,
   target: "static",
@@ -13,8 +17,8 @@ export default {
    ** Headers of the page
    */
   head: {
-    name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
-    titleTemplate: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
+    name: pageTitle,
+    titleTemplate: pageTitle,
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
@@ -93,9 +97,10 @@ export default {
       fileName: "icon.png",
     },
     manifest: {
-      name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
-      short_name: "zkWallet DAPP",
-      description: "zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet.",
+      name: pageTitle,
+      short_name: "zkSync Beta",
+      description:
+        "zkSync Beta — new release of the wallet, created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on" + " mainnet.",
       start_url: "/",
       scope: "/",
       display: "standalone",

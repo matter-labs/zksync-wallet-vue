@@ -1,14 +1,16 @@
 <template>
   <div class="defaultLayout">
-    <screen-loader />
-    <header-component />
-    <div class="routerContainer">
-      <transition name="fade" mode="out-in">
-        <nuxt />
-      </transition>
-    </div>
+    <logging-in-loader />
     <cookie-component />
-    <footer-component/>
+    <div v-if="!loggingIn && loggedIn">
+      <header-component />
+      <div class="routerContainer">
+        <transition name="fade" mode="out-in">
+          <nuxt />
+        </transition>
+      </div>
+      <footer-component/>
+    </div>
   </div>
 </template>
 
@@ -16,13 +18,21 @@
 import headerComponent from "@/blocks/Header.vue";
 import footerComponent from "@/blocks/Footer.vue";
 import cookieComponent from "@/blocks/Cookie.vue";
-import screenLoader from "@/blocks/ScreenLoader.vue";
+import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 export default {
   components: {
     headerComponent,
     footerComponent,
     cookieComponent,
-    screenLoader
+    loggingInLoader
+  },
+  computed: {
+    loggingIn: function() {
+      return this.$store.getters['account/loader'];
+    },
+    loggedIn: function() {
+      return this.$store.getters['account/loggedIn'];
+    },
   },
   watch: {
     $route: {

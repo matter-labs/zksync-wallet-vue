@@ -16,7 +16,6 @@
     "@nuxtjs/sentry": "^4.5.0",
     "@nuxtjs/toast": "latest",
     "@portis/web3": "^2.0.0-beta.59",
-    "@walletconnect/web3-provider": "^1.0.11",
     "bnc-onboard": "latest",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.0.12",
@@ -53,8 +52,8 @@
   "scripts": {
     "build:firebase:mainnet": "yarn init_env:mainnet && yarn ci && yarn generate",
     "build:firebase:rinkeby": "yarn init_env:rinkeby && yarn ci && yarn generate",
-    "init_env:mainnet": "cp \"environments/.env.mainnet\" \"src/.env\" && git rev-parse --short HEAD>>\"src/.env\"",
-    "init_env:rinkeby": "cp \"environments/.env.rinkeby\" \"src/.env\" && git rev-parse --short HEAD>>\"src/.env\"",
+    "init_env:mainnet": "cp \"environments/.env.mainnet\" \"src/.env\" && cp \"environments/.env.mainnet\" \".env\"",
+    "init_env:rinkeby": "cp \"environments/.env.rinkeby\" \"src/.env\" && cp \"environments/.env.rinkeby\" \".env\"",
     "start:firebase": "firebase serve --only hosting",
     "deploy": "firebase deploy --only hosting",
     "ci": "yarn install --frozen-lockfile",

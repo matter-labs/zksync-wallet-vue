@@ -42,7 +42,7 @@
 
 <script>
 import walletData from "@/plugins/walletData.js";
-import handleFormatToken from "@/plugins/handleFormatToken.js";
+import utils from "@/plugins/utils.js";
 
 export default {
   props: {
@@ -68,8 +68,11 @@ export default {
       }
     },
   },
+  mounted() {
+    this.getUnlockPrice();
+  },
   methods: {
-    unlock: async function () {
+    async unlock() {
       if (this.choosedToken.balance < 0.000015) {
         return (this.errorText = `Not enough ${this.choosedToken.symbol} to perform a transaction`);
       }
@@ -77,10 +80,7 @@ export default {
       this.loading = true;
       try {
         const syncWallet = walletData.get().syncWallet;
-        const syncProvider = walletData.get().syncProvider;
-        if (!syncProvider.transport.ws.isOpened) {
-          await syncProvider.transport.ws.open();
-        }
+        await this.$store.dispatch("wallet/restoreProviderConnection");
         this.tip = "Confirm the transaction to unlock this account";
         if (syncWallet.ethSignerType.verificationMethod === "ERC-1271") {
           const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
@@ -107,12 +107,11 @@ export default {
 
         const isSigningKeySet = await syncWallet.isSigningKeySet();
         console.log("isSigningKeySet", isSigningKeySet);
-        this.$store.commit("wallet/setAccountLockedState", isSigningKeySet===false);
-        
+        this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
+
         const newAccountState = await syncWallet.getAccountState();
         console.log("newAccountState", newAccountState);
         walletData.set({ accountState: newAccountState });
-
       } catch (error) {
         if (!error.message && !error.message.includes("User denied")) {
           this.tip = error.message;
@@ -120,35 +119,34 @@ export default {
         console.log("Unlock error", error);
       }
       this.loading = false;
+      return "";
     },
-    getUnlockPrice: async function() {
-      if(!this.choosedToken){return}
-      this.loading=true;
+    getUnlockPrice: async function () {
+      if (!this.choosedToken) {
+        return;
+      }
+      this.loading = true;
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       try {
-        if (!syncProvider.transport.ws.isOpened) {
-          await syncProvider.transport.ws.open();
-        }
+        await this.$store.dispatch("wallet/restoreProviderConnection");
         const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
         const foundFee = await syncProvider.getTransactionFee(
           {
             ChangePubKey: {
-              onchainPubkeyAuth: isOnchainAuthSigningKeySet
-            }
+              onchainPubkeyAuth: isOnchainAuthSigningKeySet,
+            },
           },
           syncWallet.address(),
-          this.choosedToken.symbol
+          this.choosedToken.symbol,
         );
-        this.totalFee = parseFloat(handleFormatToken(this.choosedToken.symbol, foundFee.totalFee));
+        this.totalFee = +utils.handleFormatToken(this.choosedToken.symbol, foundFee.totalFee);
       } catch (error) {
-        console.log('Get unlock fee error', error);
+        await this.$store.dispatch("toaster/ERROR");
+        console.log("Get unlock fee error", error);
       }
-      this.loading=false;
-    }
-  },
-  mounted() {
-    this.getUnlockPrice();
+      this.loading = false;
+    },
   },
 };
 </script>

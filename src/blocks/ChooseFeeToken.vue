@@ -56,24 +56,11 @@ export default {
         },
     },
     methods: {
-        formatMax: function (val) {
-            if (val === undefined) {
-                return 0;
-            }
-            val = String(val).toString();
-            let parts = val.split(".");
-            if (parts.length > 1) {
-                if (parts[1].length > 8) {
-                    parts[1] = parts[1].substr(0, 8);
-                }
-            }
-            return parseFloat(parts.join("."));
-        },
         getTokensList: async function() {
             this.tokensLoading = true;
             try {
                 const balances = await this.$store.dispatch("wallet/getzkBalances");
-                this.tokensList = balances.filter(e=>e.restricted===false).map((e) => ({ ...e, balance: this.formatMax(e.balance) }));
+                this.tokensList = balances.filter(e=>e.restricted===false);
             } catch (error) {
                 console.log(error);
             }
