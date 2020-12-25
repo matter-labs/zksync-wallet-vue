@@ -20,6 +20,5 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
           channelId: live
           projectId: zksync-vue
-          target:
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
