@@ -1,6 +1,5 @@
 import walletData from "@/plugins/walletData.js";
 
-
 /**
  * Operations with the tokens (assets)
  * @return {{restrictedTokens: [string, string], allTokens: []}}
@@ -9,7 +8,7 @@ export const state = () => ({
   /**
    * Restricted tokens, fee can't be charged in it
    */
-  restrictedTokens: ["PHNX","LAMB"],
+  restrictedTokens: ["PHNX", "LAMB"],
 
   /**
    * All available tokens
@@ -36,10 +35,10 @@ export const getters = {
     return state.allTokens;
   },
   getRestrictedTokens(state) {
-    return Object.fromEntries(Object.entries(state.allTokens).filter(e=>state.restrictedTokens.includes(e[1].symbol)));
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => state.restrictedTokens.includes(e[1].symbol)));
   },
   getAvailableTokens(state) {
-    return Object.fromEntries(Object.entries(state.allTokens).filter(e=>!state.restrictedTokens.includes(e[1].symbol)));
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
   },
   getTokenPrices(state) {
     return state.tokenPrices;
@@ -47,23 +46,22 @@ export const getters = {
 };
 
 export const actions = {
-  async loadAllTokens({commit,getters}) {
-    if(Object.entries(getters['getAllTokens']).length===0) {
-      await this.dispatch('wallet/restoreProviderConnection');
+  async loadAllTokens({ commit, getters }) {
+    if (Object.entries(getters["getAllTokens"]).length === 0) {
+      await this.dispatch("wallet/restoreProviderConnection");
       let syncProvider = walletData.get().syncProvider;
       const tokensList = await syncProvider.getTokens();
-      commit('setAllTokens', tokensList);
+      commit("setAllTokens", tokensList);
       return tokensList;
-    }
-    else {
-      return getters['getAllTokens'];
+    } else {
+      return getters["getAllTokens"];
     }
   },
-  async loadTokensAndBalances({dispatch}) {
+  async loadTokensAndBalances({ dispatch }) {
     let syncWallet = walletData.get().syncWallet;
     let accountState = walletData.get().accountState;
 
-    const tokens = await dispatch('loadAllTokens');
+    const tokens = await dispatch("loadAllTokens");
     const zkBalance = accountState.committed.balances;
     const balancePromises = Object.entries(tokens)
       .filter((t) => t[1].symbol)
@@ -80,7 +78,9 @@ export const actions = {
       .then((res) => {
         return res.filter((token) => token);
       })
-      .catch((err) => {return []});
+      .catch((err) => {
+        return [];
+      });
 
     const zkBalancePromises = Object.keys(zkBalance).map(async (key) => ({
       address: tokens[key].address,
@@ -89,12 +89,14 @@ export const actions = {
       id: tokens[key].id,
     }));
 
-    const zkBalances = await Promise.all(zkBalancePromises).catch((err) => {return []});
+    const zkBalances = await Promise.all(zkBalancePromises).catch((err) => {
+      return [];
+    });
 
     return {
       tokens,
       zkBalances,
-      ethBalances
+      ethBalances,
     };
   },
 
@@ -108,7 +110,7 @@ export const actions = {
     if (localPricesList.hasOwnProperty(symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
       return localPricesList[symbol].price;
     }
-    await this.dispatch('wallet/restoreProviderConnection');
+    await this.dispatch("wallet/restoreProviderConnection");
     let syncProvider = walletData.get().syncProvider;
     const tokenPrice = await syncProvider.getTokenPrice(symbol);
     commit("setTokenPrice", {

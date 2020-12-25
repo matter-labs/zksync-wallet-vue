@@ -83,7 +83,7 @@ export default {
         langDir: "locales/",
       },
     ],
-    '@nuxtjs/sentry'
+    "@nuxtjs/sentry",
   ],
   pwa: {
     icon: {
@@ -122,10 +122,10 @@ export default {
     scss: "./assets/style/_variables.scss",
   },
   sentry: {
-    dsn: 'https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800',
+    dsn: "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800",
     config: {
       tracesSampleRate: 1.0,
-    }
+    },
   },
 
   /*

@@ -52,7 +52,9 @@ export default () => {
     subscriptions: {
       wallet: (wallet) => {
         web3Wallet.set(new Web3(wallet.provider));
-        window.localStorage.setItem("selectedWallet", wallet.name);
+        if (process.client) {
+          window.localStorage.setItem("selectedWallet", wallet.name);
+        }
       },
     },
     walletSelect: {

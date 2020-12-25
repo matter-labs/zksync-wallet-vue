@@ -73,7 +73,7 @@
 <script>
 import moment from "moment";
 import walletData from "@/plugins/walletData.js";
-import utils from '@/plugins/utils.js';
+import utils from "@/plugins/utils.js";
 
 export default {
   props: {
@@ -101,7 +101,7 @@ export default {
   mounted() {
     this.getTransactions();
     try {
-      if (!window.localStorage.getItem("contacts-" + this.walletAddressFull)) {
+      if (!process.client || !window.localStorage.getItem("contacts-" + this.walletAddressFull)) {
         return;
       }
       const contactsList = JSON.parse(window.localStorage.getItem("contacts-" + this.walletAddressFull));
@@ -131,12 +131,11 @@ export default {
       return moment(time).format("M/D/YYYY h:mm:ss A");
     },
     getFormattedAmount: function ({ tx: { type, priority_op, token, amount, fee, feePayment } }) {
-      const symbol = (type === "Deposit" ? priority_op.token : token);
-      if(!feePayment) {
+      const symbol = type === "Deposit" ? priority_op.token : token;
+      if (!feePayment) {
         const formatToken = utils.handleFormatToken(symbol, type === "Deposit" && priority_op ? +priority_op.amount : +amount);
         return utils.handleExpNum(symbol, formatToken);
-      }
-      else {
+      } else {
         const formatToken = utils.handleFormatToken(token, +fee);
         return utils.handleExpNum(symbol, formatToken);
       }
@@ -163,12 +162,14 @@ export default {
       const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
-      var filteredList = list.filter((e) => (e.tx.type !== "ChangePubKey")).map((e)=>{
-        if((e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to)) {
-          e.tx.feePayment = true;
-        }
-        return e;
-      });
+      var filteredList = list
+        .filter((e) => e.tx.type !== "ChangePubKey")
+        .map((e) => {
+          if (e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) {
+            e.tx.feePayment = true;
+          }
+          return e;
+        });
       if (this.filter) {
         filteredList = filteredList.filter((item) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
