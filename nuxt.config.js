@@ -1,8 +1,6 @@
 require("dotenv").config();
 
-const pageTitle = `zkSync (wallet v.2-beta) ${
-  process.env.APP_CURRENT_NETWORK && process.env.APP_CURRENT_NETWORK !== "mainnet" ? " | NETWORK:" + process.env.APP_CURRENT_NETWORK : ""
-}`;
+const pageTitle = `zkSync Wallet | ${process.env.APP_CURRENT_NETWORK.charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
 
 export default {
   ssr: false,
