@@ -84,18 +84,25 @@ export default {
       onboard.config({
         darkMode: this.$inkline.config.variant !== "light",
       });
-      const walletSelect = await onboard.walletSelect();
+      /* const walletSelect = await onboard.walletSelect();
       if (walletSelect === false) {
         return;
       }
       const walletCheck = await onboard.walletCheck();
       if (walletCheck === false) {
         return;
+      } */
+
+      const walletSelect = await onboard.walletSelect();
+      if (walletSelect === false) {
+        await this.$store.dispatch("wallet/logout");
+        return;
       }
 
       this.$store.commit("showLoader");
-      const refreshWalletTry = await this.$store.dispatch("wallet/walletRefresh");
+      const refreshWalletTry = await this.$store.dispatch("wallet/walletRefresh", false);
       this.$store.commit("hideLoader");
+      console.log('refreshWalletTry', refreshWalletTry);
       if (refreshWalletTry !== true) {
         await this.$store.dispatch("wallet/logout");
       } else {

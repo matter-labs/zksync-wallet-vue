@@ -57,6 +57,9 @@
     </div>
     <div v-else-if="mainLoading===true" class="tileBlock">
       <div class="tileHeadline h3">{{ type==='withdraw' ? 'Withdraw':'Transfer' }}</div>
+      <a v-if="transactionHash" class="_display-block _text-center" target="_blank"
+         :href="`https://${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
+          class="fas fa-external-link"></i></a>
       <p v-if="openedTab==='main' && tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
       <div v-if="mainLoading===true" class="nothingFound _padding-y-2">
         <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
@@ -541,6 +544,11 @@ export default {
     },
     commitTransaction: async function () {
       try {
+        utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
+      } catch (error) {
+        return this.mainError = "Invalid amount inputed";
+      }
+      try {
         if (!this.isAddressValid) {
           throw new Error("Inputed address doesn't match ethereum address format");
         }
@@ -584,12 +592,14 @@ export default {
     withdraw: async function () {
       const syncProvider = walletData.get().syncProvider;
       this.tip = "Confirm the transaction to withdraw";
+      console.log(this.feesObj[this.fastWithdraw===true ? 'fast':'normal']);
       const withdrawTransaction = await withdraw(
         this.inputAddress,
         this.choosedToken.symbol,
         this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol,
         this.inputTotalSum.toString(),
         this.fastWithdraw,
+        this.feesObj[this.fastWithdraw===true ? 'fast':'normal']
       );
       console.log("withdrawTransaction", withdrawTransaction);
       this.transactionAmount = parseFloat(this.inputTotalSum);

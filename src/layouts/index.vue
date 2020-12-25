@@ -21,11 +21,6 @@ export default {
     cookieComponent,
     screenLoader
   },
-  computed: {
-    screenLoader: function () {
-      return this.$store.getters.getScreenLoader;
-    },
-  },
   watch: {
     $route: {
       immediate: true,
