@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import walletData from "@/plugins/walletData.js";
+import { walletData } from "@/plugins/walletData.js";
 import utils from "@/plugins/utils.js";
 
 export default {
@@ -110,7 +110,6 @@ export default {
         this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
 
         const newAccountState = await syncWallet.getAccountState();
-        console.log("newAccountState", newAccountState);
         walletData.set({ accountState: newAccountState });
       } catch (error) {
         if (!error.message && !error.message.includes("User denied")) {

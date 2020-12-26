@@ -1,5 +1,5 @@
 <template>
-  <footer class="_padding-y-1">
+  <i-layout-footer class="_padding-y-1">
     <i-container>
       <i-row center>
         <i-button block size="lg" circle @click="toggleDarkMode">
@@ -27,7 +27,7 @@
         </i-badge>
       </i-row>
     </i-container>
-  </footer>
+  </i-layout-footer>
 </template>
 
 <script>

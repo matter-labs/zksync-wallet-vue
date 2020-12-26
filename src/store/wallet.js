@@ -3,79 +3,13 @@ import { ethers } from "ethers";
 
 import onboardConfig from "@/plugins/onboardConfig.js";
 import web3Wallet from "@/plugins/web3.js";
-import walletData from "@/plugins/walletData.js";
 import utils from "@/plugins/utils";
 import { ETHER_NETWORK_NAME } from "@/plugins/build";
 
+import { changeAccountHandle, changeNetworkHandle, walletData } from "@/plugins/walletData";
+
 let getTransactionHistoryAgain = false;
 let changeNetworkWasSet = false;
-
-/**
- * @todo avoid cross-colling
- * @param dispatch
- * @param context
- * @return {function(): Promise<void>}
- */
-function changeNetworkHandle(dispatch, context) {
-  // context.$toast.info("Blockchain environment (Network) just changed");
-  return async () => {
-    if (!walletData.get().syncWallet) {
-      return;
-    }
-    const refreshWalletResult = await dispatch("walletRefresh", false);
-    if (refreshWalletResult === false) {
-      await context.$router.push("/");
-      await dispatch("logout");
-    } else {
-      await dispatch("forceRefreshData");
-    }
-  };
-}
-
-/**
- * @todo avoid cross-colling
- * @param dispatch
- * @param context
- * @return {function(): Promise<void>}
- */
-function changeAccountHandle(dispatch, context) {
-  // context.$toast.info("Active account changed. Please re-login to used one");
-  return async () => {
-    if (!walletData.get().syncWallet) {
-      return;
-    }
-    await dispatch("logout");
-    await context.$router.push("/");
-    await dispatch("clearDataStorage");
-    /* try {
-      const refreshWalletResult = await dispatch("walletRefresh");
-      if (refreshWalletResult === true) {
-        this.dispatch("toaster/index.js");
-        await context.$router.push("/");
-      } else {
-        await context.$router.push("/account");
-      }
-    } catch (error) {}
-    await context.$router.push("/"); */
-  };
-}
-
-/**
- * @todo Optimize sorting
- *
- * @param a
- * @param b
- * @return {number}
- */
-const sortBalancesById = (a, b) => {
-  if (a.id < b.id) {
-    return -1;
-  }
-  if (a.id > b.id) {
-    return 1;
-  }
-  return 0;
-};
 
 export const state = () => ({
   onboard: false,
@@ -152,7 +86,7 @@ export const getters = {
   isAccountLocked(state) {
     return state.isAccountLocked;
   },
-  getOnboard(state, dispatch) {
+  getOnboard(state) {
     return state.onboard;
   },
   getTokensList(state) {
@@ -181,11 +115,19 @@ export const getters = {
   getProvider() {
     return walletData.get().syncProvider;
   },
+  isLoggedIn() {
+    console.log(walletData.get().syncWallet);
+    if (walletData.get().syncWallet && walletData.get().syncWallet["address"]) {
+      return true;
+    }
+    console.log("not logged in");
+    return false;
+  },
 };
 
 export const actions = {
   /**
-   * Initial call, connecting to the walllet
+   * Initial call, connecting to the wallet
    * @param commit
    * @return {Promise<boolean>}
    */
@@ -288,7 +230,7 @@ export const actions = {
     for (const key of Object.keys(loadedTokens.tokens)) {
       const currentToken = loadedTokens.tokens[key];
       try {
-        var balance = await syncWallet.getEthereumBalance(key);
+        let balance = await syncWallet.getEthereumBalance(key);
         balance = +utils.handleFormatToken(currentToken.symbol, balance ? balance : 0);
         balancesResults.push({
           id: currentToken.id,
@@ -367,6 +309,7 @@ export const actions = {
   async getFees({ getters, commit, dispatch }, { address, symbol, feeSymbol, type }) {
     const savedFees = getters["getFees"];
     if (
+      savedFees &&
       savedFees.hasOwnProperty(symbol) &&
       savedFees[symbol].hasOwnProperty(feeSymbol) &&
       savedFees[symbol][feeSymbol].hasOwnProperty(type) &&
@@ -423,7 +366,7 @@ export const actions = {
       /* dispatch("changeNetworkRemove"); */
       const onboard = getters["getOnboard"];
       this.commit("account/setLoadingHint", "followInstructions");
-      var walletCheck = false;
+      let walletCheck = false;
       if (firstSelect === true) {
         walletCheck = await onboard.walletSelect();
         if (walletCheck !== true) {
@@ -455,7 +398,7 @@ export const actions = {
       const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
       const zksync = await walletData.zkSync();
-      const syncProvider = await zksync.getDefaultProvider(process.env.APP_CURRENT_NETWORK);
+      const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME);
       const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
 
       this.commit("account/setLoadingHint", "loadingData");
@@ -500,10 +443,11 @@ export const actions = {
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");
     commit("clearDataStorage");
+    dispatch("account/logout", null, { root: true });
   },
 
   /**
-   * @todo deprectate in favour of event-bus
+   * @todo deprecated in favour of event-bus
 
    * @param dispatch
    * @return {Promise<void>}

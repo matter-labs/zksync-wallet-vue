@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header v-if="isLoggedIn">
     <i-container>
       <div class="firstRow">
         <nuxt-link to="/account">
@@ -37,7 +37,7 @@
       </div>
     </i-modal>
 
-    <i-modal v-model="infoModal" size="md">
+    <i-modal v-if="walletAddressFull" v-model="infoModal" size="md">
       <template slot="header">
         <b>{{ walletName }}</b>
       </template>
@@ -68,7 +68,7 @@ import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 import { APP_ZK_SCAN } from "@/plugins/build";
-import walletData from "@/plugins/walletData.js";
+import { walletData } from "@/plugins/walletData.js";
 import VueQrcode from "vue-qrcode";
 
 export default {
@@ -86,8 +86,18 @@ export default {
     };
   },
   computed: {
+    /**
+     *
+     * @return {null|boolean}
+     */
+    isLoggedIn: function () {
+      return this.$store.getters["wallet/isLoggedIn"];
+    },
     walletAddressFull: function () {
-      return walletData.get().syncWallet.address();
+      if (this.isLoggedIn) {
+        return walletData.get().syncWallet?.address();
+      }
+      return "";
     },
     getZkScanBaseUrl: function () {
       return APP_ZK_SCAN;
@@ -104,11 +114,13 @@ export default {
         if (walletName && walletName !== this.walletAddressFull) {
           this.walletName = walletName;
         } else {
-          let address = this.walletAddressFull;
-          if (address.length > 16) {
-            address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
+          if (this.isLoggedIn) {
+            let address = this.walletAddressFull;
+            if (address.length > 16) {
+              address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
+            }
+            this.walletName = address;
           }
-          this.walletName = address;
         }
       },
     },

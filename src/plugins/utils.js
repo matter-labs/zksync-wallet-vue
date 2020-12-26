@@ -1,4 +1,4 @@
-import walletData from "@/plugins/walletData.js";
+import { walletData } from "@/plugins/walletData.js";
 import handleExpNumber from "@/plugins/handleExpNumber.js";
 
 /* function customExpHandle(x) {
@@ -56,17 +56,21 @@ const getFormatedTotalPrice = (price, amount) => {
 };
 const validateNumber = (amount) => {
   amount = amount.toString();
-  const lastCharacter = amount.substring(amount.length-1,amount.length);
-  if(lastCharacter!=="0") {
-    amount = handleExpNumber(+amount).toString().replace(/-/g, '');
+  const lastCharacter = amount.substring(amount.length - 1, amount.length);
+  if (lastCharacter !== "0") {
+    amount = handleExpNumber(+amount)
+      .toString()
+      .replace(/-/g, "");
   }
-  if(amount.length<=1){return amount}
-  const firstCharacter = amount.substring(0,1);
-  if(amount.length===2 && firstCharacter==="0" && lastCharacter==="0") {
+  if (amount.length <= 1) {
+    return amount;
+  }
+  const firstCharacter = amount.substring(0, 1);
+  if (amount.length === 2 && firstCharacter === "0" && lastCharacter === "0") {
     return "0";
   }
   return amount;
-}
+};
 export default {
   validateNumber,
   parseToken,

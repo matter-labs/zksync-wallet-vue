@@ -15,6 +15,7 @@ export default {
    ** Headers of the page
    */
   head: {
+    script: [{ src: "https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit", async: undefined, defer: undefined }],
     name: pageTitle,
     titleTemplate: pageTitle,
     meta: [
@@ -120,12 +121,15 @@ export default {
     },
   },
   inkline: {
+    // components: {
+    //   iLay
+    // },
     config: {
       autodetectVariant: true,
     },
   },
   styleResources: {
-    scss: "./assets/style/_variables.scss",
+    scss: "@/assets/style/_variables.scss",
   },
   sentry: {
     dsn: "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800",

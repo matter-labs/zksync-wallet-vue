@@ -1,4 +1,4 @@
-import walletData from "@/plugins/walletData.js";
+import { walletData } from "@/plugins/walletData.js";
 
 /**
  * Operations with the tokens (assets)
