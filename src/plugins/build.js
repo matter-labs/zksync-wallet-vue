@@ -11,7 +11,7 @@ export const ETHER_PRODUCTION = ETHER_NETWORK_NAME === "mainnet";
 export const ETHER_PREFIX = `${ETHER_NETWORK_NAME}${ETHER_PRODUCTION ? "" : "."}`;
 
 export const ETHER_NETWORK_NAME = process.env.APP_CURRENT_NETWORK;
-export const ETHER_NETWORK_ID = _ETHER_NETWORK_ID_DICTIONARY[ETHER_NETWORK_NAME];
+export const ETHER_NETWORK_ID = parseInt(_ETHER_NETWORK_ID_DICTIONARY[ETHER_NETWORK_NAME]);
 export const APP_ZKSYNC_API_LINK = `${ETHER_NETWORK_NAME}${ETHER_PRODUCTION ? "" : "-"}api.zksync.io`;
 export const APP_ZK_SCAN = `https://${ETHER_PREFIX}zkscan.io`;
 export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}zkscan.io/explorer`;
