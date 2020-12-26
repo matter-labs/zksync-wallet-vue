@@ -15,7 +15,6 @@ export default {
    ** Headers of the page
    */
   head: {
-    script: [{ src: "https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit", async: undefined, defer: undefined }],
     name: pageTitle,
     titleTemplate: pageTitle,
     meta: [
@@ -108,9 +107,17 @@ export default {
     },
   },
   toast: {
+    singleton: true,
+    keepOnHover: true,
     position: "bottom-right",
-    duration: 2000,
+    duration: 4000,
     iconPack: "fontawesome",
+    action: {
+      text: "OK",
+      onClick: (e, toastObject) => {
+        toastObject.goAway(100);
+      },
+    },
   },
   i18n: {
     vueI18n: {
@@ -121,9 +128,6 @@ export default {
     },
   },
   inkline: {
-    // components: {
-    //   iLay
-    // },
     config: {
       autodetectVariant: true,
     },

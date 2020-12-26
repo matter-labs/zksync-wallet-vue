@@ -48,7 +48,7 @@ export const getters = {
 export const actions = {
   async loadAllTokens({ commit, getters }) {
     if (Object.entries(getters["getAllTokens"]).length === 0) {
-      await this.dispatch("wallet/restoreProviderConnection");
+      await this.dispatch("wallet/restoreProviderConnection", { root: true });
       let syncProvider = walletData.get().syncProvider;
       const tokensList = await syncProvider.getTokens();
       commit("setAllTokens", tokensList);

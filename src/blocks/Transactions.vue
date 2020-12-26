@@ -2,9 +2,6 @@
   <div class="transactionsPage">
     <div class="tileBlock transactionsTile">
       <div class="tileHeadline h3">Transactions</div>
-      <!-- <i-input v-model="search" placeholder="Filter transactions">
-          <em slot="prefix" class="far fa-search"></i>
-      </i-input> -->
       <div class="transactionsListContainer">
         <div v-if="loading===true" class="nothingFound">
           <i-loader class="_display-block" size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
@@ -72,8 +69,9 @@
 
 <script>
 import moment from "moment";
-import walletData from "@/plugins/walletData.js";
-import utils from "@/plugins/utils.js";
+import { walletData } from "@/plugins/walletData";
+import utils from "@/plugins/utils";
+import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 
 export default {
   props: {
@@ -112,7 +110,7 @@ export default {
         this.addressToNameMap.set(item.address.toLowerCase(), item.name);
       }
     } catch (error) {
-      console.log(error);
+      this.$store.dispatch("toaster/error", error.message ? error.message : "Error while loading transaction list");
     }
   },
   methods: {
@@ -177,7 +175,7 @@ export default {
       try {
         this.transactionsList = await this.loadTransactions();
       } catch (error) {
-        console.log(error);
+        await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while fetching the transactions");
       }
       this.loading = false;
     },

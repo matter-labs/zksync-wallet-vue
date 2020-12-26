@@ -1,5 +1,5 @@
 <template>
-  <header v-if="isLoggedIn">
+  <header>
     <i-container>
       <div class="firstRow">
         <nuxt-link to="/account">
@@ -37,7 +37,7 @@
       </div>
     </i-modal>
 
-    <i-modal v-if="walletAddressFull" v-model="infoModal" size="md">
+    <i-modal v-model="infoModal" size="md">
       <template slot="header">
         <b>{{ walletName }}</b>
       </template>
@@ -86,18 +86,9 @@ export default {
     };
   },
   computed: {
-    /**
-     *
-     * @return {null|boolean}
-     */
-    isLoggedIn: function () {
-      return this.$store.getters["wallet/isLoggedIn"];
-    },
     walletAddressFull: function () {
-      if (this.isLoggedIn) {
-        return walletData.get().syncWallet?.address();
-      }
-      return "";
+    walletAddressFull: function () {
+      return this.$store.getters["account/getAddess"];
     },
     getZkScanBaseUrl: function () {
       return APP_ZK_SCAN;
@@ -114,13 +105,11 @@ export default {
         if (walletName && walletName !== this.walletAddressFull) {
           this.walletName = walletName;
         } else {
-          if (this.isLoggedIn) {
-            let address = this.walletAddressFull;
-            if (address.length > 16) {
-              address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
-            }
-            this.walletName = address;
+          let address = this.walletAddressFull;
+          if (address.length > 16) {
+            address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
           }
+          this.walletName = address;
         }
       },
     },

@@ -16,11 +16,11 @@ const internalWalletData = {
  * @return {function(): Promise<void>}
  */
 export const changeNetworkHandle = (dispatch, context) => {
-  // context.$toast.info("Blockchain environment (Network) just changed");
   return async () => {
     if (!walletData.get().syncWallet) {
       return;
     }
+    dispatch("toaster/info", `Your wallet changed Ethereum network to: ${context}. Reloading wallet...`, { root: true });
     const refreshWalletResult = await dispatch("walletRefresh", false);
     if (refreshWalletResult === false) {
       await context.$router.push("/");
@@ -38,11 +38,11 @@ export const changeNetworkHandle = (dispatch, context) => {
  * @return {function(): Promise<void>}
  */
 export const changeAccountHandle = (dispatch, context) => {
-  // context.$toast.info("Active account changed. Please re-login to used one");
   return async () => {
     if (!walletData.get().syncWallet) {
       return;
     }
+    dispatch("toaster/message", "Active account changed. Login out...", { root: true });
     await dispatch("logout");
     await context.$router.push("/");
     await dispatch("clearDataStorage");

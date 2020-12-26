@@ -1,40 +1,40 @@
 <template>
-  <div class="tokenAccount">
-    <div class="tileBlock">
-      <div class="tileHeadline h3">
-        <span>{{ symbol }}</span>
-        <i-tooltip>
-          <i class="fas fa-times" @click="$router.push('/account')"></i>
-          <template slot="body">Close</template>
-        </i-tooltip>
-      </div>
-      <div v-if="loading">
-        <i-loader class="_display-block _margin-x-auto _margin-y-3" size="md"
-                  :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
-      </div>
-      <div v-else>
-        <div class="infoBlock">
-          <div class="headline">Token price:</div>
-          <div>{{getFormatedTotalPrice(token.tokenPrice, 1)}}</div>
+    <div class="tokenAccount">
+      <div class="tileBlock">
+        <div class="tileHeadline h3">
+          <span>{{ symbol }}</span>
+          <i-tooltip>
+            <i class="fas fa-times" @click="$router.push('/account')"></i>
+            <template slot="body">Close</template>
+          </i-tooltip>
         </div>
-        <div class="infoBlock _margin-top-1">
-          <div class="headline">Your balance:</div>
+        <div v-if="loading">
+          <i-loader class="_display-block _margin-x-auto _margin-y-3" size="md"
+                    :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
         </div>
-        <div class="_display-flex _justify-content-space-between">
+        <div v-else>
           <div class="infoBlock">
+            <div class="headline">Token price:</div>
+          <div>{{getFormatedTotalPrice(token.tokenPrice, 1)}}</div>
+          </div>
+          <div class="infoBlock _margin-top-1">
+            <div class="headline">Your balance:</div>
+          </div>
+          <div class="_display-flex _justify-content-space-between">
+            <div class="infoBlock">
             <div class="balance">{{ symbol }} {{ token.formatedBalance }}&nbsp;&nbsp;<span
                 class="balancePrice">{{ token.formatedTotalPrice }}</span></div>
+            </div>
+            <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">-
+              Withdraw
+            </i-button>
           </div>
-          <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">-
-            Withdraw
+          <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`">
+          <i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer
           </i-button>
         </div>
-        <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`">
-          <i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer
-        </i-button>
       </div>
-    </div>
-    <transactions :filter="symbol"/>
+      <transactions :filter="symbol"/>
   </div>
 </template>
 

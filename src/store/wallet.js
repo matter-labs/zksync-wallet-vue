@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import onboardConfig from "@/plugins/onboardConfig.js";
 import web3Wallet from "@/plugins/web3.js";
 import utils from "@/plugins/utils";
-import { ETHER_NETWORK_NAME } from "@/plugins/build";
+import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 
 import { changeAccountHandle, changeNetworkHandle, walletData } from "@/plugins/walletData";
 
@@ -116,7 +116,6 @@ export const getters = {
     return walletData.get().syncProvider;
   },
   isLoggedIn() {
-    console.log(walletData.get().syncWallet);
     if (walletData.get().syncWallet && walletData.get().syncWallet["address"]) {
       return true;
     }
@@ -139,6 +138,7 @@ export const actions = {
       this.commit("account/setSelectedWallet", "");
       return false;
     } else {
+      this.dispatch("toaster/info", "Found previously selected wallet.");
       this.commit("account/setSelectedWallet", previouslySelectedWallet);
     }
     const walletSelect = await onboard.walletSelect(previouslySelectedWallet);
@@ -240,7 +240,8 @@ export const actions = {
           symbol: currentToken.symbol,
         });
       } catch (error) {
-        console.log(`Error getting ${currentToken.symbol}`, error);
+        this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
+        console.log(error.message);
       }
     }
 
@@ -415,6 +416,7 @@ export const actions = {
       this.commit("account/setLoggedIn", true);
       return true;
     } catch (error) {
+      this.dispatch("toaster/error", `Refreshing state of the wallet failed... Reason: ${error.message}`);
       console.log("Refresh error", error);
       return false;
     }
@@ -434,8 +436,6 @@ export const actions = {
     });
   },
   async logout({ dispatch, commit, getters }) {
-    /* dispatch("changeNetworkRemove"); */
-    //web3Wallet.set(false);
     const onboard = getters["getOnboard"];
     onboard.walletReset();
     walletData.set({ syncProvider: null, syncWallet: null, accountState: null });
@@ -443,22 +443,7 @@ export const actions = {
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");
     commit("clearDataStorage");
-    dispatch("account/logout", null, { root: true });
   },
-
-  /**
-   * @todo deprecated in favour of event-bus
-
-   * @param dispatch
-   * @return {Promise<void>}
-   */
-  /* async changeNetworkRemove({ dispatch }) {
-    if (window.ethereum) {
-      window.ethereum.off("chainChanged", changeNetworkHandle(dispatch, this));
-      window.ethereum.off("accountsChanged", changeAccountHandle(dispatch, this));
-    }
-  }, */
-
   /**
    * @todo deprecated in favour of event-bus
    * @param dispatch
@@ -471,10 +456,8 @@ export const actions = {
     if (process.client && window.ethereum) {
       changeNetworkWasSet = true;
       window.ethereum.on("disconnect", () => {
-        /* setTimeout(() => { */
-        this.$toast.error("Connection with your Wallet was lost. Restarting the DAPP");
+        dispatch("toaster/error", "Connection with your Wallet was lost. Restarting the DAPP", { root: true });
         dispatch("logout");
-        /* }, 2000); */
       });
       window.ethereum.on("chainChanged", changeNetworkHandle(dispatch, this));
       window.ethereum.on("accountsChanged", changeAccountHandle(dispatch, this));

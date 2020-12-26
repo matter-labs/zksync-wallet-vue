@@ -1,6 +1,7 @@
 import Web3 from "web3";
 import web3Wallet from "@/plugins/web3.js";
 import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
+
 const APP_NAME = "zkSync Beta";
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
 const INFURA_KEY = process.env.APP_WALLET_CONNECT;
@@ -35,7 +36,6 @@ const initializedWallets = {
     { walletName: "operaTouch" },
     { walletName: "torus" },
     { walletName: "status" },
-    { walletName: "unilogin" },
     { walletName: "imToken", rpcUrl: RPC_URL },
     { walletName: "meetone" },
     { walletName: "mykey", rpcUrl: RPC_URL },
@@ -47,14 +47,19 @@ const initializedWallets = {
 };
 export default (ctx) => {
   return {
+    hideBranding: true,
+    blockPollingInterval: 7000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: parseInt(ETHER_NETWORK_ID), // [Integer] The Ethereum network ID your Dapp uses.
     darkMode: true,
     subscriptions: {
       wallet: (wallet) => {
+        if (wallet && wallet.provider) {
+          wallet.provider.autoRefreshOnNetworkChange = false;
+        }
         web3Wallet.set(new Web3(wallet.provider));
         if (process.client) {
-          ctx.commit('account/setSelectedWallet', wallet.name);
+          ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
           window.localStorage.setItem("selectedWallet", wallet.name);
         }
       },

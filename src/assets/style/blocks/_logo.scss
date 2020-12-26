@@ -1,34 +1,34 @@
 .headerWrapper {
-    .projectLogo {
-        display: block;
+  .projectLogo {
+    display: block;
 
-        .logoLetter {
-            transition: $transition1;
-        }
+    .logoLetter {
+      transition: $transition1;
     }
-    .badge {
-        cursor: default;
-        margin-top: -40px;
-        border-radius: 27px;
-        margin-left: 5px;
-        transform: translateY(3.5px);
-        transition: background-color $transition1;
-    }
+  }
+  .badge {
+    cursor: default;
+    margin-top: -40px;
+    border-radius: 27px;
+    margin-left: 5px;
+    transform: translateY(3.5px);
+    transition: background-color $transition1;
+  }
 
-    @media (max-width: $mobile) {
-        width: 85%;
-        padding-top: 50px;
-    }
+  @media (max-width: $mobile) {
+    width: 85%;
+    padding-top: 50px;
+  }
 }
 
 body.inkline.-light .headerWrapper {
-    .badge {
-        background-color: $lightViolet !important;
-    }
+  .badge {
+    background-color: $lightViolet !important;
+  }
 }
 
 body.inkline.-dark .headerWrapper {
-    .badge {
-      background-color: $violet !important;
-    }
+  .badge {
+    background-color: $violet !important;
+  }
 }

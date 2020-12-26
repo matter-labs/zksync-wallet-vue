@@ -18,7 +18,7 @@
         <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
           <div class="tokenLabel">{{ item.symbol }}</div>
           <div class="rightSide">
-              <div class="balance">{{ item.formatedBalance }}</div>
+            <div class="balance">{{ item.formatedBalance }}</div>
           </div>
         </div>
         <div v-if="tokenSearch && displayedTokenList.length===0" class="nothingFound">
@@ -52,7 +52,7 @@ export default {
       if (!this.tokenSearch.trim()) {
         return this.tokensList;
       }
-            return this.tokensList.filter((e) => (e.symbol.toLowerCase().includes(this.tokenSearch.trim().toLowerCase())));
+      return this.tokensList.filter((e) => e.symbol.toLowerCase().includes(this.tokenSearch.trim().toLowerCase()));
     },
   },
   mounted() {
@@ -65,7 +65,7 @@ export default {
         const balances = await this.$store.dispatch("wallet/getzkBalances");
         this.tokensList = balances.filter((e) => e.restricted === false);
       } catch (error) {
-        console.log(error);
+        await this.$store.dispatch("toaster/error", error.message);
       }
       this.tokensLoading = false;
     },

@@ -20,7 +20,8 @@
             can link your wallet to your social account. Once our bot detects your post, you will be able to claim your
             MLTT.
           </p>
-          <a target="_blank" :href="`https://twitter.com/intent/tweet?text=%40zksync%2C%20%40the_matter_labs%E2%80%99s%20zkRollup%20for%20trustless%2C%20scalable%20payments%20is%20now%20live%20on%20Ethereum%20mainnet%21%20%0A%0AGive%20it%20a%20try%3A%20%F0%9F%91%89%F0%9F%91%89%20zksync.io%20%0A%0AClaiming%20my%20trial%20tokens%3A%20${getTicketFromAddress(generateSalt())}`"
+          <a target="_blank"
+             :href="`https://twitter.com/intent/tweet?text=%40zksync%2C%20%40the_matter_labs%E2%80%99s%20zkRollup%20for%20trustless%2C%20scalable%20payments%20is%20now%20live%20on%20Ethereum%20mainnet%21%20%0A%0AGive%20it%20a%20try%3A%20%F0%9F%91%89%F0%9F%91%89%20zksync.io%20%0A%0AClaiming%20my%20trial%20tokens%3A%20${getTicketFromAddress(generateSalt())}`"
              class="tweetBtn _margin-top-1"
              @click="tweetClicked()"><i class="fab fa-twitter"></i> Tweet</a>
         </div>
@@ -50,7 +51,7 @@
 import Checkmark from "@/components/Checkmark.vue";
 import { ETHER_NETWORK_NAME } from "@/plugins/build";
 
-import walletData from "@/plugins/walletData.js";
+import { walletData } from "@/plugins/walletData";
 import crypto from "crypto";
 import VueRecaptcha from "vue-recaptcha";
 
@@ -135,7 +136,7 @@ export default {
           this.step = "claim";
         }
       } catch (error) {
-        await this.$store.dispatch("toaster/ERROR", error.message);
+        await this.$store.dispatch("toaster/error", error.message);
         console.log("Get status");
       }
       this.loading = false;

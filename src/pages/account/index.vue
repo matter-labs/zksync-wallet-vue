@@ -30,7 +30,6 @@
 <script>
 import balances from "@/blocks/Balances.vue";
 import walletAddress from "@/components/walletAddress.vue";
-import walletData from "@/plugins/walletData.js";
 
 export default {
   components: {
@@ -45,7 +44,7 @@ export default {
   },
   computed: {
     walletAddress: function () {
-      return walletData.get().syncWallet.address();
+      this.store.getters["account/address"];
     },
   },
 };

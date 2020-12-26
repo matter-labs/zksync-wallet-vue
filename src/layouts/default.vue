@@ -1,37 +1,37 @@
 <template>
   <div class="defaultLayout">
-    <logging-in-loader />
-    <cookie-component />
+      <logging-in-loader/>
+      <cookie-component/>
     <div v-if="!loggingIn && loggedIn">
       <header-component />
       <div class="routerContainer">
         <transition name="fade" mode="out-in">
-          <nuxt />
+            <nuxt/>
         </transition>
       </div>
-      <footer-component/>
+        <footer-component/>
     </div>
   </div>
 </template>
-
 <script>
 import headerComponent from "@/blocks/Header.vue";
 import footerComponent from "@/blocks/Footer.vue";
 import cookieComponent from "@/blocks/Cookie.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
+
 export default {
   components: {
     headerComponent,
     footerComponent,
     cookieComponent,
-    loggingInLoader
+    loggingInLoader,
   },
   computed: {
-    loggingIn: function() {
-      return this.$store.getters['account/loader'];
+    loggingIn: function () {
+      return this.$store.getters["account/loader"];
     },
-    loggedIn: function() {
-      return this.$store.getters['account/loggedIn'];
+    loggedIn: function () {
+      return this.$store.getters["account/loggedIn"];
     },
   },
   watch: {

@@ -88,7 +88,7 @@
 
 <script>
 import validations from "@/plugins/validations.js";
-import walletData from "@/plugins/walletData.js";
+import { walletData } from "@/plugins/walletData.js";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 
@@ -158,7 +158,7 @@ export default {
         window.localStorage.setItem("contacts-" + this.walletAddressFull, JSON.stringify([]));
       }
     } catch (error) {
-      console.log(error);
+      this.$store.dispatch("toaster/error", error.message ? error.message : "Error while fetching your contacts.");
     }
   },
   methods: {
@@ -198,6 +198,7 @@ export default {
           this.contactsList.push({ name: this.inputedName.trim(), address: this.inputedWallet, deleted: false });
           this.saveList();
         } catch (error) {
+          this.$store.dispatch("toaster/error", error.message ? error.message : "Error while saving your contact book.");
           console.log(error);
         }
         this.inputedName = "";

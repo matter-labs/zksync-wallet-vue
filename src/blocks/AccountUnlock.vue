@@ -41,8 +41,8 @@
 </template>
 
 <script>
-import { walletData } from "@/plugins/walletData.js";
-import utils from "@/plugins/utils.js";
+import { walletData } from "@/plugins/walletData";
+import utils from "@/plugins/utils";
 
 export default {
   props: {
@@ -141,8 +141,7 @@ export default {
         );
         this.totalFee = +utils.handleFormatToken(this.choosedToken.symbol, foundFee.totalFee);
       } catch (error) {
-        await this.$store.dispatch("toaster/ERROR");
-        console.log("Get unlock fee error", error);
+        await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while receiving an unlock fee");
       }
       this.loading = false;
     },

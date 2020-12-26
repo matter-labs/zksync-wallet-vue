@@ -1,3 +1,5 @@
+import { walletData } from "~/plugins/walletData";
+
 export const state = () => ({
   loggedIn: false,
   selectedWallet: "",
@@ -16,6 +18,9 @@ export const getters = {
   },
   loader(state) {
     return state.loggedIn === false && state.selectedWallet !== "";
+  },
+  address() {
+    return walletData.get().syncWallet && walletData.get().syncWallet.address ? walletData.get().syncWallet.address() : "";
   },
 };
 
