@@ -68,7 +68,6 @@ import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 import { APP_ZK_SCAN } from "@/plugins/build";
-import { walletData } from "@/plugins/walletData.js";
 import VueQrcode from "vue-qrcode";
 
 export default {
@@ -87,8 +86,7 @@ export default {
   },
   computed: {
     walletAddressFull: function () {
-    walletAddressFull: function () {
-      return this.$store.getters["account/getAddess"];
+      return this.$store.getters["account/address"];
     },
     getZkScanBaseUrl: function () {
       return APP_ZK_SCAN;

@@ -44,7 +44,7 @@ export default {
   },
   computed: {
     walletAddress: function () {
-      this.store.getters["account/address"];
+      return this.$store.getters["account/address"];
     },
   },
 };
