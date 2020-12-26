@@ -1,10 +1,10 @@
 <template>
     <div class="alert">
-        <i class="alertIcon fal fa-info-square"></i>
+        <i class="alertIcon fas fa-info-square"></i>
         <div class="slotContainer">
             <slot />
         </div>
-        <i class="alertCloseIcon fal fa-times" @click="close()"></i>
+        <i class="alertCloseIcon fas fa-times" @click="close()"></i>
     </div>
 </template>
 

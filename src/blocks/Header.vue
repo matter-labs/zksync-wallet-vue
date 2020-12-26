@@ -51,7 +51,7 @@
           <span>View in block explorer</span>
         </a>
         <div class="modalFooterBtn" @click="renameWalletOpen()">
-          <i class="fal fa-pen"></i>
+          <i class="fas fa-pen"></i>
           <span>Rename wallet</span>
         </div>
         <div class="modalFooterBtn" @click="logout()">

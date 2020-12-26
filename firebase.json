@@ -1,6 +1,10 @@
 {
   "hosting": {
-    "firebase": "zksync-vue",
-    "public": "public"
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
   }
 }

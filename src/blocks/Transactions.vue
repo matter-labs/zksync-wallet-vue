@@ -15,7 +15,7 @@
               <em v-if="item.transactionStatus==='Verified'" class="verified far fa-check-double"></em>
               <em v-else-if="item.transactionStatus==='Commited'" class="commited far fa-check"></em>
               <em v-else-if="item.transactionStatus==='In progress'" class="inProgress fad fa-spinner-third"></em>
-              <em v-else class="rejected fal fa-times-circle"></em>
+              <em v-else class="rejected fas fa-times-circle"></em>
               <template slot="body">{{ item.transactionStatus }}</template>
             </i-tooltip>
           </div>

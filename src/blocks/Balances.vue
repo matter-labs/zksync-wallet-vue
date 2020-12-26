@@ -33,7 +33,7 @@
                         <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
                     </div>
                     <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer">
-                      <i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer
+                      <i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Transfer
                     </i-button>
                     <i-input v-model="search" placeholder="Filter tokens" maxlength="6">
                         <i slot="prefix" class="far fa-search"></i>

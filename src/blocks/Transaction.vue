@@ -126,7 +126,7 @@
       <i-button block size="lg" variant="secondary" class="_margin-top-1"
                 :disabled="!enoughTokenFee || !isAddressValid || !inputTotalSum || inputTotalSum<=0 || !feesObj || !choosedToken || feesLoading || inputTotalSum>transactionMaxAmount"
                 @click="commitTransaction()">
-        <i v-if="type!=='withdraw'" class="fal fa-paper-plane"></i>
+        <i v-if="type!=='withdraw'" class="fas fa-paper-plane"></i>
         <i v-else class="fas fa-hand-holding-usd"></i>
         {{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}
       </i-button>

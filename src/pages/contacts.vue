@@ -18,7 +18,7 @@
 
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
 
-        <i-button v-if="addContactType==='edit'" block link size="md" variant="secondary" @click="deleteContact()"><i class="fal fa-trash"></i>&nbsp;&nbsp;Delete contact</i-button>
+        <i-button v-if="addContactType==='edit'" block link size="md" variant="secondary" @click="deleteContact()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Delete contact</i-button>
         <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
       </div>
     </i-modal>
@@ -49,13 +49,13 @@
           </div>
           <div v-if="!item.deleted" class="iconsBlock">
             <i-tooltip trigger="click">
-              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="fal fa-copy"></i></i-button>
+              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="fas fa-copy"></i></i-button>
               <template slot="body">Copied!</template>
             </i-tooltip>
-            <i-button block link size="md" variant="secondary" @click="editContact(item)"><i class="fal fa-pen"></i></i-button>
+            <i-button block link size="md" variant="secondary" @click="editContact(item)"><i class="fas fa-pen"></i></i-button>
           </div>
           <div v-else class="iconsBlock">
-            <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="fal fa-trash-undo"></i></i-button>
+            <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="fas fa-trash-undo"></i></i-button>
           </div>
           <!-- <div class="rightSide">
               <div class="balance">{{item.balance}}</div>
@@ -75,13 +75,13 @@
       <div v-if="openedContact.deleted===true" class="isDeleted">Contact is deleted</div>
       <wallet-address :wallet="openedContact.address" class="_margin-y-1"/>
       <i-button v-if="openedContact.notInContacts" block link size="md" variant="secondary"
-                @click="addContactType='add'; inputedWallet=openedContact.address; addContactModal=true;"><i class="fal fa-plus"></i>&nbsp;&nbsp;Add contact
+                @click="addContactType='add'; inputedWallet=openedContact.address; addContactModal=true;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add contact
       </i-button>
-      <i-button v-else-if="openedContact.deleted===false" block link size="md" variant="secondary" @click="editContact(openedContact)"><i class="fal fa-pen"></i>&nbsp;&nbsp;Edit
+      <i-button v-else-if="openedContact.deleted===false" block link size="md" variant="secondary" @click="editContact(openedContact)"><i class="fas fa-pen"></i>&nbsp;&nbsp;Edit
         contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="fal fa-trash-undo"></i>&nbsp;&nbsp;Restore contact</i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer to contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="fas fa-trash-undo"></i>&nbsp;&nbsp;Restore contact</i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Transfer to contact</i-button>
     </div>
   </div>
 </template>

@@ -30,7 +30,7 @@
             </i-button>
           </div>
           <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`">
-          <i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer
+          <i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Transfer
           </i-button>
         </div>
       </div>

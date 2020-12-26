@@ -26,12 +26,12 @@
         <div class="hints">
             <div class="hintGroup">
                 <div v-if="min" class="hint" :class="{'red': valNow<min}">
-                    <i class="fal fa-exclamation-circle"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                     <span>Minimum required: {{min}}</span>
                     <div v-if="max" class="separator"></div>
                 </div>
                 <div v-if="max" class="hint" :class="{'red': valNow>max}">
-                    <i class="fal fa-exclamation-circle"></i>
+                    <i class="fas fa-exclamation-circle"></i>
                     <span>Max value: {{max}}</span>
                 </div>
             </div>

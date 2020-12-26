@@ -8,7 +8,7 @@ export const state = () => ({
   /**
    * Restricted tokens, fee can't be charged in it
    */
-  restrictedTokens: ["PHNX", "LAMB"],
+  restrictedTokens: ["PHNX", "LAMB", "MLTT"],
 
   /**
    * All available tokens
