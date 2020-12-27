@@ -66,7 +66,7 @@ export default (ctx) => {
     },
     walletSelect: {
       wallets: initializedWallets.wallets,
-      description: "Please select a wallet to connect to this dapp: (or <a href="#">click here</a>.",
+      description: 'Please select a wallet to connect to this dapp: (or <a href="#">click here</a>.',
     },
   };
 };
