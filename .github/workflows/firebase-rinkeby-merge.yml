@@ -20,4 +20,4 @@ jobs:
         with:
           args: deploy --project zksync-vue --only hosting
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}
