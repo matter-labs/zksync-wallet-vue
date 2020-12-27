@@ -44,14 +44,14 @@ import { GIT_REVISION_SHORT } from "@/plugins/build";
 import cookieComponent from "@/blocks/Cookie.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 export default {
-  data() {
-    return {
-      version: GIT_REVISION_SHORT,
-    }
-  },
   components: {
     cookieComponent,
     loggingInLoader,
+  },
+  data() {
+    return {
+      version: GIT_REVISION_SHORT,
+    };
   },
   watch: {
     $route: {
@@ -71,12 +71,6 @@ export default {
       },
     },
   },
-  methods: {
-    toggleDarkMode() {
-      this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
-      localStorage.setItem("colorTheme", this.$inkline.config.variant);
-    },
-  },
   mounted() {
     if (process.client) {
       window.history.scrollRestoration = "manual";
@@ -87,6 +81,12 @@ export default {
     if (localStorage.getItem("colorTheme")) {
       this.$inkline.config.variant = localStorage.getItem("colorTheme");
     }
+  },
+  methods: {
+    toggleDarkMode() {
+      this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
+      localStorage.setItem("colorTheme", this.$inkline.config.variant);
+    },
   },
 };
 </script>
