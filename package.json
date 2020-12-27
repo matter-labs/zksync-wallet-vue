@@ -54,7 +54,7 @@
     "build:firebase:rinkeby": "yarn ci && sh ./cli-process-env.sh \"rinkeby\" && yarn generate --fail-on-error",
     "ci": "rm -fr node_modules && rm -rf \"public/**\" && yarn install --frozen-lockfile",
     "start:firebase": "firebase serve --only hosting",
-    "deploy": "firebase deploy --only hosting",
+    "deploy-prod": "./cli-deploy-production.sh",
     "dev": "nuxt",
     "start": "nuxt start",
     "build": "nuxt build",

@@ -1,7 +1,6 @@
 {
   "hosting": {
     "public": "public",
-    "target": "new.zksync.io",
     "ignore": [
       "firebase.json",
       "**/.*",
