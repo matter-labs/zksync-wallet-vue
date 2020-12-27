@@ -16,8 +16,10 @@ jobs:
         env:
           APP_GIT_REVISION: ${{ github.sha }}
       - name: Deploy to Firebase
-        uses: matter-labs/firebase-action@master
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          args: deploy --project zksync-vue --only hosting
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+          projectId: zksync-vue
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}
+          FIREBASE_CLI_PREVIEWS: hostingchannels
