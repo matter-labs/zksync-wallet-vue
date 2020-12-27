@@ -78,9 +78,6 @@ export default {
       document.querySelector(".bn-onboard-custom.bn-onboard-select-wallet-definition").innerHTML =
         "We're service withdrawals 7 days a week, from 10am till 7pm. Mail: hello@mattermost.dev";
     }
-    function changeContent() {
-      var myelement = (myelement.innerHTML = "New Text");
-    }
     if (localStorage.getItem("colorTheme")) {
       this.$inkline.config.variant = localStorage.getItem("colorTheme");
     }
