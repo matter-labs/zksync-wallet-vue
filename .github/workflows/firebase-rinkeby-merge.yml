@@ -21,5 +21,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
           projectId: zksync-vue
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
+          channelId: live
