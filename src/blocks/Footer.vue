@@ -1,12 +1,7 @@
 <template>
-  <footer class="_padding-y-1">
-    <i-container>
-      <i-row center>
-        <i-button block size="lg" circle @click="toggleDarkMode">
-          <i-icon icon="light"/>
-        </i-button>
-      </i-row>
-      <i-row center class="_margin-top-1">
+  <footer class="_padding-y-1 _padding-x-3 _margin-x-auto mainFooter">
+    <div class="_display-flex _flex-direction-row _align-items-center _justify-content-space-between">
+      <i-row center class="linksRow _margin-top-1">
         <div class="_padding-x-1">
           <a target="_blank" class="footer-link link" href="//zksync.io/faq/intro.html">Docs</a>
         </div>
@@ -19,14 +14,18 @@
         <div class="_padding-x-1">
           <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
         </div>
+        <div class="_padding-x-1">
+          <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
+            v.{{version}}
+          </i-badge>
+        </div>
       </i-row>
-      <i-row center class="_margin-top-1">
-        <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Build with ❤️ by <strong>Matter Labs</strong></a>
-        <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
-          v.{{version}}
-        </i-badge>
+      <i-row center>
+        <i-button block size="lg" circle @click="toggleDarkMode">
+          <i-icon icon="light"/>
+        </i-button>
       </i-row>
-    </i-container>
+    </div>
   </footer>
 </template>
 

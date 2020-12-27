@@ -1,4 +1,13 @@
 footer {
+    &.mainFooter {
+        max-width: 1920px;
+
+        & > div {
+            @media (max-width: $mobile) {
+                flex-direction: column-reverse !important;
+            }
+        }
+    }
     a {
         font-size: 18px;
     }

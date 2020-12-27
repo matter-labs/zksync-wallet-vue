@@ -113,10 +113,12 @@ export default {
     },
   },
   methods: {
-    logout: async function () {
+    logout: function () {
       this.infoModal = false;
-      await this.$store.dispatch("wallet/logout");
-      await this.$router.push("/");
+      this.$nextTick(async ()=>{
+        await this.$store.dispatch("wallet/logout");
+        await this.$router.push("/");
+      });
     },
     renameWalletOpen: function () {
       this.infoModal = false;
