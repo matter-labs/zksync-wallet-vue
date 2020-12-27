@@ -1,4 +1,4 @@
-import walletData from "@/plugins/walletData.js";
+import { walletData } from "@/plugins/walletData.js";
 
 export default async (context) => {
   if (walletData.get().syncWallet) {
@@ -7,24 +7,26 @@ export default async (context) => {
     }
     return;
   }
-  const onboardResult = await context.store.dispatch("wallet/onboard");
-  if (onboardResult !== true) {
-    await context.store.dispatch("wallet/logout");
-    if (context.route.path !== "/") {
-      context.redirect("/");
+  (async () => {
+    const onboardResult = await context.store.dispatch("wallet/onboard");
+    if (onboardResult !== true) {
+      await context.store.dispatch("wallet/logout");
+      if (context.route.path !== "/") {
+        context.redirect("/");
+      }
+      return;
     }
-    return;
-  }
 
-  const refreshWallet = await context.store.dispatch("wallet/walletRefresh");
-  if (refreshWallet !== true) {
-    await context.store.dispatch("wallet/logout");
-    if (context.route.path !== "/") {
-      context.redirect("/");
+    const refreshWallet = await context.store.dispatch("wallet/walletRefresh");
+    if (refreshWallet !== true) {
+      await context.store.dispatch("wallet/logout");
+      if (context.route.path !== "/") {
+        context.redirect("/");
+      }
+    } else {
+      if (context.route.path === "/") {
+        context.redirect("/account");
+      }
     }
-  } else {
-    if (context.route.path === "/") {
-      context.redirect("/account");
-    }
-  }
+  })();
 };

@@ -9,7 +9,7 @@
                     </template>
                     <template slot="hints">
                         <div class="hint">
-                            <i class="fal fa-exclamation-circle"></i>
+                            <i class="fas fa-exclamation-circle"></i>
                             The unlock procedure may take 1-3 minutes, please keep patience....
                         </div>
                     </template>
@@ -48,12 +48,12 @@
                         <button class="customButton">Deposit</button>
                     </i-column>
                     <i-column>
-                        <button class="customButton" disabled><i class="fal fa-ban"></i> Deposit</button>
+                        <button class="customButton" disabled><i class="fas fa-ban"></i> Deposit</button>
                     </i-column>
                 </i-row>
                 <i-row class="_margin-top-1">
                     <i-column>
-                        <button class="customButton red"><i class="fal fa-comment-alt-dots"></i> Need Help</button>
+                        <button class="customButton red"><i class="fas fa-comment-alt-dots"></i> Need Help</button>
                     </i-column>
                     <i-column>
                         <button class="customButton outline"><i class="fad fa-spinner-third"></i> Loading</button>
@@ -75,7 +75,7 @@
                             </template>
                             <template slot="hints">
                                 <div class="hint">
-                                    <i class="fal fa-exclamation-circle"></i>
+                                    <i class="fas fa-exclamation-circle"></i>
                                     The unlock procedure may take 1-3 minutes, please keep patience....
                                 </div>
                             </template>

@@ -51,7 +51,7 @@
           <span>View in block explorer</span>
         </a>
         <div class="modalFooterBtn" @click="renameWalletOpen()">
-          <i class="fal fa-pen"></i>
+          <i class="fas fa-pen"></i>
           <span>Rename wallet</span>
         </div>
         <div class="modalFooterBtn" @click="logout()">
@@ -67,7 +67,7 @@
 import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
-import walletData from "@/plugins/walletData.js";
+import { APP_ZK_SCAN } from "@/plugins/build";
 import VueQrcode from "vue-qrcode";
 
 export default {
@@ -86,11 +86,10 @@ export default {
   },
   computed: {
     walletAddressFull: function () {
-      return walletData.get().syncWallet.address();
+      return this.$store.getters["account/address"];
     },
     getZkScanBaseUrl: function () {
-      const networkName = `${process.env.APP_CURRENT_NETWORK}`;
-      return `https://${networkName !== "mainnet" ? `${networkName}.` : ""}zkscan.io`;
+      return APP_ZK_SCAN;
     },
   },
   watch: {
@@ -114,10 +113,12 @@ export default {
     },
   },
   methods: {
-    logout: async function () {
+    logout: function () {
       this.infoModal = false;
-      await this.$store.dispatch("wallet/logout");
-      await this.$router.push("/");
+      this.$nextTick(async ()=>{
+        await this.$store.dispatch("wallet/logout");
+        await this.$router.push("/");
+      });
     },
     renameWalletOpen: function () {
       this.infoModal = false;

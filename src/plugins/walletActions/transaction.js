@@ -1,16 +1,7 @@
 import { ethers } from "ethers";
 import utils from "@/plugins/utils";
-import walletData from "@/plugins/walletData";
+import { walletData } from "@/plugins/walletData";
 
-/**
- *
- * @param address
- * @param token
- * @param feeToken
- * @param amount
- * @param fees
- * @return {Promise<Promise<Transaction>|Promise<Transaction[]>>}
- */
 export const transaction = async (address, token, feeToken, amount, fees) => {
   const syncWallet = walletData.get().syncWallet;
   let nonce = await syncWallet.getNonce("committed");
@@ -59,6 +50,7 @@ export const transaction = async (address, token, feeToken, amount, fees) => {
  * @param feeToken
  * @param amount
  * @param fastWithdraw
+ * @param fees
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
 export const withdraw = async (address, token, feeToken, amount, fastWithdraw, fees) => {

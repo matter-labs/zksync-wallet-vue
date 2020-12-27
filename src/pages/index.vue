@@ -2,7 +2,7 @@
   <div class="indexPage">
     <i-container>
       <i-row center>
-        <logo class="_padding-top-7"/>
+        <logo />
       </i-row>
       <i-row center>
         <span class="h1 _font-weight-normal">Trustless, scalable crypto payments</span>
@@ -44,16 +44,7 @@ export default {
         darkMode: this.$inkline.config.variant !== "light",
       });
 
-      const walletSelect = await onboard.walletSelect();
-      if (walletSelect === false) {
-        await this.$store.dispatch("wallet/logout");
-        return;
-      }
-
-      this.$store.commit("showLoader");
-      const refreshWalletTry = await this.$store.dispatch("wallet/walletRefresh", false);
-      this.$store.commit("hideLoader");
-      console.log("refreshWalletTry", refreshWalletTry);
+      const refreshWalletTry = await this.$store.dispatch("wallet/walletRefresh");
       if (refreshWalletTry !== true) {
         await this.$store.dispatch("wallet/logout");
       } else {

@@ -11,6 +11,7 @@
 
 # production
 /build
+/dist
 /.idea
 /lib
 
@@ -41,3 +42,4 @@ yarn-error.log*
 public/*
 !public/.gitignore
 .nuxt
+/firebase-debug.log

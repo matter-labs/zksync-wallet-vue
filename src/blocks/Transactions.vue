@@ -2,9 +2,6 @@
   <div class="transactionsPage">
     <div class="tileBlock transactionsTile">
       <div class="tileHeadline h3">Transactions</div>
-      <!-- <i-input v-model="search" placeholder="Filter transactions">
-          <em slot="prefix" class="far fa-search"></i>
-      </i-input> -->
       <div class="transactionsListContainer">
         <div v-if="loading===true" class="nothingFound">
           <i-loader class="_display-block" size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
@@ -18,7 +15,7 @@
               <em v-if="item.transactionStatus==='Verified'" class="verified far fa-check-double"></em>
               <em v-else-if="item.transactionStatus==='Commited'" class="commited far fa-check"></em>
               <em v-else-if="item.transactionStatus==='In progress'" class="inProgress fad fa-spinner-third"></em>
-              <em v-else class="rejected fal fa-times-circle"></em>
+              <em v-else class="rejected fas fa-times-circle"></em>
               <template slot="body">{{ item.transactionStatus }}</template>
             </i-tooltip>
           </div>
@@ -72,8 +69,9 @@
 
 <script>
 import moment from "moment";
-import walletData from "@/plugins/walletData.js";
-import utils from "@/plugins/utils.js";
+import { walletData } from "@/plugins/walletData";
+import utils from "@/plugins/utils";
+import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 
 export default {
   props: {
@@ -112,7 +110,7 @@ export default {
         this.addressToNameMap.set(item.address.toLowerCase(), item.name);
       }
     } catch (error) {
-      console.log(error);
+      this.$store.dispatch("toaster/error", error.message ? error.message : "Error while loading transaction list");
     }
   },
   methods: {
@@ -141,10 +139,7 @@ export default {
       }
     },
     getTransactionExplorerLink: function (transaction) {
-      return (
-        (transaction.tx.type === "Deposit" ? `https://${process.env.APP_ETH_BLOCK_EXPLORER}/tx` : `https://${process.env.APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) +
-        `/${transaction.hash}`
-      );
+      return (transaction.tx.type === "Deposit" ? `https://${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
     },
     getTransactionStatus: function (transaction) {
       if (!transaction.success) {
@@ -162,7 +157,7 @@ export default {
       const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
-      var filteredList = list
+      let filteredList = list
         .filter((e) => e.tx.type !== "ChangePubKey")
         .map((e) => {
           if (e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) {
@@ -180,7 +175,7 @@ export default {
       try {
         this.transactionsList = await this.loadTransactions();
       } catch (error) {
-        console.log(error);
+        await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while fetching the transactions");
       }
       this.loading = false;
     },

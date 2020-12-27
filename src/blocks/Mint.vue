@@ -20,7 +20,8 @@
             can link your wallet to your social account. Once our bot detects your post, you will be able to claim your
             MLTT.
           </p>
-          <a target="_blank" :href="`https://twitter.com/intent/tweet?text=%40zksync%2C%20%40the_matter_labs%E2%80%99s%20zkRollup%20for%20trustless%2C%20scalable%20payments%20is%20now%20live%20on%20Ethereum%20mainnet%21%20%0A%0AGive%20it%20a%20try%3A%20%F0%9F%91%89%F0%9F%91%89%20zksync.io%20%0A%0AClaiming%20my%20trial%20tokens%3A%20${getTicketFromAddress(generateSalt())}`"
+          <a target="_blank"
+             :href="`https://twitter.com/intent/tweet?text=%40zksync%2C%20%40the_matter_labs%E2%80%99s%20zkRollup%20for%20trustless%2C%20scalable%20payments%20is%20now%20live%20on%20Ethereum%20mainnet%21%20%0A%0AGive%20it%20a%20try%3A%20%F0%9F%91%89%F0%9F%91%89%20zksync.io%20%0A%0AClaiming%20my%20trial%20tokens%3A%20${getTicketFromAddress(generateSalt())}`"
              class="tweetBtn _margin-top-1"
              @click="tweetClicked()"><i class="fab fa-twitter"></i> Tweet</a>
         </div>
@@ -48,12 +49,13 @@
 
 <script>
 import Checkmark from "@/components/Checkmark.vue";
+import { ETHER_NETWORK_NAME } from "@/plugins/build";
 
-import walletData from "@/plugins/walletData.js";
+import { walletData } from "@/plugins/walletData";
 import crypto from "crypto";
 import VueRecaptcha from "vue-recaptcha";
 
-const FAUCET_TOKEN_API = `https://${process.env.APP_ZKSYNC_API_LINK === "stage-api.zksync.dev" ? "stage" : process.env.APP_CURRENT_NETWORK}-faucet.zksync.dev`;
+const FAUCET_TOKEN_API = `https://${APP_ZKSYNC_API_LINK === "stage-api.zksync.dev" ? "stage" : ETHER_NETWORK_NAME}-faucet.zksync.dev`;
 
 export default {
   components: {
@@ -83,7 +85,7 @@ export default {
   },
   methods: {
     startMint: function () {
-      if (process.env.APP_CURRENT_NETWORK === "mainnet") {
+      if (ETHER_NETWORK_NAME === "mainnet") {
         this.onlyTestNetModal = true;
       } else {
         if (this.step === "tweet") {
@@ -104,8 +106,7 @@ export default {
     },
     generateSalt: function () {
       if (localStorage.getItem("twitsalt")) {
-        const salt = localStorage.getItem("twitsalt");
-        return salt;
+        return localStorage.getItem("twitsalt");
       } else {
         const salt = Math.random().toString();
         localStorage.setItem("twitsalt", salt);
@@ -115,19 +116,19 @@ export default {
     tweetClicked: async function () {
       const syncAddress = walletData.get().syncWallet.address();
       localStorage.setItem(`twittMade${syncAddress}`, "true");
-      const response = await this.$axios.get(`${FAUCET_TOKEN_API}/register_address/${syncAddress}/${this.generateSalt()}`);
+      const response = await this.$axios.$get(`${FAUCET_TOKEN_API}/register_address/${syncAddress}/${this.generateSalt()}`);
       if (response.data === "Success") {
         await this.checkForTweet();
       }
     },
-    checkForTweet: async function () {
+    async checkForTweet() {
       const syncAddress = walletData.get().syncWallet.address();
       if (!localStorage.getItem(`twittMade${syncAddress}`)) {
         return false;
       }
       this.loading = true;
       try {
-        const response = await this.$axios.get(`${FAUCET_TOKEN_API}/is_withdraw_allowed/${syncAddress}`);
+        const response = await this.$axios.$get(`${FAUCET_TOKEN_API}/is_withdraw_allowed/${syncAddress}`);
         console.log("checkForTweet response", response.data);
         if (!response.data || response.data === "false") {
           this.step = "tweet";
@@ -135,6 +136,7 @@ export default {
           this.step = "claim";
         }
       } catch (error) {
+        await this.$store.dispatch("toaster/error", error.message);
         console.log("Get status");
       }
       this.loading = false;
@@ -148,7 +150,7 @@ export default {
       });
       this.loading = true;
       try {
-        const askMoneyResponse = await this.$axios.post(`${FAUCET_TOKEN_API}/ask_money`, {
+        const askMoneyResponse = await this.$axios.$post(`${FAUCET_TOKEN_API}/ask_money`, {
           address: walletData.get().syncWallet.address(),
           "g-recaptcha-response": captchaToken,
         });

@@ -2,32 +2,32 @@
  * Wrapper for the major Providers
  * @type {{accountState: null, syncProvider: null, syncWallet: null, zkSync: any|null}}
  */
-const walletData = {
+const internalWalletData = {
   syncProvider: null,
   syncWallet: null,
   accountState: null,
   zkSync: null,
 };
 
-export default {
+export const walletData = {
   zkSync: async () => {
     if (!process.client) {
       return null;
     }
-    if (!walletData["zkSync"]) {
-      walletData["zkSync"] = await import("zksync");
+    if (!internalWalletData["zkSync"]) {
+      internalWalletData["zkSync"] = await import("zksync");
     }
-    return walletData["zkSync"];
+    return internalWalletData["zkSync"];
   },
   get: () => {
-    return walletData;
+    return internalWalletData;
   },
   set: (obj) => {
     if (typeof obj !== "object") {
       return;
     }
     for (const [key, value] of Object.entries(obj)) {
-      walletData[key] = value;
+      internalWalletData[key] = value;
     }
   },
 };

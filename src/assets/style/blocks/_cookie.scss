@@ -1,21 +1,21 @@
 .cookieContainer {
     position: fixed;
     width: 100%;
-    height: max-content;
+    height: auto;
     bottom: 0;
     left: 0;
     padding: 20px;
     font-size: 16px;
     text-align: center;
     transition: background-color $transition1;
-    
+
     .cookieMain {
         display: grid;
         height: max-content;
         grid-template-columns: 1fr 150px;
         grid-template-rows: 100%;
         grid-gap: 10px;
-        
+
         .text {
             text-align: left;
             max-width: 700px;

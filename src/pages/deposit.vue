@@ -1,87 +1,105 @@
 <template>
-    <div class="transactionPage">
-        <i-modal v-model="cantFindTokenModal" size="md">
-            <template slot="header">Can't find a token</template>
-            <div>
-                <p>zkSync currently supports the most popular tokens, we will be adding more over time. <a href="//zksync.io/contact.html" target="_blank" rel="noopener noreferrer">Let us know what tokens you need</a>!</p>
-            </div>
-        </i-modal>
-        <div v-if="tokenSelectionOpened===false" class="tileBlock">
-            <div class="tileHeadline h3">Deposit</div>
-            <div v-if="success===true">
-                <a class="_display-block _text-center" target="_blank" :href="`https://${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
-                <checkmark />
-                <p class="_text-center _margin-top-0">Your deposit tx has been mined and will be processed after 1 confirmations. Use the link below to track the progress.</p>
-                <div class="totalAmount _margin-top-2">
-                    <div class="headline">Amount:</div>
+  <div class="transactionPage">
+    <i-modal v-model="cantFindTokenModal" size="md">
+      <template slot="header">Can't find a token</template>
+      <div>
+        <p>zkSync currently supports the most popular tokens, we will be adding more over time. <a
+            href="//zksync.io/contact.html" target="_blank" rel="noopener noreferrer">Let us know what tokens you
+          need</a>!</p>
+      </div>
+    </i-modal>
+    <div v-if="tokenSelectionOpened===false" class="tileBlock">
+      <div class="tileHeadline h3">Deposit</div>
+      <div v-if="success===true">
+        <a class="_display-block _text-center" target="_blank"
+           :href="`https://${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i
+            class="fas fa-external-link"></i></a>
+        <checkmark/>
+        <p class="_text-center _margin-top-0">Your deposit tx has been mined and will be processed after 1
+          confirmations. Use the transaction link to track the progress.</p>
+        <div class="totalAmount _margin-top-2">
+          <div class="headline">Amount:</div>
                     <div class="amount">
                       {{choosedToken.symbol}} {{handleExponentialNumber(choosedToken.symbol, transactionAmount)}}
                       <span class="totalPrice">{{getFormattedPrice(choosedToken.price, transactionAmount)}}</span>
                     </div>
                 </div>
-                <i-button block size="lg" variant="secondary" class="_margin-top-1" to="/account">Ok</i-button>
-            </div>
-            <div v-else-if="loading===false">
-                <div class="_padding-bottom-1">Amount / asset</div>
-                <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number">
-                    <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="tokenSelectionOpened=true">Select token</i-button>
-                    <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary" @click="tokenSelectionOpened=true">{{choosedToken.symbol}}&nbsp;&nbsp;<i class="far fa-angle-down"></i></i-button>
-                </i-input>
-                <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
-                    <div class="totalPrice">~${{(inputTotalSum*choosedToken.price).toFixed(2)}}</div>
+        <i-button block size="lg" variant="secondary" class="_margin-top-1" to="/account">Ok</i-button>
+      </div>
+      <div v-else-if="loading===false">
+        <div class="_padding-bottom-1">Amount / asset</div>
+        <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number">
+          <i-button v-if="!choosedToken" slot="append" block link variant="secondary"
+                    @click="tokenSelectionOpened=true">Select token
+          </i-button>
+          <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
+                    @click="tokenSelectionOpened=true">{{ choosedToken.symbol }}&nbsp;&nbsp;<i
+              class="far fa-angle-down"></i></i-button>
+        </i-input>
+        <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
+          <div class="totalPrice">~${{ (inputTotalSum * choosedToken.price).toFixed(2) }}</div>
                     <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0">Max: {{transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0}}</div>
-                </div>
-                <div v-if="choosedToken && choosedToken.unlocked===false" class="tokenLocked">
-                    <p class="_text-center">You should firstly unlock selected token in order to authorize deposits for <b>{{choosedToken.symbol}}</b></p>
-                    <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="unlockToken()"><i class="far fa-lock-open-alt"></i> Unlock</i-button>
-                </div>
-                <div v-else-if="choosedToken && choosedToken.unlocked===true && inputTotalSum>transactionMaxAmount" class="errorText _text-center _margin-top-1">
-                    Not enough {{choosedToken.symbol}} to perform a transaction
-                </div>
-                <div v-else-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
-                <i-button v-if="choosedToken && choosedToken.unlocked===true" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit</i-button>
-            </div>
-            <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
-                <p v-if="tip" class="_display-block _text-center">{{tip}}</p>
-                <i-loader class="_display-block _margin-top-1" size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'" />
-            </div>
         </div>
-        <div v-else class="tileBlock tokensTile">
-            <div class="tileHeadline h3">
-                <span>Balances in L1</span>
-                <i-tooltip>
-                    <i class="fas fa-times" @click="tokenSelectionOpened=false"></i>
-                    <template slot="body">Close</template>
-                </i-tooltip>
-            </div>
-            <div v-if="loading===true" class="nothingFound">
-                <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'" />
-            </div>
-            <template v-else>
-                <i-input v-model="search" placeholder="Filter balances in L1" maxlength="10">
-                    <i slot="prefix" class="far fa-search"></i>
-                </i-input>
-                <div class="tokenListContainer">
-                    <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
-                        <div class="tokenLabel">{{item.symbol}}</div>
-                        <div class="rightSide">
-                            <div class="balance">{{handleExponentialNumber(item.symbol, item.formatedBalance)}}</div>
-                        </div>
-                    </div>
-                    <div v-if="search && displayedTokenList.length===0" class="nothingFound">
-                        <span>Your search <b>"{{search}}"</b> did not match any tokens</span>
-                    </div>
-                </div>
-                <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="cantFindTokenModal=true">Can't find a token?</i-button>
-            </template>
+        <div v-if="choosedToken && choosedToken.unlocked===false" class="tokenLocked">
+          <p class="_text-center">You should firstly unlock selected token in order to authorize deposits for
+            <b>{{ choosedToken.symbol }}</b></p>
+          <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="unlockToken()"><i
+              class="far fa-lock-open-alt"></i> Unlock
+          </i-button>
         </div>
+        <div v-else-if="choosedToken && choosedToken.unlocked===true && inputTotalSum>transactionMaxAmount"
+             class="errorText _text-center _margin-top-1">
+          Not enough {{ choosedToken.symbol }} to perform a transaction
+        </div>
+        <div v-else-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
+                <i-button v-if="choosedToken && choosedToken.unlocked===true" :disabled="!inputTotalSum || inputTotalSum<=0 || inputTotalSum>transactionMaxAmount" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit</i-button>
+      </div>
+      <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
+                <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`https://${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
+        <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
+        <i-loader class="_display-block _margin-top-1" size="md"
+                  :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+      </div>
     </div>
+    <div v-else class="tileBlock tokensTile">
+      <div class="tileHeadline h3">
+        <span>Balances in L1</span>
+        <i-tooltip>
+          <i class="fas fa-times" @click="tokenSelectionOpened=false"></i>
+          <template slot="body">Close</template>
+        </i-tooltip>
+      </div>
+      <div v-if="loading===true" class="nothingFound">
+        <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+      </div>
+      <template v-else>
+        <i-input v-model="search" placeholder="Filter balances in L1" maxlength="10">
+          <i slot="prefix" class="far fa-search"></i>
+        </i-input>
+        <div class="tokenListContainer">
+          <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
+            <div class="tokenLabel">{{ item.symbol }}</div>
+            <div class="rightSide">
+                            <div class="balance">{{handleExponentialNumber(item.symbol, item.formatedBalance)}}</div>
+            </div>
+          </div>
+          <div v-if="search && displayedTokenList.length===0" class="nothingFound">
+            <span>Your search <b>"{{ search }}"</b> did not match any tokens</span>
+          </div>
+        </div>
+        <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="cantFindTokenModal=true">Can't
+          find a token?
+        </i-button>
+      </template>
+    </div>
+  </div>
 </template>
 
 <script>
-import walletData from "@/plugins/walletData.js";
-import utils from '@/plugins/utils.js';
+import { walletData } from "@/plugins/walletData.js";
+import utils from "@/plugins/utils.js";
 import { ethers } from "ethers";
+import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 import Checkmark from "@/components/Checkmark.vue";
 export default {
   components: {
@@ -113,10 +131,10 @@ export default {
     transactionMaxAmount: function () {
       const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
       const bigNumFee = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.fee));
-      return utils.handleFormatToken(this.choosedToken.symbol, (bigNumBalance-bigNumFee));
+      return utils.handleFormatToken(this.choosedToken.symbol, bigNumBalance - bigNumFee);
     },
     blockExplorerLink: function () {
-      return process.env.APP_ETH_BLOCK_EXPLORER;
+      return APP_ETH_BLOCK_EXPLORER;
     },
   },
   watch: {
@@ -127,7 +145,7 @@ export default {
           const list = await this.$store.dispatch("wallet/getInitialBalances");
           this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
         } catch (error) {
-          console.log(error);
+          await this.$store.dispatch("toaster/error", error.message);
         }
         this.loading = false;
       }

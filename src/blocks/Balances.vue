@@ -24,7 +24,7 @@
             </div>
             <div v-if="balances.length===0 && loading===false" class="centerBlock">
                 <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
-                <i-button block link size="lg" variant="secondary" class="_margin-top-0" to="/deposit">+ Deposit</i-button>
+                <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
             </div>
             <div v-else class="balances">
                 <div v-if="!loading">
@@ -33,7 +33,7 @@
                         <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
                     </div>
                     <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer">
-                      <i class="fal fa-paper-plane"></i>&nbsp;&nbsp;Transfer
+                      <i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Transfer
                     </i-button>
                     <i-input v-model="search" placeholder="Filter tokens" maxlength="6">
                         <i slot="prefix" class="far fa-search"></i>

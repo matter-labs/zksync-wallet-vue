@@ -1,10 +1,18 @@
 require("dotenv").config();
 
+const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
+const pageTitle = `zkSync Wallet | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+
 export default {
   ssr: false,
   target: "static",
   srcDir: "src/",
-
+  vue: {
+    config: {
+      productionTip: isProduction,
+      devtools: !isProduction,
+    },
+  },
   env: {
     ...process.env,
   },
@@ -13,9 +21,12 @@ export default {
    ** Headers of the page
    */
   head: {
-    name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
-    titleTemplate: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
+    name: pageTitle,
+    titleTemplate: pageTitle,
     meta: [
+      { "http-equiv": "pragma", content: "no-cache" },
+      { "http-equiv": "cache-control", content: "no-cache , no-store, must-revalidate" },
+      { "http-equiv": "expires", content: "0" },
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
@@ -93,9 +104,10 @@ export default {
       fileName: "icon.png",
     },
     manifest: {
-      name: (process.env.APP_NAME ? process.env.APP_NAME : "zkWallet v.2.0-beta") + (process.env.APP_CURRENT_NETWORK ? ` | ETHER: ${process.env.APP_CURRENT_NETWORK}` : ""),
-      short_name: "zkWallet DAPP",
-      description: "zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet.",
+      name: pageTitle,
+      short_name: "zkSync Beta",
+      description:
+        "zkSync Beta — new release of the wallet, created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on" + " mainnet.",
       start_url: "/",
       scope: "/",
       display: "standalone",
@@ -104,9 +116,17 @@ export default {
     },
   },
   toast: {
+    singleton: true,
+    keepOnHover: true,
     position: "bottom-right",
-    duration: 2000,
+    duration: 4000,
     iconPack: "fontawesome",
+    action: {
+      text: "OK",
+      onClick: (e, toastObject) => {
+        toastObject.goAway(100);
+      },
+    },
   },
   i18n: {
     vueI18n: {
@@ -122,7 +142,7 @@ export default {
     },
   },
   styleResources: {
-    scss: "./assets/style/_variables.scss",
+    scss: "@/assets/style/_variables.scss",
   },
   sentry: {
     dsn: "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800",

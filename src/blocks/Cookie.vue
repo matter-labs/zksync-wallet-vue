@@ -1,8 +1,9 @@
 <template>
     <transition name="slide-vertical">
-        <div class="cookieContainer" v-if="confirmed===false">
+        <div v-if="confirmed===false" class="cookieContainer">
             <i-container class="cookieMain">
-                <div class="text">We use cookies to ensure that we give you the best experience on our website. If you continue without changing your settings, we'll assume that you are happy with it</div>
+                <div class="text">We use cookies to ensure that we give you the best experience on our website.
+                  If you continue without changing your settings, we'll assume that you are happy with it</div>
                 <i-button block variant="secondary" size="lg" @click="cookieConfirm()">Accept</i-button>
             </i-container>
         </div>
@@ -10,29 +11,24 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 export default {
-    data() {
-        return {
-            confirmed: true,
-        }
+  data() {
+    return {
+      confirmed: true,
+    };
+  },
+  mounted() {
+    this.checkCookie();
+  },
+  methods: {
+    checkCookie: function () {
+      this.confirmed = Cookies.get("accept-cookie") === "true";
     },
-    methods: {
-        checkCookie: function() {
-            if(Cookies.get('accept-cookie')==='true') {
-                this.confirmed=true;
-            }
-            else {
-                this.confirmed=false;
-            }
-        },
-        cookieConfirm: function() {
-            Cookies.set('accept-cookie', 'true');
-            this.confirmed=true;
-        }
+    cookieConfirm: function () {
+      Cookies.set("accept-cookie", "true");
+      this.confirmed = true;
     },
-    mounted() {
-        this.checkCookie();
-    },
-}
+  },
+};
 </script>

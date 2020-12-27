@@ -1,11 +1,10 @@
 # don't ever lint node_modules
-node_modules
+/node_modules/*
 # don't ever lint public
-dist
-.nuxt
-# don't lint build output (make sure it's set to your correct build folder name)
-/functions/.nuxt/
-/functions/node_modules
-/.cache
-/.github
-/.idea
+/.nuxt/*
+/src/assets/fonts/*
+/src/assets/imgs/*
+/.github/*
+/.idea/*
+/environments/*
+/public/*

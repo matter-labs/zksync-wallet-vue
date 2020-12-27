@@ -1,4 +1,4 @@
-import walletData from "@/plugins/walletData.js";
+import { walletData } from "@/plugins/walletData.js";
 
 /**
  * Operations with the tokens (assets)
@@ -8,7 +8,7 @@ export const state = () => ({
   /**
    * Restricted tokens, fee can't be charged in it
    */
-  restrictedTokens: ["PHNX", "LAMB"],
+  restrictedTokens: ["PHNX", "LAMB", "MLTT"],
 
   /**
    * All available tokens
@@ -52,11 +52,10 @@ export const actions = {
       let syncProvider = walletData.get().syncProvider;
       const tokensList = await syncProvider.getTokens();
       commit("setAllTokens", tokensList);
-      return tokensList;
-    } else {
-      return getters["getAllTokens"];
     }
+    return getters["getAllTokens"];
   },
+
   async loadTokensAndBalances({ dispatch }) {
     let syncWallet = walletData.get().syncWallet;
     let accountState = walletData.get().accountState;
@@ -64,7 +63,9 @@ export const actions = {
     const tokens = await dispatch("loadAllTokens");
     const zkBalance = accountState.committed.balances;
     const balancePromises = Object.entries(tokens)
-      .filter((t) => t[1].symbol)
+      .filter((singleBalanceContainer) => {
+        return singleBalanceContainer[1].symbol;
+      })
       .map(async ([key, value]) => {
         return {
           id: value.id,
@@ -102,6 +103,10 @@ export const actions = {
 
   /**
    *
+   * @param commit
+   * @param getters
+   * @param commit
+   * @param getters
    * @param symbol
    * @return {Promise<{n: number, d: number}|number|*>}
    */
