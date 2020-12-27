@@ -65,4 +65,10 @@
     .bn-onboard-select-wallet-info {
         color: $lightViolet !important;
     }
+
+  .bn-onboard-custom.bn-onboard-modal-content-header-icon {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
 }

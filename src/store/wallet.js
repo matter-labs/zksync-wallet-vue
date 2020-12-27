@@ -6,10 +6,77 @@ import web3Wallet from "@/plugins/web3.js";
 import utils from "@/plugins/utils";
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 
-import { changeAccountHandle, changeNetworkHandle, walletData } from "@/plugins/walletData";
+import { walletData } from "@/plugins/walletData";
 
 let getTransactionHistoryAgain = false;
 let changeNetworkWasSet = false;
+
+/**
+ * @todo avoid cross-colling
+ * @param dispatch
+ * @param context
+ * @return {function(): Promise<void>}
+ */
+function changeNetworkHandle(dispatch, context) {
+  // context.$toast.info("Blockchain environment (Network) just changed");
+  return async () => {
+    if (!walletData.get().syncWallet) {
+      return;
+    }
+    const refreshWalletResult = await dispatch("walletRefresh", false);
+    if (refreshWalletResult === false) {
+      await context.$router.push("/");
+      await dispatch("logout");
+    } else {
+      await dispatch("forceRefreshData");
+    }
+  };
+}
+
+/**
+ * @todo avoid cross-colling
+ * @param dispatch
+ * @param context
+ * @return {function(): Promise<void>}
+ */
+function changeAccountHandle(dispatch, context) {
+  // context.$toast.info("Active account changed. Please re-login to used one");
+  return async () => {
+    if (!walletData.get().syncWallet) {
+      return;
+    }
+    await dispatch("logout");
+    await context.$router.push("/");
+    await dispatch("clearDataStorage");
+    /* try {
+      const refreshWalletResult = await dispatch("walletRefresh");
+      if (refreshWalletResult === true) {
+        this.dispatch("toaster/index.js");
+        await context.$router.push("/");
+      } else {
+        await context.$router.push("/account");
+      }
+    } catch (error) {}
+    await context.$router.push("/"); */
+  };
+}
+
+/**
+ * @todo Optimize sorting
+ *
+ * @param a
+ * @param b
+ * @return {number}
+ */
+const sortBalancesById = (a, b) => {
+  if (a.id < b.id) {
+    return -1;
+  }
+  if (a.id > b.id) {
+    return 1;
+  }
+  return 0;
+};
 
 export const state = () => ({
   onboard: false,
@@ -116,6 +183,7 @@ export const getters = {
     return walletData.get().syncProvider;
   },
   isLoggedIn() {
+    console.log(walletData.get().syncWallet);
     if (walletData.get().syncWallet && walletData.get().syncWallet["address"]) {
       return true;
     }
@@ -143,6 +211,27 @@ export const actions = {
     }
     const walletSelect = await onboard.walletSelect(previouslySelectedWallet);
     return walletSelect === true;
+  },
+
+  async loadTokens(state, { syncProvider, syncWallet, accountState }) {
+    if (!syncProvider || !syncWallet) {
+      return { tokens: {}, ethBalances: [], zkBalances: [], error: undefined };
+    }
+    const tokens = await syncProvider.getTokens();
+
+    let error = undefined;
+    const zkBalance = accountState.committed.balances;
+
+    const balancePromises = Object.entries(tokens)
+      .filter((t) => t[1].symbol)
+      .map(async ([key, value]) => {
+        return {
+          id: value.id,
+          address: value.address,
+          balance: +syncWallet?.provider.tokenSet.formatToken(value.symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
+          symbol: value.symbol,
+        };
+      });
   },
 
   /**
@@ -216,6 +305,8 @@ export const actions = {
    */
   async getInitialBalances({ dispatch, commit, getters }, force = false) {
     const localList = getters["getTokensList"];
+
+    console.log("is force: ", force);
     if (force === false && localList.lastUpdated > new Date().getTime() - 60000) {
       return localList.list;
     }
@@ -224,7 +315,12 @@ export const actions = {
     const accountState = await syncWallet.getAccountState();
     walletData.set({ accountState });
     const loadedTokens = await this.dispatch("tokens/loadTokensAndBalances");
+    console.log("tokens loaded for the acc:", accountState);
+    console.log("loaded tokens:", loadedTokens);
+    console.log(sortBalancesById);
     loadedTokens.zkBalances = loadedTokens.zkBalances.sort(sortBalancesById);
+
+    console.log(loadedTokens.zkBalances);
     const balancesResults = [];
 
     for (const key of Object.keys(loadedTokens.tokens)) {
@@ -244,7 +340,8 @@ export const actions = {
         console.log(error.message);
       }
     }
-
+    console.log("balance results...");
+    console.log(balancesResults);
     const balances = balancesResults.filter((token) => token && token.balance > 0).sort(sortBalancesById);
     const balancesEmpty = balancesResults.filter((token) => token?.balance === 0).sort(sortBalancesById);
     balances.push(...balancesEmpty);

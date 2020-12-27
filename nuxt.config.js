@@ -1,12 +1,18 @@
 require("dotenv").config();
 
+const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
 const pageTitle = `zkSync Wallet | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
 
 export default {
   ssr: false,
   target: "static",
   srcDir: "src/",
-
+  vue: {
+    config: {
+      productionTip: isProduction,
+      devtools: !isProduction,
+    },
+  },
   env: {
     ...process.env,
   },
@@ -18,6 +24,9 @@ export default {
     name: pageTitle,
     titleTemplate: pageTitle,
     meta: [
+      { "http-equiv": "pragma", content: "no-cache" },
+      { "http-equiv": "cache-control", content: "no-cache , no-store, must-revalidate" },
+      { "http-equiv": "expires", content: "0" },
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {

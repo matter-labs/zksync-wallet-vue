@@ -16,7 +16,7 @@
             class="fas fa-external-link"></i></a>
         <checkmark/>
         <p class="_text-center _margin-top-0">Your deposit tx has been mined and will be processed after 1
-          confirmations. Use the link below to track the progress.</p>
+          confirmations. Use the transaction link to track the progress.</p>
         <div class="totalAmount _margin-top-2">
           <div class="headline">Amount:</div>
                     <div class="amount">
@@ -53,9 +53,6 @@
         </div>
         <div v-else-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
                 <i-button v-if="choosedToken && choosedToken.unlocked===true" :disabled="!inputTotalSum || inputTotalSum<=0 || inputTotalSum>transactionMaxAmount" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit</i-button>
-                <!-- <div class="_text-center _margin-top-1">
-                  Fee: {{fee}} ETH <span class="totalPrice">{{getFormattedPrice("ETH", fee)}}</span>
-                </div> -->
       </div>
       <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
                 <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`https://${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
@@ -102,6 +99,7 @@
 import { walletData } from "@/plugins/walletData.js";
 import utils from "@/plugins/utils.js";
 import { ethers } from "ethers";
+import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 import Checkmark from "@/components/Checkmark.vue";
 export default {
   components: {
@@ -117,7 +115,6 @@ export default {
       mainError: "",
       tokensList: [],
       choosedToken: false,
-      fee: 0,
       cantFindTokenModal: false,
       success: false,
       transactionHash: "",
@@ -132,13 +129,9 @@ export default {
       return this.tokensList.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     transactionMaxAmount: function () {
-      if (this.choosedToken.symbol === "ETH") {
-        const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
-        const bigNumFee = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum("ETH", this.fee));
-        return +utils.handleFormatToken(this.choosedToken.symbol, bigNumBalance - bigNumFee);
-      } else {
-        return this.choosedToken.balance;
-      }
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
+      const bigNumFee = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.fee));
+      return utils.handleFormatToken(this.choosedToken.symbol, bigNumBalance - bigNumFee);
     },
     blockExplorerLink: function () {
       return APP_ETH_BLOCK_EXPLORER;
@@ -159,13 +152,6 @@ export default {
     },
     inputTotalSum(val) {
       this.mainError = "";
-      if (val.toString().length === 0) {
-        return;
-      }
-      const validate = utils.validateNumber(val);
-      if (val !== validate) {
-        this.inputTotalSum = validate;
-      }
     },
   },
   methods: {
@@ -182,6 +168,9 @@ export default {
       }
       if (typeof token.price === "undefined") {
         token.price = await this.$store.dispatch("tokens/getTokenPrice", token.symbol);
+      }
+      if (typeof token.fee === "undefined") {
+        token.fee = 0.0002;
       }
       this.mainError = "";
       this.choosedToken = token;
@@ -225,12 +214,6 @@ export default {
     },
     deposit: async function () {
       try {
-        utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
-      } catch (error) {
-        await this.$store.dispatch("toaster/error", error.message);
-        return (this.mainError = "Invalid amount inputed");
-      }
-      try {
         if (!this.choosedToken) {
           throw new Error("Choose the token first");
         } else if (!this.inputTotalSum) {
@@ -244,20 +227,19 @@ export default {
         const depositResponse = await wallet.depositToSyncFromEthereum({
           depositTo: wallet.address(),
           token: this.choosedToken.symbol,
-          amount: ethers.BigNumber.from(utils.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()).toString()),
-          /* ethTxOptions: {
+          amount: ethers.BigNumber.from(wallet.provider.tokenSet.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()).toString()),
+          ethTxOptions: {
             gasLimit: "200000",
-          }, */
+          },
         });
         this.transactionAmount = this.inputTotalSum;
-        this.transactionHash = depositResponse.ethTx.hash;
-        //this.transactionFee = utils.handleFormatToken("ETH", depositResponse.ethTx.gasPrice*depositResponse.ethTx.gasLimit);
         this.tip = "Waiting for the transaction to be mined...";
         const awaitEthereumTxCommit = await depositResponse.awaitEthereumTxCommit();
-        console.log("depositResponse", depositResponse);
+        this.transactionHash = depositResponse.ethTx.hash;
         this.tip = "Processing...";
         await this.$store.dispatch("wallet/forceRefreshData");
         this.tip = "";
+        this.inputTotalSum = null;
         this.success = true;
       } catch (error) {
         this.tip = "";

@@ -139,7 +139,7 @@ export default {
       }
     },
     getTransactionExplorerLink: function (transaction) {
-      return (transaction.tx.type === "Deposit" ? `https://${APP_ETH_BLOCK_EXPLORER}/tx` : `https://${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
+      return (transaction.tx.type === "Deposit" ? `https://${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
     },
     getTransactionStatus: function (transaction) {
       if (!transaction.success) {

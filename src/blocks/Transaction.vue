@@ -30,7 +30,7 @@
           class="fas fa-external-link"></i></a>
       <checkmark/>
       <p class="_text-center _margin-top-0">Your {{ type==='withdraw' ? 'withdrawal' : 'transaction' }} will be processed
-        shortly. Use the link below to track the progress.</p>
+        shortly. Use the transaction link to track the progress.</p>
       <div class="totalAmount smaller _margin-top-2">
         <div class="amount">
           <span>Recepient:</span>
