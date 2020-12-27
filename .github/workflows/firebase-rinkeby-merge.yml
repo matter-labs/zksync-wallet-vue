@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: 'yarn build:firebase:rinkeby'
+      - run: 'yarn deploy:stage'
         env:
           APP_GIT_REVISION: ${{ github.sha }}
       - uses: FirebaseExtended/action-hosting-deploy@v0
