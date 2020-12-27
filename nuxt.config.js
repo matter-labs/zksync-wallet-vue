@@ -99,22 +99,22 @@ export default {
     ],
     "@nuxtjs/sentry",
   ],
-  pwa: {
-    icon: {
-      fileName: "icon.png",
-    },
-    manifest: {
-      name: pageTitle,
-      short_name: "zkSync Beta",
-      description:
-        "zkSync Beta — new release of the wallet, created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on" + " mainnet.",
-      start_url: "/",
-      scope: "/",
-      display: "standalone",
-      background_color: "#11142b",
-      theme_color: "#4e529a",
-    },
-  },
+  // pwa: {
+  //   icon: {
+  //     fileName: "icon.png",
+  //   },
+  //   manifest: {
+  //     name: pageTitle,
+  //     short_name: "zkSync Beta",
+  //     description:
+  //       "zkSync Beta — new release of the wallet, created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on" + " mainnet.",
+  //     start_url: "/",
+  //     scope: "/",
+  //     display: "standalone",
+  //     background_color: "#11142b",
+  //     theme_color: "#4e529a",
+  //   },
+  // },
   toast: {
     singleton: true,
     keepOnHover: true,

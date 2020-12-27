@@ -15,4 +15,4 @@ yarn ci &&
 sh cli-process-env.sh "mainnet" &&
 yarn generate --fail-on-error &&
 firebase deploy -P zksync-vue-mainnet --only hosting &&
-echo deployed successfully!
+echo Mainnet deployed successfully!

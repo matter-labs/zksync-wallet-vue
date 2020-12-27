@@ -16,7 +16,7 @@ const initializedWallets = {
     },
     { walletName: "coinbase", preferred: true },
     { walletName: "trust", preferred: true, rpcUrl: RPC_URL },
-    { walletName: "dapper", preferred: true },
+    { walletName: "dapper", preferred: false },
     {
       walletName: "ledger",
       rpcUrl: RPC_URL,
@@ -66,6 +66,7 @@ export default (ctx) => {
     },
     walletSelect: {
       wallets: initializedWallets.wallets,
+      description: 'Please select a wallet to connect to this dapp.<br>Can`t find your wallet? <a href="https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message">Read this</a>.',
     },
   };
 };
