@@ -1,5 +1,6 @@
 #!/bin/bash
 
+git checkout master &&
 git pull &&
 git diff --quiet HEAD || (echo "There are uncommitted changes in the branch" && exit 1)
 
