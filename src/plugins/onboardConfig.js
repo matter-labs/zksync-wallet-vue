@@ -66,7 +66,7 @@ export default (ctx) => {
     },
     walletSelect: {
       wallets: initializedWallets.wallets,
-      description: 'Please select a wallet to connect to this dapp.<br>Can`t find your wallet? <a href="https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message">Read this</a>.',
+      description: 'Can`t find your wallet? <a href="https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message">Read this</a>.',
     },
   };
 };
