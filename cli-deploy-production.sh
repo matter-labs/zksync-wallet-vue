@@ -1,6 +1,7 @@
 #!/bin/bash
 
 yarn ci &&
-sh cli-process-env.sh "rinkeby" &&
+sh cli-process-env.sh "mainnet" &&
 yarn generate --fail-on-error
-firebase deploy -P zksync-vue-mainnet --only hosting
+firebase use zksync-vue-mainnet
+firebase deploy --only hosting
