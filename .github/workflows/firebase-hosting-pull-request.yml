@@ -8,9 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: 'yarn build:stage'
-        env:
-          APP_GIT_REVISION: ${{ github.sha }}
+      - run: yarn build_stage
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

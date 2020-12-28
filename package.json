@@ -56,7 +56,7 @@
     "sass-loader": "latest"
   },
   "scripts": {
-    "build stage": "yarn ci && sh ./cli-process-env.sh \"rinkeby\" && yarn generate --fail-on-error",
+    "build_stage": "yarn ci && sh ./cli-process-env.sh \"rinkeby\" && yarn generate --fail-on-error",
     "ci": "rm -fr node_modules && rm -rf 'public/*' && yarn install --frozen-lockfile",
     "start:firebase": "firebase serve --only hosting",
     "deploy:prod": "./cli-deploy-production.sh",
