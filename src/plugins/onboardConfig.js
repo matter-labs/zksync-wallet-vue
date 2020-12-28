@@ -12,6 +12,7 @@ const initializedWallets = {
     {
       walletName: "walletConnect",
       infuraKey: INFURA_KEY,
+      infuraId: INFURA_KEY,
       preferred: true,
     },
     { walletName: "coinbase", preferred: true },
