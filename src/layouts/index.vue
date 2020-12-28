@@ -8,32 +8,6 @@
     </div>
     <cookie-component />
     <footer-component/>
-<!--    <footer>-->
-<!--      <i-container>-->
-<!--        <i-row center class="_margin-top-1">-->
-<!--          <div class="_padding-x-1">-->
-<!--            <a target="_blank" class="footer-link link" href="//zksync.io/faq/intro.html">Docs</a>-->
-<!--          </div>-->
-<!--          <div class="_padding-x-1">-->
-<!--            <a target="_blank" class="footer-link" href="https://zksync.io/legal/terms.html">Terms of Use</a>-->
-<!--          </div>-->
-<!--          <div class="_padding-x-1">-->
-<!--            <a target="_blank" class="footer-link" href="https://zksync.io/legal/privacy.html">Privacy Policy</a>-->
-<!--          </div>-->
-<!--          <div class="_padding-x-1">-->
-<!--            <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>-->
-<!--          </div>-->
-<!--        </i-row>-->
-<!--
-<!--        <i-row center>-->
-<!--          <i-button block size="lg" circle @click="toggleDarkMode">-->
-<!--            <i-icon icon="light"/>-->
-<!--          </i-button>-->
-<!--        </i-row>-->
-
-<!--      </i-container>-->
-<!--    </footer>-->
-
   </div>
 </template>
 
@@ -74,9 +48,6 @@ export default {
   mounted() {
     if (process.client) {
       window.history.scrollRestoration = "manual";
-      /* document.querySelector(".bn-onboard-custom.bn-onboard-select-wallet-info").innerHTML = "Didn't found your wallet and expecting assets on L2?";
-      document.querySelector(".bn-onboard-custom.bn-onboard-select-wallet-definition").innerHTML =
-        "We're service withdrawals 7 days a week, from 10am till 7pm. Mail: hello@mattermost.dev"; */
     }
     if (localStorage.getItem("colorTheme")) {
       this.$inkline.config.variant = localStorage.getItem("colorTheme");
