@@ -39,7 +39,6 @@ const initializedWallets = {
       preferred: true,
       label: "Portis",
     },
-    { walletName: "authereum" },
     { walletName: "opera" },
     { walletName: "operaTouch" },
     { walletName: "torus" },
@@ -75,7 +74,6 @@ export default (ctx) => {
     },
     walletSelect: {
       wallets: initializedWallets.wallets,
-      //description: '<a target="_blank" href="https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message">Can`t find your wallet?</a>',
     },
   };
 };
