@@ -31,6 +31,12 @@ const initializedWallets = {
       apiKey: FORTMATIC_KEY,
       preferred: true,
     },
+    {
+      walletName: "portis",
+      apiKey: process.env.APP_PORTIS,
+      preferred: true,
+      label: "Portis",
+    },
     { walletName: "authereum" },
     { walletName: "opera" },
     { walletName: "operaTouch" },
