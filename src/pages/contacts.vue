@@ -94,14 +94,14 @@ import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 
 export default {
-  asyncData({ from }) {
-    return {
-      fromRoute: from
-    }
-  },
   components: {
     userImg,
     walletAddress,
+  },
+  asyncData({ from }) {
+    return {
+      fromRoute: from,
+    };
   },
   data() {
     return {
@@ -150,9 +150,9 @@ export default {
         this.inputedWallet = "";
       }
     },
-    '$route'(val, oldVal) {
-      this.fromRoute=oldVal;
-    }
+    $route(val, oldVal) {
+      this.fromRoute = oldVal;
+    },
   },
   mounted() {
     try {

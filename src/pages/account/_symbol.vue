@@ -41,13 +41,13 @@ import transactions from "@/blocks/Transactions.vue";
 import utils from "@/plugins/utils.js";
 
 export default {
-  asyncData({ from }) {
-    return {
-      fromRoute: from
-    }
-  },
   components: {
     transactions,
+  },
+  asyncData({ from }) {
+    return {
+      fromRoute: from,
+    };
   },
   data() {
     return {
