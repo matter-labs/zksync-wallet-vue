@@ -11,14 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build stage
-        run: 'yarn build:stage'
-        env:
-          APP_GIT_REVISION: ${{ github.sha }}
-      - name: Deploy to Firebase
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      - run: 'yarn build:stage'
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          projectId: zksync-vue
           channelId: live
+          projectId: zksync-vue
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels
