@@ -43,11 +43,12 @@ footer {
     }
   }
 }
-.inkline
+.inkline.-light
 {
   footer{
     .badge {
-      background-color: #e9ecef !important;
+      background: #e9ecef;
+      color: #343a40;
     }
   }
 }
