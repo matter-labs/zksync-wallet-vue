@@ -43,3 +43,7 @@ public/*
 !public/.gitignore
 .nuxt
 /firebase-debug.log
+/.github/workflows/firebase-hosting-merge.yml
+/.github/workflows/firebase-hosting-pull-request.yml
+/report.txt
+/tokens.txt

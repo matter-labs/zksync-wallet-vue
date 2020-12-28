@@ -464,6 +464,7 @@ export const actions = {
         return false;
       }
       if (walletData.get().syncWallet) {
+        this.commit("account/setAddress", walletData.get().syncWallet.address());
         this.commit("account/setLoggedIn", true);
         return true;
       }
@@ -489,6 +490,7 @@ export const actions = {
       const isSigningKeySet = await syncWallet.isSigningKeySet();
       commit("setAccountLockedState", isSigningKeySet === false);
       dispatch("changeNetworkSet");
+      this.commit("account/setAddress", syncWallet.address());
       this.commit("account/setLoggedIn", true);
       return true;
     } catch (error) {

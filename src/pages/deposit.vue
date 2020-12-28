@@ -10,7 +10,7 @@
     </i-modal>
     <div v-if="tokenSelectionOpened===false" class="tileBlock">
       <div class="tileHeadline h3" :class="{'withBtn': loading===false}">
-        <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn" v-if="loading===false">
+        <nuxt-link v-if="loading===false" :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
           <i class="far fa-long-arrow-alt-left"></i>
         </nuxt-link>
         <div>
@@ -62,7 +62,7 @@
                 <i-button v-if="choosedToken && choosedToken.unlocked===true" :disabled="!inputTotalSum || inputTotalSum<=0 || inputTotalSum>transactionMaxAmount" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit</i-button>
       </div>
       <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
-                <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
+        <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
         <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
         <loader class="_display-block _margin-top-1" />
       </div>
@@ -108,20 +108,21 @@ import { ethers } from "ethers";
 import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 import Checkmark from "@/components/Checkmark.vue";
 export default {
-  asyncData({ from }) {
-    return {
-      fromRoute: from
-    }
-  },
   components: {
     Checkmark,
   },
+  asyncData({ from }) {
+    return {
+      fromRoute: from,
+    };
+  },
   data() {
     return {
+      zksync: null,
       search: "",
       inputTotalSum: null,
       tokenSelectionOpened: false,
-      loading: false,
+      loading: true,
       tip: "",
       mainError: "",
       tokensList: [],
@@ -141,8 +142,8 @@ export default {
     },
     transactionMaxAmount: function () {
       const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
-      const bigNumFee = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.fee));
-      return utils.handleFormatToken(this.choosedToken.symbol, bigNumBalance - bigNumFee);
+      /* const bigNumFee = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.fee)); */
+      return utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount(bigNumBalance));
     },
     blockExplorerLink: function () {
       return APP_ETH_BLOCK_EXPLORER;
@@ -165,6 +166,10 @@ export default {
       this.mainError = "";
     },
   },
+  async mounted() {
+    this.zksync = await walletData.zkSync();
+    this.loading = false;
+  },
   methods: {
     getFormattedPrice: function (price, amount) {
       return utils.getFormatedTotalPrice(price, amount);
@@ -174,15 +179,19 @@ export default {
     },
     chooseToken: async function (token) {
       this.loading = true;
+      console.log("Token selected", token);
       if (typeof token.unlocked === "undefined") {
+        console.log(`typeof token.unlocked === "undefined". then await this.checkTokenState(token)`);
         token.unlocked = await this.checkTokenState(token);
       }
       if (typeof token.price === "undefined") {
+        console.log(`typeof token.price === "undefined". then await this.$store.dispatch("tokens/getTokenPrice", token.symbol)`);
         token.price = await this.$store.dispatch("tokens/getTokenPrice", token.symbol);
       }
-      if (typeof token.fee === "undefined") {
+      /* if (typeof token.fee === "undefined") {
+        console.log(`typeof token.fee === "undefined". token.fee = 0.0002`);
         token.fee = 0.0002;
-      }
+      } */
       this.mainError = "";
       this.choosedToken = token;
       this.loading = false;
@@ -208,7 +217,10 @@ export default {
     checkTokenState: async function (token) {
       if (token.symbol !== "ETH") {
         const wallet = walletData.get().syncWallet;
+        console.log("awaiting isERC20DepositsApproved(token.address)");
         const isApprovedDeposits = await wallet.isERC20DepositsApproved(token.address);
+        console.log("isERC20DepositsApproved result", isApprovedDeposits);
+        console.log("Saving token unlocked state to", !!isApprovedDeposits);
         this.saveUnlockedTokenState(token.symbol, !!isApprovedDeposits);
         return !!isApprovedDeposits;
       } else {
@@ -239,14 +251,14 @@ export default {
           depositTo: wallet.address(),
           token: this.choosedToken.symbol,
           amount: ethers.BigNumber.from(wallet.provider.tokenSet.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()).toString()),
-          ethTxOptions: {
+          /* ethTxOptions: {
             gasLimit: "200000",
-          },
+          }, */
         });
         this.transactionAmount = this.inputTotalSum;
+        this.transactionHash = depositResponse.ethTx.hash;
         this.tip = "Waiting for the transaction to be mined...";
         const awaitEthereumTxCommit = await depositResponse.awaitEthereumTxCommit();
-        this.transactionHash = depositResponse.ethTx.hash;
         this.tip = "Processing...";
         await this.$store.dispatch("wallet/forceRefreshData");
         this.tip = "";

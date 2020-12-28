@@ -287,6 +287,7 @@ export default {
   },
   data() {
     return {
+      zksync: null,
       errorShake: false,
       openedTab: "main",
 
@@ -365,15 +366,15 @@ export default {
       return walletData.get().syncWallet.address();
     },
     transactionMaxAmount: function () {
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
       if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
-        const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
         const bigNumFee = utils.parseToken(
           this.choosedToken.symbol,
           utils.handleExpNum(this.choosedToken.symbol, this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal),
         );
-        return +utils.handleFormatToken(this.choosedToken.symbol, bigNumBalance - bigNumFee);
+        return +utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount((bigNumBalance - bigNumFee).toString()));
       } else {
-        return this.choosedToken.balance;
+        return +utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount(bigNumBalance));
       }
     },
     enoughTokenFee: function () {
@@ -432,7 +433,8 @@ export default {
       },
     },
   },
-  mounted() {
+  async mounted() {
+    this.zksync = await walletData.zkSync();
     if (this.$route.query["w"]) {
       this.inputAddress = this.$route.query["w"];
     }
