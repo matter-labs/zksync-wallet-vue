@@ -1,4 +1,4 @@
-import Onboard from "bnc-onboard";
+import Onboard from "bnc-onboard-custom";
 import { ethers } from "ethers";
 
 import onboardConfig from "@/plugins/onboardConfig.js";

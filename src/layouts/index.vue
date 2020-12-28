@@ -7,14 +7,9 @@
       </transition>
     </div>
     <cookie-component />
-    <footer class="_padding-y-1">
+    <footer>
       <i-container>
-        <i-row center>
-          <i-button block size="lg" circle @click="toggleDarkMode">
-            <i-icon icon="light"/>
-          </i-button>
-        </i-row>
-        <i-row center class="_margin-top-1">
+        <i-row class="_margin-top-1">
           <div class="_padding-x-1">
             <a target="_blank" class="footer-link link" href="//zksync.io/faq/intro.html">Docs</a>
           </div>
@@ -28,12 +23,18 @@
             <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
           </div>
         </i-row>
-        <i-row center class="_margin-top-1">
+        <i-row class="_margin-top-1">
           <a target="_blank" class="footer-link made_by" href="//zksync.io/contact.html">Build with ❤️ by <strong>Matter Labs</strong></a>
           <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
             v.{{version}}
           </i-badge>
         </i-row>
+        <i-row>
+          <i-button block size="lg" circle @click="toggleDarkMode">
+            <i-icon icon="light"/>
+          </i-button>
+        </i-row>
+
       </i-container>
     </footer>
   </div>
@@ -42,11 +43,13 @@
 <script>
 import { GIT_REVISION_SHORT } from "@/plugins/build";
 import cookieComponent from "@/blocks/Cookie.vue";
+import footerComponent from "@/blocks/Footer.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 export default {
   components: {
     cookieComponent,
     loggingInLoader,
+    footerComponent,
   },
   data() {
     return {

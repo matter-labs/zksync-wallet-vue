@@ -164,7 +164,7 @@ export default {
    */
   build: {
     ssr: false,
-    target: "static",
+    // target: "static",
     /* extractCSS: {
       ignoreOrder: true,
     }, */
