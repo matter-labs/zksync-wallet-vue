@@ -74,9 +74,6 @@ export default {
   mounted() {
     if (process.client) {
       window.history.scrollRestoration = "manual";
-      /* document.querySelector(".bn-onboard-custom.bn-onboard-select-wallet-info").innerHTML = "Didn't found your wallet and expecting assets on L2?";
-      document.querySelector(".bn-onboard-custom.bn-onboard-select-wallet-definition").innerHTML =
-        "We're service withdrawals 7 days a week, from 10am till 7pm. Mail: hello@mattermost.dev"; */
     }
     if (localStorage.getItem("colorTheme")) {
       this.$inkline.config.variant = localStorage.getItem("colorTheme");

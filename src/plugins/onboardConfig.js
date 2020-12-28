@@ -11,8 +11,9 @@ const initializedWallets = {
     { walletName: "metamask", preferred: true },
     {
       walletName: "walletConnect",
+      networkId: ETHER_NETWORK_ID,
       infuraKey: INFURA_KEY,
-      infuraId: INFURA_KEY,
+      enableLogging: true,
       preferred: true,
     },
     { walletName: "coinbase", preferred: true },
