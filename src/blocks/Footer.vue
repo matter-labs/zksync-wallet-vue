@@ -16,17 +16,11 @@
         <div class="_padding-1-2 _padding-md-x-1">
           <a target="_blank" class="footer-link" href="https://zksync.io/legal/privacy.html">Privacy Policy</a>
         </div>
-        <div class="_padding-1-2 _padding-md-x-1 _hidden-md-and-up">
+        <div class="_padding-1-2 _padding-md-x-1">
           <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
         </div>
-      </i-row>
-      <i-row center class="_margin-top-1 _text-nowrap _margin-y-md-0 _margin-y-1">
-        <a target="_blank" class="footer-link made_by" href="//zksync.io/contact.html">Build with ❤️ by <strong>Matter Labs</strong></a>
       </i-row>
       <i-row center class="_text-nowrap _align-items-center">
-        <div class="_padding-0  _padding-md-x-1 _hidden-sm-and-down">
-          <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
-        </div>
         <div class="_padding-1-2 _padding-md-x-1 _hidden-sm-and-down">
           <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
             v.{{ version }}
