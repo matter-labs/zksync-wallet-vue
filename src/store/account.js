@@ -4,6 +4,7 @@ export const state = () => ({
   loggedIn: false,
   selectedWallet: "",
   loadingHint: "",
+  address: "",
 });
 
 export const getters = {
@@ -19,8 +20,8 @@ export const getters = {
   loader(state) {
     return state.loggedIn === false && state.selectedWallet !== "";
   },
-  address() {
-    return walletData.get().syncWallet && walletData.get().syncWallet.address ? walletData.get().syncWallet.address() : "";
+  address(state) {
+    return state.address;
   },
 };
 
@@ -33,6 +34,9 @@ export const mutations = {
   },
   setLoadingHint(state, text) {
     state.loadingHint = text;
+  },
+  setAddress(state, address) {
+    state.address = address;
   },
 };
 

@@ -8,7 +8,7 @@
       </i-tooltip>
     </div>
     <div v-if="tokensLoading===true" class="nothingFound">
-      <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+      <loader />
     </div>
     <template v-else>
       <i-input v-model="tokenSearch" placeholder="Filter balances in L2" maxlength="10">

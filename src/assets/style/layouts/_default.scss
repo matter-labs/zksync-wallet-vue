@@ -11,7 +11,7 @@
     height: auto;
     max-width: 505px;
     margin-top: 15px;
-    padding: 29px;
+    padding: 20px 29px 29px;
     margin-left: auto;
     margin-right: auto;
     transition: background-color $transition1;
@@ -21,13 +21,35 @@
     .tileHeadline {
       width: 100%;
       display: flex;
-      padding-top: 10px;
+      //padding-top: 10px;
       padding-bottom: 20px;
       margin: 0;
       text-align: center;
       font-weight: 700;
       align-items: center;
       justify-content: center;
+      &.withBtn {
+        display: grid;
+        grid-template-columns: 40px 1fr;
+        padding-right: 40px;
+        grid-template-rows: 100%;
+        align-items: center;
+      }
+      @media (max-width: $mobile) {
+        font-size: 22px;
+
+        &.withBtn {
+          grid-template-columns: 30px 1fr;
+          padding-right: 30px;
+
+          .returnBtn i {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+          }
+        }
+      }
 
       i {
         display: block;
@@ -45,6 +67,19 @@
 
         &:hover {
           background: transparentize($color: $gray, $amount: 0.5);
+        }
+      }
+      .returnBtn {
+        display: block;
+        text-decoration: none;
+
+        i {
+          width: 40px;
+          height: 40px;
+          line-height: 40px;
+          font-size: 20px;
+          margin-left: 0;
+          transition: color $transition1;
         }
       }
     }
@@ -72,6 +107,10 @@
 body.inkline.-light .defaultLayout {
   .tileBlock {
     background: $white;
+
+    .tileHeadline .returnBtn i {
+      color: $black;
+    }
   }
 
   .tileTextBg {
@@ -83,6 +122,10 @@ body.inkline.-light .defaultLayout {
 body.inkline.-dark .defaultLayout {
   .tileBlock {
     background: $darkViolet;
+
+    .tileHeadline .returnBtn i {
+      color: $white;
+    }
   }
 
   .tileTextBg {

@@ -164,10 +164,10 @@ export default {
    */
   build: {
     ssr: false,
-    target: "static",
-    extractCSS: {
+    // target: "static",
+    /* extractCSS: {
       ignoreOrder: true,
-    },
+    }, */
     extend(config, { isDev, isClient }) {
       config.node = {
         fs: "empty",

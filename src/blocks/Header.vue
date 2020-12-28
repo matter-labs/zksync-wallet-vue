@@ -9,7 +9,7 @@
           <a target="_blank" class="mainLink desktopOnly" :href="getZkScanBaseUrl">Block explorer <i class="fas fa-external-link"></i></a>
           <a target="_blank" class="mainLink desktopOnly" href="//zksync.io/faq/intro.html">Docs <i
               class="fas fa-external-link"></i></a>
-          <div class="userDropdown" @click="infoModal=true">
+          <div class="userDropdown" @click="accountModal=true">
             <div class="address">{{ walletName }}</div>
             <div class="userImgContainer">
               <user-img :wallet="walletAddressFull"/>
@@ -37,7 +37,7 @@
       </div>
     </i-modal>
 
-    <i-modal v-model="infoModal" size="md">
+    <i-modal v-model="accountModal" size="md">
       <template slot="header">
         <b>{{ walletName }}</b>
       </template>
@@ -79,7 +79,6 @@ export default {
   },
   data() {
     return {
-      infoModal: false,
       renameWalletModal: false,
       walletName: "",
     };
@@ -91,6 +90,15 @@ export default {
     getZkScanBaseUrl: function () {
       return APP_ZK_SCAN;
     },
+    accountModal: {
+      get: function() {
+        return this.$store.getters['getAccountModalState'];
+      },
+      set: function(val) {
+        this.$store.commit('setAccountModalState', val);
+        return val;
+      },
+    }
   },
   watch: {
     renameWalletModal: {
@@ -114,18 +122,15 @@ export default {
   },
   methods: {
     logout: function () {
-      this.infoModal = false;
+      this.accountModal = false;
       this.$nextTick(async ()=>{
         await this.$store.dispatch("wallet/logout");
         await this.$router.push("/");
       });
     },
     renameWalletOpen: function () {
-      this.infoModal = false;
+      this.accountModal = false;
       this.renameWalletModal = true;
-      this.$nextTick(() => {
-        this.walletName = "";
-      });
     },
     renameWallet: function () {
       this.renameWalletModal = false;

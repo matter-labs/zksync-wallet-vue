@@ -12,6 +12,7 @@ const initializedWallets = {
     {
       walletName: "walletConnect",
       infuraKey: INFURA_KEY,
+      infuraId: INFURA_KEY,
       preferred: true,
     },
     { walletName: "coinbase", preferred: true },
@@ -30,6 +31,12 @@ const initializedWallets = {
       walletName: "fortmatic",
       apiKey: FORTMATIC_KEY,
       preferred: true,
+    },
+    {
+      walletName: "portis",
+      apiKey: process.env.APP_PORTIS,
+      preferred: true,
+      label: "Portis",
     },
     { walletName: "authereum" },
     { walletName: "opera" },
@@ -62,11 +69,12 @@ export default (ctx) => {
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
           window.localStorage.setItem("selectedWallet", wallet.name);
         }
+        wallet.provider;
       },
     },
     walletSelect: {
       wallets: initializedWallets.wallets,
-      description: 'Can`t find your wallet? <a target="_blank" href="https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message">Read this</a>.',
+      //description: '<a target="_blank" href="https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message">Can`t find your wallet?</a>',
     },
   };
 };

@@ -1,4 +1,4 @@
-import Onboard from "bnc-onboard";
+import Onboard from "bnc-onboard-custom";
 import { ethers } from "ethers";
 
 import onboardConfig from "@/plugins/onboardConfig.js";
@@ -213,27 +213,6 @@ export const actions = {
     return walletSelect === true;
   },
 
-  async loadTokens(state, { syncProvider, syncWallet, accountState }) {
-    if (!syncProvider || !syncWallet) {
-      return { tokens: {}, ethBalances: [], zkBalances: [], error: undefined };
-    }
-    const tokens = await syncProvider.getTokens();
-
-    let error = undefined;
-    const zkBalance = accountState.committed.balances;
-
-    const balancePromises = Object.entries(tokens)
-      .filter((t) => t[1].symbol)
-      .map(async ([key, value]) => {
-        return {
-          id: value.id,
-          address: value.address,
-          balance: +syncWallet?.provider.tokenSet.formatToken(value.symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
-          symbol: value.symbol,
-        };
-      });
-  },
-
   /**
    * Check if the connection to the sync provider is opened and if not - restore it
    */
@@ -306,7 +285,6 @@ export const actions = {
   async getInitialBalances({ dispatch, commit, getters }, force = false) {
     const localList = getters["getTokensList"];
 
-    console.log("is force: ", force);
     if (force === false && localList.lastUpdated > new Date().getTime() - 60000) {
       return localList.list;
     }
@@ -315,33 +293,34 @@ export const actions = {
     const accountState = await syncWallet.getAccountState();
     walletData.set({ accountState });
     const loadedTokens = await this.dispatch("tokens/loadTokensAndBalances");
-    console.log("tokens loaded for the acc:", accountState);
-    console.log("loaded tokens:", loadedTokens);
-    console.log(sortBalancesById);
-    loadedTokens.zkBalances = loadedTokens.zkBalances.sort(sortBalancesById);
 
-    console.log(loadedTokens.zkBalances);
-    const balancesResults = [];
-
-    for (const key of Object.keys(loadedTokens.tokens)) {
+    const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key) => {
       const currentToken = loadedTokens.tokens[key];
       try {
         let balance = await syncWallet.getEthereumBalance(key);
         balance = +utils.handleFormatToken(currentToken.symbol, balance ? balance : 0);
-        balancesResults.push({
+        return {
           id: currentToken.id,
           address: currentToken.address,
           balance: balance,
           formatedBalance: utils.handleExpNum(currentToken.symbol, balance),
           symbol: currentToken.symbol,
-        });
+        };
       } catch (error) {
         this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
         console.log(error.message);
+        return {
+          id: currentToken.id,
+          address: currentToken.address,
+          balance: balance,
+          formatedBalance: 0,
+          symbol: currentToken.symbol,
+        };
       }
-    }
-    console.log("balance results...");
-    console.log(balancesResults);
+    });
+    const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
+      return [];
+    });
     const balances = balancesResults.filter((token) => token && token.balance > 0).sort(sortBalancesById);
     const balancesEmpty = balancesResults.filter((token) => token?.balance === 0).sort(sortBalancesById);
     balances.push(...balancesEmpty);
@@ -485,6 +464,7 @@ export const actions = {
         return false;
       }
       if (walletData.get().syncWallet) {
+        this.commit("account/setAddress", walletData.get().syncWallet.address());
         this.commit("account/setLoggedIn", true);
         return true;
       }
@@ -510,6 +490,7 @@ export const actions = {
       const isSigningKeySet = await syncWallet.isSigningKeySet();
       commit("setAccountLockedState", isSigningKeySet === false);
       dispatch("changeNetworkSet");
+      this.commit("account/setAddress", syncWallet.address());
       this.commit("account/setLoggedIn", true);
       return true;
     } catch (error) {

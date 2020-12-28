@@ -1,6 +1,9 @@
 .indexLayout {
   .routerContainer {
-    min-height: calc(100vh - 172px);
+    min-height: calc(100vh - 110px);
+    @media (max-width: $mobile) {
+      min-height: auto;
+    }
   }
 
   .projectLogo {
@@ -70,6 +73,7 @@
     }
   }
 
+
   .externalWalletPopover .popover {
     width: 330px;
     padding: 20px 30px;
@@ -78,6 +82,7 @@
       .iconsBlock a i {
         color: $darkViolet;
       }
+
     }
 
     &.-light {
@@ -137,12 +142,10 @@
   }
 }
 
-body.inkline {
-  &.-light {
-    .indexLayout {
-      background-image: url('/indexbg.jpg');
-      background-size: cover;
-      background-position: center;
-    }
+.inkline.-dark
+{
+  footer > .container .badge{
+    background: #e9ecef;
+    color: #4E529A;
   }
 }

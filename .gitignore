@@ -37,9 +37,10 @@ yarn-error.log*
 .assets_cache/
 .buildx-cache/
 .reports/
-/functions/.nuxt/
 /src/static/sw.js
-public/*
+public
 !public/.gitignore
 .nuxt
 /firebase-debug.log
+/report.txt
+/tokens.txt

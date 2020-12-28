@@ -26,7 +26,7 @@
         <span>{{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}</span>
       </div>
       <a class="_display-block _text-center" target="_blank"
-         :href="`https://${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
+         :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
           class="fas fa-external-link"></i></a>
       <checkmark/>
       <p class="_text-center _margin-top-0">Your {{ type==='withdraw' ? 'withdrawal' : 'transaction' }} will be processed
@@ -58,15 +58,22 @@
     <div v-else-if="mainLoading===true" class="tileBlock">
       <div class="tileHeadline h3">{{ type==='withdraw' ? 'Withdraw':'Transfer' }}</div>
       <a v-if="transactionHash" class="_display-block _text-center" target="_blank"
-         :href="`https://${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
+         :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
           class="fas fa-external-link"></i></a>
       <p v-if="openedTab==='main' && tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
       <div v-if="mainLoading===true" class="nothingFound _padding-y-2">
-        <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+        <loader />
       </div>
     </div>
     <div v-else-if="openedTab==='main'" class="tileBlock">
-      <div class="tileHeadline h3">{{ type==='withdraw' ? 'Withdraw':'Transfer' }}</div>
+      <div class="tileHeadline withBtn h3">
+        <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
+          <i class="far fa-long-arrow-alt-left"></i>
+        </nuxt-link>
+        <div>
+          {{ type==='withdraw' ? 'Withdraw':'Transfer' }}
+        </div>
+      </div>
 
       <div class="_padding-bottom-1">Address</div>
       <i-input v-model="inputAddress" size="lg" placeholder="0x address" maxlength="42"/>
@@ -163,7 +170,7 @@
         </i-tooltip>
       </div>
       <div v-if="tokensLoading===true" class="nothingFound">
-        <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+        <loader />
       </div>
       <template v-else>
         <i-input v-model="tokenSearch" placeholder="Filter balances in L2" maxlength="10">
@@ -272,9 +279,15 @@ export default {
       default: "",
       required: true,
     },
+    fromRoute: {
+      type: Object,
+      default: undefined,
+      required: false,
+    },
   },
   data() {
     return {
+      zksync: null,
       errorShake: false,
       openedTab: "main",
 
@@ -353,15 +366,15 @@ export default {
       return walletData.get().syncWallet.address();
     },
     transactionMaxAmount: function () {
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
       if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
-        const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
         const bigNumFee = utils.parseToken(
           this.choosedToken.symbol,
           utils.handleExpNum(this.choosedToken.symbol, this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal),
         );
-        return +utils.handleFormatToken(this.choosedToken.symbol, bigNumBalance - bigNumFee);
+        return +utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount((bigNumBalance - bigNumFee).toString()));
       } else {
-        return this.choosedToken.balance;
+        return +utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount(bigNumBalance));
       }
     },
     enoughTokenFee: function () {
@@ -420,7 +433,8 @@ export default {
       },
     },
   },
-  mounted() {
+  async mounted() {
+    this.zksync = await walletData.zkSync();
     if (this.$route.query["w"]) {
       this.inputAddress = this.$route.query["w"];
     }

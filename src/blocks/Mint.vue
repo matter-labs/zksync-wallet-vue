@@ -39,8 +39,7 @@
           There was an error. Please, try again later.
         </div>
       </div>
-      <i-loader v-else class="_display-block _margin-x-auto _margin-y-2" size="md"
-                :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+      <loader v-else class="_display-block _margin-x-auto _margin-y-2" />
     </i-modal>
     <i-button v-if="display" block variant="secondary" size="lg" @click="startMint()">⚡ Get some trial tokens! ⚡
     </i-button>

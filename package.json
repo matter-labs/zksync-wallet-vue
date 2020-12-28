@@ -10,14 +10,17 @@
     "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
   "dependencies": {
-    "@babel/runtime": "7.x",
+    "@babel/core": "^7.12.10",
+    "@babel/runtime": "^7.12.5",
+    "@ethersproject/logger": "^5.0.8",
     "@nuxtjs/axios": "latest",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/pwa": "latest",
     "@nuxtjs/sentry": "^4.5.0",
     "@nuxtjs/toast": "latest",
     "@portis/web3": "^2.0.0-beta.59",
-    "bnc-onboard": "latest",
+    "@walletconnect/web3-provider": "^1.3.1",
+    "bnc-onboard-custom": "^1.17.1",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.0.12",
     "js-cookie": "^2.2.1",
@@ -30,29 +33,32 @@
     "vue-recaptcha": "^1.3.0",
     "vue-scrollto": "^2.17.1",
     "walletlink": "^2.0.2",
-    "web3": "^1.2.7",
-    "zksync": "^0.7.4"
+    "web3": "^1.3.1",
+    "zksync": "^0.8.3"
+  },
+  "optionalDependencies": {
+    "@sentry/webpack-plugin": "^1.14.0",
+    "fs-extra": "latest"
   },
   "devDependencies": {
     "@inkline/nuxt": "^2.3.5",
     "@nuxtjs/dotenv": "1.4.1",
     "@nuxtjs/style-resources": "^1.0.0",
-    "commitlint": "^8.3.5",
+    "commitlint": "^11.0.0",
     "dotenv": "8.2.0",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.0.0",
-    "fs-extra": "^9.0.1",
     "lodash": "4.17.20",
     "node-sass": "latest",
     "prettier": "^2.2.1",
     "sass-loader": "latest"
   },
   "scripts": {
-    "build:firebase:rinkeby": "yarn ci && sh ./cli-process-env.sh \"rinkeby\" && yarn generate --fail-on-error",
-    "ci": "rm -fr node_modules && rm -rf \"public/**\" && yarn install --frozen-lockfile",
+    "build_stage": "yarn ci && sh ./cli-process-env.sh \"rinkeby\" && yarn generate --fail-on-error",
+    "ci": "rm -fr node_modules && rm -rf 'public/*' && yarn install --frozen-lockfile",
     "start:firebase": "firebase serve --only hosting",
     "deploy:prod": "./cli-deploy-production.sh",
     "dev": "nuxt",
@@ -64,7 +70,7 @@
     "format": "prettier --write",
     "lint-ts": "eslint --fix \"**/*.{js, vue}\"",
     "lint-css": "stylelint --fix \"**/*.scss\"",
-    "audit_dependencies": "npm audit --package-lock-only --audit-level critical --json | npm-audit-html --output audit.html"
+    "audit_dependencies": "yarn audit --package-lock-only --audit-level critical --json | yarn-audit-html --output audit.html"
   },
   "husky": {
     "hooks": {
@@ -76,7 +82,7 @@
     "extends": "react-app"
   },
   "lint-staged": {
-    "*.{css,scss}": "npm run lint-css",
+    "*.{css,scss}": "yarn run lint-css",
     "*.{ts,tsx}": [
       "yarn run lint-ts",
       "yarn run format"

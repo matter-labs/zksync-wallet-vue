@@ -1,17 +1,17 @@
 export const state = () => ({
-  /* screenLoader: false, */
+  accountModalOpened: false,
 });
 
 export const mutations = {
-  /* showLoader(state) {
-    state.screenLoader = true;
-  }, */
+  setAccountModalState(state, modalState) {
+    state.accountModalOpened = !!modalState;
+  },
 };
 
 export const getters = {
-  /* getScreenLoader(state) {
-    return state.screenLoader;
-  }, */
+  getAccountModalState(state) {
+    return state.accountModalOpened;
+  },
 };
 
 export const actions = {};
