@@ -21,7 +21,7 @@
         <span>My wallet</span>
         <i class="fas fa-question" @click="walletInfoModal=true"></i>
       </div>
-      <wallet-address :wallet="walletAddress"/>
+      <wallet-address class="clickablePicture" @clickPicture="openAccountModal()" :wallet="walletAddress"/>
     </div>
     <balances/>
   </div>
@@ -46,6 +46,11 @@ export default {
     walletAddress: function () {
       return this.$store.getters["account/address"];
     },
+  },
+  methods: {
+    openAccountModal: function() {
+      this.$store.commit('setAccountModalState', true);
+    }
   },
 };
 </script>

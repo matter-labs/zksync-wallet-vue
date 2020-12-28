@@ -9,7 +9,14 @@
       </div>
     </i-modal>
     <div v-if="tokenSelectionOpened===false" class="tileBlock">
-      <div class="tileHeadline h3">Deposit</div>
+      <div class="tileHeadline h3" :class="{'withBtn': loading===false}">
+        <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn" v-if="loading===false">
+          <i class="far fa-long-arrow-alt-left"></i>
+        </nuxt-link>
+        <div>
+          Deposit
+        </div>
+      </div>
       <div v-if="success===true">
         <a class="_display-block _text-center" target="_blank"
            :href="`https://${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i
@@ -57,8 +64,7 @@
       <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
                 <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`https://${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
         <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
-        <i-loader class="_display-block _margin-top-1" size="md"
-                  :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+        <loader class="_display-block _margin-top-1" />
       </div>
     </div>
     <div v-else class="tileBlock tokensTile">
@@ -70,7 +76,7 @@
         </i-tooltip>
       </div>
       <div v-if="loading===true" class="nothingFound">
-        <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+        <loader />
       </div>
       <template v-else>
         <i-input v-model="search" placeholder="Filter balances in L1" maxlength="10">
@@ -102,6 +108,11 @@ import { ethers } from "ethers";
 import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 import Checkmark from "@/components/Checkmark.vue";
 export default {
+  asyncData({ from }) {
+    return {
+      fromRoute: from
+    }
+  },
   components: {
     Checkmark,
   },

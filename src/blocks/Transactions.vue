@@ -4,7 +4,7 @@
       <div class="tileHeadline h3">Transactions</div>
       <div class="transactionsListContainer">
         <div v-if="loading===true" class="nothingFound">
-          <i-loader class="_display-block" size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+          <loader class="_display-block" />
         </div>
         <div v-else-if="transactionsList.length===0" class="nothingFound">
           <span>History is empty</span>
@@ -24,7 +24,7 @@
               <div class="createdAt">{{getTimeAgo(item.created_at)}}</div>
               <template slot="body">{{getFormatedTime(item.created_at)}}</template>
             </i-tooltip>
-            <div class="amount">{{getFormattedAmount(item)}}</div>
+            <div class="amount" :class="{'small': getFormattedAmount(item).length>10}">{{getFormattedAmount(item)}}</div>
             <div class="token">{{ item.tx.priority_op ? item.tx.priority_op.token:item.tx.token }}</div>
           </div>
           <div class="actionInfo">
@@ -60,8 +60,7 @@
         <i-button v-if="loadingMore===false && loadMoreAvailable===true" block link size="lg" variant="secondary"
                   @click="loadMore()">Load more
         </i-button>
-        <i-loader v-else-if="loadingMore===true" class="_display-block _margin-x-auto _margin-y-2" size="md"
-                  :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+        <loader v-else-if="loadingMore===true" class="_display-block _margin-x-auto _margin-y-2" />
       </div>
     </div>
   </div>

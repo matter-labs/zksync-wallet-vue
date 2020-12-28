@@ -1,16 +1,14 @@
 <template>
     <div class="tokenAccount">
       <div class="tileBlock">
-        <div class="tileHeadline h3">
+        <div class="tileHeadline withBtn h3">
+          <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
+            <i class="far fa-long-arrow-alt-left"></i>
+          </nuxt-link>
           <span>{{ symbol }}</span>
-          <i-tooltip>
-            <i class="fas fa-times" @click="$router.push('/account')"></i>
-            <template slot="body">Close</template>
-          </i-tooltip>
         </div>
         <div v-if="loading">
-          <i-loader class="_display-block _margin-x-auto _margin-y-3" size="md"
-                    :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+          <loader class="_display-block _margin-x-auto _margin-y-3" />
         </div>
         <div v-else>
           <div class="infoBlock">
@@ -43,6 +41,11 @@ import transactions from "@/blocks/Transactions.vue";
 import utils from "@/plugins/utils.js";
 
 export default {
+  asyncData({ from }) {
+    return {
+      fromRoute: from
+    }
+  },
   components: {
     transactions,
   },

@@ -41,7 +41,7 @@
                 </div>
 
                 <div v-if="loading" class="centerBlock">
-                    <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'" />
+                    <loader />
                 </div>
                 <div v-else-if="search && displayedList.length===0" class="centerBlock">
                     <span>Your search <b>"{{search}}"</b> did not match any tokens</span>

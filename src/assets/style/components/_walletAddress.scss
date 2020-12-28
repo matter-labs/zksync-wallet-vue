@@ -9,6 +9,11 @@
   padding: 20px 5px 20px 20px;
   border-radius: 4px;
   transition: background-color $transition1;
+  &.clickablePicture {
+    .userImg {
+      cursor: pointer;
+    }
+  }
 
   .walletValue {
     word-break: break-all;

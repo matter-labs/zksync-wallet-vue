@@ -64,13 +64,14 @@
       </div>
     </div>
     <div v-else class="tileBlock">
-      <div class="tileHeadline h3">
-        <span v-if="openedContact.notInContacts">{{ openedContact.address.replace(openedContact.address.slice(6, openedContact.address.length - 3), "...") }}</span>
-        <span v-else>{{ openedContact.name }}</span>
-        <i-tooltip>
-          <i class="fas fa-times" @click="$router.push('/contacts')"></i>
-          <template slot="body">Close</template>
-        </i-tooltip>
+      <div class="tileHeadline withBtn h3">
+        <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath && fromRoute.path!=='/transfer')?fromRoute:'/contacts'" class="returnBtn">
+          <i class="far fa-long-arrow-alt-left"></i>
+        </nuxt-link>
+        <div>
+          <span v-if="openedContact.notInContacts">{{ openedContact.address.replace(openedContact.address.slice(6, openedContact.address.length - 3), "...") }}</span>
+          <span v-else>{{ openedContact.name }}</span>
+        </div>
       </div>
       <div v-if="openedContact.deleted===true" class="isDeleted">Contact is deleted</div>
       <wallet-address :wallet="openedContact.address" class="_margin-y-1"/>
@@ -93,6 +94,11 @@ import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 
 export default {
+  asyncData({ from }) {
+    return {
+      fromRoute: from
+    }
+  },
   components: {
     userImg,
     walletAddress,
@@ -144,6 +150,9 @@ export default {
         this.inputedWallet = "";
       }
     },
+    '$route'(val, oldVal) {
+      this.fromRoute=oldVal;
+    }
   },
   mounted() {
     try {

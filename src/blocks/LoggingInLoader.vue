@@ -8,7 +8,7 @@
               <span v-else-if="loadingHint==='loadingData'">Getting wallet information</span>
             </p>
             <div class="_margin-top-2"></div>
-            <div class="loaderSpinner">Loading...</div>
+            <loader size="lg" />
             <i-button class="cancelButton" block variant="secondary" size="lg" @click="cancelLogin()">Cancel</i-button>
         </div>
     </transition>

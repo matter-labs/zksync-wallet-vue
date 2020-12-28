@@ -35,7 +35,7 @@
     </div>
     <p v-if="tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
     <div class="nothingFound _padding-y-2">
-      <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+      <loader />
     </div>
   </div>
 </template>

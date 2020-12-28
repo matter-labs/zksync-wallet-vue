@@ -1,12 +1,12 @@
 <template>
   <div class="defaultLayout">
-      <logging-in-loader/>
-      <cookie-component/>
+    <logging-in-loader/>
+    <cookie-component/>
     <div v-if="!loggingIn && loggedIn">
-      <header-component />
+      <header-component ref="header" />
       <div class="routerContainer">
         <transition name="fade" mode="out-in">
-            <nuxt/>
+          <nuxt />
         </transition>
       </div>
       <footer-component/>
@@ -58,6 +58,11 @@ export default {
     }
     if (localStorage.getItem("colorTheme")) {
       this.$inkline.config.variant = localStorage.getItem("colorTheme");
+    }
+  },
+  methods: {
+    log() {
+      console.log(1);
     }
   },
 };

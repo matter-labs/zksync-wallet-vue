@@ -62,6 +62,7 @@ export default (ctx) => {
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
           window.localStorage.setItem("selectedWallet", wallet.name);
         }
+        wallet.provider;
       },
     },
     walletSelect: {

@@ -62,11 +62,18 @@
           class="fas fa-external-link"></i></a>
       <p v-if="openedTab==='main' && tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
       <div v-if="mainLoading===true" class="nothingFound _padding-y-2">
-        <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+        <loader />
       </div>
     </div>
     <div v-else-if="openedTab==='main'" class="tileBlock">
-      <div class="tileHeadline h3">{{ type==='withdraw' ? 'Withdraw':'Transfer' }}</div>
+      <div class="tileHeadline withBtn h3">
+        <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
+          <i class="far fa-long-arrow-alt-left"></i>
+        </nuxt-link>
+        <div>
+          {{ type==='withdraw' ? 'Withdraw':'Transfer' }}
+        </div>
+      </div>
 
       <div class="_padding-bottom-1">Address</div>
       <i-input v-model="inputAddress" size="lg" placeholder="0x address" maxlength="42"/>
@@ -163,7 +170,7 @@
         </i-tooltip>
       </div>
       <div v-if="tokensLoading===true" class="nothingFound">
-        <i-loader size="md" :variant="$inkline.config.variant === 'light' ? 'dark' : 'light'"/>
+        <loader />
       </div>
       <template v-else>
         <i-input v-model="tokenSearch" placeholder="Filter balances in L2" maxlength="10">
@@ -271,6 +278,11 @@ export default {
       type: String,
       default: "",
       required: true,
+    },
+    fromRoute: {
+      type: Object,
+      default: undefined,
+      required: false,
     },
   },
   data() {

@@ -52,6 +52,7 @@ export const actions = {
       let syncProvider = walletData.get().syncProvider;
       const tokensList = await syncProvider.getTokens();
       commit("setAllTokens", tokensList);
+      return tokensList;
     }
     return getters["getAllTokens"];
   },
@@ -62,42 +63,21 @@ export const actions = {
 
     const tokens = await dispatch("loadAllTokens");
     const zkBalance = accountState.committed.balances;
-    const balancePromises = Object.entries(tokens)
-      .filter((singleBalanceContainer) => {
-        return singleBalanceContainer[1].symbol;
-      })
-      .map(async ([key, value]) => {
-        return {
-          id: value.id,
-          address: value.address,
-          balance: +syncWallet.provider.tokenSet.formatToken(value.symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
-          symbol: value.symbol,
-        };
-      });
 
-    const ethBalances = await Promise.all(balancePromises)
-      .then((res) => {
-        return res.filter((token) => token);
-      })
-      .catch((err) => {
-        return [];
-      });
-
-    const zkBalancePromises = Object.keys(zkBalance).map(async (key) => ({
+    const zkBalances = Object.keys(zkBalance).map((key) => ({
       address: tokens[key].address,
       balance: +syncWallet.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
       symbol: tokens[key].symbol,
       id: tokens[key].id,
     }));
 
-    const zkBalances = await Promise.all(zkBalancePromises).catch((err) => {
+    /* const zkBalances = await Promise.all(zkBalancePromises).catch((err) => {
       return [];
-    });
+    }); */
 
     return {
       tokens,
-      zkBalances,
-      ethBalances,
+      zkBalances
     };
   },
 
