@@ -67,7 +67,7 @@ export default (ctx) => {
     },
     walletSelect: {
       wallets: initializedWallets.wallets,
-      description: '<a target="_blank" href="https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message">Can`t find your wallet?</a>',
+      //description: '<a target="_blank" href="https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message">Can`t find your wallet?</a>',
     },
   };
 };
