@@ -1,6 +1,9 @@
 .indexLayout {
   .routerContainer {
-    min-height: calc(100vh - 172px);
+    min-height: calc(100vh - 110px);
+    @media (max-width: $mobile) {
+      min-height: auto;
+    }
   }
 
   .projectLogo {
@@ -70,13 +73,6 @@
     }
   }
 
-  footer > .container {
-    align-items: center;
-    height: 90px;
-    margin-top: calc(100vh - (100vh - 172px) - 90px);
-    display: flex !important;
-    justify-content: space-between;
-  }
 
   .externalWalletPopover .popover {
     width: 330px;
@@ -142,16 +138,6 @@
           }
         }
       }
-    }
-  }
-}
-
-body.inkline {
-  &.-light {
-    .indexLayout {
-      background-image: url('/indexbg.jpg');
-      background-size: cover;
-      background-position: center;
     }
   }
 }

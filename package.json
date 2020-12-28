@@ -35,25 +35,28 @@
     "web3": "^1.2.7",
     "zksync": "^0.8.3"
   },
+  "optionalDependencies": {
+    "@sentry/webpack-plugin": "^1.14.0",
+    "fs-extra": "latest"
+  },
   "devDependencies": {
     "@inkline/nuxt": "^2.3.5",
     "@nuxtjs/dotenv": "1.4.1",
     "@nuxtjs/style-resources": "^1.0.0",
-    "commitlint": "^8.3.5",
+    "commitlint": "^11.0.0",
     "dotenv": "8.2.0",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.0.0",
-    "fs-extra": "^9.0.1",
     "lodash": "4.17.20",
     "node-sass": "latest",
     "prettier": "^2.2.1",
     "sass-loader": "latest"
   },
   "scripts": {
-    "build:firebase:rinkeby": "yarn ci && sh ./cli-process-env.sh \"rinkeby\" && yarn generate --fail-on-error",
+    "build stage": "yarn ci && sh ./cli-process-env.sh \"rinkeby\" && yarn generate --fail-on-error",
     "ci": "rm -fr node_modules && rm -rf 'public/*' && yarn install --frozen-lockfile",
     "start:firebase": "firebase serve --only hosting",
     "deploy:prod": "./cli-deploy-production.sh",

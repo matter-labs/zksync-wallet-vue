@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yarn build:firebase:rinkeby
+yarn build stage
 cp CNAME public/ &&
 cp CORS public/ &&
 surge public/

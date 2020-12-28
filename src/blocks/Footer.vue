@@ -1,27 +1,39 @@
 <template>
-  <footer class="_padding-y-1 _padding-x-3 _margin-x-auto mainFooter">
-    <div class="_display-flex _flex-direction-row _align-items-center _justify-content-space-between">
-      <i-row center class="linksRow _margin-top-1">
-        <div class="_padding-x-1">
+  <footer class="_padding-y-1 _padding-x-0 _padding-md-x-3 _margin-x-auto mainFooter">
+    <div class="_display-flex _flex-direction-row _align-items-center _justify-content-space-between ">
+      <i-row class="_margin-y-1 _hidden-md-and-up">
+        <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
+          v.{{ version }}
+        </i-badge>
+      </i-row>
+      <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
+        <div class="_padding-1-2 _padding-md-x-1">
           <a target="_blank" class="footer-link link" href="//zksync.io/faq/intro.html">Docs</a>
         </div>
-        <div class="_padding-x-1">
+        <div class="_padding-1-2 _padding-md-x-1">
           <a target="_blank" class="footer-link" href="https://zksync.io/legal/terms.html">Terms of Use</a>
         </div>
-        <div class="_padding-x-1">
+        <div class="_padding-1-2 _padding-md-x-1">
           <a target="_blank" class="footer-link" href="https://zksync.io/legal/privacy.html">Privacy Policy</a>
         </div>
-        <div class="_padding-x-1">
+        <div class="_padding-1-2 _padding-md-x-1 _hidden-md-and-up">
           <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
         </div>
-        <div class="_padding-x-1">
+      </i-row>
+      <i-row center class="_margin-top-1 _text-nowrap _margin-y-md-0 _margin-y-1">
+        <a target="_blank" class="footer-link made_by" href="//zksync.io/contact.html">Build with ❤️ by <strong>Matter Labs</strong></a>
+      </i-row>
+      <i-row center class="_text-nowrap _align-items-center">
+        <div class="_padding-0  _padding-md-x-1 _hidden-sm-and-down">
+          <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
+        </div>
+        <div class="_padding-1-2 _padding-md-x-1 _hidden-sm-and-down">
           <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
-            v.{{version}}
+            v.{{ version }}
           </i-badge>
         </div>
-      </i-row>
-      <i-row center>
-        <i-button block size="lg" circle @click="toggleDarkMode">
+
+        <i-button block size="lg" circle class="floating-on-mobile" @click="toggleDarkMode">
           <i-icon icon="light"/>
         </i-button>
       </i-row>
@@ -31,6 +43,7 @@
 
 <script>
 import { GIT_REVISION_SHORT } from "@/plugins/build";
+
 export default {
   data() {
     return {
