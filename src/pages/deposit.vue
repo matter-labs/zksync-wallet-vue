@@ -19,7 +19,7 @@
       </div>
       <div v-if="success===true">
         <a class="_display-block _text-center" target="_blank"
-           :href="`https://${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i
+           :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i
             class="fas fa-external-link"></i></a>
         <checkmark/>
         <p class="_text-center _margin-top-0">Your deposit tx has been mined and will be processed after 1
@@ -62,7 +62,7 @@
                 <i-button v-if="choosedToken && choosedToken.unlocked===true" :disabled="!inputTotalSum || inputTotalSum<=0 || inputTotalSum>transactionMaxAmount" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit</i-button>
       </div>
       <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
-                <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`https://${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
+                <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
         <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
         <loader class="_display-block _margin-top-1" />
       </div>

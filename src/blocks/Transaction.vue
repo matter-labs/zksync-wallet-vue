@@ -26,7 +26,7 @@
         <span>{{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}</span>
       </div>
       <a class="_display-block _text-center" target="_blank"
-         :href="`https://${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
+         :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
           class="fas fa-external-link"></i></a>
       <checkmark/>
       <p class="_text-center _margin-top-0">Your {{ type==='withdraw' ? 'withdrawal' : 'transaction' }} will be processed
@@ -58,7 +58,7 @@
     <div v-else-if="mainLoading===true" class="tileBlock">
       <div class="tileHeadline h3">{{ type==='withdraw' ? 'Withdraw':'Transfer' }}</div>
       <a v-if="transactionHash" class="_display-block _text-center" target="_blank"
-         :href="`https://${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
+         :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
           class="fas fa-external-link"></i></a>
       <p v-if="openedTab==='main' && tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
       <div v-if="mainLoading===true" class="nothingFound _padding-y-2">
