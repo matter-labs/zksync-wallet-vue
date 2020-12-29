@@ -17,16 +17,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Clean dependencies
+      - name: Install dependencies
         run: yarn ci
 
       - name: Configure for rinkeby
         if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/rinkeby'
-        run: sh ./cli-process-env.sh \"rinkeby\"
+        run: sh ./cli-process-env.sh rinkeby
 
       - name: Configure for ropsten
         if: github.ref == 'refs/heads/ropsten'
-        run: sh ./cli-process-env.sh \"ropsten\"
+        run: sh ./cli-process-env.sh ropsten
 
       - name: Build
         run: yarn generate --fail-on-error
