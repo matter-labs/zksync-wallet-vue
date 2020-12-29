@@ -49,7 +49,14 @@ footer {
     .badge {
       font-weight: 400;
       letter-spacing: 1px;
+      font-size: 12px !important;
       text-transform: uppercase;
+      background-color: transparent !important;
+      a
+      {
+        font-weight: 400;
+        text-transform: lowercase;
+      }
     }
   }
 }
@@ -57,7 +64,6 @@ footer {
 {
   footer{
     .badge {
-      background: #e9ecef;
       color: #343a40;
     }
   }
