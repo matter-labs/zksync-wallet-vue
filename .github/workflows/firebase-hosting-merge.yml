@@ -16,27 +16,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set environment
-        run: |
-          if [[ $GITHUB_REF == 'refs/heads/dev' ]]; then
-              echo "NETWORK=rinkeby" >> "$GITHUB_ENV"
-              echo "CHANNEL=live" >> "$GITHUB_ENV"
-          if [[ $GITHUB_REF == 'refs/heads/rinkeby' ]]; then
-              echo "NETWORK=rinkeby" >> "$GITHUB_ENV"
-              echo "CHANNEL=zksync-vue-rinkeby" >> "$GITHUB_ENV"
-          if [[ $GITHUB_REF == 'refs/heads/dev' ]]; then
-              echo "NETWORK=ropsten" >> "$GITHUB_ENV"
-              echo "CHANNEL=zksync-vue-ropsten" >> "$GITHUB_ENV"
-          fi
-      - run: echo Deploying for $NETWORK
-      - run: yarn ci:build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          channelId: ${{ CHANNEL }}
-          projectId: zksync-vue
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
 
-# zksync-vue-rinkeby
+      - name: Clean dependencies
+        run: yarn ci
+
+      - name: Configure for rinkeby
+        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/rinkeby'
+        run: sh ./cli-process-env.sh \"rinkeby\"
+
+      - name: Configure for ropsten
+        if: github.ref == 'refs/heads/ropsten'
+        run: sh ./cli-process-env.sh \"ropsten\"
+
+      - name: Build
+        run: yarn generate --fail-on-error
+
+      - name: Install firebase tools
+        run: |
+          sudo npm install -g firebase-tools
+          firebase use zksync-vue --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}
+
+      - name: Deploy to staging site
+        if: github.ref == 'refs/heads/dev'
+        run: firebase deploy --only hosting:live --non-interactive --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }} -m "RunID ${{ github.run_id }} Commit SHA ${{ github.sha }}"
+
+       - name: Deploy to rinkeby site
+        if: github.ref == 'refs/heads/rinkeby'
+        run: firebase deploy --only hosting:zksync-vue-rinkeby-2 --non-interactive --token ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }} -m "RunID ${{ github.run_id }} Commit SHA ${{ github.sha }}"
