@@ -3,7 +3,7 @@
     <div class="_display-flex _flex-direction-row _align-items-center _justify-content-space-between ">
       <i-row class="_margin-y-1 _hidden-md-and-up">
         <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
-          v.{{ version }}
+          v.{{ version }} | <a href="https://uptime.com/s/zksync" target="_blank">Check Uptime</a>
         </i-badge>
       </i-row>
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">

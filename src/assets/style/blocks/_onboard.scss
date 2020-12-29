@@ -1,5 +1,9 @@
 .bn-onboard-custom {
   z-index: 10;
+  .bn-onboard-modal-content
+  {
+    max-height: calc(100vh - 2.66em);
+  }
 
   &.bn-onboard-dark-mode {
     background-color: $darkViolet !important;
@@ -13,8 +17,8 @@
     }
   }
 
-  .bn-onboard-modal-select-wallets {
-    max-height: 50vh;
+  ul.bn-onboard-modal-select-wallets {
+    max-height: 50vh !important;
   }
 
   .bn-onboard-custom.bn-onboard-select-wallet-definition {
