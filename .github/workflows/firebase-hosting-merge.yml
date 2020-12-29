@@ -40,12 +40,12 @@ jobs:
         if: github.ref == 'refs/heads/rinkeby'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          # repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          channelId: zksync-vue-rinkeby-2
+          target: zksync-vue-rinkeby-2
           projectId: zksync-vue
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
+        # env:
+        #   FIREBASE_CLI_PREVIEWS: hostingchannels
 
       # - name: Deploy to staging site
       #   if: github.ref == 'refs/heads/dev'
