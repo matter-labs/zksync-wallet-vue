@@ -4,12 +4,12 @@
 
 <script>
 export default {
-    props: {
-        size: {
-            type: String,
-            default: 'md',
-            required: false
-        }
-    }
-}
+  props: {
+    size: {
+      type: String,
+      default: "md",
+      required: false,
+    },
+  },
+};
 </script>

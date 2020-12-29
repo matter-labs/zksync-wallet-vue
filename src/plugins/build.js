@@ -10,10 +10,10 @@ export const APP_VERSION = process.env.APP_GIT_VERSION;
 /**
  * @deprecated
  */
-console.log(`This is v.${APP_VERSION}, last commit was done at ${GIT_REVISION_DATE}`);
+console.log(`This is ${APP_VERSION}, last commit was done at ${GIT_REVISION_DATE}`);
 
 export const GIT_REVISION = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
-export const GIT_REVISION_SHORT = GIT_REVISION ? GIT_REVISION.slice(-5) : "";
+export const GIT_REVISION_SHORT = GIT_REVISION ? GIT_REVISION.slice(-7) : "";
 
 export const ETHER_NETWORK_NAME = process.env.APP_CURRENT_NETWORK;
 

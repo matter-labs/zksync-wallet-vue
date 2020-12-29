@@ -57,9 +57,6 @@
           <div v-else class="iconsBlock">
             <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="fas fa-trash-undo"></i></i-button>
           </div>
-          <!-- <div class="rightSide">
-              <div class="balance">{{item.balance}}</div>
-          </div> -->
         </div>
       </div>
     </div>

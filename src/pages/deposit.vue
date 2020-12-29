@@ -188,10 +188,6 @@ export default {
         console.log(`typeof token.price === "undefined". then await this.$store.dispatch("tokens/getTokenPrice", token.symbol)`);
         token.price = await this.$store.dispatch("tokens/getTokenPrice", token.symbol);
       }
-      /* if (typeof token.fee === "undefined") {
-        console.log(`typeof token.fee === "undefined". token.fee = 0.0002`);
-        token.fee = 0.0002;
-      } */
       this.mainError = "";
       this.choosedToken = token;
       this.loading = false;
