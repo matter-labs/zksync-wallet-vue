@@ -1,10 +1,19 @@
 {
-  "hosting": {
+  "hosting": [{
+    "target": "stage",
     "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ]
-  }
+  }, {
+    "target": "rinkeby",
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }]
 }
