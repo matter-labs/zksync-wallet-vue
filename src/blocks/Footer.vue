@@ -23,7 +23,7 @@
       <i-row center class="_text-nowrap _align-items-center">
         <div class="_padding-1-2 _padding-md-x-1 _hidden-sm-and-down">
           <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
-            v.{{ version }}
+            v.{{ version }} | <a href="https://uptime.com/s/zksync" target="_blank">Check Uptime</a>
           </i-badge>
         </div>
 
