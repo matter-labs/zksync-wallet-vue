@@ -28,7 +28,7 @@ jobs:
               echo "NETWORK=ropsten" >> "$GITHUB_ENV"
               echo "CHANNEL=zksync-vue-ropsten" >> "$GITHUB_ENV"
           fi
-        run: echo Deploying for $NETWORK
+      - run: echo Deploying for $NETWORK
       - run: yarn ci:build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
