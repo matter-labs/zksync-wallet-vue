@@ -13,6 +13,7 @@
     "@babel/core": "^7.12.10",
     "@babel/runtime": "^7.12.5",
     "@ethersproject/logger": "^5.0.8",
+    "@matterlabs/zk-wallet-onboarding": "^1.18.5",
     "@nuxtjs/axios": "latest",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/pwa": "latest",
@@ -20,7 +21,6 @@
     "@nuxtjs/toast": "latest",
     "@portis/web3": "^2.0.0-beta.59",
     "@walletconnect/web3-provider": "^1.3.1",
-    "@matterlabs/zk-wallet-onboarding": "^1.18.2",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.0.12",
     "js-cookie": "^2.2.1",
@@ -54,7 +54,8 @@
     "lodash": "4.17.20",
     "node-sass": "latest",
     "prettier": "^2.2.1",
-    "sass-loader": "latest"
+    "sass-loader": "latest",
+    "webpack": "^5.11.1"
   },
   "scripts": {
     "build_stage": "yarn ci && sh ./cli-process-env.sh \"rinkeby\" && yarn generate --fail-on-error",
