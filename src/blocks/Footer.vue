@@ -11,13 +11,13 @@
           <a target="_blank" class="footer-link link" href="//zksync.io/faq/intro.html">Docs</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="https://zksync.io/legal/terms.html">Terms of Use</a>
+          <a target="_blank" class="footer-link" href="https://zksync.io/legal/terms.html">Terms</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="https://zksync.io/legal/privacy.html">Privacy Policy</a>
+          <a target="_blank" class="footer-link" :href="`${blockExplorerLink}`">Explorer</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
+          <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contacts</a>
         </div>
       </i-row>
       <i-row center class="_text-nowrap _align-items-center">
@@ -37,12 +37,18 @@
 
 <script>
 import { GIT_REVISION_SHORT } from "@/plugins/build";
+import { APP_ZK_SCAN } from "@/plugins/build";
 
 export default {
   data() {
     return {
       version: GIT_REVISION_SHORT,
     };
+  },
+  computed: {
+    blockExplorerLink: function () {
+      return APP_ZK_SCAN;
+    },
   },
   methods: {
     toggleDarkMode() {
