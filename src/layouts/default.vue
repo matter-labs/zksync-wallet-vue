@@ -63,7 +63,7 @@ export default {
   methods: {
     log() {
       console.log(1);
-    }
+    },
   },
 };
 </script>

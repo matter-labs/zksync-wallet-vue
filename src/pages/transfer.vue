@@ -1,17 +1,17 @@
 <template>
-  <transaction :fromRoute="fromRoute" type="transfer" />
+  <transaction :from-route="fromRoute" type="transfer" />
 </template>
 
 <script>
 import Transaction from "@/blocks/Transaction.vue";
 export default {
-  asyncData({ from }) {
-    return {
-      fromRoute: from
-    }
-  },
   components: {
     Transaction,
+  },
+  asyncData({ from }) {
+    return {
+      fromRoute: from,
+    };
   },
 };
 </script>

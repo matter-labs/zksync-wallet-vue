@@ -1,5 +1,3 @@
-import { walletData } from "~/plugins/walletData";
-
 export const state = () => ({
   loggedIn: false,
   selectedWallet: "",

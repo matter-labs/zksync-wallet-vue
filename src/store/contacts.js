@@ -15,8 +15,4 @@ export const getters = {
   },
 };
 
-export const actions = {
-  /* async nuxtClientInit(state, ctx) {
-    console.log(this);
-  } */
-};
+export const actions = {};

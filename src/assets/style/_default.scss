@@ -2,29 +2,9 @@
   width: 100%;
   height: max-content;
   min-height: 100vh;
-  //min-height: -webkit-fill-available;
 }
 #nuxt-loading {
   background-color: $darkViolet !important;
-}
-html,
-body {
-  /* width: 100%;
-  height: max-content;
-  min-height: 100vh;
-  //min-height: -webkit-fill-available;
-  padding: 0;
-  margin: 0;
-  outline: none !important;
-  -webkit-font-smoothing: antialiased;
-  -webkit-overflow-scrolling: touch;
-  font-family: $defaultFontFamily;
-  font-weight: 400;
-  text-align: left;
-  color: $mainColor;
-  background-color: $white;
-  overflow: auto;
-  overflow: initial; */
 }
 head {
   display: none;

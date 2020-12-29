@@ -1,4 +1,4 @@
-import Onboard from "bnc-onboard-custom";
+import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { ethers } from "ethers";
 
 import onboardConfig from "@/plugins/onboardConfig.js";

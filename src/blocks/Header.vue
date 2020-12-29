@@ -91,14 +91,14 @@ export default {
       return APP_ZK_SCAN;
     },
     accountModal: {
-      get: function() {
-        return this.$store.getters['getAccountModalState'];
+      get: function () {
+        return this.$store.getters["getAccountModalState"];
       },
-      set: function(val) {
-        this.$store.commit('setAccountModalState', val);
+      set: function (val) {
+        this.$store.commit("setAccountModalState", val);
         return val;
       },
-    }
+    },
   },
   watch: {
     renameWalletModal: {
@@ -123,7 +123,7 @@ export default {
   methods: {
     logout: function () {
       this.accountModal = false;
-      this.$nextTick(async ()=>{
+      this.$nextTick(async () => {
         await this.$store.dispatch("wallet/logout");
         await this.$router.push("/");
       });
