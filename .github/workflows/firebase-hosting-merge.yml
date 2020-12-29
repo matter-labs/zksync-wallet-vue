@@ -6,17 +6,37 @@ name: Deploy to Firebase Hosting on merge
   push:
     branches:
       - dev
+      - rinkeby
+  pull_request:
+    branches:
+      - dev
+      - rinkeby
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: yarn build_stage
+      - name: Set environment
+        run: |
+          if [[ $GITHUB_REF == 'refs/heads/dev' ]]; then
+              echo "NETWORK=rinkeby" >> "$GITHUB_ENV"
+              echo "CHANNEL=live" >> "$GITHUB_ENV"
+          if [[ $GITHUB_REF == 'refs/heads/rinkeby' ]]; then
+              echo "NETWORK=rinkeby" >> "$GITHUB_ENV"
+              echo "CHANNEL=zksync-vue-rinkeby" >> "$GITHUB_ENV"
+          if [[ $GITHUB_REF == 'refs/heads/dev' ]]; then
+              echo "NETWORK=ropsten" >> "$GITHUB_ENV"
+              echo "CHANNEL=zksync-vue-ropsten" >> "$GITHUB_ENV"
+          fi
+        run: echo Deploying for $NETWORK
+      - run: yarn ci:build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          channelId: live
+          channelId: ${{ CHANNEL }}
           projectId: zksync-vue
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
+
+# zksync-vue-rinkeby
