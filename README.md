@@ -44,7 +44,7 @@ $ build:stage
 # afterward you'll have prepared distributive in /public folder
 
 # build for production (only if you have firebase:auth) 
-$ cli-deploy-production.sh
+$ cli-deploy-production.sh  
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).

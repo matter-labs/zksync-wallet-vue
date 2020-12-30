@@ -82,6 +82,7 @@ export default {
         const syncWallet = walletData.get().syncWallet;
         await this.$store.dispatch("wallet/restoreProviderConnection");
         this.tip = "Confirm the transaction to unlock this account";
+
         if (syncWallet.ethSignerType.verificationMethod === "ERC-1271") {
           const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
           if (!isOnchainAuthSigningKeySet) {
@@ -96,22 +97,23 @@ export default {
               nonce: "committed",
               onchainAuth: true,
             });
+            this.tip = "Waiting for the transaction to be mined...";
+            await changePubkey.awaitReceipt();
           }
-          this.tip = "Waiting for the transaction to be mined...";
-          await changePubkey.awaitReceipt();
         } else {
-          const changePubkey = await syncWallet.setSigningKey({
-            feeToken: this.choosedToken.symbol,
-          });
-          console.log("changePubkey", changePubkey);
-          this.tip = "Waiting for the transaction to be mined...";
-          await changePubkey.awaitReceipt();
+          const isSigningKeySet = await syncWallet.isSigningKeySet();
+          if (!isSigningKeySet) {
+            const changePubkey = await syncWallet.setSigningKey({
+              feeToken: this.choosedToken.symbol,
+            });
+            this.tip = "Waiting for the transaction to be mined...";
+            await changePubkey.awaitReceipt();
+          }
         }
         this.tip = "Processing...";
         await this.$store.dispatch("wallet/forceRefreshData");
 
         const isSigningKeySet = await syncWallet.isSigningKeySet();
-        console.log("isSigningKeySet", isSigningKeySet);
         this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
 
         const newAccountState = await syncWallet.getAccountState();
@@ -120,7 +122,6 @@ export default {
         if (!error.message && !error.message.includes("User denied")) {
           this.tip = error.message;
         }
-        console.log("Unlock error", error);
       }
       this.loading = false;
       return "";

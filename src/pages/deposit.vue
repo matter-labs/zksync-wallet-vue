@@ -26,11 +26,11 @@
             class="fas fa-external-link"></i></a>
         <div class="totalAmount _margin-top-2">
           <div class="headline">Amount:</div>
-                    <div class="amount">
-                      <span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{handleExponentialNumber(choosedToken.symbol, transactionAmount)}}
-                      <span class="totalPrice">{{getFormattedPrice(choosedToken.price, transactionAmount)}}</span>
-                    </div>
-                </div>
+          <div class="amount">
+            <span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ handleExponentialNumber(choosedToken.symbol, transactionAmount) }}
+            <span class="totalPrice">{{ getFormattedPrice(choosedToken.price, transactionAmount) }}</span>
+          </div>
+        </div>
         <i-button block size="lg" variant="secondary" class="_margin-top-1" to="/account">Ok</i-button>
       </div>
       <div v-else-if="loading===false || tokenSelectionOpened===true">
@@ -45,7 +45,9 @@
         </i-input>
         <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
           <div class="totalPrice">~${{ (inputTotalSum * choosedToken.price).toFixed(2) }}</div>
-                    <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0">Max: {{transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0}}</div>
+          <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0">Max:
+            {{ transactionMaxAmount > 0 ? handleExponentialNumber(choosedToken.symbol, transactionMaxAmount) : 0 }}
+          </div>
         </div>
         <div v-if="choosedToken && choosedToken.unlocked===false" class="tokenLocked">
           <p class="_text-center">You should firstly unlock selected token in order to authorize deposits for
@@ -59,12 +61,19 @@
           Not enough <span class="tokenSymbol">{{ choosedToken.symbol }}</span> to perform a transaction
         </div>
         <div v-else-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
-                <i-button v-if="choosedToken && choosedToken.unlocked===true" :disabled="!inputTotalSum || inputTotalSum<=0 || inputTotalSum>transactionMaxAmount" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit</i-button>
+        <i-button
+            v-if="choosedToken && choosedToken.unlocked===true"
+            :disabled="!inputTotalSum || inputTotalSum<=0 || inputTotalSum>transactionMaxAmount"
+            block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit
+        </i-button>
       </div>
       <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
-        <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
+        <a v-if="transactionHash"
+           class="_display-block _text-center"
+           target="_blank"
+           :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
         <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
-        <loader class="_display-block _margin-top-1" />
+        <loader class="_display-block _margin-top-1"/>
       </div>
     </div>
     <i-modal v-model="tokenSelectionOpened" size="md">
@@ -77,7 +86,7 @@
           <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
             <div class="tokenSymbol">{{ item.symbol }}</div>
             <div class="rightSide">
-                            <div class="balance">{{handleExponentialNumber(item.symbol, item.formatedBalance)}}</div>
+              <div class="balance">{{ handleExponentialNumber(item.symbol, item.formatedBalance) }}</div>
             </div>
           </div>
           <div v-if="search && displayedTokenList.length===0" class="nothingFound">
@@ -98,6 +107,7 @@ import utils from "@/plugins/utils.js";
 import { ethers } from "ethers";
 import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 import Checkmark from "@/components/Checkmark.vue";
+
 export default {
   components: {
     Checkmark,
@@ -207,10 +217,7 @@ export default {
     checkTokenState: async function (token) {
       if (token.symbol !== "ETH") {
         const wallet = walletData.get().syncWallet;
-        console.log("awaiting isERC20DepositsApproved(token.address)");
         const isApprovedDeposits = await wallet.isERC20DepositsApproved(token.address);
-        console.log("isERC20DepositsApproved result", isApprovedDeposits);
-        console.log("Saving token unlocked state to", !!isApprovedDeposits);
         this.saveUnlockedTokenState(token.symbol, !!isApprovedDeposits);
         return !!isApprovedDeposits;
       } else {
@@ -247,11 +254,12 @@ export default {
         const depositResponse = await wallet.depositToSyncFromEthereum({
           depositTo: wallet.address(),
           token: this.choosedToken.symbol,
-          amount: ethers.BigNumber.from(wallet.provider.tokenSet.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()).toString()),
+          amount: ethers.BigNumber.from(utils.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()).toString()),
           /* ethTxOptions: {
             gasLimit: "200000",
           }, */
         });
+        console.log("after deposit");
         this.transactionAmount = this.inputTotalSum;
         this.transactionHash = depositResponse.ethTx.hash;
         this.tip = "Waiting for the transaction to be mined...";
