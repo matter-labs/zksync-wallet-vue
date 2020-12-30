@@ -28,6 +28,7 @@
     "moment": "^2.29.1",
     "nuxt": "^2.14.11",
     "nuxt-i18n": "^6.8.1",
+    "nuxt-webfontloader": "^1.1.0",
     "vue": "^2.6.12",
     "vue-qrcode": "^0.3.5",
     "vue-recaptcha": "^1.3.0",
