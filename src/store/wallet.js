@@ -493,8 +493,7 @@ export const actions = {
         const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
         console.log("isOnchainAuthSigningKeySet", isOnchainAuthSigningKeySet);
         commit("setAccountLockedState", !(isSigningKeySet === true && isOnchainAuthSigningKeySet === true));
-      }
-      else {
+      } else {
         commit("setAccountLockedState", isSigningKeySet === false);
       }
 

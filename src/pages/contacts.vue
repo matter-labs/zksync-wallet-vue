@@ -82,7 +82,7 @@
       <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="fas fa-trash-undo"></i>&nbsp;&nbsp;Restore contact</i-button>
       <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Transfer to contact</i-button>
     </div>
-    <transactions :address="openedContact.address" v-if="openedContact" />
+    <transactions v-if="openedContact" :address="openedContact.address" />
   </div>
 </template>
 
@@ -97,7 +97,7 @@ export default {
   components: {
     userImg,
     walletAddress,
-    transactions
+    transactions,
   },
   asyncData({ from }) {
     return {

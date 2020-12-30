@@ -10,7 +10,7 @@
     </i-modal>
     <div class="tileBlock">
       <div class="tileHeadline h3" :class="{'withBtn': (loading===false || tokenSelectionOpened===true)}">
-        <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn" v-if="loading===false">
+        <nuxt-link v-if="loading===false" :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
           <i class="far fa-long-arrow-alt-left"></i>
         </nuxt-link>
         <div>
@@ -145,6 +145,10 @@ export default {
       this.mainError = "";
     },
   },
+  async mounted() {
+    this.zksync = await walletData.zkSync();
+    this.loading = false;
+  },
   methods: {
     getFormattedPrice: function (price, amount) {
       return utils.getFormatedTotalPrice(price, amount);
@@ -153,20 +157,20 @@ export default {
       return utils.handleExpNum(symbol, amount);
     },
     openTokenSelection: async function () {
-      this.loading=true;
+      this.loading = true;
       try {
         const list = await this.$store.dispatch("wallet/getInitialBalances");
         this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
-        this.tokenSelectionOpened=true;
+        this.tokenSelectionOpened = true;
       } catch (error) {
         await this.$store.dispatch("toaster/error", error.message);
       }
-      this.loading=false;
+      this.loading = false;
     },
     chooseToken: async function (token) {
       this.tokenSelectionOpened = false;
       this.loading = true;
-      console.log('Token selected', token);
+      console.log("Token selected", token);
       if (typeof token.unlocked === "undefined") {
         console.log(`typeof token.unlocked === "undefined". then await this.checkTokenState(token)`);
         token.unlocked = await this.checkTokenState(token);
@@ -203,10 +207,10 @@ export default {
     checkTokenState: async function (token) {
       if (token.symbol !== "ETH") {
         const wallet = walletData.get().syncWallet;
-        console.log('awaiting isERC20DepositsApproved(token.address)');
+        console.log("awaiting isERC20DepositsApproved(token.address)");
         const isApprovedDeposits = await wallet.isERC20DepositsApproved(token.address);
-        console.log('isERC20DepositsApproved result', isApprovedDeposits);
-        console.log('Saving token unlocked state to', !!isApprovedDeposits);
+        console.log("isERC20DepositsApproved result", isApprovedDeposits);
+        console.log("Saving token unlocked state to", !!isApprovedDeposits);
         this.saveUnlockedTokenState(token.symbol, !!isApprovedDeposits);
         return !!isApprovedDeposits;
       } else {
@@ -234,7 +238,7 @@ export default {
           throw new Error("Introduce the amount");
         } else if (this.inputTotalSum > this.transactionMaxAmount) {
           throw new Error("Insufficient funds");
-        } else if (this.inputTotalSum<=0) {
+        } else if (this.inputTotalSum <= 0) {
           throw new Error("Input a valid amount");
         }
         this.loading = true;
@@ -270,10 +274,6 @@ export default {
       }
       this.loading = false;
     },
-  },
-  async mounted() {
-    this.zksync = await walletData.zkSync();
-    this.loading = false;
   },
 };
 </script>

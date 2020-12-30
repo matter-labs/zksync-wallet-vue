@@ -63,7 +63,7 @@
         <loader />
       </div>
     </div>
-    <div class="tileBlock" v-else>
+    <div v-else class="tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
           <i class="far fa-long-arrow-alt-left"></i>
@@ -273,7 +273,6 @@ export default {
   data() {
     return {
       zksync: null,
-      zksync: null,
       contactsListModal: false,
       tokenListModal: false,
       chooseFeeTokenModal: false,
@@ -412,7 +411,7 @@ export default {
     if (this.$route.query["token"]) {
       this.mainLoading = true;
       this.$store.dispatch("wallet/getzkBalances").then((list) => {
-        console.log('list', list);
+        console.log("list", list);
         this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
         const tokenLoaded = this.tokensList.filter((singleTokenObj) => singleTokenObj.symbol === this.$route.query["token"]).shift();
         this.chooseToken(tokenLoaded);
@@ -427,12 +426,12 @@ export default {
     }
   },
   methods: {
-    openTokenList: async function() {
+    openTokenList: async function () {
       this.mainLoading = true;
       try {
         const list = await this.$store.dispatch("wallet/getzkBalances");
         this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
-        this.tokenListModal=true;
+        this.tokenListModal = true;
       } catch (error) {
         console.log(error);
       }
@@ -461,9 +460,9 @@ export default {
       return utils.handleExpNum(symbol, amount);
     },
     chooseToken: async function (token) {
-      this.tokenListModal=false;
+      this.tokenListModal = false;
       this.choosedToken = token;
-      this.getFees();
+      await this.getFees();
     },
     chooseContact: function (contact) {
       this.choosedContact = contact;
@@ -546,23 +545,17 @@ export default {
         }
         this.mainError = "";
         this.mainLoading = true;
-        /* !enoughTokenFee || !isAddressValid || !inputTotalSum || inputTotalSum<=0 || !feesObj || !choosedToken || feesLoading || inputTotalSum>transactionMaxAmount */
         if (!this.choosedToken) {
           throw new Error("Choose the token first");
-        }
-        else if (!this.inputTotalSum || this.inputTotalSum <= 0) {
+        } else if (!this.inputTotalSum || this.inputTotalSum <= 0) {
           throw new Error("Introduce the amount");
-        }
-        else if (this.inputTotalSum > this.transactionMaxAmount) {
+        } else if (this.inputTotalSum > this.transactionMaxAmount) {
           throw new Error("Insufficient funds");
-        }
-        else if (!this.isAddressValid) {
+        } else if (!this.isAddressValid) {
           throw new Error("Destination invalid");
-        }
-        else if (this.feesLoading || !this.feesObj) {
+        } else if (this.feesLoading || !this.feesObj) {
           throw new Error("Wait until fees are loaded");
-        }
-        else if (!this.enoughTokenFee) {
+        } else if (!this.enoughTokenFee) {
           return;
         }
         await this.$store.dispatch("wallet/restoreProviderConnection");

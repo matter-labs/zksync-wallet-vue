@@ -53,13 +53,13 @@ const initializedWallets = {
   ],
 };
 export default (ctx) => {
-  const colorTheme = localStorage.getItem('colorTheme');
+  const colorTheme = localStorage.getItem("colorTheme");
   return {
     hideBranding: true,
     blockPollingInterval: 7000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: parseInt(ETHER_NETWORK_ID), // [Integer] The Ethereum network ID your Dapp uses.
-    darkMode: colorTheme==='dark'?true:false,
+    darkMode: colorTheme === "dark",
     subscriptions: {
       wallet: (wallet) => {
         if (wallet && wallet.provider) {

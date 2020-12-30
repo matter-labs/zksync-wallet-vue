@@ -86,7 +86,7 @@ export default {
           const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
           await onchainAuthTransaction.wait();
           const isSigningKeySet = await syncWallet.isSigningKeySet();
-          if(!isSigningKeySet) {
+          if (!isSigningKeySet) {
             const changePubkey = await syncWallet.setSigningKey({
               feeToken: this.choosedToken.symbol,
               nonce: "committed",
@@ -110,8 +110,7 @@ export default {
           const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
           console.log("isOnchainAuthSigningKeySet", isOnchainAuthSigningKeySet);
           this.$store.commit("wallet/setAccountLockedState", isOnchainAuthSigningKeySet === false);
-        }
-        else {
+        } else {
           const isSigningKeySet = await syncWallet.isSigningKeySet();
           console.log("isSigningKeySet", isSigningKeySet);
           this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
