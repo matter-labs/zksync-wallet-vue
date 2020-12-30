@@ -42,7 +42,7 @@ jobs:
         with:
           # repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          target: zksync-vue-rinkeby-2
+          target: rinkeby
           projectId: zksync-vue
           channelID: live
         # env:
