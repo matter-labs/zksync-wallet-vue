@@ -6,7 +6,7 @@
     "zksync-vue": {
       "hosting": {
         "rinkeby": [
-          "zksync-vue-rinkeby"
+          "zksync-vue-rinkeby-2"
         ],
         "stage": [
           "zksync-vue"
