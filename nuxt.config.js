@@ -83,6 +83,7 @@ export default {
     "@nuxtjs/google-gtag",
     "@inkline/nuxt",
     "@nuxtjs/style-resources",
+    "nuxt-webfontloader",
     [
       "nuxt-i18n",
       {
@@ -115,6 +116,11 @@ export default {
   //     theme_color: "#4e529a",
   //   },
   // },
+  webfontloader: {
+    google: {
+      families: ["Fira+Sans:400,600", "Fira+Sans+Extra+Condensed:400,600", "Fira+Code:400"],
+    },
+  },
   toast: {
     singleton: true,
     keepOnHover: true,

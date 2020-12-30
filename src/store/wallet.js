@@ -367,7 +367,7 @@ export const actions = {
       });
       return fetchTransactionHistory.data;
     } catch (error) {
-      console.log("getTransactionsHistory error", error);
+      this.dispatch("toaster/error", error.message);
       getTransactionHistoryAgain = setTimeout(() => {
         dispatch("getTransactionsHistory", true);
       }, 15000);
@@ -438,6 +438,13 @@ export const actions = {
       }
     }
   },
+
+  async checkLockedState({ commit }) {
+    const syncWallet = walletData.get().syncWallet;
+    const isSigningKeySet = await syncWallet.isSigningKeySet();
+    commit("setAccountLockedState", isSigningKeySet === false);
+  },
+
   async walletRefresh({ getters, commit, dispatch }, firstSelect = true) {
     try {
       /* dispatch("changeNetworkRemove"); */
@@ -487,8 +494,8 @@ export const actions = {
       await this.dispatch("tokens/loadTokensAndBalances");
       await dispatch("getzkBalances", accountState);
 
-      const isSigningKeySet = await syncWallet.isSigningKeySet();
-      commit("setAccountLockedState", isSigningKeySet === false);
+      await dispatch("checkLockedState");
+
       dispatch("changeNetworkSet");
       this.commit("account/setAddress", syncWallet.address());
       this.commit("account/setLoggedIn", true);

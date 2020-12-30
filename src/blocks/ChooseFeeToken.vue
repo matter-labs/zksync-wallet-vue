@@ -1,12 +1,5 @@
 <template>
-  <div class="tileBlock tokensTile">
-    <div class="tileHeadline h3">
-      <span>Balances in L2</span>
-      <i-tooltip>
-        <i class="fas fa-times" @click="$emit('selectToken')"></i>
-        <template slot="body">Close</template>
-      </i-tooltip>
-    </div>
+  <div>
     <div v-if="tokensLoading===true" class="nothingFound">
       <loader />
     </div>
@@ -16,7 +9,7 @@
       </i-input>
       <div class="tokenListContainer">
         <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
-          <div class="tokenLabel">{{ item.symbol }}</div>
+          <div class="tokenSymbol">{{ item.symbol }}</div>
           <div class="rightSide">
             <div class="balance">{{ item.formatedBalance }}</div>
           </div>

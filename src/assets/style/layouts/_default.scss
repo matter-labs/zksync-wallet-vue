@@ -25,9 +25,10 @@
       padding-bottom: 20px;
       margin: 0;
       text-align: center;
-      font-weight: 700;
+      font-weight: 400;
       align-items: center;
       justify-content: center;
+      font-family: $firaSans;
       &.withBtn {
         display: grid;
         grid-template-columns: 40px 1fr;

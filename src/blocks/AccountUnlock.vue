@@ -80,33 +80,41 @@ export default {
       this.loading = true;
       try {
         const syncWallet = walletData.get().syncWallet;
+        await this.getUnlockPrice();
         await this.$store.dispatch("wallet/restoreProviderConnection");
         this.tip = "Confirm the transaction to unlock this account";
+
         if (syncWallet.ethSignerType.verificationMethod === "ERC-1271") {
-          const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
-          await onchainAuthTransaction.wait();
-          const changePubkey = await syncWallet.setSigningKey({
-            feeToken: this.choosedToken.symbol,
-            /* fee: foundFee.totalFee, */
-            nonce: "committed",
-            onchainAuth: true,
-          });
-          this.tip = "Waiting for the transaction to be mined...";
-          await changePubkey.awaitReceipt();
+          const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
+          if (!isOnchainAuthSigningKeySet) {
+            const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
+            await onchainAuthTransaction.wait();
+          }
+
+          const isSigningKeySet = await syncWallet.isSigningKeySet();
+          if (!isSigningKeySet) {
+            const changePubkey = await syncWallet.setSigningKey({
+              feeToken: this.choosedToken.symbol,
+              nonce: "committed",
+              onchainAuth: true,
+            });
+            this.tip = "Waiting for the transaction to be mined...";
+            await changePubkey.awaitReceipt();
+          }
         } else {
-          const changePubkey = await syncWallet.setSigningKey({
-            feeToken: this.choosedToken.symbol,
-            /* fee: foundFee.totalFee, */
-          });
-          console.log("changePubkey", changePubkey);
-          this.tip = "Waiting for the transaction to be mined...";
-          await changePubkey.awaitReceipt();
+          const isSigningKeySet = await syncWallet.isSigningKeySet();
+          if (!isSigningKeySet) {
+            const changePubkey = await syncWallet.setSigningKey({
+              feeToken: this.choosedToken.symbol,
+            });
+            this.tip = "Waiting for the transaction to be mined...";
+            await changePubkey.awaitReceipt();
+          }
         }
         this.tip = "Processing...";
         await this.$store.dispatch("wallet/forceRefreshData");
 
         const isSigningKeySet = await syncWallet.isSigningKeySet();
-        console.log("isSigningKeySet", isSigningKeySet);
         this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
 
         const newAccountState = await syncWallet.getAccountState();
@@ -115,12 +123,12 @@ export default {
         if (!error.message && !error.message.includes("User denied")) {
           this.tip = error.message;
         }
-        console.log("Unlock error", error);
       }
       this.loading = false;
       return "";
     },
     getUnlockPrice: async function () {
+      console.log("getweweewe");
       if (!this.choosedToken) {
         return;
       }
@@ -129,11 +137,10 @@ export default {
       const syncProvider = walletData.get().syncProvider;
       try {
         await this.$store.dispatch("wallet/restoreProviderConnection");
-        const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
         const foundFee = await syncProvider.getTransactionFee(
           {
             ChangePubKey: {
-              onchainPubkeyAuth: isOnchainAuthSigningKeySet,
+              onchainPubkeyAuth: syncWallet.ethSignerType.verificationMethod === "ERC-1271",
             },
           },
           syncWallet.address(),

@@ -12,25 +12,22 @@
       <template slot="header">Save contact</template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
-        <i-input v-model="saveContactInput" size="lg" placeholder="Name" maxlength="20"/>
+        <i-input v-model="saveContactInput" size="lg" placeholder="Name" maxlength="20" @keyup.enter="saveContact()"/>
         <div v-if="saveContactModalError" class="modalError _margin-top-1">{{ saveContactModalError }}</div>
         <i-button class="_margin-top-1" block variant="secondary" size="lg" @click="saveContact()">Save</i-button>
       </div>
     </i-modal>
-    <account-unlock v-if="isAccountLocked && openedTab!=='tokenList'" :choosed-token="choosedToken"
-                    @selectToken="openedTab='tokenList'"/>
-    <choose-fee-token v-else-if="openedTab==='feeTokensList'" v-model="choosedFeeToken"
-                      @selectToken="openedTab='main'"/>
+    <account-unlock v-if="isAccountLocked" :choosed-token="choosedToken" @selectToken="openTokenList()"/>
     <div v-else-if="success === true" class="tileBlock">
       <div class="tileHeadline h3">
         <span>{{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}</span>
       </div>
-      <a class="_display-block _text-center" target="_blank"
-         :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
-          class="fas fa-external-link"></i></a>
       <checkmark/>
       <p class="_text-center _margin-top-0">Your {{ type==='withdraw' ? 'withdrawal' : 'transaction' }} will be processed
         shortly. Use the transaction link to track the progress.</p>
+      <a class="_display-block _text-center _margin-top-1" target="_blank"
+         :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
+          class="fas fa-external-link"></i></a>
       <div class="totalAmount smaller _margin-top-2">
         <div class="amount">
           <span>Recepient:</span>
@@ -41,12 +38,13 @@
       </div>
       <div class="totalAmount _margin-top-1">
         <div class="headline">Amount:</div>
-        <div class="amount">{{ choosedToken.symbol }} {{ handleExponentialNumber(choosedToken.symbol, transactionAmount) }} <span
+        <div class="amount"><span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ handleExponentialNumber(choosedToken.symbol, transactionAmount) }} <span
             class="totalPrice">{{getFormattedPrice(choosedToken.tokenPrice, transactionAmount)}}</span></div>
       </div>
       <div class="totalAmount smaller _margin-top-1">
         <div class="headline">Fee:</div>
-        <div class="amount">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}
+        <div class="amount">
+          <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span>
           {{ handleExponentialNumber(choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol, transactionFee) }}
           <span class="totalPrice">
             {{getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice:choosedToken.tokenPrice, transactionFee)}}
@@ -60,12 +58,12 @@
       <a v-if="transactionHash" class="_display-block _text-center" target="_blank"
          :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
           class="fas fa-external-link"></i></a>
-      <p v-if="openedTab==='main' && tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
+      <p v-if="tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
       <div v-if="mainLoading===true" class="nothingFound _padding-y-2">
         <loader />
       </div>
     </div>
-    <div v-else-if="openedTab==='main'" class="tileBlock">
+    <div v-else class="tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
           <i class="far fa-long-arrow-alt-left"></i>
@@ -76,13 +74,13 @@
       </div>
 
       <div class="_padding-bottom-1">Address</div>
-      <i-input v-model="inputAddress" size="lg" placeholder="0x address" maxlength="42"/>
+      <i-input v-model="inputAddress" size="lg" placeholder="0x address" type="text" maxlength="42" @keyup.enter="commitTransaction()"/>
       <i-row class="_margin-top-1">
         <i-column v-if="!choosedContact && !isOwnAddress" xs="12" :md="canSaveContact?7:12">
-          <i-button block link variant="secondary" @click="openedTab='contactsList'">Select from contacts</i-button>
+          <i-button block link variant="secondary" @click="contactsListModal=true">Select from contacts</i-button>
         </i-column>
         <i-column v-else xs="12" :md="canSaveContact?7:12">
-          <i-button block link variant="secondary" @click="openedTab='contactsList'">
+          <i-button block link variant="secondary" @click="contactsListModal=true">
             {{ isOwnAddress ? 'Own account' : choosedContact.name }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
           </i-button>
         </i-column>
@@ -96,12 +94,12 @@
       <br>
 
       <div class="_padding-bottom-1">Amount / asset</div>
-      <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" :class="{'errorShake': errorShake}"><!-- @keydown="filterNumbers" -->
-        <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openedTab='tokenList'">
+      <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" @keyup.enter="commitTransaction()"><!-- @keydown="filterNumbers" -->
+        <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openTokenList()">
           Select token
         </i-button>
         <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
-                  @click="openedTab='tokenList'">{{ choosedToken.symbol }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
+                  @click="openTokenList()"><span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i class="far fa-angle-down"></i>
         </i-button>
       </i-input>
       <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
@@ -113,16 +111,16 @@
         </div>
       </div>
       <div v-if="choosedToken && inputTotalSum>transactionMaxAmount" class="errorText _text-center _margin-top-1">
-        Not enough {{ choosedToken.symbol }} to perform a transaction
+        Not enough <span class="tokenSymbol">{{ choosedToken.symbol }}</span> to perform a transaction
       </div>
 
       <i-radio-group v-if="choosedToken && type==='withdraw' && (!choosedFeeToken || choosedFeeToken.symbol===choosedToken.symbol)" v-model="fastWithdraw" class="_margin-top-2">
         <i-radio :value="false">
-          Normal withdraw (Fee: <span v-if="feesObj">{{ feesObj.normal }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span><span v-else class="totalPrice">Loading...</span>).<br>
+          Normal withdraw (Fee: <span v-if="feesObj">{{ feesObj.normal }} <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span></span><span v-else class="totalPrice">Loading...</span>).<br>
           Processing time: {{ getTimeString(withdrawTime.normal) }}
         </i-radio>
         <i-radio :value="true">
-          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span><span v-else class="totalPrice">Loading...</span>).<br>
+          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast }} <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span></span><span v-else class="totalPrice">Loading...</span>).<br>
           Processing time: {{ getTimeString(withdrawTime.fast) }}
         </i-radio>
       </i-radio-group>
@@ -139,7 +137,7 @@
       </i-button>
       <div v-if="cantFindFeeToken===true && feesObj && choosedToken && isAddressValid"
            class="errorText _text-center _margin-top-1">
-        <b>{{ choosedToken.symbol }}</b> is not suitable for paying fees<br>
+        <span class="tokenSymbol">{{ choosedToken.symbol }}</span> is not suitable for paying fees<br>
         No available tokens on your balance to pay the fee
       </div>
       <div v-else-if="(feesObj || feesLoading) && choosedToken && isAddressValid" class="_text-center _margin-top-1">
@@ -148,37 +146,26 @@
         <span v-else>
           {{
             feesObj[fastWithdraw===true ? 'fast' : 'normal']
-          }} {{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}
+          }} <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span>
           <span class="totalPrice">
             {{getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice:choosedToken.tokenPrice, feesObj[fastWithdraw===true ? 'fast':'normal'])}}
           </span>
-          <span class="chooseFeeToken" @click="openedTab='feeTokensList'">Choose fee token</span>
+          <span class="chooseFeeToken" @click="chooseFeeTokenModal=true">Choose fee token</span>
         </span>
         <div v-if="enoughTokenFee===false && feesLoading===false && choosedFeeToken.symbol!==choosedToken.symbol" class="errorText _text-center _margin-top-1">
-          Not enough <b>{{ choosedFeeToken.symbol }}</b> to pay the fee
+          Not enough <span class="tokenSymbol">{{ choosedFeeToken.symbol }}</span> to pay the fee
         </div>
       </div>
-
-
     </div>
-    <div v-else-if="openedTab==='tokenList'" class="tileBlock tokensTile">
-      <div class="tileHeadline h3">
-        <span>Balances in L2</span>
-        <i-tooltip>
-          <i class="fas fa-times" @click="openedTab='main'"></i>
-          <template slot="body">Close</template>
-        </i-tooltip>
-      </div>
-      <div v-if="tokensLoading===true" class="nothingFound">
-        <loader />
-      </div>
-      <template v-else>
+    <i-modal v-model="tokenListModal" size="md">
+      <template slot="header">Balances in L2</template>
+      <div>
         <i-input v-model="tokenSearch" placeholder="Filter balances in L2" maxlength="10">
           <i slot="prefix" class="far fa-search"></i>
         </i-input>
         <div class="tokenListContainer">
           <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
-            <div class="tokenLabel">{{ item.symbol }}</div>
+            <div class="tokenSymbol">{{ item.symbol }}</div>
             <div class="rightSide">
               <div class="balance">{{ item.formatedBalance }}</div>
             </div>
@@ -190,51 +177,49 @@
             <span>No balances yet. Please make a deposit or request money from someone!</span>
           </div>
         </div>
-        <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="cantFindTokenModal=true">
+        <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="tokenListModal=false;cantFindTokenModal=true">
           Can't find a token?
         </i-button>
-      </template>
-    </div>
-    <div v-else-if="openedTab==='contactsList'" class="tileBlock contactTile">
-      <div class="tileHeadline h3">
-        <span>Contacts</span>
-        <i-tooltip>
-          <i class="fas fa-times" @click="openedTab='main'"></i>
-          <template slot="body">Close</template>
-        </i-tooltip>
       </div>
-      <i-input v-if="contactSearch.trim() || displayedContactsList.length!==0" v-model="contactSearch"
-               placeholder="Filter contacts" maxlength="20">
-        <i slot="prefix" class="far fa-search"></i>
-      </i-input>
-
-      <div class="contactsListContainer">
-        <div v-if="!contactSearch.trim() && displayedContactsList.length===0 && type!=='withdraw'" class="nothingFound">
-          <span>The contact list is empty</span>
-        </div>
-        <div v-else-if="contactSearch.trim() && displayedContactsList.length===0" class="nothingFound">
-          <span>Your search <b>"{{ contactSearch }}"</b> did not match any contacts</span>
-        </div>
-        <template v-else>
-          <div v-if="!contactSearch.trim() && type==='withdraw'" class="contactItem"
-               @click.self="chooseContact({name: 'Own account', address: ownAddress})">
-            <user-img :wallet="ownAddress"/>
-            <div class="contactInfo">
-              <div class="contactName">Own account</div>
-              <div class="contactAddress">{{ ownAddress }}</div>
-            </div>
+    </i-modal>
+    <i-modal v-model="contactsListModal" size="md">
+      <template slot="header">Contacts</template>
+      <div>
+        <i-input v-if="contactSearch.trim() || displayedContactsList.length!==0" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
+          <i slot="prefix" class="far fa-search"></i>
+        </i-input>
+        <div class="contactsListContainer">
+          <div v-if="!contactSearch.trim() && displayedContactsList.length===0 && type!=='withdraw'" class="nothingFound">
+            <span>The contact list is empty</span>
           </div>
-          <div v-for="(item, index) in displayedContactsList" :key="index" class="contactItem"
-               @click.self="chooseContact(item)">
-            <user-img :wallet="item.address"/>
-            <div class="contactInfo">
-              <div class="contactName">{{ item.name }}</div>
-              <div class="contactAddress">{{ item.address }}</div>
-            </div>
+          <div v-else-if="contactSearch.trim() && displayedContactsList.length===0" class="nothingFound">
+            <span>Your search <b>"{{ contactSearch }}"</b> did not match any contacts</span>
           </div>
-        </template>
+          <template v-else>
+            <div v-if="!contactSearch.trim() && type==='withdraw'" class="contactItem"
+                @click.self="chooseContact({name: 'Own account', address: ownAddress})">
+              <user-img :wallet="ownAddress"/>
+              <div class="contactInfo">
+                <div class="contactName">Own account</div>
+                <div class="contactAddress walletAddress">{{ ownAddress }}</div>
+              </div>
+            </div>
+            <div v-for="(item, index) in displayedContactsList" :key="index" class="contactItem"
+                @click.self="chooseContact(item)">
+              <user-img :wallet="item.address"/>
+              <div class="contactInfo">
+                <div class="contactName">{{ item.name }}</div>
+                <div class="contactAddress walletAddress">{{ item.address }}</div>
+              </div>
+            </div>
+          </template>
+        </div>
       </div>
-    </div>
+    </i-modal>
+    <i-modal v-model="chooseFeeTokenModal" size="md">
+      <template slot="header">Choose fee token</template>
+      <choose-fee-token v-model="choosedFeeToken" @selectToken="chooseFeeTokenModal=false" />
+    </i-modal>
   </div>
 </template>
 
@@ -288,8 +273,9 @@ export default {
   data() {
     return {
       zksync: null,
-      errorShake: false,
-      openedTab: "main",
+      contactsListModal: false,
+      tokenListModal: false,
+      chooseFeeTokenModal: false,
 
       mainLoading: true,
       withdrawTime: false,
@@ -310,7 +296,6 @@ export default {
 
       tokenSearch: "",
       tokensList: [],
-      tokensLoading: false,
       choosedToken: false,
       cantFindTokenModal: false,
 
@@ -385,21 +370,6 @@ export default {
     },
   },
   watch: {
-    /**
-     * Request tokens when user switch tabs
-     */
-    async openedTab(val) {
-      if (val === "tokenList" && this.tokensLoading === false) {
-        this.tokensLoading = true;
-        try {
-          const list = await this.$store.dispatch("wallet/getzkBalances");
-          this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
-        } catch (error) {
-          console.log(error);
-        }
-        this.tokensLoading = false;
-      }
-    },
     inputAddress() {
       if (this.isAddressValid) {
         this.getFees();
@@ -439,12 +409,13 @@ export default {
       this.inputAddress = this.$route.query["w"];
     }
     if (this.$route.query["token"]) {
-      this.tokensLoading = true;
+      this.mainLoading = true;
       this.$store.dispatch("wallet/getzkBalances").then((list) => {
+        console.log("list", list);
         this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
         const tokenLoaded = this.tokensList.filter((singleTokenObj) => singleTokenObj.symbol === this.$route.query["token"]).shift();
         this.chooseToken(tokenLoaded);
-        this.tokensLoading = false;
+        this.mainLoading = false;
       });
     }
     this.getContactsList();
@@ -455,25 +426,17 @@ export default {
     }
   },
   methods: {
-    /**
-     * Protecting input field from entering wrong amount
-     * @param keyPressEvent
-     * @return {boolean}
-     */
-    /* filterNumbers: function (keyPressEvent) {
-      const regex = RegExp("\d\.\,");
-      if (keyPressEvent.key && regex.test(keyPressEvent.key)) {
-        e.stopPropagation();
-        this.errorShake = true;
-        if (!this.errorShake) {
-          setTimeout(() => {
-            this.errorShake = false;
-          }, 300);
-        }
-        return false;
+    openTokenList: async function () {
+      this.mainLoading = true;
+      try {
+        const list = await this.$store.dispatch("wallet/getzkBalances");
+        this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
+        this.tokenListModal = true;
+      } catch (error) {
+        console.log(error);
       }
-      return true;
-    }, */
+      this.mainLoading = false;
+    },
     checkForFeeToken: function () {
       if (!this.choosedFeeToken && this.choosedToken && this.choosedToken.restricted === true) {
         for (const token of this.tokensList) {
@@ -497,16 +460,14 @@ export default {
       return utils.handleExpNum(symbol, amount);
     },
     chooseToken: async function (token) {
-      this.tokensLoading = true;
+      this.tokenListModal = false;
       this.choosedToken = token;
       await this.getFees();
-      this.tokensLoading = false;
-      this.openedTab = "main";
     },
     chooseContact: function (contact) {
       this.choosedContact = contact;
       this.inputAddress = contact.address;
-      this.openedTab = "main";
+      this.contactsListModal = false;
     },
     getWithdrawalTime: async function () {
       this.mainLoading = true;
@@ -576,7 +537,6 @@ export default {
       try {
         utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
       } catch (error) {
-        this.$store.dispatch("toaster");
         return (this.mainError = "Invalid amount inputed");
       }
       try {
@@ -587,15 +547,16 @@ export default {
         this.mainLoading = true;
         if (!this.choosedToken) {
           throw new Error("Choose the token first");
-        }
-        if (!this.inputTotalSum || this.inputTotalSum <= 0) {
+        } else if (!this.inputTotalSum || this.inputTotalSum <= 0) {
           throw new Error("Introduce the amount");
-        }
-        if (this.inputTotalSum > this.transactionMaxAmount) {
+        } else if (this.inputTotalSum > this.transactionMaxAmount) {
           throw new Error("Insufficient funds");
-        }
-        if (!this.isAddressValid) {
+        } else if (!this.isAddressValid) {
           throw new Error("Destination invalid");
+        } else if (this.feesLoading || !this.feesObj) {
+          throw new Error("Wait until fees are loaded");
+        } else if (!this.enoughTokenFee) {
+          return;
         }
         await this.$store.dispatch("wallet/restoreProviderConnection");
         if (this.type === "withdraw") {

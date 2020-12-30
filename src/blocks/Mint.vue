@@ -54,7 +54,7 @@ import { walletData } from "@/plugins/walletData";
 import crypto from "crypto";
 import VueRecaptcha from "vue-recaptcha";
 
-const FAUCET_TOKEN_API = `https://${APP_ZKSYNC_API_LINK === "stage-api.zksync.dev" ? "stage" : ETHER_NETWORK_NAME}-faucet.zksync.dev`;
+const FAUCET_TOKEN_API = `https://${process.env.APP_ZKSYNC_API_LINK === "stage-api.zksync.dev" ? "stage" : ETHER_NETWORK_NAME}-faucet.zksync.dev`;
 
 export default {
   components: {

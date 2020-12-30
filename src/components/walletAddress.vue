@@ -1,7 +1,7 @@
 <template>
     <div class="walletContainer">
         <user-img :wallet="wallet" @click="$emit('clickPicture')" />
-        <span class="walletValue">{{wallet}}</span>
+        <span class="walletValue walletAddress">{{wallet}}</span>
         <i-tooltip trigger="click">
             <i class="copy fas fa-copy" @click="copyAddress()"></i>
             <template slot="body">Copied!</template>

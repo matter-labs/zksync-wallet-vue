@@ -1,13 +1,13 @@
 <template>
-  <footer class="_padding-y-1 _padding-x-0 _padding-md-x-3 _margin-x-auto mainFooter">
-    <div class="_display-flex _flex-direction-row _align-items-center _justify-content-space-between ">
+  <footer class="_padding-y-1 _padding-x-0 _margin-x-auto mainFooter">
+    <div class="_display-flex _flex-direction-row  container _align-items-center _justify-content-space-between ">
       <i-row class="_margin-y-1 _hidden-md-and-up">
         <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
           v.{{ version }} | <a href="https://uptime.com/s/zksync" target="_blank">uptime</a>
         </i-badge>
       </i-row>
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
-        <div class="_padding-1-2 _padding-md-x-1">
+        <div class="_padding-1-2 _padding-md-x-1 _padding-left-0">
           <a target="_blank" class="footer-link link" href="//zksync.io/faq/intro.html">Docs</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
@@ -20,7 +20,7 @@
           <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contacts</a>
         </div>
       </i-row>
-      <i-row center class="_text-nowrap _align-items-center">
+      <i-row center class="_text-nowrap _align-items-center _margin-0">
         <div class="_padding-1-2 _padding-md-x-1 _hidden-sm-and-down">
           <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
             v.{{ version }} | <a href="https://uptime.com/s/zksync" target="_blank">uptime</a>

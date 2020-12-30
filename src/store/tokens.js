@@ -92,15 +92,11 @@ export const actions = {
    */
   async getTokenPrice({ commit, getters }, symbol) {
     const localPricesList = getters["getTokenPrices"];
-    console.log("Getting price for token", symbol);
     if (localPricesList.hasOwnProperty(symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
-      console.log("Price received from cache", localPricesList[symbol].price);
       return localPricesList[symbol].price;
     }
-    console.log("Checking (and maybe restoring) provider connection");
     await this.dispatch("wallet/restoreProviderConnection");
     let syncProvider = walletData.get().syncProvider;
-    console.log("await syncProvider.getTokenPrice(symbol)");
     const tokenPrice = await syncProvider.getTokenPrice(symbol);
     commit("setTokenPrice", {
       symbol: symbol,

@@ -29,5 +29,5 @@ export const ETHER_NETWORK_ID = parseInt(_ETHER_NETWORK_ID_DICTIONARY[ETHER_NETW
 export const APP_ZKSYNC_API_LINK = `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const APP_ZK_SCAN = `https://${ETHER_PREFIX_DOT}zkscan.io`;
 export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}/explorer`;
-export const APP_ETH_BLOCK_EXPLORER = `${ETHER_PREFIX_DOT}etherscan.io`;
+export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
 export const APP_WS_API = `wss://${ETHER_PREFIX_DOT}api.zksync.io/jsrpc-ws`;

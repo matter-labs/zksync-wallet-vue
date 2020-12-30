@@ -28,9 +28,11 @@ $modal-background-light: $white;
 
 
 //Fonts
-$ibm: 'Fira Sans', sans-serif;
+$firaSans: 'Fira Sans', 'sans-serif';
+$firaCode: 'Fira Code', 'sans-serif';
+$firaSansExtra: 'Fira Sans Extra Condensed', 'sans-serif';
 
-$font-family-primary-base: $ibm;
+$font-family-primary-base: $firaSans;
 
 /* Transitions */
 $transition1: .2s ease;

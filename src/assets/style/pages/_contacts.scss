@@ -13,6 +13,12 @@
     display: flex;
     flex-direction: column;
 }
+.modal .contactsListContainer {
+    max-height: 60vh;
+    @media (max-width: $mobile) {
+        max-height: 55vh;
+    }
+}
 .contactsListContainer {
     height: 100%;
     overflow: auto;
@@ -100,10 +106,11 @@
         align-items: center;
         justify-content: center;
         text-align: center;
+        flex-direction: column;
     }
 }
 
-body.inkline { 
+body.inkline {
     &.-light {
         .contactsListContainer {
             &::-webkit-scrollbar-thumb {

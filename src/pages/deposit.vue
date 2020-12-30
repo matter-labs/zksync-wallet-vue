@@ -8,8 +8,8 @@
           need</a>!</p>
       </div>
     </i-modal>
-    <div v-if="tokenSelectionOpened===false" class="tileBlock">
-      <div class="tileHeadline h3" :class="{'withBtn': loading===false}">
+    <div class="tileBlock">
+      <div class="tileHeadline h3" :class="{'withBtn': (loading===false || tokenSelectionOpened===true)}">
         <nuxt-link v-if="loading===false" :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
           <i class="far fa-long-arrow-alt-left"></i>
         </nuxt-link>
@@ -18,86 +18,86 @@
         </div>
       </div>
       <div v-if="success===true">
-        <a class="_display-block _text-center" target="_blank"
-           :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i
-            class="fas fa-external-link"></i></a>
         <checkmark/>
         <p class="_text-center _margin-top-0">Your deposit tx has been mined and will be processed after 1
           confirmations. Use the transaction link to track the progress.</p>
+        <a class="_display-block _text-center _margin-top-1" target="_blank"
+           :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i
+            class="fas fa-external-link"></i></a>
         <div class="totalAmount _margin-top-2">
           <div class="headline">Amount:</div>
-                    <div class="amount">
-                      {{choosedToken.symbol}} {{handleExponentialNumber(choosedToken.symbol, transactionAmount)}}
-                      <span class="totalPrice">{{getFormattedPrice(choosedToken.price, transactionAmount)}}</span>
-                    </div>
-                </div>
+          <div class="amount">
+            <span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ handleExponentialNumber(choosedToken.symbol, transactionAmount) }}
+            <span class="totalPrice">{{ getFormattedPrice(choosedToken.price, transactionAmount) }}</span>
+          </div>
+        </div>
         <i-button block size="lg" variant="secondary" class="_margin-top-1" to="/account">Ok</i-button>
       </div>
-      <div v-else-if="loading===false">
+      <div v-else-if="loading===false || tokenSelectionOpened===true">
         <div class="_padding-bottom-1">Amount / asset</div>
-        <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number">
+        <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" @keyup.enter="deposit()">
           <i-button v-if="!choosedToken" slot="append" block link variant="secondary"
-                    @click="tokenSelectionOpened=true">Select token
+                    @click="openTokenSelection()">Select token
           </i-button>
           <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
-                    @click="tokenSelectionOpened=true">{{ choosedToken.symbol }}&nbsp;&nbsp;<i
+                    @click="openTokenSelection()"><span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i
               class="far fa-angle-down"></i></i-button>
         </i-input>
         <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
           <div class="totalPrice">~${{ (inputTotalSum * choosedToken.price).toFixed(2) }}</div>
-                    <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0">Max: {{transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0}}</div>
+          <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0">Max:
+            {{ transactionMaxAmount > 0 ? handleExponentialNumber(choosedToken.symbol, transactionMaxAmount) : 0 }}
+          </div>
         </div>
         <div v-if="choosedToken && choosedToken.unlocked===false" class="tokenLocked">
           <p class="_text-center">You should firstly unlock selected token in order to authorize deposits for
-            <b>{{ choosedToken.symbol }}</b></p>
+            <span class="tokenSymbol">{{ choosedToken.symbol }}</span></p>
           <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="unlockToken()"><i
               class="far fa-lock-open-alt"></i> Unlock
           </i-button>
         </div>
         <div v-else-if="choosedToken && choosedToken.unlocked===true && inputTotalSum>transactionMaxAmount"
              class="errorText _text-center _margin-top-1">
-          Not enough {{ choosedToken.symbol }} to perform a transaction
+          Not enough <span class="tokenSymbol">{{ choosedToken.symbol }}</span> to perform a transaction
         </div>
         <div v-else-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
-                <i-button v-if="choosedToken && choosedToken.unlocked===true" :disabled="!inputTotalSum || inputTotalSum<=0 || inputTotalSum>transactionMaxAmount" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit</i-button>
+        <i-button
+            v-if="choosedToken && choosedToken.unlocked===true"
+            :disabled="!inputTotalSum || inputTotalSum<=0 || inputTotalSum>transactionMaxAmount"
+            block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">Deposit
+        </i-button>
       </div>
       <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
-        <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
+        <a v-if="transactionHash"
+           class="_display-block _text-center"
+           target="_blank"
+           :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
         <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
-        <loader class="_display-block _margin-top-1" />
+        <loader class="_display-block _margin-top-1"/>
       </div>
     </div>
-    <div v-else class="tileBlock tokensTile">
-      <div class="tileHeadline h3">
-        <span>Balances in L1</span>
-        <i-tooltip>
-          <i class="fas fa-times" @click="tokenSelectionOpened=false"></i>
-          <template slot="body">Close</template>
-        </i-tooltip>
-      </div>
-      <div v-if="loading===true" class="nothingFound">
-        <loader />
-      </div>
-      <template v-else>
+    <i-modal v-model="tokenSelectionOpened" size="md">
+      <template slot="header">Balances in L1</template>
+      <div>
         <i-input v-model="search" placeholder="Filter balances in L1" maxlength="10">
           <i slot="prefix" class="far fa-search"></i>
         </i-input>
         <div class="tokenListContainer">
           <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
-            <div class="tokenLabel">{{ item.symbol }}</div>
+            <div class="tokenSymbol">{{ item.symbol }}</div>
             <div class="rightSide">
-                            <div class="balance">{{handleExponentialNumber(item.symbol, item.formatedBalance)}}</div>
+              <div class="balance">{{ handleExponentialNumber(item.symbol, item.formatedBalance) }}</div>
             </div>
           </div>
           <div v-if="search && displayedTokenList.length===0" class="nothingFound">
             <span>Your search <b>"{{ search }}"</b> did not match any tokens</span>
           </div>
         </div>
-        <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="cantFindTokenModal=true">Can't
+        <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="tokenSelectionOpened=false;cantFindTokenModal=true">Can't
           find a token?
         </i-button>
-      </template>
-    </div>
+      </div>
+    </i-modal>
   </div>
 </template>
 
@@ -107,6 +107,7 @@ import utils from "@/plugins/utils.js";
 import { ethers } from "ethers";
 import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 import Checkmark from "@/components/Checkmark.vue";
+
 export default {
   components: {
     Checkmark,
@@ -150,18 +151,6 @@ export default {
     },
   },
   watch: {
-    async tokenSelectionOpened(val) {
-      if (val === true && this.loading === false) {
-        this.loading = true;
-        try {
-          const list = await this.$store.dispatch("wallet/getInitialBalances");
-          this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
-        } catch (error) {
-          await this.$store.dispatch("toaster/error", error.message);
-        }
-        this.loading = false;
-      }
-    },
     inputTotalSum(val) {
       this.mainError = "";
     },
@@ -177,7 +166,19 @@ export default {
     handleExponentialNumber: function (symbol, amount) {
       return utils.handleExpNum(symbol, amount);
     },
+    openTokenSelection: async function () {
+      this.loading = true;
+      try {
+        const list = await this.$store.dispatch("wallet/getInitialBalances");
+        this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
+        this.tokenSelectionOpened = true;
+      } catch (error) {
+        await this.$store.dispatch("toaster/error", error.message);
+      }
+      this.loading = false;
+    },
     chooseToken: async function (token) {
+      this.tokenSelectionOpened = false;
       this.loading = true;
       console.log("Token selected", token);
       if (typeof token.unlocked === "undefined") {
@@ -188,10 +189,13 @@ export default {
         console.log(`typeof token.price === "undefined". then await this.$store.dispatch("tokens/getTokenPrice", token.symbol)`);
         token.price = await this.$store.dispatch("tokens/getTokenPrice", token.symbol);
       }
+      /* if (typeof token.fee === "undefined") {
+        console.log(`typeof token.fee === "undefined". token.fee = 0.0002`);
+        token.fee = 0.0002;
+      } */
       this.mainError = "";
       this.choosedToken = token;
       this.loading = false;
-      this.tokenSelectionOpened = false;
     },
     unlockToken: async function () {
       this.loading = true;
@@ -213,10 +217,7 @@ export default {
     checkTokenState: async function (token) {
       if (token.symbol !== "ETH") {
         const wallet = walletData.get().syncWallet;
-        console.log("awaiting isERC20DepositsApproved(token.address)");
         const isApprovedDeposits = await wallet.isERC20DepositsApproved(token.address);
-        console.log("isERC20DepositsApproved result", isApprovedDeposits);
-        console.log("Saving token unlocked state to", !!isApprovedDeposits);
         this.saveUnlockedTokenState(token.symbol, !!isApprovedDeposits);
         return !!isApprovedDeposits;
       } else {
@@ -233,12 +234,19 @@ export default {
     },
     deposit: async function () {
       try {
+        utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
+      } catch (error) {
+        return (this.mainError = "Invalid amount inputed");
+      }
+      try {
         if (!this.choosedToken) {
           throw new Error("Choose the token first");
         } else if (!this.inputTotalSum) {
           throw new Error("Introduce the amount");
         } else if (this.inputTotalSum > this.transactionMaxAmount) {
           throw new Error("Insufficient funds");
+        } else if (this.inputTotalSum <= 0) {
+          throw new Error("Input a valid amount");
         }
         this.loading = true;
         const wallet = walletData.get().syncWallet;
@@ -246,11 +254,12 @@ export default {
         const depositResponse = await wallet.depositToSyncFromEthereum({
           depositTo: wallet.address(),
           token: this.choosedToken.symbol,
-          amount: ethers.BigNumber.from(wallet.provider.tokenSet.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()).toString()),
+          amount: ethers.BigNumber.from(utils.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()).toString()),
           /* ethTxOptions: {
             gasLimit: "200000",
           }, */
         });
+        console.log("after deposit");
         this.transactionAmount = this.inputTotalSum;
         this.transactionHash = depositResponse.ethTx.hash;
         this.tip = "Waiting for the transaction to be mined...";

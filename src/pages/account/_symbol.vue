@@ -2,10 +2,10 @@
     <div class="tokenAccount">
       <div class="tileBlock">
         <div class="tileHeadline withBtn h3">
-          <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
+          <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath && fromRoute.path!=='/withdraw')?fromRoute:'/account'" class="returnBtn">
             <i class="far fa-long-arrow-alt-left"></i>
           </nuxt-link>
-          <span>{{ symbol }}</span>
+          <span class="tokenSymbol">{{ symbol }}</span>
         </div>
         <div v-if="loading">
           <loader class="_display-block _margin-x-auto _margin-y-3" />
@@ -20,7 +20,7 @@
           </div>
           <div class="_display-flex _justify-content-space-between">
             <div class="infoBlock">
-            <div class="balance">{{ symbol }} {{ token.formatedBalance }}&nbsp;&nbsp;<span
+            <div class="balance"><span class="tokenSymbol">{{ symbol }}</span> {{ token.formatedBalance }}&nbsp;&nbsp;<span
                 class="balancePrice">{{ token.formatedTotalPrice }}</span></div>
             </div>
             <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">-

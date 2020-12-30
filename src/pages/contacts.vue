@@ -7,12 +7,12 @@
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
-        <i-input v-model="inputedName" size="lg" placeholder="Name" maxlength="20"/>
+        <i-input v-model="inputedName" size="lg" placeholder="Name" maxlength="20" @keyup.enter="addContact()"/>
 
         <br>
 
         <div class="_padding-bottom-1">Address</div>
-        <i-input v-model="inputedWallet" size="lg" placeholder="0x address" maxlength="42"/>
+        <i-input v-model="inputedWallet" size="lg" placeholder="0x address" type="text" maxlength="42" @keyup.enter="addContact()"/>
 
         <br>
 
@@ -36,7 +36,8 @@
 
       <div class="contactsListContainer">
         <div v-if="!search.trim() && displayedContactsList.length===0" class="nothingFound">
-          <span>The contact list is empty</span>
+          <div>The contact list is empty</div>
+          <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="addContactType='add'; addContactModal=true;">Add contact</i-button>
         </div>
         <div v-else-if="displayedContactsList.length===0" class="nothingFound">
           <span>Your search <b>"{{ search }}"</b> did not match any contacts</span>
@@ -45,7 +46,7 @@
           <user-img :wallet="item.address"/>
           <div class="contactInfo">
             <div class="contactName">{{ item.name }}</div>
-            <div class="contactAddress">{{ item.address }}</div>
+            <div class="contactAddress walletAddress">{{ item.address }}</div>
           </div>
           <div v-if="!item.deleted" class="iconsBlock">
             <i-tooltip trigger="click">
@@ -81,6 +82,7 @@
       <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="fas fa-trash-undo"></i>&nbsp;&nbsp;Restore contact</i-button>
       <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Transfer to contact</i-button>
     </div>
+    <transactions v-if="openedContact" :address="openedContact.address" />
   </div>
 </template>
 
@@ -89,11 +91,13 @@ import validations from "@/plugins/validations.js";
 import { walletData } from "@/plugins/walletData.js";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
+import transactions from "@/blocks/Transactions.vue";
 
 export default {
   components: {
     userImg,
     walletAddress,
+    transactions,
   },
   asyncData({ from }) {
     return {
