@@ -15,5 +15,13 @@
       "**/.*",
       "**/node_modules/**"
     ]
+  }, {
+    "target": "ropsten",
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
   }]
 }

@@ -8,6 +8,9 @@
         "rinkeby": [
           "zksync-vue-rinkeby-2"
         ],
+        "ropsten": [
+          "zksync-vue-ropsten"
+        ],
         "stage": [
           "zksync-vue"
         ]
