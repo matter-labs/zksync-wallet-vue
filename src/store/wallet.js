@@ -440,7 +440,7 @@ export const actions = {
   },
 
   async checkLockedState({ commit }) {
-    const accountState = await syncWallet.getAccountState();
+    const syncWallet = walletData.get().syncWallet;
     const isSigningKeySet = await syncWallet.isSigningKeySet();
     commit("setAccountLockedState", isSigningKeySet === false);
   },

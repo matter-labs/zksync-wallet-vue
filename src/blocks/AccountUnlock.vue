@@ -80,6 +80,7 @@ export default {
       this.loading = true;
       try {
         const syncWallet = walletData.get().syncWallet;
+        await this.getUnlockPrice();
         await this.$store.dispatch("wallet/restoreProviderConnection");
         this.tip = "Confirm the transaction to unlock this account";
 
@@ -127,6 +128,7 @@ export default {
       return "";
     },
     getUnlockPrice: async function () {
+      console.log("getweweewe");
       if (!this.choosedToken) {
         return;
       }
@@ -135,11 +137,10 @@ export default {
       const syncProvider = walletData.get().syncProvider;
       try {
         await this.$store.dispatch("wallet/restoreProviderConnection");
-        const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
         const foundFee = await syncProvider.getTransactionFee(
           {
             ChangePubKey: {
-              onchainPubkeyAuth: isOnchainAuthSigningKeySet,
+              onchainPubkeyAuth: syncWallet.ethSignerType.verificationMethod === "ERC-1271",
             },
           },
           syncWallet.address(),
