@@ -1,7 +1,14 @@
 footer {
+  padding-left: 16px;
+  padding-right: 16px;
+
+  @media screen and (min-width: 1201px) {
+    .container {
+      max-width: 1920px;
+    }
+  }
   &.mainFooter {
     margin-top: auto;
-    max-width: 700px;
     .row
     {
       font-size: 14px !important;

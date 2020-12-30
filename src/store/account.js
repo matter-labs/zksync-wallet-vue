@@ -36,6 +36,9 @@ export const mutations = {
   setAddress(state, address) {
     state.address = address;
   },
+  setAddress(state, address) {
+    state.address=address;
+  }
 };
 
 export const actions = {};

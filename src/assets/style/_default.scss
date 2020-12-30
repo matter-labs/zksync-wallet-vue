@@ -168,6 +168,8 @@ button.-lg.-circle {
   &.-md {
     > .header {
       font-size: 1.5rem;
+      font-family: $firaSansExtra;
+      font-weight: 400;
 
       & > .close {
         height: 2.2rem !important;
@@ -367,6 +369,11 @@ button.-lg.-circle {
   background-size: contain;
   color: transparent !important;
 }
-.errorShake {
-  border-color: $red !important;
+.tokenSymbol,.walletAddress {
+  font-weight: 400;
+  font-family: $firaCode;
+}
+.h1 {
+  font-family: $firaSansExtra;
+  font-weight: 400 !important;
 }

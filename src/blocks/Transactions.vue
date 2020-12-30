@@ -25,7 +25,7 @@
               <template slot="body">{{getFormatedTime(item.created_at)}}</template>
             </i-tooltip>
             <div class="amount" :class="{'small': getFormattedAmount(item).length>10}">{{getFormattedAmount(item)}}</div>
-            <div class="token">{{ item.tx.priority_op ? item.tx.priority_op.token:item.tx.token }}</div>
+            <div class="tokenSymbol">{{ item.tx.priority_op ? item.tx.priority_op.token:item.tx.token }}</div>
           </div>
           <div class="actionInfo">
             <div v-if="item.tx.type==='Withdraw'">
@@ -75,6 +75,11 @@ import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/bui
 export default {
   props: {
     filter: {
+      type: String,
+      default: "",
+      required: false,
+    },
+    address: {
       type: String,
       default: "",
       required: false,
@@ -166,6 +171,20 @@ export default {
         });
       if (this.filter) {
         filteredList = filteredList.filter((item) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
+      }
+      if (this.address) {
+        const addressLowerCase = this.address.toLowerCase();
+        const myAddressLowerCase = this.walletAddressFull.toLowerCase();
+        filteredList = filteredList.filter((item) => {
+          if(item.tx.type==='Withdraw' || item.tx.type==='Transfer') {
+            const addressToLowerCase = item.tx.to.toLowerCase();
+            const addressFromLowerCase = item.tx.from.toLowerCase();
+            if((item.tx.type==='Withdraw' && addressToLowerCase===addressLowerCase) || (item.tx.type==='Transfer' && ((addressToLowerCase===myAddressLowerCase && addressFromLowerCase===addressLowerCase) || (addressFromLowerCase===myAddressLowerCase && addressToLowerCase===addressLowerCase)))) {
+              return true
+            }
+          }
+          return false;
+        });
       }
       return filteredList.map((e) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
     },

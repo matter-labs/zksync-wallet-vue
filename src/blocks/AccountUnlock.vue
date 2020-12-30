@@ -85,18 +85,19 @@ export default {
         if (syncWallet.ethSignerType.verificationMethod === "ERC-1271") {
           const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
           await onchainAuthTransaction.wait();
-          const changePubkey = await syncWallet.setSigningKey({
-            feeToken: this.choosedToken.symbol,
-            /* fee: foundFee.totalFee, */
-            nonce: "committed",
-            onchainAuth: true,
-          });
+          const isSigningKeySet = await syncWallet.isSigningKeySet();
+          if(!isSigningKeySet) {
+            const changePubkey = await syncWallet.setSigningKey({
+              feeToken: this.choosedToken.symbol,
+              nonce: "committed",
+              onchainAuth: true,
+            });
+          }
           this.tip = "Waiting for the transaction to be mined...";
           await changePubkey.awaitReceipt();
         } else {
           const changePubkey = await syncWallet.setSigningKey({
             feeToken: this.choosedToken.symbol,
-            /* fee: foundFee.totalFee, */
           });
           console.log("changePubkey", changePubkey);
           this.tip = "Waiting for the transaction to be mined...";
@@ -105,9 +106,16 @@ export default {
         this.tip = "Processing...";
         await this.$store.dispatch("wallet/forceRefreshData");
 
-        const isSigningKeySet = await syncWallet.isSigningKeySet();
-        console.log("isSigningKeySet", isSigningKeySet);
-        this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
+        if (syncWallet.ethSignerType.verificationMethod === "ERC-1271") {
+          const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
+          console.log("isOnchainAuthSigningKeySet", isOnchainAuthSigningKeySet);
+          this.$store.commit("wallet/setAccountLockedState", isOnchainAuthSigningKeySet === false);
+        }
+        else {
+          const isSigningKeySet = await syncWallet.isSigningKeySet();
+          console.log("isSigningKeySet", isSigningKeySet);
+          this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
+        }
 
         const newAccountState = await syncWallet.getAccountState();
         walletData.set({ accountState: newAccountState });

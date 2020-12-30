@@ -32,7 +32,7 @@
         Rename wallet
       </template>
       <div>
-        <i-input v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18"/>
+        <i-input v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()"/>
         <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
       </div>
     </i-modal>

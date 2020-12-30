@@ -48,7 +48,7 @@
                 </div>
                 <div v-else class="balancesList">
                     <nuxt-link v-for="(item,index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
-                        <div class="symbol">{{item.symbol}}</div>
+                        <div class="tokenSymbol">{{item.symbol}}</div>
                         <div class="rightSide">
                             <div class="total"><span class="balancePrice">{{item.formatedTotalPrice}}</span>&nbsp;&nbsp;{{item.formatedBalance}}</div>
                             <div class="status">
