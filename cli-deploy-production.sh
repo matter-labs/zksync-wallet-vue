@@ -16,5 +16,5 @@ git pull &&
 yarn ci &&
 sh cli-process-env.sh "mainnet" &&
 yarn generate --fail-on-error &&
-firebase deploy -P zksync-vue-mainnet --only hosting --target mainnet &&
+firebase deploy -P zksync-vue-mainnet --only hosting:mainnet &&
 echo "New version #$(git tag -l|tail -n1)) Mainnet deployed successfully!"
