@@ -15,6 +15,13 @@
           "zksync-vue"
         ]
       }
+    },
+    "zksync-vue-mainnet": {
+      "hosting": {
+        "mainnet": [
+          "zksync-vue-mainnet"
+        ]
+      }
     }
   }
 }
