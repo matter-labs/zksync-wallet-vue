@@ -1,5 +1,20 @@
 {
   "projects": {
     "default": "zksync-vue"
+  },
+  "targets": {
+    "zksync-vue": {
+      "hosting": {
+        "rinkeby": [
+          "zksync-vue-rinkeby-2"
+        ],
+        "ropsten": [
+          "zksync-vue-ropsten"
+        ],
+        "stage": [
+          "zksync-vue"
+        ]
+      }
+    }
   }
 }
