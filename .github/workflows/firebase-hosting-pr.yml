@@ -16,14 +16,12 @@ jobs:
         run: yarn ci
 
       - name: Configure for rinkeby
-        if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/rinkeby'
         run: sh ./cli-process-env.sh rinkeby
 
       - name: Build rinkeby
         run: yarn generate --fail-on-error
       
       - name: Deploy to rinkeby site
-        if: github.ref == 'refs/heads/rinkeby'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
@@ -32,14 +30,12 @@ jobs:
           channelID: live
 
       - name: Configure for ropsten
-        if: github.ref == 'refs/heads/ropsten'
         run: sh ./cli-process-env.sh ropsten
 
       - name: Build ropsten
         run: yarn generate --fail-on-error
 
       - name: Deploy to ropsten site
-        if: github.ref == 'refs/heads/ropsten'
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
