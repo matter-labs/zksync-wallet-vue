@@ -488,15 +488,8 @@ export const actions = {
       await dispatch("getzkBalances", accountState);
 
       const isSigningKeySet = await syncWallet.isSigningKeySet();
+      commit("setAccountLockedState", isSigningKeySet === false);
       console.log("isSigningKeySet", isSigningKeySet);
-      if (syncWallet.ethSignerType.verificationMethod === "ERC-1271") {
-        const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
-        console.log("isOnchainAuthSigningKeySet", isOnchainAuthSigningKeySet);
-        commit("setAccountLockedState", !(isSigningKeySet === true && isOnchainAuthSigningKeySet === true));
-      }
-      else {
-        commit("setAccountLockedState", isSigningKeySet === false);
-      }
 
       dispatch("changeNetworkSet");
       this.commit("account/setAddress", syncWallet.address());
