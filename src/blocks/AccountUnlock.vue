@@ -83,8 +83,12 @@ export default {
         await this.$store.dispatch("wallet/restoreProviderConnection");
         this.tip = "Confirm the transaction to unlock this account";
         if (syncWallet.ethSignerType.verificationMethod === "ERC-1271") {
-          const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
-          await onchainAuthTransaction.wait();
+          const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
+          if (!isOnchainAuthSigningKeySet) {
+            const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
+            await onchainAuthTransaction.wait();
+          }
+          
           const isSigningKeySet = await syncWallet.isSigningKeySet();
           if(!isSigningKeySet) {
             const changePubkey = await syncWallet.setSigningKey({
@@ -106,16 +110,9 @@ export default {
         this.tip = "Processing...";
         await this.$store.dispatch("wallet/forceRefreshData");
 
-        if (syncWallet.ethSignerType.verificationMethod === "ERC-1271") {
-          const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
-          console.log("isOnchainAuthSigningKeySet", isOnchainAuthSigningKeySet);
-          this.$store.commit("wallet/setAccountLockedState", isOnchainAuthSigningKeySet === false);
-        }
-        else {
-          const isSigningKeySet = await syncWallet.isSigningKeySet();
-          console.log("isSigningKeySet", isSigningKeySet);
-          this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
-        }
+        const isSigningKeySet = await syncWallet.isSigningKeySet();
+        console.log("isSigningKeySet", isSigningKeySet);
+        this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
 
         const newAccountState = await syncWallet.getAccountState();
         walletData.set({ accountState: newAccountState });
