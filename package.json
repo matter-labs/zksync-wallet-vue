@@ -64,6 +64,7 @@
     "start:firebase": "firebase serve --only hosting",
     "deploy:prod": "./cli-deploy-production.sh",
     "dev": "nuxt",
+    "prepare": "yarn ci && sh sh cli-process-env.sh 'rinkeby'",
     "start": "nuxt start",
     "build": "nuxt build",
     "build:stage": "yarn ci && sh cli-process-env.sh 'rinkeby' && yarn generate --fail-on-error",

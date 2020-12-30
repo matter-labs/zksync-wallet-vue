@@ -33,18 +33,18 @@ zkWallet was created to unleash the power of zkSync L2 operations and give every
 ## Build Setup
 
 ``` bash
-# install dependencies (clear install)
-$ npm install --cache /tmp/empty-cache
+# install dependencies && populate .env file as of RINKEBY connection (clear install)
+$ yarn prepare
 
 # serve with hot reload at localhost:3000
-$ npm run dev
+$ yarn dev
 
-# build for production and launch server
-$ npm run build
-$ npm run start
+# build for dev
+$ build:stage
+# afterward you'll have prepared distributive in /public folder
 
-# generate static project
-$ npm run generate
+# build for production (only if you have firebase:auth) 
+$ cli-deploy-production.sh
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
