@@ -34,7 +34,7 @@ zkWallet was created to unleash the power of zkSync L2 operations and give every
 
 ``` bash
 # install dependencies && populate .env file as of RINKEBY connection (clear install)
-$ yarn prepare
+$ yarn prepare_ci
 
 # serve with hot reload at localhost:3000
 $ yarn dev
