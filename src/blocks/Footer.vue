@@ -14,11 +14,17 @@
           <a target="_blank" class="footer-link" href="https://zksync.io/legal/terms.html">Terms</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" :href="`${blockExplorerLink}`">Explorer</a>
+          <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contacts</a>
+          <span class="badge">|</span>
         </div>
+        <div class="_padding-1-2 _padding-md-x-1">
+          <a target="_blank" class="footer-link" :href="`${blockExplorerLink}`">zkScan</a>
+        </div>
+        <div class="_padding-1-2 _padding-md-x-1">
+          <a target="_blank" class="footer-link" href="https://link.zksync.io">zkLink</a>
+        </div>        
       </i-row>
       <i-row center class="_text-nowrap _align-items-center _margin-0">
         <div class="_padding-1-2 _padding-md-x-1 _hidden-sm-and-down">
