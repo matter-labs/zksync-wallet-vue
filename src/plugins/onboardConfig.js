@@ -16,6 +16,8 @@ const initializedWallets = {
       enableLogging: true,
       preferred: true,
     },
+    //FIXME: enable again
+    //{ walletName: "authereum" },
     { walletName: "coinbase", preferred: true },
     { walletName: "trust", preferred: true, rpcUrl: RPC_URL },
     { walletName: "dapper", preferred: false },
