@@ -121,3 +121,11 @@
   }
 
 }
+
+body.-dark
+{
+  .walletconnect-modal__footer a
+  {
+      color: $darkViolet !important;
+  }
+}
