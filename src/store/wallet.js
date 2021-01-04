@@ -1,5 +1,5 @@
 import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 
 import onboardConfig from "@/plugins/onboardConfig.js";
 import web3Wallet from "@/plugins/web3.js";
