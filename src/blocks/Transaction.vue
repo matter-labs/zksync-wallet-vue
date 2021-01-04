@@ -38,29 +38,29 @@
       </div>
       <div class="totalAmount _margin-top-1">
         <div class="headline">Amount:</div>
-        <div class="amount"><span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ handleExponentialNumber(choosedToken.symbol, transactionAmount) }} <span
-            class="totalPrice">{{getFormattedPrice(choosedToken.tokenPrice, transactionAmount)}}</span></div>
+        <div class="amount"><span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ transactionAmount.toFixed(4) }} <span
+            class="totalPrice">{{ getFormattedPrice(choosedToken.tokenPrice, transactionAmount) }}</span></div>
       </div>
       <div class="totalAmount smaller _margin-top-1">
         <div class="headline">Fee:</div>
         <div class="amount">
-          <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span>
-          {{ handleExponentialNumber(choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol, transactionFee) }}
+          <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol }}</span>
+          {{ getFormattedAmount(choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol, transactionFee) }}
           <span class="totalPrice">
-            {{getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice:choosedToken.tokenPrice, transactionFee)}}
+            {{ getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice : choosedToken.tokenPrice, transactionFee) }}
           </span>
         </div>
       </div>
       <i-button block size="lg" variant="secondary" class="_margin-top-2" to="/account">Ok</i-button>
     </div>
     <div v-else-if="mainLoading===true" class="tileBlock">
-      <div class="tileHeadline h3">{{ type==='withdraw' ? 'Withdraw':'Transfer' }}</div>
+      <div class="tileHeadline h3">{{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}</div>
       <a v-if="transactionHash" class="_display-block _text-center" target="_blank"
          :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
           class="fas fa-external-link"></i></a>
       <p v-if="tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
       <div v-if="mainLoading===true" class="nothingFound _padding-y-2">
-        <loader />
+        <loader/>
       </div>
     </div>
     <div v-else class="tileBlock">
@@ -69,7 +69,7 @@
           <i class="far fa-long-arrow-alt-left"></i>
         </nuxt-link>
         <div>
-          {{ type==='withdraw' ? 'Withdraw':'Transfer' }}
+          {{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}
         </div>
       </div>
 
@@ -104,10 +104,10 @@
       </i-input>
       <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
         <div class="totalPrice">
-          {{getFormattedPrice(choosedToken.tokenPrice, inputTotalSum)}}
+          {{ getFormattedPrice(choosedToken.tokenPrice, inputTotalSum) }}
         </div>
-        <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0">Max:
-          {{ transactionMaxAmount > 0 ? handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0 }}
+        <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0? getFormattedAmount(choosedToken.symbol, transactionMaxAmount):0">Max:
+          {{ transactionMaxAmount > 0 ? getFormattedAmount(choosedToken.symbol, transactionMaxAmount) : 0 }}
         </div>
       </div>
       <div v-if="choosedToken && inputTotalSum>transactionMaxAmount" class="errorText _text-center _margin-top-1">
@@ -116,15 +116,21 @@
 
       <i-radio-group v-if="choosedToken && type==='withdraw' && (!choosedFeeToken || choosedFeeToken.symbol===choosedToken.symbol)" v-model="fastWithdraw" class="_margin-top-2">
         <i-radio :value="false">
-          Normal withdraw (Fee: <span v-if="feesObj">{{ feesObj.normal }} <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span></span><span v-else class="totalPrice">Loading...</span>).<br>
+          Normal withdraw (Fee: <span v-if="feesObj">{{ feesObj.normal && feesObj.normal.toFixed(4) }} <span class="tokenSymbol">{{
+            choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol
+          }}</span></span><span v-else class="totalPrice">Loading...</span>).<br>
           Processing time: {{ getTimeString(withdrawTime.normal) }}
         </i-radio>
         <i-radio :value="true">
-          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast }} <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span></span><span v-else class="totalPrice">Loading...</span>).<br>
+          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast && feesObj.fast.toFixed(4) }} <span class="tokenSymbol">{{
+            choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol
+          }}</span></span><span v-else class="totalPrice">Loading...</span>).<br>
           Processing time: {{ getTimeString(withdrawTime.fast) }}
         </i-radio>
       </i-radio-group>
-      <div v-else-if="choosedToken && type==='withdraw'" class="totalPrice _text-center _margin-top-1">Only normal withdraw ({{getTimeString(withdrawTime.normal)}}) is available when using different fee token</div>
+      <div v-else-if="choosedToken && type==='withdraw'" class="totalPrice _text-center _margin-top-1">Only normal withdraw ({{ getTimeString(withdrawTime.normal) }}) is available
+        when using different fee token
+      </div>
 
       <div v-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
 
@@ -146,9 +152,9 @@
         <span v-else>
           {{
             feesObj[fastWithdraw===true ? 'fast' : 'normal']
-          }} <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol:choosedToken.symbol }}</span>
+          }} <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol }}</span>
           <span class="totalPrice">
-            {{getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice:choosedToken.tokenPrice, feesObj[fastWithdraw===true ? 'fast':'normal'])}}
+            {{ getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice : choosedToken.tokenPrice, feesObj[fastWithdraw===true ? 'fast' : 'normal']) }}
           </span>
           <span class="chooseFeeToken" @click="chooseFeeTokenModal=true">Choose fee token</span>
         </span>
@@ -197,7 +203,7 @@
           </div>
           <template v-else>
             <div v-if="!contactSearch.trim() && type==='withdraw'" class="contactItem"
-                @click.self="chooseContact({name: 'Own account', address: ownAddress})">
+                 @click.self="chooseContact({name: 'Own account', address: ownAddress})">
               <user-img :wallet="ownAddress"/>
               <div class="contactInfo">
                 <div class="contactName">Own account</div>
@@ -205,7 +211,7 @@
               </div>
             </div>
             <div v-for="(item, index) in displayedContactsList" :key="index" class="contactItem"
-                @click.self="chooseContact(item)">
+                 @click.self="chooseContact(item)">
               <user-img :wallet="item.address"/>
               <div class="contactInfo">
                 <div class="contactName">{{ item.name }}</div>
@@ -218,7 +224,7 @@
     </i-modal>
     <i-modal v-model="chooseFeeTokenModal" size="md">
       <template slot="header">Choose fee token</template>
-      <choose-fee-token v-model="choosedFeeToken" @selectToken="chooseFeeTokenModal=false" />
+      <choose-fee-token v-model="choosedFeeToken" @selectToken="chooseFeeTokenModal=false"/>
     </i-modal>
   </div>
 </template>
@@ -352,22 +358,26 @@ export default {
     },
     transactionMaxAmount: function () {
       this.checkBalanceEnoughForFeePayment();
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
       if (bigNumBalance < 0) {
         return 0;
       }
 
       if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
-        const bigNumFee = utils.parseToken(
-          this.choosedToken.symbol,
-          utils.handleExpNum(this.choosedToken.symbol, this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal),
-        );
-        if (bigNumBalance - bigNumFee < 0) {
+        const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
+        if (amountToParse === undefined) {
           return 0;
         }
-        return +utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount((bigNumBalance - bigNumFee).toString()));
+        const bigNumFee = utils.parseToken(this.choosedToken.symbol, amountToParse);
+
+        const maxAmount = bigNumBalance.sub(bigNumFee);
+
+        if (maxAmount.lte(0)) {
+          return 0;
+        }
+        return utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount(maxAmount));
       } else {
-        return +utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount(bigNumBalance));
+        return utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount(bigNumBalance));
       }
     },
     enoughTokenFee: function () {
@@ -387,7 +397,7 @@ export default {
       if (val.toString().length === 0) {
         return;
       }
-      const validate = utils.validateNumber(val);
+      const validate = utils.validateNumber(val.toString());
       if (val !== validate) {
         this.inputTotalSum = validate;
       }
@@ -419,7 +429,6 @@ export default {
     if (this.$route.query["token"]) {
       this.mainLoading = true;
       this.$store.dispatch("wallet/getzkBalances").then((list) => {
-        console.log("list", list);
         this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
         const tokenLoaded = this.tokensList.filter((singleTokenObj) => singleTokenObj.symbol === this.$route.query["token"]).shift();
         this.chooseToken(tokenLoaded);
@@ -438,7 +447,7 @@ export default {
       this.choosedContact = item;
     },
     checkBalanceEnoughForFeePayment: function () {
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
       /**
        * Checking balance (handle situation with 0 or less then 0 balance)
        */
@@ -447,13 +456,14 @@ export default {
       }
 
       if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
-        const bigNumFee = utils.parseToken(
-          this.choosedToken.symbol,
-          utils.handleExpNum(this.choosedToken.symbol, this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal),
-        );
-        if (bigNumBalance - bigNumFee < 0) {
-          this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol} balance to pay fee in. Choose another token for the fee payment`);
-          this.checkForFeeToken();
+        const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
+
+        if (amountToParse !== undefined) {
+          const bigNumFee = utils.parseToken(this.choosedToken.symbol, amountToParse);
+          if (bigNumBalance - bigNumFee < 0) {
+            this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol} balance to pay fee in. Choose another token for the fee payment`);
+            this.checkForFeeToken();
+          }
         }
       }
     },
@@ -488,7 +498,7 @@ export default {
       return utils.getFormatedTotalPrice(price, amount);
     },
     handleExponentialNumber: function (symbol, amount) {
-      return utils.handleExpNum(symbol, amount);
+      return utils.parseToken(symbol, amount);
     },
     chooseToken: async function (token) {
       this.tokenListModal = false;
@@ -574,7 +584,7 @@ export default {
     },
     commitTransaction: async function () {
       try {
-        utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
+        utils.parseToken(this.choosedToken.symbol, this.inputTotalSum);
       } catch (error) {
         return (this.mainError = "Invalid amount inputed");
       }
@@ -628,7 +638,7 @@ export default {
         this.fastWithdraw,
         this.feesObj[this.fastWithdraw === true ? "fast" : "normal"],
       );
-      this.transactionAmount = utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
+      this.transactionAmount = this.inputTotalSum;
       if (!Array.isArray(withdrawTransaction)) {
         this.transactionHash = withdrawTransaction.txHash;
         this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, withdrawTransaction.txData.tx.fee);
@@ -655,7 +665,7 @@ export default {
         this.inputTotalSum.toString(),
         this.feesObj.normal.toString(),
       );
-      this.transactionAmount = utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
+      this.transactionAmount = this.inputTotalSum;
       if (!Array.isArray(transferTransaction)) {
         this.transactionHash = transferTransaction.txHash;
         this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, transferTransaction.txData.tx.fee);

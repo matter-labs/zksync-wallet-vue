@@ -4,7 +4,7 @@
       <div class="tileHeadline h3">Transactions</div>
       <div class="transactionsListContainer">
         <div v-if="loading===true" class="nothingFound">
-          <loader class="_display-block" />
+          <loader class="_display-block"/>
         </div>
         <div v-else-if="transactionsList.length===0" class="nothingFound">
           <span>History is empty</span>
@@ -21,11 +21,11 @@
           </div>
           <div class="mainInfo">
             <i-tooltip>
-              <div class="createdAt">{{getTimeAgo(item.created_at)}}</div>
-              <template slot="body">{{getFormatedTime(item.created_at)}}</template>
+              <div class="createdAt">{{ getTimeAgo(item.created_at) }}</div>
+              <template slot="body">{{ getFormatedTime(item.created_at) }}</template>
             </i-tooltip>
-            <div class="amount" :class="{'small': getFormattedAmount(item).length>10}">{{getFormattedAmount(item)}}</div>
-            <div class="tokenSymbol">{{ item.tx.priority_op ? item.tx.priority_op.token:item.tx.token }}</div>
+            <div class="amount" :class="{'small': getFormattedAmount(item).length>10}">{{ getFormattedAmount(item) }}</div>
+            <div class="tokenSymbol">{{ item.tx.priority_op ? item.tx.priority_op.token : item.tx.token }}</div>
           </div>
           <div class="actionInfo">
             <div v-if="item.tx.type==='Withdraw'">
@@ -60,7 +60,7 @@
         <i-button v-if="loadingMore===false && loadMoreAvailable===true" block link size="lg" variant="secondary"
                   @click="loadMore()">Load more
         </i-button>
-        <loader v-else-if="loadingMore===true" class="_display-block _margin-x-auto _margin-y-2" />
+        <loader v-else-if="loadingMore===true" class="_display-block _margin-x-auto _margin-y-2"/>
       </div>
     </div>
   </div>
@@ -135,11 +135,9 @@ export default {
     getFormattedAmount: function ({ tx: { type, priority_op, token, amount, fee, feePayment } }) {
       const symbol = type === "Deposit" ? priority_op.token : token;
       if (!feePayment) {
-        const formatToken = utils.handleFormatToken(symbol, type === "Deposit" && priority_op ? +priority_op.amount : +amount);
-        return utils.handleExpNum(symbol, formatToken);
+        return utils.handleFormatToken(symbol, type === "Deposit" && priority_op ? priority_op.amount : amount);
       } else {
-        const formatToken = utils.handleFormatToken(token, +fee);
-        return utils.handleExpNum(symbol, formatToken);
+        return utils.handleFormatToken(token, fee);
       }
     },
     getTransactionExplorerLink: function (transaction) {
@@ -176,11 +174,16 @@ export default {
         const addressLowerCase = this.address.toLowerCase();
         const myAddressLowerCase = this.walletAddressFull.toLowerCase();
         filteredList = filteredList.filter((item) => {
-          if(item.tx.type==='Withdraw' || item.tx.type==='Transfer') {
+          if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
             const addressToLowerCase = item.tx.to.toLowerCase();
             const addressFromLowerCase = item.tx.from.toLowerCase();
-            if((item.tx.type==='Withdraw' && addressToLowerCase===addressLowerCase) || (item.tx.type==='Transfer' && ((addressToLowerCase===myAddressLowerCase && addressFromLowerCase===addressLowerCase) || (addressFromLowerCase===myAddressLowerCase && addressToLowerCase===addressLowerCase)))) {
-              return true
+            if (
+              (item.tx.type === "Withdraw" && addressToLowerCase === addressLowerCase) ||
+              (item.tx.type === "Transfer" &&
+                ((addressToLowerCase === myAddressLowerCase && addressFromLowerCase === addressLowerCase) ||
+                  (addressFromLowerCase === myAddressLowerCase && addressToLowerCase === addressLowerCase)))
+            ) {
+              return true;
             }
           }
           return false;

@@ -1,5 +1,5 @@
 import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import onboardConfig from "@/plugins/onboardConfig.js";
 import web3Wallet from "@/plugins/web3.js";
@@ -252,6 +252,7 @@ export const actions = {
       listVerified = newAccountState.verified.balances;
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
+
     for (const prop in listCommited) {
       const price = await this.dispatch("tokens/getTokenPrice", prop);
       const commitedBalance = +utils.handleFormatToken(prop, listCommited[prop] ? listCommited[prop] : 0);
@@ -260,7 +261,7 @@ export const actions = {
         symbol: prop,
         status: commitedBalance !== verifiedBalance ? "Pending" : "Verified",
         balance: commitedBalance,
-        formatedBalance: utils.handleExpNum(prop, commitedBalance),
+        formatedBalance: commitedBalance.toFixed(6),
         verifiedBalance: verifiedBalance,
         tokenPrice: price,
         formatedTotalPrice: utils.getFormatedTotalPrice(price, commitedBalance),
@@ -303,7 +304,7 @@ export const actions = {
           id: currentToken.id,
           address: currentToken.address,
           balance: balance,
-          formatedBalance: utils.handleExpNum(currentToken.symbol, balance),
+          formatedBalance: balance.toFixed(6),
           symbol: currentToken.symbol,
         };
       } catch (error) {
