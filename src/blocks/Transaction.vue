@@ -351,12 +351,20 @@ export default {
       return walletData.get().syncWallet.address();
     },
     transactionMaxAmount: function () {
+      this.checkBalanceEnoughForFeePayment();
       const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
+      if (bigNumBalance < 0) {
+        return 0;
+      }
+
       if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
         const bigNumFee = utils.parseToken(
           this.choosedToken.symbol,
           utils.handleExpNum(this.choosedToken.symbol, this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal),
         );
+        if (bigNumBalance - bigNumFee < 0) {
+          return 0;
+        }
         return +utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount((bigNumBalance - bigNumFee).toString()));
       } else {
         return +utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount(bigNumBalance));
@@ -426,6 +434,29 @@ export default {
     }
   },
   methods: {
+    checkBalanceEnoughForFeePayment: function () {
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
+      /**
+       * Checking balance (handle situation with 0 or less then 0 balance)
+       */
+      if (bigNumBalance < 0) {
+        this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}  balance to withdraw`);
+      }
+
+      if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
+        const bigNumFee = utils.parseToken(
+          this.choosedToken.symbol,
+          utils.handleExpNum(this.choosedToken.symbol, this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal),
+        );
+        if (bigNumBalance - bigNumFee < 0) {
+          this.$store.dispatch(
+            "toaster/error",
+            `You don't have enough ${this.choosedToken.symbol} balance to withdraw & pay fee in ${this.choosedFeeToken.symbol}. Choose another token for the fee payment`,
+          );
+          this.checkForFeeToken();
+        }
+      }
+    },
     openTokenList: async function () {
       this.mainLoading = true;
       try {
@@ -433,7 +464,7 @@ export default {
         this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
         this.tokenListModal = true;
       } catch (error) {
-        console.log(error);
+        this.$store.dispatch("toaster/error", error.message);
       }
       this.mainLoading = false;
     },
@@ -471,7 +502,11 @@ export default {
     },
     getWithdrawalTime: async function () {
       this.mainLoading = true;
-      this.withdrawTime = await this.$store.dispatch("wallet/getWithdrawalProcessingTime");
+      try {
+        this.withdrawTime = await this.$store.dispatch("wallet/getWithdrawalProcessingTime");
+      } catch (error) {
+        await this.$store.dispatch("toaster/error", error.message);
+      }
       this.mainLoading = false;
     },
     getFees: async function () {
@@ -480,13 +515,17 @@ export default {
         return;
       }
       this.feesLoading = true;
-      const tokenSymbol = this.choosedToken ? this.choosedToken.symbol : "ETH";
-      this.feesObj = await this.$store.dispatch("wallet/getFees", {
-        address: this.inputAddress,
-        symbol: tokenSymbol,
-        feeSymbol: this.choosedFeeToken ? this.choosedFeeToken.symbol : tokenSymbol,
-        type: this.type,
-      });
+      try {
+        const tokenSymbol = this.choosedToken ? this.choosedToken.symbol : "ETH";
+        this.feesObj = await this.$store.dispatch("wallet/getFees", {
+          address: this.inputAddress,
+          symbol: tokenSymbol,
+          feeSymbol: this.choosedFeeToken ? this.choosedFeeToken.symbol : tokenSymbol,
+          type: this.type,
+        });
+      } catch (error) {
+        await this.$store.dispatch("toaster/error", error.message);
+      }
       this.feesLoading = false;
     },
     getTimeString: function (time) {

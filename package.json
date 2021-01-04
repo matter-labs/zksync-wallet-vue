@@ -2,6 +2,16 @@
   "name": "zksync-zkwallet-vue",
   "private": true,
   "author": "Matter Labs",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://www.opensource.org/licenses/mit-license.php"
+    },
+    {
+      "type": "Apache-2.0",
+      "url": "https://opensource.org/licenses/apache2.0.php"
+    }
+  ],
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "version": "2.0.0-beta",
   "license": "MIT",
@@ -65,7 +75,7 @@
     "start:firebase": "firebase serve --only hosting",
     "deploy:prod": "./cli-deploy-production.sh",
     "dev": "nuxt",
-    "prepare_ci": "yarn ci && sh sh cli-process-env.sh 'rinkeby'",
+    "prepare_ci": "yarn ci && sh cli-process-env.sh 'rinkeby'",
     "start": "nuxt start",
     "build": "nuxt build",
     "build:stage": "yarn ci && sh cli-process-env.sh 'rinkeby' && yarn generate --fail-on-error",
