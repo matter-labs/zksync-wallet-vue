@@ -45,7 +45,7 @@ export const actions = {
       icon: {
         name: "fa-times-circle",
       },
-      duration: 3000,
+      duration: null,
     });
   },
 

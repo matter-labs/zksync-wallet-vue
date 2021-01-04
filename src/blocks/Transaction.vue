@@ -314,13 +314,13 @@ export default {
       let isInContactList = false;
       for (const item of this.contactsList) {
         if (item.address === this.inputAddress) {
-          this.choosedContact = item;
+          this.setContact(item);
           isInContactList = true;
           break;
         }
       }
       if (!isInContactList) {
-        this.choosedContact = false;
+        this.setContact();
       }
       return !isInContactList && !this.isOwnAddress && !this.choosedContact && this.isAddressValid;
     },
@@ -428,12 +428,15 @@ export default {
     }
     this.getContactsList();
     if (this.type === "withdraw") {
-      this.getWithdrawalTime();
+      await this.getWithdrawalTime();
     } else {
       this.mainLoading = false;
     }
   },
   methods: {
+    setContact: function (item = false) {
+      this.choosedContact = item;
+    },
     checkBalanceEnoughForFeePayment: function () {
       const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
       /**
@@ -449,10 +452,7 @@ export default {
           utils.handleExpNum(this.choosedToken.symbol, this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal),
         );
         if (bigNumBalance - bigNumFee < 0) {
-          this.$store.dispatch(
-            "toaster/error",
-            `You don't have enough ${this.choosedToken.symbol} balance to withdraw & pay fee in ${this.choosedFeeToken.symbol}. Choose another token for the fee payment`,
-          );
+          this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol} balance to pay fee in. Choose another token for the fee payment`);
           this.checkForFeeToken();
         }
       }
@@ -464,7 +464,7 @@ export default {
         this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
         this.tokenListModal = true;
       } catch (error) {
-        this.$store.dispatch("toaster/error", error.message);
+        await this.$store.dispatch("toaster/error", error.message);
       }
       this.mainLoading = false;
     },
