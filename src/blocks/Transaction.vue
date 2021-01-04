@@ -358,8 +358,8 @@ export default {
     },
     transactionMaxAmount: function () {
       this.checkBalanceEnoughForFeePayment();
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
-      if (bigNumBalance < 0) {
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this._chooseBalance(this.choosedToken));
+      if (bigNumBalance.lte(0)) {
         return 0;
       }
 
@@ -453,9 +453,7 @@ export default {
       return tokenBalance.balance;
     },
     checkBalanceEnoughForFeePayment: function () {
-      console.log("balance", this.choosedToken);
       const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this._chooseBalance(this.choosedToken));
-      console.log("num balance: ", bigNumBalance);
       /**
        * Checking balance (handle situation with 0 or less then 0 balance)
        */
