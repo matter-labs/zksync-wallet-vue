@@ -38,14 +38,14 @@
       </div>
       <div class="totalAmount _margin-top-1">
         <div class="headline">Amount:</div>
-        <div class="amount"><span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ transactionAmount.toFixed(4) }} <span
+        <div class="amount"><span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ transactionAmount }} <span
             class="totalPrice">{{ getFormattedPrice(choosedToken.tokenPrice, transactionAmount) }}</span></div>
       </div>
       <div class="totalAmount smaller _margin-top-1">
         <div class="headline">Fee:</div>
         <div class="amount">
           <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol }}</span>
-          {{ getFormattedAmount(choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol, transactionFee) }}
+          {{ transactionFee }}
           <span class="totalPrice">
             {{ getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice : choosedToken.tokenPrice, transactionFee) }}
           </span>
@@ -446,24 +446,36 @@ export default {
     setContact: function (item = false) {
       this.choosedContact = item;
     },
+    _chooseBalance: function (tokenBalance) {
+      if (typeof tokenBalance.balance === "string" && tokenBalance.balance.search("e") !== -1) {
+        return tokenBalance.formatedBalance;
+      }
+      return tokenBalance.balance;
+    },
     checkBalanceEnoughForFeePayment: function () {
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
+      console.log("balance", this.choosedToken);
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this._chooseBalance(this.choosedToken));
+      console.log("num balance: ", bigNumBalance);
       /**
        * Checking balance (handle situation with 0 or less then 0 balance)
        */
+
       if (bigNumBalance < 0) {
         this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}  balance to withdraw`);
       }
 
       if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
         const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
+        if (amountToParse === undefined) {
+          return 0;
+        }
+        const bigNumFee = utils.parseToken(this.choosedToken.symbol, amountToParse);
 
-        if (amountToParse !== undefined) {
-          const bigNumFee = utils.parseToken(this.choosedToken.symbol, amountToParse);
-          if (bigNumBalance - bigNumFee < 0) {
-            this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol} balance to pay fee in. Choose another token for the fee payment`);
-            this.checkForFeeToken();
-          }
+        const maxAmount = bigNumBalance.sub(bigNumFee);
+
+        if (maxAmount.lte(0)) {
+          this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol} balance to pay fee in. Choose another token for the fee payment`);
+          this.checkForFeeToken();
         }
       }
     },

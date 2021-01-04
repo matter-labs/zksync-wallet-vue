@@ -247,6 +247,8 @@ export const actions = {
       }
       await dispatch("restoreProviderConnection");
       const newAccountState = await syncWallet.getAccountState();
+
+      console.log(newAccountState);
       walletData.set({ accountState: newAccountState });
       listCommited = newAccountState.committed.balances;
       listVerified = newAccountState.verified.balances;
