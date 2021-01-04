@@ -23,7 +23,7 @@
     "@babel/core": "^7.12.10",
     "@babel/runtime": "^7.12.5",
     "@ethersproject/logger": "^5.0.8",
-    "@matterlabs/zk-wallet-onboarding": "^1.18.5",
+    "@matterlabs/zk-wallet-onboarding": "^1.18.6",
     "@nuxtjs/axios": "latest",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/pwa": "latest",
