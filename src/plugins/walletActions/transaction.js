@@ -5,8 +5,8 @@ import { walletData } from "@/plugins/walletData";
 export const transaction = async (address, token, feeToken, amount, fees) => {
   const syncWallet = walletData.get().syncWallet;
   let nonce = await syncWallet.getNonce("committed");
-  const amountBigValue = ethers.BigNumber.from(utils.parseToken(token, utils.handleExpNum(token, amount)).toString());
-  const feeBigValue = ethers.BigNumber.from(utils.parseToken(feeToken, utils.handleExpNum(feeToken, fees)).toString());
+  const amountBigValue = ethers.BigNumber.from(utils.parseToken(token, amount).toString());
+  const feeBigValue = ethers.BigNumber.from(utils.parseToken(feeToken, fees).toString());
   const transferTx = {
     fee: 0,
     nonce: nonce,
@@ -55,8 +55,8 @@ export const transaction = async (address, token, feeToken, amount, fees) => {
  */
 export const withdraw = async (address, token, feeToken, amount, fastWithdraw, fees) => {
   const syncWallet = walletData.get().syncWallet;
-  const amountBigValue = ethers.BigNumber.from(utils.parseToken(token, utils.handleExpNum(token, amount)).toString());
-  const feeBigValue = ethers.BigNumber.from(utils.parseToken(feeToken, utils.handleExpNum(feeToken, fees)).toString());
+  const amountBigValue = ethers.BigNumber.from(utils.parseToken(token, amount).toString());
+  const feeBigValue = ethers.BigNumber.from(utils.parseToken(feeToken, fees).toString());
   if (token === feeToken) {
     return await syncWallet.withdrawFromSyncToEthereum({
       ethAddress: address,

@@ -2,8 +2,12 @@ import { walletData } from "@/plugins/walletData.js";
 import handleExpNumber from "@/plugins/handleExpNumber.js";
 
 const parseToken = (symbol, amount) => {
-  const syncProvider = walletData.get().syncProvider;
-  return syncProvider.tokenSet.parseToken(symbol, amount.toString());
+  if (typeof amount === "number") {
+    console.log(symbol, amount);
+    const tokenDecimals = walletData.get().syncProvider.tokenSet.resolveTokenDecimals(symbol);
+    amount = amount.toFixed(tokenDecimals);
+  }
+  return walletData.get().syncProvider.tokenSet.parseToken(symbol, amount.toString());
 };
 const handleExpNum = (symbol, amount) => {
   if (!amount) {
@@ -12,29 +16,25 @@ const handleExpNum = (symbol, amount) => {
   if (typeof amount === "number") {
     amount = handleExpNumber(amount);
   }
-  const syncProvider = walletData.get().syncProvider;
-  return handleFormatToken(symbol, syncProvider.tokenSet.parseToken(symbol, amount.toString()).toString());
+  return handleFormatToken(symbol, parseToken(symbol, amount.toString()).toString());
 };
 const handleFormatToken = (symbol, amount) => {
   if (!amount) return "0";
   if (typeof amount === "number") {
-    amount = amount.toString();
+    amount = handleExpNumber(amount).toString();
+    amount = parseToken(symbol, amount);
   }
-  const syncProvider = walletData.get().syncProvider;
-  return syncProvider.tokenSet.formatToken(symbol, amount);
+  if (amount === "undefined") {
+    amount = "0";
+  }
+  return walletData.get().syncProvider.tokenSet.formatToken(symbol, amount);
 };
 const getFormatedTotalPrice = (price, amount) => {
   const total = price * amount;
   if (!amount || total === 0) {
     return "$0.00";
   }
-  return total < 0.01
-    ? `<$0.01`
-    : `~$${
-        handleExpNumber(total)
-          .toString()
-          .match(/^-?\d+(?:\.\d{0,2})?/)[0]
-      }`;
+  return total < 0.01 ? `<$0.01` : `~$${total.toFixed(2)}`;
 };
 const validateNumber = (amount) => {
   amount = amount.toString();
@@ -53,9 +53,22 @@ const validateNumber = (amount) => {
   }
   return amount;
 };
+
 export default {
-  validateNumber,
   parseToken,
+  timeCalc: (timeInSec) => {
+    const hours = Math.floor(timeInSec / 60 / 60);
+    const minutes = Math.floor(timeInSec / 60) - hours * 60;
+    const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
+
+    return {
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
+    };
+  },
+  handleTimeAmount: (time, string) => `${time} ${string}${time > 1 ? "s" : ""}`,
+  validateNumber,
   handleExpNum,
   handleFormatToken,
   getFormatedTotalPrice,

@@ -3,6 +3,7 @@ import web3Wallet from "@/plugins/web3.js";
 import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
 
 const APP_NAME = "zkSync Beta";
+const EXPLANATION_LINK = "https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message";
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
 const INFURA_KEY = process.env.APP_WALLET_CONNECT;
 const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
@@ -60,7 +61,7 @@ export default (ctx) => {
     hideBranding: true,
     blockPollingInterval: 400000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
-    networkId: parseInt(ETHER_NETWORK_ID), // [Integer] The Ethereum network ID your Dapp uses.
+    networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
     darkMode: colorTheme === "dark",
     subscriptions: {
       wallet: (wallet) => {
@@ -77,6 +78,13 @@ export default (ctx) => {
     },
     walletSelect: {
       wallets: initializedWallets.wallets,
+    },
+    popupContent: {
+      dismiss: "Dismiss",
+      teaser: "Can't find your wallet?",
+      fullHtml: `If you have funds in zkSync on an address that you can't control (a smart contract or an  exchange deposit account),
+        it is possible to initiate a forced withdrawal —&nbsp;<a href="${EXPLANATION_LINK}" target="_blank">please consult the documentation</a>.
+         In the future, this functionality will be automated.`,
     },
   };
 };

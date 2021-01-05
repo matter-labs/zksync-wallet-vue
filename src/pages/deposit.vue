@@ -27,7 +27,7 @@
         <div class="totalAmount _margin-top-2">
           <div class="headline">Amount:</div>
           <div class="amount">
-            <span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ handleExponentialNumber(choosedToken.symbol, transactionAmount) }}
+            <span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ transactionAmount }}
             <span class="totalPrice">{{ getFormattedPrice(choosedToken.price, transactionAmount) }}</span>
           </div>
         </div>
@@ -35,7 +35,8 @@
       </div>
       <div v-else-if="loading===false || tokenSelectionOpened===true">
         <div class="_padding-bottom-1">Amount / asset</div>
-        <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" @keyup.enter="deposit()">
+        <div lang="en-US">
+          <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" step="any" lang="en-US" @keyup.enter="deposit()">
           <i-button v-if="!choosedToken" slot="append" block link variant="secondary"
                     @click="openTokenSelection()">Select token
           </i-button>
@@ -43,10 +44,11 @@
                     @click="openTokenSelection()"><span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i
               class="far fa-angle-down"></i></i-button>
         </i-input>
+        </div>
         <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
           <div class="totalPrice">~${{ (inputTotalSum * choosedToken.price).toFixed(2) }}</div>
-          <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?handleExponentialNumber(choosedToken.symbol, transactionMaxAmount):0">Max:
-            {{ transactionMaxAmount > 0 ? handleExponentialNumber(choosedToken.symbol, transactionMaxAmount) : 0 }}
+          <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?getFormattedAmount(choosedToken.symbol, transactionMaxAmount):0">Max:
+            {{ transactionMaxAmount > 0 ? getFormattedAmount(choosedToken.symbol, transactionMaxAmount) : 0 }}
           </div>
         </div>
         <div v-if="choosedToken && choosedToken.unlocked===false" class="tokenLocked">
@@ -86,7 +88,7 @@
           <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
             <div class="tokenSymbol">{{ item.symbol }}</div>
             <div class="rightSide">
-              <div class="balance">{{ handleExponentialNumber(item.symbol, item.formatedBalance) }}</div>
+              <div class="balance">{{ item.formatedBalance }}</div>
             </div>
           </div>
           <div v-if="search && displayedTokenList.length===0" class="nothingFound">
@@ -142,8 +144,7 @@ export default {
       return this.tokensList.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     transactionMaxAmount: function () {
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.balance));
-      /* const bigNumFee = utils.parseToken(this.choosedToken.symbol, utils.handleExpNum(this.choosedToken.symbol, this.choosedToken.fee)); */
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
       return utils.handleFormatToken(this.choosedToken.symbol, this.zksync.closestPackableTransactionAmount(bigNumBalance));
     },
     blockExplorerLink: function () {
@@ -160,11 +161,14 @@ export default {
     this.loading = false;
   },
   methods: {
+    getFormattedAmount: function (token, amount) {
+      return utils.handleFormatToken(token, +amount);
+    },
     getFormattedPrice: function (price, amount) {
       return utils.getFormatedTotalPrice(price, amount);
     },
     handleExponentialNumber: function (symbol, amount) {
-      return utils.handleExpNum(symbol, amount);
+      return utils.parseToken(symbol, amount);
     },
     openTokenSelection: async function () {
       this.loading = true;
@@ -234,7 +238,7 @@ export default {
     },
     deposit: async function () {
       try {
-        utils.handleExpNum(this.choosedToken.symbol, this.inputTotalSum);
+        utils.parseToken(this.choosedToken.symbol, this.inputTotalSum);
       } catch (error) {
         return (this.mainError = "Invalid amount inputed");
       }
@@ -259,7 +263,6 @@ export default {
             gasLimit: "200000",
           }, */
         });
-        console.log("after deposit");
         this.transactionAmount = this.inputTotalSum;
         this.transactionHash = depositResponse.ethTx.hash;
         this.tip = "Waiting for the transaction to be mined...";
