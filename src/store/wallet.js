@@ -247,7 +247,6 @@ export const actions = {
 
     for (const tokenSymbol in listCommited) {
       const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
-      console.log(listCommited[tokenSymbol], listVerified[tokenSymbol]);
       const commitedBalance = +utils.handleFormatToken(tokenSymbol, listCommited[tokenSymbol] ? listCommited[tokenSymbol] : 0);
       const verifiedBalance = +utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol] : 0);
       tokensList.push({
