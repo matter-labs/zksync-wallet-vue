@@ -73,6 +73,7 @@
 
 <script>
 import Mint from "@/blocks/Mint.vue";
+import utils from "@/plugins/utils";
 export default {
   components: {
     Mint,
@@ -90,7 +91,7 @@ export default {
       if (!this.search.trim()) {
         return this.balances;
       }
-      return this.balances.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
+      return this.balances.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase())).sort(utils.sortBalancesById);
     },
   },
   mounted() {
@@ -100,7 +101,7 @@ export default {
     getBalances: async function () {
       this.loading = true;
       const balances = await this.$store.dispatch("wallet/getzkBalances");
-      this.balances = balances.filter((e) => e.balance > 0);
+      this.balances = balances.filter((e) => e.balance > 0).sort(utils.sortBalancesById);
       this.loading = false;
     },
   },

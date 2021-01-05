@@ -1,6 +1,23 @@
 import { walletData } from "@/plugins/walletData.js";
 import handleExpNumber from "@/plugins/handleExpNumber.js";
 
+/**
+ * @todo Optimize sorting
+ *
+ * @param a
+ * @param b
+ * @return {number}
+ */
+const sortBalancesById = (a, b) => {
+  if (a.id < b.id) {
+    return -1;
+  }
+  if (a.id > b.id) {
+    return 1;
+  }
+  return 0;
+};
+
 const parseToken = (symbol, amount) => {
   if (typeof amount === "number") {
     console.log(symbol, amount);
@@ -72,4 +89,5 @@ export default {
   handleExpNum,
   handleFormatToken,
   getFormatedTotalPrice,
+  sortBalancesById,
 };

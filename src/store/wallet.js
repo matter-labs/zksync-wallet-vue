@@ -51,23 +51,6 @@ function changeAccountHandle(dispatch, context) {
   };
 }
 
-/**
- * @todo Optimize sorting
- *
- * @param a
- * @param b
- * @return {number}
- */
-const sortBalancesById = (a, b) => {
-  if (a.id < b.id) {
-    return -1;
-  }
-  if (a.id > b.id) {
-    return 1;
-  }
-  return 0;
-};
-
 export const state = () => ({
   onboard: false,
   isAccountLocked: false,
@@ -278,7 +261,7 @@ export const actions = {
         restricted: (commitedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol)) === true,
       });
     }
-    tokensList.sort(sortBalancesById);
+    tokensList.sort(utils.sortBalancesById);
     commit("setZkTokens", {
       lastUpdated: new Date().getTime(),
       list: tokensList,
@@ -333,8 +316,8 @@ export const actions = {
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
       return [];
     });
-    const balances = balancesResults.filter((token) => token && token.balance > 0).sort(sortBalancesById);
-    const balancesEmpty = balancesResults.filter((token) => token && token.balance === 0).sort(sortBalancesById);
+    const balances = balancesResults.filter((token) => token && token.balance > 0).sort(utils.sortBalancesById);
+    const balancesEmpty = balancesResults.filter((token) => token && token.balance === 0).sort(utils.sortBalancesById);
     balances.push(...balancesEmpty);
     commit("setTokensList", {
       lastUpdated: new Date().getTime(),
