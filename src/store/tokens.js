@@ -46,6 +46,8 @@ export const getters = {
 };
 
 export const actions = {
+  forceReset() {},
+
   async loadAllTokens({ commit, getters }) {
     if (Object.entries(getters["getAllTokens"]).length === 0) {
       await this.dispatch("wallet/restoreProviderConnection");
@@ -63,17 +65,13 @@ export const actions = {
 
     const tokens = await dispatch("loadAllTokens");
     const zkBalance = accountState.committed.balances;
-
+    console.log(accountState);
     const zkBalances = Object.keys(zkBalance).map((key) => ({
       address: tokens[key].address,
       balance: +syncWallet.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
       symbol: tokens[key].symbol,
       id: tokens[key].id,
     }));
-
-    /* const zkBalances = await Promise.all(zkBalancePromises).catch((err) => {
-      return [];
-    }); */
 
     return {
       tokens,

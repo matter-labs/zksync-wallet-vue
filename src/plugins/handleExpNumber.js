@@ -6,6 +6,7 @@ function getExponentialParts(num) {
   return Array.isArray(num) ? num : String(num).split(/[eE]/);
 }
 export default (num) => {
+  num = num.toString().replace(",", ".");
   const eParts = getExponentialParts(num);
   if (!isExponential(eParts)) {
     return eParts[0];

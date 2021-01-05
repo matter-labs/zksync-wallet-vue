@@ -94,7 +94,8 @@
       <br>
 
       <div class="_padding-bottom-1">Amount / asset</div>
-      <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" @keyup.enter="commitTransaction()"><!-- @keydown="filterNumbers" -->
+      <div lang="en-US">
+        <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" step="any" lang="en-US" @keyup.enter="commitTransaction()"><!-- @keydown="filterNumbers" -->
         <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openTokenList()">
           Select token
         </i-button>
@@ -102,6 +103,7 @@
                   @click="openTokenList()"><span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i class="far fa-angle-down"></i>
         </i-button>
       </i-input>
+      </div>
       <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
         <div class="totalPrice">
           {{ getFormattedPrice(choosedToken.tokenPrice, inputTotalSum) }}
@@ -122,7 +124,7 @@
           Processing time: {{ getTimeString(withdrawTime.normal) }}
         </i-radio>
         <i-radio :value="true">
-          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast && feesObj.fast.toFixed(4) }} <span class="tokenSymbol">{{
+          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast && feesObj.fast.toFixed(8) }} <span class="tokenSymbol">{{
             choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol
           }}</span></span><span v-else class="totalPrice">Loading...</span>).<br>
           Processing time: {{ getTimeString(withdrawTime.fast) }}
@@ -358,7 +360,7 @@ export default {
     },
     transactionMaxAmount: function () {
       this.checkBalanceEnoughForFeePayment();
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this._chooseBalance(this.choosedToken));
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance.toFixed(7));
       if (bigNumBalance.lte(0)) {
         return 0;
       }
@@ -446,14 +448,8 @@ export default {
     setContact: function (item = false) {
       this.choosedContact = item;
     },
-    _chooseBalance: function (tokenBalance) {
-      if (typeof tokenBalance.balance === "string" && tokenBalance.balance.search("e") !== -1) {
-        return tokenBalance.formatedBalance;
-      }
-      return tokenBalance.balance;
-    },
     checkBalanceEnoughForFeePayment: function () {
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this._chooseBalance(this.choosedToken));
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance.toFixed(6));
       /**
        * Checking balance (handle situation with 0 or less then 0 balance)
        */
@@ -651,13 +647,13 @@ export default {
       this.transactionAmount = this.inputTotalSum;
       if (!Array.isArray(withdrawTransaction)) {
         this.transactionHash = withdrawTransaction.txHash;
-        this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, withdrawTransaction.txData.tx.fee);
+        this.transactionFee = utils.handleFormatToken(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, withdrawTransaction.txData.tx.fee);
         this.inputAddress = withdrawTransaction.txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
         await withdrawTransaction.awaitReceipt();
       } else {
         this.transactionHash = withdrawTransaction[0].txHash;
-        this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, withdrawTransaction[1].txData.tx.fee);
+        this.transactionFee = utils.handleFormatToken(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, withdrawTransaction[1].txData.tx.fee);
         this.inputAddress = withdrawTransaction[0].txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
         await syncProvider.notifyTransaction(withdrawTransaction[0].txHash, "COMMIT");
@@ -678,13 +674,13 @@ export default {
       this.transactionAmount = this.inputTotalSum;
       if (!Array.isArray(transferTransaction)) {
         this.transactionHash = transferTransaction.txHash;
-        this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, transferTransaction.txData.tx.fee);
+        this.transactionFee = utils.handleFormatToken(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, transferTransaction.txData.tx.fee);
         this.inputAddress = transferTransaction.txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
         await transferTransaction.awaitReceipt();
       } else {
         this.transactionHash = transferTransaction[0].txHash;
-        this.transactionFee = this.getFormattedAmount(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, transferTransaction[1].txData.tx.fee);
+        this.transactionFee = utils.handleFormatToken(this.choosedFeeToken ? this.choosedFeeToken.symbol : this.choosedToken.symbol, transferTransaction[1].txData.tx.fee);
         this.inputAddress = transferTransaction[0].txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
         await transferTransaction[0].awaitReceipt();

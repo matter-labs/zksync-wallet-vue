@@ -9,54 +9,11 @@
         <div v-else-if="transactionsList.length===0" class="nothingFound">
           <span>History is empty</span>
         </div>
-        <div v-for="(item, index) in transactionsList" v-else :key="index" class="transactionItem">
-          <div class="status">
-            <i-tooltip>
-              <em v-if="item.transactionStatus==='Verified'" class="verified far fa-check-double"></em>
-              <em v-else-if="item.transactionStatus==='Commited'" class="commited far fa-check"></em>
-              <em v-else-if="item.transactionStatus==='In progress'" class="inProgress fad fa-spinner-third"></em>
-              <em v-else class="rejected fas fa-times-circle"></em>
-              <template slot="body">{{ item.transactionStatus }}</template>
-            </i-tooltip>
-          </div>
-          <div class="mainInfo">
-            <i-tooltip>
-              <div class="createdAt">{{ getTimeAgo(item.created_at) }}</div>
-              <template slot="body">{{ getFormatedTime(item.created_at) }}</template>
-            </i-tooltip>
-            <div class="amount" :class="{'small': getFormattedAmount(item).length>10}">{{ getFormattedAmount(item) }}</div>
-            <div class="tokenSymbol">{{ item.tx.priority_op ? item.tx.priority_op.token : item.tx.token }}</div>
-          </div>
-          <div class="actionInfo">
-            <div v-if="item.tx.type==='Withdraw'">
-              <div class="actionType">Withdrawn to:</div>
-              <div v-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()" class="actionValue">Your L1
-                account
-              </div>
-              <nuxt-link v-else class="actionValue" :to="`/contacts?w=${item.tx.to}`">{{ getAddressName(item.tx.to) }}
-              </nuxt-link>
-            </div>
-            <div v-else-if="item.tx.type==='Deposit'">
-              <div class="actionType">Deposit to:</div>
-              <div class="actionValue">Your zkSync account</div>
-            </div>
-            <div v-else-if="item.tx.type==='Transfer'">
-              <div class="actionType">
-                <span v-if="item.tx.feePayment">Fee transaction</span>
-                <span v-else-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()">Received from:</span>
-                <span v-else>Sent to:</span>
-              </div>
-              <span v-if="item.tx.feePayment===true"></span>
-              <nuxt-link v-else-if="item.tx.to.toLowerCase()===walletAddressFull.toLowerCase()" class="actionValue"
-                         :to="`/contacts?w=${item.tx.from}`">{{ getAddressName(item.tx.from) }}
-              </nuxt-link>
-              <nuxt-link v-else class="actionValue" :to="`/contacts?w=${item.tx.to}`">{{ getAddressName(item.tx.to) }}
-              </nuxt-link>
-            </div>
-          </div>
-          <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(item)"><i
-              class="fas fa-external-link"></i></a>
-        </div>
+        <SingleTransaction
+            v-for="(item, index) in transactionsList"
+            v-else
+            :key="index"
+            class="transactionItem" :single-transaction="item"/>
         <i-button v-if="loadingMore===false && loadMoreAvailable===true" block link size="lg" variant="secondary"
                   @click="loadMore()">Load more
         </i-button>
@@ -67,12 +24,13 @@
 </template>
 
 <script>
-import moment from "moment";
 import { walletData } from "@/plugins/walletData";
-import utils from "@/plugins/utils";
-import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
+import SingleTransaction from "@/blocks/SingleTransaction";
 
 export default {
+  components: {
+    SingleTransaction,
+  },
   props: {
     filter: {
       type: String,
@@ -118,43 +76,6 @@ export default {
     }
   },
   methods: {
-    getAddressName: function (address) {
-      address = address.toLowerCase();
-      if (this.addressToNameMap.has(address)) {
-        return this.addressToNameMap.get(address);
-      } else {
-        return address.replace(address.slice(6, address.length - 3), "...");
-      }
-    },
-    getTimeAgo: function (time) {
-      return moment(time).fromNow();
-    },
-    getFormatedTime: function (time) {
-      return moment(time).format("M/D/YYYY h:mm:ss A");
-    },
-    getFormattedAmount: function ({ tx: { type, priority_op, token, amount, fee, feePayment } }) {
-      const symbol = type === "Deposit" ? priority_op.token : token;
-      if (!feePayment) {
-        return utils.handleFormatToken(symbol, type === "Deposit" && priority_op ? priority_op.amount : amount);
-      } else {
-        return utils.handleFormatToken(token, fee);
-      }
-    },
-    getTransactionExplorerLink: function (transaction) {
-      return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
-    },
-    getTransactionStatus: function (transaction) {
-      if (!transaction.success) {
-        return transaction.fail_reason ? transaction.fail_reason : "Rejected";
-      }
-      if (transaction.verified) {
-        return "Verified";
-      } else if (transaction.commited) {
-        return "Commited";
-      } else {
-        return "In progress";
-      }
-    },
     loadTransactions: async function (offset = 0) {
       const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
       this.totalLoadedItem += list.length;
@@ -199,6 +120,18 @@ export default {
         await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while fetching the transactions");
       }
       this.loading = false;
+    },
+    getTransactionStatus: function (transaction) {
+      if (!transaction.success) {
+        return transaction.fail_reason ? transaction.fail_reason : "Rejected";
+      }
+      if (transaction.verified) {
+        return "Verified";
+      } else if (transaction.commited) {
+        return "Commited";
+      } else {
+        return "In progress";
+      }
     },
     loadMore: async function () {
       this.loadingMore = true;

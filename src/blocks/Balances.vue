@@ -54,7 +54,7 @@
           <nuxt-link v-for="(item,index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
             <div class="tokenSymbol">{{ item.symbol }}</div>
             <div class="rightSide">
-              <div class="total"><span class="balancePrice">{{ item.formatedTotalPrice }}</span>&nbsp;&nbsp;{{ item.formatedBalance }}</div>
+              <div class="total"><span class="balancePrice">{{ item.formatedTotalPrice }}</span>&nbsp;&nbsp;{{ item.balance.toFixed(7) }}</div>
               <div class="status">
                 <i-tooltip>
                   <i v-if="item.status==='Verified'" class="verified far fa-check-double"></i>

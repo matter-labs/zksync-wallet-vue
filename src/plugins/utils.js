@@ -11,19 +11,18 @@ const handleExpNum = (symbol, amount) => {
   if (typeof amount === "number") {
     amount = handleExpNumber(amount);
   }
-  return handleFormatToken(symbol, walletData.get().syncProvider.tokenSet.parseToken(symbol, amount.toString()).toString());
+  return handleFormatToken(symbol, parseToken(symbol, amount.toString()).toString());
 };
 const handleFormatToken = (symbol, amount) => {
   if (!amount) return "0";
   if (typeof amount === "number") {
-    amount = amount.toString();
+    amount = handleExpNumber(amount).toString();
     amount = parseToken(symbol, amount);
   }
   if (amount === "undefined") {
     amount = "0";
   }
-  const syncProvider = walletData.get().syncProvider;
-  return syncProvider.tokenSet.formatToken(symbol, amount);
+  return walletData.get().syncProvider.tokenSet.formatToken(symbol, amount);
 };
 const getFormatedTotalPrice = (price, amount) => {
   const total = price * amount;

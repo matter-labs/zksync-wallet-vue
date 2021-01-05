@@ -35,7 +35,8 @@
       </div>
       <div v-else-if="loading===false || tokenSelectionOpened===true">
         <div class="_padding-bottom-1">Amount / asset</div>
-        <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" @keyup.enter="deposit()">
+        <div lang="en-US">
+          <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" step="any" lang="en-US" @keyup.enter="deposit()">
           <i-button v-if="!choosedToken" slot="append" block link variant="secondary"
                     @click="openTokenSelection()">Select token
           </i-button>
@@ -43,6 +44,7 @@
                     @click="openTokenSelection()"><span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i
               class="far fa-angle-down"></i></i-button>
         </i-input>
+        </div>
         <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
           <div class="totalPrice">~${{ (inputTotalSum * choosedToken.price).toFixed(2) }}</div>
           <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?getFormattedAmount(choosedToken.symbol, transactionMaxAmount):0">Max:
