@@ -2,6 +2,11 @@ import { walletData } from "@/plugins/walletData.js";
 import handleExpNumber from "@/plugins/handleExpNumber.js";
 
 const parseToken = (symbol, amount) => {
+  if (typeof amount === "number") {
+    console.log(symbol, amount);
+    const tokenDecimals = walletData.get().syncProvider.tokenSet.resolveTokenDecimals(symbol);
+    amount = amount.toFixed(tokenDecimals);
+  }
   return walletData.get().syncProvider.tokenSet.parseToken(symbol, amount.toString());
 };
 const handleExpNum = (symbol, amount) => {
@@ -29,7 +34,7 @@ const getFormatedTotalPrice = (price, amount) => {
   if (!amount || total === 0) {
     return "$0.00";
   }
-  return total < 0.01 ? `<$0.01` : `~$${parseFloat(total).toFixed(2)}`;
+  return total < 0.01 ? `<$0.01` : `~$${total.toFixed(2)}`;
 };
 const validateNumber = (amount) => {
   amount = amount.toString();
@@ -48,9 +53,22 @@ const validateNumber = (amount) => {
   }
   return amount;
 };
+
 export default {
-  validateNumber,
   parseToken,
+  timeCalc: (timeInSec) => {
+    const hours = Math.floor(timeInSec / 60 / 60);
+    const minutes = Math.floor(timeInSec / 60) - hours * 60;
+    const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
+
+    return {
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
+    };
+  },
+  handleTimeAmount: (time, string) => `${time} ${string}${time > 1 ? "s" : ""}`,
+  validateNumber,
   handleExpNum,
   handleFormatToken,
   getFormatedTotalPrice,

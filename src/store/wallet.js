@@ -236,9 +236,27 @@ export const actions = {
         return localList.list;
       }
       await dispatch("restoreProviderConnection");
-      const newAccountState = await syncWallet.getAccountState();
+      let newAccountState = await syncWallet.getAccountState();
 
-      console.log(newAccountState);
+      // @todo Left for testing purposes.
+      // const testBalances = {
+      //   DAI: 98.91346,
+      //   ETH: 0.00697466,
+      //   STORJ: 10.496,
+      //   USDC: 3329.78057,
+      //   USDT: 98.55857,
+      // };
+      // // const testBalances1 = {
+      // //   BAT: 0.9,
+      // //   DAI: 33543.4016421191,
+      // //   ETH: 0.0028442766686,
+      // //   KNC: 0.8,
+      // //   USDT: 64.277,
+      // // }
+      // newAccountState["committed"]["balances"] = testBalances;
+      // newAccountState["verified"]["balances"] = testBalances;
+      // console.log(newAccountState);
+
       walletData.set({ accountState: newAccountState });
       listCommited = newAccountState.committed.balances;
       listVerified = newAccountState.verified.balances;
@@ -260,6 +278,7 @@ export const actions = {
         restricted: (commitedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol)) === true,
       });
     }
+    tokensList.sort(sortBalancesById);
     commit("setZkTokens", {
       lastUpdated: new Date().getTime(),
       list: tokensList,
@@ -315,7 +334,7 @@ export const actions = {
       return [];
     });
     const balances = balancesResults.filter((token) => token && token.balance > 0).sort(sortBalancesById);
-    const balancesEmpty = balancesResults.filter((token) => token?.balance === 0).sort(sortBalancesById);
+    const balancesEmpty = balancesResults.filter((token) => token && token.balance === 0).sort(sortBalancesById);
     balances.push(...balancesEmpty);
     commit("setTokensList", {
       lastUpdated: new Date().getTime(),

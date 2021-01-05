@@ -118,13 +118,13 @@
 
       <i-radio-group v-if="choosedToken && type==='withdraw' && (!choosedFeeToken || choosedFeeToken.symbol===choosedToken.symbol)" v-model="fastWithdraw" class="_margin-top-2">
         <i-radio :value="false">
-          Normal withdraw (Fee: <span v-if="feesObj">{{ feesObj.normal && feesObj.normal.toFixed(4) }} <span class="tokenSymbol">{{
+          Normal withdraw (Fee: <span v-if="feesObj">{{ feesObj.normal && feesObj.normal.toFixed(6) }} <span class="tokenSymbol">{{
             choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol
           }}</span></span><span v-else class="totalPrice">Loading...</span>).<br>
           Processing time: {{ getTimeString(withdrawTime.normal) }}
         </i-radio>
         <i-radio :value="true">
-          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast && feesObj.fast.toFixed(8) }} <span class="tokenSymbol">{{
+          Fast withdraw (Fee: <span v-if="feesObj">{{ feesObj.fast && feesObj.fast.toFixed(6) }} <span class="tokenSymbol">{{
             choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol
           }}</span></span><span v-else class="totalPrice">Loading...</span>).<br>
           Processing time: {{ getTimeString(withdrawTime.fast) }}
@@ -153,7 +153,7 @@
         <span v-if="feesLoading" class="totalPrice">Loading...</span>
         <span v-else>
           {{
-            feesObj[fastWithdraw===true ? 'fast' : 'normal']
+            feesObj[fastWithdraw===true ? 'fast' : 'normal'].toFixed(7)
           }} <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol }}</span>
           <span class="totalPrice">
             {{ getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice : choosedToken.tokenPrice, feesObj[fastWithdraw===true ? 'fast' : 'normal']) }}
@@ -244,19 +244,6 @@ import utils from "@/plugins/utils.js";
 import validations from "@/plugins/validations.js";
 import { walletData } from "@/plugins/walletData.js";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-
-const timeCalc = (timeInSec) => {
-  const hours = Math.floor(timeInSec / 60 / 60);
-  const minutes = Math.floor(timeInSec / 60) - hours * 60;
-  const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
-
-  return {
-    hours: hours,
-    minutes: minutes,
-    seconds: seconds,
-  };
-};
-const handleTimeAmount = (time, string) => `${time} ${string}${time > 1 ? "s" : ""}`;
 
 export default {
   components: {
@@ -360,7 +347,7 @@ export default {
     },
     transactionMaxAmount: function () {
       this.checkBalanceEnoughForFeePayment();
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance.toFixed(7));
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
       if (bigNumBalance.lte(0)) {
         return 0;
       }
@@ -449,7 +436,7 @@ export default {
       this.choosedContact = item;
     },
     checkBalanceEnoughForFeePayment: function () {
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance.toFixed(6));
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
       /**
        * Checking balance (handle situation with 0 or less then 0 balance)
        */
@@ -545,8 +532,10 @@ export default {
       this.feesLoading = false;
     },
     getTimeString: function (time) {
-      let { hours, minutes, seconds } = timeCalc(time);
-      return `${hours ? handleTimeAmount(hours, "hour") : ""} ${minutes ? handleTimeAmount(minutes, "minute") : ""} ${seconds ? handleTimeAmount(seconds, "second") : ""}`;
+      let { hours, minutes, seconds } = utils.timeCalc(time);
+      return `${hours ? utils.handleTimeAmount(hours, "hour") : ""}
+              ${minutes ? utils.handleTimeAmount(minutes, "minute") : ""}
+              ${seconds ? utils.handleTimeAmount(seconds, "second") : ""}`;
     },
     getContactsList: function () {
       try {
