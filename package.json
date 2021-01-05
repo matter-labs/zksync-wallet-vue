@@ -166,5 +166,5 @@
       "scss/at-rule-no-unknown": true
     }
   },
-  "version": "2.0.0-beta"
+  "version": "2.0.3"
 }
