@@ -48,35 +48,8 @@ function changeAccountHandle(dispatch, context) {
     await dispatch("logout");
     await context.$router.push("/");
     await dispatch("clearDataStorage");
-    /* try {
-      const refreshWalletResult = await dispatch("walletRefresh");
-      if (refreshWalletResult === true) {
-        this.dispatch("toaster/index.js");
-        await context.$router.push("/");
-      } else {
-        await context.$router.push("/account");
-      }
-    } catch (error) {}
-    await context.$router.push("/"); */
   };
 }
-
-/**
- * @todo Optimize sorting
- *
- * @param a
- * @param b
- * @return {number}
- */
-const sortBalancesById = (a, b) => {
-  if (a.id < b.id) {
-    return -1;
-  }
-  if (a.id > b.id) {
-    return 1;
-  }
-  return 0;
-};
 
 export const state = () => ({
   onboard: false,
@@ -246,27 +219,49 @@ export const actions = {
         return localList.list;
       }
       await dispatch("restoreProviderConnection");
-      const newAccountState = await syncWallet.getAccountState();
+      let newAccountState = await syncWallet.getAccountState();
+
+      // @todo Left for testing purposes.
+      // const testBalances = {
+      //   DAI: 98.91346,
+      //   ETH: 0.00697466,
+      //   STORJ: 10.496,
+      //   USDC: 3329.78057,
+      //   USDT: 98.55857,
+      // };
+      // // const testBalances1 = {
+      // //   BAT: 0.9,
+      // //   DAI: 33543.4016421191,
+      // //   ETH: 0.0028442766686,
+      // //   KNC: 0.8,
+      // //   USDT: 64.277,
+      // // }
+      // newAccountState["committed"]["balances"] = testBalances;
+      // newAccountState["verified"]["balances"] = testBalances;
+      // console.log(newAccountState);
+
       walletData.set({ accountState: newAccountState });
       listCommited = newAccountState.committed.balances;
       listVerified = newAccountState.verified.balances;
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
-    for (const prop in listCommited) {
-      const price = await this.dispatch("tokens/getTokenPrice", prop);
-      const commitedBalance = +utils.handleFormatToken(prop, listCommited[prop] ? listCommited[prop] : 0);
-      const verifiedBalance = +utils.handleFormatToken(prop, listVerified[prop] ? listVerified[prop] : 0);
+
+    for (const tokenSymbol in listCommited) {
+      const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
+      const commitedBalance = +utils.handleFormatToken(tokenSymbol, listCommited[tokenSymbol] ? listCommited[tokenSymbol] : 0);
+      const verifiedBalance = +utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol] : 0);
       tokensList.push({
-        symbol: prop,
+        symbol: tokenSymbol,
         status: commitedBalance !== verifiedBalance ? "Pending" : "Verified",
         balance: commitedBalance,
-        formatedBalance: utils.handleExpNum(prop, commitedBalance),
+        formatedBalance: commitedBalance.toFixed(7),
         verifiedBalance: verifiedBalance,
         tokenPrice: price,
         formatedTotalPrice: utils.getFormatedTotalPrice(price, commitedBalance),
-        restricted: (commitedBalance <= 0 || restrictedTokens.hasOwnProperty(prop)) === true,
+        restricted: (commitedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol)) === true,
       });
     }
+    tokensList.sort(utils.sortBalancesById);
     commit("setZkTokens", {
       lastUpdated: new Date().getTime(),
       list: tokensList,
@@ -303,7 +298,7 @@ export const actions = {
           id: currentToken.id,
           address: currentToken.address,
           balance: balance,
-          formatedBalance: utils.handleExpNum(currentToken.symbol, balance),
+          formatedBalance: balance.toFixed(7),
           symbol: currentToken.symbol,
         };
       } catch (error) {
@@ -321,8 +316,8 @@ export const actions = {
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
       return [];
     });
-    const balances = balancesResults.filter((token) => token && token.balance > 0).sort(sortBalancesById);
-    const balancesEmpty = balancesResults.filter((token) => token?.balance === 0).sort(sortBalancesById);
+    const balances = balancesResults.filter((token) => token && token.balance > 0).sort(utils.sortBalancesById);
+    const balancesEmpty = balancesResults.filter((token) => token && token.balance === 0).sort(utils.sortBalancesById);
     balances.push(...balancesEmpty);
     commit("setTokensList", {
       lastUpdated: new Date().getTime(),
