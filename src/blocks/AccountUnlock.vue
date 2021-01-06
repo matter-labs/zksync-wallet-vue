@@ -8,8 +8,8 @@
       proofs. Please bear with us!</p>
     <div class="_padding-y-1">Amount / asset</div>
     <i-input size="lg" placeholder="Select token" disabled :value="inputVal">
-      <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="$emit('selectToken')">Select
-        token
+      <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="$emit('selectToken')">
+        Select token
       </i-button>
       <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
                 @click="$emit('selectToken')">{{ choosedToken.symbol }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
@@ -47,8 +47,9 @@ import utils from "@/plugins/utils";
 export default {
   props: {
     choosedToken: {
+      type: Object,
       required: false,
-      default: "",
+      default: undefined,
     },
   },
   data() {
@@ -119,10 +120,12 @@ export default {
 
         const newAccountState = await syncWallet.getAccountState();
         walletData.set({ accountState: newAccountState });
+        this.redirect("/account");
       } catch (error) {
         if (!error.message && !error.message.includes("User denied")) {
           this.tip = error.message;
         }
+        this.tip = "Unknown error";
       }
       this.loading = false;
       return "";
@@ -146,7 +149,7 @@ export default {
           syncWallet.address(),
           this.choosedToken.symbol,
         );
-        this.totalFee = +utils.handleFormatToken(this.choosedToken.symbol, foundFee.totalFee);
+        this.totalFee = utils.handleFormatToken(this.choosedToken.symbol, foundFee.totalFee);
       } catch (error) {
         await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while receiving an unlock fee");
       }

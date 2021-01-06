@@ -45,7 +45,9 @@
   },
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "devDependencies": {
+    "stylelint": "^13.8.0",
     "@inkline/nuxt": "^2.3.5",
+    "@nuxt/types": "^2.14.12",
     "@nuxtjs/dotenv": "1.4.1",
     "@nuxtjs/style-resources": "^1.0.0",
     "commitlint": "^11.0.0",

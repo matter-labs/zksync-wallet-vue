@@ -8,16 +8,11 @@
       <div>
         <div class="_padding-bottom-1">Contact name</div>
         <i-input v-model="inputedName" size="lg" placeholder="Name" maxlength="20" @keyup.enter="addContact()"/>
-
         <br>
-
         <div class="_padding-bottom-1">Address</div>
         <i-input v-model="inputedWallet" size="lg" placeholder="0x address" type="text" maxlength="42" @keyup.enter="addContact()"/>
-
         <br>
-
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
-
         <i-button v-if="addContactType==='edit'" block link size="md" variant="secondary" @click="deleteContact()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Delete contact</i-button>
         <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
       </div>
@@ -63,8 +58,8 @@
     </div>
     <div v-else class="tileBlock">
       <div class="tileHeadline withBtn h3">
-        <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath && fromRoute.path!=='/transfer')?fromRoute:'/contacts'" class="returnBtn">
-          <i class="far fa-long-arrow-alt-left"></i>
+        <nuxt-link :to="computedReturnLink" class="returnBtn">
+          <i class="far fa-long-arrow-alt-left"/>
         </nuxt-link>
         <div>
           <span v-if="openedContact.notInContacts">{{ openedContact.address.replace(openedContact.address.slice(6, openedContact.address.length - 3), "...") }}</span>
@@ -117,6 +112,9 @@ export default {
     };
   },
   computed: {
+    computedReturnLink: function () {
+      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transfer" ? this.fromRoute : "/contacts";
+    },
     walletAddressFull: function () {
       return walletData.get().syncWallet.address();
     },

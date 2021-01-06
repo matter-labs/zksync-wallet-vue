@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <template>
   <div class="_display-flex _flex-direction-row _align-items-center headerWrapper">
     <svg class="projectLogo _margin-right-1-2" viewBox="0 0 1407 276" fill="none" xmlns="http://www.w3.org/2000/svg">

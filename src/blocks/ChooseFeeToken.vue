@@ -11,7 +11,7 @@
         <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
           <div class="tokenSymbol">{{ item.symbol }}</div>
           <div class="rightSide">
-            <div class="balance">{{ item.formatedBalance }}</div>
+            <div class="balance">{{ item.balance }}</div>
           </div>
         </div>
         <div v-if="tokenSearch && displayedTokenList.length===0" class="nothingFound">
@@ -103,7 +103,9 @@ export default {
     getTokenList: async function () {
       this.tokensLoading = true;
       try {
+        console.log("it's me");
         const balances = await this.$store.dispatch("wallet/getzkBalances");
+        console.log(balances);
         this.tokensList = balances.filter((e) => this.filterBalances(e));
       } catch (error) {
         await this.$store.dispatch("toaster/error", error.message);

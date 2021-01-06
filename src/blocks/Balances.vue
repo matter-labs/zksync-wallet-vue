@@ -54,7 +54,7 @@
           <nuxt-link v-for="(item,index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
             <div class="tokenSymbol">{{ item.symbol }}</div>
             <div class="rightSide">
-              <div class="total"><span class="balancePrice">{{ item.formatedTotalPrice }}</span>&nbsp;&nbsp;{{ item.balance.toFixed(7) }}</div>
+              <div class="total"><span class="balancePrice">{{ item.formatedTotalPrice }}</span>&nbsp;&nbsp;{{ item.balance }}</div>
               <div class="status">
                 <i-tooltip>
                   <i v-if="item.status==='Verified'" class="verified far fa-check-double"></i>
@@ -100,9 +100,14 @@ export default {
   methods: {
     getBalances: async function () {
       this.loading = true;
+      /**
+       * @type {Array}
+       */
       const balances = await this.$store.dispatch("wallet/getzkBalances");
-      const balancesSorted = balances.slice().sort(utils.sortBalancesById);
-      this.balances = balancesSorted.filter((e) => e.balance > 0);
+      this.balances = balances
+        .slice()
+        .sort(utils.sortBalancesById)
+        .filter((e) => e.balance > 0);
       this.loading = false;
     },
   },

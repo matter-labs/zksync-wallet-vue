@@ -28,27 +28,27 @@
           <div class="headline">Amount:</div>
           <div class="amount">
             <span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ transactionAmount }}
-            <span class="totalPrice">{{ getFormattedPrice(choosedToken.price, transactionAmount) }}</span>
+            <span class="totalPrice">{{ transactionAmount }}</span>
           </div>
         </div>
         <i-button block size="lg" variant="secondary" class="_margin-top-1" to="/account">Ok</i-button>
       </div>
       <div v-else-if="loading===false || tokenSelectionOpened===true">
         <div class="_padding-bottom-1">Amount / asset</div>
-        <div lang="en-US">
-          <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" step="any" lang="en-US" @keyup.enter="deposit()">
-          <i-button v-if="!choosedToken" slot="append" block link variant="secondary"
-                    @click="openTokenSelection()">Select token
-          </i-button>
-          <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
-                    @click="openTokenSelection()"><span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i
-              class="far fa-angle-down"></i></i-button>
-        </i-input>
+        <div>
+          <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" step="any" @keyup.enter="deposit()">
+            <i-button v-if="!choosedToken" slot="append" block link variant="secondary"
+                      @click="openTokenSelection()">Select token
+            </i-button>
+            <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
+                      @click="openTokenSelection()"><span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i
+                class="far fa-angle-down"></i></i-button>
+          </i-input>
         </div>
         <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
           <div class="totalPrice">~${{ (inputTotalSum * choosedToken.price).toFixed(2) }}</div>
-          <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?getFormattedAmount(choosedToken.symbol, transactionMaxAmount):0">Max:
-            {{ transactionMaxAmount > 0 ? getFormattedAmount(choosedToken.symbol, transactionMaxAmount) : 0 }}
+          <div class="maxAmount" @click="inputTotalSum=transactionMaxAmount>0?transactionMaxAmount:0">Max:
+            {{ transactionMaxAmount > 0 ? transactionMaxAmount : 0 }}
           </div>
         </div>
         <div v-if="choosedToken && choosedToken.unlocked===false" class="tokenLocked">
@@ -104,11 +104,10 @@
 </template>
 
 <script>
-import { walletData } from "@/plugins/walletData.js";
-import utils from "@/plugins/utils.js";
-import { ethers } from "ethers";
-import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 import Checkmark from "@/components/Checkmark.vue";
+import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
+import utils from "@/plugins/utils.js";
+import { walletData } from "@/plugins/walletData.js";
 
 export default {
   components: {
@@ -258,7 +257,7 @@ export default {
         const depositResponse = await wallet.depositToSyncFromEthereum({
           depositTo: wallet.address(),
           token: this.choosedToken.symbol,
-          amount: ethers.BigNumber.from(utils.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()).toString()),
+          amount: utils.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString()),
           /* ethTxOptions: {
             gasLimit: "200000",
           }, */
