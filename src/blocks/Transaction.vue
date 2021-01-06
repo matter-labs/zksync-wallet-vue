@@ -112,7 +112,7 @@
           {{ transactionMaxAmount > 0 ? getFormattedAmount(choosedToken.symbol, transactionMaxAmount) : 0 }}
         </div>
       </div>
-      <div v-if="choosedToken && inputTotalSum>transactionMaxAmount" class="errorText _text-center _margin-top-1">
+      <div v-if="choosedToken && parseFloat(inputTotalSum) > parseFloat(transactionMaxAmount)" class="errorText _text-center _margin-top-1">
         Not enough <span class="tokenSymbol">{{ choosedToken.symbol }}</span> to perform a transaction
       </div>
 
@@ -137,7 +137,7 @@
       <div v-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
 
       <i-button block size="lg" variant="secondary" class="_margin-top-1"
-                :disabled="!enoughTokenFee || !isAddressValid || !inputTotalSum || inputTotalSum<=0 || !feesObj || !choosedToken || feesLoading || inputTotalSum>transactionMaxAmount"
+                :disabled="isTransferBlocked"
                 @click="commitTransaction()">
         <i v-if="type!=='withdraw'" class="fas fa-paper-plane"></i>
         <i v-else class="fas fa-hand-holding-usd"></i>
@@ -305,6 +305,53 @@ export default {
     };
   },
   computed: {
+    isTransferBlocked: function () {
+      const firstCheck = !this.isAddressValid || !this.inputTotalSum || !this.feesObj || !this.choosedToken || this.feesLoading;
+      if (firstCheck) {
+        return true;
+      }
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
+      if (bigNumBalance.lte(0)) {
+        // this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}`);
+        return true;
+      }
+      if (!this.inputTotalSum) {
+        return true;
+      }
+      const inputAmount = utils.parseToken(this.choosedToken.symbol, parseFloat(this.inputTotalSum));
+
+      if (inputAmount.lte(0)) {
+        return true;
+      }
+
+      if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
+        const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
+        if (amountToParse === undefined) {
+          return true;
+        }
+        const bigNumFee = utils.parseToken(this.choosedToken.symbol, amountToParse);
+
+        let maxAmount = bigNumBalance.sub(bigNumFee);
+
+        if (maxAmount.lte(0)) {
+          this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}`);
+          return true;
+        }
+
+        console.log("inputAmount > maxAmount", inputAmount, maxAmount, inputAmount, inputAmount.gt(maxAmount), inputAmount > inputAmount);
+        const moreThenMax = inputAmount.gt(maxAmount);
+        if (moreThenMax) {
+          this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}`);
+        }
+        return moreThenMax;
+      }
+      console.log("inputAmount > bigNumBalance", inputAmount, bigNumBalance, inputAmount.gt(bigNumBalance));
+      const moreThenMax = inputAmount.gt(bigNumBalance);
+      if (moreThenMax) {
+        this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}`);
+      }
+      return moreThenMax;
+    },
     canSaveContact: function () {
       let isInContactList = false;
       for (const item of this.contactsList) {
