@@ -9,19 +9,30 @@ import handleExpNumber from "@/plugins/handleExpNumber.js";
  * @return {number}
  */
 const sortBalancesById = (a, b) => {
-  if (a.id < b.id) {
-    return -1;
+  if (a.hasOwnProperty("id")) {
+    if (a.id < b.id) {
+      return -1;
+    }
+    if (a.id > b.id) {
+      return 1;
+    }
+    return 0;
+  } else {
+    return a.symbol.localeCompare(b.symbol);
   }
-  if (a.id > b.id) {
-    return 1;
-  }
-  return 0;
+};
+
+const isDecimalsValid = (symbol, rawAmount, decimalsAllowed) => {
+  const decimals = parseFloat(rawAmount) - parseInt(rawAmount);
+  const tokenDecimals = !decimalsAllowed ? walletData.get().syncProvider.tokenSet.resolveTokenDecimals(symbol) : decimalsAllowed;
+  console.log("isDecimalsValid:", rawAmount, decimals, decimals.length, tokenDecimals, decimals.toFixed(tokenDecimals));
+  return decimals.toFixed(tokenDecimals) > 0;
 };
 
 const parseToken = (symbol, amount) => {
   if (typeof amount === "number") {
-    console.log(symbol, amount);
     const tokenDecimals = walletData.get().syncProvider.tokenSet.resolveTokenDecimals(symbol);
+    console.log(symbol, amount, tokenDecimals);
     amount = amount.toFixed(tokenDecimals);
   }
   return walletData.get().syncProvider.tokenSet.parseToken(symbol, amount.toString());
@@ -73,6 +84,7 @@ const validateNumber = (amount) => {
 
 export default {
   parseToken,
+  isDecimalsValid,
   timeCalc: (timeInSec) => {
     const hours = Math.floor(timeInSec / 60 / 60);
     const minutes = Math.floor(timeInSec / 60) - hours * 60;

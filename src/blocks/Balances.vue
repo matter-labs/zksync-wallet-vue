@@ -91,7 +91,7 @@ export default {
       if (!this.search.trim()) {
         return this.balances;
       }
-      return this.balances.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase())).sort(utils.sortBalancesById);
+      return this.balances.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
   },
   mounted() {
@@ -101,7 +101,8 @@ export default {
     getBalances: async function () {
       this.loading = true;
       const balances = await this.$store.dispatch("wallet/getzkBalances");
-      this.balances = balances.filter((e) => e.balance > 0).sort(utils.sortBalancesById);
+      const balancesSorted = balances.slice().sort(utils.sortBalancesById);
+      this.balances = balancesSorted.filter((e) => e.balance > 0);
       this.loading = false;
     },
   },

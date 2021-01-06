@@ -20,10 +20,10 @@
     <account-unlock v-if="isAccountLocked" :choosed-token="choosedToken" @selectToken="openTokenList()"/>
     <div v-else-if="success === true" class="tileBlock">
       <div class="tileHeadline h3">
-        <span>{{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}</span>
+        <span>{{ type==="withdraw" ? "Withdraw" : "Transfer" }}</span>
       </div>
       <checkmark/>
-      <p class="_text-center _margin-top-0">Your {{ type==='withdraw' ? 'withdrawal' : 'transaction' }} will be processed
+      <p class="_text-center _margin-top-0">Your {{ type==="withdraw" ? "withdrawal" : "transaction" }} will be processed
         shortly. Use the transaction link to track the progress.</p>
       <a class="_display-block _text-center _margin-top-1" target="_blank"
          :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
@@ -54,7 +54,7 @@
       <i-button block size="lg" variant="secondary" class="_margin-top-2" to="/account">Ok</i-button>
     </div>
     <div v-else-if="mainLoading===true" class="tileBlock">
-      <div class="tileHeadline h3">{{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}</div>
+      <div class="tileHeadline h3">{{ type==="withdraw" ? "Withdraw" : "Transfer" }}</div>
       <a v-if="transactionHash" class="_display-block _text-center" target="_blank"
          :href="`${blockExplorerLink}/transactions/${transactionHash}`">Link to the transaction <i
           class="fas fa-external-link"></i></a>
@@ -69,7 +69,7 @@
           <i class="far fa-long-arrow-alt-left"></i>
         </nuxt-link>
         <div>
-          {{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}
+          {{ type==="withdraw" ? "Withdraw" : "Transfer" }}
         </div>
       </div>
 
@@ -81,7 +81,7 @@
         </i-column>
         <i-column v-else xs="12" :md="canSaveContact?7:12">
           <i-button block link variant="secondary" @click="contactsListModal=true">
-            {{ isOwnAddress ? 'Own account' : choosedContact.name }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
+            {{ isOwnAddress ? "Own account" : choosedContact.name }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
           </i-button>
         </i-column>
         <i-column xs="12" md="5">
@@ -96,13 +96,13 @@
       <div class="_padding-bottom-1">Amount / asset</div>
       <div lang="en-US">
         <i-input v-model="inputTotalSum" size="lg" placeholder="0.00" type="number" step="any" lang="en-US" @keyup.enter="commitTransaction()"><!-- @keydown="filterNumbers" -->
-        <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openTokenList()">
-          Select token
-        </i-button>
-        <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
-                  @click="openTokenList()"><span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i class="far fa-angle-down"></i>
-        </i-button>
-      </i-input>
+          <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openTokenList()">
+            Select token
+          </i-button>
+          <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
+                    @click="openTokenList()"><span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i class="far fa-angle-down"></i>
+          </i-button>
+        </i-input>
       </div>
       <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
         <div class="totalPrice">
@@ -141,7 +141,7 @@
                 @click="commitTransaction()">
         <i v-if="type!=='withdraw'" class="fas fa-paper-plane"></i>
         <i v-else class="fas fa-hand-holding-usd"></i>
-        {{ type==='withdraw' ? 'Withdraw' : 'Transfer' }}
+        {{ type==="withdraw" ? "Withdraw" : "Transfer" }}
       </i-button>
       <div v-if="cantFindFeeToken===true && feesObj && choosedToken && isAddressValid"
            class="errorText _text-center _margin-top-1">
@@ -153,10 +153,10 @@
         <span v-if="feesLoading" class="totalPrice">Loading...</span>
         <span v-else>
           {{
-            feesObj[fastWithdraw===true ? 'fast' : 'normal'].toFixed(7)
+            feesObj[fastWithdraw===true ? "fast" : "normal"].toFixed(7)
           }} <span class="tokenSymbol">{{ choosedFeeToken ? choosedFeeToken.symbol : choosedToken.symbol }}</span>
           <span class="totalPrice">
-            {{ getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice : choosedToken.tokenPrice, feesObj[fastWithdraw===true ? 'fast' : 'normal']) }}
+            {{ getFormattedPrice(choosedFeeToken ? choosedFeeToken.tokenPrice : choosedToken.tokenPrice, feesObj[fastWithdraw===true ? "fast" : "normal"]) }}
           </span>
           <span class="chooseFeeToken" @click="chooseFeeTokenModal=true">Choose fee token</span>
         </span>
@@ -238,12 +238,12 @@ import ChooseFeeToken from "@/blocks/ChooseFeeToken.vue";
 import Checkmark from "@/components/Checkmark.vue";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
-
-import { transaction, withdraw } from "@/plugins/walletActions/transaction.js";
+import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils.js";
 import validations from "@/plugins/validations.js";
+
+import { transaction, withdraw } from "@/plugins/walletActions/transaction.js";
 import { walletData } from "@/plugins/walletData.js";
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 
 export default {
   components: {
@@ -267,6 +267,7 @@ export default {
   },
   data() {
     return {
+      isTransferBlocked: true,
       zksync: null,
       contactsListModal: false,
       tokenListModal: false,
@@ -305,53 +306,6 @@ export default {
     };
   },
   computed: {
-    isTransferBlocked: function () {
-      const firstCheck = !this.isAddressValid || !this.inputTotalSum || !this.feesObj || !this.choosedToken || this.feesLoading;
-      if (firstCheck) {
-        return true;
-      }
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
-      if (bigNumBalance.lte(0)) {
-        // this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}`);
-        return true;
-      }
-      if (!this.inputTotalSum) {
-        return true;
-      }
-      const inputAmount = utils.parseToken(this.choosedToken.symbol, parseFloat(this.inputTotalSum));
-
-      if (inputAmount.lte(0)) {
-        return true;
-      }
-
-      if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
-        const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
-        if (amountToParse === undefined) {
-          return true;
-        }
-        const bigNumFee = utils.parseToken(this.choosedToken.symbol, amountToParse);
-
-        let maxAmount = bigNumBalance.sub(bigNumFee);
-
-        if (maxAmount.lte(0)) {
-          this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}`);
-          return true;
-        }
-
-        console.log("inputAmount > maxAmount", inputAmount, maxAmount, inputAmount, inputAmount.gt(maxAmount), inputAmount > inputAmount);
-        const moreThenMax = inputAmount.gt(maxAmount);
-        if (moreThenMax) {
-          this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}`);
-        }
-        return moreThenMax;
-      }
-      console.log("inputAmount > bigNumBalance", inputAmount, bigNumBalance, inputAmount.gt(bigNumBalance));
-      const moreThenMax = inputAmount.gt(bigNumBalance);
-      if (moreThenMax) {
-        this.$store.dispatch("toaster/error", `You don't have enough ${this.choosedToken.symbol}`);
-      }
-      return moreThenMax;
-    },
     canSaveContact: function () {
       let isInContactList = false;
       for (const item of this.contactsList) {
@@ -479,10 +433,61 @@ export default {
     }
   },
   methods: {
+    checkIfTransferIsBlocked: async function () {
+      const firstCheck = !this.isAddressValid || !this.inputTotalSum || !this.feesObj || !this.choosedToken || this.feesLoading;
+      if (firstCheck) {
+        return (this.isTransferBlocked = true);
+      }
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
+      if (bigNumBalance.lte(0)) {
+        return (this.isTransferBlocked = true);
+      }
+      if (!this.inputTotalSum || parseFloat(decimalsAllowed) <= 0) {
+        return (this.isTransferBlocked = true);
+      }
+
+      const inputAmount = utils.parseToken(this.choosedToken.symbol, parseFloat(this.inputTotalSum));
+
+      const decimalsAllowed = await this.$store.dispatch("tokens/getTokenDecimals", this.choosedToken.symbol);
+      console.log("decimalsAllowed", parseFloat(decimalsAllowed), this.inputTotalSum);
+      if (!utils.isDecimalsValid(this.choosedToken.symbol, this.inputTotalSum, decimalsAllowed)) {
+        this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${decimalsAllowed} decimal digits max`);
+      }
+
+      if (inputAmount.lte(0)) {
+        return (this.isTransferBlocked = true);
+      }
+
+      if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.isAddressValid && !this.cantFindFeeToken) {
+        const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
+        if (amountToParse === undefined) {
+          return (this.isTransferBlocked = true);
+        }
+        const bigNumFee = utils.parseToken(this.choosedToken.symbol, amountToParse);
+
+        let maxAmount = bigNumBalance.sub(bigNumFee);
+
+        if (maxAmount.lte(0)) {
+          this.setMainError(`Low ${this.choosedToken.symbol} balance`);
+          return (this.isTransferBlocked = true);
+        }
+
+        const moreThenMax = inputAmount.gt(maxAmount);
+        this.setMainError(moreThenMax ? `You don't have enough ${this.choosedToken.symbol}` : "");
+        return (this.isTransferBlocked = moreThenMax);
+      }
+      const moreThenMax = inputAmount.gt(bigNumBalance);
+      this.setMainError(moreThenMax ? `You don't have enough ${this.choosedToken.symbol}` : "");
+      return (this.isTransferBlocked = moreThenMax);
+    },
+    setMainError: function (errorMessage) {
+      this.mainError = errorMessage;
+    },
     setContact: function (item = false) {
       this.choosedContact = item;
     },
     checkBalanceEnoughForFeePayment: function () {
+      this.checkIfTransferIsBlocked();
       const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
       /**
        * Checking balance (handle situation with 0 or less then 0 balance)
@@ -564,6 +569,7 @@ export default {
         this.feesObj = false;
         return;
       }
+      await this.checkIfTransferIsBlocked();
       this.feesLoading = true;
       try {
         const tokenSymbol = this.choosedToken ? this.choosedToken.symbol : "ETH";
@@ -657,8 +663,14 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        if (error.message && error.message.includes("User denied")) {
-          this.mainError = "";
+        if (error.message) {
+          if (error.message.includes("User denied")) {
+            this.mainError = "";
+          } else {
+            if (error.message.includes("Fee Amount is not packable")) {
+              this.mainError = "Fee Amount is not packable";
+            }
+          }
         } else if (error.message && String(error.message).length < 60) {
           this.mainError = error.message;
         } else {

@@ -52,7 +52,7 @@ export const getters = {
     return state.tokenPrices;
   },
   getTokenDecimals(state) {
-    return state.tokenPrices;
+    return state.tokenDecimals;
   },
 };
 
