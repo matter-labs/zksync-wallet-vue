@@ -7,6 +7,8 @@
   }
 
   .transactionsListContainer {
+    // box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.075) !important;
+    border-radius: 0.3rem !important;
     overflow: auto;
     height: 100%;
 
@@ -27,7 +29,7 @@
 
     .transactionItem {
       width: 100%;
-      height: 125px;
+      height: 105px;
       display: grid;
       grid-template-columns: 35px 1fr 115px 40px;
       grid-template-rows: 100%;
@@ -151,6 +153,7 @@ body.inkline {
 
   &.-dark {
     .transactionsPage .transactionsListContainer {
+      background-color: #ffffff10;
       &::-webkit-scrollbar-thumb {
         background-color: $input-border-color-focus-dark;
       }

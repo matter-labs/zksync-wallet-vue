@@ -11,44 +11,37 @@
         <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
           <div class="tokenSymbol">{{ item.symbol }}</div>
           <div class="rightSide">
-            <div class="balance">{{ item.formatedBalance }}</div>
+            <div class="balance">{{ item.balance }}</div>
           </div>
         </div>
-        <div v-if="tokenSearch && displayedTokenList.length===0" class="nothingFound">
+        <div v-if="tokenSearch && displayedTokenList.length ===0" class="nothingFound">
           <span>Your search <b>"{{ tokenSearch }}"</b> did not match any tokens</span>
         </div>
-        <div v-else-if="displayedTokenList.length===0" class="nothingFound">
+        <div v-else-if="displayedTokenList.length ===0" class="nothingFound">
           <span>No balances yet. Please make a deposit or request money from someone!</span>
         </div>
       </div>
     </template>
 
-    <i-button v-if="showCantFindToken" block link size="lg" variant="secondary" class="_margin-top-1" @click="cantFindTokenModal=true">
+    <i-button v-if="showCantFindToken" block link size="lg" variant="secondary" class="_margin-top-1" @click="$store.dispatch('openModal', 'NoTokenFound')">
       Can't find a token?
     </i-button>
-    <i-modal v-model="cantFindTokenModal" size="md">
-      <template slot="header">Can't find a token</template>
-      <div>
-        <p>zkSync currently supports the most popular tokens, we will be adding more over time. <a
-            href="//zksync.io/contact.html" target="_blank" rel="noopener noreferrer">Let us know what tokens you
-          need</a>!</p>
-      </div>
-    </i-modal>
+    <no-token-found v-if="showCantFindToken"/>
   </div>
 </template>
 
 <script>
+import NoTokenFound from "~/blocks/modals/NoTokenFound";
+
 export default {
+  components: { NoTokenFound },
   props: {
-    value: {
-      required: false,
-    },
     showCantFindToken: {
       required: false,
       default: false,
       type: Boolean,
     },
-    checkAccountLocked: {
+    showRestricted: {
       required: false,
       default: false,
       type: Boolean,
@@ -69,14 +62,14 @@ export default {
     };
   },
   computed: {
-    isAccountLocked: function () {
-      return this.$store.getters["wallet/isAccountLocked"];
-    },
     displayedTokenList: function () {
+      const displayTokens = this.tokensList.filter((singleBalance) => {
+        return this.filterBalances(singleBalance);
+      });
       if (!this.tokenSearch.trim()) {
-        return this.tokensList;
+        return displayTokens;
       }
-      return this.tokensList.filter((e) => e.symbol.toLowerCase().includes(this.tokenSearch.trim().toLowerCase()));
+      return displayTokens.filter((e) => e.symbol.toLowerCase().includes(this.tokenSearch.trim().toLowerCase()));
     },
   },
   mounted() {
@@ -84,17 +77,14 @@ export default {
   },
   methods: {
     filterBalances: function (singleBalance) {
-      if (this.checkAccountLocked) {
-        if (this.isAccountLocked === true && singleBalance.restricted) {
-          return false;
-        }
-      }
+      let showBalance = true;
       if (!this.showZeroBalance) {
-        if (singleBalance.balance <= 0) {
-          return false;
-        }
+        showBalance = singleBalance.balance.gte(0);
       }
-      return singleBalance.restricted === false;
+      if (!this.showRestricted) {
+        showBalance = singleBalance.restricted === false;
+      }
+      return showBalance;
     },
     chooseToken: function (token) {
       this.$emit("input", token);
@@ -102,12 +92,11 @@ export default {
     },
     getTokenList: async function () {
       this.tokensLoading = true;
-      try {
-        const balances = await this.$store.dispatch("wallet/getzkBalances");
-        this.tokensList = balances.filter((e) => this.filterBalances(e));
-      } catch (error) {
-        await this.$store.dispatch("toaster/error", error.message);
-      }
+      /**
+       * @type {Array}
+       */
+      const balances = await this.$store.dispatch("wallet/getzkBalances");
+      this.tokensList = balances.slice();
       this.tokensLoading = false;
     },
   },

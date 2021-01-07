@@ -8,8 +8,8 @@
       proofs. Please bear with us!</p>
     <div class="_padding-y-1">Amount / asset</div>
     <i-input size="lg" placeholder="Select token" disabled :value="inputVal">
-      <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="$emit('selectToken')">Select
-        token
+      <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="$emit('selectToken')">
+        Select token
       </i-button>
       <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
                 @click="$emit('selectToken')">{{ choosedToken.symbol }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
@@ -25,7 +25,7 @@
       Fee:
       <span>
         {{totalFee}} {{choosedToken.symbol}}
-        <span class="totalPrice">~${{(totalFee * choosedToken.tokenPrice).toFixed(2)}}</span>
+        <span class="totalPrice">{{getFormattedPrice(totalFee,choosedToken.tokenPrice)}}</span>
       </span>
     </div>
   </div>
@@ -47,8 +47,9 @@ import utils from "@/plugins/utils";
 export default {
   props: {
     choosedToken: {
+      type: Object,
       required: false,
-      default: "",
+      default: undefined,
     },
   },
   data() {
@@ -68,19 +69,23 @@ export default {
       }
     },
   },
+  watch: {
+    choosedToken(val) {
+      this.getUnlockPrice();
+    },
+  },
   mounted() {
     this.getUnlockPrice();
   },
   methods: {
     async unlock() {
-      if (this.choosedToken.balance < 0.000015) {
+      if (this.choosedToken.balance < this.totalFee) {
         return (this.errorText = `Not enough ${this.choosedToken.symbol} to perform a transaction`);
       }
       this.errorText = "";
       this.loading = true;
       try {
         const syncWallet = walletData.get().syncWallet;
-        await this.getUnlockPrice();
         await this.$store.dispatch("wallet/restoreProviderConnection");
         this.tip = "Confirm the transaction to unlock this account";
 
@@ -123,12 +128,15 @@ export default {
         if (!error.message && !error.message.includes("User denied")) {
           this.tip = error.message;
         }
+        this.tip = "Unknown error";
       }
       this.loading = false;
       return "";
     },
+    getFormattedPrice: function (price, amount) {
+      return utils.getFormatedTotalPrice(price, amount);
+    },
     getUnlockPrice: async function () {
-      console.log("getweweewe");
       if (!this.choosedToken) {
         return;
       }
@@ -146,7 +154,7 @@ export default {
           syncWallet.address(),
           this.choosedToken.symbol,
         );
-        this.totalFee = +utils.handleFormatToken(this.choosedToken.symbol, foundFee.totalFee);
+        this.totalFee = utils.handleFormatToken(this.choosedToken.symbol, foundFee.totalFee);
       } catch (error) {
         await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while receiving an unlock fee");
       }

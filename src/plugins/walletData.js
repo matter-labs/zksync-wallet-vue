@@ -10,6 +10,9 @@ const internalWalletData = {
 };
 
 export const walletData = {
+  /**
+   * @return {Promise<null|*>}
+   */
   zkSync: async () => {
     if (!process.client) {
       return null;

@@ -6,9 +6,6 @@
           <logo/>
         </nuxt-link>
         <div class="linksContainer">
-          <!-- <a target="_blank" class="mainLink desktopOnly" :href="getZkScanBaseUrl">Block explorer <i class="fas fa-external-link"></i></a>
-          <a target="_blank" class="mainLink desktopOnly" href="//zksync.io/faq/intro.html">Docs <i
-              class="fas fa-external-link"></i></a> -->
           <div class="userDropdown" @click="accountModal=true">
             <div class="address">{{ walletName }}</div>
             <div class="userImgContainer">

@@ -54,7 +54,7 @@
           <nuxt-link v-for="(item,index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
             <div class="tokenSymbol">{{ item.symbol }}</div>
             <div class="rightSide">
-              <div class="total"><span class="balancePrice">{{ item.formatedTotalPrice }}</span>&nbsp;&nbsp;{{ item.balance.toFixed(7) }}</div>
+              <div class="total"><span class="balancePrice">{{ item.formatedTotalPrice }}</span>&nbsp;&nbsp;{{ item.balance }}</div>
               <div class="status">
                 <i-tooltip>
                   <i v-if="item.status==='Verified'" class="verified far fa-check-double"></i>
@@ -91,7 +91,7 @@ export default {
       if (!this.search.trim()) {
         return this.balances;
       }
-      return this.balances.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase())).sort(utils.sortBalancesById);
+      return this.balances.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
   },
   mounted() {
@@ -100,8 +100,17 @@ export default {
   methods: {
     getBalances: async function () {
       this.loading = true;
+      /**
+       * @type {Array}
+       */
       const balances = await this.$store.dispatch("wallet/getzkBalances");
-      this.balances = balances.filter((e) => e.balance > 0).sort(utils.sortBalancesById);
+      this.balances = balances
+        .slice()
+        .sort(utils.sortBalancesById)
+        .filter((e) => {
+          console.log("filter balances:", e.balance, typeof e.balance, e, e.balance > 0);
+          return e.balance > 0;
+        });
       this.loading = false;
     },
   },

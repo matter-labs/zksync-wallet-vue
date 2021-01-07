@@ -3,7 +3,7 @@
         <div v-if="loggingIn" class="loggingInLoader">
             <logo class="_margin-bottom-3" />
             <h1>Logging in {{selectedWallet ? `with ${selectedWallet}` : ''}}</h1>
-            <p class="hint" v-if="loadingHint">
+            <p v-if="loadingHint" class="hint">
               <span v-if="loadingHint==='followInstructions'">Follow the instructions in your wallet</span>
               <span v-else-if="loadingHint==='loadingData'">Getting wallet information</span>
             </p>
@@ -21,8 +21,8 @@ export default {
     logo,
   },
   computed: {
-    loggingIn: function() {
-      return this.$store.getters['account/loader'];
+    loggingIn: function () {
+      return this.$store.getters["account/loader"];
     },
     selectedWallet: function () {
       return this.$store.getters["account/selectedWallet"];

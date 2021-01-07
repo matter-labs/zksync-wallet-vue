@@ -1,78 +1,55 @@
 import { walletData } from "@/plugins/walletData.js";
-import handleExpNumber from "@/plugins/handleExpNumber.js";
 
 /**
- * @todo Optimize sorting
  *
- * @param a
- * @param b
- * @return {number}
+ * @param symbol
+ * @param amount
+ * @return {BigNumber|*}
  */
-const sortBalancesById = (a, b) => {
-  if (a.id < b.id) {
-    return -1;
-  }
-  if (a.id > b.id) {
-    return 1;
-  }
-  return 0;
-};
-
 const parseToken = (symbol, amount) => {
+  /**
+   * skip already bignumber
+   */
+  if (typeof amount === "object") {
+    console.log("parseToken double call", amount, typeof amount);
+    return amount;
+  }
   if (typeof amount === "number") {
-    console.log(symbol, amount);
     const tokenDecimals = walletData.get().syncProvider.tokenSet.resolveTokenDecimals(symbol);
+    console.log(symbol, amount, tokenDecimals);
     amount = amount.toFixed(tokenDecimals);
   }
   return walletData.get().syncProvider.tokenSet.parseToken(symbol, amount.toString());
 };
-const handleExpNum = (symbol, amount) => {
-  if (!amount) {
-    return "0";
-  }
-  if (typeof amount === "number") {
-    amount = handleExpNumber(amount);
-  }
-  return handleFormatToken(symbol, parseToken(symbol, amount.toString()).toString());
+
+/**
+ * Extended Number type
+ * @return {number|number}
+ */
+Number.prototype.countDecimals = function () {
+  if (Math.floor(this.valueOf()) === this.valueOf()) return 0;
+  const slittedNum = this.toString().split(".");
+  if (slittedNum[1]) return this.toString().split(".")[1].length || 0;
 };
+
 const handleFormatToken = (symbol, amount) => {
-  if (!amount) return "0";
-  if (typeof amount === "number") {
-    amount = handleExpNumber(amount).toString();
-    amount = parseToken(symbol, amount);
-  }
-  if (amount === "undefined") {
-    amount = "0";
-  }
+  if (!amount || amount === "undefined") return "0";
   return walletData.get().syncProvider.tokenSet.formatToken(symbol, amount);
-};
-const getFormatedTotalPrice = (price, amount) => {
-  const total = price * amount;
-  if (!amount || total === 0) {
-    return "$0.00";
-  }
-  return total < 0.01 ? `<$0.01` : `~$${total.toFixed(2)}`;
-};
-const validateNumber = (amount) => {
-  amount = amount.toString();
-  const lastCharacter = amount.substring(amount.length - 1, amount.length);
-  if (lastCharacter !== "0") {
-    amount = handleExpNumber(+amount)
-      .toString()
-      .replace(/-/g, "");
-  }
-  if (amount.length <= 1) {
-    return amount;
-  }
-  const firstCharacter = amount.substring(0, 1);
-  if (amount.length === 2 && firstCharacter === "0" && lastCharacter === "0") {
-    return "0";
-  }
-  return amount;
 };
 
 export default {
   parseToken,
+  /**
+   * Token format validation
+   * @param {string} symbol
+   * @param {string} rawAmount
+   * @param {Number} decimalsAllowed
+   * @return {boolean}
+   */
+  isDecimalsValid: (symbol, rawAmount, decimalsAllowed) => {
+    return rawAmount.length - 1 - parseInt(rawAmount).toString().length <= decimalsAllowed;
+  },
+
   timeCalc: (timeInSec) => {
     const hours = Math.floor(timeInSec / 60 / 60);
     const minutes = Math.floor(timeInSec / 60) - hours * 60;
@@ -84,10 +61,41 @@ export default {
       seconds: seconds,
     };
   },
+
   handleTimeAmount: (time, string) => `${time} ${string}${time > 1 ? "s" : ""}`,
-  validateNumber,
-  handleExpNum,
+
   handleFormatToken,
-  getFormatedTotalPrice,
-  sortBalancesById,
+
+  getFormatedTotalPrice: (price, amount, symbol) => {
+    if (amount === null) {
+      console.log("getFormatedTotalPrice", price, amount, typeof price, typeof amount);
+    }
+    const total = price * (amount && typeof amount["toNumber"] === "object" ? handleFormatToken(symbol, amount.toNumber()) : amount);
+    console.log("called getFormatedTotalPrice", typeof total, total);
+    if (!amount || total === 0) {
+      return "$0.00";
+    }
+    return total < 0.01 ? `<$0.01` : `~$${total.toFixed(2)}`;
+  },
+
+  /**
+   * @todo Optimize sorting
+   *
+   * @param a
+   * @param b
+   * @return {number}
+   */
+  sortBalancesById: (a, b) => {
+    if (a.hasOwnProperty("id")) {
+      if (a.id < b.id) {
+        return -1;
+      }
+      if (a.id > b.id) {
+        return 1;
+      }
+      return 0;
+    } else {
+      return a.symbol.localeCompare(b.symbol);
+    }
+  },
 };

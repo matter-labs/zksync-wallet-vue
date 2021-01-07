@@ -3,12 +3,15 @@
 </template>
 
 <script>
-import Transaction from "@/blocks/Transaction.vue";
+import Transaction from "@/blocks/Transaction";
 export default {
   components: {
     Transaction,
   },
-  asyncData({ from }) {
+  asyncData({ from, store, redirect }) {
+    if (store.getters["wallet/isAccountLocked"]) {
+      redirect("/account/unlock");
+    }
     return {
       fromRoute: from,
     };

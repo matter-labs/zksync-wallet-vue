@@ -29,6 +29,7 @@
       align-items: center;
       justify-content: center;
       font-family: $firaSans;
+
       &.withBtn {
         display: grid;
         grid-template-columns: 40px 1fr;
@@ -36,6 +37,7 @@
         grid-template-rows: 100%;
         align-items: center;
       }
+
       @media (max-width: $mobile) {
         font-size: 22px;
 
@@ -70,6 +72,7 @@
           background: transparentize($color: $gray, $amount: 0.5);
         }
       }
+
       .returnBtn {
         display: block;
         text-decoration: none;
@@ -103,6 +106,7 @@
         background-color: transparent !important;
     } */
   }
+
 }
 
 body.inkline.-light .defaultLayout {
@@ -133,4 +137,21 @@ body.inkline.-dark .defaultLayout {
     background-color: #fff8de1a;
     border-color: #ffffff14;
   }
+}
+
+body.inkline.-dark {
+  .form-input-group.-dark .form-input input,
+  input.form-input.-prefixed {
+    background-color: #ffffff30 !important;
+  }
+}
+.form-input-group.-light .form-input input,
+input.form-input.-prefixed {
+  background-color: #0000000a !important;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.035) !important;
+  border-radius: 0.3rem !important;
+}
+
+.form-input-group.-light .form-input input:focus, input.form-input.-prefixed:focus {
+  border-color: rgba(30, 30, 30, 0.15) !important;
 }

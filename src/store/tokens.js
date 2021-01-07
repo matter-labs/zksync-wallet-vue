@@ -2,7 +2,7 @@ import { walletData } from "@/plugins/walletData.js";
 
 /**
  * Operations with the tokens (assets)
- * @return {{restrictedTokens: [string, string], allTokens: []}}
+ * @return {{tokenPrices: {}, restrictedTokens: [string, string, string], allTokens: {}}}
  */
 export const state = () => ({
   /**
@@ -11,7 +11,13 @@ export const state = () => ({
   restrictedTokens: ["PHNX", "LAMB", "MLTT"],
 
   /**
-   * All available tokens
+   * All available tokens:
+   * — decimals
+   * — symbol
+   * — id
+   * — address
+   *
+   * Addressed by id
    */
   allTokens: {},
 
@@ -19,11 +25,6 @@ export const state = () => ({
    * Token prices
    */
   tokenPrices: {},
-
-  /**
-   * Token decimals
-   */
-  tokenDecimals: {},
 });
 
 export const mutations = {
@@ -32,9 +33,6 @@ export const mutations = {
   },
   setTokenPrice(state, { symbol, obj }) {
     state.tokenPrices[symbol] = obj;
-  },
-  setTokenDecimals(state, { symbol, value }) {
-    state.tokenDecimals[symbol] = value;
   },
 };
 
@@ -51,31 +49,21 @@ export const getters = {
   getTokenPrices(state) {
     return state.tokenPrices;
   },
-  getTokenDecimals(state) {
-    return state.tokenPrices;
-  },
 };
 
 export const actions = {
   /**
-   * Get decimal amount of the given token
-   *
-   * @param commit
-   * @param getters
+   * Get token decimals
+   * @param dispatch
    * @param symbol
-   * @return {Promise<*|*>}
+   * @return {number}
    */
-  async getTokenDecimals({ commit, getters }, symbol) {
-    const tokenDecimals = getters["getTokenDecimals"];
-    if (tokenDecimals.hasOwnProperty(symbol)) {
-      return tokenDecimals[symbol];
+  getTokenDecimals({ dispatch }, symbol) {
+    const tokensList = dispatch("loadAllTokens");
+    if (tokensList[symbol]) {
+      return tokensList[symbol].decimals;
     }
-    const singleTokenDecimals = await walletData.get().syncProvider.tokenSet.resolveTokenDecimals(symbol);
-    commit("setTokenDecimals", {
-      symbol: symbol,
-      value: singleTokenDecimals,
-    });
-    return singleTokenDecimals;
+    //@todo: handle error?
   },
 
   async loadAllTokens({ commit, getters }) {
@@ -95,10 +83,9 @@ export const actions = {
 
     const tokens = await dispatch("loadAllTokens");
     const zkBalance = accountState.committed.balances;
-    console.log(accountState);
     const zkBalances = Object.keys(zkBalance).map((key) => ({
       address: tokens[key].address,
-      balance: +syncWallet.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
+      balance: syncWallet.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
       symbol: tokens[key].symbol,
       id: tokens[key].id,
     }));
