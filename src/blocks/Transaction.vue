@@ -418,11 +418,20 @@ export default {
       }
     },
     inputTotalSum(val) {
-      let inputAmount = null;
+      /**
+       * !!Important!! this is not part of a logic / UI / whatever.
+       * It's ONLY simple way to invalidate values like 0.0000 which shouldn't trigger an error and can't be converted into BigNumber.
+       * Just a check to keep button disabled and avoid shoind a message.
+       */
+      if (!val || !parseFloat(val) || !this.choosedToken) {
+        return this.setMainError("", true);
+      }
 
       if (!utils.isDecimalsValid(this.choosedToken.symbol, val, this.decimalPrecision)) {
         return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`, true);
       }
+
+      let inputAmount = null;
 
       /**
        * If validated too early
@@ -432,7 +441,7 @@ export default {
       } catch (error) {
         let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          errorInfo = `Introduced amount is out of range. Note: ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`;
+          errorInfo = `Introduced amount is out of range. Note: ${this.choosedToken.symbol} doesn't allows that much amount of decimal digits`;
         }
         return this.setMainError(errorInfo, true);
       }
@@ -454,7 +463,7 @@ export default {
       let noErrors = true;
       if (this.choosedFeeToken) {
         if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
-          return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`, true);
+          return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`, true);
         }
       }
       if (!this.transactionMaxAmount || !this.enoughTokenFee) {
@@ -583,11 +592,12 @@ export default {
       this.feesLoading = true;
 
       /**
-       * Validation call
+       * @todo refactor, extract validators from computed max amount
        */
-      this.transactionMaxAmount;
 
       try {
+        this.transactionMaxAmount;
+
         const tokenSymbol = this.choosedToken ? this.choosedToken.symbol : "ETH";
         this.feesObj = await this.$store.dispatch("wallet/getFees", {
           address: this.inputAddress,
@@ -655,6 +665,7 @@ export default {
         } else {
           await this.transfer();
         }
+        this.mainLoading = false;
       } catch (error) {
         this.mainLoading = false;
 
@@ -666,14 +677,20 @@ export default {
             if (error.message.includes("Fee Amount is not packable")) {
               this.mainError = "Fee Amount is not packable";
             }
+            if (error.message.includes("Transaction Amount is not packable")) {
+              this.mainError = "Transaction Amount is not packable";
+            }
           }
-        } else if (error.message && String(error.message).length < 60) {
           this.mainError = error.message;
         } else {
-          this.mainError = "Transaction error";
+          if (error.message && String(error.message).length < 60) {
+            this.mainError = error.message;
+          } else {
+            this.mainError = "Transaction error";
+          }
         }
       }
-      this.mainLoading = false;
+
       this.tip = "";
       return this.mainError === "";
     },
@@ -710,7 +727,7 @@ export default {
       await this.getFees();
       this.tip = "Confirm the transaction to transfer";
       const transferTransaction = await transaction(this.inputAddress, this.choosedToken.symbol, this.getRealFeeToken.symbol, this.inputTotalSumBigNumber, this.feesObj.normal);
-      this.transactionAmount = this.this.inputTotalSumBigNumber;
+      this.transactionAmount = this.inputTotalSumBigNumber;
       if (!Array.isArray(transferTransaction)) {
         this.transactionHash = transferTransaction.txHash;
         this.transactionFee = transferTransaction.txData.tx.fee;
