@@ -13,14 +13,14 @@
         <div v-else>
           <div class="infoBlock">
             <div class="headline">Token price:</div>
-          <div>{{getFormatedTotalPrice(token.tokenPrice, 1)}}</div>
+            <div class="balancePrice">~${{token.tokenPrice.toFixed(2)}}</div>
           </div>
           <div class="infoBlock _margin-top-1">
             <div class="headline">Your balance:</div>
           </div>
           <div class="_display-flex _justify-content-space-between">
             <div class="infoBlock">
-            <div class="balance"><span class="tokenSymbol">{{ symbol }}</span> {{ token.formatedBalance }}&nbsp;&nbsp;<span
+            <div class="balance"><span class="tokenSymbol">{{ symbol }}</span> {{ token.balance }}&nbsp;&nbsp;<span
                 class="balancePrice">{{ token.formatedTotalPrice }}</span></div>
             </div>
             <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">-
@@ -64,8 +64,8 @@ export default {
     this.getData();
   },
   methods: {
-    getFormatedTotalPrice: function (price, amount) {
-      return utils.getFormatedTotalPrice(price, amount);
+    getFormatedTotalPrice: function (price, amount, symbol) {
+      return utils.getFormatedTotalPrice(price, amount, symbol);
     },
     getData: async function () {
       this.loading = true;

@@ -163,7 +163,7 @@ export const actions = {
    * @param getters
    * @param accountState
    * @param force
-   * @return {Promise<[]|*>}
+   * @return {Promise<[array]|*>}
    */
   async getzkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }) {
     let listCommited = {};
@@ -214,10 +214,9 @@ export const actions = {
         symbol: tokenSymbol,
         status: commitedBalance !== verifiedBalance ? "Pending" : "Verified",
         balance: commitedBalance,
-        formatedBalance: utils.handleFormatToken(commitedBalance),
         verifiedBalance: verifiedBalance,
         tokenPrice: price,
-        formatedTotalPrice: utils.getFormatedTotalPrice(price, commitedBalance),
+        formatedTotalPrice: utils.getFormatedTotalPrice(price, commitedBalance, tokenSymbol),
         restricted: (commitedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol)) === true,
       });
     }
@@ -256,19 +255,11 @@ export const actions = {
           id: currentToken.id,
           address: currentToken.address,
           balance: balance,
-          formatedBalance: utils.handleFormatToken(balance),
+          formatedBalance: utils.handleFormatToken(currentToken.symbol, balance),
           symbol: currentToken.symbol,
         };
       } catch (error) {
         this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
-        console.log(error.message);
-        return {
-          id: currentToken.id,
-          address: currentToken.address,
-          balance: balance,
-          formatedBalance: 0,
-          symbol: currentToken.symbol,
-        };
       }
     });
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
@@ -459,7 +450,6 @@ export const actions = {
       return true;
     } catch (error) {
       this.dispatch("toaster/error", `Refreshing state of the wallet failed... Reason: ${error.message}`);
-      console.log("Refresh error", error);
       return false;
     }
   },
@@ -467,9 +457,7 @@ export const actions = {
     commit("clearDataStorage");
   },
   async forceRefreshData({ dispatch }) {
-    await dispatch("getInitialBalances", true).catch((err) => {
-      console.log("forceRefreshData | getInitialBalances error", err);
-    });
+    await dispatch("getInitialBalances", true).catch((err) => {});
     await dispatch("getzkBalances", { accountState: undefined, force: true }).catch((err) => {
       console.log("forceRefreshData | getzkBalances error", err);
     });

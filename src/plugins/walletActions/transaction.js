@@ -1,5 +1,3 @@
-import { ethers } from "ethers";
-import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 
 export const transaction = async (address, token, feeToken, amountBigValue, feeBigValue) => {

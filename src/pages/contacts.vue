@@ -2,8 +2,9 @@
   <div class="contactsPage">
     <i-modal v-model="addContactModal" class="prevent-close" size="md">
       <template slot="header">
-        <span v-if="addContactType==='add'">Add contact</span>
-        <span v-else-if="addContactType==='edit'">Edit contact</span>
+
+        <span v-if="addContactType==='add'">{{$t("pages.contacts.add")}}</span>
+        <span v-else-if="addContactType==='edit'">{{$t("pages.contacts.edit")}}</span>
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>

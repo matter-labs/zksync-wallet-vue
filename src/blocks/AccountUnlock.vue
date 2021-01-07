@@ -25,7 +25,7 @@
       Fee:
       <span>
         {{totalFee}} {{choosedToken.symbol}}
-        <span class="totalPrice">~${{(totalFee * choosedToken.tokenPrice).toFixed(2)}}</span>
+        <span class="totalPrice">{{getFormattedPrice(totalFee,choosedToken.tokenPrice)}}</span>
       </span>
     </div>
   </div>
@@ -69,19 +69,23 @@ export default {
       }
     },
   },
+  watch: {
+    choosedToken(val) {
+      this.getUnlockPrice();
+    },
+  },
   mounted() {
     this.getUnlockPrice();
   },
   methods: {
     async unlock() {
-      if (this.choosedToken.balance < 0.000015) {
+      if (this.choosedToken.balance < this.totalFee) {
         return (this.errorText = `Not enough ${this.choosedToken.symbol} to perform a transaction`);
       }
       this.errorText = "";
       this.loading = true;
       try {
         const syncWallet = walletData.get().syncWallet;
-        await this.getUnlockPrice();
         await this.$store.dispatch("wallet/restoreProviderConnection");
         this.tip = "Confirm the transaction to unlock this account";
 
@@ -120,7 +124,6 @@ export default {
 
         const newAccountState = await syncWallet.getAccountState();
         walletData.set({ accountState: newAccountState });
-        this.redirect("/account");
       } catch (error) {
         if (!error.message && !error.message.includes("User denied")) {
           this.tip = error.message;
@@ -130,8 +133,10 @@ export default {
       this.loading = false;
       return "";
     },
+    getFormattedPrice: function (price, amount) {
+      return utils.getFormatedTotalPrice(price, amount);
+    },
     getUnlockPrice: async function () {
-      console.log("getweweewe");
       if (!this.choosedToken) {
         return;
       }

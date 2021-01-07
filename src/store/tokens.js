@@ -60,7 +60,6 @@ export const actions = {
    */
   getTokenDecimals({ dispatch }, symbol) {
     const tokensList = dispatch("loadAllTokens");
-    console.log(tokensList);
     if (tokensList[symbol]) {
       return tokensList[symbol].decimals;
     }
@@ -84,10 +83,9 @@ export const actions = {
 
     const tokens = await dispatch("loadAllTokens");
     const zkBalance = accountState.committed.balances;
-    console.log(accountState);
     const zkBalances = Object.keys(zkBalance).map((key) => ({
       address: tokens[key].address,
-      balance: +syncWallet.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
+      balance: syncWallet.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
       symbol: tokens[key].symbol,
       id: tokens[key].id,
     }));

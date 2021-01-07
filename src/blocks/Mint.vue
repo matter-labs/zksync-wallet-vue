@@ -128,7 +128,6 @@ export default {
       this.loading = true;
       try {
         const response = await this.$axios.$get(`${FAUCET_TOKEN_API}/is_withdraw_allowed/${syncAddress}`);
-        console.log("checkForTweet response", response.data);
         if (!response.data || response.data === "false") {
           this.step = "tweet";
         } else {

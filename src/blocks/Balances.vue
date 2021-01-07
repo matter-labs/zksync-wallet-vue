@@ -107,7 +107,10 @@ export default {
       this.balances = balances
         .slice()
         .sort(utils.sortBalancesById)
-        .filter((e) => e.balance > 0);
+        .filter((e) => {
+          console.log("filter balances:", e.balance, typeof e.balance, e, e.balance > 0);
+          return e.balance > 0;
+        });
       this.loading = false;
     },
   },

@@ -8,7 +8,10 @@ export default {
   components: {
     Transaction,
   },
-  asyncData({ from }) {
+  asyncData({ from, store, redirect }) {
+    if (store.getters["wallet/isAccountLocked"]) {
+      redirect("/account/unlock");
+    }
     return {
       fromRoute: from,
     };
