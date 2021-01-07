@@ -269,8 +269,6 @@ export default {
   },
   data() {
     return {
-      isWithdrawal: this.type === "withdraw",
-
       decimalPrecision: 18,
       calculatedFees: null,
 
@@ -289,7 +287,7 @@ export default {
       inputTotalSumBigNumber: null,
 
       mainError: "",
-      inputAddress: this.isWithdrawal ? walletData.get().syncWallet.address() : "",
+      inputAddress: this.type === "withdraw" ? walletData.get().syncWallet.address() : "",
       fastWithdraw: false,
 
       contactSearch: "",
@@ -319,6 +317,9 @@ export default {
      * Unified fee token return
      * @return Object
      */
+    isWithdrawal: function () {
+      return this.type === "withdraw";
+    },
     getRealFeeToken: function () {
       return this.choosedFeeToken ? this.choosedFeeToken : this.choosedToken;
     },
