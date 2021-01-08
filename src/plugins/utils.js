@@ -1,4 +1,5 @@
 import { walletData } from "@/plugins/walletData.js";
+import { utils as zkUtils } from 'zksync';
 
 /**
  *
@@ -98,4 +99,9 @@ export default {
       return a.symbol.localeCompare(b.symbol);
     }
   },
+
+  isAmountPackable: (amount) => {
+    return zkUtils.isTransactionAmountPackable(amount);
+  }
 };
+
