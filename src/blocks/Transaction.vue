@@ -389,8 +389,9 @@ export default {
         this.setMainError(`Fee requires recalculation. Reload the page and try again.`);
         return false;
       }
-      if (this.getRealFeeToken && this.getRealFeeToken.balance["lt"] && this.getRealFeeToken.balance.lt(feeAmount)) {
-        this.setMainError(`Not enough <span class="tokenSymbol">${this.getRealFeeToken.symbol}</span> to pay the fee`);
+
+      if (this.getRealFeeToken && this.getRealFeeToken.rawBalance["lt"] && this.getRealFeeToken.rawBalance.lt(feeAmount)) {
+        this.setMainError(`Not enough ${this.getRealFeeToken.symbol} to pay the fee`);
         return false;
       }
       this.setMainError("");
