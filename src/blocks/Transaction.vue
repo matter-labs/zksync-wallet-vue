@@ -112,7 +112,7 @@
           {{ inputTotalSumBigNumber | formatUsdAmount(choosedToken.tokenPrice, choosedToken.symbol) }}
         </div>
         <div class="maxAmount" @click="chooseMaxAmount()">
-          Max: {{ transactionMaxAmount | formatToken(choosedToken.symbol) }}
+          Max: {{ getTransactionMaxAmount() | formatToken(choosedToken.symbol) }}
         </div>
       </div>
 
@@ -278,7 +278,6 @@ export default {
       tokenListModal: false,
       chooseFeeTokenModal: false,
       hasValidAmount: false,
-      hasErrors: false,
       //hasBlockEnforced: false,
 
       mainLoading: true,
@@ -324,13 +323,6 @@ export default {
       return this.type === "withdraw";
     },
     hasBlockEnforced: function() {
-      console.log('this.inputTotalSumBigNumber', this.inputTotalSumBigNumber);
-      console.log('this.feesObj', this.feesObj);
-      console.log('this.getRealFeeToken', this.getRealFeeToken);
-      console.log('this.inputTotalSumBigNumber', this.inputTotalSumBigNumber);
-      console.log('this.inputTotalSum', this.inputTotalSum);
-      console.log('parseFloat(this.inputTotalSum)', parseFloat(this.inputTotalSum));
-      console.log('this.choosedToken', this.choosedToken)
       return !this.inputTotalSumBigNumber 
       || !this.feesObj 
       || !this.getRealFeeToken 
@@ -379,13 +371,6 @@ export default {
       && !this.mainError
       && !this.hasBlockEnforced;
 
-      console.log('hasValidAddress', this.hasValidAddress);
-      console.log('hasValidAmount', this.hasValidAmount);
-      console.log('choosedToken', this.choosedToken);
-      console.log('hasErrors', !!this.hasErrors);
-      console.log('mainError', !!this.mainError);
-      console.log('hasBlockEnforced', !!this.hasBlockEnforced);
-
       return !isTransferAvaliable;
     },
     isOwnAddress: function () {
@@ -393,43 +378,6 @@ export default {
     },
     ownAddress: function () {
       return walletData.get().syncWallet.address();
-    },
-
-    /**
-     * @used Helpful computed
-     * @return {number|*}
-     */
-    transactionMaxAmount: function () {
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
-      if (bigNumBalance.lte(0)) {
-        return 0;
-      }
-
-      let closestPackableInput = bigNumBalance;
-      if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.hasValidAddress && !this.cantFindFeeToken) {
-        const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
-        if (amountToParse === undefined) {
-          return 0;
-        }
-        const maxAmount = bigNumBalance.sub(amountToParse);
-
-        if (maxAmount.lte(0)) {
-          this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
-          return 0;
-        }
-        closestPackableInput = maxAmount;
-      }
-      const realMaxAmount = this.zksync.closestPackableTransactionAmount(closestPackableInput);
-
-      if (!this.inputTotalSumBigNumber) {
-        this.setMainError("", true);
-      } else if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
-        this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
-      } else {
-        this.setMainError("");
-      }
-
-      return realMaxAmount;
     },
     enoughTokenFee: function () {
       if (!this.feesObj || !this.getRealFeeToken || !this.inputTotalSumBigNumber) {
@@ -451,6 +399,26 @@ export default {
     blockExplorerLink: function () {
       return APP_ZKSYNC_BLOCK_EXPLORER;
     },
+    hasErrors: function() {
+      if(!this.choosedToken || !this.decimalPrecision) {
+        return false; 
+      }
+      try {
+        let noErrors = true;
+        if (this.choosedFeeToken) {
+          if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
+            this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`);
+            return;
+          }
+        }
+        if (!this.getTransactionMaxAmount() || !this.enoughTokenFee) {
+          noErrors = false;
+        }
+        return !noErrors;
+      } catch {
+        return true;
+      }
+    }
   },
   watch: {
     hasBlockEnforced(val) {
@@ -463,19 +431,6 @@ export default {
     },
     inputTotalSum(val) {
       this.validateAmount(val);
-    },
-    fastWithdraw(state) {
-      let noErrors = true;
-      if (this.choosedFeeToken) {
-        if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
-          this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`);
-          return;
-        }
-      }
-      if (!this.transactionMaxAmount || !this.enoughTokenFee) {
-        noErrors = false;
-      }
-      return (this.hasErrors = !noErrors);
     },
     choosedToken: {
       deep: true,
@@ -490,11 +445,11 @@ export default {
     },
     choosedFeeToken: {
       deep: true,
-      handler(val) {
+      async handler(val) {
         if (this.isWithdrawal && val && val.symbol !== this.choosedToken.symbol) {
           this.fastWithdraw = false;
         }
-        this.getFees();
+        await this.getFees();
         this.validateAmount(this.inputTotalSum);
       },
     },
@@ -525,7 +480,7 @@ export default {
   },
   methods: {
     chooseMaxAmount: function () {
-      this.inputTotalSum = utils.handleFormatToken(this.choosedToken.symbol, this.transactionMaxAmount);
+      this.inputTotalSum = utils.handleFormatToken(this.choosedToken.symbol, this.getTransactionMaxAmount());
     },
     updateDecimals: async function () {
       const decimals = await this.$store.dispatch("tokens/getTokenDecimals", this.choosedToken.symbol);
@@ -601,7 +556,7 @@ export default {
        */
 
       try {
-        this.transactionMaxAmount;
+        this.getTransactionMaxAmount();
 
         const tokenSymbol = this.choosedToken ? this.choosedToken.symbol : "ETH";
         this.feesObj = await this.$store.dispatch("wallet/getFees", {
@@ -754,7 +709,8 @@ export default {
       // Make it so that if there is an error with the input
       // the dollar price is displayed as zero
       this.inputTotalSumBigNumber = null;
-
+      this.hasValidAmount = false;
+      
       /**
        * !!Important!! this is not part of a logic / UI / whatever.
        * It's ONLY simple way to invalidate values like 0.0000 which shouldn't trigger an error and can't be converted into BigNumber.
@@ -794,7 +750,8 @@ export default {
       this.inputTotalSum = val;
       this.inputTotalSumBigNumber = inputAmount;
 
-      if (inputAmount.gt(this.transactionMaxAmount)) {
+
+      if (inputAmount.gt(this.getTransactionMaxAmount())) {
         this.setMainError(`Not enough ${this.choosedToken.symbol} to ${this.isWithdrawal ? "withdraw" : "transfer"} requested amount`);
         this.hasValidAmount = false;
         return false;
@@ -803,6 +760,42 @@ export default {
 
       return (this.hasValidAmount = true);
     },
+
+    getTransactionMaxAmount() {
+      if(!this.choosedToken) {
+        return 0;
+      }
+
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
+      if (bigNumBalance.lte(0)) {
+        return 0;
+      }
+
+      let closestPackableInput = bigNumBalance;
+      if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.hasValidAddress && !this.cantFindFeeToken) {
+        const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
+        if (amountToParse === undefined) {
+          return 0;
+        }
+        const maxAmount = bigNumBalance.sub(amountToParse);
+        if (maxAmount.lte(0)) {
+          this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
+          return 0;
+        }
+        closestPackableInput = maxAmount;
+      }
+      const realMaxAmount = this.zksync.closestPackableTransactionAmount(closestPackableInput);
+
+      if (!this.inputTotalSumBigNumber) {
+        this.setMainError("", true);
+      } else if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
+        this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
+      } else {
+        this.setMainError("");
+      }
+
+      return realMaxAmount;
+    }
   },
 };
 </script>
