@@ -34,7 +34,7 @@
         <div class="headline">Amount:</div>
         <div class="amount">
           <span class="tokenSymbol">{{ choosedToken.symbol }}</span>
-          {{ transactionAmount |formatToken(choosedToken.symbol) }}
+          {{ transactionAmount | formatToken(choosedToken.symbol) }}
           <span class="totalPrice">
             {{ transactionAmount | formatUsdAmount(choosedToken.tokenPrice, choosedToken.symbol) }}
           </span>
@@ -98,7 +98,7 @@
       <br>
       <div class="_padding-bottom-1">Amount / asset</div>
       <div>
-        <i-input v-model="inputTotalSum" size="lg" :precision="decimalPrecision" type="number" @keyup.enter="commitTransaction()">
+        <i-input v-model="inputTotalSum" size="lg" :precision="decimalPrecision" type="text" @keyup.enter="commitTransaction()">
           <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openTokenList()">
             Select token
           </i-button>
@@ -279,7 +279,7 @@ export default {
       chooseFeeTokenModal: false,
       hasValidAmount: false,
       hasErrors: false,
-      hasBlockEnforced: false,
+      //hasBlockEnforced: false,
 
       mainLoading: true,
       withdrawTime: false,
@@ -322,6 +322,20 @@ export default {
      */
     isWithdrawal: function () {
       return this.type === "withdraw";
+    },
+    hasBlockEnforced: function() {
+      console.log('this.inputTotalSumBigNumber', this.inputTotalSumBigNumber);
+      console.log('this.feesObj', this.feesObj);
+      console.log('this.getRealFeeToken', this.getRealFeeToken);
+      console.log('this.inputTotalSumBigNumber', this.inputTotalSumBigNumber);
+      console.log('this.inputTotalSum', this.inputTotalSum);
+      console.log('parseFloat(this.inputTotalSum)', parseFloat(this.inputTotalSum));
+      console.log('this.choosedToken', this.choosedToken)
+      return !this.inputTotalSumBigNumber 
+      || !this.feesObj 
+      || !this.getRealFeeToken 
+      || !this.inputTotalSumBigNumber
+      || !this.inputTotalSum || !parseFloat(this.inputTotalSum) || !this.choosedToken;
     },
     getRealFeeToken: function () {
       return this.choosedFeeToken ? this.choosedFeeToken : this.choosedToken;
@@ -427,7 +441,6 @@ export default {
         this.setMainError(`Fee requires recalculation. Reload the page and try again.`);
         return false;
       }
-      console.log(feeAmount);
       if (this.getRealFeeToken && this.getRealFeeToken.balance["lt"] && this.getRealFeeToken.balance.lt(feeAmount)) {
         this.setMainError(`Not enough <span class="tokenSymbol">${this.getRealFeeToken.symbol}</span> to pay the fee`);
         return false;
@@ -440,21 +453,24 @@ export default {
     },
   },
   watch: {
+    hasBlockEnforced(val) {
+      console.log('block enforced changed: ', val);
+    },
     inputAddress(addressValue) {
       if (this.hasValidAddress) {
         this.getFees();
       }
     },
     inputTotalSum(val) {
-      return this.validateAmount(val);
+      if(!this.validateAmount(val)) {
+        this.inputTotalSumBigNumber = null;
+      }
     },
     fastWithdraw(state) {
       let noErrors = true;
       if (this.choosedFeeToken) {
         if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
-          return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`, true);
-        } else {
-          this.setMainError("");
+          return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`);
         }
       }
       if (!this.transactionMaxAmount || !this.enoughTokenFee) {
@@ -526,8 +542,7 @@ export default {
       }
       return calculatedFee;
     },
-    setMainError: function (errorMessage, forceBlock = false) {
-      this.hasBlockEnforced = forceBlock;
+    setMainError: function (errorMessage) {
       this.mainError = errorMessage;
     },
     setContact: function (item = false) {
@@ -561,6 +576,7 @@ export default {
     chooseToken: async function (token) {
       this.tokenListModal = false;
       this.choosedToken = token;
+      this.validateAmount(this.inputTotalSum);
       await this.getFees();
     },
     chooseContact: function (contact) {
@@ -739,14 +755,16 @@ export default {
       /**
        * !!Important!! this is not part of a logic / UI / whatever.
        * It's ONLY simple way to invalidate values like 0.0000 which shouldn't trigger an error and can't be converted into BigNumber.
-       * Just a check to keep button disabled and avoid shoind a message.
+       * Just a check to keep button disabled and avoid shoing a message.
        */
       if (!val || !parseFloat(val) || !this.choosedToken) {
-        return this.setMainError("", true);
+        this.setMainError("", true);
+        return false;
       }
 
       if (!utils.isDecimalsValid(this.choosedToken.symbol, val, this.decimalPrecision)) {
-        return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`, true);
+        this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`);
+        return false;
       }
 
       let inputAmount = null;
@@ -761,16 +779,19 @@ export default {
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
           errorInfo = `Introduced amount is out of range. Note: ${this.choosedToken.symbol} doesn't allows that much amount of decimal digits`;
         }
-        return this.setMainError(errorInfo, true);
+        this.setMainError(errorInfo);
+        return false;
       }
 
       if (inputAmount.lte(0)) {
-        return (this.hasValidAmount = false);
+        this.hasValidAmount = false;
+        return false;
       }
 
       if (inputAmount.gt(this.transactionMaxAmount)) {
-        this.setMainError(`Not enough, ${this.choosedToken.symbol} to ${this.isWithdrawal ? "withdraw" : "transfer"} requested amount`);
-        return (this.hasValidAmount = false);
+        this.setMainError(`Not enough ${this.choosedToken.symbol} to ${this.isWithdrawal ? "withdraw" : "transfer"} requested amount`);
+        this.hasValidAmount = false;
+        return false;
       }
       this.inputTotalSumBigNumber = inputAmount;
       this.inputTotalSum = val;
