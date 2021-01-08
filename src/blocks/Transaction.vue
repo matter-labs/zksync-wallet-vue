@@ -112,7 +112,7 @@
           {{ inputTotalSumBigNumber | formatUsdAmount(choosedToken.tokenPrice, choosedToken.symbol) }}
         </div>
         <div class="maxAmount" @click="chooseMaxAmount()">
-          Max: {{ getTransactionMaxAmount() | formatToken(choosedToken.symbol) }}
+          Max: {{ transactionMaxAmount | formatToken(choosedToken.symbol) }}
         </div>
       </div>
 
@@ -411,13 +411,48 @@ export default {
             return;
           }
         }
-        if (!this.getTransactionMaxAmount() || !this.enoughTokenFee) {
+        if (!this.transactionMaxAmount || !this.enoughTokenFee) {
           noErrors = false;
         }
         return !noErrors;
       } catch {
         return true;
       }
+    },
+    transactionMaxAmount() {
+      if(!this.choosedToken) {
+        return 0;
+      }
+
+      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
+      if (bigNumBalance.lte(0)) {
+        return 0;
+      }
+
+      let closestPackableInput = bigNumBalance;
+      if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.hasValidAddress && !this.cantFindFeeToken) {
+        const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
+        if (amountToParse === undefined) {
+          return 0;
+        }
+        const maxAmount = bigNumBalance.sub(amountToParse);
+        if (maxAmount.lte(0)) {
+          this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
+          return 0;
+        }
+        closestPackableInput = maxAmount;
+      }
+      const realMaxAmount = this.zksync.closestPackableTransactionAmount(closestPackableInput);
+
+      if (!this.inputTotalSumBigNumber) {
+        this.setMainError("", true);
+      } else if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
+        this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
+      } else {
+        this.setMainError("");
+      }
+
+      return realMaxAmount;
     }
   },
   watch: {
@@ -480,7 +515,7 @@ export default {
   },
   methods: {
     chooseMaxAmount: function () {
-      this.inputTotalSum = utils.handleFormatToken(this.choosedToken.symbol, this.getTransactionMaxAmount());
+      this.inputTotalSum = utils.handleFormatToken(this.choosedToken.symbol, this.transactionMaxAmount);
     },
     updateDecimals: async function () {
       const decimals = await this.$store.dispatch("tokens/getTokenDecimals", this.choosedToken.symbol);
@@ -556,8 +591,6 @@ export default {
        */
 
       try {
-        this.getTransactionMaxAmount();
-
         const tokenSymbol = this.choosedToken ? this.choosedToken.symbol : "ETH";
         this.feesObj = await this.$store.dispatch("wallet/getFees", {
           address: this.inputAddress,
@@ -751,7 +784,7 @@ export default {
       this.inputTotalSumBigNumber = inputAmount;
 
 
-      if (inputAmount.gt(this.getTransactionMaxAmount())) {
+      if (inputAmount.gt(this.transactionMaxAmount)) {
         this.setMainError(`Not enough ${this.choosedToken.symbol} to ${this.isWithdrawal ? "withdraw" : "transfer"} requested amount`);
         this.hasValidAmount = false;
         return false;
@@ -760,42 +793,6 @@ export default {
 
       return (this.hasValidAmount = true);
     },
-
-    getTransactionMaxAmount() {
-      if(!this.choosedToken) {
-        return 0;
-      }
-
-      const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
-      if (bigNumBalance.lte(0)) {
-        return 0;
-      }
-
-      let closestPackableInput = bigNumBalance;
-      if ((!this.choosedFeeToken || this.choosedFeeToken.symbol === this.choosedToken.symbol) && this.hasValidAddress && !this.cantFindFeeToken) {
-        const amountToParse = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
-        if (amountToParse === undefined) {
-          return 0;
-        }
-        const maxAmount = bigNumBalance.sub(amountToParse);
-        if (maxAmount.lte(0)) {
-          this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
-          return 0;
-        }
-        closestPackableInput = maxAmount;
-      }
-      const realMaxAmount = this.zksync.closestPackableTransactionAmount(closestPackableInput);
-
-      if (!this.inputTotalSumBigNumber) {
-        this.setMainError("", true);
-      } else if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
-        this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
-      } else {
-        this.setMainError("");
-      }
-
-      return realMaxAmount;
-    }
   },
 };
 </script>
