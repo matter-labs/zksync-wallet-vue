@@ -297,10 +297,11 @@ export default {
       // bad since one type of error might want to set mainError as "", while the other
       // one might want to set a non-nullish value that should be displayed to the user.
       //
-      // `digitsError` was a temporary solution to cope that problem
-      // with error of user entering too many digits.
+      // `digitsError` and `packingError` were a temporary solution to cope that problem
+      // with error of user entering too many digits, and unpackable amount error.
       mainError: "",
       digitsError: "",
+      packingError: "",
       inputAddress: this.type === "withdraw" ? walletData.get().syncWallet.address() : "",
       fastWithdraw: false,
 
@@ -335,7 +336,7 @@ export default {
       return this.type === "withdraw";
     },
     displayedError: function() {
-      return this.mainError || this.digitsError;
+      return this.mainError || this.digitsError || this.packingError;
     },
     hasBlockEnforced: function() {
       return !this.inputTotalSumBigNumber 
@@ -384,7 +385,7 @@ export default {
         !this.hasValidAmount || 
         !this.choosedToken ||
         !!this.hasErrors || 
-        !!this.mainError || 
+        !!this.displayedError || 
         !!this.hasBlockEnforced
       );
     },
@@ -799,7 +800,6 @@ export default {
         this.digitsError = errorInfo;
         return false;
       }
-
       this.digitsError = '';
 
       if (inputAmount.lte(0)) {
@@ -817,6 +817,12 @@ export default {
         return false;
       }
       this.setMainError("");
+
+      if (this.isWithdrawal || utils.isAmountPackable(this.inputTotalSumBigNumber)) {
+        this.packingError = '';
+      } else {
+        this.packingError = 'Max supported precision for transfers is 10 decimal digits';
+      }
 
       return (this.hasValidAmount = true);
     },
