@@ -818,7 +818,7 @@ export default {
       }
       this.setMainError("");
 
-      if (utils.isAmountPackable(this.inputTotalSumBigNumber)) {
+      if (this.isWithdrawal || utils.isAmountPackable(this.inputTotalSumBigNumber)) {
         this.packingError = '';
       } else {
         this.packingError = 'Transaction Amount is not packable.';
