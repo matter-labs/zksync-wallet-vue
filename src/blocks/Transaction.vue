@@ -585,7 +585,7 @@ export default {
       this.mainLoading = false;
     },
     getFees: async function () {
-      if (!this.hasValidAddress || (this.choosedToken.restricted && !this.choosedFeeToken)) {
+      if (!this.hasValidAddress || (this.choosedToken.restricted && !this.choosedFeeToken) || !this.choosedToken) {
         console.log("getFees disabled", this.inputAddress, this.hasValidAddress, this.choosedToken, this.choosedFeeToken);
         this.feesObj = false;
         return;
