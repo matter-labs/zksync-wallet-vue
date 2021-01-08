@@ -365,6 +365,13 @@ export default {
       && !this.mainError
       && !this.hasBlockEnforced;
 
+      console.log('hasValidAddress', this.hasValidAddress);
+      console.log('hasValidAmount', this.hasValidAmount);
+      console.log('choosedToken', this.choosedToken);
+      console.log('hasErrors', !!this.hasErrors);
+      console.log('mainError', !!this.mainError);
+      console.log('hasBlockEnforced', !!this.hasBlockEnforced);
+
       return !isTransferAvaliable;
     },
     isOwnAddress: function () {
@@ -411,17 +418,22 @@ export default {
       return realMaxAmount;
     },
     enoughTokenFee: function () {
-      if (!this.feesObj || !this.choosedFeeToken || !this.inputTotalSumBigNumber) {
-        return this.setMainError(``, true);
+      if (!this.feesObj || !this.getRealFeeToken || !this.inputTotalSumBigNumber) {
+        this.setMainError(``, true);
+        return false;
       }
       const feeAmount = this.fastWithdraw === true ? this.feesObj["fast"] : this.feesObj["normal"];
       if (feeAmount.lte(0)) {
         this.setMainError(`Fee requires recalculation. Reload the page and try again.`);
+        return false;
       }
-      if (this.choosedFeeToken && this.choosedFeeToken.balance["lt"] && this.choosedFeeToken.balance.lt(feeAmount)) {
-        this.setMainError(`Not enough <span class="tokenSymbol">${this.choosedFeeToken.symbol}</span> to pay the fee`);
+      console.log(feeAmount);
+      if (this.getRealFeeToken && this.getRealFeeToken.balance["lt"] && this.getRealFeeToken.balance.lt(feeAmount)) {
+        this.setMainError(`Not enough <span class="tokenSymbol">${this.getRealFeeToken.symbol}</span> to pay the fee`);
+        return false;
       }
-      return this.setMainError("");
+      this.setMainError("");
+      return true;
     },
     blockExplorerLink: function () {
       return APP_ZKSYNC_BLOCK_EXPLORER;
@@ -442,7 +454,7 @@ export default {
         if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
           return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`, true);
         } else {
-          return this.setMainError("");
+          this.setMainError("");
         }
       }
       if (!this.transactionMaxAmount || !this.enoughTokenFee) {
