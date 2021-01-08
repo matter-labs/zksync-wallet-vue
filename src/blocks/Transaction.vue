@@ -700,43 +700,53 @@ export default {
         this.feesObj[this.fastWithdraw === true ? "fast" : "normal"],
       );
       this.transactionAmount = this.inputTotalSumBigNumber;
+
+      let receipt = null;
       if (!Array.isArray(withdrawTransaction)) {
         this.transactionHash = withdrawTransaction.txHash;
         this.transactionFee = withdrawTransaction.txData.tx.fee;
         this.inputAddress = withdrawTransaction.txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
-        await withdrawTransaction.awaitReceipt();
+        receipt = await withdrawTransaction.awaitReceipt();
       } else {
         this.transactionHash = withdrawTransaction[0].txHash;
         this.transactionFee = withdrawTransaction[1].txData.tx.fee;
         this.inputAddress = withdrawTransaction[0].txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
-        await syncProvider.notifyTransaction(withdrawTransaction[0].txHash, "COMMIT");
+        receipt = await syncProvider.notifyTransaction(withdrawTransaction[0].txHash, "COMMIT");
       }
       await this.$store.dispatch("wallet/forceRefreshData");
-      this.success = true;
+      this.success = receipt.success;
+      if(receipt.failReason) {
+        throw new Error(receipt.failReason);
+      }
     },
     transfer: async function () {
       await this.getFees();
       this.tip = "Confirm the transaction to transfer";
       const transferTransaction = await transaction(this.inputAddress, this.choosedToken.symbol, this.getRealFeeToken.symbol, this.inputTotalSumBigNumber, this.feesObj.normal);
       this.transactionAmount = this.inputTotalSumBigNumber;
+
+      let receipt = null;
       if (!Array.isArray(transferTransaction)) {
         this.transactionHash = transferTransaction.txHash;
         this.transactionFee = transferTransaction.txData.tx.fee;
         this.inputAddress = transferTransaction.txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
-        await transferTransaction.awaitReceipt();
+        receipt = await transferTransaction.awaitReceipt();
       } else {
         this.transactionHash = transferTransaction[0].txHash;
         this.transactionFee = transferTransaction[1].txData.tx.fee;
         this.inputAddress = transferTransaction[0].txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
-        await transferTransaction[0].awaitReceipt();
+        receipt = await transferTransaction[0].awaitReceipt();
       }
       this.tip = "Processing...";
       await this.$store.dispatch("wallet/forceRefreshData");
-      this.success = true;
+      this.success = receipt.success;
+      if(receipt.failReason) {
+        throw new Error(receipt.failReason);
+      }
     },
     validateAmount(val) {
       // Make it so that if there is an error with the input
