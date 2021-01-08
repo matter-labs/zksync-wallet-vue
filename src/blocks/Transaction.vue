@@ -272,11 +272,14 @@ export default {
       decimalPrecision: 18,
       calculatedFees: null,
 
-      isTransferBlocked: true,
+      //isTransferBlocked: true,
       zksync: null,
       contactsListModal: false,
       tokenListModal: false,
       chooseFeeTokenModal: false,
+      hasValidAmount: false,
+      hasErrors: false,
+      hasBlockEnforced: false,
 
       mainLoading: true,
       withdrawTime: false,
@@ -354,6 +357,16 @@ export default {
     hasValidAddress: function () {
       return this.inputAddress && validations.eth.test(this.inputAddress);
     },
+    isTransferBlocked: function() {
+      const isTransferAvaliable = this.hasValidAddress 
+      && this.hasValidAmount 
+      && this.choosedToken
+      && !this.hasErrors 
+      && !this.mainError
+      && !this.hasBlockEnforced;
+
+      return !isTransferAvaliable;
+    },
     isOwnAddress: function () {
       return this.inputAddress.toLowerCase() === walletData.get().syncWallet.address().toLowerCase();
     },
@@ -391,6 +404,8 @@ export default {
         this.setMainError("", true);
       } else if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
         this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
+      } else {
+        this.setMainError("");
       }
 
       return realMaxAmount;
@@ -419,58 +434,21 @@ export default {
       }
     },
     inputTotalSum(val) {
-      /**
-       * !!Important!! this is not part of a logic / UI / whatever.
-       * It's ONLY simple way to invalidate values like 0.0000 which shouldn't trigger an error and can't be converted into BigNumber.
-       * Just a check to keep button disabled and avoid shoind a message.
-       */
-      if (!val || !parseFloat(val) || !this.choosedToken) {
-        return this.setMainError("", true);
-      }
-
-      if (!utils.isDecimalsValid(this.choosedToken.symbol, val, this.decimalPrecision)) {
-        return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`, true);
-      }
-
-      let inputAmount = null;
-
-      /**
-       * If validated too early
-       */
-      try {
-        inputAmount = utils.parseToken(this.choosedToken.symbol, val);
-      } catch (error) {
-        let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
-        if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          errorInfo = `Introduced amount is out of range. Note: ${this.choosedToken.symbol} doesn't allows that much amount of decimal digits`;
-        }
-        return this.setMainError(errorInfo, true);
-      }
-
-      if (inputAmount.lte(0)) {
-        return (this.isTransferBlocked = true);
-      }
-
-      if (inputAmount.gt(this.transactionMaxAmount)) {
-        this.setMainError(`Not enough, ${this.choosedToken.symbol} to ${this.isWithdrawal ? "withdraw" : "transfer"} requested amount`);
-        return (this.isTransferBlocked = true);
-      }
-      this.inputTotalSumBigNumber = inputAmount;
-      this.inputTotalSum = val;
-      this.setMainError("");
-      return (this.isTransferBlocked = false);
+      return this.validateAmount(val);
     },
     fastWithdraw(state) {
       let noErrors = true;
       if (this.choosedFeeToken) {
         if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
           return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`, true);
+        } else {
+          return this.setMainError("");
         }
       }
       if (!this.transactionMaxAmount || !this.enoughTokenFee) {
         noErrors = false;
       }
-      return (this.isTransferBlocked = !noErrors);
+      return (this.hasErrors = !noErrors);
     },
     choosedToken: {
       deep: true,
@@ -480,6 +458,7 @@ export default {
         }
         await this.updateDecimals();
         this.checkForFeeToken();
+        this.validateAmount(this.inputTotalSum);
       },
     },
     choosedFeeToken: {
@@ -489,6 +468,7 @@ export default {
           this.fastWithdraw = false;
         }
         this.getFees();
+        this.validateAmount(this.inputTotalSum);
       },
     },
   },
@@ -535,10 +515,7 @@ export default {
       return calculatedFee;
     },
     setMainError: function (errorMessage, forceBlock = false) {
-      this.isTransferBlocked = errorMessage !== "";
-      if (forceBlock) {
-        this.isTransferBlocked = true;
-      }
+      this.hasBlockEnforced = forceBlock;
       this.mainError = errorMessage;
     },
     setContact: function (item = false) {
@@ -745,6 +722,49 @@ export default {
       this.tip = "Processing...";
       await this.$store.dispatch("wallet/forceRefreshData");
       this.success = true;
+    },
+    validateAmount(val) {
+      /**
+       * !!Important!! this is not part of a logic / UI / whatever.
+       * It's ONLY simple way to invalidate values like 0.0000 which shouldn't trigger an error and can't be converted into BigNumber.
+       * Just a check to keep button disabled and avoid shoind a message.
+       */
+      if (!val || !parseFloat(val) || !this.choosedToken) {
+        return this.setMainError("", true);
+      }
+
+      if (!utils.isDecimalsValid(this.choosedToken.symbol, val, this.decimalPrecision)) {
+        return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`, true);
+      }
+
+      let inputAmount = null;
+
+      /**
+       * If validated too early
+       */
+      try {
+        inputAmount = utils.parseToken(this.choosedToken.symbol, val);
+      } catch (error) {
+        let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
+        if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
+          errorInfo = `Introduced amount is out of range. Note: ${this.choosedToken.symbol} doesn't allows that much amount of decimal digits`;
+        }
+        return this.setMainError(errorInfo, true);
+      }
+
+      if (inputAmount.lte(0)) {
+        return (this.hasValidAmount = false);
+      }
+
+      if (inputAmount.gt(this.transactionMaxAmount)) {
+        this.setMainError(`Not enough, ${this.choosedToken.symbol} to ${this.isWithdrawal ? "withdraw" : "transfer"} requested amount`);
+        return (this.hasValidAmount = false);
+      }
+      this.inputTotalSumBigNumber = inputAmount;
+      this.inputTotalSum = val;
+      this.setMainError("");
+
+      return (this.hasValidAmount = true);
     },
   },
 };
