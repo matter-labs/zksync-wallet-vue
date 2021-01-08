@@ -78,7 +78,7 @@
 
       <div class="_padding-bottom-1">Address</div>
 
-      <i-input v-model="inputAddress" size="lg" placeholder="0x address" type="text" maxlength="42" @keyup.enter="commitTransaction()"/>
+      <i-input v-model="inputAddress" autocomplete="none" size="lg" placeholder="0x address" type="text" maxlength="42" @keyup.enter="commitTransaction()"/>
 
       <i-row class="_margin-top-1">
         <i-column v-if="!choosedContact && !isOwnAddress" xs="12" :md="canSaveContact?7:12">
