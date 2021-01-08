@@ -445,7 +445,9 @@ export default {
       }
       const realMaxAmount = this.zksync.closestPackableTransactionAmount(closestPackableInput);
 
-      if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
+      if (!this.inputTotalSumBigNumber) {
+        this.setMainError("");
+      } else if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
         this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
       } else {
         this.setMainError("");
