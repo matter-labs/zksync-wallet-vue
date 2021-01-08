@@ -1,5 +1,5 @@
 import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 
 import onboardConfig from "@/plugins/onboardConfig.js";
 import web3Wallet from "@/plugins/web3.js";
@@ -214,6 +214,7 @@ export const actions = {
         symbol: tokenSymbol,
         status: commitedBalance !== verifiedBalance ? "Pending" : "Verified",
         balance: commitedBalance,
+        rawBalance: BigNumber.from(listCommited[tokenSymbol] ? listCommited[tokenSymbol] : 0),
         verifiedBalance: verifiedBalance,
         tokenPrice: price,
         formatedTotalPrice: utils.getFormatedTotalPrice(price, commitedBalance, tokenSymbol),

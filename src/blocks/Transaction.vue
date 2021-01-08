@@ -34,7 +34,7 @@
         <div class="headline">Amount:</div>
         <div class="amount">
           <span class="tokenSymbol">{{ choosedToken.symbol }}</span>
-          {{ transactionAmount |formatToken(choosedToken.symbol) }}
+          {{ transactionAmount | formatToken(choosedToken.symbol) }}
           <span class="totalPrice">
             {{ transactionAmount | formatUsdAmount(choosedToken.tokenPrice, choosedToken.symbol) }}
           </span>
@@ -78,7 +78,7 @@
 
       <div class="_padding-bottom-1">Address</div>
 
-      <i-input v-model="inputAddress" size="lg" placeholder="0x address" type="text" maxlength="42" @keyup.enter="commitTransaction()"/>
+      <i-input v-model="inputAddress" autocomplete="none" size="lg" placeholder="0x address" type="text" maxlength="42" @keyup.enter="commitTransaction()"/>
 
       <i-row class="_margin-top-1">
         <i-column v-if="!choosedContact && !isOwnAddress" xs="12" :md="canSaveContact?7:12">
@@ -98,7 +98,7 @@
       <br>
       <div class="_padding-bottom-1">Amount / asset</div>
       <div>
-        <i-input v-model="inputTotalSum" size="lg" :precision="decimalPrecision" type="number" @keyup.enter="commitTransaction()">
+        <i-input v-model="inputTotalSum" size="lg" :precision="decimalPrecision" type="text" @keyup.enter="commitTransaction()">
           <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openTokenList()">
             Select token
           </i-button>
@@ -272,11 +272,11 @@ export default {
       decimalPrecision: 18,
       calculatedFees: null,
 
-      isTransferBlocked: true,
       zksync: null,
       contactsListModal: false,
       tokenListModal: false,
       chooseFeeTokenModal: false,
+      hasValidAmount: false,
 
       mainLoading: true,
       withdrawTime: false,
@@ -320,6 +320,13 @@ export default {
     isWithdrawal: function () {
       return this.type === "withdraw";
     },
+    hasBlockEnforced: function() {
+      return !this.inputTotalSumBigNumber 
+      || !this.feesObj 
+      || !this.getRealFeeToken 
+      || !this.inputTotalSumBigNumber
+      || !this.inputTotalSum || !parseFloat(this.inputTotalSum) || !this.choosedToken;
+    },
     getRealFeeToken: function () {
       return this.choosedFeeToken ? this.choosedFeeToken : this.choosedToken;
     },
@@ -354,18 +361,68 @@ export default {
     hasValidAddress: function () {
       return this.inputAddress && validations.eth.test(this.inputAddress);
     },
+    isTransferBlocked: function() {
+      return (
+        !this.hasValidAddress ||
+        !this.hasValidAmount || 
+        !this.choosedToken ||
+        !!this.hasErrors || 
+        !!this.mainError || 
+        !!this.hasBlockEnforced
+      );
+    },
     isOwnAddress: function () {
       return this.inputAddress.toLowerCase() === walletData.get().syncWallet.address().toLowerCase();
     },
     ownAddress: function () {
       return walletData.get().syncWallet.address();
     },
+    enoughTokenFee: function () {
+      if (!this.feesObj || !this.getRealFeeToken || !this.inputTotalSumBigNumber) {
+        this.setMainError(``);
+        return false;
+      }
+      const feeAmount = this.fastWithdraw === true ? this.feesObj["fast"] : this.feesObj["normal"];
+      if (feeAmount.lte(0)) {
+        this.setMainError(`Fee requires recalculation. Reload the page and try again.`);
+        return false;
+      }
 
-    /**
-     * @used Helpful computed
-     * @return {number|*}
-     */
-    transactionMaxAmount: function () {
+      if (this.getRealFeeToken && this.getRealFeeToken.rawBalance["lt"] && this.getRealFeeToken.rawBalance.lt(feeAmount)) {
+        this.setMainError(`Not enough ${this.getRealFeeToken.symbol} to pay the fee`);
+        return false;
+      }
+      this.setMainError("");
+      return true;
+    },
+    blockExplorerLink: function () {
+      return APP_ZKSYNC_BLOCK_EXPLORER;
+    },
+    hasErrors: function() {
+      if(!this.choosedToken || !this.decimalPrecision) {
+        return false; 
+      }
+      try {
+        let noErrors = true;
+        if (this.choosedFeeToken) {
+          if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
+            this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`);
+            return;
+          }
+        }
+        if (!this.transactionMaxAmount || !this.enoughTokenFee) {
+          noErrors = false;
+        }
+        return !noErrors;
+      } catch {
+        return true;
+      }
+    },
+    transactionMaxAmount() {
+      if(!this.choosedToken) {
+        return 0;
+      }
+
       const bigNumBalance = utils.parseToken(this.choosedToken.symbol, this.choosedToken.balance);
       if (bigNumBalance.lte(0)) {
         return 0;
@@ -378,7 +435,6 @@ export default {
           return 0;
         }
         const maxAmount = bigNumBalance.sub(amountToParse);
-
         if (maxAmount.lte(0)) {
           this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
           return 0;
@@ -388,89 +444,30 @@ export default {
       const realMaxAmount = this.zksync.closestPackableTransactionAmount(closestPackableInput);
 
       if (!this.inputTotalSumBigNumber) {
-        this.setMainError("", true);
+        this.setMainError("");
       } else if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
         this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
+      } else {
+        this.setMainError("");
       }
 
       return realMaxAmount;
-    },
-    enoughTokenFee: function () {
-      if (!this.feesObj || !this.choosedFeeToken || !this.inputTotalSumBigNumber) {
-        return this.setMainError(``, true);
-      }
-      const feeAmount = this.fastWithdraw === true ? this.feesObj["fast"] : this.feesObj["normal"];
-      if (feeAmount.lte(0)) {
-        this.setMainError(`Fee requires recalculation. Reload the page and try again.`);
-      }
-      if (this.choosedFeeToken && this.choosedFeeToken.balance["lt"] && this.choosedFeeToken.balance.lt(feeAmount)) {
-        this.setMainError(`Not enough <span class="tokenSymbol">${this.choosedFeeToken.symbol}</span> to pay the fee`);
-      }
-      return this.setMainError("");
-    },
-    blockExplorerLink: function () {
-      return APP_ZKSYNC_BLOCK_EXPLORER;
-    },
+    }
   },
   watch: {
+    fastWithdraw() {
+      this.validateAmount(this.inputTotalSum);
+    },
+    hasBlockEnforced(val) {
+      console.log('block enforced changed: ', val);
+    },
     inputAddress(addressValue) {
       if (this.hasValidAddress) {
         this.getFees();
       }
     },
     inputTotalSum(val) {
-      /**
-       * !!Important!! this is not part of a logic / UI / whatever.
-       * It's ONLY simple way to invalidate values like 0.0000 which shouldn't trigger an error and can't be converted into BigNumber.
-       * Just a check to keep button disabled and avoid shoind a message.
-       */
-      if (!val || !parseFloat(val) || !this.choosedToken) {
-        return this.setMainError("", true);
-      }
-
-      if (!utils.isDecimalsValid(this.choosedToken.symbol, val, this.decimalPrecision)) {
-        return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`, true);
-      }
-
-      let inputAmount = null;
-
-      /**
-       * If validated too early
-       */
-      try {
-        inputAmount = utils.parseToken(this.choosedToken.symbol, val);
-      } catch (error) {
-        let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
-        if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          errorInfo = `Introduced amount is out of range. Note: ${this.choosedToken.symbol} doesn't allows that much amount of decimal digits`;
-        }
-        return this.setMainError(errorInfo, true);
-      }
-
-      if (inputAmount.lte(0)) {
-        return (this.isTransferBlocked = true);
-      }
-
-      if (inputAmount.gt(this.transactionMaxAmount)) {
-        this.setMainError(`Not enough, ${this.choosedToken.symbol} to ${this.isWithdrawal ? "withdraw" : "transfer"} requested amount`);
-        return (this.isTransferBlocked = true);
-      }
-      this.inputTotalSumBigNumber = inputAmount;
-      this.inputTotalSum = val;
-      this.setMainError("");
-      return (this.isTransferBlocked = false);
-    },
-    fastWithdraw(state) {
-      let noErrors = true;
-      if (this.choosedFeeToken) {
-        if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
-          return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`, true);
-        }
-      }
-      if (!this.transactionMaxAmount || !this.enoughTokenFee) {
-        noErrors = false;
-      }
-      return (this.isTransferBlocked = !noErrors);
+      this.validateAmount(val);
     },
     choosedToken: {
       deep: true,
@@ -480,15 +477,17 @@ export default {
         }
         await this.updateDecimals();
         this.checkForFeeToken();
+        this.validateAmount(this.inputTotalSum);
       },
     },
     choosedFeeToken: {
       deep: true,
-      handler(val) {
+      async handler(val) {
         if (this.isWithdrawal && val && val.symbol !== this.choosedToken.symbol) {
           this.fastWithdraw = false;
         }
-        this.getFees();
+        await this.getFees();
+        this.validateAmount(this.inputTotalSum);
       },
     },
   },
@@ -534,11 +533,7 @@ export default {
       }
       return calculatedFee;
     },
-    setMainError: function (errorMessage, forceBlock = false) {
-      this.isTransferBlocked = errorMessage !== "";
-      if (forceBlock) {
-        this.isTransferBlocked = true;
-      }
+    setMainError: function (errorMessage) {
       this.mainError = errorMessage;
     },
     setContact: function (item = false) {
@@ -573,6 +568,7 @@ export default {
       this.tokenListModal = false;
       this.choosedToken = token;
       await this.getFees();
+      this.validateAmount(this.inputTotalSum);
     },
     chooseContact: function (contact) {
       this.choosedContact = contact;
@@ -585,7 +581,7 @@ export default {
       this.mainLoading = false;
     },
     getFees: async function () {
-      if (!this.hasValidAddress || (this.choosedToken.restricted && !this.choosedFeeToken)) {
+      if (!this.hasValidAddress || (this.choosedToken.restricted && !this.choosedFeeToken) || !this.choosedToken) {
         console.log("getFees disabled", this.inputAddress, this.hasValidAddress, this.choosedToken, this.choosedFeeToken);
         this.feesObj = false;
         return;
@@ -597,8 +593,6 @@ export default {
        */
 
       try {
-        this.transactionMaxAmount;
-
         const tokenSymbol = this.choosedToken ? this.choosedToken.symbol : "ETH";
         this.feesObj = await this.$store.dispatch("wallet/getFees", {
           address: this.inputAddress,
@@ -708,43 +702,108 @@ export default {
         this.feesObj[this.fastWithdraw === true ? "fast" : "normal"],
       );
       this.transactionAmount = this.inputTotalSumBigNumber;
+
+      let receipt = null;
       if (!Array.isArray(withdrawTransaction)) {
         this.transactionHash = withdrawTransaction.txHash;
         this.transactionFee = withdrawTransaction.txData.tx.fee;
         this.inputAddress = withdrawTransaction.txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
-        await withdrawTransaction.awaitReceipt();
+        receipt = await withdrawTransaction.awaitReceipt();
       } else {
         this.transactionHash = withdrawTransaction[0].txHash;
         this.transactionFee = withdrawTransaction[1].txData.tx.fee;
         this.inputAddress = withdrawTransaction[0].txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
-        await syncProvider.notifyTransaction(withdrawTransaction[0].txHash, "COMMIT");
+        receipt = await syncProvider.notifyTransaction(withdrawTransaction[0].txHash, "COMMIT");
       }
       await this.$store.dispatch("wallet/forceRefreshData");
-      this.success = true;
+      this.success = receipt.success;
+      if(receipt.failReason) {
+        throw new Error(receipt.failReason);
+      }
     },
     transfer: async function () {
       await this.getFees();
       this.tip = "Confirm the transaction to transfer";
       const transferTransaction = await transaction(this.inputAddress, this.choosedToken.symbol, this.getRealFeeToken.symbol, this.inputTotalSumBigNumber, this.feesObj.normal);
       this.transactionAmount = this.inputTotalSumBigNumber;
+
+      let receipt = null;
       if (!Array.isArray(transferTransaction)) {
         this.transactionHash = transferTransaction.txHash;
         this.transactionFee = transferTransaction.txData.tx.fee;
         this.inputAddress = transferTransaction.txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
-        await transferTransaction.awaitReceipt();
+        receipt = await transferTransaction.awaitReceipt();
       } else {
         this.transactionHash = transferTransaction[0].txHash;
         this.transactionFee = transferTransaction[1].txData.tx.fee;
         this.inputAddress = transferTransaction[0].txData.tx.to;
         this.tip = "Waiting for the transaction to be mined...";
-        await transferTransaction[0].awaitReceipt();
+        receipt = await transferTransaction[0].awaitReceipt();
       }
       this.tip = "Processing...";
       await this.$store.dispatch("wallet/forceRefreshData");
-      this.success = true;
+      this.success = receipt.success;
+      if(receipt.failReason) {
+        throw new Error(receipt.failReason);
+      }
+    },
+    validateAmount(val) {
+      // Make it so that if there is an error with the input
+      // the dollar price is displayed as zero
+      this.inputTotalSumBigNumber = null;
+      this.hasValidAmount = false;
+      
+      /**
+       * !!Important!! this is not part of a logic / UI / whatever.
+       * It's ONLY simple way to invalidate values like 0.0000 which shouldn't trigger an error and can't be converted into BigNumber.
+       * Just a check to keep button disabled and avoid shoing a message.
+       */
+      if (!val || !parseFloat(val) || !this.choosedToken) {
+        this.setMainError("");
+        return false;
+      }
+
+      if (!utils.isDecimalsValid(this.choosedToken.symbol, val, this.decimalPrecision)) {
+        this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`);
+        return false;
+      }
+
+      let inputAmount = null;
+
+      /**
+       * If validated too early
+       */
+      try {
+        inputAmount = utils.parseToken(this.choosedToken.symbol, val);
+      } catch (error) {
+        let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
+        if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
+          errorInfo = `Precision exceeded: ${this.choosedToken.symbol} doesn't support that many decimal digits`;
+        }
+        this.setMainError(errorInfo);
+        return false;
+      }
+
+      if (inputAmount.lte(0)) {
+        this.hasValidAmount = false;
+        return false;
+      }
+
+      this.inputTotalSum = val;
+      this.inputTotalSumBigNumber = inputAmount;
+
+
+      if (inputAmount.gt(this.transactionMaxAmount)) {
+        this.setMainError(`Not enough ${this.choosedToken.symbol} to ${this.isWithdrawal ? "withdraw" : "transfer"} requested amount`);
+        this.hasValidAmount = false;
+        return false;
+      }
+      this.setMainError("");
+
+      return (this.hasValidAmount = true);
     },
   },
 };
