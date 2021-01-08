@@ -158,7 +158,7 @@
         Only normal withdraw ({{ withdrawTime.normal | getTimeString }}) is available when using different fee token
       </div>
 
-      <div v-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
+      <div v-if="displayedError" class="errorText _text-center _margin-top-1">{{ displayedError }}</div>
 
       <i-button block size="lg" variant="secondary" class="_margin-top-1" :disabled="isTransferBlocked" @click="commitTransaction()">
         <i v-if="isWithdrawal" class="fas fa-hand-holding-usd"></i>
@@ -286,7 +286,21 @@ export default {
       inputTotalSum: null,
       inputTotalSumBigNumber: null,
 
+      // @todo: Refactor this into a store-based solution
+      //
+      // NOTE: This is temporary solution.
+      // In the future, all the error handling should be centralized
+      // in the storage. As for now all the functions manipulate a single 
+      // variable: `mainError`.
+      // 
+      // It is very good for design purposes, but is really 
+      // bad since one type of error might want to set mainError as "", while the other
+      // one might want to set a non-nullish value that should be displayed to the user.
+      //
+      // `digitsError` was a temporary solution to cope that problem
+      // with error of user entering too many digits.
       mainError: "",
+      digitsError: "",
       inputAddress: this.type === "withdraw" ? walletData.get().syncWallet.address() : "",
       fastWithdraw: false,
 
@@ -319,6 +333,9 @@ export default {
      */
     isWithdrawal: function () {
       return this.type === "withdraw";
+    },
+    displayedError: function() {
+      return this.mainError || this.digitsError;
     },
     hasBlockEnforced: function() {
       return !this.inputTotalSumBigNumber 
@@ -406,7 +423,7 @@ export default {
         let noErrors = true;
         if (this.choosedFeeToken) {
           if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
-            this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`);
+            this.digitsError = `Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`;
             return;
           }
         }
@@ -567,6 +584,7 @@ export default {
     chooseToken: async function (token) {
       this.tokenListModal = false;
       this.choosedToken = token;
+      await this.updateDecimals();
       await this.getFees();
       this.validateAmount(this.inputTotalSum);
     },
@@ -766,11 +784,6 @@ export default {
         return false;
       }
 
-      if (!utils.isDecimalsValid(this.choosedToken.symbol, val, this.decimalPrecision)) {
-        this.setMainError(`Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`);
-        return false;
-      }
-
       let inputAmount = null;
 
       /**
@@ -783,9 +796,11 @@ export default {
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
           errorInfo = `Precision exceeded: ${this.choosedToken.symbol} doesn't support that many decimal digits`;
         }
-        this.setMainError(errorInfo);
+        this.digitsError = errorInfo;
         return false;
       }
+
+      this.digitsError = '';
 
       if (inputAmount.lte(0)) {
         this.hasValidAmount = false;
