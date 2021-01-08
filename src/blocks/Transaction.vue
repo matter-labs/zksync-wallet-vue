@@ -457,6 +457,9 @@ export default {
     }
   },
   watch: {
+    fastWithdraw() {
+      this.validateAmount(this.inputTotalSum);
+    },
     hasBlockEnforced(val) {
       console.log('block enforced changed: ', val);
     },
@@ -566,8 +569,8 @@ export default {
     chooseToken: async function (token) {
       this.tokenListModal = false;
       this.choosedToken = token;
-      this.validateAmount(this.inputTotalSum);
       await this.getFees();
+      this.validateAmount(this.inputTotalSum);
     },
     chooseContact: function (contact) {
       this.choosedContact = contact;
