@@ -381,7 +381,7 @@ export default {
     },
     enoughTokenFee: function () {
       if (!this.feesObj || !this.getRealFeeToken || !this.inputTotalSumBigNumber) {
-        this.setMainError(``, true);
+        this.setMainError(``);
         return false;
       }
       const feeAmount = this.fastWithdraw === true ? this.feesObj["fast"] : this.feesObj["normal"];
@@ -445,9 +445,7 @@ export default {
       }
       const realMaxAmount = this.zksync.closestPackableTransactionAmount(closestPackableInput);
 
-      if (!this.inputTotalSumBigNumber) {
-        this.setMainError("", true);
-      } else if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
+      if (realMaxAmount.lt(this.inputTotalSumBigNumber)) {
         this.setMainError(`You don't have enough ${this.choosedToken.symbol}`);
       } else {
         this.setMainError("");
@@ -764,7 +762,7 @@ export default {
        * Just a check to keep button disabled and avoid shoing a message.
        */
       if (!val || !parseFloat(val) || !this.choosedToken) {
-        this.setMainError("", true);
+        this.setMainError("");
         return false;
       }
 
