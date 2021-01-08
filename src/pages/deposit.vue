@@ -205,7 +205,7 @@ export default {
       await this.updateDecimals();
 
       if (!utils.isDecimalsValid(this.choosedToken.symbol, userAmount, this.decimalPrecision)) {
-        this.mainError = `Amount out of range, ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`;
+        this.mainError = `Precision exceeded: ${this.choosedToken.symbol} supports ${this.decimalPrecision} decimal digits max`;
         return (this.depositAllowed = false);
       }
 
@@ -213,7 +213,7 @@ export default {
         userAmountBigNum = utils.parseToken(this.choosedToken.symbol, userAmount);
       } catch (error) {
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          this.mainError = `Introduced amount is out of range. Note: ${this.choosedToken.symbol} allows ${this.decimalPrecision} decimal digits max`;
+          this.mainError = `Precision exceeded: ${this.choosedToken.symbol} supports ${this.decimalPrecision} decimal digits max`;
           return (this.depositAllowed = false);
         } else {
           this.mainError = `Amount processing error. Common reason behind it — inaccurate amount.

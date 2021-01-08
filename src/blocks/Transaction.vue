@@ -781,7 +781,7 @@ export default {
       } catch (error) {
         let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          errorInfo = `Introduced amount is out of range. Note: ${this.choosedToken.symbol} doesn't allows that much amount of decimal digits`;
+          errorInfo = `Precision exceeded: ${this.choosedToken.symbol} doesn't support that many decimal digits`;
         }
         this.setMainError(errorInfo);
         return false;
