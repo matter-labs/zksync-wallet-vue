@@ -821,7 +821,7 @@ export default {
       if (utils.isAmountPackable(this.inputTotalSumBigNumber)) {
         this.packingError = '';
       } else {
-        this.packingError = 'Transaction Amount is not packable.';
+        this.packingError = 'Max supported precision for transfers is 10 decimal digits';
       }
 
       return (this.hasValidAmount = true);
