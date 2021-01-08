@@ -462,15 +462,14 @@ export default {
       }
     },
     inputTotalSum(val) {
-      if(!this.validateAmount(val)) {
-        this.inputTotalSumBigNumber = null;
-      }
+      this.validateAmount(val);
     },
     fastWithdraw(state) {
       let noErrors = true;
       if (this.choosedFeeToken) {
         if (!utils.isDecimalsValid(this.choosedToken.symbol, this.choosedFeeToken.balance, this.decimalPrecision)) {
-          return this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`);
+          this.setMainError(`Amount out of range, ${this.choosedToken.symbol} doesn't allows that much decimal digits`);
+          return;
         }
       }
       if (!this.transactionMaxAmount || !this.enoughTokenFee) {
@@ -752,6 +751,10 @@ export default {
       this.success = true;
     },
     validateAmount(val) {
+      // Make it so that if there is an error with the input
+      // the dollar price is displayed as zero
+      this.inputTotalSumBigNumber = null;
+
       /**
        * !!Important!! this is not part of a logic / UI / whatever.
        * It's ONLY simple way to invalidate values like 0.0000 which shouldn't trigger an error and can't be converted into BigNumber.
@@ -788,13 +791,14 @@ export default {
         return false;
       }
 
+      this.inputTotalSum = val;
+      this.inputTotalSumBigNumber = inputAmount;
+
       if (inputAmount.gt(this.transactionMaxAmount)) {
         this.setMainError(`Not enough ${this.choosedToken.symbol} to ${this.isWithdrawal ? "withdraw" : "transfer"} requested amount`);
         this.hasValidAmount = false;
         return false;
       }
-      this.inputTotalSumBigNumber = inputAmount;
-      this.inputTotalSum = val;
       this.setMainError("");
 
       return (this.hasValidAmount = true);
