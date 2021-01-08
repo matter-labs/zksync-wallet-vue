@@ -272,13 +272,11 @@ export default {
       decimalPrecision: 18,
       calculatedFees: null,
 
-      //isTransferBlocked: true,
       zksync: null,
       contactsListModal: false,
       tokenListModal: false,
       chooseFeeTokenModal: false,
       hasValidAmount: false,
-      //hasBlockEnforced: false,
 
       mainLoading: true,
       withdrawTime: false,
@@ -364,14 +362,14 @@ export default {
       return this.inputAddress && validations.eth.test(this.inputAddress);
     },
     isTransferBlocked: function() {
-      const isTransferAvaliable = this.hasValidAddress 
-      && this.hasValidAmount 
-      && this.choosedToken
-      && !this.hasErrors 
-      && !this.mainError
-      && !this.hasBlockEnforced;
-
-      return !isTransferAvaliable;
+      return (
+        !this.hasValidAddress ||
+        !this.hasValidAmount || 
+        !this.choosedToken ||
+        !!this.hasErrors || 
+        !!this.mainError || 
+        !!this.hasBlockEnforced
+      );
     },
     isOwnAddress: function () {
       return this.inputAddress.toLowerCase() === walletData.get().syncWallet.address().toLowerCase();
