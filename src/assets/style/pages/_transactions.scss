@@ -153,9 +153,9 @@ body.inkline {
 
   &.-dark {
     .transactionsPage .transactionsListContainer {
-      background-color: #ffffff10;
+      //background-color: #ffffff10;
       &::-webkit-scrollbar-thumb {
-        //background-color: $input-border-color-focus-dark;
+        background-color: $input-border-color-focus-dark;
       }
 
       .transactionItem {
