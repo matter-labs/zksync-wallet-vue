@@ -270,6 +270,11 @@ button.-lg.-circle {
 }
 
 .form-input-group {
+  .form-input {
+    input {
+      font-size: 1.15rem!important;
+    }
+  }
   &.-light {
     .form-input {
       input {
