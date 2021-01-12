@@ -151,7 +151,7 @@ export const actions = {
    */
   async restoreProviderConnection() {
     const syncProvider = walletData.get().syncProvider;
-    if (!syncProvider.transport.ws.isOpened) {
+    if (syncProvider.transport.ws && !syncProvider.transport.ws.isOpened) {
       await syncProvider.transport.ws.open();
     }
   },
@@ -431,7 +431,7 @@ export const actions = {
       const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
       const zksync = await walletData.zkSync();
-      const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME);
+      const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME, 'HTTP');
       const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
 
       this.commit("account/setLoadingHint", "loadingData");
