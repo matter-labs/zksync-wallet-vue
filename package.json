@@ -41,11 +41,10 @@
     "vue-scrollto": "^2.17.1",
     "walletlink": "^2.0.2",
     "web3": "^1.3.1",
-    "zksync": "^0.8.3"
+    "zksync": "^0.8.4"
   },
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "devDependencies": {
-    "stylelint": "^13.8.0",
     "@inkline/nuxt": "^2.3.5",
     "@nuxt/types": "^2.14.12",
     "@nuxtjs/dotenv": "1.4.1",
@@ -61,6 +60,7 @@
     "node-sass": "latest",
     "prettier": "^2.2.1",
     "sass-loader": "latest",
+    "stylelint": "^13.8.0",
     "webpack": "^5.11.1"
   },
   "eslintConfig": {
