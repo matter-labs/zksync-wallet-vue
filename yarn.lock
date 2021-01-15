@@ -3538,7 +3538,7 @@ axios@^0.18.0:
     follow-redirects "1.5.10"
     is-buffer "^2.0.2"
 
-axios@^0.21.0, axios@^0.21.1:
+axios@^0.21.1:
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
@@ -15984,12 +15984,12 @@ zksync-crypto@^0.4.2:
   resolved "https://registry.yarnpkg.com/zksync-crypto/-/zksync-crypto-0.4.2.tgz#58dd8629ce222f14b3ad83f2c50a68fec6363974"
   integrity sha512-PQw0e7t80uP7c5LHonEh4dS4wGpK2TC4uYR/16jcDCaCS2wY/exF37hAOeQiskb0hnU2C6/jqtvBMbsMTzVh7Q==
 
-zksync@^0.8.3:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/zksync/-/zksync-0.8.3.tgz#b06423c84ef03a36db8d961a072cf63d58f63aa8"
-  integrity sha512-nGYQyN22F4yrmFgBiYVDQUx5YRnNmCNUfC3kfe3Q6pe3ie18LJ4CP5dXOTD2URVVZMiT7ow6kNxUQ8/yMAttug==
+zksync@^0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/zksync/-/zksync-0.8.4.tgz#1d02cca4ca17aa09ede73944177baee10cc2ace9"
+  integrity sha512-5jtyxYb4cTdB6cvA/9j40xJS0oKO1fmOx49BbXhNMo+03rvfJX0hSH9Wdu1Zh2HZT04OPIx6lZcUQlwT53YhZA==
   dependencies:
-    axios "^0.21.0"
+    axios "^0.21.1"
     websocket "^1.0.30"
     websocket-as-promised "^1.1.0"
     zksync-crypto "^0.4.2"
