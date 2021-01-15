@@ -757,10 +757,10 @@ export default {
       }
     },
     transfer: async function () {
-      const transferWithdrawWarning = localStorage.getItem(this.inputAddress+'-canceledTransferWithdrawWarning');
+      const transferWithdrawWarning = localStorage.getItem(this.ownAddress+'-canceledTransferWithdrawWarning');
       if(!transferWithdrawWarning && this.transferWithdrawWarningDialog===false) {
-        const accountUnlocked = await this.accountUnlocked(this.inputAddress);
-        if(accountUnlocked===false) {
+        const accountExists = await this.accountExists(this.inputAddress);
+        if(accountExists===false) {
           this.transferWithdrawWarningDialog=true;
           this.mainLoading = false;
           return;
@@ -792,13 +792,13 @@ export default {
         throw new Error(receipt.failReason);
       }
     },
-    accountUnlocked: async function(address) {
+    accountExists: async function(address) {
       const state = await walletData.get().syncProvider.getState(address);
       return state.id!==null;
     },
     warningDialogProceedTransfer: function() {
       if(this.transferWithdrawWarningCheckmark===true) {
-        localStorage.setItem(this.inputAddress+'-canceledTransferWithdrawWarning', "true");
+        localStorage.setItem(this.ownAddress+'-canceledTransferWithdrawWarning', "true");
       }
       this.commitTransaction();
       this.$nextTick(()=>{
