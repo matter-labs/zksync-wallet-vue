@@ -757,7 +757,7 @@ export default {
       }
     },
     transfer: async function () {
-      const transferWithdrawWarning = localStorage.getItem(this.ownAddress+'-canceledTransferWithdrawWarning');
+      const transferWithdrawWarning = localStorage.getItem('canceledTransferWithdrawWarning');
       if(!transferWithdrawWarning && this.transferWithdrawWarningDialog===false) {
         const accountExists = await this.accountExists(this.inputAddress);
         if(accountExists===false) {
@@ -798,7 +798,7 @@ export default {
     },
     warningDialogProceedTransfer: function() {
       if(this.transferWithdrawWarningCheckmark===true) {
-        localStorage.setItem(this.ownAddress+'-canceledTransferWithdrawWarning', "true");
+        localStorage.setItem('canceledTransferWithdrawWarning', "true");
       }
       this.commitTransaction();
       this.$nextTick(()=>{
