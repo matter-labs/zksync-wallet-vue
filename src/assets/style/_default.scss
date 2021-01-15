@@ -358,6 +358,14 @@ button.-lg.-circle {
     outline: none;
   }
 }
+.form-check.-checkbox {
+  label {
+    outline: none;
+  }
+  input:checked ~ .form-input-label::before {
+    background-color: $lightViolet !important;
+  }
+}
 
 .recaptchaContainer {
   & > div {
