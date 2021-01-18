@@ -10,6 +10,17 @@
       </div>
     </i-modal>
 
+    <i-modal v-model="transferWithdrawWarningDialog" class="prevent-close" size="md">
+      <template slot="header">Transfer warning</template>
+      <div>
+        <div class="_padding-bottom-1">
+          You are about to transfer money to an address that doesn't have a zkSync balance yet. The transfer will happen inside zkSync L2. If you want to move money from zkSync to the mainnet, please use the <nuxt-link :to="`/withdraw?w=${inputAddress}`">Withdraw</nuxt-link> function instead.
+        </div>
+        <i-checkbox v-model="transferWithdrawWarningCheckmark">Do not show this again</i-checkbox>
+        <i-button class="_margin-top-1" block variant="secondary" size="lg" @click="warningDialogProceedTransfer();">Transfer inside zkSync</i-button>
+      </div>
+    </i-modal>
+
     <div v-if="success === true" class="tileBlock">
       <div class="tileHeadline h3">
         <span>{{ isWithdrawal ? "Withdraw": "Transfer" }}</span>
@@ -279,6 +290,9 @@ export default {
       tokenListModal: false,
       chooseFeeTokenModal: false,
       hasValidAmount: false,
+
+      transferWithdrawWarningDialog: false,
+      transferWithdrawWarningCheckmark: false,
 
       mainLoading: true,
       withdrawTime: false,
@@ -745,6 +759,15 @@ export default {
       }
     },
     transfer: async function () {
+      const transferWithdrawWarning = localStorage.getItem('canceledTransferWithdrawWarning');
+      if(!transferWithdrawWarning && this.transferWithdrawWarningDialog===false) {
+        const accountExists = await this.accountExists(this.inputAddress);
+        if(accountExists===false) {
+          this.transferWithdrawWarningDialog=true;
+          this.mainLoading = false;
+          return;
+        }
+      }
       await this.getFees();
       this.tip = "Confirm the transaction to transfer";
       const transferTransaction = await transaction(this.inputAddress, this.choosedToken.symbol, this.getRealFeeToken.symbol, this.inputTotalSumBigNumber, this.feesObj.normal);
@@ -770,6 +793,21 @@ export default {
       if(receipt.failReason) {
         throw new Error(receipt.failReason);
       }
+    },
+    accountExists: async function(address) {
+      const state = await walletData.get().syncProvider.getState(address);
+      return state.id!==null;
+    },
+    warningDialogProceedTransfer: function() {
+      if(this.transferWithdrawWarningCheckmark===true) {
+        localStorage.setItem('canceledTransferWithdrawWarning', "true");
+      }
+      this.commitTransaction();
+      this.$nextTick(()=>{
+        setTimeout(() => {
+          this.transferWithdrawWarningDialog=false;
+        }, 100);
+      });
     },
     validateAmount(val) {
       // Make it so that if there is an error with the input
