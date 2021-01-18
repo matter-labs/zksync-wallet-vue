@@ -134,7 +134,9 @@
           <span v-else class="totalPrice">Loading...</span>
           ).
           <br>
-          Processing time: {{ withdrawTime.normal | getTimeString }}
+          Processing time: up to 24 hours
+          <!-- FIXME: restore the following line -->
+          <!-- Processing time: {{ withdrawTime.normal | getTimeString }} -->
         </i-radio>
         <i-radio :value="true">
           Fast withdraw
