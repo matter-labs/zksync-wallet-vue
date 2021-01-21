@@ -3,7 +3,7 @@
 
 name: Deploy to Firebase Hosting on merge
 'on':
-  pull_request:
+  push:
     branches:
       - master
 jobs:
