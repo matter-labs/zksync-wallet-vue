@@ -37,17 +37,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import transactions from "@/blocks/Transactions.vue";
+import Vue from 'vue'
+import transactions from '@/blocks/Transactions.vue'
 
 export default Vue.extend({
   components: {
     transactions,
   },
-  asyncData({ from }) {
+  asyncData ({ from }) {
     return {
       fromRoute: from,
-    };
+    }
   },
   data() {
     return {
@@ -76,8 +76,8 @@ export default Vue.extend({
           break;
         }
       }
-      if (found === false) {
-        await this.$router.push("/account");
+      if (!found) {
+        await this.$router.push('/account')
       }
     },
   },

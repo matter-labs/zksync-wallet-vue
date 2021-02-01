@@ -59,7 +59,7 @@
                 <div class="status">
                   <i-tooltip>
                     <i v-if="item.status==='Verified' && !activeDeposits[item.symbol]" class="verified far fa-check-double"></i>
-                    <i v-else class="commited far fa-check"></i>
+                    <i v-else class="committed far fa-check"></i>
                     <template slot="body">{{ item.status }}</template>
                   </i-tooltip>
                 </div>
@@ -83,12 +83,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Mint from "@/blocks/Mint.vue";
-import { BigNumber } from "ethers";
-import { Balance } from "@/plugins/types";
+import Vue from 'vue'
+import Mint from '@/blocks/Mint.vue'
+import { BigNumber } from 'ethers'
+import { Balance } from '@/plugins/types'
 
-var updateListInterval = undefined as any;
+let updateListInterval = undefined as any
 
 interface depositsInterface {
   [tokenSymbol: string]: Array<{
@@ -125,18 +125,18 @@ export default Vue.extend({
       return this.zkBalances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     activeDeposits: function() {
-      const deposits = this.$store.getters['transaction/depositList'] as depositsInterface;
-      var activeDeposits = {} as depositsInterface;
-      var finalDeposits = {} as {
+      const deposits = this.$store.getters['transaction/depositList'] as depositsInterface
+      const activeDeposits = {} as depositsInterface
+      const finalDeposits = {} as {
         [tokenSymbol: string]: BigNumber,
       }
-      for(const tokenSymbol in deposits) {
-        activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter(tx => tx.status==='Initiated');
+      for (const tokenSymbol in deposits) {
+        activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter(tx => tx.status === 'Initiated')
       }
-      for(const tokenSymbol in activeDeposits) {
-        if(activeDeposits[tokenSymbol].length>0) {
-          if(!finalDeposits[tokenSymbol]) {
-            finalDeposits[tokenSymbol] = BigNumber.from("0");
+      for (const tokenSymbol in activeDeposits) {
+        if (activeDeposits[tokenSymbol].length > 0) {
+          if (!finalDeposits[tokenSymbol]) {
+            finalDeposits[tokenSymbol] = BigNumber.from('0')
           }
           for(const tx of activeDeposits[tokenSymbol]) {
             finalDeposits[tokenSymbol] = finalDeposits[tokenSymbol].add(tx.amount);

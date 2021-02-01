@@ -1,7 +1,7 @@
-import Vue from 'vue';
 import { shallowMount, Wrapper } from '@vue/test-utils';
 
 import userImg from '@/components/userImg.vue';
+
 let wrapper: Wrapper<userImg>;
 
 describe('userImg', () => {

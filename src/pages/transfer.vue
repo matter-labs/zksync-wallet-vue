@@ -3,18 +3,16 @@
 </template>
 
 <script>
-import Transaction from "@/blocks/Transaction";
+import Transaction from '@/blocks/Transaction'
+
 export default {
   components: {
     Transaction,
   },
-  asyncData({ from, store, redirect }) {
-    /* if (store.getters["wallet/isAccountLocked"]) {
-      redirect("/account/unlock");
-    } */
+  asyncData ({ from }) {
     return {
       fromRoute: from,
-    };
+    }
   },
 };
 </script>

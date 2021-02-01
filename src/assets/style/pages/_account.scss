@@ -20,13 +20,13 @@
     }
 
     .balances {
-      width: 100%;
       height: calc(100% - 40px);
+      width: 100%;
 
       .balancesList {
-        width: 100%;
         height: calc(100% - 170px);
         overflow: auto;
+        width: 100%;
 
         &::-webkit-scrollbar {
           width: 10px;
@@ -44,16 +44,16 @@
         }
 
         .balanceItem {
-          width: 100%;
-          height: 60px;
-          display: flex;
-          justify-content: space-between;
           align-items: center;
-          padding: 0 20px;
           border-bottom: 1px solid;
-          transition: background-color $transition1, color $transition1;
-          text-decoration: none;
           cursor: pointer;
+          display: flex;
+          height: 60px;
+          justify-content: space-between;
+          padding: 0 20px;
+          text-decoration: none;
+          transition: background-color $transition1, color $transition1;
+          width: 100%;
 
           &:hover {
             background-color: transparentize($color: $gray, $amount: 0.9);
@@ -64,15 +64,16 @@
           }
 
           .rightSide {
-            display: flex;
             align-items: flex-end;
-            justify-content: center;
+            display: flex;
             flex-direction: column;
+            justify-content: center;
 
             .rowItem {
               display: flex;
               align-items: center;
             }
+
             .total {
               font-size: 18px;
               line-height: 25px;
@@ -93,17 +94,17 @@
             }
 
             .status {
-              width: 25px;
+              font-size: 20px;
               height: 25px;
               line-height: 25px;
-              font-size: 20px;
               text-align: center;
+              width: 25px;
 
               .verified {
                 color: $green;
               }
 
-              .commited {
+              .committed {
                 color: #aa935d;
               }
 
@@ -130,13 +131,13 @@
             display: block;
             height: max-content;
             padding: 10px 20px;
-            
+
             .tokenSymbol {
               text-align: center;
             }
             .rightSide {
               display: block;
-  
+
               .rowItem {
                 display: flex;
                 flex-direction: column;
@@ -152,26 +153,26 @@
                   display: block;
                 }
               }
-  
+
               .status {
-                width: 25px;
+                font-size: 20px;
                 height: 25px;
                 line-height: 25px;
-                font-size: 20px;
                 text-align: center;
-  
+                width: 25px;
+
                 .verified {
                   color: $green;
                 }
-  
-                .commited {
+
+                .committed {
                   color: #aa935d;
                 }
-  
+
                 .inProgress {
                   color: $gray;
                 }
-  
+
                 .loaderSpinner {
                   position: relative;
                   top: 3px;

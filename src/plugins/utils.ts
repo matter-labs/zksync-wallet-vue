@@ -1,7 +1,7 @@
-import { walletData } from "@/plugins/walletData";
-import { TokenSymbol, GweiBalance, DecimalBalance, Address } from "@/plugins/types";
+import { walletData } from '@/plugins/walletData';
+import { Address, DecimalBalance, GweiBalance, TokenSymbol } from '@/plugins/types';
 import { utils as zkUtils } from 'zksync';
-import { utils, BigNumberish } from "ethers";
+import { BigNumberish, utils } from 'ethers';
 
 /**
  *
@@ -47,10 +47,10 @@ export default {
 
   handleFormatToken,
 
-  getFormatedTotalPrice: (price: number, amount: number) => {
+  getFormattedTotalPrice: (price: number, amount: number) => {
     const total = price * amount;
     if (!amount || total === 0) {
-      return "$0.00";
+      return '$0.00';
     }
     return total < 0.01 ? `<$0.01` : `~$${total.toFixed(2)}`;
   },

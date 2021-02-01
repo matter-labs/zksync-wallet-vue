@@ -14,7 +14,7 @@ describe('AddressInput', () => {
     });
 
     test('has no value', () => {
-      expect(wrapper.vm.$data.inputedWallet).toBe("");
+      expect(wrapper.vm.$data.inputtedWallet).toBe('');
       // @ts-ignore: Unreachable code error
       expect(wrapper.vm.isValid).toBe(false);
       // @ts-ignore: Unreachable code error
@@ -25,9 +25,9 @@ describe('AddressInput', () => {
   describe('With value', () => {
     test('Correct address', () => {
       wrapper = shallowMount(AddressInput, {
-        propsData: { value: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0" }
+        propsData: { value: '0x2D9835a1C1662559975B00AEA00e326D1F9f13d0' }
       });
-      expect(wrapper.vm.$data.inputedWallet).toBe("0x2D9835a1C1662559975B00AEA00e326D1F9f13d0");
+      expect(wrapper.vm.$data.inputtedWallet).toBe('0x2D9835a1C1662559975B00AEA00e326D1F9f13d0');
       // @ts-ignore: Unreachable code error
       expect(wrapper.vm.isValid).toBe(true);
       // @ts-ignore: Unreachable code error
@@ -36,9 +36,9 @@ describe('AddressInput', () => {
     });
     test('Wrong address', () => {
       wrapper = shallowMount(AddressInput, {
-        propsData: { value: "0x312acE2a5Ff974416666B9866F48a8FA9513A517" }
+        propsData: { value: '0x312acE2a5Ff974416666B9866F48a8FA9513A517' }
       });
-      expect(wrapper.vm.$data.inputedWallet).toBe("0x312acE2a5Ff974416666B9866F48a8FA9513A517");
+      expect(wrapper.vm.$data.inputtedWallet).toBe('0x312acE2a5Ff974416666B9866F48a8FA9513A517');
       // @ts-ignore: Unreachable code error
       expect(wrapper.vm.isValid).toBe(false);
       // @ts-ignore: Unreachable code error

@@ -12,8 +12,8 @@
 
   .transactionsListContainer {
     border-radius: 0.3rem !important;
-    overflow: auto;
     height: 100%;
+    overflow: auto;
 
     &::-webkit-scrollbar {
       width: 10px;
@@ -31,15 +31,15 @@
     }
 
     .transactionItem {
-      width: 100%;
-      height: 105px;
+      align-items: center;
+      border-bottom: 1px solid;
       display: grid;
+      grid-gap: 20px;
       grid-template-columns: 35px 1fr 115px 40px;
       grid-template-rows: 100%;
-      grid-gap: 20px;
-      align-items: center;
+      height: 105px;
       padding: 0 20px;
-      border-bottom: 1px solid;
+      width: 100%;
       @media screen and (max-width: 768px) {
         grid-template-columns: 100%;
         grid-template-rows: 35px 80px 50px 40px;
@@ -60,16 +60,16 @@
       }
 
       .status {
-        width: 35px;
-        height: 35px;
         font-size: 25px;
+        height: 35px;
         text-align: center;
+        width: 35px;
 
         .verified {
           color: $green;
         }
 
-        .commited {
+        .committed {
           color: #aa935d;
         }
 
@@ -127,7 +127,7 @@
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        
+
         .linkText {
           display: block;
           font-size: 14px;

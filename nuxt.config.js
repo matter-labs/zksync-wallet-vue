@@ -157,9 +157,9 @@ export default {
     /* extractCSS: {
       ignoreOrder: true,
     }, */
-    extend(config, { isDev, isClient }) {
+    extend (config) {
       config.node = {
-        fs: "empty",
+        fs: 'empty',
       };
     },
   },

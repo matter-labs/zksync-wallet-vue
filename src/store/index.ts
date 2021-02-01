@@ -1,4 +1,4 @@
-import { GetterTree, ActionTree, MutationTree } from 'vuex';
+import { ActionTree, GetterTree, MutationTree } from 'vuex';
 
 export const state = () => ({
   accountModalOpened: false,
@@ -21,7 +21,7 @@ export const getters: GetterTree<RootState, RootState> = {
 
 export const mutations: MutationTree<RootState> = {
   setAccountModalState(state, modalState: boolean) {
-    state.accountModalOpened = !!modalState;
+    state.accountModalOpened = modalState;
   },
   setCurrentModal(state, modalName: String) {
     state.currentModal = modalName;

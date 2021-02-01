@@ -49,13 +49,13 @@
 
         <!-- Main -->
         <i-row class="_margin-top-1">
-            <i-column v-if="!choosedContact || (!choosedContact.name && !isOwnAddress)" xs="12" :md="canSaveContact?7:12">
-                <i-button block link variant="secondary" @click="contactsListModal=true">Select from contacts</i-button>
+            <i-column v-if="!chosenContact || (!chosenContact.name && !isOwnAddress)" :md="canSaveContact?7:12" xs="12">
+              <i-button block link variant="secondary" @click="contactsListModal=true">Select from contacts</i-button>
             </i-column>
             <i-column v-else xs="12" :md="canSaveContact?7:12">
-                <i-button block link variant="secondary" @click="contactsListModal=true">
-                    {{ isOwnAddress ? "Own account": choosedContact.name }}&nbsp;&nbsp;<i class="far fa-angle-down"/>
-                </i-button>
+              <i-button block link variant="secondary" @click="contactsListModal=true">
+                {{ isOwnAddress ? 'Own account' : chosenContact.name }}&nbsp;&nbsp;<i class="far fa-angle-down"/>
+              </i-button>
             </i-column>
             <i-column xs="12" md="5">
                 <i-button v-if="canSaveContact" block link variant="secondary" @click="saveContactModal=true">
@@ -67,35 +67,36 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Address, Contact } from "@/plugins/types";
-import userImg from "@/components/userImg.vue";
+import Vue from 'vue'
+import { Address, Contact } from '@/plugins/types'
+import userImg from '@/components/userImg.vue'
+
 export default Vue.extend({
-    props: {
-        address: {
-            type: String,
-            default: undefined,
-            required: false,
-        },
-        displayOwnAddress: {
-            type: Boolean,
+  props: {
+    address: {
+      type: String,
+      default: undefined,
+      required: false,
+    },
+    displayOwnAddress: {
+      type: Boolean,
             default: true,
             required: false
         }
     },
     data() {
         return {
-            /* Contacts list */
-            contactsListModal: false,
-            contactSearch: '',
+          /* Contacts list */
+          contactsListModal: false,
+          contactSearch: '',
 
-            /* Save contact */
-            saveContactModal: false,
-            saveContactInput: '',
-            saveContactModalError: '',
-            
-            /* Main */
-            choosedContact: false as (false | Contact),
+          /* Save contact */
+          saveContactModal: false,
+          saveContactInput: '',
+          saveContactModalError: '',
+
+          /* Main */
+          chosenContact: false as (false | Contact),
         }
     },
     computed: {
@@ -103,15 +104,14 @@ export default Vue.extend({
             return this.$store.getters['account/address'];
         },
         canSaveContact: function(): boolean {
-            return (!this.isInContacts && !!this.choosedContact && !!this.choosedContact.address && !this.choosedContact.name && !this.isOwnAddress);
+          return (!this.isInContacts && !!this.chosenContact && !!this.chosenContact.address && !this.chosenContact.name && !this.isOwnAddress)
         },
         isOwnAddress: function(): boolean {
-            if(this.choosedContact && this.choosedContact.address) {
-                return this.ownAddress.toLowerCase()===this.choosedContact.address.toLowerCase();
-            }
-            else {
-                return false;
-            }
+          if (this.chosenContact && this.chosenContact.address) {
+            return this.ownAddress.toLowerCase() === this.chosenContact.address.toLowerCase()
+          } else {
+            return false
+          }
         },
         contactsList: function(): Array<Contact> {
             return this.$store.getters['contacts/get'];
@@ -124,21 +124,20 @@ export default Vue.extend({
             return this.contactsList.filter((e) => e.name.toLowerCase().includes(lowerCaseInput));
         },
         isInContacts: function(): boolean {
-            if(this.choosedContact && this.choosedContact.address) {
-                return this.checkAddressInContacts(this.choosedContact.address);
-            }
-            else {
-                return false;
-            }
+          if (this.chosenContact && this.chosenContact.address) {
+            return this.checkAddressInContacts(this.chosenContact.address)
+          } else {
+            return false
+          }
         },
     },
     watch: {
-        choosedContact: {
-            deep: true,
-            handler(val) {
-                this.$emit('input', val);
-            }
+      chosenContact: {
+        deep: true,
+        handler (val) {
+          this.$emit('input', val)
         },
+      },
         address: {
             immediate: true,
             handler(val) {
@@ -169,7 +168,7 @@ export default Vue.extend({
     methods: {
         chooseContact: function(contact: Contact): void {
             if(!contact.address) {
-                this.choosedContact = false;
+              this.chosenContact = false
                 return;
             }
             if(!contact.name) {
@@ -177,8 +176,8 @@ export default Vue.extend({
                     contact = this.$store.getters['contacts/getByAddress'](contact.address);
                 }
             }
-            this.choosedContact=contact;
-            this.contactsListModal=false;
+          this.chosenContact = contact
+          this.contactsListModal = false
         },
         checkAddressInContacts: function(address: Address): boolean {
             return this.$store.getters['contacts/isInContacts'](address);
@@ -190,7 +189,7 @@ export default Vue.extend({
             }
             const contact = {
                 name: this.saveContactInput,
-                address: (this.choosedContact as Contact).address
+              address: (this.chosenContact as Contact).address,
             };
             this.$store.commit('contacts/saveContact', contact);
             this.chooseContact(contact);

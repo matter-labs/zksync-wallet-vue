@@ -1,5 +1,4 @@
-import { ContactsModuleState, state, mutations, getters } from '@/store/contacts';
-import { state as RootState, getters as RootGetters } from '@/store';
+import { ContactsModuleState, state } from '@/store/contacts';
 
 let contactsState: ContactsModuleState;
 

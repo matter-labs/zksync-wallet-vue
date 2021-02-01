@@ -24,11 +24,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Tx, Address } from "@/plugins/types";
-import SingleTransaction from "@/components/SingleTransaction.vue";
+import Vue from 'vue'
+import { Address, Tx } from '@/plugins/types'
+import SingleTransaction from '@/components/SingleTransaction.vue'
 
-var updateListInterval = undefined as any;
+let updateListInterval = undefined as any
 export default Vue.extend({
   components: {
     SingleTransaction,
@@ -36,7 +36,7 @@ export default Vue.extend({
   props: {
     filter: {
       type: String,
-      default: "",
+      default: '',
       required: false,
     },
     address: {
@@ -150,16 +150,20 @@ export default Vue.extend({
         return "Verified";
       } else if (transaction.commited) {
         return "Commited";
+
       } else {
         return "In progress";
       }
     },
     loadMore: async function (): Promise<void> {
-      this.autoUpdateList();
-      this.loadingMore = true;
-      const list = await this.loadTransactions(this.totalLoadedItem);
-      /* this.transactionsList.push(...list); */
-      this.loadingMore = false;
+      await this.autoUpdateList()
+      this.loadingMore = true
+      const list = await this.loadTransactions(this.totalLoadedItem)
+      /*
+      @todo: fix it up
+      this.transactionsList.push(...list);
+      */
+      this.loadingMore = false
     },
     autoUpdateList: async function(): Promise<void> {
       clearInterval(updateListInterval);

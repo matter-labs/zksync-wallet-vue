@@ -8,13 +8,13 @@
         <a :href="txLink" v-if="txLink" class="_display-block _text-center _margin-top-1" target="_blank">
             Link to the transaction <i class="fas fa-external-link"></i>
         </a>
-        <div class="infoBlockItem smaller _margin-top-2" v-if="recepient">
-            <div class="amount">
-                <span>Recepient:</span>
-                <span v-if="isOwnAddress(recepient.address)" class="secondaryText">Own account</span>
-                <span v-else-if="recepient.name" class="secondaryText">{{ recepient.name }}</span>
-            </div>
-            <wallet-address :wallet="recepient.address"/>
+        <div v-if="recipient" class="infoBlockItem smaller _margin-top-2">
+          <div class="amount">
+            <span>Recipient:</span>
+            <span v-if="isOwnAddress(recipient.address)" class="secondaryText">Own account</span>
+            <span v-else-if="recipient.name" class="secondaryText">{{ recipient.name }}</span>
+          </div>
+          <wallet-address :wallet="recipient.address"/>
         </div>
         <div class="infoBlockItem _margin-top-1" v-if="amount">
             <div class="headline">Amount:</div>
@@ -42,19 +42,20 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Address } from "@/plugins/types";
-import Checkmark from "@/components/Checkmark.vue";
-import WalletAddress from "@/components/walletAddress.vue";
+import Vue from 'vue'
+import { Address } from '@/plugins/types'
+import Checkmark from '@/components/Checkmark.vue'
+import WalletAddress from '@/components/walletAddress.vue'
+
 export default Vue.extend({
-    props: {
-        type: {
-            type: String,
-            default: "",
-            required: false
-        },
-        headline: {
-            type: String,
+  props: {
+    type: {
+      type: String,
+      default: '',
+      required: false,
+    },
+    headline: {
+      type: String,
             default: "",
             required: false
         },
@@ -73,10 +74,10 @@ export default Vue.extend({
             default: false,
             required: false
         },
-        recepient: {
-            type: Object,
-            required: false
-        },
+    recipient: {
+      type: Object,
+      required: false,
+    },
         amount: {
             type: Object,
             required: false

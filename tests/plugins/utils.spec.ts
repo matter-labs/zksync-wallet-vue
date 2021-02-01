@@ -1,11 +1,11 @@
 import utils from '@/plugins/utils';
 
-describe('getFormatedTotalPrice', () => {
-    test('works', () => {
-        expect(utils.getFormatedTotalPrice(1,1)).toEqual("~$1.00");
-        expect(utils.getFormatedTotalPrice(1,0)).toEqual("$0.00");
-        expect(utils.getFormatedTotalPrice(1,0.0000001)).toEqual("<$0.01");
-    });
+describe('getFormattedTotalPrice', () => {
+  test('works', () => {
+    expect(utils.getFormattedTotalPrice(1, 1)).toEqual('~$1.00');
+    expect(utils.getFormattedTotalPrice(1, 0)).toEqual('$0.00');
+    expect(utils.getFormattedTotalPrice(1, 0.0000001)).toEqual('<$0.01');
+  });
 });
 
 describe('validateAddress', () => {

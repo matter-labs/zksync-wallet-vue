@@ -8,10 +8,10 @@
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
-        <i-input ref="nameInput" v-model="inputedName" size="lg" placeholder="Name" maxlength="20" autofocus @keyup.enter="addContact()"/>
+        <i-input ref="nameInput" v-model="inputtedName" autofocus maxlength="20" placeholder="Name" size="lg" @keyup.enter="addContact()"/>
         <br>
         <div class="_padding-bottom-1">Address</div>
-        <address-input ref="addressInput" v-model="inputedWallet" @enter="addContact()" />
+        <address-input ref="addressInput" v-model="inputtedWallet" @enter="addContact()"/>
         <br>
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
         <i-button v-if="addContactType==='edit'" block link size="md" variant="secondary" @click="deleteContact()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Delete contact</i-button>
@@ -69,8 +69,10 @@
       </div>
       <div v-if="openedContact.deleted===true" class="isDeleted">Contact is deleted</div>
       <wallet-address :wallet="openedContact.address" class="_margin-y-1"/>
-      <i-button v-if="openedContact.notInContacts" block link size="md" variant="secondary"
-                @click="addContactType='add'; inputedWallet=openedContact.address; addContactModal=true;"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add contact
+      <i-button
+          v-if="openedContact.notInContacts" block link size="md" variant="secondary"
+          @click="addContactType='add'; inputtedWallet=openedContact.address; addContactModal=true;"
+      ><i class="fas fa-plus"></i>&nbsp;&nbsp;Add contact
       </i-button>
       <i-button v-else-if="openedContact.deleted===false" block link size="md" variant="secondary" @click="editContact(openedContact)"><i class="fas fa-pen"></i>&nbsp;&nbsp;Edit
         contact
@@ -83,36 +85,36 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { Contact, Address } from "@/plugins/types";
+import Vue from 'vue'
+import { Address, Contact } from '@/plugins/types'
 
-import userImg from "@/components/userImg.vue";
-import walletAddress from "@/components/walletAddress.vue";
-import transactions from "@/blocks/Transactions.vue";
-import addressInput from '@/components/AddressInput.vue';
+import userImg from '@/components/userImg.vue'
+import walletAddress from '@/components/walletAddress.vue'
+import transactions from '@/blocks/Transactions.vue'
+import addressInput from '@/components/AddressInput.vue'
 
 export default Vue.extend({
   components: {
     userImg,
     walletAddress,
     transactions,
-    addressInput
+    addressInput,
   },
-  asyncData({ from }) {
+  asyncData ({ from }) {
     return {
       fromRoute: from,
     };
   },
   data() {
     return {
-      search: "",
+      search: '',
       addContactModal: false,
-      addContactType: "add",
-      inputedName: "",
-      inputedWallet: "",
+      addContactType: 'add',
+      inputtedName: '',
+      inputtedWallet: '',
       editingWallet: null as (Contact | null),
-      modalError: "",
-      contactsList: this.$store.getters['contacts/get'].map((e: Contact) => ({...e, deleted: false, notInContacts: false})) as Array<Contact>,
+      modalError: '',
+      contactsList: this.$store.getters['contacts/get'].map((e: Contact) => ({ ...e, deleted: false, notInContacts: false })) as Array<Contact>,
       fromRoute: {},
     };
   },
@@ -150,17 +152,16 @@ export default Vue.extend({
   },
   watch: {
     addContactModal(val: boolean) {
-      if (val === false) {
-        this.inputedName = "";
-        this.inputedWallet = "";
-      }
-      else {
-        this.$nextTick(()=>{
-          if(this.$refs.nameInput) {
+      if (!val) {
+        this.inputtedName = ''
+        this.inputtedWallet = ''
+      } else {
+        this.$nextTick(() => {
+          if (this.$refs.nameInput) {
             // @ts-ignore: Unreachable code error
             this.$refs.nameInput.$el.querySelector('input').focus()
           }
-        });
+        })
       }
     },
     $route(val, oldVal) {
@@ -169,53 +170,53 @@ export default Vue.extend({
   },
   methods: {
     addContact: function () {
-      if (this.inputedName.trim().length === 0) {
-        this.modalError = `Name can't be empty`;
-      } else if (!this.inputedWallet) {
-        this.modalError = `Enter a valid wallet address`;
-      } else if (this.inputedWallet.trim().toLowerCase() === this.walletAddressFull.toLowerCase()) {
-        this.modalError = `You can't add your own account to contacts`;
+      if (this.inputtedName.trim().length === 0) {
+        this.modalError = `Name can't be empty`
+      } else if (!this.inputtedWallet) {
+        this.modalError = `Enter a valid wallet address`
+      } else if (this.inputtedWallet.trim().toLowerCase() === this.walletAddressFull.toLowerCase()) {
+        this.modalError = `You can't add your own account to contacts`
       } else {
-        this.addContactModal = false;
-        this.modalError = "";
+        this.addContactModal = false
+        this.modalError = ''
         try {
-          const addressToSearch = this.addContactType === "add" ? this.inputedWallet : (this.editingWallet?.address || '');
+          const addressToSearch = this.addContactType === 'add' ? this.inputtedWallet : (this.editingWallet?.address || '')
           for (let a = 0; a < this.contactsList.length; a++) {
             if (this.contactsList[a].address.toLowerCase() === addressToSearch.toLowerCase()) {
-              this.contactsList.splice(a, 1);
-              break;
+              this.contactsList.splice(a, 1)
+              break
             }
           }
-          this.contactsList.unshift({ name: this.inputedName.trim(), address: this.inputedWallet, deleted: false });
-          this.$store.commit('contacts/saveContact', {name: this.inputedName.trim(), address: this.inputedWallet});
+          this.contactsList.unshift({ name: this.inputtedName.trim(), address: this.inputtedWallet, deleted: false })
+          this.$store.commit('contacts/saveContact', { name: this.inputtedName.trim(), address: this.inputtedWallet })
         } catch (error) {
-          this.$store.dispatch("toaster/error", error.message ? error.message : "Error while saving your contact book.");
-          console.log(error);
+          this.$store.dispatch('toaster/error', error.message ? error.message : 'Error while saving your contact book.')
+          console.log(error)
         }
-        this.inputedName = "";
-        this.inputedWallet = "";
+        this.inputtedName = ''
+        this.inputtedWallet = ''
       }
     },
     editContact: function (contact: Contact) {
-      this.modalError = "";
-      this.inputedName = contact.name;
-      this.inputedWallet = contact.address;
-      this.editingWallet = contact;
-      this.addContactType = "edit";
-      this.addContactModal = true;
+      this.modalError = ''
+      this.inputtedName = contact.name
+      this.inputtedWallet = contact.address
+      this.editingWallet = contact
+      this.addContactType = 'edit'
+      this.addContactModal = true
     },
     deleteContact: function () {
       for (let a = 0; a < this.contactsList.length; a++) {
         if (this.contactsList[a].address.toLowerCase() === this.editingWallet?.address.toLowerCase()) {
-          this.contactsList[a].deleted = true;
-          this.$store.commit('contacts/deleteContact', this.contactsList[a].address);
-          break;
+          this.contactsList[a].deleted = true
+          this.$store.commit('contacts/deleteContact', this.contactsList[a].address)
+          break
         }
       }
-      this.addContactModal = false;
-      this.inputedName = "";
-      this.inputedWallet = "";
-      this.editingWallet = null;
+      this.addContactModal = false
+      this.inputtedName = ''
+      this.inputtedWallet = ''
+      this.editingWallet = null
     },
     restoreDeleted: function (contact: Contact) {
       for (let a = 0; a < this.contactsList.length; a++) {

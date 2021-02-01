@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
+import { BigNumber, BigNumberish, ContractTransaction, ethers } from 'ethers';
 
 export declare type Address = string;
 export declare type PubKeyHash = string;
@@ -24,10 +24,11 @@ export interface Token {
     balance: (string | BigNumber),
     symbol: TokenSymbol,
     id: Number,
-    formatedBalance?: string
+  formattedBalance?: string
 }
-/* 
-{ id: any; address: any; balance: BigNumber; formatedBalance: string; symbol: any; }
+
+/*
+{ id: any; address: any; balance: BigNumber; formattedBalance: string; symbol: any; }
 */
 export interface zksync {
     closestPackableTransactionAmount(num: DecimalBalance): GweiBalance

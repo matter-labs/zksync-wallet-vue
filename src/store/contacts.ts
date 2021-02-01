@@ -1,8 +1,8 @@
 import { GetterTree, MutationTree } from 'vuex';
 import { RootState } from '~/store';
-import { Address, Contact } from "@/plugins/types";
-import { walletData } from "@/plugins/walletData";
-import utils from "@/plugins/utils";
+import { Address, Contact } from '@/plugins/types';
+import { walletData } from '@/plugins/walletData';
+import utils from '@/plugins/utils';
 
 export const state = () => ({
   contactsList: [] as Array<Contact>
@@ -11,10 +11,10 @@ export const state = () => ({
 export type ContactsModuleState = ReturnType<typeof state>;
 
 export const mutations: MutationTree<ContactsModuleState> = {
-  getContactsFromStorage(state) {
+  getContactsFromStorage (state) {
     try {
       const walletAddress = walletData.get().syncWallet!.address();
-      var contactsList = window.localStorage.getItem("contacts-" + walletAddress);
+      let contactsList = window.localStorage.getItem('contacts-' + walletAddress);
       if (process.client && contactsList && window.localStorage.getItem("contacts-" + walletAddress)) {
         contactsList = JSON.parse(contactsList) || [];
         if (Array.isArray(contactsList)) {

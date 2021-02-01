@@ -4,7 +4,7 @@
         <!-- Choose token -->
         <i-modal v-model="chooseTokenModal" size="md">
             <template slot="header">Choose token</template>
-            <choose-token @choosed="chooseToken($event)" tokensType="L1" />
+            <choose-token tokensType="L1" @chosen="chooseToken($event)"/>
         </i-modal>
 
         <!-- Loading block -->
@@ -22,10 +22,10 @@
                 Your deposit transaction has been mined and will be processed after required number of confirmations.
                 <br>Use the transaction link to track the progress.
             </p>
-            <p class="_text-center _margin-top-0" v-else-if="transactionInfo.type==='unlock'">
-                <span class="tokenSymbol">{{ choosedToken.symbol }}</span> token has been successfully unlocked and now you can proceed to deposit
-                <br>Use the transaction link to track the progress.
-            </p>
+          <p class="_text-center _margin-top-0" v-else-if="transactionInfo.type==='unlock'">
+            <span class="tokenSymbol">{{ chosenToken.symbol }}</span> token has been successfully unlocked and now you can proceed to deposit
+            <br>Use the transaction link to track the progress.
+          </p>
         </success-block>
 
         <!-- Main Block -->
@@ -40,19 +40,28 @@
             </div>
 
             <div class="_padding-top-1 inputLabel">Amount</div>
-            <amount-input ref="amountInput" v-model="inputedAmount" autofocus :maxAmount="maxAmount" :token="choosedToken?choosedToken:undefined" type="deposit" @chooseToken="chooseTokenModal=true" @enter="commitTransaction()" />
+          <amount-input
+              ref="amountInput"
+              v-model="inputtedAmount"
+              :maxAmount="maxAmount"
+              :token="chosenToken?chosenToken:undefined"
+              autofocus
+              type="deposit"
+              @chooseToken="chooseTokenModal=true"
+              @enter="commitTransaction()"
+          />
 
             <div class="errorText _text-center _margin-top-1">
                 {{ error }}
             </div>
-            <p class="_text-center" v-if="choosedToken && !choosedToken.unlocked">
-                You should firstly unlock selected token in order to authorize deposits for
-                <span class="tokenSymbol">{{ choosedToken.symbol }}</span>
-            </p>
-            
+          <p v-if="chosenToken && !chosenToken.unlocked" class="_text-center">
+            You should firstly unlock selected token in order to authorize deposits for
+            <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
+          </p>
+
             <i-button block size="lg" variant="secondary" class="_margin-top-1" :disabled="buttonDisabled" @click="commitTransaction()">
                 {{ buttonType }}
-                <span class="tokenSymbol" v-if="buttonType==='Unlock'">{{ choosedToken.symbol }}</span>
+              <span v-if="buttonType==='Unlock'" class="tokenSymbol">{{ chosenToken.symbol }}</span>
             </i-button>
         </div>
 
@@ -60,29 +69,29 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from 'vue'
 
-import { BigNumber, ethers } from "ethers";
-import { Balance, ETHOperation, GweiBalance } from "@/plugins/types";
-import { walletData } from "@/plugins/walletData";
-import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
-import utils from '@/plugins/utils';
-import { deposit } from "@/plugins/walletActions/transaction";
+import { ethers } from 'ethers'
+import { Balance, ETHOperation, GweiBalance } from '@/plugins/types'
+import { walletData } from '@/plugins/walletData'
+import { APP_ETH_BLOCK_EXPLORER } from '@/plugins/build'
+import utils from '@/plugins/utils'
+import { deposit } from '@/plugins/walletActions/transaction'
 
-import loadingBlock from '@/components/LoadingBlock.vue';
-import successBlock from '@/components/SuccessBlock.vue';
-import chooseToken from '@/blocks/ChooseToken.vue';
-import amountInput from '@/components/AmountInput.vue';
+import loadingBlock from '@/components/LoadingBlock.vue'
+import successBlock from '@/components/SuccessBlock.vue'
+import chooseToken from '@/blocks/ChooseToken.vue'
+import amountInput from '@/components/AmountInput.vue'
 
-var zksync = null as any;
+let zksync = null as any
 
 export default Vue.extend({
-    props: {
-        fromRoute: {
-            type: Object,
-            default: undefined,
-            required: false,
-        },
+  props: {
+    fromRoute: {
+      type: Object,
+      default: undefined,
+      required: false,
+    },
     },
     data() {
         return {
@@ -102,41 +111,39 @@ export default Vue.extend({
                 hash: '',
                 explorerLink: '',
                 amount: {
-                    amount: '' as GweiBalance,
-                    token: false as (false | Balance)
+                  amount: '' as GweiBalance,
+                  token: false as (false | Balance),
                 },
-                fee: {
-                    amount: '' as GweiBalance,
-                    token: false as (false | Balance)
-                },
+              fee: {
+                amount: '' as GweiBalance,
+                token: false as (false | Balance),
+              },
             },
 
-            /* Main Block */
-            inputedAmount: '',
-            choosedToken: false as (Balance | false),
-            error: "",
+          /* Main Block */
+          inputtedAmount: '',
+          chosenToken: false as (Balance | false),
+          error: '',
         }
     },
     computed: {
         maxAmount: function(): string {
-            if(!this.choosedToken) {
-                return "0"
-            }
-            else {
-                return zksync!.closestPackableTransactionAmount(this.choosedToken.rawBalance).toString();
-            }
+          if (!this.chosenToken) {
+            return '0'
+          } else {
+            return zksync!.closestPackableTransactionAmount(this.chosenToken.rawBalance).toString()
+          }
         },
         buttonType: function(): string {
-            if(!this.choosedToken || (this.choosedToken as Balance).unlocked) {
-                return "Deposit";
-            }
-            else {
-                return "Unlock";
-            }
+          if (!this.chosenToken || (this.chosenToken as Balance).unlocked) {
+            return 'Deposit'
+          } else {
+            return 'Unlock'
+          }
         },
         buttonDisabled: function(): boolean {
             if(this.buttonType==='Unlock'){return false}
-            return (!this.inputedAmount || !this.choosedToken);
+          return (!this.inputtedAmount || !this.chosenToken)
         }
     },
     components: {
@@ -149,27 +156,27 @@ export default Vue.extend({
         chooseToken: async function(token: Balance) {
             this.loading=true;
             this.chooseTokenModal = false;
-            if(token.unlocked === undefined) {
-                token.unlocked = await this.checkTokenState(token);
-            }
-            if(token.tokenPrice === undefined) {
-                token.tokenPrice = await this.$store.dispatch("tokens/getTokenPrice", token.symbol);
-            }
-            this.choosedToken = token;
-            this.loading=false;
+          if (token.unlocked === undefined) {
+            token.unlocked = await this.checkTokenState(token)
+          }
+          if (token.tokenPrice == undefined) {
+            token.tokenPrice = await this.$store.dispatch('tokens/getTokenPrice', token.symbol)
+          }
+          this.chosenToken = token
+          this.loading = false
             this.$nextTick(()=> {
-                if(this.inputedAmount && this.$refs.amountInput) {
-                    // @ts-ignore: Unreachable code error
-                    this.$refs.amountInput.emitValue(this.inputedAmount);
-                }
+              if (this.inputtedAmount && this.$refs.amountInput) {
+                // @ts-ignore: Unreachable code error
+                this.$refs.amountInput.emitValue(this.inputtedAmount)
+              }
             });
         },
         commitTransaction: async function(): Promise<void> {
-            if(!this.inputedAmount) {
-                // @ts-ignore: Unreachable code error
-                this.$refs.amountInput.emitValue(this.inputedAmount);
-            }
-            if(this.buttonDisabled){return}
+          if (!this.inputtedAmount) {
+            // @ts-ignore: Unreachable code error
+            this.$refs.amountInput.emitValue(this.inputtedAmount)
+          }
+          if (this.buttonDisabled) {return}
             this.error = "";
             this.loading=true;
             try {
@@ -203,54 +210,54 @@ export default Vue.extend({
             this.loading=false;
         },
         deposit: async function(): Promise<void> {
-            this.tip = "Confirm the transaction to deposit";
-            const txAmount = utils.parseToken((this.choosedToken as Balance).symbol, this.inputedAmount);
-            // @ts-ignore: Unreachable code error
-            const transferTransaction = await deposit((this.choosedToken as Balance).symbol, txAmount.toString(), this.$store) as ETHOperation;
-            this.transactionInfo.amount.amount = txAmount.toString();
-            this.transactionInfo.amount.token = this.choosedToken as Balance;
-            this.transactionInfo.fee.token = this.choosedToken as Balance;
-            let receipt = {} as ethers.ContractReceipt;
-            this.transactionInfo.hash = transferTransaction.ethTx.hash;
-            this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER+'/tx/'+transferTransaction.ethTx.hash;
-            this.tip = "Waiting for the transaction to be mined...";
-            receipt = await transferTransaction.awaitEthereumTxCommit();
-            this.transactionInfo.fee.amount = receipt.gasUsed.toString();
-            this.transactionInfo.continueBtnFunction = false;
-            this.transactionInfo.type = 'deposit';
-            this.transactionInfo.success = true;
+          this.tip = 'Confirm the transaction to deposit'
+          const txAmount = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAmount)
+          // @ts-ignore: Unreachable code error
+          const transferTransaction = await deposit((this.chosenToken as Balance).symbol, txAmount.toString(), this.$store) as ETHOperation
+          this.transactionInfo.amount.amount = txAmount.toString()
+          this.transactionInfo.amount.token = this.chosenToken as Balance
+          this.transactionInfo.fee.token = this.chosenToken as Balance
+          let receipt = {} as ethers.ContractReceipt
+          this.transactionInfo.hash = transferTransaction.ethTx.hash
+          this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + '/tx/' + transferTransaction.ethTx.hash
+          this.tip = 'Waiting for the transaction to be mined...'
+          receipt = await transferTransaction.awaitEthereumTxCommit()
+          this.transactionInfo.fee.amount = receipt.gasUsed.toString()
+          this.transactionInfo.continueBtnFunction = false
+          this.transactionInfo.type = 'deposit'
+          this.transactionInfo.success = true
         },
         unlockToken: async function (): Promise<void> {
-            if(!this.choosedToken){return}
+          if (!this.chosenToken) {return}
             this.loading = true;
             try {
-                const wallet = walletData.get().syncWallet;
-                this.tip = `Confirm the transaction in order to unlock ${this.choosedToken.symbol} token`;
-                const approveDeposits = await wallet!.approveERC20TokenDeposits(this.choosedToken.address as string);
-                const balances = this.$store.getters['wallet/getzkBalances'] as Array<Balance>;
-                var ETHToken;
-                for (const token of balances) {
-                    if (token.symbol === "ETH") {
-                        ETHToken = token;
-                        break;
-                    }
+              const wallet = walletData.get().syncWallet
+              this.tip = `Confirm the transaction in order to unlock ${this.chosenToken.symbol} token`
+              const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string)
+              const balances = this.$store.getters['wallet/getzkBalances'] as Array<Balance>
+              let ETHToken
+              for (const token of balances) {
+                if (token.symbol === 'ETH') {
+                  ETHToken = token
+                  break
                 }
-                this.transactionInfo.amount.amount = "0";
-                this.transactionInfo.amount.token = ETHToken as Balance;
-                this.transactionInfo.fee.token = ETHToken as Balance;
-                let receipt = {} as ethers.ContractReceipt;
-                this.tip = "Waiting for the transaction to be mined...";
-                receipt = await approveDeposits.wait();
-                this.transactionInfo.hash = receipt.transactionHash;
-                this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER+'/tx/'+receipt.transactionHash;
-                this.transactionInfo.fee.amount = receipt.gasUsed.toString();
-                this.transactionInfo.continueBtnFunction = true;
-                this.transactionInfo.type = 'unlock';
-                const isTokenUnlocked = await this.checkTokenState(this.choosedToken);
-                if(isTokenUnlocked===true) {
-                    this.transactionInfo.success = true;
-                }
-                this.choosedToken = { ...this.choosedToken, unlocked: isTokenUnlocked };
+              }
+              this.transactionInfo.amount.amount = '0'
+              this.transactionInfo.amount.token = ETHToken as Balance
+              this.transactionInfo.fee.token = ETHToken as Balance
+              let receipt = {} as ethers.ContractReceipt
+              this.tip = 'Waiting for the transaction to be mined...'
+              receipt = await approveDeposits.wait()
+              this.transactionInfo.hash = receipt.transactionHash
+              this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + '/tx/' + receipt.transactionHash
+              this.transactionInfo.fee.amount = receipt.gasUsed.toString()
+              this.transactionInfo.continueBtnFunction = true
+              this.transactionInfo.type = 'unlock'
+              const isTokenUnlocked = await this.checkTokenState(this.chosenToken)
+              if (isTokenUnlocked) {
+                this.transactionInfo.success = true
+              }
+              this.chosenToken = { ...this.chosenToken, unlocked: isTokenUnlocked }
             } catch (error) {
                 if (error.message) {
                     if (!error.message.includes("User denied")) {
@@ -265,7 +272,7 @@ export default Vue.extend({
             if (token.symbol !== "ETH") {
                 const wallet = walletData.get().syncWallet;
                 const isApprovedDeposits = await wallet!.isERC20DepositsApproved(token.address as string);
-                return !!isApprovedDeposits;
+              return isApprovedDeposits
             } else {
                 return true;
             }
@@ -278,7 +285,7 @@ export default Vue.extend({
                 const balances = this.$store.getters['wallet/getzkBalances'] as Array<Balance>;
                 for(const item of balances) {
                     if(item.symbol===this.$route.query["token"]) {
-                        this.chooseToken(item);
+                      await this.chooseToken(item)
                         break;
                     }
                 }

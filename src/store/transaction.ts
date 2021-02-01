@@ -1,10 +1,9 @@
 import { RootState } from '~/store';
-import { BigNumber } from "ethers";
-import { GetterTree, ActionTree, MutationTree } from 'vuex';
-import { walletData } from "@/plugins/walletData";
-import { ETHOperation, GweiBalance } from "@/plugins/types";
+import { ActionTree, GetterTree, MutationTree } from 'vuex';
+import { walletData } from '@/plugins/walletData';
+import { ETHOperation } from '@/plugins/types';
 
-var updateBalancesTimeout = undefined as any;
+let updateBalancesTimeout = undefined as any;
 
 interface depositsInterface {
   [tokenSymbol: string]: Array<{
@@ -50,7 +49,7 @@ export const mutations: MutationTree<TransactionModuleState> = {
     if(!Array.isArray(state.deposits[tokenSymbol])){
       state.deposits[tokenSymbol]=[];
     }
-    var txIndex = -1;
+    let txIndex = -1;
     for (let a = 0; a < state.deposits[tokenSymbol].length; a++) {
       if(state.deposits[tokenSymbol][a].hash===hash) {
         txIndex=a;

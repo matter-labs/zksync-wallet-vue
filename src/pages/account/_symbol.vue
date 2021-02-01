@@ -2,7 +2,7 @@
     <div class="tokenAccount">
       <div class="tileBlock">
         <div class="tileHeadline withBtn h3">
-          <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath && fromRoute.path!=='/withdraw')?fromRoute:'/account'" class="returnBtn">
+          <nuxt-link :to="(fromRoute && fromRoute.fullPath!==$route.fullPath && fromRoute.path!=='/withdraw') ? fromRoute:'/account'" class="returnBtn">
             <i class="far fa-long-arrow-alt-left"></i>
           </nuxt-link>
           <span class="tokenSymbol">{{ symbol }}</span>
@@ -37,17 +37,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import transactions from "@/blocks/Transactions.vue";
+import Vue from 'vue'
+import transactions from '@/blocks/Transactions.vue'
 
 export default Vue.extend({
   components: {
     transactions,
   },
-  asyncData({ from }) {
+  asyncData ({ from }) {
     return {
       fromRoute: from,
-    };
+    }
   },
   data() {
     return {
@@ -76,8 +76,8 @@ export default Vue.extend({
           break;
         }
       }
-      if (found === false) {
-        await this.$router.push("/account");
+      if (!found) {
+        await this.$router.push('/account')
       }
     },
   },

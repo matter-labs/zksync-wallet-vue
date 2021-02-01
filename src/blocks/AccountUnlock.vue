@@ -2,7 +2,7 @@
   <div v-if="!loading && !transactionInfo.success" class="tileBlock">
     <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
-      <choose-token onlyAllowed @choosed="chooseToken($event)" />
+      <choose-token onlyAllowed @chosen="chooseToken($event)"/>
     </i-modal>
     <div class="tileHeadline h3">
       Unlock account
@@ -12,28 +12,31 @@
       proofs. Please bear with us!</p>
     <div class="_padding-y-1">Amount / asset</div>
     <i-input size="lg" placeholder="Select token" disabled :value="inputVal">
-      <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="chooseTokenModal=true">
+      <i-button v-if="!chosenToken" slot="append" block link variant="secondary" @click="chooseTokenModal=true">
         Select token
       </i-button>
-      <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
-                @click="chooseTokenModal=true">{{ choosedToken.symbol }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
+      <i-button
+          v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
+          @click="chooseTokenModal=true"
+      >{{ chosenToken.symbol }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
       </i-button>
     </i-input>
     <div v-if="errorText" class="errorText _text-center _margin-top-1">
       {{ errorText }}
     </div>
     <div v-if="!enoughFeeToken" class="errorText _text-center _margin-top-1">
-      Not enough <span class="tokenSymbol">{{ choosedToken.symbol }}</span> to pay the fee
+      Not enough <span class="tokenSymbol">{{ chosenToken.symbol }}</span> to pay the fee
     </div>
-    <i-button class="_margin-top-1" block variant="secondary" size="lg" :disabled="!choosedToken || !enoughFeeToken || !totalFee || feesLoading" @click="unlock()"><i
-        class="far fa-lock-open-alt"></i> Unlock
+    <i-button :disabled="!chosenToken || !enoughFeeToken || !totalFee || feesLoading" block class="_margin-top-1" size="lg" variant="secondary" @click="unlock()"><i
+        class="far fa-lock-open-alt"
+    ></i> Unlock
     </i-button>
     <div v-if="totalFee" class="_text-center _margin-top-1">
       Fee:
       <span v-if="feesLoading" class="secondaryText">Loading...</span>
       <span v-else>
-        {{ totalFee  | formatToken(choosedToken.symbol) }} {{choosedToken.symbol}}
-        <span class="secondaryText">{{ totalFee | formatUsdAmount(choosedToken.tokenPrice, choosedToken.symbol) }}</span>
+        {{ totalFee  | formatToken(chosenToken.symbol) }} {{ chosenToken.symbol }}
+        <span class="secondaryText">{{ totalFee | formatUsdAmount(chosenToken.tokenPrice, chosenToken.symbol) }}</span>
       </span>
     </div>
   </div>
@@ -53,18 +56,18 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { walletData } from "@/plugins/walletData";
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Balance, GweiBalance, Transaction } from "@/plugins/types";
-import { BigNumber } from "ethers";
+import Vue from 'vue'
+import { walletData } from '@/plugins/walletData'
+import { APP_ZKSYNC_BLOCK_EXPLORER } from '@/plugins/build'
+import { Balance, GweiBalance, Transaction } from '@/plugins/types'
+import { BigNumber } from 'ethers'
 
-import chooseToken from '@/blocks/ChooseToken.vue';
-import loadingBlock from '@/components/LoadingBlock.vue';
-import successBlock from '@/components/SuccessBlock.vue';
+import chooseToken from '@/blocks/ChooseToken.vue'
+import loadingBlock from '@/components/LoadingBlock.vue'
+import successBlock from '@/components/SuccessBlock.vue'
 
 export default Vue.extend({
-  data() {
+  data () {
     return {
       /* Choose token */
       chooseTokenModal: false,
@@ -76,7 +79,7 @@ export default Vue.extend({
         explorerLink: '',
         fee: {
           amount: '' as GweiBalance,
-          token: false as (false | Balance)
+          token: false as (false | Balance),
         },
       },
 
@@ -85,26 +88,26 @@ export default Vue.extend({
       tip: '',
 
       /* Main */
-      choosedToken: false as (false | Balance),
+      chosenToken: false as (false | Balance),
       totalFee: undefined as (undefined | GweiBalance),
       feesLoading: false,
-      errorText: "",
+      errorText: '',
     };
   },
   computed: {
     inputVal: function (): string {
-      if (!this.choosedToken) {
-        return "";
+      if (!this.chosenToken) {
+        return ''
       } else {
-        return `${this.choosedToken.symbol} (Balance: ${this.choosedToken.balance})`;
+        return `${this.chosenToken.symbol} (Balance: ${this.chosenToken.balance})`
       }
     },
     enoughFeeToken: function(): boolean {
-      if(!this.choosedToken || !this.totalFee || this.feesLoading) {
-        return true;
+      if (!this.chosenToken || !this.totalFee || this.feesLoading) {
+        return true
       }
       // @ts-ignore: Unreachable code error
-      return BigNumber.from(this.choosedToken.rawBalance).gt(this.totalFee);
+      return BigNumber.from(this.chosenToken.rawBalance).gt(this.totalFee)
     },
   },
   components: {
@@ -114,13 +117,13 @@ export default Vue.extend({
   },
   methods: {
     chooseToken: function(token: Balance) {
-      this.choosedToken=token;
-      this.chooseTokenModal=false;
+      this.chosenToken = token
+      this.chooseTokenModal = false
       this.getUnlockPrice();
     },
     unlock: async function(): Promise<string> {
-      if(this.totalFee === undefined || this.choosedToken === false) {
-        return "";
+      if (this.totalFee === undefined || this.chosenToken === false) {
+        return ''
       }
       this.errorText = "";
       this.loading = true;
@@ -139,13 +142,13 @@ export default Vue.extend({
           const isSigningKeySet = await syncWallet!.isSigningKeySet();
           if (!isSigningKeySet) {
             const changePubkey = await syncWallet?.setSigningKey({
-              feeToken: this.choosedToken.symbol,
-              nonce: "committed",
+              feeToken: this.chosenToken.symbol,
+              nonce: 'committed',
               onchainAuth: true,
             });
-            console.log('changePubkey', changePubkey);
-            this.$store.dispatch('transaction/watchTransaction', {transactionHash: changePubkey.txHash, tokenSymbol: this.choosedToken.symbol});
-            this.setTransactionInfo(changePubkey);
+            console.log('changePubkey', changePubkey)
+            this.$store.dispatch('transaction/watchTransaction', { transactionHash: changePubkey.txHash, tokenSymbol: this.chosenToken.symbol })
+            this.setTransactionInfo(changePubkey)
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey?.awaitReceipt();
           }
@@ -153,11 +156,11 @@ export default Vue.extend({
           const isSigningKeySet = await syncWallet!.isSigningKeySet();
           if (!isSigningKeySet) {
             const changePubkey = await syncWallet!.setSigningKey({
-              feeToken: this.choosedToken.symbol,
+              feeToken: this.chosenToken.symbol,
             });
-            console.log('changePubkey', changePubkey);
-            this.$store.dispatch('transaction/watchTransaction', {transactionHash: changePubkey.txHash, tokenSymbol: this.choosedToken.symbol});
-            this.setTransactionInfo(changePubkey);
+            console.log('changePubkey', changePubkey)
+            await this.$store.dispatch('transaction/watchTransaction', { transactionHash: changePubkey.txHash, tokenSymbol: this.chosenToken.symbol })
+            this.setTransactionInfo(changePubkey)
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey.awaitReceipt();
           }
@@ -179,8 +182,8 @@ export default Vue.extend({
       return "";
     },
     getUnlockPrice: async function (): Promise<void> {
-      if (!this.choosedToken) {
-        return;
+      if (!this.chosenToken) {
+        return
       }
       this.feesLoading = true;
       const syncWallet = walletData.get().syncWallet;
@@ -188,13 +191,13 @@ export default Vue.extend({
       try {
         await this.$store.dispatch("wallet/restoreProviderConnection");
         const foundFee = await syncProvider?.getTransactionFee(
-          {
-            ChangePubKey: {
-              onchainPubkeyAuth: syncWallet?.ethSignerType?.verificationMethod === "ERC-1271",
+            {
+              ChangePubKey: {
+                onchainPubkeyAuth: syncWallet?.ethSignerType?.verificationMethod === 'ERC-1271',
+              },
             },
-          },
-          syncWallet?.address() || '',
-          this.choosedToken.symbol,
+            syncWallet?.address() || '',
+            this.chosenToken.symbol,
         );
         this.totalFee = foundFee!.totalFee.toString();
       } catch (error) {
@@ -203,8 +206,8 @@ export default Vue.extend({
       this.feesLoading = false;
     },
     setTransactionInfo: function(transaction: Transaction): void {
-      this.transactionInfo.fee.token = this.choosedToken;
-      this.transactionInfo.hash = transaction.txHash;
+      this.transactionInfo.fee.token = this.chosenToken
+      this.transactionInfo.hash = transaction.txHash
       this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER+'/transactions/'+transaction.txHash;
       this.transactionInfo.fee.amount = transaction.txData.tx.fee;
     }

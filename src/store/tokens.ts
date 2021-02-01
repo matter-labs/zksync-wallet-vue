@@ -1,8 +1,8 @@
 import { RootState } from '~/store';
-import { GetterTree, ActionTree, MutationTree } from 'vuex';
-import { Address, TokenSymbol, Tokens, TokenPrices, Token } from "@/plugins/types";
-import { BigNumberish, BigNumber } from "ethers";
-import { walletData } from "@/plugins/walletData";
+import { ActionTree, GetterTree, MutationTree } from 'vuex';
+import { Address, Token, TokenPrices, Tokens, TokenSymbol } from '@/plugins/types';
+import { BigNumberish } from 'ethers';
+import { walletData } from '@/plugins/walletData';
 
 /**
  * Operations with the tokens (assets)
@@ -12,7 +12,7 @@ export const state = () => ({
   /**
    * Restricted tokens, fee can't be charged in it
    */
-  restrictedTokens: ["PHNX", "LAMB", "MLTT"] as Array<TokenSymbol>,
+  restrictedTokens: ['PHNX', 'LAMB', 'MLTT'] as Array<TokenSymbol>,
 
   /**
    * All available tokens:

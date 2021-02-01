@@ -61,12 +61,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import logo from "@/blocks/Logo.vue";
-import userImg from "@/components/userImg.vue";
-import walletAddress from "@/components/walletAddress.vue";
-import { APP_ZK_SCAN } from "@/plugins/build";
-import VueQrcode from "vue-qrcode";
+import Vue from 'vue'
+import logo from '@/blocks/Logo.vue'
+import userImg from '@/components/userImg.vue'
+import walletAddress from '@/components/walletAddress.vue'
+import { APP_ZK_SCAN } from '@/plugins/build'
+import VueQrcode from 'vue-qrcode'
 
 export default Vue.extend({
   components: {
@@ -75,7 +75,7 @@ export default Vue.extend({
     walletAddress,
     VueQrcode,
   },
-  data() {
+  data () {
     return {
       renameWalletModal: false,
       walletName: "",
@@ -103,15 +103,15 @@ export default Vue.extend({
       immediate: true,
       handler(val: boolean): void {
         if (!process.client) {
-          return;
+          return
         }
-        if(val===true) {
-          this.$nextTick(()=>{
-            if(this.$refs.nameInput) {
+        if (val) {
+          this.$nextTick(() => {
+            if (this.$refs.nameInput) {
               // @ts-ignore: Unreachable code error
-              this.$refs.nameInput.$el.querySelector('input').focus();
+              this.$refs.nameInput.$el.querySelector('input').focus()
             }
-          });
+          })
         }
         const walletName: string = window.localStorage.getItem(this.walletAddressFull) || '';
         if (walletName && walletName !== this.walletAddressFull) {

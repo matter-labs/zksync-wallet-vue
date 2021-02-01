@@ -1,6 +1,17 @@
-import { walletData } from "@/plugins/walletData";
-import { Address, TokenSymbol, GweiBalance, Tx } from "@/plugins/types";
+import { walletData } from '@/plugins/walletData';
+import { Address, GweiBalance, TokenSymbol, Tx } from '@/plugins/types';
 
+/**
+ * Transaction processing action
+ *
+ * @param {Address} address
+ * @param {TokenSymbol} token
+ * @param {TokenSymbol} feeToken
+ * @param {GweiBalance} amountBigValue
+ * @param {GweiBalance} feeBigValue
+ * @param store
+ * @returns {Promise<Transaction | Transaction[]>}
+ */
 export const transaction = async (address: Address, token: TokenSymbol, feeToken: TokenSymbol, amountBigValue: GweiBalance, feeBigValue: GweiBalance, store: any) => {
   const syncWallet = walletData.get().syncWallet;
   let nonce = await syncWallet!.getNonce("committed");
@@ -52,6 +63,7 @@ export const transaction = async (address: Address, token: TokenSymbol, feeToken
  * @param amount
  * @param fastWithdraw
  * @param fees
+ * @param store
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
 export const withdraw = async (address: Address, token: TokenSymbol, feeToken: TokenSymbol, amount: GweiBalance, fastWithdraw: boolean, fees: GweiBalance, store: any) => {
@@ -64,7 +76,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
       token: token,
       amount: amountBigValue,
       fee: feeBigValue,
-      fastProcessing: !!fastWithdraw,
+      fastProcessing: fastWithdraw,
     });
     store.dispatch('transaction/watchTransaction', {transactionHash: transaction.txHash, tokenSymbol: token, type: 'transfer'});
     return transaction;
@@ -91,7 +103,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
       throw new Error("No transfers in queue");
     }
 
-    var signedTransactions = [] as Array<Tx>;
+    const signedTransactions = [] as Array<Tx>;
     let signWithdrawTransaction = null;
 
     let nextNonce = await syncWallet!.getNonce();
@@ -109,7 +121,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
         .catch((error) => {
           throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
         });
-        
+
       // @ts-ignore: Unreachable code error
       signedTransactions.push({ tx: signWithdrawTransaction.tx, signature: signWithdrawTransaction.ethereumSignature });
     }
@@ -127,7 +139,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
         .catch((error) => {
           throw new Error("Error while performing signSyncTransfer: " + error.message);
         });
-      
+
       // @ts-ignore: Unreachable code error
       signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
     }
@@ -145,6 +157,14 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
   }
 };
 
+/**
+ * Deposit action method
+ *
+ * @param {TokenSymbol} token
+ * @param {GweiBalance} amount
+ * @param store
+ * @returns {Promise<any>}
+ */
 export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: any) => {
   const wallet = walletData.get().syncWallet;
   const depositResponse = await wallet?.depositToSyncFromEthereum({

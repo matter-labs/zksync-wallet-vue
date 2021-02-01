@@ -3,7 +3,7 @@
     <div class="status">
       <i-tooltip>
         <em v-if="singleTransaction.transactionStatus==='Verified'" class="verified far fa-check-double"></em>
-        <em v-else-if="singleTransaction.transactionStatus==='Commited'" class="commited far fa-check"></em>
+        <em v-else-if="singleTransaction.transactionStatus==='Commited'" class="committed far fa-check"></em>
         <em v-else-if="singleTransaction.transactionStatus==='In progress'" class="inProgress fad fa-spinner-third"></em>
         <em v-else class="rejected fas fa-times-circle"></em>
         <template slot="body">{{ singleTransaction.transactionStatus }}</template>
@@ -50,14 +50,14 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from 'vue';
-import moment from "moment";
-import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import utils from "@/plugins/utils";
-import { Tx, Address, Provider } from "@/plugins/types";
-import { walletData } from "@/plugins/walletData";
+import Vue from 'vue'
+import moment from 'moment'
+import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from '@/plugins/build'
+import utils from '@/plugins/utils'
+import { Address, Provider, Tx } from '@/plugins/types'
+import { walletData } from '@/plugins/walletData'
 
-var getTimeAgoInterval = undefined as any;
+let getTimeAgoInterval = undefined as any
 export default Vue.extend({
   props: {
     singleTransaction: {
@@ -65,7 +65,7 @@ export default Vue.extend({
       required: true,
     },
   },
-  data() {
+  data () {
     return {
       timeAgo: '',
       ethTx: '',
