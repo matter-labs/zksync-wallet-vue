@@ -2,7 +2,7 @@ import { shallowMount, Wrapper } from '@vue/test-utils';
 
 import userImg from '@/components/userImg.vue';
 
-let wrapper: Wrapper<userImg>;
+let wrapper: Wrapper<Vue>;
 
 describe('userImg', () => {
   test('With no address', () => {

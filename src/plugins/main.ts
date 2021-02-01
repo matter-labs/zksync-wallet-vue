@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueScrollTo from 'vue-scrollto';
 import utils from '@/plugins/utils';
 import Loader from '@/components/loader.vue';
-import { GweiBalance, TokenSymbol } from '@/plugins/types';
+import { TokenSymbol } from '@/plugins/types';
 import { BigNumber } from 'ethers';
 
 Vue.use(VueScrollTo);
@@ -12,7 +12,7 @@ Vue.component('Loader', Loader);
 /**
  * Implementation of the tokenFormatter as a global filter
  */
-Vue.filter('formatToken', (value: GweiBalance, symbol: TokenSymbol) => {
+Vue.filter('formatToken', (value: string, symbol: TokenSymbol) => {
   return utils.handleFormatToken(symbol, value);
 });
 

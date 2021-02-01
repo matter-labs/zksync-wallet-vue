@@ -238,7 +238,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
    * @return {Promise<[array]|*>}
    */
   async getzkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }): Promise<Array<Balance>> {
-    let listCommited = {} as {
+    let listCommitted = {} as {
       [token: string]: BigNumberish;
     };
     let listVerified = {} as {
@@ -247,7 +247,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     let tokensList = [] as Array<Balance>;
     let syncWallet = walletData.get().syncWallet;
     if (accountState) {
-      listCommited = accountState.committed.balances;
+      listCommitted = accountState.committed.balances;
       listVerified = accountState.verified.balances;
     } else {
       const localList = getters["getzkList"];
@@ -277,23 +277,23 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       // console.log(newAccountState);
 
       walletData.set({ accountState: newAccountState });
-      listCommited = (newAccountState?.committed.balances || {});
+      listCommitted = (newAccountState?.committed.balances || {});
       listVerified = (newAccountState?.verified.balances || {});
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
 
-    for (const tokenSymbol in listCommited) {
-      const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
-      const commitedBalance = utils.handleFormatToken(tokenSymbol, listCommited[tokenSymbol] ? listCommited[tokenSymbol].toString() : "0");
-      const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
+    for (const tokenSymbol in listCommitted) {
+      const price = await this.dispatch('tokens/getTokenPrice', tokenSymbol);
+      const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : '0');
+      const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : '0');
       tokensList.push({
         symbol: tokenSymbol,
-        status: commitedBalance !== verifiedBalance ? 'Pending' : 'Verified',
-        balance: commitedBalance,
-        rawBalance: BigNumber.from(listCommited[tokenSymbol] ? listCommited[tokenSymbol] : '0'),
+        status: committedBalance !== verifiedBalance ? 'Pending' : 'Verified',
+        balance: committedBalance,
+        rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : '0'),
         verifiedBalance: verifiedBalance,
         tokenPrice: price,
-        restricted: ((+commitedBalance) <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol)),
+        restricted: ((+committedBalance) <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol)),
       } as Balance);
     }
     commit("setZkTokens", {
@@ -342,6 +342,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
     });
     const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
+      //@todo insert sentry logging
       return [];
     });
     const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.sortBalancesById) as Array<Token>;
@@ -511,7 +512,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       }
 
       /**
-       * @type {provider|ExternalProvider}
+       * @type {provider}
        */
       const currentProvider = web3Wallet.get().eth.currentProvider;
       /**

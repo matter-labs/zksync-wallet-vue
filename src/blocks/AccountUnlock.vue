@@ -147,7 +147,7 @@ export default Vue.extend({
               onchainAuth: true,
             });
             console.log('changePubkey', changePubkey)
-            this.$store.dispatch('transaction/watchTransaction', { transactionHash: changePubkey.txHash, tokenSymbol: this.chosenToken.symbol })
+            await this.$store.dispatch('transaction/watchTransaction', { transactionHash: changePubkey.txHash, tokenSymbol: this.chosenToken.symbol })
             this.setTransactionInfo(changePubkey)
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey?.awaitReceipt();

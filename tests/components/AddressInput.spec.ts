@@ -3,7 +3,7 @@ import { shallowMount, Wrapper } from '@vue/test-utils';
 import AddressInput from '@/components/AddressInput.vue';
 
 // Component config
-let wrapper: Wrapper<AddressInput>;
+let wrapper: Wrapper<Vue>;
 
 describe('AddressInput', () => {
   describe('Initializing', () => {

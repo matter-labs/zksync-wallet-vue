@@ -13,13 +13,7 @@
         </p>
       </i-row>
       <i-row center class="_padding-top-1 _padding-bottom-2">
-        <div class="tileContainer _padding-x-2" @click="customWallet()">
-          <div class="tile">
-            <img src="@/assets/imgs/wallets/external.png" alt="External">
-            <i class="tileIcon fas fa-lock"></i>
-          </div>
-          <div class="tileName">Connect your wallet</div>
-        </div>
+        <i-button block size="lg" variant="secondary" @click="customWallet()">Connect your wallet</i-button>
       </i-row>
       <div class="scrollDown" @click="scrollDown()">
         <i class="fal fa-mouse-alt"></i>
@@ -66,16 +60,16 @@
 </template>
 
 <script>
-import logo from "@/blocks/Logo.vue";
-import investors from "@/blocks/Investors.vue";
+import investors from '@/blocks/Investors.vue'
+import logo from '@/blocks/Logo.vue'
 
 export default {
   components: {
     logo,
-    investors
+    investors,
   },
-  layout: "index",
-  data() {
+  layout: 'index',
+  data () {
     return {
       lockVisible: false,
       contactInfoShown: false,

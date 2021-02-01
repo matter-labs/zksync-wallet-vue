@@ -258,18 +258,9 @@ export default Vue.extend({
   },
   computed: {
     transactionTypeName: function (): string {
-      switch (this.type) {
-        case 'withdraw':
-          return 'Withdraw'
-          break
-        case 'transfer':
-          return 'Transfer'
-          break
-
-        default:
-          return ''
-          break
-      }
+      if (this.type === 'withdraw') {
+        return 'Withdraw'
+      } else return this.type === 'transfer' ? 'Transfer' : ''
     },
     maxAmount: function (): string {
       if (!this.chosenToken) {
@@ -456,7 +447,7 @@ export default Vue.extend({
           this.feesObj[this.transactionMode],
           this.$store,
       ) as Transaction
-      let receipt = {} as TransactionReceipt
+      let receipt: TransactionReceipt
       this.transactionInfo.amount.amount = txAmount.toString()
       this.transactionInfo.amount.token = this.chosenToken as Balance
       this.transactionInfo.fee.token = this.feeToken

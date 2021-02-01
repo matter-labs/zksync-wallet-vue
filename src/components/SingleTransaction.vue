@@ -12,7 +12,7 @@
     <div class="mainInfo">
       <i-tooltip>
         <div class="createdAt">{{ timeAgo }}</div>
-        <template slot="body">{{ getFormatedTime(singleTransaction.created_at) }}</template>
+        <template slot="body">{{ getFormattedTime(singleTransaction.created_at) }}</template>
       </i-tooltip>
       <div class="amount" :class="{'small': getFormattedAmount(singleTransaction).length>10}">{{ getFormattedAmount(singleTransaction) }}</div>
       <div class="tokenSymbol">{{ singleTransaction.tx.priority_op ? singleTransaction.tx.priority_op.token : singleTransaction.tx.token }}</div>
@@ -80,8 +80,8 @@ export default Vue.extend({
     getTimeAgo: function (time: number): string {
       return moment(time).fromNow();
     },
-    getFormatedTime: function (time: number): string {
-      return moment(time).format("M/D/YYYY h:mm:ss A");
+    getFormattedTime: function (time: number): string {
+      return moment(time).format('M/D/YYYY h:mm:ss A')
     },
     getFormattedAmount: function ({ tx: { type, priority_op, token, amount, fee, feePayment } }: Tx): string {
       const symbol = type === "Deposit" ? priority_op!.token : token;
