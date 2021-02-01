@@ -61,7 +61,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main.js"],
+  plugins: ["@/plugins/main"],
 
   router: {
     middleware: ["wallet"],
@@ -69,7 +69,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [],
+  buildModules: ['@nuxt/typescript-build'],
 
   /*
    ** Nuxt.js modules

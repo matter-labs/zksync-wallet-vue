@@ -1,8 +1,7 @@
 .walletPage {
   .balancesBlock {
-        /* height: calc(100vh - 105px - 316px); */
-        height: max-content;
-    min-height: 340px;
+    height: calc(100vh - 105px - 316px);
+    min-height: 360px;
 
     .form-input-group
     {
@@ -22,17 +21,11 @@
 
     .balances {
       width: 100%;
-      height: max-content;
-      min-height: 300px;
-      /* max-height: calc(30vh - 160px);
-      overflow: hidden; */
+      height: calc(100% - 40px);
 
       .balancesList {
         width: 100%;
-        height: max-content;
-        /* height: calc(100% - 80px);
-        max-height: calc(30vh - 160px);
-        min-height: 150px; */
+        height: calc(100% - 170px);
         overflow: auto;
 
         &::-webkit-scrollbar {
@@ -72,11 +65,26 @@
 
           .rightSide {
             display: flex;
-            align-items: center;
+            align-items: flex-end;
+            justify-content: center;
+            flex-direction: column;
 
+            .rowItem {
+              display: flex;
+              align-items: center;
+            }
             .total {
               font-size: 18px;
+              line-height: 25px;
               padding-right: 10px;
+              &.small {
+                font-size: 13px;
+                color: $gray;
+
+                .balancePrice {
+                  font-size: 12px;
+                }
+              }
 
               .balancePrice {
                 font-size: 16px;
@@ -101,6 +109,74 @@
 
               .inProgress {
                 color: $gray;
+              }
+
+              .loaderSpinner {
+                position: relative;
+                top: 3px;
+                left: 2px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (max-width: $mobile) {
+      height: max-content;
+      .balances {
+        .balancesList {
+          .balanceItem {
+            display: block;
+            height: max-content;
+            padding: 10px 20px;
+            
+            .tokenSymbol {
+              text-align: center;
+            }
+            .rightSide {
+              display: block;
+  
+              .rowItem {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                &:nth-child(2) {
+                  margin-top: 10px;
+                }
+              }
+              .total {
+                text-align: center;
+
+                .balancePrice {
+                  display: block;
+                }
+              }
+  
+              .status {
+                width: 25px;
+                height: 25px;
+                line-height: 25px;
+                font-size: 20px;
+                text-align: center;
+  
+                .verified {
+                  color: $green;
+                }
+  
+                .commited {
+                  color: #aa935d;
+                }
+  
+                .inProgress {
+                  color: $gray;
+                }
+  
+                .loaderSpinner {
+                  position: relative;
+                  top: 3px;
+                  left: 2px;
+                }
               }
             }
           }

@@ -1,12 +1,104 @@
 .indexPage {
-  height: calc(100vh - 175px);
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
+  transition: background-color $transition1;
+
+  .indexFullScreen {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    .scrollDown {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      display: flex;
+      width: max-content;
+      height: max-content;
+      align-items: center;
+      color: $gray;
+      border: 1px solid transparent;
+      border-radius: 15px;
+      padding: 8px 15px;
+      transition: $transition1;
+      cursor: pointer;
+      &:hover {
+        border-color: transparentize($color: $gray, $amount: 0.5);
+      }
+      i {
+        font-size: 16px;
+        //color: lighten($color: $gray, $amount: 20);
+      }
+      span {
+        font-size: 10px;
+        text-align: left;
+        padding-left: 10px;
+        text-transform: uppercase;
+      }
+    }
+  }
+  .aboutZkSync {
+    max-width: 500px;
+    font-size: 20px;
+  }
+  .featuresContainer {
+    max-width: 950px;
+    margin: 0 auto;
+
+    .featureItem {
+      img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 20px;
+      }
+      .featureHeadline {
+        font-weight: 500;
+        font-size: 22px;
+      }
+      .featureText {
+        font-weight: 400;
+        font-size: 16px;
+        margin: 0;
+        margin-top: 12px;
+      }
+    }
+  }
 
   @media (max-width: $mobile) {
-    display: block;
-    height: auto;
+    .indexFullScreen {
+      display: block;
+      height: auto;
+      padding-bottom: 80px;
+
+      .aboutZkSync {
+        max-width: 90%;
+        font-size: 16px;
+      }
+    } 
+    .featuresContainer {
+      .featureItem {
+        margin-bottom: 30px;
+
+        .featureHeadline {
+          font-size: 20px;
+        }
+        .featureText {
+          font-size: 14px;
+          margin-top: 8px;
+          max-width: 300px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+    }
+  }
+}
+
+body.inkline {
+  &.-light .indexPage {
+    background-color: $white;
   }
 }

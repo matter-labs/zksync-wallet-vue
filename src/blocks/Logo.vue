@@ -31,14 +31,15 @@
   </div>
 </template>
 
-<script>
-import { ETHER_NETWORK_NAME } from "~/plugins/build";
+<script lang="ts">
+import Vue from 'vue';
+import { ETHER_NETWORK_NAME } from "@/plugins/build";
 
-export default {
+export default Vue.extend({
   computed: {
-    network: function () {
+    network: function (): string {
       return ETHER_NETWORK_NAME;
     },
   },
-};
+});
 </script>

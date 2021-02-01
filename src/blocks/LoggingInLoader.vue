@@ -14,28 +14,29 @@
     </transition>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import logo from "@/blocks/Logo.vue";
-export default {
+export default Vue.extend({
   components: {
     logo,
   },
   computed: {
-    loggingIn: function () {
+    loggingIn: function (): boolean {
       return this.$store.getters["account/loader"];
     },
-    selectedWallet: function () {
+    selectedWallet: function (): string {
       return this.$store.getters["account/selectedWallet"];
     },
-    loadingHint: function () {
+    loadingHint: function (): string {
       return this.$store.getters["account/loadingHint"];
     },
   },
   methods: {
-    cancelLogin: function () {
+    cancelLogin: function (): void {
       this.$store.dispatch("wallet/logout");
       this.$router.push("/");
     },
   },
-};
+});
 </script>

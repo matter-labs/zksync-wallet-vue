@@ -27,11 +27,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import balances from "@/blocks/Balances.vue";
 import walletAddress from "@/components/walletAddress.vue";
 
-export default {
+export default Vue.extend({
   components: {
     walletAddress,
     balances,
@@ -39,7 +40,6 @@ export default {
   data() {
     return {
       walletInfoModal: false,
-      balanceInfoModal: false,
     };
   },
   computed: {
@@ -52,5 +52,5 @@ export default {
       this.$store.commit("setAccountModalState", true);
     },
   },
-};
+});
 </script>

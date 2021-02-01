@@ -3,6 +3,13 @@
         color: $red;
         text-align: center;
     }
+    .transactionsTile {
+        height: calc(100vh - 105px - 325px - 110px) !important;
+        min-height: 200px !important;
+        @media (max-width: $mobile) {
+            height: calc(100vh - 105px - 325px - 150px) !important;
+        }
+    }
 }
 .modalError {
     text-align: center;
@@ -10,8 +17,12 @@
 }
 .contactTile {
     height: calc(100vh - 105px - 110px) !important;
+    min-height: 300px;
     display: flex;
     flex-direction: column;
+    @media (max-width: $mobile) {
+        height: calc(100vh - 105px - 150px) !important;
+    }
 }
 .modal .contactsListContainer {
     max-height: 60vh;

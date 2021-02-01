@@ -8,10 +8,10 @@
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
-        <i-input v-model="inputedName" size="lg" placeholder="Name" maxlength="20" @keyup.enter="addContact()"/>
+        <i-input ref="nameInput" v-model="inputedName" size="lg" placeholder="Name" maxlength="20" autofocus @keyup.enter="addContact()"/>
         <br>
         <div class="_padding-bottom-1">Address</div>
-        <i-input v-model="inputedWallet" size="lg" placeholder="0x address" type="text" maxlength="42" @keyup.enter="addContact()"/>
+        <address-input ref="addressInput" v-model="inputedWallet" @enter="addContact()" />
         <br>
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
         <i-button v-if="addContactType==='edit'" block link size="md" variant="secondary" @click="deleteContact()"><i class="fas fa-trash"></i>&nbsp;&nbsp;Delete contact</i-button>
@@ -82,18 +82,21 @@
   </div>
 </template>
 
-<script>
-import validations from "@/plugins/validations.js";
-import { walletData } from "@/plugins/walletData.js";
+<script lang="ts">
+import Vue from 'vue';
+import { Contact, Address } from "@/plugins/types";
+
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 import transactions from "@/blocks/Transactions.vue";
+import addressInput from '@/components/AddressInput.vue';
 
-export default {
+export default Vue.extend({
   components: {
     userImg,
     walletAddress,
     transactions,
+    addressInput
   },
   asyncData({ from }) {
     return {
@@ -107,105 +110,84 @@ export default {
       addContactType: "add",
       inputedName: "",
       inputedWallet: "",
-      editingWallet: null,
+      editingWallet: null as (Contact | null),
       modalError: "",
-      contactsList: [],
+      contactsList: this.$store.getters['contacts/get'].map((e: Contact) => ({...e, deleted: false, notInContacts: false})) as Array<Contact>,
+      fromRoute: {},
     };
   },
   computed: {
-    computedReturnLink: function () {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transfer" ? this.fromRoute : "/contacts";
+    computedReturnLink: function (): string {
+      // @ts-ignore: Unreachable code error
+      return (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transfer") ? this.fromRoute : "/contacts";
     },
-    walletAddressFull: function () {
-      return walletData.get().syncWallet.address();
+    walletAddressFull: function (): string {
+      return this.$store.getters['account/address'];
     },
-    displayedContactsList: function () {
+    displayedContactsList: function (): Array<Contact> {
       if (!this.search.trim()) {
         return this.contactsList;
       }
-      return this.contactsList.filter((e) => e.name.toLowerCase().includes(this.search.trim().toLowerCase()));
+      return this.contactsList.filter((e: Contact) => e.name.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
-    openedContact: function () {
+    openedContact: function (): (null | Contact) {
       const wallet = this.$route.query.w;
       if (!wallet) {
         return null;
       }
       for (let a = 0; a < this.contactsList.length; a++) {
-        if (this.contactsList[a].address.toLowerCase() === wallet.toLowerCase()) {
+        if (this.contactsList[a].address.toLowerCase() === String(wallet).toLowerCase()) {
           return this.contactsList[a];
         }
       }
       return {
         deleted: false,
         notInContacts: true,
-        address: wallet,
+        address: String(wallet),
         name: "",
       };
     },
   },
   watch: {
-    addContactModal(val) {
+    addContactModal(val: boolean) {
       if (val === false) {
         this.inputedName = "";
         this.inputedWallet = "";
+      }
+      else {
+        this.$nextTick(()=>{
+          if(this.$refs.nameInput) {
+            // @ts-ignore: Unreachable code error
+            this.$refs.nameInput.$el.querySelector('input').focus()
+          }
+        });
       }
     },
     $route(val, oldVal) {
       this.fromRoute = oldVal;
     },
   },
-  mounted() {
-    try {
-      if (process.client && window.localStorage.getItem("contacts-" + this.walletAddressFull)) {
-        const contactsList = JSON.parse(window.localStorage.getItem("contacts-" + this.walletAddressFull));
-        if (Array.isArray(contactsList)) {
-          this.contactsList = contactsList.map((e) => ({ ...e, deleted: false }));
-        } else {
-          window.localStorage.setItem("contacts-" + this.walletAddressFull, JSON.stringify([]));
-        }
-      } else {
-        window.localStorage.setItem("contacts-" + this.walletAddressFull, JSON.stringify([]));
-      }
-    } catch (error) {
-      this.$store.dispatch("toaster/error", error.message ? error.message : "Error while fetching your contacts.");
-    }
-  },
   methods: {
-    saveList: function () {
-      const contactsList = JSON.parse(JSON.stringify(this.contactsList));
-      for (let a = contactsList.length - 1; a >= 0; a--) {
-        if (contactsList[a].deleted === false) {
-          delete contactsList[a].deleted;
-        } else {
-          contactsList.splice(a, 1);
-        }
-      }
-      if (process.client) {
-        window.localStorage.setItem("contacts-" + this.walletAddressFull, JSON.stringify(contactsList));
-      }
-    },
     addContact: function () {
       if (this.inputedName.trim().length === 0) {
         this.modalError = `Name can't be empty`;
-      } else if (this.inputedWallet.trim().length === 0) {
-        this.modalError = `Wallet address can't be empty`;
-      } else if (!validations.eth.test(this.inputedWallet)) {
-        this.modalError = `"${this.inputedWallet}" doesn't match ethereum address format`;
+      } else if (!this.inputedWallet) {
+        this.modalError = `Enter a valid wallet address`;
       } else if (this.inputedWallet.trim().toLowerCase() === this.walletAddressFull.toLowerCase()) {
         this.modalError = `You can't add your own account to contacts`;
       } else {
         this.addContactModal = false;
         this.modalError = "";
         try {
-          const addressToSearch = this.addContactType === "add" ? this.inputedWallet : this.editingWallet.address;
+          const addressToSearch = this.addContactType === "add" ? this.inputedWallet : (this.editingWallet?.address || '');
           for (let a = 0; a < this.contactsList.length; a++) {
             if (this.contactsList[a].address.toLowerCase() === addressToSearch.toLowerCase()) {
               this.contactsList.splice(a, 1);
               break;
             }
           }
-          this.contactsList.push({ name: this.inputedName.trim(), address: this.inputedWallet, deleted: false });
-          this.saveList();
+          this.contactsList.unshift({ name: this.inputedName.trim(), address: this.inputedWallet, deleted: false });
+          this.$store.commit('contacts/saveContact', {name: this.inputedName.trim(), address: this.inputedWallet});
         } catch (error) {
           this.$store.dispatch("toaster/error", error.message ? error.message : "Error while saving your contact book.");
           console.log(error);
@@ -214,7 +196,7 @@ export default {
         this.inputedWallet = "";
       }
     },
-    editContact: function (contact) {
+    editContact: function (contact: Contact) {
       this.modalError = "";
       this.inputedName = contact.name;
       this.inputedWallet = contact.address;
@@ -224,8 +206,9 @@ export default {
     },
     deleteContact: function () {
       for (let a = 0; a < this.contactsList.length; a++) {
-        if (this.contactsList[a].address.toLowerCase() === this.editingWallet.address.toLowerCase()) {
+        if (this.contactsList[a].address.toLowerCase() === this.editingWallet?.address.toLowerCase()) {
           this.contactsList[a].deleted = true;
+          this.$store.commit('contacts/deleteContact', this.contactsList[a].address);
           break;
         }
       }
@@ -233,21 +216,21 @@ export default {
       this.inputedName = "";
       this.inputedWallet = "";
       this.editingWallet = null;
-      this.saveList();
     },
-    restoreDeleted: function (contact) {
+    restoreDeleted: function (contact: Contact) {
       for (let a = 0; a < this.contactsList.length; a++) {
         if (this.contactsList[a].address.toLowerCase() === contact.address.toLowerCase()) {
           this.$set(this.contactsList, a, { ...contact, deleted: false });
+          this.$store.commit('contacts/saveContact', {name: contact.name, address: contact.address});
           break;
         }
       }
-      this.saveList();
     },
-    openContact: function (contact) {
+    openContact: function (contact: Contact) {
+      // @ts-ignore: Unreachable code error
       this.$router.push({ ...this.$route, query: { w: contact.address } });
     },
-    copyAddress: function (address) {
+    copyAddress: function (address: Address) {
       const elem = document.createElement("textarea");
       elem.style.position = "absolute";
       elem.style.left = -99999999 + "px";
@@ -259,5 +242,5 @@ export default {
       document.body.removeChild(elem);
     },
   },
-};
+});
 </script>

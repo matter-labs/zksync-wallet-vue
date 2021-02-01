@@ -11,4 +11,11 @@
             }
         }
     }
+    .transactionsTile {
+        height: calc(100vh - 105px - 325px - 110px) !important;
+        min-height: 250px !important;
+        @media (max-width: $mobile) {
+            height: calc(100vh - 105px - 325px - 150px) !important;
+        }
+    }
 }

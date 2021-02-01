@@ -1,4 +1,12 @@
-<template>
+scroll
+account.ts
+contacts.ts
+index.ts
+README.md
+toaster.ts
+tokens.ts
+transaction.ts
+wallet.ts<template>
   <div class="defaultLayout">
     <logging-in-loader/>
     <cookie-component/>

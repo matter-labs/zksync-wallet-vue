@@ -1,13 +1,16 @@
 .transactionsPage {
   .transactionsTile {
-    height: calc(100vh - 105px - 110px);
-    min-height: 500px !important;
+    height: calc(100vh - 100px - 110px);
+    min-height: 500px;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: $mobile) {
+      height: calc(100vh - 105px - 150px) !important;
+    }
   }
 
   .transactionsListContainer {
-    // box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.075) !important;
     border-radius: 0.3rem !important;
     overflow: auto;
     height: 100%;
@@ -124,6 +127,13 @@
           overflow: hidden;
           text-overflow: ellipsis;
         }
+        
+        .linkText {
+          display: block;
+          font-size: 14px;
+          line-height: 1.1;
+          margin-top: 7px;
+        }
       }
     }
 
@@ -134,6 +144,9 @@
       align-items: center;
       justify-content: center;
       text-align: center;
+      &.loadMoreAvailable {
+        height: calc(100% - 45px);
+      }
     }
   }
 }
@@ -153,7 +166,7 @@ body.inkline {
 
   &.-dark {
     .transactionsPage .transactionsListContainer {
-      //background-color: #ffffff10;
+      background-color: #ffffff10;
       &::-webkit-scrollbar-thumb {
         background-color: $input-border-color-focus-dark;
       }

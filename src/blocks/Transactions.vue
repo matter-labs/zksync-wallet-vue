@@ -6,14 +6,14 @@
         <div v-if="loading===true" class="nothingFound">
           <loader class="_display-block"/>
         </div>
-        <div v-else-if="transactionsList.length===0" class="nothingFound">
+        <div v-else-if="transactionsList.length===0 && !loadingMore" class="nothingFound" :class="{'loadMoreAvailable': loadMoreAvailable}">
           <span>History is empty</span>
         </div>
-        <SingleTransaction
-            v-for="(item, index) in transactionsList"
+        <single-transaction
+            v-for="(item) in transactionsList"
             v-else
-            :key="index"
-            class="transactionItem" :single-transaction="item"/>
+            :key="item.hash"
+            class="transactionItem" :single-transaction="item" />
         <i-button v-if="loadingMore===false && loadMoreAvailable===true" block link size="lg" variant="secondary"
                   @click="loadMore()">Load more
         </i-button>
@@ -23,11 +23,13 @@
   </div>
 </template>
 
-<script>
-import { walletData } from "@/plugins/walletData";
-import SingleTransaction from "@/blocks/SingleTransaction";
+<script lang="ts">
+import Vue from 'vue';
+import { Tx, Address } from "@/plugins/types";
+import SingleTransaction from "@/components/SingleTransaction.vue";
 
-export default {
+var updateListInterval = undefined as any;
+export default Vue.extend({
   components: {
     SingleTransaction,
   },
@@ -45,7 +47,7 @@ export default {
   },
   data() {
     return {
-      transactionsList: [],
+      /* transactionsList: [] as Array<Tx>, */
       loading: true,
       addressToNameMap: new Map(),
       loadMoreAvailable: false,
@@ -54,49 +56,30 @@ export default {
     };
   },
   computed: {
-    walletAddressFull: function () {
-      return walletData.get().syncWallet.address();
+    walletAddressFull: function (): Address {
+      return this.$store.getters['account/address'];
     },
-  },
-  mounted() {
-    this.getTransactions();
-    try {
-      if (!process.client || !window.localStorage.getItem("contacts-" + this.walletAddressFull)) {
-        return;
-      }
-      const contactsList = JSON.parse(window.localStorage.getItem("contacts-" + this.walletAddressFull));
-      if (!contactsList || !Array.isArray(contactsList)) {
-        return;
-      }
-      for (const item of contactsList) {
-        this.addressToNameMap.set(item.address.toLowerCase(), item.name);
-      }
-    } catch (error) {
-      this.$store.dispatch("toaster/error", error.message ? error.message : "Error while loading transaction list");
-    }
-  },
-  methods: {
-    loadTransactions: async function (offset = 0) {
-      const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
+    transactionsList: function (): Array<Tx> {
+      const list = this.$store.getters['wallet/getTransactionsHistory'];
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
       let filteredList = list
-        .filter((e) => e.tx.type !== "ChangePubKey")
-        .map((e) => {
+        .filter((e: Tx) => (e.tx.type !== "ChangePubKey" && !e.fail_reason))
+        .map((e: Tx) => {
           if (e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) {
             e.tx.feePayment = true;
           }
           return e;
         });
       if (this.filter) {
-        filteredList = filteredList.filter((item) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
+        filteredList = filteredList.filter((item: Tx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
       if (this.address) {
         const addressLowerCase = this.address.toLowerCase();
         const myAddressLowerCase = this.walletAddressFull.toLowerCase();
-        filteredList = filteredList.filter((item) => {
+        filteredList = filteredList.filter((item: Tx) => {
           if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
-            const addressToLowerCase = item.tx.to.toLowerCase();
+            const addressToLowerCase = item.tx.to?.toLowerCase();
             const addressFromLowerCase = item.tx.from.toLowerCase();
             if (
               (item.tx.type === "Withdraw" && addressToLowerCase === addressLowerCase) ||
@@ -110,18 +93,56 @@ export default {
           return false;
         });
       }
-      return filteredList.map((e) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
+      return filteredList.map((e: Tx) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
     },
-    getTransactions: async function () {
+  },
+  methods: {
+    loadTransactions: async function (offset: number = 0): Promise<Array<Tx>> {
+      const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
+      this.totalLoadedItem += list.length;
+      this.loadMoreAvailable = list.length >= 25;
+      let filteredList = list
+        .filter((e: Tx) => e.tx.type !== "ChangePubKey")
+        .map((e: Tx) => {
+          if (e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) {
+            e.tx.feePayment = true;
+          }
+          return e;
+        });
+      if (this.filter) {
+        filteredList = filteredList.filter((item: Tx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
+      }
+      if (this.address) {
+        const addressLowerCase = this.address.toLowerCase();
+        const myAddressLowerCase = this.walletAddressFull.toLowerCase();
+        filteredList = filteredList.filter((item: Tx) => {
+          if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
+            const addressToLowerCase = item.tx.to?.toLowerCase();
+            const addressFromLowerCase = item.tx.from.toLowerCase();
+            if (
+              (item.tx.type === "Withdraw" && addressToLowerCase === addressLowerCase) ||
+              (item.tx.type === "Transfer" &&
+                ((addressToLowerCase === myAddressLowerCase && addressFromLowerCase === addressLowerCase) ||
+                  (addressFromLowerCase === myAddressLowerCase && addressToLowerCase === addressLowerCase)))
+            ) {
+              return true;
+            }
+          }
+          return false;
+        });
+      }
+      return filteredList.map((e: Tx) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
+    },
+    getTransactions: async function (): Promise<void> {
       this.loading = true;
       try {
-        this.transactionsList = await this.loadTransactions();
+        await this.loadTransactions();
       } catch (error) {
         await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while fetching the transactions");
       }
       this.loading = false;
     },
-    getTransactionStatus: function (transaction) {
+    getTransactionStatus: function (transaction: Tx): string {
       if (!transaction.success) {
         return transaction.fail_reason ? transaction.fail_reason : "Rejected";
       }
@@ -133,12 +154,26 @@ export default {
         return "In progress";
       }
     },
-    loadMore: async function () {
+    loadMore: async function (): Promise<void> {
+      this.autoUpdateList();
       this.loadingMore = true;
       const list = await this.loadTransactions(this.totalLoadedItem);
-      this.transactionsList.push(...list);
+      /* this.transactionsList.push(...list); */
       this.loadingMore = false;
     },
+    autoUpdateList: async function(): Promise<void> {
+      clearInterval(updateListInterval);
+      updateListInterval = setInterval(()=>{
+        this.loadTransactions();
+      },120000);
+    }
   },
-};
+  mounted() {
+    this.autoUpdateList();
+    this.getTransactions();
+  },
+  beforeDestroy() {
+    clearInterval(updateListInterval);
+  },
+});
 </script>

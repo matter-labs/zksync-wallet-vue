@@ -10,20 +10,6 @@ head {
   display: none;
 }
 
-@media (min-width: $mobile+1) {
-  .mobileOnly {
-    display: none !important;
-  }
-}
-
-@media (max-width: $mobile) {
-  .desktopOnly {
-    display: none !important;
-  }
-}
-
-
-
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -33,21 +19,25 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-/* .container {
-    width: 90%;
-} */
-.loadScreen {
-  z-index: 999;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  /* background-color: rgba(255,255,255,0.6);
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 100%;
-  align-items: center;
-  justify-items: center;
-  backdrop-filter: blur(10px); */
+.secondaryText {
+  font-size: 16px;
+  color: $gray;
+}
+.linkText {
+  font-size: 16px;
+  color: $lightViolet;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.desktopOnly {
+  @media screen and (max-width: $mobile) {
+    display: none;
+  }
 }
 
 body.inkline {
@@ -372,10 +362,6 @@ button.-lg.-circle {
     margin: 0 auto;
   }
 }
-.fa-check {
-  font-weight: 600;
-  color: #58AE67;
-}
 .fa-check-double {
   display: block;
   min-width: 35px;
@@ -393,4 +379,8 @@ button.-lg.-circle {
 .h1 {
   font-family: $firaSans;
   font-weight: 400 !important;
+}
+.h2 {
+  font-family: $firaSans;
+  font-weight: 600 !important;
 }

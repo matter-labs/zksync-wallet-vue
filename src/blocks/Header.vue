@@ -29,7 +29,7 @@
         Rename wallet
       </template>
       <div>
-        <i-input v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()"/>
+        <i-input ref="nameInput" v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()"/>
         <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
       </div>
     </i-modal>
@@ -60,14 +60,15 @@
   </header>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 import { APP_ZK_SCAN } from "@/plugins/build";
 import VueQrcode from "vue-qrcode";
 
-export default {
+export default Vue.extend({
   components: {
     logo,
     userImg,
@@ -81,17 +82,17 @@ export default {
     };
   },
   computed: {
-    walletAddressFull: function () {
+    walletAddressFull: function (): string {
       return this.$store.getters["account/address"];
     },
-    getZkScanBaseUrl: function () {
+    getZkScanBaseUrl: function (): string {
       return APP_ZK_SCAN;
     },
     accountModal: {
-      get: function () {
+      get: function (): boolean {
         return this.$store.getters["getAccountModalState"];
       },
-      set: function (val) {
+      set: function (val: boolean): boolean {
         this.$store.commit("setAccountModalState", val);
         return val;
       },
@@ -100,15 +101,23 @@ export default {
   watch: {
     renameWalletModal: {
       immediate: true,
-      handler() {
+      handler(val: boolean): void {
         if (!process.client) {
-          return false;
+          return;
         }
-        const walletName = window.localStorage.getItem(this.walletAddressFull);
+        if(val===true) {
+          this.$nextTick(()=>{
+            if(this.$refs.nameInput) {
+              // @ts-ignore: Unreachable code error
+              this.$refs.nameInput.$el.querySelector('input').focus();
+            }
+          });
+        }
+        const walletName: string = window.localStorage.getItem(this.walletAddressFull) || '';
         if (walletName && walletName !== this.walletAddressFull) {
           this.walletName = walletName;
         } else {
-          let address = this.walletAddressFull;
+          let address: string = this.walletAddressFull;
           if (address.length > 16) {
             address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
           }
@@ -118,23 +127,23 @@ export default {
     },
   },
   methods: {
-    logout: function () {
+    logout: function (): void {
       this.accountModal = false;
       this.$nextTick(async () => {
         await this.$store.dispatch("wallet/logout");
         await this.$router.push("/");
       });
     },
-    renameWalletOpen: function () {
+    renameWalletOpen: function (): void {
       this.accountModal = false;
       this.renameWalletModal = true;
     },
-    renameWallet: function () {
+    renameWallet: function (): void {
       this.renameWalletModal = false;
       if (process.client && this.walletName.length > 0 && this.walletName !== this.walletAddressFull) {
         window.localStorage.setItem(this.walletAddressFull, this.walletName);
       }
     },
   },
-};
+});
 </script>

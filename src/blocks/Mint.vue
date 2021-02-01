@@ -46,7 +46,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import Checkmark from "@/components/Checkmark.vue";
 import { ETHER_NETWORK_NAME } from "@/plugins/build";
 
@@ -56,7 +57,7 @@ import VueRecaptcha from "vue-recaptcha";
 
 const FAUCET_TOKEN_API = `https://${process.env.APP_ZKSYNC_API_LINK === "stage-api.zksync.dev" ? "stage" : ETHER_NETWORK_NAME}-faucet.zksync.dev`;
 
-export default {
+export default Vue.extend({
   components: {
     VueRecaptcha,
     Checkmark,
@@ -78,12 +79,12 @@ export default {
     };
   },
   computed: {
-    recaptchaSiteID: function () {
-      return process.env.RECAPTCHA_SITE_KEY;
+    recaptchaSiteID: function (): string {
+      return process.env.RECAPTCHA_SITE_KEY || '';
     },
   },
   methods: {
-    startMint: function () {
+    startMint: function (): void {
       if (ETHER_NETWORK_NAME === "mainnet") {
         this.onlyTestNetModal = true;
       } else {
@@ -93,8 +94,9 @@ export default {
         this.mainModal = true;
       }
     },
-    getTicketFromAddress: function (salt) {
-      const preimage = (String(walletData.get().syncWallet.address()).trim() + String(salt).trim()).toLowerCase();
+    getTicketFromAddress: function (salt: string): string {
+      const address = this.$store.getters['account/address'];
+      const preimage = (address.trim() + String(salt).trim()).toLowerCase();
 
       const hash = crypto.createHash("sha256");
       hash.update(preimage);
@@ -103,35 +105,35 @@ export default {
       const digest = hash.digest("hex").slice(0, 13);
       return parseInt(digest, 16).toString().padStart(16, "0");
     },
-    generateSalt: function () {
+    generateSalt: function (): string {
       if (localStorage.getItem("twitsalt")) {
-        return localStorage.getItem("twitsalt");
+        return localStorage.getItem("twitsalt") || '';
       } else {
         const salt = Math.random().toString();
         localStorage.setItem("twitsalt", salt);
         return salt;
       }
     },
-    tweetClicked: async function () {
-      const syncAddress = walletData.get().syncWallet.address();
+    tweetClicked: async function (): Promise<void> {
+      const syncAddress = walletData.get().syncWallet?.address();
       localStorage.setItem(`twittMade${syncAddress}`, "true");
       const response = await this.$axios.$get(`${FAUCET_TOKEN_API}/register_address/${syncAddress}/${this.generateSalt()}`);
       if (response.data === "Success") {
         await this.checkForTweet();
       }
     },
-    async checkForTweet() {
-      const syncAddress = walletData.get().syncWallet.address();
+    checkForTweet: async function(): Promise<void> {
+      const syncAddress = walletData.get().syncWallet?.address();
       if (!localStorage.getItem(`twittMade${syncAddress}`)) {
-        return false;
+        return;
       }
       this.loading = true;
       try {
         const response = await this.$axios.$get(`${FAUCET_TOKEN_API}/is_withdraw_allowed/${syncAddress}`);
-        if (!response.data || response.data === "false") {
-          this.step = "tweet";
-        } else {
+        if (response === true) {
           this.step = "claim";
+        } else {
+          this.step = "tweet";
         }
       } catch (error) {
         await this.$store.dispatch("toaster/error", error.message);
@@ -140,16 +142,16 @@ export default {
       this.loading = false;
     },
 
-    recaptchaVerified: async function (captchaToken) {
+    recaptchaVerified: async function (captchaToken: string): Promise<void> {
       await new Promise((resolve) => {
         setTimeout(() => {
-          resolve();
+          resolve(undefined);
         }, 400);
       });
       this.loading = true;
       try {
         const askMoneyResponse = await this.$axios.$post(`${FAUCET_TOKEN_API}/ask_money`, {
-          address: walletData.get().syncWallet.address(),
+          address: walletData.get().syncWallet?.address(),
           "g-recaptcha-response": captchaToken,
         });
         console.log("askMoneyResponse", askMoneyResponse.data);
@@ -157,7 +159,7 @@ export default {
           this.tip = "Claiming tokens...";
           await new Promise((resolve) => {
             setTimeout(() => {
-              resolve();
+              resolve(undefined);
             }, 7000);
           });
           await this.$store.dispatch("wallet/forceRefreshData");
@@ -173,17 +175,17 @@ export default {
       }
       this.loading = false;
     },
-    recaptchaExpired: function () {
+    recaptchaExpired: function (): void {
       console.log("reCaptcha Expired");
     },
-    recaptchaError: function () {
+    recaptchaError: function (): void {
       console.log("reCaptcha Error");
     },
-    close: function () {
+    close: function (): void {
       this.mainModal = false;
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>

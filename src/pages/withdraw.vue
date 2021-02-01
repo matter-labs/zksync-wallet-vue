@@ -1,5 +1,5 @@
 <template>
-    <transaction :from-route="fromRoute" type="withdraw" />
+  <transaction :from-route="fromRoute" type="withdraw" />
 </template>
 
 <script>
@@ -9,9 +9,9 @@ export default {
     Transaction,
   },
   asyncData({ from, store, redirect }) {
-    if (store.getters["wallet/isAccountLocked"]) {
+    /* if (store.getters["wallet/isAccountLocked"]) {
       redirect("/account/unlock");
-    }
+    } */
     return {
       fromRoute: from,
     };

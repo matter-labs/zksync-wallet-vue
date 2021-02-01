@@ -41,26 +41,29 @@
   </footer>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import { GIT_REVISION_SHORT } from "@/plugins/build";
 import { APP_ZK_SCAN } from "@/plugins/build";
 
-export default {
+export default Vue.extend({
   data() {
     return {
       version: GIT_REVISION_SHORT,
     };
   },
   computed: {
-    blockExplorerLink: function () {
+    blockExplorerLink: function(): string {
       return APP_ZK_SCAN;
     },
   },
   methods: {
     toggleDarkMode() {
+      // @ts-ignore: Unreachable code error
       this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
+      // @ts-ignore: Unreachable code error
       localStorage.setItem("colorTheme", this.$inkline.config.variant);
     },
   },
-};
+});
 </script>

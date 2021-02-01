@@ -10,9 +10,10 @@
     </transition>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import Cookies from "js-cookie";
-export default {
+export default Vue.extend({
   data() {
     return {
       confirmed: true,
@@ -22,13 +23,13 @@ export default {
     this.checkCookie();
   },
   methods: {
-    checkCookie: function () {
-      this.confirmed = Cookies.get("accept-cookie") === "true";
+    checkCookie: function(): void {
+      this.confirmed = (Cookies.get("accept-cookie") === "true");
     },
-    cookieConfirm: function () {
+    cookieConfirm: function(): void {
       Cookies.set("accept-cookie", "true");
       this.confirmed = true;
     },
   },
-};
+});
 </script>

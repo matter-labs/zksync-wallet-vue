@@ -14,6 +14,7 @@ export default {
   },
   computed: {
     walletImg: function () {
+      if(!this.wallet){return ""};
       return blockie(this.wallet);
     },
   },

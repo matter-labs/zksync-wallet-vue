@@ -145,6 +145,13 @@
 {
   footer > .container .badge{
     background: #e9ecef;
-    color: #4E529A;
+    color: #2f3264;
+  }
+}
+body.inkline {
+  &.-light {
+    .indexPage, .indexPage footer {
+      background-color: $white;
+    }
   }
 }

@@ -3,7 +3,10 @@
   height: 100%;
 
   .routerContainer {
-    min-height: calc(100vh - 202px);
+    min-height: calc(100vh - 105px - 110px);
+    @media (max-width: $mobile) {
+      min-height: calc(100vh - 105px - 150px) !important;
+    }
   }
 
   .tileBlock {
@@ -21,7 +24,6 @@
     .tileHeadline {
       width: 100%;
       display: flex;
-      //padding-top: 10px;
       padding-bottom: 20px;
       margin: 0;
       text-align: center;
@@ -101,10 +103,6 @@
       border-radius: 5px;
       border: 1px solid;
     }
-
-    /* .form-input-prepend {
-        background-color: transparent !important;
-    } */
   }
 
 }

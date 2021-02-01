@@ -26,7 +26,7 @@
         <span>Balances in L2</span>
         <i class="fas fa-question" @click="balanceInfoModal=true"></i>
       </div>
-      <div v-if="balances.length===0 && loading===false" class="centerBlock">
+      <div v-if="zkBalances.length===0 && loading===false" class="centerBlock">
         <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
         <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
       </div>
@@ -54,65 +54,121 @@
           <nuxt-link v-for="(item,index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
             <div class="tokenSymbol">{{ item.symbol }}</div>
             <div class="rightSide">
-              <div class="total"><span class="balancePrice">{{ item.formatedTotalPrice }}</span>&nbsp;&nbsp;{{ item.balance }}</div>
-              <div class="status">
-                <i-tooltip>
-                  <i v-if="item.status==='Verified'" class="verified far fa-check-double"></i>
-                  <i v-else class="commited far fa-check"></i>
-                  <template slot="body">{{ item.status }}</template>
-                </i-tooltip>
+              <div class="rowItem">
+                <div class="total"><span class="balancePrice">{{ item.rawBalance | formatUsdAmount(item.tokenPrice, item.symbol) }}</span>&nbsp;&nbsp;{{ item.balance }}</div>
+                <div class="status">
+                  <i-tooltip>
+                    <i v-if="item.status==='Verified' && !activeDeposits[item.symbol]" class="verified far fa-check-double"></i>
+                    <i v-else class="commited far fa-check"></i>
+                    <template slot="body">{{ item.status }}</template>
+                  </i-tooltip>
+                </div>
+              </div>
+              <div class="rowItem" v-if="activeDeposits[item.symbol]">
+                <div class="total small">
+                  <span class="balancePrice">{{ activeDeposits[item.symbol] | formatUsdAmount(item.tokenPrice, item.symbol) }}</span>
+                  &nbsp;&nbsp;+{{ activeDeposits[item.symbol] | formatToken(item.symbol) }}
+                </div>
+                <div class="status">
+                  <loader size="xs" />
+                </div>
               </div>
             </div>
           </nuxt-link>
         </div>
       </div>
-      <mint :display="(balances.length===0 && loading===false)" class="_margin-top-2" @received="getBalances()"/>
+      <mint :display="(zkBalances.length===0 && loading===false)" class="_margin-top-2" @received="getBalances()"/>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import Mint from "@/blocks/Mint.vue";
-import utils from "@/plugins/utils";
-export default {
+import { BigNumber } from "ethers";
+import { Balance } from "@/plugins/types";
+
+var updateListInterval = undefined as any;
+
+interface depositsInterface {
+  [tokenSymbol: string]: Array<{
+    hash: string,
+    amount: string,
+    status: string,
+    confirmations: number
+  }>
+}
+export default Vue.extend({
   components: {
     Mint,
   },
   data() {
     return {
-      balances: [],
       search: "",
-      loading: true,
+      loading: false,
       balanceInfoModal: false,
     };
   },
+  watch: {
+    activeDeposits(val) {
+      console.log('activeDeposits updated', val);
+    }
+  },
   computed: {
-    displayedList: function () {
-      if (!this.search.trim()) {
-        return this.balances;
-      }
-      return this.balances.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
+    zkBalances: function() {
+      return this.$store.getters['wallet/getzkBalances'];
     },
+    displayedList: function (): Array<Balance> {
+      if (!this.search.trim()) {
+        return this.zkBalances;
+      }
+      return this.zkBalances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
+    },
+    activeDeposits: function() {
+      const deposits = this.$store.getters['transaction/depositList'] as depositsInterface;
+      var activeDeposits = {} as depositsInterface;
+      var finalDeposits = {} as {
+        [tokenSymbol: string]: BigNumber,
+      }
+      for(const tokenSymbol in deposits) {
+        activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter(tx => tx.status==='Initiated');
+      }
+      for(const tokenSymbol in activeDeposits) {
+        if(activeDeposits[tokenSymbol].length>0) {
+          if(!finalDeposits[tokenSymbol]) {
+            finalDeposits[tokenSymbol] = BigNumber.from("0");
+          }
+          for(const tx of activeDeposits[tokenSymbol]) {
+            finalDeposits[tokenSymbol] = finalDeposits[tokenSymbol].add(tx.amount);
+          }
+        }
+      }
+      return finalDeposits;
+    },
+  },
+  methods: {
+    getBalances: async function (): Promise<void> {
+      if(this.zkBalances.length===0) {
+        this.loading = true;
+      }
+      const balances = await this.$store.dispatch("wallet/getzkBalances");
+      /* this.balances = JSON.parse(JSON.stringify(balances)).sort(utils.sortBalancesById); */
+      this.loading = false;
+    },
+    autoUpdateList: async function(): Promise<void> {
+      clearInterval(updateListInterval);
+      updateListInterval = setInterval(()=>{
+        this.getBalances();
+      },120000);
+    }
   },
   mounted() {
     this.getBalances();
+    this.autoUpdateList();
+    console.log('activeDeposits', this.activeDeposits);
   },
-  methods: {
-    getBalances: async function () {
-      this.loading = true;
-      /**
-       * @type {Array}
-       */
-      const balances = await this.$store.dispatch("wallet/getzkBalances");
-      this.balances = balances
-        .slice()
-        .sort(utils.sortBalancesById)
-        .filter((e) => {
-          console.log("filter balances:", e.balance, typeof e.balance, e, e.balance > 0);
-          return e.balance > 0;
-        });
-      this.loading = false;
-    },
+  beforeDestroy() {
+    clearInterval(updateListInterval);
   },
-};
+});
 </script>

@@ -1,6 +1,5 @@
 <template>
     <div class="animatedCheckmark">
-
     </div>
 </template>
 
