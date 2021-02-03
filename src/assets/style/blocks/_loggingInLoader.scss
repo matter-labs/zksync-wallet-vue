@@ -59,8 +59,8 @@
 
 body.inkline {
     &.-light .loggingInLoader {
-    background-color: #f3f4f7;
-  }
+      background-color: $mediumGrey;
+    }
     &.-dark .loggingInLoader {
     background-color: #1d2039;
   }

@@ -1,4 +1,8 @@
+@import "../variables";
+@import "../components/custom/custom";
+
 .indexPage {
+  background-color: $mediumGrey;
   transition: background-color $transition1;
 
   .indexFullScreen {
@@ -45,8 +49,8 @@
     font-size: 20px;
   }
   .featuresContainer {
-    max-width: 950px;
     margin: 0 auto;
+    max-width: 950px;
 
     .featureItem {
       img {
@@ -54,15 +58,15 @@
         height: 100px;
         margin-bottom: 20px;
       }
+
       .featureHeadline {
         font-weight: 500;
         font-size: 22px;
       }
       .featureText {
-        font-weight: 400;
         font-size: 16px;
-        margin: 0;
-        margin-top: 12px;
+        font-weight: 400;
+        margin: 12px 0 0;
       }
     }
   }
@@ -77,7 +81,7 @@
         max-width: 90%;
         font-size: 16px;
       }
-    } 
+    }
     .featuresContainer {
       .featureItem {
         margin-bottom: 30px;

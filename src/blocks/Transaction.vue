@@ -508,10 +508,10 @@ export default Vue.extend({
       const txAmount = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAmount);
       // @ts-ignore: Unreachable code error
       const transferTransaction = (await transaction(
-        this.inputtedAddress,
-        (this.chosenToken as Balance).symbol,
-        this.feeToken.symbol,
-        txAmount.toString(),
+        <string>this.inputtedAddress,
+        <string>(this.chosenToken as Balance).symbol,
+        <string>this.feeToken.symbol,
+        <string>txAmount.toString(),
         this.feesObj.normal,
         this.$store,
       )) as Transaction;

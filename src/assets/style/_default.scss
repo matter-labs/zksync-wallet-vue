@@ -51,12 +51,14 @@ body.inkline {
   }
 
   &.-light {
-    background-color: #f3f4f7;
+    background-color: $mediumGrey;
+
     .projectLogo {
       .logoLetter {
         fill: #11142b;
       }
     }
+
     .button {
       &.-link {
         &:hover {
@@ -69,7 +71,7 @@ body.inkline {
     background-color: #11142b;
     .projectLogo {
       .logoLetter {
-        fill: #f3f4f7;
+        fill: $mediumGrey;
       }
     }
     .button {
