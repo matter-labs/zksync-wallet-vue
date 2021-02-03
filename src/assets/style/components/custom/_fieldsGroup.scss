@@ -1,3 +1,5 @@
+@import "custom";
+
 .fieldGroup {
     width: 100%;
     height: max-content;
@@ -29,7 +31,7 @@
             color: $darkerGray;
             font-family: $ibm;
             white-space: nowrap;
-            
+
             .headline {
                 font-size: 12px;
                 line-height: 14px;

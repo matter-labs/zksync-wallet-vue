@@ -1,8 +1,8 @@
-import { RootState } from '~/store';
-import { ActionTree, GetterTree, MutationTree } from 'vuex';
-import { Address, Token, TokenPrices, Tokens, TokenSymbol } from '@/plugins/types';
-import { BigNumberish } from 'ethers';
-import { walletData } from '@/plugins/walletData';
+import { ActionTree, GetterTree, MutationTree } from "vuex";
+import { Address, Token, TokenPrices, Tokens, TokenSymbol } from "@/plugins/types";
+import { BigNumberish } from "ethers";
+import { walletData } from "@/plugins/walletData";
+import { RootState } from "~/store";
 
 /**
  * Operations with the tokens (assets)
@@ -12,7 +12,7 @@ export const state = () => ({
   /**
    * Restricted tokens, fee can't be charged in it
    */
-  restrictedTokens: ['PHNX', 'LAMB', 'MLTT'] as Array<TokenSymbol>,
+  restrictedTokens: ["PHNX", "LAMB", "MLTT"] as Array<TokenSymbol>,
 
   /**
    * All available tokens:
@@ -59,33 +59,37 @@ export const getters: GetterTree<TokensModuleState, RootState> = {
 
 export const actions: ActionTree<TokensModuleState, RootState> = {
   async loadAllTokens({ commit, getters }): Promise<Tokens> {
-    if (Object.entries(getters["getAllTokens"]).length === 0) {
+    if (Object.entries(getters.getAllTokens).length === 0) {
       await this.dispatch("wallet/restoreProviderConnection");
       const tokensList = await walletData.get().syncProvider?.getTokens();
       commit("setAllTokens", tokensList);
       return tokensList || {};
     }
-    return getters["getAllTokens"];
+    return getters.getAllTokens;
   },
 
-  async loadTokensAndBalances({ dispatch }): Promise<{
-    tokens: Tokens,
-    zkBalances: Array<Token>
+  async loadTokensAndBalances({
+    dispatch,
+  }): Promise<{
+    tokens: Tokens;
+    zkBalances: Array<Token>;
   }> {
-    let syncWallet = walletData.get().syncWallet;
-    let accountState = walletData.get().accountState;
+    const syncWallet = walletData.get().syncWallet;
+    const accountState = walletData.get().accountState;
 
     const tokens = await dispatch("loadAllTokens");
     const zkBalance = accountState?.committed.balances;
-    if(!zkBalance) {
+    if (!zkBalance) {
       return {
         tokens,
         zkBalances: [],
       };
     }
-    const zkBalances = Object.keys(zkBalance as {
-      [token: string]: BigNumberish;
-    }).map((key: TokenSymbol) => ({
+    const zkBalances = Object.keys(
+      zkBalance as {
+        [token: string]: BigNumberish;
+      },
+    ).map((key: TokenSymbol) => ({
       address: tokens[key].address as Address,
       balance: syncWallet?.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0") as string,
       symbol: tokens[key].symbol as TokenSymbol,
@@ -108,20 +112,20 @@ export const actions: ActionTree<TokensModuleState, RootState> = {
    * @return {Promise<{n: number, d: number}|number|*>}
    */
   async getTokenPrice({ commit, getters }, symbol: TokenSymbol): Promise<number> {
-    const localPricesList = getters["getTokenPrices"];
+    const localPricesList = getters.getTokenPrices;
     if (localPricesList.hasOwnProperty(symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
       return localPricesList[symbol].price;
     }
     await this.dispatch("wallet/restoreProviderConnection");
-    let syncProvider = walletData.get().syncProvider;
+    const syncProvider = walletData.get().syncProvider;
     const tokenPrice = await syncProvider?.getTokenPrice(symbol);
     commit("setTokenPrice", {
-      symbol: symbol,
+      symbol,
       obj: {
         lastUpdated: new Date().getTime(),
         price: tokenPrice,
       },
     });
-    return (tokenPrice || 0);
+    return tokenPrice || 0;
   },
 };

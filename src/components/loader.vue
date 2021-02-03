@@ -1,5 +1,5 @@
 <template>
-    <div class="loaderSpinner" :class="`size-${size}`">Loading...</div>
+  <div class="loaderSpinner" :class="`size-${size}`">Loading...</div>
 </template>
 
 <script>

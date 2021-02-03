@@ -20,12 +20,16 @@
     }
 
     .balances {
-      height: calc(100% - 40px);
+      height: calc(100% - 50px);
       width: 100%;
 
       .balancesList {
+        box-shadow: $shadowInset;
+        border-radius: $borderInsetRadius;
+        background-color: #ffffff10;
         height: calc(100% - 170px);
-        overflow: auto;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
         width: 100%;
 
         &::-webkit-scrollbar {

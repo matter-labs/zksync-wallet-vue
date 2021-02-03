@@ -1,5 +1,5 @@
-import { ActionTree } from 'vuex';
-import { RootState } from '~/store';
+import { ActionTree } from "vuex";
+import { RootState } from "~/store";
 
 export const state = () => ({});
 
@@ -22,7 +22,7 @@ export const actions: ActionTree<ToasterModuleState, RootState> = {
         name: "fa-check",
       },
     });
-    let configuration = {
+    const configuration = {
       position: "bottom-right",
 
       type: "default",

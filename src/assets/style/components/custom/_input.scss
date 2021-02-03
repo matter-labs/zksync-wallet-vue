@@ -1,3 +1,5 @@
+@import "custom";
+
 .amountInputContainer {
   width: 100%;
   height: max-content;
@@ -46,7 +48,7 @@
     padding: 15px 5px;
     border-radius: 5px;
     transition: background-color .2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.04);
+    box-shadow: $inputContainerShadow;
 
     .pre {
       width: max-content;

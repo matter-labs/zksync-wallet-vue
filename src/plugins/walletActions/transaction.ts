@@ -1,5 +1,5 @@
-import { walletData } from '@/plugins/walletData';
-import { Address, GweiBalance, TokenSymbol, Tx } from '@/plugins/types';
+import { walletData } from "@/plugins/walletData";
+import { Address, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
 
 /**
  * Transaction processing action
@@ -17,15 +17,15 @@ export const transaction = async (address: Address, token: TokenSymbol, feeToken
   let nonce = await syncWallet!.getNonce("committed");
   const transferTx = {
     fee: 0,
-    nonce: nonce,
+    nonce,
     amount: amountBigValue,
     to: address,
-    token: token,
+    token,
   };
   nonce += 1;
   const feeTx = {
     fee: feeBigValue,
-    nonce: nonce,
+    nonce,
     amount: 0,
     to: syncWallet!.address(),
     token: feeToken,
@@ -37,16 +37,16 @@ export const transaction = async (address: Address, token: TokenSymbol, feeToken
   if (token === feeToken) {
     const transaction = await syncWallet!.syncTransfer({
       to: address,
-      token: token,
+      token,
       amount: amountBigValue,
       fee: feeBigValue,
     });
-    store.dispatch('transaction/watchTransaction', {transactionHash: transaction.txHash, tokenSymbol: token, type: 'withdraw'});
+    store.dispatch("transaction/watchTransaction", { transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
     return transaction;
   } else {
     const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
     for (let a = 0; a < transferTransaction.length; a++) {
-      store.dispatch('transaction/watchTransaction', {transactionHash: transferTransaction[a].txHash, tokenSymbol: a===0?token:feeToken, type: 'withdraw'});
+      store.dispatch("transaction/watchTransaction", { transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: "withdraw" });
     }
     if (transferTransaction) {
       return transferTransaction;
@@ -73,12 +73,12 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
   if (token === feeToken) {
     const transaction = await syncWallet!.withdrawFromSyncToEthereum({
       ethAddress: address,
-      token: token,
+      token,
       amount: amountBigValue,
       fee: feeBigValue,
       fastProcessing: fastWithdraw,
     });
-    store.dispatch('transaction/watchTransaction', {transactionHash: transaction.txHash, tokenSymbol: token, type: 'transfer'});
+    store.dispatch("transaction/watchTransaction", { transactionHash: transaction.txHash, tokenSymbol: token, type: "transfer" });
     return transaction;
   } else {
     const withdrawals = [
@@ -86,7 +86,7 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
         ethAddress: address,
         amount: amountBigValue,
         fee: "0",
-        token: token,
+        token,
       },
     ];
     const transfers = [
@@ -148,11 +148,11 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
       throw new Error("Error while performing submitTxsBatch: " + error.message);
     });
     for (let a = 0; a < transactionHashes.length; a++) {
-      store.dispatch('transaction/watchTransaction', {transactionHash: transactionHashes[a], tokenSymbol: a===0?token:feeToken, type: 'transfer'});
+      store.dispatch("transaction/watchTransaction", { transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: "transfer" });
     }
     return transactionHashes.map((txHash, index) => ({
       txData: signedTransactions[index],
-      txHash: txHash,
+      txHash,
     }));
   }
 };
@@ -169,9 +169,9 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: an
   const wallet = walletData.get().syncWallet;
   const depositResponse = await wallet?.depositToSyncFromEthereum({
     depositTo: wallet.address(),
-    token: token,
-    amount: amount
+    token,
+    amount,
   });
-  store.dispatch('transaction/watchDeposit', {depositTx: depositResponse, tokenSymbol: token, amount: amount});
+  store.dispatch("transaction/watchDeposit", { depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse;
-}
+};

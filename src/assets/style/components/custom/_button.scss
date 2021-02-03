@@ -1,9 +1,11 @@
+@import "custom";
+
 .customButton {
     width: max-content;
     min-width: 152px;
     height: 46px;
     text-align: center;
-    font-family: $openSans;
+    font-family: $firaSans;
     font-size: 15px;
     font-weight: 600;
     color: $white;
@@ -14,7 +16,7 @@
     padding: 0 15px;
     box-sizing: border-box;
     transition: .2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.04);
+    box-shadow: $inputContainerShadow;
     outline: none;
     &.outline {
         color: $darkerGray;

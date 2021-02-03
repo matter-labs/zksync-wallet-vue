@@ -44,3 +44,12 @@ $headerDesktop: 75px;
 /* Responsive */
 $mobile: 768px;
 $maxWidth: 1370px;
+
+/* Shadows */
+$shadowInset: inset 1px 1px 5px rgba(0,0,0,0.075);
+$popoverShadow: 0 10px 40px rgba(0,0,0,0.1);
+$shadowTop: 0 -3px 10px rgba(0, 0, 0, 0.1);
+$inputContainerShadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.04);
+
+/* Borders */
+$borderInsetRadius: 8px;

@@ -7,15 +7,16 @@
       </transition>
     </div>
     <cookie-component />
-    <footer-component/>
+    <footer-component />
   </div>
 </template>
 
 <script>
-import { GIT_REVISION_SHORT } from "@/plugins/build";
 import cookieComponent from "@/blocks/Cookie.vue";
 import footerComponent from "@/blocks/Footer.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
+import { GIT_REVISION_SHORT } from "@/plugins/build";
+
 export default {
   components: {
     cookieComponent,

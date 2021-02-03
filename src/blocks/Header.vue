@@ -3,13 +3,13 @@
     <i-container>
       <div class="firstRow">
         <nuxt-link to="/account">
-          <logo/>
+          <logo />
         </nuxt-link>
         <div class="linksContainer">
-          <div class="userDropdown" @click="accountModal=true">
+          <div class="userDropdown" @click="accountModal = true">
             <div class="address">{{ walletName }}</div>
             <div class="userImgContainer">
-              <user-img :wallet="walletAddressFull"/>
+              <user-img :wallet="walletAddressFull" />
             </div>
             <div class="dropdownArrow">
               <i class="far fa-angle-down"></i>
@@ -25,11 +25,9 @@
     </i-container>
 
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
-      <template slot="header">
-        Rename wallet
-      </template>
+      <template slot="header"> Rename wallet</template>
       <div>
-        <i-input ref="nameInput" v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()"/>
+        <i-input ref="nameInput" v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()" />
         <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
       </div>
     </i-modal>
@@ -39,8 +37,8 @@
         <b>{{ walletName }}</b>
       </template>
       <div>
-        <wallet-address :wallet="walletAddressFull"/>
-        <vue-qrcode class="addressQR" :value="walletAddressFull" :margin="1" :scale="6"/>
+        <wallet-address :wallet="walletAddressFull" />
+        <vue-qrcode class="addressQR" :value="walletAddressFull" :margin="1" :scale="6" />
       </div>
       <template slot="footer">
         <a class="modalFooterBtn" :href="`${getZkScanBaseUrl}/accounts/${walletAddressFull}`" target="_blank">
@@ -61,12 +59,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import logo from '@/blocks/Logo.vue'
-import userImg from '@/components/userImg.vue'
-import walletAddress from '@/components/walletAddress.vue'
-import { APP_ZK_SCAN } from '@/plugins/build'
-import VueQrcode from 'vue-qrcode'
+import Vue from "vue";
+import logo from "@/blocks/Logo.vue";
+import userImg from "@/components/userImg.vue";
+import walletAddress from "@/components/walletAddress.vue";
+import { APP_ZK_SCAN } from "@/plugins/build";
+import VueQrcode from "vue-qrcode";
 
 export default Vue.extend({
   components: {
@@ -75,7 +73,7 @@ export default Vue.extend({
     walletAddress,
     VueQrcode,
   },
-  data () {
+  data() {
     return {
       renameWalletModal: false,
       walletName: "",
@@ -103,17 +101,17 @@ export default Vue.extend({
       immediate: true,
       handler(val: boolean): void {
         if (!process.client) {
-          return
+          return;
         }
         if (val) {
           this.$nextTick(() => {
             if (this.$refs.nameInput) {
               // @ts-ignore: Unreachable code error
-              this.$refs.nameInput.$el.querySelector('input').focus()
+              this.$refs.nameInput.$el.querySelector("input").focus();
             }
-          })
+          });
         }
-        const walletName: string = window.localStorage.getItem(this.walletAddressFull) || '';
+        const walletName: string = window.localStorage.getItem(this.walletAddressFull) || "";
         if (walletName && walletName !== this.walletAddressFull) {
           this.walletName = walletName;
         } else {

@@ -3,16 +3,16 @@
 </template>
 
 <script>
-import Transaction from '@/blocks/Transaction'
+import Transaction from "@/blocks/Transaction";
 
 export default {
   components: {
     Transaction,
   },
-  asyncData ({ from }) {
+  asyncData({ from }) {
     return {
       fromRoute: from,
-    }
+    };
   },
 };
 </script>

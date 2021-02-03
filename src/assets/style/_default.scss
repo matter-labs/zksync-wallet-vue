@@ -90,7 +90,7 @@ button.-lg.-circle {
 
 .popover {
   border-radius: 10px !important;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  box-shadow: $popoverShadow;
   opacity: 0.975;
   border: none !important;
   &.-dark {

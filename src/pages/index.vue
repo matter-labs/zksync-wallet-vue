@@ -8,9 +8,7 @@
         <span class="h1 _font-weight-normal">Scalability without compromises</span>
       </i-row>
       <i-row center>
-        <p class="secondaryText aboutZkSync">
-          zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum
-        </p>
+        <p class="secondaryText aboutZkSync">zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum</p>
       </i-row>
       <i-row center class="_padding-top-1 _padding-bottom-2">
         <i-button block size="lg" variant="secondary" @click="customWallet()">Connect your wallet</i-button>
@@ -34,25 +32,19 @@
       </i-row>
       <i-row center around class="featuresContainer">
         <i-column xs="12" md="4" class="featureItem">
-          <img src="@/assets/imgs/pages/index/f3.svg" alt="Secure like mainnet">
+          <img src="@/assets/imgs/pages/index/f3.svg" alt="Secure like mainnet" />
           <div class="featureHeadline">Secure like mainnet</div>
-          <p class="featureText secondaryText">
-            Powered by zkRollup with universal setup — the apex L2 scaling solution.
-          </p>
+          <p class="featureText secondaryText">Powered by zkRollup with universal setup — the apex L2 scaling solution.</p>
         </i-column>
         <i-column xs="12" md="4" class="featureItem">
-          <img src="@/assets/imgs/pages/index/f2.svg" alt="Ready for mass adoption">
+          <img src="@/assets/imgs/pages/index/f2.svg" alt="Ready for mass adoption" />
           <div class="featureHeadline">Ready for mass adoption</div>
-          <p class="featureText secondaryText">
-            Enables Paypal-scale throughput for your dapp or wallet today.
-          </p>
+          <p class="featureText secondaryText">Enables Paypal-scale throughput for your dapp or wallet today.</p>
         </i-column>
         <i-column xs="12" md="4" class="featureItem">
-          <img src="@/assets/imgs/pages/index/f1.svg" alt="User experience first">
+          <img src="@/assets/imgs/pages/index/f1.svg" alt="User experience first" />
           <div class="featureHeadline">User experience first</div>
-          <p class="featureText secondaryText">
-            A protocol designed with obsession over user and developer experience.
-          </p>
+          <p class="featureText secondaryText">A protocol designed with obsession over user and developer experience.</p>
         </i-column>
       </i-row>
     </i-container>
@@ -60,33 +52,29 @@
 </template>
 
 <script>
-import investors from '@/blocks/Investors.vue'
-import logo from '@/blocks/Logo.vue'
+import investors from "@/blocks/Investors.vue";
+import logo from "@/blocks/Logo.vue";
 
 export default {
   components: {
     logo,
     investors,
   },
-  layout: 'index',
-  data () {
+  layout: "index",
+  data() {
     return {
       lockVisible: false,
       contactInfoShown: false,
     };
   },
   methods: {
-    scrollDown: function() {
-      this.$scrollTo(
-        this.$refs.scrollToBlock.$el,
-        500,
-        {
-          x:false,
-          y:true,
-          cancelable: true,
-          offset: -10,
-        }
-      );
+    scrollDown: function () {
+      this.$scrollTo(this.$refs.scrollToBlock.$el, 500, {
+        x: false,
+        y: true,
+        cancelable: true,
+        offset: -10,
+      });
     },
     customWallet: async function () {
       const onboard = this.$store.getters["wallet/getOnboard"];

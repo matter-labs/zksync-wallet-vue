@@ -1,14 +1,14 @@
-import { ActionTree, GetterTree, MutationTree } from 'vuex';
+import { ActionTree, GetterTree, MutationTree } from "vuex";
 
 export const state = () => ({
   accountModalOpened: false,
   /**
    * Used to handle modals and simplify the code
    */
-  currentModal: false as (String | false),
+  currentModal: false as String | false,
 });
 
-export type RootState = ReturnType<typeof state>
+export type RootState = ReturnType<typeof state>;
 
 export const getters: GetterTree<RootState, RootState> = {
   getAccountModalState(state) {
@@ -17,7 +17,7 @@ export const getters: GetterTree<RootState, RootState> = {
   currentModal(state) {
     return state.currentModal;
   },
-}
+};
 
 export const mutations: MutationTree<RootState> = {
   setAccountModalState(state, modalState: boolean) {
@@ -26,7 +26,7 @@ export const mutations: MutationTree<RootState> = {
   setCurrentModal(state, modalName: String) {
     state.currentModal = modalName;
   },
-}
+};
 
 export const actions: ActionTree<RootState, RootState> = {
   openModal({ commit }, modalName) {
@@ -35,4 +35,4 @@ export const actions: ActionTree<RootState, RootState> = {
   closeActiveModal({ commit }) {
     commit("setCurrentModal", null);
   },
-}
+};

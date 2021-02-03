@@ -1,7 +1,7 @@
-import { walletData } from '@/plugins/walletData';
-import { Address, DecimalBalance, GweiBalance, TokenSymbol } from '@/plugins/types';
-import { utils as zkUtils } from 'zksync';
-import { BigNumberish, utils } from 'ethers';
+import { walletData } from "@/plugins/walletData";
+import { Address, DecimalBalance, GweiBalance, TokenSymbol } from "@/plugins/types";
+import { utils as zkUtils } from "zksync";
+import { BigNumberish, utils } from "ethers";
 
 /**
  *
@@ -9,7 +9,7 @@ import { BigNumberish, utils } from 'ethers';
  * @param amount
  * @return {BigNumber|*}
  */
-const parseToken = (symbol: TokenSymbol, amount: (DecimalBalance | number)) => {
+const parseToken = (symbol: TokenSymbol, amount: DecimalBalance | number) => {
   /**
    * skip already bignumber
    */
@@ -37,9 +37,9 @@ export default {
     const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
 
     return {
-      hours: hours,
-      minutes: minutes,
-      seconds: seconds,
+      hours,
+      minutes,
+      seconds,
     };
   },
 
@@ -50,7 +50,7 @@ export default {
   getFormattedTotalPrice: (price: number, amount: number) => {
     const total = price * amount;
     if (!amount || total === 0) {
-      return '$0.00';
+      return "$0.00";
     }
     return total < 0.01 ? `<$0.01` : `~$${total.toFixed(2)}`;
   },

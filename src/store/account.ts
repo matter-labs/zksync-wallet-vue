@@ -1,6 +1,6 @@
-import { GetterTree, MutationTree } from 'vuex';
-import { RootState } from '~/store';
-import { Address } from '@/plugins/types';
+import { GetterTree, MutationTree } from "vuex";
+import { Address } from "@/plugins/types";
+import { RootState } from "~/store";
 
 export const state = () => ({
   loggedIn: false,
@@ -37,9 +37,9 @@ export const getters: GetterTree<AccountModuleState, RootState> = {
     return state.loadingHint;
   },
   loader(state): boolean {
-    return !state.loggedIn && state.selectedWallet !== '';
+    return !state.loggedIn && state.selectedWallet !== "";
   },
   address(state): Address {
     return state.address;
   },
-}
+};

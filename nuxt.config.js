@@ -69,7 +69,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxt/typescript-build'],
+  buildModules: ["@nuxt/typescript-build"],
 
   /*
    ** Nuxt.js modules
@@ -157,9 +157,9 @@ export default {
     /* extractCSS: {
       ignoreOrder: true,
     }, */
-    extend (config) {
+    extend(config) {
       config.node = {
-        fs: 'empty',
+        fs: "empty",
       };
     },
   },
@@ -169,7 +169,7 @@ export default {
   },
   pwa: {
     workbox: {
-      'pagesURLPattern': '/_nuxt/'
-    }
-  }
+      pagesURLPattern: "/_nuxt/",
+    },
+  },
 };

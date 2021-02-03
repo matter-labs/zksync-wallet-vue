@@ -12,6 +12,7 @@
 
   .transactionsListContainer {
     border-radius: 0.3rem !important;
+    box-shadow: $shadowInset;
     height: 100%;
     overflow: auto;
 
@@ -34,12 +35,16 @@
       align-items: center;
       border-bottom: 1px solid;
       display: grid;
-      grid-gap: 20px;
-      grid-template-columns: 35px 1fr 115px 40px;
+      grid-gap: 10px;
+      grid-template-columns: 30px 1fr 180px 35px;
       grid-template-rows: 100%;
       height: 105px;
-      padding: 0 20px;
+      padding: 0 15px;
       width: 100%;
+      &:hover {
+        background-color: transparentize($color: $gray, $amount: 0.9);
+      }
+
       @media screen and (max-width: 768px) {
         grid-template-columns: 100%;
         grid-template-rows: 35px 80px 50px 40px;
@@ -121,7 +126,7 @@
 
         .actionValue {
           display: block;
-          width: 100%;
+          width: fit-content;
           font-size: 16px;
           line-height: 19px;
           overflow: hidden;

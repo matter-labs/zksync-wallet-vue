@@ -34,7 +34,13 @@ header {
       }
       .badge {
         margin-top: -30px;
-        transition: background-color $transition1;
+        font-weight: 400;
+        letter-spacing: 1px;
+        font-size: 12px !important;
+        text-transform: uppercase;
+        color: $lightViolet !important;
+        background: transparent !important;
+        padding: 0;
       }
       @media (max-width: $mobile) {
         padding-top: 0 !important;
@@ -193,9 +199,6 @@ body.inkline.-light header {
   .secondRow a, .linksContainer .mainLink {
     color: $black;
   }
-  .headerWrapper .badge {
-    background-color: $lightViolet !important;
-  }
 }
 
 body.inkline.-dark header {
@@ -203,8 +206,5 @@ body.inkline.-dark header {
 
   .secondRow a, .linksContainer .mainLink {
     color: $white;
-  }
-  .headerWrapper .badge {
-    background-color: $violet !important;
   }
 }

@@ -1,23 +1,24 @@
 <template>
   <div class="defaultLayout">
-    <logging-in-loader/>
-    <cookie-component/>
+    <logging-in-loader />
+    <cookie-component />
     <div v-if="!loggingIn && loggedIn">
-      <header-component ref="header"/>
+      <header-component ref="header" />
       <div class="routerContainer">
         <transition name="fade" mode="out-in">
-          <nuxt/>
+          <nuxt />
         </transition>
       </div>
-      <footer-component/>
+      <footer-component />
     </div>
   </div>
 </template>
+
 <script>
-import cookieComponent from '@/blocks/Cookie.vue'
-import footerComponent from '@/blocks/Footer.vue'
-import headerComponent from '@/blocks/Header.vue'
-import loggingInLoader from '@/blocks/LoggingInLoader.vue'
+import cookieComponent from "@/blocks/Cookie.vue";
+import footerComponent from "@/blocks/Footer.vue";
+import headerComponent from "@/blocks/Header.vue";
+import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 
 export default {
   components: {
@@ -27,10 +28,10 @@ export default {
     loggingInLoader,
   },
   computed: {
-    loggingIn: function () {
+    loggingIn() {
       return this.$store.getters["account/loader"];
     },
-    loggedIn: function () {
+    loggedIn() {
       return this.$store.getters["account/loggedIn"];
     },
   },
@@ -45,7 +46,7 @@ export default {
         }
         if (val.path !== oldVal.path) {
           this.$nextTick(() => {
-            let lastScroll = this.$store.getters["scroll/getLastScroll"];
+            const lastScroll = this.$store.getters["scroll/getLastScroll"];
             document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
           });
         }

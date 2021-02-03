@@ -1,4 +1,4 @@
-let web3Wallet = false as (false | any);
+let web3Wallet = false as false | any;
 
 export default {
   get: () => {

@@ -1,20 +1,20 @@
-import { shallowMount, Wrapper } from '@vue/test-utils';
+import { shallowMount, Wrapper } from "@vue/test-utils";
 
-import userImg from '@/components/userImg.vue';
+import userImg from "@/components/userImg.vue";
 
 let wrapper: Wrapper<Vue>;
 
-describe('userImg', () => {
-  test('With no address', () => {
+describe("userImg", () => {
+  test("With no address", () => {
     wrapper = shallowMount(userImg, {
-      propsData: { wallet: "" }
+      propsData: { wallet: "" },
     });
-    expect(wrapper.find('.userImg').attributes().src).toBe("");
+    expect(wrapper.find(".userImg").attributes().src).toBe("");
   });
-  test('With correct address', () => {
+  test("With correct address", () => {
     wrapper = shallowMount(userImg, {
-      propsData: { wallet: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0" }
+      propsData: { wallet: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0" },
     });
-    expect(wrapper.find('.userImg').attributes().src).toContain("base64");
+    expect(wrapper.find(".userImg").attributes().src).toContain("base64");
   });
 });

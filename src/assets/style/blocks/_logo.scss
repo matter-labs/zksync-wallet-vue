@@ -8,13 +8,19 @@
       transition: $transition1;
     }
   }
+
   .badge {
     cursor: default;
     margin-top: -40px;
     border-radius: 27px;
-    margin-left: 5px;
     transform: translateY(3.5px);
-    transition: background-color $transition1;
+    font-weight: 400;
+    letter-spacing: 1px;
+    font-size: 12px !important;
+    text-transform: uppercase;
+    color: $lightViolet !important;
+    background: transparent !important;
+    padding: 0 !important;
   }
 
   @media (max-width: $mobile) {
@@ -24,13 +30,7 @@
 }
 
 body.inkline.-light .headerWrapper {
-  .badge {
-    background-color: $lightViolet !important;
-  }
 }
 
 body.inkline.-dark .headerWrapper {
-  .badge {
-    background-color: $violet !important;
-  }
 }

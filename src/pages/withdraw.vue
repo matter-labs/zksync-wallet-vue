@@ -4,6 +4,7 @@
 
 <script>
 import Transaction from "@/blocks/Transaction.vue";
+
 export default {
   components: {
     Transaction,

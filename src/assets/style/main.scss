@@ -4,11 +4,9 @@
 @import "./transitions.scss";
 @import "./fonts.scss";
 
-
 //Layouts
 @import "./layouts/default.scss";
 @import "./layouts/index.scss";
-
 
 //Blocks
 @import "./blocks/header.scss";
@@ -19,7 +17,6 @@
 @import "./blocks/cookie.scss";
 @import "./blocks/loggingInLoader.scss";
 @import "./blocks/chooseToken.scss";
-
 
 //Components
 @import "./components/loader.scss";

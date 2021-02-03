@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   extends: [
     "plugin:vue/recommended",
+    "@nuxtjs/eslint-config-typescript",
     "plugin:prettier-vue/recommended",
     // Do not add `'prettier/vue'` if you don't want to use prettier for `<template>` blocks
     "prettier/vue",
@@ -67,7 +68,6 @@ module.exports = {
       },
     },
   },
-
   rules: {
     "prettier-vue/prettier": [
       "error",
