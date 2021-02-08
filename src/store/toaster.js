@@ -41,7 +41,12 @@ export const actions = {
   },
 
   error({ dispatch }, messageText) {
-    this.$sentry.captureException(new Error(messageText))
+    this.$toast.error(messageText, {
+      icon: {
+        name: "fa-times-circle",
+      },
+      duration: null,
+    });
   },
 
   info({ dispatch }, messageText) {
