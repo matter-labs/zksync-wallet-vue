@@ -250,7 +250,10 @@ export default Vue.extend({
       inputtedAmount: "",
       chosenToken: false as Balance | false,
       chosenFeeToken: false as Balance | false,
-      feesObj: false as FeesObj | false,
+      feesObj: {
+        GweiBalance: "normal",
+        GweiBalancefast: "fast",
+      } as FeesObj,
       feesLoading: false,
       transactionMode: "normal",
       cantFindFeeToken: false,
@@ -506,7 +509,6 @@ export default Vue.extend({
       }
       this.tip = "Confirm the transaction to transfer";
       const txAmount = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAmount);
-      // @ts-ignore: Unreachable code error
       const transferTransaction = (await transaction(
         <string>this.inputtedAddress,
         <string>(this.chosenToken as Balance).symbol,

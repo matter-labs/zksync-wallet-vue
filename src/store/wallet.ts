@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Balance, GweiBalance, Token, TokenSymbol, Transaction } from "@/plugins/types";
+import { Address, Balance, GweiBalance, TokenSymbol, Transaction } from "@/plugins/types";
 
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 
@@ -151,6 +151,13 @@ export const mutations: MutationTree<WalletModuleState> = {
       fast: GweiBalance;
     };
   },
+  /**
+   * @todo review and drop (?)
+   *
+   * @param state
+   * @param {any} status
+   * @param {any} tokenSymbol
+   */
   setZkBalanceStatus(state, { status, tokenSymbol }) {
     for (const item of state.zkTokens.list) {
       if (item.symbol === tokenSymbol) {
@@ -334,7 +341,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     }
     commit("setZkTokens", {
       lastUpdated: new Date().getTime(),
-      list: tokensList.sort(utils.sortBalancesById),
+      list: tokensList.sort(utils.sortBalancesAZ),
     });
     return tokensList;
   },
@@ -346,7 +353,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
    * @param force
    * @return {Promise<*[]|*>}
    */
-  async getInitialBalances({ dispatch, commit, getters }, force = false): Promise<Array<Token>> {
+  async getInitialBalances({ dispatch, commit, getters }, force = false): Promise<void | Array<Balance>> {
     const localList = getters.getTokensList;
 
     if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
@@ -361,34 +368,36 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     }
     const loadedTokens = await this.dispatch("tokens/loadTokensAndBalances");
 
-    const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key) => {
-      const currentToken = loadedTokens.tokens[key];
-      try {
-        const balance = await syncWallet.getEthereumBalance(key);
-        return {
-          id: currentToken.id,
-          address: currentToken.address,
-          balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
-          rawBalance: balance,
-          formattedBalance: utils.handleFormatToken(currentToken.symbol, balance.toString()),
-          symbol: currentToken.symbol,
-        };
-      } catch (error) {
-        this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
-      }
-    });
-    const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((err) => {
+    const loadInitialBalancesPromises: Promise<void | Balance>[] = Object.keys(loadedTokens.tokens).map(
+      async (key: number | string): Promise<void | Balance> => {
+        const currentToken = loadedTokens.tokens[key];
+        try {
+          const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+          return {
+            id: currentToken.id.toString(),
+            address: currentToken.address,
+            balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
+            rawBalance: balance,
+            // @ts-ignore
+            formattedBalance: utils.handleFormatToken(currentToken.symbol, balance.toString()),
+            symbol: currentToken.symbol,
+          };
+        } catch (error) {
+          this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
+        }
+      },
+    );
+    const balancesResults: (void | Array<Balance>)[] | any[] = await Promise.all(loadInitialBalancesPromises).catch(() => {
       // @todo insert sentry logging
       return [];
     });
-    const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.sortBalancesById) as Array<Token>;
-    const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesById) as Array<Token>;
+    const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.sortTokensById);
+    const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesAZ) as Array<Balance>;
     balances.push(...balancesEmpty);
     commit("setTokensList", {
       lastUpdated: new Date().getTime(),
       list: balances,
     });
-    return balances;
   },
 
   /**
@@ -592,7 +601,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     commit("clearDataStorage");
   },
   async forceRefreshData({ dispatch }): Promise<void> {
-    await dispatch("getInitialBalances", true).catch((err) => {
+    await dispatch("getInitialBalances", true).catch(() => {
       // @todo add sentry report
     });
     await dispatch("getzkBalances", { accountState: undefined, force: true }).catch((err) => {
@@ -607,7 +616,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
   async logout({ commit, getters }): Promise<void> {
     const onboard = getters.getOnboard;
     onboard.walletReset();
-    walletData.set({ syncProvider: null, syncWallet: null, accountState: null });
+    walletData.set({ syncProvider: undefined, syncWallet: undefined, accountState: undefined });
     localStorage.removeItem("selectedWallet");
     this.commit("account/setLoggedIn", false);
     this.commit("account/setSelectedWallet", "");

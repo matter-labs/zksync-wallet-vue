@@ -37,6 +37,7 @@ export interface Transfer {
 }
 
 export interface Balance {
+  id: undefined | number;
   symbol: TokenSymbol;
   status: "Pending" | "Verified";
   balance: DecimalBalance;
@@ -49,10 +50,10 @@ export interface Balance {
 }
 
 export interface Token {
+  id: Number;
   address: Address;
   balance: string | BigNumber;
   symbol: TokenSymbol;
-  id: Number;
   formattedBalance?: string;
 }
 
@@ -73,6 +74,92 @@ export interface Contact {
 export interface FeesObj {
   normal?: GweiBalance;
   fast?: GweiBalance;
+}
+
+export interface Withdraw {
+  type: "Withdraw";
+  accountId: number;
+  from: Address;
+  to: Address;
+  token: number;
+  amount: BigNumberish;
+  fee: BigNumberish;
+  nonce: number;
+  signature: Signature;
+}
+
+export interface ChangePubKey {
+  type: "ChangePubKey";
+  accountId: number;
+  account: Address;
+  newPkHash: PubKeyHash;
+  feeToken: number;
+  fee: BigNumberish;
+  nonce: number;
+  signature: Signature;
+  ethSignature: string;
+}
+
+export interface CloseAccount {
+  type: "Close";
+  account: Address;
+  nonce: number;
+  signature: Signature;
+}
+
+export interface BlockInfo {
+  blockNumber: number;
+  committed: boolean;
+  verified: boolean;
+}
+
+export interface TransactionReceipt {
+  executed: boolean;
+  success?: boolean;
+  failReason?: string;
+  block?: BlockInfo;
+}
+
+export interface PriorityOperationReceipt {
+  executed: boolean;
+  block?: BlockInfo;
+}
+
+export interface ContractAddress {
+  mainContract: string;
+  govContract: string;
+}
+
+export interface Tokens {
+  [token: string]: {
+    address: string;
+    id: number;
+    symbol: string;
+    decimals: number;
+  };
+}
+
+export interface TokenPrices {
+  [token: string]: {
+    lastUpdated: number;
+    price: string;
+  };
+}
+
+export interface ChangePubKeyFee {
+  ChangePubKey: {
+    onchainPubkeyAuth: boolean;
+  };
+}
+
+export declare type EthSignerType = {
+  verificationMethod: "ECDSA" | "ERC-1271";
+  isSignedMsgPrefixed: boolean;
+};
+
+export interface TxEthSignature {
+  type: "EthereumSignature" | "EIP1271Signature";
+  signature: string;
 }
 
 export interface SignedTransaction {
@@ -253,92 +340,6 @@ export interface AccountState {
   };
 }
 
-export declare type EthSignerType = {
-  verificationMethod: "ECDSA" | "ERC-1271";
-  isSignedMsgPrefixed: boolean;
-};
-
-export interface TxEthSignature {
-  type: "EthereumSignature" | "EIP1271Signature";
-  signature: string;
-}
-
-export interface Withdraw {
-  type: "Withdraw";
-  accountId: number;
-  from: Address;
-  to: Address;
-  token: number;
-  amount: BigNumberish;
-  fee: BigNumberish;
-  nonce: number;
-  signature: Signature;
-}
-
-export interface ChangePubKey {
-  type: "ChangePubKey";
-  accountId: number;
-  account: Address;
-  newPkHash: PubKeyHash;
-  feeToken: number;
-  fee: BigNumberish;
-  nonce: number;
-  signature: Signature;
-  ethSignature: string;
-}
-
-export interface CloseAccount {
-  type: "Close";
-  account: Address;
-  nonce: number;
-  signature: Signature;
-}
-
-export interface BlockInfo {
-  blockNumber: number;
-  committed: boolean;
-  verified: boolean;
-}
-
-export interface TransactionReceipt {
-  executed: boolean;
-  success?: boolean;
-  failReason?: string;
-  block?: BlockInfo;
-}
-
-export interface PriorityOperationReceipt {
-  executed: boolean;
-  block?: BlockInfo;
-}
-
-export interface ContractAddress {
-  mainContract: string;
-  govContract: string;
-}
-
-export interface Tokens {
-  [token: string]: {
-    address: string;
-    id: number;
-    symbol: string;
-    decimals: number;
-  };
-}
-
-export interface TokenPrices {
-  [token: string]: {
-    lastUpdated: number;
-    price: string;
-  };
-}
-
-export interface ChangePubKeyFee {
-  ChangePubKey: {
-    onchainPubkeyAuth: boolean;
-  };
-}
-
 export interface Fee {
   feeType: "Withdraw" | "Transfer" | "TransferToNew" | "FastWithdraw" | ChangePubKeyFee;
   gasTxAmount: BigNumber;
@@ -422,4 +423,12 @@ export declare abstract class AbstractJSONRPCTransport {
 declare class Subscription {
   unsubscribe: () => Promise<void>;
   constructor(unsubscribe: () => Promise<void>);
+}
+
+export interface walletData {
+  [key: string]: object | undefined;
+  syncProvider?: Provider;
+  syncWallet?: Wallet;
+  accountState?: AccountState;
+  zkSync?: object;
 }

@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, DecimalBalance, GweiBalance, TokenSymbol } from "@/plugins/types";
+import { Address, Balance, DecimalBalance, GweiBalance, Token, TokenSymbol } from "@/plugins/types";
 import { utils as zkUtils } from "zksync";
 import { BigNumberish, utils } from "ethers";
 
@@ -62,18 +62,24 @@ export default {
    * @param b
    * @return {number}
    */
-  sortBalancesById: (a: any, b: any) => {
-    if (a.hasOwnProperty("id")) {
-      if (a.id < b.id) {
-        return -1;
-      }
-      if (a.id > b.id) {
-        return 1;
-      }
-      return 0;
-    } else {
-      return a.symbol.localeCompare(b.symbol);
+  sortTokensById: (a: Token, b: Token) => {
+    if (a.id < b.id) {
+      return -1;
     }
+    if (a.id > b.id) {
+      return 1;
+    }
+    return 0;
+  },
+
+  /**
+   * Soring by the token name
+   * @param {Token} a
+   * @param {Token} b
+   * @returns {number}
+   */
+  sortBalancesAZ: (a: Balance, b: Balance) => {
+    return a.symbol.localeCompare(b.symbol);
   },
 
   isAmountPackable: (amount: String): boolean => {
