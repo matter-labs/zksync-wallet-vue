@@ -10,16 +10,14 @@
       </div>
     </i-modal>
     <div class="tileBlock">
-      <div class="tileHeadline h3" :class="{'withBtn': (loading===false || tokenSelectionOpened===true)}">
-        <nuxt-link v-if="loading===false" :to="(fromRoute && fromRoute.fullPath!==$route.fullPath)?fromRoute:'/account'" class="returnBtn">
+      <div class="tileHeadline h3" :class="{ withBtn: loading === false || tokenSelectionOpened === true }">
+        <nuxt-link v-if="loading === false" :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'" class="returnBtn">
           <i class="far fa-long-arrow-alt-left"></i>
         </nuxt-link>
-        <div>
-          Deposit
-        </div>
+        <div>Deposit</div>
       </div>
-      <div v-if="success===true">
-        <checkmark/>
+      <div v-if="success === true">
+        <checkmark />
         <p class="_text-center _margin-top-0">
           Your deposit tx has been mined and will be processed after required number of confirmations. Use the transaction link to track the progress.
         </p>
@@ -29,65 +27,55 @@
         <div class="totalAmount _margin-top-2">
           <div class="headline">Amount:</div>
           <div class="amount">
-            <span class="tokenSymbol">{{ choosedToken.symbol }}</span> {{ transactionAmount }}
-            <span class="totalPrice">{{ inputTotalSumBigNumber |formatUsdAmount( choosedToken.price, choosedToken.symbol) }}</span>
+            <span class="tokenSymbol">{{ chosenToken.symbol }}</span> {{ transactionAmount }}
+            <span class="totalPrice">{{ inputTotalSumBigNumber | formatUsdAmount(chosenToken.price, chosenToken.symbol) }}</span>
           </div>
         </div>
         <i-button block size="lg" variant="secondary" class="_margin-top-1" to="/account">Ok</i-button>
       </div>
-      <div v-else-if="loading===false || tokenSelectionOpened===true">
+      <div v-else-if="loading === false || tokenSelectionOpened === true">
         <div class="_padding-bottom-1">Amount / asset</div>
         <div>
           <i-input v-model="inputTotalSum" size="lg" lang="en-US" type="number" @keyup.enter="deposit()">
-            <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="openTokenSelection()">
-              Select token
-            </i-button>
+            <i-button v-if="!chosenToken" slot="append" block link variant="secondary" @click="openTokenSelection()"> Select token </i-button>
             <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary" @click="openTokenSelection()">
-              <span class="tokenSymbol">{{ choosedToken.symbol }}</span>&nbsp;&nbsp;<i class="far fa-angle-down"/>
+              <span class="tokenSymbol">{{ chosenToken.symbol }}</span
+              >&nbsp;&nbsp;<i class="far fa-angle-down" />
             </i-button>
           </i-input>
         </div>
-        <div v-if="choosedToken" class="_display-flex _justify-content-space-between _margin-top-1">
-          <div class="totalPrice">{{ inputTotalSumBigNumber | formatUsdAmount(choosedToken.price, choosedToken.symbol) }}</div>
-          <div class="maxAmount" @click="handleMaxAmountClick()">
-            Max: {{ transactionMaxAmount | formatToken(choosedToken.symbol) }}
-          </div>
+        <div v-if="chosenToken" class="_display-flex _justify-content-space-between _margin-top-1">
+          <div class="totalPrice">{{ inputTotalSumBigNumber | formatUsdAmount(chosenToken.price, chosenToken.symbol) }}</div>
+          <div class="maxAmount" @click="handleMaxAmountClick()">Max: {{ transactionMaxAmount | formatToken(chosenToken.symbol) }}</div>
         </div>
-        <div v-if="choosedToken && choosedToken.unlocked===false" class="tokenLocked">
+        <div v-if="chosenToken && chosenToken.unlocked === false" class="tokenLocked">
           <p class="_text-center">
             You should firstly unlock selected token in order to authorize deposits for
-            <span class="tokenSymbol">{{ choosedToken.symbol }}</span>
+            <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </p>
-          <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="unlockToken()">
-            <i class="far fa-lock-open-alt"/>&nbsp;Unlock
-          </i-button>
+          <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="unlockToken()"> <i class="far fa-lock-open-alt" />&nbsp;Unlock </i-button>
         </div>
-        <div v-else-if="choosedToken && choosedToken.unlocked===true && inputTotalSum>transactionMaxAmount"
-             class="errorText _text-center _margin-top-1">
-          Not enough <span class="tokenSymbol">{{ choosedToken.symbol }}</span> to perform a transaction
+        <div v-else-if="chosenToken && chosenToken.unlocked === true && inputTotalSum > transactionMaxAmount" class="errorText _text-center _margin-top-1">
+          Not enough <span class="tokenSymbol">{{ chosenToken.symbol }}</span> to perform a transaction
         </div>
         <div v-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
-        <i-button
-            v-if="choosedToken && choosedToken.unlocked === true"
-            :disabled="!depositAllowed"
-            block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">
+        <i-button v-if="chosenToken && chosenToken.unlocked === true" :disabled="!depositAllowed" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">
           Deposit
         </i-button>
       </div>
       <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
-        <a v-if="transactionHash"
-           class="_display-block _text-center"
-           target="_blank"
-           :href="`${blockExplorerLink}/tx/${transactionHash}`">Link to the transaction <i class="fas fa-external-link"></i></a>
+        <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`${blockExplorerLink}/tx/${transactionHash}`"
+          >Link to the transaction <i class="fas fa-external-link"></i
+        ></a>
         <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
-        <loader class="_display-block _margin-top-1"/>
+        <loader class="_display-block _margin-top-1" />
       </div>
     </div>
     <i-modal v-model="tokenSelectionOpened" size="md">
       <template slot="header">Balances in L1</template>
       <div>
         <i-input v-model="search" placeholder="Filter balances in L1" maxlength="10">
-          <i slot="prefix" class="far fa-search"/>
+          <i slot="prefix" class="far fa-search" />
         </i-input>
         <div class="tokenListContainer">
           <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
@@ -96,11 +84,23 @@
               <div class="balance">{{ item.balance | formatToken(item.symbol) }}</div>
             </div>
           </div>
-          <div v-if="search && displayedTokenList.length===0" class="nothingFound">
-            <span>Your search <b>"{{ search }}"</b> did not match any tokens</span>
+          <div v-if="search && displayedTokenList.length === 0" class="nothingFound">
+            <span
+              >Your search <b>"{{ search }}"</b> did not match any tokens</span
+            >
           </div>
         </div>
-        <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="tokenSelectionOpened=false;cantFindTokenModal=true">
+        <i-button
+          block
+          link
+          size="lg"
+          variant="secondary"
+          class="_margin-top-1"
+          @click="
+            tokenSelectionOpened = false;
+            cantFindTokenModal = true;
+          "
+        >
           Can't find a token?
         </i-button>
       </div>
@@ -137,7 +137,7 @@ export default {
       tip: "",
       mainError: "",
       tokensList: [],
-      choosedToken: false,
+      chosenToken: false,
       cantFindTokenModal: false,
       success: false,
       transactionHash: "",
@@ -152,7 +152,7 @@ export default {
       return this.tokensList.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     transactionMaxAmount: function () {
-      return this.zksync.closestPackableTransactionAmount(this.choosedToken.balance);
+      return this.zksync.closestPackableTransactionAmount(this.chosenToken.balance);
     },
     blockExplorerLink: function () {
       return APP_ETH_BLOCK_EXPLORER;
@@ -171,7 +171,7 @@ export default {
       const validationResults = await this.isDepositEnabled(incomingValue);
       if (validationResults === true) {
         this.inputTotalSum = incomingValue;
-        this.inputTotalSumBigNumber = utils.parseToken(this.choosedToken.symbol, incomingValue);
+        this.inputTotalSumBigNumber = utils.parseToken(this.chosenToken.symbol, incomingValue);
       }
     },
   },
@@ -181,8 +181,8 @@ export default {
   },
   methods: {
     updateDecimals: async function () {
-      const decimals = await this.$store.dispatch("tokens/getTokenDecimals", this.choosedToken.symbol);
-      this.decimalPrecision = this.choosedToken && decimals ? decimals : 18;
+      const decimals = await this.$store.dispatch("tokens/getTokenDecimals", this.chosenToken.symbol);
+      this.decimalPrecision = this.chosenToken && decimals ? decimals : 18;
     },
 
     /**
@@ -191,7 +191,7 @@ export default {
      * @return {Promise<boolean>}
      */
     isDepositEnabled: async function (incomingValue = null) {
-      if (!this.choosedToken) {
+      if (!this.chosenToken) {
         this.mainError = "";
         return (this.depositAllowed = false);
       }
@@ -204,16 +204,16 @@ export default {
 
       await this.updateDecimals();
 
-      if (!utils.isDecimalsValid(this.choosedToken.symbol, userAmount, this.decimalPrecision)) {
-        this.mainError = `Precision exceeded: ${this.choosedToken.symbol} supports ${this.decimalPrecision} decimal digits max`;
+      if (!utils.isDecimalsValid(this.chosenToken.symbol, userAmount, this.decimalPrecision)) {
+        this.mainError = `Precision exceeded: ${this.chosenToken.symbol} supports ${this.decimalPrecision} decimal digits max`;
         return (this.depositAllowed = false);
       }
 
       try {
-        userAmountBigNum = utils.parseToken(this.choosedToken.symbol, userAmount);
+        userAmountBigNum = utils.parseToken(this.chosenToken.symbol, userAmount);
       } catch (error) {
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          this.mainError = `Precision exceeded: ${this.choosedToken.symbol} supports ${this.decimalPrecision} decimal digits max`;
+          this.mainError = `Precision exceeded: ${this.chosenToken.symbol} supports ${this.decimalPrecision} decimal digits max`;
           return (this.depositAllowed = false);
         } else {
           this.mainError = `Amount processing error. Common reason behind it — inaccurate amount.
@@ -232,7 +232,7 @@ export default {
         return (this.depositAllowed = false);
       }
       if (userAmountBigNum.gt(this.transactionMaxAmount)) {
-        this.mainError = `Not enough ${this.choosedToken.symbol} to perform a deposit`;
+        this.mainError = `Not enough ${this.chosenToken.symbol} to perform a deposit`;
         return (this.depositAllowed = false);
       }
 
@@ -240,7 +240,7 @@ export default {
       return (this.depositAllowed = true);
     },
     handleMaxAmountClick: function () {
-      this.inputTotalSum = utils.handleFormatToken(this.choosedToken.symbol, this.transactionMaxAmount);
+      this.inputTotalSum = utils.handleFormatToken(this.chosenToken.symbol, this.transactionMaxAmount);
     },
     openTokenSelection: async function () {
       this.loading = true;
@@ -268,7 +268,7 @@ export default {
        token.fee = 0.0002;
        } */
       this.mainError = "";
-      this.choosedToken = token;
+      this.chosenToken = token;
       this.loading = false;
     },
     unlockToken: async function () {
@@ -276,12 +276,12 @@ export default {
       try {
         const wallet = walletData.get().syncWallet;
         this.tip = "Confirm the transaction in order to unlock the token";
-        const approveDeposits = await wallet.approveERC20TokenDeposits(this.choosedToken.address);
+        const approveDeposits = await wallet.approveERC20TokenDeposits(this.chosenToken.address);
         this.tip = "Waiting for the transaction to be processed...";
         const waitResult = await approveDeposits.wait();
         this.tip = "";
-        const isTokenUnlocked = await this.checkTokenState(this.choosedToken);
-        this.choosedToken = { ...this.choosedToken, unlocked: isTokenUnlocked };
+        const isTokenUnlocked = await this.checkTokenState(this.chosenToken);
+        this.chosenToken = { ...this.chosenToken, unlocked: isTokenUnlocked };
       } catch (error) {
         this.mainError = error.message;
         this.tip = "";
@@ -309,7 +309,7 @@ export default {
     },
     deposit: async function () {
       try {
-        utils.parseToken(this.choosedToken.symbol, this.inputTotalSum.toString());
+        utils.parseToken(this.chosenToken.symbol, this.inputTotalSum.toString());
       } catch (error) {
         return (this.mainError =
           "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help");
@@ -326,7 +326,7 @@ export default {
         this.tip = "Confirm the transaction to deposit";
         const depositResponse = await wallet.depositToSyncFromEthereum({
           depositTo: wallet.address(),
-          token: this.choosedToken.symbol,
+          token: this.chosenToken.symbol,
           amount: this.inputTotalSumBigNumber,
           /* ethTxOptions: {
            gasLimit: "200000",

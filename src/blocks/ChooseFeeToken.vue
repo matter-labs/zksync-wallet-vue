@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-if="tokensLoading===true" class="nothingFound">
-      <loader/>
+    <div v-if="tokensLoading === true" class="nothingFound">
+      <loader />
     </div>
     <template v-else>
       <i-input v-model="tokenSearch" placeholder="Filter balances in L2" maxlength="10">
@@ -14,10 +14,12 @@
             <div class="balance">{{ item.balance }}</div>
           </div>
         </div>
-        <div v-if="tokenSearch && displayedTokenList.length ===0" class="nothingFound">
-          <span>Your search <b>"{{ tokenSearch }}"</b> did not match any tokens</span>
+        <div v-if="tokenSearch && displayedTokenList.length === 0" class="nothingFound">
+          <span
+            >Your search <b>"{{ tokenSearch }}"</b> did not match any tokens</span
+          >
         </div>
-        <div v-else-if="displayedTokenList.length ===0" class="nothingFound">
+        <div v-else-if="displayedTokenList.length === 0" class="nothingFound">
           <span>No balances yet. Please make a deposit or request money from someone!</span>
         </div>
       </div>
@@ -26,7 +28,7 @@
     <i-button v-if="showCantFindToken" block link size="lg" variant="secondary" class="_margin-top-1" @click="$store.dispatch('openModal', 'NoTokenFound')">
       Can't find a token?
     </i-button>
-    <no-token-found v-if="showCantFindToken"/>
+    <no-token-found v-if="showCantFindToken" />
   </div>
 </template>
 
@@ -57,7 +59,7 @@ export default {
       cantFindTokenModal: false,
       tokenSearch: "",
       tokensLoading: false,
-      choosedToken: false,
+      chosenToken: false,
       tokensList: [],
     };
   },
