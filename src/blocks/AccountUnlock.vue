@@ -1,38 +1,31 @@
 <template>
   <div v-if="!loading" class="tileBlock">
-    <div class="tileHeadline h3">
-      Unlock account
-    </div>
-    <p class="tileTextBg">To start using your account you need to register your public key once. This operation costs
-      15000 gas on-chain. In the future, we will eliminate this step by verifying ETH signatures with zero-knowledge
-      proofs. Please bear with us!</p>
+    <div class="tileHeadline h3">Unlock account</div>
+    <p class="tileTextBg">
+      To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH
+      signatures with zero-knowledge proofs. Please bear with us!
+    </p>
     <div class="_padding-y-1">Amount / asset</div>
     <i-input size="lg" placeholder="Select token" disabled :value="inputVal">
-      <i-button v-if="!choosedToken" slot="append" block link variant="secondary" @click="$emit('selectToken')">
-        Select token
-      </i-button>
-      <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary"
-                @click="$emit('selectToken')">{{ choosedToken.symbol }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
+      <i-button v-if="!chosenToken" slot="append" block link variant="secondary" @click="$emit('selectToken')"> Select token </i-button>
+      <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary" @click="$emit('selectToken')"
+        >{{ chosenToken.symbol }}&nbsp;&nbsp;<i class="far fa-angle-down"></i>
       </i-button>
     </i-input>
     <div v-if="errorText" class="errorText _text-center _margin-top-1">
       {{ errorText }}
     </div>
-    <i-button class="_margin-top-1" block variant="secondary" size="lg" :disabled="!choosedToken" @click="unlock()"><i
-        class="far fa-lock-open-alt"></i> Unlock
-    </i-button>
+    <i-button class="_margin-top-1" block variant="secondary" size="lg" :disabled="!chosenToken" @click="unlock()"><i class="far fa-lock-open-alt"></i> Unlock </i-button>
     <div v-if="totalFee" class="_text-center _margin-top-1">
       Fee:
       <span>
-        {{totalFee}} {{choosedToken.symbol}}
-        <span class="totalPrice">{{getFormattedPrice(totalFee,choosedToken.tokenPrice)}}</span>
+        {{ totalFee }} {{ chosenToken.symbol }}
+        <span class="totalPrice">{{ getFormattedPrice(totalFee, chosenToken.tokenPrice) }}</span>
       </span>
     </div>
   </div>
   <div v-else class="tileBlock">
-    <div class="tileHeadline h3">
-      Unlock account
-    </div>
+    <div class="tileHeadline h3">Unlock account</div>
     <p v-if="tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
     <div class="nothingFound _padding-y-2">
       <loader />
@@ -46,7 +39,7 @@ import utils from "@/plugins/utils";
 
 export default {
   props: {
-    choosedToken: {
+    chosenToken: {
       type: Object,
       required: false,
       default: undefined,
@@ -62,15 +55,15 @@ export default {
   },
   computed: {
     inputVal: function () {
-      if (!this.choosedToken) {
+      if (!this.chosenToken) {
         return "";
       } else {
-        return `${this.choosedToken.symbol} (Balance: ${this.choosedToken.balance})`;
+        return `${this.chosenToken.symbol} (Balance: ${this.chosenToken.balance})`;
       }
     },
   },
   watch: {
-    choosedToken(val) {
+    chosenToken(val) {
       this.getUnlockPrice();
     },
   },
@@ -79,8 +72,8 @@ export default {
   },
   methods: {
     async unlock() {
-      if (this.choosedToken.balance < this.totalFee) {
-        return (this.errorText = `Not enough ${this.choosedToken.symbol} to perform a transaction`);
+      if (this.chosenToken.balance < this.totalFee) {
+        return (this.errorText = `Not enough ${this.chosenToken.symbol} to perform a transaction`);
       }
       this.errorText = "";
       this.loading = true;
@@ -99,7 +92,7 @@ export default {
           const isSigningKeySet = await syncWallet.isSigningKeySet();
           if (!isSigningKeySet) {
             const changePubkey = await syncWallet.setSigningKey({
-              feeToken: this.choosedToken.symbol,
+              feeToken: this.chosenToken.symbol,
               nonce: "committed",
               onchainAuth: true,
             });
@@ -110,7 +103,7 @@ export default {
           const isSigningKeySet = await syncWallet.isSigningKeySet();
           if (!isSigningKeySet) {
             const changePubkey = await syncWallet.setSigningKey({
-              feeToken: this.choosedToken.symbol,
+              feeToken: this.chosenToken.symbol,
             });
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey.awaitReceipt();
@@ -137,7 +130,7 @@ export default {
       return utils.getFormatedTotalPrice(price, amount);
     },
     getUnlockPrice: async function () {
-      if (!this.choosedToken) {
+      if (!this.chosenToken) {
         return;
       }
       this.loading = true;
@@ -152,9 +145,9 @@ export default {
             },
           },
           syncWallet.address(),
-          this.choosedToken.symbol,
+          this.chosenToken.symbol,
         );
-        this.totalFee = utils.handleFormatToken(this.choosedToken.symbol, foundFee.totalFee);
+        this.totalFee = utils.handleFormatToken(this.chosenToken.symbol, foundFee.totalFee);
       } catch (error) {
         await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while receiving an unlock fee");
       }
