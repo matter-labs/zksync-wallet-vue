@@ -79,7 +79,10 @@ export default {
   },
   methods: {
     async unlock() {
-      if (this.choosedToken.balance < this.totalFee) {
+      /*
+        @todo: Use numbers only for displaying data, use Bignumber for all the internal numbers manipulation
+      */
+      if (+this.choosedToken.balance < +this.totalFee) {
         return (this.errorText = `Not enough ${this.choosedToken.symbol} to perform a transaction`);
       }
       this.errorText = "";
