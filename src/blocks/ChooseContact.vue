@@ -4,7 +4,7 @@
     <i-modal v-model="contactsListModal" size="md">
       <template slot="header">Contacts</template>
       <div>
-        <i-input ref="contactNameInput" v-if="contactSearch.trim() || displayedContactsList.length !== 0" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
+        <i-input v-if="contactSearch.trim() || displayedContactsList.length !== 0" ref="contactNameInput" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
           <i slot="prefix" class="far fa-search"></i>
         </i-input>
         <div class="contactsListContainer">
@@ -70,6 +70,9 @@ import { Address, Contact } from "@/plugins/types";
 import userImg from "@/components/userImg.vue";
 
 export default Vue.extend({
+  components: {
+    userImg,
+  },
   props: {
     address: {
       type: String,
@@ -98,30 +101,30 @@ export default Vue.extend({
     };
   },
   computed: {
-    ownAddress: function (): Address {
+    ownAddress(): Address {
       return this.$store.getters["account/address"];
     },
-    canSaveContact: function (): boolean {
+    canSaveContact(): boolean {
       return !this.isInContacts && !!this.chosenContact && !!this.chosenContact.address && !this.chosenContact.name && !this.isOwnAddress;
     },
-    isOwnAddress: function (): boolean {
+    isOwnAddress(): boolean {
       if (this.chosenContact && this.chosenContact.address) {
         return this.ownAddress.toLowerCase() === this.chosenContact.address.toLowerCase();
       } else {
         return false;
       }
     },
-    contactsList: function (): Array<Contact> {
+    contactsList(): Array<Contact> {
       return this.$store.getters["contacts/get"];
     },
-    displayedContactsList: function (): Array<Contact> {
+    displayedContactsList(): Array<Contact> {
       if (!this.contactSearch.trim()) {
         return this.contactsList;
       }
       const lowerCaseInput = this.contactSearch.trim().toLowerCase();
       return this.contactsList.filter((e) => e.name.toLowerCase().includes(lowerCaseInput));
     },
-    isInContacts: function (): boolean {
+    isInContacts(): boolean {
       if (this.chosenContact && this.chosenContact.address) {
         return this.checkAddressInContacts(this.chosenContact.address);
       } else {
@@ -160,11 +163,8 @@ export default Vue.extend({
       }, 0);
     },
   },
-  components: {
-    userImg,
-  },
   methods: {
-    chooseContact: function (contact: Contact): void {
+    chooseContact(contact: Contact): void {
       if (!contact.address) {
         this.chosenContact = false;
         return;
@@ -177,10 +177,10 @@ export default Vue.extend({
       this.chosenContact = contact;
       this.contactsListModal = false;
     },
-    checkAddressInContacts: function (address: Address): boolean {
+    checkAddressInContacts(address: Address): boolean {
       return this.$store.getters["contacts/isInContacts"](address);
     },
-    saveContact: function (): void {
+    saveContact(): void {
       if (this.saveContactInput.trim().length <= 0) {
         this.saveContactModalError = "Name can't be empty";
         return;
