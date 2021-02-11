@@ -169,7 +169,7 @@ export default {
   },
   pwa: {
     workbox: {
-      'pagesURLPattern': '/_nuxt/'
-    }
-  }
+      pagesURLPattern: "/_nuxt/",
+    },
+  },
 };
