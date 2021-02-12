@@ -36,7 +36,7 @@ import { ETHER_NETWORK_NAME } from "~/plugins/build";
 
 export default {
   computed: {
-    network: function () {
+    network() {
       return ETHER_NETWORK_NAME;
     },
   },

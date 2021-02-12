@@ -54,7 +54,7 @@ export default {
     };
   },
   computed: {
-    inputVal: function () {
+    inputVal() {
       if (!this.chosenToken) {
         return "";
       } else {
@@ -63,7 +63,7 @@ export default {
     },
   },
   watch: {
-    chosenToken(val) {
+    chosenToken() {
       this.getUnlockPrice();
     },
   },
@@ -75,8 +75,8 @@ export default {
       /*
         @todo: Use numbers only for displaying data, use Bignumber for all the internal numbers manipulation
       */
-      if (+this.choosedToken.balance < +this.totalFee) {
-        return (this.errorText = `Not enough ${this.choosedToken.symbol} to perform a transaction`);
+      if (+this.chosenToken.balance < +this.totalFee) {
+        return (this.errorText = `Not enough ${this.chosenToken.symbol} to perform a transaction`);
       }
       this.errorText = "";
       this.loading = true;
@@ -122,17 +122,17 @@ export default {
         walletData.set({ accountState: newAccountState });
       } catch (error) {
         if (!error.message && !error.message.includes("User denied")) {
-          this.tip = error.message;
+          this.errorText = error.message;
         }
-        this.tip = "Unknown error";
+        this.errorText = "Unknown error";
       }
       this.loading = false;
       return "";
     },
-    getFormattedPrice: function (price, amount) {
-      return utils.getFormatedTotalPrice(price, amount);
+    getFormattedPrice(price, amount) {
+      return utils.getFormattedTotalPrice(price, amount);
     },
-    getUnlockPrice: async function () {
+    async getUnlockPrice() {
       if (!this.chosenToken) {
         return;
       }

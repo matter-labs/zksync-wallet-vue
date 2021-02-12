@@ -15,7 +15,9 @@
       <div>
         <div class="_padding-bottom-1">
           You are about to transfer money to an address that doesn't have a zkSync balance yet. The transfer will happen inside zkSync L2. If you want to move money from zkSync to
-          the mainnet, please use the <nuxt-link :to="`/withdraw?w=${inputAddress}`">Withdraw</nuxt-link> function instead.
+          the mainnet, please use the
+          <nuxt-link :to="`/withdraw?w=${inputAddress}`">Withdraw</nuxt-link>
+          function instead.
         </div>
         <i-checkbox v-model="transferWithdrawWarningCheckmark">Do not show this again</i-checkbox>
         <i-button class="_margin-top-1" block variant="secondary" size="lg" @click="warningDialogProceedTransfer()">Transfer inside zkSync</i-button>
@@ -97,14 +99,14 @@
           </i-button>
         </i-column>
         <i-column xs="12" md="5">
-          <i-button v-if="canSaveContact" block link variant="secondary" @click="saveContactModal = true"> Save to contacts </i-button>
+          <i-button v-if="canSaveContact" block link variant="secondary" @click="saveContactModal = true"> Save to contacts</i-button>
         </i-column>
       </i-row>
       <br />
       <div class="_padding-bottom-1">Amount / asset</div>
       <div>
         <i-input v-model="inputTotalSum" size="lg" :precision="decimalPrecision" type="text" @keyup.enter="commitTransaction()">
-          <i-button v-if="!chosenToken" slot="append" block link variant="secondary" @click="openTokenList()"> Select token </i-button>
+          <i-button v-if="!chosenToken" slot="append" block link variant="secondary" @click="openTokenList()"> Select token</i-button>
           <i-button v-else slot="append" block class="selectedTokenBtn" link variant="secondary" @click="openTokenList()">
             <span class="tokenSymbol">{{ chosenToken.symbol }}</span
             >&nbsp;&nbsp;<i class="far fa-angle-down" />
@@ -118,11 +120,8 @@
         <div class="maxAmount" @click="chooseMaxAmount()">Max: {{ transactionMaxAmount | formatToken(chosenToken.symbol) }}</div>
       </div>
 
-      <!-- <i-radio-group
-        v-if="chosenToken && isWithdrawal && (!chosenFeeToken || chosenFeeToken.symbol === chosenToken.symbol) && feesObj"
-        v-model="fastWithdraw"
-        class="_margin-top-2"
-      >
+      <!-- <i-radio-group v-if="chosenToken && isWithdrawal && (!chosenFeeToken || chosenFeeToken.symbol===chosenToken.symbol) && feesObj" v-model="fastWithdraw"
+                     class="_margin-top-2">
         <i-radio :value="false">
           Normal withdraw (
           <strong>Fee:</strong>
@@ -182,6 +181,16 @@
           </span>
           <span class="chooseFeeToken" @click="chooseFeeTokenModal = true">Choose fee token</span>
         </span>
+
+        <div v-if="isWithdrawal && withdrawTime && withdrawTime.normal" class="totalPrice">
+          <i-tooltip>
+            <div class="_display-inline-flex">
+              Estimated processing time: {{ withdrawTime.normal | getTimeString }}
+              <i class="fas fa-question withdrawalAnnounce" />
+            </div>
+            <template slot="body">Despite all the capabilities of ZK and L2, full withdrawal process may take up to 5 hours and depends on L1</template>
+          </i-tooltip>
+        </div>
       </div>
     </div>
 
@@ -338,13 +347,13 @@ export default {
      * Unified fee token return
      * @return Object
      */
-    isWithdrawal: function () {
+    isWithdrawal() {
       return this.type === "withdraw";
     },
-    displayedError: function () {
+    displayedError() {
       return this.mainError || this.digitsError || this.packingError;
     },
-    hasBlockEnforced: function () {
+    hasBlockEnforced() {
       return (
         !this.inputTotalSumBigNumber ||
         !this.feesObj ||
@@ -355,10 +364,10 @@ export default {
         !this.chosenToken
       );
     },
-    getRealFeeToken: function () {
+    getRealFeeToken() {
       return this.chosenFeeToken ? this.chosenFeeToken : this.chosenToken;
     },
-    canSaveContact: function () {
+    canSaveContact() {
       let isInContactList = false;
       for (const item of this.contactsList) {
         if (item.address === this.inputAddress) {
@@ -372,10 +381,10 @@ export default {
       }
       return !isInContactList && !this.isOwnAddress && !this.chosenContract && this.hasValidAddress;
     },
-    isAccountLocked: function () {
+    isAccountLocked() {
       return this.$store.getters["wallet/isAccountLocked"];
     },
-    displayedContactsList: function () {
+    displayedContactsList() {
       if (!this.contactSearch.trim()) {
         return this.contactsList;
       }
@@ -386,19 +395,19 @@ export default {
      *
      * @return boolean
      */
-    hasValidAddress: function () {
+    hasValidAddress() {
       return this.inputAddress && validations.eth.test(this.inputAddress);
     },
-    isTransferBlocked: function () {
+    isTransferBlocked() {
       return !this.hasValidAddress || !this.hasValidAmount || !this.chosenToken || !!this.hasErrors || !!this.displayedError || !!this.hasBlockEnforced;
     },
-    isOwnAddress: function () {
+    isOwnAddress() {
       return this.inputAddress.toLowerCase() === walletData.get().syncWallet.address().toLowerCase();
     },
-    ownAddress: function () {
+    ownAddress() {
       return walletData.get().syncWallet.address();
     },
-    enoughTokenFee: function () {
+    enoughTokenFee() {
       if (!this.feesObj || !this.getRealFeeToken || !this.inputTotalSumBigNumber) {
         this.setMainError(``);
         return false;
@@ -416,10 +425,10 @@ export default {
       this.setMainError("");
       return true;
     },
-    blockExplorerLink: function () {
+    blockExplorerLink() {
       return APP_ZKSYNC_BLOCK_EXPLORER;
     },
-    hasErrors: function () {
+    hasErrors() {
       if (!this.chosenToken || !this.decimalPrecision) {
         return false;
       }
@@ -427,7 +436,7 @@ export default {
         let noErrors = true;
         if (this.chosenFeeToken) {
           if (!utils.isDecimalsValid(this.chosenToken.symbol, this.chosenFeeToken.balance, this.decimalPrecision)) {
-            this.digitsError = `Amount out of range, ${this.chosenToken.symbol} doesn't allows that much decimal digits`;
+            this.pushDigitsErrorValue(`Amount out of range, ${this.chosenToken.symbol} doesn't allows that much decimal digits`);
             return;
           }
         }
@@ -479,8 +488,8 @@ export default {
     fastWithdraw() {
       this.validateAmount(this.inputTotalSum);
     },
-    hasBlockEnforced(val) {
-      console.log("block enforced changed: ", val);
+    hasBlockEnforced() {
+      // console.log("block enforced changed: ", val);
     },
     inputAddress() {
       if (this.hasValidAddress) {
@@ -514,10 +523,10 @@ export default {
   },
   async mounted() {
     this.zksync = await walletData.zkSync();
-    if (this.$route.query["w"]) {
-      this.inputAddress = this.$route.query["w"];
+    if (this.$route.query.w) {
+      this.inputAddress = this.$route.query.w;
     }
-    if (this.$route.query["token"]) {
+    if (this.$route.query.token) {
       this.mainLoading = true;
       /**
        * @type {Array}
@@ -537,14 +546,21 @@ export default {
     await this.updateDecimals();
   },
   methods: {
-    chooseMaxAmount: function () {
+    /**
+     * Storing centralized way any error with the digits
+     * @param errorText
+     */
+    pushDigitsErrorValue(errorText = null) {
+      this.digitsError = errorText;
+    },
+    chooseMaxAmount() {
       this.inputTotalSum = utils.handleFormatToken(this.chosenToken.symbol, this.transactionMaxAmount);
     },
-    updateDecimals: async function () {
+    async updateDecimals() {
       const decimals = await this.$store.dispatch("tokens/getTokenDecimals", this.chosenToken.symbol);
       this.decimalPrecision = this.chosenToken && decimals ? decimals : 18;
     },
-    handleFeeObjectProcessing: function () {
+    handleFeeObjectProcessing() {
       if (!this.calculatedFees) {
         return "";
       }
@@ -554,13 +570,13 @@ export default {
       }
       return calculatedFee;
     },
-    setMainError: function (errorMessage) {
+    setMainError(errorMessage) {
       this.mainError = errorMessage;
     },
-    setContact: function (item = false) {
+    setContact(item = false) {
       this.chosenContract = item;
     },
-    openTokenList: async function () {
+    async openTokenList() {
       this.mainLoading = true;
       try {
         const list = await this.$store.dispatch("wallet/getzkBalances");
@@ -571,7 +587,7 @@ export default {
       }
       this.mainLoading = false;
     },
-    checkForFeeToken: function () {
+    checkForFeeToken() {
       if (!this.chosenFeeToken && this.chosenToken && this.chosenToken.restricted === true) {
         for (const token of this.tokensList) {
           if (token.restricted === false) {
@@ -585,24 +601,24 @@ export default {
         this.cantFindFeeToken = false;
       }
     },
-    chooseToken: async function (token) {
+    async chooseToken(token) {
       this.tokenListModal = false;
       this.chosenToken = token;
       await this.updateDecimals();
       await this.getFees();
       this.validateAmount(this.inputTotalSum);
     },
-    chooseContact: function (contact) {
+    chooseContact(contact) {
       this.chosenContract = contact;
       this.inputAddress = contact.address;
       this.contactsListModal = false;
     },
-    getWithdrawalTime: async function () {
+    async getWithdrawalTime() {
       this.mainLoading = true;
       this.withdrawTime = await this.$store.dispatch("wallet/getWithdrawalProcessingTime");
       this.mainLoading = false;
     },
-    getFees: async function () {
+    async getFees() {
       if (!this.hasValidAddress || (this.chosenToken.restricted && !this.chosenFeeToken) || !this.chosenToken) {
         console.log("getFees disabled", this.inputAddress, this.hasValidAddress, this.chosenToken, this.chosenFeeToken);
         this.feesObj = false;
@@ -627,8 +643,7 @@ export default {
       }
       this.feesLoading = false;
     },
-
-    getContactsList: function () {
+    getContactsList() {
       try {
         const walletAddress = walletData.get().syncWallet.address();
         if (process.client && window.localStorage.getItem("contacts-" + walletAddress)) {
@@ -641,7 +656,7 @@ export default {
         console.log(error);
       }
     },
-    saveContact: function () {
+    saveContact() {
       if (this.saveContactInput.trim().length === 0) {
         this.saveContactModalError = `Name can't be empty`;
         return;
@@ -686,7 +701,6 @@ export default {
       } catch (error) {
         this.mainLoading = false;
 
-        console.log(error);
         if (error.message) {
           if (error.message.includes("User denied")) {
             this.mainError = "";
@@ -699,19 +713,17 @@ export default {
             }
           }
           this.mainError = error.message;
+        } else if (error.message && String(error.message).length < 60) {
+          this.mainError = error.message;
         } else {
-          if (error.message && String(error.message).length < 60) {
-            this.mainError = error.message;
-          } else {
-            this.mainError = "Transaction error";
-          }
+          this.mainError = "Transaction error";
         }
       }
 
       this.tip = "";
       return this.mainError === "";
     },
-    withdraw: async function () {
+    async withdraw() {
       const syncProvider = walletData.get().syncProvider;
       this.tip = "Confirm the transaction to withdraw";
 
@@ -745,7 +757,7 @@ export default {
         throw new Error(receipt.failReason);
       }
     },
-    transfer: async function () {
+    async transfer() {
       const transferWithdrawWarning = localStorage.getItem("canceledTransferWithdrawWarning");
       if (!transferWithdrawWarning && this.transferWithdrawWarningDialog === false) {
         const accountExists = await this.accountExists(this.inputAddress);
@@ -781,11 +793,11 @@ export default {
         throw new Error(receipt.failReason);
       }
     },
-    accountExists: async function (address) {
+    async accountExists(address) {
       const state = await walletData.get().syncProvider.getState(address);
       return state.id !== null;
     },
-    warningDialogProceedTransfer: function () {
+    warningDialogProceedTransfer() {
       if (this.transferWithdrawWarningCheckmark === true) {
         localStorage.setItem("canceledTransferWithdrawWarning", "true");
       }
@@ -824,10 +836,10 @@ export default {
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
           errorInfo = `Precision exceeded: ${this.chosenToken.symbol} doesn't support that many decimal digits`;
         }
-        this.digitsError = errorInfo;
+        this.pushDigitsErrorValue(errorInfo);
         return false;
       }
-      this.digitsError = "";
+      this.pushDigitsErrorValue();
 
       if (inputAmount.lte(0)) {
         this.hasValidAmount = false;

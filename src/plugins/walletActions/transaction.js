@@ -5,15 +5,15 @@ export const transaction = async (address, token, feeToken, amountBigValue, feeB
   let nonce = await syncWallet.getNonce("committed");
   const transferTx = {
     fee: 0,
-    nonce: nonce,
+    nonce,
     amount: amountBigValue,
     to: address,
-    token: token,
+    token,
   };
   nonce += 1;
   const feeTx = {
     fee: feeBigValue,
-    nonce: nonce,
+    nonce,
     amount: 0,
     to: syncWallet.address(),
     token: feeToken,
@@ -25,13 +25,12 @@ export const transaction = async (address, token, feeToken, amountBigValue, feeB
   if (token === feeToken) {
     return await syncWallet.syncTransfer({
       to: address,
-      token: token,
+      token,
       amount: amountBigValue,
       fee: feeBigValue,
     });
   } else {
     const transferTransaction = await syncWallet.syncMultiTransfer([transferTx, feeTx]);
-    console.log("transferTransaction", transferTransaction);
     if (transferTransaction) {
       return transferTransaction;
     }
@@ -56,7 +55,7 @@ export const withdraw = async (address, token, feeToken, amount, fastWithdraw, f
   if (token === feeToken) {
     return await syncWallet.withdrawFromSyncToEthereum({
       ethAddress: address,
-      token: token,
+      token,
       amount: amountBigValue,
       fee: feeBigValue,
       fastProcessing: !!fastWithdraw,
@@ -67,7 +66,7 @@ export const withdraw = async (address, token, feeToken, amount, fastWithdraw, f
         ethAddress: address,
         amount: amountBigValue,
         fee: "0",
-        token: token,
+        token,
       },
     ];
     const transfers = [
@@ -128,7 +127,7 @@ export const withdraw = async (address, token, feeToken, amount, fastWithdraw, f
     });
     return transactionHashes.map((txHash, index) => ({
       txData: signedTransactions[index],
-      txHash: txHash,
+      txHash,
     }));
   }
 };

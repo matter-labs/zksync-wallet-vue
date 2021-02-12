@@ -110,12 +110,6 @@ export default {
     position: "bottom-right",
     duration: 4000,
     iconPack: "fontawesome",
-    action: {
-      text: "OK",
-      onClick: (e, toastObject) => {
-        toastObject.goAway(100);
-      },
-    },
   },
   i18n: {
     vueI18n: {
@@ -157,7 +151,7 @@ export default {
     /* extractCSS: {
       ignoreOrder: true,
     }, */
-    extend(config, { isDev, isClient }) {
+    extend(config) {
       config.node = {
         fs: "empty",
       };
@@ -169,7 +163,7 @@ export default {
   },
   pwa: {
     workbox: {
-      'pagesURLPattern': '/_nuxt/'
-    }
-  }
+      pagesURLPattern: "/_nuxt/",
+    },
+  },
 };

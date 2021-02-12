@@ -13,7 +13,7 @@ export default {
     },
   },
   computed: {
-    walletImg: function () {
+    walletImg() {
       return blockie(this.wallet);
     },
   },

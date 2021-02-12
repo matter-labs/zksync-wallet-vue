@@ -23,10 +23,8 @@ export default async (context) => {
       if (context.route.path !== "/") {
         context.redirect("/");
       }
-    } else {
-      if (context.route.path === "/") {
-        context.redirect("/account");
-      }
+    } else if (context.route.path === "/") {
+      context.redirect("/account");
     }
   })();
 };

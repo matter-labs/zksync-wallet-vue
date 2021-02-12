@@ -113,19 +113,19 @@ export default {
     };
   },
   computed: {
-    computedReturnLink: function () {
+    computedReturnLink() {
       return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transfer" ? this.fromRoute : "/contacts";
     },
-    walletAddressFull: function () {
+    walletAddressFull() {
       return walletData.get().syncWallet.address();
     },
-    displayedContactsList: function () {
+    displayedContactsList() {
       if (!this.search.trim()) {
         return this.contactsList;
       }
       return this.contactsList.filter((e) => e.name.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
-    openedContact: function () {
+    openedContact() {
       const wallet = this.$route.query.w;
       if (!wallet) {
         return null;
@@ -171,7 +171,7 @@ export default {
     }
   },
   methods: {
-    saveList: function () {
+    saveList() {
       const contactsList = JSON.parse(JSON.stringify(this.contactsList));
       for (let a = contactsList.length - 1; a >= 0; a--) {
         if (contactsList[a].deleted === false) {
@@ -184,7 +184,7 @@ export default {
         window.localStorage.setItem("contacts-" + this.walletAddressFull, JSON.stringify(contactsList));
       }
     },
-    addContact: function () {
+    addContact() {
       if (this.inputedName.trim().length === 0) {
         this.modalError = `Name can't be empty`;
       } else if (this.inputedWallet.trim().length === 0) {
@@ -214,7 +214,7 @@ export default {
         this.inputedWallet = "";
       }
     },
-    editContact: function (contact) {
+    editContact(contact) {
       this.modalError = "";
       this.inputedName = contact.name;
       this.inputedWallet = contact.address;
@@ -222,7 +222,7 @@ export default {
       this.addContactType = "edit";
       this.addContactModal = true;
     },
-    deleteContact: function () {
+    deleteContact() {
       for (let a = 0; a < this.contactsList.length; a++) {
         if (this.contactsList[a].address.toLowerCase() === this.editingWallet.address.toLowerCase()) {
           this.contactsList[a].deleted = true;
@@ -235,7 +235,7 @@ export default {
       this.editingWallet = null;
       this.saveList();
     },
-    restoreDeleted: function (contact) {
+    restoreDeleted(contact) {
       for (let a = 0; a < this.contactsList.length; a++) {
         if (this.contactsList[a].address.toLowerCase() === contact.address.toLowerCase()) {
           this.$set(this.contactsList, a, { ...contact, deleted: false });
@@ -244,10 +244,10 @@ export default {
       }
       this.saveList();
     },
-    openContact: function (contact) {
+    openContact(contact) {
       this.$router.push({ ...this.$route, query: { w: contact.address } });
     },
-    copyAddress: function (address) {
+    copyAddress(address) {
       const elem = document.createElement("textarea");
       elem.style.position = "absolute";
       elem.style.left = -99999999 + "px";

@@ -1,6 +1,7 @@
 module.exports = {
   root: true,
   extends: [
+    "@nuxtjs/eslint-config-typescript",
     "plugin:vue/recommended",
     "plugin:prettier-vue/recommended",
     // Do not add `'prettier/vue'` if you don't want to use prettier for `<template>` blocks

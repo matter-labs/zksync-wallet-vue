@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData.js";
-import { utils as zkUtils } from 'zksync';
+import { utils as zkUtils } from "zksync";
 
 /**
  *
@@ -57,22 +57,31 @@ export default {
     const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
 
     return {
-      hours: hours,
-      minutes: minutes,
-      seconds: seconds,
+      hours,
+      minutes,
+      seconds,
     };
   },
 
+  /**
+   * @param {number} time
+   * @param {string} string
+   */
   handleTimeAmount: (time, string) => `${time} ${string}${time > 1 ? "s" : ""}`,
 
   handleFormatToken,
 
-  getFormatedTotalPrice: (price, amount, symbol) => {
+  /**
+   * @param {*} price
+   * @param {string} amount
+   * @param {*} symbol
+   */
+  getFormattedTotalPrice(price, amount, symbol) {
     if (amount === null) {
-      console.log("getFormatedTotalPrice", price, amount, typeof price, typeof amount);
+      console.log("getFormattedTotalPrice", price, amount, typeof price, typeof amount);
     }
-    const total = price * (amount && typeof amount["toNumber"] === "object" ? handleFormatToken(symbol, amount.toNumber()) : amount);
-    console.log("called getFormatedTotalPrice", typeof total, total);
+    const total = price * (amount && typeof amount.toNumber === "object" ? handleFormatToken(symbol, amount.toNumber()) : amount);
+    console.log("called getFormattedTotalPrice", typeof total, total);
     if (!amount || total === 0) {
       return "$0.00";
     }
@@ -102,6 +111,5 @@ export default {
 
   isAmountPackable: (amount) => {
     return zkUtils.isTransactionAmountPackable(amount);
-  }
+  },
 };
-

@@ -3,13 +3,13 @@
     <i-container>
       <div class="firstRow">
         <nuxt-link to="/account">
-          <logo/>
+          <logo />
         </nuxt-link>
         <div class="linksContainer">
-          <div class="userDropdown" @click="accountModal=true">
+          <div class="userDropdown" @click="accountModal = true">
             <div class="address">{{ walletName }}</div>
             <div class="userImgContainer">
-              <user-img :wallet="walletAddressFull"/>
+              <user-img :wallet="walletAddressFull" />
             </div>
             <div class="dropdownArrow">
               <i class="far fa-angle-down"></i>
@@ -25,11 +25,9 @@
     </i-container>
 
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
-      <template slot="header">
-        Rename wallet
-      </template>
+      <template slot="header"> Rename wallet </template>
       <div>
-        <i-input v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()"/>
+        <i-input v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()" />
         <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
       </div>
     </i-modal>
@@ -39,8 +37,8 @@
         <b>{{ walletName }}</b>
       </template>
       <div>
-        <wallet-address :wallet="walletAddressFull"/>
-        <vue-qrcode class="addressQR" :value="walletAddressFull" :margin="1" :scale="6"/>
+        <wallet-address :wallet="walletAddressFull" />
+        <vue-qrcode class="addressQR" :value="walletAddressFull" :margin="1" :scale="6" />
       </div>
       <template slot="footer">
         <a class="modalFooterBtn" :href="`${getZkScanBaseUrl}/accounts/${walletAddressFull}`" target="_blank">
@@ -81,17 +79,17 @@ export default {
     };
   },
   computed: {
-    walletAddressFull: function () {
+    walletAddressFull() {
       return this.$store.getters["account/address"];
     },
-    getZkScanBaseUrl: function () {
+    getZkScanBaseUrl() {
       return APP_ZK_SCAN;
     },
     accountModal: {
       get: function () {
         return this.$store.getters["getAccountModalState"];
       },
-      set: function (val) {
+      set(val) {
         this.$store.commit("setAccountModalState", val);
         return val;
       },
@@ -118,18 +116,18 @@ export default {
     },
   },
   methods: {
-    logout: function () {
+    logout() {
       this.accountModal = false;
       this.$nextTick(async () => {
         await this.$store.dispatch("wallet/logout");
         await this.$router.push("/");
       });
     },
-    renameWalletOpen: function () {
+    renameWalletOpen() {
       this.accountModal = false;
       this.renameWalletModal = true;
     },
-    renameWallet: function () {
+    renameWallet() {
       this.renameWalletModal = false;
       if (process.client && this.walletName.length > 0 && this.walletName !== this.walletAddressFull) {
         window.localStorage.setItem(this.walletAddressFull, this.walletName);

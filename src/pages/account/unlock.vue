@@ -1,6 +1,6 @@
 <template>
   <div class="transactionPage">
-    <account-unlock v-if="mainLoading === false" :choosed-token="chosenToken" @selectToken="openTokenList()" />
+    <account-unlock v-if="mainLoading === false" :chosen-token="chosenToken" @selectToken="openTokenList()" />
     <div v-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
     <div v-if="mainLoading === true" class="tileBlock">
       <div class="tileHeadline h3">Unlock Token</div>
@@ -37,7 +37,7 @@ export default {
     };
   },
   computed: {
-    isAccountLocked: function () {
+    isAccountLocked() {
       return this.$store.getters["wallet/isAccountLocked"];
     },
   },
@@ -52,10 +52,10 @@ export default {
     },
   },
   methods: {
-    tokenSelected: function (value) {
+    tokenSelected(value) {
       this.chosenToken = value;
     },
-    openTokenList: async function () {
+    async openTokenList() {
       this.mainLoading = true;
       try {
         const list = await this.$store.dispatch("wallet/getzkBalances");
