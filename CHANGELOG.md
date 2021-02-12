@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > **Upcoming TS-version release**
 
 ---
-* Time of the full withdrawal announced the rigth way: up to 5 hours.
+* Time of the full withdrawal announced the right way: up to 5 hours.
 * refactoring: required changes to merge js and TS versions
 * fixed mistyped “choosed”
 * fixed push the data-property value from computed property
