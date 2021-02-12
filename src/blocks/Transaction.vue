@@ -182,7 +182,15 @@
           <span class="chooseFeeToken" @click="chooseFeeTokenModal = true">Choose fee token</span>
         </span>
 
-        <div v-if="isWithdrawal && withdrawTime && withdrawTime.normal" class="totalPrice">Processing time: {{ withdrawTime.normal | getTimeString }}</div>
+        <div v-if="isWithdrawal && withdrawTime && withdrawTime.normal" class="totalPrice">
+          <i-tooltip>
+            <div class="_display-inline-flex">
+              Estimated processing time: {{ withdrawTime.normal | getTimeString }}
+              <i class="fas fa-question withdrawalAnnounce" />
+            </div>
+            <template slot="body">Despite all the capabilities of ZK and L2, full withdrawal process may take up to 5 hours and depends on L1</template>
+          </i-tooltip>
+        </div>
       </div>
     </div>
 
