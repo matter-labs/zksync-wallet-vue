@@ -126,9 +126,8 @@ export default {
   },
   data() {
     return {
+      cachedDecimalPrecision: 18,
       depositAllowed: false,
-      decimalPrecision: 18,
-
       zksync: null,
       search: "",
       inputTotalSumBigNumber: null,
@@ -146,6 +145,12 @@ export default {
     };
   },
   computed: {
+    decimalPrecision() {
+      if (!this.chosenToken) {
+        return this.cachedDecimalPrecision;
+      }
+      return this.loadDecimalsLimit();
+    },
     displayedTokenList() {
       if (!this.search.trim()) {
         return this.tokensList;
@@ -187,9 +192,10 @@ export default {
     this.loading = false;
   },
   methods: {
-    async updateDecimals() {
-      const decimals = await this.$store.dispatch("tokens/getTokenDecimals", this.chosenToken.symbol);
-      this.decimalPrecision = this.chosenToken && decimals ? decimals : 18;
+    async loadDecimalsLimit(token = null) {
+      this.cachedDecimalPrecision = 18;
+      const callableToken = token || this.chosenToken;
+      return (this.cachedDecimalPrecision = await this.$store.dispatch("tokens/getTokenDecimals", callableToken.symbol));
     },
 
     /**
@@ -197,7 +203,7 @@ export default {
      * @param {string|*} incomingValue
      * @return {boolean}
      */
-    async isDepositEnabled(incomingValue = null) {
+    isDepositEnabled(incomingValue = null) {
       if (!this.chosenToken) {
         this.mainError = "";
         return (this.depositAllowed = false);
@@ -209,7 +215,7 @@ export default {
         userAmount = incomingValue;
       }
 
-      await this.updateDecimals();
+      this.loadDecimalsLimit();
 
       if (!utils.isDecimalsValid(this.chosenToken.symbol, userAmount, this.decimalPrecision)) {
         this.mainError = `Precision exceeded: ${this.chosenToken.symbol} supports ${this.decimalPrecision} decimal digits max`;
@@ -220,7 +226,7 @@ export default {
         userAmountBigNum = utils.parseToken(this.chosenToken.symbol, userAmount);
       } catch (error) {
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          this.mainError = `Precision exceeded: ${this.chosenToken.symbol} supports only limited decimal digits`;
+          this.mainError = `Precision exceeded: ${this.chosenToken.symbol} supports ${this.decimalPrecision} decimal digits max`;
           return (this.depositAllowed = false);
         } else {
           this.mainError = `Amount processing error. Common reason behind it — inaccurate amount.
@@ -261,7 +267,7 @@ export default {
       this.loading = false;
     },
     async chooseToken(token) {
-      await this.updateDecimals();
+      this.loadDecimalsLimit(token);
       this.tokenSelectionOpened = false;
       this.loading = true;
       if (typeof token.unlocked === "undefined") {

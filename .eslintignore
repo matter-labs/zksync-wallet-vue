@@ -1,5 +1,6 @@
 # don't ever lint node_modules
 /node_modules/*
+/src/static/sw.js
 # don't ever lint public
 /.nuxt/*
 /src/assets/fonts/*

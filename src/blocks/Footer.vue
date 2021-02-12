@@ -42,8 +42,7 @@
 </template>
 
 <script>
-import { GIT_REVISION_SHORT } from "@/plugins/build";
-import { APP_ZK_SCAN } from "@/plugins/build";
+import { GIT_REVISION_SHORT, APP_ZK_SCAN } from "@/plugins/build";
 
 export default {
   data() {
@@ -52,7 +51,7 @@ export default {
     };
   },
   computed: {
-    blockExplorerLink: function () {
+    blockExplorerLink() {
       return APP_ZK_SCAN;
     },
   },

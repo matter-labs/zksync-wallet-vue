@@ -3,21 +3,15 @@
     <div class="tileBlock transactionsTile">
       <div class="tileHeadline h3">Transactions</div>
       <div class="transactionsListContainer">
-        <div v-if="loading===true" class="nothingFound">
-          <loader class="_display-block"/>
+        <div v-if="loading === true" class="nothingFound">
+          <loader class="_display-block" />
         </div>
-        <div v-else-if="transactionsList.length===0" class="nothingFound">
+        <div v-else-if="transactionsList.length === 0" class="nothingFound">
           <span>History is empty</span>
         </div>
-        <SingleTransaction
-            v-for="(item, index) in transactionsList"
-            v-else
-            :key="index"
-            class="transactionItem" :single-transaction="item"/>
-        <i-button v-if="loadingMore===false && loadMoreAvailable===true" block link size="lg" variant="secondary"
-                  @click="loadMore()">Load more
-        </i-button>
-        <loader v-else-if="loadingMore===true" class="_display-block _margin-x-auto _margin-y-2"/>
+        <SingleTransaction v-for="(item, index) in transactionsList" v-else :key="index" class="transactionItem" :single-transaction="item" />
+        <i-button v-if="loadingMore === false && loadMoreAvailable === true" block link size="lg" variant="secondary" @click="loadMore()">Load more</i-button>
+        <loader v-else-if="loadingMore === true" class="_display-block _margin-x-auto _margin-y-2" />
       </div>
     </div>
   </div>
@@ -54,7 +48,7 @@ export default {
     };
   },
   computed: {
-    walletAddressFull: function () {
+    walletAddressFull() {
       return walletData.get().syncWallet.address();
     },
   },
@@ -128,7 +122,7 @@ export default {
       if (transaction.verified) {
         return "Verified";
       } else if (transaction.commited) {
-        return "Commited";
+        return "Committed";
       } else {
         return "In progress";
       }

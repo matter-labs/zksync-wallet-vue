@@ -43,12 +43,12 @@ export default {
     };
   },
   computed: {
-    walletAddress: function () {
+    walletAddress() {
       return this.$store.getters["account/address"];
     },
   },
   methods: {
-    openAccountModal: function () {
+    openAccountModal() {
       this.$store.commit("setAccountModalState", true);
     },
   },

@@ -47,13 +47,14 @@
   "devDependencies": {
     "@inkline/nuxt": "^2.3.5",
     "@nuxt/types": "^2.14.12",
+    "@nuxt/typescript-build": "^2.0.4",
     "@nuxtjs/dotenv": "1.4.1",
+    "@nuxtjs/eslint-config-typescript": "^5.0.0",
     "@nuxtjs/style-resources": "^1.0.0",
     "commitlint": "^11.0.0",
     "dotenv": "8.2.0",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.0.0",
     "lodash": "4.17.20",
@@ -64,7 +65,7 @@
     "webpack": "^5.11.1"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "@nuxtjs/eslint-config-typescript"
   },
   "homepage": "https://wallet.zksync.io",
   "husky": {
@@ -110,7 +111,7 @@
     "generate": "nuxt generate",
     "test": "echo \"Not implemented.\"",
     "format": "prettier --write",
-    "lint-ts": "eslint --fix \"**/*.{js, vue}\"",
+    "lint-ts": "eslint --fix --ext .ts,.js,.vue .",
     "lint-css": "stylelint --fix \"**/*.scss\"",
     "audit_dependencies": "yarn audit --package-lock-only --audit-level critical --json | yarn-audit-html --output audit.html"
   },

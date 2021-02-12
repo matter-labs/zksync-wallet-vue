@@ -22,10 +22,10 @@ export default {
     this.checkCookie();
   },
   methods: {
-    checkCookie: function () {
+    checkCookie() {
       this.confirmed = Cookies.get("accept-cookie") === "true";
     },
-    cookieConfirm: function () {
+    cookieConfirm() {
       Cookies.set("accept-cookie", "true");
       this.confirmed = true;
     },

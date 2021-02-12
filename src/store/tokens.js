@@ -63,7 +63,7 @@ export const actions = {
     if (tokensList[symbol]) {
       return tokensList[symbol].decimals;
     }
-    //@todo: handle error?
+    // @todo: handle error?
   },
 
   async loadAllTokens({ commit, getters }) {

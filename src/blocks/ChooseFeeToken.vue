@@ -64,7 +64,7 @@ export default {
     };
   },
   computed: {
-    displayedTokenList: function () {
+    displayedTokenList() {
       const displayTokens = this.tokensList.filter((singleBalance) => {
         return this.filterBalances(singleBalance);
       });
@@ -78,7 +78,7 @@ export default {
     this.getTokenList();
   },
   methods: {
-    filterBalances: function (singleBalance) {
+    filterBalances(singleBalance) {
       let showBalance = true;
       if (!this.showZeroBalance) {
         showBalance = singleBalance.balance.gte(0);
@@ -88,11 +88,11 @@ export default {
       }
       return showBalance;
     },
-    chooseToken: function (token) {
+    chooseToken(token) {
       this.$emit("input", token);
       this.$emit("selectToken");
     },
-    getTokenList: async function () {
+    async getTokenList() {
       this.tokensLoading = true;
       /**
        * @type {Array}

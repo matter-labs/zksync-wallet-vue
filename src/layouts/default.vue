@@ -1,7 +1,7 @@
 <template>
   <div class="defaultLayout">
-    <logging-in-loader/>
-    <cookie-component/>
+    <logging-in-loader />
+    <cookie-component />
     <div v-if="!loggingIn && loggedIn">
       <header-component ref="header" />
       <div class="routerContainer">
@@ -9,7 +9,7 @@
           <nuxt />
         </transition>
       </div>
-      <footer-component/>
+      <footer-component />
     </div>
   </div>
 </template>
@@ -27,10 +27,10 @@ export default {
     loggingInLoader,
   },
   computed: {
-    loggingIn: function () {
+    loggingIn() {
       return this.$store.getters["account/loader"];
     },
-    loggedIn: function () {
+    loggedIn() {
       return this.$store.getters["account/loggedIn"];
     },
   },
@@ -45,7 +45,7 @@ export default {
         }
         if (val.path !== oldVal.path) {
           this.$nextTick(() => {
-            let lastScroll = this.$store.getters["scroll/getLastScroll"];
+            const lastScroll = this.$store.getters["scroll/getLastScroll"];
             document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
           });
         }
@@ -62,6 +62,7 @@ export default {
   },
   methods: {
     log() {
+      // eslint-disable-next-line no-console
       console.log(1);
     },
   },

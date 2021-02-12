@@ -35,10 +35,10 @@ export default {
     };
   },
   methods: {
-    burnerWallet: function () {
+    burnerWallet() {
       this.$router.push("/account");
     },
-    customWallet: async function () {
+    async customWallet() {
       const onboard = this.$store.getters["wallet/getOnboard"];
       onboard.config({
         darkMode: this.$inkline.config.variant !== "light",

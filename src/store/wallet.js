@@ -1,5 +1,5 @@
 import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { ethers, BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 
 import onboardConfig from "@/plugins/onboardConfig.js";
 import web3Wallet from "@/plugins/web3.js";
@@ -63,6 +63,7 @@ export const mutations = {
     if (!state.fees[symbol][feeSymbol].hasOwnProperty(type)) {
       state.fees[symbol][feeSymbol][type] = {};
     }
+
     state.fees[symbol][feeSymbol][type][address] = obj;
   },
   clearDataStorage(state) {
@@ -166,12 +167,12 @@ export const actions = {
    * @return {Promise<[array]|*>}
    */
   async getzkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }) {
-    let listCommited = {};
+    let listCommitted = {};
     let listVerified = {};
     let tokensList = [];
     let syncWallet = walletData.get().syncWallet;
     if (accountState) {
-      listCommited = accountState.committed.balances;
+      listCommitted = accountState.committed.balances;
       listVerified = accountState.verified.balances;
     } else {
       const localList = getters["getzkList"];
@@ -179,7 +180,7 @@ export const actions = {
         return localList.list;
       }
       await dispatch("restoreProviderConnection");
-      let newAccountState = await syncWallet.getAccountState();
+      const newAccountState = await syncWallet.getAccountState();
 
       // @todo Left for testing purposes.
       // const testBalances = {
@@ -201,24 +202,23 @@ export const actions = {
       // console.log(newAccountState);
 
       walletData.set({ accountState: newAccountState });
-      listCommited = newAccountState.committed.balances;
+      listCommitted = newAccountState.committed.balances;
       listVerified = newAccountState.verified.balances;
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
-
-    for (const tokenSymbol in listCommited) {
+    for (const tokenSymbol in listCommitted) {
       const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
-      const commitedBalance = utils.handleFormatToken(tokenSymbol, listCommited[tokenSymbol] ? listCommited[tokenSymbol] : 0);
+      const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : 0);
       const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol] : 0);
       tokensList.push({
         symbol: tokenSymbol,
-        status: commitedBalance !== verifiedBalance ? "Pending" : "Verified",
-        balance: commitedBalance,
-        rawBalance: BigNumber.from(listCommited[tokenSymbol] ? listCommited[tokenSymbol] : 0),
+        status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
+        balance: committedBalance,
+        rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : 0),
         verifiedBalance: verifiedBalance,
         tokenPrice: price,
-        formatedTotalPrice: utils.getFormatedTotalPrice(price, commitedBalance, tokenSymbol),
-        restricted: (commitedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol)) === true,
+        formattedTotalPrice: utils.getFormattedTotalPrice(price, committedBalance, tokenSymbol),
+        restricted: (committedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol)) === true,
       });
     }
     tokensList.sort(utils.sortBalancesById);
@@ -256,7 +256,7 @@ export const actions = {
           id: currentToken.id,
           address: currentToken.address,
           balance: balance,
-          formatedBalance: utils.handleFormatToken(currentToken.symbol, balance),
+          formattedBalance: utils.handleFormatToken(currentToken.symbol, balance),
           symbol: currentToken.symbol,
         };
       } catch (error) {
@@ -281,40 +281,32 @@ export const actions = {
    * @param dispatch
    * @param commit
    * @param getters
+   * @param force
+   * @param offset
    * @param options
    * @return {Promise<any>}
    */
-  async getTransactionsHistory({ dispatch, commit, getters }, options) {
+  async getTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }) {
     clearTimeout(getTransactionHistoryAgain);
     const localList = getters["getTransactionsList"];
-    if (!options) {
-      options = {
-        force: false,
-        offset: 0,
-      };
-    } else {
-      if (options.force === undefined) {
-        options.force = false;
-      }
-      if (options.offset === undefined) {
-        options.offset = 0;
-      }
-    }
-    if (options.force === false && localList.lastUpdated > new Date().getTime() - 30000 && options.offset === 0) {
+    /**
+     * If valid we're returning cached transaction list
+     */
+    if (!force && localList.lastUpdated > new Date().getTime() - 30000 && offset === 0) {
       return localList.list;
     }
     try {
       const syncWallet = walletData.get().syncWallet;
-      const fetchTransactionHistory = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet.address()}/history/${options.offset}/25`);
+      const fetchTransactionHistory = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet.address()}/history/${offset}/25`);
       commit("setTransactionsList", {
         lastUpdated: new Date().getTime(),
-        list: options.offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
+        list: offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
       });
       return fetchTransactionHistory.data;
     } catch (error) {
       this.dispatch("toaster/error", error.message);
       getTransactionHistoryAgain = setTimeout(() => {
-        dispatch("getTransactionsHistory", true);
+        dispatch("getTransactionsHistory", { force: true });
       }, 15000);
       return localList.list;
     }
@@ -363,23 +355,21 @@ export const actions = {
           commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
           return feesObj;
         }
+      } else if (symbol === feeSymbol) {
+        const foundFeeNormal = await syncProvider.getTransactionFee("Transfer", address, symbol);
+        const totalFeeValue = zksync.closestPackableTransactionFee(foundFeeNormal.totalFee);
+        const feesObj = {
+          normal: totalFeeValue,
+        };
+        commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
+        return feesObj;
       } else {
-        if (symbol === feeSymbol) {
-          const foundFeeNormal = await syncProvider.getTransactionFee("Transfer", address, symbol);
-          const totalFeeValue = zksync.closestPackableTransactionFee(foundFeeNormal.totalFee);
-          const feesObj = {
-            normal: totalFeeValue,
-          };
-          commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
-          return feesObj;
-        } else {
-          const batchTransferFee = await syncProvider.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet.address()], feeSymbol);
-          const feesObj = {
-            normal: zksync.closestPackableTransactionFee(batchTransferFee),
-          };
-          commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
-          return feesObj;
-        }
+        const batchTransferFee = await syncProvider.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet.address()], feeSymbol);
+        const feesObj = {
+          normal: zksync.closestPackableTransactionFee(batchTransferFee),
+        };
+        commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
+        return feesObj;
       }
     }
   },
@@ -390,11 +380,19 @@ export const actions = {
     commit("setAccountLockedState", isSigningKeySet === false);
   },
 
-  async walletRefresh({ getters, commit, dispatch }, firstSelect = true) {
+  /**
+   * Refreshing the wallet in case local storage keep token or signer fired event
+   *
+   * @param getters
+   * @param dispatch
+   * @param firstSelect
+   * @returns {Promise<boolean>}
+   */
+  async walletRefresh({ getters, dispatch }, firstSelect = true) {
     try {
       /* dispatch("changeNetworkRemove"); */
       const onboard = getters["getOnboard"];
-      this.commit("account/setLoadingHint", "followInstructions");
+      this.commit("account/setLoadingHint", "Follow the instructions in your wallet");
       let walletCheck = false;
       if (firstSelect === true) {
         walletCheck = await onboard.walletSelect();
@@ -431,10 +429,10 @@ export const actions = {
       const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
       const zksync = await walletData.zkSync();
-      const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME, 'HTTP');
+      const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
       const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
 
-      this.commit("account/setLoadingHint", "loadingData");
+      this.commit("account/setLoadingHint", "Getting wallet information");
       const accountState = await syncWallet.getAccountState();
 
       walletData.set({ syncProvider, syncWallet, accountState, ethWallet });
@@ -454,7 +452,12 @@ export const actions = {
       return false;
     }
   },
-  async clearDataStorage({ commit }) {
+
+  /**
+   * Remove localy saved data
+   * @param commit
+   */
+  clearDataStorage({ commit }) {
     commit("clearDataStorage");
   },
   async forceRefreshData({ dispatch }) {
@@ -466,7 +469,14 @@ export const actions = {
       console.log("forceRefreshData | getTransactionsHistory error", err);
     });
   },
-  async logout({ dispatch, commit, getters }) {
+
+  /**
+   * Perform logout and fire a couple of events
+   * @param commit
+   * @param getters
+   * @returns {Promise<void>}
+   */
+  logout({ commit, getters }) {
     const onboard = getters["getOnboard"];
     onboard.walletReset();
     walletData.set({ syncProvider: null, syncWallet: null, accountState: null });

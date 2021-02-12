@@ -3,55 +3,58 @@
     <i-modal v-model="onlyTestNetModal" size="md">
       <template slot="header">Matter Labs Trial Token</template>
       <div>
-        <p>
-          MLTT trial token is currently unavailable on mainnet. You can try it on our <a
-            href="https://rinkeby.zksync.io/">Rinkeby testnet</a> for now.
-        </p>
+        <p>MLTT trial token is currently unavailable on mainnet. You can try it on our <a href="https://rinkeby.zksync.io/">Rinkeby testnet</a> for now.</p>
       </div>
     </i-modal>
     <i-modal v-model="mainModal" class="prevent-close" size="md">
       <template slot="header">Matter Labs Trial Token</template>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
-      <div v-if="loading===false">
-        <div v-if="step==='tweet'">
+      <div v-if="loading === false">
+        <div v-if="step === 'tweet'">
           <p>
-            We grant free $MLTT to the first 500 users. To unlock a free withdrawal please tweet from your account with
-            our pre-populated text. Your privacy is preserved as your pre-populated wallet address is hashed so no one
-            can link your wallet to your social account. Once our bot detects your post, you will be able to claim your
-            MLTT.
+            We grant free $MLTT to the first 500 users. To unlock a free withdrawal please tweet from your account with our pre-populated text. Your privacy is preserved as your
+            pre-populated wallet address is hashed so no one can link your wallet to your social account. Once our bot detects your post, you will be able to claim your MLTT.
           </p>
-          <a target="_blank"
-             :href="`https://twitter.com/intent/tweet?text=%40zksync%2C%20%40the_matter_labs%E2%80%99s%20zkRollup%20for%20trustless%2C%20scalable%20payments%20is%20now%20live%20on%20Ethereum%20mainnet%21%20%0A%0AGive%20it%20a%20try%3A%20%F0%9F%91%89%F0%9F%91%89%20zksync.io%20%0A%0AClaiming%20my%20trial%20tokens%3A%20${getTicketFromAddress(generateSalt())}`"
-             class="tweetBtn _margin-top-1"
-             @click="tweetClicked()"><i class="fab fa-twitter"></i> Tweet</a>
+          <a
+            target="_blank"
+            :href="`https://twitter.com/intent/tweet?text=%40zksync%2C%20%40the_matter_labs%E2%80%99s%20zkRollup%20for%20trustless%2C%20scalable%20payments%20is%20now%20live%20on%20Ethereum%20mainnet%21%20%0A%0AGive%20it%20a%20try%3A%20%F0%9F%91%89%F0%9F%91%89%20zksync.io%20%0A%0AClaiming%20my%20trial%20tokens%3A%20${getTicketFromAddress(
+              generateSalt(),
+            )}`"
+            class="tweetBtn _margin-top-1"
+            @click="tweetClicked()"
+            ><i class="fab fa-twitter"></i> Tweet</a
+          >
         </div>
-        <div v-else-if="step==='claim'">
-          <vue-recaptcha class="recaptchaContainer" :load-recaptcha-script="true" :sitekey="recaptchaSiteID"
-                         :theme="$inkline.config.variant === 'light' ? 'dark' : 'light'" @verify="recaptchaVerified($event)" @expired="recaptchaExpired()"
-                         @error="recaptchaError()"/>
+        <div v-else-if="step === 'claim'">
+          <vue-recaptcha
+            class="recaptchaContainer"
+            :load-recaptcha-script="true"
+            :sitekey="recaptchaSiteID"
+            :theme="$inkline.config.variant === 'light' ? 'dark' : 'light'"
+            @verify="recaptchaVerified($event)"
+            @expired="recaptchaExpired()"
+            @error="recaptchaError()"
+          />
         </div>
-        <div v-else-if="step==='success'">
+        <div v-else-if="step === 'success'">
           <p class="_display-block _text-center">Tokens successfully claimed!</p>
-          <checkmark/>
+          <checkmark />
           <i-button block variant="secondary" size="lg" @click="close()">Ok</i-button>
         </div>
-        <div v-else-if="step==='error'">
-          There was an error. Please, try again later.
-        </div>
+        <div v-else-if="step === 'error'">There was an error. Please, try again later.</div>
       </div>
       <loader v-else class="_display-block _margin-x-auto _margin-y-2" />
     </i-modal>
-    <i-button v-if="display" block variant="secondary" size="lg" @click="startMint()">⚡ Get some trial tokens! ⚡
-    </i-button>
+    <i-button v-if="display" block variant="secondary" size="lg" @click="startMint()">⚡ Get some trial tokens! ⚡ </i-button>
   </div>
 </template>
 
 <script>
+import crypto from "crypto";
 import Checkmark from "@/components/Checkmark.vue";
 import { ETHER_NETWORK_NAME } from "@/plugins/build";
 
 import { walletData } from "@/plugins/walletData";
-import crypto from "crypto";
 import VueRecaptcha from "vue-recaptcha";
 
 const FAUCET_TOKEN_API = `https://${process.env.APP_ZKSYNC_API_LINK === "stage-api.zksync.dev" ? "stage" : ETHER_NETWORK_NAME}-faucet.zksync.dev`;
@@ -78,12 +81,12 @@ export default {
     };
   },
   computed: {
-    recaptchaSiteID: function () {
+    recaptchaSiteID() {
       return process.env.RECAPTCHA_SITE_KEY;
     },
   },
   methods: {
-    startMint: function () {
+    startMint() {
       if (ETHER_NETWORK_NAME === "mainnet") {
         this.onlyTestNetModal = true;
       } else {
@@ -93,7 +96,7 @@ export default {
         this.mainModal = true;
       }
     },
-    getTicketFromAddress: function (salt) {
+    getTicketFromAddress(salt) {
       const preimage = (String(walletData.get().syncWallet.address()).trim() + String(salt).trim()).toLowerCase();
 
       const hash = crypto.createHash("sha256");
@@ -103,7 +106,7 @@ export default {
       const digest = hash.digest("hex").slice(0, 13);
       return parseInt(digest, 16).toString().padStart(16, "0");
     },
-    generateSalt: function () {
+    generateSalt() {
       if (localStorage.getItem("twitsalt")) {
         return localStorage.getItem("twitsalt");
       } else {
@@ -112,7 +115,7 @@ export default {
         return salt;
       }
     },
-    tweetClicked: async function () {
+    async tweetClicked() {
       const syncAddress = walletData.get().syncWallet.address();
       localStorage.setItem(`twittMade${syncAddress}`, "true");
       const response = await this.$axios.$get(`${FAUCET_TOKEN_API}/register_address/${syncAddress}/${this.generateSalt()}`);
@@ -135,12 +138,12 @@ export default {
         }
       } catch (error) {
         await this.$store.dispatch("toaster/error", error.message);
-        console.log("Get status");
+        // console.log("Get status");
       }
       this.loading = false;
     },
 
-    recaptchaVerified: async function (captchaToken) {
+    async recaptchaVerified(captchaToken) {
       await new Promise((resolve) => {
         setTimeout(() => {
           resolve();
@@ -152,7 +155,6 @@ export default {
           address: walletData.get().syncWallet.address(),
           "g-recaptcha-response": captchaToken,
         });
-        console.log("askMoneyResponse", askMoneyResponse.data);
         if (askMoneyResponse.data === "Success") {
           this.tip = "Claiming tokens...";
           await new Promise((resolve) => {
@@ -169,17 +171,17 @@ export default {
         }
       } catch (error) {
         this.step = "error";
-        console.log("askMoney error", error);
+        // console.log("askMoney error", error);
       }
       this.loading = false;
     },
-    recaptchaExpired: function () {
-      console.log("reCaptcha Expired");
+    recaptchaExpired() {
+      // console.log("reCaptcha Expired");
     },
-    recaptchaError: function () {
-      console.log("reCaptcha Error");
+    recaptchaError() {
+      // console.log("reCaptcha Error");
     },
-    close: function () {
+    close() {
       this.mainModal = false;
     },
   },
