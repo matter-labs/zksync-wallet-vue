@@ -2,8 +2,8 @@
   <div class="transactionsingleTransaction">
     <div class="status">
       <i-tooltip>
-        <em v-if="singleTransaction.transactionStatus === 'Verified'" class="verified far fa-check-double"></em>
-        <em v-else-if="singleTransaction.transactionStatus === 'Commited'" class="committed far fa-check"></em>
+        <em v-if="singleTransaction.verified"  class="verified far fa-check-double"></em>
+        <em v-else-if="singleTransaction.commited" class="committed far fa-check"></em>
         <em v-else-if="singleTransaction.transactionStatus === 'In progress'" class="inProgress fad fa-spinner-third"></em>
         <em v-else class="rejected fas fa-times-circle"></em>
         <template slot="body">{{ singleTransaction.transactionStatus }}</template>
@@ -87,13 +87,11 @@ export default {
       return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
     },
     getTransactionStatus(transaction) {
-      console.log("transaction");
-      console.log(transaction);
       if (!transaction.success) {
         return transaction.fail_reason ? transaction.fail_reason : "Rejected";
       }
       if (transaction.verified) {
-        return "Verified";
+        return "Finalized";
       } else if (transaction.commited) {
         return "Committed";
       } else {

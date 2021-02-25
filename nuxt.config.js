@@ -1,7 +1,8 @@
 require("dotenv").config();
 
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
-const pageTitle = `zkSync Wallet | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const pageTitle = `zkWallet | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const pageDescription = `A crypto wallet & gateway to layer-2 zkSync Rollup. Commit transactions fast & cheap like never before!`;
 
 export default {
   ssr: false,
@@ -69,7 +70,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [],
+  buildModules: [["@nuxtjs/dotenv", { path: __dirname }]],
 
   /*
    ** Nuxt.js modules
@@ -82,6 +83,7 @@ export default {
     "@nuxtjs/google-gtag",
     "@inkline/nuxt",
     "@nuxtjs/style-resources",
+    "nuxt-socialsplash-module",
     "nuxt-webfontloader",
     [
       "nuxt-i18n",
@@ -95,6 +97,20 @@ export default {
         ],
         defaultLocale: "en",
         langDir: "./locales/",
+      },
+    ],
+    [
+      "nuxt-social-meta",
+      {
+        url: "https://wallet.zksync.io",
+        title: pageTitle,
+        site_name: "zkWallet v.",
+        description: pageDescription,
+        img: "Link to image in static folder",
+        locale: "en_US",
+        twitter: "@user",
+        twitter_card: "summary_large_image",
+        themeColor: "#theme-color",
       },
     ],
     "@nuxtjs/sentry",
