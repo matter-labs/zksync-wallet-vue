@@ -34,7 +34,6 @@
     "nuxt": "^2.14.12",
     "nuxt-i18n": "^6.8.1",
     "nuxt-social-meta": "^0.0.5",
-    "nuxt-socialsplash-module": "^1.0.0",
     "nuxt-webfontloader": "^1.1.0",
     "qrcode": "^1.0.0",
     "vue": "^2.6.12",

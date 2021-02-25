@@ -83,7 +83,6 @@ export default {
     "@nuxtjs/google-gtag",
     "@inkline/nuxt",
     "@nuxtjs/style-resources",
-    "nuxt-socialsplash-module",
     "nuxt-webfontloader",
     [
       "nuxt-i18n",

@@ -14170,13 +14170,6 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"nuxt-socialsplash-module@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "nuxt-socialsplash-module@npm:1.0.0"
-  checksum: 25783e06ac3514e649727bb2b3d100d87d4d664d05b7f24216c5bcfea8f3910942d85db3ea0850e4cf6d97052987c5d2a6a01eb7b72203b679367eb2b3bc5cb9
-  languageName: node
-  linkType: hard
-
 "nuxt-webfontloader@npm:^1.1.0":
   version: 1.1.0
   resolution: "nuxt-webfontloader@npm:1.1.0"
@@ -21175,7 +21168,6 @@ typescript@~4.1:
     nuxt: ^2.14.12
     nuxt-i18n: ^6.8.1
     nuxt-social-meta: ^0.0.5
-    nuxt-socialsplash-module: ^1.0.0
     nuxt-webfontloader: ^1.1.0
     prettier: ^2.2.1
     qrcode: ^1.0.0
