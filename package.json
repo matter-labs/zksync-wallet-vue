@@ -33,6 +33,7 @@
     "moment": "^2.29.1",
     "nuxt": "^2.14.12",
     "nuxt-i18n": "^6.8.1",
+    "nuxt-social-meta": "^0.0.5",
     "nuxt-webfontloader": "^1.1.0",
     "qrcode": "^1.0.0",
     "vue": "^2.6.12",
@@ -41,28 +42,28 @@
     "vue-scrollto": "^2.17.1",
     "walletlink": "^2.0.2",
     "web3": "^1.3.1",
-    "zksync": "^0.8.4"
+    "zksync": "^0.9.0"
   },
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "devDependencies": {
     "@inkline/nuxt": "^2.3.5",
     "@nuxt/types": "^2.14.12",
     "@nuxt/typescript-build": "^2.0.4",
-    "@nuxtjs/dotenv": "1.4.1",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config-typescript": "^5.0.0",
     "@nuxtjs/style-resources": "^1.0.0",
     "commitlint": "^11.0.0",
     "dotenv": "8.2.0",
-    "eslint": "^7.16.0",
+    "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-vue": "^7.0.0",
     "lodash": "4.17.20",
     "node-sass": "latest",
     "prettier": "^2.2.1",
-    "sass-loader": "latest",
+    "sass-loader": "10.1.1",
     "stylelint": "^13.8.0",
-    "webpack": "^5.11.1"
+    "webpack": "4.46"
   },
   "eslintConfig": {
     "extends": "@nuxtjs/eslint-config-typescript"
@@ -99,15 +100,15 @@
   },
   "private": true,
   "scripts": {
-    "ci": "rm -fr node_modules && rm -rf 'public/*' && yarn install --frozen-lockfile",
-    "ci:build": "yarn ci && sh ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
+    "ci": "rm -fr node_modules && rm -rf 'public/*' && sh ./cli-check-env.sh && yarn install --immutable  --immutable-cache",
+    "ci:build": "yarn run ci && sh ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
     "start:firebase": "firebase serve --only hosting",
     "deploy:prod": "./cli-deploy-production.sh",
-    "dev": "nuxt",
-    "prepare_ci": "yarn ci && sh cli-process-env.sh 'rinkeby'",
-    "start": "nuxt start",
-    "build": "nuxt build",
-    "build:stage": "yarn ci && sh cli-process-env.sh 'rinkeby' && yarn generate --fail-on-error",
+    "dev": "sh ./cli-check-env.sh && nuxt",
+    "prepare_ci": "yarn run ci && sh cli-process-env.sh 'rinkeby'",
+    "start": "sh ./cli-check-env.sh && nuxt start",
+    "build": "sh ./cli-check-env.sh && nuxt build",
+    "build:stage": "yarn run ci && sh cli-process-env.sh 'rinkeby' && yarn generate --fail-on-error",
     "generate": "nuxt generate",
     "test": "echo \"Not implemented.\"",
     "format": "prettier --write",
@@ -169,5 +170,5 @@
       "scss/at-rule-no-unknown": true
     }
   },
-  "version": "2.0.3"
+  "version": "2.1.0"
 }

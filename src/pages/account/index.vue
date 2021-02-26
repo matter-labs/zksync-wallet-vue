@@ -8,7 +8,7 @@
         </div>
         <p>
           As long as you control your Ethereum account you also own all the L2 balances under its address in zkSync. Nobody can freeze or take them away from you. Once your balance
-          has been verified (), you can always recover your tokens from zkSync — even if its validators are ever shut down.
+          has been finalized (), you can always recover your tokens from zkSync — even if its validators are ever shut down.
           <a href="//zksync.io/faq/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
         </p>
       </div>

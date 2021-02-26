@@ -14,19 +14,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > **Upcoming TS-version release**
 
 ---
-* Time of the full withdrawal announced the rigth way: up to 5 hours.
+* Time of the full withdrawal announced the right way: up to 5 hours.
 * refactoring: required changes to merge js and TS versions
-* fixed mistyped “choosed”
 * fixed push the data-property value from computed property
 * simplified a bit deposit.vue
-* fixed mistyped “getFormattedTotalPrice”
-* small cleaning of the nuxt.config
-* "@nuxt/typescript-build": "^2.0.4", package added && "@nuxtjs/eslint-config-typescript": "^5.0.0",
-* reformatted almost all .vue files
 * login loader simplified
-* two new Vue.filters snippets: full time string and days ago string
 * Deposit wrong length of the token decimals fixed
 * wallet store refactoring
+
+## 2.1.0 — 2021-02-26
+
+### Added
+
+* added seo meta-data
+* zksync version bumped
+* changePubKey turned into the record in History of transactions 
+* new tx state nomenclature
+* imToken update
+* two new Vue.filters snippets: full time string and days ago string
+
+### Updated
+
+* refactoring: required changes to merge js and TS versions
+* fixed push the data-property value from computed property
+* small cleaning of the nuxt.config
+* reformatted almost all .vue files
+* login loader simplified
+
+### Removed
+
+* dropped unused packages
+* failed transactions hidden
+
+### Fixed
+
+* Reported issue with locked transfer button
+* fixed mistyped “choosed”
+* fixed mistyped “getFormattedTotalPrice”
+* Deposit wrong length of the token decimals fixed
+* made some visual fixes
 
 ## 2.0.4 — 2021-02-11
 

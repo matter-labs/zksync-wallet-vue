@@ -1,7 +1,12 @@
 require("dotenv").config();
 
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
-const pageTitle = `zkSync Wallet | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const pageTitle = `zkWallet — the access to L2 zkSync features on mainnet. | ${process.env.APP_CURRENT_NETWORK.toString()
+  .charAt(0)
+  .toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const pageDescription = `A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum`;
+const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
+crypto payments, zkWallet, cryptowallet`;
 
 export default {
   ssr: false,
@@ -32,7 +37,17 @@ export default {
       {
         hid: "description",
         name: "description",
-        content: process.env.npm_package_description || "",
+        content: pageDescription,
+      },
+      {
+        hid: "keywords",
+        name: "keywords",
+        content: pageKeywords,
+      },
+      {
+        hid: "author",
+        name: "author",
+        content: "https://zksync.io",
       },
       {
         hid: "msapplication-TileImage",
@@ -69,7 +84,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: [],
+  buildModules: [["@nuxtjs/dotenv", { path: __dirname }]],
 
   /*
    ** Nuxt.js modules
@@ -95,6 +110,20 @@ export default {
         ],
         defaultLocale: "en",
         langDir: "./locales/",
+      },
+    ],
+    [
+      "nuxt-social-meta",
+      {
+        url: "https://wallet.zksync.io",
+        title: pageTitle,
+        site_name: pageTitle,
+        description: pageDescription,
+        img: "https://wallet.zksync.io/zkwallet.jpg",
+        locale: "en_US",
+        twitter: "@zksync",
+        twitter_card: "https://wallet.zksync.io/zkwallet.jpg",
+        themeColor: "#4e529a",
       },
     ],
     "@nuxtjs/sentry",
