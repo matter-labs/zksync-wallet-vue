@@ -49,6 +49,15 @@ export const getters = {
   getTokenPrices(state) {
     return state.tokenPrices;
   },
+  getTokenByID(state) {
+    return (id) => {
+      for (const symbol in state.allTokens) {
+        if (state.allTokens[symbol].id === id) {
+          return state.allTokens[symbol];
+        }
+      }
+    };
+  },
 };
 
 export const actions = {
@@ -67,19 +76,19 @@ export const actions = {
   },
 
   async loadAllTokens({ commit, getters }) {
-    if (Object.entries(getters["getAllTokens"]).length === 0) {
+    if (Object.entries(getters.getAllTokens).length === 0) {
       await this.dispatch("wallet/restoreProviderConnection");
-      let syncProvider = walletData.get().syncProvider;
+      const syncProvider = walletData.get().syncProvider;
       const tokensList = await syncProvider.getTokens();
       commit("setAllTokens", tokensList);
       return tokensList;
     }
-    return getters["getAllTokens"];
+    return getters.getAllTokens;
   },
 
   async loadTokensAndBalances({ dispatch }) {
-    let syncWallet = walletData.get().syncWallet;
-    let accountState = walletData.get().accountState;
+    const syncWallet = walletData.get().syncWallet;
+    const accountState = walletData.get().accountState;
 
     const tokens = await dispatch("loadAllTokens");
     const zkBalance = accountState.committed.balances;
@@ -106,15 +115,15 @@ export const actions = {
    * @return {Promise<{n: number, d: number}|number|*>}
    */
   async getTokenPrice({ commit, getters }, symbol) {
-    const localPricesList = getters["getTokenPrices"];
+    const localPricesList = getters.getTokenPrices;
     if (localPricesList.hasOwnProperty(symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
       return localPricesList[symbol].price;
     }
     await this.dispatch("wallet/restoreProviderConnection");
-    let syncProvider = walletData.get().syncProvider;
+    const syncProvider = walletData.get().syncProvider;
     const tokenPrice = await syncProvider.getTokenPrice(symbol);
     commit("setTokenPrice", {
-      symbol: symbol,
+      symbol,
       obj: {
         lastUpdated: new Date().getTime(),
         price: tokenPrice,

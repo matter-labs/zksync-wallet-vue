@@ -1,8 +1,12 @@
 require("dotenv").config();
 
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
-const pageTitle = `zkWallet | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
-const pageDescription = `A crypto wallet & gateway to layer-2 zkSync Rollup. Commit transactions fast & cheap like never before!`;
+const pageTitle = `zkWallet — the access to L2 zkSync features on mainnet. | ${process.env.APP_CURRENT_NETWORK.toString()
+  .charAt(0)
+  .toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const pageDescription = `A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum`;
+const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
+crypto payments, zkWallet, cryptowallet`;
 
 export default {
   ssr: false,
@@ -33,7 +37,17 @@ export default {
       {
         hid: "description",
         name: "description",
-        content: process.env.npm_package_description || "",
+        content: pageDescription,
+      },
+      {
+        hid: "keywords",
+        name: "keywords",
+        content: pageKeywords,
+      },
+      {
+        hid: "author",
+        name: "author",
+        content: "https://zksync.io",
       },
       {
         hid: "msapplication-TileImage",
@@ -103,13 +117,13 @@ export default {
       {
         url: "https://wallet.zksync.io",
         title: pageTitle,
-        site_name: "zkWallet v.",
+        site_name: pageTitle,
         description: pageDescription,
-        img: "Link to image in static folder",
+        img: "https://wallet.zksync.io/zkwallet.jpg",
         locale: "en_US",
-        twitter: "@user",
-        twitter_card: "summary_large_image",
-        themeColor: "#theme-color",
+        twitter: "@zksync",
+        twitter_card: "https://wallet.zksync.io/zkwallet.jpg",
+        themeColor: "#4e529a",
       },
     ],
     "@nuxtjs/sentry",
