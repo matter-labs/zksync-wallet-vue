@@ -43,9 +43,8 @@
         <i-tooltip>
           <div class="actionType">Account activation <em class="fa fa-info-circle"/></div>
           <div style="white-space: normal; width: 200px" slot="body">
-            Activation is required to set the signing key associated with the account.<br>
-            Without it no operation can be authorized by your
-            corresponding account
+            Activation is required single-time payment to set the signing key associated with the account.<br>
+            Without it no operation can be authorized by your corresponding account.
           </div>
         </i-tooltip>
       </div>
