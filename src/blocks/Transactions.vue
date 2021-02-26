@@ -70,18 +70,21 @@ export default {
     }
   },
   methods: {
-    loadTransactions: async function (offset = 0) {
-      const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
+    async loadTransactions(offset = 0) {
+      const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
-      let filteredList = list
-        .filter((e) => e.tx.type !== "ChangePubKey")
-        .map((e) => {
-          if (e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) {
-            e.tx.feePayment = true;
-          }
-          return e;
-        });
+      let filteredList = list.map((e) => {
+        if ((e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) || e.tx.type === "ChangePubKey") {
+          e.tx.feePayment = true;
+        }
+        return e;
+      });
+      for (const item of filteredList) {
+        if (item.tx.type === "ChangePubKey") {
+          console.log("ChangePubKey", item);
+        }
+      }
       if (this.filter) {
         filteredList = filteredList.filter((item) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
@@ -106,7 +109,7 @@ export default {
       }
       return filteredList.map((e) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
     },
-    getTransactions: async function () {
+    async getTransactions() {
       this.loading = true;
       try {
         this.transactionsList = await this.loadTransactions();
@@ -115,19 +118,19 @@ export default {
       }
       this.loading = false;
     },
-    getTransactionStatus: function (transaction) {
+    getTransactionStatus(transaction) {
       if (!transaction.success) {
         return transaction.fail_reason ? transaction.fail_reason : "Rejected";
       }
       if (transaction.verified) {
-        return "Verified";
+        return "Finalized";
       } else if (transaction.commited) {
         return "Committed";
       } else {
         return "In progress";
       }
     },
-    loadMore: async function () {
+    async loadMore() {
       this.loadingMore = true;
       const list = await this.loadTransactions(this.totalLoadedItem);
       this.transactionsList.push(...list);
