@@ -97,7 +97,7 @@ export default {
             const changePubkey = await syncWallet.setSigningKey({
               feeToken: this.chosenToken.symbol,
               nonce: "committed",
-              onchainAuth: true,
+              ethAuthType: "Onchain",
             });
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey.awaitReceipt();
@@ -106,6 +106,7 @@ export default {
           const isSigningKeySet = await syncWallet.isSigningKeySet();
           if (!isSigningKeySet) {
             const changePubkey = await syncWallet.setSigningKey({
+              ethAuthType: "ECDSA",
               feeToken: this.chosenToken.symbol,
             });
             this.tip = "Waiting for the transaction to be mined...";
@@ -121,7 +122,7 @@ export default {
         const newAccountState = await syncWallet.getAccountState();
         walletData.set({ accountState: newAccountState });
       } catch (error) {
-        if (!error.message && !error.message.includes("User denied")) {
+        if (error.message && !error.message.includes("User denied")) {
           this.errorText = error.message;
         }
         this.errorText = "Unknown error";
