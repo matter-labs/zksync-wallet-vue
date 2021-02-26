@@ -2,7 +2,7 @@
   <div v-if="!loading" class="tileBlock">
     <div class="tileHeadline h3">Activate account</div>
     <p class="tileTextBg">
-      To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH
+      To start using your account you need to register your public key once. This operation costs 11000 gas on-chain. In the future, we will eliminate this step by verifying ETH
       signatures with zero-knowledge proofs. Please bear with us!
     </p>
     <div class="_padding-y-1">Amount / asset</div>
