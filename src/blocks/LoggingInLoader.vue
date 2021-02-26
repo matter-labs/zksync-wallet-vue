@@ -3,7 +3,7 @@
     <div v-if="loggingIn" class="loggingInLoader">
       <logo class="_margin-bottom-3" />
       <h1>Logging in{{ titlePostfix }}</h1>
-      <div class="_margin-top-2" v-if="loadingHint">
+      <div class="_margin-top-2 _margin-bottom-1" v-if="loadingHint">
         <p class="hint">
           <span>{{ loadingHint }}</span>
         </p>

@@ -212,7 +212,7 @@ export const actions = {
       const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol] : 0);
       tokensList.push({
         symbol: tokenSymbol,
-        status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
+        status: committedBalance !== verifiedBalance ? "Pending" : "Finalized",
         balance: committedBalance,
         rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : 0),
         verifiedBalance: verifiedBalance,

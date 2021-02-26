@@ -55,7 +55,7 @@
               </div>
               <div class="status">
                 <i-tooltip>
-                  <i v-if="item.status === 'Verified'" class="verified far fa-check-double"></i>
+                  <i v-if="item.status === 'Finalized'" class="verified far fa-check-double"></i>
                   <i v-else class="committed far fa-check"></i>
                   <template slot="body">{{ item.status }}</template>
                 </i-tooltip>

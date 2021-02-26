@@ -9,6 +9,7 @@ const INFURA_KEY = process.env.APP_WALLET_CONNECT;
 const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
 const initializedWallets = {
   wallets: [
+    { walletName: "imToken", rpcUrl: RPC_URL, preferred: true },
     { walletName: "metamask", preferred: true },
     {
       walletName: "walletConnect",
@@ -46,7 +47,6 @@ const initializedWallets = {
     { walletName: "operaTouch" },
     { walletName: "torus" },
     { walletName: "status" },
-    { walletName: "imToken", rpcUrl: RPC_URL },
     { walletName: "meetone" },
     { walletName: "mykey", rpcUrl: RPC_URL },
     { walletName: "huobiwallet", rpcUrl: RPC_URL },
@@ -73,6 +73,7 @@ export default (ctx) => {
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
           window.localStorage.setItem("selectedWallet", wallet.name);
         }
+        // eslint-disable-next-line no-unused-expressions
         wallet.provider;
       },
     },

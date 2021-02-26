@@ -1,6 +1,6 @@
 <template>
   <div v-if="!loading" class="tileBlock">
-    <div class="tileHeadline h3">Unlock account</div>
+    <div class="tileHeadline h3">Activate account</div>
     <p class="tileTextBg">
       To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH
       signatures with zero-knowledge proofs. Please bear with us!
@@ -15,7 +15,7 @@
     <div v-if="errorText" class="errorText _text-center _margin-top-1">
       {{ errorText }}
     </div>
-    <i-button class="_margin-top-1" block variant="secondary" size="lg" :disabled="!chosenToken" @click="unlock()"><i class="far fa-lock-open-alt"></i> Unlock </i-button>
+    <i-button class="_margin-top-1" block variant="secondary" size="lg" :disabled="!chosenToken" @click="unlock()"><i class="far fa-lock-open-alt"></i> Activate </i-button>
     <div v-if="totalFee" class="_text-center _margin-top-1">
       Fee:
       <span>
@@ -25,7 +25,7 @@
     </div>
   </div>
   <div v-else class="tileBlock">
-    <div class="tileHeadline h3">Unlock account</div>
+    <div class="tileHeadline h3">Activate account</div>
     <p v-if="tip" class="_display-block _text-center _margin-top-1">{{ tip }}</p>
     <div class="nothingFound _padding-y-2">
       <loader />

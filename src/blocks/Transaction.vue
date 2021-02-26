@@ -399,7 +399,7 @@ export default {
       return this.inputAddress && validations.eth.test(this.inputAddress);
     },
     isTransferBlocked() {
-      return !this.hasValidAddress || !this.hasValidAmount || !this.chosenToken || !!this.hasErrors || !!this.displayedError || !!this.hasBlockEnforced;
+      return !this.hasValidAddress || !this.hasValidAmount || !this.chosenToken || !!this.hasErrors || !!this.hasBlockEnforced;
     },
     isOwnAddress() {
       return this.inputAddress.toLowerCase() === walletData.get().syncWallet.address().toLowerCase();
@@ -412,13 +412,13 @@ export default {
         this.setMainError(``);
         return false;
       }
-      const feeAmount = this.fastWithdraw === true ? this.feesObj["fast"] : this.feesObj["normal"];
+      const feeAmount = this.fastWithdraw === true ? this.feesObj.fast : this.feesObj.normal;
       if (feeAmount.lte(0)) {
         this.setMainError(`Fee requires recalculation. Reload the page and try again.`);
         return false;
       }
 
-      if (this.getRealFeeToken && this.getRealFeeToken.rawBalance["lt"] && this.getRealFeeToken.rawBalance.lt(feeAmount)) {
+      if (this.getRealFeeToken && this.getRealFeeToken.rawBalance.lt && this.getRealFeeToken.rawBalance.lt(feeAmount)) {
         this.setMainError(`Not enough ${this.getRealFeeToken.symbol} to pay the fee`);
         return false;
       }
@@ -533,7 +533,7 @@ export default {
        */
       const list = await this.$store.dispatch("wallet/getzkBalances");
       this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
-      const tokenLoaded = this.tokensList.filter((singleTokenObj) => singleTokenObj.symbol === this.$route.query["token"]).shift();
+      const tokenLoaded = this.tokensList.filter((singleTokenObj) => singleTokenObj.symbol === this.$route.query.token).shift();
       await this.chooseToken(tokenLoaded);
       this.mainLoading = false;
     }
@@ -686,7 +686,7 @@ export default {
     /**
      * @todo chosen change for chosen
      */
-    commitTransaction: async function () {
+    async commitTransaction() {
       try {
         this.mainError = "";
         this.mainLoading = true;
@@ -704,15 +704,13 @@ export default {
         if (error.message) {
           if (error.message.includes("User denied")) {
             this.mainError = "";
+          } else if (error.message.includes("Fee Amount is not packable")) {
+            this.mainError = "Fee Amount is not packable";
+          } else if (error.message.includes("Transaction Amount is not packable")) {
+            this.mainError = "Transaction Amount is not packable";
           } else {
-            if (error.message.includes("Fee Amount is not packable")) {
-              this.mainError = "Fee Amount is not packable";
-            }
-            if (error.message.includes("Transaction Amount is not packable")) {
-              this.mainError = "Transaction Amount is not packable";
-            }
+            this.mainError = error.message;
           }
-          this.mainError = error.message;
         } else if (error.message && String(error.message).length < 60) {
           this.mainError = error.message;
         } else {
