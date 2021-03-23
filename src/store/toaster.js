@@ -41,7 +41,6 @@ export const actions = {
   },
 
   error({ dispatch }, messageText) {
-    console.log(messageText);
     this.$sentry.captureException(new Error(messageText));
   },
 

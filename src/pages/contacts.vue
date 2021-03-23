@@ -208,7 +208,6 @@ export default {
           this.saveList();
         } catch (error) {
           this.$store.dispatch("toaster/error", error.message ? error.message : "Error while saving your contact book.");
-          console.log(error);
         }
         this.inputedName = "";
         this.inputedWallet = "";

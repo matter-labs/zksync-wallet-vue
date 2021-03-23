@@ -620,7 +620,6 @@ export default {
     },
     async getFees() {
       if (!this.hasValidAddress || (this.chosenToken.restricted && !this.chosenFeeToken) || !this.chosenToken) {
-        console.log("getFees disabled", this.inputAddress, this.hasValidAddress, this.chosenToken, this.chosenFeeToken);
         this.feesObj = false;
         return;
       }

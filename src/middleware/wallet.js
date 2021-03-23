@@ -1,13 +1,13 @@
 import { walletData } from "@/plugins/walletData.js";
 
-export default async (context) => {
+export default (context) => {
   if (walletData.get().syncWallet) {
     if (context.route.path === "/") {
       context.redirect("/account");
     }
     return;
   }
-  await (async () => {
+  (async () => {
     const onboardResult = await context.store.dispatch("wallet/onboard");
     if (onboardResult !== true) {
       await context.store.dispatch("wallet/logout");
