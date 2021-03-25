@@ -3,7 +3,7 @@ import web3Wallet from "@/plugins/web3.js";
 import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
 
 const APP_NAME = "zkSync Beta";
-const EXPLANATION_LINK = "https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message";
+const FORCED_EXIT_LINK = `https://withdraw${ETHER_NETWORK_NAME === "mainnet" ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
 const INFURA_KEY = process.env.APP_WALLET_CONNECT;
 const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
@@ -83,9 +83,7 @@ export default (ctx) => {
     popupContent: {
       dismiss: "Dismiss",
       teaser: "Can't find your wallet?",
-      fullHtml: `If you have funds in zkSync on an address that you can't control (a smart contract or an  exchange deposit account),
-        it is possible to initiate a forced withdrawal —&nbsp;<a href="${EXPLANATION_LINK}" target="_blank">please consult the documentation</a>.
-         In the future, this functionality will be automated.`,
+      fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
     },
   };
 };
