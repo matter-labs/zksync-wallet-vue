@@ -83,7 +83,7 @@ export default (ctx) => {
     popupContent: {
       dismiss: "Dismiss",
       teaser: "Can't find your wallet?",
-      fullHtml: `If you have funds in zkSync on an address that you can't control (a smart contract or an  exchange deposit account) it is possible to use an <a href="${FORCED_EXIT_LINK}" target="_blank">alternative withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
+      fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
     },
   };
 };
