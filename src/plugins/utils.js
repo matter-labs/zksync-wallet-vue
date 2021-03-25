@@ -12,12 +12,10 @@ const parseToken = (symbol, amount) => {
    * skip already bignumber
    */
   if (typeof amount === "object") {
-    console.log("parseToken double call", amount, typeof amount);
     return amount;
   }
   if (typeof amount === "number") {
     const tokenDecimals = walletData.get().syncProvider.tokenSet.resolveTokenDecimals(symbol);
-    console.log(symbol, amount, tokenDecimals);
     amount = amount.toFixed(tokenDecimals);
   }
   return walletData.get().syncProvider.tokenSet.parseToken(symbol, amount.toString());
@@ -77,11 +75,7 @@ export default {
    * @param {*} symbol
    */
   getFormattedTotalPrice(price, amount, symbol) {
-    if (amount === null) {
-      console.log("getFormattedTotalPrice", price, amount, typeof price, typeof amount);
-    }
     const total = price * (amount && typeof amount.toNumber === "object" ? handleFormatToken(symbol, amount.toNumber()) : amount);
-    console.log("called getFormattedTotalPrice", typeof total, total);
     if (!amount || total === 0) {
       return "$0.00";
     }

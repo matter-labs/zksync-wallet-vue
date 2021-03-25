@@ -117,11 +117,9 @@ export const getters = {
     return walletData.get().syncProvider;
   },
   isLoggedIn() {
-    console.log(walletData.get().syncWallet);
-    if (walletData.get().syncWallet && walletData.get().syncWallet["address"]) {
+    if (walletData.get().syncWallet && walletData.get().syncWallet.address) {
       return true;
     }
-    console.log("not logged in");
     return false;
   },
 };
@@ -169,13 +167,13 @@ export const actions = {
   async getzkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }) {
     let listCommitted = {};
     let listVerified = {};
-    let tokensList = [];
-    let syncWallet = walletData.get().syncWallet;
+    const tokensList = [];
+    const syncWallet = walletData.get().syncWallet;
     if (accountState) {
       listCommitted = accountState.committed.balances;
       listVerified = accountState.verified.balances;
     } else {
-      const localList = getters["getzkList"];
+      const localList = getters.getzkList;
       if (force === false && localList.lastUpdated > new Date().getTime() - 60000) {
         return localList.list;
       }
@@ -215,7 +213,7 @@ export const actions = {
         status: committedBalance !== verifiedBalance ? "Pending" : "Finalized",
         balance: committedBalance,
         rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : 0),
-        verifiedBalance: verifiedBalance,
+        verifiedBalance,
         tokenPrice: price,
         formattedTotalPrice: utils.getFormattedTotalPrice(price, committedBalance, tokenSymbol),
         restricted: (committedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol)) === true,
@@ -237,7 +235,7 @@ export const actions = {
    * @return {Promise<*[]|*>}
    */
   async getInitialBalances({ dispatch, commit, getters }, force = false) {
-    const localList = getters["getTokensList"];
+    const localList = getters.getTokensList;
 
     if (force === false && localList.lastUpdated > new Date().getTime() - 60000) {
       return localList.list;
@@ -251,11 +249,11 @@ export const actions = {
     const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key) => {
       const currentToken = loadedTokens.tokens[key];
       try {
-        let balance = await syncWallet.getEthereumBalance(key);
+        const balance = await syncWallet.getEthereumBalance(key);
         return {
           id: currentToken.id,
           address: currentToken.address,
-          balance: balance,
+          balance,
           formattedBalance: utils.handleFormatToken(currentToken.symbol, balance),
           symbol: currentToken.symbol,
         };
@@ -288,7 +286,7 @@ export const actions = {
    */
   async getTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }) {
     clearTimeout(getTransactionHistoryAgain);
-    const localList = getters["getTransactionsList"];
+    const localList = getters.getTransactionsList;
     /**
      * If valid we're returning cached transaction list
      */
@@ -312,8 +310,8 @@ export const actions = {
     }
   },
   async getWithdrawalProcessingTime({ getters, commit }) {
-    if (getters["getWithdrawalProcessingTime"]) {
-      return getters["getWithdrawalProcessingTime"];
+    if (getters.getWithdrawalProcessingTime) {
+      return getters.getWithdrawalProcessingTime;
     } else {
       const withdrawTime = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
       commit("setWithdrawalProcessingTime", withdrawTime.data);
@@ -321,7 +319,7 @@ export const actions = {
     }
   },
   async getFees({ getters, commit, dispatch }, { address, symbol, feeSymbol, type }) {
-    const savedFees = getters["getFees"];
+    const savedFees = getters.getFees;
     if (
       savedFees &&
       savedFees.hasOwnProperty(symbol) &&
@@ -391,7 +389,7 @@ export const actions = {
   async walletRefresh({ getters, dispatch }, firstSelect = true) {
     try {
       /* dispatch("changeNetworkRemove"); */
-      const onboard = getters["getOnboard"];
+      const onboard = getters.getOnboard;
       this.commit("account/setLoadingHint", "Follow the instructions in your wallet");
       let walletCheck = false;
       if (firstSelect === true) {
@@ -477,7 +475,7 @@ export const actions = {
    * @returns {Promise<void>}
    */
   logout({ commit, getters }) {
-    const onboard = getters["getOnboard"];
+    const onboard = getters.getOnboard;
     onboard.walletReset();
     walletData.set({ syncProvider: null, syncWallet: null, accountState: null });
     localStorage.removeItem("selectedWallet");

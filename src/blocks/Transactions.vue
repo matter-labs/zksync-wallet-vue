@@ -80,11 +80,6 @@ export default {
         }
         return e;
       });
-      for (const item of filteredList) {
-        if (item.tx.type === "ChangePubKey") {
-          console.log("ChangePubKey", item);
-        }
-      }
       if (this.filter) {
         filteredList = filteredList.filter((item) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }

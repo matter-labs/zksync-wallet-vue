@@ -51,6 +51,8 @@ export default {
     }
     if (localStorage.getItem("colorTheme")) {
       this.$inkline.config.variant = localStorage.getItem("colorTheme");
+    } else {
+      localStorage.setItem("colorTheme", this.$inkline.config.variant);
     }
   },
   methods: {
