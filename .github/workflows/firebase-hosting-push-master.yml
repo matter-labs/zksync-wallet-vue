@@ -42,3 +42,17 @@ jobs:
           target: ropsten
           projectId: zksync-vue
           channelID: live
+
+      - name: Configure for mainnet
+        run: sh ./cli-process-env.sh mainnet
+
+      - name: Build mainnet
+        run: yarn generate --fail-on-error
+
+      - name: Deploy to mainnet
+        uses: matter-labs/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}'
+          target: mainnet
+          projectId: zksync-vue-mainnet
+          channelID: live
