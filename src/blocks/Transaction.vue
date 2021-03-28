@@ -182,10 +182,10 @@
           <span class="chooseFeeToken" @click="chooseFeeTokenModal = true">Choose fee token</span>
         </span>
 
-        <div v-if="isWithdrawal && withdrawTime && withdrawTime.normal" class="totalPrice">
+        <div v-if="isWithdrawal" class="totalPrice">
           <i-tooltip>
             <div class="_display-inline-flex">
-              Estimated processing time: {{ withdrawTime.normal | getTimeString }}
+              Estimated processing time: 5 hours
               <i class="fas fa-question withdrawalAnnounce" />
             </div>
             <template slot="body">Despite all the capabilities of ZK and L2, full withdrawal process may take up to 5 hours and depends on L1</template>
@@ -294,7 +294,6 @@ export default {
       transferWithdrawWarningCheckmark: false,
 
       mainLoading: true,
-      withdrawTime: false,
       feesObj: {},
       feesLoading: false,
 
@@ -538,11 +537,7 @@ export default {
       this.mainLoading = false;
     }
     this.getContactsList();
-    if (this.isWithdrawal) {
-      await this.getWithdrawalTime();
-    } else {
-      this.mainLoading = false;
-    }
+    this.mainLoading = false;
     await this.updateDecimals();
   },
   methods: {
@@ -612,11 +607,6 @@ export default {
       this.chosenContract = contact;
       this.inputAddress = contact.address;
       this.contactsListModal = false;
-    },
-    async getWithdrawalTime() {
-      this.mainLoading = true;
-      this.withdrawTime = await this.$store.dispatch("wallet/getWithdrawalProcessingTime");
-      this.mainLoading = false;
     },
     async getFees() {
       if (!this.hasValidAddress || (this.chosenToken.restricted && !this.chosenFeeToken) || !this.chosenToken) {
