@@ -5,8 +5,49 @@
   flex-direction: column;
   justify-content: center;
 
+  .connectWallet {
+    height: 65px;
+    width: max-content;
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    padding-right: 23px;
+    color: $black;
+    transition: $transition1;
+    transition-property: box-shadow, color;
+    will-change: box-shadow, color;
+    border-radius: 10px;
+    box-shadow: 0 0 0 1px $black;
+    cursor: pointer;
+    &:hover {
+      color: $violet !important;
+      box-shadow: 0 0 0 2px $lightViolet !important;
+    }
+
+    img {
+      display: block;
+      height: 100%;
+      width: auto;
+      margin-right: 10px;
+      padding: 3px 0;
+    }
+    .text {
+      font-size: 18px;
+      font-weight: 500;
+    }
+  }
+
   @media (max-width: $mobile) {
     display: block;
     height: auto;
+  }
+}
+
+.inkline.-dark {
+  .indexPage {
+    .connectWallet {
+      box-shadow: 0 0 0 1px $white;
+      color: $white;
+    }
   }
 }

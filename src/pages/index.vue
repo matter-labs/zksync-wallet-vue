@@ -7,13 +7,10 @@
       <i-row center>
         <span class="h1 _font-weight-normal">Trustless, scalable crypto payments</span>
       </i-row>
-      <i-row center class="_padding-top-2">
-        <div class="tileContainer _padding-x-2 _padding-top-1" @click="customWallet()">
-          <div class="tile">
-            <img src="@/assets/imgs/wallets/external.png" alt="External">
-            <i class="tileIcon fas fa-lock"></i>
-          </div>
-          <div class="tileName">Connect your wallet</div>
+      <i-row center class="_padding-top-3">
+        <div class="connectWallet" @click="customWallet()">
+          <img src="@/assets/imgs/wallets/external.png" alt="External">
+          <div class="text">Connect your wallet</div>
         </div>
       </i-row>
     </i-container>
