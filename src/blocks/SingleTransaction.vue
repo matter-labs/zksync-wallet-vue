@@ -24,7 +24,7 @@
         <nuxt-link v-else class="actionValue" :to="`/contacts?w=${singleTransaction.tx.to}`">{{ getAddressName(singleTransaction.tx.to) }}</nuxt-link>
       </div>
       <div v-if="singleTransaction.tx.type === 'FullExit'">
-        <div class="actionType">Forced Exit</div>
+        <div class="actionType">Full Exit</div>
         <div v-if="isOwnAddress(singleTransaction.tx.priority_op.eth_address)" class="actionValue">Your L1 account</div>
         <nuxt-link v-else class="actionValue" :to="`/contacts?w=${singleTransaction.tx.priority_op.eth_address}`">{{ getAddressName(singleTransaction.tx.priority_op.eth_address) }}</nuxt-link>
       </div>
