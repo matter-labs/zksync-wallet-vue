@@ -114,8 +114,8 @@ export default {
       this.loading = false;
     },
     getTransactionStatus(transaction) {
-      if (!transaction.success) {
-        return transaction.fail_reason ? transaction.fail_reason : "Rejected";
+      if (transaction.fail_reason) {
+        return transaction.fail_reason;
       }
       if (transaction.verified) {
         return "Finalized";
