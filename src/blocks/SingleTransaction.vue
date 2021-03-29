@@ -20,8 +20,13 @@
     <div class="actionInfo">
       <div v-if="singleTransaction.tx.type === 'Withdraw'">
         <div class="actionType">Withdrawn to:</div>
-        <div v-if="singleTransaction.tx.to.toLowerCase() === walletAddressFull.toLowerCase()" class="actionValue">Your L1 account</div>
+        <div v-if="isOwnAddress(singleTransaction.tx.to.toLowerCase())" class="actionValue">Your L1 account</div>
         <nuxt-link v-else class="actionValue" :to="`/contacts?w=${singleTransaction.tx.to}`">{{ getAddressName(singleTransaction.tx.to) }}</nuxt-link>
+      </div>
+      <div v-if="singleTransaction.tx.type === 'FullExit'">
+        <div class="actionType">Forced Exit</div>
+        <div v-if="isOwnAddress(singleTransaction.tx.priority_op.eth_address)" class="actionValue">Your L1 account</div>
+        <nuxt-link v-else class="actionValue" :to="`/contacts?w=${singleTransaction.tx.priority_op.eth_address}`">{{ getAddressName(singleTransaction.tx.priority_op.eth_address) }}</nuxt-link>
       </div>
       <div v-else-if="singleTransaction.tx.type === 'Deposit'">
         <div class="actionType">Deposit to:</div>
@@ -42,20 +47,20 @@
       <div v-else-if="singleTransaction.tx.type === 'ChangePubKey'">
         <i-tooltip>
           <div class="actionType">Account activation <em class="fa fa-info-circle"/></div>
-          <div style="white-space: normal; width: 200px" slot="body">
+          <div slot="body" style="white-space: normal; width: 200px">
             Activation is required single-time payment to set the signing key associated with the account.<br>
             Without it no operation can be authorized by your corresponding account.
           </div>
         </i-tooltip>
       </div>
-      <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(singleTransaction)"><em class="fas fa-external-link"/></a>
     </div>
+    <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(singleTransaction)"><em class="fas fa-external-link"/></a>
   </div>
 </template>
 <script>
-import {APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER} from "@/plugins/build";
+import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
-import {walletData} from "@/plugins/walletData";
+import { walletData } from "@/plugins/walletData";
 
 export default {
   props: {
@@ -75,21 +80,29 @@ export default {
     },
   },
   methods: {
+    isOwnAddress(address) {
+      return this.walletAddressFull.toLowerCase() === String(address).toLowerCase();
+    },
     getFormattedAmount(transaction) {
       const symbol = this.getTxSymbol(transaction);
       if (!transaction.tx.feePayment && transaction.tx.type !== "ChangePubKey") {
         return utils.handleFormatToken(symbol, transaction.tx.type === "Deposit" && transaction.tx.priority_op ? transaction.tx.priority_op.amount : transaction.tx.amount);
       } else if (transaction.tx.type === "ChangePubKey") {
         return utils.handleFormatToken(symbol, transaction.tx.fee);
+      } else if (transaction.tx.type === "FullExit") {
+        return utils.handleFormatToken(transaction.tx.priority_op.token, transaction.tx.withdraw_amount ? transaction.tx.withdraw_amount : "9");
       } else {
         return utils.handleFormatToken(transaction.tx.token, transaction.tx.fee);
       }
     },
-    getTxSymbol({tx: {type, priority_op, token, feeToken}}) {
+    // eslint-disable-next-line camelcase
+    getTxSymbol({ tx: { type, priority_op, token, feeToken } }) {
       if (type === "Deposit") {
         return priority_op.token;
       } else if (type === "ChangePubKey") {
         return this.$store.getters["tokens/getTokenByID"](feeToken).symbol;
+      } else if (type === "FullExit") {
+        return priority_op.token;
       } else {
         return token;
       }
