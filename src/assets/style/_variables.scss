@@ -1,14 +1,21 @@
 /* Colors */
 $white: #fff;
-$gray: #9EAEBB;
+$gray: #9eaebb;
 $black: #242424;
 $violet: #4e529a;
 $green: #1d9b4a;
-$darkViolet: #171A49; //MajorDark
+$darkViolet: #171a49; //MajorDark
 $lightViolet: #8c8dfc;
-$red: #F25F5C;
+$red: #f25f5c;
 $link-color: $lightViolet;
 $color-secondary: $violet;
+
+/* Extracted values */
+$tempLightGray: #bababa;
+$tempLightYellow: #bababa;
+$tempDarkBlue: #11142b;
+$tempTransparent: transparent;
+
 
 /* Input */
 $input-prefix-border-width: 0;
@@ -28,9 +35,9 @@ $modal-border-color-light: #180d0d14;
 $modal-background-light: $white;
 
 /* Fonts */
-$firaSans: 'Fira Sans', 'sans-serif';
-$firaCode: 'Fira Code', 'sans-serif';
-$firaSansExtra: 'Fira Sans Extra Condensed', 'sans-serif';
+$firaSans: "Fira Sans", "sans-serif";
+$firaCode: "Fira Code", "sans-serif";
+$firaSansExtra: "Fira Sans Extra Condensed", "sans-serif";
 
 $font-family-primary-base: $firaSans;
 
@@ -46,8 +53,8 @@ $mobile: 768px;
 $maxWidth: 1370px;
 
 /* Shadows */
-$shadowInset: inset 1px 1px 5px rgba(0,0,0,0.075);
-$popoverShadow: 0 10px 40px rgba(0,0,0,0.1);
+$shadowInset: inset 1px 1px 5px rgba(0, 0, 0, 0.075);
+$popoverShadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 $shadowTop: 0 -3px 10px rgba(0, 0, 0, 0.1);
 $inputContainerShadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.04);
 

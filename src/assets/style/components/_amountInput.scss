@@ -1,11 +1,17 @@
+@import "../variables";
+
 .amountInput {
   transition: box-shadow $transition1;
+  will-change: box-shadow;
+
   input {
     border-radius: 0.3rem 0 0 0.3rem !important;
   }
-  button{
+
+  button {
     border-radius: 0 0.3rem 0.3rem 0 !important;
   }
+
   &.error .form-input-group input {
     box-shadow: 0 0 0 1px $red !important;
   }
@@ -13,9 +19,9 @@
   .error {
     width: 100%;
     min-height: 18px;
+    padding-top: 5px;
     color: $red;
     font-size: 12px;
     line-height: 14px;
-    padding-top: 5px;
   }
 }

@@ -167,7 +167,7 @@ export interface SignedTransaction {
   ethereumSignature?: TxEthSignature;
 }
 
-export interface Tx {
+export declare class Tx {
   hash: string;
   pq_id?: any;
   eth_block: number;
@@ -192,6 +192,7 @@ export interface Tx {
     type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
     feePayment?: boolean;
   };
+
   success: boolean;
   fail_reason?: any;
   commited: boolean;
@@ -216,6 +217,135 @@ export declare class Signer {
     signer: Signer;
     ethSignatureType: EthSignerType;
   }>;
+}
+
+export declare abstract class AbstractJSONRPCTransport {
+  abstract request(method: string, params: any): Promise<any>;
+
+  subscriptionsSupported(): boolean;
+
+  subscribe(subMethod: string, subParams: any, unsubMethod: string, cb: (data: any) => void): Promise<Subscription>;
+
+  abstract disconnect(): any;
+
+  abstract ws: {
+    isOpened: boolean;
+    open(): Promise<any>;
+  };
+}
+
+export declare class TokenSet {
+  private tokensBySymbol;
+
+  constructor(tokensBySymbol: Tokens);
+
+  private resolveTokenObject;
+
+  isTokenTransferAmountPackable(tokenLike: TokenLike, amount: string): boolean;
+
+  isTokenTransactionFeePackable(tokenLike: TokenLike, amount: string): boolean;
+
+  formatToken(tokenLike: TokenLike, amount: BigNumberish): string;
+
+  parseToken(tokenLike: TokenLike, amount: string): BigNumber;
+
+  resolveTokenDecimals(tokenLike: TokenLike): number;
+
+  resolveTokenId(tokenLike: TokenLike): number;
+
+  resolveTokenAddress(tokenLike: TokenLike): TokenAddress;
+
+  resolveTokenSymbol(tokenLike: TokenLike): TokenSymbol;
+}
+
+export interface AccountState {
+  address: Address;
+  id?: number;
+  depositing: {
+    balances: {
+      [token: string]: {
+        amount: BigNumberish;
+        expectedAcceptBlock: number;
+      };
+    };
+  };
+  committed: {
+    balances: {
+      [token: string]: BigNumberish;
+    };
+    nonce: number;
+    pubKeyHash: PubKeyHash;
+  };
+  verified: {
+    balances: {
+      [token: string]: BigNumberish;
+    };
+    nonce: number;
+    pubKeyHash: PubKeyHash;
+  };
+}
+
+export interface Fee {
+  feeType: "Withdraw" | "Transfer" | "TransferToNew" | "FastWithdraw" | ChangePubKeyFee;
+  gasTxAmount: BigNumber;
+  gasPriceWei: BigNumber;
+  gasFee: BigNumber;
+  zkpFee: BigNumber;
+  totalFee: BigNumber;
+}
+
+export declare class Provider {
+  transport: AbstractJSONRPCTransport;
+  contractAddress: ContractAddress;
+  tokenSet: TokenSet;
+  pollIntervalMilliSecs: number;
+
+  private constructor();
+
+  static newWebsocketProvider(address: string): Promise<Provider>;
+
+  static newHttpProvider(address?: string, pollIntervalMilliSecs?: number): Promise<Provider>;
+
+  submitTx(tx: any, signature?: TxEthSignature, fastProcessing?: boolean): Promise<string>;
+
+  submitTxsBatch(
+    transactions: {
+      tx: any;
+      signature?: TxEthSignature;
+    }[],
+  ): Promise<string[]>;
+
+  getContractAddress(): Promise<ContractAddress>;
+
+  getTokens(): Promise<Tokens>;
+
+  getState(address: Address): Promise<AccountState>;
+
+  getTxReceipt(txHash: string): Promise<TransactionReceipt>;
+
+  getPriorityOpStatus(serialId: number): Promise<PriorityOperationReceipt>;
+
+  getConfirmationsForEthOpAmount(): Promise<number>;
+
+  getEthTxForWithdrawal(withdrawal_hash: any): Promise<string>;
+
+  notifyPriorityOp(serialId: number, action: "COMMIT" | "VERIFY"): Promise<PriorityOperationReceipt>;
+
+  notifyTransaction(hash: string, action: "COMMIT" | "VERIFY"): Promise<TransactionReceipt>;
+
+  getTransactionFee(txType: "Withdraw" | "Transfer" | "FastWithdraw" | ChangePubKeyFee, address: Address, tokenLike: TokenLike): Promise<Fee>;
+
+  getTransactionsBatchFee(txTypes: ("Withdraw" | "Transfer" | "FastWithdraw")[], addresses: Address[], tokenLike: TokenLike): Promise<BigNumber>;
+
+  getTokenPrice(tokenLike: TokenLike): Promise<number>;
+
+  disconnect(): Promise<any>;
+}
+
+declare class ZKSyncTxError extends Error {
+  value: PriorityOperationReceipt | TransactionReceipt;
+
+  constructor(message: string, value: PriorityOperationReceipt | TransactionReceipt);
 }
 
 export declare class Wallet {
@@ -308,83 +438,11 @@ export declare class Transaction {
   private throwErrorIfFailedState;
 }
 
-declare class ZKSyncTxError extends Error {
-  value: PriorityOperationReceipt | TransactionReceipt;
-  constructor(message: string, value: PriorityOperationReceipt | TransactionReceipt);
-}
-
-export interface AccountState {
-  address: Address;
-  id?: number;
-  depositing: {
-    balances: {
-      [token: string]: {
-        amount: BigNumberish;
-        expectedAcceptBlock: number;
-      };
-    };
-  };
-  committed: {
-    balances: {
-      [token: string]: BigNumberish;
-    };
-    nonce: number;
-    pubKeyHash: PubKeyHash;
-  };
-  verified: {
-    balances: {
-      [token: string]: BigNumberish;
-    };
-    nonce: number;
-    pubKeyHash: PubKeyHash;
-  };
-}
-
-export interface Fee {
-  feeType: "Withdraw" | "Transfer" | "TransferToNew" | "FastWithdraw" | ChangePubKeyFee;
-  gasTxAmount: BigNumber;
-  gasPriceWei: BigNumber;
-  gasFee: BigNumber;
-  zkpFee: BigNumber;
-  totalFee: BigNumber;
-}
-
 export interface BatchFee {
   totalFee: BigNumber;
 }
 
 export declare function getDefaultProvider(network: "localhost" | "rinkeby" | "ropsten" | "mainnet", transport?: "WS" | "HTTP"): Promise<Provider>;
-
-export declare class Provider {
-  transport: AbstractJSONRPCTransport;
-  contractAddress: ContractAddress;
-  tokenSet: TokenSet;
-  pollIntervalMilliSecs: number;
-  private constructor();
-  static newWebsocketProvider(address: string): Promise<Provider>;
-  static newHttpProvider(address?: string, pollIntervalMilliSecs?: number): Promise<Provider>;
-  submitTx(tx: any, signature?: TxEthSignature, fastProcessing?: boolean): Promise<string>;
-  submitTxsBatch(
-    transactions: {
-      tx: any;
-      signature?: TxEthSignature;
-    }[],
-  ): Promise<string[]>;
-
-  getContractAddress(): Promise<ContractAddress>;
-  getTokens(): Promise<Tokens>;
-  getState(address: Address): Promise<AccountState>;
-  getTxReceipt(txHash: string): Promise<TransactionReceipt>;
-  getPriorityOpStatus(serialId: number): Promise<PriorityOperationReceipt>;
-  getConfirmationsForEthOpAmount(): Promise<number>;
-  getEthTxForWithdrawal(withdrawal_hash: any): Promise<string>;
-  notifyPriorityOp(serialId: number, action: "COMMIT" | "VERIFY"): Promise<PriorityOperationReceipt>;
-  notifyTransaction(hash: string, action: "COMMIT" | "VERIFY"): Promise<TransactionReceipt>;
-  getTransactionFee(txType: "Withdraw" | "Transfer" | "FastWithdraw" | ChangePubKeyFee, address: Address, tokenLike: TokenLike): Promise<Fee>;
-  getTransactionsBatchFee(txTypes: ("Withdraw" | "Transfer" | "FastWithdraw")[], addresses: Address[], tokenLike: TokenLike): Promise<BigNumber>;
-  getTokenPrice(tokenLike: TokenLike): Promise<number>;
-  disconnect(): Promise<any>;
-}
 
 export declare class ETHProxy {
   private ethersProvider;
@@ -393,31 +451,6 @@ export declare class ETHProxy {
   private mainContract;
   constructor(ethersProvider: ethers.providers.Provider, contractAddress: ContractAddress);
   resolveTokenId(token: TokenAddress): Promise<number>;
-}
-
-export declare class TokenSet {
-  private tokensBySymbol;
-  constructor(tokensBySymbol: Tokens);
-  private resolveTokenObject;
-  isTokenTransferAmountPackable(tokenLike: TokenLike, amount: string): boolean;
-  isTokenTransactionFeePackable(tokenLike: TokenLike, amount: string): boolean;
-  formatToken(tokenLike: TokenLike, amount: BigNumberish): string;
-  parseToken(tokenLike: TokenLike, amount: string): BigNumber;
-  resolveTokenDecimals(tokenLike: TokenLike): number;
-  resolveTokenId(tokenLike: TokenLike): number;
-  resolveTokenAddress(tokenLike: TokenLike): TokenAddress;
-  resolveTokenSymbol(tokenLike: TokenLike): TokenSymbol;
-}
-
-export declare abstract class AbstractJSONRPCTransport {
-  abstract request(method: string, params: any): Promise<any>;
-  subscriptionsSupported(): boolean;
-  subscribe(subMethod: string, subParams: any, unsubMethod: string, cb: (data: any) => void): Promise<Subscription>;
-  abstract disconnect(): any;
-  abstract ws: {
-    isOpened: boolean;
-    open(): Promise<any>;
-  };
 }
 
 declare class Subscription {
@@ -431,4 +464,13 @@ export interface walletData {
   syncWallet?: Wallet;
   accountState?: AccountState;
   zkSync?: object;
+}
+
+export interface depositsInterface {
+  [tokenSymbol: string]: Array<{
+    hash: string;
+    amount: string;
+    status: string;
+    confirmations: number;
+  }>;
 }

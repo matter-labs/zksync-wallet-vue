@@ -5,21 +5,21 @@ header {
   transition: background-color $transition1;
 
   & > .container {
-    height: 100%;
     display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 35px 1fr;
     grid-row-gap: 5px;
+    grid-template-rows: 35px 1fr;
+    grid-template-columns: 100%;
+    height: 100%;
     @media screen and (min-width: 1201px) {
       max-width: 1920px;
     }
   }
 
   .firstRow {
-    height: 100%;
-    width: 100%;
     display: flex;
     justify-content: space-between;
+    width: 100%;
+    height: 100%;
 
     a {
       text-decoration: none;
@@ -29,19 +29,21 @@ header {
       height: 35px !important;
 
       .projectLogo {
-        height: 100% !important;
         width: auto !important;
+        height: 100% !important;
       }
+
       .badge {
         margin-top: -30px;
-        font-weight: 400;
-        letter-spacing: 1px;
-        font-size: 12px !important;
-        text-transform: uppercase;
-        color: $lightViolet !important;
-        background: transparent !important;
         padding: 0;
+        color: $lightViolet !important;
+        font-weight: 400;
+        font-size: 12px !important;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        background: transparent !important;
       }
+
       @media (max-width: $mobile) {
         padding-top: 0 !important;
 
@@ -56,14 +58,14 @@ header {
     }
 
     .linksContainer {
-      height: 100%;
-      width: max-content;
       display: grid;
-      grid-auto-flow: column;
-      grid-template-rows: 100%;
       grid-auto-columns: max-content;
-      align-items: center;
+      grid-auto-flow: column;
       grid-gap: 25px;
+      grid-template-rows: 100%;
+      align-items: center;
+      width: max-content;
+      height: 100%;
       @media screen and (min-width: $mobile) and (max-width: 992px) {
         grid-gap: 15px;
 
@@ -78,27 +80,27 @@ header {
         transition: color $transition1;
 
         i {
-          font-size: 12px;
-          color: $gray;
           padding-left: 2px;
+          color: $gray;
+          font-size: 12px;
         }
       }
     }
 
     .userDropdown {
+      display: grid;
+      grid-gap: 15px;
+      grid-template-rows: 100%;
+      grid-template-columns: max-content 25px 16px;
+      align-items: center;
+      box-sizing: border-box;
       width: max-content;
       height: 35px;
-      display: grid;
-      grid-template-columns: max-content 25px 16px;
-      grid-template-rows: 100%;
-      grid-gap: 15px;
-      align-items: center;
-      transition: background-color $transition1;
-      box-sizing: border-box;
-      padding-left: 10px;
       padding-right: 13px;
+      padding-left: 10px;
       border-radius: 15px;
       cursor: pointer;
+      transition: background-color $transition1;
 
       &:hover {
         background-color: transparentize($color: $gray, $amount: 0.8);
@@ -111,8 +113,8 @@ header {
       }
 
       .userImgContainer {
-        height: 25px;
         width: 25px;
+        height: 25px;
 
         img {
           width: 100%;
@@ -121,8 +123,8 @@ header {
       }
 
       .dropdownArrow {
-        font-size: 20px;
         color: darken($color: $gray, $amount: 15);
+        font-size: 20px;
         text-align: right;
       }
 
@@ -138,12 +140,12 @@ header {
   }
 
   .secondRow {
-    height: auto;
     display: grid;
-    grid-template-columns: repeat(3, max-content);
-    grid-template-rows: 100%;
     grid-gap: 50px;
+    grid-template-rows: 100%;
+    grid-template-columns: repeat(3, max-content);
     justify-content: center;
+    height: auto;
     @media (max-width: $mobile) {
       grid-gap: 20px;
 
@@ -153,14 +155,14 @@ header {
     }
 
     a {
-      display: block;
       position: relative;
-      text-align: center;
+      display: block;
+      font-weight: 400;
       font-size: 18px;
       line-height: 49px;
-      font-weight: 400;
-      transition: $transition1;
+      text-align: center;
       text-decoration: none !important;
+      transition: $transition1;
 
       &.nuxt-link-exact-active, &:hover {
         &::after {
@@ -170,12 +172,12 @@ header {
 
       &::after {
         position: absolute;
-        content: '';
+        bottom: -2px;
+        left: 0;
         width: 100%;
         height: 4px;
-        left: 0;
-        bottom: -2px;
-        background: transparent;
+        background: $tempTransparent;
+        content: "";
       }
     }
   }

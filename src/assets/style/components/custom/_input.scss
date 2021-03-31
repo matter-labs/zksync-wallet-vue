@@ -1,11 +1,77 @@
-@import "custom";
-
 .amountInputContainer {
   width: 100%;
   height: max-content;
 
+  .inputContainer {
+    display: grid;
+    grid-template-rows: 100%;
+    grid-template-columns: max-content 1fr 40px;
+    align-items: center;
+    height: 46px;
+    padding: 15px 5px;
+    background: $white;
+    border-radius: 5px;
+    box-shadow: $inputContainerShadow;
+    transition: background-color 0.2s ease;
+
+    .pre {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: max-content;
+      min-width: 75px;
+      height: 100%;
+      color: $violet;
+      font-weight: 600;
+      font-size: 18px;
+      font-family: $openSans;
+      border-right: 2px solid $purple;
+
+      img {
+        width: auto;
+        height: 100%;
+        margin-right: 6px;
+      }
+    }
+
+    input {
+      display: block;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      padding: 0 15px;
+      color: $purpleDark;
+      font-weight: 600;
+      font-size: 14px;
+      font-family: $openSans;
+      text-align: left;
+      background-color: $tempTransparent;
+      border: none;
+      outline: none !important;
+      transition: color 0.2s ease;
+
+      &::placeholder {
+        color: $gray;
+        font-weight: 600;
+      }
+    }
+
+    .append {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      color: $violet;
+      font-size: 14px;
+      border-left: 2px solid $purple;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+  }
+
   &.status- {
-    &disabled .inputContainer, &loading .inputContainer {
+    &disabled .inputContainer,
+    &loading .inputContainer {
       background-color: $lighterGray !important;
 
       .append {
@@ -21,8 +87,8 @@
       }
 
       .append {
-        border-color: $red;
         color: $red;
+        border-color: $red;
       }
     }
 
@@ -32,87 +98,22 @@
       }
 
       .append {
-        border-color: $green;
         color: $green;
+        border-color: $green;
       }
     }
   }
 
-  .inputContainer {
-    height: 46px;
-    display: grid;
-    grid-template-columns: max-content 1fr 40px;
-    grid-template-rows: 100%;
-    background: $white;
-    align-items: center;
-    padding: 15px 5px;
-    border-radius: 5px;
-    transition: background-color .2s ease;
-    box-shadow: $inputContainerShadow;
 
-    .pre {
-      width: max-content;
-      min-width: 75px;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      color: $violet;
-      font-weight: 600;
-      font-family: $openSans;
-      border-right: 2px solid $purple;
-
-      img {
-        height: 100%;
-        width: auto;
-        margin-right: 6px;
-      }
-    }
-
-    input {
-      display: block;
-      width: 100%;
-      height: 100%;
-      border: none;
-      background-color: transparent;
-      outline: none !important;
-      font-size: 14px;
-      color: $purpleDark;
-      font-weight: 600;
-      font-family: $openSans;
-      text-align: left;
-      padding: 0 15px;
-      box-sizing: border-box;
-      transition: color .2s ease;
-
-      &::placeholder {
-        color: $gray;
-        font-weight: 600;
-      }
-    }
-
-    .append {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 14px;
-      color: $violet;
-      border-left: 2px solid $purple;
-      transition: color .2s ease, border-color .2s ease;
-    }
-  }
 
   .hints {
+    display: grid;
+    grid-auto-rows: max-content;
+    grid-auto-flow: row;
+    grid-gap: 5px;
+    grid-template-columns: 100%;
     width: 100%;
     height: max-content;
-    display: grid;
-    grid-auto-flow: row;
-    grid-template-columns: 100%;
-    grid-auto-rows: max-content;
-    grid-gap: 5px;
     margin-top: 10px;
 
     .hintGroup {
@@ -122,11 +123,11 @@
     .hint {
       display: flex;
       align-items: center;
-      font-family: $ibm;
       font-weight: 300;
       font-size: 12px;
+      font-family: $ibm;
       line-height: 15px;
-      transition: color .2s ease;
+      transition: color 0.2s ease;
 
       &.red {
         color: $red;
@@ -140,27 +141,28 @@
         color: $gray;
       }
 
-      span, i {
+      span,
+      i {
         display: block;
       }
 
       i {
-        font-size: 18px;
         margin-right: 8px;
+        font-size: 18px;
       }
 
       .separator {
-        height: 17px;
         width: 1.5px;
-        background-color: $gray;
+        height: 17px;
         margin: 0 15px;
+        background-color: $gray;
       }
     }
   }
 }
 
 .fa-spinner-third {
-  animation: spin .5s linear 0s infinite;
+  animation: spin 0.5s linear 0s infinite;
 }
 
 @keyframes spin {

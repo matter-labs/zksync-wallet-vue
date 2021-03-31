@@ -1,7 +1,6 @@
 <template>
   <div class="defaultLayout">
     <logging-in-loader />
-    <cookie-component />
     <div v-if="!loggingIn && loggedIn">
       <header-component ref="header" />
       <div class="routerContainer">
@@ -14,17 +13,16 @@
   </div>
 </template>
 
-<script>
-import cookieComponent from "@/blocks/Cookie.vue";
+<script type="ts">
 import footerComponent from "@/blocks/Footer.vue";
 import headerComponent from "@/blocks/Header.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   components: {
     headerComponent,
     footerComponent,
-    cookieComponent,
     loggingInLoader,
   },
   computed: {
@@ -61,10 +59,5 @@ export default {
       this.$inkline.config.variant = localStorage.getItem("colorTheme");
     }
   },
-  methods: {
-    log() {
-      console.log(1);
-    },
-  },
-};
+});
 </script>

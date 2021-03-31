@@ -1,12 +1,19 @@
 require("dotenv").config();
 
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
-const pageTitle = `zkSync Wallet | ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const srcDir = "src";
+const pageTitle = `Modern dApp with zkSync powers`;
+const pageImg = `https://zksync.io/social.jpg`;
+
+const pageTitleTemplate = `zkWallet on ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const pageDescription = `A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum`;
+const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
+crypto payments, zkWallet, cryptowallet`;
 
 export default {
   ssr: false,
   target: "static",
-  srcDir: "src/",
+  srcDir: `${srcDir}/`,
   vue: {
     config: {
       productionTip: isProduction,
@@ -22,18 +29,88 @@ export default {
    */
   head: {
     name: pageTitle,
-    titleTemplate: pageTitle,
+    titleTemplate: `%s | ${pageTitleTemplate}`,
+    htmlAttrs: {
+      lang: "en",
+      amp: true,
+    },
     meta: [
+      {
+        hid: "keywords",
+        name: "keywords",
+        content: pageKeywords,
+      },
+      {
+        hid: "description",
+        name: "description",
+        content: pageDescription,
+      },
+      {
+        hid: "author",
+        name: "author",
+        content: "https://matter-labs.io",
+      },
+      {
+        hid: "twitter:title",
+        name: "twitter:title",
+        content: pageImg,
+      },
+      {
+        hid: "twitter:description",
+        name: "twitter:description",
+        content: pageDescription,
+      },
+      {
+        hid: "twitter:image",
+        name: "twitter:image",
+        content: pageImg,
+      },
+      {
+        hid: "twitter:site",
+        name: "twitter:site",
+        content: "@zksync",
+      },
+      {
+        hid: "twitter:creator",
+        name: "twitter:creator",
+        content: "@the_matter_labs",
+      },
+      {
+        hid: "twitter:image:alt",
+        name: "twitter:image:alt",
+        content: pageImg,
+      },
+      {
+        hid: "og:title",
+        property: "og:title",
+        content: pageTitleTemplate,
+      },
+      {
+        hid: "og:description",
+        property: "og:description",
+        content: pageDescription,
+      },
+      {
+        hid: "og:image",
+        property: "og:image",
+        content: pageImg,
+      },
+      {
+        hid: "og:image:secure_url",
+        property: "og:image:secure_url",
+        content: pageImg,
+      },
+      {
+        hid: "og:image:alt",
+        property: "og:image:alt",
+        content: pageTitleTemplate,
+      },
+
       { "http-equiv": "pragma", content: "no-cache" },
       { "http-equiv": "cache-control", content: "no-cache , no-store, must-revalidate" },
       { "http-equiv": "expires", content: "0" },
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      {
-        hid: "description",
-        name: "description",
-        content: process.env.npm_package_description || "",
-      },
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
@@ -69,7 +146,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxt/typescript-build"],
+  buildModules: ["@nuxt/typescript-build", ["@nuxtjs/dotenv", { path: __dirname }]],
 
   /*
    ** Nuxt.js modules
@@ -110,23 +187,18 @@ export default {
     position: "bottom-right",
     duration: 4000,
     iconPack: "fontawesome",
-    action: {
-      text: "OK",
-      onClick: (e, toastObject) => {
-        toastObject.goAway(100);
-      },
-    },
   },
   i18n: {
     vueI18n: {
       fallbackLocale: "en",
       messages: {
-        en: require("./src/locales/en/translations.json"),
+        en: require(`./${srcDir}/locales/en/translations.json`),
       },
     },
   },
   inkline: {
     config: {
+      variant: "dark",
       autodetectVariant: true,
     },
   },
@@ -134,13 +206,13 @@ export default {
     scss: "@/assets/style/_variables.scss",
   },
   sentry: {
-    dsn: "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800",
+    dsn: process.env.SENTRY_DSN,
     config: {
       tracesSampleRate: 1.0,
     },
   },
   "google-gtag": {
-    id: "UA-178057628-1",
+    id: process.env.GTAG_ID,
     config: {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload

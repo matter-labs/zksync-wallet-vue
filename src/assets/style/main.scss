@@ -1,37 +1,37 @@
 // Core
-@import "./variables.scss";
-@import "./default.scss";
-@import "./transitions.scss";
-@import "./fonts.scss";
+@import "./variables";
+@import "./default";
+@import "./transitions";
+@import "./fonts";
 
 //Layouts
-@import "./layouts/default.scss";
-@import "./layouts/index.scss";
+@import "./layouts/default";
+@import "./layouts/index";
 
 //Blocks
-@import "./blocks/header.scss";
-@import "./blocks/footer.scss";
-@import "./blocks/logo.scss";
-@import "./blocks/investors.scss";
-@import "./blocks/onboard.scss";
-@import "./blocks/cookie.scss";
-@import "./blocks/loggingInLoader.scss";
-@import "./blocks/chooseToken.scss";
+@import "./blocks/header";
+@import "./blocks/footer";
+@import "./blocks/logo";
+@import "./blocks/investors";
+@import "./blocks/onboard";
+@import "./blocks/mint";
+@import "./blocks/loggingInLoader";
+@import "./blocks/chooseToken";
 
 //Components
-@import "./components/loader.scss";
-@import "./components/userImg.scss";
-@import "./components/walletAddress.scss";
-@import "./components/checkmark.scss";
-@import "./components/toaster.scss";
-@import "./components/loadingBlock.scss";
-@import "./components/amountInput.scss";
-@import "./components/successBlock.scss";
+@import "./components/loader";
+@import "./components/userImg";
+@import "./components/walletAddress";
+@import "./components/checkmark";
+@import "./components/toaster";
+@import "./components/loadingBlock";
+@import "./components/amountInput";
+@import "./components/successBlock";
 
 //Pages
-@import "./pages/index.scss";
-@import "./pages/contacts.scss";
-@import "./pages/transactions.scss";
-@import "./pages/transaction.scss";
-@import "./pages/account.scss";
-@import "./pages/tokenAccount.scss";
+@import "./pages/index";
+@import "./pages/contacts";
+@import "./pages/transactions";
+@import "./pages/transaction";
+@import "./pages/account";
+@import "./pages/tokenAccount";

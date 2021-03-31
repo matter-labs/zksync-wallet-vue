@@ -597,7 +597,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return false;
     }
   },
-  async clearDataStorage({ commit }): Promise<void> {
+  clearDataStorage({ commit }): void {
     commit("clearDataStorage");
   },
   async forceRefreshData({ dispatch }): Promise<void> {
@@ -613,7 +613,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       console.log("forceRefreshData | getTransactionsHistory error", err);
     });
   },
-  async logout({ commit, getters }): Promise<void> {
+  logout({ commit, getters }): void {
     const onboard = getters.getOnboard;
     onboard.walletReset();
     walletData.set({ syncProvider: undefined, syncWallet: undefined, accountState: undefined });

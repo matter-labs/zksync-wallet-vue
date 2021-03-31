@@ -20,10 +20,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-
 import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
+import Vue from "vue";
 
 export default Vue.extend({
   props: {
@@ -59,7 +58,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    inputtedAmountBigNumber: function (): string | BigNumber {
+    inputtedAmountBigNumber(): string | BigNumber {
       if (this.inputtedAmount) {
         try {
           return utils.parseToken(this.token.symbol, this.inputtedAmount);
@@ -98,8 +97,15 @@ export default Vue.extend({
       }
     },
   },
+  mounted() {
+    // @ts-ignore: Unreachable code error
+    if (this.autofocus) {
+      // @ts-ignore: Unreachable code error
+      this.$refs.amountInput?.$el?.querySelector("input")?.focus();
+    }
+  },
   methods: {
-    emitValue: function (val: string): void {
+    emitValue(val: string): void {
       const trimmed = val.trim();
       this.inputtedAmount = trimmed;
       if (val !== trimmed) {
@@ -112,7 +118,7 @@ export default Vue.extend({
         this.$emit("input", "");
       }
     },
-    validateAmount: function (val: string): void {
+    validateAmount(val: string): void {
       if (!val || !parseFloat(val as string)) {
         this.error = "Wrong amount inputted";
         return;
@@ -152,20 +158,13 @@ export default Vue.extend({
       }
       this.error = "";
     },
-    chooseMaxAmount: function () {
+    chooseMaxAmount() {
       try {
         this.inputtedAmount = utils.handleFormatToken(this.token.symbol, this.maxAmount);
       } catch (error) {
         console.log("Error choose max amount", error);
       }
     },
-  },
-  mounted() {
-    // @ts-ignore: Unreachable code error
-    if (this.autofocus) {
-      // @ts-ignore: Unreachable code error
-      this.$refs.amountInput?.$el?.querySelector("input")?.focus();
-    }
   },
 });
 </script>

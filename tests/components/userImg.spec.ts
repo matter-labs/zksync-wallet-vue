@@ -1,10 +1,9 @@
-import { shallowMount, Wrapper } from "@vue/test-utils";
-
 import userImg from "@/components/userImg.vue";
+import { shallowMount, Wrapper } from "@vue/test-utils";
+import { Vue } from "vue-property-decorator";
 
 let wrapper: Wrapper<Vue>;
-
-describe("userImg", () => {
+describe("userImg", (): void => {
   test("With no address", () => {
     wrapper = shallowMount(userImg, {
       propsData: { wallet: "" },

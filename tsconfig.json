@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2018",
+    "jsx": "preserve",
     "module": "ESNext",
     "moduleResolution": "Node",
     "lib": [
@@ -29,17 +30,20 @@
       ]
     },
     "types": [
+      "@types/jest",
+      "@types/nuxt",
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxt/vue-app",
-      "@types/jest",
-      "lodash"
+      "lodash",
+      "_types/main"
     ]
   },
   "exclude": [
     "node_modules",
     ".nuxt",
+    ".yarn",
     "dist",
     "public",
     ".github",

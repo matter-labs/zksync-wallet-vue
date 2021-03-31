@@ -2,10 +2,11 @@
   .inputLabel {
     padding-bottom: 5px;
   }
+
   .errorText {
     color: $red;
   }
-  
+
   @media screen and (max-width: $mobile) {
     .feeAmount {
       display: block;

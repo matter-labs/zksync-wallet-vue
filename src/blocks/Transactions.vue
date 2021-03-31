@@ -18,9 +18,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { Address, Tx } from "@/plugins/types";
 import SingleTransaction from "@/components/SingleTransaction.vue";
+import { Address, Tx } from "@/plugins/types";
+import Vue from "vue";
 
 let updateListInterval = undefined as any;
 export default Vue.extend({
@@ -50,10 +50,10 @@ export default Vue.extend({
     };
   },
   computed: {
-    walletAddressFull: function (): Address {
+    walletAddressFull(): Address {
       return this.$store.getters["account/address"];
     },
-    transactionsList: function (): Array<Tx> {
+    transactionsList(): Array<Tx> {
       const list = this.$store.getters["wallet/getTransactionsHistory"];
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
@@ -90,9 +90,16 @@ export default Vue.extend({
       return filteredList.map((e: Tx) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
     },
   },
+  mounted() {
+    this.autoUpdateList();
+    this.getTransactions();
+  },
+  beforeDestroy() {
+    clearInterval(updateListInterval);
+  },
   methods: {
-    loadTransactions: async function (offset: number = 0): Promise<Array<Tx>> {
-      const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset: offset });
+    async loadTransactions(offset: number = 0): Promise<Array<Tx>> {
+      const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
       let filteredList = list
@@ -127,7 +134,7 @@ export default Vue.extend({
       }
       return filteredList.map((e: Tx) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
     },
-    getTransactions: async function (): Promise<void> {
+    async getTransactions(): Promise<void> {
       this.loading = true;
       try {
         await this.loadTransactions();
@@ -136,41 +143,34 @@ export default Vue.extend({
       }
       this.loading = false;
     },
-    getTransactionStatus: function (transaction: Tx): string {
+    getTransactionStatus(transaction: Tx): string {
       if (!transaction.success) {
         return transaction.fail_reason ? transaction.fail_reason : "Rejected";
       }
       if (transaction.verified) {
         return "Verified";
       } else if (transaction.commited) {
-        return "Commited";
+        return "Committed";
       } else {
         return "In progress";
       }
     },
-    loadMore: async function (): Promise<void> {
+    async loadMore(): Promise<void> {
       await this.autoUpdateList();
       this.loadingMore = true;
-      const list = await this.loadTransactions(this.totalLoadedItem);
+      await this.loadTransactions(this.totalLoadedItem);
       /*
       @todo: fix it up
       this.transactionsList.push(...list);
       */
       this.loadingMore = false;
     },
-    autoUpdateList: async function (): Promise<void> {
+    autoUpdateList(): void {
       clearInterval(updateListInterval);
       updateListInterval = setInterval(() => {
         this.loadTransactions();
       }, 120000);
     },
-  },
-  mounted() {
-    this.autoUpdateList();
-    this.getTransactions();
-  },
-  beforeDestroy() {
-    clearInterval(updateListInterval);
   },
 });
 </script>

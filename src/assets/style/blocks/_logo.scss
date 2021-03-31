@@ -1,3 +1,4 @@
+@import "../variables";
 .headerWrapper {
   justify-content: center;
 
@@ -10,17 +11,17 @@
   }
 
   .badge {
-    cursor: default;
     margin-top: -40px;
+    padding: 0 !important;
+    color: $lightViolet !important;
+    font-weight: 400;
+    font-size: 12px !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: transparent !important;
     border-radius: 27px;
     transform: translateY(3.5px);
-    font-weight: 400;
-    letter-spacing: 1px;
-    font-size: 12px !important;
-    text-transform: uppercase;
-    color: $lightViolet !important;
-    background: transparent !important;
-    padding: 0 !important;
+    cursor: default;
   }
 
   @media (max-width: $mobile) {

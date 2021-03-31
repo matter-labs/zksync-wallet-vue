@@ -9,6 +9,8 @@ import { RootState } from "~/store";
  * @return {{tokenPrices: {}, restrictedTokens: [string, string, string], allTokens: {}}}
  */
 export const state = () => ({
+  strict: process.env.NODE_ENV !== "production",
+
   /**
    * Restricted tokens, fee can't be charged in it
    */

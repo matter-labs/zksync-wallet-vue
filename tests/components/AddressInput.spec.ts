@@ -1,9 +1,11 @@
-import { shallowMount, Wrapper } from "@vue/test-utils";
+import { Vue } from "vue-property-decorator";
 
 import AddressInput from "@/components/AddressInput.vue";
+import { shallowMount, Wrapper, de } from "@vue/test-utils";
+import { BaseWrapper } from "@vue/test-utils/types/index";
 
 // Component config
-let wrapper: Wrapper<Vue>;
+let wrapper: BaseWrapper<Vue>;
 
 describe("AddressInput", () => {
   describe("Initializing", () => {
@@ -15,9 +17,7 @@ describe("AddressInput", () => {
 
     test("has no value", () => {
       expect(wrapper.vm.$data.inputtedWallet).toBe("");
-      // @ts-ignore: Unreachable code error
       expect(wrapper.vm.isValid).toBe(false);
-      // @ts-ignore: Unreachable code error
       expect(wrapper.vm.error).toBe("");
       expect(wrapper.find(".walletContainer.error").exists()).toBe(false);
     });
@@ -28,9 +28,7 @@ describe("AddressInput", () => {
         propsData: { value: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0" },
       });
       expect(wrapper.vm.$data.inputtedWallet).toBe("0x2D9835a1C1662559975B00AEA00e326D1F9f13d0");
-      // @ts-ignore: Unreachable code error
       expect(wrapper.vm.isValid).toBe(true);
-      // @ts-ignore: Unreachable code error
       expect(wrapper.vm.error).toBe("");
       expect(wrapper.find(".walletContainer.error").exists()).toBe(false);
     });
@@ -39,9 +37,7 @@ describe("AddressInput", () => {
         propsData: { value: "0x312acE2a5Ff974416666B9866F48a8FA9513A517" },
       });
       expect(wrapper.vm.$data.inputtedWallet).toBe("0x312acE2a5Ff974416666B9866F48a8FA9513A517");
-      // @ts-ignore: Unreachable code error
       expect(wrapper.vm.isValid).toBe(false);
-      // @ts-ignore: Unreachable code error
       expect(wrapper.vm.error).toBe("Invalid address");
       expect(wrapper.find(".walletContainer.error").exists()).toBe(true);
     });

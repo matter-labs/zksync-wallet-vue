@@ -24,7 +24,6 @@
         <span class="h2 _font-weight-normal">Who is behind zkSync</span>
       </i-row>
     </i-container>
-    <investors />
 
     <i-container class="_padding-y-4">
       <i-row center class="_padding-bottom-2">
@@ -51,14 +50,13 @@
   </div>
 </template>
 
-<script>
-import investors from "@/blocks/Investors.vue";
+<script type="ts">
 import logo from "@/blocks/Logo.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   components: {
     logo,
-    investors,
   },
   layout: "index",
   data() {
@@ -68,7 +66,7 @@ export default {
     };
   },
   methods: {
-    scrollDown: function () {
+    scrollDown() {
       this.$scrollTo(this.$refs.scrollToBlock.$el, 500, {
         x: false,
         y: true,
@@ -76,7 +74,7 @@ export default {
         offset: -10,
       });
     },
-    customWallet: async function () {
+    async customWallet() {
       const onboard = this.$store.getters["wallet/getOnboard"];
       onboard.config({
         darkMode: this.$inkline.config.variant !== "light",
@@ -90,5 +88,5 @@ export default {
       }
     },
   },
-};
+});
 </script>

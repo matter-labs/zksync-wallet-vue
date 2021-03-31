@@ -1,3 +1,5 @@
+@import "../variables";
+
 .indexLayout {
   .routerContainer {
     min-height: calc(100vh - 82px);
@@ -34,13 +36,13 @@
     }
 
     .tile {
-      margin: 20px auto;
       position: relative;
       width: 130px;
       height: 130px;
+      margin: 20px auto;
+      padding: 20px;
       background-color: $white;
       border-radius: 27px;
-      padding: 20px;
       transition: $transition1;
 
       img {
@@ -56,19 +58,19 @@
         right: -24px;
         width: 48px;
         height: 48px;
-        opacity: 0;
-        border-radius: 50%;
-        background-color: $white;
-        line-height: 48px;
-        font-size: 20px;
         color: $violet;
+        font-size: 20px;
+        line-height: 48px;
+        background-color: $white;
+        border-radius: 50%;
+        opacity: 0;
         transition: $transition2;
       }
     }
 
     .tileName {
-      font-size: 18px;
       padding-top: 7px;
+      font-size: 18px;
     }
   }
 
@@ -91,15 +93,15 @@
     }
 
     .h5 {
-      font-size: 22px;
       margin: 0;
+      font-size: 22px;
       text-align: center;
     }
 
     .description {
+      margin-bottom: 15px;
       font-size: 16px;
       line-height: 20px;
-      margin-bottom: 15px;
     }
 
     .contactInfo {
@@ -124,16 +126,16 @@
           width: 48px;
           height: 48px;
           overflow: hidden;
-          border-radius: 50%;
           background-color: $violet;
+          border-radius: 50%;
 
           i {
             display: block;
-            text-align: center;
             width: 100%;
             height: 100%;
-            line-height: 48px;
             font-size: 20px;
+            line-height: 48px;
+            text-align: center;
           }
         }
       }
@@ -141,13 +143,13 @@
   }
 }
 
-.inkline.-dark
-{
-  footer > .container .badge{
-    background: #e9ecef;
+.inkline.-dark {
+  footer > .container .badge {
     color: #2f3264;
+    background: #e9ecef;
   }
 }
+
 body.inkline {
   &.-light {
     .indexPage, .indexPage footer {

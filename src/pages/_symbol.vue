@@ -36,8 +36,8 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import transactions from "@/blocks/Transactions.vue";
+import Vue from "vue";
 
 export default Vue.extend({
   components: {
@@ -55,7 +55,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    symbol: function () {
+    symbol() {
       return this.$route.params.symbol.toUpperCase();
     },
   },
@@ -63,13 +63,13 @@ export default Vue.extend({
     this.getData();
   },
   methods: {
-    getData: async function () {
+    async getData() {
       this.loading = true;
       const balances = await this.$store.dispatch("wallet/getzkBalances");
       let found = false;
-      for (let a = 0; a < balances.length; a++) {
-        if (balances[a].symbol === this.symbol) {
-          this.token = balances[a];
+      for (const item of balances) {
+        if (item.symbol === this.symbol) {
+          this.token = item;
           found = true;
           this.loading = false;
           break;

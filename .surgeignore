@@ -1,5 +1,0 @@
-.git
-*.sh
-.*
-*.*~
-!node_modules

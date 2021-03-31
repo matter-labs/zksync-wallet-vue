@@ -6,50 +6,55 @@
 
   .indexFullScreen {
     position: relative;
-    height: 100vh;
     display: flex;
-    align-items: center;
     flex-direction: column;
+    align-items: center;
     justify-content: center;
+    height: 100vh;
 
     .scrollDown {
       position: absolute;
+      right: 0;
       bottom: 20px;
       left: 0;
-      right: 0;
-      margin: 0 auto;
       display: flex;
+      align-items: center;
       width: max-content;
       height: max-content;
-      align-items: center;
-      color: $gray;
-      border: 1px solid transparent;
-      border-radius: 15px;
+      margin: 0 auto;
       padding: 8px 15px;
-      transition: $transition1;
+      color: $gray;
+      border: 1px solid $tempTransparent;
+      border-radius: 15px;
       cursor: pointer;
+      transition: $transition1;
+
       &:hover {
         border-color: transparentize($color: $gray, $amount: 0.5);
       }
+
       i {
         font-size: 16px;
         //color: lighten($color: $gray, $amount: 20);
       }
+
       span {
+        padding-left: 10px;
         font-size: 10px;
         text-align: left;
-        padding-left: 10px;
         text-transform: uppercase;
       }
     }
   }
+
   .aboutZkSync {
     max-width: 500px;
     font-size: 20px;
   }
+
   .featuresContainer {
-    margin: 0 auto;
     max-width: 950px;
+    margin: 0 auto;
 
     .featureItem {
       img {
@@ -62,10 +67,11 @@
         font-weight: 500;
         font-size: 22px;
       }
+
       .featureText {
-        font-size: 16px;
-        font-weight: 400;
         margin: 12px 0 0;
+        font-weight: 400;
+        font-size: 16px;
       }
     }
   }
@@ -88,12 +94,13 @@
         .featureHeadline {
           font-size: 20px;
         }
+
         .featureText {
-          font-size: 14px;
-          margin-top: 8px;
           max-width: 300px;
-          margin-left: auto;
+          margin-top: 8px;
           margin-right: auto;
+          margin-left: auto;
+          font-size: 14px;
         }
       }
     }

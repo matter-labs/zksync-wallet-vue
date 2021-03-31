@@ -1,13 +1,21 @@
 module.exports = {
+  parserOptions: {
+    parser: "@typescript-eslint/parser",
+    ecmaVersion: 2018,
+    sourceType: "module",
+  },
   root: true,
+  plugins: ["@typescript-eslint"],
   extends: [
-    "plugin:vue/recommended",
     "@nuxtjs/eslint-config-typescript",
+    "plugin:vue/recommended",
+    "plugin:vue/base",
+    "prettier",
+    "prettier/vue",
     "plugin:prettier-vue/recommended",
     // Do not add `'prettier/vue'` if you don't want to use prettier for `<template>` blocks
     "prettier/vue",
   ],
-
   settings: {
     "prettier-vue": {
       // Settings for how to process Vue SFC Blocks
@@ -19,7 +27,7 @@ module.exports = {
          *
          * @default true
          */
-        template: false,
+        template: true,
 
         /**
          * Use prettier to process `<script>` blocks or not
@@ -69,6 +77,8 @@ module.exports = {
     },
   },
   rules: {
+    "no-console": "off",
+    "no-prototype-builtins": "off",
     "prettier-vue/prettier": [
       "error",
       {
@@ -80,5 +90,8 @@ module.exports = {
         tabWidth: 2,
       },
     ],
+    "no-unused-vars": "off",
+    camelcase: "off",
+    "@typescript-eslint/no-unused-vars": ["off"],
   },
 };

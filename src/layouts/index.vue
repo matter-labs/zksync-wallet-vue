@@ -6,20 +6,17 @@
         <nuxt />
       </transition>
     </div>
-    <cookie-component />
     <footer-component />
   </div>
 </template>
 
 <script>
-import cookieComponent from "@/blocks/Cookie.vue";
 import footerComponent from "@/blocks/Footer.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 import { GIT_REVISION_SHORT } from "@/plugins/build";
 
 export default {
   components: {
-    cookieComponent,
     loggingInLoader,
     footerComponent,
   },
@@ -39,7 +36,7 @@ export default {
         }
         if (val.path !== oldVal.path) {
           this.$nextTick(() => {
-            let lastScroll = this.$store.getters["scroll/getLastScroll"];
+            const lastScroll = this.$store.getters["scroll/getLastScroll"];
             document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
           });
         }

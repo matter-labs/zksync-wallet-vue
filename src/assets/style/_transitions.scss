@@ -1,20 +1,24 @@
 .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s ease;
+  transition: opacity .5s ease;
 }
+
 .fade-enter, .fade-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
+
 .fadeFast-enter-active, .fadeFast-leave-active {
-    transition: .2s ease;
+  transition: .2s ease;
 }
+
 .fadeFast-enter, .fadeFast-leave-to {
-    opacity: 0;
+  opacity: 0;
 }
 
 
 .slide-vertical-enter-active, .slide-vertical-leave-active {
-    transition: transform .5s ease !important;
+  transition: transform .5s ease !important;
 }
+
 .slide-vertical-enter, .slide-vertical-leave-to {
-    transform: translateY(250px);
+  transform: translateY(250px);
 }

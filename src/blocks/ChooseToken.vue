@@ -1,7 +1,7 @@
 <template>
   <div class="chooseTokenBlock">
-    <div v-if="loading===true" class="centerBlock">
-      <loader/>
+    <div v-if="loading === true" class="centerBlock">
+      <loader />
     </div>
     <template v-else>
       <i-input ref="tokenSymbolInput" v-model="search" :placeholder="`Filter balances in ${tokensType}`" maxlength="10">
@@ -15,26 +15,29 @@
           </div>
         </div>
         <div v-if="search && displayedList.length === 0" class="centerBlock">
-          <span>Your search <b>"{{ search }}"</b> did not match any tokens</span>
+          <span
+            >Your search <b>"{{ search }}"</b> did not match any tokens</span
+          >
         </div>
         <div v-else-if="displayedList.length === 0" class="centerBlock">
           <span>No balances yet. Please make a deposit or request money from someone!</span>
         </div>
       </div>
-      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$store.dispatch('openModal', 'NoTokenFound')">
-        Can't find a token?
-      </i-button>
-      <no-token-found/>
+      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$store.dispatch('openModal', 'NoTokenFound')"> Can't find a token? </i-button>
+      <no-token-found />
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import { Balance } from '@/plugins/types'
-import NoTokenFound from '@/blocks/modals/NoTokenFound.vue'
+import NoTokenFound from "@/blocks/modals/NoTokenFound.vue";
+import { Balance } from "@/plugins/types";
+import Vue from "vue";
 
 export default Vue.extend({
+  components: {
+    NoTokenFound,
+  },
   props: {
     onlyAllowed: {
       type: Boolean,
@@ -43,56 +46,53 @@ export default Vue.extend({
     },
     tokensType: {
       type: String,
-      default: 'L2',
+      default: "L2",
       required: false,
     },
   },
-  data () {
+  data() {
     return {
-      search: '',
+      search: "",
       loading: false,
-    }
-  },
-  components: {
-    NoTokenFound,
+    };
   },
   computed: {
-    balances: function (): Array<Balance> {
-      if (this.tokensType === 'L2') {
-        return this.$store.getters['wallet/getzkBalances']
+    balances(): Array<Balance> {
+      if (this.tokensType === "L2") {
+        return this.$store.getters["wallet/getzkBalances"];
       } else {
-        return this.$store.getters['wallet/getInitialBalances']
+        return this.$store.getters["wallet/getInitialBalances"];
       }
     },
-    displayedList: function (): Array<Balance> {
-      let list: Array<Balance>
+    displayedList(): Array<Balance> {
+      let list: Array<Balance>;
       if (!this.search.trim()) {
-        list = this.balances
+        list = this.balances;
       } else {
-        list = this.balances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()))
+        list = this.balances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
       }
       if (this.onlyAllowed) {
-        list = list.filter(e => !e.restricted)
+        list = list.filter((e) => !e.restricted);
       }
-      return list
+      return list;
     },
+  },
+  mounted() {
+    this.getTokenList();
   },
   methods: {
-    chooseToken: function (token: Balance): void {
-      this.$emit('chosen', token)
+    chooseToken(token: Balance): void {
+      this.$emit("chosen", token);
     },
-    getTokenList: async function (): Promise<void> {
-      this.loading = true
-      if (this.tokensType === 'L2') {
-        await this.$store.dispatch('wallet/getzkBalances')
+    async getTokenList(): Promise<void> {
+      this.loading = true;
+      if (this.tokensType === "L2") {
+        await this.$store.dispatch("wallet/getzkBalances");
       } else {
-        await this.$store.dispatch('wallet/getInitialBalances')
+        await this.$store.dispatch("wallet/getInitialBalances");
       }
-      this.loading = false
+      this.loading = false;
     },
   },
-  mounted () {
-    this.getTokenList()
-  },
-})
+});
 </script>

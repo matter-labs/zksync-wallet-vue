@@ -1,6 +1,8 @@
+@import "../variables";
+
 footer {
-  padding-left: 16px;
   padding-right: 16px;
+  padding-left: 16px;
 
   @media screen and (min-width: 1201px) {
     .container {
@@ -8,10 +10,11 @@ footer {
       max-width: 1920px;
     }
   }
+
   &.mainFooter {
     margin-top: auto;
-    .row
-    {
+
+    .row {
       font-size: 14px !important;
     }
 
@@ -33,12 +36,12 @@ footer {
 
     .floating-on-mobile {
       position: fixed;
+      right: 4vw;
       bottom: 4vh;
-      border-radius: 100%;
       width: 2.5rem !important;
       height: 2.5rem !important;
-      right: 4vw;
       padding: 0;
+      border-radius: 100%;
       box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.08), 0px 6px 10px 0px rgba(0, 0, 0, 0.10), 0px 1px 18px 0px rgba(0, 0, 0, .10);
     }
   }
@@ -51,26 +54,26 @@ footer {
     }
   }
 }
-.inkline
-{
-  footer{
+
+.inkline {
+  footer {
     .badge {
       font-weight: 400;
-      letter-spacing: 1px;
       font-size: 12px !important;
+      letter-spacing: 1px;
       text-transform: uppercase;
       background-color: transparent !important;
-      a
-      {
+
+      a {
         font-weight: 400;
         text-transform: lowercase;
       }
     }
   }
 }
-.inkline.-light
-{
-  footer{
+
+.inkline.-light {
+  footer {
     .badge {
       color: #343a40;
     }

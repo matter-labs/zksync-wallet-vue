@@ -1,5 +1,5 @@
-import { walletData } from "@/plugins/walletData";
 import { Address, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
+import { walletData } from "@/plugins/walletData";
 
 /**
  * Transaction processing action
@@ -54,6 +54,16 @@ export const transaction = async (address: Address, token: TokenSymbol, feeToken
   }
 };
 
+interface WithdrawParams {
+  address: Address;
+  token: TokenSymbol;
+  feeToken: TokenSymbol;
+  amount: GweiBalance;
+  fastWithdraw: boolean;
+  fees: GweiBalance;
+  store: any;
+}
+
 /**
  * Generic method for batch transaction creation
  *
@@ -66,7 +76,7 @@ export const transaction = async (address: Address, token: TokenSymbol, feeToken
  * @param store
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
-export const withdraw = async (address: Address, token: TokenSymbol, feeToken: TokenSymbol, amount: GweiBalance, fastWithdraw: boolean, fees: GweiBalance, store: any) => {
+export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw, fees, store }: WithdrawParams): Promise<any> => {
   const syncWallet = walletData.get().syncWallet;
   const amountBigValue = amount;
   const feeBigValue = fees;
@@ -108,14 +118,13 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
 
     let nextNonce = await syncWallet!.getNonce();
 
-    for (let i = 0; i < withdrawals.length; i++) {
-      const withdrawal = withdrawals[i];
+    for (const item of withdrawals) {
       const nonce = nextNonce;
       nextNonce += 1;
 
       signWithdrawTransaction = await syncWallet!
         .signWithdrawFromSyncToEthereum({
-          ...withdrawal,
+          ...item,
           nonce,
         })
         .catch((error) => {
@@ -126,14 +135,13 @@ export const withdraw = async (address: Address, token: TokenSymbol, feeToken: T
       signedTransactions.push({ tx: signWithdrawTransaction.tx, signature: signWithdrawTransaction.ethereumSignature });
     }
 
-    for (let i = 0; i < transfers.length; i++) {
-      const transfer = transfers[i];
+    for (const item of transfers) {
       const nonce = nextNonce;
       nextNonce += 1;
 
       const signTransaction = await syncWallet!
         .signSyncTransfer({
-          ...transfer,
+          ...item,
           nonce,
         })
         .catch((error) => {

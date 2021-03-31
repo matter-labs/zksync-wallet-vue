@@ -1,52 +1,55 @@
-@import "custom";
 
 .fieldGroup {
-    width: 100%;
-    height: max-content;
+  width: 100%;
+  height: max-content;
 
-    .label {
-        font-family: $openSans;
-        font-weight: 600;
-        font-size: 17px;
-        color: $purple;
-        text-align: left;
+  .label {
+    margin-bottom: 5px;
+    color: $purple;
+    font-weight: 600;
+    font-size: 17px;
+    font-family: $openSans;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  .fieldsSlot {
+    display: flex;
+
+    & > * {
+      &:not(:first-child) {
+        margin-left: 15px;
+      }
+    }
+
+    .totalSum {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 80px;
+      height: 46px;
+      color: $darkerGray;
+      font-family: $ibm;
+      white-space: nowrap;
+      text-align: center;
+
+      .headline {
+        color: #64748b;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 14px;
         text-transform: uppercase;
-        margin-bottom: 5px;
-    }
-    .fieldsSlot {
-        display: flex;
+      }
 
-        & > * {
-            &:not(:first-child) {
-                margin-left: 15px;
-            }
-        }
-        .totalSum {
-            width: 80px;
-            height: 46px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            color: $darkerGray;
-            font-family: $ibm;
-            white-space: nowrap;
+      .value {
+        font-size: 16px;
+        line-height: 25px;
+      }
 
-            .headline {
-                font-size: 12px;
-                line-height: 14px;
-                color: #64748B;
-                font-weight: 400;
-                text-transform: uppercase;
-            }
-            .value {
-                font-size: 16px;
-                line-height: 25px;
-            }
-            .source {
-                font-size: 9px;
-                line-height: 10px;
-            }
-        }
+      .source {
+        font-size: 9px;
+        line-height: 10px;
+      }
     }
+  }
 }

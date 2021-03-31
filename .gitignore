@@ -43,3 +43,7 @@ public
 /firebase-debug.log
 /report.txt
 /tokens.txt
+/.yarn/cache/
+/.yarn/build-state.yml
+/.yarn/install-state.gz
+/.yarn/unplugged/

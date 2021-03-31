@@ -1,9 +1,11 @@
+@import "../variables";
+
 .transactionsPage {
   .transactionsTile {
-    height: calc(100vh - 100px - 110px);
-    min-height: 500px;
     display: flex;
     flex-direction: column;
+    height: calc(100vh - 100px - 110px);
+    min-height: 500px;
 
     @media (max-width: $mobile) {
       height: calc(100vh - 105px - 150px) !important;
@@ -11,14 +13,14 @@
   }
 
   .transactionsListContainer {
-    border-radius: 0.3rem !important;
-    box-shadow: $shadowInset;
     height: 100%;
     overflow: auto;
+    border-radius: 0.3rem !important;
+    box-shadow: $shadowInset;
 
     &::-webkit-scrollbar {
       width: 10px;
-      background-color: transparent;
+      background-color: $tempTransparent;
     }
 
     &::-webkit-scrollbar-thumb {
@@ -27,30 +29,31 @@
     }
 
     &::-webkit-scrollbar-track {
-      background-color: transparent;
+      background-color: $tempTransparent;
       border-radius: 10px;
     }
 
     .transactionItem {
-      align-items: center;
-      border-bottom: 1px solid;
       display: grid;
       grid-gap: 10px;
-      grid-template-columns: 30px 1fr 180px 35px;
       grid-template-rows: 100%;
+      grid-template-columns: 30px 1fr 180px 35px;
+      align-items: center;
+      width: 100%;
       height: 105px;
       padding: 0 15px;
-      width: 100%;
+      border-bottom: 1px solid;
+
       &:hover {
         background-color: transparentize($color: $gray, $amount: 0.9);
       }
 
       @media screen and (max-width: 768px) {
-        grid-template-columns: 100%;
-        grid-template-rows: 35px 80px 50px 40px;
         grid-gap: 10px;
-        padding: 20px 10px;
+        grid-template-rows: 35px 80px 50px 40px;
+        grid-template-columns: 100%;
         height: max-content;
+        padding: 20px 10px;
 
         .status {
           justify-self: center;
@@ -59,16 +62,16 @@
           text-align: center !important;
         }
         .button {
-          width: 38px;
           justify-self: center;
+          width: 38px;
         }
       }
 
       .status {
-        font-size: 25px;
-        height: 35px;
-        text-align: center;
         width: 35px;
+        height: 35px;
+        font-size: 25px;
+        text-align: center;
 
         .verified {
           color: $green;
@@ -104,13 +107,14 @@
         .amount {
           font-size: 24px;
           line-height: 32px;
+
           &.small {
             font-size: 14px;
           }
         }
 
         .tokenSymbol {
-          font-size: 18px;
+          font-size: $tempFontSizeMedium;
           line-height: 20px;
         }
       }
@@ -127,28 +131,31 @@
         .actionValue {
           display: block;
           width: fit-content;
+          max-width: 100%;
+          overflow: hidden;
           font-size: 16px;
           line-height: 19px;
-          overflow: hidden;
           text-overflow: ellipsis;
         }
 
         .linkText {
           display: block;
+          margin-top: 7px;
           font-size: 14px;
           line-height: 1.1;
-          margin-top: 7px;
         }
       }
     }
 
     .nothingFound {
-      width: 100%;
-      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
+      height: 85%;
+      overflow: hidden;
       text-align: center;
+
       &.loadMoreAvailable {
         height: calc(100% - 45px);
       }
@@ -171,7 +178,6 @@ body.inkline {
 
   &.-dark {
     .transactionsPage .transactionsListContainer {
-      background-color: #ffffff10;
       &::-webkit-scrollbar-thumb {
         background-color: $input-border-color-focus-dark;
       }
