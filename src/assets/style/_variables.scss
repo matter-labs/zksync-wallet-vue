@@ -32,7 +32,7 @@ $input-border-color-focus-light: #00000033;
 $modal-border-radius: (md: 8px);
 $modal-border-color-dark: #ffffff14;
 $modal-background-dark: $darkViolet;
-$modal-border-color-light: #180d0d14;
+$modal-border-color-light: #180d0d05;
 $modal-background-light: $white;
 
 /* Fonts */
@@ -53,7 +53,7 @@ $borderRadius: 8px;
 $borderRadiusBig: 16px;
 
 /* Blocks */
-$headerDesktop: 75px;
+$headerHeight: 80px;
 $minRouteHeight: calc(100vh - 82px - 80px);
 $minRouteHeightMain: calc(100vh - 82px - 80px - 15px);
 
@@ -62,9 +62,10 @@ $mobile: 768px;
 $maxWidth: 1370px;
 
 /* Shadows */
-$shadowInset: inset 1px 1px 5px rgba(0, 0, 0, 0.075);
-$popoverShadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-$shadowTop: 0 -3px 10px rgba(0, 0, 0, 0.1);
+$shadowInset: inset 1px 1px 5px rgba(0, 0, 0, 0.03);
+$popoverShadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+$shadowTop: 0 -3px 10px rgba(0, 0, 0, 0.05);
+$shadowBottom: 0 3px 10px rgba(0, 0, 0, 0.05);
 $inputContainerShadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.04);
 
 /* Borders */

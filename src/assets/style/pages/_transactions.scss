@@ -132,6 +132,11 @@
           font-size: 16px;
           line-height: 19px;
           text-overflow: ellipsis;
+
+          @media screen and (max-width: $mobile) {
+            text-align: center;
+            margin: 0 auto;
+          }
         }
 
         .linkText {

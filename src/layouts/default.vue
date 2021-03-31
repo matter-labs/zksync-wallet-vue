@@ -2,6 +2,7 @@
   <div class="defaultLayout">
     <logging-in-loader />
     <div v-if="!loggingIn && loggedIn">
+      <div class="headerSpace mobileOnly"></div>
       <header-component ref="header" />
       <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
         <template slot="header"> Rename wallet</template>

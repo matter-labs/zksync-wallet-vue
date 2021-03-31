@@ -30,6 +30,17 @@ input[type=number] {
   font-size: 16px;
 }
 
+.mobileOnly {
+  @media screen and (min-width: $mobile) {
+    display: none;
+  }
+}
+.desktopOnly {
+  @media screen and (max-width: $mobile+1) {
+    display: none;
+  }
+}
+
 .linkText {
   color: $lightViolet;
   font-weight: 500;
@@ -233,7 +244,7 @@ button.-lg.-circle {
 
     .header, .footer, .body {
       background: $modal-background-light !important;
-      border-color: $modal-border-color-light !important;
+      border-color: $light !important;
     }
 
     .footer .modalFooterBtn {

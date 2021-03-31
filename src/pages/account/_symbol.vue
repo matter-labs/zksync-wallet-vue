@@ -18,7 +18,7 @@
         <div class="infoBlock _margin-top-1">
           <div class="headline">Your balance:</div>
         </div>
-        <div class="_display-flex _justify-content-space-between">
+        <div class="_display-flex _justify-content-space-between balanceWithdraw">
           <div class="infoBlock">
             <div class="balance">
               <span class="tokenSymbol">{{ symbol }}</span> {{ token.balance }}&nbsp;&nbsp;<span class="balancePrice">{{
@@ -82,3 +82,15 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.balanceWithdraw {
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+
+    & > .infoBlock {
+      margin-bottom: 10px;
+    }
+  }
+}
+</style>
