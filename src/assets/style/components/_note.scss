@@ -4,10 +4,10 @@
   .noteMain {
     display: flex;
     align-items: center;
-    text-align: left;
-    border-radius: 6px;
-    border: 1px solid $light;
     padding: 10px 15px;
+    text-align: left;
+    border: 1px solid $light;
+    border-radius: 6px;
     transition: border-color $transition1;
 
     .noteIcon {

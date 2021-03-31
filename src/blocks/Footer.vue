@@ -23,16 +23,13 @@
         <div class="_padding-1-2 _padding-md-x-1">
           <a target="_blank" class="footer-link" :href="`${blockExplorerLink}`">zkScan</a>
         </div>
-        <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="https://link.zksync.io">zkLink</a>
-        </div>
       </i-row>
-      <i-row center class="_margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
-        <div class="poweredBy">
-          <div>Powered By</div>
+      <i-row center class="_margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap badge outline-white -secondary">
+        <a href="https://zksync.io" target="_blank" class="poweredBy">
+          <span>Powered By</span>
           <logo />
-          <div>Ecosystem</div>
-        </div>
+          <span>Ecosystem</span>
+        </a>
       </i-row>
       <i-row center class="_text-nowrap _align-items-center _margin-0">
         <div class="_padding-1-2 _padding-md-x-1 _hidden-sm-and-down">

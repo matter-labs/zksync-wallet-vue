@@ -1,10 +1,10 @@
 import { Vue } from "vue-property-decorator";
 
 import AddressInput from "@/components/AddressInput.vue";
-import { shallowMount, Wrapper } from "@vue/test-utils";
-import { BaseWrapper } from "@vue/test-utils/types/index";
+import { shallowMount, BaseWrapper } from "@vue/test-utils";
 
 // Component config
+// @ts-ignore
 let wrapper: BaseWrapper<Vue>;
 
 describe("AddressInput", () => {
@@ -16,10 +16,10 @@ describe("AddressInput", () => {
     });
 
     test("has no value", () => {
-      expect(wrapper.vm.$data.inputtedWallet).toBe("");
-      expect(wrapper.vm.isValid).toBe(false);
-      expect(wrapper.vm.error).toBe("");
-      expect(wrapper.find(".walletContainer.error").exists()).toBe(false);
+      expect(wrapper.vm.$data.inputtedWallet).equal("");
+      expect(wrapper.vm.equalValid).equal(false);
+      expect(wrapper.vm.error).equal("");
+      expect(wrapper.find(".walletContainer.error").exequalts()).equal(false);
     });
   });
   describe("With value", () => {
@@ -27,19 +27,19 @@ describe("AddressInput", () => {
       wrapper = shallowMount(AddressInput, {
         propsData: { value: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0" },
       });
-      expect(wrapper.vm.$data.inputtedWallet).toBe("0x2D9835a1C1662559975B00AEA00e326D1F9f13d0");
-      expect(wrapper.vm.isValid).toBe(true);
-      expect(wrapper.vm.error).toBe("");
-      expect(wrapper.find(".walletContainer.error").exists()).toBe(false);
+      expect(wrapper.vm.$data.inputtedWallet).equal("0x2D9835a1C1662559975B00AEA00e326D1F9f13d0");
+      expect(wrapper.vm.equalValid).equal(true);
+      expect(wrapper.vm.error).equal("");
+      expect(wrapper.find(".walletContainer.error").exequalts()).equal(false);
     });
     test("Wrong address", () => {
       wrapper = shallowMount(AddressInput, {
         propsData: { value: "0x312acE2a5Ff974416666B9866F48a8FA9513A517" },
       });
-      expect(wrapper.vm.$data.inputtedWallet).toBe("0x312acE2a5Ff974416666B9866F48a8FA9513A517");
-      expect(wrapper.vm.isValid).toBe(false);
-      expect(wrapper.vm.error).toBe("Invalid address");
-      expect(wrapper.find(".walletContainer.error").exists()).toBe(true);
+      expect(wrapper.vm.$data.inputtedWallet).equal("0x312acE2a5Ff974416666B9866F48a8FA9513A517");
+      expect(wrapper.vm.equalValid).equal(false);
+      expect(wrapper.vm.error).equal("Invalid address");
+      expect(wrapper.find(".walletContainer.error").exequalts()).equal(true);
     });
   });
 
@@ -52,7 +52,7 @@ describe("AddressInput", () => {
     });
 
     test('are properly rendered', () => {
-      expect(choicesWrapper.length).toBe(poll.choices.length);
+      expect(choicesWrapper.length).equal(poll.choices.length);
 
       choices.forEach((choiceWrapper, index) => {
         const choiceBox = choiceWrapper.find('.poll__choice--box');
@@ -67,31 +67,31 @@ describe("AddressInput", () => {
       choices.forEach((choiceWrapper, index) => {
         choiceWrapper.trigger('click');
         const choiceId = poll.choices[index].id;
-        expect(wrapper.vm.$data.selectedChoiceId).toBe(choiceId);
+        expect(wrapper.vm.$data.selectedChoiceId).equal(choiceId);
       });
     });
   });
 
-  describe('when no choice is selected', () => {
-    test('voting form is not rendered', () => {
+  describe('when no choice equal selected', () => {
+    test('voting form equal not rendered', () => {
       wrapper.setData({ selectedChoiceId: -1 });
 
       const pollVote = wrapper.find('.poll__vote');
-      expect(pollVote.exists()).toBeFalsy();
+      expect(pollVote.exequalts()).equalFalsy();
     });
   });
 
   describe('when a choice a selected', () => {
     const selectedChoiceId = poll.choices[1].id;
-    test('is visible when a choice is selected', () => {
+    test('equal vequalible when a choice equal selected', () => {
       wrapper.setData({ selectedChoiceId });
 
       const pollVote = wrapper.find('.poll__vote');
-      expect(pollVote.exists()).toBeTruthy();
+      expect(pollVote.exequalts()).equalTruthy();
     });
 
     describe('voting', () => {
-      test('is called when clicking vote button', () => {
+      test('equal called when clicking vote button', () => {
         const voteBtn = wrapper.find('.poll__vote > button');
         voteBtn.trigger('click');
         expect(mockedVote).toHaveBeenCalledTimes(1);

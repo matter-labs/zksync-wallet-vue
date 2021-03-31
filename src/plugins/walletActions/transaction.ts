@@ -1,4 +1,4 @@
-import { Address, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
+import { Address, GweiBalance, TokenSymbol, Transaction, Tx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 
 /**
@@ -35,12 +35,12 @@ export const transaction = async (address: Address, token: TokenSymbol, feeToken
    * @todo: process case when there are 2 transactions
    */
   if (token === feeToken) {
-    const transaction = await syncWallet!.syncTransfer({
+    const transaction = (await syncWallet!.syncTransfer({
       to: address,
       token,
       amount: amountBigValue,
       fee: feeBigValue,
-    });
+    })) as Transaction;
     store.dispatch("transaction/watchTransaction", { transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
     return transaction;
   } else {

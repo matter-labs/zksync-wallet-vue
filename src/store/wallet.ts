@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Balance, GweiBalance, TokenSymbol, Transaction } from "@/plugins/types";
+import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Transaction } from "@/plugins/types";
 
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 
@@ -465,13 +465,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return withdrawTime.data;
     }
   },
-  async getFees(
-    { getters, commit, dispatch },
-    { address, symbol, feeSymbol, type },
-  ): Promise<{
-    fast?: Number;
-    normal: Number;
-  }> {
+  async getFees({ getters, commit, dispatch }, { address, symbol, feeSymbol, type }): Promise<FeesObj> {
     const savedFees = getters.getFees;
     if (
       savedFees &&

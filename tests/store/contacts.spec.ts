@@ -9,7 +9,7 @@ describe("Contacts state", () => {
 
   describe("initState", () => {
     test("works", () => {
-      expect(contactsState.contactsList).toEqual([]);
+      expect(contactsState.contactsList).equal([]);
     });
   });
 });

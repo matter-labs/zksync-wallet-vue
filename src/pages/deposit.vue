@@ -242,11 +242,10 @@ export default Vue.extend({
       this.transactionInfo.amount.amount = txAmount.toString();
       this.transactionInfo.amount.token = this.chosenToken as Balance;
       this.transactionInfo.fee.token = this.chosenToken as Balance;
-      let receipt: ethers.ContractReceipt;
       this.transactionInfo.hash = transferTransaction.ethTx.hash;
       this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + transferTransaction.ethTx.hash;
       this.tip = "Waiting for the transaction to be mined...";
-      receipt = await transferTransaction.awaitEthereumTxCommit();
+      const receipt: ethers.ContractReceipt = await transferTransaction.awaitEthereumTxCommit();
       this.transactionInfo.fee.amount = receipt.gasUsed.toString();
       this.transactionInfo.continueBtnFunction = false;
       this.transactionInfo.type = "deposit";
@@ -272,9 +271,8 @@ export default Vue.extend({
         this.transactionInfo.amount.amount = "0";
         this.transactionInfo.amount.token = ETHToken as Balance;
         this.transactionInfo.fee.token = ETHToken as Balance;
-        let receipt: ethers.ContractReceipt;
         this.tip = "Waiting for the transaction to be mined...";
-        receipt = await approveDeposits.wait();
+        const receipt: ethers.ContractReceipt = await approveDeposits.wait();
         this.transactionInfo.hash = receipt.transactionHash;
         this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + receipt.transactionHash;
         this.transactionInfo.fee.amount = receipt.gasUsed.toString();

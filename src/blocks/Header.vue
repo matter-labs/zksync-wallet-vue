@@ -17,7 +17,7 @@
         </i-column>
         <i-column :xs="12" :md="3" class="_margin-left-auto _padding-right-0 _display-flex _justify-content-end">
           <div class="linksContainer">
-            <div class="userDropdown" @click="accountModal = true">
+            <div class="userDropdown" @click="togglePopup">
               <div class="userDropdownAddress">
                 <div class="walletLabel">Wallet</div>
                 <div class="userAddress">
@@ -28,45 +28,13 @@
                 <user-img :wallet="walletAddressFull" />
               </div>
               <div class="dropdownArrow">
-                <i class="far fa-angle-down"></i>
+                <i class="far fa-angle-down" />
               </div>
             </div>
           </div>
         </i-column>
       </i-row>
     </i-container>
-
-    <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
-      <template slot="header"> Rename wallet</template>
-      <div>
-        <i-input ref="nameInput" v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()" />
-        <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
-      </div>
-    </i-modal>
-
-    <i-modal v-model="accountModal" size="md">
-      <template slot="header">
-        <b>{{ walletName }}</b>
-      </template>
-      <div>
-        <wallet-address :wallet="walletAddressFull" />
-        <vue-qrcode class="addressQR" :value="walletAddressFull" :margin="1" :scale="6" />
-      </div>
-      <template slot="footer">
-        <a class="modalFooterBtn" :href="`${getZkScanBaseUrl}/accounts/${walletAddressFull}`" target="_blank">
-          <i class="fas fa-external-link"></i>
-          <span>View in block explorer</span>
-        </a>
-        <div class="modalFooterBtn" @click="renameWalletOpen()">
-          <i class="fas fa-pen"></i>
-          <span>Rename wallet</span>
-        </div>
-        <div class="modalFooterBtn" @click="logout()">
-          <i class="far fa-unlink"></i>
-          <span>Disconnect wallet</span>
-        </div>
-      </template>
-    </i-modal>
   </header>
 </template>
 
@@ -74,16 +42,11 @@
 import Vue from "vue";
 import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
-import walletAddress from "@/components/walletAddress.vue";
-import { APP_ZK_SCAN } from "@/plugins/build";
-import VueQrcode from "vue-qrcode";
 
 export default Vue.extend({
   components: {
     logo,
     userImg,
-    walletAddress,
-    VueQrcode,
   },
   data() {
     return {
@@ -94,9 +57,6 @@ export default Vue.extend({
   computed: {
     walletAddressFull(): string {
       return this.$store.getters["account/address"];
-    },
-    getZkScanBaseUrl(): string {
-      return APP_ZK_SCAN;
     },
     accountModal: {
       get(): boolean {
@@ -144,15 +104,8 @@ export default Vue.extend({
         await this.$router.push("/");
       });
     },
-    renameWalletOpen(): void {
-      this.accountModal = false;
-      this.renameWalletModal = true;
-    },
-    renameWallet(): void {
-      this.renameWalletModal = false;
-      if (process.client && this.walletName.length > 0 && this.walletName !== this.walletAddressFull) {
-        window.localStorage.setItem(this.walletAddressFull, this.walletName);
-      }
+    togglePopup(): void {
+      this.$store.commit("setAccountModalState", true);
     },
   },
 });

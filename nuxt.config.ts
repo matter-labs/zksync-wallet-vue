@@ -1,3 +1,6 @@
+import { NuxtConfig } from "@nuxt/types";
+import { NuxtOptionsHead } from "@nuxt/types/config/head";
+
 require("dotenv").config();
 
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
@@ -5,12 +8,14 @@ const srcDir = "src";
 const pageTitle = `Modern dApp with zkSync powers`;
 const pageImg = `https://zksync.io/social.jpg`;
 
-const pageTitleTemplate = `zkWallet on ${process.env.APP_CURRENT_NETWORK.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK.slice(1)}`;
+const pageTitleTemplate = `zkWallet on ${process.env.APP_CURRENT_NETWORK?.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK?.slice(1)}`;
 const pageDescription = `A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum`;
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
 crypto payments, zkWallet, cryptowallet`;
 
-export default {
+// @ts-ignore
+const config: NuxtConfig = {
+  components: true,
   ssr: false,
   target: "static",
   srcDir: `${srcDir}/`,
@@ -20,6 +25,7 @@ export default {
       devtools: !isProduction,
     },
   },
+  // @ts-ignore
   env: {
     ...process.env,
   },
@@ -28,10 +34,11 @@ export default {
    ** Headers of the page
    */
   head: {
-    name: pageTitle,
+    title: pageTitle as string | undefined,
     titleTemplate: `%s | ${pageTitleTemplate}`,
     htmlAttrs: {
       lang: "en",
+      // @ts-ignore
       amp: true,
     },
     meta: [
@@ -106,9 +113,9 @@ export default {
         content: pageTitleTemplate,
       },
 
-      { "http-equiv": "pragma", content: "no-cache" },
-      { "http-equiv": "cache-control", content: "no-cache , no-store, must-revalidate" },
-      { "http-equiv": "expires", content: "0" },
+      //      { "http-equiv": "pragma", content: "no-cache" },
+      //      { "http-equiv": "cache-control", content: "no-cache , no-store, must-revalidate" },
+      //      { "http-equiv": "expires", content: "0" },
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
@@ -227,10 +234,11 @@ export default {
     ssr: false,
     // target: "static",
     /* extractCSS: {
-      ignoreOrder: true,
-    }, */
+     ignoreOrder: true,
+     }, */
     extend(config) {
       config.node = {
+        // @ts-ignore
         fs: "empty",
       };
     },
@@ -245,3 +253,4 @@ export default {
     },
   },
 };
+export default config;

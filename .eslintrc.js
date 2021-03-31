@@ -4,18 +4,8 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
   },
-  root: true,
   plugins: ["@typescript-eslint"],
-  extends: [
-    "@nuxtjs/eslint-config-typescript",
-    "plugin:vue/recommended",
-    "plugin:vue/base",
-    "prettier",
-    "prettier/vue",
-    "plugin:prettier-vue/recommended",
-    // Do not add `'prettier/vue'` if you don't want to use prettier for `<template>` blocks
-    "prettier/vue",
-  ],
+  extends: ["@nuxtjs/eslint-config-typescript", "plugin:vue/recommended", "plugin:vue/base", "plugin:prettier-vue/recommended"],
   settings: {
     "prettier-vue": {
       // Settings for how to process Vue SFC Blocks

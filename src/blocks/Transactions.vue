@@ -54,9 +54,8 @@ export default Vue.extend({
       return this.$store.getters["account/address"];
     },
     transactionsList(): Array<Tx> {
-      const list = this.$store.getters["wallet/getTransactionsHistory"];
-      this.totalLoadedItem += list.length;
-      this.loadMoreAvailable = list.length >= 25;
+      const list = this.checkLoadMore();
+
       let filteredList = list
         .filter((e: Tx) => e.tx.type !== "ChangePubKey" && !e.fail_reason)
         .map((e: Tx) => {
@@ -170,6 +169,12 @@ export default Vue.extend({
       updateListInterval = setInterval(() => {
         this.loadTransactions();
       }, 120000);
+    },
+    checkLoadMore() {
+      const listData = this.$store.getters["wallet/getTransactionsHistory"];
+      this.totalLoadedItem += listData.length;
+      this.loadMoreAvailable = listData.length >= 25;
+      return listData;
     },
   },
 });

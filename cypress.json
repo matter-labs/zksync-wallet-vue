@@ -1,0 +1,6 @@
+{
+  "experimentalStudio": true,
+  "pluginsFile": "tests/plugins/index.js",
+  "fixturesFolder": "tests/cypress/fixtures",
+  "integrationFolder": "tests/integration"
+}

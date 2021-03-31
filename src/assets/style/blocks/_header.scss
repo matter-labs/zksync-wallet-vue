@@ -57,7 +57,6 @@ header {
 
 
     .linksContainer {
-      height: 100%;
       display: grid;
       grid-auto-columns: max-content;
       grid-auto-flow: column;
@@ -65,6 +64,7 @@ header {
       grid-template-rows: 100%;
       align-items: center;
       width: max-content;
+      height: 100%;
       @media screen and (min-width: $mobile) and (max-width: 992px) {
         grid-gap: 15px;
 
@@ -85,8 +85,8 @@ header {
         }
       }
       .headerLink {
-        color: #BABABA;
         padding: 10px 15px;
+        color: #BABABA;
         transition: $transition1;
         transition-property: background-color, color;
         will-change: background-color, color;
@@ -111,11 +111,11 @@ header {
       cursor: pointer;
 
       .userDropdownAddress {
-        height: 100%;
-        width: max-content;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        width: max-content;
+        height: 100%;
         padding: 4px 0;
         padding-right: 13px;
 

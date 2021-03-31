@@ -31,10 +31,10 @@ footer {
   }
 
   .zkSyncBootomLogo {
-    z-index: -1;
     position: absolute;
     bottom: 0;
     left: 0;
+    z-index: -1;
     width: 100%;
     height: auto;
   }
@@ -50,8 +50,8 @@ footer {
       padding: 0 !important;
 
       .projectLogo {
-        height: 30px;
         width: 127px !important;
+        height: 30px;
         margin: 0 !important;
         transform: translateY(-2px);
       }
