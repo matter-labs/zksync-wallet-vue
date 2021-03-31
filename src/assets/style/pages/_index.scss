@@ -1,114 +1,22 @@
-@import "../components/custom/custom";
-
 .indexPage {
-  background-color: $mediumGrey;
-  transition: background-color $transition1;
-
-  .indexFullScreen {
-    position: relative;
+  width: 100%;
+  height: 100%;
+  .container {
+    width: 100%;
+    height: 100%;
+    min-height: $minRouteHeight;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    flex-direction: column;
 
-    .scrollDown {
-      position: absolute;
-      right: 0;
-      bottom: 20px;
-      left: 0;
-      display: flex;
-      align-items: center;
-      width: max-content;
-      height: max-content;
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+    }
+    .noteContainer {
+      max-width: 480px;
       margin: 0 auto;
-      padding: 8px 15px;
-      color: $gray;
-      border: 1px solid $tempTransparent;
-      border-radius: 15px;
-      cursor: pointer;
-      transition: $transition1;
-
-      &:hover {
-        border-color: transparentize($color: $gray, $amount: 0.5);
-      }
-
-      i {
-        font-size: 16px;
-        //color: lighten($color: $gray, $amount: 20);
-      }
-
-      span {
-        padding-left: 10px;
-        font-size: 10px;
-        text-align: left;
-        text-transform: uppercase;
-      }
     }
-  }
-
-  .aboutZkSync {
-    max-width: 500px;
-    font-size: 20px;
-  }
-
-  .featuresContainer {
-    max-width: 950px;
-    margin: 0 auto;
-
-    .featureItem {
-      img {
-        width: 100px;
-        height: 100px;
-        margin-bottom: 20px;
-      }
-
-      .featureHeadline {
-        font-weight: 500;
-        font-size: 22px;
-      }
-
-      .featureText {
-        margin: 12px 0 0;
-        font-weight: 400;
-        font-size: 16px;
-      }
-    }
-  }
-
-  @media (max-width: $mobile) {
-    .indexFullScreen {
-      display: block;
-      height: auto;
-      padding-bottom: 80px;
-
-      .aboutZkSync {
-        max-width: 90%;
-        font-size: 16px;
-      }
-    }
-    .featuresContainer {
-      .featureItem {
-        margin-bottom: 30px;
-
-        .featureHeadline {
-          font-size: 20px;
-        }
-
-        .featureText {
-          max-width: 300px;
-          margin-top: 8px;
-          margin-right: auto;
-          margin-left: auto;
-          font-size: 14px;
-        }
-      }
-    }
-  }
-}
-
-body.inkline {
-  &.-light .indexPage {
-    background-color: $white;
   }
 }

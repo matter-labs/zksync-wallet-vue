@@ -1,5 +1,6 @@
 /* Colors */
 $white: #fff;
+$light: #E1E4E8;
 $gray: #9eaebb;
 $black: #242424;
 $violet: #4e529a;
@@ -45,8 +46,16 @@ $font-family-primary-base: $firaSans;
 $transition1: .2s ease;
 $transition2: .3s ease;
 
+/* Border-radius */
+$borderRadiusXs: 6.6px;
+$borderRadiusSm: 0.25rem;
+$borderRadius: 8px;
+$borderRadiusBig: 16px;
+
 /* Blocks */
 $headerDesktop: 75px;
+$minRouteHeight: calc(100vh - 82px - 80px);
+$minRouteHeightMain: calc(100vh - 82px - 80px - 15px);
 
 /* Responsive */
 $mobile: 768px;

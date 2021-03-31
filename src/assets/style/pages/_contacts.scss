@@ -7,11 +7,8 @@
   }
 
   .transactionsTile {
-    height: calc(100vh - 105px - 325px - 110px) !important;
+    height: $minRouteHeightMain !important;
     min-height: 200px !important;
-    @media (max-width: $mobile) {
-      height: calc(100vh - 105px - 325px - 150px) !important;
-    }
   }
 }
 
@@ -23,11 +20,8 @@
 .contactTile {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 105px - 110px) !important;
+  height: $minRouteHeightMain !important;
   min-height: 300px;
-  @media (max-width: $mobile) {
-    height: calc(100vh - 105px - 150px) !important;
-  }
 }
 
 .contactsListContainer {

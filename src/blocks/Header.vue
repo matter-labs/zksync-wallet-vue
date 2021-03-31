@@ -1,27 +1,39 @@
 <template>
   <header>
     <i-container>
-      <div class="firstRow">
-        <nuxt-link to="/account">
-          <logo />
-        </nuxt-link>
-        <div class="linksContainer">
-          <div class="userDropdown" @click="accountModal = true">
-            <div class="address">{{ walletName }}</div>
-            <div class="userImgContainer">
-              <user-img :wallet="walletAddressFull" />
-            </div>
-            <div class="dropdownArrow">
-              <i class="far fa-angle-down"></i>
+      <i-row>
+        <i-column :xs="12" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
+          <nuxt-link to="/account">
+            <logo />
+          </nuxt-link>
+        </i-column>
+        <i-column :xs="12" :md="6" class="_padding-y-0">
+          <div class="linksContainer _margin-x-auto">
+            <nuxt-link class="headerLink" to="/account">My wallet</nuxt-link>
+            <nuxt-link class="headerLink" to="/deposit">Deposit</nuxt-link>
+            <nuxt-link class="headerLink" to="/contacts">Contacts</nuxt-link>
+            <nuxt-link class="headerLink" to="/transactions">Transactions</nuxt-link>
+          </div>
+        </i-column>
+        <i-column :xs="12" :md="3" class="_margin-left-auto _padding-right-0 _display-flex _justify-content-end">
+          <div class="linksContainer">
+            <div class="userDropdown" @click="accountModal = true">
+              <div class="userDropdownAddress">
+                <div class="walletLabel">Wallet</div>
+                <div class="userAddress">
+                  <div class="address">{{ walletName }}</div>
+                </div>
+              </div>
+              <div class="userImgContainer">
+                <user-img :wallet="walletAddressFull" />
+              </div>
+              <div class="dropdownArrow">
+                <i class="far fa-angle-down"></i>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="secondRow">
-        <nuxt-link to="/account">My wallet</nuxt-link>
-        <nuxt-link to="/contacts">Contacts</nuxt-link>
-        <nuxt-link to="/transactions">Transactions</nuxt-link>
-      </div>
+        </i-column>
+      </i-row>
     </i-container>
 
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
@@ -80,17 +92,17 @@ export default Vue.extend({
     };
   },
   computed: {
-    walletAddressFull: function (): string {
+    walletAddressFull(): string {
       return this.$store.getters["account/address"];
     },
-    getZkScanBaseUrl: function (): string {
+    getZkScanBaseUrl(): string {
       return APP_ZK_SCAN;
     },
     accountModal: {
-      get: function (): boolean {
-        return this.$store.getters["getAccountModalState"];
+      get(): boolean {
+        return this.$store.getters.getAccountModalState;
       },
-      set: function (val: boolean): boolean {
+      set(val: boolean): boolean {
         this.$store.commit("setAccountModalState", val);
         return val;
       },
@@ -117,7 +129,7 @@ export default Vue.extend({
         } else {
           let address: string = this.walletAddressFull;
           if (address.length > 16) {
-            address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
+            address = address.substr(0, 5) + "..." + address.substr(address.length - 5, address.length - 1);
           }
           this.walletName = address;
         }
@@ -125,18 +137,18 @@ export default Vue.extend({
     },
   },
   methods: {
-    logout: function (): void {
+    logout(): void {
       this.accountModal = false;
       this.$nextTick(async () => {
         await this.$store.dispatch("wallet/logout");
         await this.$router.push("/");
       });
     },
-    renameWalletOpen: function (): void {
+    renameWalletOpen(): void {
       this.accountModal = false;
       this.renameWalletModal = true;
     },
-    renameWallet: function (): void {
+    renameWallet(): void {
       this.renameWalletModal = false;
       if (process.client && this.walletName.length > 0 && this.walletName !== this.walletAddressFull) {
         window.localStorage.setItem(this.walletAddressFull, this.walletName);

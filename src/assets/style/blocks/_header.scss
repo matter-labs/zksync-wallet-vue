@@ -1,38 +1,32 @@
 header {
   width: 100%;
-  height: 105px;
-  padding: 16px 16px 0;
+  height: 80px;
+  padding: 0;
   transition: background-color $transition1;
 
   & > .container {
-    display: grid;
-    grid-row-gap: 5px;
-    grid-template-rows: 35px 1fr;
-    grid-template-columns: 100%;
-    height: 100%;
-    @media screen and (min-width: 1201px) {
-      max-width: 1920px;
-    }
-  }
-
-  .firstRow {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     width: 100%;
     height: 100%;
 
+    .row {
+      width: 100%;
+      padding: 0 5vw;
+    }
+  
     a {
       text-decoration: none;
     }
-
+  
     .headerWrapper {
       height: 35px !important;
-
+  
       .projectLogo {
         width: auto !important;
         height: 100% !important;
       }
-
+  
       .badge {
         margin-top: -30px;
         padding: 0;
@@ -43,10 +37,10 @@ header {
         text-transform: uppercase;
         background: transparent !important;
       }
-
+  
       @media (max-width: $mobile) {
         padding-top: 0 !important;
-
+  
         .projectLogo {
           max-width: 130px !important;
           object-fit: contain !important;
@@ -56,16 +50,21 @@ header {
         }
       }
     }
+    @media screen and (min-width: 1201px) {
+      max-width: 1920px;
+    }
+  }
+
 
     .linksContainer {
+      height: 100%;
       display: grid;
       grid-auto-columns: max-content;
       grid-auto-flow: column;
-      grid-gap: 25px;
+      grid-gap: 10px;
       grid-template-rows: 100%;
       align-items: center;
       width: max-content;
-      height: 100%;
       @media screen and (min-width: $mobile) and (max-width: 992px) {
         grid-gap: 15px;
 
@@ -85,59 +84,80 @@ header {
           font-size: 12px;
         }
       }
+      .headerLink {
+        color: #BABABA;
+        padding: 10px 15px;
+        transition: $transition1;
+        transition-property: background-color, color;
+        will-change: background-color, color;
+        
+        &.nuxt-link-exact-active {
+          color: #27274E;
+          font-weight: 600;
+          background: #F7FAFC;
+          border-radius: 8px;
+        }
+      }
     }
 
     .userDropdown {
       display: grid;
-      grid-gap: 15px;
       grid-template-rows: 100%;
-      grid-template-columns: max-content 25px 16px;
+      grid-template-columns: max-content 32px 30px;
       align-items: center;
       box-sizing: border-box;
       width: max-content;
       height: 35px;
-      padding-right: 13px;
-      padding-left: 10px;
-      border-radius: 15px;
       cursor: pointer;
-      transition: background-color $transition1;
 
-      &:hover {
-        background-color: transparentize($color: $gray, $amount: 0.8);
-      }
+      .userDropdownAddress {
+        height: 100%;
+        width: max-content;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 4px 0;
+        padding-right: 13px;
 
-      .address {
-        font-size: 18px;
-        line-height: 25px;
-        white-space: nowrap;
+        .walletLabel {
+          color: #BABABA;
+          font-size: 13px;
+          line-height: 13px;
+          text-align: left;
+        }
+        .address {
+          font-size: 12px;
+          line-height: 12px;
+          white-space: nowrap;
+        }
       }
 
       .userImgContainer {
-        width: 25px;
-        height: 25px;
+        width: 32px;
+        height: 32px;
 
         img {
           width: 100%;
           height: 100%;
+          border-radius: 40%;
         }
       }
 
       .dropdownArrow {
-        color: darken($color: $gray, $amount: 15);
+        color: $lightViolet;
         font-size: 20px;
         text-align: right;
       }
 
       @media screen and (max-width: 768px) {
-        grid-template-columns: 25px 16px;
-        padding-right: 0;
+        grid-template-columns: 32px 30px;
 
-        .address {
+        .userDropdownAddress {
           display: none;
         }
       }
     }
-  }
+  
 
   .secondRow {
     display: grid;
@@ -196,9 +216,10 @@ header {
 }
 
 body.inkline.-light header {
-  background: $white;
-
-  .secondRow a, .linksContainer .mainLink {
+  background: rgba(24, 24, 32, 0.04);
+  backdrop-filter: blur(25px);
+  
+  .linksContainer .mainLink {
     color: $black;
   }
 }
@@ -206,7 +227,13 @@ body.inkline.-light header {
 body.inkline.-dark header {
   background: $darkViolet;
 
-  .secondRow a, .linksContainer .mainLink {
+  .linksContainer .mainLink {
     color: $white;
+  }
+  .linksContainer .headerLink {
+    &.nuxt-link-exact-active {
+      color: darken($color: $white, $amount: 15);
+      background-color: darken($color: $darkViolet, $amount: 5);
+    }
   }
 }

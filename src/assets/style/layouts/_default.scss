@@ -5,10 +5,10 @@
   height: 100%;
 
   .routerContainer {
-    min-height: calc(100vh - 105px - 110px);
-    @media (max-width: $mobile) {
-      min-height: calc(100vh - 105px - 150px) !important;
-    }
+    min-height: $minRouteHeightMain;
+    /* @media (max-width: $mobile) {
+      min-height: $minRouteHeight !important;
+    } */
   }
 
   .tileBlock {

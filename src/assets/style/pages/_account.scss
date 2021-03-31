@@ -2,7 +2,7 @@
 
 .walletPage {
   .balancesBlock {
-    height: calc(100vh - 105px - 316px);
+    height: $minRouteHeightMain;
     min-height: 360px;
 
     .form-input-group {

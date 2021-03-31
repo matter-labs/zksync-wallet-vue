@@ -31,19 +31,13 @@
         fill-opacity="0.9"
       />
     </svg>
-    <i-badge variant="primary">Beta<!--  <small v-if="network">{{ network }}</small> --></i-badge>
   </div>
 </template>
 
 <script lang="ts">
-import { ETHER_NETWORK_NAME } from "@/plugins/build";
 import Vue from "vue";
 
 export default Vue.extend({
-  computed: {
-    network(): string {
-      return ETHER_NETWORK_NAME;
-    },
-  },
+  
 });
 </script>

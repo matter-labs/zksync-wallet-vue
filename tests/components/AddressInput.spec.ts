@@ -1,7 +1,7 @@
 import { Vue } from "vue-property-decorator";
 
 import AddressInput from "@/components/AddressInput.vue";
-import { shallowMount, Wrapper, de } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import { BaseWrapper } from "@vue/test-utils/types/index";
 
 // Component config

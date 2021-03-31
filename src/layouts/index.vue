@@ -1,6 +1,7 @@
 <template>
   <div class="indexLayout">
     <logging-in-loader />
+    <header-component />
     <div class="routerContainer">
       <transition name="fade" mode="out-in">
         <nuxt />
@@ -11,12 +12,14 @@
 </template>
 
 <script>
+import headerComponent from "@/blocks/IndexHeader.vue";
 import footerComponent from "@/blocks/Footer.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 import { GIT_REVISION_SHORT } from "@/plugins/build";
 
 export default {
   components: {
+    headerComponent,
     loggingInLoader,
     footerComponent,
   },

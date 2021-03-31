@@ -1,62 +1,34 @@
 <template>
   <div class="indexPage">
-    <i-container class="indexFullScreen">
-      <i-row center>
-        <logo class="logo" />
-      </i-row>
-      <i-row center>
-        <span class="h1 _font-weight-normal">Scalability without compromises</span>
-      </i-row>
-      <i-row center>
-        <p class="secondaryText aboutZkSync">zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum</p>
-      </i-row>
-      <i-row center class="_padding-top-1 _padding-bottom-2">
-        <i-button block size="lg" variant="secondary" @click="customWallet()">Connect your wallet</i-button>
-      </i-row>
-      <div class="scrollDown" @click="scrollDown()">
-        <i class="fal fa-mouse-alt"></i>
-        <span>Scroll down</span>
+    <i-container>
+      <h1>Connect your L1 ETH Wallet to start</h1>
+      <div data-cy="connectWalet-btn" class="tileContainer _margin-top-1" @click="customWallet()">
+        <div class="tile">
+          <img src="@/assets/imgs/wallets/external.png" alt="External" />
+          <i class="tileIcon fas fa-lock"></i>
+        </div>
+        <div class="tileName">Connect your wallet</div>
       </div>
-    </i-container>
-
-    <i-container ref="scrollToBlock">
-      <i-row center>
-        <span class="h2 _font-weight-normal">Who is behind zkSync</span>
-      </i-row>
-    </i-container>
-
-    <i-container class="_padding-y-4">
-      <i-row center class="_padding-bottom-2">
-        <span class="h2 _font-weight-normal">zkSync Features</span>
-      </i-row>
-      <i-row center around class="featuresContainer">
-        <i-column xs="12" md="4" class="featureItem">
-          <img src="@/assets/imgs/pages/index/f3.svg" alt="Secure like mainnet" />
-          <div class="featureHeadline">Secure like mainnet</div>
-          <p class="featureText secondaryText">Powered by zkRollup with universal setup — the apex L2 scaling solution.</p>
-        </i-column>
-        <i-column xs="12" md="4" class="featureItem">
-          <img src="@/assets/imgs/pages/index/f2.svg" alt="Ready for mass adoption" />
-          <div class="featureHeadline">Ready for mass adoption</div>
-          <p class="featureText secondaryText">Enables Paypal-scale throughput for your dapp or wallet today.</p>
-        </i-column>
-        <i-column xs="12" md="4" class="featureItem">
-          <img src="@/assets/imgs/pages/index/f1.svg" alt="User experience first" />
-          <div class="featureHeadline">User experience first</div>
-          <p class="featureText secondaryText">A protocol designed with obsession over user and developer experience.</p>
-        </i-column>
-      </i-row>
+      <note class="_margin-top-2">
+        <template slot="icon">
+          <i class="noteIcon fal fa-info-square"></i>
+        </template>
+        <template slot="default">
+          <div class="noteText">
+            By using zkSync: Checkout Gateway, you agree to accept full responsability. See our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> for the details.
+          </div>
+        </template>
+      </note>
     </i-container>
   </div>
 </template>
 
-<script type="ts">
-import logo from "@/blocks/Logo.vue";
-import Vue from "vue";
+<script>
+import Note from "@/components/Note.vue";
 
-export default Vue.extend({
+export default {
   components: {
-    logo,
+    Note,
   },
   layout: "index",
   data() {
@@ -66,13 +38,8 @@ export default Vue.extend({
     };
   },
   methods: {
-    scrollDown() {
-      this.$scrollTo(this.$refs.scrollToBlock.$el, 500, {
-        x: false,
-        y: true,
-        cancelable: true,
-        offset: -10,
-      });
+    burnerWallet() {
+      this.$router.push("/account");
     },
     async customWallet() {
       const onboard = this.$store.getters["wallet/getOnboard"];
@@ -88,5 +55,5 @@ export default Vue.extend({
       }
     },
   },
-});
+};
 </script>

@@ -10,7 +10,9 @@
 
 //Blocks
 @import "./blocks/header";
+@import "./blocks/indexHeader";
 @import "./blocks/footer";
+@import "./blocks/socialBlock";
 @import "./blocks/logo";
 @import "./blocks/investors";
 @import "./blocks/onboard";
@@ -27,6 +29,7 @@
 @import "./components/loadingBlock";
 @import "./components/amountInput";
 @import "./components/successBlock";
+@import "./components/note";
 
 //Pages
 @import "./pages/index";

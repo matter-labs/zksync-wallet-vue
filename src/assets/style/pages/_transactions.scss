@@ -4,12 +4,8 @@
   .transactionsTile {
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 100px - 110px);
+    height: $minRouteHeightMain;
     min-height: 500px;
-
-    @media (max-width: $mobile) {
-      height: calc(100vh - 105px - 150px) !important;
-    }
   }
 
   .transactionsListContainer {

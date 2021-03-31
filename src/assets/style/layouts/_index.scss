@@ -2,7 +2,7 @@
 
 .indexLayout {
   .routerContainer {
-    min-height: calc(100vh - 82px);
+    min-height: $minRouteHeight;
     @media (max-width: $mobile) {
       min-height: auto;
     }
@@ -21,25 +21,12 @@
       box-shadow: 0 4px 8px #00000015;
     }
 
-    &.lockVisible {
-      .tile {
-        background-color: transparentize($color: $white, $amount: 0.6);
-
-        img {
-          opacity: .8;
-        }
-
-        .tileIcon {
-          opacity: 1;
-        }
-      }
-    }
-
     .tile {
       position: relative;
       width: 130px;
       height: 130px;
       margin: 20px auto;
+      margin-bottom: 5px;
       padding: 20px;
       background-color: $white;
       border-radius: 27px;
@@ -147,13 +134,5 @@
   footer > .container .badge {
     color: #2f3264;
     background: #e9ecef;
-  }
-}
-
-body.inkline {
-  &.-light {
-    .indexPage, .indexPage footer {
-      background-color: $white;
-    }
   }
 }
