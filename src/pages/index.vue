@@ -5,13 +5,13 @@
       <div data-cy="connectWalet-btn" class="tileContainer _margin-top-1" @click="customWallet()">
         <div class="tile">
           <img src="@/assets/imgs/wallets/external.png" alt="External" />
-          <i class="tileIcon fas fa-lock"></i>
+          <i class="tileIcon ri-lock-line"></i>
         </div>
         <div class="tileName">Connect your wallet</div>
       </div>
       <note class="_margin-top-2">
         <template slot="icon">
-          <i class="noteIcon fal fa-info-square"></i>
+          <i class="noteIcon ri-information-line"></i>
         </template>
         <template slot="default">
           <div class="noteText">

@@ -5,7 +5,7 @@
       <template slot="header">Contacts</template>
       <div>
         <i-input v-if="contactSearch.trim() || displayedContactsList.length !== 0" ref="contactNameInput" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
-          <i slot="prefix" class="far fa-search"></i>
+          <i slot="prefix" class="ri-search-line"></i>
         </i-input>
         <div class="contactsListContainer">
           <div v-if="!contactSearch.trim() && displayedContactsList.length === 0 && !displayOwnAddress" class="nothingFound">
@@ -54,7 +54,7 @@
       </i-column>
       <i-column v-else xs="12" :md="canSaveContact ? 7 : 12">
         <i-button block link variant="secondary" @click="contactsListModal = true">
-          {{ isOwnAddress ? "Own account" : chosenContact.name }}&nbsp;&nbsp;<i class="far fa-angle-down" />
+          {{ isOwnAddress ? "Own account" : chosenContact.name }}&nbsp;&nbsp;<i class="ri-arrow-down-s-line" />
         </i-button>
       </i-column>
       <i-column xs="12" md="5">

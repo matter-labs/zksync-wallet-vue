@@ -29,7 +29,7 @@
     <!-- Loading block -->
     <loading-block v-if="loading === true" :headline="transactionTypeName">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
-        Link to the transaction <i class="fas fa-external-link" />
+        Link to the transaction <i class="ri-external-link-line" />
       </a>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
     </loading-block>
@@ -54,7 +54,7 @@
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'" class="returnBtn">
-          <i class="far fa-long-arrow-alt-left"></i>
+          <i class="ri-arrow-left-line"></i>
         </nuxt-link>
         <div>
           {{ transactionTypeName }}
@@ -131,8 +131,8 @@
 
       <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction()">
         <template v-if="ownAccountUnlocked">
-          <i v-if="type === 'withdraw'" class="fas fa-hand-holding-usd"></i>
-          <i v-else-if="type === 'transfer'" class="fas fa-paper-plane"></i>
+          <i v-if="type === 'withdraw'" class="ri-hand-coin-fill"></i>
+          <i v-else-if="type === 'transfer'" class="ri-send-plane-fill"></i>
         </template>
         {{ !ownAccountUnlocked ? "Activate Account" : transactionTypeName }}
       </i-button>

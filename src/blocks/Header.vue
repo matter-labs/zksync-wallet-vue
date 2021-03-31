@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="loggedInHeader">
     <i-container>
       <i-row>
         <i-column :xs="6" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
@@ -10,19 +10,19 @@
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
           <div class="pagesContainer linksContainer _margin-x-auto">
             <nuxt-link class="headerLink" to="/account">
-              <i class="mobileOnly fas fa-wallet"></i>
+              <i class="mobileOnly ri-wallet-line"></i>
               <span>My wallet</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/deposit">
-              <i class="mobileOnly fas fa-wallet"></i>
+              <i class="mobileOnly ri-download-2-line"></i>
               <span>Deposit</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/contacts">
-              <i class="mobileOnly fas fa-wallet"></i>
+              <i class="mobileOnly ri-contacts-line"></i>
               <span>Contacts</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/transactions">
-              <i class="mobileOnly fas fa-wallet"></i>
+              <i class="mobileOnly ri-history-line"></i>
               <span>Transactions</span>
             </nuxt-link>
           </div>
@@ -40,7 +40,7 @@
                 <user-img :wallet="walletAddressFull" />
               </div>
               <div class="dropdownArrow">
-                <i class="far fa-angle-down" />
+                <i class="ri-arrow-down-s-line" />
               </div>
             </div>
           </div>

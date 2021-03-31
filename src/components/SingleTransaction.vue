@@ -2,10 +2,10 @@
   <div class="transactionsingleTransaction">
     <div class="status">
       <i-tooltip>
-        <em v-if="singleTransaction.transactionStatus === 'Verified'" class="verified far fa-check-double"></em>
-        <em v-else-if="singleTransaction.transactionStatus === 'Committed'" class="committed far fa-check"></em>
-        <em v-else-if="singleTransaction.transactionStatus === 'In progress'" class="inProgress fad fa-spinner-third"></em>
-        <em v-else class="rejected fas fa-times-circle"></em>
+        <em v-if="singleTransaction.transactionStatus === 'Verified'" class="verified ri-check-double-line"></em>
+        <em v-else-if="singleTransaction.transactionStatus === 'Committed'" class="committed ri-check-line"></em>
+        <em v-else-if="singleTransaction.transactionStatus === 'In progress'" class="inProgress ri-loader-5-line"></em>
+        <em v-else class="rejected ri-close-circle-fill"></em>
         <template slot="body">{{ singleTransaction.transactionStatus }}</template>
       </i-tooltip>
     </div>
@@ -41,7 +41,7 @@
         <nuxt-link v-else class="actionValue" :to="`/contacts?w=${singleTransaction.tx.to}`">{{ getAddressName(singleTransaction.tx.to) }}</nuxt-link>
       </div>
     </div>
-    <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(singleTransaction)"><i class="fas fa-external-link"></i></a>
+    <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(singleTransaction)"><i class="ri-external-link-line"></i></a>
   </div>
 </template>
 <script lang="ts">

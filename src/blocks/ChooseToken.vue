@@ -5,7 +5,7 @@
     </div>
     <template v-else>
       <i-input ref="tokenSymbolInput" v-model="search" :placeholder="`Filter balances in ${tokensType}`" maxlength="10">
-        <i slot="prefix" class="far fa-search"></i>
+        <i slot="prefix" class="ri-search-line"></i>
       </i-input>
       <div class="tokenListContainer">
         <div v-for="item in displayedList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">

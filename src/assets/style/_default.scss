@@ -32,12 +32,12 @@ input[type=number] {
 
 .mobileOnly {
   @media screen and (min-width: $mobile) {
-    display: none;
+    display: none !important;
   }
 }
 .desktopOnly {
   @media screen and (max-width: $mobile+1) {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -205,13 +205,10 @@ button.-lg.-circle {
           color: $white;
           font-weight: 300;
           font-size: 2rem;
-          font-family: "Font Awesome 5 Pro";
+          font-family: 'remixicon' !important;
           font-style: normal;
-          font-variant: normal;
-          content: "\f00d";
           -webkit-font-smoothing: antialiased;
-          font-feature-settings: normal;
-          text-rendering: auto;
+          content: "\eb98";
         }
 
         .icon {

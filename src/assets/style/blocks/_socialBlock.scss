@@ -12,6 +12,7 @@
         width: 20px;
         height: 20px;
         transition: color $transition1;
+        text-decoration: none;
         &:hover {
             color: $lightViolet !important;
         }
@@ -19,6 +20,12 @@
         i {
             font-size: 18px;
             line-height: 20px;
+        }
+        svg {
+          display: block;
+          width: 19px;
+          height: 19px;
+          object-fit: contain;
         }
     }
 }

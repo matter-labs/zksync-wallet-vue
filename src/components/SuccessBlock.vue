@@ -5,7 +5,7 @@
     </div>
     <checkmark />
     <slot />
-    <a :href="txLink" v-if="txLink" class="_display-block _text-center _margin-top-1" target="_blank"> Link to the transaction <i class="fas fa-external-link"></i> </a>
+    <a :href="txLink" v-if="txLink" class="_display-block _text-center _margin-top-1" target="_blank"> Link to the transaction <i class="ri-external-link-line"></i> </a>
     <div v-if="recipient" class="infoBlockItem smaller _margin-top-2">
       <div class="amount">
         <span>Recipient:</span>

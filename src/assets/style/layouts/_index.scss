@@ -15,6 +15,7 @@
   }
 
   .tileContainer {
+    z-index: 0;
     cursor: pointer;
 
     &:hover .tile {

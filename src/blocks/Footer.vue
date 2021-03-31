@@ -1,5 +1,5 @@
 <template>
-  <footer class="_padding-y-1 _padding-x-0 _margin-x-auto mainFooter">
+  <footer class="_padding-top-1 mainFooter">
     <img class="zkSyncBootomLogo desktopOnly" src="@/assets/imgs/zkSync.svg" alt="zkSync" />
     <div class="_display-flex _flex-direction-row container _align-items-center _justify-content-space-between">
       <i-row class="_margin-md-y-1 _hidden-md-and-up">

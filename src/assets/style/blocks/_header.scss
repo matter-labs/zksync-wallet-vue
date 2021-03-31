@@ -3,12 +3,14 @@ header {
   height: 80px;
   padding: 0;
   transition: background-color $transition1;
-  @media screen and (max-width: $mobile) {
-    z-index: 9;
-    position: fixed;
-    left: 0;
-    top: 0;
-    box-shadow: $shadowBottom;
+  &.loggedInHeader {
+    @media screen and (max-width: $mobile) {
+      z-index: 9;
+      position: fixed;
+      left: 0;
+      top: 0;
+      box-shadow: $shadowBottom;
+    }
   }
 
   & > .container {
