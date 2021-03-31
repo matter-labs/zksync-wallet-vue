@@ -581,6 +581,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
 
       this.commit("contacts/getContactsFromStorage");
       this.commit("account/setAddress", syncWallet.address());
+      this.commit("account/setNameFromStorage");
       this.commit("account/setLoggedIn", true);
       return true;
     } catch (error) {

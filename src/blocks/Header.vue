@@ -35,6 +35,7 @@
         </i-column>
       </i-row>
     </i-container>
+    <account-modal />
   </header>
 </template>
 
@@ -42,19 +43,18 @@
 import Vue from "vue";
 import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
+import accountModal from "@/blocks/modals/AccountModal.vue";
 
 export default Vue.extend({
   components: {
     logo,
     userImg,
-  },
-  data() {
-    return {
-      renameWalletModal: false,
-      walletName: "",
-    };
+    accountModal,
   },
   computed: {
+    walletName(): string {
+      return this.$store.getters["account/name"];
+    },
     walletAddressFull(): string {
       return this.$store.getters["account/address"];
     },
@@ -65,34 +65,6 @@ export default Vue.extend({
       set(val: boolean): boolean {
         this.$store.commit("setAccountModalState", val);
         return val;
-      },
-    },
-  },
-  watch: {
-    renameWalletModal: {
-      immediate: true,
-      handler(val: boolean): void {
-        if (!process.client) {
-          return;
-        }
-        if (val) {
-          this.$nextTick(() => {
-            if (this.$refs.nameInput) {
-              // @ts-ignore: Unreachable code error
-              this.$refs.nameInput.$el.querySelector("input").focus();
-            }
-          });
-        }
-        const walletName: string = window.localStorage.getItem(this.walletAddressFull) || "";
-        if (walletName && walletName !== this.walletAddressFull) {
-          this.walletName = walletName;
-        } else {
-          let address: string = this.walletAddressFull;
-          if (address.length > 16) {
-            address = address.substr(0, 5) + "..." + address.substr(address.length - 5, address.length - 1);
-          }
-          this.walletName = address;
-        }
       },
     },
   },

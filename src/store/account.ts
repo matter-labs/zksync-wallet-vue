@@ -7,7 +7,21 @@ export const state = () => ({
   selectedWallet: "" as String,
   loadingHint: "" as String,
   address: "" as Address,
+  name: "" as string,
 });
+
+function getNameFromAddress(userAddress: Address) {
+  const walletName: string = window.localStorage.getItem(userAddress) || "";
+  if (!walletName || walletName === userAddress) {
+    let address: string = userAddress;
+    if (address.length > 16) {
+      address = address.substr(0, 5) + "..." + address.substr(address.length - 5, address.length - 1);
+    }
+    return address;
+  } else {
+    return walletName;
+  }
+}
 
 export type AccountModuleState = ReturnType<typeof state>;
 
@@ -23,6 +37,13 @@ export const mutations: MutationTree<AccountModuleState> = {
   },
   setAddress(state, address: Address) {
     state.address = address;
+  },
+  setName(state, name: string) {
+    window.localStorage.setItem(state.address, name);
+    state.name = getNameFromAddress(state.address);
+  },
+  setNameFromStorage(state) {
+    state.name = getNameFromAddress(state.address);
   },
 };
 
@@ -41,5 +62,8 @@ export const getters: GetterTree<AccountModuleState, RootState> = {
   },
   address(state): Address {
     return state.address;
+  },
+  name(state): String {
+    return state.name;
   },
 };
