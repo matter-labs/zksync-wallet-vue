@@ -38,7 +38,6 @@ yarn-error.log*
 .reports/
 /src/static/sw.js
 public
-!public/.gitignore
 .nuxt
 /firebase-debug.log
 /report.txt
@@ -47,3 +46,8 @@ public
 /.yarn/build-state.yml
 /.yarn/install-state.gz
 /.yarn/unplugged/
+
+# unignore
+!public/.gitignore
+!.yarn/releases/*
+!.yarn/plugins/*

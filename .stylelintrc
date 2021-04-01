@@ -48,6 +48,6 @@
     ],
     "max-nesting-depth": 3,
     "order/properties-order": "off",
-    "no-duplicate-selectors": true,
+    "no-duplicate-selectors": true
   }
 }
