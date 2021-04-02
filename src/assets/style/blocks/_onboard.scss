@@ -14,11 +14,18 @@
   .bn-onboard-modal-content {
     max-height: calc(100vh - 2.66em);
     @media (max-width: $mobile) {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 5vh;
       height: 100vh !important;
       max-height: 100vh !important;
       border-radius: 0 !important;
       .bn-onboard-modal-content-header {
         margin: 1rem 0 !important;
+      }
+      .bn-onboard-select-wallet-definition {
+        padding-bottom: calc(5.5vh + 55px);
       }
     }
   }
@@ -122,6 +129,24 @@
     top: 1.65em;
     width: 25px;
     height: 25px;
+    @media (max-width: $mobile) {
+      position: fixed;
+      top: initial;
+      bottom: 3.5vh;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: $lightViolet;
+      box-shadow: 0 2px 12px $lightViolet;
+      padding: 18px;
+
+      svg path {
+        fill: $white;
+      }
+    }
 
     svg {
       width: 100%;
@@ -143,5 +168,13 @@
 body.-dark {
   .walletconnect-modal__footer a {
     color: $darkViolet !important;
+  }
+  .bn-onboard-custom {
+    .bn-onboard-modal-content-close {
+      @media (max-width: $mobile) {
+        background: $violet;
+        box-shadow: 0 2px 12px $violet;
+      }
+    }
   }
 }
