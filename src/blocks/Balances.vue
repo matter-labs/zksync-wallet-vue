@@ -8,9 +8,9 @@
         </div>
         <p>
           Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
-          <a href="//etherscan.io" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer. Nevertheless,
-          balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
-          <a href="//zksync.io/faq/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
+          <a href="https://etherscan.io" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer.
+          Nevertheless, balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
+          <a href="https://zksync.io/faq/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
         </p>
         <p>You can move your balances from L1 into zkSync by making a Deposit</p>
         <p>To move them back from zkSync to L1 you can make a Withdraw</p>
