@@ -87,7 +87,6 @@ import { BigNumber } from "ethers";
 import Vue from "vue";
 
 let updateListInterval = undefined as any;
-
 export default Vue.extend({
   components: {
     Mint,
@@ -110,7 +109,7 @@ export default Vue.extend({
       return this.zkBalances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     activeDeposits() {
-      const deposits = this.$accessor.transaction.depositList;
+      const deposits = this.$accessor.transaction.depositList as depositsInterface;
       const activeDeposits = {} as depositsInterface;
       const finalDeposits = {} as {
         [tokenSymbol: string]: BigNumber;
@@ -136,13 +135,13 @@ export default Vue.extend({
       console.log("activeDeposits updated", val);
     },
   },
+  beforeDestroy() {
+    clearInterval(updateListInterval);
+  },
   mounted() {
     this.getBalances();
     this.autoUpdateList();
     console.log("activeDeposits", this.activeDeposits);
-  },
-  beforeDestroy() {
-    clearInterval(updateListInterval);
   },
   methods: {
     async getBalances(): Promise<void> {
