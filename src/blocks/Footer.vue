@@ -15,7 +15,7 @@
           <a target="_blank" class="footer-link" href="https://zksync.io/legal/terms.html">Terms</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
+          <a target="_blank" class="footer-link" href="https://zksync.io/contact.html">Contact</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
           <span class="badge">|</span>
@@ -55,14 +55,12 @@ export default Vue.extend({
   components: {
     Logo,
   },
-  data() {
-    return {
-      version: GIT_REVISION_SHORT,
-    };
-  },
   computed: {
     blockExplorerLink(): string {
       return APP_ZK_SCAN;
+    },
+    version(): string {
+      return GIT_REVISION_SHORT;
     },
   },
   methods: {
