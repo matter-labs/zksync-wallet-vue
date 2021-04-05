@@ -88,6 +88,7 @@ import Vue from "vue";
 
 let updateListInterval = undefined as any;
 
+
 export default Vue.extend({
   components: {
     Mint,

@@ -105,10 +105,10 @@ export default Vue.extend({
         .filter((e: Tx) => e.tx.type !== "ChangePubKey")
         .map((e: Tx) => {
           if (e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) {
-            e.tx.feePayment = true;
-          }
-          return e;
-        });
+          e.tx.feePayment = true;
+        }
+        return e;
+      });
       if (this.filter) {
         filteredList = filteredList.filter((item: Tx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
@@ -147,7 +147,7 @@ export default Vue.extend({
         return transaction.fail_reason ? transaction.fail_reason : "Rejected";
       }
       if (transaction.verified) {
-        return "Verified";
+        return "Finalized";
       } else if (transaction.commited) {
         return "Committed";
       } else {

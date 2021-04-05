@@ -23,7 +23,7 @@ export default {
     },
   },
   methods: {
-    copyAddress: function () {
+    copyAddress() {
       const elem = document.createElement("textarea");
       elem.style.position = "absolute";
       elem.style.left = -99999999 + "px";

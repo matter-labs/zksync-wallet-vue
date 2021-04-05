@@ -5,6 +5,9 @@
 <script>
 import Transaction from "@/blocks/Transaction.vue";
 
+/**
+ * @property fromRoute
+ */
 export default {
   components: {
     Transaction,

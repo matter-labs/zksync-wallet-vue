@@ -219,7 +219,6 @@ export default Vue.extend({
           this.$store.commit("contacts/saveContact", { name: this.inputtedName.trim(), address: this.inputtedWallet });
         } catch (error) {
           this.$store.dispatch("toaster/error", error.message ? error.message : "Error while saving your contact book.");
-          console.log(error);
         }
         this.inputtedName = "";
         this.inputtedWallet = "";

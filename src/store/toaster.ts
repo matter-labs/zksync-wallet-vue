@@ -45,13 +45,7 @@ export const actions: ActionTree<ToasterModuleState, RootState> = {
   },
 
   error({ dispatch }, messageText) {
-    // @ts-ignore: Unreachable code error
-    this.$toast.error(messageText, {
-      icon: {
-        name: "fa-times-circle",
-      },
-      duration: null,
-    });
+    this.$sentry.captureException(new Error(messageText));
   },
 
   info({ dispatch }, messageText) {

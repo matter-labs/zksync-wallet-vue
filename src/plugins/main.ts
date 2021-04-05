@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueScrollTo from "vue-scrollto";
 import utils from "@/plugins/utils";
+import moment from "moment";
 import Loader from "@/components/loader.vue";
 import { TokenSymbol } from "@/plugins/types";
 import { BigNumber } from "ethers";
@@ -24,6 +25,7 @@ Vue.filter("formatUsdAmount", (value: string | BigNumber, price: string, symbol:
 });
 
 /**
+ * @todo consider switching with some ready component
  * Filtering human-readable time
  */
 Vue.filter("getTimeString", (value: number) => {
@@ -32,3 +34,13 @@ Vue.filter("getTimeString", (value: number) => {
               ${minutes ? utils.handleTimeAmount(minutes, "minute") : ""}
               ${seconds ? utils.handleTimeAmount(seconds, "second") : ""}`;
 });
+
+/**
+ * Format date as a human-readable "XX ago"
+ */
+Vue.filter("formatTimeAgo", (time) => moment(time).fromNow());
+
+/**
+ * Format date as a human-readable "XX ago"
+ */
+Vue.filter("formatDateTime", (time) => moment(time).format("M/D/YYYY h:mm:ss A"));
