@@ -1,7 +1,6 @@
-import { GetterTree, MutationTree } from "vuex";
 import { Address } from "@/plugins/types";
+import { getterTree, mutationTree } from "typed-vuex";
 import { APP_ZK_SCAN } from "~/plugins/build";
-import { RootState } from "~/store";
 
 export const state = () => ({
   loggedIn: false,
@@ -13,7 +12,7 @@ export const state = () => ({
 
 function getNameFromAddress(userAddress: Address): string {
   const walletName: string = window.localStorage.getItem(userAddress) || "";
-  if (walletName.trim().length < 1 && walletName !== userAddress) {
+  if (walletName.trim().length > 1 && walletName !== userAddress) {
     return walletName;
   }
   let address: string = userAddress;
@@ -25,7 +24,7 @@ function getNameFromAddress(userAddress: Address): string {
 
 export type AccountModuleState = ReturnType<typeof state>;
 
-export const mutations: MutationTree<AccountModuleState> = {
+export const mutations = mutationTree(state, {
   setLoggedIn(state, loggedInState: boolean) {
     state.loggedIn = loggedInState;
   },
@@ -48,9 +47,9 @@ export const mutations: MutationTree<AccountModuleState> = {
   setNameFromStorage(state) {
     state.name = getNameFromAddress(state.address);
   },
-};
+});
 
-export const getters: GetterTree<AccountModuleState, RootState> = {
+export const getters = getterTree(state, {
   loggedIn(state): boolean {
     return state.loggedIn;
   },
@@ -72,4 +71,4 @@ export const getters: GetterTree<AccountModuleState, RootState> = {
   zkScanUrl(state: AccountModuleState): string {
     return `${APP_ZK_SCAN}/accounts/${state.address}`;
   },
-};
+});

@@ -51,7 +51,7 @@ export default Vue.extend({
   },
   computed: {
     walletAddressFull(): Address {
-      return this.$store.getters["account/address"];
+      return this.$accessor.account.address;
     },
     transactionsList(): Array<Tx> {
       const list = this.checkLoadMore();
@@ -98,7 +98,7 @@ export default Vue.extend({
   },
   methods: {
     async loadTransactions(offset: number = 0): Promise<Array<Tx>> {
-      const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset });
+      const list = await this.$accessor.wallet.requestTransactionsHistory({ force: false, offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
       let filteredList = list
@@ -138,7 +138,7 @@ export default Vue.extend({
       try {
         await this.loadTransactions();
       } catch (error) {
-        await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while fetching the transactions");
+        await this.$accessor.toaster.error(error.message ? error.message : "Error while fetching the transactions");
       }
       this.loading = false;
     },
@@ -171,7 +171,7 @@ export default Vue.extend({
       }, 120000);
     },
     checkLoadMore() {
-      const listData = this.$store.getters["wallet/getTransactionsHistory"];
+      const listData = this.$accessor.wallet.getTransactionsHistory;
       this.totalLoadedItem += listData.length;
       this.loadMoreAvailable = listData.length >= 25;
       return listData;

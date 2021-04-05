@@ -126,6 +126,7 @@
     "moment": "^2.29.1",
     "nuxt": "^2.15.4",
     "nuxt-i18n": "^6.22.3",
+    "nuxt-typed-vuex": "^0.1.22",
     "nuxt-webfontloader": "^1.1.0",
     "qrcode": "^1.4.4",
     "vue": "^2.6.12",

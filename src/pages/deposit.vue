@@ -166,7 +166,7 @@ export default Vue.extend({
     try {
       this.loading = true;
       if (this.$route.query.token) {
-        const balances = this.$store.getters["wallet/getzkBalances"] as Array<Balance>;
+        const balances = this.$accessor.wallet.getzkBalances;
         for (const item of balances) {
           if (item.symbol === this.$route.query.token) {
             await this.chooseToken(item);
@@ -189,7 +189,7 @@ export default Vue.extend({
         token.unlocked = await this.checkTokenState(token);
       }
       if (token.tokenPrice === undefined) {
-        token.tokenPrice = await this.$store.dispatch("tokens/getTokenPrice", token.symbol);
+        token.tokenPrice = await this.$accessor.tokens.getTokenPrice(token.symbol);
       }
       this.chosenToken = token;
       this.loading = false;
@@ -238,7 +238,7 @@ export default Vue.extend({
       this.tip = "Confirm the transaction to deposit";
       const txAmount = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAmount);
       // @ts-ignore: Unreachable code error
-      const transferTransaction = (await deposit((this.chosenToken as Balance).symbol, txAmount.toString(), this.$store)) as ETHOperation;
+      const transferTransaction = (await deposit((this.chosenToken as Balance).symbol, txAmount.toString(), this.$accessor)) as ETHOperation;
       this.transactionInfo.amount.amount = txAmount.toString();
       this.transactionInfo.amount.token = this.chosenToken as Balance;
       this.transactionInfo.fee.token = this.chosenToken as Balance;
@@ -260,7 +260,7 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         this.tip = `Confirm the transaction in order to unlock ${this.chosenToken.symbol} token`;
         const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string);
-        const balances = this.$store.getters["wallet/getzkBalances"] as Array<Balance>;
+        const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken;
         for (const token of balances) {
           if (token.symbol === "ETH") {

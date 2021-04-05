@@ -23,7 +23,7 @@
           <span>No balances yet. Please make a deposit or request money from someone!</span>
         </div>
       </div>
-      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$store.dispatch('openModal', 'NoTokenFound')"> Can't find a token? </i-button>
+      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token? </i-button>
       <no-token-found />
     </template>
   </div>
@@ -59,9 +59,9 @@ export default Vue.extend({
   computed: {
     balances(): Array<Balance> {
       if (this.tokensType === "L2") {
-        return this.$store.getters["wallet/getzkBalances"];
+        return this.$accessor.wallet.getzkBalances;
       } else {
-        return this.$store.getters["wallet/getInitialBalances"];
+        return this.$accessor.wallet.getInitialBalances;
       }
     },
     displayedList(): Array<Balance> {
@@ -87,9 +87,9 @@ export default Vue.extend({
     async getTokenList(): Promise<void> {
       this.loading = true;
       if (this.tokensType === "L2") {
-        await this.$store.dispatch("wallet/getzkBalances");
+        await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       } else {
-        await this.$store.dispatch("wallet/getInitialBalances");
+        await this.$accessor.wallet.requestInitialBalances(false);
       }
       this.loading = false;
     },

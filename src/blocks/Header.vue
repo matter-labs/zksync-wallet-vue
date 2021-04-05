@@ -3,8 +3,8 @@
     <i-container>
       <i-row>
         <i-column :xs="6" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
-          <nuxt-link to="/account">
-            <logo :is-zk-sync-logo="false"/>
+          <nuxt-link class="logoLinkContainer" to="/account">
+            <logo :is-zk-sync-logo="false" />
           </nuxt-link>
         </i-column>
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
@@ -65,17 +65,17 @@ export default Vue.extend({
   },
   computed: {
     walletName(): string {
-      return this.$store.getters["account/name"];
+      return this.$accessor.account.name;
     },
     walletAddressFull(): string {
-      return this.$store.getters["account/address"];
+      return this.$accessor.account.address;
     },
     accountModal: {
       get(): boolean {
-        return this.$store.getters.getAccountModalState;
+        return this.$accessor.getAccountModalState;
       },
       set(val: boolean): boolean {
-        this.$store.commit("setAccountModalState", val);
+        this.$accessor.setAccountModalState(val);
         return val;
       },
     },
@@ -84,12 +84,12 @@ export default Vue.extend({
     logout(): void {
       this.accountModal = false;
       this.$nextTick(async () => {
-        await this.$store.dispatch("wallet/logout");
+        await this.$accessor.wallet.logout();
         await this.$router.push("/");
       });
     },
     togglePopup(): void {
-      this.$store.commit("setAccountModalState", true);
+      this.$accessor.setAccountModalState(true);
     },
   },
 });

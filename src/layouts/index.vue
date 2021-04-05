@@ -39,7 +39,7 @@ export default {
         }
         if (val.path !== oldVal.path) {
           this.$nextTick(() => {
-            const lastScroll = this.$store.getters["scroll/getLastScroll"];
+            const lastScroll = this.$accessor.scroll.getLastScroll;
             document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
           });
         }

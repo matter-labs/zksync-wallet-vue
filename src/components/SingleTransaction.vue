@@ -2,7 +2,7 @@
   <div class="transactionsingleTransaction">
     <div class="status">
       <i-tooltip>
-        <em v-if="singleTransaction.transactionStatus === 'Verified'" class="verified ri-check-double-line"></em>
+        <em v-if="singleTransaction.transactionStatus === 'Finalized'" class="verified ri-check-double-line"></em>
         <em v-else-if="singleTransaction.transactionStatus === 'Committed'" class="committed ri-check-line"></em>
         <em v-else-if="singleTransaction.transactionStatus === 'In progress'" class="inProgress ri-loader-5-line"></em>
         <em v-else class="rejected ri-close-circle-fill"></em>
@@ -70,7 +70,7 @@ export default Vue.extend({
   },
   computed: {
     walletAddressFull(): Address {
-      return this.$store.getters["account/address"];
+      return this.$accessor.account.address;
     },
   },
   mounted() {
@@ -87,9 +87,6 @@ export default Vue.extend({
     getTimeAgo(time: any): string {
       return moment(time).fromNow();
     },
-    getFormattedTime(time: Date): string {
-      return moment(time).format("M/D/YYYY h:mm:ss A");
-    },
     getFormattedAmount({ tx: { type, priority_op, token, amount, fee, feePayment } }: Tx): string {
       const symbol = type === "Deposit" ? priority_op!.token : token;
       if (!feePayment) {
@@ -100,7 +97,7 @@ export default Vue.extend({
     },
     getAddressName(address: string): string {
       address = address.toLowerCase();
-      const contactFromStore = this.$store.getters["contacts/getByAddress"](address);
+      const contactFromStore = this.$accessor.contacts.getByAddress(address);
       if (contactFromStore) {
         return contactFromStore.name;
       } else {
@@ -110,21 +107,9 @@ export default Vue.extend({
     getTransactionExplorerLink(transaction: Tx): string {
       return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
     },
-    getTransactionStatus(transaction: Tx): string {
-      if (!transaction.success) {
-        return transaction.fail_reason ? transaction.fail_reason : "Rejected";
-      }
-      if (transaction.verified) {
-        return "Verified";
-      } else if (transaction.commited) {
-        return "Committed";
-      } else {
-        return "In progress";
-      }
-    },
     async getWithdrawalTx() {
       if (this.singleTransaction.tx.type === "Withdraw") {
-        const txFromStore = this.$store.getters["transaction/getWithdrawalTx"](this.singleTransaction.hash);
+        const txFromStore = this.$accessor.transaction.getWithdrawalTx(this.singleTransaction.hash);
         if (txFromStore) {
           this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${txFromStore}`;
         } else {
@@ -132,7 +117,7 @@ export default Vue.extend({
           const ethTx = await syncProvider!.getEthTxForWithdrawal(this.singleTransaction.hash);
           if (ethTx) {
             this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${ethTx}`;
-            this.$store.commit("transaction/setWithdrawalTx", { tx: this.singleTransaction.hash, ethTx });
+            this.$accessor.transaction.setWithdrawalTx({ tx: this.singleTransaction.hash, ethTx });
           }
         }
       }

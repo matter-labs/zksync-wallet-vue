@@ -23,19 +23,19 @@ export default Vue.extend({
     logo,
   },
   computed: {
-    loggingIn(): boolean {
-      return this.$store.getters["account/loader"];
+    loggingIn() {
+      return this.$accessor.account.loader;
     },
-    selectedWallet(): string {
-      return this.$store.getters["account/selectedWallet"];
+    selectedWallet() {
+      return this.$accessor.account.selectedWallet;
     },
-    loadingHint(): string {
-      return this.$store.getters["account/loadingHint"];
+    loadingHint() {
+      return this.$accessor.account.loadingHint;
     },
   },
   methods: {
     cancelLogin(): void {
-      this.$store.dispatch("wallet/logout");
+      this.$accessor.wallet.logout();
       this.$router.push("/");
     },
   },

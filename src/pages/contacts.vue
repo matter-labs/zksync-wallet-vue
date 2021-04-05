@@ -142,7 +142,7 @@ export default Vue.extend({
       inputtedWallet: "",
       editingWallet: null as Contact | null,
       modalError: "",
-      contactsList: this.$store.getters["contacts/get"].map((e: Contact) => ({ ...e, deleted: false, notInContacts: false })) as Array<Contact>,
+      contactsList: this.$accessor.contacts.get.map((e: Contact) => ({ ...e, deleted: false, notInContacts: false })) as Array<Contact>,
       fromRoute: {},
     };
   },
@@ -152,7 +152,7 @@ export default Vue.extend({
       return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transfer" ? this.fromRoute : "/contacts";
     },
     walletAddressFull(): string {
-      return this.$store.getters["account/address"];
+      return this.$accessor.account.address;
     },
     displayedContactsList(): Array<Contact> {
       if (!this.search.trim()) {
@@ -216,9 +216,9 @@ export default Vue.extend({
             }
           }
           this.contactsList.unshift({ name: this.inputtedName.trim(), address: this.inputtedWallet, deleted: false });
-          this.$store.commit("contacts/saveContact", { name: this.inputtedName.trim(), address: this.inputtedWallet });
+          this.$accessor.contacts.saveContact({ name: this.inputtedName.trim(), address: this.inputtedWallet });
         } catch (error) {
-          this.$store.dispatch("toaster/error", error.message ? error.message : "Error while saving your contact book.");
+          this.$accessor.toaster.error(error.message ? error.message : "Error while saving your contact book.");
         }
         this.inputtedName = "";
         this.inputtedWallet = "";
@@ -236,7 +236,7 @@ export default Vue.extend({
       for (const item of this.contactsList) {
         if (item.address.toLowerCase() === this.editingWallet?.address.toLowerCase()) {
           item.deleted = true;
-          this.$store.commit("contacts/deleteContact", item.address);
+          this.$accessor.contacts.deleteContact(item.address);
           break;
         }
       }
@@ -249,7 +249,7 @@ export default Vue.extend({
       for (let a = 0; a < this.contactsList.length; a++) {
         if (this.contactsList[a].address.toLowerCase() === contact.address.toLowerCase()) {
           this.$set(this.contactsList, a, { ...contact, deleted: false });
-          this.$store.commit("contacts/saveContact", { name: contact.name, address: contact.address });
+          this.$accessor.contacts.saveContact({ name: contact.name, address: contact.address });
           break;
         }
       }

@@ -152,7 +152,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxt/typescript-build", ["@nuxtjs/dotenv", { path: __dirname }]],
+  buildModules: ["@nuxt/typescript-build", ["@nuxtjs/dotenv", { path: __dirname }], "nuxt-typed-vuex"],
 
   /*
    ** Nuxt.js modules

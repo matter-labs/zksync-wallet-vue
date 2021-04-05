@@ -47,25 +47,25 @@ export default Vue.extend({
   data() {
     return {
       renameWalletModal: false,
-      walletName: this.$store.getters["account/name"],
+      walletName: this.$accessor.account.name,
     };
   },
   computed: {
     accountName(): string {
-      return this.$store.getters["account/name"];
+      return this.$accessor.account.name;
     },
     accountAddress(): string {
-      return this.$store.getters["account/address"];
+      return this.$accessor.account.address;
     },
     accountZkScanUrl(): string {
-      return this.$store.getters["account/zkScanUrl"];
+      return this.$accessor.account.zkScanUrl;
     },
     accountModal: {
       get(): boolean {
-        return this.$store.getters.getAccountModalState;
+        return this.$accessor.getAccountModalState;
       },
       set(val: boolean): boolean {
-        this.$store.commit("setAccountModalState", val);
+        this.$accessor.setAccountModalState(val);
         return val;
       },
     },
@@ -94,7 +94,7 @@ export default Vue.extend({
     logout(): void {
       this.accountModal = false;
       this.$nextTick(async () => {
-        await this.$store.dispatch("wallet/logout");
+        await this.$accessor.wallet.logout();
         await this.$router.push("/");
       });
     },
@@ -103,11 +103,11 @@ export default Vue.extend({
       this.renameWalletModal = true;
     },
     renameWallet(): void {
-      this.$store.commit("account/setName", this.walletName);
+      this.$accessor.account.setName(this.walletName);
       this.renameWalletModal = false;
     },
     togglePopup(): void {
-      this.$store.commit("setAccountModalState", true);
+      this.$accessor.setAccountModalState(true);
     },
   },
 });
