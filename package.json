@@ -50,7 +50,7 @@
   },
   "scripts": {
     "ci": "rm -fr node_modules && rm -rf 'public/*' && yarn install --frozen-lockfile",
-    "ci:build": "yarn ci && sh ./cli-process-env.sh \"$NETWORK\"  && yarn generate --fail-on-error",
+    "ci:build": "yarn run ci && sh ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
     "start:firebase": "firebase serve --only hosting",
     "deploy:prod": "./cli-deploy-production.sh",
     "dev": "sh cli-process-env.sh 'rinkeby' 'dev' 1 && nuxt",
