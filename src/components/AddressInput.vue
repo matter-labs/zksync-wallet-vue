@@ -3,6 +3,7 @@
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
       <user-img v-if="isValid" :wallet="inputtedWallet" />
       <div v-else class="userImgPlaceholder userImg"></div>
+      <!--suppress HtmlFormInputWithoutLabel -->
       <input
         ref="input"
         v-model="inputtedWallet"

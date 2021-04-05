@@ -99,6 +99,10 @@ export default Vue.extend({
           name: "zkCheckout",
           link: "https://www.npmjs.com/package/zksync-checkout/",
         },
+        {
+          name: "zkMint",
+          link: "https://mint.zksync.dev/",
+        },
       ] as Array<DropdownOption>,
     };
   },
