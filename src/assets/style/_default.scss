@@ -30,6 +30,17 @@ input[type=number] {
   font-size: 16px;
 }
 
+.mobileOnly {
+  @media screen and (min-width: $mobile) {
+    display: none !important;
+  }
+}
+.desktopOnly {
+  @media screen and (max-width: $mobile+1) {
+    display: none !important;
+  }
+}
+
 .linkText {
   color: $lightViolet;
   font-weight: 500;
@@ -194,13 +205,10 @@ button.-lg.-circle {
           color: $white;
           font-weight: 300;
           font-size: 2rem;
-          font-family: "Font Awesome 5 Pro";
+          font-family: 'remixicon' !important;
           font-style: normal;
-          font-variant: normal;
-          content: "\f00d";
           -webkit-font-smoothing: antialiased;
-          font-feature-settings: normal;
-          text-rendering: auto;
+          content: "\eb98";
         }
 
         .icon {
@@ -233,7 +241,7 @@ button.-lg.-circle {
 
     .header, .footer, .body {
       background: $modal-background-light !important;
-      border-color: $modal-border-color-light !important;
+      border-color: $light !important;
     }
 
     .footer .modalFooterBtn {

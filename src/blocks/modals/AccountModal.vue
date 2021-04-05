@@ -18,15 +18,15 @@
       </div>
       <template slot="footer">
         <a class="modalFooterBtn" :href="`${getZkScanBaseUrl}/accounts/${walletAddressFull}`" target="_blank">
-          <i class="fas fa-external-link"></i>
+          <i class="ri-external-link-line"></i>
           <span>View in block explorer</span>
         </a>
         <div class="modalFooterBtn" @click="renameWalletOpen()">
-          <i class="fas fa-pen"></i>
+          <i class="ri-pencil-line"></i>
           <span>Rename wallet</span>
         </div>
         <div class="modalFooterBtn" @click="logout()">
-          <i class="far fa-unlink"></i>
+          <i class="ri-link-unlink-m"></i>
           <span>Disconnect wallet</span>
         </div>
       </template>

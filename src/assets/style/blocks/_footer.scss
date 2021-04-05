@@ -10,8 +10,8 @@ footer {
   }
 
   &.mainFooter {
-    margin-top: auto;
-
+    width: 100%;
+    
     .row {
       font-size: 14px !important;
     }
@@ -62,7 +62,7 @@ footer {
 
     .floating-on-mobile {
       position: fixed;
-      right: 4vw;
+      right: 8vw;
       bottom: 4vh;
       width: 2.5rem !important;
       height: 2.5rem !important;

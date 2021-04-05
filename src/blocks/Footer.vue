@@ -1,8 +1,8 @@
 <template>
-  <footer class="_padding-y-1 _padding-x-0 _margin-x-auto mainFooter">
-    <img class="zkSyncBootomLogo" src="@/assets/imgs/zkSync.svg" alt="zkSync" />
+  <footer class="_padding-top-1 mainFooter">
+    <img class="zkSyncBootomLogo desktopOnly" src="@/assets/imgs/zkSync.svg" alt="zkSync" />
     <div class="_display-flex _flex-direction-row container _align-items-center _justify-content-space-between">
-      <i-row class="_margin-y-1 _hidden-md-and-up">
+      <i-row class="_margin-md-y-1 _hidden-md-and-up">
         <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
           v.{{ version }} | <a href="https://uptime.com/s/zksync" target="_blank">uptime</a>
         </i-badge>

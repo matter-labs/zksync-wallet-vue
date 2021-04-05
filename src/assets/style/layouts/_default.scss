@@ -20,7 +20,7 @@
     margin-left: auto;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 4px 4px 8px 0 rgba(11, 52, 102, 0.12);
+    box-shadow: 4px 4px 8px 0 rgba(11, 52, 102, 0.02);
     transition: background-color $transition1;
 
     .tileHeadline {
@@ -107,6 +107,19 @@
     }
   }
 
+  footer {
+    /* Navigation bar space */
+    margin-bottom: 80px;
+    @media (max-width: $mobile) {
+      .floating-on-mobile {
+        bottom: calc(4vh + 70px);
+      }
+    }
+  }
+  .headerSpace {
+    height: $headerHeight;
+    width: 100%;
+  }
 }
 
 body.inkline.-light .defaultLayout {

@@ -9,7 +9,7 @@
     <!-- Loading block -->
     <loading-block v-if="loading === true" headline="Deposit">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
-        Link to the transaction <i class="fas fa-external-link" />
+        Link to the transaction <i class="ri-external-link-line" />
       </a>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
     </loading-block>
@@ -43,7 +43,7 @@
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'" class="returnBtn">
-          <i class="far fa-long-arrow-alt-left"></i>
+          <i class="ri-arrow-left-line"></i>
         </nuxt-link>
         <div>Deposit</div>
       </div>

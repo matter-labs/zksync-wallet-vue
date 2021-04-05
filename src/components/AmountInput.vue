@@ -4,7 +4,7 @@
       <i-button v-if="!token" slot="append" block link variant="secondary" @click="$emit('chooseToken')"> Select token</i-button>
       <i-button v-else slot="append" block class="selectedTokenBtn" link variant="secondary" @click="$emit('chooseToken')">
         <span class="tokenSymbol">{{ token.symbol }}</span
-        >&nbsp;&nbsp;<i class="far fa-angle-down" />
+        >&nbsp;&nbsp;<i class="ri-arrow-down-s-line" />
       </i-button>
     </i-input>
     <div class="error">

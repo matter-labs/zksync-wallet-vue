@@ -14,7 +14,7 @@
         <br />
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
         <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" @click="deleteContact()"
-          ><i class="fas fa-trash"></i>&nbsp;&nbsp;Delete contact</i-button
+          ><i class="ri-delete-bin-line"></i>&nbsp;&nbsp;Delete contact</i-button
         >
         <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
       </div>
@@ -24,7 +24,7 @@
         <span>Contacts</span>
         <i-tooltip>
           <i
-            class="fas fa-plus"
+            class="ri-add-fill"
             @click="
               addContactType = 'add';
               addContactModal = true;
@@ -34,7 +34,7 @@
         </i-tooltip>
       </div>
       <i-input v-if="search.trim() || displayedContactsList.length !== 0" v-model="search" placeholder="Filter contacts" maxlength="20">
-        <i slot="prefix" class="far fa-search"></i>
+        <i slot="prefix" class="ri-search-line"></i>
       </i-input>
 
       <div class="contactsListContainer">
@@ -66,13 +66,13 @@
           </div>
           <div v-if="!item.deleted" class="iconsBlock">
             <i-tooltip trigger="click">
-              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="fas fa-copy"></i></i-button>
+              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="ri-clipboard-line"></i></i-button>
               <template slot="body">Copied!</template>
             </i-tooltip>
-            <i-button block link size="md" variant="secondary" @click="editContact(item)"><i class="fas fa-pen"></i></i-button>
+            <i-button block link size="md" variant="secondary" @click="editContact(item)"><i class="ri-pencil-fill"></i></i-button>
           </div>
           <div v-else class="iconsBlock">
-            <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="fas fa-trash-undo"></i></i-button>
+            <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="ri-arrow-go-back-line"></i></i-button>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@
     <div v-else class="tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="computedReturnLink" class="returnBtn">
-          <i class="far fa-long-arrow-alt-left" />
+          <i class="ri-arrow-left-line" />
         </nuxt-link>
         <div>
           <span v-if="openedContact.notInContacts">{{ openedContact.address.replace(openedContact.address.slice(6, openedContact.address.length - 3), "...") }}</span>
@@ -100,13 +100,13 @@
           inputtedWallet = openedContact.address;
           addContactModal = true;
         "
-        ><i class="fas fa-plus"></i>&nbsp;&nbsp;Add contact
+        ><i class="ri-add-line"></i>&nbsp;&nbsp;Add contact
       </i-button>
       <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)"
-        ><i class="fas fa-pen"></i>&nbsp;&nbsp;Edit contact
+        ><i class="ri-pencil-fill"></i>&nbsp;&nbsp;Edit contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="fas fa-trash-undo"></i>&nbsp;&nbsp;Restore contact</i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Transfer to contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="ri-arrow-go-back-line"></i>&nbsp;&nbsp;Restore contact</i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer to contact</i-button>
     </div>
     <transactions v-if="openedContact" :address="openedContact.address" />
   </div>

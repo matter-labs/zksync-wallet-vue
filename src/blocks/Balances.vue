@@ -19,7 +19,7 @@
     <div class="balancesBlock tileBlock">
       <div class="tileHeadline h3">
         <span>Balances in L2</span>
-        <i class="fas fa-question" @click="balanceInfoModal = true"></i>
+        <i class="ri-question-mark" @click="balanceInfoModal = true"></i>
       </div>
       <div v-if="zkBalances.length === 0 && loading === false" class="centerBlock">
         <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
@@ -31,9 +31,9 @@
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
           </div>
-          <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Transfer </i-button>
+          <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer </i-button>
           <i-input v-model="search" placeholder="Filter tokens" maxlength="6">
-            <i slot="prefix" class="far fa-search"></i>
+            <i slot="prefix" class="ri-search-line"></i>
           </i-input>
         </div>
 
@@ -56,8 +56,8 @@
                 </div>
                 <div class="status">
                   <i-tooltip>
-                    <i v-if="item.status === 'Verified' && !activeDeposits[item.symbol]" class="verified far fa-check-double"></i>
-                    <i v-else class="committed far fa-check"></i>
+                    <i v-if="item.status === 'Verified' && !activeDeposits[item.symbol]" class="verified ri-check-double-line"></i>
+                    <i v-else class="committed ri-check-line"></i>
                     <template slot="body">{{ item.status }}</template>
                   </i-tooltip>
                 </div>
