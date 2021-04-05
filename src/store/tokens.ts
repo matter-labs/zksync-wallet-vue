@@ -1,6 +1,6 @@
 import { BigNumberish } from "ethers";
 import { getterTree, mutationTree, actionTree } from "typed-vuex";
-import { Address, Token, TokenPrices, Tokens, TokenSymbol } from "@/plugins/types";
+import { Address, Token, TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/plugins/types";
 import { walletData } from "~/plugins/walletData";
 
 /**
@@ -55,6 +55,15 @@ export const getters = getterTree(state, {
   },
   getTokenPrices(state): TokenPrices {
     return state.tokenPrices;
+  },
+  getTokenByID(state): Function {
+    return (id: number): TokenItem | undefined => {
+      for (const symbol in state.allTokens) {
+        if (state.allTokens[symbol].id === id) {
+          return state.allTokens[symbol];
+        }
+      }
+    };
   },
 });
 

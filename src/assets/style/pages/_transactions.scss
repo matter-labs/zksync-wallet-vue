@@ -119,9 +119,19 @@
         width: 100%;
 
         .actionType {
+          display: flex;
+          align-items: center;
           color: $gray;
           font-size: 16px;
           line-height: 19px;
+
+          em {
+            position: relative;
+            top: 2px;
+            font-size: 22px;
+            line-height: 22px;
+            margin-left: 5px;
+          }
         }
 
         .actionValue {
