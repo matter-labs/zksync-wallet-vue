@@ -58,19 +58,11 @@ export default Vue.extend({
   },
   computed: {
     balances(): Array<Balance> {
-      if (this.tokensType === "L2") {
-        return this.$accessor.wallet.getzkBalances;
-      } else {
-        return this.$accessor.wallet.getInitialBalances;
-      }
+      return this.tokensType === "L2" ? this.$accessor.wallet.getzkBalances : this.$accessor.wallet.getInitialBalances;
     },
     displayedList(): Array<Balance> {
       let list: Array<Balance>;
-      if (!this.search.trim()) {
-        list = this.balances;
-      } else {
-        list = this.balances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
-      }
+      list = !this.search.trim() ? this.balances : this.balances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
       if (this.onlyAllowed) {
         list = list.filter((e) => !e.restricted);
       }
