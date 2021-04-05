@@ -1,7 +1,7 @@
 <template>
   <div class="accountModalContainer">
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
-      <template slot="header"> Rename wallet</template>
+      <template slot="header">Rename wallet</template>
       <div>
         <i-input ref="nameInput" v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()" />
         <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
@@ -10,14 +10,14 @@
 
     <i-modal v-model="accountModal" size="md">
       <template slot="header">
-        <b>{{ currentWalletName }}</b>
+        <b>{{ walletName }}</b>
       </template>
       <div>
-        <wallet-address :wallet="walletAddressFull" />
-        <vue-qrcode class="addressQR" :value="walletAddressFull" :margin="1" :scale="6" />
+        <wallet-address :wallet="accountAddress" />
+        <vue-qrcode class="addressQR" :value="accountAddress" :margin="1" :scale="6" />
       </div>
       <template slot="footer">
-        <a class="modalFooterBtn" :href="`${getZkScanBaseUrl}/accounts/${walletAddressFull}`" target="_blank">
+        <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank">
           <i class="ri-external-link-line"></i>
           <span>View in block explorer</span>
         </a>
@@ -37,7 +37,6 @@
 <script lang="ts">
 import Vue from "vue";
 import walletAddress from "@/components/walletAddress.vue";
-import { APP_ZK_SCAN } from "@/plugins/build";
 import VueQrcode from "vue-qrcode";
 
 export default Vue.extend({
@@ -52,14 +51,14 @@ export default Vue.extend({
     };
   },
   computed: {
-    currentWalletName(): string {
+    accountName(): string {
       return this.$store.getters["account/name"];
     },
-    walletAddressFull(): string {
+    accountAddress(): string {
       return this.$store.getters["account/address"];
     },
-    getZkScanBaseUrl(): string {
-      return APP_ZK_SCAN;
+    accountZkScanUrl(): string {
+      return this.$store.getters["account/zkScanUrl"];
     },
     accountModal: {
       get(): boolean {
@@ -86,7 +85,7 @@ export default Vue.extend({
             }
           });
         } else {
-          this.walletName = this.currentWalletName;
+          this.walletName = this.accountName;
         }
       },
     },
@@ -113,14 +112,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss">
-.accountModalContainer {
-  position: absolute;
-  pointer-events: none;
-
-  & > * {
-    pointer-events: all;
-  }
-}
-</style>
