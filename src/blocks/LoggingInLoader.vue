@@ -3,9 +3,8 @@
     <div v-if="loggingIn" class="loggingInLoader">
       <logo class="_margin-bottom-3" :is-zk-sync-logo="false" />
       <h1>Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
-      <p v-if="loadingHint" class="hint">
-        <span v-if="loadingHint === 'followInstructions'">Follow the instructions in your wallet</span>
-        <span v-else-if="loadingHint === 'loadingData'">Getting wallet information</span>
+      <p v-if="hintText" class="hint">
+        <span>{{ hintText }}</span>
       </p>
       <div class="_margin-top-2"></div>
       <loader size="lg" />
@@ -26,11 +25,17 @@ export default Vue.extend({
     loggingIn() {
       return this.$accessor.account.loader;
     },
+    hintText(): string {
+      if (this.$accessor.account.loadingHint === "followInstructions") {
+        return "Follow the instructions in your wallet";
+      }
+      if (this.$accessor.account.loadingHint === "loadingData") {
+        return "Getting wallet information";
+      }
+      return "";
+    },
     selectedWallet() {
       return this.$accessor.account.selectedWallet;
-    },
-    loadingHint() {
-      return this.$accessor.account.loadingHint;
     },
   },
   methods: {
