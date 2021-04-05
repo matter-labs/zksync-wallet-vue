@@ -1,7 +1,6 @@
 import Vue from "vue";
 
 import { BigNumber } from "ethers";
-import moment from "moment";
 import VueScrollTo from "vue-scrollto";
 
 import Loader from "@/components/loader.vue";
