@@ -250,9 +250,9 @@ export default Vue.extend({
       chosenToken: false as Balance | false,
       chosenFeeToken: false as Balance | false,
       feesObj: {
-        normal: "",
-        fast: "",
-      } as FeesObj | undefined,
+        GweiBalance: "normal",
+        GweiBalancefast: "fast",
+      } as FeesObj,
       feesLoading: false,
       transactionMode: "normal",
       cantFindFeeToken: false,
@@ -270,25 +270,24 @@ export default Vue.extend({
       } else return this.type === "transfer" ? "Transfer" : "";
     },
     maxAmount: function (): string {
+
+      // @ts-ignore: Unreachable code error
       if (!this.chosenToken) {
         return "0";
+      } else if ((!this.chosenFeeToken || this.chosenToken.symbol === this.chosenFeeToken.symbol) && !this.feesLoading && this.feesObj[this.transactionMode]) {
+        // @ts-ignore: Unreachable code error
+        let amount = this.chosenToken.rawBalance.sub(this.feesObj[this.transactionMode]);
+        if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
+          amount = amount.sub(this.activateAccountFee);
+        }
+        return zksync!.closestPackableTransactionAmount(amount).toString();
       } else {
         // @ts-ignore: Unreachable code error
-        if ((!this.chosenFeeToken || this.chosenToken.symbol === this.chosenFeeToken.symbol) && !this.feesLoading && this.feesObj[this.transactionMode]) {
-          // @ts-ignore: Unreachable code error
-          let amount = this.chosenToken.rawBalance.sub(this.feesObj[this.transactionMode] as String);
-          if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
-            amount = amount.sub(this.activateAccountFee);
-          }
-          return zksync!.closestPackableTransactionAmount(amount).toString();
-        } else {
-          // @ts-ignore: Unreachable code error
-          let amount = this.chosenToken.rawBalance;
-          if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
-            amount = amount.sub(this.activateAccountFee);
-          }
-          return zksync!.closestPackableTransactionAmount(amount).toString();
+        let amount = this.chosenToken.rawBalance;
+        if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
+          amount = amount.sub(this.activateAccountFee);
         }
+        return zksync!.closestPackableTransactionAmount(amount).toString();
       }
     },
     feeToken: function (): Balance {
@@ -390,7 +389,7 @@ export default Vue.extend({
     },
     getFees: async function (): Promise<void> {
       if (!this.chosenToken || !this.inputtedAddress || this.feeToken.restricted) {
-        this.feesObj = undefined;
+        this.feesObj = false;
         return;
       }
       this.feesLoading = true;
@@ -455,19 +454,18 @@ export default Vue.extend({
     withdraw: async function (): Promise<void> {
       const syncProvider = walletData.get().syncProvider as Provider;
       const txAmount = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAmount);
+      console.log(txAmount)
       this.tip = "Confirm the transaction to withdraw";
-      if (this.feesObj === undefined) {
-        throw new Error("Fee fetching error :(");
-      }
-      const withdrawTransaction = (await withdraw({
-        address: this.inputtedAddress,
-        token: (this.chosenToken as Balance).symbol,
-        feeToken: this.feeToken.symbol,
-        amount: txAmount.toString(),
-        fastWithdraw: this.transactionMode === "fast",
-        fees: (this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal) as string,
-        store: this.$store,
-      })) as Transaction;
+      const withdrawTransaction = (await withdraw(
+        this.inputtedAddress,
+        (this.chosenToken as Balance).symbol,
+        this.feeToken.symbol,
+        txAmount.toString(),
+        this.transactionMode === "fast",
+        // @ts-ignore: Unreachable code error
+        this.feesObj[this.transactionMode],
+        this.$store,
+      )) as Transaction;
       let receipt: TransactionReceipt;
       this.transactionInfo.amount.amount = txAmount.toString();
       this.transactionInfo.amount.token = this.chosenToken as Balance;
@@ -498,7 +496,7 @@ export default Vue.extend({
         throw new Error(receipt.failReason);
       }
     },
-    async transfer(): Promise<void> {
+    transfer: async function (): Promise<void> {
       const transferWithdrawWarning = localStorage.getItem("canceledTransferWithdrawWarning");
       if (!transferWithdrawWarning && !this.transferWithdrawWarningModal) {
         const accountUnlocked = await this.accountUnlocked(this.inputtedAddress);
@@ -515,7 +513,7 @@ export default Vue.extend({
         <string>(this.chosenToken as Balance).symbol,
         <string>this.feeToken.symbol,
         <string>txAmount.toString(),
-        this.feesObj?.normal as string,
+        this.feesObj.normal,
         this.$store,
       )) as Transaction;
       this.transactionInfo.amount.amount = txAmount.toString();

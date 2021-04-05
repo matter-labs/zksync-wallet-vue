@@ -2,10 +2,10 @@
   <div class="transactionsingleTransaction">
     <div class="status">
       <i-tooltip>
-        <em v-if="singleTransaction.transactionStatus === 'Verified'" class="verified ri-check-double-line"></em>
+        <em v-if="singleTransaction.transactionStatus === 'Finalized'" class="verified ri-check-double-line"></em>
         <em v-else-if="singleTransaction.transactionStatus === 'Committed'" class="committed ri-check-line"></em>
         <em v-else-if="singleTransaction.transactionStatus === 'In progress'" class="inProgress ri-loader-5-line"></em>
-        <em v-else class="rejected ri-close-circle-fill"></em>
+        <em v-else-if="singleTransaction.transactionStatus === 'Rejected'" class="rejected ri-close-circle-fill"></em>
         <template slot="body">{{ singleTransaction.transactionStatus }}</template>
       </i-tooltip>
     </div>
