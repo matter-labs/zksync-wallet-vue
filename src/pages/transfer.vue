@@ -2,10 +2,11 @@
   <transaction :from-route="fromRoute" type="transfer" />
 </template>
 
-<script>
-import Transaction from "@/blocks/Transaction";
+<script lang="ts">
+import Transaction from "@/blocks/Transaction.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   components: {
     Transaction,
   },
@@ -14,5 +15,5 @@ export default {
       fromRoute: from,
     };
   },
-};
+});
 </script>

@@ -2,13 +2,11 @@
   <transaction :from-route="fromRoute" type="withdraw" />
 </template>
 
-<script>
+<script lang="ts">
 import Transaction from "@/blocks/Transaction.vue";
+import Vue from "vue";
 
-/**
- * @property fromRoute
- */
-export default {
+export default Vue.extend({
   components: {
     Transaction,
   },
@@ -17,5 +15,5 @@ export default {
       fromRoute: from,
     };
   },
-};
+});
 </script>
