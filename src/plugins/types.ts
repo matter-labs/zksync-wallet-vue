@@ -43,7 +43,7 @@ export interface Balance {
   balance: DecimalBalance;
   rawBalance: BigNumber;
   verifiedBalance: DecimalBalance;
-  tokenPrice: string;
+  tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
   address?: string;

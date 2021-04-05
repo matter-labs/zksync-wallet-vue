@@ -43,6 +43,7 @@ footer {
     align-items: center;
     color: $violet;
     text-transform: uppercase;
+    text-decoration: none;
 
     .headerWrapper {
       width: max-content;
@@ -58,8 +59,7 @@ footer {
     }
   }
 
-  @media (max-width: $mobile) {
-
+  @media (max-width: 992px) {
     .floating-on-mobile {
       position: fixed;
       right: 8vw;
@@ -69,6 +69,9 @@ footer {
       padding: 0;
       border-radius: 100%;
       box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.08), 0px 6px 10px 0px rgba(0, 0, 0, 0.10), 0px 1px 18px 0px rgba(0, 0, 0, .10);
+      @media (min-width: $mobile) {
+        bottom: 80px;
+      }
     }
   }
 }

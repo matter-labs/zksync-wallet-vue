@@ -18,11 +18,11 @@ export default Vue.extend({
     isOpened: {
       set(val): void {
         if (val === false) {
-          this.$store.dispatch("closeActiveModal");
+          this.$accessor.closeActiveModal();
         }
       },
       get(): boolean {
-        return this.$store.getters.currentModal !== null && this.$store.getters.currentModal === "NoTokenFound";
+        return this.$accessor.currentModal !== null && this.$accessor.currentModal === "NoTokenFound";
       },
     },
   },

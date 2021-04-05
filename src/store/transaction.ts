@@ -122,7 +122,7 @@ export const actions = actionTree(
       clearTimeout(updateBalancesTimeout);
       updateBalancesTimeout = setTimeout(() => {
         this.dispatch("wallet/requestZkBalances", { accountState: undefined, force: true });
-        this.dispatch("wallet/getTransactionsHistory", { offset: 0, force: true });
+        this.dispatch("wallet/requestTransactionsHistory", { offset: 0, force: true });
       }, 2000);
     },
   },

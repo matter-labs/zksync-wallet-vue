@@ -12,7 +12,7 @@ export const state = () => ({
 
 function getNameFromAddress(userAddress: Address): string {
   const walletName: string = window.localStorage.getItem(userAddress) || "";
-  if (walletName.trim().length < 1 && walletName !== userAddress) {
+  if (walletName.trim().length > 1 && walletName !== userAddress) {
     return walletName;
   }
   let address: string = userAddress;

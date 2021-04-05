@@ -94,7 +94,7 @@ export default Vue.extend({
   },
   computed: {
     ownAddress(): Address {
-      return this.$store.getters["account/address"];
+      return this.$accessor.account.address;
     },
   },
   methods: {

@@ -4,7 +4,7 @@ import { Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interf
 
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Transaction } from "@/plugins/types";
+import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Transaction, Tx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
 import web3Wallet from "@/plugins/web3";
@@ -45,7 +45,7 @@ export const state = () => ({
   },
   transactionsHistory: {
     lastUpdated: 0 as Number,
-    list: [] as Array<Transaction>,
+    list: [] as Array<Tx>,
   },
   withdrawalProcessingTime: false as
     | false
@@ -102,7 +102,7 @@ export const mutations = mutationTree(state, {
     state,
     obj: {
       lastUpdated: Number;
-      list: Array<Transaction>;
+      list: Array<Tx>;
     },
   ) {
     state.transactionsHistory = obj;
@@ -201,7 +201,7 @@ export const getters = getterTree(state, {
   getzkBalances(state): Array<Balance> {
     return state.zkTokens.list;
   },
-  getTransactionsHistory(state): Array<Transaction> {
+  getTransactionsHistory(state): Array<Tx> {
     return state.transactionsHistory.list;
   },
   getTokenPrices(
@@ -218,7 +218,7 @@ export const getters = getterTree(state, {
     state,
   ): {
     lastUpdated: Number;
-    list: Array<Transaction>;
+    list: Array<Tx>;
   } {
     return state.transactionsHistory;
   },
@@ -421,7 +421,7 @@ export const actions = actionTree(
      * @param options
      * @return {Promise<any>}
      */
-    async getTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }): Promise<Array<Transaction>> {
+    async requestTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }): Promise<Array<Tx>> {
       // @ts-ignore: Unreachable code error
       clearTimeout(getTransactionHistoryAgain);
       const localList = getters.getTransactionsList;
@@ -448,12 +448,12 @@ export const actions = actionTree(
         this.dispatch("toaster/error", error.message);
         // @ts-ignore: Unreachable code error
         getTransactionHistoryAgain = setTimeout(() => {
-          dispatch("getTransactionsHistory", { force: true });
+          dispatch("requestTransactionsHistory", { force: true });
         }, 15000);
         return localList.list;
       }
     },
-    async getWithdrawalProcessingTime({
+    async requestWithdrawalProcessingTime({
       getters,
       commit,
     }): Promise<{
@@ -468,7 +468,7 @@ export const actions = actionTree(
         return withdrawTime.data;
       }
     },
-    async getFees({ getters, commit, dispatch }, { address, symbol, feeSymbol, type }): Promise<FeesObj> {
+    async requestFees({ getters, commit, dispatch }, { address, symbol, feeSymbol, type }): Promise<FeesObj> {
       const savedFees = getters.getFees;
       if (
         savedFees &&
@@ -621,9 +621,9 @@ export const actions = actionTree(
         // @todo add sentry report
         console.log("forceRefreshData | requestZkBalances error", err);
       });
-      await dispatch("getTransactionsHistory", { force: true }).catch((err) => {
+      await dispatch("requestTransactionsHistory", { force: true }).catch((err) => {
         // @todo add sentry report
-        console.log("forceRefreshData | getTransactionsHistory error", err);
+        console.log("forceRefreshData | requestTransactionsHistory error", err);
       });
     },
 

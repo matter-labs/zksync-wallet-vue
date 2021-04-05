@@ -256,7 +256,10 @@ export default Vue.extend({
       feesLoading: false,
       transactionMode: "normal",
       cantFindFeeToken: false,
-      withdrawTime: false,
+      withdrawTime: {
+        normal: 0 as Number,
+        fast: 0 as Number,
+      },
       transferWithdrawWarningCheckmark: false,
       activateAccountFeeLoading: false,
       activateAccountFee: undefined as undefined | GweiBalance,
@@ -329,7 +332,7 @@ export default Vue.extend({
       return !this.inputtedAddress || !this.inputtedAmount || !this.chosenToken || this.feesLoading || this.cantFindFeeToken || !this.enoughFeeToken;
     },
     ownAccountUnlocked: function (): boolean {
-      return !this.$store.getters["wallet/isAccountLocked"];
+      return !this.$accessor.wallet.isAccountLocked;
     },
   },
   components: {
@@ -352,7 +355,7 @@ export default Vue.extend({
       },
     },
     inputtedAddress() {
-      this.getFees();
+      this.requestFees();
     },
   },
   methods: {
@@ -360,7 +363,7 @@ export default Vue.extend({
       this.chosenToken = token;
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
-      const balances = JSON.parse(JSON.stringify(this.$store.getters["wallet/getzkBalances"])).sort(
+      const balances = JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort(
         (a: Balance, b: Balance) => parseFloat(b.balance) - parseFloat(a.balance),
       ) as Array<Balance>;
       if (this.chosenToken.restricted) {
@@ -379,35 +382,35 @@ export default Vue.extend({
       } else {
         this.cantFindFeeToken = false;
       }
-      this.getFees();
+      this.requestFees();
       this.getAccountActivationFee();
     },
     chooseFeeToken: function (token: Balance) {
       this.chosenFeeToken = token;
       this.chooseFeeTokenModal = false;
-      this.getFees();
+      this.requestFees();
       this.getAccountActivationFee();
     },
-    getFees: async function (): Promise<void> {
+    requestFees: async function (): Promise<void> {
       if (!this.chosenToken || !this.inputtedAddress || this.feeToken.restricted) {
         this.feesObj = undefined;
         return;
       }
       this.feesLoading = true;
       try {
-        this.feesObj = await this.$store.dispatch("wallet/getFees", {
+        this.feesObj = await this.$accessor.wallet.requestFees({
           address: this.inputtedAddress,
           symbol: this.chosenToken.symbol,
           feeSymbol: this.feeToken.symbol,
           type: this.type,
         });
       } catch (error) {
-        await this.$store.dispatch("toaster/error", error.message);
+        await this.$accessor.toaster.error(error.message);
       }
       this.feesLoading = false;
     },
     getWithdrawalTime: async function (): Promise<void> {
-      this.withdrawTime = await this.$store.dispatch("wallet/getWithdrawalProcessingTime");
+      this.withdrawTime = await this.$accessor.wallet.requestWithdrawalProcessingTime();
     },
     commitTransaction: async function (): Promise<void> {
       console.log(this.ownAccountUnlocked);
@@ -466,7 +469,7 @@ export default Vue.extend({
         amount: txAmount.toString(),
         fastWithdraw: this.transactionMode === "fast",
         fees: (this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal) as string,
-        store: this.$store,
+        store: this.$accessor,
       })) as Transaction;
       let receipt: TransactionReceipt;
       this.transactionInfo.amount.amount = txAmount.toString();
@@ -516,14 +519,13 @@ export default Vue.extend({
         <string>this.feeToken.symbol,
         <string>txAmount.toString(),
         this.feesObj?.normal as string,
-        this.$store,
+        this.$accessor,
       )) as Transaction;
       this.transactionInfo.amount.amount = txAmount.toString();
       this.transactionInfo.amount.token = this.chosenToken as Balance;
       this.transactionInfo.fee.token = this.feeToken;
       let receipt = {} as TransactionReceipt;
       if (transferTransaction && !Array.isArray(transferTransaction)) {
-        // @ts-ignore
         this.transactionInfo.hash = transferTransaction.txHash;
         this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransaction.txHash;
         this.transactionInfo.fee.amount = transferTransaction.txData.tx.fee;
@@ -572,7 +574,7 @@ export default Vue.extend({
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       try {
-        await this.$store.dispatch("wallet/restoreProviderConnection");
+        await this.$accessor.wallet.restoreProviderConnection();
         const foundFee = await syncProvider?.getTransactionFee(
           {
             ChangePubKey: {
@@ -584,7 +586,7 @@ export default Vue.extend({
         );
         this.activateAccountFee = foundFee!.totalFee.toString();
       } catch (error) {
-        await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while receiving an unlock fee");
+        await this.$accessor.toaster.error(error.message ? error.message : "Error while receiving an unlock fee");
       }
       this.activateAccountFeeLoading = false;
     },
@@ -597,7 +599,7 @@ export default Vue.extend({
       try {
         this.clearTransactionInfo();
         const syncWallet = walletData.get().syncWallet;
-        await this.$store.dispatch("wallet/restoreProviderConnection");
+        await this.$accessor.wallet.restoreProviderConnection();
         this.tip = "Confirm the transaction to unlock this account";
 
         if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
@@ -615,7 +617,7 @@ export default Vue.extend({
               onchainAuth: true,
             });
             console.log("changePubkey", changePubkey);
-            await this.$store.dispatch("transaction/watchTransaction", { transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
+            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
             this.setTransactionInfo(changePubkey, true);
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey?.awaitReceipt();
@@ -627,14 +629,14 @@ export default Vue.extend({
               feeToken: this.feeToken.symbol,
             });
             console.log("changePubkey", changePubkey);
-            await this.$store.dispatch("transaction/watchTransaction", { transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
+            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
             this.setTransactionInfo(changePubkey, true);
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey.awaitReceipt();
           }
         }
         const isSigningKeySet = await syncWallet?.isSigningKeySet();
-        this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
+        this.$accessor.wallet.setAccountLockedState(isSigningKeySet === false);
 
         const newAccountState = await syncWallet?.getAccountState();
         walletData.set({ accountState: newAccountState });
@@ -692,7 +694,7 @@ export default Vue.extend({
         this.inputtedAddress = this.$route.query["w"].toString();
       }
       if (this.$route.query["token"]) {
-        const balances = this.$store.getters["wallet/getzkBalances"] as Array<Balance>;
+        const balances = this.$accessor.wallet.getzkBalances;
         for (const item of balances) {
           if (item.symbol === this.$route.query["token"]) {
             this.chooseToken(item);

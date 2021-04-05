@@ -101,7 +101,7 @@ export default Vue.extend({
   },
   computed: {
     zkBalances() {
-      return this.$store.getters["wallet/getzkBalances"];
+      return this.$accessor.wallet.getzkBalances;
     },
     displayedList(): Array<Balance> {
       if (!this.search.trim()) {
@@ -110,7 +110,7 @@ export default Vue.extend({
       return this.zkBalances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     activeDeposits() {
-      const deposits = this.$store.getters["transaction/depositList"] as depositsInterface;
+      const deposits = this.$accessor.transaction.depositList;
       const activeDeposits = {} as depositsInterface;
       const finalDeposits = {} as {
         [tokenSymbol: string]: BigNumber;
@@ -149,7 +149,7 @@ export default Vue.extend({
       if (this.zkBalances.length === 0) {
         this.loading = true;
       }
-      await this.$store.dispatch("wallet/getzkBalances");
+      await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       this.loading = false;
     },
     autoUpdateList(): void {
