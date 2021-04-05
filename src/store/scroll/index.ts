@@ -1,5 +1,4 @@
-import { GetterTree, MutationTree } from "vuex";
-import { RootState } from "~/store";
+import { getterTree, mutationTree } from "typed-vuex";
 
 export const state = () => ({
   lastScroll: false as false | Number,
@@ -8,7 +7,7 @@ export const state = () => ({
 
 export type ScrollModuleState = ReturnType<typeof state>;
 
-export const mutations: MutationTree<ScrollModuleState> = {
+export const mutations = mutationTree(state, {
   setLastScroll(state, lastScroll: Number) {
     if (!lastScroll) {
       state.lastScroll = false;
@@ -19,13 +18,13 @@ export const mutations: MutationTree<ScrollModuleState> = {
   setLastPath(state, lastPath: String) {
     state.lastPath = lastPath;
   },
-};
+});
 
-export const getters: GetterTree<ScrollModuleState, RootState> = {
+export const getters = getterTree(state, {
   getLastScroll(state): false | Number {
     return state.lastScroll;
   },
   getLastPath(state): String {
     return state.lastPath;
   },
-};
+});

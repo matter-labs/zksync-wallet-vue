@@ -1,6 +1,5 @@
-import { GetterTree, MutationTree } from "vuex";
 import { Address } from "@/plugins/types";
-import { RootState } from "~/store";
+import { getterTree, mutationTree } from "typed-vuex";
 
 export const state = () => ({
   loggedIn: false,
@@ -25,7 +24,7 @@ function getNameFromAddress(userAddress: Address) {
 
 export type AccountModuleState = ReturnType<typeof state>;
 
-export const mutations: MutationTree<AccountModuleState> = {
+export const mutations = mutationTree(state, {
   setLoggedIn(state, loggedInState: boolean) {
     state.loggedIn = loggedInState;
   },
@@ -45,9 +44,9 @@ export const mutations: MutationTree<AccountModuleState> = {
   setNameFromStorage(state) {
     state.name = getNameFromAddress(state.address);
   },
-};
+});
 
-export const getters: GetterTree<AccountModuleState, RootState> = {
+export const getters = getterTree(state, {
   loggedIn(state): boolean {
     return state.loggedIn;
   },
@@ -66,4 +65,4 @@ export const getters: GetterTree<AccountModuleState, RootState> = {
   name(state): String {
     return state.name;
   },
-};
+});

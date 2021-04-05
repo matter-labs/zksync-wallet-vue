@@ -87,9 +87,9 @@ export default Vue.extend({
     async getTokenList(): Promise<void> {
       this.loading = true;
       if (this.tokensType === "L2") {
-        await this.$store.dispatch("wallet/getzkBalances");
+        await this.$store.dispatch("wallet/requestZkBalances");
       } else {
-        await this.$store.dispatch("wallet/getInitialBalances");
+        await this.$store.dispatch("wallet/requestInitialBalances");
       }
       this.loading = false;
     },

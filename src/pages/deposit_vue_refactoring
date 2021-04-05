@@ -258,7 +258,7 @@ export default {
     async openTokenSelection() {
       this.loading = true;
       try {
-        const list = await this.$store.dispatch("wallet/getInitialBalances");
+        const list = await this.$store.dispatch("wallet/requestInitialBalances");
         this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
         this.tokenSelectionOpened = true;
       } catch (error) {

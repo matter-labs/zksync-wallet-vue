@@ -142,7 +142,7 @@ export interface Tokens {
 export interface TokenPrices {
   [token: string]: {
     lastUpdated: number;
-    price: string;
+    price: number;
   };
 }
 
