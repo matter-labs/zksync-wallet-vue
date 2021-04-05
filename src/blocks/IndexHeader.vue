@@ -5,7 +5,7 @@
         <i-row>
           <i-column>
             <transition name="fade">
-              <logo />
+              <logo :is-zk-sync-logo="false" />
             </transition>
           </i-column>
           <i-column class="_padding-right-0">
@@ -34,8 +34,8 @@
           </i-column>
           <i-column :xs="12" :md="4" class="_padding-y-0">
             <div class="linksContainer">
-              <a href="/faq/" target="_blank" class="linkItem">FAQ</a>
-              <a href="/dev/" target="_blank" class="linkItem">Docs</a>
+              <a href="https://zksync.io/faq/" target="_blank" class="linkItem">FAQ</a>
+              <a href="https://zksync.io/dev/" target="_blank" class="linkItem">Docs</a>
               <i-dropdown
                 class="_background-transparent _border-none likeLinkItem"
                 :class="{ opened: dropdownOpened }"
@@ -45,8 +45,8 @@
                 trigger="manual"
               >
                 <a class="dropDownHandler linkItem _position-top-0" @click.capture="dropdownOpened = !dropdownOpened"
-                  >zkTools <i class="fal" :class="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"
-                /></a>
+                  >zkTools <i class="fal" :class="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"></i
+                ></a>
                 <i-dropdown-menu v-model="dropdownOpened">
                   <i-dropdown-item v-for="(item, index) in dropdownOptions" :key="index" :href="item.link" target="_blank">{{ item.name }}</i-dropdown-item>
                 </i-dropdown-menu>
@@ -83,10 +83,6 @@ export default Vue.extend({
       opened: false,
       dropdownOpened: false,
       dropdownOptions: [
-        {
-          name: "zkWallet",
-          link: "https://wallet.zksync.io/",
-        },
         {
           name: "zkLink",
           link: "https://link.zksync.io/",

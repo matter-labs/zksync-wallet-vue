@@ -1,6 +1,6 @@
 <template>
   <div class="_display-flex _flex-direction-row _align-items-center headerWrapper">
-    <svg class="projectLogo _margin-right-1-2" viewBox="0 0 1407 276" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg v-if="isZkSyncLogo" class="projectLogo _margin-right-1-2" viewBox="0 0 1407 276" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M485.481 137.772L347.819 0.254944V100.967L211.134 201.801L347.819 201.896V275.289L485.481 137.772Z" fill="#4E529A" />
       <path
         fill-rule="evenodd"
@@ -31,13 +31,36 @@
         fill-opacity="0.9"
       />
     </svg>
+    <template v-else>
+      <img class="zkwallet-logo" alt="zkWallet" :src="zkWalletLogoSrc" />
+      <i-badge variant="primary">
+        <small v-if="network">{{ network }}</small>
+      </i-badge>
+    </template>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { ETHER_NETWORK_NAME } from "~/plugins/build";
 
 export default Vue.extend({
-
+  props: {
+    isZkSyncLogo: {
+      default: true,
+      required: false,
+      type: Boolean,
+    },
+  },
+  computed: {
+    zkWalletLogoSrc(): string {
+      // @ts-ignore
+      const variation = this.$inkline.config.variant === "light" ? "" : "-alt";
+      return require(`@/assets/imgs/logos/zkwallet${variation}.svg`);
+    },
+    network(): string {
+      return ETHER_NETWORK_NAME;
+    },
+  },
 });
 </script>

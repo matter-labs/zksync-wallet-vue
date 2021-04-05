@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div v-if="loggingIn" class="loggingInLoader">
-      <logo class="_margin-bottom-3" />
+      <logo class="_margin-bottom-3" :is-zk-sync-logo="false" />
       <h1>Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
       <p v-if="loadingHint" class="hint">
         <span v-if="loadingHint === 'followInstructions'">Follow the instructions in your wallet</span>
@@ -23,18 +23,18 @@ export default Vue.extend({
     logo,
   },
   computed: {
-    loggingIn: function (): boolean {
+    loggingIn(): boolean {
       return this.$store.getters["account/loader"];
     },
-    selectedWallet: function (): string {
+    selectedWallet(): string {
       return this.$store.getters["account/selectedWallet"];
     },
-    loadingHint: function (): string {
+    loadingHint(): string {
       return this.$store.getters["account/loadingHint"];
     },
   },
   methods: {
-    cancelLogin: function (): void {
+    cancelLogin(): void {
       this.$store.dispatch("wallet/logout");
       this.$router.push("/");
     },
