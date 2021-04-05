@@ -10,6 +10,7 @@ $lightViolet: #8c8dfc;
 $red: #f25f5c;
 $link-color: $lightViolet;
 $color-secondary: $violet;
+$openSans: "Open Sans", "sans-serif";
 
 /* Extracted values */
 $tempLightGray: #bababa;
@@ -62,7 +63,7 @@ $mobile: 768px;
 $maxWidth: 1370px;
 
 /* Shadows */
-$shadowInset: inset 1px 1px 5px rgba(0, 0, 0, 0.03);
+$shadowInset: inset 1px 1px 1px rgba(0, 0, 0, 0.03);
 $popoverShadow: 0 10px 40px rgba(0, 0, 0, 0.05);
 $shadowTop: 0 -3px 10px rgba(0, 0, 0, 0.05);
 $shadowBottom: 0 3px 10px rgba(0, 0, 0, 0.05);

@@ -233,7 +233,6 @@ body {
         top: 0;
         padding: 10px 12px 10px;
         background-color: $darkViolet;
-        transition: transform $transition2;
         will-change: transform;
         transform: translateY(-100vh);
         min-height: 220px;

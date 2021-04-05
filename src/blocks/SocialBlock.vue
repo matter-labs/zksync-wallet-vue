@@ -1,7 +1,7 @@
 <template>
   <div class="socialIcons">
     <a v-for="(socialProfile, numIndex) in socialNetworks" :key="numIndex" :href="socialProfile.url" class="socialItem" target="_blank">
-      <i v-if="socialProfile.icon" :class="socialProfile.icon" />
+      <i v-if="socialProfile.icon" :class="socialProfile.icon"></i>
       <div v-else-if="socialProfile.img" class="svgContainer" v-html="socialIcons[socialProfile.img]"></div>
     </a>
   </div>
@@ -53,7 +53,7 @@ export default {
         {
           name: "All Contacts",
           icon: "ri-at-line",
-          url: "/contact.html",
+          url: "https://zksync.io/contact.html",
           hideIn: "footer",
         },
       ];

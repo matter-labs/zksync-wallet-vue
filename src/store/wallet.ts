@@ -1,18 +1,16 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Transaction } from "@/plugins/types";
+import { Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 
-import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { BigNumber, ethers } from "ethers";
-
-import onboardConfig from "@/plugins/onboardConfig";
-import web3Wallet from "@/plugins/web3";
-import utils from "@/plugins/utils";
-import watcher from "@/plugins/watcher";
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
-
+import onboardConfig from "@/plugins/onboardConfig";
+import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Transaction } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
+import watcher from "@/plugins/watcher";
+import web3Wallet from "@/plugins/web3";
+import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { RootState } from "~/store";
+import utils from "~/plugins/utils";
 
 interface feesInterface {
   [symbol: string]: {
@@ -246,6 +244,9 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   getProvider() {
     return walletData.get().syncProvider;
   },
+  getAccountState() {
+    return walletData.get().syncProvider;
+  },
   isLoggedIn(): boolean {
     return !!(walletData.get().syncWallet && walletData.get().syncWallet?.address);
   },
@@ -258,7 +259,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
    * @return {Promise<boolean>}
    */
   async onboard({ commit }): Promise<boolean> {
-    const onboard = Onboard(onboardConfig(this));
+    const onboard = Onboard(onboardConfig(this) as Initialization);
     commit("setOnboard", onboard);
     const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
     if (!previouslySelectedWallet) {
@@ -340,12 +341,11 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
       tokensList.push({
         symbol: tokenSymbol,
-        status: committedBalance !== verifiedBalance ? "Pending" : "Finalized",
+        status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
         balance: committedBalance,
         rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
         verifiedBalance,
         tokenPrice: price,
-        formattedTotalPrice: utils.getFormattedTotalPrice(price, committedBalance, tokenSymbol),
         restricted: +committedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol),
       } as Balance);
     }
@@ -525,7 +525,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const isSigningKeySet = await syncWallet!.isSigningKeySet();
     commit("setAccountLockedState", !isSigningKeySet);
   },
-/**
+  /**
    * Refreshing the wallet in case local storage keep token or signer fired event
    *
    * @param getters
@@ -574,7 +574,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
       const zksync = await walletData.zkSync();
-      const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
+      const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
       const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
 
       this.commit("account/setLoadingHint", "Getting wallet information");
@@ -607,7 +607,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
    * Remove localy saved data
    * @param commit
    */
-  clearDataStorage({ commit }):void {
+  clearDataStorage({ commit }): void {
     commit("clearDataStorage");
   },
   async forceRefreshData({ dispatch }): Promise<void> {
@@ -630,7 +630,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
    * @param getters
    * @returns {Promise<void>}
    */
-  logout({ commit, getters }):void {
+  logout({ commit, getters }): void {
     const onboard = getters.getOnboard;
     onboard.walletReset();
     walletData.set({ syncProvider: undefined, syncWallet: undefined, accountState: undefined });

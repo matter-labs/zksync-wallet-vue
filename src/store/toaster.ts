@@ -45,6 +45,7 @@ export const actions: ActionTree<ToasterModuleState, RootState> = {
   },
 
   error({ dispatch }, messageText) {
+    // @ts-ignore: Unreachable code error
     this.$sentry.captureException(new Error(messageText));
   },
 

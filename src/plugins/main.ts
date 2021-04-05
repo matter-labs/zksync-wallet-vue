@@ -1,10 +1,12 @@
 import Vue from "vue";
-import VueScrollTo from "vue-scrollto";
-import utils from "@/plugins/utils";
+
+import { BigNumber } from "ethers";
 import moment from "moment";
+import VueScrollTo from "vue-scrollto";
+
 import Loader from "@/components/loader.vue";
 import { TokenSymbol } from "@/plugins/types";
-import { BigNumber } from "ethers";
+import utils from "@/plugins/utils";
 
 Vue.use(VueScrollTo);
 
@@ -38,9 +40,9 @@ Vue.filter("getTimeString", (value: number) => {
 /**
  * Format date as a human-readable "XX ago"
  */
-Vue.filter("formatTimeAgo", (time) => moment(time).fromNow());
+Vue.filter("formatTimeAgo", (time: moment.MomentInput) => moment(time).fromNow());
 
 /**
  * Format date as a human-readable "XX ago"
  */
-Vue.filter("formatDateTime", (time) => moment(time).format("M/D/YYYY h:mm:ss A"));
+Vue.filter("formatDateTime", (time: moment.MomentInput) => moment(time).format("M/D/YYYY h:mm:ss A"));

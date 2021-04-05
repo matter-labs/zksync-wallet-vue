@@ -1,3 +1,4 @@
+import { Initialization, PopupContent } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import Web3 from "web3";
 import web3Wallet from "@/plugins/web3";
 import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
@@ -57,7 +58,7 @@ const initializedWallets = {
 };
 export default (ctx: any) => {
   const colorTheme = localStorage.getItem("colorTheme");
-  return {
+  return <Initialization>{
     hideBranding: true,
     blockPollingInterval: 400000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
@@ -80,7 +81,7 @@ export default (ctx: any) => {
     walletSelect: {
       wallets: initializedWallets.wallets,
     },
-    popupContent: {
+    popupContent: <PopupContent>{
       dismiss: "Dismiss",
       teaser: "Can't find your wallet?",
       fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
