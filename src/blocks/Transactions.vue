@@ -147,7 +147,7 @@ export default Vue.extend({
         return transaction.fail_reason ? transaction.fail_reason : "Rejected";
       }
       if (transaction.verified) {
-        return "Verified";
+        return "Finalized";
       } else if (transaction.commited) {
         return "Committed";
       } else {

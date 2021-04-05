@@ -32,6 +32,7 @@
     },
     "types": [
       "vue-meta",
+      "@types/node",
       "@types/jest",
       "@types/nuxt",
       "@types/node",
@@ -39,12 +40,18 @@
       "@nuxtjs/axios",
       "@nuxt/vue-app",
       "lodash",
-      "_types/main"
+      "_types/main",
+      "@nuxtjs/axios",
+      "@nuxtjs/style-resources",
+      "@inkline/nuxt",
+      "@nuxtjs/sentry",
+      "@nuxtjs/toast",
+      "@nuxt/types",
+      "nuxt-i18n"
     ]
   },
   "exclude": [
     "node_modules",
-    ".nuxt",
     ".yarn",
     "dist",
     "public",

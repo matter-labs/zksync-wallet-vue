@@ -167,7 +167,7 @@ export interface SignedTransaction {
   ethereumSignature?: TxEthSignature;
 }
 
-export declare class Tx {
+export interface Tx {
   hash: string;
   pq_id?: any;
   eth_block: number;

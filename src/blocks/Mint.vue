@@ -7,7 +7,7 @@
       </div>
     </i-modal>
     <div v-if="display">
-      <i-button v-if="networkName !== 'mainnet'" block variant="secondary" size="lg" target="_blank" href="///https://zkmint.zksync.io/">⚡ Get some trial tokens! ⚡ </i-button>
+      <i-button v-if="networkName !== 'mainnet'" block variant="secondary" size="lg" target="_blank" href="https://mint.zksync.dev/">⚡ Get some trial tokens! ⚡ </i-button>
       <i-button v-else block variant="secondary" size="lg" @click="onlyTestNetModal = true">⚡ Get some trial tokens! ⚡ </i-button>
     </div>
   </div>

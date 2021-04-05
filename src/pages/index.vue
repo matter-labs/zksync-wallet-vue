@@ -9,27 +9,12 @@
         </div>
         <div class="tileName">Connect your wallet</div>
       </div>
-      <note class="_margin-top-2">
-        <template slot="icon">
-          <i class="noteIcon ri-information-line"></i>
-        </template>
-        <template slot="default">
-          <div class="noteText">
-            By using zkSync: Checkout Gateway, you agree to accept full responsability. See our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a> for the details.
-          </div>
-        </template>
-      </note>
     </i-container>
   </div>
 </template>
 
 <script>
-import Note from "@/components/Note.vue";
-
 export default {
-  components: {
-    Note,
-  },
   layout: "index",
   data() {
     return {

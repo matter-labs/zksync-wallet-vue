@@ -1,5 +1,4 @@
 import { NuxtConfig } from "@nuxt/types";
-import { NuxtOptionsHead } from "@nuxt/types/config/head";
 
 require("dotenv").config();
 

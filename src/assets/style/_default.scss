@@ -205,7 +205,8 @@ button.-lg.-circle {
           color: $white;
           font-weight: 300;
           font-size: 2rem;
-          font-family: 'remixicon' !important;
+          //noinspection CssNoGenericFontName
+          font-family: "remixicon" !important;
           font-style: normal;
           -webkit-font-smoothing: antialiased;
           content: "\eb98";

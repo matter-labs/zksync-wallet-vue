@@ -1,14 +1,16 @@
+import { Initialization, PopupContent } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import Web3 from "web3";
 import web3Wallet from "@/plugins/web3";
 import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
 
 const APP_NAME = "zkSync Beta";
-const EXPLANATION_LINK = "https://zksync.io/faq/wallets.html#what-if-my-wallet-is-not-supported-or-can-t-sign-a-message";
+const FORCED_EXIT_LINK = `https://withdraw${ETHER_NETWORK_NAME === "mainnet" ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
 const INFURA_KEY = process.env.APP_WALLET_CONNECT;
 const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
 const initializedWallets = {
   wallets: [
+    { walletName: "imToken", rpcUrl: RPC_URL, preferred: true },
     { walletName: "metamask", preferred: true },
     {
       walletName: "walletConnect",
@@ -46,7 +48,6 @@ const initializedWallets = {
     { walletName: "operaTouch" },
     { walletName: "torus" },
     { walletName: "status" },
-    { walletName: "imToken", rpcUrl: RPC_URL },
     { walletName: "meetone" },
     { walletName: "mykey", rpcUrl: RPC_URL },
     { walletName: "huobiwallet", rpcUrl: RPC_URL },
@@ -57,7 +58,7 @@ const initializedWallets = {
 };
 export default (ctx: any) => {
   const colorTheme = localStorage.getItem("colorTheme");
-  return {
+  return <Initialization>{
     hideBranding: true,
     blockPollingInterval: 400000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
@@ -73,17 +74,17 @@ export default (ctx: any) => {
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
           window.localStorage.setItem("selectedWallet", wallet.name);
         }
+        // eslint-disable-next-line no-unused-expressions
+        wallet.provider;
       },
     },
     walletSelect: {
       wallets: initializedWallets.wallets,
     },
-    popupContent: {
+    popupContent: <PopupContent>{
       dismiss: "Dismiss",
       teaser: "Can't find your wallet?",
-      fullHtml: `If you have funds in zkSync on an address that you can't control (a smart contract or an  exchange deposit account),
-        it is possible to initiate a forced withdrawal —&nbsp;<a href="${EXPLANATION_LINK}" target="_blank">please consult the documentation</a>.
-         In the future, this functionality will be automated.`,
+      fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
     },
   };
 };

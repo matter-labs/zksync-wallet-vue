@@ -4,7 +4,7 @@
       <i-row>
         <i-column :xs="6" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
           <nuxt-link to="/account">
-            <logo />
+            <logo :is-zk-sync-logo="false"/>
           </nuxt-link>
         </i-column>
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
@@ -37,10 +37,10 @@
                 </div>
               </div>
               <div class="userImgContainer">
-                <user-img :wallet="walletAddressFull" />
+                <user-img :wallet="walletAddressFull"></user-img>
               </div>
               <div class="dropdownArrow">
-                <i class="ri-arrow-down-s-line" />
+                <i class="ri-arrow-down-s-line"></i>
               </div>
             </div>
           </div>

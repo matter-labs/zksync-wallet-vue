@@ -1,12 +1,12 @@
 <template>
-    <div class="walletContainer">
-        <user-img :wallet="wallet" @click="$emit('clickPicture')" />
-        <span class="walletValue walletAddress">{{wallet}}</span>
-        <i-tooltip trigger="click">
-            <i class="copy ri-clipboard-line" @click="copyAddress()"></i>
-            <template slot="body">Copied!</template>
-        </i-tooltip>
-    </div>
+  <div class="walletContainer">
+    <user-img :wallet="wallet" @click="$emit('clickPicture')" />
+    <span class="walletValue walletAddress">{{ wallet }}</span>
+    <i-tooltip trigger="click">
+      <i class="copy ri-clipboard-line" @click="copyAddress()"></i>
+      <template slot="body">Copied!</template>
+    </i-tooltip>
+  </div>
 </template>
 
 <script>
@@ -23,7 +23,7 @@ export default {
     },
   },
   methods: {
-    copyAddress: function () {
+    copyAddress() {
       const elem = document.createElement("textarea");
       elem.style.position = "absolute";
       elem.style.left = -99999999 + "px";

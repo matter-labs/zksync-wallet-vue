@@ -523,6 +523,7 @@ export default Vue.extend({
       this.transactionInfo.fee.token = this.feeToken;
       let receipt = {} as TransactionReceipt;
       if (transferTransaction && !Array.isArray(transferTransaction)) {
+        // @ts-ignore
         this.transactionInfo.hash = transferTransaction.txHash;
         this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransaction.txHash;
         this.transactionInfo.fee.amount = transferTransaction.txData.tx.fee;

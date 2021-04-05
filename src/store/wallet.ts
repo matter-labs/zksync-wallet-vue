@@ -1,17 +1,16 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ActionTree, GetterTree, MutationTree } from "vuex";
-import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Transaction } from "@/plugins/types";
+import { Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 
-import Onboard from "@matterlabs/zk-wallet-onboarding";
-
-import onboardConfig from "@/plugins/onboardConfig";
-import web3Wallet from "@/plugins/web3";
-import utils from "@/plugins/utils";
-import watcher from "@/plugins/watcher";
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
-
+import onboardConfig from "@/plugins/onboardConfig";
+import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Transaction } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
+import watcher from "@/plugins/watcher";
+import web3Wallet from "@/plugins/web3";
+import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { RootState } from "~/store";
+import utils from "~/plugins/utils";
 
 interface feesInterface {
   [symbol: string]: {
@@ -146,6 +145,7 @@ export const mutations: MutationTree<WalletModuleState> = {
     if (!state.fees[symbol][feeSymbol].hasOwnProperty(type)) {
       state.fees[symbol][feeSymbol][type] = {};
     }
+
     state.fees[symbol][feeSymbol][type][address] = obj as {
       normal: GweiBalance;
       fast: GweiBalance;
@@ -236,6 +236,17 @@ export const getters: GetterTree<WalletModuleState, RootState> = {
   getFees(state): feesInterface {
     return state.fees;
   },
+
+  getSyncWallet() {
+    return walletData.get().syncWallet;
+  },
+
+  getProvider() {
+    return walletData.get().syncProvider;
+  },
+  getAccountState() {
+    return walletData.get().syncProvider;
+  },
   isLoggedIn(): boolean {
     return !!(walletData.get().syncWallet && walletData.get().syncWallet?.address);
   },
@@ -248,7 +259,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
    * @return {Promise<boolean>}
    */
   async onboard({ commit }): Promise<boolean> {
-    const onboard = Onboard(onboardConfig(this));
+    const onboard = Onboard(onboardConfig(this) as Initialization);
     commit("setOnboard", onboard);
     const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
     if (!previouslySelectedWallet) {
@@ -324,7 +335,6 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       listVerified = newAccountState?.verified.balances || {};
     }
     const restrictedTokens = this.getters["tokens/getRestrictedTokens"];
-
     for (const tokenSymbol in listCommitted) {
       const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
       const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
@@ -405,35 +415,27 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
    * @param dispatch
    * @param commit
    * @param getters
+   * @param force
+   * @param offset
    * @param options
    * @return {Promise<any>}
    */
-  async getTransactionsHistory({ dispatch, commit, getters }, options): Promise<Array<Transaction>> {
+  async getTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }): Promise<Array<Transaction>> {
     // @ts-ignore: Unreachable code error
     clearTimeout(getTransactionHistoryAgain);
     const localList = getters.getTransactionsList;
-    if (!options) {
-      options = {
-        force: false,
-        offset: 0,
-      };
-    } else {
-      if (options.force === undefined) {
-        options.force = false;
-      }
-      if (options.offset === undefined) {
-        options.offset = 0;
-      }
-    }
-    if (options.force === false && localList.lastUpdated > new Date().getTime() - 30000 && options.offset === 0) {
+    /**
+     * If valid we're returning cached transaction list
+     */
+    if (!force && localList.lastUpdated > new Date().getTime() - 30000 && offset === 0) {
       return localList.list;
     }
     try {
       const syncWallet = walletData.get().syncWallet;
-      const fetchTransactionHistory = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet?.address()}/history/${options.offset}/25`);
+      const fetchTransactionHistory = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
       commit("setTransactionsList", {
         lastUpdated: new Date().getTime(),
-        list: options.offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
+        list: offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
       });
       for (const tx of fetchTransactionHistory.data) {
         if (tx.hash && tx.hash.includes("sync-tx:") && !tx.verified && !tx.fail_reason) {
@@ -445,7 +447,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       this.dispatch("toaster/error", error.message);
       // @ts-ignore: Unreachable code error
       getTransactionHistoryAgain = setTimeout(() => {
-        dispatch("getTransactionsHistory", true);
+        dispatch("getTransactionsHistory", { force: true });
       }, 15000);
       return localList.list;
     }
@@ -523,11 +525,19 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
     const isSigningKeySet = await syncWallet!.isSigningKeySet();
     commit("setAccountLockedState", !isSigningKeySet);
   },
+  /**
+   * Refreshing the wallet in case local storage keep token or signer fired event
+   *
+   * @param getters
+   * @param dispatch
+   * @param firstSelect
+   * @returns {Promise<boolean>}
+   */
   async walletRefresh({ getters, dispatch }, firstSelect = true): Promise<boolean> {
     try {
       /* dispatch("changeNetworkRemove"); */
       const onboard = getters.getOnboard;
-      this.commit("account/setLoadingHint", "followInstructions");
+      this.commit("account/setLoadingHint", "Follow the instructions in your wallet");
       let walletCheck = false;
       if (firstSelect) {
         walletCheck = await onboard.walletSelect();
@@ -567,7 +577,7 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
       const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
 
-      this.commit("account/setLoadingHint", "loadingData");
+      this.commit("account/setLoadingHint", "Getting wallet information");
       const accountState = await syncWallet.getAccountState();
 
       walletData.set({ syncProvider, syncWallet, accountState, ethWallet });
@@ -592,6 +602,11 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       return false;
     }
   },
+
+  /**
+   * Remove localy saved data
+   * @param commit
+   */
   clearDataStorage({ commit }): void {
     commit("clearDataStorage");
   },
@@ -608,6 +623,13 @@ export const actions: ActionTree<WalletModuleState, RootState> = {
       console.log("forceRefreshData | getTransactionsHistory error", err);
     });
   },
+
+  /**
+   * Perform logout and fire a couple of events
+   * @param commit
+   * @param getters
+   * @returns {Promise<void>}
+   */
   logout({ commit, getters }): void {
     const onboard = getters.getOnboard;
     onboard.walletReset();

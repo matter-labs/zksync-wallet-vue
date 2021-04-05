@@ -44,6 +44,7 @@ export default Vue.extend({
     token: {
       type: Object,
       required: false,
+      default: undefined,
     },
     autofocus: {
       type: Boolean,
