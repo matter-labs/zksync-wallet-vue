@@ -1,4 +1,12 @@
-import { ActionTree, GetterTree, MutationTree } from "vuex";
+import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
+
+import * as account from "@/store/account";
+import * as contacts from "@/store/contacts";
+import * as scroll from "@/store/scroll/index";
+import * as toaster from "@/store/toaster";
+import * as tokens from "@/store/tokens";
+import * as transaction from "@/store/transaction";
+import * as wallet from "@/store/wallet";
 
 export const state = () => ({
   accountModalOpened: false,
@@ -10,29 +18,48 @@ export const state = () => ({
 
 export type RootState = ReturnType<typeof state>;
 
-export const getters: GetterTree<RootState, RootState> = {
+export const getters = getterTree(state, {
   getAccountModalState(state) {
     return state.accountModalOpened;
   },
   currentModal(state) {
     return state.currentModal;
   },
-};
+});
 
-export const mutations: MutationTree<RootState> = {
+export const mutations = mutationTree(state, {
   setAccountModalState(state, modalState: boolean) {
     state.accountModalOpened = modalState;
   },
-  setCurrentModal(state, modalName: String) {
+  setCurrentModal(state, modalName: String | false) {
     state.currentModal = modalName;
   },
-};
+});
 
-export const actions: ActionTree<RootState, RootState> = {
-  openModal({ commit }, modalName) {
-    commit("setCurrentModal", modalName);
+export const actions = actionTree(
+  { state, getters, mutations },
+  {
+    openModal({ commit }, modalName) {
+      commit("setCurrentModal", modalName);
+    },
+    closeActiveModal({ commit }) {
+      commit("setCurrentModal", false);
+    },
   },
-  closeActiveModal({ commit }) {
-    commit("setCurrentModal", null);
+);
+
+export const accessorType = getAccessorType({
+  state,
+  getters,
+  mutations,
+  actions,
+  modules: {
+    scroll,
+    account,
+    contacts,
+    toaster,
+    tokens,
+    transaction,
+    wallet,
   },
-};
+});

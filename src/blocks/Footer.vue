@@ -9,13 +9,13 @@
       </i-row>
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
         <div class="_padding-1-2 _padding-md-x-1 _padding-left-0">
-          <a target="_blank" class="footer-link link" href="//zksync.io/faq/intro.html">Docs</a>
+          <a target="_blank" class="footer-link link" href="https://zksync.io/faq/intro.html">Docs</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
           <a target="_blank" class="footer-link" href="https://zksync.io/legal/terms.html">Terms</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="//zksync.io/contact.html">Contact</a>
+          <a target="_blank" class="footer-link" href="https://zksync.io/contact.html">Contact</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
           <span class="badge">|</span>
@@ -47,29 +47,25 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import { GIT_REVISION_SHORT, APP_ZK_SCAN } from "@/plugins/build";
 import Logo from "@/blocks/Logo.vue";
+import Vue from "vue";
 
 export default Vue.extend({
   components: {
     Logo,
   },
-  data() {
-    return {
-      version: GIT_REVISION_SHORT,
-    };
-  },
   computed: {
     blockExplorerLink(): string {
       return APP_ZK_SCAN;
     },
+    version(): string {
+      return GIT_REVISION_SHORT;
+    },
   },
   methods: {
     toggleDarkMode() {
-      // @ts-ignore: Unreachable code error
       this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
-      // @ts-ignore: Unreachable code error
       localStorage.setItem("colorTheme", this.$inkline.config.variant);
     },
   },

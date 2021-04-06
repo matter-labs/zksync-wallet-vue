@@ -33,8 +33,8 @@
           <template slot="body">Add contact</template>
         </i-tooltip>
       </div>
-      <i-input v-if="search.trim() || displayedContactsList.length !== 0" v-model="search" placeholder="Filter contacts" maxlength="20">
-        <i slot="prefix" class="ri-search-line"></i>
+      <i-input v-if="search.trim() || displayedContactsList.length !== 0" v-model="search" placeholder="Filter contacts" ref="searchInput" autofocus maxlength="20">
+        <i slot="prefix" class="ri-search-line"/>
       </i-input>
 
       <div class="contactsListContainer">
@@ -128,7 +128,7 @@ export default Vue.extend({
     transactions,
     addressInput,
   },
-  asyncData({ from }) {
+  asyncData({ from }): any {
     return {
       fromRoute: from,
     };
@@ -142,23 +142,19 @@ export default Vue.extend({
       inputtedWallet: "",
       editingWallet: null as Contact | null,
       modalError: "",
-      contactsList: this.$store.getters["contacts/get"].map((e: Contact) => ({ ...e, deleted: false, notInContacts: false })) as Array<Contact>,
-      fromRoute: {},
+      contactsList: this.$accessor.contacts.get.map((e: Contact) => ({ ...e, deleted: false, notInContacts: false })) as Array<Contact>,
+      fromRoute: {} as any,
     };
   },
   computed: {
     computedReturnLink(): string {
-      // @ts-ignore: Unreachable code error
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transfer" ? this.fromRoute : "/contacts";
+      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute?.path !== "/transfer" ? this.fromRoute : "/contacts";
     },
     walletAddressFull(): string {
-      return this.$store.getters["account/address"];
+      return this.$accessor.account.address;
     },
     displayedContactsList(): Array<Contact> {
-      if (!this.search.trim()) {
-        return this.contactsList;
-      }
-      return this.contactsList.filter((e: Contact) => e.name.toLowerCase().includes(this.search.trim().toLowerCase()));
+      return !this.search.trim() ? this.contactsList : this.contactsList.filter((e: Contact) => e.name.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     openedContact(): null | Contact {
       const wallet = this.$route.query.w;
@@ -187,7 +183,7 @@ export default Vue.extend({
         this.$nextTick(() => {
           if (this.$refs.nameInput) {
             // @ts-ignore: Unreachable code error
-            this.$refs.nameInput.$el.querySelector("input").focus();
+            this.$refs.nameInput?.$el?.querySelector("input").focus();
           }
         });
       }
@@ -195,6 +191,12 @@ export default Vue.extend({
     $route(val, oldVal) {
       this.fromRoute = oldVal;
     },
+  },
+  mounted(): void {
+    //noinspection ES6ShorthandObjectProperty
+    if (this.$refs.searchInput) {
+      this.$refs.searchInput?.$el?.querySelector("input").focus();
+    }
   },
   methods: {
     addContact() {
@@ -216,9 +218,9 @@ export default Vue.extend({
             }
           }
           this.contactsList.unshift({ name: this.inputtedName.trim(), address: this.inputtedWallet, deleted: false });
-          this.$store.commit("contacts/saveContact", { name: this.inputtedName.trim(), address: this.inputtedWallet });
+          this.$accessor.contacts.saveContact({ name: this.inputtedName.trim(), address: this.inputtedWallet });
         } catch (error) {
-          this.$store.dispatch("toaster/error", error.message ? error.message : "Error while saving your contact book.");
+          this.$accessor.toaster.error(error.message ? error.message : "Error while saving your contact book.");
         }
         this.inputtedName = "";
         this.inputtedWallet = "";
@@ -236,7 +238,7 @@ export default Vue.extend({
       for (const item of this.contactsList) {
         if (item.address.toLowerCase() === this.editingWallet?.address.toLowerCase()) {
           item.deleted = true;
-          this.$store.commit("contacts/deleteContact", item.address);
+          this.$accessor.contacts.deleteContact(item.address);
           break;
         }
       }
@@ -249,7 +251,7 @@ export default Vue.extend({
       for (let a = 0; a < this.contactsList.length; a++) {
         if (this.contactsList[a].address.toLowerCase() === contact.address.toLowerCase()) {
           this.$set(this.contactsList, a, { ...contact, deleted: false });
-          this.$store.commit("contacts/saveContact", { name: contact.name, address: contact.address });
+          this.$accessor.contacts.saveContact({ name: contact.name, address: contact.address });
           break;
         }
       }

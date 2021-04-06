@@ -1,7 +1,7 @@
 <template>
   <div class="accountModalContainer">
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
-      <template slot="header"> Rename wallet</template>
+      <template slot="header">Rename wallet</template>
       <div>
         <i-input ref="nameInput" v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()" />
         <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
@@ -10,14 +10,14 @@
 
     <i-modal v-model="accountModal" size="md">
       <template slot="header">
-        <b>{{ currentWalletName }}</b>
+        <b>{{ walletName }}</b>
       </template>
       <div>
-        <wallet-address :wallet="walletAddressFull" />
-        <vue-qrcode class="addressQR" :value="walletAddressFull" :margin="1" :scale="6" />
+        <wallet-address :wallet="accountAddress" />
+        <vue-qrcode class="addressQR" :value="accountAddress" :margin="1" :scale="6" />
       </div>
       <template slot="footer">
-        <a class="modalFooterBtn" :href="`${getZkScanBaseUrl}/accounts/${walletAddressFull}`" target="_blank">
+        <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank">
           <i class="ri-external-link-line"></i>
           <span>View in block explorer</span>
         </a>
@@ -37,7 +37,6 @@
 <script lang="ts">
 import Vue from "vue";
 import walletAddress from "@/components/walletAddress.vue";
-import { APP_ZK_SCAN } from "@/plugins/build";
 import VueQrcode from "vue-qrcode";
 
 export default Vue.extend({
@@ -48,25 +47,25 @@ export default Vue.extend({
   data() {
     return {
       renameWalletModal: false,
-      walletName: this.$store.getters["account/name"],
+      walletName: this.$accessor.account.name,
     };
   },
   computed: {
-    currentWalletName(): string {
-      return this.$store.getters["account/name"];
+    accountName(): string {
+      return this.$accessor.account.name;
     },
-    walletAddressFull(): string {
-      return this.$store.getters["account/address"];
+    accountAddress(): string {
+      return this.$accessor.account.address;
     },
-    getZkScanBaseUrl(): string {
-      return APP_ZK_SCAN;
+    accountZkScanUrl(): string {
+      return this.$accessor.account.zkScanUrl;
     },
     accountModal: {
       get(): boolean {
-        return this.$store.getters.getAccountModalState;
+        return this.$accessor.getAccountModalState;
       },
       set(val: boolean): boolean {
-        this.$store.commit("setAccountModalState", val);
+        this.$accessor.setAccountModalState(val);
         return val;
       },
     },
@@ -86,7 +85,7 @@ export default Vue.extend({
             }
           });
         } else {
-          this.walletName = this.currentWalletName;
+          this.walletName = this.accountName;
         }
       },
     },
@@ -95,7 +94,7 @@ export default Vue.extend({
     logout(): void {
       this.accountModal = false;
       this.$nextTick(async () => {
-        await this.$store.dispatch("wallet/logout");
+        await this.$accessor.wallet.logout();
         await this.$router.push("/");
       });
     },
@@ -104,23 +103,12 @@ export default Vue.extend({
       this.renameWalletModal = true;
     },
     renameWallet(): void {
-      this.$store.commit("account/setName", this.walletName);
+      this.$accessor.account.setName(this.walletName);
       this.renameWalletModal = false;
     },
     togglePopup(): void {
-      this.$store.commit("setAccountModalState", true);
+      this.$accessor.setAccountModalState(true);
     },
   },
 });
 </script>
-
-<style lang="scss">
-.accountModalContainer {
-  position: absolute;
-  pointer-events: none;
-
-  & > * {
-    pointer-events: all;
-  }
-}
-</style>

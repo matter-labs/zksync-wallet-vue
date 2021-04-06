@@ -102,7 +102,7 @@ export default Vue.extend({
   },
   computed: {
     ownAddress(): Address {
-      return this.$store.getters["account/address"];
+      return this.$accessor.account.address;
     },
     canSaveContact(): boolean {
       return !this.isInContacts && !!this.chosenContact && !!this.chosenContact.address && !this.chosenContact.name && !this.isOwnAddress;
@@ -115,7 +115,7 @@ export default Vue.extend({
       }
     },
     contactsList(): Array<Contact> {
-      return this.$store.getters["contacts/get"];
+      return this.$accessor.contacts.get;
     },
     displayedContactsList(): Array<Contact> {
       if (!this.contactSearch.trim()) {
@@ -171,14 +171,14 @@ export default Vue.extend({
       }
       if (!contact.name) {
         if (this.checkAddressInContacts(contact.address)) {
-          contact = this.$store.getters["contacts/getByAddress"](contact.address);
+          contact = this.$accessor.contacts.getByAddress(contact.address);
         }
       }
       this.chosenContact = contact;
       this.contactsListModal = false;
     },
     checkAddressInContacts(address: Address): boolean {
-      return this.$store.getters["contacts/isInContacts"](address);
+      return this.$accessor.contacts.isInContacts(address);
     },
     saveContact(): void {
       if (this.saveContactInput.trim().length <= 0) {
@@ -189,7 +189,7 @@ export default Vue.extend({
         name: this.saveContactInput,
         address: (this.chosenContact as Contact).address,
       };
-      this.$store.commit("contacts/saveContact", contact);
+      this.$accessor.contacts.saveContact(contact);
       this.chooseContact(contact);
       this.saveContactInput = "";
       this.saveContactModal = false;

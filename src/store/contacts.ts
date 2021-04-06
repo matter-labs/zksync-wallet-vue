@@ -1,8 +1,7 @@
-import { GetterTree, MutationTree } from "vuex";
+import { getterTree, mutationTree } from "typed-vuex";
 import { Address, Contact } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import utils from "@/plugins/utils";
-import { RootState } from "~/store";
 
 export const state = () => ({
   contactsList: [] as Array<Contact>,
@@ -10,7 +9,7 @@ export const state = () => ({
 
 export type ContactsModuleState = ReturnType<typeof state>;
 
-export const mutations: MutationTree<ContactsModuleState> = {
+export const mutations = mutationTree(state, {
   getContactsFromStorage(state) {
     try {
       const walletAddress = walletData.get().syncWallet!.address();
@@ -53,9 +52,9 @@ export const mutations: MutationTree<ContactsModuleState> = {
       window.localStorage.setItem("contacts-" + walletData.get().syncWallet!.address(), JSON.stringify(state.contactsList));
     }
   },
-};
+});
 
-export const getters: GetterTree<ContactsModuleState, RootState> = {
+export const getters = getterTree(state, {
   get(state) {
     return state.contactsList;
   },
@@ -81,4 +80,4 @@ export const getters: GetterTree<ContactsModuleState, RootState> = {
       return false;
     };
   },
-};
+});

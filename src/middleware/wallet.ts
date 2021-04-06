@@ -1,31 +1,33 @@
 import { walletData } from "@/plugins/walletData";
 import { Context } from "@nuxt/types";
 
-export default async (context: Context) => {
+export default ({ redirect, app: { $accessor }, route }: Context) => {
   if (walletData.get().syncWallet) {
-    if (context.route.path === "/") {
-      context.redirect("/mint");
+    if (route.path === "/") {
+      redirect("/account");
     }
     return;
   }
-  await (async () => {
-    const onboardResult = await context.store.dispatch("wallet/onboard");
-    if (onboardResult !== true) {
-      await context.store.dispatch("wallet/logout");
-      if (context.route.path !== "/") {
-        context.redirect("/");
+  (async () => {
+    // @ts-ignore
+    const onboardResult = await $accessor.wallet.onboardInit();
+    if (!onboardResult) {
+      await $accessor.wallet.logout();
+      if (route.path !== "/") {
+        redirect("/");
       }
       return;
     }
 
-    const refreshWallet = await context.store.dispatch("wallet/walletRefresh");
-    if (refreshWallet !== true) {
-      await context.store.dispatch("wallet/logout");
-      if (context.route.path !== "/") {
-        context.redirect("/");
+    // @ts-ignore
+    const refreshWallet = await $accessor.wallet.walletRefresh();
+    if (!refreshWallet) {
+      await $accessor.wallet.logout();
+      if (route.path !== "/") {
+        redirect("/");
       }
-    } else if (context.route.path === "/") {
-      context.redirect("/mint");
+    } else if (route.path === "/") {
+      redirect("/account");
     }
   })();
 };

@@ -8,9 +8,9 @@
         </div>
         <p>
           Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
-          <a href="//etherscan.io" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer. Nevertheless,
-          balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
-          <a href="//zksync.io/faq/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
+          <a href="https://etherscan.io" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer.
+          Nevertheless, balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
+          <a href="https://zksync.io/faq/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
         </p>
         <p>You can move your balances from L1 into zkSync by making a Deposit</p>
         <p>To move them back from zkSync to L1 you can make a Withdraw</p>
@@ -32,7 +32,7 @@
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
           </div>
           <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer </i-button>
-          <i-input v-model="search" placeholder="Filter tokens" maxlength="6">
+          <i-input v-model="search" placeholder="Filter tokens" maxlength="6" autofocus ref="searchInput">
             <i slot="prefix" class="ri-search-line"></i>
           </i-input>
         </div>
@@ -87,7 +87,6 @@ import { BigNumber } from "ethers";
 import Vue from "vue";
 
 let updateListInterval = undefined as any;
-
 export default Vue.extend({
   components: {
     Mint,
@@ -101,7 +100,7 @@ export default Vue.extend({
   },
   computed: {
     zkBalances() {
-      return this.$store.getters["wallet/getzkBalances"];
+      return this.$accessor.wallet.getzkBalances;
     },
     displayedList(): Array<Balance> {
       if (!this.search.trim()) {
@@ -110,7 +109,7 @@ export default Vue.extend({
       return this.zkBalances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     activeDeposits() {
-      const deposits = this.$store.getters["transaction/depositList"] as depositsInterface;
+      const deposits = this.$accessor.transaction.depositList as depositsInterface;
       const activeDeposits = {} as depositsInterface;
       const finalDeposits = {} as {
         [tokenSymbol: string]: BigNumber;
@@ -136,20 +135,23 @@ export default Vue.extend({
       console.log("activeDeposits updated", val);
     },
   },
+  beforeDestroy() {
+    clearInterval(updateListInterval);
+  },
   mounted() {
     this.getBalances();
     this.autoUpdateList();
-    console.log("activeDeposits", this.activeDeposits);
-  },
-  beforeDestroy() {
-    clearInterval(updateListInterval);
+    //noinspection ES6ShorthandObjectProperty
+    if (this.$refs.searchInput) {
+      this.$refs.searchInput?.$el?.querySelector("input").focus();
+    }
   },
   methods: {
     async getBalances(): Promise<void> {
       if (this.zkBalances.length === 0) {
         this.loading = true;
       }
-      await this.$store.dispatch("wallet/getzkBalances");
+      await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       this.loading = false;
     },
     autoUpdateList(): void {

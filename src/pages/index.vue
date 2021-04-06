@@ -27,14 +27,14 @@ export default {
       this.$router.push("/account");
     },
     async customWallet() {
-      const onboard = this.$store.getters["wallet/getOnboard"];
+      const onboard = this.$accessor.wallet.getOnboard;
       onboard.config({
         darkMode: this.$inkline.config.variant !== "light",
       });
 
-      const refreshWalletTry = await this.$store.dispatch("wallet/walletRefresh");
+      const refreshWalletTry = await this.$accessor.wallet.walletRefresh();
       if (refreshWalletTry !== true) {
-        await this.$store.dispatch("wallet/logout");
+        await this.$accessor.wallet.logout();
       } else {
         await this.$router.push("/account");
       }

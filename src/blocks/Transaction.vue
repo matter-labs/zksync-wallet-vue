@@ -87,20 +87,20 @@
           <span class="feeAmount">
             (
             <strong>Fee:</strong>
-            <span v-if="feesObj && feesObj['normal']">
-              {{ feesObj && feesObj["normal"] | formatToken(feeToken.symbol) }}
+            <span v-if="feesObj && feesObj.normal">
+              {{ feesObj && feesObj.normal | formatToken(feeToken.symbol) }}
               <span class="tokenSymbol">
                 {{ feeToken.symbol }}
               </span>
               <span class="totalPrice">
-                {{ feesObj["normal"] | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
+                {{ feesObj && feesObj.normal | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
               </span>
             </span>
             <span v-else class="totalPrice">Loading...</span>
             ).
           </span>
           <br class="desktopOnly" />
-          Processing time: {{ withdrawTime.normal | getTimeString }}
+          Processing time: {{ withdrawTime.normal | formatDateTime }}
         </i-radio>
         <i-radio value="fast">
           Fast withdraw
@@ -111,18 +111,18 @@
               {{ feesObj && feesObj["fast"] | formatToken(feeToken.symbol) }}
               <span class="tokenSymbol">{{ feeToken.symbol }}</span>
               <span class="totalPrice">
-                {{ feesObj["fast"] | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
+                {{ feesObj && feesObj["fast"] | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
               </span>
             </span>
             <span v-else class="totalPrice">Loading...</span>
             ).
           </span>
           <br class="desktopOnly" />
-          Processing time: {{ withdrawTime.fast | getTimeString }}
+          Processing time: {{ withdrawTime.fast | formatDateTime }}
         </i-radio>
       </i-radio-group>
       <div v-else-if="chosenToken && type === 'withdraw' && feesObj" class="secondaryText _text-center _margin-top-1">
-        Only normal withdraw ({{ withdrawTime.normal | getTimeString }}) is available when using different fee token
+        Only normal withdraw ({{ withdrawTime.normal | formatDateTime }}) is available when using different fee token
       </div>
 
       <div class="errorText _text-center _margin-top-1">
@@ -145,13 +145,13 @@
         No available tokens on your balance to pay the fee
       </div>
       <div v-else>
-        <div v-if="(feesObj || feesObj[transactionMode] || feesLoading) && chosenToken && inputtedAddress" class="_text-center _margin-top-1">
+        <div v-if="chosenFeeObj && chosenToken && inputtedAddress" class="_text-center _margin-top-1">
           Fee:
           <span v-if="feesLoading" class="secondaryText">Loading...</span>
           <span v-else>
-            {{ feesObj[transactionMode] | formatToken(feeToken.symbol) }} <span class="tokenSymbol">{{ feeToken.symbol }}</span>
+            {{ feesObj && feesObj[transactionMode] | formatToken(feeToken.symbol) }} <span class="tokenSymbol">{{ feeToken.symbol }}</span>
             <span class="secondaryText">
-              {{ feesObj[transactionMode] | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
+              {{ feesObj && feesObj[transactionMode] | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
             </span>
           </span>
         </div>
@@ -165,7 +165,7 @@
             </span>
           </span>
         </div>
-        <div v-if="((feesObj || feesObj[transactionMode] || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1">
+        <div v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1">
           <span class="linkText" @click="chooseFeeTokenModal = true">Choose fee token</span>
         </div>
       </div>
@@ -250,13 +250,16 @@ export default Vue.extend({
       chosenToken: false as Balance | false,
       chosenFeeToken: false as Balance | false,
       feesObj: {
-        GweiBalance: "normal",
-        GweiBalancefast: "fast",
-      } as FeesObj,
+        normal: "",
+        fast: "",
+      } as FeesObj | false,
       feesLoading: false,
       transactionMode: "normal",
       cantFindFeeToken: false,
-      withdrawTime: false,
+      withdrawTime: {
+        normal: 0 as Number,
+        fast: 0 as Number,
+      },
       transferWithdrawWarningCheckmark: false,
       activateAccountFeeLoading: false,
       activateAccountFee: undefined as undefined | GweiBalance,
@@ -264,19 +267,27 @@ export default Vue.extend({
     };
   },
   computed: {
+    chosenFeeObj(){
+      if (this.feesObj && this.transactionMode && !this.loading && !this.feesLoading)
+      {
+        return this.feesObj.hasOwnProperty(this.transactionMode) ? this.feesObj[this.transactionMode] : false;
+      }
+      return false;
+    },
     transactionTypeName: function (): string {
       if (this.type === "withdraw") {
         return "Withdraw";
       } else return this.type === "transfer" ? "Transfer" : "";
     },
     maxAmount: function (): string {
-
-      // @ts-ignore: Unreachable code error
       if (!this.chosenToken) {
         return "0";
-      } else if ((!this.chosenFeeToken || this.chosenToken.symbol === this.chosenFeeToken.symbol) && !this.feesLoading && this.feesObj[this.transactionMode]) {
+      }
+      // @ts-ignore: Unreachable code error
+      if ((!this.chosenFeeToken || this.chosenToken.symbol === this.chosenFeeToken.symbol) && !this.feesLoading &&
+        (this.transactionMode === 'normal' ? this.feesObj?.normal : this.feesObj?.fast)) {
         // @ts-ignore: Unreachable code error
-        let amount = this.chosenToken.rawBalance.sub(this.feesObj[this.transactionMode]);
+        let amount = this.chosenToken.rawBalance.sub((this.transactionMode === 'normal' ? this.feesObj?.normal : this.feesObj?.fast) as String);
         if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
           amount = amount.sub(this.activateAccountFee);
         }
@@ -328,7 +339,7 @@ export default Vue.extend({
       return !this.inputtedAddress || !this.inputtedAmount || !this.chosenToken || this.feesLoading || this.cantFindFeeToken || !this.enoughFeeToken;
     },
     ownAccountUnlocked: function (): boolean {
-      return !this.$store.getters["wallet/isAccountLocked"];
+      return !this.$accessor.wallet.isAccountLocked;
     },
   },
   components: {
@@ -351,7 +362,7 @@ export default Vue.extend({
       },
     },
     inputtedAddress() {
-      this.getFees();
+      this.requestFees();
     },
   },
   methods: {
@@ -359,7 +370,7 @@ export default Vue.extend({
       this.chosenToken = token;
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
-      const balances = JSON.parse(JSON.stringify(this.$store.getters["wallet/getzkBalances"])).sort(
+      const balances = JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort(
         (a: Balance, b: Balance) => parseFloat(b.balance) - parseFloat(a.balance),
       ) as Array<Balance>;
       if (this.chosenToken.restricted) {
@@ -378,35 +389,37 @@ export default Vue.extend({
       } else {
         this.cantFindFeeToken = false;
       }
-      this.getFees();
+      this.requestFees();
       this.getAccountActivationFee();
     },
     chooseFeeToken: function (token: Balance) {
       this.chosenFeeToken = token;
       this.chooseFeeTokenModal = false;
-      this.getFees();
+      this.requestFees();
       this.getAccountActivationFee();
     },
-    getFees: async function (): Promise<void> {
-      if (!this.chosenToken || !this.inputtedAddress || this.feeToken.restricted) {
-        this.feesObj = false;
+    requestFees: async function (): Promise<void> {
+      if (!this.chosenToken || !this.inputtedAddress || this.feeToken?.restricted) {
+        this.feesObj = undefined;
         return;
       }
       this.feesLoading = true;
       try {
-        this.feesObj = await this.$store.dispatch("wallet/getFees", {
+        console.log({
           address: this.inputtedAddress,
-          symbol: this.chosenToken.symbol,
-          feeSymbol: this.feeToken.symbol,
+          symbol: this.chosenToken?.symbol,
+          feeSymbol: this.feeToken?.symbol,
           type: this.type,
         });
+
+        this.feesObj = await this.$accessor.wallet.requestFees();
       } catch (error) {
-        await this.$store.dispatch("toaster/error", error.message);
+        await this.$accessor.toaster.error(error.message);
       }
       this.feesLoading = false;
     },
     getWithdrawalTime: async function (): Promise<void> {
-      this.withdrawTime = await this.$store.dispatch("wallet/getWithdrawalProcessingTime");
+      this.withdrawTime = await this.$accessor.wallet.requestWithdrawalProcessingTime();
     },
     commitTransaction: async function (): Promise<void> {
       console.log(this.ownAccountUnlocked);
@@ -454,18 +467,19 @@ export default Vue.extend({
     withdraw: async function (): Promise<void> {
       const syncProvider = walletData.get().syncProvider as Provider;
       const txAmount = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAmount);
-      console.log(txAmount)
       this.tip = "Confirm the transaction to withdraw";
-      const withdrawTransaction = (await withdraw(
-        this.inputtedAddress,
-        (this.chosenToken as Balance).symbol,
-        this.feeToken.symbol,
-        txAmount.toString(),
-        this.transactionMode === "fast",
-        // @ts-ignore: Unreachable code error
-        this.feesObj[this.transactionMode],
-        this.$store,
-      )) as Transaction;
+      if (this.feesObj === undefined) {
+        throw new Error("Fee fetching error :(");
+      }
+      const withdrawTransaction = (await withdraw({
+        address: this.inputtedAddress,
+        token: (this.chosenToken as Balance).symbol,
+        feeToken: this.feeToken.symbol,
+        amount: txAmount.toString(),
+        fastWithdraw: this.transactionMode === "fast",
+        fees: (this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal) as string,
+        store: this.$accessor,
+      })) as Transaction;
       let receipt: TransactionReceipt;
       this.transactionInfo.amount.amount = txAmount.toString();
       this.transactionInfo.amount.token = this.chosenToken as Balance;
@@ -496,7 +510,7 @@ export default Vue.extend({
         throw new Error(receipt.failReason);
       }
     },
-    transfer: async function (): Promise<void> {
+    async transfer(): Promise<void> {
       const transferWithdrawWarning = localStorage.getItem("canceledTransferWithdrawWarning");
       if (!transferWithdrawWarning && !this.transferWithdrawWarningModal) {
         const accountUnlocked = await this.accountUnlocked(this.inputtedAddress);
@@ -513,15 +527,14 @@ export default Vue.extend({
         <string>(this.chosenToken as Balance).symbol,
         <string>this.feeToken.symbol,
         <string>txAmount.toString(),
-        this.feesObj.normal,
-        this.$store,
+        this.feesObj?.normal as string,
+        this.$accessor,
       )) as Transaction;
       this.transactionInfo.amount.amount = txAmount.toString();
       this.transactionInfo.amount.token = this.chosenToken as Balance;
       this.transactionInfo.fee.token = this.feeToken;
       let receipt = {} as TransactionReceipt;
       if (transferTransaction && !Array.isArray(transferTransaction)) {
-        // @ts-ignore
         this.transactionInfo.hash = transferTransaction.txHash;
         this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransaction.txHash;
         this.transactionInfo.fee.amount = transferTransaction.txData.tx.fee;
@@ -570,7 +583,7 @@ export default Vue.extend({
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       try {
-        await this.$store.dispatch("wallet/restoreProviderConnection");
+        await this.$accessor.wallet.restoreProviderConnection();
         const foundFee = await syncProvider?.getTransactionFee(
           {
             ChangePubKey: {
@@ -582,7 +595,7 @@ export default Vue.extend({
         );
         this.activateAccountFee = foundFee!.totalFee.toString();
       } catch (error) {
-        await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while receiving an unlock fee");
+        await this.$accessor.toaster.error(error.message ? error.message : "Error while receiving an unlock fee");
       }
       this.activateAccountFeeLoading = false;
     },
@@ -595,7 +608,7 @@ export default Vue.extend({
       try {
         this.clearTransactionInfo();
         const syncWallet = walletData.get().syncWallet;
-        await this.$store.dispatch("wallet/restoreProviderConnection");
+        await this.$accessor.wallet.restoreProviderConnection();
         this.tip = "Confirm the transaction to unlock this account";
 
         if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
@@ -613,7 +626,7 @@ export default Vue.extend({
               onchainAuth: true,
             });
             console.log("changePubkey", changePubkey);
-            await this.$store.dispatch("transaction/watchTransaction", { transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
+            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
             this.setTransactionInfo(changePubkey, true);
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey?.awaitReceipt();
@@ -625,14 +638,14 @@ export default Vue.extend({
               feeToken: this.feeToken.symbol,
             });
             console.log("changePubkey", changePubkey);
-            await this.$store.dispatch("transaction/watchTransaction", { transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
+            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
             this.setTransactionInfo(changePubkey, true);
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey.awaitReceipt();
           }
         }
         const isSigningKeySet = await syncWallet?.isSigningKeySet();
-        this.$store.commit("wallet/setAccountLockedState", isSigningKeySet === false);
+        this.$accessor.wallet.setAccountLockedState(isSigningKeySet === false);
 
         const newAccountState = await syncWallet?.getAccountState();
         walletData.set({ accountState: newAccountState });
@@ -690,7 +703,7 @@ export default Vue.extend({
         this.inputtedAddress = this.$route.query["w"].toString();
       }
       if (this.$route.query["token"]) {
-        const balances = this.$store.getters["wallet/getzkBalances"] as Array<Balance>;
+        const balances = this.$accessor.wallet.getzkBalances;
         for (const item of balances) {
           if (item.symbol === this.$route.query["token"]) {
             this.chooseToken(item);

@@ -1,5 +1,4 @@
-import { AccountModuleState, state, mutations, getters } from "@/store/account";
-import { state as RootState, getters as RootGetters } from "@/store";
+import { AccountModuleState, getters, mutations, state } from "@/store/account";
 
 let accountState: AccountModuleState;
 
@@ -63,10 +62,10 @@ describe("Account getters", () => {
 
   describe("loader", () => {
     test("works", () => {
-      expect(getters.loader(accountState, getters, RootState(), RootGetters)).equal(false);
+      expect(getters.loader(accountState)).equal(false);
       mutations.setLoggedIn(accountState, false);
       mutations.setSelectedWallet(accountState, "Test");
-      expect(getters.loader(accountState, getters, RootState(), RootGetters)).equal(true);
+      expect(getters.loader(accountState)).equal(true);
     });
   });
 });

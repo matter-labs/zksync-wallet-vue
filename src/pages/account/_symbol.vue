@@ -65,7 +65,7 @@ export default Vue.extend({
   methods: {
     async getData() {
       this.loading = true;
-      const balances = await this.$store.dispatch("wallet/getzkBalances");
+      const balances = await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       let found = false;
       for (const item of balances) {
         if (item.symbol === this.symbol) {
@@ -82,15 +82,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.balanceWithdraw {
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
-
-    & > .infoBlock {
-      margin-bottom: 10px;
-    }
-  }
-}
-</style>

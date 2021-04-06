@@ -1,4 +1,4 @@
-import { NuxtConfig } from "@nuxt/types";
+import { Configuration } from "@nuxt/types";
 
 require("dotenv").config();
 
@@ -13,7 +13,7 @@ const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation,
 crypto payments, zkWallet, cryptowallet`;
 
 // @ts-ignore
-const config: NuxtConfig = {
+const config: Configuration = {
   components: true,
   ssr: false,
   target: "static",
@@ -152,7 +152,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxt/typescript-build", ["@nuxtjs/dotenv", { path: __dirname }]],
+  buildModules: ["@nuxt/typescript-build", "nuxt-typed-vuex", ["@nuxtjs/dotenv", { path: __dirname }]],
 
   /*
    ** Nuxt.js modules
@@ -231,13 +231,8 @@ const config: NuxtConfig = {
    */
   build: {
     ssr: false,
-    // target: "static",
-    /* extractCSS: {
-     ignoreOrder: true,
-     }, */
-    extend(config) {
+    extend(config: { node: { fs: string } }) {
       config.node = {
-        // @ts-ignore
         fs: "empty",
       };
     },

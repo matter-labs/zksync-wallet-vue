@@ -1,5 +1,4 @@
-import { GetterTree, MutationTree } from "vuex";
-import { RootState } from "~/store";
+import { getterTree, mutationTree } from "typed-vuex";
 
 export const state = () => ({
   lastScroll: false as false | Number,
@@ -8,7 +7,7 @@ export const state = () => ({
 
 export type ScrollModuleState = ReturnType<typeof state>;
 
-export const mutations: MutationTree<ScrollModuleState> = {
+export const mutations = mutationTree(state, {
   setLastScroll(state, lastScroll: Number) {
     if (!lastScroll) {
       state.lastScroll = false;
@@ -19,13 +18,17 @@ export const mutations: MutationTree<ScrollModuleState> = {
   setLastPath(state, lastPath: String) {
     state.lastPath = lastPath;
   },
-};
+});
 
-export const getters: GetterTree<ScrollModuleState, RootState> = {
-  getLastScroll(state): false | Number {
-    return state.lastScroll;
+export const getters = getterTree(state, {
+  getLastScroll(state): number {
+    if (state.lastScroll !== false) {
+      return 0;
+    }
+    //@ts-ignore since TS-linter ignores any method of fixing this one
+    return state.lastScroll.y as number;
   },
   getLastPath(state): String {
     return state.lastPath;
   },
-};
+});

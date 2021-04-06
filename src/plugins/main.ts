@@ -22,20 +22,23 @@ Vue.filter("formatToken", (value: string, symbol: TokenSymbol) => {
 /**
  * Implementation of the tokenFormatter as a global filter
  */
-Vue.filter("formatUsdAmount", (value: string | BigNumber, price: string, symbol: TokenSymbol) => {
+Vue.filter("formatUsdAmount", (value: string | BigNumber, price: number, symbol: TokenSymbol) => {
   return utils.getFormattedTotalPrice(Number(price), +utils.handleFormatToken(symbol, <string>value));
 });
 
 /**
+ * Format date as a human-readable "XX ago"
  * @todo consider switching with some ready component
  * Filtering human-readable time
  */
-Vue.filter("getTimeString", (value: number) => {
-  const { hours, minutes, seconds } = utils.timeCalc(value);
-  return `${hours ? utils.handleTimeAmount(hours, "hour") : ""}
-              ${minutes ? utils.handleTimeAmount(minutes, "minute") : ""}
-              ${seconds ? utils.handleTimeAmount(seconds, "second") : ""}`;
-});
+Vue.filter("formatTimeAgo", (time: moment.Moment | Date | string | number | (number | string)[] | moment.MomentInputObject | null | undefined) => moment(time).fromNow());
+
+/**
+ * Format date as a human-readable "XX ago"
+ */
+Vue.filter("formatDateTime", (time: moment.Moment | Date | string | number | (number | string)[] | moment.MomentInputObject | null | undefined) =>
+  moment(time).format("M/D/YYYY h:mm:ss A"),
+);
 
 /**
  * Format date as a human-readable "XX ago"

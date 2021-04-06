@@ -23,7 +23,7 @@
           <span>No balances yet. Please make a deposit or request money from someone!</span>
         </div>
       </div>
-      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$store.dispatch('openModal', 'NoTokenFound')"> Can't find a token? </i-button>
+      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token? </i-button>
       <no-token-found />
     </template>
   </div>
@@ -58,19 +58,11 @@ export default Vue.extend({
   },
   computed: {
     balances(): Array<Balance> {
-      if (this.tokensType === "L2") {
-        return this.$store.getters["wallet/getzkBalances"];
-      } else {
-        return this.$store.getters["wallet/getInitialBalances"];
-      }
+      return this.tokensType === "L2" ? this.$accessor.wallet.getzkBalances : this.$accessor.wallet.getInitialBalances;
     },
     displayedList(): Array<Balance> {
       let list: Array<Balance>;
-      if (!this.search.trim()) {
-        list = this.balances;
-      } else {
-        list = this.balances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
-      }
+      list = !this.search.trim() ? this.balances : this.balances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
       if (this.onlyAllowed) {
         list = list.filter((e) => !e.restricted);
       }
@@ -87,9 +79,9 @@ export default Vue.extend({
     async getTokenList(): Promise<void> {
       this.loading = true;
       if (this.tokensType === "L2") {
-        await this.$store.dispatch("wallet/getzkBalances");
+        await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       } else {
-        await this.$store.dispatch("wallet/getInitialBalances");
+        await this.$accessor.wallet.requestInitialBalances(false);
       }
       this.loading = false;
     },

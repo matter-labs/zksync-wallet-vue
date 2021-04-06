@@ -30,13 +30,13 @@ export default Vue.extend({
   },
   computed: {
     loggingIn() {
-      return this.$store.getters["account/loader"];
+      return this.$accessor.account.loader;
     },
     loggedIn() {
-      return this.$store.getters["account/loggedIn"];
+      return this.$accessor.account.loggedIn;
     },
     walletAddressFull() {
-      return this.$store.getters["account/address"];
+      return this.$accessor.account.address;
     },
     getZkScanBaseUrl() {
       return APP_ZK_SCAN;
@@ -53,8 +53,7 @@ export default Vue.extend({
         }
         if (val.path !== oldVal.path) {
           this.$nextTick(() => {
-            const lastScroll = this.$store.getters["scroll/getLastScroll"];
-            document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
+            document.documentElement.scrollTop = this.$accessor.scroll.getLastScroll;
           });
         }
       },

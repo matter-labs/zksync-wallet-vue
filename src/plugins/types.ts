@@ -9,6 +9,19 @@ export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
 export declare type Nonce = number | "committed";
 
+export declare type zkOperationType = "withdraw" | "activate" | "deposit" | "transfer" | "unlock";
+export declare type zkOperationFeeType = "fast" | "normal" | "slow";
+
+export interface WithdrawParams {
+  address: Address;
+  token: TokenSymbol;
+  feeToken: TokenSymbol;
+  amount: GweiBalance;
+  fastWithdraw: boolean;
+  fees: GweiBalance;
+  store: any;
+}
+
 export interface Signature {
   pubKey: string;
   signature: string;
@@ -43,7 +56,7 @@ export interface Balance {
   balance: DecimalBalance;
   rawBalance: BigNumber;
   verifiedBalance: DecimalBalance;
-  tokenPrice: string;
+  tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
@@ -130,19 +143,20 @@ export interface ContractAddress {
   govContract: string;
 }
 
+export interface TokenItem {
+  address: string;
+  id: number;
+  symbol: string;
+  decimals: number;
+}
 export interface Tokens {
-  [token: string]: {
-    address: string;
-    id: number;
-    symbol: string;
-    decimals: number;
-  };
+  [token: string]: TokenItem;
 }
 
 export interface TokenPrices {
   [token: string]: {
     lastUpdated: number;
-    price: string;
+    price: number;
   };
 }
 
@@ -167,6 +181,29 @@ export interface SignedTransaction {
   ethereumSignature?: TxEthSignature;
 }
 
+export declare class zkTx implements Tx {
+  commited: boolean;
+  confirmCount: number;
+  created_at: Date;
+  eth_block: number;
+  hash: string;
+  success: boolean;
+  tx: {
+    fast: boolean;
+    amount: string;
+    fee: string;
+    from: string;
+    nonce: number;
+    priority_op?: { amount: string; from: string; to: string; token: string };
+    signature: { pubKey: string; signature: string };
+    to?: string;
+    token?: string;
+    feeToken?: number;
+    type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
+  };
+  verified: boolean;
+}
+
 export interface Tx {
   hash: string;
   pq_id?: any;
@@ -189,8 +226,8 @@ export interface Tx {
     };
     to?: string;
     token?: string;
+    feeToken?: number;
     type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
-    feePayment?: boolean;
   };
 
   success: boolean;
@@ -473,4 +510,22 @@ export interface depositsInterface {
     status: string;
     confirmations: number;
   }>;
+}
+
+export interface zkFeeData {
+  feeAmount: BigNumber | undefined;
+  isPackable: Boolean;
+  isFetched: Boolean;
+  recipient: string;
+  feeToken?: Balance;
+  operationType: "withdraw" | "activate" | "deposit" | "transfer" | "unlock" | undefined;
+  onlyEth: Boolean;
+  token?: Balance;
+}
+
+export interface zkTransaction {
+  amount: BigNumber;
+  token: Balance;
+  feeToken: Balance;
+  feeAmount: BigNumber;
 }
