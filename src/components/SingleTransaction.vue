@@ -2,11 +2,8 @@
   <div class="transactionsingleTransaction">
     <div class="status">
       <i-tooltip>
-        <em v-if="singleTransaction.transactionStatus === 'Finalized'" class="verified ri-check-double-line"></em>
-        <em v-else-if="singleTransaction.transactionStatus === 'Committed'" class="committed ri-check-line"></em>
-        <em v-else-if="singleTransaction.transactionStatus === 'In progress'" class="inProgress ri-loader-5-line"></em>
-        <em v-else class="rejected ri-close-circle-fill"></em>
-        <template slot="body">{{ singleTransaction.transactionStatus }}</template>
+        <em :class="transactionStatus.icon"></em>
+        <template slot="body">{{ transactionStatus.text }}</template>
       </i-tooltip>
     </div>
     <div class="mainInfo">
@@ -15,38 +12,31 @@
         <template slot="body">{{ singleTransaction.created_at | formatDateTime }}</template>
       </i-tooltip>
       <div :class="{ small: getFormattedAmount(singleTransaction).length > 10 }" class="amount">{{ getFormattedAmount(singleTransaction) }}</div>
-      <div class="tokenSymbol">{{ singleTransaction.tx.priority_op ? singleTransaction.tx.priority_op.token : singleTransaction.tx.token }}</div>
+      <div class="tokenSymbol">{{ tokenSymbol }}</div>
     </div>
     <div class="actionInfo">
-      <div v-if="singleTransaction.tx.type === 'Withdraw'">
-        <div class="actionType">Withdrawn to:</div>
-        <div v-if="singleTransaction.tx.to.toLowerCase() === walletAddressFull.toLowerCase()" class="actionValue">Your L1 account</div>
-        <nuxt-link v-else class="actionValue" :to="`/contacts?w=${singleTransaction.tx.to}`">{{ getAddressName(singleTransaction.tx.to) }}</nuxt-link>
-        <a v-if="ethTx" :href="ethTx" target="_blank" class="linkText">Ethereum Transaction</a>
+      <div class="actionType">
+        <span>{{ transactionTypeData.type }}</span>
+        <i-tooltip v-if="transactionTypeData.tooltip">
+          <em v-if="transactionTypeData.tooltip" :class="transactionTypeData.tooltip.icon" />
+          <div slot="body" style="white-space: normal; width: 200px" v-html="transactionTypeData.tooltip.html"></div>
+        </i-tooltip>
       </div>
-      <div v-else-if="singleTransaction.tx.type === 'Deposit'">
-        <div class="actionType">Deposit to:</div>
-        <div class="actionValue">Your zkSync account</div>
-      </div>
-      <div v-else-if="singleTransaction.tx.type === 'Transfer'">
-        <div class="actionType">
-          <span v-if="singleTransaction.tx.feePayment">Fee transaction</span>
-          <span v-else-if="singleTransaction.tx.to.toLowerCase() === walletAddressFull.toLowerCase()">Received from:</span>
-          <span v-else>Sent to:</span>
-        </div>
-        <span v-if="singleTransaction.tx.feePayment === true"></span>
-        <nuxt-link v-else-if="singleTransaction.tx.to.toLowerCase() === walletAddressFull.toLowerCase()" class="actionValue" :to="`/contacts?w=${singleTransaction.tx.from}`"
-          >{{ getAddressName(singleTransaction.tx.from) }}
-        </nuxt-link>
-        <nuxt-link v-else class="actionValue" :to="`/contacts?w=${singleTransaction.tx.to}`">{{ getAddressName(singleTransaction.tx.to) }}</nuxt-link>
-      </div>
+      <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your L1 account</div>
+      <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`">{{
+        getAddressName(displayedAddress)
+      }}</nuxt-link>
+      <a v-if="ethTx" :href="ethTx" target="_blank" class="linkText">Ethereum Transaction</a>
     </div>
-    <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(singleTransaction)"><i class="ri-external-link-line"></i></a>
+    <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(singleTransaction)">
+      <i class="ri-external-link-line"></i>
+    </a>
   </div>
 </template>
+
 <script lang="ts">
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, Provider, Tx } from "@/plugins/types";
+import { Address, Provider, TokenSymbol, Tx } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 
@@ -69,8 +59,123 @@ export default Vue.extend({
     };
   },
   computed: {
+    isFeeTransaction(): boolean {
+      if (
+        this.singleTransaction.tx.type === "ChangePubKey" ||
+        (this.singleTransaction.tx.type === "Transfer" && this.singleTransaction.tx.amount === "0" && this.singleTransaction.tx.from === this.singleTransaction.tx.to)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
     walletAddressFull(): Address {
       return this.$accessor.account.address;
+    },
+    displayedAddress(): string {
+      switch (this.singleTransaction.tx.type) {
+        case "Transfer":
+          if (this.isSameAddress(this.singleTransaction.tx.to)) {
+            return this.singleTransaction.tx.from;
+          } else {
+            return this.singleTransaction.tx.to;
+          }
+        default:
+          if (this.singleTransaction.tx.priority_op) {
+            return this.singleTransaction.tx.priority_op.to;
+          }
+          return this.singleTransaction.tx.to;
+      }
+    },
+    transactionStatus(): { text: string; icon: string } {
+      if (!this.singleTransaction.success) {
+        return {
+          text: this.singleTransaction.fail_reason ? this.singleTransaction.fail_reason : "Rejected",
+          icon: "rejected ri-close-circle-fill",
+        };
+      }
+      if (this.singleTransaction.verified) {
+        return {
+          text: "Finalized",
+          icon: "verified ri-check-double-line",
+        };
+      } else if (this.singleTransaction.commited) {
+        return {
+          text: "Committed",
+          icon: "committed ri-check-line",
+        };
+      } else {
+        return {
+          text: "In progress",
+          icon: "inProgress ri-loader-5-line",
+        };
+      }
+    },
+    transactionTypeData(): { type: string; showAddress: boolean; tooltip: false | { icon: string; html: string } } {
+      switch (this.singleTransaction.tx.type) {
+        case "Withdraw":
+          return {
+            type: "Withdrawn to:",
+            showAddress: true,
+            tooltip: false,
+          };
+        case "ChangePubKey":
+          return {
+            type: "Account activation",
+            showAddress: false,
+            tooltip: {
+              icon: "ri-information-fill",
+              html: `Activation is required single-time payment to set the signing key associated with the account.<br>Without it no operation can be authorized by your corresponding account.`,
+            },
+          };
+        case "Deposit":
+          return {
+            type: "Deposit to:",
+            showAddress: true,
+            tooltip: false,
+          };
+        case "Transfer":
+          if (this.isFeeTransaction === true) {
+            return {
+              type: "Fee transaction",
+              showAddress: false,
+              tooltip: false,
+            };
+          } else if (this.isSameAddress(this.displayedAddress)) {
+            return {
+              type: "Received from:",
+              showAddress: true,
+              tooltip: false,
+            };
+          } else {
+            return {
+              type: "Sent to:",
+              showAddress: true,
+              tooltip: false,
+            };
+          }
+        default:
+          return {
+            type: this.singleTransaction.tx.type,
+            showAddress: true,
+            tooltip: false,
+          };
+      }
+    },
+    tokenSymbol(): TokenSymbol {
+      if (!this.isFeeTransaction) {
+        if (this.singleTransaction.tx.priority_op) {
+          return this.singleTransaction.tx.priority_op.token;
+        } else {
+          return this.singleTransaction.tx.token;
+        }
+      } else if (typeof this.singleTransaction.tx.feeToken === "number") {
+        return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken).symbol;
+      } else if (this.singleTransaction.tx.priority_op) {
+        return this.singleTransaction.tx.priority_op.token;
+      } else {
+        return this.singleTransaction.tx.token;
+      }
     },
   },
   mounted() {
@@ -84,19 +189,22 @@ export default Vue.extend({
     clearInterval(getTimeAgoInterval);
   },
   methods: {
+    isSameAddress(address: string): boolean {
+      return String(address).toLowerCase() === this.walletAddressFull.toLowerCase();
+    },
     getTimeAgo(time: any): string {
       return moment(time).fromNow();
     },
-    getFormattedAmount({ tx: { type, priority_op, token, amount, fee, feePayment } }: Tx): string {
-      const symbol = type === "Deposit" ? priority_op!.token : token;
-      if (!feePayment) {
-        return utils.handleFormatToken(symbol as string, type === "Deposit" && priority_op ? priority_op.amount : amount);
+    getFormattedAmount({ tx: { type, priority_op, amount, fee } }: Tx): string {
+      console.log(type, this.singleTransaction);
+      if (!this.isFeeTransaction) {
+        return utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount);
       } else {
-        return utils.handleFormatToken(token as string, fee);
+        return utils.handleFormatToken(this.tokenSymbol, fee);
       }
     },
     getAddressName(address: string): string {
-      address = address.toLowerCase();
+      address = address ? String(address).toLowerCase() : "";
       const contactFromStore = this.$accessor.contacts.getByAddress(address);
       if (contactFromStore) {
         return contactFromStore.name;

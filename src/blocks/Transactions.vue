@@ -56,14 +56,7 @@ export default Vue.extend({
     transactionsList(): Array<Tx> {
       const list = this.checkLoadMore();
 
-      let filteredList = list
-        .filter((e: Tx) => e.tx.type !== "ChangePubKey" && !e.fail_reason)
-        .map((e: Tx) => {
-          if (e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) {
-            e.tx.feePayment = true;
-          }
-          return e;
-        });
+      let filteredList = list.filter((e: Tx) => !e.fail_reason);
       if (this.filter) {
         filteredList = filteredList.filter((item: Tx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
@@ -86,7 +79,7 @@ export default Vue.extend({
           return false;
         });
       }
-      return filteredList.map((e: Tx) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
+      return filteredList;
     },
   },
   mounted() {
@@ -101,14 +94,7 @@ export default Vue.extend({
       const list = await this.$accessor.wallet.requestTransactionsHistory({ force: false, offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25;
-      let filteredList = list
-        .filter((e: Tx) => e.tx.type !== "ChangePubKey")
-        .map((e: Tx) => {
-          if (e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) {
-            e.tx.feePayment = true;
-          }
-          return e;
-        });
+      let filteredList = list;
       if (this.filter) {
         filteredList = filteredList.filter((item: Tx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
@@ -131,7 +117,7 @@ export default Vue.extend({
           return false;
         });
       }
-      return filteredList.map((e: Tx) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
+      return filteredList;
     },
     async getTransactions(): Promise<void> {
       this.loading = true;
@@ -141,18 +127,6 @@ export default Vue.extend({
         await this.$accessor.toaster.error(error.message ? error.message : "Error while fetching the transactions");
       }
       this.loading = false;
-    },
-    getTransactionStatus(transaction: Tx): string {
-      if (!transaction.success) {
-        return transaction.fail_reason ? transaction.fail_reason : "Rejected";
-      }
-      if (transaction.verified) {
-        return "Finalized";
-      } else if (transaction.commited) {
-        return "Committed";
-      } else {
-        return "In progress";
-      }
     },
     async loadMore(): Promise<void> {
       await this.autoUpdateList();

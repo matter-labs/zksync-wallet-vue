@@ -143,13 +143,14 @@ export interface ContractAddress {
   govContract: string;
 }
 
+export interface TokenItem {
+  address: string;
+  id: number;
+  symbol: string;
+  decimals: number;
+}
 export interface Tokens {
-  [token: string]: {
-    address: string;
-    id: number;
-    symbol: string;
-    decimals: number;
-  };
+  [token: string]: TokenItem;
 }
 
 export interface TokenPrices {
@@ -202,8 +203,8 @@ export interface Tx {
     };
     to?: string;
     token?: string;
+    feeToken?: number;
     type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
-    feePayment?: boolean;
   };
 
   success: boolean;
