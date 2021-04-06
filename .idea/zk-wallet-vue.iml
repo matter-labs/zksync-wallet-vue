@@ -10,9 +10,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="@types/eslint" level="application" />
-    <orderEntry type="library" name="@types/eslint-config-prettier" level="application" />
     <orderEntry type="library" name="@types/prettier" level="application" />
     <orderEntry type="library" name="@types/stylelint" level="application" />
     <orderEntry type="library" name="@types/webpack" level="application" />
+    <orderEntry type="library" name="@types/type-detect" level="application" />
   </component>
 </module>
