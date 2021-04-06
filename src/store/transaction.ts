@@ -1,6 +1,9 @@
-import { getterTree, mutationTree, actionTree } from "typed-vuex";
-import { walletData } from "@/plugins/walletData";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { ChangePubkeyTypes } from "zksync/build/types";
+import { ChangePubKeyFee } from "zksync/src/types";
+
 import { ETHOperation } from "@/plugins/types";
+import { walletData } from "@/plugins/walletData";
 
 let updateBalancesTimeout = undefined as any;
 
@@ -124,6 +127,27 @@ export const actions = actionTree(
         this.dispatch("wallet/requestZkBalances", { accountState: undefined, force: true });
         this.dispatch("wallet/requestTransactionsHistory", { offset: 0, force: true });
       }, 2000);
+    },
+
+    /**
+     * Receive correct Fee amount
+     * @param {any} address
+     * @param {any} feeToken
+     * @return {Promise<any>}
+     */
+    fetchChangePubKeyFee: async function ({}, { address, feeToken }) {
+      const syncWallet = walletData.get().syncWallet;
+      const syncProvider = walletData.get().syncProvider;
+      if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
+        const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
+        if (!isOnchainAuthSigningKeySet) {
+          const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
+          await onchainAuthTransaction?.wait();
+        }
+      }
+      const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+      //@ts-ignore
+      return syncProvider?.getTransactionFee({ ChangePubKey: ethAuthType as ChangePubkeyTypes } as ChangePubKeyFee, address, feeToken);
     },
   },
 );

@@ -33,8 +33,8 @@
           <template slot="body">Add contact</template>
         </i-tooltip>
       </div>
-      <i-input v-if="search.trim() || displayedContactsList.length !== 0" v-model="search" placeholder="Filter contacts" maxlength="20">
-        <i slot="prefix" class="ri-search-line"></i>
+      <i-input v-if="search.trim() || displayedContactsList.length !== 0" v-model="search" placeholder="Filter contacts" ref="searchInput" autofocus maxlength="20">
+        <i slot="prefix" class="ri-search-line"/>
       </i-input>
 
       <div class="contactsListContainer">
@@ -183,7 +183,7 @@ export default Vue.extend({
         this.$nextTick(() => {
           if (this.$refs.nameInput) {
             // @ts-ignore: Unreachable code error
-            this.$refs.nameInput.$el.querySelector("input").focus();
+            this.$refs.nameInput?.$el?.querySelector("input").focus();
           }
         });
       }
@@ -191,6 +191,12 @@ export default Vue.extend({
     $route(val, oldVal) {
       this.fromRoute = oldVal;
     },
+  },
+  mounted(): void {
+    //noinspection ES6ShorthandObjectProperty
+    if (this.$refs.searchInput) {
+      this.$refs.searchInput?.$el?.querySelector("input").focus();
+    }
   },
   methods: {
     addContact() {

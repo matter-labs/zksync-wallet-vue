@@ -32,7 +32,7 @@
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
           </div>
           <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer </i-button>
-          <i-input v-model="search" placeholder="Filter tokens" maxlength="6">
+          <i-input v-model="search" placeholder="Filter tokens" maxlength="6" autofocus ref="searchInput">
             <i slot="prefix" class="ri-search-line"></i>
           </i-input>
         </div>
@@ -141,7 +141,10 @@ export default Vue.extend({
   mounted() {
     this.getBalances();
     this.autoUpdateList();
-    console.log("activeDeposits", this.activeDeposits);
+    //noinspection ES6ShorthandObjectProperty
+    if (this.$refs.searchInput) {
+      this.$refs.searchInput?.$el?.querySelector("input").focus();
+    }
   },
   methods: {
     async getBalances(): Promise<void> {

@@ -151,12 +151,13 @@ export default Vue.extend({
     },
   },
   mounted() {
+    // @ts-ignore
     this.timeAgo = this.getTimeAgo(this.singleTransaction.created_at);
     getTimeAgoInterval = setInterval(() => {
       if (!this.singleTransaction) {
         return clearInterval(getTimeAgoInterval);
       }
-      //noinspection ES6ShorthandObjectProperty unbeatable error
+      // @ts-ignore
       this.timeAgo = this.getTimeAgo(this.singleTransaction.created_at);
     }, 30000);
     this.getWithdrawalTx();
