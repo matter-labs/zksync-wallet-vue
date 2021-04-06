@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
+import { ChangePubKeyFee, SignedTransaction } from "zksync/build/types";
 
 export declare type Address = string;
 export declare type PubKeyHash = string;
@@ -160,12 +161,6 @@ export interface TokenPrices {
   };
 }
 
-export interface ChangePubKeyFee {
-  ChangePubKey: {
-    onchainPubkeyAuth: boolean;
-  };
-}
-
 export declare type EthSignerType = {
   verificationMethod: "ECDSA" | "ERC-1271";
   isSignedMsgPrefixed: boolean;
@@ -174,11 +169,6 @@ export declare type EthSignerType = {
 export interface TxEthSignature {
   type: "EthereumSignature" | "EIP1271Signature";
   signature: string;
-}
-
-export interface SignedTransaction {
-  tx: Transfer | Withdraw | ChangePubKey | CloseAccount | ForcedExit;
-  ethereumSignature?: TxEthSignature;
 }
 
 export declare class zkTx implements Tx {
@@ -201,6 +191,7 @@ export declare class zkTx implements Tx {
     feeToken?: number;
     type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
   };
+
   verified: boolean;
 }
 

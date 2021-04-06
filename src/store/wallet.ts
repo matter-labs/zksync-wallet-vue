@@ -4,7 +4,7 @@ import { Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interf
 
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Transaction, Tx } from "@/plugins/types";
+import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
 import web3Wallet from "@/plugins/web3";
@@ -311,26 +311,6 @@ export const actions = actionTree(
         }
         await dispatch("restoreProviderConnection");
         const newAccountState = await syncWallet!.getAccountState();
-
-        // @todo Left for testing purposes.
-        // const testBalances = {
-        //   DAI: 98.91346,
-        //   ETH: 0.00697466,
-        //   STORJ: 10.496,
-        //   USDC: 3329.78057,
-        //   USDT: 98.55857,
-        // };
-        // // const testBalances1 = {
-        // //   BAT: 0.9,
-        // //   DAI: 33543.4016421191,
-        // //   ETH: 0.0028442766686,
-        // //   KNC: 0.8,
-        // //   USDT: 64.277,
-        // // }
-        // newAccountState["committed"]["balances"] = testBalances;
-        // newAccountState["verified"]["balances"] = testBalances;
-        // console.log(newAccountState);
-
         walletData.set({ accountState: newAccountState });
         listCommitted = newAccountState?.committed.balances || {};
         listVerified = newAccountState?.verified.balances || {};

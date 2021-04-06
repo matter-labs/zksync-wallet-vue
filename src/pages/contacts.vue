@@ -33,8 +33,8 @@
           <template slot="body">Add contact</template>
         </i-tooltip>
       </div>
-      <i-input v-if="search.trim() || displayedContactsList.length !== 0" v-model="search" placeholder="Filter contacts" ref="searchInput" autofocus maxlength="20">
-        <i slot="prefix" class="ri-search-line"/>
+      <i-input v-if="search.trim() || displayedContactsList.length !== 0" ref="searchInput" v-model="search" placeholder="Filter contacts" autofocus maxlength="20">
+        <i slot="prefix" class="ri-search-line" />
       </i-input>
 
       <div class="contactsListContainer">
@@ -120,6 +120,7 @@ import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 import { Address, Contact } from "@/plugins/types";
 import Vue from "vue";
+import "vue-router/types/vue";
 
 export default Vue.extend({
   components: {
@@ -193,7 +194,7 @@ export default Vue.extend({
     },
   },
   mounted(): void {
-    //noinspection ES6ShorthandObjectProperty
+    // @ts-ignore
     if (this.$refs.searchInput) {
       this.$refs.searchInput?.$el?.querySelector("input").focus();
     }
@@ -257,7 +258,7 @@ export default Vue.extend({
       }
     },
     openContact(contact: Contact) {
-      // @ts-ignore: Unreachable code error
+      // @ts-ignore
       this.$router.push({ ...this.$route, query: { w: contact.address } });
     },
     copyAddress(address: Address) {

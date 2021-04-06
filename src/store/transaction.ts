@@ -1,9 +1,7 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ChangePubkeyTypes } from "zksync/build/types";
-import { ChangePubKeyFee } from "zksync/src/types";
-
 import { ETHOperation } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { ChangePubKeyFee, ChangePubkeyTypes } from "zksync/build/types";
 
 let updateBalancesTimeout = undefined as any;
 
@@ -131,11 +129,12 @@ export const actions = actionTree(
 
     /**
      * Receive correct Fee amount
+     * @param state
      * @param {any} address
      * @param {any} feeToken
      * @return {Promise<any>}
      */
-    fetchChangePubKeyFee: async function ({}, { address, feeToken }) {
+    async fetchChangePubKeyFee({ state }, { address, feeToken }) {
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
@@ -145,9 +144,18 @@ export const actions = actionTree(
           await onchainAuthTransaction?.wait();
         }
       }
+
       const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-      //@ts-ignore
-      return syncProvider?.getTransactionFee({ ChangePubKey: ethAuthType as ChangePubkeyTypes } as ChangePubKeyFee, address, feeToken);
+      const txType: ChangePubKeyFee = {
+        // Note: Ignore, since it just looks more intuitive if `"ChangePubKey"` is kept as a string literal)
+        // Denotes how authorization of operation is performed:
+        // 'Onchain' if it's done by sending an Ethereum transaction,
+        // 'ECDSA' if it's done by providing an Ethereum signature in zkSync transaction.
+        // 'CREATE2' if it's done by providing arguments to restore account ethereum address according to CREATE2 specification.
+        ChangePubKey: <ChangePubkeyTypes>(ethAuthType === "ECDSA" ? "ECDSALegacyMessage" : "ECDSA"),
+      };
+
+      return syncProvider?.getTransactionFee(txType, address, feeToken);
     },
   },
 );

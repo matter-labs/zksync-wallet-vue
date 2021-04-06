@@ -18,14 +18,13 @@
       <div class="actionType">
         <span>{{ transactionTypeData.type }}</span>
         <i-tooltip v-if="transactionTypeData.tooltip">
-          <em v-if="transactionTypeData.tooltip" :class="transactionTypeData.tooltip.icon"/>
+          <em v-if="transactionTypeData.tooltip" :class="transactionTypeData.tooltip.icon" />
           <div slot="body" style="white-space: normal; width: 200px" v-html="transactionTypeData.tooltip.html"></div>
         </i-tooltip>
       </div>
       <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your L1 account</div>
-      <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`">{{
-          getAddressName(displayedAddress)
-        }}
+      <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`"
+        >{{ getAddressName(displayedAddress) }}
       </nuxt-link>
       <a v-if="ethTx" :href="ethTx" target="_blank" class="linkText">Ethereum Transaction</a>
     </div>
@@ -36,10 +35,10 @@
 </template>
 
 <script lang="ts">
-import {APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER} from "@/plugins/build";
-import {Address, Provider, TokenSymbol, Tx} from "@/plugins/types";
+import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
+import { Address, Provider, TokenSymbol, Tx } from "@/plugins/types";
 import utils from "@/plugins/utils";
-import {walletData} from "@/plugins/walletData";
+import { walletData } from "@/plugins/walletData";
 
 import moment from "moment";
 import Vue from "vue";
@@ -48,8 +47,8 @@ let getTimeAgoInterval = undefined as any;
 export default Vue.extend({
   props: {
     singleTransaction: {
-      type: <typeof Tx>Object,
-      required: true
+      type: Object as Tx,
+      required: true,
     },
   },
   data() {
@@ -69,7 +68,13 @@ export default Vue.extend({
       return this.$accessor.account.address;
     },
     displayedAddress(): string {
-      return this.singleTransaction.tx.type === "Transfer" ? this.isSameAddress(this.singleTransaction.tx.to) ? this.singleTransaction.tx.from : this.singleTransaction.tx.to : this.singleTransaction.tx.priority_op ? this.singleTransaction.tx.priority_op.to : this.singleTransaction.tx.to;
+      return this.singleTransaction.tx.type === "Transfer"
+        ? this.isSameAddress(this.singleTransaction.tx.to)
+          ? this.singleTransaction.tx.from
+          : this.singleTransaction.tx.to
+        : this.singleTransaction.tx.priority_op
+        ? this.singleTransaction.tx.priority_op.to
+        : this.singleTransaction.tx.to;
     },
     transactionStatus(): { text: string; icon: string } {
       if (!this.singleTransaction.success) {
@@ -147,7 +152,15 @@ export default Vue.extend({
       }
     },
     tokenSymbol(): TokenSymbol {
-      return !this.isFeeTransaction ? this.singleTransaction.tx.priority_op ? this.singleTransaction.tx.priority_op.token : this.singleTransaction.tx.token : typeof this.singleTransaction.tx.feeToken === "number" ? this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken).symbol : this.singleTransaction.tx.priority_op ? this.singleTransaction.tx.priority_op.token : this.singleTransaction.tx.token;
+      return !this.isFeeTransaction
+        ? this.singleTransaction.tx.priority_op
+          ? this.singleTransaction.tx.priority_op.token
+          : this.singleTransaction.tx.token
+        : typeof this.singleTransaction.tx.feeToken === "number"
+        ? this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken).symbol
+        : this.singleTransaction.tx.priority_op
+        ? this.singleTransaction.tx.priority_op.token
+        : this.singleTransaction.tx.token;
     },
   },
   mounted() {
@@ -172,8 +185,10 @@ export default Vue.extend({
     getTimeAgo(time: any): string {
       return moment(time).fromNow();
     },
-    getFormattedAmount({tx: {type, priority_op, amount, fee}}: Tx): string {
-      return !this.isFeeTransaction ? utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount) : utils.handleFormatToken(this.tokenSymbol, fee);
+    getFormattedAmount({ tx: { type, priority_op, amount, fee } }: Tx): string {
+      return !this.isFeeTransaction
+        ? utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount)
+        : utils.handleFormatToken(this.tokenSymbol, fee);
     },
     getAddressName(address: string): string {
       address = address ? String(address).toLowerCase() : "";
@@ -184,7 +199,7 @@ export default Vue.extend({
       return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
     },
     async getWithdrawalTx() {
-      const singleTx = this.singleTransaction as Tx;
+      const singleTx: Tx = this.singleTransaction;
       if (singleTx && singleTx.tx.type === "Withdraw") {
         const txFromStore = this.$accessor.transaction.getWithdrawalTx(singleTx.hash);
         if (txFromStore) {
@@ -194,7 +209,7 @@ export default Vue.extend({
           const ethTx = await syncProvider!.getEthTxForWithdrawal(singleTx.hash);
           if (ethTx) {
             this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${ethTx}`;
-            this.$accessor.transaction.setWithdrawalTx({tx: singleTx.hash, ethTx});
+            this.$accessor.transaction.setWithdrawalTx({ tx: singleTx.hash, ethTx });
           }
         }
       }
