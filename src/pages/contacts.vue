@@ -120,7 +120,7 @@ import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 import { Address, Contact } from "@/plugins/types";
 import Vue from "vue";
-import "vue-router/types/vue";
+/* import "vue-router/types/vue"; */
 
 export default Vue.extend({
   components: {
@@ -196,7 +196,7 @@ export default Vue.extend({
   mounted(): void {
     // @ts-ignore
     if (this.$refs.searchInput) {
-      this.$refs.searchInput?.$el?.querySelector("input").focus();
+      (this.$refs.searchInput as Vue).$el?.querySelector("input")?.focus();
     }
   },
   methods: {

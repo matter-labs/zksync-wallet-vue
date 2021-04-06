@@ -48,7 +48,7 @@ let getTimeAgoInterval = undefined as any;
 export default Vue.extend({
   props: {
     singleTransaction: {
-      type: Object as Tx,
+      type: Object,
       required: true,
     },
   },

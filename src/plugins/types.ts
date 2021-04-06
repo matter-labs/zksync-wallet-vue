@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
-import { ChangePubKeyFee, SignedTransaction } from "zksync/build/types";
+import { ChangePubKeyFee, LegacyChangePubKeyFee, SignedTransaction } from "zksync/build/types";
 
 export declare type Address = string;
 export declare type PubKeyHash = string;
@@ -314,7 +314,7 @@ export interface AccountState {
 }
 
 export interface Fee {
-  feeType: "Withdraw" | "Transfer" | "TransferToNew" | "FastWithdraw" | ChangePubKeyFee;
+  feeType: "Withdraw" | "Transfer" | "TransferToNew" | "FastWithdraw" | ChangePubKeyFee | LegacyChangePubKeyFee;
   gasTxAmount: BigNumber;
   gasPriceWei: BigNumber;
   gasFee: BigNumber;
@@ -361,7 +361,7 @@ export declare class Provider {
 
   notifyTransaction(hash: string, action: "COMMIT" | "VERIFY"): Promise<TransactionReceipt>;
 
-  getTransactionFee(txType: "Withdraw" | "Transfer" | "FastWithdraw" | ChangePubKeyFee, address: Address, tokenLike: TokenLike): Promise<Fee>;
+  getTransactionFee(txType: "Withdraw" | "Transfer" | "FastWithdraw" | ChangePubKeyFee | LegacyChangePubKeyFee, address: Address, tokenLike: TokenLike): Promise<Fee>;
 
   getTransactionsBatchFee(txTypes: ("Withdraw" | "Transfer" | "FastWithdraw")[], addresses: Address[], tokenLike: TokenLike): Promise<BigNumber>;
 

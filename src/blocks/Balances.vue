@@ -32,7 +32,7 @@
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
           </div>
           <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer </i-button>
-          <i-input v-model="search" placeholder="Filter tokens" maxlength="6" autofocus ref="searchInput">
+          <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
             <i slot="prefix" class="ri-search-line"></i>
           </i-input>
         </div>
@@ -83,6 +83,7 @@
 <script lang="ts">
 import Mint from "@/blocks/Mint.vue";
 import { Balance, depositsInterface } from "@/plugins/types";
+import { isNull } from "cypress/types/lodash";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 
@@ -141,9 +142,8 @@ export default Vue.extend({
   mounted() {
     this.getBalances();
     this.autoUpdateList();
-    //noinspection ES6ShorthandObjectProperty
     if (this.$refs.searchInput) {
-      this.$refs.searchInput?.$el?.querySelector("input").focus();
+      (this.$refs.searchInput as Vue).$el?.querySelector("input")?.focus();
     }
   },
   methods: {
