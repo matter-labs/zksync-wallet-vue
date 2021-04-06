@@ -82,15 +82,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.balanceWithdraw {
-  @media screen and (max-width: 768px) {
-    flex-direction: column;
-
-    & > .infoBlock {
-      margin-bottom: 10px;
-    }
-  }
-}
-</style>

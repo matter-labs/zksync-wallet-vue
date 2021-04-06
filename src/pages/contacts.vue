@@ -128,7 +128,7 @@ export default Vue.extend({
     transactions,
     addressInput,
   },
-  asyncData({ from }) {
+  asyncData({ from }): any {
     return {
       fromRoute: from,
     };
@@ -143,22 +143,18 @@ export default Vue.extend({
       editingWallet: null as Contact | null,
       modalError: "",
       contactsList: this.$accessor.contacts.get.map((e: Contact) => ({ ...e, deleted: false, notInContacts: false })) as Array<Contact>,
-      fromRoute: {},
+      fromRoute: {} as any,
     };
   },
   computed: {
     computedReturnLink(): string {
-      // @ts-ignore: Unreachable code error
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transfer" ? this.fromRoute : "/contacts";
+      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute?.path !== "/transfer" ? this.fromRoute : "/contacts";
     },
     walletAddressFull(): string {
       return this.$accessor.account.address;
     },
     displayedContactsList(): Array<Contact> {
-      if (!this.search.trim()) {
-        return this.contactsList;
-      }
-      return this.contactsList.filter((e: Contact) => e.name.toLowerCase().includes(this.search.trim().toLowerCase()));
+      return !this.search.trim() ? this.contactsList : this.contactsList.filter((e: Contact) => e.name.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     openedContact(): null | Contact {
       const wallet = this.$route.query.w;

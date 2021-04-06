@@ -182,7 +182,12 @@ body.inkline {
       }
 
       .transactionItem {
+        height: 80px;
         border-color: $input-border-color-light;
+        .amount, .tokenSymbol
+        {
+          display: inline-flex;
+        }
       }
     }
   }

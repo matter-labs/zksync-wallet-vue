@@ -53,8 +53,7 @@ export default Vue.extend({
         }
         if (val.path !== oldVal.path) {
           this.$nextTick(() => {
-            const lastScroll = this.$accessor.scroll.getLastScroll;
-            document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
+            document.documentElement.scrollTop = this.$accessor.scroll.getLastScroll;
           });
         }
       },

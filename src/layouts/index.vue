@@ -11,13 +11,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import headerComponent from "@/blocks/IndexHeader.vue";
 import footerComponent from "@/blocks/Footer.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 import { GIT_REVISION_SHORT } from "@/plugins/build";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   components: {
     headerComponent,
     loggingInLoader,
@@ -39,8 +40,7 @@ export default {
         }
         if (val.path !== oldVal.path) {
           this.$nextTick(() => {
-            const lastScroll = this.$accessor.scroll.getLastScroll;
-            document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
+            document.documentElement.scrollTop = this.$accessor.scroll.getLastScroll as number
           });
         }
       },
@@ -51,7 +51,7 @@ export default {
       window.history.scrollRestoration = "manual";
     }
     if (localStorage.getItem("colorTheme")) {
-      this.$inkline.config.variant = localStorage.getItem("colorTheme");
+      this.$inkline.config.variant = localStorage.getItem("colorTheme") as "light" | "dark";
     } else {
       localStorage.setItem("colorTheme", this.$inkline.config.variant);
     }
@@ -62,5 +62,5 @@ export default {
       localStorage.setItem("colorTheme", this.$inkline.config.variant);
     },
   },
-};
+});
 </script>

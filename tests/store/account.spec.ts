@@ -1,5 +1,4 @@
-import { AccountModuleState, state, mutations, getters } from "@/store/account";
-import { state as RootState, getters as RootGetters } from "@/store";
+import { AccountModuleState, getters, mutations, state } from "@/store/account";
 
 let accountState: AccountModuleState;
 

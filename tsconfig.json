@@ -1,5 +1,4 @@
 {
-  "extends": "@nuxt/typescript",
   "compilerOptions": {
     "target": "ESNext",
     "jsx": "preserve",
@@ -37,10 +36,9 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxt/vue-app",
-      "lodash",
       "@nuxtjs/axios",
       "@nuxtjs/style-resources",
-      "@inkline/nuxt",
+      "@inkline/inkline",
       "@nuxtjs/sentry",
       "@nuxtjs/toast",
       "nuxt-i18n",

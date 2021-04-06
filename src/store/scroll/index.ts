@@ -21,8 +21,12 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  getLastScroll(state): false | Number {
-    return state.lastScroll;
+  getLastScroll(state): number {
+    if (state.lastScroll !== false) {
+      return 0;
+    }
+    //@ts-ignore since TS-linter ignores any method of fixing this one
+    return state.lastScroll.y as number;
   },
   getLastPath(state): String {
     return state.lastPath;

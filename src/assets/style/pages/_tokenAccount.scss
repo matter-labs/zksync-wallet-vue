@@ -22,3 +22,13 @@
     }
   }
 }
+
+.balanceWithdraw {
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+
+    & > .infoBlock {
+      margin-bottom: 10px;
+    }
+  }
+}

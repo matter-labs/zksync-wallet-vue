@@ -47,9 +47,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import { GIT_REVISION_SHORT, APP_ZK_SCAN } from "@/plugins/build";
 import Logo from "@/blocks/Logo.vue";
+import Vue from "vue";
 
 export default Vue.extend({
   components: {
@@ -65,9 +65,7 @@ export default Vue.extend({
   },
   methods: {
     toggleDarkMode() {
-      // @ts-ignore: Unreachable code error
       this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
-      // @ts-ignore: Unreachable code error
       localStorage.setItem("colorTheme", this.$inkline.config.variant);
     },
   },

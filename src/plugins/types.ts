@@ -181,6 +181,29 @@ export interface SignedTransaction {
   ethereumSignature?: TxEthSignature;
 }
 
+export declare class zkTx implements Tx {
+  commited: boolean;
+  confirmCount: number;
+  created_at: Date;
+  eth_block: number;
+  hash: string;
+  success: boolean;
+  tx: {
+    fast: boolean;
+    amount: string;
+    fee: string;
+    from: string;
+    nonce: number;
+    priority_op?: { amount: string; from: string; to: string; token: string };
+    signature: { pubKey: string; signature: string };
+    to?: string;
+    token?: string;
+    feeToken?: number;
+    type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
+  };
+  verified: boolean;
+}
+
 export interface Tx {
   hash: string;
   pq_id?: any;
