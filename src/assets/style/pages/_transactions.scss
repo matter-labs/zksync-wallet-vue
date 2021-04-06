@@ -45,11 +45,11 @@
       }
 
       @media screen and (max-width: 768px) {
-        grid-gap: 10px;
-        grid-template-rows: 35px 80px 50px 40px;
+        grid-gap: 5px;
+        grid-template-rows: 30px 75px 45px 30px;
         grid-template-columns: 100%;
         height: max-content;
-        padding: 20px 10px;
+        padding: 10px 10px;
 
         .status {
           justify-self: center;
@@ -124,6 +124,9 @@
           color: $gray;
           font-size: 16px;
           line-height: 19px;
+          @media screen and (max-width: $mobile) {
+            justify-content: center;
+          }
 
           em {
             position: relative;
