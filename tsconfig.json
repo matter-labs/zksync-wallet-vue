@@ -1,14 +1,14 @@
 {
+  "extends": "@nuxt/typescript",
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "ESNext",
     "jsx": "preserve",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "lib": [
+      "dom",
       "ESNext",
-      "ESNext.AsyncIterable",
-      "DOM",
-      "dom"
+      "ESNext.AsyncIterable"
     ],
     "esModuleInterop": true,
     "allowJs": true,
@@ -34,20 +34,18 @@
       "vue-meta",
       "@types/node",
       "@types/jest",
-      "@types/nuxt",
-      "@types/node",
       "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxt/vue-app",
       "lodash",
-      "_types/main",
       "@nuxtjs/axios",
       "@nuxtjs/style-resources",
       "@inkline/nuxt",
       "@nuxtjs/sentry",
       "@nuxtjs/toast",
-      "@nuxt/types",
-      "nuxt-i18n"
+      "nuxt-i18n",
+      "@types/node",
+      "@nuxt/types"
     ]
   },
   "exclude": [

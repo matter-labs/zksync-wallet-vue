@@ -9,6 +9,19 @@ export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
 export declare type Nonce = number | "committed";
 
+export declare type zkOperationType = "withdraw" | "activate" | "deposit" | "transfer" | "unlock";
+export declare type zkOperationFeeType = "fast" | "normal" | "slow";
+
+export interface WithdrawParams {
+  address: Address;
+  token: TokenSymbol;
+  feeToken: TokenSymbol;
+  amount: GweiBalance;
+  fastWithdraw: boolean;
+  fees: GweiBalance;
+  store: any;
+}
+
 export interface Signature {
   pubKey: string;
   signature: string;
@@ -473,4 +486,22 @@ export interface depositsInterface {
     status: string;
     confirmations: number;
   }>;
+}
+
+export interface zkFeeData {
+  feeAmount: BigNumber | undefined;
+  isPackable: Boolean;
+  isFetched: Boolean;
+  recipient: string;
+  feeToken?: Balance;
+  operationType: "withdraw" | "activate" | "deposit" | "transfer" | "unlock" | undefined;
+  onlyEth: Boolean;
+  token?: Balance;
+}
+
+export interface zkTransaction {
+  amount: BigNumber;
+  token: Balance;
+  feeToken: Balance;
+  feeAmount: BigNumber;
 }
