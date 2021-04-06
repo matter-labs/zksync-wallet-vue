@@ -1,3 +1,4 @@
+<!--suppress ES6ShorthandObjectProperty -->
 <template>
   <div class="transactionsingleTransaction">
     <div class="status">
