@@ -110,6 +110,8 @@ export default Vue.extend({
       return this.zkBalances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     activeDeposits() {
+      // eslint-disable-next-line no-unused-expressions
+      this.$accessor.transaction.getForceUpdateTick; // Force to update the list
       const deposits = this.$accessor.transaction.depositList as depositsInterface;
       const activeDeposits = {} as depositsInterface;
       const finalDeposits = {} as {
@@ -131,20 +133,17 @@ export default Vue.extend({
       return finalDeposits;
     },
   },
-  watch: {
-    activeDeposits(val) {
-      console.log("activeDeposits updated", val);
-    },
-  },
   beforeDestroy() {
     clearInterval(updateListInterval);
   },
   mounted() {
     this.getBalances();
     this.autoUpdateList();
-    if (this.$refs.searchInput) {
+
+    // Bad UX if using phone
+    /* if (this.$refs.searchInput) {
       (this.$refs.searchInput as Vue).$el?.querySelector("input")?.focus();
-    }
+    } */
   },
   methods: {
     async getBalances(): Promise<void> {

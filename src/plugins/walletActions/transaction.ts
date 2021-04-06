@@ -49,12 +49,12 @@ export const transaction = async (
       amount: amountBigValue,
       fee: feeBigValue,
     })) as Transaction;
-    await store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
+    store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
     return transaction;
   } else {
     const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
     for (let a = 0; a < transferTransaction.length; a++) {
-      await store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: "withdraw" });
+      store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: "withdraw" });
     }
     if (transferTransaction) {
       return transferTransaction;
@@ -96,7 +96,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       fee: feeBigValue,
       fastProcessing: fastWithdraw,
     });
-    await store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "transfer" });
+    store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "transfer" });
     return transaction;
   } else {
     const withdrawals = [
@@ -164,7 +164,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       throw new Error("Error while performing submitTxsBatch: " + error.message);
     });
     for (let a = 0; a < transactionHashes.length; a++) {
-      await store.transaction.watchTransaction({ transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: "transfer" });
+      store.transaction.watchTransaction({ transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: "transfer" });
     }
     return transactionHashes.map((txHash, index) => ({
       txData: signedTransactions[index],
@@ -188,6 +188,6 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: an
     token,
     amount,
   });
-  await store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount });
+  store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse;
 };

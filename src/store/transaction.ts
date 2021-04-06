@@ -22,7 +22,7 @@ export const state = () => ({
     };
   },
   deposits: {} as depositsInterface,
-  forceUpdateTick: 0,
+  forceUpdateTick: 0 /* Used to force update computed active deposits list */,
   withdrawalTxToEthTx: new Map() as Map<string, string>,
 });
 
@@ -60,11 +60,12 @@ export const mutations = mutationTree(state, {
         status,
         confirmations,
       });
-      state.forceUpdateTick++;
+    } else if (status === "Committed") {
+      state.deposits[tokenSymbol].splice(txIndex, 1);
     } else {
       state.deposits[tokenSymbol][txIndex].status = status;
-      state.forceUpdateTick++;
     }
+    state.forceUpdateTick++;
   },
   setWithdrawalTx(state, { tx, ethTx }) {
     state.withdrawalTxToEthTx.set(tx, ethTx);
@@ -72,6 +73,9 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
+  getForceUpdateTick(state) {
+    return state.forceUpdateTick;
+  },
   depositList(state) {
     return state.deposits;
   },
@@ -107,16 +111,19 @@ export const actions = actionTree(
     async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: string; amount: string }): Promise<void> {
       try {
         commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
-        await depositTx.awaitEthereumTxCommit();
-        dispatch("requestBalancesUpdate");
+        /* await depositTx.awaitEthereumTxCommit();
+        await dispatch("requestBalancesUpdate"); */
         await depositTx.awaitReceipt();
-        dispatch("requestBalancesUpdate");
+        await dispatch("requestBalancesUpdate");
         commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Committed" });
-        await depositTx.awaitVerifyReceipt();
+
+        // No need to watch tx after tokens were already granted
+        /* await depositTx.awaitVerifyReceipt();
+        console.log("awaitVerifyReceipt received");
         dispatch("requestBalancesUpdate");
-        commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Verified" });
+        commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Verified" }); */
       } catch (error) {
-        commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Verified" });
+        commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Committed" });
       }
     },
     requestBalancesUpdate(): void {
@@ -124,7 +131,7 @@ export const actions = actionTree(
       updateBalancesTimeout = setTimeout(() => {
         this.dispatch("wallet/requestZkBalances", { accountState: undefined, force: true });
         this.dispatch("wallet/requestTransactionsHistory", { offset: 0, force: true });
-      }, 2000);
+      }, 500);
     },
 
     /**

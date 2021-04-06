@@ -77,7 +77,7 @@
         @enter="commitTransaction()"
       />
 
-      <i-radio-group
+      <!-- <i-radio-group
         v-if="chosenToken && type === 'withdraw' && (!chosenFeeToken || chosenFeeToken.symbol === chosenToken.symbol) && feesObj"
         v-model="transactionMode"
         class="_margin-top-2"
@@ -123,7 +123,7 @@
       </i-radio-group>
       <div v-else-if="chosenToken && type === 'withdraw' && feesObj" class="secondaryText _text-center _margin-top-1">
         Only normal withdraw ({{ withdrawTime.normal | formatDateTime }}) is available when using different fee token
-      </div>
+      </div> -->
 
       <div class="errorText _text-center _margin-top-1">
         {{ error }}
@@ -168,6 +168,15 @@
         <div v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1">
           <span class="linkText" @click="chooseFeeTokenModal = true">Choose fee token</span>
         </div>
+      </div>
+      <div v-if="type === 'withdraw'" class="totalPrice _display-flex _justify-center">
+        <i-tooltip>
+          <div class="_display-inline-flex">
+            Estimated processing time: 5 hours
+            <i class="ri-question-mark withdrawalAnnounce" />
+          </div>
+          <div slot="body" style="white-space: normal; width: 200px">Despite all the capabilities of ZK and L2, full withdrawal process may take up to 5 hours and depends on L1</div>
+        </i-tooltip>
       </div>
       <p v-if="!ownAccountUnlocked" class="tileTextBg _margin-top-1">
         To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH
