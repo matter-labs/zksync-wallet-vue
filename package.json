@@ -49,7 +49,7 @@
     "fs-extra": "^9.1.0"
   },
   "scripts": {
-    "ci": "rm -fr node_modules && rm -rf 'public/*' && yarn install --frozen-lockfile",
+    "ci": "rm -fr node_modules && rm -rf 'public/*' && yarn install --immutable-cache",
     "ci:build": "yarn run ci && sh ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
     "start:firebase": "firebase serve --only hosting",
     "deploy:prod": "./cli-deploy-production.sh",
@@ -120,7 +120,6 @@
     "axios": "^0.21.1",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.1.0",
-    "js-cookie": "^2.2.1",
     "lottie-web": "^5.7.7",
     "moment": "^2.29.1",
     "nuxt": "^2.15.4",
