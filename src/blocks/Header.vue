@@ -52,10 +52,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
 import accountModal from "@/blocks/modals/AccountModal.vue";
+import Vue from "vue";
 
 export default Vue.extend({
   components: {

@@ -35,9 +35,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import walletAddress from "@/components/walletAddress.vue";
 import VueQrcode from "vue-qrcode";
+import Vue from "vue";
 
 export default Vue.extend({
   components: {

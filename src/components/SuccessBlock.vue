@@ -42,10 +42,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import { Address } from "@/plugins/types";
 import Checkmark from "@/components/Checkmark.vue";
 import WalletAddress from "@/components/walletAddress.vue";
+import Vue from "vue";
 
 export default Vue.extend({
   components: {

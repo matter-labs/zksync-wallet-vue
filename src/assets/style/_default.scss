@@ -1,7 +1,9 @@
 @import "variables";
 @import "components/custom/custom";
 
-#__nuxt, #__layout, .defaultLayout {
+#__nuxt,
+#__layout,
+.defaultLayout {
   width: 100%;
   height: max-content;
   min-height: 100vh;
@@ -21,7 +23,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -121,25 +123,29 @@ button.-lg.-circle {
     background-color: $darkViolet !important;
 
     &[data-popper-placement^="right"] {
-      .arrow, .arrow::after {
+      .arrow,
+      .arrow::after {
         border-right-color: $darkViolet !important;
       }
     }
 
     &[data-popper-placement^="left"] {
-      .arrow, .arrow::after {
+      .arrow,
+      .arrow::after {
         border-left-color: $darkViolet !important;
       }
     }
 
     &[data-popper-placement^="bottom"] {
-      .arrow, .arrow::after {
+      .arrow,
+      .arrow::after {
         border-bottom-color: $darkViolet !important;
       }
     }
 
     &[data-popper-placement^="top"] {
-      .arrow, .arrow::after {
+      .arrow,
+      .arrow::after {
         border-top-color: $darkViolet !important;
       }
     }
@@ -149,25 +155,29 @@ button.-lg.-circle {
     background-color: $white !important;
 
     &[data-popper-placement^="right"] {
-      .arrow, .arrow::after {
+      .arrow,
+      .arrow::after {
         border-right-color: $white !important;
       }
     }
 
     &[data-popper-placement^="left"] {
-      .arrow, .arrow::after {
+      .arrow,
+      .arrow::after {
         border-left-color: $white !important;
       }
     }
 
     &[data-popper-placement^="bottom"] {
-      .arrow, .arrow::after {
+      .arrow,
+      .arrow::after {
         border-bottom-color: $white !important;
       }
     }
 
     &[data-popper-placement^="top"] {
-      .arrow, .arrow::after {
+      .arrow,
+      .arrow::after {
         border-top-color: $white !important;
       }
     }
@@ -225,7 +235,9 @@ button.-lg.-circle {
       }
     }
 
-    .header, .footer, .body {
+    .header,
+    .footer,
+    .body {
       padding-right: 28px !important;
       padding-left: 28px !important;
     }
@@ -240,7 +252,9 @@ button.-lg.-circle {
       color: $gray !important;
     }
 
-    .header, .footer, .body {
+    .header,
+    .footer,
+    .body {
       background: $modal-background-light !important;
       border-color: $light !important;
     }
@@ -251,7 +265,9 @@ button.-lg.-circle {
   }
 
   &.-dark {
-    .header, .footer, .body {
+    .header,
+    .footer,
+    .body {
       background: $modal-background-dark !important;
       border-color: $modal-border-color-dark !important;
     }
@@ -385,7 +401,8 @@ button.-lg.-circle {
       border: 1px solid $input-border-color-focus-dark;
     }
 
-    &::before, &::after {
+    &::before,
+    &::after {
       top: 2.5px !important;
     }
   }
@@ -436,7 +453,8 @@ button.-lg.-circle {
   background-size: contain;
 }
 
-.tokenSymbol, .walletAddress {
+.tokenSymbol,
+.walletAddress {
   font-weight: 400;
   font-family: $firaCode;
 }

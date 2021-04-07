@@ -54,7 +54,8 @@
         .status {
           justify-self: center;
         }
-        .mainInfo, .actionInfo {
+        .mainInfo,
+        .actionInfo {
           text-align: center !important;
         }
         .button {
@@ -187,8 +188,8 @@ body.inkline {
       .transactionItem {
         height: 80px;
         border-color: $input-border-color-light;
-        .amount, .tokenSymbol
-        {
+        .amount,
+        .tokenSymbol {
           display: inline-flex;
         }
       }

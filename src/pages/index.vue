@@ -13,8 +13,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   layout: "index",
   data() {
     return {
@@ -32,13 +34,13 @@ export default {
         darkMode: this.$inkline.config.variant !== "light",
       });
 
-      const refreshWalletTry = await this.$accessor.wallet.walletRefresh();
-      if (refreshWalletTry !== true) {
+      const refreshWalletTry = await this.$accessor.wallet.walletRefresh;
+      if (!refreshWalletTry) {
         await this.$accessor.wallet.logout();
       } else {
         await this.$router.push("/account");
       }
     },
   },
-};
+});
 </script>

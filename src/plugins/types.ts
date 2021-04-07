@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
+import Vue from "vue";
 import { ChangePubKeyFee, LegacyChangePubKeyFee, SignedTransaction } from "zksync/build/types";
 
 export declare type Address = string;
@@ -12,17 +13,6 @@ export declare type Nonce = number | "committed";
 
 export declare type zkOperationType = "withdraw" | "activate" | "deposit" | "transfer" | "unlock";
 export declare type zkOperationFeeType = "fast" | "normal" | "slow";
-
-export interface WithdrawParams {
-  address: Address;
-  token: TokenSymbol;
-  feeToken: TokenSymbol;
-  amount: GweiBalance;
-  fastWithdraw: boolean;
-  fees: GweiBalance;
-  store: any;
-}
-
 export interface Signature {
   pubKey: string;
   signature: string;
@@ -55,7 +45,7 @@ export interface Balance {
   symbol: TokenSymbol;
   status: "Pending" | "Verified";
   balance: DecimalBalance;
-  rawBalance: BigNumber;
+  rawBalance: DecimalBalance;
   verifiedBalance: DecimalBalance;
   tokenPrice: number;
   restricted: boolean;
@@ -75,7 +65,7 @@ export interface Token {
 { id: any; address: any; balance: BigNumber; formattedBalance: string; symbol: any; }
 */
 export interface zksync {
-  closestPackableTransactionAmount(num: DecimalBalance): GweiBalance;
+  closestPackableTransactionAmount(num: BigNumberish): GweiBalance;
 }
 
 export interface Contact {
@@ -169,30 +159,6 @@ export declare type EthSignerType = {
 export interface TxEthSignature {
   type: "EthereumSignature" | "EIP1271Signature";
   signature: string;
-}
-
-export declare class zkTx implements Tx {
-  commited: boolean;
-  confirmCount: number;
-  created_at: Date;
-  eth_block: number;
-  hash: string;
-  success: boolean;
-  tx: {
-    fast: boolean;
-    amount: string;
-    fee: string;
-    from: string;
-    nonce: number;
-    priority_op?: { amount: string; from: string; to: string; token: string };
-    signature: { pubKey: string; signature: string };
-    to?: string;
-    token?: string;
-    feeToken?: number;
-    type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
-  };
-
-  verified: boolean;
 }
 
 export interface Tx {
@@ -356,9 +322,6 @@ export declare class Provider {
   getConfirmationsForEthOpAmount(): Promise<number>;
 
   getEthTxForWithdrawal(withdrawal_hash: any): Promise<string>;
-
-  notifyPriorityOp(serialId: number, action: "COMMIT" | "VERIFY"): Promise<PriorityOperationReceipt>;
-
   notifyTransaction(hash: string, action: "COMMIT" | "VERIFY"): Promise<TransactionReceipt>;
 
   getTransactionFee(txType: "Withdraw" | "Transfer" | "FastWithdraw" | ChangePubKeyFee | LegacyChangePubKeyFee, address: Address, tokenLike: TokenLike): Promise<Fee>;
@@ -441,7 +404,7 @@ export declare class Wallet {
 
 export declare class ETHOperation {
   ethTx: ContractTransaction;
-  zkSyncProvider: Provider;
+
   state: "Sent" | "Mined" | "Committed" | "Verified" | "Failed";
   error?: ZKSyncTxError;
   priorityOpId?: BigNumber;
@@ -450,7 +413,6 @@ export declare class ETHOperation {
   awaitReceipt(): Promise<PriorityOperationReceipt>;
   awaitVerifyReceipt(): Promise<PriorityOperationReceipt>;
   private setErrorState;
-  private throwErrorIfFailedState;
 }
 
 export declare class Transaction {
@@ -463,7 +425,6 @@ export declare class Transaction {
   awaitReceipt(): Promise<TransactionReceipt>;
   awaitVerifyReceipt(): Promise<TransactionReceipt>;
   private setErrorState;
-  private throwErrorIfFailedState;
 }
 
 export interface BatchFee {
@@ -471,15 +432,6 @@ export interface BatchFee {
 }
 
 export declare function getDefaultProvider(network: "localhost" | "rinkeby" | "ropsten" | "mainnet", transport?: "WS" | "HTTP"): Promise<Provider>;
-
-export declare class ETHProxy {
-  private ethersProvider;
-  contractAddress: ContractAddress;
-  private governanceContract;
-  private mainContract;
-  constructor(ethersProvider: ethers.providers.Provider, contractAddress: ContractAddress);
-  resolveTokenId(token: TokenAddress): Promise<number>;
-}
 
 declare class Subscription {
   unsubscribe: () => Promise<void>;
@@ -502,21 +454,54 @@ export interface depositsInterface {
     confirmations: number;
   }>;
 }
-
-export interface zkFeeData {
-  feeAmount: BigNumber | undefined;
-  isPackable: Boolean;
-  isFetched: Boolean;
-  recipient: string;
-  feeToken?: Balance;
-  operationType: "withdraw" | "activate" | "deposit" | "transfer" | "unlock" | undefined;
-  onlyEth: Boolean;
-  token?: Balance;
+export declare class zkVue extends Vue {
+  $refs: {
+    vue: Vue;
+    element: HTMLInputElement;
+    vues: Vue[];
+    elements: HTMLInputElement[];
+  };
 }
 
-export interface zkTransaction {
-  amount: BigNumber;
-  token: Balance;
-  feeToken: Balance;
-  feeAmount: BigNumber;
+export declare interface TransactionInfo {
+  continueBtnFunction: boolean;
+  amount: any;
+  success: boolean;
+  fee: { amount: string; token: false | Balance };
+  recipient: any;
+  type: string;
+  hash: string;
+  explorerLink: string;
+}
+
+export class zkTx implements Tx {
+  commited!: boolean;
+  confirmCount!: number;
+  created_at!: Date;
+  eth_block!: number;
+  hash!: string;
+  success!: boolean;
+  fail_reason?: any;
+  tx!: {
+    fast: boolean;
+    amount: string;
+    fee: string;
+    from: string;
+    nonce: number;
+    priority_op?: { amount: string; from: string; to: string; token: string };
+    signature: { pubKey: string; signature: string };
+    to?: string;
+    token?: string;
+    feeToken?: number;
+    type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
+  };
+
+  verified!: boolean;
+}
+
+export declare interface singleIcon {
+  name: string;
+  img: string;
+  url: string;
+  hideIn?: string;
 }

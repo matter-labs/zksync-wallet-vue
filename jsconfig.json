@@ -18,9 +18,12 @@
   },
   "exclude": [
     "node_modules",
-    ".github",
-    ".nuxt",
+    ".yarn",
     "dist",
-    "public"
+    "public",
+    ".github",
+    "environments",
+    "src/blocks/Transaction.vue",
+    "tests"
   ]
 }

@@ -1,5 +1,5 @@
 module.exports = {
-  preset: "ts-jest",
+  preset: "@nuxt/test-utils",
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     "^~/(.*)$": "<rootDir>/src/$1",

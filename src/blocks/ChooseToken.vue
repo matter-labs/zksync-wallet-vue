@@ -23,6 +23,7 @@
           <span>No balances yet. Please make a deposit or request money from someone!</span>
         </div>
       </div>
+      <!--suppress JSCheckFunctionSignatures -->
       <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token? </i-button>
       <no-token-found />
     </template>
@@ -32,6 +33,7 @@
 <script lang="ts">
 import NoTokenFound from "@/blocks/modals/NoTokenFound.vue";
 import { Balance } from "@/plugins/types";
+
 import Vue from "vue";
 
 export default Vue.extend({

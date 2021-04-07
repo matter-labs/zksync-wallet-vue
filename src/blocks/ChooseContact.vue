@@ -65,9 +65,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import { Address, Contact } from "@/plugins/types";
 import userImg from "@/components/userImg.vue";
+import Vue from "vue";
 
 export default Vue.extend({
   components: {

@@ -1,6 +1,6 @@
 /* Colors */
 $white: #fff;
-$light: #E1E4E8;
+$light: #e1e4e8;
 $gray: #9eaebb;
 $black: #242424;
 $violet: #4e529a;
@@ -18,7 +18,6 @@ $tempLightYellow: #bababa;
 $tempDarkBlue: #11142b;
 $tempTransparent: transparent;
 
-
 /* Input */
 $input-prefix-border-width: 0;
 $input-border-width: 1px;
@@ -30,7 +29,9 @@ $input-border-color-light: #0000000a;
 $input-border-color-focus-light: #00000033;
 
 /* Modal */
-$modal-border-radius: (md: 8px);
+$modal-border-radius: (
+  md: 8px,
+);
 $modal-border-color-dark: #ffffff14;
 $modal-background-dark: $darkViolet;
 $modal-border-color-light: #180d0d05;
@@ -44,8 +45,8 @@ $firaSansExtra: "Fira Sans Extra Condensed", "sans-serif";
 $font-family-primary-base: $firaSans;
 
 /* Transitions */
-$transition1: .2s ease;
-$transition2: .3s ease;
+$transition1: 0.2s ease;
+$transition2: 0.3s ease;
 
 /* Border-radius */
 $borderRadiusXs: 6.6px;

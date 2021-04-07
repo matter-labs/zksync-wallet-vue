@@ -1,13 +1,17 @@
 # don't ever lint node_modules
 /node_modules/*
-src/static/sw.js
+/src/static/sw.js
 # don't ever lint public
 /.nuxt/*
 /src/assets/fonts/*
 /src/assets/imgs/*
+/src/store/operation.ts
 /.github/*
 /.idea/*
 /environments/*
 /public/*
 /_nuxt/*
 sw.js*
+/src/assets
+tests/*
+/tests/*

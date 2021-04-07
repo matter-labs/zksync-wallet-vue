@@ -42,7 +42,7 @@
         </div>
         <div v-else-if="search && displayedList.length === 0" class="centerBlock">
           <span
-            >Your search <b>"{{ search }}"</b> did not match any tokens</span
+            >Your search <strong>"{{ search }}"</strong> did not match any tokens</span
           >
         </div>
         <div v-else class="balancesList">
@@ -64,7 +64,8 @@
               </div>
               <div v-if="activeDeposits[item.symbol]" class="rowItem">
                 <div class="total small">
-                  <span class="balancePrice">{{ activeDeposits[item.symbol] | formatUsdAmount(item.tokenPrice, item.symbol) }}</span>
+                  <!-- @ts-ignore-->
+                  <span class="balancePrice">{{ activeDeposits[item.symbol].toString() | formatUsdAmount(item.tokenPrice, item.symbol) }}</span>
                   &nbsp;&nbsp;+{{ activeDeposits[item.symbol].toString() | formatToken(item.symbol) }}
                 </div>
                 <div class="status">
@@ -83,7 +84,6 @@
 <script lang="ts">
 import Mint from "@/blocks/Mint.vue";
 import { Balance, depositsInterface } from "@/plugins/types";
-import { isNull } from "cypress/types/lodash";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 
@@ -100,37 +100,42 @@ export default Vue.extend({
     };
   },
   computed: {
-    zkBalances() {
+    zkBalances(): Balance[] {
       return this.$accessor.wallet.getzkBalances;
     },
-    displayedList(): Array<Balance> {
+    displayedList(): Balance[] {
       if (!this.search.trim()) {
         return this.zkBalances;
       }
       return this.zkBalances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
-    activeDeposits() {
+    // @ts-ignore
+    activeDeposits(): depositsInterface {
       // eslint-disable-next-line no-unused-expressions
-      this.$accessor.transaction.getForceUpdateTick; // Force to update the list
+      this.$accessor.transaction.getForceUpdateTick(); // Force to update the list
       const deposits = this.$accessor.transaction.depositList as depositsInterface;
       const activeDeposits = {} as depositsInterface;
-      const finalDeposits = {} as {
-        [tokenSymbol: string]: BigNumber;
-      };
+      const finalDeposits = {} as depositsInterface;
       for (const tokenSymbol in deposits) {
+        // @ts-ignore
         activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx) => tx.status === "Initiated");
       }
       for (const tokenSymbol in activeDeposits) {
+        // @ts-ignore
         if (activeDeposits[tokenSymbol].length > 0) {
+          // @ts-ignore
           if (!finalDeposits[tokenSymbol]) {
+            // @ts-ignore
             finalDeposits[tokenSymbol] = BigNumber.from("0");
           }
-          for (const tx of activeDeposits[tokenSymbol]) {
+          // @ts-ignore
+          for (const tx: depositsInterface of activeDeposits[tokenSymbol]) {
+            // @ts-ignore
             finalDeposits[tokenSymbol] = finalDeposits[tokenSymbol].add(tx.amount);
           }
         }
       }
-      return finalDeposits;
+      return (finalDeposits as unknown) as depositsInterface;
     },
   },
   beforeDestroy() {

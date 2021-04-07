@@ -7,9 +7,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import socialIcons from "@/plugins/socialIcons";
-export default {
+import { singleIcon } from "@/plugins/types";
+import Vue from "vue";
+
+export default Vue.extend({
   props: {
     location: {
       required: false,
@@ -23,13 +26,13 @@ export default {
     };
   },
   computed: {
-    socialNetworks() {
+    socialNetworks(): singleIcon[] {
       const socialIcons = [
         {
           name: "Medium Blog",
           img: "medium",
           url: "https://medium.com/matter-labs",
-        },
+        } as singleIcon,
         {
           name: "Gitter Rooms",
           img: "gitter",
@@ -56,9 +59,9 @@ export default {
           url: "https://zksync.io/contact.html",
           hideIn: "footer",
         },
-      ];
+      ] as singleIcon[];
       return socialIcons.filter((item) => !item.hideIn || item.hideIn !== this.location);
     },
   },
-};
+});
 </script>

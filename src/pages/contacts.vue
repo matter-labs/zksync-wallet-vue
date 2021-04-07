@@ -118,9 +118,8 @@ import addressInput from "@/components/AddressInput.vue";
 
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
-import { Address, Contact } from "@/plugins/types";
+import { Address, Contact, zkVue } from "@/plugins/types";
 import Vue from "vue";
-/* import "vue-router/types/vue"; */
 
 export default Vue.extend({
   components: {

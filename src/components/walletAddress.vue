@@ -9,9 +9,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import userImg from "@/components/userImg.vue";
-export default {
+import Vue from "vue";
+export default Vue.extend({
   components: {
     userImg,
   },
@@ -35,5 +36,5 @@ export default {
       document.body.removeChild(elem);
     },
   },
-};
+});
 </script>

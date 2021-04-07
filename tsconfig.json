@@ -4,6 +4,7 @@
     "jsx": "preserve",
     "module": "ESNext",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "lib": [
       "dom",
       "ESNext",
@@ -36,9 +37,12 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxt/vue-app",
+      "lodash",
+      "@nuxtjs/eslint-config-typescript",
       "@nuxtjs/axios",
       "@nuxtjs/style-resources",
       "@inkline/inkline",
+      "@inkline/nuxt",
       "@nuxtjs/sentry",
       "@nuxtjs/toast",
       "nuxt-i18n",
@@ -51,6 +55,9 @@
     ".yarn",
     "dist",
     "public",
+    "cypress",
+    "src/blocks/Transaction",
+    "tests",
     ".github",
     "environments"
   ]

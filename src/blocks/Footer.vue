@@ -64,7 +64,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    toggleDarkMode() {
+    toggleDarkMode(): void {
       this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
       localStorage.setItem("colorTheme", this.$inkline.config.variant);
     },

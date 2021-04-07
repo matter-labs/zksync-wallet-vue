@@ -1,44 +1,44 @@
 .socialIcons {
-    display: grid;
-    grid-auto-columns: 20px;
-    grid-auto-flow: column;
-    grid-gap: 15px;
-    grid-template-rows: 100%;
-    width: max-content;
+  display: grid;
+  grid-auto-columns: 20px;
+  grid-auto-flow: column;
+  grid-gap: 15px;
+  grid-template-rows: 100%;
+  width: max-content;
+  height: 20px;
+
+  .socialItem {
+    display: block;
+    width: 20px;
     height: 20px;
-
-    .socialItem {
-        display: block;
-        width: 20px;
-        height: 20px;
-        transition: color $transition1;
-        text-decoration: none;
-        &:hover {
-            color: $lightViolet !important;
-        }
-
-        i {
-            font-size: 18px;
-            line-height: 20px;
-        }
-        svg {
-          display: block;
-          width: 19px;
-          height: 19px;
-          object-fit: contain;
-        }
+    transition: color $transition1;
+    text-decoration: none;
+    &:hover {
+      color: $lightViolet !important;
     }
+
+    i {
+      font-size: 18px;
+      line-height: 20px;
+    }
+    svg {
+      display: block;
+      width: 19px;
+      height: 19px;
+      object-fit: contain;
+    }
+  }
 }
 
 body.inkline {
-    &.-light .socialIcons {
-        .socialItem {
-            color: $gray;
-        }
+  &.-light .socialIcons {
+    .socialItem {
+      color: $gray;
     }
-    &.-dark .socialIcons {
-        .socialItem {
-            color: $white;
-        }
+  }
+  &.-dark .socialIcons {
+    .socialItem {
+      color: $white;
     }
+  }
 }
