@@ -174,7 +174,7 @@
         <i-tooltip>
           <div class="_display-inline-flex">
             Estimated processing time: 5 hours
-            <i class="ri-question-mark withdrawalAnnounce" />
+            <i class="ri-question-mark iconInfo" />
           </div>
           <div slot="body">Despite all the capabilities of ZK and L2, full withdrawal process may take up to 5 hours and depends on L1</div>
         </i-tooltip>
@@ -666,8 +666,7 @@ export default Vue.extend({
               nonce: "committed",
               onchainAuth: true,
             });
-            console.log("changePubkey", changePubkey);
-            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
+            this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
             this.setTransactionInfo(changePubkey, true);
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey?.awaitReceipt();
@@ -678,8 +677,7 @@ export default Vue.extend({
             const changePubkey = await syncWallet!.setSigningKey({
               feeToken: this.feeToken.symbol,
             });
-            console.log("changePubkey", changePubkey);
-            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
+            this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
             this.setTransactionInfo(changePubkey, true);
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey.awaitReceipt();
