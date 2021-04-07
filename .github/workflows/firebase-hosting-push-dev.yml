@@ -24,7 +24,7 @@ jobs:
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
           target: rinkeby
-          projectId: zksync-dapp-wallet
+          projectId: zksync-vue
           channelID: live
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
@@ -40,7 +40,7 @@ jobs:
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
           target: ropsten
-          projectId: zksync-dapp-wallet
+          projectId: zksync-vue
           channelID: live
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
@@ -56,7 +56,7 @@ jobs:
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
           target: mainnet
-          projectId: zksync-dapp-wallet
+          projectId: zksync-vue
           channelID: live
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
