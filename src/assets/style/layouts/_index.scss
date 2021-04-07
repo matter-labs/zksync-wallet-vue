@@ -15,7 +15,6 @@
   }
 
   .tileContainer {
-    z-index: 0;
     cursor: pointer;
 
     &:hover .tile {
@@ -23,7 +22,6 @@
     }
 
     .tile {
-      position: relative;
       width: 130px;
       height: 130px;
       margin: 20px auto 5px;

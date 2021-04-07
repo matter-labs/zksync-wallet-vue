@@ -134,7 +134,6 @@
       margin: 0 auto;
       width: 55px;
       height: 55px;
-      border-radius: 50%;
       background: $lightViolet;
       box-shadow: 0 2px 12px $lightViolet;
       padding: 18px;
@@ -196,7 +195,6 @@
       .bn-onboard-modal-content-close {
         top: 2rem;
       }
-
     }
   }
 }
@@ -214,7 +212,5 @@ body {
         }
       }
     }
-  }
-  &.-light {
   }
 }

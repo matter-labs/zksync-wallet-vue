@@ -240,11 +240,6 @@ const config: NuxtConfig = {
     dir: "public",
     fallback: "404.html",
   },
-  pwa: {
-    workbox: {
-      pagesURLPattern: "/_nuxt/",
-    },
-  },
   typescript: {
     typeCheck: {
       eslint: {
