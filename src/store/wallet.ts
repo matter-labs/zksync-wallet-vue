@@ -24,7 +24,7 @@ interface feesInterface {
   };
 }
 
-let getTransactionHistoryAgain = false;
+let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
 
 export const state = () => ({
   onboard: undefined as undefined | API,
@@ -404,7 +404,6 @@ export const actions = actionTree(
      * @return {Promise<any>}
      */
     async requestTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }): Promise<Array<Tx>> {
-      // @ts-ignore: Unreachable code error
       clearTimeout(getTransactionHistoryAgain);
       const localList = getters.getTransactionsList;
       /**
@@ -428,7 +427,6 @@ export const actions = actionTree(
         return fetchTransactionHistory.data;
       } catch (error) {
         this.dispatch("toaster/error", error.message);
-        // @ts-ignore: Unreachable code error
         getTransactionHistoryAgain = setTimeout(() => {
           dispatch("requestTransactionsHistory", { force: true });
         }, 15000);
@@ -586,6 +584,7 @@ export const actions = actionTree(
         this.commit("account/setLoggedIn", true);
         return true;
       } catch (error) {
+        console.log("Wallet refresh error", error);
         if (!error.message.includes("User denied")) {
           this.dispatch("toaster/error", `Refreshing state of the wallet failed... Reason: ${error.message}`);
           this.dispatch("toaster/error", error.message);

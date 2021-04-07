@@ -1,6 +1,7 @@
 import { Address, GweiBalance, TokenSymbol, Transaction, Tx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
+import { Withdraw } from "zksync/build/types";
 
 /**
  * Transaction processing action
@@ -118,7 +119,10 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       throw new Error("No transfers in queue");
     }
 
-    const signedTransactions = [] as Array<Tx>;
+    const signedTransactions = [] as Array<{
+      tx: Withdraw;
+      signature: any;
+    }>;
     let signWithdrawTransaction = null;
 
     let nextNonce = await syncWallet!.getNonce();
@@ -136,8 +140,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
           throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
         });
 
-      // @ts-ignore: Unreachable code error
-      signedTransactions.push({ tx: signWithdrawTransaction.tx, signature: signWithdrawTransaction.ethereumSignature });
+      signedTransactions.push({ tx: signWithdrawTransaction.tx as Withdraw, signature: signWithdrawTransaction.ethereumSignature });
     }
 
     for (const item of transfers) {
@@ -153,8 +156,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
           throw new Error("Error while performing signSyncTransfer: " + error.message);
         });
 
-      // @ts-ignore: Unreachable code error
-      signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
+      signedTransactions.push({ tx: signTransaction.tx as Withdraw, signature: signTransaction.ethereumSignature });
     }
 
     const transactionHashes = await syncWallet!.provider.submitTxsBatch(signedTransactions).catch((error) => {

@@ -182,8 +182,7 @@ export default Vue.extend({
       } else {
         this.$nextTick(() => {
           if (this.$refs.nameInput) {
-            // @ts-ignore: Unreachable code error
-            this.$refs.nameInput?.$el?.querySelector("input").focus();
+            (this.$refs.nameInput as Vue)?.$el?.querySelector("input")?.focus();
           }
         });
       }
@@ -193,7 +192,6 @@ export default Vue.extend({
     },
   },
   mounted(): void {
-    // @ts-ignore
     if (this.$refs.searchInput) {
       (this.$refs.searchInput as Vue).$el?.querySelector("input")?.focus();
     }

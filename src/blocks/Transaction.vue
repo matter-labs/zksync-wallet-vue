@@ -301,31 +301,23 @@ export default Vue.extend({
         return "Withdraw";
       } else return this.type === "transfer" ? "Transfer" : "";
     },
-    // @ts-ignore: Unreachable code error
     maxAmount(): string {
       if (!this.chosenToken) {
         return "0";
       }
-      // @ts-ignore: Unreachable code error
       if (
         (!this.chosenFeeToken || this.chosenToken.symbol === this.chosenFeeToken.symbol) &&
         !this.feesLoading &&
         (this.transactionMode === "normal" ? (this.feesObj as FeesObj)?.normal : (this.feesObj as FeesObj)?.fast)
       ) {
-        // @ts-ignore: Unreachable code error
-        let amount: string;
-        // @ts-ignore: Unreachable code error
-        amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as string);
+        let amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as string);
         if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
-          // @ts-ignore: Unreachable code error
           amount = amount.sub(this.activateAccountFee as string);
         }
         return zksync!.closestPackableTransactionAmount(amount).toString();
       } else {
-        // @ts-ignore: Unreachable code error
         let amount = this.chosenToken.rawBalance;
         if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
-          // @ts-ignore: Unreachable code error
           amount = amount.sub(this.activateAccountFee);
         }
         return zksync!.closestPackableTransactionAmount(amount).toString();
@@ -340,7 +332,6 @@ export default Vue.extend({
     },
     enoughFeeToken(): boolean {
       if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
-        // @ts-ignore: Unreachable code error
         const feeAmount = BigNumber.from(this.activateAccountFee);
         return BigNumber.from(this.feeToken.rawBalance).gt(feeAmount);
       }
@@ -355,7 +346,6 @@ export default Vue.extend({
       ) {
         return true;
       }
-      // @ts-ignore: Unreachable code error
       let feeAmount = BigNumber.from(this.feesObj[this.transactionMode]);
       if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
         feeAmount = feeAmount.add(this.activateAccountFee);
@@ -460,7 +450,6 @@ export default Vue.extend({
           feeSymbol: this.feeToken?.symbol,
           type: this.type,
         });
-        // @ts-ignore: Unreachable code error
         this.feesObj = await this.$accessor.wallet.requestFees({
           address: this.inputtedAddress,
           symbol: this.chosenToken?.symbol,
@@ -478,7 +467,7 @@ export default Vue.extend({
     async commitTransaction(): Promise<void> {
       if (!this.inputtedAmount && this.ownAccountUnlocked) {
         // @ts-ignore: Unreachable code error
-        this.$refs.amountInput.emit(this.inputtedAmount);
+        (this.$refs.amountInput as Vue).emitValue(this.inputtedAmount);
       }
       if (this.buttonDisabled) {
         return;

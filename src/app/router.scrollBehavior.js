@@ -25,7 +25,6 @@ export default async function (to, from, savedPosition) {
 
   if (to.hash) {
     const el = findEl(to.hash);
-    // @ts-ignore
     const offsetTop = el.getBoundingClientRect().top + window.pageYOffset;
     if ("scrollBehavior" in document.documentElement.style) {
       return window.scrollTo({ top: offsetTop, behavior: "smooth" });

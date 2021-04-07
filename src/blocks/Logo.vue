@@ -54,7 +54,6 @@ export default Vue.extend({
   },
   computed: {
     zkWalletLogoSrc(): string {
-      // @ts-ignore
       const variation = this.$inkline.config.variant === "light" ? "" : "-alt";
       return require(`@/assets/imgs/logos/zkwallet${variation}.svg`);
     },
