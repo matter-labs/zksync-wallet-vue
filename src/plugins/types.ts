@@ -41,12 +41,11 @@ export interface Transfer {
 }
 
 export interface Balance {
-  id: undefined | number;
   symbol: TokenSymbol;
   status: "Pending" | "Verified";
-  balance: DecimalBalance;
-  rawBalance: DecimalBalance;
-  verifiedBalance: DecimalBalance;
+  balance: GweiBalance;
+  rawBalance: BigNumber;
+  verifiedBalance: GweiBalance;
   tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
@@ -58,12 +57,7 @@ export interface Token {
   address: Address;
   balance: string | BigNumber;
   symbol: TokenSymbol;
-  formattedBalance?: string;
 }
-
-/*
-{ id: any; address: any; balance: BigNumber; formattedBalance: string; symbol: any; }
-*/
 export interface zksync {
   closestPackableTransactionAmount(num: BigNumberish): GweiBalance;
 }

@@ -63,7 +63,6 @@ export const mutations = mutationTree(state, {
     state.isAccountLocked = accountState;
   },
   setOnboard(state, obj: any) {
-    console.log("set onboard", obj);
     state.onboard = obj;
   },
   setTokensList(
@@ -321,15 +320,15 @@ export const actions = actionTree(
         const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
-        tokensList.push(({
+        tokensList.push({
           symbol: tokenSymbol,
           status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
           balance: committedBalance,
           rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
           verifiedBalance,
-          tokenPrice: price,
+          tokenPrice: parseFloat(price),
           restricted: +committedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol),
-        } as unknown) as Balance);
+        } as Balance);
       }
       commit("setZkTokens", {
         lastUpdated: new Date().getTime(),
@@ -365,14 +364,16 @@ export const actions = actionTree(
           const currentToken = loadedTokens.tokens[key];
           try {
             const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+            const price = await this.dispatch("tokens/getTokenPrice", currentToken.symbol);
             return {
-              id: currentToken.id.toString(),
               address: currentToken.address,
               balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
-              rawBalance: (balance as unknown) as string,
-              // @ts-ignore
-              formattedBalance: utils.handleFormatToken(currentToken.symbol, balance.toString()),
+              rawBalance: balance,
+              verifiedBalance: balance.toString(),
+              tokenPrice: parseFloat(price),
               symbol: currentToken.symbol,
+              status: "Verified",
+              restricted: false,
             };
           } catch (error) {
             this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
@@ -541,9 +542,7 @@ export const actions = actionTree(
         if (getAccounts.length === 0) {
           return false;
         }
-        console.log(walletData.get());
         if (walletData.get().syncWallet) {
-          console.log("syncWallet", walletData.get().syncWallet);
           rootState.disptach("account/setAddress", walletData.get().syncWallet!.address());
           return true;
         }
@@ -555,22 +554,14 @@ export const actions = actionTree(
 
         const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider).getSigner();
 
-        console.log("signer: ", ethWallet);
-
         const zksync = await walletData.zkSync();
-
-        console.log("zksync: ", zksync);
-        console.log("network:", ETHER_NETWORK_NAME);
         const syncProvider: Provider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
 
-        console.log("Provider:", syncProvider);
         const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
 
-        console.log("syncWallet:", syncWallet);
         this.commit("account/setLoadingHint", "Getting wallet information");
 
         const accountState = await syncWallet.getAccountState();
-        console.log("accountState:", accountState);
 
         const walletProps: iWalletData = {
           syncProvider,
