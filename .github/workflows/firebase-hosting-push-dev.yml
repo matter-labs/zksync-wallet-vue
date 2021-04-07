@@ -22,10 +22,12 @@ jobs:
       - name: Deploy to rinkeby site
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_TEST }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
           target: rinkeby
           projectId: zksync-dapp-wallet
           channelID: live
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels
 
       - name: Configure for ropsten
         run: sh ./cli-process-env.sh ropsten dev 1
@@ -36,10 +38,12 @@ jobs:
       - name: Deploy to ropsten site
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_TEST }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
           target: ropsten
           projectId: zksync-dapp-wallet
           channelID: live
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels
 
       - name: Configure for mainnet
         run: sh ./cli-process-env.sh mainnet dev 1
@@ -50,7 +54,9 @@ jobs:
       - name: Deploy to mainnet
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_TEST }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
           target: mainnet
           projectId: zksync-dapp-wallet
           channelID: live
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels
