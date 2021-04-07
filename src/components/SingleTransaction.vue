@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, Provider, TokenSymbol, Tx, zkTx } from "@/plugins/types";
+import { Address, Provider, TokenSymbol, Tx } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 
@@ -48,7 +48,8 @@ let getTimeAgoInterval = undefined as any;
 export default Vue.extend({
   props: {
     singleTransaction: {
-      type: zkTx,
+      type: Object,
+      default: () => {},
       required: true,
     },
   },

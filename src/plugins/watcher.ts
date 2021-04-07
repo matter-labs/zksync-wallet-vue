@@ -9,7 +9,6 @@ export default ({ redirect, app: { $accessor }, route }: Context) => {
     return;
   }
   (async () => {
-    // @ts-ignore
     const onboardResult = await $accessor.wallet.onboardInit();
     if (!onboardResult) {
       await $accessor.wallet.logout();

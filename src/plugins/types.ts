@@ -41,12 +41,11 @@ export interface Transfer {
 }
 
 export interface Balance {
-  id: undefined | number;
   symbol: TokenSymbol;
   status: "Pending" | "Verified";
-  balance: DecimalBalance;
-  rawBalance: DecimalBalance;
-  verifiedBalance: DecimalBalance;
+  balance: GweiBalance;
+  rawBalance: BigNumber;
+  verifiedBalance: GweiBalance;
   tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
@@ -58,12 +57,7 @@ export interface Token {
   address: Address;
   balance: string | BigNumber;
   symbol: TokenSymbol;
-  formattedBalance?: string;
 }
-
-/*
-{ id: any; address: any; balance: BigNumber; formattedBalance: string; symbol: any; }
-*/
 export interface zksync {
   closestPackableTransactionAmount(num: BigNumberish): GweiBalance;
 }
@@ -472,31 +466,6 @@ export declare interface TransactionInfo {
   type: string;
   hash: string;
   explorerLink: string;
-}
-
-export class zkTx implements Tx {
-  commited!: boolean;
-  confirmCount!: number;
-  created_at!: Date;
-  eth_block!: number;
-  hash!: string;
-  success!: boolean;
-  fail_reason?: any;
-  tx!: {
-    fast: boolean;
-    amount: string;
-    fee: string;
-    from: string;
-    nonce: number;
-    priority_op?: { amount: string; from: string; to: string; token: string };
-    signature: { pubKey: string; signature: string };
-    to?: string;
-    token?: string;
-    feeToken?: number;
-    type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
-  };
-
-  verified!: boolean;
 }
 
 export declare interface singleIcon {
