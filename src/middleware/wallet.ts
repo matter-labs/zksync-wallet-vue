@@ -1,7 +1,8 @@
 import { walletData } from "@/plugins/walletData";
-import { Context } from "@nuxt/types";
+import { Context, Middleware } from "@nuxt/types";
+import { getAccessorType } from "typed-vuex";
 
-export default ({ redirect, app: { $accessor }, route }: Context) => {
+const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) => {
   if (walletData.get().syncWallet) {
     if (route.path === "/") {
       redirect("/account");
@@ -9,8 +10,7 @@ export default ({ redirect, app: { $accessor }, route }: Context) => {
     return;
   }
   (async () => {
-    // @ts-ignore
-    const onboardResult = await $accessor.wallet.onboardInit();
+    const onboardResult: boolean = await $accessor.wallet.onboardInit();
     if (!onboardResult) {
       await $accessor.wallet.logout();
       if (route.path !== "/") {
@@ -31,3 +31,5 @@ export default ({ redirect, app: { $accessor }, route }: Context) => {
     }
   })();
 };
+
+export default wallet;

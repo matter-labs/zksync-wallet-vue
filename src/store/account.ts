@@ -1,5 +1,6 @@
 import { Address } from "@/plugins/types";
-import { getterTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { Wallet } from "zksync";
 import { APP_ZK_SCAN } from "~/plugins/build";
 
 export const state = () => ({
@@ -72,3 +73,13 @@ export const getters = getterTree(state, {
     return `${APP_ZK_SCAN}/accounts/${state.address}`;
   },
 });
+
+export const actions = actionTree(
+  { state, getters, mutations },
+  {
+    storeConnection({ commit }, wallet: Wallet): void {
+      commit("setSelectedWallet", wallet.address());
+      commit("setLoggedIn", true);
+    },
+  },
+);

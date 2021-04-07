@@ -505,3 +505,12 @@ export declare interface singleIcon {
   url: string;
   hideIn?: string;
 }
+
+export interface iWalletData {
+  [key: string]: object | undefined;
+
+  syncProvider?: Provider;
+  syncWallet?: Wallet;
+  accountState?: AccountState;
+  zkSync?: object;
+}

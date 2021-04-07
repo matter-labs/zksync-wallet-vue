@@ -1,12 +1,4 @@
-import { AccountState, Provider, Wallet } from "@/plugins/types";
-
-interface iWalletData {
-  [key: string]: object | undefined;
-  syncProvider?: Provider;
-  syncWallet?: Wallet;
-  accountState?: AccountState;
-  zkSync?: object;
-}
+import { AccountState, Provider, Wallet, iWalletData } from "@/plugins/types";
 
 const internalWalletData: iWalletData = {
   syncProvider: undefined,

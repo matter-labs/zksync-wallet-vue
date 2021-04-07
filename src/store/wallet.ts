@@ -3,12 +3,12 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Tx } from "@/plugins/types";
+import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Tx, iWalletData, Provider } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
 import web3Wallet from "@/plugins/web3";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import { API, Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import utils from "~/plugins/utils";
 
 interface feesInterface {
@@ -27,7 +27,7 @@ interface feesInterface {
 let getTransactionHistoryAgain = false;
 
 export const state = () => ({
-  onboard: false as any,
+  onboard: undefined as undefined | API,
   isAccountLocked: false,
   zkTokens: {
     lastUpdated: 0 as Number,
@@ -63,6 +63,7 @@ export const mutations = mutationTree(state, {
     state.isAccountLocked = accountState;
   },
   setOnboard(state, obj: any) {
+    console.log("set onboard", obj);
     state.onboard = obj;
   },
   setTokensList(
@@ -186,7 +187,7 @@ export const getters = getterTree(state, {
   isAccountLocked(state): boolean {
     return state.isAccountLocked;
   },
-  getOnboard(state): any {
+  getOnboard(state): API | undefined {
     return state.onboard;
   },
   getTokensList(state): { lastUpdated: Number; list: Array<Balance> } {
@@ -260,7 +261,7 @@ export const actions = actionTree(
      * @return {Promise<boolean>}
      */
     async onboardInit({ commit }): Promise<boolean> {
-      const onboard = Onboard(onboardConfig(this) as Initialization);
+      const onboard: API = Onboard(onboardConfig(this) as Initialization);
       commit("setOnboard", onboard);
       const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
       if (!previouslySelectedWallet) {
@@ -513,24 +514,23 @@ export const actions = actionTree(
      *
      * @param getters
      * @param dispatch
+     * @param state
+     * @param rootState
+     * @param commit
      * @param firstSelect
      * @returns {Promise<boolean>}
      */
-    async walletRefresh({ getters, dispatch }, firstSelect = true): Promise<boolean> {
+    async walletRefresh({ getters, dispatch, state, rootState, commit }, firstSelect: boolean = true): Promise<boolean> {
       try {
-        /* dispatch("changeNetworkRemove"); */
-        const onboard = getters.getOnboard;
         this.commit("account/setLoadingHint", "Follow the instructions in your wallet");
-        let walletCheck = false;
+        let walletCheck: boolean = false;
         if (firstSelect) {
-          walletCheck = await onboard.walletSelect();
+          walletCheck = (await state.onboard?.walletSelect()) as boolean;
           if (!walletCheck) {
             return false;
           }
-          walletCheck = await onboard.walletCheck();
-        } else {
-          walletCheck = await onboard.walletCheck();
         }
+        walletCheck = (await state.onboard?.walletCheck()) as boolean;
         if (!walletCheck) {
           return false;
         }
@@ -541,9 +541,10 @@ export const actions = actionTree(
         if (getAccounts.length === 0) {
           return false;
         }
+        console.log(walletData.get());
         if (walletData.get().syncWallet) {
-          this.commit("account/setAddress", walletData.get().syncWallet!.address());
-          this.commit("account/setLoggedIn", true);
+          console.log("syncWallet", walletData.get().syncWallet);
+          rootState.disptach("account/setAddress", walletData.get().syncWallet!.address());
           return true;
         }
 
@@ -551,27 +552,41 @@ export const actions = actionTree(
          * @type {provider}
          */
         const currentProvider = web3Wallet.get().eth.currentProvider;
-        /**
-         * noinspection ES6ShorthandObjectProperty
-         */
-        const ethWallet = new ethers.providers.Web3Provider(currentProvider).getSigner();
+
+        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider).getSigner();
+
+        console.log("signer: ", ethWallet);
 
         const zksync = await walletData.zkSync();
-        const syncProvider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME /* , 'HTTP' */);
+
+        console.log("zksync: ", zksync);
+        console.log("network:", ETHER_NETWORK_NAME);
+        const syncProvider: Provider = await zksync.getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
+
+        console.log("Provider:", syncProvider);
         const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
 
+        console.log("syncWallet:", syncWallet);
         this.commit("account/setLoadingHint", "Getting wallet information");
-        const accountState = await syncWallet.getAccountState();
 
-        walletData.set({ syncProvider, syncWallet, accountState, ethWallet });
+        const accountState = await syncWallet.getAccountState();
+        console.log("accountState:", accountState);
+
+        const walletProps: iWalletData = {
+          syncProvider,
+          syncWallet,
+          accountState,
+          ethWallet,
+        };
+
+        walletData.set(walletProps);
 
         await this.dispatch("tokens/loadTokensAndBalances");
         await dispatch("requestZkBalances", accountState);
 
         await dispatch("checkLockedState");
 
-        // @ts-ignore
-        await watcher.changeNetworkSet(dispatch, this);
+        //        await watcher.changeNetworkSet(dispatch, this);
 
         this.commit("contacts/getContactsFromStorage");
         this.commit("account/setAddress", syncWallet.address());
@@ -580,7 +595,7 @@ export const actions = actionTree(
         return true;
       } catch (error) {
         if (!error.message.includes("User denied")) {
-          // this.dispatch("toaster/error", `Refreshing state of the wallet failed... Reason: ${error.message}`);
+          this.dispatch("toaster/error", `Refreshing state of the wallet failed... Reason: ${error.message}`);
           this.dispatch("toaster/error", error.message);
         }
         return false;
@@ -593,13 +608,13 @@ export const actions = actionTree(
 
     /**
      * Perform logout and fire a couple of events
+     * @param dispatch
      * @param commit
      * @param getters
      * @returns {Promise<void>}
      */
-    logout({ commit, getters }): void {
-      const onboard = getters.getOnboard;
-      onboard.walletReset();
+    logout({ dispatch, commit, getters }): void {
+      this.state.onboard?.walletReset();
       walletData.set({ syncProvider: undefined, syncWallet: undefined, accountState: undefined });
       localStorage.removeItem("selectedWallet");
       this.commit("account/setLoggedIn", false);

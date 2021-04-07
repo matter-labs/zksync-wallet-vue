@@ -2,7 +2,7 @@
   <div class="indexPage">
     <i-container>
       <h1>Connect your L1 ETH Wallet to start</h1>
-      <div data-cy="connectWalet-btn" class="tileContainer _margin-top-1" @click="customWallet()">
+      <div data-cy="connectWalet-btn" class="tileContainer _margin-top-1" @click="customWallet">
         <div class="tile">
           <img src="@/assets/imgs/wallets/external.png" alt="External" />
           <i class="tileIcon ri-lock-line"></i>
@@ -25,16 +25,12 @@ export default Vue.extend({
     };
   },
   methods: {
-    burnerWallet() {
-      this.$router.push("/account");
-    },
     async customWallet() {
-      const onboard = this.$accessor.wallet.getOnboard;
-      onboard.config({
+      this.$accessor.wallet.onboard?.config({
         darkMode: this.$inkline.config.variant !== "light",
       });
-
-      const refreshWalletTry = await this.$accessor.wallet.walletRefresh;
+      const refreshWalletTry = await this.$accessor.wallet.walletRefresh();
+      console.log(refreshWalletTry);
       if (!refreshWalletTry) {
         await this.$accessor.wallet.logout();
       } else {
