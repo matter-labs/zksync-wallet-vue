@@ -71,8 +71,7 @@ export default Vue.extend({
   methods: {
     focusInput(): void {
       if (this.$refs.input) {
-        // @ts-ignore: Unreachable code error
-        this.$refs.input.focus();
+        (this.$refs.input as HTMLElement).focus();
       }
     },
   },

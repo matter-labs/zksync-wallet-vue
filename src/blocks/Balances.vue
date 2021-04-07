@@ -114,7 +114,7 @@ export default Vue.extend({
       const deposits = this.$accessor.transaction.depositList as depositsInterface;
       const activeDeposits = {} as depositsInterface;
       const finalDeposits = {} as {
-        [tokenSymbol: string]: BigNumber,
+        [tokenSymbol: string]: BigNumber;
       };
       for (const tokenSymbol in deposits) {
         activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx) => tx.status === "Initiated");

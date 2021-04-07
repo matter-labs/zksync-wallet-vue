@@ -182,7 +182,7 @@ export default Vue.extend({
       } else {
         this.$nextTick(() => {
           if (this.$refs.nameInput) {
-            (this.$refs.nameInput as Vue).$el?.querySelector("input").focus();
+            (this.$refs.nameInput as Vue)?.$el?.querySelector("input")?.focus();
           }
         });
       }

@@ -151,15 +151,13 @@ export default Vue.extend({
 
     contactsListModal() {
       setTimeout(() => {
-        // @ts-ignore: Unreachable code error
-        this.$refs.contactNameInput?.$el?.querySelector("input")?.focus();
+        (this.$refs.contactNameInput as Vue)?.$el?.querySelector("input")?.focus();
       }, 0);
     },
     saveContactModal() {
       this.saveContactModalError = "";
       setTimeout(() => {
-        // @ts-ignore: Unreachable code error
-        this.$refs.saveContactNameInput?.$el?.querySelector("input")?.focus();
+        (this.$refs.contactNameInput as Vue)?.$el?.querySelector("input")?.focus();
       }, 0);
     },
   },

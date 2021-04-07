@@ -1,8 +1,18 @@
 <template>
-  <div class="amountInput" :class="{ error: error }">
+  <div class="amountInput allowence" :class="{ error: error }">
     <i-input ref="amountInput" v-model="inputtedAmount" maxlength="35" size="lg" placeholder="Unlimited" type="text" @keyup.enter="$emit('enter')"></i-input>
     <div class="error">
       {{ error }}
+    </div>
+    <div v-if="token" class="_display-flex _justify-content-space-between">
+      <div class="secondaryText">
+        <!-- {{ inputtedAmountBigNumber | formatUsdAmount(token.tokenPrice, token.symbol) }} -->
+      </div>
+        <div class="linkText minAmount" @click="chooseMinAmount()">
+          <transition name="fadeFast">
+            <span v-if="minAmount!=='0'">Min: {{ minAmount | formatToken(token.symbol) }}</span>
+          </transition>
+        </div>
     </div>
   </div>
 </template>
@@ -23,6 +33,11 @@ export default Vue.extend({
       type: Object,
       required: false,
       default: undefined,
+    },
+    minAmount: {
+      type: String,
+      default: "",
+      required: false,
     },
     autofocus: {
       type: Boolean,
@@ -58,7 +73,7 @@ export default Vue.extend({
         this.emitValue(this.inputtedAmount);
       },
     },
-    maxAmount: {
+    minAmount: {
       deep: true,
       handler() {
         if (!this.inputtedAmount) {
@@ -130,7 +145,22 @@ export default Vue.extend({
         this.error = "Wrong amount inputted";
         return;
       }
+
+      if (this.minAmount) {
+        if (inputAmount.lt(this.minAmount)) {
+          this.error = `Inputed amount is lower than the minimum amount`;
+          return;
+        }
+      }
+
       this.error = "";
+    },
+    chooseMinAmount() {
+      try {
+        this.inputtedAmount = utils.handleFormatToken(this.token.symbol, this.minAmount);
+      } catch (error) {
+        console.log("Error choose max amount", error);
+      }
     },
   },
 });

@@ -1,14 +1,16 @@
 import { getterTree, mutationTree } from "typed-vuex";
 
+type VueRouterScroll = false | { x: number; y: number };
+
 export const state = () => ({
-  lastScroll: false as false | Number,
+  lastScroll: false as VueRouterScroll,
   lastPath: "" as String,
 });
 
 export type ScrollModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setLastScroll(state, lastScroll: Number) {
+  setLastScroll(state, lastScroll: VueRouterScroll) {
     if (!lastScroll) {
       state.lastScroll = false;
     } else {
@@ -22,11 +24,10 @@ export const mutations = mutationTree(state, {
 
 export const getters = getterTree(state, {
   getLastScroll(state): number {
-    if (state.lastScroll !== false) {
+    if (!state.lastScroll) {
       return 0;
     }
-    // @ts-ignore since TS-linter ignores any method of fixing this one
-    return state.lastScroll.y as number;
+    return state.lastScroll.y;
   },
   getLastPath(state): String {
     return state.lastPath;

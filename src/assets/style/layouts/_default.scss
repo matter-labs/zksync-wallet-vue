@@ -108,9 +108,9 @@
   }
 
   footer {
-    /* Navigation bar space */
-    margin-bottom: 80px;
     @media (max-width: $mobile) {
+      margin-bottom: 80px; /* Navigation bar space */
+      
       .floating-on-mobile {
         bottom: calc(4vh + 70px);
       }
@@ -171,26 +171,25 @@ input.form-input.-prefixed:focus {
   border-color: rgba(30, 30, 30, 0.15) !important;
 }
 
-.totalPrice .tooltip-wrapper {
+.tooltip-wrapper {
   display: flex;
-  margin: 1rem auto;
-  i.withdrawalAnnounce {
-    display: block;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    font-size: 11px;
-    line-height: 26px;
-    text-align: center;
-    background: transparentize($color: $gray, $amount: 0.7);
-    opacity: 0.9;
-    margin-left: 10px;
-    transform: translateY(1px);
-    transition: background-color $transition1;
-    cursor: pointer;
+}
+i.iconInfo,em.iconInfo {
+  display: block;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  font-size: 11px;
+  line-height: 26px;
+  text-align: center;
+  background: transparentize($color: $gray, $amount: 0.7);
+  opacity: 0.9;
+  margin-left: 10px;
+  transform: translateY(1px);
+  transition: background-color $transition1;
+  cursor: pointer;
 
-    &:hover {
-      background: transparentize($color: $gray, $amount: 0.5);
-    }
+  &:hover {
+    background: transparentize($color: $gray, $amount: 0.5);
   }
 }

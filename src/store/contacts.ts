@@ -13,14 +13,12 @@ export const mutations = mutationTree(state, {
   getContactsFromStorage(state) {
     try {
       const walletAddress = walletData.get().syncWallet!.address();
-      let contactsList = window.localStorage.getItem("contacts-" + walletAddress);
+      const contactsList = window.localStorage.getItem("contacts-" + walletAddress);
       if (process.client && contactsList && window.localStorage.getItem("contacts-" + walletAddress)) {
-        contactsList = JSON.parse(contactsList) || [];
+        let contactsListArray: Contact[] = JSON.parse(contactsList) || [];
         if (Array.isArray(contactsList)) {
-          // @ts-ignore: Unreachable code error
-          contactsList = contactsList.filter((contact) => utils.validateAddress(contact.address) && contact.name.length > 0);
-          // @ts-ignore: Unreachable code error
-          state.contactsList = contactsList;
+          contactsListArray = contactsList.filter((contact) => utils.validateAddress(contact.address) && contact.name.length > 0);
+          state.contactsList = contactsListArray;
           return;
         }
       }

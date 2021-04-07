@@ -3,6 +3,11 @@
 .amountInput {
   transition: box-shadow $transition1;
   will-change: box-shadow;
+  &.allowence {
+    .minAmount {
+      min-height: 24px;
+    }
+  }
 
   input {
     border-radius: 0.3rem 0 0 0.3rem !important;

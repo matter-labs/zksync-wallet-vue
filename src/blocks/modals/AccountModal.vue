@@ -80,8 +80,7 @@ export default Vue.extend({
         if (val) {
           this.$nextTick(() => {
             if (this.$refs.nameInput) {
-              // @ts-ignore: Unreachable code error
-              this.$refs.nameInput.$el.querySelector("input").focus();
+              (this.$refs.nameInput as Vue)?.$el?.querySelector("input")?.focus();
             }
           });
         } else {
