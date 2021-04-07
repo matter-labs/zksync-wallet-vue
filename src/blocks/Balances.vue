@@ -112,7 +112,7 @@ export default Vue.extend({
     // @ts-ignore
     activeDeposits(): depositsInterface {
       // eslint-disable-next-line no-unused-expressions
-      this.$accessor.transaction.getForceUpdateTick(); // Force to update the list
+      this.$accessor.transaction.getForceUpdateTick; // Force to update the list
       const deposits = this.$accessor.transaction.depositList as depositsInterface;
       const activeDeposits = {} as depositsInterface;
       const finalDeposits = {} as depositsInterface;

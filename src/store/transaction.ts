@@ -72,13 +72,8 @@ export const mutations = mutationTree(state, {
   },
 });
 
-interface ForceUpdateTick {
-  state: any;
-}
-
 export const getters = getterTree(state, {
-  // @ts-ignore: Unreachable code error
-  getForceUpdateTick({ state }: ForceUpdateTick) {
+  getForceUpdateTick(state) {
     return state.forceUpdateTick;
   },
   depositList(state) {
