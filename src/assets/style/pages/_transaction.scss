@@ -84,7 +84,6 @@ body.inkline {
   &.-light {
     .transactionPage {
       .tokenListContainer {
-
         &::-webkit-scrollbar-thumb {
           background-color: $input-border-color-focus-light;
         }

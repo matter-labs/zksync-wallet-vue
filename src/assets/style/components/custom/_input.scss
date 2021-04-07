@@ -104,8 +104,6 @@
     }
   }
 
-
-
   .hints {
     display: grid;
     grid-auto-rows: max-content;
@@ -116,48 +114,7 @@
     height: max-content;
     margin-top: 10px;
 
-    .hintGroup {
-      display: flex;
-    }
 
-    .hint {
-      display: flex;
-      align-items: center;
-      font-weight: 300;
-      font-size: 12px;
-      font-family: $ibm;
-      line-height: 15px;
-      transition: color 0.2s ease;
-
-      &.red {
-        color: $red;
-      }
-
-      &.green {
-        color: $green;
-      }
-
-      &.gray {
-        color: $gray;
-      }
-
-      span,
-      i {
-        display: block;
-      }
-
-      i {
-        margin-right: 8px;
-        font-size: 18px;
-      }
-
-      .separator {
-        width: 1.5px;
-        height: 17px;
-        margin: 0 15px;
-        background-color: $gray;
-      }
-    }
   }
 }
 

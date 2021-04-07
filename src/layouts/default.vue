@@ -19,8 +19,8 @@ import footerComponent from "@/blocks/Footer.vue";
 import headerComponent from "@/blocks/Header.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 
-import Vue from "vue";
 import { APP_ZK_SCAN } from "@/plugins/build";
+import Vue from "vue";
 
 export default Vue.extend({
   components: {

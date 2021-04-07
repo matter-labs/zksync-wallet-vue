@@ -1,17 +1,18 @@
 <template>
-  <div class="animatedCheckmark"></div>
+  <div class="animatedCheckmark" />
 </template>
 
-<script>
+<script lang="ts">
 import successCheckmark from "@/plugins/successCheckmark.json";
-import lottie from "lottie-web";
+import lottie, { AnimationConfigWithData, AnimationItem } from "lottie-web";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   mounted() {
     this.loadAnimation();
   },
   methods: {
-    loadAnimation() {
+    loadAnimation(): AnimationItem {
       return lottie.loadAnimation({
         container: this.$el,
         autoplay: true,
@@ -19,8 +20,8 @@ export default {
         width: "200px",
         height: "200px",
         animationData: successCheckmark,
-      });
+      } as AnimationConfigWithData);
     },
   },
-};
+});
 </script>

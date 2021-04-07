@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Transaction from "@/blocks/Transaction.vue";
-import Vue from "vue";
+import { Vue } from "vue-property-decorator";
 
 export default Vue.extend({
   components: {

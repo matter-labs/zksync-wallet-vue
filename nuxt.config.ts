@@ -1,4 +1,4 @@
-import { Configuration } from "@nuxt/types";
+import { NuxtConfig } from "@nuxt/types/config";
 
 require("dotenv").config();
 
@@ -13,7 +13,7 @@ const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation,
 crypto payments, zkWallet, cryptowallet`;
 
 // @ts-ignore
-const config: Configuration = {
+const config: NuxtConfig = {
   components: true,
   ssr: false,
   target: "static",
@@ -159,7 +159,6 @@ const config: Configuration = {
    */
   modules: [
     "@nuxtjs/dotenv",
-    "@nuxtjs/pwa",
     "@nuxtjs/axios",
     "@nuxtjs/toast",
     "@nuxtjs/google-gtag",
@@ -231,7 +230,7 @@ const config: Configuration = {
    */
   build: {
     ssr: false,
-    extend(config: { node: { fs: string } }) {
+    extend() {
       config.node = {
         fs: "empty",
       };
@@ -244,6 +243,13 @@ const config: Configuration = {
   pwa: {
     workbox: {
       pagesURLPattern: "/_nuxt/",
+    },
+  },
+  typescript: {
+    typeCheck: {
+      eslint: {
+        files: "./**/*.{ts,js,vue}",
+      },
     },
   },
 };

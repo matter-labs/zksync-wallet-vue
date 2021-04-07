@@ -64,7 +64,7 @@ export default Vue.extend({
         try {
           return utils.parseToken(this.token.symbol, this.inputtedAmount);
         } catch (error) {
-          return "0";
+          this.$sentry.captureException(error);
         }
       }
       return "0";

@@ -1,3 +1,4 @@
+// eslint-disable-next-line require-await
 export default async function (to, from, savedPosition) {
   if (to.path !== from.path) {
     this.app.$accessor.scroll.setLastPath(from.path);
@@ -23,7 +24,8 @@ export default async function (to, from, savedPosition) {
   };
 
   if (to.hash) {
-    const el = await findEl(to.hash);
+    const el = findEl(to.hash);
+    // @ts-ignore
     const offsetTop = el.getBoundingClientRect().top + window.pageYOffset;
     if ("scrollBehavior" in document.documentElement.style) {
       return window.scrollTo({ top: offsetTop, behavior: "smooth" });

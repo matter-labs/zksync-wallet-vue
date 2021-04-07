@@ -24,7 +24,8 @@ body {
       }
     }
 
-    .container, .row {
+    .container,
+    .row {
       height: 100%;
     }
 
@@ -36,7 +37,6 @@ body {
       display: flex;
       align-items: center;
     }
-
 
     .headerWrapper {
       padding-top: 0 !important;
@@ -98,8 +98,6 @@ body {
             border-radius: 0 0 $borderRadius $borderRadius !important;
           }
         }
-
-
       }
 
       @media screen and (max-width: $mobile) {
@@ -128,10 +126,9 @@ body {
       align-items: center;
 
       &:before {
-        content: '';
+        content: "";
         top: 0;
         left: 0;
-
       }
 
       i.fal {
@@ -156,7 +153,6 @@ body {
         padding: 0;
       }
       &.opened {
-
         .mobileIndexHeader {
           padding: 0;
 
@@ -274,12 +270,10 @@ body {
             font-size: 18px;
             padding: 10px 0;
             text-align: left;
-            &:first-child
-            {
+            &:first-child {
               padding-top: 0;
             }
-            &:last-child
-            {
+            &:last-child {
               padding-bottom: 0;
             }
           }
@@ -321,7 +315,8 @@ body {
   }
 }
 
-.mainIndexHeader, .mainFooter {
+.mainIndexHeader,
+.mainFooter {
   .linksContainer {
     position: absolute;
     left: 50%;

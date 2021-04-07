@@ -72,8 +72,13 @@ export const mutations = mutationTree(state, {
   },
 });
 
+interface ForceUpdateTick {
+  state: any;
+}
+
 export const getters = getterTree(state, {
-  getForceUpdateTick(state) {
+  // @ts-ignore: Unreachable code error
+  getForceUpdateTick({ state }: ForceUpdateTick) {
     return state.forceUpdateTick;
   },
   depositList(state) {
@@ -97,13 +102,13 @@ export const actions = actionTree(
         if (!existingTransaction) {
           await walletData.get().syncProvider!.notifyTransaction(transactionHash, "COMMIT");
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
-          dispatch("requestBalancesUpdate");
+          await dispatch("requestBalancesUpdate");
         } else {
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
         }
         await walletData.get().syncProvider!.notifyTransaction(transactionHash, "VERIFY");
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
-        dispatch("requestBalancesUpdate");
+        await dispatch("requestBalancesUpdate");
       } catch (error) {
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       }

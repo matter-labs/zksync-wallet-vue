@@ -20,7 +20,7 @@ export const transaction = async (
   amountBigValue: GweiBalance,
   feeBigValue: GweiBalance,
   store: typeof accessorType,
-) => {
+): Promise<Transaction | Transaction[]> => {
   const syncWallet = walletData.get().syncWallet;
   let nonce = await syncWallet!.getNonce("committed");
   const transferTx = {
@@ -49,17 +49,14 @@ export const transaction = async (
       amount: amountBigValue,
       fee: feeBigValue,
     })) as Transaction;
-    store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
+    await store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
     return transaction;
-  } else {
-    const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
-    for (let a = 0; a < transferTransaction.length; a++) {
-      store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: "withdraw" });
-    }
-    if (transferTransaction) {
-      return transferTransaction;
-    }
   }
+  const transferTransaction: Transaction[] = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
+  for (let a = 0; a < transferTransaction.length; a++) {
+    await store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: "withdraw" });
+  }
+  return transferTransaction;
 };
 
 interface WithdrawParams {
@@ -96,7 +93,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       fee: feeBigValue,
       fastProcessing: fastWithdraw,
     });
-    store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "transfer" });
+    await store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "transfer" });
     return transaction;
   } else {
     const withdrawals = [
@@ -164,7 +161,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       throw new Error("Error while performing submitTxsBatch: " + error.message);
     });
     for (let a = 0; a < transactionHashes.length; a++) {
-      store.transaction.watchTransaction({ transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: "transfer" });
+      await store.transaction.watchTransaction({ transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: "transfer" });
     }
     return transactionHashes.map((txHash, index) => ({
       txData: signedTransactions[index],
@@ -188,6 +185,6 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: an
     token,
     amount,
   });
-  store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount });
+  await store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse;
 };

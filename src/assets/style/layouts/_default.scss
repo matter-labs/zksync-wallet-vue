@@ -69,7 +69,7 @@
         border-radius: 50%;
         transform: translateY(1px);
         cursor: pointer;
-        opacity: .9;
+        opacity: 0.9;
         transition: background-color $transition1;
 
         &:hover {
@@ -166,7 +166,8 @@ input.form-input.-prefixed {
   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.035) !important;
 }
 
-.form-input-group.-light .form-input input:focus, input.form-input.-prefixed:focus {
+.form-input-group.-light .form-input input:focus,
+input.form-input.-prefixed:focus {
   border-color: rgba(30, 30, 30, 0.15) !important;
 }
 
@@ -182,7 +183,7 @@ input.form-input.-prefixed {
     line-height: 26px;
     text-align: center;
     background: transparentize($color: $gray, $amount: 0.7);
-    opacity: .9;
+    opacity: 0.9;
     margin-left: 10px;
     transform: translateY(1px);
     transition: background-color $transition1;

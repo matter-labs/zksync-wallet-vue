@@ -1,6 +1,6 @@
 import { BigNumberish } from "ethers";
-import { getterTree, mutationTree, actionTree } from "typed-vuex";
-import { Address, Token, TokenPrices, Tokens, TokenSymbol, TokenItem } from "@/plugins/types";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { Address, Token, TokenItem, TokenPrices, Tokens, TokenSymbol } from "@/plugins/types";
 import { walletData } from "~/plugins/walletData";
 
 /**

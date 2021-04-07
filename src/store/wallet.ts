@@ -1,6 +1,5 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { getterTree, mutationTree, actionTree } from "typed-vuex";
-import { Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
@@ -9,6 +8,7 @@ import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
 import web3Wallet from "@/plugins/web3";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
+import { Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import utils from "~/plugins/utils";
 
 interface feesInterface {
@@ -50,8 +50,8 @@ export const state = () => ({
   withdrawalProcessingTime: false as
     | false
     | {
-        normal: Number;
-        fast: Number;
+        normal: number;
+        fast: number;
       },
   fees: {} as feesInterface,
 });
@@ -110,8 +110,8 @@ export const mutations = mutationTree(state, {
   setWithdrawalProcessingTime(
     state,
     obj: {
-      normal: Number;
-      fast: Number;
+      normal: number;
+      fast: number;
     },
   ) {
     state.withdrawalProcessingTime = obj;
@@ -227,8 +227,8 @@ export const getters = getterTree(state, {
   ):
     | false
     | {
-        normal: Number;
-        fast: Number;
+        normal: number;
+        fast: number;
       } {
     return state.withdrawalProcessingTime;
   },
@@ -320,7 +320,7 @@ export const actions = actionTree(
         const price = await this.dispatch("tokens/getTokenPrice", tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
-        tokensList.push({
+        tokensList.push(({
           symbol: tokenSymbol,
           status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
           balance: committedBalance,
@@ -328,7 +328,7 @@ export const actions = actionTree(
           verifiedBalance,
           tokenPrice: price,
           restricted: +committedBalance <= 0 || restrictedTokens.hasOwnProperty(tokenSymbol),
-        } as Balance);
+        } as unknown) as Balance);
       }
       commit("setZkTokens", {
         lastUpdated: new Date().getTime(),
@@ -368,7 +368,7 @@ export const actions = actionTree(
               id: currentToken.id.toString(),
               address: currentToken.address,
               balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
-              rawBalance: balance,
+              rawBalance: (balance as unknown) as string,
               // @ts-ignore
               formattedBalance: utils.handleFormatToken(currentToken.symbol, balance.toString()),
               symbol: currentToken.symbol,
@@ -437,8 +437,8 @@ export const actions = actionTree(
       getters,
       commit,
     }): Promise<{
-      normal: Number;
-      fast: Number;
+      normal: number;
+      fast: number;
     }> {
       if (getters.getWithdrawalProcessingTime) {
         return getters.getWithdrawalProcessingTime;
@@ -570,6 +570,7 @@ export const actions = actionTree(
 
         await dispatch("checkLockedState");
 
+        // @ts-ignore
         await watcher.changeNetworkSet(dispatch, this);
 
         this.commit("contacts/getContactsFromStorage");
@@ -586,25 +587,8 @@ export const actions = actionTree(
       }
     },
 
-    /**
-     * Remove localy saved data
-     * @param commit
-     */
     clearDataStorage({ commit }): void {
       commit("clearDataStorage");
-    },
-    async forceRefreshData({ dispatch }): Promise<void> {
-      await dispatch("requestInitialBalances", true).catch(() => {
-        // @todo add sentry report
-      });
-      await dispatch("requestZkBalances", { accountState: undefined, force: true }).catch((err) => {
-        // @todo add sentry report
-        console.log("forceRefreshData | requestZkBalances error", err);
-      });
-      await dispatch("requestTransactionsHistory", { force: true }).catch((err) => {
-        // @todo add sentry report
-        console.log("forceRefreshData | requestTransactionsHistory error", err);
-      });
     },
 
     /**

@@ -1,4 +1,4 @@
-<!--suppress ES6ShorthandObjectProperty -->
+<!-- @ts-ignore -->
 <template>
   <div class="transactionsingleTransaction">
     <div class="status">
@@ -20,7 +20,7 @@
         <span>{{ transactionTypeData.type }}</span>
         <i-tooltip v-if="transactionTypeData.tooltip">
           <em v-if="transactionTypeData.tooltip" :class="transactionTypeData.tooltip.icon" />
-          <div slot="body" style="white-space: normal; width: 200px" v-html="transactionTypeData.tooltip.html"></div>
+          <div slot="body" v-html="transactionTypeData.tooltip.html"></div>
         </i-tooltip>
       </div>
       <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your L1 account</div>
@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, Provider, TokenSymbol, Tx } from "@/plugins/types";
+import { Address, Provider, TokenSymbol, Tx, zkTx } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 
@@ -48,7 +48,7 @@ let getTimeAgoInterval = undefined as any;
 export default Vue.extend({
   props: {
     singleTransaction: {
-      type: Object,
+      type: zkTx,
       required: true,
     },
   },
@@ -68,9 +68,9 @@ export default Vue.extend({
     walletAddressFull(): Address {
       return this.$accessor.account.address;
     },
-    displayedAddress(): string {
+    displayedAddress(): any {
       return this.singleTransaction.tx.type === "Transfer"
-        ? this.isSameAddress(this.singleTransaction.tx.to)
+        ? this.isSameAddress(this.singleTransaction.tx.to as string)
           ? this.singleTransaction.tx.from
           : this.singleTransaction.tx.to
         : this.singleTransaction.tx.priority_op

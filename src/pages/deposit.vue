@@ -89,7 +89,7 @@ import utils from "@/plugins/utils";
 import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 import { ethers } from "ethers";
-import { Vue } from "vue-property-decorator";
+import Vue from "vue";
 
 let zksync = null as any;
 
@@ -142,24 +142,13 @@ export default Vue.extend({
   },
   computed: {
     maxAmount(): string {
-      if (!this.chosenToken) {
-        return "0";
-      } else {
-        return zksync!.closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
-      }
+      return !this.chosenToken ? "0" : zksync!.closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
     },
     buttonType(): string {
-      if (!this.chosenToken || (this.chosenToken as Balance).unlocked) {
-        return "Deposit";
-      } else {
-        return "Unlock";
-      }
+      return !this.chosenToken || (this.chosenToken as Balance).unlocked ? "Deposit" : "Unlock";
     },
     buttonDisabled(): boolean {
-      if (this.buttonType === "Unlock") {
-        return false;
-      }
-      return !this.inputtedAmount || !this.chosenToken;
+      return this.buttonType === "Unlock" ? false : !this.inputtedAmount || !this.chosenToken;
     },
   },
   async mounted() {
@@ -185,10 +174,10 @@ export default Vue.extend({
     async chooseToken(token: Balance) {
       this.loading = true;
       this.chooseTokenModal = false;
-      if (token.unlocked === undefined) {
+      if (!token.unlocked) {
         token.unlocked = await this.checkTokenState(token);
       }
-      if (token.tokenPrice === undefined) {
+      if (token.tokenPrice) {
         token.tokenPrice = await this.$accessor.tokens.getTokenPrice(token.symbol);
       }
       this.chosenToken = token;
@@ -294,12 +283,11 @@ export default Vue.extend({
       this.loading = false;
     },
     async checkTokenState(token: Balance): Promise<boolean> {
-      if (token.symbol !== "ETH") {
+      if (token.symbol.toLowerCase() !== "eth") {
         const wallet = walletData.get().syncWallet;
         return await wallet!.isERC20DepositsApproved(token.address as string);
-      } else {
-        return true;
       }
+      return true;
     },
   },
 });

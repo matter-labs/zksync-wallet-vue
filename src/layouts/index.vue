@@ -40,7 +40,7 @@ export default Vue.extend({
         }
         if (val.path !== oldVal.path) {
           this.$nextTick(() => {
-            document.documentElement.scrollTop = this.$accessor.scroll.getLastScroll as number
+            document.documentElement.scrollTop = this.$accessor.scroll.getLastScroll as number;
           });
         }
       },
