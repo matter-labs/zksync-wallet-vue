@@ -7,7 +7,7 @@
     </i-modal>
 
     <!-- Loading block -->
-    <loading-block v-if="loading === true" headline="Deposit">
+    <loading-block v-if="loading === true" :headline="loading && transactionInfo.type === 'unlock' ? `Unlocking ${chosenToken.symbol}` : 'Deposit'">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
         Link to the transaction <i class="ri-external-link-line" />
       </a>
@@ -19,15 +19,12 @@
       v-else-if="transactionInfo.success === true"
       :amount="transactionInfo.amount"
       :continue-btn-function="transactionInfo.continueBtnFunction"
+      :continue-btn-text="transactionInfo.continueBtnText"
       :fee="transactionInfo.fee"
       :tx-link="transactionInfo.explorerLink"
-      headline="Deposit"
+      :headline="transactionInfo.type === 'unlock' ? `${chosenToken.symbol} unlocked` : 'Deposit'"
       type="deposit"
-      @continue="
-        transactionInfo.success = false;
-        transactionInfo.hash = '';
-        transactionInfo.explorerLink = '';
-      "
+      @continue="successBlockContinue"
     >
       <p v-if="transactionInfo.type === 'deposit'" class="_text-center _margin-top-0">
         Your deposit transaction has been mined and will be processed after required number of confirmations.
@@ -60,6 +57,11 @@
         @enter="commitTransaction()"
       />
 
+      <div v-if="chosenToken && !chosenToken.unlocked">
+        <div class="_padding-top-1 inputLabel">{{ chosenToken.symbol }} Allowence</div>
+        <allowence-input ref="allowenceInput" v-model="inputtedAllowence" :token="chosenToken" @error="allowenceError = $event" @enter="commitTransaction()" />
+      </div>
+
       <div class="errorText _text-center _margin-top-1">
         {{ error }}
       </div>
@@ -69,8 +71,10 @@
       </p>
 
       <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction()">
-        {{ buttonType }}
-        <span v-if="buttonType === 'Unlock'" class="tokenSymbol">{{ chosenToken.symbol }}</span>
+        <span v-if="buttonType === 'Unlock'">
+          Unlock <span class="tokenSymbol">{{ chosenToken.symbol }}</span> and Deposit
+        </span>
+        <span v-else>Deposit</span>
       </i-button>
     </div>
   </div>
@@ -79,6 +83,7 @@
 <script lang="ts">
 import chooseToken from "@/blocks/ChooseToken.vue";
 import amountInput from "@/components/AmountInput.vue";
+import allowenceInput from "@/components/AllowenceInput.vue";
 
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
@@ -98,6 +103,7 @@ export default Vue.extend({
     loadingBlock,
     successBlock,
     amountInput,
+    allowenceInput,
     chooseToken,
   },
   props: {
@@ -121,6 +127,7 @@ export default Vue.extend({
       transactionInfo: {
         success: false,
         continueBtnFunction: false,
+        continueBtnText: "",
         type: "",
         hash: "",
         explorerLink: "",
@@ -136,6 +143,8 @@ export default Vue.extend({
 
       /* Main Block */
       inputtedAmount: "",
+      inputtedAllowence: "",
+      allowenceError: false,
       chosenToken: false as Balance | false,
       error: "",
     };
@@ -156,10 +165,7 @@ export default Vue.extend({
       }
     },
     buttonDisabled(): boolean {
-      if (this.buttonType === "Unlock") {
-        return false;
-      }
-      return !this.inputtedAmount || !this.chosenToken;
+      return !this.inputtedAmount || !this.chosenToken || this.allowenceError;
     },
   },
   async mounted() {
@@ -197,6 +203,8 @@ export default Vue.extend({
         if (this.inputtedAmount && this.$refs.amountInput) {
           // @ts-ignore: Unreachable code error
           this.$refs.amountInput.emitValue(this.inputtedAmount);
+          // @ts-ignore: Unreachable code error
+          this.$refs.allowenceInput.emitValue(this.inputtedAllowence);
         }
       });
     },
@@ -204,6 +212,8 @@ export default Vue.extend({
       if (!this.inputtedAmount) {
         // @ts-ignore: Unreachable code error
         this.$refs.amountInput.emitValue(this.inputtedAmount);
+        // @ts-ignore: Unreachable code error
+        this.$refs.allowenceInput.emitValue(this.inputtedAllowence);
       }
       if (this.buttonDisabled) {
         return;
@@ -211,10 +221,10 @@ export default Vue.extend({
       this.error = "";
       this.loading = true;
       try {
-        if (this.buttonType === "Deposit") {
-          await this.deposit();
-        } else if (this.buttonType === "Unlock") {
+        if (this.buttonType === "Unlock") {
           await this.unlockToken();
+        } else {
+          await this.deposit();
         }
       } catch (error) {
         if (error.message) {
@@ -236,8 +246,8 @@ export default Vue.extend({
     },
     async deposit(): Promise<void> {
       this.tip = "Confirm the transaction to deposit";
+      this.transactionInfo.type = "deposit";
       const txAmount = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAmount);
-      // @ts-ignore: Unreachable code error
       const transferTransaction = (await deposit((this.chosenToken as Balance).symbol, txAmount.toString(), this.$accessor)) as ETHOperation;
       this.transactionInfo.amount.amount = txAmount.toString();
       this.transactionInfo.amount.token = this.chosenToken as Balance;
@@ -248,7 +258,7 @@ export default Vue.extend({
       const receipt: ethers.ContractReceipt = await transferTransaction.awaitEthereumTxCommit();
       this.transactionInfo.fee.amount = receipt.gasUsed.toString();
       this.transactionInfo.continueBtnFunction = false;
-      this.transactionInfo.type = "deposit";
+      this.transactionInfo.continueBtnText = "";
       this.transactionInfo.success = true;
     },
     async unlockToken(): Promise<void> {
@@ -259,7 +269,9 @@ export default Vue.extend({
       try {
         const wallet = walletData.get().syncWallet;
         this.tip = `Confirm the transaction in order to unlock ${this.chosenToken.symbol} token`;
-        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string);
+        this.transactionInfo.type = "unlock";
+        const approveAmount = this.inputtedAllowence ? utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAllowence) : undefined;
+        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, approveAmount);
         const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken;
         for (const token of balances) {
@@ -277,12 +289,13 @@ export default Vue.extend({
         this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + receipt.transactionHash;
         this.transactionInfo.fee.amount = receipt.gasUsed.toString();
         this.transactionInfo.continueBtnFunction = true;
-        this.transactionInfo.type = "unlock";
-        const isTokenUnlocked = await this.checkTokenState(this.chosenToken);
+        this.transactionInfo.continueBtnText = "Proceed to deposit";
+        /* const isTokenUnlocked = await this.checkTokenState(this.chosenToken);
         if (isTokenUnlocked) {
           this.transactionInfo.success = true;
-        }
-        this.chosenToken = { ...this.chosenToken, unlocked: isTokenUnlocked };
+        } */
+        this.transactionInfo.success = true;
+        this.chosenToken = { ...this.chosenToken, unlocked: true };
       } catch (error) {
         if (error.message) {
           if (!error.message.includes("User denied")) {
@@ -299,6 +312,17 @@ export default Vue.extend({
         return await wallet!.isERC20DepositsApproved(token.address as string);
       } else {
         return true;
+      }
+    },
+    successBlockContinue() {
+      this.transactionInfo.success = false;
+      this.transactionInfo.hash = "";
+      this.transactionInfo.explorerLink = "";
+      if (this.transactionInfo.type === "unlock") {
+        if (!this.error) {
+          this.loading = true;
+          this.deposit();
+        }
       }
     },
   },

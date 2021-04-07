@@ -425,7 +425,7 @@ export declare class Wallet {
   getBalance(token: TokenLike, type?: "committed" | "verified"): Promise<BigNumber>;
   getEthereumBalance(token: TokenLike): Promise<BigNumber>;
   isERC20DepositsApproved(token: TokenLike): Promise<boolean>;
-  approveERC20TokenDeposits(token: TokenLike): Promise<ContractTransaction>;
+  approveERC20TokenDeposits(token: TokenLike, max_erc20_approve_amount?: BigNumber): Promise<ContractTransaction>;
   depositToSyncFromEthereum(deposit: {
     depositTo: Address;
     token: TokenLike;

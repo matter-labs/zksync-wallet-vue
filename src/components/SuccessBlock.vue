@@ -34,7 +34,9 @@
         </span>
       </div>
     </div>
-    <i-button v-if="continueBtnFunction" block size="lg" variant="secondary" class="_margin-top-2" @click="$emit('continue')">Ok</i-button>
+    <i-button v-if="continueBtnFunction" block size="lg" variant="secondary" class="_margin-top-2" @click="$emit('continue')">
+      {{ continueBtnText ? continueBtnText : "Ok" }}
+    </i-button>
     <i-button v-else block size="lg" variant="secondary" class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
   </div>
 </template>
@@ -74,6 +76,11 @@ export default Vue.extend({
     continueBtnFunction: {
       type: Boolean,
       default: false,
+      required: false,
+    },
+    continueBtnText: {
+      type: String,
+      default: "",
       required: false,
     },
     recipient: {

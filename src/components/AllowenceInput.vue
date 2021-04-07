@@ -1,20 +1,8 @@
 <template>
   <div class="amountInput" :class="{ error: error }">
-    <i-input ref="amountInput" v-model="inputtedAmount" maxlength="35" size="lg" type="text" @keyup.enter="$emit('enter')">
-      <i-button v-if="!token" slot="append" block link variant="secondary" @click="$emit('chooseToken')"> Select token</i-button>
-      <i-button v-else slot="append" block class="selectedTokenBtn" link variant="secondary" @click="$emit('chooseToken')">
-        <span class="tokenSymbol">{{ token.symbol }}</span
-        >&nbsp;&nbsp;<i class="ri-arrow-down-s-line" />
-      </i-button>
-    </i-input>
+    <i-input ref="amountInput" v-model="inputtedAmount" maxlength="35" size="lg" placeholder="Unlimited" type="text" @keyup.enter="$emit('enter')"></i-input>
     <div class="error">
       {{ error }}
-    </div>
-    <div v-if="token" class="_display-flex _justify-content-space-between">
-      <div class="secondaryText">
-        {{ inputtedAmountBigNumber | formatUsdAmount(token.tokenPrice, token.symbol) }}
-      </div>
-      <div class="linkText" @click="chooseMaxAmount()">Max: {{ maxAmount | formatToken(token.symbol) }}</div>
     </div>
   </div>
 </template>
@@ -27,16 +15,6 @@ import Vue from "vue";
 export default Vue.extend({
   props: {
     value: {
-      type: String,
-      default: "",
-      required: false,
-    },
-    type: {
-      type: String,
-      default: "",
-      required: false,
-    },
-    maxAmount: {
       type: String,
       default: "",
       required: false,
@@ -97,11 +75,20 @@ export default Vue.extend({
         this.inputtedAmount = val;
       }
     },
+    error: {
+      immediate: true,
+      handler(val) {
+        this.$emit("error", !!val);
+      },
+    },
   },
   mounted() {
     if (this.autofocus) {
       (this.$refs.amountInput as Vue)?.$el?.querySelector("input")?.focus();
     }
+  },
+  beforeDestroy() {
+    this.$emit("error", false);
   },
   methods: {
     emitValue(val: string): void {
@@ -118,11 +105,11 @@ export default Vue.extend({
       }
     },
     validateAmount(val: string): void {
-      if (!val || !parseFloat(val as string)) {
+      if (val && !parseFloat(val as string)) {
         this.error = "Wrong amount inputted";
         return;
       }
-      if (!this.token) {
+      if (!val || !this.token) {
         this.error = "";
         return;
       }
@@ -143,26 +130,7 @@ export default Vue.extend({
         this.error = "Wrong amount inputted";
         return;
       }
-
-      if (this.maxAmount) {
-        if (inputAmount.gt(this.maxAmount)) {
-          this.error = `Not enough ${this.token.symbol} to ${this.type} requested amount`;
-          return;
-        }
-      }
-
-      if (this.type === "transfer" && !utils.isAmountPackable(inputAmount.toString())) {
-        this.error = "Max supported precision for transfers exceeded";
-        return;
-      }
       this.error = "";
-    },
-    chooseMaxAmount() {
-      try {
-        this.inputtedAmount = utils.handleFormatToken(this.token.symbol, this.maxAmount);
-      } catch (error) {
-        console.log("Error choose max amount", error);
-      }
     },
   },
 });
