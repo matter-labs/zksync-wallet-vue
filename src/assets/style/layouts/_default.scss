@@ -108,9 +108,9 @@
   }
 
   footer {
-    /* Navigation bar space */
-    margin-bottom: 80px;
     @media (max-width: $mobile) {
+      margin-bottom: 80px; /* Navigation bar space */
+      
       .floating-on-mobile {
         bottom: calc(4vh + 70px);
       }

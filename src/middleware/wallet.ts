@@ -1,6 +1,5 @@
 import { walletData } from "@/plugins/walletData";
 import { Context, Middleware } from "@nuxt/types";
-import { getAccessorType } from "typed-vuex";
 
 const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) => {
   if (walletData.get().syncWallet) {

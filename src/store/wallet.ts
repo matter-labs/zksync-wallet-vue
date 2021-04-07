@@ -576,7 +576,7 @@ export const actions = actionTree(
         await dispatch("checkLockedState");
 
         // @ts-ignore: Unreachable code error
-        await watcher.changeNetworkSet(dispatch, this);
+        // await watcher.changeNetworkSet(dispatch, this);
 
         this.commit("contacts/getContactsFromStorage");
         this.commit("account/setAddress", syncWallet.address());
