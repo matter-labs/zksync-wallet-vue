@@ -12,7 +12,6 @@ const pageDescription = `A crypto wallet & gateway to layer-2 zkSync Rollup. zkS
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
 crypto payments, zkWallet, cryptowallet`;
 
-// @ts-ignore
 const config: NuxtConfig = {
   components: true,
   ssr: false,

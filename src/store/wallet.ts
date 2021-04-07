@@ -543,7 +543,7 @@ export const actions = actionTree(
           return false;
         }
         if (walletData.get().syncWallet) {
-          rootState.disptach("account/setAddress", walletData.get().syncWallet!.address());
+          rootState.dispatch("account/setAddress", walletData.get().syncWallet!.address());
           return true;
         }
 
@@ -577,7 +577,8 @@ export const actions = actionTree(
 
         await dispatch("checkLockedState");
 
-        //        await watcher.changeNetworkSet(dispatch, this);
+        // @ts-ignore: Unreachable code error
+        await watcher.changeNetworkSet(dispatch, this);
 
         this.commit("contacts/getContactsFromStorage");
         this.commit("account/setAddress", syncWallet.address());
@@ -604,8 +605,8 @@ export const actions = actionTree(
      * @param getters
      * @returns {Promise<void>}
      */
-    logout({ dispatch, commit, getters }): void {
-      this.state.onboard?.walletReset();
+    logout({ state, commit, getters }): void {
+      state.onboard?.walletReset();
       walletData.set({ syncProvider: undefined, syncWallet: undefined, accountState: undefined });
       localStorage.removeItem("selectedWallet");
       this.commit("account/setLoggedIn", false);

@@ -64,7 +64,6 @@
               </div>
               <div v-if="activeDeposits[item.symbol]" class="rowItem">
                 <div class="total small">
-                  <!-- @ts-ignore-->
                   <span class="balancePrice">{{ activeDeposits[item.symbol].toString() | formatUsdAmount(item.tokenPrice, item.symbol) }}</span>
                   &nbsp;&nbsp;+{{ activeDeposits[item.symbol].toString() | formatToken(item.symbol) }}
                 </div>
@@ -109,33 +108,28 @@ export default Vue.extend({
       }
       return this.zkBalances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
-    // @ts-ignore
-    activeDeposits(): depositsInterface {
+    activeDeposits() {
       // eslint-disable-next-line no-unused-expressions
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
       const deposits = this.$accessor.transaction.depositList as depositsInterface;
       const activeDeposits = {} as depositsInterface;
-      const finalDeposits = {} as depositsInterface;
+      const finalDeposits = {} as {
+        [tokenSymbol: string]: BigNumber,
+      };
       for (const tokenSymbol in deposits) {
-        // @ts-ignore
         activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx) => tx.status === "Initiated");
       }
       for (const tokenSymbol in activeDeposits) {
-        // @ts-ignore
         if (activeDeposits[tokenSymbol].length > 0) {
-          // @ts-ignore
           if (!finalDeposits[tokenSymbol]) {
-            // @ts-ignore
             finalDeposits[tokenSymbol] = BigNumber.from("0");
           }
-          // @ts-ignore
-          for (const tx: depositsInterface of activeDeposits[tokenSymbol]) {
-            // @ts-ignore
+          for (const tx of activeDeposits[tokenSymbol]) {
             finalDeposits[tokenSymbol] = finalDeposits[tokenSymbol].add(tx.amount);
           }
         }
       }
-      return (finalDeposits as unknown) as depositsInterface;
+      return finalDeposits;
     },
   },
   beforeDestroy() {
@@ -144,11 +138,6 @@ export default Vue.extend({
   mounted() {
     this.getBalances();
     this.autoUpdateList();
-
-    // Bad UX if using phone
-    /* if (this.$refs.searchInput) {
-      (this.$refs.searchInput as Vue).$el?.querySelector("input")?.focus();
-    } */
   },
   methods: {
     async getBalances(): Promise<void> {
