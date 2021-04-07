@@ -13,50 +13,47 @@ jobs:
       - name: Install dependencies
         run: yarn install --check-cache
 
-      - name: Configure for rinkeby
+      - name: Configure for rinkeby [dev]
         run: sh ./cli-process-env.sh rinkeby dev 1
 
       - name: Build rinkeby
         run: yarn generate --fail-on-error
       
-      - name: Deploy to rinkeby site
+      - name: Deploy to rinkeby site [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          target: rinkeby
+          target: rinkeby-dev
           projectId: zksync-vue
-          channelID: live
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
 
       - name: Configure for ropsten
         run: sh ./cli-process-env.sh ropsten dev 1
 
-      - name: Build ropsten
+      - name: Build ropsten [dev]
         run: yarn generate --fail-on-error
 
-      - name: Deploy to ropsten site
+      - name: Deploy to ropsten site [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          target: ropsten
+          target: ropsten-dev
           projectId: zksync-vue
-          channelID: live
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
 
-      - name: Configure for mainnet
+      - name: Configure for mainnet [dev]
         run: sh ./cli-process-env.sh mainnet dev 1
 
       - name: Build mainnet
         run: yarn generate --fail-on-error
 
-      - name: Deploy to mainnet
+      - name: Deploy to mainnet [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          target: mainnet
+          target: mainnet-dev
           projectId: zksync-vue
-          channelID: live
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels

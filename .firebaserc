@@ -13,6 +13,15 @@
         ],
         "stage": [
           "zksync-vue"
+        ],
+        "rinkeby-dev": [
+          "zksync-vue-rinkeby-dev"
+        ],
+        "ropsten-dev": [
+          "zksync-vue-ropsten-dev"
+        ],
+        "mainnet-dev": [
+          "zksync-vue-mainnet-dev"
         ]
       }
     },
