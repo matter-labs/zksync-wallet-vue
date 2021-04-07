@@ -5,7 +5,6 @@
       <div data-cy="connectWalet-btn" class="tileContainer _margin-top-1" @click="customWallet">
         <div class="tile">
           <img src="@/assets/imgs/wallets/external.png" alt="External" />
-          <i class="tileIcon ri-lock-line"></i>
         </div>
         <div class="tileName">Connect your wallet</div>
       </div>
