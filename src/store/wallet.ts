@@ -5,7 +5,7 @@ import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
 import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Tx, iWalletData, Provider } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
-import watcher from "@/plugins/watcher";
+import eventBus from "@/plugins/eventBus";
 import web3Wallet from "@/plugins/web3";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API, Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
@@ -281,6 +281,21 @@ export const actions = actionTree(
       if (syncProvider && syncProvider.transport.ws && !syncProvider.transport.ws.isOpened) {
         await syncProvider.transport.ws.open();
       }
+    },
+
+    async forceRefreshData({ dispatch }): Promise<void> {
+      await dispatch("requestInitialBalances", true).catch((error) => {
+        this.$sentry.captureException(error);
+      });
+      await dispatch("requestZkBalances", { accountState: undefined, force: true }).catch((error) => {
+        this.$sentry.captureException(error);
+      });
+      await dispatch("getTransactionsHistory", { force: true }).catch((error) => {
+        dispatch("requestTransactionsHistory", { force: true }).catch((subError) => {
+          this.$sentry.captureException(subError);
+        });
+        this.$sentry.captureException(error);
+      });
     },
 
     /**
@@ -578,7 +593,7 @@ export const actions = actionTree(
         await dispatch("checkLockedState");
 
         // @ts-ignore: Unreachable code error
-        await watcher.changeNetworkSet(dispatch, this);
+        await eventBus.changeNetworkSet(dispatch, this);
 
         this.commit("contacts/getContactsFromStorage");
         this.commit("account/setAddress", syncWallet.address());

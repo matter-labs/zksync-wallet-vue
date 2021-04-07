@@ -100,13 +100,13 @@
           inputtedWallet = openedContact.address;
           addContactModal = true;
         "
-        ><i class="ri-add-line"></i>&nbsp;&nbsp;Add contact
+        ><i class="ri-add-line" />&nbsp;&nbsp;Add contact
       </i-button>
       <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)"
-        ><i class="ri-pencil-fill"></i>&nbsp;&nbsp;Edit contact
+        ><i class="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="ri-arrow-go-back-line"></i>&nbsp;&nbsp;Restore contact</i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer to contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact</i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact</i-button>
     </div>
     <transactions v-if="openedContact" :address="openedContact.address" />
   </div>
@@ -118,7 +118,7 @@ import addressInput from "@/components/AddressInput.vue";
 
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
-import { Address, Contact, zkVue } from "@/plugins/types";
+import { Address, Contact } from "@/plugins/types";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -182,8 +182,7 @@ export default Vue.extend({
       } else {
         this.$nextTick(() => {
           if (this.$refs.nameInput) {
-            // @ts-ignore: Unreachable code error
-            this.$refs.nameInput?.$el?.querySelector("input").focus();
+            (this.$refs.nameInput as Vue).$el?.querySelector("input").focus();
           }
         });
       }
@@ -193,13 +192,12 @@ export default Vue.extend({
     },
   },
   mounted(): void {
-    // @ts-ignore
     if (this.$refs.searchInput) {
       (this.$refs.searchInput as Vue).$el?.querySelector("input")?.focus();
     }
   },
   methods: {
-    addContact() {
+    addContact(): void {
       if (this.inputtedName.trim().length === 0) {
         this.modalError = `Name can't be empty`;
       } else if (!this.inputtedWallet) {
@@ -226,7 +224,7 @@ export default Vue.extend({
         this.inputtedWallet = "";
       }
     },
-    editContact(contact: Contact) {
+    editContact(contact: Contact): void {
       this.modalError = "";
       this.inputtedName = contact.name;
       this.inputtedWallet = contact.address;
@@ -234,7 +232,7 @@ export default Vue.extend({
       this.addContactType = "edit";
       this.addContactModal = true;
     },
-    deleteContact() {
+    deleteContact(): void {
       for (const item of this.contactsList) {
         if (item.address.toLowerCase() === this.editingWallet?.address.toLowerCase()) {
           item.deleted = true;
@@ -247,7 +245,7 @@ export default Vue.extend({
       this.inputtedWallet = "";
       this.editingWallet = null;
     },
-    restoreDeleted(contact: Contact) {
+    restoreDeleted(contact: Contact): void {
       for (let a = 0; a < this.contactsList.length; a++) {
         if (this.contactsList[a].address.toLowerCase() === contact.address.toLowerCase()) {
           this.$set(this.contactsList, a, { ...contact, deleted: false });
@@ -256,11 +254,10 @@ export default Vue.extend({
         }
       }
     },
-    openContact(contact: Contact) {
-      // @ts-ignore
+    openContact(contact: Contact): void {
       this.$router.push({ ...this.$route, query: { w: contact.address } });
     },
-    copyAddress(address: Address) {
+    copyAddress(address: Address): void {
       const elem = document.createElement("textarea");
       elem.style.position = "absolute";
       elem.style.left = -99999999 + "px";

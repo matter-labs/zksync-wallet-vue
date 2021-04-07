@@ -5,7 +5,7 @@ import moment from "moment";
 import VueScrollTo from "vue-scrollto";
 
 import Loader from "@/components/loader.vue";
-import { depositsInterface, TokenSymbol } from "@/plugins/types";
+import { TokenSymbol } from "@/plugins/types";
 import utils from "@/plugins/utils";
 
 Vue.use(VueScrollTo);
@@ -22,7 +22,7 @@ Vue.filter("formatToken", (value: string, symbol: TokenSymbol) => {
 /**
  * Implementation of the tokenFormatter as a global filter
  */
-Vue.filter("formatUsdAmount", (value: false | string | BigNumber | TokenSymbol | depositsInterface, price: number, symbol: TokenSymbol) => {
+Vue.filter("formatUsdAmount", (value: false | string | BigNumber, price: number, symbol: TokenSymbol) => {
   return utils.getFormattedTotalPrice(Number(price), +utils.handleFormatToken(symbol, <string>value));
 });
 

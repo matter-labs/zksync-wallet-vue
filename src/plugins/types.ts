@@ -440,23 +440,6 @@ export interface walletData {
   zkSync?: object;
 }
 
-export interface depositsInterface {
-  [tokenSymbol: string]: Array<{
-    hash: string;
-    amount: string;
-    status: string;
-    confirmations: number;
-  }>;
-}
-export declare class zkVue extends Vue {
-  $refs: {
-    vue: Vue;
-    element: HTMLInputElement;
-    vues: Vue[];
-    elements: HTMLInputElement[];
-  };
-}
-
 export declare interface TransactionInfo {
   continueBtnFunction: boolean;
   amount: any;
@@ -482,4 +465,29 @@ export interface iWalletData {
   syncWallet?: Wallet;
   accountState?: AccountState;
   zkSync?: object;
+}
+
+export declare interface depositTx {
+  hash: string;
+  amount: BigNumber | string;
+  status: string;
+  confirmations: number;
+}
+
+export declare interface zkEventBus {
+  changeNetworkSet: () => void;
+  changeNetworkHandle: (chainId: string) => void;
+  changeAccountHandle: (data: any) => void;
+}
+
+export declare interface zkDeposit {
+  [tokenSymbol: string]: BigNumber;
+}
+
+export declare interface zkActiveDeposit {
+  [tokenSymbol: string]: Balance[];
+}
+
+export declare interface depositsInterface {
+  [tokenSymbol: string]: Array<depositTx>;
 }
