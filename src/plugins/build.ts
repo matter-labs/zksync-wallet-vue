@@ -19,7 +19,7 @@ export const ETHER_PREFIX = ETHER_PRODUCTION ? "" : ETHER_NETWORK_NAME;
 export const ETHER_PREFIX_DOT = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : ".");
 export const ETHER_PREFIX_MINUS = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : "-");
 
-export const ETHER_NETWORK_ID = _ETHER_NETWORK_ID_DICTIONARY.rinkeby;
+export const ETHER_NETWORK_ID = _ETHER_NETWORK_ID_DICTIONARY[ETHER_NETWORK_NAME];
 export const APP_ZKSYNC_API_LINK = `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const APP_ZK_SCAN = `https://${ETHER_PREFIX_DOT}zkscan.io`;
 export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}/explorer`;
