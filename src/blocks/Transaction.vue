@@ -171,8 +171,8 @@
         </div>
       </div>
       <div v-if="type === 'withdraw'" class="totalPrice _display-flex _justify-center">
-        <i-tooltip>
-          <div class="_display-inline-flex">
+        <i-tooltip class="_width-100">
+          <div class="_width-100 _display-inline-flex _justify-content-center _margin-top-1">
             Estimated processing time: 5 hours
             <i class="ri-question-mark iconInfo" />
           </div>
@@ -286,7 +286,7 @@ export default Vue.extend({
   },
   computed: {
     chosenFeeObj(): GweiBalance | boolean {
-      if (this.feesObj && this.transactionMode && !this.loading && !this.feesLoading) {
+      if (this.feesObj && this.transactionMode && !this.feesLoading) {
         return this.feesObj.hasOwnProperty(this.transactionMode) ? ((this.feesObj as FeesObj)[this.transactionMode] as string) : false;
       }
       return false;
@@ -470,6 +470,7 @@ export default Vue.extend({
           await this.transfer();
         }
       } catch (error) {
+        console.log(error);
         if (error.message) {
           if (error.message.includes("User denied")) {
             this.error = "";
@@ -537,6 +538,7 @@ export default Vue.extend({
     },
     async transfer(): Promise<void> {
       const transferWithdrawWarning = localStorage.getItem("canceledTransferWithdrawWarning");
+      this.tip = "Processing...";
       if (!transferWithdrawWarning && !this.transferWithdrawWarningModal) {
         const accountUnlocked = await this.accountUnlocked(this.inputtedAddress);
         if (!accountUnlocked) {
@@ -571,6 +573,7 @@ export default Vue.extend({
       const receivedTransaction: Transaction | undefined = transferTransaction.hasOwnProperty("txData")
         ? (transferTransaction as Transaction)
         : (transferTransaction as Transaction[]).shift();
+      const feeTransaction: Transaction | undefined = !Array.isArray(transferTransaction) ? (transferTransaction as Transaction) : (transferTransaction as Transaction[]).shift();
 
       if (receivedTransaction === undefined) {
         throw new Error("Wrong transaction type");
@@ -578,7 +581,7 @@ export default Vue.extend({
 
       this.transactionInfo.hash = receivedTransaction.txHash as string;
       this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + receivedTransaction.txHash;
-      this.transactionInfo.fee.amount = receivedTransaction.txData.tx.fee;
+      this.transactionInfo.fee.amount = feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: receivedTransaction.txData.tx.to,
         name: this.chosenContact ? this.chosenContact.name : "",
