@@ -127,6 +127,7 @@ export default Vue.extend({
         await this.$accessor.toaster.error(error.message ? error.message : "Error while fetching the transactions");
       }
       this.loading = false;
+      console.log(this.transactionsList);
     },
     async loadMore(): Promise<void> {
       await this.autoUpdateList();

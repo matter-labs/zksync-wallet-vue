@@ -460,6 +460,7 @@ export const actions = actionTree(
         return getters.getWithdrawalProcessingTime;
       }
       const withdrawTime = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
+      console.log("withdrawTime", withdrawTime);
       commit("setWithdrawalProcessingTime", withdrawTime.data);
       return withdrawTime.data;
     },

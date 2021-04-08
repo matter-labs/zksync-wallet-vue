@@ -40,6 +40,7 @@
       v-else-if="transactionInfo.success === true"
       :amount="transactionInfo.amount"
       :continue-btn-function="transactionInfo.continueBtnFunction"
+      :continue-btn-text="transactionInfo.continueBtnText"
       :fee="transactionInfo.fee"
       :headline="transactionTypeName"
       :recipient="transactionInfo.recipient"
@@ -119,11 +120,11 @@
             ).
           </span>
           <br class="desktopOnly" />
-          Processing time: {{ withdrawTime.fast | formatDateTime }}
+          Processing time: {{ withdrawTime.fast | formatTimeAgo }}
         </i-radio>
       </i-radio-group>
       <div v-else-if="chosenToken && type === 'withdraw' && feesObj" class="secondaryText _text-center _margin-top-1">
-        Only normal withdraw ({{ withdrawTime.normal | formatDateTime }}) is available when using different fee token
+        Only normal withdraw ({{ withdrawTime.normal | formatTimeAgo }}) is available when using different fee token
       </div>
 
       <div class="errorText _text-center _margin-top-1">
@@ -170,7 +171,7 @@
           <span class="linkText" @click="chooseFeeTokenModal = true">Choose fee token</span>
         </div>
       </div>
-      <div v-if="type === 'withdraw'" class="totalPrice _display-flex _justify-center">
+      <!-- <div v-if="type === 'withdraw'" class="totalPrice _display-flex _justify-center">
         <i-tooltip class="_width-100">
           <div class="_width-100 _display-inline-flex _justify-content-center _margin-top-1">
             Estimated processing time: 5 hours
@@ -178,7 +179,7 @@
           </div>
           <div slot="body">Despite all the capabilities of ZK and L2, full withdrawal process may take up to 5 hours and depends on L1</div>
         </i-tooltip>
-      </div>
+      </div> -->
       <p v-if="!ownAccountUnlocked" class="tileTextBg _margin-top-1">
         To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH
         signatures with zero-knowledge proofs. Please bear with us!
@@ -241,6 +242,7 @@ export default Vue.extend({
       transactionInfo: {
         success: false,
         continueBtnFunction: false,
+        continueBtnText: "",
         hash: "",
         type: "",
         explorerLink: "",
@@ -292,7 +294,11 @@ export default Vue.extend({
       return false;
     },
     transactionTypeName(): string {
-      return this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : "";
+      if (this.transactionInfo.type !== "ActivateAccount") {
+        return this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : "";
+      } else {
+        return "Account Activation";
+      }
     },
     maxAmount(): string {
       if (!this.chosenToken) {
@@ -638,6 +644,7 @@ export default Vue.extend({
       this.loading = true;
       try {
         this.clearTransactionInfo();
+        this.transactionInfo.type = "ActivateAccount";
         const syncWallet = walletData.get().syncWallet;
         await this.$accessor.wallet.restoreProviderConnection();
         this.tip = "Confirm the transaction to unlock this account";
@@ -648,31 +655,17 @@ export default Vue.extend({
             const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
             await onchainAuthTransaction?.wait();
           }
-
-          const isSigningKeySet = await syncWallet!.isSigningKeySet();
-          if (!isSigningKeySet) {
-            const changePubkey = await syncWallet?.setSigningKey({
-              feeToken: this.feeToken.symbol,
-              nonce: "committed",
-              onchainAuth: true,
-            });
-            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
-            this.setTransactionInfo(changePubkey, true);
-            this.tip = "Waiting for the transaction to be mined...";
-            await changePubkey?.awaitReceipt();
-          }
-        } else {
-          const isSigningKeySet = await syncWallet!.isSigningKeySet();
-          if (!isSigningKeySet) {
-            const changePubkey = await syncWallet!.setSigningKey({
-              feeToken: this.feeToken.symbol,
-            });
-            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
-            this.setTransactionInfo(changePubkey, true);
-            this.tip = "Waiting for the transaction to be mined...";
-            await changePubkey.awaitReceipt();
-          }
         }
+        const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+        const changePubkey = await syncWallet?.setSigningKey({
+          feeToken: this.feeToken.symbol,
+          fee: this.activateAccountFee,
+          nonce: "committed",
+          ethAuthType: ethAuthType === "ECDSA" ? "ECDSALegacyMessage" : "ECDSA",
+        });
+        this.setTransactionInfo(changePubkey as Transaction, true, `Proceed to ${this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : ""}`);
+        this.tip = "Waiting for the transaction to be mined...";
+        await changePubkey?.awaitReceipt();
         const isSigningKeySet = await syncWallet?.isSigningKeySet();
         this.$accessor.wallet.setAccountLockedState(isSigningKeySet === false);
 
@@ -681,17 +674,20 @@ export default Vue.extend({
 
         this.transactionInfo.success = true;
       } catch (error) {
+        console.log(error);
         if (error.message && !error.message.includes("User denied")) {
           this.error = error.message;
         }
       }
       this.loading = false;
+      this.transactionInfo.type = "";
       return "";
     },
     clearTransactionInfo() {
       this.transactionInfo = {
         success: false,
         continueBtnFunction: false,
+        continueBtnText: "",
         hash: "",
         type: "",
         explorerLink: "",
@@ -709,20 +705,18 @@ export default Vue.extend({
         },
       };
     },
-    setTransactionInfo(transaction: Transaction, continueAfter = false) {
+    setTransactionInfo(transaction: Transaction, continueAfter = false, btnText = "") {
       this.transactionInfo.continueBtnFunction = continueAfter;
       this.transactionInfo.hash = transaction.txHash;
+      this.transactionInfo.continueBtnText = btnText;
       this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transaction.txHash;
       this.transactionInfo.fee.token = this.feeToken;
       this.transactionInfo.fee.amount = transaction.txData.tx.fee;
       this.transactionInfo.amount = undefined;
       this.transactionInfo.recipient = undefined;
-      this.transactionInfo.type = "ActivateAccount";
     },
     successBlockContinue() {
       this.clearTransactionInfo();
-      this.chosenToken = false;
-      this.chosenFeeToken = false;
     },
   },
 });
