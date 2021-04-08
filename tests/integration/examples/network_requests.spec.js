@@ -22,7 +22,7 @@ context("Network Requests", () => {
   it("cy.request() - verify response using BDD syntax", () => {
     cy.request("https://jsonplaceholder.cypress.io/comments").then((response) => {
       // https://on.cypress.io/assertions
-      expect(response).property("status").to.equal(200);
+      expect(response).property("status").to.toBe(200);
       expect(response).property("body").to.have.property("length").and.be.oneOf([500, 501]);
       expect(response).to.include.keys("headers", "duration");
     });
@@ -68,7 +68,7 @@ context("Network Requests", () => {
       // note that the value here is the returned value of the 2nd request
       // which is the new post object
       .then((response) => {
-        expect(response).property("status").to.equal(201); // new entity created
+        expect(response).property("status").to.toBe(201); // new entity created
         expect(response).property("body").to.contain({
           title: "Cypress Test Runner",
         });
@@ -108,7 +108,7 @@ context("Network Requests", () => {
         // When this callback runs, both "cy.request" API commands have finished
         // and the test context has "user" and "post" objects set.
         // Let's verify them.
-        expect(this.post, "post has the right user id").property("userId").to.equal(this.user.id);
+        expect(this.post, "post has the right user id").property("userId").to.toBe(this.user.id);
       });
   });
 

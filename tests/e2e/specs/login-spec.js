@@ -18,7 +18,7 @@ describe("Wallet tests", () => {
       exchange.waitUntilLoggedIn();
       exchange.getLoggedInWalletAddress().then((exchangeWalletAddress) => {
         const formattedMetamaskWalletAddress = metamaskWalletAddress.slice(0, 5) + "..." + metamaskWalletAddress.slice(-5);
-        expect(exchangeWalletAddress).to.equal(formattedMetamaskWalletAddress.toLowerCase());
+        expect(exchangeWalletAddress).to.toBe(formattedMetamaskWalletAddress.toLowerCase());
       });
     });
   });

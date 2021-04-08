@@ -57,31 +57,31 @@ context("Connectors", () => {
     it("yields the returned value to the next command", () => {
       cy.wrap(1)
         .then((num) => {
-          expect(num).to.equal(1);
+          expect(num).to.toBe(1);
 
           return 2;
         })
         .then((num) => {
-          expect(num).to.equal(2);
+          expect(num).to.toBe(2);
         });
     });
 
     it("yields the original subject without return", () => {
       cy.wrap(1)
         .then((num) => {
-          expect(num).to.equal(1);
+          expect(num).to.toBe(1);
           // note that nothing is returned from this callback
         })
         .then((num) => {
           // this callback receives the original unchanged value 1
-          expect(num).to.equal(1);
+          expect(num).to.toBe(1);
         });
     });
 
     it("yields the value yielded by the last Cypress command inside", () => {
       cy.wrap(1)
         .then((num) => {
-          expect(num).to.equal(1);
+          expect(num).to.toBe(1);
           // note how we run a Cypress command
           // the result yielded by this Cypress command
           // will be passed to the second ".then"
@@ -89,7 +89,7 @@ context("Connectors", () => {
         })
         .then((num) => {
           // this callback receives the value yielded by "cy.wrap(2)"
-          expect(num).to.equal(2);
+          expect(num).to.toBe(2);
         });
     });
   });

@@ -51,8 +51,8 @@ context("Assertions", () => {
       expect(true).to.be.true;
       const o = { foo: "bar" };
 
-      expect(o).to.equal(o);
-      expect(o).to.deep.equal({ foo: "bar" });
+      expect(o).to.toBe(o);
+      expect(o).to.deep.toBe({ foo: "bar" });
       // matching text using regular expression
       expect("FooBar").to.match(/bar$/i);
     });
@@ -145,7 +145,7 @@ context("Assertions", () => {
           // we can massage text before comparing
           const secondText = normalizeText($div.text());
 
-          expect(secondText, "second text").to.equal(text);
+          expect(secondText, "second text").to.toBe(text);
         });
     });
 
