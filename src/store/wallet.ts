@@ -6,6 +6,7 @@ import onboardConfig from "@/plugins/onboardConfig";
 import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Tx, iWalletData, Provider } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import web3Wallet from "@/plugins/web3";
+import watcher from "@/plugins/watcher";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API, Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import utils from "~/plugins/utils";
@@ -572,6 +573,9 @@ export const actions = actionTree(
         const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
 
         this.commit("account/setLoadingHint", "Getting wallet information");
+
+        // @ts-ignore
+        await watcher.changeNetworkSet(dispatch, this);
 
         const accountState = await syncWallet.getAccountState();
 
