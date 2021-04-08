@@ -103,9 +103,9 @@
 
 <script lang="ts">
 import chooseToken from "@/blocks/ChooseToken.vue";
-import amountInput from "@/components/AmountInput.vue";
-import allowanceInput from "@/components/AllowanceInput.vue";
 import AllowanceModal from "@/blocks/modals/Allowance.vue";
+import allowanceInput from "@/components/AllowanceInput.vue";
+import amountInput from "@/components/AmountInput.vue";
 
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
@@ -115,7 +115,7 @@ import { Balance, ETHOperation, GweiBalance } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
-import { BigNumber, ethers, Contract } from "ethers";
+import { BigNumber, Contract, ethers } from "ethers";
 import Vue from "vue";
 
 let zksync = null as any;
@@ -376,8 +376,7 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
         const erc20contract = new Contract(tokenAddress, zksync.utils.IERC20_INTERFACE, wallet!.ethSigner);
-        const currentAllowance = (await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract)) as BigNumber;
-        return currentAllowance;
+        return (await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract)) as BigNumber;
       }
       return BigNumber.from(zksync.utils.ERC20_APPROVE_TRESHOLD);
     },
