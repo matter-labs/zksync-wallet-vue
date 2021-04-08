@@ -51,6 +51,6 @@ jobs:
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          target: stage-dev
+          target: mainnet-dev
           projectId: zksync-vue
           channelID: dev

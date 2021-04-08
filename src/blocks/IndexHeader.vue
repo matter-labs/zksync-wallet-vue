@@ -97,7 +97,7 @@ export default Vue.extend({
         },
         {
           name: "zkCheckout",
-          link: "https://www.npmjs.com/package/zksync-checkout/",
+§          link: "https://checkout.zksync.io/",
         },
         {
           name: "zkMint",

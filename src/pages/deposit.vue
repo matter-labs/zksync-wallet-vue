@@ -192,10 +192,7 @@ export default Vue.extend({
       }
     },
     zeroAllowance(): boolean {
-      if (this.tokenAllowance && this.tokenAllowance.eq(BigNumber.from("0"))) {
-        return true;
-      }
-      return false;
+      return this.tokenAllowance && this.tokenAllowance.eq(BigNumber.from("0"));
     },
     enoughAllowance(): boolean {
       if (!this.tokenAllowance || !this.chosenToken) {
