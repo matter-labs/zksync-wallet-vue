@@ -44,6 +44,13 @@
         background-color: transparentize($color: $gray, $amount: 0.9);
       }
 
+      .mainInfo {
+        .tokenSymbol,
+        .amount {
+          display: inline-flex !important;
+        }
+      }
+
       @media screen and (max-width: 768px) {
         grid-gap: 5px;
         grid-template-rows: 30px 75px 45px 30px;

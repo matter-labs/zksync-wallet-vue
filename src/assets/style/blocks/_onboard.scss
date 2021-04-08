@@ -1,63 +1,53 @@
 @import "../variables";
 
-.bn-onboard-custom {
-  z-index: 10;
+.bn-onboard-modal {
+  .bn-onboard-custom.bn-onboard-modal-content {
+    width: 100%;
+  }
 
-  header.bn-onboard-modal-content-header {
-    margin-bottom: 1rem !important;
+  .bn-onboard-select-wallet-info {
+    color: $lightViolet !important;
+    font-weight: bold;
+    font-size: 16px;
+  }
 
-    & > h3 {
-      margin-left: 0 !important;
+  a,
+  .bn-onboard-select-wallet-info {
+    color: $lightViolet !important;
+    font: normal 16px $firaSans !important;
+    letter-spacing: -0.01rem !important;
+    text-decoration: none !important;
+    &:hover {
+      color: $violet !important;
+    }
+  }
+
+  z-index: 4;
+  @media screen and (min-width: $mobile) {
+    background-color: transparent !important;
+    .bn-onboard-modal-content {
+      width: 85%;
     }
   }
 
   .bn-onboard-modal-content {
     max-height: calc(100vh - 2.66em);
+    font-family: $firaSans;
+
     @media (max-width: $mobile) {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
       height: 100vh !important;
       max-height: 100vh !important;
-      padding-top: 5vh;
       border-radius: 0 !important;
+
       .bn-onboard-modal-content-header {
         margin: 1rem 0 !important;
       }
-      .bn-onboard-select-wallet-definition {
-        padding-bottom: calc(5.5vh + 55px);
-      }
     }
-  }
-
-  &.bn-onboard-dark-mode {
-    background-color: $darkViolet !important;
-
-    .bn-onboard-prepare-error {
-      background-color: transparent !important;
-    }
-
-    .bn-onboard-selected-wallet {
-      background-color: $accentBg !important;
-    }
-  }
-
-  & > p {
-    margin-top: 0.25rem !important;
   }
 
   ul.bn-onboard-modal-select-wallets {
     max-height: 50vh !important;
-    margin: 0.5rem auto !important;
-    padding-bottom: 0.5rem !important;
-    overflow-y: scroll;
-    background-color: transparentize($color: $color-secondary, $amount: 0.95);
-    border-radius: $borderRadius;
-
-    button.bn-onboard-icon-button {
-      margin: 0.1rem 0;
-      border-radius: 4px;
-    }
+    overflow: auto;
   }
 
   .bn-onboard-custom.bn-onboard-select-wallet-definition {
@@ -74,13 +64,17 @@
     }
   }
 
-  .bn-onboard-select-wallet-info {
-    font-weight: bold;
-    font-size: 16px;
+  .bn-onboard-icon-button {
+    border-radius: 8px;
   }
 
   .bn-onboard-selected-wallet {
-    background-color: transparentize($color: $gray, $amount: 0.7) !important;
+    background-color: transparentize($color: $gray, $amount: 0.95) !important;
+    box-shadow: 0 0 0 1.5px $violet !important;
+
+    &:hover {
+      box-shadow: 0 0 0 2.5px $lightViolet !important;
+    }
 
     span i {
       font-style: normal;
@@ -91,31 +85,25 @@
 
   .bn-onboard-prepare-button {
     color: $white !important;
-    background-color: $violet !important;
+    background-color: $violet;
     border-color: $violet !important;
     border-radius: 4px;
     transition: $transition1;
 
     &:hover {
       background-color: $lightViolet !important;
-      border-color: $lightViolet !important;
+      border-color: $lightViolet;
     }
   }
 
-  .bn-onboard-prepare-error {
-    background-color: transparent !important;
-  }
-
-  .bn-onboard-dark-mode-background-hover:hover {
-    background-color: $violet !important;
-  }
-
-  .bn-onboard-dark-mode-background {
-    background-color: $violet !important;
-  }
-
+  .bn-onboard-prepare-error,
   .bn-onboard-modal-content-header {
     background-color: transparent !important;
+  }
+
+  .bn-onboard-dark-mode-background-hover:hover,
+  .bn-onboard-dark-mode-background {
+    background-color: $violet !important;
   }
 
   .bn-onboard-modal-content-header {
@@ -128,23 +116,6 @@
     top: 1.65em;
     width: 25px;
     height: 25px;
-    @media (max-width: $mobile) {
-      position: fixed;
-      top: initial;
-      bottom: 3.5vh;
-      left: 0;
-      right: 0;
-      margin: 0 auto;
-      width: 55px;
-      height: 55px;
-      background: $lightViolet;
-      box-shadow: 0 2px 12px $lightViolet;
-      padding: 18px;
-
-      svg path {
-        fill: $white;
-      }
-    }
 
     svg {
       width: 100%;
@@ -152,17 +123,11 @@
     }
   }
 
-  .bn-onboard-select-wallet-info {
-    color: $lightViolet !important;
-  }
-
   .bn-onboard-custom.bn-onboard-modal-content-header-icon {
     display: none !important;
     visibility: hidden !important;
   }
-}
 
-.bn-onboard-modal {
   @media screen and (max-width: $mobile) {
     button.bn-onboard-modal.bn-onboard-modal-content {
       margin: 0.25rem 0;
@@ -185,15 +150,10 @@
       }
 
       ul.bn-onboard-custom.bn-onboard-modal-select-wallets {
-        position: relative;
         height: 100%;
-        //max-height: calc(100% - 150px - 2rem) !important;
+        max-height: calc(100% - 150px - 2rem) !important;
         margin: 0;
         padding: 0;
-
-        @media (max-height: 600px) {
-          max-height: 44vh !important;
-        }
       }
 
       .bn-onboard-custom.bn-onboard-select-info-container {
@@ -205,23 +165,24 @@
       .bn-onboard-modal-content-close {
         top: 2rem;
       }
+
+      .bn-onboard-custom.bn-onboard-icon-button {
+        margin: 0.25em;
+        padding: 0.25em;
+      }
     }
   }
-}
 
-body {
-  &.-dark {
-    .walletconnect-modal__footer a {
-      color: $darkViolet !important;
+  .bn-onboard-dark-mode {
+    background-color: darken($darkViolet, 7) !important;
+    box-shadow: $defaultShadow;
+
+    .bn-onboard-prepare-error {
+      background-color: transparent !important;
     }
 
-    .bn-onboard-custom {
-      .bn-onboard-modal-content-close {
-        @media (max-width: $mobile) {
-          background: $violet;
-          box-shadow: 0 2px 12px $violet;
-        }
-      }
+    .bn-onboard-selected-wallet {
+      background-color: $accentBg !important;
     }
   }
 }

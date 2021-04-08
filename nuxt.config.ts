@@ -112,15 +112,15 @@ const config: NuxtConfig = {
         content: pageTitleTemplate,
       },
 
-      //      { "http-equiv": "pragma", content: "no-cache" },
-      //      { "http-equiv": "cache-control", content: "no-cache , no-store, must-revalidate" },
-      //      { "http-equiv": "expires", content: "0" },
+      { "http-equiv": "pragma", content: "no-cache" },
+      { "http-equiv": "cache-control", content: "no-cache , no-store, must-revalidate" },
+      { "http-equiv": "expires", content: "0" },
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
-        content: "/icon.png",
+        content: "/favicon-dark.png",
       },
       { hid: "theme-color", name: "theme-color", content: "#4e529a" },
       {

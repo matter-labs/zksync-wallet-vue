@@ -137,11 +137,11 @@ header {
     }
     .headerLink {
       padding: 10px 15px;
-      color: $tempLightGray;
+      color: $violet;
+      border-radius: $borderRadius;
       transition: $transition1;
       transition-property: background-color, color;
       will-change: background-color, color;
-      border-radius: $borderRadius;
 
       &.nuxt-link-exact-active {
         color: #27274e;
@@ -194,30 +194,30 @@ header {
   .userDropdown {
     display: grid;
     grid-template-rows: 100%;
-    grid-template-columns: max-content 32px 30px;
+    grid-template-columns: max-content 20px 40px;
     align-items: center;
     box-sizing: border-box;
     width: max-content;
-    height: 35px;
+    height: 40px;
     cursor: pointer;
 
     .userDropdownAddress {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: stretch;
       width: max-content;
       height: 100%;
-      padding: 4px 13px 4px 0;
+      padding: 0 13px 0 5px;
 
       .walletLabel {
-        color: $tempLightGray;
-        font-size: 13px;
-        line-height: 13px;
+        color: darken($tempLightGray, 20);
+        font-size: 14px;
+        line-height: 20px;
         text-align: left;
       }
       .address {
-        font-size: 12px;
-        line-height: 12px;
+        font-size: 14px;
+        line-height: 20px;
         white-space: nowrap;
       }
     }
@@ -306,8 +306,8 @@ header {
 }
 
 body.inkline.-light header {
-  background: #f5f5f6;
-  //backdrop-filter: blur(25px);
+  background: $bgLight;
+  backdrop-filter: blur(25px);
 
   .linksContainer .mainLink {
     color: $black;

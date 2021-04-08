@@ -30,7 +30,7 @@
       <i-container>
         <i-row>
           <i-column :xs="12" :md="4" class="_padding-left-0 desktopOnly">
-            <a href="http://zksync.io/" target="_blank"><logo /></a>
+            <logo :is-zk-sync-logo="false" />
           </i-column>
           <i-column :xs="12" :md="4" class="_padding-y-0">
             <div class="linksContainer">

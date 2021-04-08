@@ -110,7 +110,7 @@
   footer {
     @media (max-width: $mobile) {
       margin-bottom: 80px; /* Navigation bar space */
-      
+
       .floating-on-mobile {
         bottom: calc(4vh + 70px);
       }
@@ -174,7 +174,8 @@ input.form-input.-prefixed:focus {
 .tooltip-wrapper {
   display: flex;
 }
-i.iconInfo,em.iconInfo {
+i.iconInfo,
+em.iconInfo {
   display: block;
   width: 25px;
   height: 25px;
