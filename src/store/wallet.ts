@@ -5,7 +5,6 @@ import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
 import { Address, Balance, FeesObj, GweiBalance, TokenSymbol, Tx, iWalletData, Provider } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
-import eventBus from "@/plugins/eventBus";
 import web3Wallet from "@/plugins/web3";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API, Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
@@ -257,6 +256,7 @@ export const actions = actionTree(
     /**
      * Initial call, connecting to the wallet
      * @param commit
+     * @param rootState
      * @return {Promise<boolean>}
      */
     async onboardInit({ commit }): Promise<boolean> {
@@ -266,10 +266,9 @@ export const actions = actionTree(
       if (!previouslySelectedWallet) {
         this.commit("account/setSelectedWallet", "");
         return false;
-      } else {
-        this.dispatch("toaster/info", "Found previously selected wallet.");
-        this.commit("account/setSelectedWallet", previouslySelectedWallet);
       }
+      this.dispatch("toaster/info", "Found previously selected wallet.");
+      this.commit("account/setSelectedWallet", previouslySelectedWallet);
       return await onboard.walletSelect(previouslySelectedWallet);
     },
 
@@ -395,8 +394,8 @@ export const actions = actionTree(
           }
         },
       );
-      const balancesResults: (void | Array<Balance>)[] | any[] = await Promise.all(loadInitialBalancesPromises).catch(() => {
-        // @todo insert sentry logging
+      const balancesResults: (void | Array<Balance>)[] | any[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
+        this.$sentry.captureException(error);
         return [];
       });
       const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.sortTokensById);
@@ -441,6 +440,7 @@ export const actions = actionTree(
         }
         return fetchTransactionHistory.data;
       } catch (error) {
+        this.$sentry.captureException(error);
         this.dispatch("toaster/error", error.message);
         getTransactionHistoryAgain = setTimeout(() => {
           dispatch("requestTransactionsHistory", { force: true });
@@ -457,11 +457,10 @@ export const actions = actionTree(
     }> {
       if (getters.getWithdrawalProcessingTime) {
         return getters.getWithdrawalProcessingTime;
-      } else {
-        const withdrawTime = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
-        commit("setWithdrawalProcessingTime", withdrawTime.data);
-        return withdrawTime.data;
       }
+      const withdrawTime = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
+      commit("setWithdrawalProcessingTime", withdrawTime.data);
+      return withdrawTime.data;
     },
     async requestFees({ getters, commit, dispatch }, { address, symbol, feeSymbol, type }): Promise<FeesObj> {
       const savedFees = getters.getFees;
@@ -528,13 +527,13 @@ export const actions = actionTree(
      *
      * @param getters
      * @param dispatch
-     * @param state
      * @param rootState
+     * @param state
      * @param commit
      * @param firstSelect
      * @returns {Promise<boolean>}
      */
-    async walletRefresh({ getters, dispatch, state, rootState, commit }, firstSelect: boolean = true): Promise<boolean> {
+    async walletRefresh({ getters, dispatch, rootState, state, commit }, firstSelect: boolean = true): Promise<boolean> {
       try {
         this.commit("account/setLoadingHint", "Follow the instructions in your wallet");
         let walletCheck: boolean = false;
@@ -589,9 +588,7 @@ export const actions = actionTree(
         await dispatch("requestZkBalances", accountState);
 
         await dispatch("checkLockedState");
-
-        // @ts-ignore: Unreachable code error
-        // await eventBus.changeNetworkSet(dispatch, this);
+        //        this.nuxt.$eventBus.changeNetworkSet();
 
         this.commit("contacts/getContactsFromStorage");
         this.commit("account/setAddress", syncWallet.address());
@@ -600,6 +597,7 @@ export const actions = actionTree(
         return true;
       } catch (error) {
         console.log("Wallet refresh error", error);
+        this.$sentry.captureException(error);
         if (!error.message.includes("User denied")) {
           this.dispatch("toaster/error", `Refreshing state of the wallet failed... Reason: ${error.message}`);
           this.dispatch("toaster/error", error.message);

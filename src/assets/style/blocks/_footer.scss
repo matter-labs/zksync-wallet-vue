@@ -108,3 +108,10 @@ footer {
     }
   }
 }
+
+.inkline.-dark {
+  footer > .container .badge {
+    color: $mediumViolet;
+    background: #e9ecef;
+  }
+}

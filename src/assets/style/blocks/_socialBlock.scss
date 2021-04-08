@@ -11,6 +11,7 @@
     display: block;
     width: 20px;
     height: 20px;
+    color: $violet;
     transition: color $transition1;
     text-decoration: none;
     &:hover {
@@ -31,11 +32,6 @@
 }
 
 body.inkline {
-  &.-light .socialIcons {
-    .socialItem {
-      color: $gray;
-    }
-  }
   &.-dark .socialIcons {
     .socialItem {
       color: $white;

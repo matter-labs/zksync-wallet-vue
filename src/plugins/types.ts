@@ -1,5 +1,4 @@
 import { BigNumber, BigNumberish, ContractTransaction, ethers } from "ethers";
-import Vue from "vue";
 import { ChangePubKeyFee, LegacyChangePubKeyFee, SignedTransaction } from "zksync/build/types";
 
 export declare type Address = string;
@@ -478,14 +477,6 @@ export declare interface zkEventBus {
   changeNetworkSet: () => void;
   changeNetworkHandle: (chainId: string) => void;
   changeAccountHandle: (data: any) => void;
-}
-
-export declare interface zkDeposit {
-  [tokenSymbol: string]: BigNumber;
-}
-
-export declare interface zkActiveDeposit {
-  [tokenSymbol: string]: Balance[];
 }
 
 export declare interface depositsInterface {

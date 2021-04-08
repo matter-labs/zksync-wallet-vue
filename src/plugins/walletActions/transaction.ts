@@ -1,4 +1,4 @@
-import { Address, GweiBalance, TokenSymbol, Transaction, Tx } from "@/plugins/types";
+import { Address, GweiBalance, TokenSymbol, Transaction } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
 import { Withdraw } from "zksync/build/types";

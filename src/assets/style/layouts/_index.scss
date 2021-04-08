@@ -18,9 +18,8 @@
     cursor: pointer;
 
     &:hover .tile {
-      box-shadow: 0 4px 8px #00000015;
+      box-shadow: $hoverShadow;
     }
-
     .tile {
       width: 130px;
       height: 130px;
@@ -29,6 +28,7 @@
       background-color: $white;
       border-radius: 27px;
       transition: $transition1;
+      box-shadow: $tileShadow;
 
       img {
         width: 100%;
@@ -123,12 +123,5 @@
         }
       }
     }
-  }
-}
-
-.inkline.-dark {
-  footer > .container .badge {
-    color: #2f3264;
-    background: #e9ecef;
   }
 }

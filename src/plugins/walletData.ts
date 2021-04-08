@@ -1,4 +1,4 @@
-import { AccountState, Provider, Wallet, iWalletData } from "@/plugins/types";
+import { iWalletData } from "@/plugins/types";
 
 const internalWalletData: iWalletData = {
   syncProvider: undefined,

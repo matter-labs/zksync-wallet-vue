@@ -137,11 +137,11 @@ header {
     }
     .headerLink {
       padding: 10px 15px;
-      color: #bababa;
+      color: $tempLightGray;
       transition: $transition1;
       transition-property: background-color, color;
       will-change: background-color, color;
-      border-radius: 8px;
+      border-radius: $borderRadius;
 
       &.nuxt-link-exact-active {
         color: #27274e;
@@ -210,7 +210,7 @@ header {
       padding: 4px 13px 4px 0;
 
       .walletLabel {
-        color: #bababa;
+        color: $tempLightGray;
         font-size: 13px;
         line-height: 13px;
         text-align: left;

@@ -291,7 +291,7 @@ button.-lg.-circle {
       padding: 6px 15px;
       color: $white;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: $borderRadius;
       cursor: pointer;
       transition: background-color $transition1;
 

@@ -2,21 +2,21 @@
 
 body {
   .indexHeader {
-    backdrop-filter: blur(83.3333px);
-    background: rgba(24, 24, 32, 0.01);
-    height: 84px;
     width: 100%;
+    height: 84px;
     z-index: 9;
-    background: -moz-linear-gradient(top, rgba(24, 24, 32, 0.9), rgba(24, 24, 32, 0.7));
+    backdrop-filter: blur(83.3333px);
+    background: rgba(24, 24, 32, 0.01) -moz-linear-gradient(top, rgba(24, 24, 32, 0.9), rgba(24, 24, 32, 0.7));
     box-shadow: 1px 1px 5px 10px rgba(0, 0, 0, 0.01);
 
     .linksContainer {
       .linkItem {
-        line-height: 2rem;
         font-weight: normal;
-        transition: color $transition1;
+        line-height: 2rem;
         text-decoration: none;
         cursor: pointer;
+        transition: color $transition1;
+        will-change: color;
 
         &:hover {
           color: $lightViolet !important;
@@ -42,10 +42,10 @@ body {
       padding-top: 0 !important;
 
       .projectLogo {
+        width: auto;
         min-width: 90px;
         max-width: none;
         height: 30px;
-        width: auto;
       }
     }
 
@@ -53,16 +53,16 @@ body {
       padding: 0;
 
       @media screen and (min-width: $mobile+1) and (max-width: 991px) {
-        font-size: 14px;
         padding: 0 5px;
+        font-size: 14px;
       }
 
       & > .menu[data-popper-placement="bottom"] {
-        padding: 0;
-        border-radius: $borderRadius;
         min-width: 150px;
-        border-color: $darkViolet;
+        padding: 0;
         background: $darkViolet;
+        border-color: $darkViolet;
+        border-radius: $borderRadius;
 
         .arrow {
           border-bottom-color: $darkViolet;
@@ -75,16 +75,12 @@ body {
 
         .item {
           color: $white;
-          font-size: 16px;
-          font-family: $openSans;
-          font-style: normal;
-          font-weight: normal;
-          line-height: 2rem;
+          font: normal normal 16px/2rem $firaSans;
 
           &:hover {
-            transition: color, background-color $transition1 !important;
-            background-color: lighten($darkViolet, 10) !important;
             color: $lightViolet;
+            background-color: lighten($darkViolet, 10) !important;
+            transition: color, background-color $transition1 !important;
             will-change: color, backgroud;
           }
 
@@ -108,11 +104,11 @@ body {
           }
 
           & > .menu {
-            margin: 120px;
-            width: 100vw;
             position: fixed;
             left: -35px;
             z-index: 1004;
+            width: 100vw;
+            margin: 120px;
           }
         }
       }
@@ -144,8 +140,8 @@ body {
     }
 
     .mainIndexHeader {
-      height: 100%;
       width: 100%;
+      height: 100%;
     }
 
     @media screen and (max-width: $mobile) {
@@ -304,9 +300,9 @@ body {
         }
       }
       .dropdown {
-        transition: height $transition1;
         height: 52px;
         overflow: hidden;
+        transition: height $transition1;
         &.opened {
           height: 312px;
         }
@@ -329,7 +325,7 @@ body {
     a.linkItem {
       padding: 0 10px;
       white-space: nowrap;
-      color: $white !important;
+      color: $white;
       @media screen and (min-width: $mobile+1) and (max-width: 991px) {
         font-size: 14px;
         padding: 0 5px;
@@ -352,15 +348,24 @@ body.inkline.-light {
 
       .linksContainer {
         a.linkItem {
-          color: $black !important;
+          color: $violet !important;
+          &:hover {
+            color: $lightViolet !important;
+          }
         }
       }
       .dropdown .menu {
-        border-color: $white;
-        background-color: $white;
+        background-color: $bgLight;
+        border-color: $bgLight;
+        box-shadow: $layerShadow;
 
         .item {
-          color: $black;
+          color: $violet !important;
+          &:hover {
+            color: $lightViolet !important;
+            background-color: darken($white, 5) !important;
+            border-color: darken($bgLight, 5) !important;
+          }
         }
       }
     }

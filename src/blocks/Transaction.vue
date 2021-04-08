@@ -94,7 +94,7 @@
                 {{ feeToken.symbol }}
               </span>
               <span class="totalPrice">
-                {{ feesObj && feesObj.normal | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
+                {{ feesObj.normal | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
               </span>
             </span>
             <span v-else class="totalPrice">Loading...</span>
@@ -109,10 +109,10 @@
             (
             <strong>Fee:</strong>
             <span v-if="feesObj && feesObj['fast']">
-              {{ feesObj && feesObj["fast"] | formatToken(feeToken.symbol) }}
+              {{ feesObj.fast | formatToken(feeToken.symbol) }}
               <span class="tokenSymbol">{{ feeToken.symbol }}</span>
               <span class="totalPrice">
-                {{ feesObj && feesObj["fast"] | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
+                {{ feesObj.fast | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
               </span>
             </span>
             <span v-else class="totalPrice">Loading...</span>
@@ -203,7 +203,6 @@ import { walletData } from "@/plugins/walletData";
 
 import { BigNumber } from "ethers";
 import Vue from "vue";
-import Balances from "~/blocks/Balances.vue";
 
 let zksync = null as any;
 
@@ -288,47 +287,35 @@ export default Vue.extend({
   computed: {
     chosenFeeObj(): GweiBalance | boolean {
       if (this.feesObj && this.transactionMode && !this.loading && !this.feesLoading) {
-        if (this.feesObj.hasOwnProperty(this.transactionMode)) {
-          return (this.feesObj as FeesObj)[this.transactionMode] as string;
-        } else {
-          return false;
-        }
+        return this.feesObj.hasOwnProperty(this.transactionMode) ? ((this.feesObj as FeesObj)[this.transactionMode] as string) : false;
       }
       return false;
     },
     transactionTypeName(): string {
-      if (this.type === "withdraw") {
-        return "Withdraw";
-      } else return this.type === "transfer" ? "Transfer" : "";
+      return this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : "";
     },
     maxAmount(): string {
       if (!this.chosenToken) {
         return "0";
       }
+
+      let amount;
       if (
         (!this.chosenFeeToken || this.chosenToken.symbol === this.chosenFeeToken.symbol) &&
         !this.feesLoading &&
         (this.transactionMode === "normal" ? (this.feesObj as FeesObj)?.normal : (this.feesObj as FeesObj)?.fast)
       ) {
-        let amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as string);
-        if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
-          amount = amount.sub(this.activateAccountFee as string);
-        }
-        return zksync!.closestPackableTransactionAmount(amount).toString();
+        amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as string);
       } else {
-        let amount = this.chosenToken.rawBalance;
-        if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
-          amount = amount.sub(this.activateAccountFee);
-        }
-        return zksync!.closestPackableTransactionAmount(amount).toString();
+        amount = this.chosenToken.rawBalance;
       }
+      if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
+        amount = amount.sub(this.activateAccountFee);
+      }
+      return zksync!.closestPackableTransactionAmount(amount).toString();
     },
     feeToken(): Balance {
-      if (this.chosenFeeToken) {
-        return this.chosenFeeToken;
-      } else {
-        return this.chosenToken as Balance;
-      }
+      return this.chosenFeeToken ? this.chosenFeeToken : (this.chosenToken as Balance);
     },
     enoughFeeToken(): boolean {
       if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
@@ -493,7 +480,7 @@ export default Vue.extend({
           } else if (error.message && String(error.message).length < 60) {
             this.error = error.message;
           }
-        } else if (error.message && (error.message as string).length < 60) {
+        } else if (error.message && String(error.message).length < 60) {
           this.error = error.message;
         } else {
           this.error = "Transaction error";
@@ -666,7 +653,7 @@ export default Vue.extend({
               nonce: "committed",
               onchainAuth: true,
             });
-            this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
+            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
             this.setTransactionInfo(changePubkey, true);
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey?.awaitReceipt();
@@ -677,7 +664,7 @@ export default Vue.extend({
             const changePubkey = await syncWallet!.setSigningKey({
               feeToken: this.feeToken.symbol,
             });
-            this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
+            await this.$accessor.transaction.watchTransaction({ transactionHash: changePubkey.txHash, tokenSymbol: this.feeToken.symbol });
             this.setTransactionInfo(changePubkey, true);
             this.tip = "Waiting for the transaction to be mined...";
             await changePubkey.awaitReceipt();

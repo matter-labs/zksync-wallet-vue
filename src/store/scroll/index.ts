@@ -11,11 +11,7 @@ export type ScrollModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
   setLastScroll(state, lastScroll: VueRouterScroll) {
-    if (!lastScroll) {
-      state.lastScroll = false;
-    } else {
-      state.lastScroll = lastScroll;
-    }
+    state.lastScroll = lastScroll || false;
   },
   setLastPath(state, lastPath: String) {
     state.lastPath = lastPath;
@@ -24,10 +20,7 @@ export const mutations = mutationTree(state, {
 
 export const getters = getterTree(state, {
   getLastScroll(state): number {
-    if (!state.lastScroll) {
-      return 0;
-    }
-    return state.lastScroll.y;
+    return !state.lastScroll ? 0 : state.lastScroll.y;
   },
   getLastPath(state): String {
     return state.lastPath;

@@ -100,13 +100,13 @@
           inputtedWallet = openedContact.address;
           addContactModal = true;
         "
-        ><i class="ri-add-line" />&nbsp;&nbsp;Add contact
+        ><i class="ri-add-line"></i>&nbsp;&nbsp;Add contact
       </i-button>
       <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)"
-        ><i class="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
+        ><i class="ri-pencil-fill"></i>&nbsp;&nbsp;Edit contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact</i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="ri-arrow-go-back-line"></i>&nbsp;&nbsp;Restore contact</i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer to contact</i-button>
     </div>
     <transactions v-if="openedContact" :address="openedContact.address" />
   </div>
@@ -218,6 +218,7 @@ export default Vue.extend({
           this.contactsList.unshift({ name: this.inputtedName.trim(), address: this.inputtedWallet, deleted: false });
           this.$accessor.contacts.saveContact({ name: this.inputtedName.trim(), address: this.inputtedWallet });
         } catch (error) {
+          this.$sentry.captureException(error);
           this.$accessor.toaster.error(error.message ? error.message : "Error while saving your contact book.");
         }
         this.inputtedName = "";
@@ -255,6 +256,7 @@ export default Vue.extend({
       }
     },
     openContact(contact: Contact): void {
+      // @ts-ignore
       this.$router.push({ ...this.$route, query: { w: contact.address } });
     },
     copyAddress(address: Address): void {
