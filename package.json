@@ -45,13 +45,15 @@
     ]
   },
   "optionalDependencies": {
-    "@sentry/webpack-plugin": "^1.14.2",
     "fs-extra": "^9.1.0"
   },
   "scripts": {
     "ci": "rm -fr node_modules && rm -rf 'public/*' && yarn install --immutable-cache",
     "ci:build": "yarn run ci && sh ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
-    "start:firebase": "firebase serve --only hosting",
+    "ci:prepare:rinkeby": "yarn run ci && sh cli-process-env.sh 'rinkeby' dev 1",
+    "ci:prepare:ropsten": "yarn run ci && sh cli-process-env.sh 'ropsten' dev 1",
+    "ci:prepare:mainnet": "yarn run ci && sh cli-process-env.sh 'mainnet' dev 1",
+    "ci:validate": "yarn ci && sh cli-process-env.sh 'mainnet' dev 1",
     "deploy:prod": "./cli-deploy-production.sh",
     "dev": "sh cli-process-env.sh 'rinkeby' 'dev' 1 && nuxt",
     "prepare_ci": "yarn ci && sh cli-process-env.sh 'rinkeby'",

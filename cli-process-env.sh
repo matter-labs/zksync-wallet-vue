@@ -4,7 +4,16 @@ NETWORK="$1"
 ENV_VALUE="$2"
 FORCE_REWRITE="$3"
 
-echo "$FORCE_REWRITE"
+# Colors
+Red="\033[0;31m"     # Red
+Default="\033[1;37m" # White
+Green="\033[0;32m"   # Green
+Blue="\033[0;34m"    # Blue
+BBlue="\033[1;34m"   # Bold Blue
+
+if [[ "$FORCE_REWRITE" ]]; then
+  echo "${Red}Attention! Existing .env would be overridden"
+fi
 
 if [[ -z "$NETWORK" ]]; then
   NETWORK="rinkeby"
@@ -16,23 +25,28 @@ fi
 
 FILE=".env"
 
-echo "Configure..."
-echo "- Environment: $ENV_VALUE"
-echo "- Ethereum network: $NETWORK"
-echo "- Generate .env anyway : $FORCE_REWRITE"
-echo ""
-
-echo "CLI: Checking env..."
-echo ""
-if [ -e "$FILE" ]; then
-  echo ".env found"
+echo "${BBlue}Chosen configuration... \n" "" "$NC"
+echo "${Default}   Environment: $ENV_VALUE"
+echo "   Ethereum network: $NETWORK"
+printf "${Default}   Generate .env anyway:"
+if [[ FORCE_REWRITE ]]; then
+  echo "${Red}yes"
 else
-  echo "setting $NETWORK .env"
-  FORCE_REWRITE=1
+  echo "${Green}nope"
 fi
 
+printf "${BBlue}\nCLI: Checking env...\n\n"
+printf "${Default}   File status: "
+
+if [ -e "$FILE" ]; then
+  echo "${Green}.env found"
+else
+  echo "${Default} Configuring .env for $NETWORK ethereum network"
+  FORCE_REWRITE=1
+fi
+echo ""
 if [ -z $FORCE_REWRITE ]; then
-  echo "Exiting without change..."
+  echo "${Red}Done!: Exiting without change..."
   exit
 fi
 
@@ -48,4 +62,4 @@ rm -f ./.env &&
   echo "$APP_ENV" >>".env" &&
   echo "$GIT_UPDATED_AT" >>".env"
 
-echo "Configured successfully"
+echo "${Green}Configured successfully "

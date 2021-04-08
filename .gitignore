@@ -51,3 +51,5 @@ public
 !public/.gitignore
 !.yarn/releases/*
 !.yarn/plugins/*
+/cypress/screenshots/examples/misc.spec.js/
+/cypress/videos/examples/

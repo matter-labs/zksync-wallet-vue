@@ -3,6 +3,7 @@ import { NuxtConfig } from "@nuxt/types/config";
 require("dotenv").config();
 
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
+const env = process.env.APP_ENV ?? "prod";
 const srcDir = "src";
 const pageTitle = `Modern dApp with zkSync powers`;
 const pageImg = `https://zksync.io/social.jpg`;
@@ -211,7 +212,9 @@ const config: NuxtConfig = {
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
+    disableServerSide: true,
     config: {
+      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
       tracesSampleRate: 1.0,
     },
   },
@@ -221,7 +224,7 @@ const config: NuxtConfig = {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload
     },
-    debug: false, // enable to track in dev mode
+    debug: env !== "prod", // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
   /*
