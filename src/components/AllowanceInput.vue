@@ -101,6 +101,7 @@ export default Vue.extend({
     if (this.autofocus) {
       (this.$refs.amountInput as Vue)?.$el?.querySelector("input")?.focus();
     }
+    /* this.validateAmount(this.inputtedAmount); */
   },
   beforeDestroy() {
     this.$emit("error", false);

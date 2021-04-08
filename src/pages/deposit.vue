@@ -19,7 +19,7 @@
     <!-- Transaction success block -->
     <success-block
       v-else-if="transactionInfo.success === true"
-      :amount="transactionInfo.amount"
+      :amount="transactionInfo.type === 'unlock' ? undefined : transactionInfo.amount"
       :continue-btn-function="transactionInfo.continueBtnFunction"
       :continue-btn-text="transactionInfo.continueBtnText"
       :fee="transactionInfo.fee"
@@ -179,7 +179,7 @@ export default Vue.extend({
       return !this.chosenToken ? "0" : zksync!.closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
     },
     buttonDisabled(): boolean {
-      return !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading;
+      return !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.enoughInputedAllowance;
     },
     amountBigNumber(): BigNumber {
       if (!this.chosenToken || !this.inputtedAmount) {
@@ -203,6 +203,17 @@ export default Vue.extend({
       }
       return this.tokenAllowance.gte(this.maxAmount) || this.tokenAllowance.gte(this.amountBigNumber);
     },
+    enoughInputedAllowance(): boolean {
+      if (!this.inputtedAllowance || !this.tokenAllowance || !this.chosenToken || this.enoughAllowance) {
+        return true;
+      }
+      try {
+        const inputedAllowenceBigNumber = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAllowance);
+        return inputedAllowenceBigNumber.gte(this.amountBigNumber);
+      } catch (error) {
+        return true;
+      }
+    },
     displayTokenUnlock(): boolean {
       return this.chosenToken && !this.enoughAllowance;
     },
@@ -221,6 +232,9 @@ export default Vue.extend({
       } else {
         this.thresholdLoading = false;
       }
+    },
+    enoughAllowance(val) {
+      console.log("enoughAllowance", val);
     },
   },
   async mounted() {
