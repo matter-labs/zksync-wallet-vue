@@ -9,7 +9,6 @@ let changeNetworkWasSet = false;
  * @return {function(): Promise<void>}
  */
 const changeNetworkHandle = (dispatch, context) => {
-  context.$toast.info("Blockchain environment (Network) just changed");
   return async () => {
     if (!walletData.get().syncWallet) {
       return;

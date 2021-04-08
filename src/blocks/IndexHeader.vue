@@ -2,7 +2,7 @@
   <header class="indexHeader" :class="{ opened: opened }">
     <div class="mobileIndexHeader">
       <i-container class="mobileOnly">
-        <i-row>
+        <i-row class="_disaply-flex _justify-content-between _flex-nowrap">
           <i-column>
             <transition name="fade">
               <logo :is-zk-sync-logo="false" />

@@ -539,12 +539,12 @@ export const actions = actionTree(
         this.commit("account/setLoadingHint", "Follow the instructions in your wallet");
         let walletCheck: boolean = false;
         if (firstSelect) {
-          walletCheck = (await state.onboard?.walletSelect()) as boolean;
+          walletCheck = (await state.onboard!.walletSelect()) as boolean;
           if (!walletCheck) {
             return false;
           }
         }
-        walletCheck = (await state.onboard?.walletCheck()) as boolean;
+        walletCheck = (await state.onboard!.walletCheck()) as boolean;
         if (!walletCheck) {
           return false;
         }

@@ -15,10 +15,23 @@
   background: white;
   animation-fill-mode: forwards;
 
-  .projectLogo {
-    width: 100%;
-    max-width: 300px;
-    height: auto;
+  .headerWrapper {
+    position: relative;
+    width: max-content;
+    padding-top: 0 !important;
+
+    .zkwallet-logo {
+      height: 55px;
+
+      @media screen and (max-width: $mobile) {
+        height: 35px;
+      }
+    }
+    .badge {
+      position: absolute;
+      left: 100%;
+      bottom: 100%;
+    }
   }
 
   h1 {

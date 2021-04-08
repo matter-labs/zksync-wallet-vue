@@ -1,6 +1,8 @@
 @import "../variables";
 
 .bn-onboard-modal {
+  z-index: 10;
+
   .bn-onboard-custom.bn-onboard-modal-content {
     width: 100%;
   }
@@ -22,9 +24,8 @@
     }
   }
 
-  z-index: 4;
   @media screen and (min-width: $mobile) {
-    background-color: transparent !important;
+    b//background-color: transparent !important;
     .bn-onboard-modal-content {
       width: 85%;
     }

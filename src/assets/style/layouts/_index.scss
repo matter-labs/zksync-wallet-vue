@@ -16,6 +16,9 @@
 
   .tileContainer {
     cursor: pointer;
+    @media screen and (min-width: $mobile) {
+      padding-bottom: 70px;
+    }
 
     &:hover .tile {
       box-shadow: $hoverShadow;

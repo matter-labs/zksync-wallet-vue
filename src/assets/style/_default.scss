@@ -92,6 +92,10 @@ body.inkline {
   &.-dark {
     background-color: $tempDarkBlue;
 
+    .linkText {
+      color: $lightViolet;
+    }
+    
     .projectLogo {
       .logoLetter {
         fill: $mediumGrey;

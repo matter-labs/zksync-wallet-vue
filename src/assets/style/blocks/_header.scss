@@ -322,10 +322,15 @@ body.inkline.-light header {
 body.inkline.-dark header {
   background: $darkViolet;
 
+  .userDropdown .userDropdownAddress .walletLabel {
+    color: $gray;
+  }
   .linksContainer .mainLink {
     color: $white;
   }
   .linksContainer .headerLink {
+    color: $lightViolet;
+
     &.nuxt-link-exact-active {
       color: darken($color: $white, $amount: 15);
       background-color: darken($color: $darkViolet, $amount: 5);
