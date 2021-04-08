@@ -1,12 +1,12 @@
 import { Address } from "@/plugins/types";
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { Wallet } from "zksync";
+import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
+import { Wallet } from "zksync/build";
 import { APP_ZK_SCAN } from "~/plugins/build";
 
 export const state = () => ({
   loggedIn: false,
   selectedWallet: "" as String,
-  loadingHint: "" as String,
+  loadingHint: "" as string,
   address: "" as Address,
   name: "" as string,
 });
@@ -32,7 +32,7 @@ export const mutations = mutationTree(state, {
   setSelectedWallet(state, name: String) {
     state.selectedWallet = name;
   },
-  setLoadingHint(state, text: String) {
+  setLoadingHint(state, text: string) {
     state.loadingHint = text;
   },
   setAddress(state, address: Address) {
@@ -57,7 +57,7 @@ export const getters = getterTree(state, {
   selectedWallet(state): String {
     return state.selectedWallet;
   },
-  loadingHint(state): String {
+  loadingHint(state): string {
     return state.loadingHint;
   },
   loader(state): boolean {
