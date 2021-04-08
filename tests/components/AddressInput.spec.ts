@@ -16,10 +16,10 @@ describe("AddressInput", () => {
     });
 
     test("has no value", () => {
-      expect(wrapper.vm.$data.inputtedWallet).equal("");
-      expect(wrapper.vm.equalValid).equal(false);
-      expect(wrapper.vm.error).equal("");
-      expect(wrapper.find(".walletContainer.error").exequalts()).equal(false);
+      expect(wrapper.vm.$data.inputtedWallet).toBe("");
+      expect(wrapper.vm.equalValid).toBe(false);
+      expect(wrapper.vm.error).toBe("");
+      expect(wrapper.find(".walletContainer.error").exequalts()).toBe(false);
     });
   });
   describe("With value", () => {
@@ -27,19 +27,19 @@ describe("AddressInput", () => {
       wrapper = shallowMount(AddressInput, {
         propsData: { value: "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0" },
       });
-      expect(wrapper.vm.$data.inputtedWallet).equal("0x2D9835a1C1662559975B00AEA00e326D1F9f13d0");
-      expect(wrapper.vm.equalValid).equal(true);
-      expect(wrapper.vm.error).equal("");
-      expect(wrapper.find(".walletContainer.error").exequalts()).equal(false);
+      expect(wrapper.vm.$data.inputtedWallet).toBe("0x2D9835a1C1662559975B00AEA00e326D1F9f13d0");
+      expect(wrapper.vm.equalValid).toBe(true);
+      expect(wrapper.vm.error).toBe("");
+      expect(wrapper.find(".walletContainer.error").exequalts()).toBe(false);
     });
     test("Wrong address", () => {
       wrapper = shallowMount(AddressInput, {
         propsData: { value: "0x312acE2a5Ff974416666B9866F48a8FA9513A517" },
       });
-      expect(wrapper.vm.$data.inputtedWallet).equal("0x312acE2a5Ff974416666B9866F48a8FA9513A517");
-      expect(wrapper.vm.equalValid).equal(false);
-      expect(wrapper.vm.error).equal("Invalid address");
-      expect(wrapper.find(".walletContainer.error").exequalts()).equal(true);
+      expect(wrapper.vm.$data.inputtedWallet).toBe("0x312acE2a5Ff974416666B9866F48a8FA9513A517");
+      expect(wrapper.vm.equalValid).toBe(false);
+      expect(wrapper.vm.error).toBe("Invalid address");
+      expect(wrapper.find(".walletContainer.error").exequalts()).toBe(true);
     });
   });
 
@@ -52,7 +52,7 @@ describe("AddressInput", () => {
     });
 
     test('are properly rendered', () => {
-      expect(choicesWrapper.length).equal(poll.choices.length);
+      expect(choicesWrapper.length).toBe(poll.choices.length);
 
       choices.forEach((choiceWrapper, index) => {
         const choiceBox = choiceWrapper.find('.poll__choice--box');
@@ -67,7 +67,7 @@ describe("AddressInput", () => {
       choices.forEach((choiceWrapper, index) => {
         choiceWrapper.trigger('click');
         const choiceId = poll.choices[index].id;
-        expect(wrapper.vm.$data.selectedChoiceId).equal(choiceId);
+        expect(wrapper.vm.$data.selectedChoiceId).toBe(choiceId);
       });
     });
   });
