@@ -102,7 +102,7 @@
             ).
           </span>
           <br class="desktopOnly" />
-          Processing time: {{ withdrawTime.normal | formatDateTime }}
+          Processing time: {{ withdrawTime.normal }} minutes
         </i-radio>
         <i-radio value="fast">
           Fast withdraw
@@ -120,11 +120,11 @@
             ).
           </span>
           <br class="desktopOnly" />
-          Processing time: {{ withdrawTime.fast | formatTimeAgo }}
+          Processing time: {{ withdrawTime.fast }} minutes
         </i-radio>
       </i-radio-group>
       <div v-else-if="chosenToken && type === 'withdraw' && feesObj" class="secondaryText _text-center _margin-top-1">
-        Only normal withdraw ({{ withdrawTime.normal | formatTimeAgo }}) is available when using different fee token
+        Only normal withdraw ({{ withdrawTime.normal }} minutes) is available when using different fee token
       </div>
 
       <div class="errorText _text-center _margin-top-1">
