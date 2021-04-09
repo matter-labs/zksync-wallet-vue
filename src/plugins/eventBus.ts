@@ -12,7 +12,7 @@ declare module "@nuxt/types" {
 }
 
 const eventBus: Plugin = (context: Context, _inject: Inject) => {
-  const changeNetworkWasSet: boolean = false;
+  const changeNetworkWasSet = false;
 
   const changeAccountHandle = function (data: any | undefined): void {
     context.app.$accessor.toaster.message("Active account changed. Please re-login to used one");

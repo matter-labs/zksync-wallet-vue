@@ -50,7 +50,7 @@ export interface Balance {
 }
 
 export interface Token {
-  id: Number;
+  id: number;
   address: Address;
   balance: string | BigNumber;
   symbol: TokenSymbol;

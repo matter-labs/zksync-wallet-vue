@@ -50,7 +50,7 @@ export const getters = getterTree(state, {
   loggedIn(state): boolean {
     return state.loggedIn;
   },
-  selectedWallet(state): String {
+  selectedWallet(state): string {
     return state.selectedWallet;
   },
   loadingHint(state): string {
@@ -62,7 +62,7 @@ export const getters = getterTree(state, {
   address(state): Address {
     return state.address;
   },
-  name(state): String {
+  name(state): string {
     return state.name;
   },
   zkScanUrl(state: AccountModuleState): string {

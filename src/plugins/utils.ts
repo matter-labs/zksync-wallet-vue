@@ -40,7 +40,7 @@ export default {
     if (!amount || total === 0) {
       return "$0.00";
     }
-    return total < 0.01 ? `<$0.01` : `~$${total.toFixed(2)}`;
+    return total < 0.01 ? "<$0.01" : `~$${total.toFixed(2)}`;
   },
 
   /**

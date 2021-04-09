@@ -24,5 +24,6 @@ module.exports = {
       jsx: false,
     },
     warnOnUnsupportedTypeScriptVersion: true,
+    extraFileExtensions: ".vue",
   },
 };

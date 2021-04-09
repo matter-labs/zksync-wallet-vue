@@ -30,21 +30,21 @@ export const state = () => ({
   onboard: undefined as undefined | API,
   isAccountLocked: false,
   zkTokens: {
-    lastUpdated: 0 as Number,
+    lastUpdated: 0 as number,
     list: [] as Array<Balance>,
   },
   initialTokens: {
-    lastUpdated: 0 as Number,
+    lastUpdated: 0 as number,
     list: [] as Array<Balance>,
   },
   tokenPrices: {} as {
     [symbol: string]: {
-      lastUpdated: Number;
-      price: Number;
+      lastUpdated: number;
+      price: number;
     };
   },
   transactionsHistory: {
-    lastUpdated: 0 as Number,
+    lastUpdated: 0 as number,
     list: [] as Array<Tx>,
   },
   withdrawalProcessingTime: false as
@@ -68,7 +68,7 @@ export const mutations = mutationTree(state, {
   setTokensList(
     state,
     obj: {
-      lastUpdated: Number;
+      lastUpdated: number;
       list: Array<Balance>;
     },
   ) {
@@ -77,7 +77,7 @@ export const mutations = mutationTree(state, {
   setZkTokens(
     state,
     obj: {
-      lastUpdated: Number;
+      lastUpdated: number;
       list: Array<Balance>;
     },
   ) {
@@ -91,8 +91,8 @@ export const mutations = mutationTree(state, {
     }: {
       symbol: TokenSymbol;
       obj: {
-        lastUpdated: Number;
-        price: Number;
+        lastUpdated: number;
+        price: number;
       };
     },
   ) {
@@ -101,7 +101,7 @@ export const mutations = mutationTree(state, {
   setTransactionsList(
     state,
     obj: {
-      lastUpdated: Number;
+      lastUpdated: number;
       list: Array<Tx>;
     },
   ) {
@@ -189,13 +189,13 @@ export const getters = getterTree(state, {
   getOnboard(state): API | undefined {
     return state.onboard;
   },
-  getTokensList(state): { lastUpdated: Number; list: Array<Balance> } {
+  getTokensList(state): { lastUpdated: number; list: Array<Balance> } {
     return state.initialTokens;
   },
   getInitialBalances(state): Array<Balance> {
     return state.initialTokens.list;
   },
-  getzkList(state): { lastUpdated: Number; list: Array<Balance> } {
+  getzkList(state): { lastUpdated: number; list: Array<Balance> } {
     return state.zkTokens;
   },
   getzkBalances(state): Array<Balance> {
@@ -208,8 +208,8 @@ export const getters = getterTree(state, {
     state,
   ): {
     [symbol: string]: {
-      lastUpdated: Number;
-      price: Number;
+      lastUpdated: number;
+      price: number;
     };
   } {
     return state.tokenPrices;
@@ -217,7 +217,7 @@ export const getters = getterTree(state, {
   getTransactionsList(
     state,
   ): {
-    lastUpdated: Number;
+    lastUpdated: number;
     list: Array<Tx>;
   } {
     return state.transactionsHistory;
@@ -534,10 +534,10 @@ export const actions = actionTree(
      * @param firstSelect
      * @returns {Promise<boolean>}
      */
-    async walletRefresh({ getters, dispatch, rootState, state, commit }, firstSelect: boolean = true): Promise<boolean> {
+    async walletRefresh({ getters, dispatch, rootState, state, commit }, firstSelect = true): Promise<boolean> {
       try {
         this.commit("account/setLoadingHint", "Follow the instructions in your wallet");
-        let walletCheck: boolean = false;
+        let walletCheck = false;
         if (firstSelect) {
           walletCheck = (await state.onboard!.walletSelect()) as boolean;
           if (!walletCheck) {

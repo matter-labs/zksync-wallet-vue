@@ -105,7 +105,7 @@ export const actions = actionTree(
         address: tokens[key].address as Address,
         balance: syncWallet?.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0") as string,
         symbol: tokens[key].symbol as TokenSymbol,
-        id: tokens[key].id as Number,
+        id: tokens[key].id as number,
       }));
 
       return {
