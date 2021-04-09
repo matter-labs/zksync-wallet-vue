@@ -1,19 +1,31 @@
-import { AccountModuleState, getters, mutations, state } from "@/store/account";
+import { AccountModuleState, state, mutations, getters } from "@/store/account";
+import { setupTest } from "@nuxt/test-utils/dist";
+
+describe("Integration tests for the stores as a data-models", () => {
+  setupTest({
+    testDir: __dirname,
+    config: {
+      myModule: {
+        test: 123,
+      },
+    },
+  });
+
+  test("initState", () => {
+    expect(accountState.loggedIn).toBe(false);
+    expect(accountState.selectedWallet).toBe("");
+    expect(accountState.loadingHint).toBe("");
+    expect(accountState.address).toBe("");
+  });
+});
 
 let accountState: AccountModuleState;
 
 describe("Account state", () => {
-  beforeEach(() => {
-    accountState = state();
-  });
+  beforeEach(() => {});
 
-  describe("initState", () => {
-    test("works", () => {
-      expect(accountState.loggedIn).toBe(false);
-      expect(accountState.selectedWallet).toBe("");
-      expect(accountState.loadingHint).toBe("");
-      expect(accountState.address).toBe("");
-    });
+  describe("", () => {
+    test("works", () => {});
   });
 });
 
