@@ -1,5 +1,5 @@
 <template>
-  <i-modal v-model="isOpened" size="md">
+  <i-modal v-model="opened" size="md">
     <template slot="header">Allowance</template>
     <p>
       Allowance is used to limit the amount of L1 balance that zkSync will be able to use. It is recomended to leave the field empty, so the unlimited allowance is set and you
@@ -14,7 +14,7 @@ import Vue from "vue";
 export default Vue.extend({
   name: "Allowance",
   computed: {
-    isOpened: {
+    opened: {
       set(val): void {
         if (val === false) {
           this.$accessor.closeActiveModal();

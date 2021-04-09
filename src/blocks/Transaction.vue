@@ -174,15 +174,6 @@
           <span class="linkText" @click="chooseFeeTokenModal = true">Choose fee token</span>
         </div>
       </div>
-      <!-- <div v-if="type === 'withdraw'" class="totalPrice _display-flex _justify-center">
-        <i-tooltip class="_width-100">
-          <div class="_width-100 _display-inline-flex _justify-content-center _margin-top-1">
-            Estimated processing time: 5 hours
-            <i class="ri-question-mark iconInfo" />
-          </div>
-          <div slot="body">Despite all the capabilities of ZK and L2, full withdrawal process may take up to 5 hours and depends on L1</div>
-        </i-tooltip>
-      </div> -->
       <p v-if="!ownAccountUnlocked" class="tileTextBg _margin-top-1">
         To start using your zkSync account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by
         verifying ETH signatures with zero-knowledge proofs. Please bear with us!
@@ -250,16 +241,16 @@ export default Vue.extend({
         type: "",
         explorerLink: "",
         recipient: {
-          address: "" as Address,
+          address: "",
           name: "",
-        } as any,
+        },
         amount: {
-          amount: "" as GweiBalance,
-          token: false as false | Balance,
-        } as any,
+          amount: "",
+          token: false,
+        },
         fee: {
-          amount: "" as GweiBalance,
-          token: false as false | Balance,
+          amount: "",
+          token: false,
         },
       } as TransactionInfo,
 
@@ -292,7 +283,7 @@ export default Vue.extend({
   computed: {
     chosenFeeObj(): GweiBalance | boolean {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
-        return this.feesObj.hasOwnProperty(this.transactionMode) ? ((this.feesObj as FeesObj)[this.transactionMode] as string) : false;
+        return this.feesObj.hasOwnProperty(this.transactionMode) ? (this.feesObj[this.transactionMode] as string) : false;
       }
       return false;
     },
@@ -440,12 +431,6 @@ export default Vue.extend({
       }
       this.feesLoading = true;
       try {
-        console.log({
-          address: this.inputtedAddress,
-          symbol: this.chosenToken?.symbol,
-          feeSymbol: this.feeToken?.symbol,
-          type: this.type,
-        });
         this.feesObj = await this.$accessor.wallet.requestFees({
           address: this.inputtedAddress,
           symbol: this.chosenToken?.symbol,
@@ -640,9 +625,9 @@ export default Vue.extend({
       }
       this.activateAccountFeeLoading = false;
     },
-    async activateAccount(): Promise<string> {
+    async activateAccount(): Promise<void> {
       if (this.activateAccountFee === undefined || !this.feeToken) {
-        return "";
+        return;
       }
       this.error = "";
       this.loading = true;
@@ -684,7 +669,6 @@ export default Vue.extend({
         }
       }
       this.loading = false;
-      return "";
     },
     clearTransactionInfo() {
       this.transactionInfo = {

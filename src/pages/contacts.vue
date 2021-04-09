@@ -13,9 +13,9 @@
         <address-input ref="addressInput" v-model="inputtedWallet" @enter="addContact()" />
         <br />
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
-        <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" @click="deleteContact()"
-          ><i class="ri-delete-bin-line"></i>&nbsp;&nbsp;Delete contact</i-button
-        >
+        <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" @click="deleteContact()">
+          <i class="ri-delete-bin-line"></i>&nbsp;&nbsp;Delete contact
+        </i-button>
         <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
       </div>
     </i-modal>
@@ -33,12 +33,12 @@
           <template slot="body">Add contact</template>
         </i-tooltip>
       </div>
-      <i-input v-if="search.trim() || displayedContactsList.length !== 0" ref="searchInput" v-model="search" placeholder="Filter contacts" autofocus maxlength="20">
+      <i-input v-if="isSearching || hasDisplayedContacts" ref="searchInput" v-model="search" placeholder="Filter contacts" autofocus maxlength="20">
         <i slot="prefix" class="ri-search-line" />
       </i-input>
 
       <div class="contactsListContainer">
-        <div v-if="!search.trim() && displayedContactsList.length === 0" class="nothingFound">
+        <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
           <div>The contact list is empty</div>
           <i-button
             block
@@ -50,13 +50,14 @@
               addContactType = 'add';
               addContactModal = true;
             "
-            >Add contact</i-button
           >
+            Add contact
+          </i-button>
         </div>
-        <div v-else-if="displayedContactsList.length === 0" class="nothingFound">
-          <span
-            >Your search <b>"{{ search }}"</b> did not match any contacts</span
-          >
+        <div v-else-if="!hasDisplayedContacts" class="nothingFound">
+          <span>
+            Your search <b>"{{ search }}"</b> did not match any contacts
+          </span>
         </div>
         <div v-for="(item, index) in displayedContactsList" v-else :key="index" class="contactItem" :class="{ deleted: item.deleted === true }" @click.self="openContact(item)">
           <user-img :wallet="item.address" />
@@ -118,6 +119,7 @@ import addressInput from "@/components/AddressInput.vue";
 
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
+import utils from "@/plugins/utils";
 import { Address, Contact } from "@/plugins/types";
 import Vue from "vue";
 
@@ -154,7 +156,7 @@ export default Vue.extend({
       return this.$accessor.account.address;
     },
     displayedContactsList(): Array<Contact> {
-      return !this.search.trim() ? this.contactsList : this.contactsList.filter((e: Contact) => e.name.toLowerCase().includes(this.search.trim().toLowerCase()));
+      return utils.searchInArr(this.search, this.contactsList, (e: Contact) => e.name);
     },
     openedContact(): null | Contact {
       const wallet = this.$route.query.w;
@@ -172,6 +174,12 @@ export default Vue.extend({
         address: String(wallet),
         name: "",
       };
+    },
+    hasDisplayedContacts(): boolean {
+      return this.displayedContactsList.length !== 0;
+    },
+    isSearching(): boolean {
+      return !!this.search.trim();
     },
   },
   watch: {

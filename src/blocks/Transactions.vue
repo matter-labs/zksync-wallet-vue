@@ -22,7 +22,7 @@ import SingleTransaction from "@/components/SingleTransaction.vue";
 import { Address, Tx } from "@/plugins/types";
 import Vue from "vue";
 
-let updateListInterval = undefined as any;
+let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
   components: {
     SingleTransaction,
@@ -41,7 +41,6 @@ export default Vue.extend({
   },
   data() {
     return {
-      /* transactionsList: [] as Array<Tx>, */
       loading: true,
       addressToNameMap: new Map(),
       loadMoreAvailable: false,
@@ -50,20 +49,18 @@ export default Vue.extend({
     };
   },
   computed: {
-    walletAddressFull(): Address {
+    ownAddress(): Address {
       return this.$accessor.account.address;
     },
     transactionsList(): Array<Tx> {
-      const list = this.checkLoadMore();
-
-      let filteredList = list.filter((e: Tx) => !e.fail_reason);
+      let list = this.$accessor.wallet.getTransactionsHistory;
       if (this.filter) {
-        filteredList = filteredList.filter((item: Tx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
+        list = list.filter((item: Tx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
       if (this.address) {
         const addressLowerCase = this.address.toLowerCase();
-        const myAddressLowerCase = this.walletAddressFull.toLowerCase();
-        filteredList = filteredList.filter((item: Tx) => {
+        const myAddressLowerCase = this.ownAddress.toLowerCase();
+        list = list.filter((item: Tx) => {
           if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
             const addressToLowerCase = item.tx.to?.toLowerCase();
             const addressFromLowerCase = item.tx.from.toLowerCase();
@@ -79,7 +76,7 @@ export default Vue.extend({
           return false;
         });
       }
-      return filteredList;
+      return list;
     },
   },
   mounted() {
@@ -93,14 +90,14 @@ export default Vue.extend({
     async loadTransactions(offset: number = 0): Promise<Array<Tx>> {
       const list = await this.$accessor.wallet.requestTransactionsHistory({ force: false, offset });
       this.totalLoadedItem += list.length;
-      this.loadMoreAvailable = list.length >= 25;
+      this.loadMoreAvailable = list.length >= 25; /* 25 transactions are loaded for each request */
       let filteredList = list;
       if (this.filter) {
         filteredList = filteredList.filter((item: Tx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
       if (this.address) {
         const addressLowerCase = this.address.toLowerCase();
-        const myAddressLowerCase = this.walletAddressFull.toLowerCase();
+        const myAddressLowerCase = this.ownAddress.toLowerCase();
         filteredList = filteredList.filter((item: Tx) => {
           if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
             const addressToLowerCase = item.tx.to?.toLowerCase();
@@ -127,29 +124,20 @@ export default Vue.extend({
         await this.$accessor.toaster.error(error.message ? error.message : "Error while fetching the transactions");
       }
       this.loading = false;
-      console.log(this.transactionsList);
     },
     async loadMore(): Promise<void> {
       await this.autoUpdateList();
       this.loadingMore = true;
       await this.loadTransactions(this.totalLoadedItem);
-      /*
-      @todo: fix it up
-      this.transactionsList.push(...list);
-      */
       this.loadingMore = false;
     },
     autoUpdateList(): void {
       clearInterval(updateListInterval);
       updateListInterval = setInterval(() => {
-        this.loadTransactions();
+        if (this.totalLoadedItem <= 25) {
+          this.loadTransactions();
+        }
       }, 120000);
-    },
-    checkLoadMore() {
-      const listData = this.$accessor.wallet.getTransactionsHistory;
-      this.totalLoadedItem += listData.length;
-      this.loadMoreAvailable = listData.length >= 25;
-      return listData;
     },
   },
 });

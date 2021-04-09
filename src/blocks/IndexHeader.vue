@@ -44,9 +44,9 @@
                 placement="bottom"
                 trigger="manual"
               >
-                <a class="dropDownHandler linkItem _position-top-0" @click.capture="dropdownOpened = !dropdownOpened"
-                  >zkTools <i class="fal" :class="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"></i
-                ></a>
+                <a class="dropDownHandler linkItem _position-top-0" @click.capture="dropdownOpened = !dropdownOpened">
+                  zkTools <i class="fal" :class="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"></i>
+                </a>
                 <i-dropdown-menu v-model="dropdownOpened">
                   <i-dropdown-item v-for="(item, index) in dropdownOptions" :key="index" :href="item.link" target="_blank">{{ item.name }}</i-dropdown-item>
                 </i-dropdown-menu>

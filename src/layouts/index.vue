@@ -29,27 +29,7 @@ export default Vue.extend({
       version: GIT_REVISION_SHORT,
     };
   },
-  watch: {
-    $route: {
-      immediate: true,
-      handler(val, oldVal) {
-        if (!oldVal) {
-          return this.$nextTick(() => {
-            document.documentElement.scrollTop = 0;
-          });
-        }
-        if (val.path !== oldVal.path) {
-          this.$nextTick(() => {
-            document.documentElement.scrollTop = this.$accessor.scroll.getLastScroll as number;
-          });
-        }
-      },
-    },
-  },
   mounted() {
-    if (process.client) {
-      window.history.scrollRestoration = "manual";
-    }
     if (localStorage.getItem("colorTheme")) {
       this.$inkline.config.variant = localStorage.getItem("colorTheme") as "light" | "dark";
     } else {

@@ -15,9 +15,9 @@
           </div>
         </div>
         <div v-if="search && displayedList.length === 0" class="centerBlock">
-          <span
-            >Your search <b>"{{ search }}"</b> did not match any tokens</span
-          >
+          <span>
+            Your search <b>"{{ search }}"</b> did not match any tokens
+          </span>
         </div>
         <div v-else-if="displayedList.length === 0" class="centerBlock">
           <span>No balances yet. Please make a deposit or request money from someone!</span>
@@ -32,6 +32,7 @@
 
 <script lang="ts">
 import NoTokenFound from "@/blocks/modals/NoTokenFound.vue";
+import utils from "@/plugins/utils";
 import { Balance } from "@/plugins/types";
 
 import Vue from "vue";
@@ -64,7 +65,7 @@ export default Vue.extend({
     },
     displayedList(): Array<Balance> {
       let list: Array<Balance>;
-      list = !this.search.trim() ? this.balances : this.balances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
+      list = utils.searchInArr(this.search, this.balances, (e: Balance) => e.symbol);
       if (this.onlyAllowed) {
         list = list.filter((e) => !e.restricted);
       }

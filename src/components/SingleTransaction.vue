@@ -23,8 +23,8 @@
         </i-tooltip>
       </div>
       <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your L1 account</div>
-      <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`"
-        >{{ getAddressName(displayedAddress) }}
+      <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`">
+        {{ getAddressName(displayedAddress) }}
       </nuxt-link>
       <a v-if="ethTx" :href="ethTx" target="_blank" class="linkText">Ethereum Transaction</a>
     </div>
@@ -35,15 +35,15 @@
 </template>
 
 <script lang="ts">
+import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import { Address, Provider, TokenSymbol, Tx } from "@/plugins/types";
-import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 
 import moment from "moment";
 import Vue from "vue";
 
-let getTimeAgoInterval = undefined as any;
+let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
   props: {
     singleTransaction: {
@@ -78,7 +78,7 @@ export default Vue.extend({
         : this.singleTransaction.tx.to;
     },
     transactionStatus(): { text: string; icon: string } {
-      if (this.singleTransaction.success===false) {
+      if (this.singleTransaction.success === false) {
         return {
           text: this.singleTransaction.fail_reason ? this.singleTransaction.fail_reason : "Rejected",
           icon: "rejected ri-close-circle-fill",

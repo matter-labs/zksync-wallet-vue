@@ -15,7 +15,6 @@ const eventBus: Plugin = (context: Context, _inject: Inject) => {
   const changeNetworkWasSet: boolean = false;
 
   const changeAccountHandle = function (data: any | undefined): void {
-    console.log(data);
     context.app.$accessor.toaster.message("Active account changed. Please re-login to used one");
     if (!walletData.get().syncWallet) {
       return;
@@ -25,7 +24,6 @@ const eventBus: Plugin = (context: Context, _inject: Inject) => {
     context.redirect("/");
   };
   const changeNetworkHandle = async function (chainId: string): Promise<void> {
-    console.log(chainId);
     if (!walletData.get().syncWallet) {
       return;
     }

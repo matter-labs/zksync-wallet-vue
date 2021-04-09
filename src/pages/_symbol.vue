@@ -21,9 +21,9 @@
         <div class="_display-flex _justify-content-space-between">
           <div class="infoBlock">
             <div class="balance">
-              <span class="tokenSymbol">{{ symbol }}</span> {{ token.balance }}&nbsp;&nbsp;<span class="balancePrice">{{
-                token.rawBalance | formatUsdAmount(token.tokenPrice, token.symbol)
-              }}</span>
+              <span class="tokenSymbol">{{ symbol }}</span>
+              {{ token.balance }}&nbsp;&nbsp;
+              <span class="balancePrice">{{ token.rawBalance | formatUsdAmount(token.tokenPrice, token.symbol) }}</span>
             </div>
           </div>
           <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">- Withdraw</i-button>

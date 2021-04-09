@@ -5,9 +5,7 @@
       {{ error }}
     </div>
     <div v-if="token" class="_display-flex _justify-content-space-between">
-      <div class="secondaryText">
-        <!-- {{ inputtedAmountBigNumber | formatUsdAmount(token.tokenPrice, token.symbol) }} -->
-      </div>
+      <div></div>
       <div class="linkText minAmount" @click="chooseMinAmount()">
         <transition name="fadeFast">
           <span v-if="minAmount !== '0'">Min: {{ minAmount | formatToken(token.symbol) }}</span>
@@ -51,18 +49,6 @@ export default Vue.extend({
       error: "",
     };
   },
-  computed: {
-    inputtedAmountBigNumber(): string | BigNumber {
-      if (this.inputtedAmount) {
-        try {
-          return utils.parseToken(this.token.symbol, this.inputtedAmount);
-        } catch (error) {
-          return "0";
-        }
-      }
-      return "0";
-    },
-  },
   watch: {
     token: {
       deep: true,
@@ -101,7 +87,6 @@ export default Vue.extend({
     if (this.autofocus) {
       (this.$refs.amountInput as Vue)?.$el?.querySelector("input")?.focus();
     }
-    /* this.validateAmount(this.inputtedAmount); */
   },
   beforeDestroy() {
     this.$emit("error", false);

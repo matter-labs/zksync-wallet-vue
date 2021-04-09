@@ -5,7 +5,7 @@ import { ChangePubKeyFee, ChangePubkeyTypes } from "zksync/build/types";
 
 let updateBalancesTimeout = undefined as any;
 
-interface depositsInterface {
+interface DepositsInterface {
   [tokenSymbol: string]: Array<{
     hash: string;
     amount: string;
@@ -21,7 +21,7 @@ export const state = () => ({
       status: string;
     };
   },
-  deposits: {} as depositsInterface,
+  deposits: {} as DepositsInterface,
   forceUpdateTick: 0 /* Used to force update computed active deposits list */,
   withdrawalTxToEthTx: new Map() as Map<string, string>,
 });
@@ -89,7 +89,7 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    async watchTransaction({ dispatch, commit, state }, { transactionHash, existingTransaction /* , tokenSymbol, type */ }): Promise<void> {
+    async watchTransaction({ dispatch, commit, state }, { transactionHash, existingTransaction }): Promise<void> {
       try {
         if (state.watchedTransactions.hasOwnProperty(transactionHash)) {
           return;
@@ -111,17 +111,9 @@ export const actions = actionTree(
     async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: string; amount: string }): Promise<void> {
       try {
         commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
-        /* await depositTx.awaitEthereumTxCommit();
-        await dispatch("requestBalancesUpdate"); */
         await depositTx.awaitReceipt();
         await dispatch("requestBalancesUpdate");
         commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Committed" });
-
-        // No need to watch tx after tokens were already granted
-        /* await depositTx.awaitVerifyReceipt();
-        console.log("awaitVerifyReceipt received");
-        dispatch("requestBalancesUpdate");
-        commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Verified" }); */
       } catch (error) {
         commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Committed" });
       }

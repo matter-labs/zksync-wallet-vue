@@ -10,8 +10,6 @@ export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
 export declare type Nonce = number | "committed";
 
-export declare type zkOperationType = "withdraw" | "activate" | "deposit" | "transfer" | "unlock";
-export declare type zkOperationFeeType = "fast" | "normal" | "slow";
 export interface Signature {
   pubKey: string;
   signature: string;
@@ -444,7 +442,7 @@ export declare interface TransactionInfo {
   amount: any;
   success: boolean;
   fee: { amount: string; token: false | Balance };
-  recipient: any;
+  recipient?: any;
   continueBtnText?: string;
   type: string;
   hash: string;
@@ -480,6 +478,6 @@ export declare interface zkEventBus {
   changeAccountHandle: (data: any) => void;
 }
 
-export declare interface depositsInterface {
+export declare interface DepositsInterface {
   [tokenSymbol: string]: Array<depositTx>;
 }

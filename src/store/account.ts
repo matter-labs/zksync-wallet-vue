@@ -5,10 +5,10 @@ import { APP_ZK_SCAN } from "~/plugins/build";
 
 export const state = () => ({
   loggedIn: false,
-  selectedWallet: "" as String,
-  loadingHint: "" as string,
+  selectedWallet: "",
+  loadingHint: "",
   address: "" as Address,
-  name: "" as string,
+  name: "",
 });
 
 function getNameFromAddress(userAddress: Address): string {
@@ -16,11 +16,7 @@ function getNameFromAddress(userAddress: Address): string {
   if (walletName.trim().length > 1 && walletName !== userAddress) {
     return walletName;
   }
-  let address: string = userAddress;
-  if (address.length > 16) {
-    address = address.substr(0, 5) + "..." + address.substr(address.length - 5, address.length - 1);
-  }
-  return address;
+  return userAddress.substr(0, 5) + "..." + userAddress.substr(userAddress.length - 5, userAddress.length - 1);
 }
 
 export type AccountModuleState = ReturnType<typeof state>;
@@ -29,7 +25,7 @@ export const mutations = mutationTree(state, {
   setLoggedIn(state, loggedInState: boolean) {
     state.loggedIn = loggedInState;
   },
-  setSelectedWallet(state, name: String) {
+  setSelectedWallet(state, name: string) {
     state.selectedWallet = name;
   },
   setLoadingHint(state, text: string) {

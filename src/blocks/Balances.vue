@@ -21,7 +21,7 @@
         <span>Balances in L2</span>
         <i class="ri-question-mark" @click="balanceInfoModal = true"></i>
       </div>
-      <div v-if="displayedList.length === 0 && loading === false" class="centerBlock">
+      <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
         <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
         <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
       </div>
@@ -40,10 +40,10 @@
         <div v-if="loading" class="centerBlock">
           <loader />
         </div>
-        <div v-else-if="search && displayedList.length === 0" class="centerBlock">
-          <span
-            >Your search <strong>"{{ search }}"</strong> did not match any tokens</span
-          >
+        <div v-else-if="isSearching && !hasDisplayedBalances" class="centerBlock">
+          <span>
+            Your search <strong>"{{ search }}"</strong> did not match any tokens
+          </span>
         </div>
         <div v-else class="balancesList">
           <nuxt-link v-for="(item, index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
@@ -51,12 +51,12 @@
             <div class="rightSide">
               <div v-if="item.rawBalance" class="rowItem">
                 <div class="total">
-                  <span class="balancePrice">{{ item.rawBalance | formatUsdAmount(item.tokenPrice, item.symbol) }}</span
-                  >&nbsp;&nbsp;{{ item.rawBalance | formatToken(item.symbol) }}
+                  <span class="balancePrice">{{ item.rawBalance | formatUsdAmount(item.tokenPrice, item.symbol) }}</span>
+                  &nbsp;&nbsp;{{ item.rawBalance | formatToken(item.symbol) }}
                 </div>
                 <div class="status">
                   <i-tooltip>
-                    <i v-if="item.status === 'Verified' && !activeDeposits[item.symbol]" class="verified ri-check-double-line"></i>
+                    <i v-if="item.status === 'Verified'" class="verified ri-check-double-line"></i>
                     <i v-else class="committed ri-check-line"></i>
                     <template slot="body">{{ item.status }}</template>
                   </i-tooltip>
@@ -75,14 +75,15 @@
           </nuxt-link>
         </div>
       </div>
-      <mint :display="displayedList.length === 0 && loading === false" class="_margin-top-2" @received="getBalances()" />
+      <mint :display="!isSearching && !hasDisplayedBalances && loading === false" class="_margin-top-2" @received="getBalances()" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Mint from "@/blocks/Mint.vue";
-import { Balance, depositsInterface } from "@/plugins/types";
+import utils from "@/plugins/utils";
+import { Balance, DepositsInterface } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 
@@ -93,7 +94,7 @@ type DisplayToken = {
   status: string | undefined;
 };
 
-let updateListInterval = undefined as any;
+let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
   components: {
     Mint,
@@ -130,19 +131,18 @@ export default Vue.extend({
             rawBalance: undefined,
             status: undefined,
           };
+        } else {
+          returnTokens[symbol].status = "Pending";
         }
       }
       const finalList = Object.keys(returnTokens).map((e) => returnTokens[e]);
-      if (!this.search.trim()) {
-        return finalList;
-      }
-      return finalList.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
+      return utils.searchInArr(this.search, finalList, (e: DisplayToken) => e.symbol);
     },
     activeDeposits() {
       // eslint-disable-next-line no-unused-expressions
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
-      const deposits = this.$accessor.transaction.depositList as depositsInterface;
-      const activeDeposits = {} as depositsInterface;
+      const deposits = this.$accessor.transaction.depositList as DepositsInterface;
+      const activeDeposits = {} as DepositsInterface;
       const finalDeposits = {} as {
         [tokenSymbol: string]: BigNumber;
       };
@@ -160,6 +160,12 @@ export default Vue.extend({
         }
       }
       return finalDeposits;
+    },
+    hasDisplayedBalances(): boolean {
+      return this.displayedList.length !== 0;
+    },
+    isSearching(): boolean {
+      return !!this.search.trim();
     },
   },
   beforeDestroy() {
