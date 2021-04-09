@@ -1,5 +1,5 @@
 <template>
-  <div class="mintTokensContainer">
+  <div v-if="display" class="mintTokensContainer">
     <i-modal v-model="onlyTestNetModal" size="md">
       <template slot="header">Matter Labs Trial Token</template>
       <div>
