@@ -370,7 +370,7 @@ export declare class Wallet {
 
   isSigningKeySet(): Promise<boolean>;
   signSetSigningKey(changePubKey: { feeToken: TokenLike; fee: BigNumberish; nonce: number; onchainAuth: boolean }): Promise<SignedTransaction>;
-  setSigningKey(changePubKey: { feeToken: TokenLike; fee?: BigNumberish; nonce?: Nonce; onchainAuth?: boolean }): Promise<Transaction>;
+  setSigningKey(changePubKey: { feeToken: TokenLike; fee?: BigNumberish; nonce?: Nonce; ethAuthType: "ECDSA" | "ECDSALegacyMessage" }): Promise<Transaction>;
   isOnchainAuthSigningKeySet(nonce?: Nonce): Promise<boolean>;
   onchainAuthSigningKey(nonce?: Nonce, ethTxOptions?: ethers.providers.TransactionRequest): Promise<ContractTransaction>;
   getCurrentPubKeyHash(): Promise<PubKeyHash>;
@@ -445,6 +445,7 @@ export declare interface TransactionInfo {
   success: boolean;
   fee: { amount: string; token: false | Balance };
   recipient: any;
+  continueBtnText?: string;
   type: string;
   hash: string;
   explorerLink: string;
