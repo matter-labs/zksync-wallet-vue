@@ -21,7 +21,7 @@
         <span>Balances in L2</span>
         <i class="ri-question-mark" @click="balanceInfoModal = true"></i>
       </div>
-      <div v-if="zkBalances.length === 0 && loading === false" class="centerBlock">
+      <div v-if="displayedList.length === 0 && loading === false" class="centerBlock">
         <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
         <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
       </div>
@@ -49,10 +49,10 @@
           <nuxt-link v-for="(item, index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
             <div class="tokenSymbol">{{ item.symbol }}</div>
             <div class="rightSide">
-              <div class="rowItem">
+              <div v-if="item.rawBalance" class="rowItem">
                 <div class="total">
                   <span class="balancePrice">{{ item.rawBalance | formatUsdAmount(item.tokenPrice, item.symbol) }}</span
-                  >&nbsp;&nbsp;{{ item.balance }}
+                  >&nbsp;&nbsp;{{ item.rawBalance | formatToken(item.symbol) }}
                 </div>
                 <div class="status">
                   <i-tooltip>
@@ -75,7 +75,7 @@
           </nuxt-link>
         </div>
       </div>
-      <mint :display="zkBalances.length === 0 && loading === false" class="_margin-top-2" @received="getBalances()" />
+      <mint :display="displayedList.length === 0 && loading === false" class="_margin-top-2" @received="getBalances()" />
     </div>
   </div>
 </template>
@@ -85,6 +85,13 @@ import Mint from "@/blocks/Mint.vue";
 import { Balance, depositsInterface } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
+
+type DisplayToken = {
+  symbol: string;
+  tokenPrice: number;
+  rawBalance: BigNumber | undefined;
+  status: string | undefined;
+};
 
 let updateListInterval = undefined as any;
 export default Vue.extend({
@@ -102,11 +109,34 @@ export default Vue.extend({
     zkBalances(): Balance[] {
       return this.$accessor.wallet.getzkBalances;
     },
-    displayedList(): Balance[] {
-      if (!this.search.trim()) {
-        return this.zkBalances;
+    displayedList(): DisplayToken[] {
+      const allTokenPrices = this.$accessor.tokens.getTokenPrices;
+      const returnTokens = {} as {
+        [symbol: string]: DisplayToken;
+      };
+      this.zkBalances.forEach((token) => {
+        returnTokens[token.symbol] = {
+          symbol: token.symbol,
+          tokenPrice: token.tokenPrice,
+          rawBalance: token.rawBalance,
+          status: token.status,
+        };
+      });
+      for (const symbol in this.activeDeposits) {
+        if (!returnTokens.hasOwnProperty(symbol)) {
+          returnTokens[symbol] = {
+            symbol,
+            tokenPrice: allTokenPrices[symbol].price,
+            rawBalance: undefined,
+            status: undefined,
+          };
+        }
       }
-      return this.zkBalances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
+      const finalList = Object.keys(returnTokens).map((e) => returnTokens[e]);
+      if (!this.search.trim()) {
+        return finalList;
+      }
+      return finalList.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
     },
     activeDeposits() {
       // eslint-disable-next-line no-unused-expressions
@@ -141,7 +171,7 @@ export default Vue.extend({
   },
   methods: {
     async getBalances(): Promise<void> {
-      if (this.zkBalances.length === 0) {
+      if (this.displayedList.length === 0) {
         this.loading = true;
       }
       await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });

@@ -78,7 +78,7 @@ export default Vue.extend({
         : this.singleTransaction.tx.to;
     },
     transactionStatus(): { text: string; icon: string } {
-      if (!this.singleTransaction.success) {
+      if (this.singleTransaction.success===false) {
         return {
           text: this.singleTransaction.fail_reason ? this.singleTransaction.fail_reason : "Rejected",
           icon: "rejected ri-close-circle-fill",

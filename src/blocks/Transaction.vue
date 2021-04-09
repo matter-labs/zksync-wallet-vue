@@ -495,6 +495,7 @@ export default Vue.extend({
         } else {
           this.error = "Transaction error";
         }
+        this.clearTransactionInfo();
       }
       this.tip = "";
       this.loading = false;
