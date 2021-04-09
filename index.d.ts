@@ -1,8 +1,7 @@
 /**
  * zkSync Types
  */
-import { accessorType } from "@/store";
-import IPrototype from "@inkline/inkline";
+import { accessorType } from "~/store";
 
 declare module "vue/types/vue" {
   interface Vue {
@@ -13,6 +12,5 @@ declare module "vue/types/vue" {
 declare module "@nuxt/types" {
   interface NuxtAppOptions {
     $accessor: typeof accessorType;
-    $inkline: typeof IPrototype;
   }
 }

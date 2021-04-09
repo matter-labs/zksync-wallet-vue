@@ -1,5 +1,3 @@
-@import "../variables";
-
 header {
   width: 100%;
   height: 80px;
@@ -7,10 +5,10 @@ header {
   transition: background-color $transition1;
   &.loggedInHeader {
     @media screen and (max-width: $mobile) {
-      z-index: 9;
       position: fixed;
-      left: 0;
       top: 0;
+      left: 0;
+      z-index: 9;
       box-shadow: $shadowBottom;
     }
     @media screen and (min-width: 992px) and (max-width: 1200px) {
@@ -62,9 +60,9 @@ header {
     }
 
     .logoLinkContainer {
-      height: 100%;
       display: flex;
       align-items: center;
+      height: 100%;
     }
     .headerWrapper {
       height: 30px !important;
@@ -153,39 +151,39 @@ header {
   @media screen and (max-width: $mobile) {
     .pagesContainerRow {
       position: absolute;
-      left: 0;
       top: 0;
+      left: 0;
     }
     .pagesContainer {
-      z-index: 9;
       position: fixed;
-      left: 0;
       bottom: -1px;
+      left: 0;
+      z-index: 9;
+      grid-gap: 2px;
+      justify-content: center;
       width: 100%;
       height: 80px;
       padding: 6px 5vw;
       background-color: $darkViolet;
-      justify-content: center;
-      grid-gap: 2px;
       box-shadow: $shadowTop;
 
       .headerLink {
-        font-size: 14px;
-        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
+        height: 100%;
         padding: 9px 10px;
+        font-size: 14px;
         &.nuxt-link-exact-active {
           font-weight: 400;
         }
 
         i {
           display: block;
-          text-align: center;
-          font-size: 20px;
-          padding-bottom: 5px;
           padding-top: 2px;
+          padding-bottom: 5px;
+          font-size: 20px;
+          text-align: center;
         }
       }
     }

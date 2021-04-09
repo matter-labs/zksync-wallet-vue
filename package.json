@@ -1,5 +1,5 @@
 {
-  "name": "zksync-zkwallet-vue",
+  "name": "zksync-dapp-wallet",
   "author": "Matter Labs",
   "private": true,
   "browserslist": {
@@ -63,32 +63,21 @@
     "generate": "nuxt generate",
     "test": "jest",
     "format": "prettier --write",
-    "lint-ts": "eslint --fix --ext \"**/*.{ts, js, vue}\"",
+    "lint-ts": "eslint --fix --ext .ts,.js,.vue ./src",
     "lint-css": "stylelint --fix \"**/*.scss\""
   },
   "stylelint": {
     "extends": [
-      "stylelint-config-recommended",
-      "stylelint-config-rational-order"
+      "stylelint-config-recommended"
     ],
     "plugins": [
-      "stylelint-order",
-      "stylelint-scss",
-      "stylelint-config-rational-order/plugin"
+      "stylelint-scss"
     ],
     "rules": {
       "no-empty-source": [
         true,
         {
           "severity": "warning"
-        }
-      ],
-      "order/properties-order": [],
-      "plugin/rational-order": [
-        true,
-        {
-          "border-in-box-model": false,
-          "empty-line-between-groups": false
         }
       ],
       "selector-type-no-unknown": [
@@ -107,84 +96,69 @@
   "dependencies": {
     "@inkline/nuxt": "^2.3.6",
     "@matterlabs/zk-wallet-onboarding": "1.18.6",
-    "@nuxt/components": "2.1.4",
-    "@nuxt/typescript-runtime": "^2.1.0",
+    "@nuxt/components": "2.1.6",
+    "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.0.3",
     "@nuxtjs/toast": "^3.3.1",
-    "@types/lodash": "^4.14.168",
-    "@walletconnect/web3-provider": "^1.4.1",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.1.0",
     "lottie-web": "^5.7.7",
     "moment": "^2.29.1",
-    "nuxt": "^2.15.4",
+    "nuxt": "latest",
     "nuxt-i18n": "^6.22.3",
     "nuxt-typed-vuex": "^0.1.22",
     "nuxt-webfontloader": "^1.1.0",
     "qrcode": "^1.4.4",
     "typed-vuex": "^0.1.22",
-    "vue-property-decorator": "^9.1.2",
+    "vue": "latest",
     "vue-qrcode": "^0.3.5",
     "vue-scrollto": "^2.20.0",
-    "walletlink": "^2.0.3",
     "web3": "^1.3.5",
     "zksync": "^0.10.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.14",
-    "@babel/plugin-transform-runtime": "^7.13.10",
-    "@cypress/vue": "^2.2.0",
-    "@cypress/webpack-preprocessor": "^5.7.0",
-    "@nuxt/test-utils": "0.2.1",
-    "@nuxt/types": "^2.15.4",
-    "@nuxt/typescript": "^2.8.1",
-    "@nuxt/typescript-build": "^2.1.0",
+    "@nuxt/test-utils": "0.2.2",
+    "@nuxt/types": "latest",
+    "@nuxt/typescript-build": "latest",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config-typescript": "^6.0.0",
-    "@nuxtjs/style-resources": "^1.0.0",
-    "@types/babel__plugin-transform-runtime": "^7.9.1",
+    "@nuxtjs/style-resources": "latest",
     "@types/jest": "^26.0.22",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^8.2.2",
+    "@vue/test-utils": "^1.1.3",
     "commitlint": "^12.0.1",
-    "cypress": "^7.0.0",
-    "cypress-nuxt": "^1.3.1",
     "dotenv": "^8.2.0",
     "eslint": "^7.23.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-jest": "^24.3.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "3.3.1",
-    "eslint-plugin-prettier-vue": "^2.1.1",
-    "eslint-plugin-promise": "^4.3.1",
-    "eslint-plugin-vue": "^7.8.0",
     "fork-ts-checker-webpack-plugin": "^6.2.0",
+    "jesse-mock-web3-provider": "^0.0.2",
     "jest": "^26.6.3",
-    "lodash": "4.17.21",
     "node-sass": "4.14.1",
+    "nuxt-property-decorator": "^2.9.1",
     "prettier": "^2.2.1",
     "sass-loader": "10.1.1",
     "stylelint": "^13.12.0",
-    "stylelint-config-rational-order": "^0.1.2",
     "stylelint-config-recommended": "^4.0.0",
     "stylelint-high-performance-animation": "^1.5.2",
-    "stylelint-order": "^4.1.0",
     "stylelint-scss": "^3.19.0",
-    "ts-jest": "^26.4.4",
+    "ts-jest": "^26.5.4",
     "ts-loader": "^8.1.0",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.3",
+    "typescript": "^4.2.4",
     "vue-class-component": "^7.2.6",
     "vue-jest": "^3.0.7",
     "vuex": "^3.6.2",
-    "webpack": "^4.46.0"
+    "webpack": "4.46.0"
   },
-  "eslintConfig": {
-    "extends": "@nuxtjs/eslint-config-typescript"
+  "peerDependencies": {
+    "playwright": "1.10.0"
+  },
+  "resolutions": {
+    "babel-core": "7.0.0-bridge.0"
+  },
+  "fork-ts-checker": {
+    "typescript": true
   }
 }

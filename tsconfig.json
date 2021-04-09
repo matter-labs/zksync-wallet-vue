@@ -8,56 +8,41 @@
     "lib": [
       "dom",
       "ESNext",
-      "ESNext.AsyncIterable"
+      "ESNext.AsyncIterable",
+      "DOM"
     ],
     "esModuleInterop": true,
     "allowJs": true,
     "sourceMap": true,
     "strict": true,
     "noEmit": true,
+    "experimentalDecorators": true,
     "baseUrl": "./src",
     "paths": {
-      "~/*": [
-        "./*"
-      ],
-      "@/*": [
-        "./*"
-      ],
-      "~~/*": [
-        "./*"
-      ],
-      "@@/*": [
-        "./*"
-      ]
+      "@/*": ["*"],
+      "~/*": ["*"]
     },
     "types": [
       "vue-meta",
+      "@nuxt/vue-app",
       "@types/node",
       "@types/jest",
       "@nuxt/types",
       "@nuxtjs/axios",
-      "@nuxt/vue-app",
-      "lodash",
-      "@nuxtjs/eslint-config-typescript",
-      "@nuxtjs/axios",
-      "@nuxtjs/style-resources",
-      "@inkline/inkline",
+      "@/types/*.d.ts",
       "@inkline/nuxt",
       "@nuxtjs/sentry",
       "@nuxtjs/toast",
+      "@inkline/inkline/types",
       "nuxt-i18n",
-      "@types/node",
-      "@nuxt/types"
     ]
   },
   "exclude": [
     "node_modules",
-    ".yarn",
+    ".nuxt",
     "dist",
+    ".yarn",
     "public",
-    "cypress",
-    "src/blocks/Transaction",
-    "tests",
     ".github",
     "environments"
   ]

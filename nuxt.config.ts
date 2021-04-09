@@ -1,15 +1,14 @@
-import { NuxtConfig } from "@nuxt/types/config";
-
-require("dotenv").config();
+import { NuxtConfig } from "@nuxt/types/index";
 
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
 const env = process.env.APP_ENV ?? "prod";
 const srcDir = "src";
-const pageTitle = `Modern dApp with zkSync powers`;
-const pageImg = `https://zksync.io/social.jpg`;
+const pageTitle = "Modern dApp with zkSync powers";
+const pageImg = "https://zksync.io/social.jpg";
 
 const pageTitleTemplate = `zkWallet on ${process.env.APP_CURRENT_NETWORK?.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK?.slice(1)}`;
-const pageDescription = `A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum`;
+const pageDescription =
+  "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
 crypto payments, zkWallet, cryptowallet`;
 
@@ -152,7 +151,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxt/typescript-build", "nuxt-typed-vuex", ["@nuxtjs/dotenv", { path: __dirname }]],
+  buildModules: ["@nuxtjs/style-resources", "@nuxt/typescript-build", "nuxt-typed-vuex", ["@nuxtjs/dotenv", { path: __dirname }]],
 
   /*
    ** Nuxt.js modules
@@ -163,7 +162,6 @@ const config: NuxtConfig = {
     "@nuxtjs/toast",
     "@nuxtjs/google-gtag",
     "@inkline/nuxt",
-    "@nuxtjs/style-resources",
     "nuxt-webfontloader",
     [
       "nuxt-i18n",
@@ -208,7 +206,7 @@ const config: NuxtConfig = {
     },
   },
   styleResources: {
-    scss: "@/assets/style/_variables.scss",
+    scss: ["@/assets/style/vars/*.scss"],
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
@@ -245,7 +243,7 @@ const config: NuxtConfig = {
   typescript: {
     typeCheck: {
       eslint: {
-        files: "./**/*.{ts,js,vue}",
+        files: `${srcDir}/**/*.{ts,js,vue}`,
       },
     },
   },

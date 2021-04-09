@@ -1,8 +1,9 @@
 // Core
-@import "./variables";
+
+@import "./components/custom/input.scss";
+@import "./components/custom/button.scss";
+@import "./components/custom/alert.scss";
 @import "./default";
-@import "./transitions";
-@import "./fonts";
 
 //Layouts
 @import "./layouts/default";
@@ -14,7 +15,6 @@
 @import "./blocks/footer";
 @import "./blocks/socialBlock";
 @import "./blocks/logo";
-@import "./blocks/investors";
 @import "./blocks/onboard";
 @import "./blocks/mint";
 @import "./blocks/loggingInLoader";

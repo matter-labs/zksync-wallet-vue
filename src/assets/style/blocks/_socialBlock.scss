@@ -12,8 +12,8 @@
     width: 20px;
     height: 20px;
     color: $violet;
-    transition: color $transition1;
     text-decoration: none;
+    transition: color $transition1;
     &:hover {
       color: $lightViolet !important;
     }

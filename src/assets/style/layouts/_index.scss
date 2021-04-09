@@ -1,5 +1,3 @@
-@import "../variables";
-
 .indexLayout {
   .routerContainer {
     min-height: $minRouteHeight;
@@ -30,8 +28,8 @@
       padding: 20px;
       background-color: $white;
       border-radius: 27px;
-      transition: $transition1;
       box-shadow: $tileShadow;
+      transition: $transition1;
 
       img {
         width: 100%;

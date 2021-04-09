@@ -1,6 +1,3 @@
-@import "variables";
-@import "components/custom/custom";
-
 #__nuxt,
 #__layout,
 .defaultLayout {
@@ -95,7 +92,7 @@ body.inkline {
     .linkText {
       color: $lightViolet;
     }
-    
+
     .projectLogo {
       .logoLetter {
         fill: $mediumGrey;

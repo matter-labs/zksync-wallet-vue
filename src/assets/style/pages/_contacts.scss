@@ -1,5 +1,3 @@
-@import "../variables";
-
 .contactsPage {
   .isDeleted {
     color: $red;
@@ -124,8 +122,8 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    text-align: center;
     overflow: hidden;
+    text-align: center;
   }
 }
 
