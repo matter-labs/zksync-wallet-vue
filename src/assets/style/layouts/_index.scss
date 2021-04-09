@@ -2,7 +2,7 @@
 
 .indexLayout {
   .routerContainer {
-    min-height: $minRouteHeight;
+    min-height: calc(100vh - 70px - 80px);
     @media (max-width: $mobile) {
       min-height: auto;
     }

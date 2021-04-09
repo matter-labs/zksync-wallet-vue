@@ -1,4 +1,5 @@
 footer {
+  position: relative;
   padding-right: 16px;
   padding-left: 16px;
 
@@ -62,6 +63,10 @@ footer {
         transform: translateY(-2px);
       }
     }
+  }
+  
+  .floating-on-mobile {
+    transform: translateY(-5px);
   }
 
   @media (max-width: 992px) {
