@@ -136,7 +136,10 @@
           <i v-if="type === 'withdraw'" class="ri-hand-coin-fill"></i>
           <i v-else-if="type === 'transfer'" class="ri-send-plane-fill"></i>
         </template>
-        {{ !ownAccountUnlocked ? "Activate Account" : transactionTypeName }}
+        <span>
+          <span v-if="!ownAccountUnlocked">Activate Account and </span>
+          <span>{{ transactionTypeName }}</span>
+        </span>
       </i-button>
 
       <div v-if="!enoughFeeToken" class="errorText _text-center _margin-top-1">
@@ -181,8 +184,8 @@
         </i-tooltip>
       </div> -->
       <p v-if="!ownAccountUnlocked" class="tileTextBg _margin-top-1">
-        To start using your account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by verifying ETH
-        signatures with zero-knowledge proofs. Please bear with us!
+        To start using your zkSync account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by
+        verifying ETH signatures with zero-knowledge proofs. Please bear with us!
       </p>
     </div>
   </div>
@@ -346,8 +349,8 @@ export default Vue.extend({
       return BigNumber.from(this.chosenFeeToken.rawBalance).gt(feeAmount);
     },
     buttonDisabled(): boolean {
-      if (!this.ownAccountUnlocked) {
-        return !(this.feeToken && this.activateAccountFee && !this.activateAccountFeeLoading && this.enoughFeeToken);
+      if (!this.ownAccountUnlocked && !(this.feeToken && this.activateAccountFee && !this.activateAccountFeeLoading && this.enoughFeeToken)) {
+        return true;
       }
       return !this.inputtedAddress || !this.inputtedAmount || !this.chosenToken || this.feesLoading || this.cantFindFeeToken || !this.enoughFeeToken;
     },
@@ -458,7 +461,7 @@ export default Vue.extend({
       this.withdrawTime = await this.$accessor.wallet.requestWithdrawalProcessingTime();
     },
     async commitTransaction(): Promise<void> {
-      if (!this.inputtedAmount && this.ownAccountUnlocked) {
+      if (!this.inputtedAmount) {
         // @ts-ignore: Unreachable code error
         (this.$refs.amountInput as Vue).emitValue(this.inputtedAmount);
       }
@@ -680,7 +683,6 @@ export default Vue.extend({
         }
       }
       this.loading = false;
-      this.transactionInfo.type = "";
       return "";
     },
     clearTransactionInfo() {
@@ -716,7 +718,11 @@ export default Vue.extend({
       this.transactionInfo.recipient = undefined;
     },
     successBlockContinue() {
+      if (this.error) {
+        return;
+      }
       this.clearTransactionInfo();
+      this.commitTransaction();
     },
   },
 });
