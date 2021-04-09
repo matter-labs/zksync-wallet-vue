@@ -1,8 +1,8 @@
-type networkIDS = {
+type NetworkIDS = {
   [key: string]: number;
 };
 
-const _ETHER_NETWORK_ID_DICTIONARY: networkIDS = {
+const _ETHER_NETWORK_ID_DICTIONARY: NetworkIDS = {
   rinkeby: 4,
   ropsten: 3,
   mainnet: 1,

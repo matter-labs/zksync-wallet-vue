@@ -26,7 +26,6 @@
       </i-row>
       <i-row center class="_margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap badge outline-white -secondary">
         <a href="https://zksync.io" target="_blank" class="poweredBy">
-          <!-- <span>Powered By</span> -->
           <logo />
           <span>Ecosystem</span>
         </a>

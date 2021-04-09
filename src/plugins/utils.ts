@@ -9,24 +9,14 @@ import { BigNumberish, utils } from "ethers";
  * @param amount
  * @return {BigNumber|*}
  */
-const parseToken = (symbol: TokenSymbol, amount: DecimalBalance | number) => {
-  /**
-   * skip already bignumber
-   */
-  if (typeof amount === "object") {
-    return amount;
-  }
-  if (typeof amount === "number") {
-    const tokenDecimals = walletData.get().syncProvider!.tokenSet.resolveTokenDecimals(symbol);
-    amount = amount.toFixed(tokenDecimals);
-  }
+function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
   return walletData.get().syncProvider!.tokenSet.parseToken(symbol, amount.toString());
-};
+}
 
-const handleFormatToken = (symbol: TokenSymbol, amount: GweiBalance) => {
-  if (!amount || amount === "undefined") return "0";
+function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance | undefined) {
+  if (!amount) return "0";
   return walletData.get().syncProvider!.tokenSet.formatToken(symbol, amount);
-};
+}
 
 export default {
   parseToken,
@@ -43,8 +33,6 @@ export default {
     };
   },
 
-  handleTimeAmount: (time: number, string: string) => `${time} ${string}${time > 1 ? "s" : ""}`,
-
   handleFormatToken,
 
   getFormattedTotalPrice: (price: number, amount: number) => {
@@ -56,17 +44,14 @@ export default {
   },
 
   /**
-   * @todo Optimize sorting
-   *
    * @param a
    * @param b
    * @return {number}
    */
-  sortTokensById: (a: Token, b: Token) => {
+  compareTokensById: (a: Token, b: Token) => {
     if (a.id < b.id) {
       return -1;
-    }
-    if (a.id > b.id) {
+    } else if (a.id > b.id) {
       return 1;
     }
     return 0;
@@ -82,11 +67,19 @@ export default {
     return a.symbol.localeCompare(b.symbol);
   },
 
-  isAmountPackable: (amount: String): boolean => {
-    return zkUtils.isTransactionAmountPackable(amount as BigNumberish);
+  isAmountPackable: (amount: BigNumberish): boolean => {
+    return zkUtils.isTransactionAmountPackable(amount);
   },
 
   validateAddress: (address: Address): boolean => {
     return utils.isAddress(address);
+  },
+
+  searchInArr: (search: string, list: Array<any>, searchParam: Function) => {
+    if (!search.trim()) {
+      return list;
+    }
+    search = search.trim().toLowerCase();
+    return list.filter((e) => String(searchParam(e)).toLowerCase().includes(search));
   },
 };

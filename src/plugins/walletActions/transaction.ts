@@ -4,7 +4,7 @@ import { accessorType } from "@/store";
 import { Withdraw } from "zksync/build/types";
 
 /**
- * Transaction processing action
+ * Make zkSync transaction
  *
  * @param {Address} address
  * @param {TokenSymbol} token
@@ -50,12 +50,12 @@ export const transaction = async (
       amount: amountBigValue,
       fee: feeBigValue,
     })) as Transaction;
-    store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "withdraw" });
+    store.transaction.watchTransaction({ transactionHash: transaction.txHash });
     return transaction;
   }
   const transferTransaction: Transaction[] = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
   for (let a = 0; a < transferTransaction.length; a++) {
-    store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash, tokenSymbol: a === 0 ? token : feeToken, type: "withdraw" });
+    store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash });
   }
   return transferTransaction;
 };
@@ -94,76 +94,56 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       fee: feeBigValue,
       fastProcessing: fastWithdraw,
     });
-    store.transaction.watchTransaction({ transactionHash: transaction.txHash, tokenSymbol: token, type: "transfer" });
+    store.transaction.watchTransaction({ transactionHash: transaction.txHash });
     return transaction;
   } else {
-    const withdrawals = [
-      {
-        ethAddress: address,
-        amount: amountBigValue,
-        fee: "0",
-        token,
-      },
-    ];
-    const transfers = [
-      {
-        to: syncWallet!.address(),
-        token: feeToken,
-        amount: "0",
-        fee: feeBigValue,
-      },
-    ];
-    if (!syncWallet!.signer) {
-      throw new Error("zkSync signer is required for sending zksync transactions.");
-    } else if (transfers.length === 0) {
-      throw new Error("No transfers in queue");
-    }
+    const withdrawawTx = {
+      ethAddress: address,
+      amount: amountBigValue,
+      fee: "0",
+      token,
+    };
+    const transferTx = {
+      to: syncWallet!.address(),
+      token: feeToken,
+      amount: "0",
+      fee: feeBigValue,
+    };
 
     const signedTransactions = [] as Array<{
       tx: Withdraw;
       signature: any;
     }>;
-    let signWithdrawTransaction = null;
 
-    let nextNonce = await syncWallet!.getNonce();
+    const nonce = await syncWallet!.getNonce();
 
-    for (const item of withdrawals) {
-      const nonce = nextNonce;
-      nextNonce += 1;
+    const signedWithdrawTransaction = await syncWallet!
+      .signWithdrawFromSyncToEthereum({
+        ...withdrawawTx,
+        nonce,
+      })
+      .catch((error) => {
+        throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
+      });
 
-      signWithdrawTransaction = await syncWallet!
-        .signWithdrawFromSyncToEthereum({
-          ...item,
-          nonce,
-        })
-        .catch((error) => {
-          throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
-        });
+    signedTransactions.push({ tx: signedWithdrawTransaction.tx as Withdraw, signature: signedWithdrawTransaction.ethereumSignature });
 
-      signedTransactions.push({ tx: signWithdrawTransaction.tx as Withdraw, signature: signWithdrawTransaction.ethereumSignature });
-    }
+    const signTransaction = await syncWallet!
+      .signSyncTransfer({
+        ...transferTx,
+        nonce: nonce + 1,
+      })
+      .catch((error) => {
+        throw new Error("Error while performing signSyncTransfer: " + error.message);
+      });
 
-    for (const item of transfers) {
-      const nonce = nextNonce;
-      nextNonce += 1;
-
-      const signTransaction = await syncWallet!
-        .signSyncTransfer({
-          ...item,
-          nonce,
-        })
-        .catch((error) => {
-          throw new Error("Error while performing signSyncTransfer: " + error.message);
-        });
-
-      signedTransactions.push({ tx: signTransaction.tx as Withdraw, signature: signTransaction.ethereumSignature });
-    }
+    signedTransactions.push({ tx: signTransaction.tx as Withdraw, signature: signTransaction.ethereumSignature });
 
     const transactionHashes = await syncWallet!.provider.submitTxsBatch(signedTransactions).catch((error) => {
       throw new Error("Error while performing submitTxsBatch: " + error.message);
     });
     for (let a = 0; a < transactionHashes.length; a++) {
-      store.transaction.watchTransaction({ transactionHash: transactionHashes[a], tokenSymbol: a === 0 ? token : feeToken, type: "transfer" });
+      store.transaction.watchTransaction({ transactionHash: transactionHashes[a] });
     }
     return transactionHashes.map((txHash, index) => ({
       txData: signedTransactions[index],

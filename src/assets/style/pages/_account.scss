@@ -1,7 +1,8 @@
 .walletPage {
   .balancesBlock {
-    height: $minRouteHeightMain;
-    min-height: 360px;
+    height: max-content;
+    //max-height: $minRouteHeightMain;
+    min-height: 320px;
 
     .form-input-group {
       margin-bottom: 1rem;

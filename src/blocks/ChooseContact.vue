@@ -4,20 +4,20 @@
     <i-modal v-model="contactsListModal" size="md">
       <template slot="header">Contacts</template>
       <div>
-        <i-input v-if="contactSearch.trim() || displayedContactsList.length !== 0" ref="contactNameInput" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
+        <i-input v-if="isSearching || hasDisplayedContacts" ref="contactNameInput" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
           <i slot="prefix" class="ri-search-line"></i>
         </i-input>
         <div class="contactsListContainer">
-          <div v-if="!contactSearch.trim() && displayedContactsList.length === 0 && !displayOwnAddress" class="nothingFound">
+          <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
             <span>The contact list is empty</span>
           </div>
-          <div v-else-if="contactSearch.trim() && displayedContactsList.length === 0 && !displayOwnAddress" class="nothingFound _padding-top-2 _padding-bottom-1">
-            <span
-              >Your search <b>"{{ contactSearch }}"</b> did not match any contacts</span
-            >
+          <div v-else-if="isSearching && !hasDisplayedContacts" class="nothingFound _padding-top-2 _padding-bottom-1">
+            <span>
+              Your search <b>"{{ contactSearch }}"</b> did not match any contacts
+            </span>
           </div>
           <template v-else>
-            <div v-if="!contactSearch.trim() && displayOwnAddress" class="contactItem" @click.self="chooseContact({ name: 'Own account', address: ownAddress })">
+            <div v-if="!isSearching && displayOwnAddress" class="contactItem" @click.self="chooseContact({ name: 'Own account', address: ownAddress })">
               <user-img :wallet="ownAddress" />
               <div class="contactInfo">
                 <div class="contactName">Own account</div>
@@ -65,6 +65,7 @@
 </template>
 
 <script lang="ts">
+import utils from "@/plugins/utils";
 import { Address, Contact } from "@/plugins/types";
 import userImg from "@/components/userImg.vue";
 import Vue from "vue";
@@ -118,11 +119,10 @@ export default Vue.extend({
       return this.$accessor.contacts.get;
     },
     displayedContactsList(): Array<Contact> {
-      if (!this.contactSearch.trim()) {
+      if (!this.isSearching) {
         return this.contactsList;
       }
-      const lowerCaseInput = this.contactSearch.trim().toLowerCase();
-      return this.contactsList.filter((e) => e.name.toLowerCase().includes(lowerCaseInput));
+      return utils.searchInArr(this.contactSearch, this.contactsList, (e: Contact) => e.name);
     },
     isInContacts(): boolean {
       if (this.chosenContact && this.chosenContact.address) {
@@ -130,6 +130,12 @@ export default Vue.extend({
       } else {
         return false;
       }
+    },
+    hasDisplayedContacts(): boolean {
+      return this.displayedContactsList.length !== 0 || this.displayOwnAddress;
+    },
+    isSearching(): boolean {
+      return !!this.contactSearch.trim();
     },
   },
   watch: {

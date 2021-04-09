@@ -56,23 +56,23 @@ const initializedWallets = {
     { walletName: "atoken" },
   ],
 };
-export default (ctx: any) => {
+export default (ctx: any): Initialization => {
   const colorTheme = localStorage.getItem("colorTheme");
-  return <Initialization>{
+  return {
     hideBranding: true,
     blockPollingInterval: 400000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
     darkMode: colorTheme === "dark",
     subscriptions: {
-      wallet: (wallet: any) => {
+      wallet: (wallet) => {
         if (wallet && wallet.provider) {
           wallet.provider.autoRefreshOnNetworkChange = false;
         }
         web3Wallet.set(new Web3(wallet.provider));
         if (process.client) {
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
-          window.localStorage.setItem("selectedWallet", wallet.name);
+          window.localStorage.setItem("selectedWallet", wallet.name as string);
         }
         // eslint-disable-next-line no-unused-expressions
         wallet.provider;

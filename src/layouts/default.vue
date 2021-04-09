@@ -1,7 +1,7 @@
 <template>
   <div class="defaultLayout">
     <logging-in-loader />
-    <div v-if="!loggingIn && loggedIn">
+    <div v-if="!loggingIn && loggedIn" class="layoutContent">
       <div class="headerSpace mobileOnly"></div>
       <header-component ref="header" />
       <div class="routerContainer">
@@ -42,27 +42,7 @@ export default Vue.extend({
       return APP_ZK_SCAN;
     },
   },
-  watch: {
-    $route: {
-      immediate: true,
-      handler(val, oldVal) {
-        if (!oldVal) {
-          return this.$nextTick(() => {
-            document.documentElement.scrollTop = 0;
-          });
-        }
-        if (val.path !== oldVal.path) {
-          this.$nextTick(() => {
-            document.documentElement.scrollTop = this.$accessor.scroll.getLastScroll;
-          });
-        }
-      },
-    },
-  },
   mounted() {
-    if (process.client) {
-      window.history.scrollRestoration = "manual";
-    }
     if (localStorage.getItem("colorTheme")) {
       this.$inkline.config.variant = localStorage.getItem("colorTheme");
     } else {

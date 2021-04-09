@@ -84,8 +84,8 @@
         </span>
         <span v-else>
           You do not have enough allowance for
-          <span class="tokenSymbol">{{ chosenToken.symbol }}</span
-          >. <br class="desktopOnly" />
+          <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
+          .<br class="desktopOnly" />
           Set higher allowance to proceed to deposit.
         </span>
       </p>
@@ -211,7 +211,7 @@ export default Vue.extend({
         const inputedAllowenceBigNumber = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAllowance);
         return inputedAllowenceBigNumber.gte(this.amountBigNumber);
       } catch (error) {
-        return true;
+        return false;
       }
     },
     displayTokenUnlock(): boolean {
@@ -232,9 +232,6 @@ export default Vue.extend({
       } else {
         this.thresholdLoading = false;
       }
-    },
-    enoughAllowance(val) {
-      console.log("enoughAllowance", val);
     },
   },
   async mounted() {
@@ -261,14 +258,8 @@ export default Vue.extend({
       this.loading = true;
       this.chooseTokenModal = false;
       this.chosenToken = false;
-      this.tokenAllowance = await this.getTokeAllowance(token);
+      this.tokenAllowance = await this.getTokenAllowance(token);
       this.setAllowanceToCurrent();
-      /* if (!token.unlocked) {
-        token.unlocked = await this.checkTokenState(token);
-      }
-      if (!token.tokenPrice) {
-        token.tokenPrice = await this.$accessor.tokens.getTokenPrice(token.symbol);
-      } */
       this.chosenToken = token;
       this.loading = false;
       this.$nextTick(() => {
@@ -361,10 +352,6 @@ export default Vue.extend({
         this.transactionInfo.fee.amount = receipt.gasUsed.toString();
         this.transactionInfo.continueBtnFunction = true;
         this.transactionInfo.continueBtnText = "Proceed to deposit";
-        /* const isTokenUnlocked = await this.checkTokenState(this.chosenToken);
-        if (isTokenUnlocked) {
-          this.transactionInfo.success = true;
-        } */
         this.transactionInfo.success = true;
         this.chosenToken = { ...this.chosenToken, unlocked: true };
       } catch (error) {
@@ -384,7 +371,7 @@ export default Vue.extend({
       }
       return true;
     },
-    async getTokeAllowance(token: Balance): Promise<BigNumber> {
+    async getTokenAllowance(token: Balance): Promise<BigNumber> {
       const zksync = await walletData.zkSync();
       if (token.symbol.toLowerCase() !== "eth") {
         const wallet = walletData.get().syncWallet;

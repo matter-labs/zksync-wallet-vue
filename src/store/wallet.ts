@@ -399,7 +399,7 @@ export const actions = actionTree(
         this.$sentry.captureException(error);
         return [];
       });
-      const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.sortTokensById);
+      const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.compareTokensById);
       const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesAZ) as Array<Balance>;
       balances.push(...balancesEmpty);
       commit("setTokensList", {
@@ -460,7 +460,6 @@ export const actions = actionTree(
         return getters.getWithdrawalProcessingTime;
       }
       const withdrawTime = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
-      console.log("withdrawTime", withdrawTime);
       commit("setWithdrawalProcessingTime", withdrawTime.data);
       return withdrawTime.data;
     },

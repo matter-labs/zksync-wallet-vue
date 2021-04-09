@@ -1,5 +1,5 @@
 <template>
-  <i-modal v-model="isOpened" size="md">
+  <i-modal v-model="opened" size="md">
     <template slot="header">Can't find a token</template>
     <p>
       zkSync currently supports the most popular tokens, we will be adding more over time.
@@ -15,7 +15,7 @@ import Vue from "vue";
 export default Vue.extend({
   name: "NoTokenFound",
   computed: {
-    isOpened: {
+    opened: {
       set(val): void {
         if (val === false) {
           this.$accessor.closeActiveModal();

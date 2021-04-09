@@ -11,10 +11,6 @@
               <i class="mobileOnly ri-wallet-line"></i>
               <span>My wallet</span>
             </nuxt-link>
-            <!-- <nuxt-link class="headerLink" to="/deposit">
-              <i class="mobileOnly ri-download-2-line"></i>
-              <span>Deposit</span>
-            </nuxt-link> -->
             <nuxt-link class="headerLink" to="/contacts">
               <i class="mobileOnly ri-contacts-line"></i>
               <span>Contacts</span>
