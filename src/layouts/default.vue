@@ -1,7 +1,7 @@
 <template>
   <div class="defaultLayout">
     <logging-in-loader />
-    <div class="layoutContent" v-if="!loggingIn && loggedIn">
+    <div v-if="!loggingIn && loggedIn" class="layoutContent">
       <div class="headerSpace mobileOnly"></div>
       <header-component ref="header" />
       <div class="routerContainer">
