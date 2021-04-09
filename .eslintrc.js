@@ -6,7 +6,7 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  extends: ["@nuxtjs/eslint-config-typescript", "eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier/@typescript-eslint"],
+  extends: ["@nuxtjs/eslint-config-typescript", "eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
   rules: {
     // enable additional rules
     indent: ["error", 2],

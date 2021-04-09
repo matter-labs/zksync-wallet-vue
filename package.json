@@ -132,6 +132,8 @@
     "commitlint": "^12.0.1",
     "dotenv": "^8.2.0",
     "eslint": "^7.23.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
     "fork-ts-checker-webpack-plugin": "^6.2.0",
     "jesse-mock-web3-provider": "^0.0.2",
     "jest": "^26.6.3",
