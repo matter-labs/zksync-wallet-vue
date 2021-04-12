@@ -136,7 +136,7 @@ export default Vue.extend({
         }
       }
       const finalList = Object.keys(returnTokens).map((e) => returnTokens[e]);
-      return utils.searchInArr(this.search, finalList, (e: DisplayToken) => e.symbol);
+      return utils.searchInArr(this.search, finalList, (e) => (e as DisplayToken).symbol) as DisplayToken[];
     },
     activeDeposits() {
       // eslint-disable-next-line no-unused-expressions

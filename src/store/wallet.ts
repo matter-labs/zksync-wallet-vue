@@ -14,7 +14,7 @@ import { API, Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/i
 import { provider } from "web3-core";
 import { Provider, Wallet } from "zksync/build";
 import { AccountState, Address, Fee, Network, TokenSymbol } from "zksync/build/types";
-import utils from "~/plugins/utils";
+import utils from "@/plugins/utils";
 
 interface feesInterface {
   [symbol: string]: {

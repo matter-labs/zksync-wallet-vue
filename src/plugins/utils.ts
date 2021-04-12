@@ -15,9 +15,9 @@ function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
   return walletData.get().syncProvider?.tokyaenSet.parseToken(symbol, amount.toString());
 }
 
-function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance | undefined) {
+function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance) {
   if (!amount) return "0";
-  return walletData.get().syncProvider?.tokenSet.formatToken(symbol, amount);
+  return walletData.get().syncProvider?.tokenSet.formatToken(symbol, amount) || "0";
 }
 
 export default {

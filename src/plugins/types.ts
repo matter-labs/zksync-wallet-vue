@@ -158,3 +158,15 @@ export declare interface iWalletWrapper {
   zkSync: () => Promise<zksync | undefined>;
   get: () => iWalletData;
 }
+
+export interface Balance {
+  symbol: TokenSymbol;
+  status: "Pending" | "Verified";
+  balance: GweiBalance;
+  rawBalance: BigNumber;
+  verifiedBalance: GweiBalance;
+  tokenPrice: number;
+  restricted: boolean;
+  unlocked?: boolean;
+  address?: string;
+}

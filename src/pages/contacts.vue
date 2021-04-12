@@ -145,7 +145,7 @@ export default Vue.extend({
       inputtedWallet: <Address>"",
       editingWallet: <Contact | null>null,
       modalError: <string>"",
-      contactsList: <Contact[]>this.$accessor.contacts.get.map((e: Contact) => ({ ...e, deleted: false, notInContacts: false })),
+      contactsList: <Contact[]>this.$accessor.contacts.get.map((e) => ({ ...e, deleted: false, notInContacts: false })),
       fromRoute: {} as unknown,
     };
   },
