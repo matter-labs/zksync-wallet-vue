@@ -300,7 +300,7 @@ export const actions = actionTree(
           balance: committedBalance,
           rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
           verifiedBalance,
-          tokenPrice: parseFloat(price),
+          tokenPrice: price,
           restricted: !committedBalance || +committedBalance <= 0 || restrictedTokens.includes(tokenSymbol),
         } as ZkInBalance);
       }
@@ -486,7 +486,7 @@ export const actions = actionTree(
     },
     async checkLockedState({ commit }): Promise<void> {
       const syncWallet = walletData.get().syncWallet;
-      const isSigningKeySet: boolean = await syncWallet!.isSigningKeySet();
+      const isSigningKeySet = await syncWallet!.isSigningKeySet();
       commit("setAccountLockedState", !isSigningKeySet);
     },
     /**

@@ -27,9 +27,17 @@ export const walletData: iWalletWrapper = {
   },
 
   set: (val: iWalletData): void => {
-    internalWalletData.zkSync = val?.zkSync;
-    internalWalletData.syncProvider = val?.syncProvider;
-    internalWalletData.syncWallet = val?.syncWallet;
-    internalWalletData.accountState = val?.accountState;
+    if (typeof val.zkSync !== "undefined") {
+      internalWalletData.zkSync = val.zkSync;
+    }
+    if (typeof val.syncProvider !== "undefined") {
+      internalWalletData.syncProvider = val.syncProvider;
+    }
+    if (typeof val.syncWallet !== "undefined") {
+      internalWalletData.syncWallet = val.syncWallet;
+    }
+    if (typeof val.accountState !== "undefined") {
+      internalWalletData.accountState = val.accountState;
+    }
   },
 };
