@@ -17,7 +17,6 @@
 
 <script lang="ts">
 import utils from "@/plugins/utils";
-import { BigNumber } from "ethers";
 import Vue from "vue";
 
 export default Vue.extend({

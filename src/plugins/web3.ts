@@ -1,10 +1,12 @@
-let web3Wallet = false as false | any;
+import Web3 from "web3";
+
+let web3Wallet = <boolean | Web3>false;
 
 export default {
   get: () => {
     return web3Wallet;
   },
-  set: (obj: any) => {
+  set: (obj: typeof Web3) => {
     web3Wallet = obj;
   },
 };

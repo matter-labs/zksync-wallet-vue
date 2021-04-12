@@ -5,7 +5,7 @@ import moment from "moment";
 import VueScrollTo from "vue-scrollto";
 
 import Loader from "@/components/loader.vue";
-import { TokenSymbol } from "@/plugins/types";
+import { TokenSymbol } from "zksync/build/types";
 import utils from "@/plugins/utils";
 
 Vue.use(VueScrollTo);
