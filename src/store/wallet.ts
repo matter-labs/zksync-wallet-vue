@@ -5,7 +5,7 @@ import Web3 from "web3";
 
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { Address, FeesObj, GweiBalance, iWalletData, zksync } from "@/plugins/types";
+import { ZkInFeesObj, ZkInBalance, GweiBalance, iWalletData, zksync, ZkInTx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import web3Wallet from "@/plugins/web3";
 import watcher from "@/plugins/watcher";
@@ -13,7 +13,7 @@ import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API, Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { provider } from "web3-core";
 import { Provider, Wallet } from "zksync/build";
-import { AccountState, Fee, Network, TokenSymbol } from "zksync/build/types";
+import { AccountState, Address, Fee, Network, TokenSymbol } from "zksync/build/types";
 import utils from "~/plugins/utils";
 
 interface feesInterface {
@@ -34,10 +34,10 @@ let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
 export declare interface iWallet {
   onboard?: API;
   isAccountLocked: boolean;
-  zkTokens: { lastUpdated: number; list: Array<Balance> };
-  initialTokens: { lastUpdated: number; list: Array<Balance> };
+  zkTokens: { lastUpdated: number; list: Array<ZkInBalance> };
+  initialTokens: { lastUpdated: number; list: Array<ZkInBalance> };
   tokenPrices: { [p: string]: { lastUpdated: number; price: number } };
-  transactionsHistory: { lastUpdated: number; list: Array<Tx> };
+  transactionsHistory: { lastUpdated: number; list: Array<ZkInTx> };
   withdrawalProcessingTime: false | { normal: number; fast: number };
   fees: feesInterface;
 }
@@ -75,7 +75,7 @@ export const mutations = mutationTree(state, {
     state,
     obj: {
       lastUpdated: number;
-      list: Balance[];
+      list: ZkInBalance[];
     },
   ) {
     state.initialTokens = obj;
@@ -84,7 +84,7 @@ export const mutations = mutationTree(state, {
     state,
     obj: {
       lastUpdated: number;
-      list: Balance[];
+      list: ZkInBalance[];
     },
   ) {
     state.zkTokens = obj;
@@ -108,7 +108,7 @@ export const mutations = mutationTree(state, {
     state,
     obj: {
       lastUpdated: number;
-      list: Array<Tx>;
+      list: Array<ZkInTx>;
     },
   ) {
     state.transactionsHistory = obj;
@@ -135,7 +135,7 @@ export const mutations = mutationTree(state, {
       feeSymbol: TokenSymbol;
       type: string;
       address: Address;
-      obj: FeesObj;
+      obj: ZkInFeesObj;
     },
   ) {
     state.fees[symbol][feeSymbol][type][address] = obj as {
@@ -178,11 +178,11 @@ export const mutations = mutationTree(state, {
 export const getters = getterTree(state, {
   isAccountLocked: (state): boolean => state.isAccountLocked,
   getOnboard: (state): API | undefined => state.onboard,
-  getTokensList: (state): { lastUpdated: number; list: Array<Balance> } => state.initialTokens,
-  getInitialBalances: (state): Array<Balance> => state.initialTokens.list,
-  getzkList: (state): { lastUpdated: number; list: Array<Balance> } => state.zkTokens,
-  getzkBalances: (state): Array<Balance> => state.zkTokens.list,
-  getTransactionsHistory: (state): Array<Tx> => state.transactionsHistory.list,
+  getTokensList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.initialTokens,
+  getInitialBalances: (state): Array<ZkInBalance> => state.initialTokens.list,
+  getzkList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.zkTokens,
+  getzkBalances: (state): Array<ZkInBalance> => state.zkTokens.list,
+  getTransactionsHistory: (state): Array<ZkInTx> => state.transactionsHistory.list,
   getTokenPrices: (
     state,
   ): {
@@ -195,7 +195,7 @@ export const getters = getterTree(state, {
     state,
   ): {
     lastUpdated: number;
-    list: Array<Tx>;
+    list: Array<ZkInTx>;
   } => state.transactionsHistory,
   getWithdrawalProcessingTime: (
     state,
@@ -242,7 +242,7 @@ export const actions = actionTree(
     async restoreProviderConnection(): Promise<void> {
       const syncProvider = walletData.get().syncProvider;
       if (syncProvider && syncProvider?.transport.ws && !syncProvider.transport.ws.isOpened) {
-        await syncProvider?.transport.ws.open();
+        await syncProvider.transport.ws.open();
       }
     },
 
@@ -270,14 +270,14 @@ export const actions = actionTree(
      * @param force
      * @return {Promise<[array]|*>}
      */
-    async requestZkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }): Promise<Array<Balance>> {
+    async requestZkBalances({ commit, dispatch, getters }, { accountState, force = false } = { accountState: undefined, force: false }): Promise<Array<ZkInBalance>> {
       let listCommitted = {} as {
         [token: string]: BigNumberish;
       };
       let listVerified = {} as {
         [token: string]: BigNumberish;
       };
-      const tokensList = [] as Array<Balance>;
+      const tokensList = [] as Array<ZkInBalance>;
       const syncWallet = walletData.get().syncWallet;
       if (accountState) {
         listCommitted = accountState.committed.balances;
@@ -306,7 +306,7 @@ export const actions = actionTree(
           verifiedBalance,
           tokenPrice: parseFloat(price),
           restricted: !committedBalance || +committedBalance <= 0 || restrictedTokens.includes(tokenSymbol),
-        } as Balance);
+        } as ZkInBalance);
       }
       commit("setZkTokens", {
         lastUpdated: new Date().getTime(),
@@ -322,7 +322,7 @@ export const actions = actionTree(
      * @param force
      * @return {Promise<*[]|*>}
      */
-    async requestInitialBalances({ dispatch, commit, getters }, force = false): Promise<void | Array<Balance>> {
+    async requestInitialBalances({ dispatch, commit, getters }, force = false): Promise<void | Array<ZkInBalance>> {
       const localList = getters.getTokensList;
 
       if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
@@ -339,8 +339,8 @@ export const actions = actionTree(
       }
       const loadedTokens = await this.dispatch("tokens/loadTokensAndBalances");
 
-      const loadInitialBalancesPromises: Promise<void | Balance>[] = Object.keys(loadedTokens.tokens).map(
-        async (key: number | string): Promise<void | Balance> => {
+      const loadInitialBalancesPromises: Promise<void | ZkInBalance>[] = Object.keys(loadedTokens.tokens).map(
+        async (key: number | string): Promise<void | ZkInBalance> => {
           const currentToken = loadedTokens.tokens[key];
           try {
             const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
@@ -417,7 +417,7 @@ export const actions = actionTree(
         return localList.list;
       }
     },
-    async requestFees({ getters, commit, dispatch }, { address, symbol, feeSymbol, type }): Promise<FeesObj> {
+    async requestFees({ getters, commit, dispatch }, { address, symbol, feeSymbol, type }): Promise<ZkInFeesObj> {
       const savedFees = getters.getFees;
       if (
         Object.prototype.hasOwnProperty.call(savedFees, symbol) &&
@@ -436,9 +436,9 @@ export const actions = actionTree(
       }
       if (type === "withdraw") {
         if (symbol === feeSymbol) {
-          const foundFeeFast: Fee | undefined = await syncProvider?.getTransactionFee("FastWithdraw", address, symbol);
-          const foundFeeNormal: Fee | undefined = await syncProvider?.getTransactionFee("Withdraw", address, symbol);
-          const feesObj: FeesObj = {
+          const foundFeeFast: Fee = await syncProvider!.getTransactionFee("FastWithdraw", address, symbol);
+          const foundFeeNormal: Fee = await syncProvider!.getTransactionFee("Withdraw", address, symbol);
+          const feesObj: ZkInFeesObj = {
             fast: foundFeeFast !== undefined ? zksync.closestPackableTransactionFee(foundFeeFast.totalFee) : undefined,
             normal: foundFeeNormal !== undefined ? zksync.closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined,
           };
@@ -451,7 +451,7 @@ export const actions = actionTree(
             feeSymbol,
           );
           const batchWithdrawFeeNormal: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet?.address()], feeSymbol);
-          const feesObj: FeesObj = {
+          const feesObj: ZkInFeesObj = {
             fast: batchWithdrawFeeFast !== undefined ? zksync.closestPackableTransactionFee(batchWithdrawFeeFast) : undefined,
             normal: batchWithdrawFeeNormal !== undefined ? zksync.closestPackableTransactionFee(batchWithdrawFeeNormal) : undefined,
           };
@@ -461,7 +461,7 @@ export const actions = actionTree(
       } else if (symbol === feeSymbol) {
         const foundFeeNormal: Fee | undefined = await syncProvider?.getTransactionFee("Transfer", address, symbol);
         const totalFeeValue: BigNumber | undefined = foundFeeNormal !== undefined ? zksync.closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined;
-        const feesObj: FeesObj = {
+        const feesObj: ZkInFeesObj = {
           normal: totalFeeValue !== undefined ? totalFeeValue : undefined,
           fast: undefined,
         };
@@ -469,7 +469,7 @@ export const actions = actionTree(
         return feesObj;
       }
       const batchTransferFee: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet?.address()], feeSymbol);
-      const feesObj: FeesObj = {
+      const feesObj: ZkInFeesObj = {
         normal: batchTransferFee !== undefined ? zksync.closestPackableTransactionFee(batchTransferFee) : undefined,
         fast: "",
       };
@@ -492,7 +492,7 @@ export const actions = actionTree(
     },
     async checkLockedState({ commit }): Promise<void> {
       const syncWallet = walletData.get().syncWallet;
-      const isSigningKeySet: boolean | undefined = await syncWallet?.isSigningKeySet();
+      const isSigningKeySet: boolean = await syncWallet!.isSigningKeySet();
       commit("setAccountLockedState", !isSigningKeySet);
     },
     /**

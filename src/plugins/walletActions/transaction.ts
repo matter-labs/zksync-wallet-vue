@@ -1,9 +1,10 @@
-import { Address, GweiBalance } from "@/plugins/types";
+import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
 import { Store } from "vuex";
 import { WalletModuleState } from "@/store/wallet";
-import { SignedTransaction, TokenSymbol, TxEthSignature, Withdraw } from "zksync/build/types";
+import { Transfer } from "zksync/build/types";
+import { Address, SignedTransaction, TokenSymbol, TxEthSignature, Withdraw, Nonce } from "zksync/src/types";
 
 /**
  * Make zkSync transaction
@@ -46,12 +47,12 @@ export const transaction = async (
    * @todo: process case when there are 2 transactions
    */
   if (token === feeToken) {
-    const transaction = (await syncWallet?.syncTransfer({
+    const transaction: Transfer = await syncWallet?.syncTransfer({
       to: address,
       token,
       amount: amountBigValue,
       fee: feeBigValue,
-    })) as Transaction;
+    });
     store.transaction.watchTransaction({ transactionHash: transaction.txHash });
     return transaction;
   }
@@ -122,7 +123,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     const signedWithdrawTransaction = await syncWallet
       ?.signWithdrawFromSyncToEthereum({
         ...withdrawawTx,
-        nonce,
+        nonce: Nonce,
       })
       .catch((error) => {
         throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
@@ -169,6 +170,6 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: St
     token,
     amount,
   });
-  store.transaction.watchDeposit({ depositTx: ETHOperation, tokenSymbol: token, amount });
+  store.transaction.watchDeposit({ ZKIDepositTx: ETHOperation, tokenSymbol: token, amount });
   return depositResponse;
 };

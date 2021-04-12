@@ -191,7 +191,10 @@ import amountInput from "@/components/AmountInput.vue";
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, Balance, Contact, FeesObj, GweiBalance, Provider, TokenSymbol, Transaction, TransactionInfo, TransactionReceipt } from "@/plugins/types";
+import { Address, TokenSymbol, TransactionReceipt } from "zksync/src/types";
+import { Provider } from "zksync/src/provider";
+
+import { ZkInBalance, ZkInContact, ZkInFeesObj, GweiBalance, Transaction, ZkInTransactionInfo } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
@@ -252,7 +255,7 @@ export default Vue.extend({
           amount: "",
           token: false,
         },
-      } as TransactionInfo,
+      } as zkInTransactionInfo,
 
       /* Warning Modal */
       transferWithdrawWarningModal: false,
@@ -266,7 +269,7 @@ export default Vue.extend({
       feesObj: {
         normal: "",
         fast: "",
-      } as FeesObj | false,
+      } as ZkInFeesObj | false,
       feesLoading: false,
       transactionMode: "normal" as "normal" | "fast",
       cantFindFeeToken: false,
@@ -303,7 +306,7 @@ export default Vue.extend({
       if (
         (!this.chosenFeeToken || this.chosenToken.symbol === this.chosenFeeToken.symbol) &&
         !this.feesLoading &&
-        (this.transactionMode === "normal" ? (this.feesObj as FeesObj)?.normal : (this.feesObj as FeesObj)?.fast)
+        (this.transactionMode === "normal" ? (this.feesObj as FeesObj)?.normal : (this.feesObj as ZkInFeesObj)?.fast)
       ) {
         amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as string);
       } else {
@@ -498,7 +501,7 @@ export default Vue.extend({
         feeToken: this.feeToken.symbol,
         amount: txAmount.toString(),
         fastWithdraw: this.transactionMode === "fast",
-        fees: (this.transactionMode === "fast" ? (this.feesObj as FeesObj)?.fast : (this.feesObj as FeesObj)?.normal) as string,
+        fees: (this.transactionMode === "fast" ? (this.feesObj as ZkInFeesObj)?.fast : (this.feesObj as ZkInFeesObj)?.normal) as string,
         store: this.$accessor,
       })) as Transaction;
       let receipt: TransactionReceipt;

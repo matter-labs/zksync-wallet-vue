@@ -1,6 +1,6 @@
-import { NetworkIDS } from "@/plugins/types";
+import { ZkInEthNetwork, ZkTpNetworkName } from "@/plugins/types";
 
-const _ETHER_NETWORK_ID_DICTIONARY: NetworkIDS = {
+const _ETHER_NETWORK_ID_DICTIONARY: ZkInEthNetwork = {
   rinkeby: 4,
   ropsten: 3,
   mainnet: 1,
@@ -9,7 +9,7 @@ const _ETHER_NETWORK_ID_DICTIONARY: NetworkIDS = {
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 export const GIT_REVISION_SHORT: string = GIT_REVISION ? GIT_REVISION.slice(-7) : "";
 
-export const ETHER_NETWORK_NAME: string = process.env.APP_CURRENT_NETWORK || "";
+export const ETHER_NETWORK_NAME: ZkTpNetworkName = process.env.APP_CURRENT_NETWORK as ZkTpNetworkName;
 
 export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 

@@ -83,7 +83,7 @@
 <script lang="ts">
 import Mint from "@/blocks/Mint.vue";
 import utils from "@/plugins/utils";
-import { DepositsInterface } from "@/plugins/types";
+import { ZkInDeposits } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 
@@ -141,8 +141,8 @@ export default Vue.extend({
     activeDeposits() {
       // eslint-disable-next-line no-unused-expressions
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
-      const deposits = this.$accessor.transaction.depositList as DepositsInterface;
-      const activeDeposits = {} as DepositsInterface;
+      const deposits = this.$accessor.transaction.depositList as ZkInDeposits;
+      const activeDeposits = {} as ZkInDeposits;
       const finalDeposits = {} as {
         [tokenSymbol: string]: BigNumber;
       };

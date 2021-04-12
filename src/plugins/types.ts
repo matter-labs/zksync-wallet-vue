@@ -1,11 +1,13 @@
 import { BigNumber } from "ethers";
-import { TransactionReceipt } from "zksync/build/types";
+import { AbstractJSONRPCTransport, WSTransport } from "zksync/src/transport";
+import { SignedTransaction, TransactionReceipt, AccountState, Address, TokenSymbol } from "zksync/src/types";
 import { Wallet } from "zksync/src";
-import { AccountState, Address, TokenSymbol } from "zksync/src/types";
+
 import { Provider } from "zksync/build/provider";
 
 import * as zkSyncType from "zksync";
 export declare type zksync = typeof zkSyncType;
+export declare type ZkTpNetworkName = "rinkeby" | "mainnet" | "ropsten";
 
 export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
@@ -24,10 +26,17 @@ export declare interface ZkInTokenPrices {
 }
 
 export interface ZkInTx {
-  hash: string;
-  pq_id?: any;
-  eth_block: number;
+  tx_id: string; // Unique identifier of a transaction, designated to be used in relative tx history queries.
+  hash: string; // Hash of a transaction.
+  eth_block?: number; // Number of Ethereum block in which priority operation was added. `null` for transactions.
+  pq_id?: number; // Identifier of a priority operation. `null` for transactions.
+  success?: boolean; // Flag for successful transaction execution. `null` for priority operations.
+  fail_reason?: string; // Reason of the transaction failure. May be `null`.
+  commited: boolean; // Flag for inclusion of transaction into some block.
+  verified: boolean; // Flag of having the block with transaction verified.
+  created_at: string; // Timestamp of the transaction execution.
   tx: {
+    // Transaction / Priority operation contents. Structure depends on the type of operation.
     fast: boolean;
     amount: string;
     fee: string;
@@ -49,24 +58,7 @@ export interface ZkInTx {
     type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
   };
 
-  success: boolean;
-  fail_reason?: any;
-  commited: boolean;
-  verified: boolean;
   confirmCount: number;
-  created_at: Date;
-}
-
-export declare interface ZkInTransactionInfo {
-  continueBtnFunction: boolean;
-  amount: any;
-  success: boolean;
-  fee: { amount: string; token: false | Balance };
-  recipient?: any;
-  continueBtnText?: string;
-  type: string;
-  hash: string;
-  explorerLink: string;
 }
 
 export interface ZkInBalance {
@@ -79,6 +71,18 @@ export interface ZkInBalance {
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
+}
+
+export declare interface ZkInTransactionInfo {
+  continueBtnFunction: boolean;
+  amount: any;
+  success: boolean;
+  fee: { amount: string; token: false | ZkInBalance };
+  recipient?: Address;
+  continueBtnText?: string;
+  type: string;
+  hash: string;
+  explorerLink: string;
 }
 
 export interface ZkInContact {
@@ -106,35 +110,21 @@ export interface ZkInTokenItem {
 }
 
 export interface TokenPrices {
-  [token: TokenSymbol]: {
+  [token: string]: {
     lastUpdated: number;
     price: number;
   };
 }
 
-export interface TxEthSignature {
-  type: "EthereumSignature" | "EIP1271Signature";
-  signature: string;
-}
-
-export interface Fee {
-  feeType: "Withdraw" | "Transfer" | "TransferToNew" | "FastWithdraw" | ChangePubKeyFee | LegacyChangePubKeyFee;
-  gasTxAmount: BigNumber;
-  gasPriceWei: BigNumber;
-  gasFee: BigNumber;
-  zkpFee: BigNumber;
-  totalFee: BigNumber;
-}
-
 export declare class Transaction {
-  txData: any;
+  txData: SignedTransaction;
   txHash: string;
   sidechainProvider: Provider;
   state: "Sent" | "Committed" | "Verified" | "Failed";
   error?: ZKSyncTxError;
   constructor(txData: any, txHash: string, sidechainProvider: Provider);
   awaitReceipt(): Promise<TransactionReceipt>;
-  awaitVerifyReceipt(): Promise<zkInTransactionInfo>;
+  awaitVerifyReceipt(): Promise<ZkInTransactionInfo>;
   private setErrorState;
 }
 
@@ -146,21 +136,21 @@ export declare interface singleIcon {
 }
 
 export interface iWalletData {
-  syncProvider?: Provider;
+  syncProvider?: WSTransport | AbstractJSONRPCTransport | Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
   zkSync?: zksync;
 }
 
-export declare interface depositTx {
+export declare interface ZKInDepositTx {
   hash: string;
   amount: BigNumber | string;
   status: string;
   confirmations: number;
 }
 
-export declare interface DepositsInterface {
-  [tokenSymbol: string]: Array<depositTx>;
+export declare interface ZkInDeposits {
+  [tokenSymbol: string]: ZKInDepositTx[];
 }
 
 export declare interface iWalletWrapper {

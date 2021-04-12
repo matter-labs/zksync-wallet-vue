@@ -1,4 +1,4 @@
-import { GweiBalance } from "@/plugins/types";
+import { GweiBalance, ZKInDepositTx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { ContractTransaction } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
@@ -109,7 +109,7 @@ export const actions = actionTree(
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       }
     },
-    async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: Deposit; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
+    async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: ZKInDepositTx; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
       try {
         commit("updateDepositStatus", { hash: depositTx?.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
         await depositTx.awaitReceipt();

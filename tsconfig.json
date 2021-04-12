@@ -38,6 +38,9 @@
       "nuxt-i18n"
     ]
   },
+  "include": [
+
+  ],
   "exclude": [
     "node_modules",
     ".nuxt",

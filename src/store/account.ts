@@ -1,6 +1,6 @@
-import { Address } from "@/plugins/types";
-import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
-import { Wallet } from "zksync/build";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { Wallet } from "zksync/src";
+import { Address } from "zksync/src/types";
 import { APP_ZK_SCAN } from "~/plugins/build";
 
 export declare interface iAccount {

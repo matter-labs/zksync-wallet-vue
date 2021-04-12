@@ -2199,44 +2199,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/cryptoassets@npm:^5.48.0":
-  version: 5.48.0
-  resolution: "@ledgerhq/cryptoassets@npm:5.48.0"
+"@ledgerhq/cryptoassets@npm:^5.49.0":
+  version: 5.49.0
+  resolution: "@ledgerhq/cryptoassets@npm:5.49.0"
   dependencies:
     invariant: 2
-  checksum: 3f12e89c4e726e40b5f0fc062f5cfc5981aa3d4d2d50fa646864a4825dd2f3061361ecc0739b4d3052512263df07002793fe4e6abe91fc4d63488928e4363e4f
+  checksum: 487e424c7512b92dfaeaa142575e84047965738a99c282ea28915e0d4f764a4798a1b14e417b6cae90ec989c3d594cb70fc5bd32c6db22159f0941faab01ffa3
   languageName: node
   linkType: hard
 
-"@ledgerhq/devices@npm:^5.48.0":
-  version: 5.48.0
-  resolution: "@ledgerhq/devices@npm:5.48.0"
+"@ledgerhq/devices@npm:^5.49.0":
+  version: 5.49.0
+  resolution: "@ledgerhq/devices@npm:5.49.0"
   dependencies:
-    "@ledgerhq/errors": ^5.48.0
-    "@ledgerhq/logs": ^5.48.0
+    "@ledgerhq/errors": ^5.49.0
+    "@ledgerhq/logs": ^5.49.0
     rxjs: ^6.6.7
     semver: ^7.3.5
-  checksum: 5b8bd1f54fdde55cdc30fd7327d723f3079774761f6b485f53667877abd109de589f0f1d093a47c82d19a5c20a02aac329bdcf6189d4a94c501cbd388a63016e
+  checksum: 101362f042e7c306e4fc7001a7aa7b6b7d72343d748428f0a93e46997bb501ae06060de5189524953712da8893ce7c6c1e8d6815021540fdcb6f2370b366667c
   languageName: node
   linkType: hard
 
-"@ledgerhq/errors@npm:^5.34.0, @ledgerhq/errors@npm:^5.48.0":
-  version: 5.48.0
-  resolution: "@ledgerhq/errors@npm:5.48.0"
-  checksum: 268edf7d32a0b31425a88c063e6c72418130c6eaf3d6ccfb6f292a476e11fcf468a7864d77e396a5b9d85de2a568fe556f319ab1a7817dccfdac6b38de248ef7
+"@ledgerhq/errors@npm:^5.34.0, @ledgerhq/errors@npm:^5.49.0":
+  version: 5.49.0
+  resolution: "@ledgerhq/errors@npm:5.49.0"
+  checksum: 8d36c203d801235327cc42a94cd8f3bed101237bcfef92912416490a0826f3ed6e10fd043051ca3e72027323044043b31a78333fdd27e6a96e4741b6b4c66b60
   languageName: node
   linkType: hard
 
 "@ledgerhq/hw-app-eth@npm:^5.21.0":
-  version: 5.48.0
-  resolution: "@ledgerhq/hw-app-eth@npm:5.48.0"
+  version: 5.49.0
+  resolution: "@ledgerhq/hw-app-eth@npm:5.49.0"
   dependencies:
-    "@ledgerhq/cryptoassets": ^5.48.0
-    "@ledgerhq/errors": ^5.48.0
-    "@ledgerhq/hw-transport": ^5.48.0
+    "@ledgerhq/cryptoassets": ^5.49.0
+    "@ledgerhq/errors": ^5.49.0
+    "@ledgerhq/hw-transport": ^5.49.0
     bignumber.js: ^9.0.1
     rlp: ^2.2.6
-  checksum: 05559ba9107a77c3c7dcdbc0be3fe5d5410f7bd107611d34594b3243cdfaaabf90a0474bec793086dcea3f202a4f22f699a85bc0721ecdeaa803e4bde5c7a33e
+  checksum: bc2f9b45bb01630b33cacf497224b79dd353568dd573ffc88d19a19c169baf47d4f00913739143550fee21747b82a615f2aa381c83490df9159294b7e158a40d
   languageName: node
   linkType: hard
 
@@ -2252,21 +2252,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport@npm:^5.34.0, @ledgerhq/hw-transport@npm:^5.48.0":
-  version: 5.48.0
-  resolution: "@ledgerhq/hw-transport@npm:5.48.0"
+"@ledgerhq/hw-transport@npm:^5.34.0, @ledgerhq/hw-transport@npm:^5.49.0":
+  version: 5.49.0
+  resolution: "@ledgerhq/hw-transport@npm:5.49.0"
   dependencies:
-    "@ledgerhq/devices": ^5.48.0
-    "@ledgerhq/errors": ^5.48.0
+    "@ledgerhq/devices": ^5.49.0
+    "@ledgerhq/errors": ^5.49.0
     events: ^3.3.0
-  checksum: a9866fca8e060afcb03b2b592b2e076627e19b2af68ae5bea9db84c8184c5904d8d0f595c92072674ad84e48d75710226219056b68d8d6f62bc90ff80618c181
+  checksum: e8fbf49c1935166e1222220be9fe315cf6e39c9671940fea7c25e748b4b9d3ff4df148bd694deed9da06f7811c14a978acc612101f35f05244f10b046c69f0a2
   languageName: node
   linkType: hard
 
-"@ledgerhq/logs@npm:^5.30.0, @ledgerhq/logs@npm:^5.48.0":
-  version: 5.48.0
-  resolution: "@ledgerhq/logs@npm:5.48.0"
-  checksum: 661c3669a31062584c783ae4c0403e4d8ba58fd1dd4a0ebc74da64912055e9e778de72fd863b24fb399206d05284f7ab5b2cc254b7ae14ae2213815bc9bb9f79
+"@ledgerhq/logs@npm:^5.30.0, @ledgerhq/logs@npm:^5.49.0":
+  version: 5.49.0
+  resolution: "@ledgerhq/logs@npm:5.49.0"
+  checksum: 1930c44a14f2a95e8920d38cdd50e0732471fa1e2b466c5997e1fdc1f5a8a297c153ac4193f7148157a97de1e52964ce661b5a6ec603925fa4068bffcfc06604
   languageName: node
   linkType: hard
 
@@ -4572,11 +4572,11 @@ __metadata:
   linkType: hard
 
 "acorn@npm:^8.0.4, acorn@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "acorn@npm:8.1.0"
+  version: 8.1.1
+  resolution: "acorn@npm:8.1.1"
   bin:
     acorn: bin/acorn
-  checksum: 99ccf30832b00ff7e19dff353479fd303c5a82c4ae0a5c5904a6c03316658b89bbdca40f5d8473e6aedd988a404190abd7b431dbd3160df4c09a10398b84bf1c
+  checksum: 9726714a9b5319f3d4969f8ace546a47086a7ea986f68fae3a2ffaabec219566c87b1ac21139ee3653462639cac357c9b8846725b7e72a741cc2421563a23ac8
   languageName: node
   linkType: hard
 
@@ -6296,17 +6296,17 @@ __metadata:
   linkType: hard
 
 "browserslist@npm:^4.0.0, browserslist@npm:^4.12.0, browserslist@npm:^4.14.5, browserslist@npm:^4.16.3, browserslist@npm:^4.6.4":
-  version: 4.16.3
-  resolution: "browserslist@npm:4.16.3"
+  version: 4.16.4
+  resolution: "browserslist@npm:4.16.4"
   dependencies:
-    caniuse-lite: ^1.0.30001181
-    colorette: ^1.2.1
-    electron-to-chromium: ^1.3.649
+    caniuse-lite: ^1.0.30001208
+    colorette: ^1.2.2
+    electron-to-chromium: ^1.3.712
     escalade: ^3.1.1
-    node-releases: ^1.1.70
+    node-releases: ^1.1.71
   bin:
     browserslist: cli.js
-  checksum: dfab0d3c3d9a3517cf3f8a274bc4e8245f3a02c1a5ae2a0e01498273d363952d11ee09fdce3b0ce551f6cab9d619ed2d9facf7b6471c9190df949a5ad39665c5
+  checksum: 00071f51695eae0d33c6193f37af87c690e5049dc615aeebae32bd0a60ad64698f29b8a579667012a177bff532f6235f22d1a96bfb30bf6364631914e2d64294
   languageName: node
   linkType: hard
 
@@ -6720,7 +6720,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000844, caniuse-lite@npm:^1.0.30000981, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001181, caniuse-lite@npm:^1.0.30001205":
+"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30000844, caniuse-lite@npm:^1.0.30000981, caniuse-lite@npm:^1.0.30001109, caniuse-lite@npm:^1.0.30001205, caniuse-lite@npm:^1.0.30001208":
   version: 1.0.30001208
   resolution: "caniuse-lite@npm:1.0.30001208"
   checksum: c8c9ffbd57fe0f39e1cde2211b685f4a16babe73ab2bb50b22b9f267e29ca4843b5df83d518fae2c2e79347eab6d7da86027d649cb984e6f151a5650f592c03b
@@ -7220,7 +7220,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"colorette@npm:^1.2.1":
+"colorette@npm:^1.2.1, colorette@npm:^1.2.2":
   version: 1.2.2
   resolution: "colorette@npm:1.2.2"
   checksum: e240f0c94b8d9f34b52bd17b50fc13a3b74f9e662edeaa2b0c65e06ec6b1fc6367fb42b834ec5a1d819d68b74a3d850f3bd3e284f9e614d6c4ffa122f83c6ec5
@@ -8768,7 +8768,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.3.47, electron-to-chromium@npm:^1.3.649":
+"electron-to-chromium@npm:^1.3.47, electron-to-chromium@npm:^1.3.712":
   version: 1.3.712
   resolution: "electron-to-chromium@npm:1.3.712"
   checksum: 9bf46cf2b249532bdaa3d8da061e921c1d27c1d89d2e6627f4bcc7c6f65d13ceec0404901c0d971acad52b87914342de32828eb6705ac2817eb11087a54907d6
@@ -9246,8 +9246,8 @@ __metadata:
   linkType: hard
 
 "eslint-plugin-vue@npm:^7.7.0":
-  version: 7.8.0
-  resolution: "eslint-plugin-vue@npm:7.8.0"
+  version: 7.9.0
+  resolution: "eslint-plugin-vue@npm:7.9.0"
   dependencies:
     eslint-utils: ^2.1.0
     natural-compare: ^1.4.0
@@ -9255,7 +9255,7 @@ __metadata:
     vue-eslint-parser: ^7.6.0
   peerDependencies:
     eslint: ^6.2.0 || ^7.0.0
-  checksum: 387788fdb0e34f291dc547f1e006d7f0fa2b6ab63bab03858307f2f7b25bd6a08efec9ee39e5c3607e66c9d386a9aead7b3346036d75f285f002fcc4d4723aed
+  checksum: 1773e6a9bfd43ace9548323cfc16e7ed8bd9728ac62b9a6b71bebc3ea1c8b6dd8f48931f07557d96c8ce0e7d70ae13871d3deb3c83874796ff4ca85f2560ce5f
   languageName: node
   linkType: hard
 
@@ -15720,12 +15720,12 @@ fsevents@^1.2.7:
   linkType: hard
 
 "node-html-parser@npm:^3.1.2":
-  version: 3.1.3
-  resolution: "node-html-parser@npm:3.1.3"
+  version: 3.1.4
+  resolution: "node-html-parser@npm:3.1.4"
   dependencies:
     css-select: ^3.1.2
     he: 1.2.0
-  checksum: 0b6a3772bfc119b40be5227eba46c3a8d6e65e187bfb10b5e1ce8ab1cab7381a71e556c8209950ad9c83e5686ff9c52d1d964e8edb9025fd5ec11d8c5215b9d5
+  checksum: 09286d64aa24eee8c738928262825e8c6535736db4f515bd87c0bd7ec33cd28384070ec25aa217195633dd1d505ebe340fae9ea7374f0365f046f957aeab094b
   languageName: node
   linkType: hard
 
@@ -15795,7 +15795,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"node-releases@npm:^1.1.70":
+"node-releases@npm:^1.1.71":
   version: 1.1.71
   resolution: "node-releases@npm:1.1.71"
   checksum: 9e283003f1deafd0ca7f9bbde9c4b5b05d880ca165217f5227b37406626d6689a246a5c4c72f9a8512be65cd51b13cc7d0f5d8bc68ad36089b620f1810292340

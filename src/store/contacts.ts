@@ -1,9 +1,10 @@
-import { Address, Contact } from "@/plugins/types";
+import { ZkInContact } from "@/plugins/types";
+import { Address } from "zksync/src/types";
 import utils from "@/plugins/utils";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 
 export declare interface iContacts {
-  contactsList: Contact[];
+  contactsList: ZkInContact[];
   storageKey?: string;
 }
 
@@ -15,13 +16,13 @@ export const state = (): iContacts => ({
 export type ContactsModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setContactsList(state, contactsList: Contact[]): void {
+  setContactsList(state, contactsList: ZkInContact[]): void {
     state.contactsList = contactsList;
   },
-  add(state, contact: Contact): void {
+  add(state, contact: ZkInContact): void {
     state.contactsList.unshift(contact);
   },
-  delete(state, contact: Contact): void {
+  delete(state, contact: ZkInContact): void {
     const foundIndex = state.contactsList.indexOf(contact);
     if (foundIndex !== -1) {
       state.contactsList = state.contactsList.filter((singleContact) => singleContact.address.toLowerCase() !== contact.address.toLowerCase());
@@ -37,7 +38,7 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  get: (state: ContactsModuleState): Contact[] => state.contactsList,
+  get: (state: ContactsModuleState): ZkInContact[] => state.contactsList,
 });
 
 export const actions = actionTree(
@@ -65,7 +66,7 @@ export const actions = actionTree(
       }
       return false;
     },
-    getByAddress({ state }, address: Address): Contact | undefined {
+    getByAddress({ state }, address: Address): ZkInContact | undefined {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {
         if (contactItem.address.toLowerCase() === address) {
@@ -86,8 +87,8 @@ export const actions = actionTree(
           commit("initContactsList");
           return;
         }
-        let contactsList: Contact[] = JSON.parse(contactsListRaw);
-        contactsList = contactsList.filter((contact: Contact) => utils.validateAddress(contact.address) && contact.name.length > 0);
+        let contactsList: ZkInContact[] = JSON.parse(contactsListRaw);
+        contactsList = contactsList.filter((contact: ZkInContact) => utils.validateAddress(contact.address) && contact.name.length > 0);
         commit("setContactsList", contactsList);
       } catch (error) {
         this.$sentry.captureException(error);
@@ -95,13 +96,13 @@ export const actions = actionTree(
       }
     },
     deleteContact({ commit }, address: Address): void {
-      const contact: Contact | undefined = this.app.$accessor.contacts.getByAddress(address);
+      const contact: ZkInContact | undefined = this.app.$accessor.contacts.getByAddress(address);
       if (contact !== undefined) {
         commit("delete", contact);
         this.app.$accessor.contacts.updateLocalStorage();
       }
     },
-    saveContact({ state, commit }, contact: Contact): void {
+    saveContact({ state, commit }, contact: ZkInContact): void {
       if (state.contactsList.includes(contact)) {
         commit("delete", contact);
       }

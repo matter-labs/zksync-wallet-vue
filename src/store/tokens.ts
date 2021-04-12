@@ -1,7 +1,7 @@
 import { BigNumberish } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { Address, TokenItem, TokenPrices, Tokens } from "@/plugins/types";
-import { TokenSymbol } from "zksync/build/types";
+import { TokenItem, TokenPrices, Tokens } from "@/plugins/types";
+import { Address, TokenSymbol } from "zksync/build/types";
 import { walletData } from "~/plugins/walletData";
 
 /**
@@ -85,7 +85,7 @@ export const actions = actionTree(
       dispatch,
     }): Promise<{
       tokens: Tokens;
-      zkBalances: Array<Token>;
+      zkBalances: Array<TokenSymbol>;
     }> {
       const syncWallet = walletData.get().syncWallet;
       const accountState = walletData.get().accountState;
