@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { Address, DecimalBalance, GweiBalance } from "@/plugins/types";
+import { Address, Balance, DecimalBalance, GweiBalance } from "@/plugins/types";
 import { utils as zkUtils } from "zksync";
 import { TokenSymbol } from "zksync/src/types";
 
@@ -15,9 +15,9 @@ function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
   return walletData.get().syncProvider?.tokenSet.parseToken(symbol, amount.toString());
 }
 
-function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance | undefined) {
+function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance) {
   if (!amount) return "0";
-  return walletData.get().syncProvider?.tokenSet.formatToken(symbol, amount);
+  return walletData.get().syncProvider?.tokenSet.formatToken(symbol, amount) || "0";
 }
 
 export default {

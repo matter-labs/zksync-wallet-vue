@@ -5,7 +5,7 @@ import Web3 from "web3";
 
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { Address, FeesObj, GweiBalance, iWalletData, zksync } from "@/plugins/types";
+import { Address, Balance, FeesObj, GweiBalance, iWalletData, zksync } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import web3Wallet from "@/plugins/web3";
 import watcher from "@/plugins/watcher";
@@ -14,7 +14,7 @@ import { API, Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/i
 import { provider } from "web3-core";
 import { Provider, Wallet } from "zksync/build";
 import { AccountState, Fee, Network, TokenSymbol } from "zksync/build/types";
-import utils from "~/plugins/utils";
+import utils from "@/plugins/utils";
 
 interface feesInterface {
   [symbol: string]: {

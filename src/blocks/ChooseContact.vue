@@ -122,7 +122,7 @@ export default Vue.extend({
       if (!this.isSearching) {
         return this.contactsList;
       }
-      return utils.searchInArr(this.contactSearch, this.contactsList, (e: Contact) => e.name);
+      return utils.searchInArr(this.contactSearch, this.contactsList, (e) => (e as Contact).name) as Contact[];
     },
     isInContacts(): boolean {
       if (this.chosenContact && this.chosenContact.address) {
