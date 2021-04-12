@@ -1,62 +1,50 @@
+import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
+
 import * as account from "@/store/account";
 import * as contacts from "@/store/contacts";
 import * as toaster from "@/store/toaster";
 import * as tokens from "@/store/tokens";
 import * as transaction from "@/store/transaction";
 import * as wallet from "@/store/wallet";
-import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 
-export const state = () => ({
+interface iRootState {
+  accountModalOpened: boolean;
+  currentModal?: string;
+}
+
+export const state = (): iRootState => ({
   accountModalOpened: false,
-  /**
-   * Used to handle modals and simplify the code
-   */
-  currentModal: <boolean | string>false,
+  currentModal: undefined,
 });
 
 export type RootState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
-  getAccountModalState: (state) => state.accountModalOpened,
-  currentModal: (state) => state.currentModal,
+  getAccountModalState: (state: RootState) => state.accountModalOpened,
+  currentModal: (state: RootState) => state.currentModal,
 });
 
 export const mutations = mutationTree(state, {
-  setAccountModalState(state, modalState: boolean) {
+  setAccountModalState(state: RootState, modalState: boolean): void {
     state.accountModalOpened = modalState;
   },
-  setCurrentModal(state, modalName: string | false) {
+  setCurrentModal(state: RootState, modalName: string): void {
     state.currentModal = modalName;
+  },
+  removeCurrentModal(state: RootState): void {
+    state.currentModal = undefined;
   },
 });
 
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    //    async resetEmail(): Promise<void> {
-    //      this.app.$accessor.anotherModule.doSomething();
-    //    },
-    openModal({ commit }, modalName) {
+    openModal({ commit }, modalName: string): void {
       commit("setCurrentModal", modalName);
     },
-    closeActiveModal({ commit }) {
-      commit("setCurrentModal", false);
+    closeActiveModal({ commit }): void {
+      commit("removeCurrentModal");
     },
-    //    async resetEmail({ commit, dispatch, getters, state }) {
-    //      // Typed
-    //      commit("initialiseStore");
-    //      let a = getters.email;
-    //      let b = state._email;
-    //
-    //      // Not typed
-    //      dispatch("resetEmail");
-    //
-    //      // Typed
-    //      this.app.$accessor.resetEmail();
-    //    },
-    //    async nuxtServerInit(_vuexContext, nuxtContext: Context) {
-    //      console.log(nuxtContext.req);
-    //    },
   },
 );
 

@@ -3,12 +3,20 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
 import { Wallet } from "zksync/build";
 import { APP_ZK_SCAN } from "~/plugins/build";
 
-export const state = () => ({
+export declare interface iAccount {
+  loggedIn: boolean;
+  selectedWallet?: string;
+  loadingHint: string;
+  address?: Address;
+  name?: string;
+}
+
+export const state = (): iAccount => ({
   loggedIn: false,
-  selectedWallet: "",
+  selectedWallet: undefined,
   loadingHint: "",
-  address: "" as Address,
-  name: "",
+  address: undefined,
+  name: undefined,
 });
 
 function getNameFromAddress(userAddress: Address): string {
@@ -22,52 +30,42 @@ function getNameFromAddress(userAddress: Address): string {
 export type AccountModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setLoggedIn(state, loggedInState: boolean) {
+  setLoggedIn(state: AccountModuleState, loggedInState: boolean): void {
     state.loggedIn = loggedInState;
   },
-  setSelectedWallet(state, name: string) {
+  setSelectedWallet(state: AccountModuleState, name: string): void {
     state.selectedWallet = name;
   },
-  setLoadingHint(state, text: string) {
+  setLoadingHint(state: AccountModuleState, text: string): void {
     state.loadingHint = text;
   },
-  setAddress(state, address: Address) {
+  setAddress(state: AccountModuleState, address: Address): void {
     state.address = address;
   },
-  setName(state: AccountModuleState, name: string) {
-    if (name.length < 1) {
-      name = getNameFromAddress(state.address);
+  setName(state: AccountModuleState, name: string): void {
+    if (state.address !== undefined) {
+      if (name.length < 1) {
+        name = getNameFromAddress(state.address);
+      }
+      window.localStorage.setItem(state.address as string, name);
+      state.name = getNameFromAddress(state.address);
     }
-    window.localStorage.setItem(state.address, name);
-    state.name = getNameFromAddress(state.address);
   },
-  setNameFromStorage(state) {
-    state.name = getNameFromAddress(state.address);
+  setNameFromStorage(state): void {
+    if (state.address !== undefined) {
+      state.name = getNameFromAddress(state.address);
+    }
   },
 });
 
 export const getters = getterTree(state, {
-  loggedIn(state): boolean {
-    return state.loggedIn;
-  },
-  selectedWallet(state): string {
-    return state.selectedWallet;
-  },
-  loadingHint(state): string {
-    return state.loadingHint;
-  },
-  loader(state): boolean {
-    return !state.loggedIn && state.selectedWallet !== "";
-  },
-  address(state): Address {
-    return state.address;
-  },
-  name(state): string {
-    return state.name;
-  },
-  zkScanUrl(state: AccountModuleState): string {
-    return `${APP_ZK_SCAN}/accounts/${state.address}`;
-  },
+  loggedIn: (state: AccountModuleState): boolean => state.loggedIn,
+  selectedWallet: (state: AccountModuleState): string | undefined => state.selectedWallet,
+  loadingHint: (state: AccountModuleState): string => state.loadingHint,
+  loader: (state: AccountModuleState): boolean => !state.loggedIn && state.selectedWallet !== "",
+  address: (state: AccountModuleState): Address | undefined => state.address,
+  name: (state: AccountModuleState): string | undefined => state.name,
+  zkScanUrl: (state: AccountModuleState): string | undefined => (state.address ? `${APP_ZK_SCAN}/accounts/${state.address}` : undefined),
 });
 
 export const actions = actionTree(
