@@ -19,8 +19,8 @@
 
 <script lang="ts">
 import SingleTransaction from "@/components/SingleTransaction.vue";
-import { Address } from "@/plugins/types";
-import { ZkInTx } from "zksync/src/types";
+import { ZkInTx } from "@/plugins/types";
+import { Address } from "zksync/src/types";
 import Vue from "vue";
 
 let updateListInterval: ReturnType<typeof setInterval>;
@@ -53,7 +53,7 @@ export default Vue.extend({
     ownAddress(): Address {
       return this.$accessor.account.address || "";
     },
-    transactionsList(): Array<Tx> {
+    transactionsList(): Array<ZkInTx> {
       let list = this.$accessor.wallet.getTransactionsHistory;
       if (this.filter) {
         list = list.filter((item: ZkInTx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
@@ -88,7 +88,7 @@ export default Vue.extend({
     clearInterval(updateListInterval);
   },
   methods: {
-    async loadTransactions(offset: number = 0): Promise<Array<Tx>> {
+    async loadTransactions(offset: number = 0): Promise<Array<ZkInTx>> {
       const list = await this.$accessor.wallet.requestTransactionsHistory({ force: false, offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25; /* 25 transactions are loaded for each request */

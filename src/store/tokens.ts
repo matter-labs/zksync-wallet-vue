@@ -1,8 +1,9 @@
 import { BigNumberish } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { TokenItem, TokenPrices, Tokens } from "@/plugins/types";
+import { ZkInTokenItem, ZkInTokenPrices, Tokens } from "@/plugins/types";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { walletData } from "~/plugins/walletData";
+import { ZkInBalanceItem } from "../plugins/types";
 
 /**
  * Operations with the tokens (assets)
@@ -30,7 +31,7 @@ export const state = () => ({
   /**
    * Token prices
    */
-  tokenPrices: {} as TokenPrices,
+  tokenPrices: {} as ZkInTokenPrices,
 });
 
 export type TokensModuleState = ReturnType<typeof state>;
@@ -49,16 +50,16 @@ export const getters = getterTree(state, {
     return state.allTokens;
   },
   getRestrictedTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => state.restrictedTokens.includes(e[1].symbol)));
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e: ZkInTokenItem) => state.restrictedTokens.includes(e[1].symbol)));
   },
   getAvailableTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e: ZkInTokenItem) => !state.restrictedTokens.includes(e[1].symbol)));
   },
-  getTokenPrices(state): TokenPrices {
+  getTokenPrices(state): ZkInTokenPrices {
     return state.tokenPrices;
   },
   getTokenByID(state) {
-    return (id: number): TokenItem | undefined => {
+    return (id: number): ZkInTokenItem | undefined => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];
@@ -85,7 +86,7 @@ export const actions = actionTree(
       dispatch,
     }): Promise<{
       tokens: Tokens;
-      zkBalances: Array<TokenSymbol>;
+      zkBalances: Array<ZkInBalanceItem>;
     }> {
       const syncWallet = walletData.get().syncWallet;
       const accountState = walletData.get().accountState;

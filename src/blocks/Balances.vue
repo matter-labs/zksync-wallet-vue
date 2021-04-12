@@ -83,7 +83,7 @@
 <script lang="ts">
 import Mint from "@/blocks/Mint.vue";
 import utils from "@/plugins/utils";
-import { ZkInDeposits } from "@/plugins/types";
+import { ZkInBalance, ZkInDeposits } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 
@@ -107,7 +107,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    zkBalances(): Balance[] {
+    zkBalances(): ZkInBalance[] {
       return this.$accessor.wallet.getzkBalances;
     },
     displayedList(): DisplayToken[] {

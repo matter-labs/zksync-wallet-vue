@@ -119,7 +119,8 @@ import addressInput from "@/components/AddressInput.vue";
 
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
-import { Address, Contact } from "@/plugins/types";
+import { ZkInContact } from "@/plugins/types";
+import { Address } from "zksync/src/types";
 import utils from "@/plugins/utils";
 import Vue from "vue";
 
@@ -137,15 +138,15 @@ export default Vue.extend({
   },
   data() {
     return {
-      deletedContact: <Contact | undefined>undefined,
+      deletedContact: <ZkInContact | undefined>undefined,
       search: <string>"",
       addContactModal: <boolean>false,
       addContactType: "add",
       inputtedName: <string>"",
       inputtedWallet: <Address>"",
-      editingWallet: <Contact | null>null,
+      editingWallet: <ZkInContact | null>null,
       modalError: <string>"",
-      contactsList: <Contact[]>this.$accessor.contacts.get.map((e) => ({ ...e, deleted: false, notInContacts: false })),
+      contactsList: <ZkInContact[]>this.$accessor.contacts.get.map((e) => ({ ...e, deleted: false, notInContacts: false })),
       fromRoute: {} as unknown,
     };
   },
@@ -156,10 +157,10 @@ export default Vue.extend({
     walletAddressFull(): string {
       return this.$accessor.account.address || '';
     },
-    displayedContactsList(): Contact[] {
-      return (utils.searchInArr(this.search, this.contactsList, (e) => (e as Contact).name) as Contact[]);
+    displayedContactsList(): ZkInContact[] {
+      return (utils.searchInArr(this.search, this.contactsList, (e) => (e as ZkInContact).name) as ZkInContact[]);
     },
-    openedContact(): null | Contact {
+    openedContact(): null | ZkInContact {
       const wallet = this.$route.query.w;
       if (!wallet) {
         return null;
@@ -225,7 +226,7 @@ export default Vue.extend({
             }
           }
           this.contactsList.unshift({ name: this.inputtedName.trim(), address: this.inputtedWallet, deleted: false });
-          const contact: Contact = {
+          const contact: ZkInContact = {
             name: this.inputtedName.trim(),
             address: this.inputtedWallet.toLowerCase(),
           };
@@ -238,7 +239,7 @@ export default Vue.extend({
         this.inputtedWallet = "";
       }
     },
-    editContact(contact: Contact): void {
+    editContact(contact: ZkInContact): void {
       this.modalError = "";
       this.inputtedName = contact.name;
       this.inputtedWallet = contact.address;
@@ -266,7 +267,7 @@ export default Vue.extend({
         this.deletedContact = undefined;
       }
     },
-    openContact(contact: Contact): void {
+    openContact(contact: ZkInContact): void {
       // @ts-ignore
       this.$router.push({ ...this.$route, query: { w: contact.address } });
     },

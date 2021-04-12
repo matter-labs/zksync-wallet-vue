@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { AbstractJSONRPCTransport, WSTransport } from "zksync/src/transport";
+import { AbstractJSONRPCTransport } from "zksync/src/transport";
 import { SignedTransaction, TransactionReceipt, AccountState, Address, TokenSymbol } from "zksync/src/types";
 import { Wallet } from "zksync/src";
 
@@ -73,6 +73,13 @@ export interface ZkInBalance {
   address?: string;
 }
 
+export interface ZkInBalanceItem {
+  id: number;
+  symbol: TokenSymbol;
+  balance: GweiBalance;
+  address: string;
+}
+
 export declare interface ZkInTransactionInfo {
   continueBtnFunction: boolean;
   amount: any;
@@ -107,13 +114,6 @@ export interface ZkInTokenItem {
   id: number;
   symbol: string;
   decimals: number;
-}
-
-export interface TokenPrices {
-  [token: string]: {
-    lastUpdated: number;
-    price: number;
-  };
 }
 
 export declare class Transaction {
@@ -159,14 +159,14 @@ export declare interface iWalletWrapper {
   get: () => iWalletData;
 }
 
-export interface Balance {
-  symbol: TokenSymbol;
-  status: "Pending" | "Verified";
-  balance: GweiBalance;
-  rawBalance: BigNumber;
-  verifiedBalance: GweiBalance;
-  tokenPrice: number;
-  restricted: boolean;
-  unlocked?: boolean;
-  address?: string;
+export declare interface ZkInTransactionInfo {
+  continueBtnFunction: boolean;
+  amount: any;
+  success: boolean;
+  fee: { amount: string; token: false | ZkInBalance };
+  recipient?: Address;
+  continueBtnText?: string;
+  type: string;
+  hash: string;
+  explorerLink: string;
 }

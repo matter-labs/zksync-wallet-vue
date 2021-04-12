@@ -37,7 +37,8 @@
 <script lang="ts">
 import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, Tx } from "@/plugins/types";
+import { ZkInTx } from "@/plugins/types";
+import { Address } from "zksync/src/types";
 import { walletData } from "@/plugins/walletData";
 import { TokenSymbol } from "zksync/build/types";
 
@@ -186,7 +187,7 @@ export default Vue.extend({
     getTimeAgo(time: any): string {
       return moment(time).fromNow();
     },
-    getFormattedAmount({ tx: { type, priority_op, amount, fee } }: Tx): string {
+    getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
       if(!this.isFeeTransaction) {
         return utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount) || '';
       } else {
@@ -198,7 +199,7 @@ export default Vue.extend({
       const contactFromStore = this.$accessor.contacts.getByAddress(address);
       return contactFromStore ? contactFromStore.name : address.replace(address.slice(6, address.length - 3), "...");
     },
-    getTransactionExplorerLink(transaction: Tx): string {
+    getTransactionExplorerLink(transaction: ZkInTx): string {
       return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
     },
     async getWithdrawalTx() {

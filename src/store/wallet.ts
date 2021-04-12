@@ -15,6 +15,7 @@ import { provider } from "web3-core";
 import { Provider, Wallet } from "zksync/build";
 import { AccountState, Address, Fee, Network, TokenSymbol } from "zksync/build/types";
 import utils from "@/plugins/utils";
+import { ZkInBalance } from "../plugins/types";
 
 interface feesInterface {
   [symbol: string]: {
@@ -360,14 +361,14 @@ export const actions = actionTree(
           }
         },
       );
-      const balancesResults: (void | Balance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
+      const balancesResults: (void | ZkInBalance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
         this.$sentry.captureException(error);
         return [];
       });
       // @ts-ignore
       const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.compareTokensById);
       // @ts-ignore
-      const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesAZ) as Array<Balance>;
+      const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesAZ) as Array<ZkInBalance>;
       balances.push(...balancesEmpty);
       // @ts-ignore
       commit("setTokensList", {
@@ -386,7 +387,7 @@ export const actions = actionTree(
      * @param options
      * @return {Promise<any>}
      */
-    async requestTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }): Promise<Array<Tx>> {
+    async requestTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }): Promise<Array<ZkInTx>> {
       clearTimeout(getTransactionHistoryAgain);
       const localList = getters.getTransactionsList;
       /**

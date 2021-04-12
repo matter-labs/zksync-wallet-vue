@@ -66,7 +66,8 @@
 
 <script lang="ts">
 import utils from "@/plugins/utils";
-import { Address, Contact } from "@/plugins/types";
+import { ZkInContact } from "@/plugins/types";
+import { Address } from "zksync/src/types";
 import userImg from "@/components/userImg.vue";
 import Vue from "vue";
 
@@ -98,7 +99,7 @@ export default Vue.extend({
       saveContactModalError: "",
 
       /* Main */
-      chosenContact: false as false | Contact,
+      chosenContact: false as false | ZkInContact,
     };
   },
   computed: {
@@ -115,14 +116,14 @@ export default Vue.extend({
         return false;
       }
     },
-    contactsList(): Array<Contact> {
+    contactsList(): Array<ZkInContact> {
       return this.$accessor.contacts.get;
     },
-    displayedContactsList(): Array<Contact> {
+    displayedContactsList(): Array<ZkInContact> {
       if (!this.isSearching) {
         return this.contactsList;
       }
-      return utils.searchInArr(this.contactSearch, this.contactsList, (e) => (e as Contact).name) as Contact[];
+      return utils.searchInArr(this.contactSearch, this.contactsList, (e) => (e as ZkInContact).name) as ZkInContact[];
     },
     isInContacts(): boolean {
       if (this.chosenContact && this.chosenContact.address) {
@@ -168,7 +169,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    chooseContact(contact: Contact): void {
+    chooseContact(contact: ZkInContact): void {
       if (!contact.address) {
         this.chosenContact = false;
         return;
@@ -191,7 +192,7 @@ export default Vue.extend({
       }
       const contact = {
         name: this.saveContactInput,
-        address: (this.chosenContact as Contact).address,
+        address: (this.chosenContact as ZkInContact).address,
       };
       this.$accessor.contacts.saveContact(contact);
       this.chooseContact(contact);
