@@ -1,6 +1,7 @@
 import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
+import { Transfer } from "zksync/build/types";
 import { Address, SignedTransaction, TokenSymbol, TxEthSignature, Withdraw, Nonce } from "zksync/src/types";
 
 /**
@@ -23,7 +24,7 @@ export const transaction = async (
   store: typeof accessorType,
 ) => {
   const syncWallet = walletData.get().syncWallet;
-  let nonce: number | undefined = await syncWallet?.getNonce("committed");
+  let nonce: number | undefined = await syncWallet!.getNonce("committed");
   const transferTx = {
     fee: 0,
     nonce,
@@ -44,7 +45,7 @@ export const transaction = async (
    * @todo: process case when there are 2 transactions
    */
   if (token === feeToken) {
-    const transaction: Transfer = await syncWallet?.syncTransfer({
+    const transaction = await syncWallet!.syncTransfer({
       to: address,
       token,
       amount: amountBigValue,
@@ -53,7 +54,7 @@ export const transaction = async (
     store.transaction.watchTransaction({ transactionHash: transaction.txHash });
     return transaction;
   }
-  const transferTransaction = await syncWallet?.syncMultiTransfer([transferTx, feeTx]);
+  const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
   for (let a = 0; a < transferTransaction.length; a++) {
     store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash });
   }
@@ -87,7 +88,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   const amountBigValue = amount;
   const feeBigValue = fees;
   if (token === feeToken) {
-    const transaction = await syncWallet?.withdrawFromSyncToEthereum({
+    const transaction = await syncWallet!.withdrawFromSyncToEthereum({
       ethAddress: address,
       token,
       amount: amountBigValue,
@@ -104,7 +105,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       token,
     };
     const transferTx = {
-      to: syncWallet?.address(),
+      to: syncWallet!.address(),
       token: feeToken,
       amount: "0",
       fee: feeBigValue,
@@ -115,12 +116,12 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       signature: TxEthSignature;
     }> = [];
 
-    const nonce = await syncWallet?.getNonce();
+    const nonce = await syncWallet!.getNonce();
 
-    const signedWithdrawTransaction = await syncWallet
-      ?.signWithdrawFromSyncToEthereum({
+    const signedWithdrawTransaction = await syncWallet!
+      .signWithdrawFromSyncToEthereum({
         ...withdrawawTx,
-        nonce: Nonce,
+        nonce,
       })
       .catch((error) => {
         throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
@@ -128,8 +129,8 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
 
     signedTransactions.push({ tx: signedWithdrawTransaction.tx, signature: signedWithdrawTransaction.ethereumSignature });
 
-    const signTransaction: SignedTransaction | void = await syncWallet
-      ?.signSyncTransfer({
+    const signTransaction: SignedTransaction | void = await syncWallet!
+      .signSyncTransfer({
         ...transferTx,
         nonce: nonce + 1,
       })
@@ -139,7 +140,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
 
     signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
 
-    const transactionHashes = await syncWallet?.provider.submitTxsBatch(signedTransactions).catch((error) => {
+    const transactionHashes = await syncWallet!.provider.submitTxsBatch(signedTransactions).catch((error) => {
       throw new Error("Error while performing submitTxsBatch: " + error.message);
     });
     for (let a = 0; a < transactionHashes.length; a++) {
@@ -162,11 +163,11 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
  */
 export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: typeof accessorType) => {
   const wallet = walletData.get().syncWallet;
-  const depositResponse = await wallet?.depositToSyncFromEthereum({
-    depositTo: wallet.address(),
+  const depositResponse = await wallet!.depositToSyncFromEthereum({
+    depositTo: wallet!.address(),
     token,
     amount,
   });
-  store.transaction.watchDeposit({ ZKIDepositTx: depositResponse, tokenSymbol: token, amount });
+  store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse;
 };

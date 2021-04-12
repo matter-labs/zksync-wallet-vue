@@ -1,9 +1,8 @@
 import { BigNumberish } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ZkInTokenItem, ZkInTokenPrices, Tokens } from "@/plugins/types";
-import { Address, TokenSymbol } from "zksync/build/types";
-import { walletData } from "~/plugins/walletData";
-import { ZkInBalanceItem } from "../plugins/types";
+import { ZkInTokenPrices, ZkInToken, Token } from "@/plugins/types";
+import { Address, TokenSymbol, Tokens } from "zksync/build/types";
+import { walletData } from "@/plugins/walletData";
 
 /**
  * Operations with the tokens (assets)
@@ -50,16 +49,16 @@ export const getters = getterTree(state, {
     return state.allTokens;
   },
   getRestrictedTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e: ZkInTokenItem) => state.restrictedTokens.includes(e[1].symbol)));
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => state.restrictedTokens.includes(e[1].symbol)));
   },
   getAvailableTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e: ZkInTokenItem) => !state.restrictedTokens.includes(e[1].symbol)));
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
   },
   getTokenPrices(state): ZkInTokenPrices {
     return state.tokenPrices;
   },
   getTokenByID(state) {
-    return (id: number): ZkInTokenItem | undefined => {
+    return (id: number): Token | undefined => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];
@@ -74,24 +73,22 @@ export const actions = actionTree(
   {
     async loadAllTokens({ commit, getters }): Promise<Tokens> {
       if (Object.entries(getters.getAllTokens).length === 0) {
-        await this.dispatch("wallet/restoreProviderConnection");
-        const tokensList = await walletData.get().syncProvider?.getTokens();
-        commit("setAllTokens", tokensList as Tokens);
+        await this.app.$accessor.wallet.restoreProviderConnection();
+        const tokensList = await walletData.get().syncProvider!.getTokens();
+        commit("setAllTokens", tokensList);
         return tokensList || {};
       }
       return getters.getAllTokens;
     },
 
-    async loadTokensAndBalances({
-      dispatch,
-    }): Promise<{
+    async loadTokensAndBalances(): Promise<{
       tokens: Tokens;
-      zkBalances: Array<ZkInBalanceItem>;
+      zkBalances: Array<ZkInToken>;
     }> {
       const syncWallet = walletData.get().syncWallet;
       const accountState = walletData.get().accountState;
 
-      const tokens = await dispatch("loadAllTokens");
+      const tokens = await this.app.$accessor.tokens.loadAllTokens();
       const zkBalance = accountState?.committed.balances;
       if (!zkBalance) {
         return {
@@ -130,7 +127,7 @@ export const actions = actionTree(
       if (Object.prototype.hasOwnProperty.call(localPricesList, symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
         return localPricesList[symbol].price;
       }
-      await this.dispatch("wallet/restoreProviderConnection");
+      await this.app.$accessor.wallet.restoreProviderConnection();
       const syncProvider = walletData.get().syncProvider;
       const tokenPrice = await syncProvider?.getTokenPrice(symbol);
       commit("setTokenPrice", {

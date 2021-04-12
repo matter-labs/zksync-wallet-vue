@@ -1,5 +1,4 @@
-import { BigNumber } from "ethers";
-import { AbstractJSONRPCTransport } from "zksync/src/transport";
+import { BigNumber, BigNumberish } from "ethers";
 import { SignedTransaction, TransactionReceipt, AccountState, Address, TokenSymbol } from "zksync/src/types";
 import { Wallet } from "zksync/src";
 
@@ -23,6 +22,39 @@ export declare interface ZkInTokenPrices {
     lastUpdated: number;
     price: number;
   };
+}
+
+export interface ZkInBalance {
+  symbol: TokenSymbol;
+  status: "Pending" | "Verified";
+  balance: GweiBalance;
+  rawBalance: BigNumber;
+  verifiedBalance: GweiBalance;
+  tokenPrice: number;
+  restricted: boolean;
+  unlocked?: boolean;
+  address?: string;
+}
+
+export declare interface ZkInTransactionInfo {
+  continueBtnFunction: boolean;
+  amount?: {
+    amount: BigNumberish;
+    token: false | ZkInBalance;
+  };
+  fee?: {
+    amount: BigNumberish;
+    token: false | ZkInBalance;
+  };
+  recipient?: {
+    address: string;
+    name: string;
+  };
+  success: boolean;
+  continueBtnText?: string;
+  type: string;
+  hash: string;
+  explorerLink: string;
 }
 
 export interface ZkInTx {
@@ -60,36 +92,17 @@ export interface ZkInTx {
 
   confirmCount: number;
 }
-
-export interface ZkInBalance {
-  symbol: TokenSymbol;
-  status: "Pending" | "Verified";
-  balance: GweiBalance;
-  rawBalance: BigNumber;
-  verifiedBalance: GweiBalance;
-  tokenPrice: number;
-  restricted: boolean;
-  unlocked?: boolean;
-  address?: string;
+export interface Token {
+  address: string;
+  id: number;
+  symbol: string;
+  decimals: number;
 }
-
-export interface ZkInBalanceItem {
+export interface ZkInToken {
   id: number;
   symbol: TokenSymbol;
   balance: GweiBalance;
   address: string;
-}
-
-export declare interface ZkInTransactionInfo {
-  continueBtnFunction: boolean;
-  amount: any;
-  success: boolean;
-  fee: { amount: string; token: false | ZkInBalance };
-  recipient?: Address;
-  continueBtnText?: string;
-  type: string;
-  hash: string;
-  explorerLink: string;
 }
 
 export interface ZkInContact {
@@ -136,7 +149,7 @@ export declare interface singleIcon {
 }
 
 export interface iWalletData {
-  syncProvider?: AbstractJSONRPCTransport | Provider;
+  syncProvider?: Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
   zkSync?: zksync;
@@ -157,16 +170,4 @@ export declare interface iWalletWrapper {
   set: (val: iWalletData) => void;
   zkSync: () => Promise<zksync | undefined>;
   get: () => iWalletData;
-}
-
-export declare interface ZkInTransactionInfo {
-  continueBtnFunction: boolean;
-  amount: any;
-  success: boolean;
-  fee: { amount: string; token: false | ZkInBalance };
-  recipient?: Address;
-  continueBtnText?: string;
-  type: string;
-  hash: string;
-  explorerLink: string;
 }

@@ -99,7 +99,7 @@ export default Vue.extend({
       if (this.address) {
         const addressLowerCase = this.address.toLowerCase();
         const myAddressLowerCase = this.ownAddress.toLowerCase();
-        filteredList = filteredList.filter((item: ZKInTx) => {
+        filteredList = filteredList.filter((item: ZkInTx) => {
           if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
             const addressToLowerCase = item.tx.to?.toLowerCase();
             const addressFromLowerCase = item.tx.from.toLowerCase();
