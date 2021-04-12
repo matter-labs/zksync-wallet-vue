@@ -12,12 +12,12 @@ import { BigNumberish, utils } from "ethers";
  * @return {BigNumber|*}
  */
 function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
-  return walletData.get().syncProvider?.tokyaenSet.parseToken(symbol, amount.toString());
+  return walletData.get().syncProvider?.tokenSet?.parseToken(symbol, amount.toString());
 }
 
 function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance) {
   if (!amount) return "0";
-  return walletData.get().syncProvider?.tokenSet.formatToken(symbol, amount) || "0";
+  return walletData.get().syncProvider?.tokenSet?.formatToken(symbol, amount) || "0";
 }
 
 export default {

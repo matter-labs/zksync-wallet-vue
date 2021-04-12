@@ -136,7 +136,7 @@ export declare interface singleIcon {
 }
 
 export interface iWalletData {
-  syncProvider?: WSTransport | AbstractJSONRPCTransport | Provider;
+  syncProvider?: AbstractJSONRPCTransport | Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
   zkSync?: zksync;
