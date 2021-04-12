@@ -1,4 +1,14 @@
-import { Initialization, PopupContent } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import { WalletModuleState } from "@/store/wallet";
+import {
+  Initialization,
+  PopupContent,
+  Subscriptions,
+  WalletInitOptions,
+  WalletModule,
+  WalletSelectModuleOptions,
+  Wallet as OnBoardingWallet,
+} from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import { Store } from "vuex";
 import Web3 from "web3";
 import web3Wallet from "@/plugins/web3";
 import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
@@ -6,10 +16,10 @@ import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
 const APP_NAME = "zkSync Beta";
 const FORCED_EXIT_LINK = `https://withdraw${ETHER_NETWORK_NAME === "mainnet" ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
-const INFURA_KEY = process.env.APP_WALLET_CONNECT;
+const INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;
 const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
-const initializedWallets = {
-  wallets: [
+const initializedWallets: WalletSelectModuleOptions = {
+  wallets: <Array<WalletModule | WalletInitOptions>>[
     { walletName: "imToken", rpcUrl: RPC_URL, preferred: true },
     { walletName: "metamask", preferred: true },
     {
@@ -56,19 +66,20 @@ const initializedWallets = {
     { walletName: "atoken" },
   ],
 };
-export default (ctx: any): Initialization => {
-  const colorTheme = localStorage.getItem("colorTheme");
-  return {
+export default (ctx: Store<WalletModuleState>): Initialization => {
+  const colorTheme: string | null = localStorage.getItem("colorTheme");
+  return <Initialization>{
     hideBranding: true,
     blockPollingInterval: 400000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
-    darkMode: colorTheme === "dark",
-    subscriptions: {
-      wallet: (wallet) => {
+    darkMode: colorTheme !== null && colorTheme === "dark",
+    subscriptions: <Subscriptions>{
+      wallet: (wallet: OnBoardingWallet) => {
         if (wallet && wallet.provider) {
           wallet.provider.autoRefreshOnNetworkChange = false;
         }
+        // @ts-ignore
         web3Wallet.set(new Web3(wallet.provider));
         if (process.client) {
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
@@ -78,8 +89,8 @@ export default (ctx: any): Initialization => {
         wallet.provider;
       },
     },
-    walletSelect: {
-      wallets: initializedWallets.wallets,
+    walletSelect: <WalletSelectModuleOptions>{
+      wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
     },
     popupContent: <PopupContent>{
       dismiss: "Dismiss",

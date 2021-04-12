@@ -42,6 +42,7 @@ import { walletData } from "@/plugins/walletData";
 
 import moment from "moment";
 import Vue from "vue";
+import { Withdraw } from "zksync/build/types";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -198,7 +199,7 @@ export default Vue.extend({
       return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
     },
     async getWithdrawalTx() {
-      const singleTx: Tx = this.singleTransaction;
+      const singleTx: Withdraw = this.singleTransaction;
       if (singleTx && singleTx.tx.type === "Withdraw") {
         const txFromStore = this.$accessor.transaction.getWithdrawalTx(singleTx.hash);
         if (txFromStore) {

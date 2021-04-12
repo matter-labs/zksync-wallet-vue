@@ -83,7 +83,7 @@
 <script lang="ts">
 import Mint from "@/blocks/Mint.vue";
 import utils from "@/plugins/utils";
-import { Balance, DepositsInterface } from "@/plugins/types";
+import { DepositsInterface } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 

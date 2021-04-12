@@ -1,7 +1,8 @@
-import { ETHOperation } from "@/plugins/types";
+import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
+import { ContractTransaction } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ChangePubKeyFee, ChangePubkeyTypes } from "zksync/build/types";
+import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/src/types";
 
 let updateBalancesTimeout = undefined as any;
 
@@ -95,27 +96,27 @@ export const actions = actionTree(
           return;
         }
         if (!existingTransaction) {
-          await walletData.get().syncProvider!.notifyTransaction(transactionHash, "COMMIT");
+          await walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
           await dispatch("requestBalancesUpdate");
         } else {
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
         }
-        await walletData.get().syncProvider!.notifyTransaction(transactionHash, "VERIFY");
+        await walletData.get().syncProvider?.notifyTransaction(transactionHash, "VERIFY");
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
         await dispatch("requestBalancesUpdate");
       } catch (error) {
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       }
     },
-    async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: string; amount: string }): Promise<void> {
+    async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: Deposit; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
       try {
-        commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
+        commit("updateDepositStatus", { hash: depositTx?.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
         await depositTx.awaitReceipt();
         await dispatch("requestBalancesUpdate");
-        commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Committed" });
+        commit("updateDepositStatus", { hash: depositTx?.ethTx.hash, tokenSymbol, status: "Committed" });
       } catch (error) {
-        commit("updateDepositStatus", { hash: depositTx!.ethTx.hash, tokenSymbol, status: "Committed" });
+        commit("updateDepositStatus", { hash: depositTx?.ethTx.hash, tokenSymbol, status: "Committed" });
       }
     },
     requestBalancesUpdate(): void {
@@ -133,18 +134,18 @@ export const actions = actionTree(
      * @param {any} feeToken
      * @return {Promise<any>}
      */
-    async fetchChangePubKeyFee({ state }, { address, feeToken }) {
+    async fetchChangePubKeyFee({}, { address, feeToken }): Promise<Fee | undefined> {
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
-        const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
+        const isOnchainAuthSigningKeySet: boolean = await syncWallet?.isOnchainAuthSigningKeySet();
         if (!isOnchainAuthSigningKeySet) {
-          const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
+          const onchainAuthTransaction: ContractTransaction = await syncWallet?.onchainAuthSigningKey();
           await onchainAuthTransaction?.wait();
         }
       }
 
-      const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+      const ethAuthType: string = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
       const txType: ChangePubKeyFee = {
         // Note: Ignore, since it just looks more intuitive if `"ChangePubKey"` is kept as a string literal)
         // Denotes how authorization of operation is performed:
