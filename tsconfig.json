@@ -24,6 +24,7 @@
     },
     "types": [
       "vue-meta",
+      "typed-vuex",
       "@nuxt/vue-app",
       "@types/node",
       "@types/jest",
@@ -34,7 +35,7 @@
       "@nuxtjs/sentry",
       "@nuxtjs/toast",
       "@inkline/inkline/types",
-      "nuxt-i18n",
+      "nuxt-i18n"
     ]
   },
   "exclude": [

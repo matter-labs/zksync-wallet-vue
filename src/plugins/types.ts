@@ -462,7 +462,7 @@ export interface iWalletData {
   syncProvider?: Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
-  zkSync?: object;
+  zkSync?: zksync;
 }
 
 export declare interface depositTx {

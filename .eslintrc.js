@@ -14,11 +14,12 @@ module.exports = {
     quotes: ["error", "double"],
     semi: ["error", "always"],
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
     "no-console": "off",
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaVersion: 2020,
+    ecmaVersion: 12,
     project: path.resolve(__dirname, "./tsconfig.json"),
     tsconfigRootDir: __dirname,
     sourceType: "module",

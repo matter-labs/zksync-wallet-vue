@@ -26,34 +26,35 @@ interface feesInterface {
 
 let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
 
-export const state = () => ({
-  onboard: undefined as undefined | API,
+export declare interface iWallet {
+  onboard?: API;
+  isAccountLocked: boolean;
+  zkTokens: { lastUpdated: number; list: Array<Balance> };
+  initialTokens: { lastUpdated: number; list: Array<Balance> };
+  tokenPrices: { [p: string]: { lastUpdated: number; price: number } };
+  transactionsHistory: { lastUpdated: number; list: Array<Tx> };
+  withdrawalProcessingTime: false | { normal: number; fast: number };
+  fees: feesInterface;
+}
+
+export const state = (): iWallet => ({
+  onboard: undefined,
   isAccountLocked: false,
   zkTokens: {
-    lastUpdated: 0 as number,
-    list: [] as Array<Balance>,
+    lastUpdated: 0,
+    list: [],
   },
   initialTokens: {
-    lastUpdated: 0 as number,
-    list: [] as Array<Balance>,
+    lastUpdated: 0,
+    list: [],
   },
-  tokenPrices: {} as {
-    [symbol: string]: {
-      lastUpdated: number;
-      price: number;
-    };
-  },
+  tokenPrices: {},
   transactionsHistory: {
-    lastUpdated: 0 as number,
-    list: [] as Array<Tx>,
+    lastUpdated: 0,
+    list: [],
   },
-  withdrawalProcessingTime: false as
-    | false
-    | {
-        normal: number;
-        fast: number;
-      },
-  fees: {} as feesInterface,
+  withdrawalProcessingTime: false,
+  fees: {},
 });
 
 export type WalletModuleState = ReturnType<typeof state>;
@@ -62,7 +63,7 @@ export const mutations = mutationTree(state, {
   setAccountLockedState(state, accountState: boolean) {
     state.isAccountLocked = accountState;
   },
-  setOnboard(state, obj: any) {
+  setOnboard(state, obj: API) {
     state.onboard = obj;
   },
   setTokensList(
@@ -183,72 +184,42 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  isAccountLocked(state): boolean {
-    return state.isAccountLocked;
-  },
-  getOnboard(state): API | undefined {
-    return state.onboard;
-  },
-  getTokensList(state): { lastUpdated: number; list: Array<Balance> } {
-    return state.initialTokens;
-  },
-  getInitialBalances(state): Array<Balance> {
-    return state.initialTokens.list;
-  },
-  getzkList(state): { lastUpdated: number; list: Array<Balance> } {
-    return state.zkTokens;
-  },
-  getzkBalances(state): Array<Balance> {
-    return state.zkTokens.list;
-  },
-  getTransactionsHistory(state): Array<Tx> {
-    return state.transactionsHistory.list;
-  },
-  getTokenPrices(
+  isAccountLocked: (state): boolean => state.isAccountLocked,
+  getOnboard: (state): API | undefined => state.onboard,
+  getTokensList: (state): { lastUpdated: number; list: Array<Balance> } => state.initialTokens,
+  getInitialBalances: (state): Array<Balance> => state.initialTokens.list,
+  getzkList: (state): { lastUpdated: number; list: Array<Balance> } => state.zkTokens,
+  getzkBalances: (state): Array<Balance> => state.zkTokens.list,
+  getTransactionsHistory: (state): Array<Tx> => state.transactionsHistory.list,
+  getTokenPrices: (
     state,
   ): {
     [symbol: string]: {
       lastUpdated: number;
       price: number;
     };
-  } {
-    return state.tokenPrices;
-  },
-  getTransactionsList(
+  } => state.tokenPrices,
+  getTransactionsList: (
     state,
   ): {
     lastUpdated: number;
     list: Array<Tx>;
-  } {
-    return state.transactionsHistory;
-  },
-  getWithdrawalProcessingTime(
+  } => state.transactionsHistory,
+  getWithdrawalProcessingTime: (
     state,
   ):
     | false
     | {
         normal: number;
         fast: number;
-      } {
-    return state.withdrawalProcessingTime;
-  },
-  getFees(state): feesInterface {
-    return state.fees;
-  },
+      } => state.withdrawalProcessingTime,
+  getFees: (state): feesInterface => state.fees,
 
-  getSyncWallet() {
-    return walletData.get().syncWallet;
-  },
+  getSyncWallet: () => walletData.get().syncWallet,
 
-  getProvider() {
-    return walletData.get().syncProvider;
-  },
-  getAccountState() {
-    return walletData.get().syncProvider;
-  },
-  isLoggedIn(): boolean {
-    return !!(walletData.get().syncWallet && walletData.get().syncWallet?.address);
-  },
+  getProvider: () => walletData.get().syncProvider,
+  getAccountState: () => walletData.get().syncProvider,
+  isLoggedIn: (): boolean => !!(walletData.get().syncWallet && walletData.get().syncWallet?.address),
 });
 
 export const actions = actionTree(

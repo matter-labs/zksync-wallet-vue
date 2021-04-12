@@ -106,7 +106,7 @@
       <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)"
         ><i class="ri-pencil-fill"></i>&nbsp;&nbsp;Edit contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted(openedContact)"><i class="ri-arrow-go-back-line"></i>&nbsp;&nbsp;Restore contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"><i class="ri-arrow-go-back-line"></i>&nbsp;&nbsp;Restore contact</i-button>
       <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer to contact</i-button>
     </div>
     <transactions v-if="openedContact" :address="openedContact.address" />
@@ -119,8 +119,8 @@ import addressInput from "@/components/AddressInput.vue";
 
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
-import utils from "@/plugins/utils";
 import { Address, Contact } from "@/plugins/types";
+import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -137,15 +137,16 @@ export default Vue.extend({
   },
   data() {
     return {
-      search: "",
-      addContactModal: false,
+      deletedContact: <Contact | undefined>undefined,
+      search: <string>"",
+      addContactModal: <boolean>false,
       addContactType: "add",
-      inputtedName: "",
-      inputtedWallet: "",
-      editingWallet: null as Contact | null,
-      modalError: "",
-      contactsList: this.$accessor.contacts.get.map((e: Contact) => ({ ...e, deleted: false, notInContacts: false })) as Array<Contact>,
-      fromRoute: {} as any,
+      inputtedName: <string>"",
+      inputtedWallet: <Address>"",
+      editingWallet: <Contact | null>null,
+      modalError: <string>"",
+      contactsList: <Contact[]>this.$accessor.contacts.get.map((e: Contact) => ({ ...e, deleted: false, notInContacts: false })),
+      fromRoute: {} as unknown,
     };
   },
   computed: {
@@ -155,7 +156,7 @@ export default Vue.extend({
     walletAddressFull(): string {
       return this.$accessor.account.address;
     },
-    displayedContactsList(): Array<Contact> {
+    displayedContactsList(): Contact[] {
       return utils.searchInArr(this.search, this.contactsList, (e: Contact) => e.name);
     },
     openedContact(): null | Contact {
@@ -224,7 +225,11 @@ export default Vue.extend({
             }
           }
           this.contactsList.unshift({ name: this.inputtedName.trim(), address: this.inputtedWallet, deleted: false });
-          this.$accessor.contacts.saveContact({ name: this.inputtedName.trim(), address: this.inputtedWallet });
+          const contact: Contact = {
+            name: this.inputtedName.trim(),
+            address: this.inputtedWallet.toLowerCase(),
+          };
+          this.$accessor.contacts.saveContact(contact);
         } catch (error) {
           this.$sentry.captureException(error);
           this.$accessor.toaster.error(error.message ? error.message : "Error while saving your contact book.");
@@ -242,25 +247,22 @@ export default Vue.extend({
       this.addContactModal = true;
     },
     deleteContact(): void {
-      for (const item of this.contactsList) {
-        if (item.address.toLowerCase() === this.editingWallet?.address.toLowerCase()) {
-          item.deleted = true;
-          this.$accessor.contacts.deleteContact(item.address);
-          break;
-        }
+      const foundContact = this.$accessor.contacts.getByAddress(item.address);
+      if (foundContact === undefined) {
+        this.$accessor.toaster.error(`Contact with the address : ${item.address} not found`);
+        return;
       }
+      this.deletedContact = foundContact;
+      this.$accessor.contacts.deleteContact(item.address);
       this.addContactModal = false;
       this.inputtedName = "";
       this.inputtedWallet = "";
       this.editingWallet = null;
     },
-    restoreDeleted(contact: Contact): void {
-      for (let a = 0; a < this.contactsList.length; a++) {
-        if (this.contactsList[a].address.toLowerCase() === contact.address.toLowerCase()) {
-          this.$set(this.contactsList, a, { ...contact, deleted: false });
-          this.$accessor.contacts.saveContact({ name: contact.name, address: contact.address });
-          break;
-        }
+    restoreDeleted(): void {
+      if (this.deletedContact) {
+        this.$accessor.contacts.saveContact(this.deletedContact);
+        this.deletedContact = undefined;
       }
     },
     openContact(contact: Contact): void {

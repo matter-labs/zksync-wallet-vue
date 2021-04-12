@@ -1,63 +1,62 @@
-import { getterTree, mutationTree } from "typed-vuex";
 import { Address, Contact } from "@/plugins/types";
-import { walletData } from "@/plugins/walletData";
 import utils from "@/plugins/utils";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 
-export const state = () => ({
-  contactsList: [] as Array<Contact>,
+export declare interface iContacts {
+  contactsList: Contact[];
+  storageKey?: string;
+}
+
+export const state = (): iContacts => ({
+  contactsList: [],
+  storageKey: undefined,
 });
 
 export type ContactsModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  getContactsFromStorage(state) {
-    try {
-      const walletAddress = walletData.get().syncWallet!.address();
-      const contactsList = window.localStorage.getItem("contacts-" + walletAddress);
-      if (process.client && contactsList && window.localStorage.getItem("contacts-" + walletAddress)) {
-        let contactsListArray: Contact[] = JSON.parse(contactsList) || [];
-        if (Array.isArray(contactsList)) {
-          contactsListArray = contactsList.filter((contact) => utils.validateAddress(contact.address) && contact.name.length > 0);
-          state.contactsList = contactsListArray;
-          return;
-        }
-      }
-      state.contactsList = [];
-    } catch (error) {
-      state.contactsList = [];
+  setContactsList(state, contactsList: Contact[]): void {
+    state.contactsList = contactsList;
+  },
+  add(state, contact: Contact): void {
+    state.contactsList.unshift(contact);
+  },
+  delete(state, contact: Contact): void {
+    const foundIndex = state.contactsList.indexOf(contact);
+    if (foundIndex !== -1) {
+      state.contactsList = state.contactsList.filter((singleContact) => singleContact.address.toLowerCase() !== contact.address.toLowerCase());
     }
   },
-  saveContact(state, { name, address }) {
-    const lowerCaseAddress = address.toLowerCase();
-    for (let a = state.contactsList.length - 1; a >= 0; a--) {
-      if (state.contactsList[a].address.toLowerCase() === lowerCaseAddress) {
-        state.contactsList.splice(a, 1);
-      }
-    }
-    state.contactsList.unshift({ name: name.trim(), address });
-    if (process.client) {
-      window.localStorage.setItem("contacts-" + walletData.get().syncWallet!.address(), JSON.stringify(state.contactsList));
-    }
+  setStorageKey(state, storageKey: string): void {
+    state.storageKey = storageKey;
   },
-  deleteContact(state, address) {
-    const lowerCaseAddress = address.toLowerCase();
-    for (let a = state.contactsList.length - 1; a >= 0; a--) {
-      if (state.contactsList[a].address.toLowerCase() === lowerCaseAddress) {
-        state.contactsList.splice(a, 1);
-      }
-    }
-    if (process.client) {
-      window.localStorage.setItem("contacts-" + walletData.get().syncWallet!.address(), JSON.stringify(state.contactsList));
-    }
+
+  initContactsList(state): void {
+    state.contactsList = [];
   },
 });
 
 export const getters = getterTree(state, {
-  get(state) {
-    return state.contactsList;
-  },
-  isInContacts(state): Function {
-    return (address: Address): boolean => {
+  get: (state: ContactsModuleState): Contact[] => state.contactsList,
+});
+
+export const actions = actionTree(
+  { state, mutations, getters },
+  {
+    getStorageKey({ state, commit }): string {
+      if (state.storageKey === undefined) {
+        const walletAddress: Address | undefined = this.app.$accessor.account.address;
+        if (walletAddress === undefined) {
+          throw new Error("Wallet address can't be undefined");
+        }
+        commit("setStorageKey", "contacts-" + walletAddress);
+      }
+      if (state.storageKey === undefined) {
+        throw new Error("Storage key is empty");
+      }
+      return state.storageKey;
+    },
+    isInContacts({ state }, address: Address): boolean {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {
         if (contactItem.address.toLowerCase() === address) {
@@ -65,17 +64,55 @@ export const getters = getterTree(state, {
         }
       }
       return false;
-    };
-  },
-  getByAddress(state): Function {
-    return (address: Address): false | Contact => {
+    },
+    getByAddress({ state }, address: Address): Contact | undefined {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {
         if (contactItem.address.toLowerCase() === address) {
           return contactItem;
         }
       }
-      return false;
-    };
+      return undefined;
+    },
+    getContactsFromStorage({ commit }): void {
+      try {
+        const walletAddress: Address | undefined = this.app.$accessor.account.address;
+        if (walletAddress === undefined || !process.client) {
+          commit("initContactsList");
+          return;
+        }
+        const contactsListRaw: string | null = window.localStorage.getItem(this.app.$accessor.contacts.getStorageKey());
+        if (contactsListRaw === null) {
+          commit("initContactsList");
+          return;
+        }
+        let contactsList: Contact[] = JSON.parse(contactsListRaw);
+        contactsList = contactsList.filter((contact: Contact) => utils.validateAddress(contact.address) && contact.name.length > 0);
+        commit("setContactsList", contactsList);
+      } catch (error) {
+        this.$sentry.captureException(error);
+        commit("initContactsList");
+      }
+    },
+    deleteContact({ commit }, address: Address): void {
+      const contact: Contact | undefined = this.app.$accessor.contacts.getByAddress(address);
+      if (contact !== undefined) {
+        commit("delete", contact);
+        this.app.$accessor.contacts.updateLocalStorage();
+      }
+    },
+    saveContact({ state, commit }, contact: Contact): void {
+      if (state.contactsList.includes(contact)) {
+        commit("delete", contact);
+      }
+      commit("add", contact);
+      this.app.$accessor.contacts.updateLocalStorage();
+    },
+    updateLocalStorage({ state }): void {
+      if (process.client) {
+        const storageKey: string = this.app.$accessor.contacts.getStorageKey();
+        window.localStorage.setItem(storageKey, JSON.stringify(state.contactsList));
+      }
+    },
   },
-});
+);

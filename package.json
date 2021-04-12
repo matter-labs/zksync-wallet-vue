@@ -63,7 +63,7 @@
     "generate": "nuxt generate",
     "test": "jest",
     "format": "prettier --write",
-    "lint-ts": "eslint --fix --ext .ts,.js,.vue ./src",
+    "lint-ts": "eslint --fix --ext .ts,.js,.vue ./  src",
     "lint-css": "stylelint --fix \"**/*.scss\""
   },
   "stylelint": {

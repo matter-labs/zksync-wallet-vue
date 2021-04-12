@@ -62,6 +62,7 @@ ij_vue_interpolation_wrap = on_every_item
 ij_vue_keep_indents_on_empty_lines = false
 ij_vue_spaces_within_interpolation_expressions = true
 ij_vue_uniform_indent = false
+ij_vue_use_double_quotes = true
 
 [.editorconfig]
 ij_editorconfig_align_group_field_declarations = true
