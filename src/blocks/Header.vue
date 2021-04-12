@@ -59,10 +59,10 @@ export default Vue.extend({
   },
   computed: {
     walletName(): string {
-      return this.$accessor.account.name;
+      return this.$accessor.account.name || '';
     },
     walletAddressFull(): string {
-      return this.$accessor.account.address;
+      return this.$accessor.account.address || '';
     },
     accountModal: {
       get(): boolean {

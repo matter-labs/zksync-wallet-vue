@@ -37,8 +37,9 @@
 <script lang="ts">
 import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, Provider, TokenSymbol, Tx } from "@/plugins/types";
+import { Address, Tx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
+import { TokenSymbol } from "zksync/build/types";
 
 import moment from "moment";
 import Vue from "vue";
@@ -67,7 +68,7 @@ export default Vue.extend({
       );
     },
     walletAddressFull(): Address {
-      return this.$accessor.account.address;
+      return this.$accessor.account.address || '';
     },
     displayedAddress(): any {
       return this.singleTransaction.tx.type === "Transfer"
@@ -159,7 +160,7 @@ export default Vue.extend({
           ? this.singleTransaction.tx.priority_op.token
           : this.singleTransaction.tx.token
         : typeof this.singleTransaction.tx.feeToken === "number"
-        ? this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken).symbol
+        ? this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)?.symbol
         : this.singleTransaction.tx.priority_op
         ? this.singleTransaction.tx.priority_op.token
         : this.singleTransaction.tx.token;
@@ -186,9 +187,11 @@ export default Vue.extend({
       return moment(time).fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: Tx): string {
-      return !this.isFeeTransaction
-        ? utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount)
-        : utils.handleFormatToken(this.tokenSymbol, fee);
+      if(!this.isFeeTransaction) {
+        return utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount) || '';
+      } else {
+        return utils.handleFormatToken(this.tokenSymbol, fee) || '';
+      }
     },
     getAddressName(address: string): string {
       address = address ? String(address).toLowerCase() : "";
@@ -205,7 +208,7 @@ export default Vue.extend({
         if (txFromStore) {
           this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${txFromStore}`;
         } else {
-          const syncProvider = walletData.get().syncProvider as Provider;
+          const syncProvider = walletData.get().syncProvider;
           const ethTx = await syncProvider!.getEthTxForWithdrawal(singleTx.hash);
           if (ethTx) {
             this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${ethTx}`;

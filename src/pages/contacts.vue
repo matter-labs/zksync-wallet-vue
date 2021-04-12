@@ -130,7 +130,7 @@ export default Vue.extend({
     transactions,
     addressInput,
   },
-  asyncData({ from }): any {
+  asyncData({ from }) {
     return {
       fromRoute: from,
     };
@@ -154,10 +154,10 @@ export default Vue.extend({
       return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute?.path !== "/transfer" ? this.fromRoute : "/contacts";
     },
     walletAddressFull(): string {
-      return this.$accessor.account.address;
+      return this.$accessor.account.address || '';
     },
     displayedContactsList(): Contact[] {
-      return utils.searchInArr(this.search, this.contactsList, (e: Contact) => e.name);
+      return (utils.searchInArr(this.search, this.contactsList, (e) => (e as Contact).name) as Contact[]);
     },
     openedContact(): null | Contact {
       const wallet = this.$route.query.w;
@@ -247,13 +247,14 @@ export default Vue.extend({
       this.addContactModal = true;
     },
     deleteContact(): void {
-      const foundContact = this.$accessor.contacts.getByAddress(item.address);
+      if(!this.editingWallet){return}
+      const foundContact = this.$accessor.contacts.getByAddress(this.editingWallet.address);
       if (foundContact === undefined) {
-        this.$accessor.toaster.error(`Contact with the address : ${item.address} not found`);
+        this.$accessor.toaster.error(`Contact with the address : ${this.editingWallet.address} not found`);
         return;
       }
       this.deletedContact = foundContact;
-      this.$accessor.contacts.deleteContact(item.address);
+      this.$accessor.contacts.deleteContact(this.editingWallet.address);
       this.addContactModal = false;
       this.inputtedName = "";
       this.inputtedWallet = "";

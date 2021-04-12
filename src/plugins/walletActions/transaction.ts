@@ -1,9 +1,9 @@
-import {Address, GweiBalance} from "@/plugins/types";
+import { Address, GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
 import { Store } from "vuex";
-import { WalletModuleState} from "@/store/wallet";
-import {SignedTransaction, TokenSymbol, Withdraw} from "zksync/build/types";
+import { WalletModuleState } from "@/store/wallet";
+import { SignedTransaction, TokenSymbol, TxEthSignature, Withdraw } from "zksync/build/types";
 
 /**
  * Make zkSync transaction
@@ -38,7 +38,7 @@ export const transaction = async (
     fee: feeBigValue,
     nonce,
     amount: 0,
-    to: syncWallet!.address(),
+    to: syncWallet?.address(),
     token: feeToken,
   };
 
@@ -69,7 +69,7 @@ interface WithdrawParams {
   amount: GweiBalance;
   fastWithdraw: boolean;
   fees: GweiBalance;
-  store: any;
+  store: typeof accessorType;
 }
 
 /**
@@ -84,12 +84,12 @@ interface WithdrawParams {
  * @param store
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
-export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw, fees, store }: WithdrawParams): Promise<any> => {
+export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw, fees, store }: WithdrawParams) => {
   const syncWallet = walletData.get().syncWallet;
   const amountBigValue = amount;
   const feeBigValue = fees;
   if (token === feeToken) {
-    const transaction = await syncWallet!.withdrawFromSyncToEthereum({
+    const transaction = await syncWallet?.withdrawFromSyncToEthereum({
       ethAddress: address,
       token,
       amount: amountBigValue,
@@ -106,7 +106,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       token,
     };
     const transferTx = {
-      to: syncWallet!.address(),
+      to: syncWallet?.address(),
       token: feeToken,
       amount: "0",
       fee: feeBigValue,
@@ -114,14 +114,13 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
 
     const signedTransactions = [] as Array<{
       tx: Withdraw;
-      signature: any;
+      signature: TxEthSignature;
     }>;
 
-    let nonce: number;
-    nonce = await syncWallet?.getNonce();
+    const nonce = await syncWallet?.getNonce();
 
-    const signedWithdrawTransaction = await syncWallet?
-      .signWithdrawFromSyncToEthereum({
+    const signedWithdrawTransaction = await syncWallet
+      ?.signWithdrawFromSyncToEthereum({
         ...withdrawawTx,
         nonce,
       })
@@ -131,7 +130,8 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
 
     signedTransactions.push({ tx: signedWithdrawTransaction.tx as Withdraw, signature: signedWithdrawTransaction.ethereumSignature });
 
-    const signTransaction: SignedTransaction | void = await syncWallet?.signSyncTransfer({
+    const signTransaction: SignedTransaction | void = await syncWallet
+      ?.signSyncTransfer({
         ...transferTx,
         nonce: nonce + 1,
       })

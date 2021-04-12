@@ -103,7 +103,7 @@ export default Vue.extend({
   },
   computed: {
     ownAddress(): Address {
-      return this.$accessor.account.address;
+      return this.$accessor.account.address || '';
     },
     canSaveContact(): boolean {
       return !this.isInContacts && !!this.chosenContact && !!this.chosenContact.address && !this.chosenContact.name && !this.isOwnAddress;

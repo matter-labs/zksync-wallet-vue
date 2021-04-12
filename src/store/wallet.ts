@@ -305,7 +305,7 @@ export const actions = actionTree(
           rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
           verifiedBalance,
           tokenPrice: parseFloat(price),
-          restricted: +committedBalance <= 0 || restrictedTokens.includes(tokenSymbol),
+          restricted: !committedBalance || +committedBalance <= 0 || restrictedTokens.includes(tokenSymbol),
         } as Balance);
       }
       commit("setZkTokens", {
@@ -430,7 +430,7 @@ export const actions = actionTree(
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
       await dispatch("restoreProviderConnection");
-      const zksync = await walletData.zkSync();
+      const zksync: zksync | undefined = await walletData.zkSync();
       if (zksync === undefined) {
         throw new Error("No zksync lib loaded");
       }

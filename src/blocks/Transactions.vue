@@ -50,7 +50,7 @@ export default Vue.extend({
   },
   computed: {
     ownAddress(): Address {
-      return this.$accessor.account.address;
+      return this.$accessor.account.address || '';
     },
     transactionsList(): Array<Tx> {
       let list = this.$accessor.wallet.getTransactionsHistory;

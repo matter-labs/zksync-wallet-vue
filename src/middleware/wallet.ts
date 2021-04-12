@@ -18,7 +18,7 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
       return;
     }
 
-    const refreshWallet = await $accessor.wallet.walletRefresh();
+    const refreshWallet = await $accessor.wallet.walletRefresh(true);
     if (!refreshWallet) {
       await $accessor.wallet.logout();
       if (route.path !== "/") {

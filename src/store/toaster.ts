@@ -7,7 +7,7 @@ export type ToasterModuleState = ReturnType<typeof state>;
 export const actions = actionTree(
   { state },
   {
-    message({ commit }, messageText) {
+    message(_, messageText) {
       // @ts-ignore: Unreachable code error
       this.$toast.show(messageText, {
         type: "default",
@@ -15,7 +15,7 @@ export const actions = actionTree(
       });
     },
 
-    success({ commit }, messageText) {
+    success(_, messageText) {
       // @ts-ignore: Unreachable code error
       this.$toast.success(messageText, {
         duration: 3000,
@@ -45,12 +45,12 @@ export const actions = actionTree(
       });
     },
 
-    error({ dispatch }, messageText) {
+    error(_, messageText) {
       // @ts-ignore: Unreachable code error
       this.$sentry.captureException(new Error(messageText));
     },
 
-    info({ dispatch }, messageText) {
+    info(_, messageText) {
       // @ts-ignore: Unreachable code error
       this.$toast.info(messageText, {
         icon: {

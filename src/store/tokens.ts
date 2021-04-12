@@ -1,6 +1,7 @@
 import { BigNumberish } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { Address, Token, TokenItem, TokenPrices, Tokens, TokenSymbol } from "@/plugins/types";
+import { Address, TokenItem, TokenPrices, Tokens } from "@/plugins/types";
+import { TokenSymbol } from "zksync/build/types";
 import { walletData } from "~/plugins/walletData";
 
 /**
@@ -48,15 +49,15 @@ export const getters = getterTree(state, {
     return state.allTokens;
   },
   getRestrictedTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e: any) => state.restrictedTokens.includes(e[1].symbol)));
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => state.restrictedTokens.includes(e[1].symbol)));
   },
   getAvailableTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e: any) => !state.restrictedTokens.includes(e[1].symbol)));
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
   },
   getTokenPrices(state): TokenPrices {
     return state.tokenPrices;
   },
-  getTokenByID(state): Function {
+  getTokenByID(state) {
     return (id: number): TokenItem | undefined => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
@@ -125,7 +126,7 @@ export const actions = actionTree(
      */
     async getTokenPrice({ commit, getters }, symbol: TokenSymbol): Promise<number> {
       const localPricesList = getters.getTokenPrices;
-      if (localPricesList.hasOwnProperty(symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
+      if (Object.prototype.hasOwnProperty.call(localPricesList, symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
         return localPricesList[symbol].price;
       }
       await this.dispatch("wallet/restoreProviderConnection");

@@ -89,7 +89,7 @@ export declare interface singleIcon {
 }
 
 export interface iWalletData {
-  syncProvider?: typeof Provider;
+  syncProvider?: Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
   zkSync?: zksync;

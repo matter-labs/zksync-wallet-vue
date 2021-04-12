@@ -1,7 +1,7 @@
 import { walletData } from "@/plugins/walletData";
 import { Address, DecimalBalance, GweiBalance } from "@/plugins/types";
 import { utils as zkUtils } from "zksync";
-import { TokenSymbol, Tokens } from "zksync/src/types";
+import { TokenSymbol } from "zksync/src/types";
 
 import { BigNumberish, utils } from "ethers";
 
@@ -77,7 +77,7 @@ export default {
     return utils.isAddress(address);
   },
 
-  searchInArr: (search: string, list: Array<any>, searchParam: Function) => {
+  searchInArr: (search: string, list: Array<unknown>, searchParam: (e: unknown) => string) => {
     if (!search.trim()) {
       return list;
     }

@@ -4,7 +4,7 @@ import { ContractTransaction } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/src/types";
 
-let updateBalancesTimeout = undefined as any;
+let updateBalancesTimeout: ReturnType<typeof setTimeout>;
 
 interface DepositsInterface {
   [tokenSymbol: string]: Array<{
@@ -35,7 +35,7 @@ export const mutations = mutationTree(state, {
       delete state.watchedTransactions[hash];
       return;
     }
-    if (!state.watchedTransactions.hasOwnProperty(hash)) {
+    if (!Object.prototype.hasOwnProperty.call(state.watchedTransactions, hash)) {
       state.watchedTransactions[hash] = {
         status,
       };
@@ -92,7 +92,7 @@ export const actions = actionTree(
   {
     async watchTransaction({ dispatch, commit, state }, { transactionHash, existingTransaction }): Promise<void> {
       try {
-        if (state.watchedTransactions.hasOwnProperty(transactionHash)) {
+        if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
           return;
         }
         if (!existingTransaction) {
@@ -134,7 +134,7 @@ export const actions = actionTree(
      * @param {any} feeToken
      * @return {Promise<any>}
      */
-    async fetchChangePubKeyFee({}, { address, feeToken }): Promise<Fee | undefined> {
+    async fetchChangePubKeyFee(_, { address, feeToken }): Promise<Fee | undefined> {
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
