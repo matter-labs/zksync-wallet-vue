@@ -1,84 +1,141 @@
 import { BigNumber } from "ethers";
-import { Wallet } from "zksync/build";
-import { AccountState, TokenSymbol } from "zksync/build/types";
+import { TransactionReceipt } from "zksync/build/types";
+import { Wallet } from "zksync/src";
+import { AccountState, Address, TokenSymbol } from "zksync/src/types";
 import { Provider } from "zksync/build/provider";
 
 import * as zkSyncType from "zksync";
-
-export declare type Address = string;
-export declare type PubKeyHash = string;
-export declare type TokenAddress = string;
-export declare type TokenLike = TokenSymbol | TokenAddress;
-export declare type GweiBalance = string;
-export declare type DecimalBalance = string;
-export declare type Nonce = number | "committed";
-export declare type NetworkIDS = {
-  [key: string]: number;
-};
-
 export declare type zksync = typeof zkSyncType;
 
-export interface Signature {
-  pubKey: string;
-  signature: string;
+export declare type GweiBalance = string;
+export declare type DecimalBalance = string;
+
+export declare interface ZkInEthNetwork {
+  rinkeby: number;
+  mainnet: number;
+  ropsten: number;
 }
-export interface Contact {
+
+export declare interface ZkInTokenPrices {
+  [token: string]: {
+    lastUpdated: number;
+    price: number;
+  };
+}
+
+export interface ZkInTx {
+  hash: string;
+  pq_id?: any;
+  eth_block: number;
+  tx: {
+    fast: boolean;
+    amount: string;
+    fee: string;
+    from: string;
+    nonce: number;
+    priority_op?: {
+      amount: string;
+      from: string;
+      to: string;
+      token: string;
+    };
+    signature: {
+      pubKey: string;
+      signature: string;
+    };
+    to?: string;
+    token?: string;
+    feeToken?: number;
+    type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
+  };
+
+  success: boolean;
+  fail_reason?: any;
+  commited: boolean;
+  verified: boolean;
+  confirmCount: number;
+  created_at: Date;
+}
+
+export declare interface ZkInTransactionInfo {
+  continueBtnFunction: boolean;
+  amount: any;
+  success: boolean;
+  fee: { amount: string; token: false | Balance };
+  recipient?: any;
+  continueBtnText?: string;
+  type: string;
+  hash: string;
+  explorerLink: string;
+}
+
+export interface ZkInBalance {
+  symbol: TokenSymbol;
+  status: "Pending" | "Verified";
+  balance: GweiBalance;
+  rawBalance: BigNumber;
+  verifiedBalance: GweiBalance;
+  tokenPrice: number;
+  restricted: boolean;
+  unlocked?: boolean;
+  address?: string;
+}
+
+export interface ZkInContact {
   address: Address;
   name: string;
   deleted?: boolean;
   notInContacts?: boolean;
 }
 
-export interface FeesObj {
+export interface ZkInFeesObj {
   normal?: GweiBalance | BigNumber;
   fast?: GweiBalance | BigNumber;
 }
 
-export interface CloseAccount {
-  type: "Close";
-  account: Address;
-  nonce: number;
-  signature: Signature;
-}
-
-export interface BlockInfo {
-  blockNumber: number;
-  committed: boolean;
-  verified: boolean;
-}
-
-export interface TransactionReceipt {
-  executed: boolean;
-  success?: boolean;
-  failReason?: string;
-  block?: BlockInfo;
-}
-
-export interface PriorityOperationReceipt {
-  executed: boolean;
-  block?: BlockInfo;
-}
-
-export interface ContractAddress {
+export interface ZkInContractAddress {
   mainContract: string;
   govContract: string;
 }
 
-export interface TokenItem {
+export interface ZkInTokenItem {
   address: string;
   id: number;
   symbol: string;
   decimals: number;
 }
-export interface Tokens {
-  [token: string]: TokenItem;
-}
 
 export interface TokenPrices {
-  [token: string]: {
+  [token: TokenSymbol]: {
     lastUpdated: number;
     price: number;
   };
+}
+
+export interface TxEthSignature {
+  type: "EthereumSignature" | "EIP1271Signature";
+  signature: string;
+}
+
+export interface Fee {
+  feeType: "Withdraw" | "Transfer" | "TransferToNew" | "FastWithdraw" | ChangePubKeyFee | LegacyChangePubKeyFee;
+  gasTxAmount: BigNumber;
+  gasPriceWei: BigNumber;
+  gasFee: BigNumber;
+  zkpFee: BigNumber;
+  totalFee: BigNumber;
+}
+
+export declare class Transaction {
+  txData: any;
+  txHash: string;
+  sidechainProvider: Provider;
+  state: "Sent" | "Committed" | "Verified" | "Failed";
+  error?: ZKSyncTxError;
+  constructor(txData: any, txHash: string, sidechainProvider: Provider);
+  awaitReceipt(): Promise<TransactionReceipt>;
+  awaitVerifyReceipt(): Promise<zkInTransactionInfo>;
+  private setErrorState;
 }
 
 export declare interface singleIcon {
