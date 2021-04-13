@@ -10,7 +10,7 @@ import { walletData } from "@/plugins/walletData";
 import web3Wallet from "@/plugins/web3";
 import watcher from "@/plugins/watcher";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { API, Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { provider } from "web3-core";
 import { Provider, Wallet } from "zksync/build";
 import { AccountState, Address, Fee, Network, TokenSymbol } from "zksync/build/types";
@@ -255,7 +255,7 @@ export const actions = actionTree(
       await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true }).catch((error) => {
         this.$sentry.captureException(error);
       });
-      await this.app.$accessor.wallet.getTransactionsHistory({ force: true }).catch((error) => {
+      await this.app.$accessor.wallet.getTransactionsHistory({ force: true }).catch((error: unknown) => {
         this.$sentry.captureException(error);
       });
     },

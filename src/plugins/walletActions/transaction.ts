@@ -1,7 +1,7 @@
 import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
-import { Address, SignedTransaction, TokenSymbol, TxEthSignature, Withdraw } from "zksync/src/types";
+import { Address, SignedTransaction, TokenSymbol, Transfer, TxEthSignature, Withdraw } from "zksync/src/types";
 
 /**
  * Make zkSync transaction
@@ -36,7 +36,7 @@ export const transaction = async (
     fee: feeBigValue,
     nonce,
     amount: 0,
-    to: syncWallet?.address(),
+    to: syncWallet!.address(),
     token: feeToken,
   };
 
@@ -111,8 +111,8 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     };
 
     const signedTransactions: Array<{
-      tx: Withdraw;
-      signature: TxEthSignature;
+      tx: Transfer | Withdraw;
+      signature?: TxEthSignature;
     }> = [];
 
     const nonce = await syncWallet!.getNonce();
@@ -126,7 +126,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
         throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
       });
 
-    signedTransactions.push({ tx: signedWithdrawTransaction.tx, signature: signedWithdrawTransaction.ethereumSignature });
+    signedTransactions.push({ tx: signedWithdrawTransaction.tx as Withdraw, signature: signedWithdrawTransaction.ethereumSignature });
 
     const signTransaction: SignedTransaction | void = await syncWallet!
       .signSyncTransfer({
@@ -137,7 +137,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
         throw new Error("Error while performing signSyncTransfer: " + error.message);
       });
 
-    signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
+    signedTransactions.push({ tx: signTransaction.tx as Transfer, signature: signTransaction.ethereumSignature });
 
     const transactionHashes = await syncWallet!.provider.submitTxsBatch(signedTransactions).catch((error) => {
       throw new Error("Error while performing submitTxsBatch: " + error.message);

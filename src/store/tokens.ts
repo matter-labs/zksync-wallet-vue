@@ -1,7 +1,6 @@
-import { BigNumberish } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { ZkInTokenPrices, ZkInToken, Token } from "@/plugins/types";
-import { Address, TokenSymbol, Tokens } from "zksync/build/types";
+import { TokenSymbol, Tokens } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 
 /**
