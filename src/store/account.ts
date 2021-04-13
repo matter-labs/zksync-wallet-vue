@@ -46,7 +46,7 @@ export const mutations = mutationTree(state, {
       if (name.length < 1) {
         name = getNameFromAddress(state.address);
       }
-      window.localStorage.setItem(state.address as string, name);
+      window.localStorage.setItem(state.address, name);
       state.name = getNameFromAddress(state.address);
     }
   },

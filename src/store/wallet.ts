@@ -138,10 +138,12 @@ export const mutations = mutationTree(state, {
       obj: ZkInFeesObj;
     },
   ) {
-    state.fees[symbol][feeSymbol][type][address] = obj as {
-      normal: GweiBalance;
-      fast: GweiBalance;
-    };
+    state.fees[symbol][feeSymbol][type][address] = <
+      {
+        normal: GweiBalance;
+        fast: GweiBalance;
+      }
+    >obj;
   },
   /**
    * @todo review and drop (?)
@@ -224,7 +226,7 @@ export const actions = actionTree(
      * @return {Promise<boolean>}
      */
     async onboardInit({ commit }): Promise<boolean> {
-      const onboard: API = Onboard(onboardConfig(this) as Initialization);
+      const onboard: API = Onboard(onboardConfig(this));
       commit("setOnboard", onboard);
       const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
       if (!previouslySelectedWallet) {
@@ -267,13 +269,12 @@ export const actions = actionTree(
      * @return {Promise<[array]|*>}
      */
     async requestZkBalances({ commit, getters }, { accountState, force = false } = { accountState: undefined, force: false }): Promise<Array<ZkInBalance>> {
-      let listCommitted = {} as {
+      type balancesList = {
         [token: string]: BigNumberish;
       };
-      let listVerified = {} as {
-        [token: string]: BigNumberish;
-      };
-      const tokensList = [] as Array<ZkInBalance>;
+      let listCommitted = <balancesList>{};
+      let listVerified = <balancesList>{};
+      const tokensList = <Array<ZkInBalance>>[];
       const syncWallet = walletData.get().syncWallet;
       if (accountState) {
         listCommitted = accountState.committed.balances;
@@ -302,7 +303,7 @@ export const actions = actionTree(
           verifiedBalance,
           tokenPrice: price,
           restricted: !committedBalance || +committedBalance <= 0 || restrictedTokens.includes(tokenSymbol),
-        } as ZkInBalance);
+        });
       }
       commit("setZkTokens", {
         lastUpdated: new Date().getTime(),
@@ -359,10 +360,8 @@ export const actions = actionTree(
         this.$sentry.captureException(error);
         return [];
       });
-      // @ts-ignore
       const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.compareTokensById);
-      // @ts-ignore
-      const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesAZ) as Array<ZkInBalance>;
+      const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesAZ);
       balances.push(...balancesEmpty);
       // @ts-ignore
       commit("setTokensList", {
@@ -502,12 +501,12 @@ export const actions = actionTree(
         this.app.$accessor.account.setLoadingHint("Follow the instructions in your wallet");
         let walletCheck = false;
         if (firstSelect) {
-          walletCheck = (await state.onboard?.walletSelect()) as boolean;
+          walletCheck = !!(await state.onboard?.walletSelect());
           if (!walletCheck) {
             return false;
           }
         }
-        walletCheck = (await state.onboard?.walletCheck()) as boolean;
+        walletCheck = !!(await state.onboard?.walletCheck());
         if (!walletCheck) {
           return false;
         }

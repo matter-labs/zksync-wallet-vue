@@ -1,8 +1,9 @@
-import { GweiBalance, ZKInDepositTx } from "@/plugins/types";
+import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { ContractTransaction } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/src/types";
+import { ETHOperation } from "zksync/src/wallet";
 
 let updateBalancesTimeout: ReturnType<typeof setTimeout>;
 
@@ -16,15 +17,17 @@ interface DepositsInterface {
 }
 
 export const state = () => ({
-  watchedTransactions: {} as {
-    [txHash: string]: {
-      [prop: string]: string;
-      status: string;
-    };
-  },
-  deposits: {} as DepositsInterface,
+  watchedTransactions: <
+    {
+      [txHash: string]: {
+        [prop: string]: string;
+        status: string;
+      };
+    }
+  >{},
+  deposits: <DepositsInterface>{},
   forceUpdateTick: 0 /* Used to force update computed active deposits list */,
-  withdrawalTxToEthTx: new Map() as Map<string, string>,
+  withdrawalTxToEthTx: <Map<string, string>>new Map(),
 });
 
 export type TransactionModuleState = ReturnType<typeof state>;
@@ -109,8 +112,7 @@ export const actions = actionTree(
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       }
     },
-    /* depositTx here should be ETHOperation */
-    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ZKInDepositTx; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
+    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
       try {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
         await depositTx.awaitReceipt();

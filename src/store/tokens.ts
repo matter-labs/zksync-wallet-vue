@@ -14,7 +14,7 @@ export const state = () => ({
   /**
    * Restricted tokens, fee can't be charged in it
    */
-  restrictedTokens: ["PHNX", "LAMB", "MLTT"] as Array<TokenSymbol>,
+  restrictedTokens: <Array<TokenSymbol>>["PHNX", "LAMB", "MLTT"],
 
   /**
    * All available tokens:
@@ -25,12 +25,12 @@ export const state = () => ({
    *
    * Addressed by id
    */
-  allTokens: {} as Tokens,
+  allTokens: <Tokens>{},
 
   /**
    * Token prices
    */
-  tokenPrices: {} as ZkInTokenPrices,
+  tokenPrices: <ZkInTokenPrices>{},
 });
 
 export type TokensModuleState = ReturnType<typeof state>;
@@ -96,15 +96,11 @@ export const actions = actionTree(
           zkBalances: [],
         };
       }
-      const zkBalances = Object.keys(
-        zkBalance as {
-          [token: string]: BigNumberish;
-        },
-      ).map((key: TokenSymbol) => ({
-        address: tokens[key].address as Address,
-        balance: syncWallet?.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0") as string,
-        symbol: tokens[key].symbol as TokenSymbol,
-        id: tokens[key].id as number,
+      const zkBalances = Object.keys(zkBalance).map((key: TokenSymbol) => ({
+        address: tokens[key].address,
+        balance: syncWallet!.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
+        symbol: tokens[key].symbol,
+        id: tokens[key].id,
       }));
 
       return {
