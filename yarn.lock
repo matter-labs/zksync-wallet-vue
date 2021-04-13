@@ -23826,7 +23826,7 @@ resolve@~1.17.0:
     web3: ^1.3.5
     web3-core: ^1.3.5
     webpack: 4.46.0
-    zksync: ^0.10.8
+    zksync: ^0.10.9
   peerDependencies:
     playwright: 1.10.0
   dependenciesMeta:
@@ -23835,9 +23835,9 @@ resolve@~1.17.0:
   languageName: unknown
   linkType: soft
 
-"zksync@npm:^0.10.8":
-  version: 0.10.8
-  resolution: "zksync@npm:0.10.8"
+"zksync@npm:^0.10.9":
+  version: 0.10.9
+  resolution: "zksync@npm:0.10.9"
   dependencies:
     axios: ^0.21.1
     websocket: ^1.0.30
@@ -23846,7 +23846,7 @@ resolve@~1.17.0:
   peerDependencies:
     "@ethersproject/logger": ^5.0.0
     ethers: ^5.0.0
-  checksum: 5800912a49cb87ce6a3d6d1ca18b12b9451a77343b0e0f2082952d0d3e354b6a735f384a6a9f82ec183ffb2378d4ae6b8fba03e462845b5f019585c1d6cb4991
+  checksum: 3af532a52e82791793f6407e242e89fb5a19f69eb1dced8deeceaca1947f8c6e0a58ea54c86d884a00beb40bc72dd76636c5de44476695c14986a180645e778f
   languageName: node
   linkType: hard
 
