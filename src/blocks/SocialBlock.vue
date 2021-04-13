@@ -10,7 +10,9 @@
 <script lang="ts">
 import socialIcons from "@/plugins/socialIcons";
 import { singleIcon } from "@/plugins/types";
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
+
+type Location = "header" | "footer";
 
 export default Vue.extend({
   props: {
@@ -18,7 +20,7 @@ export default Vue.extend({
       required: false,
       type: String,
       default: "header",
-    },
+    } as PropOptions<Location>,
   },
   data() {
     return {

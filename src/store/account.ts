@@ -1,5 +1,5 @@
 import { getterTree, mutationTree } from "typed-vuex";
-import { Address } from "zksync/src/types";
+import { Address } from "zksync/build/types";
 import { APP_ZK_SCAN } from "@/plugins/build";
 
 export declare interface iAccount {

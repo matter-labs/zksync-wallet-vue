@@ -1,7 +1,7 @@
 import { walletData } from "@/plugins/walletData";
-import { DecimalBalance, GweiBalance } from "@/plugins/types";
+import { DecimalBalance, GweiBalance, ZkInBalance } from "@/plugins/types";
 import { utils as zkUtils } from "zksync";
-import { Address, TokenSymbol } from "zksync/src/types";
+import { Address, TokenSymbol } from "zksync/build/types";
 
 import { BigNumber, BigNumberish, utils } from "ethers";
 
@@ -50,7 +50,7 @@ export default {
    * @param b
    * @return {number}
    */
-  compareTokensById: (a: Token, b: Token) => {
+  compareTokensById: (a: ZkInBalance, b: ZkInBalance) => {
     if (a.id < b.id) {
       return -1;
     } else if (a.id > b.id) {
@@ -61,8 +61,8 @@ export default {
 
   /**
    * Soring by the token name
-   * @param {Token} a
-   * @param {Token} b
+   * @param {ZkInBalance} a
+   * @param {ZkInBalance} b
    * @returns {number}
    */
   sortBalancesAZ: (a: ZkInBalance, b: ZkInBalance) => {

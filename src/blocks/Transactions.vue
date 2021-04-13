@@ -20,8 +20,8 @@
 <script lang="ts">
 import SingleTransaction from "@/components/SingleTransaction.vue";
 import { ZkInTx } from "@/plugins/types";
-import { Address } from "zksync/src/types";
-import Vue from "vue";
+import { Address } from "zksync/build/types";
+import Vue, { PropOptions } from "vue";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -38,7 +38,7 @@ export default Vue.extend({
       type: String,
       default: "",
       required: false,
-    },
+    } as PropOptions<Address>,
   },
   data() {
     return {

@@ -38,13 +38,12 @@
 import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import { ZkInTx } from "@/plugins/types";
-import { Address } from "zksync/src/types";
+import { Address } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 import { TokenSymbol } from "zksync/build/types";
 
 import moment from "moment";
-import Vue from "vue";
-import { Withdraw } from "zksync/build/types";
+import Vue, { PropOptions } from "vue";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -53,7 +52,7 @@ export default Vue.extend({
       type: Object,
       default: () => {},
       required: true,
-    },
+    } as PropOptions<ZkInTx>,
   },
   data() {
     return {
@@ -71,14 +70,16 @@ export default Vue.extend({
     walletAddressFull(): Address {
       return this.$accessor.account.address || '';
     },
-    displayedAddress(): any {
-      return this.singleTransaction.tx.type === "Transfer"
-        ? this.isSameAddress(this.singleTransaction.tx.to as string)
-          ? this.singleTransaction.tx.from
-          : this.singleTransaction.tx.to
-        : this.singleTransaction.tx.priority_op
-        ? this.singleTransaction.tx.priority_op.to
-        : this.singleTransaction.tx.to;
+    displayedAddress(): Address {
+      if(this.singleTransaction.tx.type === "Transfer") {
+        if(this.isSameAddress(this.singleTransaction.tx.to || '')) {
+          return this.singleTransaction.tx.from;
+        }
+      }
+      else if(this.singleTransaction.tx.priority_op) {
+        return this.singleTransaction.tx.priority_op.to;
+      }
+      return this.singleTransaction.tx.to || '';
     },
     transactionStatus(): { text: string; icon: string } {
       if (this.singleTransaction.success === false) {
@@ -156,15 +157,18 @@ export default Vue.extend({
       }
     },
     tokenSymbol(): TokenSymbol {
-      return !this.isFeeTransaction
-        ? this.singleTransaction.tx.priority_op
-          ? this.singleTransaction.tx.priority_op.token
-          : this.singleTransaction.tx.token
-        : typeof this.singleTransaction.tx.feeToken === "number"
-        ? this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)?.symbol
-        : this.singleTransaction.tx.priority_op
-        ? this.singleTransaction.tx.priority_op.token
-        : this.singleTransaction.tx.token;
+      if (!this.isFeeTransaction) {
+        if (this.singleTransaction.tx.priority_op) {
+          return this.singleTransaction.tx.priority_op.token;
+        }
+      } else {
+        if (typeof this.singleTransaction.tx.feeToken === "number") {
+          return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol
+        } else if (this.singleTransaction.tx.priority_op) {
+          return this.singleTransaction.tx.priority_op.token;
+        }
+      }
+      return this.singleTransaction.tx.token!;
     },
   },
   mounted() {
@@ -184,7 +188,7 @@ export default Vue.extend({
     isSameAddress(address: string): boolean {
       return String(address).toLowerCase() === this.walletAddressFull.toLowerCase();
     },
-    getTimeAgo(time: any): string {
+    getTimeAgo(time: string): string {
       return moment(time).fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
@@ -203,7 +207,7 @@ export default Vue.extend({
       return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
     },
     async getWithdrawalTx() {
-      const singleTx: Withdraw = this.singleTransaction;
+      const singleTx = this.singleTransaction;
       if (singleTx && singleTx.tx.type === "Withdraw") {
         const txFromStore = this.$accessor.transaction.getWithdrawalTx(singleTx.hash);
         if (txFromStore) {

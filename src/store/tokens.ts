@@ -1,5 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ZkInTokenPrices, ZkInToken, Token } from "@/plugins/types";
+import { ZkInTokenPrices, ZkInToken, TokenInfo } from "@/plugins/types";
 import { TokenSymbol, Tokens } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 
@@ -57,7 +57,7 @@ export const getters = getterTree(state, {
     return state.tokenPrices;
   },
   getTokenByID(state) {
-    return (id: number): Token | undefined => {
+    return (id: number): TokenInfo | undefined => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];

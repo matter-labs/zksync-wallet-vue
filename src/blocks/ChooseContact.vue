@@ -67,9 +67,9 @@
 <script lang="ts">
 import utils from "@/plugins/utils";
 import { ZkInContact } from "@/plugins/types";
-import { Address } from "zksync/src/types";
+import { Address } from "zksync/build/types";
 import userImg from "@/components/userImg.vue";
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
   components: {
@@ -80,7 +80,7 @@ export default Vue.extend({
       type: String,
       default: undefined,
       required: false,
-    },
+    } as PropOptions<Address>,
     displayOwnAddress: {
       type: Boolean,
       default: true,
@@ -175,8 +175,9 @@ export default Vue.extend({
         return;
       }
       if (!contact.name) {
-        if (this.checkAddressInContacts(contact.address)) {
-          contact = this.$accessor.contacts.getByAddress(contact.address);
+        const foundContact = this.$accessor.contacts.getByAddress(contact.address);
+        if (foundContact) {
+          contact = foundContact;
         }
       }
       this.chosenContact = contact;

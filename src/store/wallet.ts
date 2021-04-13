@@ -5,15 +5,15 @@ import Web3 from "web3";
 
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { ZkInFeesObj, ZkInBalance, GweiBalance, iWalletData, zksync, ZkInTx } from "@/plugins/types";
+import { ZkInFeesObj, ZkInBalance, GweiBalance, iWalletData, ZkInTx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import web3Wallet from "@/plugins/web3";
 import watcher from "@/plugins/watcher";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { provider } from "web3-core";
-import { Provider, Wallet } from "zksync/build";
 import { AccountState, Address, Fee, Network, TokenSymbol } from "zksync/build/types";
+import { getDefaultProvider, closestPackableTransactionFee, Wallet } from "zksync";
 import utils from "@/plugins/utils";
 
 interface feesInterface {
@@ -255,7 +255,7 @@ export const actions = actionTree(
       await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true }).catch((error) => {
         this.$sentry.captureException(error);
       });
-      await this.app.$accessor.wallet.getTransactionsHistory({ force: true }).catch((error: unknown) => {
+      await this.app.$accessor.wallet.requestTransactionsHistory({ force: true }).catch((error: unknown) => {
         this.$sentry.captureException(error);
       });
     },
@@ -290,12 +290,14 @@ export const actions = actionTree(
         listCommitted = newAccountState?.committed.balances || {};
         listVerified = newAccountState?.verified.balances || {};
       }
+      const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
       const restrictedTokens: TokenSymbol[] = this.app.$accessor.tokens.restrictedTokens;
       for (const tokenSymbol in listCommitted) {
         const price = await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
+          id: loadedTokens.tokens[tokenSymbol].id,
           symbol: tokenSymbol,
           status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
           balance: committedBalance,
@@ -335,13 +337,14 @@ export const actions = actionTree(
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
 
-      const loadInitialBalancesPromises: Promise<void | ZkInBalance>[] = Object.keys(loadedTokens.tokens).map(
-        async (key: number | string): Promise<void | ZkInBalance> => {
+      const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(
+        async (key: number | string): Promise<undefined | ZkInBalance> => {
           const currentToken = loadedTokens.tokens[key];
           try {
             const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
             const price = await this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
             return {
+              id: currentToken.id,
               address: currentToken.address,
               balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
               rawBalance: balance,
@@ -353,17 +356,18 @@ export const actions = actionTree(
             };
           } catch (error) {
             this.app.$accessor.toaster.error(`Error getting ${currentToken.symbol} balance`);
+            return undefined;
           }
         },
       );
-      const balancesResults: (void | ZkInBalance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
+      const balancesResults = await Promise.all(loadInitialBalancesPromises).catch((error) => {
         this.$sentry.captureException(error);
         return [];
       });
-      const balances = balancesResults.filter((token) => token && token.rawBalance.gt(0)).sort(utils.compareTokensById);
-      const balancesEmpty = balancesResults.filter((token) => token && token.rawBalance.lte(0)).sort(utils.sortBalancesAZ);
+      console.log("balancesResults", balancesResults);
+      const balances = (balancesResults.filter((token) => token && token.rawBalance.gt(0)) as ZkInBalance[]).sort(utils.compareTokensById);
+      const balancesEmpty = (balancesResults.filter((token) => token && token.rawBalance.lte(0)) as ZkInBalance[]).sort(utils.sortBalancesAZ);
       balances.push(...balancesEmpty);
-      // @ts-ignore
       commit("setTokensList", {
         lastUpdated: new Date().getTime(),
         list: balances,
@@ -397,13 +401,13 @@ export const actions = actionTree(
         });
         for (const tx of fetchTransactionHistory.data) {
           if (tx.hash && tx.hash.includes("sync-tx:") && !tx.verified && !tx.fail_reason) {
-            this.app.$accessor.transaction.watchTransaction({ transactionHash: tx.hash, existingTransaction: true });
+            this.dispatch("transaction/watchTransaction", { transactionHash: tx.hash, existingTransaction: true });
           }
         }
         return fetchTransactionHistory.data;
       } catch (error) {
         this.$sentry.captureException(error);
-        this.app.$accessor.toaster.error(error.message);
+        this.dispatch("toaster/error", error.message);
         getTransactionHistoryAgain = setTimeout(() => {
           this.app.$accessor.wallet.requestTransactionsHistory({ force: true });
         }, 15000);
@@ -423,17 +427,13 @@ export const actions = actionTree(
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
       await this.app.$accessor.wallet.restoreProviderConnection();
-      const zksync: zksync | undefined = await walletData.zkSync();
-      if (zksync === undefined) {
-        throw new Error("No zksync lib loaded");
-      }
       if (type === "withdraw") {
         if (symbol === feeSymbol) {
           const foundFeeFast: Fee = await syncProvider!.getTransactionFee("FastWithdraw", address, symbol);
           const foundFeeNormal: Fee = await syncProvider!.getTransactionFee("Withdraw", address, symbol);
           const feesObj: ZkInFeesObj = {
-            fast: foundFeeFast !== undefined ? zksync.closestPackableTransactionFee(foundFeeFast.totalFee) : undefined,
-            normal: foundFeeNormal !== undefined ? zksync.closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined,
+            fast: foundFeeFast !== undefined ? closestPackableTransactionFee(foundFeeFast.totalFee) : undefined,
+            normal: foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined,
           };
           commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
           return feesObj;
@@ -445,15 +445,15 @@ export const actions = actionTree(
           );
           const batchWithdrawFeeNormal: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet?.address()], feeSymbol);
           const feesObj: ZkInFeesObj = {
-            fast: batchWithdrawFeeFast !== undefined ? zksync.closestPackableTransactionFee(batchWithdrawFeeFast) : undefined,
-            normal: batchWithdrawFeeNormal !== undefined ? zksync.closestPackableTransactionFee(batchWithdrawFeeNormal) : undefined,
+            fast: batchWithdrawFeeFast !== undefined ? closestPackableTransactionFee(batchWithdrawFeeFast) : undefined,
+            normal: batchWithdrawFeeNormal !== undefined ? closestPackableTransactionFee(batchWithdrawFeeNormal) : undefined,
           };
           commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
           return feesObj;
         }
       } else if (symbol === feeSymbol) {
         const foundFeeNormal: Fee | undefined = await syncProvider?.getTransactionFee("Transfer", address, symbol);
-        const totalFeeValue: BigNumber | undefined = foundFeeNormal !== undefined ? zksync.closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined;
+        const totalFeeValue: BigNumber | undefined = foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined;
         const feesObj: ZkInFeesObj = {
           normal: totalFeeValue !== undefined ? totalFeeValue : undefined,
           fast: undefined,
@@ -463,7 +463,7 @@ export const actions = actionTree(
       }
       const batchTransferFee: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet?.address()], feeSymbol);
       const feesObj: ZkInFeesObj = {
-        normal: batchTransferFee !== undefined ? zksync.closestPackableTransactionFee(batchTransferFee) : undefined,
+        normal: batchTransferFee !== undefined ? closestPackableTransactionFee(batchTransferFee) : undefined,
         fast: "",
       };
       commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
@@ -526,12 +526,11 @@ export const actions = actionTree(
         }
         const currentProvider: provider = web3WalletInstance.eth.currentProvider;
         const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
-        const zksync: zksync | undefined = await walletData.zkSync();
-        const syncProvider: Provider | undefined = await zksync?.getDefaultProvider(ETHER_NETWORK_NAME as Network, "HTTP");
+        const syncProvider = await getDefaultProvider(ETHER_NETWORK_NAME as Network, "HTTP");
         if (syncProvider === undefined) {
           return false;
         }
-        const syncWallet: Wallet | undefined = await zksync?.Wallet.fromEthSigner(ethWallet, syncProvider);
+        const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
         this.app.$accessor.account.setLoadingHint("Getting wallet information");
 
         // @ts-ignore

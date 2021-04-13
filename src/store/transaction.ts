@@ -2,8 +2,8 @@ import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { ContractTransaction } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/src/types";
-import { ETHOperation } from "zksync/src/wallet";
+import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/build/types";
+import { ETHOperation } from "zksync/build/wallet";
 
 let updateBalancesTimeout: ReturnType<typeof setTimeout>;
 

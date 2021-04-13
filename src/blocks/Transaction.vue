@@ -190,18 +190,17 @@ import amountInput from "@/components/AmountInput.vue";
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, TokenSymbol, TransactionReceipt } from "zksync/src/types";
-import { Provider } from "zksync/src/provider";
+import { Address, TokenSymbol, TransactionReceipt } from "zksync/build/types";
+import { Transaction } from "zksync/build/wallet";
+import { closestPackableTransactionAmount } from "zksync";
 
-import { ZkInBalance, ZkInContact, ZkInFeesObj, GweiBalance, Transaction, ZkInTransactionInfo } from "@/plugins/types";
+import { ZkInBalance, ZkInContact, ZkInFeesObj, GweiBalance, ZkInTransactionInfo, ZkInTransactionType } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 
 import { BigNumber } from "ethers";
-import Vue from "vue";
-
-let zksync = null as any;
+import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
   components: {
@@ -215,9 +214,9 @@ export default Vue.extend({
   props: {
     type: {
       type: String,
-      default: "",
+      default: "transfer",
       required: true,
-    },
+    } as PropOptions<ZkInTransactionType>,
     fromRoute: {
       type: Object,
       default: undefined,
@@ -314,7 +313,7 @@ export default Vue.extend({
       if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
         amount = amount.sub(this.activateAccountFee);
       }
-      return zksync!.closestPackableTransactionAmount(amount).toString();
+      return closestPackableTransactionAmount(amount).toString();
     },
     feeToken(): ZkInBalance {
       return this.chosenFeeToken ? this.chosenFeeToken : (this.chosenToken as ZkInBalance);
@@ -381,7 +380,6 @@ export default Vue.extend({
           }
         }
       }
-      zksync = await walletData.zkSync();
       if (this.type === "withdraw") {
         await this?.getWithdrawalTime();
       }

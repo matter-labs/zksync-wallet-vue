@@ -1,12 +1,12 @@
 import { BigNumber, BigNumberish } from "ethers";
-import { SignedTransaction, TransactionReceipt, AccountState, Address, TokenSymbol } from "zksync/src/types";
-import { Wallet } from "zksync/src";
+import { AccountState, Address, TokenSymbol } from "zksync/build/types";
+import { Wallet } from "zksync";
 
 import { Provider } from "zksync/build/provider";
 
-import * as zkSyncType from "zksync";
-export declare type zksync = typeof zkSyncType;
 export declare type ZkTpNetworkName = "rinkeby" | "mainnet" | "ropsten";
+
+export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";
 
 export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
@@ -25,6 +25,7 @@ export declare interface ZkInTokenPrices {
 }
 
 export interface ZkInBalance {
+  id: number;
   symbol: TokenSymbol;
   status: "Pending" | "Verified";
   balance: GweiBalance;
@@ -67,6 +68,7 @@ export interface ZkInTx {
   commited: boolean; // Flag for inclusion of transaction into some block.
   verified: boolean; // Flag of having the block with transaction verified.
   created_at: string; // Timestamp of the transaction execution.
+  confirmCount: number;
   tx: {
     // Transaction / Priority operation contents. Structure depends on the type of operation.
     fast: boolean;
@@ -89,10 +91,8 @@ export interface ZkInTx {
     feeToken?: number;
     type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
   };
-
-  confirmCount: number;
 }
-export interface Token {
+export interface TokenInfo {
   address: string;
   id: number;
   symbol: string;
@@ -129,18 +129,6 @@ export interface ZkInTokenItem {
   decimals: number;
 }
 
-export declare class Transaction {
-  txData: SignedTransaction;
-  txHash: string;
-  sidechainProvider: Provider;
-  state: "Sent" | "Committed" | "Verified" | "Failed";
-  error?: ZKSyncTxError;
-  constructor(txData: any, txHash: string, sidechainProvider: Provider);
-  awaitReceipt(): Promise<TransactionReceipt>;
-  awaitVerifyReceipt(): Promise<ZkInTransactionInfo>;
-  private setErrorState;
-}
-
 export declare interface singleIcon {
   name: string;
   img: string;
@@ -152,7 +140,6 @@ export interface iWalletData {
   syncProvider?: Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
-  zkSync?: zksync;
 }
 
 export declare interface ZKInDepositTx {
@@ -168,6 +155,5 @@ export declare interface ZkInDeposits {
 
 export declare interface iWalletWrapper {
   set: (val: iWalletData) => void;
-  zkSync: () => Promise<zksync | undefined>;
   get: () => iWalletData;
 }

@@ -16,8 +16,9 @@
 </template>
 
 <script lang="ts">
+import { DecimalBalance, GweiBalance, ZkInToken } from "@/plugins/types";
 import utils from "@/plugins/utils";
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
   props: {
@@ -25,17 +26,17 @@ export default Vue.extend({
       type: String,
       default: "",
       required: false,
-    },
+    } as PropOptions<DecimalBalance>,
     token: {
       type: Object,
       required: false,
       default: undefined,
-    },
+    } as PropOptions<ZkInToken | undefined>,
     minAmount: {
       type: String,
       default: "",
       required: false,
-    },
+    } as PropOptions<GweiBalance>,
     autofocus: {
       type: Boolean,
       default: false,
@@ -142,6 +143,7 @@ export default Vue.extend({
     },
     chooseMinAmount() {
       try {
+        if(!this.token){return}
         this.inputtedAmount = utils.handleFormatToken(this.token.symbol, this.minAmount);
       } catch (error) {
         console.log("Error choose max amount", error);

@@ -1,5 +1,5 @@
 import { ZkInContact } from "@/plugins/types";
-import { Address } from "zksync/src/types";
+import { Address } from "zksync/build/types";
 import utils from "@/plugins/utils";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 

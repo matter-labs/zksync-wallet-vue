@@ -42,7 +42,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ETHER_NETWORK_NAME } from "~/plugins/build";
+import { ETHER_NETWORK_NAME } from "@/plugins/build";
 
 export default Vue.extend({
   props: {

@@ -1,7 +1,7 @@
 import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
-import { Address, SignedTransaction, TokenSymbol, Transfer, TxEthSignature, Withdraw } from "zksync/src/types";
+import { Address, SignedTransaction, TokenSymbol, Transfer, TxEthSignature, Withdraw } from "zksync/build/types";
 
 /**
  * Make zkSync transaction

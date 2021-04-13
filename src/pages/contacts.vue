@@ -120,7 +120,8 @@ import addressInput from "@/components/AddressInput.vue";
 import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 import { ZkInContact } from "@/plugins/types";
-import { Address } from "zksync/src/types";
+import { Address } from "zksync/build/types";
+import { Route } from "vue-router/types";
 import utils from "@/plugins/utils";
 import Vue from "vue";
 
@@ -147,11 +148,11 @@ export default Vue.extend({
       editingWallet: <ZkInContact | null>null,
       modalError: <string>"",
       contactsList: <ZkInContact[]>this.$accessor.contacts.get.map((e) => ({ ...e, deleted: false, notInContacts: false })),
-      fromRoute: {} as unknown,
+      fromRoute: <Route>{},
     };
   },
   computed: {
-    computedReturnLink(): string {
+    computedReturnLink(): Route | string {
       return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute?.path !== "/transfer" ? this.fromRoute : "/contacts";
     },
     walletAddressFull(): string {
