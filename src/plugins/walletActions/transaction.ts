@@ -1,7 +1,7 @@
 import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
-import { Address, SignedTransaction, TokenSymbol, Transfer, TxEthSignature, Withdraw } from "zksync/build/types";
+import { Address, TokenSymbol, Transfer, TxEthSignature, Withdraw } from "zksync/build/types";
 
 /**
  * Make zkSync transaction
@@ -128,7 +128,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
 
     signedTransactions.push({ tx: signedWithdrawTransaction.tx as Withdraw, signature: signedWithdrawTransaction.ethereumSignature });
 
-    const signTransaction: SignedTransaction | void = await syncWallet!
+    const signTransaction = await syncWallet!
       .signSyncTransfer({
         ...transferTx,
         nonce: nonce + 1,

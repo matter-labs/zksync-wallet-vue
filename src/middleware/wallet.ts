@@ -9,7 +9,7 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
     return;
   }
   (async () => {
-    const onboardResult: boolean = await $accessor.wallet.onboardInit();
+    const onboardResult = await $accessor.wallet.onboardInit();
     if (!onboardResult) {
       await $accessor.wallet.logout();
       if (route.path !== "/") {

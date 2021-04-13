@@ -46,7 +46,7 @@ export const actions = actionTree(
   {
     getStorageKey({ state, commit }): string {
       if (state.storageKey === undefined) {
-        const walletAddress: Address | undefined = this.app.$accessor.account.address;
+        const walletAddress = this.app.$accessor.account.address;
         if (walletAddress === undefined) {
           throw new Error("Wallet address can't be undefined");
         }
@@ -77,12 +77,12 @@ export const actions = actionTree(
     },
     getContactsFromStorage({ commit }): void {
       try {
-        const walletAddress: Address | undefined = this.app.$accessor.account.address;
+        const walletAddress = this.app.$accessor.account.address;
         if (walletAddress === undefined || !process.client) {
           commit("initContactsList");
           return;
         }
-        const contactsListRaw: string | null = window.localStorage.getItem(this.app.$accessor.contacts.getStorageKey());
+        const contactsListRaw = window.localStorage.getItem(this.app.$accessor.contacts.getStorageKey());
         if (contactsListRaw === null) {
           commit("initContactsList");
           return;
@@ -96,7 +96,7 @@ export const actions = actionTree(
       }
     },
     deleteContact({ commit }, address: Address): void {
-      const contact: ZkInContact | undefined = this.app.$accessor.contacts.getByAddress(address);
+      const contact = this.app.$accessor.contacts.getByAddress(address);
       if (contact !== undefined) {
         commit("delete", contact);
         this.app.$accessor.contacts.updateLocalStorage();
@@ -111,7 +111,7 @@ export const actions = actionTree(
     },
     updateLocalStorage({ state }): void {
       if (process.client) {
-        const storageKey: string = this.app.$accessor.contacts.getStorageKey();
+        const storageKey = this.app.$accessor.contacts.getStorageKey();
         window.localStorage.setItem(storageKey, JSON.stringify(state.contactsList));
       }
     },

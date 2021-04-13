@@ -353,7 +353,7 @@ export default Vue.extend({
           }
         }
         this.tip = "Waiting for the transaction to be mined...";
-        const receipt: ethers.ContractReceipt = await approveDeposits.wait();
+        const receipt = await approveDeposits.wait();
         this.transactionInfo.hash = receipt.transactionHash;
         this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + receipt.transactionHash;
         if(ETHToken) {

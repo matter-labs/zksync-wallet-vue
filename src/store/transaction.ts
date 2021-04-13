@@ -141,14 +141,14 @@ export const actions = actionTree(
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
-        const isOnchainAuthSigningKeySet: boolean = await syncWallet?.isOnchainAuthSigningKeySet();
+        const isOnchainAuthSigningKeySet = await syncWallet?.isOnchainAuthSigningKeySet();
         if (!isOnchainAuthSigningKeySet) {
-          const onchainAuthTransaction: ContractTransaction = await syncWallet?.onchainAuthSigningKey();
+          const onchainAuthTransaction = await syncWallet?.onchainAuthSigningKey();
           await onchainAuthTransaction?.wait();
         }
       }
 
-      const ethAuthType: string = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+      const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
       const txType: ChangePubKeyFee = {
         // Note: Ignore, since it just looks more intuitive if `"ChangePubKey"` is kept as a string literal)
         // Denotes how authorization of operation is performed:
