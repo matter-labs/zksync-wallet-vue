@@ -29,12 +29,12 @@ export default Vue.extend({
   },
   computed: {
     socialNetworks(): singleIcon[] {
-      const socialIcons = [
+      const socialIcons = <singleIcon[]>[
         {
           name: "Medium Blog",
           img: "medium",
           url: "https://medium.com/matter-labs",
-        } as singleIcon,
+        },
         {
           name: "Gitter Rooms",
           img: "gitter",
@@ -61,7 +61,7 @@ export default Vue.extend({
           url: "https://zksync.io/contact.html",
           hideIn: "footer",
         },
-      ] as singleIcon[];
+      ];
       return socialIcons.filter((item) => !item.hideIn || item.hideIn !== this.location);
     },
   },

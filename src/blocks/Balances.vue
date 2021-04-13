@@ -112,9 +112,9 @@ export default Vue.extend({
     },
     displayedList(): DisplayToken[] {
       const allTokenPrices = this.$accessor.tokens.getTokenPrices;
-      const returnTokens = {} as {
+      const returnTokens = <{
         [symbol: string]: DisplayToken;
-      };
+      }>{};
       this.zkBalances.forEach((token) => {
         returnTokens[token.symbol] = {
           symbol: token.symbol,
@@ -141,11 +141,11 @@ export default Vue.extend({
     activeDeposits() {
       // eslint-disable-next-line no-unused-expressions
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
-      const deposits = this.$accessor.transaction.depositList as ZkInDeposits;
-      const activeDeposits = {} as ZkInDeposits;
-      const finalDeposits = {} as {
+      const deposits = this.$accessor.transaction.depositList;
+      const activeDeposits = <ZkInDeposits>{};
+      const finalDeposits = <{
         [tokenSymbol: string]: BigNumber;
-      };
+      }>{};
       for (const tokenSymbol in deposits) {
         activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx) => tx.status === "Initiated");
       }

@@ -392,7 +392,7 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
         const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE, wallet!.ethSigner);
-        return (await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract)) as BigNumber;
+        return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
       }
       return BigNumber.from(ERC20_APPROVE_TRESHOLD);
     },

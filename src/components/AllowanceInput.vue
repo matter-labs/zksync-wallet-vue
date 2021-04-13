@@ -106,7 +106,7 @@ export default Vue.extend({
       }
     },
     validateAmount(val: string): void {
-      if (val && !parseFloat(val as string)) {
+      if (val && !parseFloat(val)) {
         this.error = "Wrong amount inputted";
         return;
       }

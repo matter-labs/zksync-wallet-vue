@@ -99,7 +99,7 @@ export default Vue.extend({
       saveContactModalError: "",
 
       /* Main */
-      chosenContact: false as false | ZkInContact,
+      chosenContact: <ZkInContact | false>false,
     };
   },
   computed: {
@@ -191,12 +191,14 @@ export default Vue.extend({
         this.saveContactModalError = "Name can't be empty";
         return;
       }
-      const contact = {
-        name: this.saveContactInput,
-        address: (this.chosenContact as ZkInContact).address,
-      };
-      this.$accessor.contacts.saveContact(contact);
-      this.chooseContact(contact);
+      if(this.chosenContact) {
+        const contact = {
+          name: this.saveContactInput,
+          address: this.chosenContact.address,
+        };
+        this.$accessor.contacts.saveContact(contact);
+        this.chooseContact(contact);
+      }
       this.saveContactInput = "";
       this.saveContactModal = false;
     },
