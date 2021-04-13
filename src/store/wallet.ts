@@ -364,7 +364,6 @@ export const actions = actionTree(
         this.$sentry.captureException(error);
         return [];
       });
-      console.log("balancesResults", balancesResults);
       const balances = (balancesResults.filter((token) => token && token.rawBalance.gt(0)) as ZkInBalance[]).sort(utils.compareTokensById);
       const balancesEmpty = (balancesResults.filter((token) => token && token.rawBalance.lte(0)) as ZkInBalance[]).sort(utils.sortBalancesAZ);
       balances.push(...balancesEmpty);
