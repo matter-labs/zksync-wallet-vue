@@ -343,7 +343,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.12.13, @babel/parser@npm:^7.13.15, @babel/parser@npm:^7.5.5, @babel/parser@npm:^7.9.6":
+"@babel/parser@npm:^7.1.0, @babel/parser@npm:^7.12.13, @babel/parser@npm:^7.13.15, @babel/parser@npm:^7.9.6":
   version: 7.13.15
   resolution: "@babel/parser@npm:7.13.15"
   bin:
@@ -1258,7 +1258,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.1.0, @babel/traverse@npm:^7.13.0, @babel/traverse@npm:^7.13.13, @babel/traverse@npm:^7.13.15, @babel/traverse@npm:^7.5.5":
+"@babel/traverse@npm:^7.1.0, @babel/traverse@npm:^7.13.0, @babel/traverse@npm:^7.13.13, @babel/traverse@npm:^7.13.15":
   version: 7.13.15
   resolution: "@babel/traverse@npm:7.13.15"
   dependencies:
@@ -1946,7 +1946,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@intlify/vue-i18n-extensions@npm:^1.0.1":
+"@intlify/vue-i18n-extensions@npm:^1.0.2":
   version: 1.0.2
   resolution: "@intlify/vue-i18n-extensions@npm:1.0.2"
   dependencies:
@@ -1955,7 +1955,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@intlify/vue-i18n-loader@npm:^1.0.0":
+"@intlify/vue-i18n-loader@npm:^1.1.0":
   version: 1.1.0
   resolution: "@intlify/vue-i18n-loader@npm:1.1.0"
   dependencies:
@@ -7504,7 +7504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:^0.4.0, cookie@npm:^0.4.1":
+"cookie@npm:^0.4.1":
   version: 0.4.1
   resolution: "cookie@npm:0.4.1"
   checksum: b8e0928e3e7aba013087974b33a6eec730b0a68b7ec00fc3c089a56ba2883bcf671252fc2ed64775aa1ca64796b6e1f6fdddba25a66808aef77614d235fd3e06
@@ -8769,9 +8769,9 @@ __metadata:
   linkType: hard
 
 "electron-to-chromium@npm:^1.3.47, electron-to-chromium@npm:^1.3.712":
-  version: 1.3.713
-  resolution: "electron-to-chromium@npm:1.3.713"
-  checksum: eea4e393ac6d9fcd53a6f16f355c2dd9690d8324afc7f33aac5f98981f1ce1094f7f704b718a7f5f13001ef4609cebd4bb97c95d1ad12c82b0db0501d0bbf71e
+  version: 1.3.715
+  resolution: "electron-to-chromium@npm:1.3.715"
+  checksum: b47fae50b323c0a75fbf511499c9a2bf59ceb380c791505ceb28725db523b25813e37e4d31f9a6c69e228a5bed96b7ff69c4bd3c2483293f97dc26afc0a6083e
   languageName: node
   linkType: hard
 
@@ -13648,8 +13648,8 @@ fsevents@^1.2.7:
   linkType: hard
 
 "js-beautify@npm:^1.6.12, js-beautify@npm:^1.6.14":
-  version: 1.13.8
-  resolution: "js-beautify@npm:1.13.8"
+  version: 1.13.11
+  resolution: "js-beautify@npm:1.13.11"
   dependencies:
     config-chain: ^1.1.12
     editorconfig: ^0.15.3
@@ -13660,7 +13660,7 @@ fsevents@^1.2.7:
     css-beautify: js/bin/css-beautify.js
     html-beautify: js/bin/html-beautify.js
     js-beautify: js/bin/js-beautify.js
-  checksum: 851013bf00ac89f34af9ff5a6d5d683d5d13bf6c463fd7b507af3bcd33031dbe8cc644da8e0b610b5c023dc1f6c4c303419cc382b5ecfd570b5a92ae03b7a416
+  checksum: 115b4c6d86128782d5f92c35462b2df4f245e82aae26569f99a8e2d60e35c8004ce68869ec2da01800223173530abc369cf7ef4b7d9d0d1aedd7a53525caee8f
   languageName: node
   linkType: hard
 
@@ -16047,21 +16047,21 @@ fsevents@^1.2.7:
   linkType: hard
 
 "nuxt-i18n@npm:^6.22.3":
-  version: 6.24.0
-  resolution: "nuxt-i18n@npm:6.24.0"
+  version: 6.25.0
+  resolution: "nuxt-i18n@npm:6.25.0"
   dependencies:
-    "@babel/parser": ^7.5.5
-    "@babel/traverse": ^7.5.5
-    "@intlify/vue-i18n-extensions": ^1.0.1
-    "@intlify/vue-i18n-loader": ^1.0.0
-    cookie: ^0.4.0
+    "@babel/parser": ^7.13.15
+    "@babel/traverse": ^7.13.15
+    "@intlify/vue-i18n-extensions": ^1.0.2
+    "@intlify/vue-i18n-loader": ^1.1.0
+    cookie: ^0.4.1
     devalue: ^2.0.1
     js-cookie: ^2.2.1
     klona: ^2.0.4
     lodash.merge: ^4.6.2
-    ufo: ^0.6.7
-    vue-i18n: ^8.23.0
-  checksum: 032f7a50d299a89d8d7389ed079f1858a542fcd5c23fe2abb5ad8405bb1dd2ef721a4e9bc8e6046c0c7bb4671ae56e3cb322336547dfa78710aa44eb0a186cb0
+    ufo: ^0.6.11
+    vue-i18n: ^8.24.3
+  checksum: 1102149263c04721b91840ecd628c35b915cd42cf2e25ab7b1f00103576bf5affb6faae7df00b774ddc0820393f7b904407a6ec7baedf4d04ae2eb5f047059a2
   languageName: node
   linkType: hard
 
@@ -21657,7 +21657,7 @@ resolve@~1.17.0:
   languageName: node
   linkType: hard
 
-"ufo@npm:^0.6.10, ufo@npm:^0.6.7":
+"ufo@npm:^0.6.10, ufo@npm:^0.6.11":
   version: 0.6.11
   resolution: "ufo@npm:0.6.11"
   checksum: 3b0393dbec80e0f7072959903dc39f64368211645cafce291bf440d48e8a5c8c33c9a13ac8a6839be42d63ed0d797090d6376490aad40709d292069d2cb29c7c
@@ -22281,7 +22281,7 @@ resolve@~1.17.0:
   languageName: node
   linkType: hard
 
-"vue-i18n@npm:^8.23.0":
+"vue-i18n@npm:^8.24.3":
   version: 8.24.3
   resolution: "vue-i18n@npm:8.24.3"
   checksum: b4763e48d16f5e4fda8cd70e999ded2684de15c57ea3054739a86e7b261815bb21ef8f17fa601f06cd8687dd3dcfe810dccb5dbcf160a0e70ea81984bd86772a

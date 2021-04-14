@@ -111,14 +111,15 @@ import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 
-import { Balance, GweiBalance } from "@/plugins/types";
+import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
+import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
+import { closestPackableTransactionAmount } from "zksync";
 import { BigNumber, Contract, ethers } from "ethers";
 import Vue from "vue";
 
-let zksync = null as any;
 let thresholdTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
   components: {
@@ -147,7 +148,7 @@ export default Vue.extend({
       chooseFeeTokenModal: false,
 
       /* Transaction success block */
-      transactionInfo: {
+      transactionInfo: <ZkInTransactionInfo>{
         success: false,
         continueBtnFunction: false,
         continueBtnText: "",
@@ -155,28 +156,28 @@ export default Vue.extend({
         hash: "",
         explorerLink: "",
         amount: {
-          amount: "" as GweiBalance,
-          token: false as false | Balance,
+          amount: "",
+          token: false,
         },
         fee: {
-          amount: "" as GweiBalance,
-          token: false as false | Balance,
+          amount: "",
+          token: false,
         },
       },
 
       /* Main Block */
-      inputtedAmount: "",
-      inputtedAllowance: "",
+      inputtedAmount: <DecimalBalance>"",
+      inputtedAllowance: <DecimalBalance>"",
       allowanceError: false,
-      tokenAllowance: false as false | BigNumber,
-      chosenToken: false as Balance | false,
+      tokenAllowance: <false | BigNumber>false,
+      chosenToken: <ZkInBalance | false>false,
       thresholdLoading: false,
       error: "",
     };
   },
   computed: {
     maxAmount(): string {
-      return !this.chosenToken ? "0" : zksync!.closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
+      return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
     },
     buttonDisabled(): boolean {
       return !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.enoughInputedAllowance;
@@ -208,7 +209,7 @@ export default Vue.extend({
         return true;
       }
       try {
-        const inputedAllowenceBigNumber = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAllowance);
+        const inputedAllowenceBigNumber = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAllowance);
         return inputedAllowenceBigNumber.gte(this.amountBigNumber);
       } catch (error) {
         return false;
@@ -246,7 +247,6 @@ export default Vue.extend({
           }
         }
       }
-      zksync = await walletData.zkSync();
       this.loading = false;
     } catch (error) {
       console.log(error);
@@ -254,7 +254,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    async chooseToken(token: Balance) {
+    async chooseToken(token: ZkInBalance) {
       this.loading = true;
       this.chooseTokenModal = false;
       this.chosenToken = false;
@@ -310,16 +310,25 @@ export default Vue.extend({
     async deposit(): Promise<void> {
       this.tip = "Confirm the transaction to deposit";
       this.transactionInfo.type = "deposit";
-      const transferTransaction = await deposit((this.chosenToken as Balance).symbol, this.amountBigNumber.toString(), this.$accessor);
+      const transferTransaction = await deposit((this.chosenToken as ZkInBalance).symbol, this.amountBigNumber.toString(), this.$accessor);
       if(!transferTransaction) {return}
-      this.transactionInfo.amount.amount = this.amountBigNumber.toString();
-      this.transactionInfo.amount.token = this.chosenToken as Balance;
-      this.transactionInfo.fee.token = this.chosenToken as Balance;
+      this.transactionInfo.amount = {
+        amount: this.amountBigNumber.toString(),
+        token: this.chosenToken
+      }
       this.transactionInfo.hash = transferTransaction.ethTx.hash;
       this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + transferTransaction.ethTx.hash;
       this.tip = "Waiting for the transaction to be mined...";
-      const receipt: ethers.ContractReceipt = await transferTransaction.awaitEthereumTxCommit();
-      this.transactionInfo.fee.amount = receipt.gasUsed.toString();
+      const receipt = await transferTransaction.awaitEthereumTxCommit();
+      if(!receipt) {
+        this.transactionInfo.fee = undefined;
+      }
+      else {
+        this.transactionInfo.fee = {
+          token: this.chosenToken,
+          amount: receipt.gasUsed.toString()
+        }
+      }
       this.transactionInfo.continueBtnFunction = false;
       this.transactionInfo.continueBtnText = "";
       this.transactionInfo.success = true;
@@ -333,7 +342,7 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         this.tip = `Confirm the transaction in order to unlock ${this.chosenToken.symbol} token`;
         this.transactionInfo.type = "unlock";
-        const approveAmount = this.inputtedAllowance ? utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAllowance) : undefined;
+        const approveAmount = this.inputtedAllowance ? utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAllowance) : undefined;
         const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, approveAmount);
         const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken;
@@ -343,14 +352,20 @@ export default Vue.extend({
             break;
           }
         }
-        this.transactionInfo.amount.amount = "0";
-        this.transactionInfo.amount.token = ETHToken as Balance;
-        this.transactionInfo.fee.token = ETHToken as Balance;
         this.tip = "Waiting for the transaction to be mined...";
-        const receipt: ethers.ContractReceipt = await approveDeposits.wait();
+        const receipt = await approveDeposits.wait();
         this.transactionInfo.hash = receipt.transactionHash;
         this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + receipt.transactionHash;
-        this.transactionInfo.fee.amount = receipt.gasUsed.toString();
+        if(ETHToken) {
+          this.transactionInfo.amount = {
+            amount: "0",
+            token: ETHToken
+          }
+          this.transactionInfo.fee = {
+            amount: receipt.gasUsed.toString(),
+            token: ETHToken
+          }
+        }
         this.transactionInfo.continueBtnFunction = true;
         this.transactionInfo.continueBtnText = "Proceed to deposit";
         this.transactionInfo.success = true;
@@ -365,22 +380,21 @@ export default Vue.extend({
       this.tip = "";
       this.loading = false;
     },
-    async checkTokenState(token: Balance): Promise<boolean> {
+    async checkTokenState(token: ZkInBalance): Promise<boolean> {
       if (token.symbol.toLowerCase() !== "eth") {
         const wallet = walletData.get().syncWallet;
         return await wallet!.isERC20DepositsApproved(token.address as string);
       }
       return true;
     },
-    async getTokenAllowance(token: Balance): Promise<BigNumber> {
-      const zksync = await walletData.zkSync();
+    async getTokenAllowance(token: ZkInBalance): Promise<BigNumber> {
       if (token.symbol.toLowerCase() !== "eth") {
         const wallet = walletData.get().syncWallet;
         const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
-        const erc20contract = new Contract(tokenAddress, zksync.utils.IERC20_INTERFACE, wallet!.ethSigner);
-        return (await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract)) as BigNumber;
+        const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE, wallet!.ethSigner);
+        return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
       }
-      return BigNumber.from(zksync.utils.ERC20_APPROVE_TRESHOLD);
+      return BigNumber.from(ERC20_APPROVE_TRESHOLD);
     },
     async successBlockContinue() {
       this.transactionInfo.success = false;

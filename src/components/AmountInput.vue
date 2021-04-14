@@ -20,9 +20,10 @@
 </template>
 
 <script lang="ts">
+import { DecimalBalance, GweiBalance, ZkInToken } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
   props: {
@@ -30,7 +31,7 @@ export default Vue.extend({
       type: String,
       default: "",
       required: false,
-    },
+    } as PropOptions<DecimalBalance>,
     type: {
       type: String,
       default: "",
@@ -40,12 +41,12 @@ export default Vue.extend({
       type: String,
       default: "",
       required: false,
-    },
+    } as PropOptions<GweiBalance>,
     token: {
       type: Object,
       required: false,
       default: undefined,
-    },
+    } as PropOptions<ZkInToken>,
     autofocus: {
       type: Boolean,
       default: false,
@@ -118,7 +119,7 @@ export default Vue.extend({
       }
     },
     validateAmount(val: string): void {
-      if (!val || !parseFloat(val as string)) {
+      if (!val || !parseFloat(val)) {
         this.error = "Wrong amount inputted";
         return;
       }

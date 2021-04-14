@@ -10,7 +10,9 @@
 <script lang="ts">
 import socialIcons from "@/plugins/socialIcons";
 import { singleIcon } from "@/plugins/types";
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
+
+type Location = "header" | "footer";
 
 export default Vue.extend({
   props: {
@@ -18,7 +20,7 @@ export default Vue.extend({
       required: false,
       type: String,
       default: "header",
-    },
+    } as PropOptions<Location>,
   },
   data() {
     return {
@@ -27,12 +29,12 @@ export default Vue.extend({
   },
   computed: {
     socialNetworks(): singleIcon[] {
-      const socialIcons = [
+      const socialIcons = <singleIcon[]>[
         {
           name: "Medium Blog",
           img: "medium",
           url: "https://medium.com/matter-labs",
-        } as singleIcon,
+        },
         {
           name: "Gitter Rooms",
           img: "gitter",
@@ -59,7 +61,7 @@ export default Vue.extend({
           url: "https://zksync.io/contact.html",
           hideIn: "footer",
         },
-      ] as singleIcon[];
+      ];
       return socialIcons.filter((item) => !item.hideIn || item.hideIn !== this.location);
     },
   },

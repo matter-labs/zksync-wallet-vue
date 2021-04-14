@@ -1,7 +1,10 @@
-import { BigNumber, ContractTransaction } from "ethers";
+import { accessorType } from "@/store";
+import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
 import { SignedTransaction, TransactionReceipt, AccountState, Address, TokenSymbol } from "zksync/src/types";
 import { Wallet, Provider } from "zksync";
+
+export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";
 
 export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
@@ -11,6 +14,40 @@ export declare interface ZkInTokenPrices {
     lastUpdated: number;
     price: number;
   };
+}
+
+export interface ZkInBalance {
+  id: number;
+  symbol: TokenSymbol;
+  status: "Pending" | "Verified";
+  balance: GweiBalance;
+  rawBalance: BigNumber;
+  verifiedBalance: GweiBalance;
+  tokenPrice: number;
+  restricted: boolean;
+  unlocked?: boolean;
+  address?: string;
+}
+
+export declare interface ZkInTransactionInfo {
+  continueBtnFunction: boolean;
+  amount?: {
+    amount: BigNumberish;
+    token: false | ZkInBalance;
+  };
+  fee?: {
+    amount: BigNumberish;
+    token: false | ZkInBalance;
+  };
+  recipient?: {
+    address: Address;
+    name: string;
+  };
+  success: boolean;
+  continueBtnText?: string;
+  type: string;
+  hash: string;
+  explorerLink: string;
 }
 
 export interface ZkInTx {
@@ -23,6 +60,7 @@ export interface ZkInTx {
   commited: boolean; // Flag for inclusion of transaction into some block.
   verified: boolean; // Flag of having the block with transaction verified.
   created_at: string; // Timestamp of the transaction execution.
+  confirmCount: number;
   tx: {
     // Transaction / Priority operation contents. Structure depends on the type of operation.
     fast: boolean;
@@ -45,13 +83,16 @@ export interface ZkInTx {
     feeToken?: number;
     type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
   };
-
-  confirmCount: number;
 }
-
-export interface ZkInBalance {
+export interface TokenInfo {
+  address: string;
+  id: number;
+  symbol: string;
+  decimals: number;
+}
+export interface ZkInToken {
+  id: number;
   symbol: TokenSymbol;
-  status: "Pending" | "Verified";
   balance: GweiBalance;
   rawBalance: BigNumber;
   verifiedBalance: GweiBalance;
@@ -60,18 +101,18 @@ export interface ZkInBalance {
   unlocked?: boolean;
   address?: string;
 }
-
-export declare interface ZkInTransactionInfo {
-  continueBtnFunction: boolean;
-  amount: GweiBalance;
-  success: boolean;
-  fee: { amount: GweiBalance; token: false | ZkInBalance };
-  recipient?: Address;
-  continueBtnText?: string;
-  type: string;
-  hash: string;
-  explorerLink: string;
-}
+//
+// export declare interface ZkInTransactionInfo {
+//  continueBtnFunction: boolean;
+//  amount: GweiBalance;
+//  success: boolean;
+//  fee: { amount: GweiBalance; token: false | ZkInBalance };
+//  recipient?: Address;
+//  continueBtnText?: string;
+//  type: string;
+//  hash: string;
+//  explorerLink: string;
+// }
 
 export interface ZkInContact {
   address: Address;
@@ -125,9 +166,13 @@ export interface iWalletData {
   syncProvider?: Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
-  zkSync?: unknown;
 }
 
+export declare interface iWalletWrapper {
+  set: (val: iWalletData) => void;
+  get: () => iWalletData;
+  setProvider: (importedProvider: Provider) => void;
+}
 export declare interface ZKInDepositTx extends ETHOperation {
   hash: string;
   amount: BigNumber | string;
@@ -137,13 +182,6 @@ export declare interface ZKInDepositTx extends ETHOperation {
 
 export declare interface ZkInDeposits {
   [tokenSymbol: string]: ZKInDepositTx[];
-}
-
-export declare interface iWalletWrapper {
-  set: (val: iWalletData) => void;
-  zkSync: () => Promise<unknown>;
-  get: () => iWalletData;
-  setProvider: (importedProvider: Provider) => void;
 }
 
 export interface Balance {
@@ -161,4 +199,27 @@ export interface Balance {
 export declare interface networkEthId {
   name: string;
   id: number;
+}
+
+export declare interface ZkInWithdrawParams {
+  address: Address;
+  token: TokenSymbol;
+  feeToken: TokenSymbol;
+  amount: GweiBalance;
+  fastWithdraw: boolean;
+  fees: GweiBalance;
+  store: typeof accessorType;
+}
+
+export declare interface ZkInSyncTransfer {
+  to: Address;
+  token: TokenSymbol;
+  amount: GweiBalance;
+  fee: GweiBalance;
+}
+
+export declare interface ZkInWatchArgs {
+  depositResponse: ETHOperation;
+  token: TokenSymbol;
+  amount: GweiBalance;
 }

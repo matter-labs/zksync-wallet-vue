@@ -29,8 +29,8 @@
       "@types/node",
       "@types/jest",
       "@nuxt/types",
-      "@nuxtjs/axios",
       "@/types/*.d.ts",
+      "@nuxtjs/axios",
       "@inkline/nuxt",
       "@nuxtjs/sentry",
       "@nuxtjs/toast",
@@ -38,9 +38,6 @@
       "nuxt-i18n"
     ]
   },
-  "include": [
-    "src/"
-  ],
   "exclude": [
     "node_modules",
     ".nuxt",

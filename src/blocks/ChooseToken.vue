@@ -33,10 +33,11 @@
 <script lang="ts">
 import NoTokenFound from "@/blocks/modals/NoTokenFound.vue";
 import utils from "@/plugins/utils";
-import { Balance, ZkInBalance } from "@/plugins/types";
+import { ZkInBalance } from "@/plugins/types";
 
-import Vue from "vue";
-import { TokenSymbol } from "zksync/src/types";
+import Vue, { PropOptions } from "vue";
+
+type TokensType = "L1" | "L2";
 
 export default Vue.extend({
   components: {
@@ -52,7 +53,7 @@ export default Vue.extend({
       type: String,
       default: "L2",
       required: false,
-    },
+    } as PropOptions<TokensType>,
   },
   data() {
     return {
@@ -64,9 +65,8 @@ export default Vue.extend({
     balances: <ZkInBalance>() => {
       return this.tokensType === "L2" ? this.$accessor.wallet.getzkBalances : this.$accessor.wallet.getInitialBalances;
     },
-    displayedList: function (): Array<Balance> {
-      let list: Array<ZkInBalance>;
-      list = !this.search.trim() ? this.balances : this.balances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
+    displayedList(): Array<ZkInBalance> {
+      let list: Array<ZkInBalance> = utils.searchInArr(this.search, this.balances, (e) => (e as ZkInBalance).symbol) as ZkInBalance[];
       if (this.onlyAllowed) {
         list = list.filter((e) => !e.restricted);
       }
@@ -77,7 +77,7 @@ export default Vue.extend({
     this.getTokenList();
   },
   methods: {
-    chooseToken(token: Balance): void {
+    chooseToken(token: ZkInBalance): void {
       this.$emit("chosen", token);
     },
     async getTokenList(): Promise<void> {

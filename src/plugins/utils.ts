@@ -1,9 +1,9 @@
 import { walletData } from "@/plugins/walletData";
 import { DecimalBalance, GweiBalance, ZkInBalance } from "@/plugins/types";
 import { utils as zkUtils } from "zksync";
-import { Address, TokenSymbol } from "zksync/src/types";
+import { Address, TokenSymbol } from "zksync/build/types";
 
-import { BigNumberish, utils } from "ethers";
+import { BigNumber, BigNumberish, utils } from "ethers";
 
 /**
  *
@@ -12,7 +12,7 @@ import { BigNumberish, utils } from "ethers";
  * @return {BigNumber|*}
  */
 function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
-  return walletData.get().syncProvider?.tokenSet?.parseToken(symbol, amount.toString());
+  return walletData.get().syncProvider?.tokenSet?.parseToken(symbol, amount.toString()) || BigNumber.from("0");
 }
 
 function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance) {
@@ -50,7 +50,7 @@ export default {
    * @param b
    * @return {number}
    */
-  compareTokensById: (a: Token, b: Token) => {
+  compareTokensById: (a: ZkInBalance, b: ZkInBalance) => {
     if (a.id < b.id) {
       return -1;
     } else if (a.id > b.id) {

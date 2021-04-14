@@ -37,6 +37,7 @@
 
 <script lang="ts">
 import transactions from "@/blocks/Transactions.vue";
+import { ZkInBalance } from "@/plugins/types";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -50,7 +51,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      token: {},
+      token: <ZkInBalance>{},
       loading: true,
     };
   },

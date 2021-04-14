@@ -53,11 +53,6 @@ export default Vue.extend({
     WalletAddress,
   },
   props: {
-    type: {
-      type: String,
-      default: "",
-      required: false,
-    },
     headline: {
       type: String,
       default: "",

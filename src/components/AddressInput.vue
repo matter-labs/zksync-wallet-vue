@@ -21,9 +21,10 @@
 
 <script lang="ts">
 import userImg from "@/components/userImg.vue";
+import { DecimalBalance } from "@/plugins/types";
 
 import utils from "@/plugins/utils";
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
   components: {
@@ -34,7 +35,7 @@ export default Vue.extend({
       type: String,
       default: "",
       required: false,
-    },
+    } as PropOptions<DecimalBalance>,
   },
   data() {
     return {

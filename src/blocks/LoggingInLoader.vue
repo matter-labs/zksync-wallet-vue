@@ -32,7 +32,7 @@ export default Vue.extend({
       if (this.$accessor.account.loadingHint === "loadingData") {
         return "Getting wallet information";
       }
-      return this.$accessor.account.loadingHint as string;
+      return this.$accessor.account.loadingHint;
     },
     selectedWallet() {
       return this.$accessor.account.selectedWallet;

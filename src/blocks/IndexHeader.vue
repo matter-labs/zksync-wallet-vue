@@ -82,7 +82,7 @@ export default Vue.extend({
     return {
       opened: false,
       dropdownOpened: false,
-      dropdownOptions: [
+      dropdownOptions: <Array<DropdownOption>>[
         {
           name: "zkLink",
           link: "https://link.zksync.io/",
@@ -103,7 +103,7 @@ export default Vue.extend({
           name: "zkMint",
           link: "https://mint.zksync.dev/",
         },
-      ] as Array<DropdownOption>,
+      ],
     };
   },
 });

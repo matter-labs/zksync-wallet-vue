@@ -1,8 +1,8 @@
-import { GweiBalance, ZKInDepositTx } from "@/plugins/types";
+import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
-import { ContractTransaction } from "ethers";
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/src/types";
+import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
+import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/src/types";
+import { ETHOperation } from "zksync/build/wallet";
 
 let updateBalancesTimeout: ReturnType<typeof setTimeout>;
 
@@ -16,19 +16,22 @@ interface DepositsInterface {
 }
 
 export const state = () => ({
-  watchedTransactions: {} as {
-    [txHash: string]: {
-      [prop: string]: string;
-      status: string;
-    };
-  },
-  deposits: {} as DepositsInterface,
+  watchedTransactions: <
+    {
+      [txHash: string]: {
+        [prop: string]: string;
+        status: string;
+      };
+    }
+  >{},
+  deposits: <DepositsInterface>{},
   forceUpdateTick: 0 /* Used to force update computed active deposits list */,
-  withdrawalTxToEthTx: new Map() as Map<string, string>,
+  withdrawalTxToEthTx: <Map<string, string>>new Map(),
 });
 
 export type TransactionModuleState = ReturnType<typeof state>;
 
+// @ts-ignore
 export const mutations = mutationTree(state, {
   updateTransactionStatus(state, { hash, status }): void {
     if (status === "Verified") {
@@ -43,7 +46,7 @@ export const mutations = mutationTree(state, {
       state.watchedTransactions[hash].status = status;
     }
   },
-  updateDepositStatus(state, { tokenSymbol, hash, amount, status, confirmations }) {
+  updateDepositStatus: (state, { tokenSymbol, hash, amount, status, confirmations }) => {
     if (!Array.isArray(state.deposits[tokenSymbol])) {
       state.deposits[tokenSymbol] = [];
     }
@@ -68,7 +71,7 @@ export const mutations = mutationTree(state, {
     }
     state.forceUpdateTick++;
   },
-  setWithdrawalTx(state, { tx, ethTx }) {
+  setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }) {
     state.withdrawalTxToEthTx.set(tx, ethTx);
   },
 });
@@ -90,40 +93,40 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    async watchTransaction({ dispatch, commit, state }, { transactionHash, existingTransaction }): Promise<void> {
+    watchTransaction: ({ commit, dispatch, state }, { transactionHash, existingTransaction }) => {
       try {
         if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
           return;
         }
         if (!existingTransaction) {
-          await walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
+          walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
-          await dispatch("requestBalancesUpdate");
+          dispatch("requestBalancesUpdate");
         } else {
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
         }
-        await walletData.get().syncProvider?.notifyTransaction(transactionHash, "VERIFY");
+        walletData.get().syncProvider?.notifyTransaction(transactionHash, "VERIFY");
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
-        await dispatch("requestBalancesUpdate");
+        dispatch("requestBalancesUpdate");
       } catch (error) {
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       }
     },
-    async watchDeposit({ dispatch, commit }, { depositTx, tokenSymbol, amount }: { depositTx: ZKInDepositTx; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
+    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
       try {
-        commit("updateDepositStatus", { hash: depositTx?.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
+        commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
         await depositTx.awaitReceipt();
-        await dispatch("requestBalancesUpdate");
-        commit("updateDepositStatus", { hash: depositTx?.ethTx.hash, tokenSymbol, status: "Committed" });
+        await this.app.$accessor.transaction.requestBalancesUpdate();
+        commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       } catch (error) {
-        commit("updateDepositStatus", { hash: depositTx?.ethTx.hash, tokenSymbol, status: "Committed" });
+        commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       }
     },
     requestBalancesUpdate(): void {
       clearTimeout(updateBalancesTimeout);
       updateBalancesTimeout = setTimeout(() => {
-        this.dispatch("wallet/requestZkBalances", { accountState: undefined, force: true });
-        this.dispatch("wallet/requestTransactionsHistory", { offset: 0, force: true });
+        this.app.$accessor.wallet.requestZkBalances({ force: true });
+        this.app.$accessor.wallet.requestTransactionsHistory({ offset: 0, force: true });
       }, 500);
     },
 
@@ -131,22 +134,22 @@ export const actions = actionTree(
      * Receive correct Fee amount
      * @param state
      * @param _
-     * @param {any} address
-     * @param {any} feeToken
+     * @param address
+     * @param feeToken
      * @return {Promise<any>}
      */
-    async fetchChangePubKeyFee(_, { address, feeToken }): Promise<Fee | undefined> {
+    async fetchChangePubKeyFee(_, { address, feeToken }: { address: Address; feeToken: TokenSymbol }): Promise<Fee | undefined> {
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
-        const isOnchainAuthSigningKeySet: boolean = await syncWallet?.isOnchainAuthSigningKeySet();
+        const isOnchainAuthSigningKeySet = await syncWallet?.isOnchainAuthSigningKeySet();
         if (!isOnchainAuthSigningKeySet) {
-          const onchainAuthTransaction: ContractTransaction = await syncWallet?.onchainAuthSigningKey();
+          const onchainAuthTransaction = await syncWallet?.onchainAuthSigningKey();
           await onchainAuthTransaction?.wait();
         }
       }
 
-      const ethAuthType: string = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+      const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
       const txType: ChangePubKeyFee = {
         // Note: Ignore, since it just looks more intuitive if `"ChangePubKey"` is kept as a string literal)
         // Denotes how authorization of operation is performed:

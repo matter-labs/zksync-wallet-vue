@@ -49,7 +49,9 @@
 import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
 import accountModal from "@/blocks/modals/AccountModal.vue";
+import {formatters} from "stylelint";
 import Vue from "vue";
+import string = formatters.string;
 
 export default Vue.extend({
   components: {
@@ -58,7 +60,7 @@ export default Vue.extend({
     accountModal,
   },
   computed: {
-    walletName(): string {
+    walletName: string () => {
       return this.$accessor.account.name || '';
     },
     walletAddressFull(): string {

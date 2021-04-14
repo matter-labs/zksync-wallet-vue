@@ -1,4 +1,3 @@
-<!--suppress ES6ShorthandObjectProperty -->
 <template>
   <div class="transactionPage">
     <i-modal v-model="chooseTokenModal" size="md">
@@ -191,18 +190,17 @@ import amountInput from "@/components/AmountInput.vue";
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, TokenSymbol, TransactionReceipt } from "zksync/src/types";
-import { Provider } from "zksync/src/provider";
+import { Address, TokenSymbol, TransactionReceipt } from "zksync/build/types";
+import { Transaction } from "zksync/build/wallet";
+import { closestPackableTransactionAmount } from "zksync";
 
-import { ZkInBalance, ZkInContact, ZkInFeesObj, GweiBalance, ZkInTx, ZkInTransactionInfo } from "@/plugins/types";
+import { ZkInBalance, ZkInContact, ZkInFeesObj, GweiBalance, ZkInTransactionInfo, ZkInTransactionType } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 
 import { BigNumber } from "ethers";
-import Vue from "vue";
-
-let zksync = null as any;
+import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
   components: {
@@ -216,9 +214,9 @@ export default Vue.extend({
   props: {
     type: {
       type: String,
-      default: "",
+      default: "transfer",
       required: true,
-    },
+    } as PropOptions<ZkInTransactionType>,
     fromRoute: {
       type: Object,
       default: undefined,
@@ -236,7 +234,7 @@ export default Vue.extend({
       chooseFeeTokenModal: false,
 
       /* Transaction success block */
-      transactionInfo: {
+      transactionInfo: <ZkInTransactionInfo>{
         success: false,
         continueBtnFunction: false,
         continueBtnText: "",
@@ -255,36 +253,36 @@ export default Vue.extend({
           amount: "",
           token: false,
         },
-      } as zkInTransactionInfo,
+      },
 
       /* Warning Modal */
       transferWithdrawWarningModal: false,
 
       /* Main Block */
       inputtedAddress: "",
-      chosenContact: false as false | Contact,
+      chosenContact: <ZkInContact | false>false,
       inputtedAmount: "",
-      chosenToken: false as Balance | false,
-      chosenFeeToken: false as Balance | false,
-      feesObj: {
+      chosenToken: <ZkInBalance | false>false,
+      chosenFeeToken: <ZkInBalance | false>false,
+      feesObj: <ZkInFeesObj>{
         normal: "",
         fast: "",
-      } as ZkInFeesObj | false,
+      },
       feesLoading: false,
-      transactionMode: "normal" as "normal" | "fast",
+      transactionMode: <"normal" | "fast">"normal",
       cantFindFeeToken: false,
       withdrawTime: {
-        normal: 0 as number,
-        fast: 0 as number,
+        normal: 0,
+        fast: 0,
       },
       transferWithdrawWarningCheckmark: false,
       activateAccountFeeLoading: false,
-      activateAccountFee: undefined as undefined | GweiBalance,
+      activateAccountFee: <GweiBalance | undefined>undefined,
       error: "",
     };
   },
   computed: {
-    chosenFeeObj(): GweiBalance | boolean {
+    chosenFeeObj(): GweiBalance | false {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
         return this.feesObj.hasOwnProperty(this.transactionMode) ? (this.feesObj[this.transactionMode] as string) : false;
       }
@@ -306,7 +304,7 @@ export default Vue.extend({
       if (
         (!this.chosenFeeToken || this.chosenToken.symbol === this.chosenFeeToken.symbol) &&
         !this.feesLoading &&
-        (this.transactionMode === "normal" ? (this.feesObj as FeesObj)?.normal : (this.feesObj as ZkInFeesObj)?.fast)
+        (this.transactionMode === "normal" ? (this.feesObj as ZkInFeesObj)?.normal : (this.feesObj as ZkInFeesObj)?.fast)
       ) {
         amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as string);
       } else {
@@ -315,10 +313,10 @@ export default Vue.extend({
       if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
         amount = amount.sub(this.activateAccountFee);
       }
-      return zksync!.closestPackableTransactionAmount(amount).toString();
+      return closestPackableTransactionAmount(amount).toString();
     },
-    feeToken(): Balance {
-      return this.chosenFeeToken ? this.chosenFeeToken : (this.chosenToken as Balance);
+    feeToken(): ZkInBalance {
+      return this.chosenFeeToken ? this.chosenFeeToken : (this.chosenToken as ZkInBalance);
     },
     enoughFeeToken(): boolean {
       if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
@@ -382,7 +380,6 @@ export default Vue.extend({
           }
         }
       }
-      zksync = await walletData.zkSync();
       if (this.type === "withdraw") {
         await this?.getWithdrawalTime();
       }
@@ -395,13 +392,13 @@ export default Vue.extend({
     this.loading = false;
   },
   methods: {
-    chooseToken(token: Balance) {
+    chooseToken(token: ZkInBalance) {
       this.chosenToken = token;
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
-      const balances = JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort(
-        (a: Balance, b: Balance) => parseFloat(b.balance) - parseFloat(a.balance),
-      ) as Array<Balance>;
+      const balances = <Array<ZkInBalance>>JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort(
+        (a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance) - parseFloat(a.balance),
+      );
       if (this.chosenToken.restricted) {
         let tokenFound = false;
         for (const feeToken of balances) {
@@ -421,7 +418,7 @@ export default Vue.extend({
       this.requestFees();
       this.getAccountActivationFee();
     },
-    chooseFeeToken(token: Balance) {
+    chooseFeeToken(token: ZkInBalance) {
       this.chosenFeeToken = token;
       this.chooseFeeTokenModal = false;
       this.requestFees();
@@ -429,7 +426,10 @@ export default Vue.extend({
     },
     async requestFees(): Promise<void> {
       if (!this.chosenToken || !this.inputtedAddress || this.feeToken?.restricted) {
-        this.feesObj = false;
+        this.feesObj = {
+          normal: "",
+          fast: "",
+        };
         return;
       }
       this.feesLoading = true;
@@ -491,29 +491,29 @@ export default Vue.extend({
       this.loading = false;
     },
     async withdraw(): Promise<void> {
-      const syncProvider = walletData.get().syncProvider as Provider;
-      const txAmount = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAmount);
+      const syncProvider = walletData.get().syncProvider;
+      const txAmount = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
       this.tip = "Confirm the transaction to withdraw";
       if (this.feesObj === undefined) {
         throw new Error("Fee fetching error :(");
       }
       const withdrawTransaction = (await withdraw({
         address: this.inputtedAddress,
-        token: (this.chosenToken as Balance).symbol,
+        token: (this.chosenToken as ZkInBalance).symbol,
         feeToken: this.feeToken.symbol,
         amount: txAmount.toString(),
         fastWithdraw: this.transactionMode === "fast",
         fees: (this.transactionMode === "fast" ? (this.feesObj as ZkInFeesObj)?.fast : (this.feesObj as ZkInFeesObj)?.normal) as string,
         store: this.$accessor,
-      })) as Transaction;
+      }));
       let receipt: TransactionReceipt;
-      this.transactionInfo.amount.amount = txAmount.toString();
-      this.transactionInfo.amount.token = this.chosenToken as Balance;
-      this.transactionInfo.fee.token = this.feeToken;
+      this.transactionInfo.amount!.amount = txAmount.toString();
+      this.transactionInfo.amount!.token = this.chosenToken as ZkInBalance;
+      this.transactionInfo.fee!.token = this.feeToken;
       if (!Array.isArray(withdrawTransaction)) {
         this.transactionInfo.hash = withdrawTransaction.txHash;
         this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + withdrawTransaction.txHash;
-        this.transactionInfo.fee.amount = withdrawTransaction.txData.tx.fee;
+        this.transactionInfo.fee!.amount = withdrawTransaction.txData.tx.fee;
         this.transactionInfo.recipient = {
           address: withdrawTransaction.txData.tx.to,
           name: this.chosenContact ? this.chosenContact.name : "",
@@ -523,15 +523,15 @@ export default Vue.extend({
       } else {
         this.transactionInfo.hash = withdrawTransaction[0].txHash;
         this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + withdrawTransaction[0].txHash;
-        this.transactionInfo.fee.amount = withdrawTransaction[1].txData.tx.fee;
+        this.transactionInfo.fee!.amount = withdrawTransaction[1].txData.tx.fee;
         this.transactionInfo.recipient = {
-          address: withdrawTransaction[0].txData.tx.to as string,
+          address: withdrawTransaction[0].txData.tx.to,
           name: this.chosenContact ? this.chosenContact.name : "",
         };
         this.tip = "Waiting for the transaction to be mined...";
-        receipt = await syncProvider.notifyTransaction(withdrawTransaction[0].txHash, "COMMIT");
+        receipt = await syncProvider!.notifyTransaction(withdrawTransaction[0].txHash, "COMMIT");
       }
-      this.transactionInfo.success = receipt.success as boolean;
+      this.transactionInfo.success = !!receipt.success;
       if (receipt.failReason) {
         throw new Error(receipt.failReason);
       }
@@ -549,46 +549,44 @@ export default Vue.extend({
       }
       this.tip = "Confirm the transaction to transfer";
 
-      const calculatedFee: GweiBalance | boolean = this.chosenFeeObj;
+      const calculatedFee = this.chosenFeeObj;
 
       if (calculatedFee === false) {
         throw new Error("Fee calculation failed");
       }
 
-      const txAmount = utils.parseToken((this.chosenToken as Balance).symbol, this.inputtedAmount);
-      const transferTransaction: Transaction | Transaction[] = await transaction(
-        this.inputtedAddress as Address,
-        (this.chosenToken as Balance).symbol as TokenSymbol,
-        this.feeToken.symbol as TokenSymbol,
-        txAmount.toString() as GweiBalance,
-        calculatedFee as GweiBalance,
+      const txAmount = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
+      const transferTransaction = await transaction(
+        this.inputtedAddress,
+        (this.chosenToken as ZkInBalance).symbol,
+        this.feeToken.symbol,
+        txAmount.toString(),
+        calculatedFee,
         this.$accessor,
       );
 
-      this.transactionInfo.amount.amount = txAmount.toString() as GweiBalance;
-      this.transactionInfo.amount.token = this.chosenToken as Balance;
-      this.transactionInfo.fee.amount = calculatedFee as TokenSymbol;
-      this.transactionInfo.fee.token = this.feeToken;
+      this.transactionInfo.amount!.amount = txAmount.toString();
+      this.transactionInfo.amount!.token = this.chosenToken as ZkInBalance;
+      this.transactionInfo.fee!.amount = calculatedFee;
+      this.transactionInfo.fee!.token = this.feeToken;
 
-      const receivedTransaction: Transaction | undefined = transferTransaction.hasOwnProperty("txData")
-        ? (transferTransaction as Transaction)
-        : (transferTransaction as Transaction[]).shift();
-      const feeTransaction: Transaction | undefined = !Array.isArray(transferTransaction) ? (transferTransaction as Transaction) : (transferTransaction as Transaction[]).shift();
+      const receivedTransaction = !Array.isArray(transferTransaction) ? transferTransaction : transferTransaction.shift();
+      const feeTransaction = !Array.isArray(transferTransaction) ? transferTransaction : transferTransaction.shift();
 
       if (receivedTransaction === undefined) {
         throw new Error("Wrong transaction type");
       }
 
-      this.transactionInfo.hash = receivedTransaction.txHash as string;
+      this.transactionInfo.hash = receivedTransaction.txHash;
       this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + receivedTransaction.txHash;
-      this.transactionInfo.fee.amount = feeTransaction?.txData.tx.fee;
+      this.transactionInfo.fee!.amount = feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: receivedTransaction.txData.tx.to,
         name: this.chosenContact ? this.chosenContact.name : "",
       };
       this.tip = "Waiting for the transaction to be mined...";
       const receipt: TransactionReceipt = await receivedTransaction.awaitReceipt();
-      this.transactionInfo.success = receipt.success as boolean;
+      this.transactionInfo.success = !!receipt.success;
       if (receipt.failReason) {
         throw new Error(receipt.failReason);
       }
@@ -619,9 +617,9 @@ export default Vue.extend({
         await this.$accessor.wallet.restoreProviderConnection();
         const foundFee = await syncProvider?.getTransactionFee(
           {
-            ChangePubKey: syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA",
+            ChangePubKey: syncWallet!.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA",
           },
-          syncWallet?.address() || "",
+          syncWallet!.address() || "",
           this.feeToken.symbol,
         );
         this.activateAccountFee = foundFee!.totalFee.toString();
@@ -645,27 +643,27 @@ export default Vue.extend({
         await this.$accessor.wallet.restoreProviderConnection();
         this.tip = "Confirm the transaction to unlock this account";
 
-        if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
+        if (syncWallet!.ethSignerType?.verificationMethod === "ERC-1271") {
           const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
           if (!isOnchainAuthSigningKeySet) {
             const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
             await onchainAuthTransaction?.wait();
           }
         }
-        const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-        const changePubkey = await syncWallet?.setSigningKey({
+        const ethAuthType = syncWallet!.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
+        const changePubkey = await syncWallet!.setSigningKey({
           feeToken: this.feeToken.symbol,
           fee: this.activateAccountFee,
           nonce: "committed",
           ethAuthType: ethAuthType === "ECDSA" ? "ECDSALegacyMessage" : "ECDSA",
         });
-        this.setTransactionInfo(changePubkey as Transaction, true, `Proceed to ${this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : ""}`);
+        this.setTransactionInfo(changePubkey, true, `Proceed to ${this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : ""}`);
         this.tip = "Waiting for the transaction to be mined...";
         await changePubkey?.awaitReceipt();
-        const isSigningKeySet = await syncWallet?.isSigningKeySet();
+        const isSigningKeySet = await syncWallet!.isSigningKeySet();
         this.$accessor.wallet.setAccountLockedState(isSigningKeySet === false);
 
-        const newAccountState = await syncWallet?.getAccountState();
+        const newAccountState = await syncWallet!.getAccountState();
         walletData.set({ accountState: newAccountState });
 
         this.transactionInfo.success = true;
@@ -686,16 +684,16 @@ export default Vue.extend({
         type: "",
         explorerLink: "",
         recipient: {
-          address: "" as Address,
+          address: "",
           name: "",
         },
         amount: {
-          amount: "" as GweiBalance,
-          token: false as false | Balance,
+          amount: "",
+          token: false,
         },
         fee: {
-          amount: "" as GweiBalance,
-          token: this.feeToken as false | Balance,
+          amount: "",
+          token: this.feeToken,
         },
       };
     },
@@ -704,8 +702,8 @@ export default Vue.extend({
       this.transactionInfo.hash = transaction.txHash;
       this.transactionInfo.continueBtnText = btnText;
       this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transaction.txHash;
-      this.transactionInfo.fee.token = this.feeToken;
-      this.transactionInfo.fee.amount = transaction.txData.tx.fee;
+      this.transactionInfo.fee!.token = this.feeToken;
+      this.transactionInfo.fee!.amount = transaction.txData.tx.fee;
       this.transactionInfo.amount = undefined;
       this.transactionInfo.recipient = undefined;
     },

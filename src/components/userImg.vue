@@ -2,9 +2,10 @@
   <img class="userImg" :src="walletImg" alt="avatar" @click="$emit('click')" />
 </template>
 
-<script type="ts">
+<script lang="ts">
+import { Address } from "zksync/build/types";
 import blockie from "ethereum-blockies-base64";
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
   props: {
@@ -12,7 +13,7 @@ export default Vue.extend({
       type: String,
       default: "",
       required: true,
-    },
+    } as PropOptions<Address>,
   },
   computed: {
     walletImg() {

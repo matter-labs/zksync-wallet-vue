@@ -28,7 +28,7 @@ export default Vue.extend({
       this.$accessor.wallet.onboard?.config({
         darkMode: this.$inkline.config.variant !== "light",
       });
-      const refreshWalletTry = await this.$accessor.wallet.walletRefresh();
+      const refreshWalletTry = await this.$accessor.wallet.walletRefresh(true);
       if (!refreshWalletTry) {
         await this.$accessor.wallet.logout();
       } else {

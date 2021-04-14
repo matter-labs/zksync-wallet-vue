@@ -29,7 +29,7 @@ export default Vue.extend({
     loggingInLoader,
   },
   computed: {
-    loggingIn() {
+    loggingIn:boolean () => {
       return this.$accessor.account.loader;
     },
     loggedIn() {

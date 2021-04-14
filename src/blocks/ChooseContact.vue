@@ -69,7 +69,7 @@ import utils from "@/plugins/utils";
 import { ZkInContact } from "@/plugins/types";
 import { Address } from "zksync/src/types";
 import userImg from "@/components/userImg.vue";
-import Vue from "vue";
+import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
   components: {
@@ -80,7 +80,7 @@ export default Vue.extend({
       type: String,
       default: undefined,
       required: false,
-    },
+    } as PropOptions<Address>,
     displayOwnAddress: {
       type: Boolean,
       default: true,
@@ -99,7 +99,7 @@ export default Vue.extend({
       saveContactModalError: "",
 
       /* Main */
-      chosenContact: false as false | ZkInContact,
+      chosenContact: <ZkInContact | false>false,
     };
   },
   computed: {
@@ -171,8 +171,9 @@ export default Vue.extend({
         return;
       }
       if (!contact?.name) {
-        if (this.checkAddressInContacts(contact.address)) {
-          contact = this.$accessor.contacts.getByAddress(contact.address);
+        const foundContact = this.$accessor.contacts.getByAddress(contact.address);
+        if (foundContact) {
+          contact = foundContact;
         }
       }
       // @ts-ignore
@@ -187,12 +188,14 @@ export default Vue.extend({
         this.saveContactModalError = "Name can't be empty";
         return;
       }
-      const contact = {
-        name: this.saveContactInput,
+      if(this.chosenContact) {
+        const contact = {
+          name: this.saveContactInput,
         address: (this.chosenContact as ZkInContact).address,
-      };
-      this.$accessor.contacts.saveContact(contact);
-      this.chooseContact(contact);
+        };
+        this.$accessor.contacts.saveContact(contact);
+        this.chooseContact(contact);
+      }
       this.saveContactInput = "";
       this.saveContactModal = false;
     },
