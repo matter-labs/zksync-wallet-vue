@@ -130,6 +130,7 @@ export const actions = actionTree(
     /**
      * Receive correct Fee amount
      * @param state
+     * @param _
      * @param {any} address
      * @param {any} feeToken
      * @return {Promise<any>}

@@ -2,7 +2,6 @@ import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vue
 
 import * as account from "@/store/account";
 import * as contacts from "@/store/contacts";
-import * as toaster from "@/store/toaster";
 import * as tokens from "@/store/tokens";
 import * as transaction from "@/store/transaction";
 import * as wallet from "@/store/wallet";
@@ -56,7 +55,6 @@ export const accessorType = getAccessorType({
   modules: {
     account,
     contacts,
-    toaster,
     tokens,
     transaction,
     wallet,

@@ -1,29 +1,22 @@
-import { ExternalProvider } from "@ethersproject/providers";
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import Web3 from "web3";
-
 import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { ZkInFeesObj, ZkInBalance, GweiBalance, iWalletData, zksync, ZkInTx } from "@/plugins/types";
+import { iWalletData, ZkInBalance, ZkInFeesObj, ZkInTx } from "@/plugins/types";
+import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
-import web3Wallet from "@/plugins/web3";
 import watcher from "@/plugins/watcher";
+import { Web3Provider } from "@ethersproject/providers/lib.esm";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API, Initialization } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
-import { provider } from "web3-core";
-import { Provider, Wallet } from "zksync/build";
-import { AccountState, Address, Fee, Network, TokenSymbol } from "zksync/build/types";
-import utils from "@/plugins/utils";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { getDefaultProvider, closestPackableTransactionFee, Provider, Wallet } from "zksync";
+import { AccountState, Address, Fee, TokenSymbol } from "zksync/src/types";
 
 interface feesInterface {
   [symbol: string]: {
     [feeSymbol: string]: {
       [type: string]: {
-        [address: string]: {
-          normal: GweiBalance;
-          fast: GweiBalance;
-        };
+        [address: string]: ZkInFeesObj;
       };
     };
   };
@@ -65,28 +58,16 @@ export const state = (): iWallet => ({
 export type WalletModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setAccountLockedState(state, accountState: boolean) {
+  setAccountLockedState(state, accountState: boolean): void {
     state.isAccountLocked = accountState;
   },
   setOnboard(state, obj: API) {
     state.onboard = obj;
   },
-  setTokensList(
-    state,
-    obj: {
-      lastUpdated: number;
-      list: ZkInBalance[];
-    },
-  ) {
+  setTokensList(state, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
     state.initialTokens = obj;
   },
-  setZkTokens(
-    state,
-    obj: {
-      lastUpdated: number;
-      list: ZkInBalance[];
-    },
-  ) {
+  setZkTokens(state, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
     state.zkTokens = obj;
   },
   setTokenPrice(
@@ -101,7 +82,7 @@ export const mutations = mutationTree(state, {
         price: number;
       };
     },
-  ) {
+  ): void {
     state.tokenPrices[symbol] = obj;
   },
   setTransactionsList(
@@ -110,7 +91,7 @@ export const mutations = mutationTree(state, {
       lastUpdated: number;
       list: Array<ZkInTx>;
     },
-  ) {
+  ): void {
     state.transactionsHistory = obj;
   },
   setWithdrawalProcessingTime(
@@ -119,29 +100,11 @@ export const mutations = mutationTree(state, {
       normal: number;
       fast: number;
     },
-  ) {
+  ): void {
     state.withdrawalProcessingTime = obj;
   },
-  setFees(
-    state,
-    {
-      symbol,
-      feeSymbol,
-      type,
-      address,
-      obj,
-    }: {
-      symbol: TokenSymbol;
-      feeSymbol: TokenSymbol;
-      type: string;
-      address: Address;
-      obj: ZkInFeesObj;
-    },
-  ) {
-    state.fees[symbol][feeSymbol][type][address] = obj as {
-      normal: GweiBalance;
-      fast: GweiBalance;
-    };
+  setFees(state, { symbol, feeSymbol, type, address, obj }: { symbol: TokenSymbol; feeSymbol: TokenSymbol; type: string; address: Address; obj: ZkInFeesObj }): void {
+    state.fees[symbol][feeSymbol][type][address] = obj as ZkInFeesObj;
   },
   /**
    * @todo review and drop (?)
@@ -231,7 +194,9 @@ export const actions = actionTree(
         this.commit("account/setSelectedWallet", "");
         return false;
       }
-      this.dispatch("toaster/info", "Found previously selected wallet.");
+      this.app.$toasted.global.zkCancel({
+        message: "Found previously selected wallet.",
+      });
       this.commit("account/setSelectedWallet", previouslySelectedWallet);
       return await onboard.walletSelect(previouslySelectedWallet);
     },
@@ -240,9 +205,9 @@ export const actions = actionTree(
      * Check if the connection to the sync provider is opened and if not - restore it
      */
     async restoreProviderConnection(): Promise<void> {
-      const syncProvider = walletData.get().syncProvider;
-      if (syncProvider && syncProvider?.transport.ws && !syncProvider.transport.ws.isOpened) {
-        await syncProvider.transport.ws.open();
+      if (walletData.get().syncProvider!.transport !== undefined) {
+        const activeProvider: Provider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
+        walletData.setProvider(activeProvider);
       }
     },
 
@@ -356,11 +321,13 @@ export const actions = actionTree(
               restricted: false,
             };
           } catch (error) {
-            this.dispatch("toaster/error", `Error getting ${currentToken.symbol} balance`);
+            this.app.$toasted.global.zkException({
+              message: `Error getting ${currentToken.symbol} balance`,
+            });
           }
         },
       );
-      const balancesResults: (void | Balance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
+      const balancesResults: (void | ZkInBalance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
         this.$sentry.captureException(error);
         return [];
       });
@@ -386,7 +353,7 @@ export const actions = actionTree(
      * @param options
      * @return {Promise<any>}
      */
-    async requestTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }): Promise<Array<Tx>> {
+    async requestTransactionsHistory({ dispatch, commit, getters }, { force = false, offset = 0 }): Promise<Array<ZkInTx>> {
       clearTimeout(getTransactionHistoryAgain);
       const localList = getters.getTransactionsList;
       /**
@@ -410,7 +377,9 @@ export const actions = actionTree(
         return fetchTransactionHistory.data;
       } catch (error) {
         this.$sentry.captureException(error);
-        this.dispatch("toaster/error", error.message);
+        this.app.$toasted.global.zkException({
+          message: error.message,
+        });
         getTransactionHistoryAgain = setTimeout(() => {
           dispatch("requestTransactionsHistory", { force: true });
         }, 15000);
@@ -430,37 +399,29 @@ export const actions = actionTree(
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
       await dispatch("restoreProviderConnection");
-      const zksync: zksync | undefined = await walletData.zkSync();
-      if (zksync === undefined) {
-        throw new Error("No zksync lib loaded");
-      }
+
       if (type === "withdraw") {
         if (symbol === feeSymbol) {
           const foundFeeFast: Fee = await syncProvider!.getTransactionFee("FastWithdraw", address, symbol);
           const foundFeeNormal: Fee = await syncProvider!.getTransactionFee("Withdraw", address, symbol);
           const feesObj: ZkInFeesObj = {
-            fast: foundFeeFast !== undefined ? zksync.closestPackableTransactionFee(foundFeeFast.totalFee) : undefined,
-            normal: foundFeeNormal !== undefined ? zksync.closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined,
-          };
-          commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
-          return feesObj;
-        } else {
-          const batchWithdrawFeeFast: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(
-            ["FastWithdraw", "Transfer"],
-            [address, syncWallet?.address()],
-            feeSymbol,
-          );
-          const batchWithdrawFeeNormal: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet?.address()], feeSymbol);
-          const feesObj: ZkInFeesObj = {
-            fast: batchWithdrawFeeFast !== undefined ? zksync.closestPackableTransactionFee(batchWithdrawFeeFast) : undefined,
-            normal: batchWithdrawFeeNormal !== undefined ? zksync.closestPackableTransactionFee(batchWithdrawFeeNormal) : undefined,
+            fast: foundFeeFast !== undefined ? closestPackableTransactionFee(foundFeeFast.totalFee) : undefined,
+            normal: foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined,
           };
           commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
           return feesObj;
         }
+        const batchWithdrawFeeFast: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(["FastWithdraw", "Transfer"], [address, syncWallet?.address()], feeSymbol);
+        const batchWithdrawFeeNormal: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet?.address()], feeSymbol);
+        const feesObj: ZkInFeesObj = {
+          fast: batchWithdrawFeeFast !== undefined ? closestPackableTransactionFee(batchWithdrawFeeFast) : undefined,
+          normal: batchWithdrawFeeNormal !== undefined ? closestPackableTransactionFee(batchWithdrawFeeNormal) : undefined,
+        };
+        commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
+        return feesObj;
       } else if (symbol === feeSymbol) {
         const foundFeeNormal: Fee | undefined = await syncProvider?.getTransactionFee("Transfer", address, symbol);
-        const totalFeeValue: BigNumber | undefined = foundFeeNormal !== undefined ? zksync.closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined;
+        const totalFeeValue: BigNumber | undefined = foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined;
         const feesObj: ZkInFeesObj = {
           normal: totalFeeValue !== undefined ? totalFeeValue : undefined,
           fast: undefined,
@@ -468,9 +429,14 @@ export const actions = actionTree(
         commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
         return feesObj;
       }
-      const batchTransferFee: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet?.address()], feeSymbol);
+
+      /**
+       * @todo drop ZkInFeesObj as the typed object and simplify fees to a single (normal) except withdraw
+       * @type {BigNumber}
+       */
+      const batchTransferFee: BigNumber | undefined = await syncProvider?.getTransactionsBatchFee(["Transfer"], [address, syncWallet?.address()], feeSymbol);
       const feesObj: ZkInFeesObj = {
-        normal: batchTransferFee !== undefined ? zksync.closestPackableTransactionFee(batchTransferFee) : undefined,
+        normal: batchTransferFee !== undefined ? closestPackableTransactionFee(batchTransferFee) : undefined,
         fast: "",
       };
       commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
@@ -519,27 +485,28 @@ export const actions = actionTree(
           return false;
         }
 
-        const web3WalletInstance: boolean | Web3 = web3Wallet.get();
+        // @ts-ignore
+        const web3WalletInstance: Web3Provider = new ethers.providers.Web3Provider(window?.ethereum);
+        /**
+         * Provider verification
+         * @todo: add network validation here
+         * @type {ethers.providers.Network}
+         */
+        const networkInfo: ethers.providers.Network = await web3WalletInstance._ready();
+        if (!networkInfo || !web3WalletInstance.provider) {
+          return false;
+        }
 
-        if (web3WalletInstance === false || !(web3WalletInstance instanceof Web3)) {
-          return false;
-        }
-        const getAccounts = await web3WalletInstance.eth.getAccounts();
-        if (getAccounts.length === 0) {
-          return false;
-        }
         if (walletData.get().syncWallet) {
           rootState.dispatch("account/setAddress", walletData.get().syncWallet?.address());
           return true;
         }
-        const currentProvider: provider = web3WalletInstance.eth.currentProvider;
-        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
-        const zksync: zksync | undefined = await walletData.zkSync();
-        const syncProvider: Provider | undefined = await zksync?.getDefaultProvider(ETHER_NETWORK_NAME as Network, "HTTP");
+        const ethWallet: ethers.providers.JsonRpcSigner = web3WalletInstance.getSigner();
+        const syncProvider: Provider | undefined = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
         if (syncProvider === undefined) {
           return false;
         }
-        const syncWallet: Wallet | undefined = await zksync?.Wallet.fromEthSigner(ethWallet, syncProvider);
+        const syncWallet: Wallet | undefined = await Wallet.fromEthSigner(ethWallet, syncProvider);
         this.commit("account/setLoadingHint", "Getting wallet information");
 
         // @ts-ignore
@@ -567,11 +534,11 @@ export const actions = actionTree(
         this.commit("account/setLoggedIn", true);
         return true;
       } catch (error) {
-        console.log("Wallet refresh error", error);
         this.$sentry.captureException(error);
         if (!error.message.includes("User denied")) {
-          this.dispatch("toaster/error", `Refreshing state of the wallet failed... Reason: ${error.message}`);
-          this.dispatch("toaster/error", error.message);
+          this.app.$toasted.global.zkException({
+            message: `Refreshing state of the wallet failed... Reason: ${error.message}`,
+          });
         }
         return false;
       }
