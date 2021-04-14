@@ -1,13 +1,20 @@
 module.exports = {
+  extends: ["@nuxtjs/eslint-config-typescript", "plugin:prettier/recommended", "plugin:vue/base", "prettier"],
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+    project: ["./tsconfig.json"],
+    parser: "@typescript-eslint/parser",
+    ecmaVersion: 2018,
+    sourceType: "module",
+    extraFileExtensions: [".vue"],
+  },
   root: true,
   env: {
     node: true,
     browser: true,
   },
-  extends: ["@nuxtjs/eslint-config-typescript", "eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"],
   rules: {
     // enable additional rules
-    indent: ["error", 2],
     "linebreak-style": ["error", "unix"],
     quotes: ["error", "double"],
     camelcase: "off",
@@ -17,17 +24,5 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "no-console": "off",
     "@typescript-eslint/no-empty-function": ["off"],
-  },
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    ecmaVersion: 2021,
-    project: ["./tsconfig.json"],
-    tsconfigRootDir: __dirname,
-    sourceType: "module",
-    ecmaFeatures: {
-      jsx: false,
-    },
-
-    extraFileExtensions: ["*.vue", ".*.vue"],
   },
 };

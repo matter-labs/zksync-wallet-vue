@@ -119,7 +119,7 @@ export default Vue.extend({
       try {
         inputAmount = utils.parseToken(this.token.symbol, val);
       } catch (error) {
-        let errorInfo = `Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help`;
+        let errorInfo = "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
           errorInfo = `Precision exceeded: ${this.token.symbol} doesn't support that many decimal digits`;
         }
@@ -134,7 +134,7 @@ export default Vue.extend({
 
       if (this.minAmount) {
         if (inputAmount.lt(this.minAmount)) {
-          this.error = `Inputted amount is lower than the minimum amount`;
+          this.error = "Inputted amount is lower than the minimum amount";
           return;
         }
       }
@@ -143,7 +143,9 @@ export default Vue.extend({
     },
     chooseMinAmount() {
       try {
-        if(!this.token){return}
+        if (!this.token) {
+          return;
+        }
         this.inputtedAmount = utils.handleFormatToken(this.token.symbol, this.minAmount);
       } catch (error) {
         console.log("Error choose max amount", error);

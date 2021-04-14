@@ -16,11 +16,8 @@ export default Vue.extend({
     } as PropOptions<Address>,
   },
   computed: {
-    walletImg() {
-      if (!this.wallet) {
-        return "";
-      }
-      return blockie(this.wallet);
+    walletImg(): string {
+      return !this.wallet ? "" : blockie(this.wallet);
     },
   },
 });

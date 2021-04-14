@@ -31,7 +31,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    networkName() {
+    networkName(): string {
       return ETHER_NETWORK_NAME;
     },
   },

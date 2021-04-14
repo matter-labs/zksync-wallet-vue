@@ -62,11 +62,11 @@ export default Vue.extend({
     };
   },
   computed: {
-    balances: <ZkInBalance>() => {
+    balances(): ZkInBalance[] {
       return this.tokensType === "L2" ? this.$accessor.wallet.getzkBalances : this.$accessor.wallet.getInitialBalances;
     },
-    displayedList(): Array<ZkInBalance> {
-      let list: Array<ZkInBalance> = utils.searchInArr(this.search, this.balances, (e) => (e as ZkInBalance).symbol) as ZkInBalance[];
+    displayedList(): ZkInBalance[] {
+      let list: ZkInBalance[] = utils.searchInArr(this.search, this.balances, (e) => (e as ZkInBalance).symbol) as ZkInBalance[];
       if (this.onlyAllowed) {
         list = list.filter((e) => !e.restricted);
       }

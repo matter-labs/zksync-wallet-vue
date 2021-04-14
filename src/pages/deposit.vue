@@ -117,7 +117,7 @@ import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
 import { closestPackableTransactionAmount } from "zksync";
-import { BigNumber, Contract, ethers } from "ethers";
+import { BigNumber, Contract } from "ethers";
 import Vue from "vue";
 
 let thresholdTimeout: ReturnType<typeof setTimeout>;
@@ -311,23 +311,24 @@ export default Vue.extend({
       this.tip = "Confirm the transaction to deposit";
       this.transactionInfo.type = "deposit";
       const transferTransaction = await deposit((this.chosenToken as ZkInBalance).symbol, this.amountBigNumber.toString(), this.$accessor);
-      if(!transferTransaction) {return}
+      if (!transferTransaction) {
+        return;
+      }
       this.transactionInfo.amount = {
         amount: this.amountBigNumber.toString(),
-        token: this.chosenToken
-      }
+        token: this.chosenToken,
+      };
       this.transactionInfo.hash = transferTransaction.ethTx.hash;
       this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + transferTransaction.ethTx.hash;
       this.tip = "Waiting for the transaction to be mined...";
       const receipt = await transferTransaction.awaitEthereumTxCommit();
-      if(!receipt) {
+      if (!receipt) {
         this.transactionInfo.fee = undefined;
-      }
-      else {
+      } else {
         this.transactionInfo.fee = {
           token: this.chosenToken,
-          amount: receipt.gasUsed.toString()
-        }
+          amount: receipt.gasUsed.toString(),
+        };
       }
       this.transactionInfo.continueBtnFunction = false;
       this.transactionInfo.continueBtnText = "";
@@ -356,15 +357,15 @@ export default Vue.extend({
         const receipt = await approveDeposits.wait();
         this.transactionInfo.hash = receipt.transactionHash;
         this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + receipt.transactionHash;
-        if(ETHToken) {
+        if (ETHToken) {
           this.transactionInfo.amount = {
             amount: "0",
-            token: ETHToken
-          }
+            token: ETHToken,
+          };
           this.transactionInfo.fee = {
             amount: receipt.gasUsed.toString(),
-            token: ETHToken
-          }
+            token: ETHToken,
+          };
         }
         this.transactionInfo.continueBtnFunction = true;
         this.transactionInfo.continueBtnText = "Proceed to deposit";

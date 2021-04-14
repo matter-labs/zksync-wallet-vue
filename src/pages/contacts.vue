@@ -159,7 +159,7 @@ export default Vue.extend({
       return this.$accessor.account.address || "";
     },
     displayedContactsList(): ZkInContact[] {
-      return (utils.searchInArr(this.search, this.contactsList, (e) => (e as ZkInContact).name) as ZkInContact[]);
+      return utils.searchInArr(this.search, this.contactsList, (e) => (e as ZkInContact).name) as ZkInContact[];
     },
     openedContact(): null | ZkInContact {
       const wallet = this.$route.query.w;
@@ -198,7 +198,7 @@ export default Vue.extend({
         });
       }
     },
-    $route(val, oldVal) {
+    $route(_val, oldVal) {
       this.fromRoute = oldVal;
     },
   },
@@ -210,11 +210,11 @@ export default Vue.extend({
   methods: {
     addContact(): void {
       if (this.inputtedName.trim().length === 0) {
-        this.modalError = `Name can't be empty`;
+        this.modalError = "Name can't be empty";
       } else if (!this.inputtedWallet) {
-        this.modalError = `Enter a valid wallet address`;
+        this.modalError = "Enter a valid wallet address";
       } else if (this.inputtedWallet.trim().toLowerCase() === this.walletAddressFull.toLowerCase()) {
-        this.modalError = `You can't add your own account to contacts`;
+        this.modalError = "You can't add your own account to contacts";
       } else {
         this.addContactModal = false;
         this.modalError = "";

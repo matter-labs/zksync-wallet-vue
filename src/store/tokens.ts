@@ -1,5 +1,5 @@
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ZkInTokenPrices, TokenInfo, ZkInBalance, Balance } from "@/plugins/types";
+import { ZkInTokenPrices, TokenInfo } from "@/plugins/types";
 import { TokenSymbol, Tokens } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 

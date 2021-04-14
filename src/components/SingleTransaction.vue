@@ -38,9 +38,8 @@
 import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import { ZkInTx } from "@/plugins/types";
-import { Address } from "zksync/build/types";
+import { Address, TokenSymbol } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
-import { TokenSymbol } from "zksync/build/types";
 
 import moment from "moment";
 import Vue, { PropOptions } from "vue";
@@ -68,18 +67,17 @@ export default Vue.extend({
       );
     },
     walletAddressFull(): Address {
-      return this.$accessor.account.address || '';
+      return this.$accessor.account.address || "";
     },
     displayedAddress(): Address {
-      if(this.singleTransaction.tx.type === "Transfer") {
-        if(this.isSameAddress(this.singleTransaction.tx.to || '')) {
+      if (this.singleTransaction.tx.type === "Transfer") {
+        if (this.isSameAddress(this.singleTransaction.tx.to || "")) {
           return this.singleTransaction.tx.from;
         }
-      }
-      else if(this.singleTransaction.tx.priority_op) {
+      } else if (this.singleTransaction.tx.priority_op) {
         return this.singleTransaction.tx.priority_op.to;
       }
-      return this.singleTransaction.tx.to || '';
+      return this.singleTransaction.tx.to || "";
     },
     transactionStatus(): { text: string; icon: string } {
       if (this.singleTransaction.success === false) {
@@ -119,7 +117,8 @@ export default Vue.extend({
             showAddress: false,
             tooltip: {
               icon: "ri-information-fill",
-              html: `Activation is required single-time payment to set the signing key associated with the account.<br>Without it no operation can be authorized by your corresponding account.`,
+              html:
+                "Activation is required single-time payment to set the signing key associated with the account.<br>Without it no operation can be authorized by your corresponding account.",
             },
           };
         case "Deposit":
@@ -161,12 +160,10 @@ export default Vue.extend({
         if (this.singleTransaction.tx.priority_op) {
           return this.singleTransaction.tx.priority_op.token;
         }
-      } else {
-        if (typeof this.singleTransaction.tx.feeToken === "number") {
-          return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol
-        } else if (this.singleTransaction.tx.priority_op) {
-          return this.singleTransaction.tx.priority_op.token;
-        }
+      } else if (typeof this.singleTransaction.tx.feeToken === "number") {
+        return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol;
+      } else if (this.singleTransaction.tx.priority_op) {
+        return this.singleTransaction.tx.priority_op.token;
       }
       return this.singleTransaction.tx.token!;
     },
@@ -192,10 +189,10 @@ export default Vue.extend({
       return moment(time).fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
-      if(!this.isFeeTransaction) {
-        return utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount) || '';
+      if (!this.isFeeTransaction) {
+        return utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount) || "";
       } else {
-        return utils.handleFormatToken(this.tokenSymbol, fee) || '';
+        return utils.handleFormatToken(this.tokenSymbol, fee) || "";
       }
     },
     getAddressName(address: string): string {

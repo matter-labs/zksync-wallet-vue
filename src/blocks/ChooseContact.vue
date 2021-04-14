@@ -188,10 +188,10 @@ export default Vue.extend({
         this.saveContactModalError = "Name can't be empty";
         return;
       }
-      if(this.chosenContact) {
+      if (this.chosenContact) {
         const contact = {
           name: this.saveContactInput,
-        address: (this.chosenContact as ZkInContact).address,
+          address: (this.chosenContact as ZkInContact).address,
         };
         this.$accessor.contacts.saveContact(contact);
         this.chooseContact(contact);

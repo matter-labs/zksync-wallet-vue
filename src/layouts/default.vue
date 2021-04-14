@@ -21,6 +21,7 @@ import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 
 import { APP_ZK_SCAN } from "@/plugins/build";
 import Vue from "vue";
+import {Address} from "zksync/src/types";
 
 export default Vue.extend({
   components: {
@@ -29,16 +30,16 @@ export default Vue.extend({
     loggingInLoader,
   },
   computed: {
-    loggingIn:boolean () => {
+    loggingIn(): boolean{
       return this.$accessor.account.loader;
     },
-    loggedIn() {
+    loggedIn(): boolean {
       return this.$accessor.account.loggedIn;
     },
-    walletAddressFull() {
+    walletAddressFull(): Address {
       return this.$accessor.account.address;
     },
-    getZkScanBaseUrl() {
+    getZkScanBaseUrl(): string {
       return APP_ZK_SCAN;
     },
   },

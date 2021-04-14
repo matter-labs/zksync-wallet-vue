@@ -136,7 +136,7 @@ export const withdraw = async ({
   // @ts-ignore
   signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
 
-  const transactionHashes: string[] | SignedTransaction[] | void = await syncWallet?.provider.submitTxsBatch(signedTransactions as SignedTransaction[]).catch((error) => {
+  const transactionHashes: string[] | SignedTransaction[] | undefined = await syncWallet?.provider.submitTxsBatch(signedTransactions as SignedTransaction[]).catch((error) => {
     throw new Error("Error while performing submitTxsBatch: " + error.message);
   });
 

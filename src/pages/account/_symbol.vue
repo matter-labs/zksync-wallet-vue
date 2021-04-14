@@ -39,6 +39,7 @@
 import transactions from "@/blocks/Transactions.vue";
 import { ZkInBalance } from "@/plugins/types";
 import Vue from "vue";
+import { TokenSymbol } from "zksync/src/types";
 
 export default Vue.extend({
   components: {
@@ -56,7 +57,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    symbol() {
+    symbol(): TokenSymbol {
       return this.$route.params.symbol.toUpperCase();
     },
   },

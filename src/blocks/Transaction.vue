@@ -190,7 +190,7 @@ import amountInput from "@/components/AmountInput.vue";
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, TokenSymbol, TransactionReceipt } from "zksync/build/types";
+import { Address, TransactionReceipt, Transfer } from "zksync/build/types";
 import { Transaction } from "zksync/build/wallet";
 import { closestPackableTransactionAmount } from "zksync";
 
@@ -201,6 +201,7 @@ import { walletData } from "@/plugins/walletData";
 
 import { BigNumber } from "ethers";
 import Vue, { PropOptions } from "vue";
+import { ChangePubKey, CloseAccount, ForcedExit, TxEthSignature, Withdraw } from "zksync/src/types";
 
 export default Vue.extend({
   components: {
@@ -396,8 +397,8 @@ export default Vue.extend({
       this.chosenToken = token;
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
-      const balances = <Array<ZkInBalance>>JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort(
-        (a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance) - parseFloat(a.balance),
+      const balances = <Array<ZkInBalance>>(
+        JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance) - parseFloat(a.balance))
       );
       if (this.chosenToken.restricted) {
         let tokenFound = false;
@@ -497,7 +498,10 @@ export default Vue.extend({
       if (this.feesObj === undefined) {
         throw new Error("Fee fetching error :(");
       }
-      const withdrawTransaction = (await withdraw({
+      const withdrawTransaction:
+        | Array<{ tx?: Transfer | Withdraw | ChangePubKey | CloseAccount | ForcedExit; signature?: TxEthSignature }>[]
+        | Transaction
+        | undefined = await withdraw({
         address: this.inputtedAddress,
         token: (this.chosenToken as ZkInBalance).symbol,
         feeToken: this.feeToken.symbol,
@@ -505,7 +509,8 @@ export default Vue.extend({
         fastWithdraw: this.transactionMode === "fast",
         fees: (this.transactionMode === "fast" ? (this.feesObj as ZkInFeesObj)?.fast : (this.feesObj as ZkInFeesObj)?.normal) as string,
         store: this.$accessor,
-      }));
+      });
+
       let receipt: TransactionReceipt;
       this.transactionInfo.amount!.amount = txAmount.toString();
       this.transactionInfo.amount!.token = this.chosenToken as ZkInBalance;
@@ -519,7 +524,7 @@ export default Vue.extend({
           name: this.chosenContact ? this.chosenContact.name : "",
         };
         this.tip = "Waiting for the transaction to be mined...";
-        receipt = await withdrawTransaction.awaitReceipt();
+        receipt = await withdrawTransaction?.awaitReceipt();
       } else {
         this.transactionInfo.hash = withdrawTransaction[0].txHash;
         this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + withdrawTransaction[0].txHash;
