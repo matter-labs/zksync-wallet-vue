@@ -104,7 +104,7 @@ export const mutations = mutationTree(state, {
     state.withdrawalProcessingTime = obj;
   },
   setFees(state, { symbol, feeSymbol, type, address, obj }: { symbol: TokenSymbol; feeSymbol: TokenSymbol; type: string; address: Address; obj: ZkInFeesObj }): void {
-    state.fees[symbol][feeSymbol][type][address] = obj as ZkInFeesObj;
+    state.fees[symbol][feeSymbol][type][address] = obj;
   },
   /**
    * @todo review and drop (?)
@@ -520,7 +520,7 @@ export const actions = actionTree(
         await this.app.$accessor.wallet.checkLockedState();
 
         this.app.$accessor.contacts.getContactsFromStorage();
-        this.app.$accessor.account.setAddress(syncWallet!.address());
+        this.app.$accessor.account.setAddress(syncWallet.address());
         this.app.$accessor.account.setNameFromStorage();
         this.app.$accessor.account.setLoggedIn(true);
         return true;

@@ -305,7 +305,7 @@ export default Vue.extend({
       if (
         (!this.chosenFeeToken || this.chosenToken.symbol === this.chosenFeeToken.symbol) &&
         !this.feesLoading &&
-        (this.transactionMode === "normal" ? (this.feesObj as ZkInFeesObj)?.normal : (this.feesObj as ZkInFeesObj)?.fast)
+        (this.transactionMode === "normal" ? this.feesObj?.normal : this.feesObj?.fast)
       ) {
         amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as string);
       } else {
@@ -507,7 +507,7 @@ export default Vue.extend({
         feeToken: this.feeToken.symbol,
         amount: txAmount.toString(),
         fastWithdraw: this.transactionMode === "fast",
-        fees: (this.transactionMode === "fast" ? (this.feesObj as ZkInFeesObj)?.fast : (this.feesObj as ZkInFeesObj)?.normal) as string,
+        fees: (this.transactionMode === "fast" ? this.feesObj?.fast : this.feesObj?.normal) as string,
         store: this.$accessor,
       });
 
@@ -666,7 +666,7 @@ export default Vue.extend({
         this.tip = "Waiting for the transaction to be mined...";
         await changePubkey?.awaitReceipt();
         const isSigningKeySet = await syncWallet!.isSigningKeySet();
-        this.$accessor.wallet.setAccountLockedState(isSigningKeySet === false);
+        this.$accessor.wallet.setAccountLockedState(!isSigningKeySet);
 
         const newAccountState = await syncWallet!.getAccountState();
         walletData.set({ accountState: newAccountState });

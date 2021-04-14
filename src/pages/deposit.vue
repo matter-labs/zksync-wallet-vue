@@ -209,7 +209,7 @@ export default Vue.extend({
         return true;
       }
       try {
-        const inputedAllowenceBigNumber = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAllowance);
+        const inputedAllowenceBigNumber = utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance);
         return inputedAllowenceBigNumber.gte(this.amountBigNumber);
       } catch (error) {
         return false;
@@ -343,7 +343,7 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         this.tip = `Confirm the transaction in order to unlock ${this.chosenToken.symbol} token`;
         this.transactionInfo.type = "unlock";
-        const approveAmount = this.inputtedAllowance ? utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAllowance) : undefined;
+        const approveAmount = this.inputtedAllowance ? utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance) : undefined;
         const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, approveAmount);
         const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken;
@@ -415,7 +415,7 @@ export default Vue.extend({
               } else if (error.message.includes("Transaction Amount is not packable")) {
                 this.error = "Transaction Amount is not packable";
               }
-            } else if (error.message && String(error.message).length < 60) {
+            } else if (error.message && error.message.toString().length < 60) {
               this.error = error.message;
             } else {
               this.error = "Transaction error";

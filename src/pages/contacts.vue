@@ -284,7 +284,7 @@ export default Vue.extend({
       elem.style.position = "absolute";
       elem.style.left = -99999999 + "px";
       elem.style.top = -99999999 + "px";
-      elem.value = address as string;
+      elem.value = address;
       document.body.appendChild(elem);
       elem.select();
       document.execCommand("copy");

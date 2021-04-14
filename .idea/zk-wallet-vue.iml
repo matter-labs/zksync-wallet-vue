@@ -14,5 +14,6 @@
     <orderEntry type="library" name="@types/webpack" level="application" />
     <orderEntry type="library" name="@types/type-detect" level="application" />
     <orderEntry type="library" name="@types/google.fonts" level="application" />
+    <orderEntry type="library" name="@types/eslint" level="application" />
   </component>
 </module>

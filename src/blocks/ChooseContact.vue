@@ -191,7 +191,7 @@ export default Vue.extend({
       if (this.chosenContact) {
         const contact = {
           name: this.saveContactInput,
-          address: (this.chosenContact as ZkInContact).address,
+          address: this.chosenContact.address,
         };
         this.$accessor.contacts.saveContact(contact);
         this.chooseContact(contact);

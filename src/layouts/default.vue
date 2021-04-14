@@ -30,16 +30,16 @@ export default Vue.extend({
     loggingInLoader,
   },
   computed: {
-    loggingIn(): boolean{
+    loggingIn(){
       return this.$accessor.account.loader;
     },
-    loggedIn(): boolean {
+    loggedIn(){
       return this.$accessor.account.loggedIn;
     },
-    walletAddressFull(): Address {
+    walletAddressFull(){
       return this.$accessor.account.address;
     },
-    getZkScanBaseUrl(): string {
+    getZkScanBaseUrl(){
       return APP_ZK_SCAN;
     },
   },

@@ -65,7 +65,7 @@ export default Vue.extend({
     this.getData();
   },
   methods: {
-    async getData() {
+    async getData(): Promise<void> {
       this.loading = true;
       const balances = await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       let found = false;

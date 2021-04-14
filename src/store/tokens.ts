@@ -95,7 +95,7 @@ export const actions = actionTree(
       const zkBalance = accountState?.committed.balances;
       if (!zkBalance) {
         return {
-          tokens: tokens as Tokens,
+          tokens,
           zkBalances: <balanceToReturn[]>[],
         };
       }

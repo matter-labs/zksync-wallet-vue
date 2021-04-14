@@ -1,6 +1,7 @@
 import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
+import { PriorityOperationReceipt } from "zksync/build/types";
 import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/src/types";
 import { ETHOperation } from "zksync/build/wallet";
 
@@ -93,7 +94,7 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    watchTransaction: ({ commit, dispatch, state }, { transactionHash, existingTransaction }) => {
+    watchTransaction({ commit, dispatch, state }, { transactionHash, existingTransaction }) {
       try {
         if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
           return;
@@ -112,12 +113,14 @@ export const actions = actionTree(
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       }
     },
-    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
+    watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
       try {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
-        await depositTx.awaitReceipt();
-        await this.app.$accessor.transaction.requestBalancesUpdate();
-        commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
+        depositTx.awaitReceipt().then((POReceipt: PriorityOperationReceipt): void => {
+          console.log(POReceipt);
+          this.app.$accessor.transaction.requestBalancesUpdate();
+          commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
+        });
       } catch (error) {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       }

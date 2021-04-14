@@ -11,7 +11,7 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
   (async () => {
     const onboardResult = await $accessor.wallet.onboardInit();
     if (!onboardResult) {
-      await $accessor.wallet.logout();
+      $accessor.wallet.logout();
       if (route.path !== "/") {
         redirect("/");
       }
@@ -20,7 +20,7 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
 
     const refreshWallet = await $accessor.wallet.walletRefresh(true);
     if (!refreshWallet) {
-      await $accessor.wallet.logout();
+      $accessor.wallet.logout();
       if (route.path !== "/") {
         redirect("/");
       }

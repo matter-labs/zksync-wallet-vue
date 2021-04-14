@@ -1,9 +1,8 @@
 import { GweiBalance, ZkClTransaction } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
-import { Transfer } from "zksync/build/types";
 import { ETHOperation, Transaction } from "zksync/build/wallet";
-import { Address, ChangePubKey, CloseAccount, ForcedExit, SignedTransaction, TokenSymbol, TxEthSignature, Withdraw } from "zksync/src/types";
+import { Address, SignedTransaction, TokenSymbol } from "zksync/src/types";
 
 /**
  * Make zkSync transaction
@@ -79,20 +78,12 @@ interface WithdrawParams {
  * @param store
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
-export const withdraw = async ({
-  address,
-  token,
-  feeToken,
-  amount,
-  fastWithdraw,
-  fees,
-  store,
-}: WithdrawParams): Promise<Array<{ tx?: Transfer | Withdraw | ChangePubKey | CloseAccount | ForcedExit; signature?: TxEthSignature }>[] | Transaction | undefined> => {
+export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw, fees, store }: WithdrawParams): Promise<Transaction> => {
   const syncWallet = walletData.get().syncWallet;
   const amountBigValue = amount;
   const feeBigValue = fees;
   if (token === feeToken) {
-    const transaction: Transaction | undefined = await syncWallet?.withdrawFromSyncToEthereum({
+    const transaction: Transaction | undefined = await syncWallet!.withdrawFromSyncToEthereum({
       ethAddress: address,
       token,
       amount: amountBigValue,
@@ -141,7 +132,6 @@ export const withdraw = async ({
   });
 
   // @ts-ignore
-
   if (transactionHashes !== undefined) {
     for (let a = 0; a < transactionHashes.length; a++) {
       if (transactionHashes[a] === undefined) {
@@ -150,7 +140,7 @@ export const withdraw = async ({
       store.transaction.watchTransaction({ transactionHash: transactionHashes[a] });
     }
   }
-  return transactionHashes.map((value: string, index: number) => ({ txData: signedTransactions[index], txHash: value }));
+  return transactionHashes?.map((value: string, index: number) => ({ txData: signedTransactions[index], txHash: value }));
 };
 
 /**
