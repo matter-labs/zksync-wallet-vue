@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { DecimalBalance, GweiBalance } from "@/plugins/types";
+import { DecimalBalance, GweiBalance, ZkInBalance } from "@/plugins/types";
 import { utils as zkUtils } from "zksync";
 import { Address, TokenSymbol } from "zksync/src/types";
 
@@ -61,8 +61,8 @@ export default {
 
   /**
    * Soring by the token name
-   * @param {Token} a
-   * @param {Token} b
+   * @param {ZkInBalance} a
+   * @param {ZkInBalance} b
    * @returns {number}
    */
   sortBalancesAZ: (a: ZkInBalance, b: ZkInBalance) => {

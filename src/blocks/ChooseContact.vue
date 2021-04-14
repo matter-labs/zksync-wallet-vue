@@ -66,7 +66,8 @@
 
 <script lang="ts">
 import utils from "@/plugins/utils";
-import { Address, Contact } from "@/plugins/types";
+import { ZkInContact } from "@/plugins/types";
+import { Address } from "zksync/src/types";
 import userImg from "@/components/userImg.vue";
 import Vue from "vue";
 
@@ -98,12 +99,12 @@ export default Vue.extend({
       saveContactModalError: "",
 
       /* Main */
-      chosenContact: false as false | Contact,
+      chosenContact: false as false | ZkInContact,
     };
   },
   computed: {
     ownAddress(): Address {
-      return this.$accessor.account.address || '';
+      return this.$accessor.account.address || "";
     },
     canSaveContact(): boolean {
       return !this.isInContacts && !!this.chosenContact && !!this.chosenContact.address && !this.chosenContact.name && !this.isOwnAddress;
@@ -115,21 +116,17 @@ export default Vue.extend({
         return false;
       }
     },
-    contactsList(): Array<Contact> {
+    contactsList(): Array<ZkInContact> {
       return this.$accessor.contacts.get;
     },
-    displayedContactsList(): Array<Contact> {
+    displayedContactsList(): Array<ZkInContact> {
       if (!this.isSearching) {
         return this.contactsList;
       }
-      return utils.searchInArr(this.contactSearch, this.contactsList, (e) => (e as Contact).name) as Contact[];
+      return utils.searchInArr(this.contactSearch, this.contactsList, (e) => (e as ZkInContact).name) as ZkInContact[];
     },
     isInContacts(): boolean {
-      if (this.chosenContact && this.chosenContact.address) {
-        return this.checkAddressInContacts(this.chosenContact.address);
-      } else {
-        return false;
-      }
+      return this.chosenContact && this.chosenContact.address ? this.checkAddressInContacts(this.chosenContact.address) : false;
     },
     hasDisplayedContacts(): boolean {
       return this.displayedContactsList.length !== 0 || this.displayOwnAddress;
@@ -168,16 +165,17 @@ export default Vue.extend({
     },
   },
   methods: {
-    chooseContact(contact: Contact): void {
-      if (!contact.address) {
+    chooseContact(contact?: ZkInContact): void {
+      if (!contact?.address) {
         this.chosenContact = false;
         return;
       }
-      if (!contact.name) {
+      if (!contact?.name) {
         if (this.checkAddressInContacts(contact.address)) {
           contact = this.$accessor.contacts.getByAddress(contact.address);
         }
       }
+      // @ts-ignore
       this.chosenContact = contact;
       this.contactsListModal = false;
     },
@@ -191,7 +189,7 @@ export default Vue.extend({
       }
       const contact = {
         name: this.saveContactInput,
-        address: (this.chosenContact as Contact).address,
+        address: (this.chosenContact as ZkInContact).address,
       };
       this.$accessor.contacts.saveContact(contact);
       this.chooseContact(contact);

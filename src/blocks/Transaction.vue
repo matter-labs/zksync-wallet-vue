@@ -194,7 +194,7 @@ import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import { Address, TokenSymbol, TransactionReceipt } from "zksync/src/types";
 import { Provider } from "zksync/src/provider";
 
-import { ZkInBalance, ZkInContact, ZkInFeesObj, GweiBalance, Transaction, ZkInTransactionInfo } from "@/plugins/types";
+import { ZkInBalance, ZkInContact, ZkInFeesObj, GweiBalance, ZkInTx, ZkInTransactionInfo } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
@@ -441,7 +441,9 @@ export default Vue.extend({
           type: this.type,
         });
       } catch (error) {
-        await this.$accessor.toaster.error(error.message);
+        this.$toasted.global.zkException({
+          message: error.message,
+        });
       }
       this.feesLoading = false;
     },
@@ -624,7 +626,9 @@ export default Vue.extend({
         );
         this.activateAccountFee = foundFee!.totalFee.toString();
       } catch (error) {
-        await this.$accessor.toaster.error(error.message ? error.message : "Error while receiving an unlock fee");
+        await this.$toasted.global.zkException({
+          message: error.message ?? "Error while receiving an unlock fee",
+        });
       }
       this.activateAccountFeeLoading = false;
     },

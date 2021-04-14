@@ -33,9 +33,10 @@
 <script lang="ts">
 import NoTokenFound from "@/blocks/modals/NoTokenFound.vue";
 import utils from "@/plugins/utils";
-import { Balance } from "@/plugins/types";
+import { Balance, ZkInBalance } from "@/plugins/types";
 
 import Vue from "vue";
+import { TokenSymbol } from "zksync/src/types";
 
 export default Vue.extend({
   components: {
@@ -60,12 +61,12 @@ export default Vue.extend({
     };
   },
   computed: {
-    balances(): Array<Balance> {
+    balances: <ZkInBalance>() => {
       return this.tokensType === "L2" ? this.$accessor.wallet.getzkBalances : this.$accessor.wallet.getInitialBalances;
     },
-    displayedList(): Array<Balance> {
-      let list: Array<Balance>;
-      list = utils.searchInArr(this.search, this.balances, (e: Balance) => e.symbol);
+    displayedList: function (): Array<Balance> {
+      let list: Array<ZkInBalance>;
+      list = !this.search.trim() ? this.balances : this.balances.filter((e: Balance) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
       if (this.onlyAllowed) {
         list = list.filter((e) => !e.restricted);
       }

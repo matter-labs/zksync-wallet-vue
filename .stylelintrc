@@ -4,6 +4,7 @@
     "color-named": "never",
     "font-family-name-quotes": "always-where-recommended",
     "font-weight-notation": "numeric",
+    "string-quotes": "double",
     "function-url-quotes": "always",
     "number-leading-zero": "never",
     "value-no-vendor-prefix": true,

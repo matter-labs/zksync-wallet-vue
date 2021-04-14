@@ -1,4 +1,4 @@
-import { iWalletData, zksync, iWalletWrapper } from "@/plugins/types";
+import { iWalletData, iWalletWrapper } from "@/plugins/types";
 
 const internalWalletData: iWalletData = {
   syncProvider: undefined,
@@ -9,10 +9,10 @@ const internalWalletData: iWalletData = {
 
 /**
  * Wrapper for the major Providers
- * @type {{accountState: null, syncProvider: null, syncWallet: null, zkSync: any|null}}
+ * @type iWalletWrapper
  */
 export const walletData: iWalletWrapper = {
-  zkSync: async (): Promise<zksync | undefined> => {
+  zkSync: async () => {
     if (!process.client) {
       return undefined;
     }
@@ -22,14 +22,15 @@ export const walletData: iWalletWrapper = {
     return internalWalletData.zkSync;
   },
 
-  get: (): iWalletData => {
-    return internalWalletData;
-  },
+  get: () => internalWalletData,
 
-  set: (val: iWalletData): void => {
+  set: (val): void => {
     internalWalletData.zkSync = val?.zkSync;
     internalWalletData.syncProvider = val?.syncProvider;
     internalWalletData.syncWallet = val?.syncWallet;
     internalWalletData.accountState = val?.accountState;
+  },
+  setProvider: (importedProvider): void => {
+    internalWalletData.syncProvider = importedProvider;
   },
 };

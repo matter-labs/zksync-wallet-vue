@@ -1,12 +1,12 @@
-import Web3 from "web3";
+import { Provider } from "@ethersproject/providers";
 
-let web3Wallet = <boolean | Web3>false;
+let web3Wallet: Provider;
 
 export default {
   get: () => {
     return web3Wallet;
   },
-  set: (obj: Web3) => {
+  set: (obj: Provider) => {
     web3Wallet = obj;
   },
 };

@@ -30,7 +30,9 @@ const changeNetworkHandle = (dispatch, context) => {
  * @return {function(): Promise<void>}
  */
 const changeAccountHandle = (dispatch, context) => {
-  // context.$toast.info("Active account changed. Please re-login to used one");
+  context.$toasted.global.zkException({
+    message: "You've changes active account. Restarting the DAPP",
+  });
   return async () => {
     if (!walletData.get().syncWallet) {
       return;
@@ -52,7 +54,9 @@ const changeNetworkSet = (dispatch, context) => {
     if (process.client && window.ethereum) {
       changeNetworkWasSet = true;
       window.ethereum?.on("disconnect", () => {
-        dispatch("toaster/error", "Connection with your Wallet was lost. Restarting the DAPP", { root: true });
+        context.$toasted.global.zkException({
+          message: "Connection with your Wallet was lost. Restarting the DAPP",
+        });
         dispatch("logout");
       });
       window.ethereum?.on("chainChanged", changeNetworkHandle(dispatch, context));

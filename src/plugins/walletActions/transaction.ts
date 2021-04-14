@@ -1,7 +1,10 @@
-import { GweiBalance } from "@/plugins/types";
+import { GweiBalance, ZkInTx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
+import {ETHOperation} from "zksync/build/wallet";
 import { Address, SignedTransaction, TokenSymbol, TxEthSignature, Withdraw, Nonce } from "zksync/src/types";
+import { Wallet } from "zksync";
+
 
 /**
  * Make zkSync transaction
@@ -12,7 +15,7 @@ import { Address, SignedTransaction, TokenSymbol, TxEthSignature, Withdraw, Nonc
  * @param {GweiBalance} amountBigValue
  * @param {GweiBalance} feeBigValue
  * @param store
- * @returns {Promise<Transaction | Transaction[]>}
+ * @returns {Promise<ZkInTransaction | ZkInTransaction[]>}
  */
 export const transaction = async (
   address: Address,
@@ -21,7 +24,7 @@ export const transaction = async (
   amountBigValue: GweiBalance,
   feeBigValue: GweiBalance,
   store: typeof accessorType,
-) => {
+): Promise<ZkInTx | ZkInTx[]> => {
   const syncWallet = walletData.get().syncWallet;
   let nonce: number | undefined = await syncWallet?.getNonce("committed");
   const transferTx = {
@@ -44,16 +47,16 @@ export const transaction = async (
    * @todo: process case when there are 2 transactions
    */
   if (token === feeToken) {
-    const transaction: Transfer = await syncWallet?.syncTransfer({
+    const transaction: Transaction = await syncWallet?.syncTransfer({
       to: address,
       token,
       amount: amountBigValue,
       fee: feeBigValue,
     });
-    store.transaction.watchTransaction({ transactionHash: transaction.txHash });
+    store.ZkInTx.watchTransaction({ transactionHash: transaction.txHash });
     return transaction;
   }
-  const transferTransaction = await syncWallet?.syncMultiTransfer([transferTx, feeTx]);
+  const transferTransaction = await syncWallet?.syncMultiTransfer([transferTx, feeTx: ]);
   for (let a = 0; a < transferTransaction.length; a++) {
     store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash });
   }
@@ -96,61 +99,60 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     });
     store.transaction.watchTransaction({ transactionHash: transaction.txHash });
     return transaction;
-  } else {
-    const withdrawawTx = {
-      ethAddress: address,
-      amount: amountBigValue,
-      fee: "0",
-      token,
-    };
-    const transferTx = {
-      to: syncWallet?.address(),
-      token: feeToken,
-      amount: "0",
-      fee: feeBigValue,
-    };
-
-    const signedTransactions: Array<{
-      tx: Withdraw;
-      signature: TxEthSignature;
-    }> = [];
-
-    const nonce = await syncWallet?.getNonce();
-
-    const signedWithdrawTransaction = await syncWallet
-      ?.signWithdrawFromSyncToEthereum({
-        ...withdrawawTx,
-        nonce: Nonce,
-      })
-      .catch((error) => {
-        throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
-      });
-
-    signedTransactions.push({ tx: signedWithdrawTransaction.tx, signature: signedWithdrawTransaction.ethereumSignature });
-
-    const signTransaction: SignedTransaction | void = await syncWallet
-      ?.signSyncTransfer({
-        ...transferTx,
-        nonce: nonce + 1,
-      })
-      .catch((error) => {
-        throw new Error("Error while performing signSyncTransfer: " + error.message);
-      });
-
-    signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
-
-    const transactionHashes = await syncWallet?.provider.submitTxsBatch(signedTransactions).catch((error) => {
-      throw new Error("Error while performing submitTxsBatch: " + error.message);
-    });
-    for (let a = 0; a < transactionHashes.length; a++) {
-      store.transaction.watchTransaction({ transactionHash: transactionHashes[a] });
-    }
-    return transactionHashes.map((txHash, index) => ({
-      txData: signedTransactions[index],
-      txHash,
-    }));
   }
-};
+  const withdrawawTx = {
+    ethAddress: address,
+    amount: amountBigValue,
+    fee: "0",
+    token,
+  };
+  const transferTx = {
+    to: syncWallet?.address(),
+    token: feeToken,
+    amount: "0",
+    fee: feeBigValue,
+  };
+
+  const signedTransactions: Array<{
+    tx: Withdraw;
+    signature: TxEthSignature;
+  }> = [];
+
+  const nonce = await syncWallet?.getNonce();
+
+  const signedWithdrawTransaction = await syncWallet
+    ?.signWithdrawFromSyncToEthereum({
+      ...withdrawawTx,
+      nonce: Nonce,
+    })
+    .catch((error) => {
+      throw new Error("Error while performing signWithdrawFromSyncToEthereum: " + error.message);
+    });
+
+  signedTransactions.push({ tx: signedWithdrawTransaction.tx, signature: signedWithdrawTransaction.ethereumSignature });
+
+  const signTransaction: SignedTransaction = await syncWallet
+    ?.signSyncTransfer({
+      ...transferTx,
+      nonce: nonce + 1,
+    })
+    .catch((error) => {
+      throw new Error("Error while performing signSyncTransfer: " + error.message);
+    });
+
+  signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
+
+  const transactionHashes = await syncWallet?.provider.submitTxsBatch(signedTransactions).catch((error) => {
+    throw new Error("Error while performing submitTxsBatch: " + error.message);
+  });
+  for (let a = 0; a < transactionHashes.length; a++) {
+    store.transaction.watchTransaction({ transactionHash: transactionHashes[a] });
+  }
+  return transactionHashes.map((txHash, index) => ({
+    txData: signedTransactions[index],
+    txHash,
+  }));
+};;
 
 /**
  * Deposit action method
@@ -161,12 +163,11 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
  * @returns {Promise<any>}
  */
 export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: typeof accessorType) => {
-  const wallet = walletData.get().syncWallet;
-  const depositResponse = await wallet?.depositToSyncFromEthereum({
-    depositTo: wallet.address(),
+  const depositResponse:ETHOperation =  walletData.get().syncWallet?.depositToSyncFromEthereum({
+    depositTo: walletData.get().syncWallet?.address(),
     token,
     amount,
   });
-  store.transaction.watchDeposit({ ZKIDepositTx: depositResponse, tokenSymbol: token, amount });
+  store.account.watchDeposit({ depositResponse: ZkInTransaction, tokenSymbol: token, amount });
   return depositResponse;
 };

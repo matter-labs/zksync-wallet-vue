@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { Address } from "@/plugins/types";
+import { Address } from "zksync/src/types";
 import Checkmark from "@/components/Checkmark.vue";
 import WalletAddress from "@/components/walletAddress.vue";
 import Vue from "vue";
@@ -101,7 +101,7 @@ export default Vue.extend({
   },
   computed: {
     ownAddress(): Address {
-      return this.$accessor.account.address || '';
+      return this.$accessor.account.address || "";
     },
   },
   methods: {

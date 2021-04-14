@@ -1,22 +1,10 @@
-import { BigNumber } from "ethers";
-import { AbstractJSONRPCTransport, WSTransport } from "zksync/src/transport";
+import { BigNumber, ContractTransaction } from "ethers";
+import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
 import { SignedTransaction, TransactionReceipt, AccountState, Address, TokenSymbol } from "zksync/src/types";
-import { Wallet } from "zksync/src";
-
-import { Provider } from "zksync/build/provider";
-
-import * as zkSyncType from "zksync";
-export declare type zksync = typeof zkSyncType;
-export declare type ZkTpNetworkName = "rinkeby" | "mainnet" | "ropsten";
+import { Wallet, Provider } from "zksync";
 
 export declare type GweiBalance = string;
 export declare type DecimalBalance = string;
-
-export declare interface ZkInEthNetwork {
-  rinkeby: number;
-  mainnet: number;
-  ropsten: number;
-}
 
 export declare interface ZkInTokenPrices {
   [token: string]: {
@@ -75,9 +63,9 @@ export interface ZkInBalance {
 
 export declare interface ZkInTransactionInfo {
   continueBtnFunction: boolean;
-  amount: any;
+  amount: GweiBalance;
   success: boolean;
-  fee: { amount: string; token: false | ZkInBalance };
+  fee: { amount: GweiBalance; token: false | ZkInBalance };
   recipient?: Address;
   continueBtnText?: string;
   type: string;
@@ -116,16 +104,14 @@ export interface TokenPrices {
   };
 }
 
-export declare class Transaction {
+export declare class ZkClTransaction extends ETHOperation {
   txData: SignedTransaction;
   txHash: string;
   sidechainProvider: Provider;
   state: "Sent" | "Committed" | "Verified" | "Failed";
   error?: ZKSyncTxError;
-  constructor(txData: any, txHash: string, sidechainProvider: Provider);
+  constructor(txData: ContractTransaction, txHash: string, sidechainProvider: Provider);
   awaitReceipt(): Promise<TransactionReceipt>;
-  awaitVerifyReceipt(): Promise<ZkInTransactionInfo>;
-  private setErrorState;
 }
 
 export declare interface singleIcon {
@@ -136,13 +122,13 @@ export declare interface singleIcon {
 }
 
 export interface iWalletData {
-  syncProvider?: AbstractJSONRPCTransport | Provider;
+  syncProvider?: Provider;
   syncWallet?: Wallet;
   accountState?: AccountState;
-  zkSync?: zksync;
+  zkSync?: unknown;
 }
 
-export declare interface ZKInDepositTx {
+export declare interface ZKInDepositTx extends ETHOperation {
   hash: string;
   amount: BigNumber | string;
   status: string;
@@ -155,8 +141,9 @@ export declare interface ZkInDeposits {
 
 export declare interface iWalletWrapper {
   set: (val: iWalletData) => void;
-  zkSync: () => Promise<zksync | undefined>;
+  zkSync: () => Promise<unknown>;
   get: () => iWalletData;
+  setProvider: (importedProvider: Provider) => void;
 }
 
 export interface Balance {
@@ -169,4 +156,9 @@ export interface Balance {
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
+}
+
+export declare interface networkEthId {
+  name: string;
+  id: number;
 }

@@ -19,9 +19,9 @@
 
 <script lang="ts">
 import SingleTransaction from "@/components/SingleTransaction.vue";
-import { Address } from "@/plugins/types";
-import { ZkInTx } from "zksync/src/types";
+import { ZkInTx } from "@/plugins/types";
 import Vue from "vue";
+import { Address } from "zksync/src/types";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -122,7 +122,9 @@ export default Vue.extend({
       try {
         await this.loadTransactions();
       } catch (error) {
-        await this.$accessor.toaster.error(error.message ? error.message : "Error while fetching the transactions");
+        this.$toasted.global.zkException({
+          message: error.message ?? "Error while fetching the transactions",
+        });
       }
       this.loading = false;
     },
