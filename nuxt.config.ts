@@ -1,4 +1,5 @@
-import { NuxtConfig } from "@nuxt/types/index";
+import { NuxtConfig } from "@nuxt/types";
+import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
 const env = process.env.APP_ENV ?? "prod";
@@ -184,12 +185,21 @@ const config: NuxtConfig = {
       families: ["Fira+Sans:400,600", "Fira+Sans+Extra+Condensed:400,600", "Fira+Code:400"],
     },
   },
-  toast: {
+  toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
-    position: "bottom-right",
+    position: "top-right" as ToastPosition,
     duration: 4000,
-    iconPack: "fontawesome",
+    className: "zkToastMain",
+    iconPack: "fontawesome" as ToastIconPack,
+    action: <ToastAction>{
+      text: "Close",
+      class: "zkToastActionClose",
+      icon: "fa-times-circle",
+      onClick: (_e: Event, toastObject: ToastObject): void => {
+        toastObject.goAway(100);
+      },
+    },
   },
   i18n: {
     vueI18n: {

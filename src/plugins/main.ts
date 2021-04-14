@@ -1,12 +1,12 @@
+import Loader from "@/components/loader.vue";
+import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
-import Vue from "vue";
 
 import moment from "moment";
+import Vue from "vue";
 import VueScrollTo from "vue-scrollto";
-
-import Loader from "@/components/loader.vue";
+import { ToastAction, ToastOptions } from "vue-toasted";
 import { TokenSymbol } from "zksync/build/types";
-import utils from "@/plugins/utils";
 
 Vue.use(VueScrollTo);
 
@@ -35,3 +35,45 @@ Vue.filter("formatTimeAgo", (time: moment.MomentInput) => moment(time).fromNow()
  * Format date as a human-readable "M/D/YYYY h:mm:ss A"
  */
 Vue.filter("formatDateTime", (time: moment.MomentInput) => moment(time).format("M/D/YYYY h:mm:ss A"));
+
+/**
+ * zkException error reporting toaster registered
+ */
+Vue.toasted.register(
+  "zkException",
+  (payload: { message?: string }): string => {
+    return payload.message ?? "Oops...Something went wrong";
+  },
+  <ToastOptions>{
+    duration: undefined,
+    className: "zkToastException",
+    icon: "fa-times-circle",
+    type: "error",
+  },
+);
+
+/**
+ * zkCancel — first implementation of “push” with route action (on testing)
+ */
+Vue.toasted.register(
+  "zkCancel",
+  (payload: { message?: string; hasCancelRoute: boolean; name?: string; route?: string }) => {
+    return payload.message ?? "Cancel last operation";
+  },
+  <ToastOptions>{
+    type: "info",
+    duration: 2000,
+    icon: "fa-undo",
+    className: "zkToastInfo",
+    action: [
+      <ToastAction>{
+        text: "Cancel",
+        className: "zkToastActionCancel",
+        push: {
+          name: "/action",
+          dontClose: true,
+        },
+      },
+    ],
+  },
+);
