@@ -235,7 +235,7 @@ export default Vue.extend({
         } catch (error) {
           this.$sentry.captureException(error);
 
-          this.$toasted.global.zkException({
+          this.$toast.global.zkException({
             message: error.message ?? "Error while saving your contact book.",
           });
         }
@@ -257,7 +257,7 @@ export default Vue.extend({
       }
       const foundContact = this.$accessor.contacts.getByAddress(this.editingWallet.address);
       if (foundContact === undefined) {
-        this.$toasted.global.zkException({
+        this.$toast.global.zkException({
           message: `Contact with the address : ${this.editingWallet.address} not found`,
         });
         return;

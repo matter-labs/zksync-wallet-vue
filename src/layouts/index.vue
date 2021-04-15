@@ -15,6 +15,8 @@
 import headerComponent from "@/blocks/IndexHeader.vue";
 import footerComponent from "@/blocks/Footer.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
+import utils from "@/plugins/utils";
+
 import { GIT_REVISION_SHORT } from "@/plugins/build";
 import Vue from "vue";
 
@@ -30,17 +32,7 @@ export default Vue.extend({
     };
   },
   mounted() {
-    if (localStorage.getItem("colorTheme")) {
-      this.$inkline.config.variant = localStorage.getItem("colorTheme") as "light" | "dark";
-    } else {
-      localStorage.setItem("colorTheme", this.$inkline.config.variant);
-    }
-  },
-  methods: {
-    toggleDarkMode() {
-      this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
-      localStorage.setItem("colorTheme", this.$inkline.config.variant);
-    },
+    utils.defineTheme(this.$inkline, false);
   },
 });
 </script>

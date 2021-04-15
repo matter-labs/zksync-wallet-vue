@@ -442,7 +442,7 @@ export default Vue.extend({
           type: this.type,
         });
       } catch (error) {
-        this.$toasted.global.zkException({
+        this.$toast.global.zkException({
           message: error.message,
         });
       }
@@ -629,7 +629,7 @@ export default Vue.extend({
         );
         this.activateAccountFee = foundFee!.totalFee.toString();
       } catch (error) {
-        await this.$toasted.global.zkException({
+        await this.$toast.global.zkException({
           message: error.message ?? "Error while receiving an unlock fee",
         });
       }

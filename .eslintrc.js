@@ -14,7 +14,6 @@ module.exports = {
     browser: true,
   },
   rules: {
-    // enable additional rules
     "linebreak-style": ["error", "unix"],
     quotes: ["error", "double"],
     camelcase: "off",
@@ -24,6 +23,8 @@ module.exports = {
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "no-console": "off",
+    "vue/no-v-html": "off",
     "@typescript-eslint/no-empty-function": ["off"],
   },
+  ignorePatterns: ["sw.js"],
 };

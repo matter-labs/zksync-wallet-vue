@@ -18,10 +18,8 @@
 import footerComponent from "@/blocks/Footer.vue";
 import headerComponent from "@/blocks/Header.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
-
-import { APP_ZK_SCAN } from "@/plugins/build";
+import utils from "@/plugins/utils";
 import Vue from "vue";
-import {Address} from "zksync/src/types";
 
 export default Vue.extend({
   components: {
@@ -36,19 +34,9 @@ export default Vue.extend({
     loggedIn(){
       return this.$accessor.account.loggedIn;
     },
-    walletAddressFull(){
-      return this.$accessor.account.address;
-    },
-    getZkScanBaseUrl(){
-      return APP_ZK_SCAN;
-    },
   },
-  mounted() {
-    if (localStorage.getItem("colorTheme")) {
-      this.$inkline.config.variant = localStorage.getItem("colorTheme");
-    } else {
-      localStorage.setItem("colorTheme", this.$inkline.config.variant);
-    }
-  },
+  mounted(){
+    utils.defineTheme(this.$inkline, false);
+  }
 });
 </script>

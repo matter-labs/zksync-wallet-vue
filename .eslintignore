@@ -7,3 +7,4 @@ environments/*
 public/*
 _nuxt/*
 src/static/sw.js
+.eslintrc.js

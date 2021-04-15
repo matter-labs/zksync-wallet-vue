@@ -115,10 +115,10 @@ import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/plugins/type
 import utils from "@/plugins/utils";
 import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
-import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
-import { closestPackableTransactionAmount } from "zksync";
 import { BigNumber, Contract } from "ethers";
 import Vue from "vue";
+import { closestPackableTransactionAmount } from "zksync";
+import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
 
 let thresholdTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
@@ -297,12 +297,11 @@ export default Vue.extend({
             this.error = "Fee Amount is not packable";
           } else if (error.message.includes("Transaction Amount is not packable")) {
             this.error = "Transaction Amount is not packable";
+          } else if (String(error.message).length < 60) {
+            this.error = error.message;
           }
-        } else if (error.message && String(error.message).length < 60) {
-          this.error = error.message;
-        } else {
-          this.error = "Transaction error";
         }
+        this.error = this.error ? this.error : "Transaction error";
       }
       this.tip = "";
       this.loading = false;
@@ -414,12 +413,11 @@ export default Vue.extend({
                 this.error = "Fee Amount is not packable";
               } else if (error.message.includes("Transaction Amount is not packable")) {
                 this.error = "Transaction Amount is not packable";
+              } else if (error.message && error.message.toString().length < 60) {
+                this.error = error.message;
               }
-            } else if (error.message && error.message.toString().length < 60) {
-              this.error = error.message;
-            } else {
-              this.error = "Transaction error";
             }
+            this.error = this.error ? this.error : "Transaction error";
           }
           this.tip = "";
           this.loading = false;

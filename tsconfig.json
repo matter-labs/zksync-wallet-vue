@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "jsx": "preserve",
+    "target": "ES2018",
     "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "lib": [
-      "dom",
       "ESNext",
+      "dom",
       "ESNext.AsyncIterable",
       "DOM"
     ],
@@ -23,7 +22,6 @@
       "~/*": ["*"]
     },
     "types": [
-      "vue-meta",
       "typed-vuex",
       "@nuxt/vue-app",
       "@types/node",
@@ -31,10 +29,10 @@
       "@nuxt/types",
       "@/types/*.d.ts",
       "@nuxtjs/axios",
-      "@inkline/nuxt",
       "@nuxtjs/sentry",
       "@nuxtjs/toast",
       "@inkline/inkline/types",
+      "@inkline/nuxt",
       "nuxt-i18n",
     ]
   },

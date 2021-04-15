@@ -2,6 +2,7 @@ import { walletData } from "@/plugins/walletData";
 import { DecimalBalance, GweiBalance, ZkInBalance } from "@/plugins/types";
 import { utils as zkUtils } from "zksync";
 import { Address, TokenSymbol } from "zksync/build/types";
+import { IPrototype } from "@inkline/inkline/src/plugin.d";
 
 import { BigNumber, BigNumberish, utils } from "ethers";
 
@@ -83,5 +84,23 @@ export default {
     }
     search = search.trim().toLowerCase();
     return list.filter((e) => String(searchParam(e)).toLowerCase().includes(search));
+  },
+
+  /**
+   * Theme definition moved to the utility plugin
+   * @param {IPrototype} inklineContext
+   * @param {boolean} toggleTheme
+   * @return {"light" | "dark"}
+   */
+  defineTheme(inklineContext: IPrototype, toggleTheme: boolean): "light" | "dark" {
+    let mode: string | null | undefined = localStorage.getItem("colorTheme");
+    if (toggleTheme) {
+      mode = inklineContext.config.variant = mode === "light" ? "dark" : "light";
+    }
+    if (mode && ["light", "dark"].includes(mode)) {
+      inklineContext.config.variant = mode === "light" ? "light" : "dark";
+      localStorage.setItem("colorTheme", inklineContext.config.variant);
+    }
+    return inklineContext.config.variant;
   },
 };

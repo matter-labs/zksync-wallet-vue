@@ -194,7 +194,7 @@ export const actions = actionTree(
         this.app.$accessor.account.setSelectedWallet("");
         return false;
       }
-      this.app.$toasted.global.zkCancel({
+      this.app.$toast.global.zkCancel({
         message: "Found previously selected wallet.",
       });
       this.app.$accessor.account.setSelectedWallet(previouslySelectedWallet);
@@ -323,7 +323,7 @@ export const actions = actionTree(
               restricted: false,
             };
           } catch (error) {
-            this.app.$toasted.global.zkException({
+            this.app.$toast.global.zkException({
               message: `Error getting ${currentToken.symbol} balance`,
             });
           }
@@ -375,7 +375,7 @@ export const actions = actionTree(
         return fetchTransactionHistory.data;
       } catch (error) {
         this.$sentry.captureException(error);
-        this.app.$toasted.global.zkException({
+        this.app.$toast.global.zkException({
           message: error.message,
         });
         getTransactionHistoryAgain = setTimeout(() => {
@@ -489,6 +489,7 @@ export const actions = actionTree(
          * @type {ethers.providers.Network}
          */
         const networkInfo: ethers.providers.Network = await web3WalletInstance._ready();
+        console.log(web3WalletInstance);
         if (!networkInfo || !web3WalletInstance.provider) {
           return false;
         }
@@ -527,7 +528,8 @@ export const actions = actionTree(
       } catch (error) {
         this.$sentry.captureException(error);
         if (!error.message.includes("User denied")) {
-          this.app.$toasted.global.zkException({
+          console.log(this.app);
+          this.app.$toast.global.zkException({
             message: `Refreshing state of the wallet failed... Reason: ${error.message}`,
           });
         }

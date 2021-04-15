@@ -43,6 +43,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ETHER_NETWORK_NAME } from "@/plugins/build";
+import utils from "@/plugins/utils";
 
 export default Vue.extend({
   props: {
@@ -54,7 +55,7 @@ export default Vue.extend({
   },
   computed: {
     zkWalletLogoSrc(): string {
-      const variation = this.$inkline.config.variant === "light" ? "" : "-alt";
+      const variation = utils.defineTheme(this.$inkline, false) === "light" ? "" : "-alt";
       return require(`@/assets/imgs/logos/zkwallet${variation}.svg`);
     },
     network(): string {

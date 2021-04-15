@@ -122,7 +122,7 @@ export default Vue.extend({
       try {
         await this.loadTransactions();
       } catch (error) {
-        this.$toasted.global.zkException({
+        this.$toast.global.zkException({
           message: error.message ?? "Error while fetching the transactions",
         });
       }

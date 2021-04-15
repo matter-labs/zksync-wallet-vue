@@ -88,7 +88,9 @@ export const actions = actionTree(
     },
 
     async loadTokensAndBalances(): Promise<{ zkBalances: balanceToReturn[]; tokens: Tokens }> {
+      console.log("loading tokens");
       const syncWallet = walletData.get().syncWallet;
+      console.log("syncWallet", syncWallet);
       const accountState = walletData.get().accountState;
 
       const tokens: Tokens = await this.app.$accessor.tokens.loadAllTokens();

@@ -30,7 +30,7 @@ export default Vue.extend({
       });
       const refreshWalletTry = await this.$accessor.wallet.walletRefresh(true);
       if (!refreshWalletTry) {
-        await this.$accessor.wallet.logout();
+        this.$accessor.wallet.logout();
       } else {
         await this.$router.push("/account");
       }

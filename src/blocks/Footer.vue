@@ -48,6 +48,7 @@
 <script lang="ts">
 import { GIT_REVISION_SHORT, APP_ZK_SCAN } from "@/plugins/build";
 import Logo from "@/blocks/Logo.vue";
+import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -64,8 +65,7 @@ export default Vue.extend({
   },
   methods: {
     toggleDarkMode(): void {
-      this.$inkline.config.variant = this.$inkline.config.variant === "light" ? "dark" : "light";
-      localStorage.setItem("colorTheme", this.$inkline.config.variant);
+      utils.defineTheme(this.$inkline, true);
     },
   },
 });
