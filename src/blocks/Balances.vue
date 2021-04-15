@@ -111,7 +111,7 @@ export default Vue.extend({
     zkBalances(): ZkInBalance[] {
       return this.$accessor.wallet.getzkBalances;
     },
-    displayedList(): DisplayToken[] {
+    displayedList: function (): DisplayToken[] {
       const allTokenPrices = this.$accessor.tokens.getTokenPrices;
       const returnTokens = <
         {
@@ -139,7 +139,7 @@ export default Vue.extend({
         }
       }
       const finalList = Object.keys(returnTokens).map((e) => returnTokens[e]);
-      return utils.searchInArr(this.search, finalList, (e) => (e as DisplayToken).symbol) as DisplayToken[];
+      return <DisplayToken[]>utils.searchInArr(this.search, finalList, (e) => (e as DisplayToken).symbol);
     },
     activeDeposits: function () {
       // @ts-ignore
