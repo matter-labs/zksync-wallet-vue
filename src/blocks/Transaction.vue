@@ -190,17 +190,17 @@ import amountInput from "@/components/AmountInput.vue";
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, TransactionReceipt, Transfer } from "zksync/build/types";
-import { Transaction } from "zksync/build/wallet";
-import { closestPackableTransactionAmount } from "zksync";
 
-import { ZkInBalance, ZkInContact, ZkInFeesObj, GweiBalance, ZkInTransactionInfo, ZkInTransactionType } from "@/plugins/types";
+import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZkInTransactionType } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import Vue, { PropOptions } from "vue";
+import { closestPackableTransactionAmount } from "zksync";
+import { Address, TransactionReceipt, Transfer } from "zksync/build/types";
+import { Transaction } from "zksync/build/wallet";
 import { ChangePubKey, CloseAccount, ForcedExit, TxEthSignature, Withdraw } from "zksync/src/types";
 
 export default Vue.extend({
@@ -283,9 +283,10 @@ export default Vue.extend({
     };
   },
   computed: {
-    chosenFeeObj(): GweiBalance | false {
+    chosenFeeObj(): BigNumberish | boolean {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
-        return this.feesObj.hasOwnProperty(this.transactionMode) ? (this.feesObj[this.transactionMode] as string) : false;
+        const selectedFeeTypeAmount: string | BigNumber | undefined = this.transactionMode === "fast" ? this.feesObj?.fast : this.feesObj?.normal;
+        return BigNumber.from(selectedFeeTypeAmount);
       }
       return false;
     },
@@ -478,14 +479,11 @@ export default Vue.extend({
             this.error = "Fee Amount is not packable";
           } else if (error.message.includes("Transaction Amount is not packable")) {
             this.error = "Transaction Amount is not packable";
-          } else if (error.message && String(error.message).length < 60) {
+          } else if (String(error.message).length < 60) {
             this.error = error.message;
           }
-        } else if (error.message && String(error.message).length < 60) {
-          this.error = error.message;
-        } else {
-          this.error = "Transaction error";
         }
+        this.error = "Transaction error";
         this.clearTransactionInfo();
       }
       this.tip = "";
@@ -556,7 +554,7 @@ export default Vue.extend({
 
       const calculatedFee = this.chosenFeeObj;
 
-      if (calculatedFee === false) {
+      if (calculatedFee === undefined) {
         throw new Error("Fee calculation failed");
       }
 
@@ -566,14 +564,17 @@ export default Vue.extend({
         (this.chosenToken as ZkInBalance).symbol,
         this.feeToken.symbol,
         txAmount.toString(),
-        calculatedFee,
+        calculatedFee as string,
         this.$accessor,
       );
 
       this.transactionInfo.amount!.amount = txAmount.toString();
       this.transactionInfo.amount!.token = this.chosenToken as ZkInBalance;
-      this.transactionInfo.fee!.amount = calculatedFee;
-      this.transactionInfo.fee!.token = this.feeToken;
+
+      if (BigNumber.isBigNumber(calculatedFee)) {
+        this.transactionInfo.fee!.amount = calculatedFee;
+        this.transactionInfo.fee!.token = this.feeToken;
+      }
 
       const receivedTransaction = !Array.isArray(transferTransaction) ? transferTransaction : transferTransaction.shift();
       const feeTransaction = !Array.isArray(transferTransaction) ? transferTransaction : transferTransaction.shift();

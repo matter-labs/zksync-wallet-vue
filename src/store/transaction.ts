@@ -1,4 +1,4 @@
-import { GweiBalance } from "@/plugins/types";
+import { GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
 import { PriorityOperationReceipt } from "zksync/build/types";
@@ -6,15 +6,6 @@ import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "z
 import { ETHOperation } from "zksync/build/wallet";
 
 let updateBalancesTimeout: ReturnType<typeof setTimeout>;
-
-interface DepositsInterface {
-  [tokenSymbol: string]: Array<{
-    hash: string;
-    amount: string;
-    status: string;
-    confirmations: number;
-  }>;
-}
 
 export const state = () => ({
   watchedTransactions: <
@@ -25,7 +16,7 @@ export const state = () => ({
       };
     }
   >{},
-  deposits: <DepositsInterface>{},
+  deposits: <ZkInDeposits>{},
   forceUpdateTick: 0 /* Used to force update computed active deposits list */,
   withdrawalTxToEthTx: <Map<string, string>>new Map(),
 });
@@ -59,7 +50,7 @@ export const mutations = mutationTree(state, {
       }
     }
     if (txIndex === -1) {
-      state.deposits[tokenSymbol].push({
+      state.deposits[tokenSymbol].push(<ZKInDepositTx>{
         hash,
         amount,
         status,

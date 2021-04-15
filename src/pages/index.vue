@@ -28,6 +28,7 @@ export default Vue.extend({
       this.$accessor.wallet.onboard?.config({
         darkMode: this.$inkline.config.variant !== "light",
       });
+      console.log("called customWallet");
       const refreshWalletTry = await this.$accessor.wallet.walletRefresh(true);
       if (!refreshWalletTry) {
         this.$accessor.wallet.logout();

@@ -206,7 +206,8 @@ export const actions = actionTree(
      * @return {Promise<void>}
      */
     async forceRefreshData(): Promise<void> {
-      await this.app.$accessor.wallet.requestInitialBalances(true).catch((error) => {
+      console.log("forceRefreshData called");
+      await this.app.$accessor.wallet.requestInitialBalances(true).catch((error: unknown) => {
         this.$sentry.captureException(error);
       });
       // @ts-ignore
@@ -254,7 +255,9 @@ export const actions = actionTree(
         }
         await this.app.$accessor.wallet.restoreProviderConnection();
         const newAccountState = await syncWallet?.getAccountState();
-        walletData.set({ accountState: newAccountState });
+        if (!walletData.get().accountState) {
+          walletData.set({ accountState: newAccountState });
+        }
         listCommitted = newAccountState?.committed.balances || {};
         listVerified = newAccountState?.verified.balances || {};
       }
@@ -526,6 +529,7 @@ export const actions = actionTree(
         this.app.$accessor.account.setLoggedIn(true);
         return true;
       } catch (error) {
+        console.log("during connection", error);
         this.$sentry.captureException(error);
         if (!error.message.includes("User denied")) {
           console.log(this.app);

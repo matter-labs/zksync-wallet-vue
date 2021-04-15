@@ -13,6 +13,7 @@ const changeNetworkHandle = (dispatch, context) => {
     if (!walletData.get().syncWallet) {
       return;
     }
+    console.log("changeNetworkHandle called");
     const refreshWalletResult = await dispatch("walletRefresh", false);
     if (refreshWalletResult === false) {
       await context.$router.push("/connect");
@@ -30,9 +31,9 @@ const changeNetworkHandle = (dispatch, context) => {
  * @return {function(): Promise<void>}
  */
 const changeAccountHandle = (dispatch, context) => {
-  context.$toast.global.zkException({
-    message: "You've changes active account. Restarting the DAPP",
-  });
+  //  context.$toast.global.zkException({
+  //    message: "You've changes active account. Restarting the DAPP",
+  //  });
   return async () => {
     if (!walletData.get().syncWallet) {
       return;

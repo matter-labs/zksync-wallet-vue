@@ -24,6 +24,7 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "no-console": "off",
     "vue/no-v-html": "off",
+    "no-unused-expressions": "off",
     "@typescript-eslint/no-empty-function": ["off"],
   },
   ignorePatterns: ["sw.js"],

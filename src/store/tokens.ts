@@ -101,15 +101,16 @@ export const actions = actionTree(
           zkBalances: <balanceToReturn[]>[],
         };
       }
-      const zkBalances: balanceToReturn[] = Object.keys(zkBalance).map(
-        (key: TokenSymbol) =>
-          ({
-            address: tokens[key].address,
-            balance: syncWallet!.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
-            symbol: tokens[key].symbol,
-            id: tokens[key].id,
-          } as balanceToReturn),
-      );
+      const zkBalances: balanceToReturn[] = Object.keys(zkBalance).map((key: TokenSymbol) => {
+        const syncWallet = walletData.get().syncWallet;
+        console.log("zkBalances:", syncWallet);
+        return {
+          address: tokens[key].address,
+          balance: syncWallet!.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
+          symbol: tokens[key].symbol,
+          id: tokens[key].id,
+        } as balanceToReturn;
+      });
 
       return {
         tokens,

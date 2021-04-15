@@ -223,3 +223,12 @@ export declare interface ZkInWatchArgs {
   token: TokenSymbol;
   amount: GweiBalance;
 }
+
+export interface DepositsInterface {
+  [tokenSymbol: string]: {
+    hash: string;
+    amount: string;
+    status: string;
+    confirmations: number;
+  }[];
+}

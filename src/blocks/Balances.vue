@@ -83,9 +83,10 @@
 <script lang="ts">
 import Mint from "@/blocks/Mint.vue";
 import utils from "@/plugins/utils";
-import { ZkInBalance, ZkInDeposits } from "@/plugins/types";
+import { ZkInBalance, ZkInDeposits, ZKInDepositTx } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
+import { TokenSymbol } from "zksync/src/types";
 
 type DisplayToken = {
   symbol: string;
@@ -126,7 +127,7 @@ export default Vue.extend({
         };
       });
       for (const symbol in this.activeDeposits) {
-        if (!returnTokens.hasOwnProperty(symbol)) {
+        if (!returnTokens[symbol]) {
           returnTokens[symbol] = {
             symbol,
             tokenPrice: allTokenPrices[symbol].price,
@@ -140,26 +141,28 @@ export default Vue.extend({
       const finalList = Object.keys(returnTokens).map((e) => returnTokens[e]);
       return utils.searchInArr(this.search, finalList, (e) => (e as DisplayToken).symbol) as DisplayToken[];
     },
-    activeDeposits() {
-      // eslint-disable-next-line no-unused-expressions
+    activeDeposits: function () {
+      // @ts-ignore
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
-      const deposits = this.$accessor.transaction.depositList;
+      const deposits: ZkInDeposits = this.$accessor.transaction.depositList;
       const activeDeposits = <ZkInDeposits>{};
       const finalDeposits = <
         {
           [tokenSymbol: string]: BigNumber;
         }
       >{};
-      for (const tokenSymbol in deposits) {
-        activeDeposits[tokenSymbol] = deposits[tokenSymbol].filter((tx) => tx.status === "Initiated");
+      let ticker: TokenSymbol;
+      for (ticker in deposits) {
+        activeDeposits[ticker] = deposits[ticker].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
       }
-      for (const tokenSymbol in activeDeposits) {
-        if (activeDeposits[tokenSymbol].length > 0) {
-          if (!finalDeposits[tokenSymbol]) {
-            finalDeposits[tokenSymbol] = BigNumber.from("0");
+      for (ticker in activeDeposits) {
+        if (activeDeposits[ticker].length > 0) {
+          if (!finalDeposits[ticker]) {
+            finalDeposits[ticker] = BigNumber.from("0");
           }
-          for (const tx of activeDeposits[tokenSymbol]) {
-            finalDeposits[tokenSymbol] = finalDeposits[tokenSymbol].add(tx.amount);
+          let tx: ZKInDepositTx;
+          for (tx of activeDeposits[ticker]) {
+            finalDeposits[ticker] = finalDeposits[ticker].add(tx.amount);
           }
         }
       }
