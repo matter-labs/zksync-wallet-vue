@@ -22,7 +22,6 @@ export const state = () => ({
 
 export type TransactionModuleState = ReturnType<typeof state>;
 
-// @ts-ignore
 export const mutations = mutationTree(state, {
   updateTransactionStatus(state, { hash, status }): void {
     if (status === "Verified") {

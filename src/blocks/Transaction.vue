@@ -199,9 +199,8 @@ import { walletData } from "@/plugins/walletData";
 import { BigNumber, BigNumberish } from "ethers";
 import Vue, { PropOptions } from "vue";
 import { closestPackableTransactionAmount } from "zksync";
-import { Address, TransactionReceipt, Transfer } from "zksync/build/types";
+import { Address, TransactionReceipt } from "zksync/build/types";
 import { Transaction } from "zksync/build/wallet";
-import { ChangePubKey, CloseAccount, ForcedExit, TxEthSignature, Withdraw } from "zksync/src/types";
 
 export default Vue.extend({
   components: {
@@ -438,18 +437,18 @@ export default Vue.extend({
         return;
       }
       this.feesLoading = true;
-      /* try { */
-      this.feesObj = await this.$accessor.wallet.requestFees({
-        address: this.inputtedAddress,
-        symbol: this.chosenToken?.symbol,
-        feeSymbol: this.feeToken?.symbol,
-        type: this.type,
-      });
-      /* } catch (error) {
+      try {
+        this.feesObj = await this.$accessor.wallet.requestFees({
+          address: this.inputtedAddress,
+          symbol: this.chosenToken?.symbol,
+          feeSymbol: this.feeToken?.symbol,
+          type: this.type,
+        });
+      } catch (error) {
         this.$toast.global.zkException({
           message: error.message,
         });
-      } */
+      }
       this.feesLoading = false;
     },
     async getWithdrawalTime(): Promise<void> {

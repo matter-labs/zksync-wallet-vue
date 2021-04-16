@@ -1,7 +1,7 @@
 import { GweiBalance, ZkClTransaction } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
-import { ETHOperation, Transaction } from "zksync/build/wallet";
+import { Transaction } from "zksync/build/wallet";
 import { Address, SignedTransaction, TokenSymbol } from "zksync/src/types";
 
 /**
@@ -24,7 +24,7 @@ export const transaction = async (
   store: typeof accessorType,
 ): Promise<Transaction | ZkClTransaction | undefined> => {
   const syncWallet = walletData.get().syncWallet;
-  let nonce: number = (await syncWallet?.getNonce("committed")) as number;
+  let nonce: number = (await syncWallet!.getNonce("committed")) as number;
   const transferTx = {
     fee: 0,
     nonce,
@@ -38,20 +38,18 @@ export const transaction = async (
    * @todo: process case when there are 2 transactions
    */
   if (token === feeToken) {
-    const transaction: Transaction | undefined = await syncWallet?.syncTransfer({
+    const transaction = await syncWallet!.syncTransfer({
       to: address,
       token,
       amount: amountBigValue,
       fee: feeBigValue,
     });
-    store.transaction.watchTransaction({ transactionHash: transaction?.txHash });
+    store.transaction.watchTransaction({ transactionHash: transaction.txHash });
     return transaction;
   }
-  const transferTransaction: Transaction[] | undefined = await syncWallet?.syncMultiTransfer([transferTx]);
-  if (transferTransaction !== undefined) {
-    for (let a = 0; a < transferTransaction.length; a++) {
-      store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash });
-    }
+  const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx]);
+  for (let a = 0; a < transferTransaction.length; a++) {
+    store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash });
   }
   return transferTransaction?.shift();
 };
@@ -83,7 +81,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   const amountBigValue = amount;
   const feeBigValue = fees;
   if (token === feeToken) {
-    const transaction: Transaction | undefined = await syncWallet!.withdrawFromSyncToEthereum({
+    const transaction = await syncWallet!.withdrawFromSyncToEthereum({
       ethAddress: address,
       token,
       amount: amountBigValue,
@@ -106,39 +104,35 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     fee: feeBigValue,
   };
 
-  // @ts-ignore
   const signedTransactions: SignedTransaction[] = [];
 
-  const nonce: number = (await syncWallet?.getNonce()) as number;
+  const nonce = (await syncWallet!.getNonce()) as number;
 
-  const signedWithdrawTransaction: SignedTransaction | undefined = await syncWallet?.signWithdrawFromSyncToEthereum({
+  const signedWithdrawTransaction = await syncWallet!.signWithdrawFromSyncToEthereum({
     ...withdrawalTx,
     nonce,
   });
-  // @ts-ignore
-
-  signedTransactions.push({ tx: signedWithdrawTransaction.tx, signature: signedWithdrawTransaction.ethereumSignature });
 
   // @ts-ignore
-  const signTransaction: SignedTransaction | undefined = await syncWallet?.signSyncTransfer({ ...transferTx, nonce: nonce + 1 }).catch((error) => {
+  signedTransactions.push({ tx: signedWithdrawTransaction!.tx, signature: signedWithdrawTransaction.ethereumSignature });
+
+  // @ts-ignore
+  const signTransaction = await syncWallet!.signSyncTransfer({ ...transferTx, nonce: nonce + 1 }).catch((error) => {
     throw new Error("Error while performing signSyncTransfer: " + error.message);
   });
 
   // @ts-ignore
   signedTransactions.push({ tx: signTransaction.tx, signature: signTransaction.ethereumSignature });
 
-  const transactionHashes: string[] | SignedTransaction[] | undefined = await syncWallet?.provider.submitTxsBatch(signedTransactions as SignedTransaction[]).catch((error) => {
+  const transactionHashes = await syncWallet!.provider.submitTxsBatch(signedTransactions).catch((error) => {
     throw new Error("Error while performing submitTxsBatch: " + error.message);
   });
 
-  // @ts-ignore
-  if (transactionHashes !== undefined) {
-    for (let a = 0; a < transactionHashes.length; a++) {
-      if (transactionHashes[a] === undefined) {
-        continue;
-      }
-      store.transaction.watchTransaction({ transactionHash: transactionHashes[a] });
+  for (let a = 0; a < transactionHashes.length; a++) {
+    if (transactionHashes[a] === undefined) {
+      continue;
     }
+    store.transaction.watchTransaction({ transactionHash: transactionHashes[a] });
   }
   // @ts-ignore
   return transactionHashes.map((value: string, index: number) => ({ txData: signedTransactions[index], txHash: value }));
@@ -153,12 +147,11 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
  * @returns {Promise<any>}
  */
 export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: typeof accessorType) => {
-  const depositResponse: ETHOperation | undefined = await walletData.get().syncWallet?.depositToSyncFromEthereum({
-    depositTo: walletData.get().syncWallet?.address() as string,
+  const depositResponse = await walletData.get().syncWallet!.depositToSyncFromEthereum({
+    depositTo: walletData.get().syncWallet!.address(),
     token,
     amount,
   });
-  // @ts-ignore
   store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse;
 };

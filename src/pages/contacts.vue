@@ -276,7 +276,6 @@ export default Vue.extend({
       }
     },
     openContact(contact: ZkInContact): void {
-      // @ts-ignore
       this.$router.push({ ...this.$route, query: { w: contact.address } });
     },
     copyAddress(address: Address): void {
