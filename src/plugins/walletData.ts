@@ -13,12 +13,15 @@ const internalWalletData: iWalletData = {
 export const walletData: iWalletWrapper = {
   get: () => internalWalletData,
 
-  set: (val): void => {
-    internalWalletData.syncProvider = val?.syncProvider;
-    internalWalletData.syncWallet = val?.syncWallet;
-    internalWalletData.accountState = val?.accountState;
-  },
-  setProvider: (importedProvider): void => {
-    internalWalletData.syncProvider = importedProvider;
+  set: (val) => {
+    if (Object.prototype.hasOwnProperty.call(val, "syncProvider")) {
+      internalWalletData.syncProvider = val.syncProvider;
+    }
+    if (Object.prototype.hasOwnProperty.call(val, "syncWallet")) {
+      internalWalletData.syncWallet = val.syncWallet;
+    }
+    if (Object.prototype.hasOwnProperty.call(val, "accountState")) {
+      internalWalletData.accountState = val.accountState;
+    }
   },
 };

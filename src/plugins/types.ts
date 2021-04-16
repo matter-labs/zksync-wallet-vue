@@ -171,7 +171,6 @@ export interface iWalletData {
 export declare interface iWalletWrapper {
   set: (val: iWalletData) => void;
   get: () => iWalletData;
-  setProvider: (importedProvider: Provider) => void;
 }
 export declare interface ZKInDepositTx extends ETHOperation {
   hash: string;

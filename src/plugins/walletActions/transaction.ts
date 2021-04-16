@@ -141,14 +141,8 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     }
   }
   // @ts-ignore
-  return transactionHashes?.map((value: string, index: number) => ({ txData: signedTransactions[index], txHash: value }));
+  return transactionHashes.map((value: string, index: number) => ({ txData: signedTransactions[index], txHash: value }));
 };
-
-interface ResultTyped {
-  depositTx: ETHOperation;
-  tokenSymbol: TokenSymbol;
-  amount: GweiBalance;
-}
 
 /**
  * Deposit action method
@@ -165,6 +159,6 @@ export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: ty
     amount,
   });
   // @ts-ignore
-  store.transaction.watchDeposit(<ResultTyped>{ depositTx: depositResponse, tokenSymbol: token, amount });
+  store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount });
   return depositResponse;
 };

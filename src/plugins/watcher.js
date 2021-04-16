@@ -13,10 +13,9 @@ const changeNetworkHandle = (dispatch, context) => {
     if (!walletData.get().syncWallet) {
       return;
     }
-    console.log("changeNetworkHandle called");
     const refreshWalletResult = await dispatch("walletRefresh", false);
     if (refreshWalletResult === false) {
-      await context.$router.push("/connect");
+      await context.$router.push("/");
       await dispatch("logout");
     } else {
       await dispatch("forceRefreshData");
@@ -39,7 +38,7 @@ const changeAccountHandle = (dispatch, context) => {
       return;
     }
     await dispatch("logout");
-    await context.$router.push("/connect");
+    await context.$router.push("/");
     await dispatch("clearDataStorage");
   };
 };

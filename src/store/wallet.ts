@@ -4,7 +4,6 @@ import { iWalletData, ZkInBalance, ZkInFeesObj, ZkInTx } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
-import { Web3Provider } from "@ethersproject/providers/lib.esm";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -104,6 +103,16 @@ export const mutations = mutationTree(state, {
     state.withdrawalProcessingTime = obj;
   },
   setFees(state, { symbol, feeSymbol, type, address, obj }: { symbol: TokenSymbol; feeSymbol: TokenSymbol; type: string; address: Address; obj: ZkInFeesObj }): void {
+    if (!Object.prototype.hasOwnProperty.call(state.fees, symbol)) {
+      state.fees[symbol] = {};
+    }
+    if (!Object.prototype.hasOwnProperty.call(state.fees[symbol], feeSymbol)) {
+      state.fees[symbol][feeSymbol] = {};
+    }
+    if (!Object.prototype.hasOwnProperty.call(state.fees[symbol][feeSymbol], type)) {
+      state.fees[symbol][feeSymbol][type] = {};
+    }
+
     state.fees[symbol][feeSymbol][type][address] = obj;
   },
   /**
@@ -206,12 +215,10 @@ export const actions = actionTree(
      * @return {Promise<void>}
      */
     async forceRefreshData(): Promise<void> {
-      console.log("forceRefreshData called");
       await this.app.$accessor.wallet.requestInitialBalances(true).catch((error: unknown) => {
         this.$sentry.captureException(error);
       });
-      // @ts-ignore
-      await this.app.$accessor.wallet.requestZkBalances().catch((error) => {
+      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false }).catch((error) => {
         this.$sentry.captureException(error);
       });
       await this.app.$accessor.wallet.requestTransactionsHistory(true).catch((error: unknown) => {
@@ -225,7 +232,7 @@ export const actions = actionTree(
     async restoreProviderConnection(): Promise<void> {
       if (walletData.get().syncProvider!.transport !== undefined) {
         const activeProvider: Provider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
-        walletData.setProvider(activeProvider);
+        walletData.set({ syncProvider: activeProvider });
       }
     },
 
@@ -485,31 +492,30 @@ export const actions = actionTree(
         }
 
         // @ts-ignore
-        const web3WalletInstance: Web3Provider = new ethers.providers.Web3Provider(window?.ethereum);
+        const web3WalletInstance = new ethers.providers.Web3Provider(window?.ethereum);
         /**
          * Provider verification
          * @todo: add network validation here
          * @type {ethers.providers.Network}
          */
         const networkInfo: ethers.providers.Network = await web3WalletInstance._ready();
-        console.log(web3WalletInstance);
         if (!networkInfo || !web3WalletInstance.provider) {
           return false;
         }
 
         if (walletData.get().syncWallet) {
-          this.app.$accessor.account.setAddress(walletData.get().syncWallet?.address() as string);
+          this.app.$accessor.account.setAddress(walletData.get().syncWallet?.address() || "");
           return true;
         }
-        const ethWallet: ethers.providers.JsonRpcSigner = web3WalletInstance.getSigner();
-        const syncProvider: Provider | undefined = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
+        const ethWallet = web3WalletInstance.getSigner();
+        const syncProvider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
         if (syncProvider === undefined) {
           return false;
         }
         const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
         this.app.$accessor.account.setLoadingHint("Getting wallet information");
 
-        await watcher.changeNetworkSet(dispatch, this);
+        watcher.changeNetworkSet(dispatch, this);
         const accountState = await syncWallet?.getAccountState();
 
         walletData.set(<iWalletData>{
@@ -529,10 +535,9 @@ export const actions = actionTree(
         this.app.$accessor.account.setLoggedIn(true);
         return true;
       } catch (error) {
-        console.log("during connection", error);
+        console.log("Error during connection", error);
         this.$sentry.captureException(error);
         if (!error.message.includes("User denied")) {
-          console.log(this.app);
           this.app.$toast.global.zkException({
             message: `Refreshing state of the wallet failed... Reason: ${error.message}`,
           });

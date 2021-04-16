@@ -176,7 +176,6 @@ export default Vue.extend({
           contact = foundContact;
         }
       }
-      // @ts-ignore
       this.chosenContact = contact;
       this.contactsListModal = false;
     },

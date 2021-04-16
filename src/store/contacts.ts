@@ -35,6 +35,15 @@ export const mutations = mutationTree(state, {
   initContactsList(state): void {
     state.contactsList = [];
   },
+  getByAddress(state, address: Address): ZkInContact | false {
+    address = address.toLowerCase();
+    for (const contactItem of state.contactsList) {
+      if (contactItem.address.toLowerCase() === address) {
+        return contactItem;
+      }
+    }
+    return false;
+  },
 });
 
 export const getters = getterTree(state, {
@@ -66,15 +75,6 @@ export const actions = actionTree(
       }
       return false;
     },
-    getByAddress({ state }, address: Address): ZkInContact | undefined {
-      address = address.toLowerCase();
-      for (const contactItem of state.contactsList) {
-        if (contactItem.address.toLowerCase() === address) {
-          return contactItem;
-        }
-      }
-      return undefined;
-    },
     getContactsFromStorage({ commit }): void {
       try {
         const walletAddress = this.app.$accessor.account.address;
@@ -97,7 +97,7 @@ export const actions = actionTree(
     },
     deleteContact({ commit }, address: Address): void {
       const contact = this.app.$accessor.contacts.getByAddress(address);
-      if (contact !== undefined) {
+      if (contact) {
         commit("delete", contact);
         this.app.$accessor.contacts.updateLocalStorage();
       }

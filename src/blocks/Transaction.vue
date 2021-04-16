@@ -285,7 +285,10 @@ export default Vue.extend({
   computed: {
     chosenFeeObj(): BigNumberish | boolean {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
-        const selectedFeeTypeAmount: string | BigNumber | undefined = this.transactionMode === "fast" ? this.feesObj?.fast : this.feesObj?.normal;
+        const selectedFeeTypeAmount = this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal;
+        if (!selectedFeeTypeAmount) {
+          return BigNumber.from("0");
+        }
         return BigNumber.from(selectedFeeTypeAmount);
       }
       return false;
@@ -435,18 +438,18 @@ export default Vue.extend({
         return;
       }
       this.feesLoading = true;
-      try {
-        this.feesObj = await this.$accessor.wallet.requestFees({
-          address: this.inputtedAddress,
-          symbol: this.chosenToken?.symbol,
-          feeSymbol: this.feeToken?.symbol,
-          type: this.type,
-        });
-      } catch (error) {
+      /* try { */
+      this.feesObj = await this.$accessor.wallet.requestFees({
+        address: this.inputtedAddress,
+        symbol: this.chosenToken?.symbol,
+        feeSymbol: this.feeToken?.symbol,
+        type: this.type,
+      });
+      /* } catch (error) {
         this.$toast.global.zkException({
           message: error.message,
         });
-      }
+      } */
       this.feesLoading = false;
     },
     async getWithdrawalTime(): Promise<void> {
@@ -471,7 +474,6 @@ export default Vue.extend({
           await this.transfer();
         }
       } catch (error) {
-        console.log(error);
         if (error.message) {
           if (error.message.includes("User denied")) {
             this.error = "";
@@ -482,8 +484,9 @@ export default Vue.extend({
           } else if (String(error.message).length < 60) {
             this.error = error.message;
           }
+        } else {
+          this.error = "Transaction error";
         }
-        this.error = "Transaction error";
         this.clearTransactionInfo();
       }
       this.tip = "";
@@ -496,10 +499,7 @@ export default Vue.extend({
       if (this.feesObj === undefined) {
         throw new Error("Fee fetching error :(");
       }
-      const withdrawTransaction:
-        | Array<{ tx?: Transfer | Withdraw | ChangePubKey | CloseAccount | ForcedExit; signature?: TxEthSignature }>[]
-        | Transaction
-        | undefined = await withdraw({
+      const withdrawTransaction = await withdraw({
         address: this.inputtedAddress,
         token: (this.chosenToken as ZkInBalance).symbol,
         feeToken: this.feeToken.symbol,

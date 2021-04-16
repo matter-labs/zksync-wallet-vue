@@ -256,7 +256,7 @@ export default Vue.extend({
         return;
       }
       const foundContact = this.$accessor.contacts.getByAddress(this.editingWallet.address);
-      if (foundContact === undefined) {
+      if (!foundContact) {
         this.$toast.global.zkException({
           message: `Contact with the address : ${this.editingWallet.address} not found`,
         });

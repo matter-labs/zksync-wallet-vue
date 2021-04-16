@@ -299,9 +299,12 @@ export default Vue.extend({
             this.error = "Transaction Amount is not packable";
           } else if (String(error.message).length < 60) {
             this.error = error.message;
+          } else {
+            this.error = "Transaction error";
           }
+        } else {
+          this.error = "Transaction error";
         }
-        this.error = this.error ? this.error : "Transaction error";
       }
       this.tip = "";
       this.loading = false;
@@ -415,9 +418,12 @@ export default Vue.extend({
                 this.error = "Transaction Amount is not packable";
               } else if (error.message && error.message.toString().length < 60) {
                 this.error = error.message;
+              } else {
+                this.error = "Transaction error";
               }
+            } else {
+              this.error = "Transaction error";
             }
-            this.error = this.error ? this.error : "Transaction error";
           }
           this.tip = "";
           this.loading = false;

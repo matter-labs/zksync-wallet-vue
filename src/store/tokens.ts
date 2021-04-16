@@ -67,7 +67,7 @@ export const getters = getterTree(state, {
   },
 });
 
-interface balanceToReturn {
+interface BalanceToReturn {
   address: string;
   balance: string;
   symbol: string;
@@ -87,10 +87,7 @@ export const actions = actionTree(
       return getters.getAllTokens;
     },
 
-    async loadTokensAndBalances(): Promise<{ zkBalances: balanceToReturn[]; tokens: Tokens }> {
-      console.log("loading tokens");
-      const syncWallet = walletData.get().syncWallet;
-      console.log("syncWallet", syncWallet);
+    async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
       const accountState = walletData.get().accountState;
 
       const tokens: Tokens = await this.app.$accessor.tokens.loadAllTokens();
@@ -98,18 +95,17 @@ export const actions = actionTree(
       if (!zkBalance) {
         return {
           tokens,
-          zkBalances: <balanceToReturn[]>[],
+          zkBalances: <BalanceToReturn[]>[],
         };
       }
-      const zkBalances: balanceToReturn[] = Object.keys(zkBalance).map((key: TokenSymbol) => {
+      const zkBalances: BalanceToReturn[] = Object.keys(zkBalance).map((key: TokenSymbol) => {
         const syncWallet = walletData.get().syncWallet;
-        console.log("zkBalances:", syncWallet);
         return {
           address: tokens[key].address,
           balance: syncWallet!.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
           symbol: tokens[key].symbol,
           id: tokens[key].id,
-        } as balanceToReturn;
+        } as BalanceToReturn;
       });
 
       return {

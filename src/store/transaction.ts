@@ -1,7 +1,6 @@
 import { GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
-import { PriorityOperationReceipt } from "zksync/build/types";
 import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/src/types";
 import { ETHOperation } from "zksync/build/wallet";
 
@@ -107,8 +106,7 @@ export const actions = actionTree(
     watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
       try {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
-        depositTx.awaitReceipt().then((POReceipt: PriorityOperationReceipt): void => {
-          console.log(POReceipt);
+        depositTx.awaitReceipt().then(() => {
           this.app.$accessor.transaction.requestBalancesUpdate();
           commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
         });

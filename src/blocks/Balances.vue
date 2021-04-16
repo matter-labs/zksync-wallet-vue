@@ -111,7 +111,7 @@ export default Vue.extend({
     zkBalances(): ZkInBalance[] {
       return this.$accessor.wallet.getzkBalances;
     },
-    displayedList: function (): DisplayToken[] {
+    displayedList(): DisplayToken[] {
       const allTokenPrices = this.$accessor.tokens.getTokenPrices;
       const returnTokens = <
         {
@@ -141,16 +141,11 @@ export default Vue.extend({
       const finalList = Object.keys(returnTokens).map((e) => returnTokens[e]);
       return <DisplayToken[]>utils.searchInArr(this.search, finalList, (e) => (e as DisplayToken).symbol);
     },
-    activeDeposits: function () {
-      // @ts-ignore
+    activeDeposits() {
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
       const deposits: ZkInDeposits = this.$accessor.transaction.depositList;
       const activeDeposits = <ZkInDeposits>{};
-      const finalDeposits = <
-        {
-          [tokenSymbol: string]: BigNumber;
-        }
-      >{};
+      const finalDeposits = <{ [tokenSymbol: string]: BigNumber }>{};
       let ticker: TokenSymbol;
       for (ticker in deposits) {
         activeDeposits[ticker] = deposits[ticker].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
