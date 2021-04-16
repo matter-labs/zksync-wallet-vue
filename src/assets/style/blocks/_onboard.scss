@@ -1,5 +1,5 @@
 .bn-onboard-modal {
-  z-index: 10;
+  z-index: 11;
 
   .bn-onboard-custom.bn-onboard-modal-content {
     width: 100%;
@@ -9,6 +9,9 @@
     color: $lightViolet !important;
     font-weight: bold;
     font-size: 16px;
+    @media screen and (max-width: $mobile) {
+      margin-top: 0.35em;
+    }
   }
 
   a,
@@ -132,6 +135,9 @@
       margin: 0.25rem 0;
       padding: 0.5rem;
     }
+    .bn-onboard-select-wallet-definition {
+      margin-top: .8em !important;
+    }
     .bn-onboard-modal-content {
       padding-bottom: 0;
 
@@ -150,7 +156,7 @@
 
       ul.bn-onboard-custom.bn-onboard-modal-select-wallets {
         height: 100%;
-        max-height: calc(100% - 150px - 2rem) !important;
+        max-height: calc(100% - 285px - 2rem) !important;
         margin: 0;
         padding: 0;
       }

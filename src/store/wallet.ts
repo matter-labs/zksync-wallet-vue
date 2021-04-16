@@ -558,6 +558,7 @@ export const actions = actionTree(
      */
     logout({ state, commit }): void {
       state.onboard?.walletReset();
+      clearTimeout(getTransactionHistoryAgain);
       walletData.set({ syncProvider: undefined, syncWallet: undefined, accountState: undefined });
       localStorage.removeItem("selectedWallet");
       this.app.$accessor.account.setLoggedIn(false);
