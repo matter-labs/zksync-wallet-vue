@@ -48,12 +48,15 @@ export const mutations = mutationTree(state, {
 
 export const getters = getterTree(state, {
   get: (state: ContactsModuleState): ZkInContact[] => state.contactsList,
+  getStorageKey(_, __, ___, rootGetters): string {
+    return `contacts-${rootGetters["account/address"]}`;
+  },
 });
 
 export const actions = actionTree(
   { state, mutations, getters },
   {
-    getStorageKey({ state, commit }): string {
+    requestStorageKey({ state, commit }): string {
       if (state.storageKey === undefined) {
         const walletAddress = this.app.$accessor.account.address;
         if (walletAddress === undefined) {
@@ -82,7 +85,7 @@ export const actions = actionTree(
           commit("initContactsList");
           return;
         }
-        const contactsListRaw = window.localStorage.getItem(this.app.$accessor.contacts.getStorageKey());
+        const contactsListRaw = window.localStorage.getItem(this.app.$accessor.contacts.getStorageKey);
         if (contactsListRaw === null) {
           commit("initContactsList");
           return;
@@ -111,8 +114,7 @@ export const actions = actionTree(
     },
     updateLocalStorage({ state }): void {
       if (process.client) {
-        const storageKey = this.app.$accessor.contacts.getStorageKey();
-        window.localStorage.setItem(storageKey, JSON.stringify(state.contactsList));
+        window.localStorage.setItem(this.app.$accessor.contacts.getStorageKey, JSON.stringify(state.contactsList));
       }
     },
   },

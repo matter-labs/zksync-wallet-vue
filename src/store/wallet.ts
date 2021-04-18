@@ -529,10 +529,10 @@ export const actions = actionTree(
 
         await this.app.$accessor.wallet.checkLockedState();
 
-        this.app.$accessor.contacts.getContactsFromStorage();
         this.app.$accessor.account.setAddress(syncWallet.address());
         this.app.$accessor.account.setNameFromStorage();
         this.app.$accessor.account.setLoggedIn(true);
+        this.app.$accessor.contacts.getContactsFromStorage();
         return true;
       } catch (error) {
         console.log("Error during connection", error);
