@@ -4,8 +4,6 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
 import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/src/types";
 import { ETHOperation } from "zksync/build/wallet";
 
-let updateBalancesTimeout: ReturnType<typeof setTimeout>;
-
 export const state = () => ({
   watchedTransactions: <
     {
@@ -83,7 +81,7 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    watchTransaction({ commit, dispatch, state }, { transactionHash, existingTransaction }) {
+    async watchTransaction({ commit, dispatch, state }, { transactionHash, existingTransaction }) {
       try {
         if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
           return;
@@ -91,13 +89,13 @@ export const actions = actionTree(
         if (!existingTransaction) {
           walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
-          dispatch("requestBalancesUpdate");
+          await dispatch("requestBalancesUpdate");
         } else {
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
         }
         walletData.get().syncProvider?.notifyTransaction(transactionHash, "VERIFY");
+        await dispatch("requestBalancesUpdate");
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
-        dispatch("requestBalancesUpdate");
       } catch (error) {
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       }
@@ -105,20 +103,17 @@ export const actions = actionTree(
     watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
       try {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
-        depositTx.awaitReceipt().then(() => {
-          this.app.$accessor.transaction.requestBalancesUpdate();
+        depositTx.awaitReceipt().then(async () => {
+          await this.app.$accessor.transaction.requestBalancesUpdate();
           commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
         });
       } catch (error) {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       }
     },
-    requestBalancesUpdate(): void {
-      clearTimeout(updateBalancesTimeout);
-      updateBalancesTimeout = setTimeout(() => {
-        this.app.$accessor.wallet.requestZkBalances({ force: true });
-        this.app.$accessor.wallet.requestTransactionsHistory({ offset: 0, force: true });
-      }, 500);
+    async requestBalancesUpdate(): Promise<void> {
+      await this.app.$accessor.wallet.requestZkBalances({ force: true });
+      this.app.$accessor.wallet.requestTransactionsHistory({ offset: 0, force: true });
     },
 
     /**

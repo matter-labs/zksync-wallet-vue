@@ -245,11 +245,11 @@ export const actions = actionTree(
      * @return {Promise<[array]|*>}
      */
     async requestZkBalances({ commit, getters }, { accountState, force = false }) {
-      type balancesList = {
+      type BalancesList = {
         [token: string]: BigNumberish;
       };
-      let listCommitted = <balancesList>{};
-      let listVerified = <balancesList>{};
+      let listCommitted = <BalancesList>{};
+      let listVerified = <BalancesList>{};
       const tokensList = <Array<ZkInBalance>>[];
       const syncWallet = walletData.get().syncWallet;
       if (accountState) {

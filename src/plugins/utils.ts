@@ -18,7 +18,14 @@ function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
 
 function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance) {
   if (!amount) return "0";
-  return walletData.get().syncProvider?.tokenSet?.formatToken(symbol, amount) || "0";
+  const result = walletData.get().syncProvider?.tokenSet?.formatToken(symbol, amount);
+  if (result) {
+    if (result && result.endsWith(".0")) {
+      return result.substr(0, result.length - 2);
+    }
+    return result;
+  }
+  return "0";
 }
 
 export default {

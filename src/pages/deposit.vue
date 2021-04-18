@@ -252,6 +252,8 @@ export default Vue.extend({
       console.log(error);
       this.loading = false;
     }
+    console.log(this.$accessor.wallet.getzkBalances);
+    console.log(this.$accessor.tokens.getAllTokens);
   },
   methods: {
     async chooseToken(token: ZkInBalance) {
@@ -348,31 +350,42 @@ export default Vue.extend({
         const approveAmount = this.inputtedAllowance ? utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance) : undefined;
         const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, approveAmount);
         const balances = this.$accessor.wallet.getzkBalances;
-        let ETHToken;
+        let ETHToken: ZkInBalance | undefined;
         for (const token of balances) {
           if (token.symbol === "ETH") {
             ETHToken = token;
             break;
           }
         }
+        if (!ETHToken) {
+          ETHToken = {
+            balance: "0",
+            id: 19,
+            rawBalance: BigNumber.from("0"),
+            restricted: false,
+            status: "Verified",
+            symbol: "ETH",
+            tokenPrice: await this.$accessor.tokens.getTokenPrice("ETH"),
+            verifiedBalance: "0",
+          };
+        }
         this.tip = "Waiting for the transaction to be mined...";
         const receipt = await approveDeposits.wait();
         this.transactionInfo.hash = receipt.transactionHash;
         this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + receipt.transactionHash;
-        if (ETHToken) {
-          this.transactionInfo.amount = {
-            amount: "0",
-            token: ETHToken,
-          };
-          this.transactionInfo.fee = {
-            amount: receipt.gasUsed.toString(),
-            token: ETHToken,
-          };
-        }
+        this.transactionInfo.amount = {
+          amount: "0",
+          token: ETHToken,
+        };
+        this.transactionInfo.fee = {
+          amount: receipt.gasUsed.toString(),
+          token: ETHToken,
+        };
         this.transactionInfo.continueBtnFunction = true;
         this.transactionInfo.continueBtnText = "Proceed to deposit";
         this.transactionInfo.success = true;
         this.chosenToken = { ...this.chosenToken, unlocked: true };
+        this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
       } catch (error) {
         if (error.message) {
           if (!error.message.includes("User denied")) {
@@ -382,13 +395,6 @@ export default Vue.extend({
       }
       this.tip = "";
       this.loading = false;
-    },
-    async checkTokenState(token: ZkInBalance): Promise<boolean> {
-      if (token.symbol.toLowerCase() !== "eth") {
-        const wallet = walletData.get().syncWallet;
-        return await wallet!.isERC20DepositsApproved(token.address as string);
-      }
-      return true;
     },
     async getTokenAllowance(token: ZkInBalance): Promise<BigNumber> {
       if (token.symbol.toLowerCase() !== "eth") {
