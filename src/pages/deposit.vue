@@ -252,8 +252,6 @@ export default Vue.extend({
       console.log(error);
       this.loading = false;
     }
-    console.log(this.$accessor.wallet.getzkBalances);
-    console.log(this.$accessor.tokens.getAllTokens);
   },
   methods: {
     async chooseToken(token: ZkInBalance) {

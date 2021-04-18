@@ -35,21 +35,23 @@ export const mutations = mutationTree(state, {
   initContactsList(state): void {
     state.contactsList = [];
   },
-  getByAddress(state, address: Address): ZkInContact | false {
-    address = address.toLowerCase();
-    for (const contactItem of state.contactsList) {
-      if (contactItem.address.toLowerCase() === address) {
-        return contactItem;
-      }
-    }
-    return false;
-  },
 });
 
 export const getters = getterTree(state, {
   get: (state: ContactsModuleState): ZkInContact[] => state.contactsList,
   getStorageKey(_, __, ___, rootGetters): string {
     return `contacts-${rootGetters["account/address"]}`;
+  },
+  getByAddress(state) {
+    return (address: Address) => {
+      address = address.toLowerCase();
+      for (const contactItem of state.contactsList) {
+        if (contactItem.address.toLowerCase() === address) {
+          return contactItem;
+        }
+      }
+      return false;
+    };
   },
 });
 
