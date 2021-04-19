@@ -2,7 +2,7 @@ import Loader from "@/components/loader.vue";
 import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
 
-import moment from "moment";
+import moment from "moment-timezone";
 import Vue from "vue";
 import VueScrollTo from "vue-scrollto";
 import { ToastAction, ToastOptions } from "vue-toasted";
@@ -35,6 +35,11 @@ Vue.filter("formatTimeAgo", (time: moment.MomentInput) => moment(time).fromNow()
  * Format date as a human-readable "M/D/YYYY h:mm:ss A"
  */
 Vue.filter("formatDateTime", (time: moment.MomentInput) => moment(time).format("M/D/YYYY h:mm:ss A"));
+
+/**
+ * Format date as a human-readable "M/D/YYYY h:mm:ss A"
+ */
+Vue.filter("formatSeconds", (time: number) => utils.timeCalc(time));
 
 /**
  * zkException error reporting toaster registered

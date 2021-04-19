@@ -44,22 +44,19 @@
       "yarn run format"
     ]
   },
-  "optionalDependencies": {
-    "fs-extra": "^9.1.0"
-  },
   "scripts": {
-    "ci": "rm -fr node_modules && rm -rf 'public/*' && yarn install --immutable-cache",
-    "ci:build": "yarn run ci && sh ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
-    "ci:prepare:rinkeby": "yarn run ci && sh cli-process-env.sh 'rinkeby' dev 1",
-    "ci:prepare:ropsten": "yarn run ci && sh cli-process-env.sh 'ropsten' dev 1",
-    "ci:prepare:mainnet": "yarn run ci && sh cli-process-env.sh 'mainnet' dev 1",
-    "ci:validate": "yarn ci && sh cli-process-env.sh 'mainnet' dev 1",
+    "ci:clear": "bash cli-dev.sh ci",
+    "ci:build": "yarn run ci && bash ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
+    "ci:prepare:rinkeby": "bash cli-process-env.sh 'rinkeby' dev 1",
+    "ci:prepare:ropsten": "bash cli-process-env.sh 'ropsten' dev 1",
+    "ci:prepare:mainnet": "bash cli-process-env.sh 'mainnet' dev 1",
+    "ci:validate": "yarn ci && bash cli-process-env.sh 'mainnet' dev 1",
     "deploy:prod": "./cli-deploy-production.sh",
-    "dev": "sh cli-process-env.sh 'rinkeby' 'dev' 1 && nuxt",
-    "prepare_ci": "yarn ci && sh cli-process-env.sh 'rinkeby'",
-    "start": "sh sh cli-process-env.sh 'rinkeby' 'dev' && nuxt start",
-    "build": "sh cli-process-env.sh 'mainnet' 'prod' true && nuxt build",
-    "build:stage": "yarn ci && sh cli-process-env.sh 'rinkeby' 'dev' && yarn generate --fail-on-error",
+    "dev": "bash cli-process-env.sh 'rinkeby' 'dev' 1 && nuxt",
+    "prepare_ci": "yarn ci && bash cli-process-env.sh 'rinkeby'",
+    "start": "bash bash cli-process-env.sh 'rinkeby' 'dev' && nuxt start",
+    "build": "bash cli-process-env.sh 'mainnet' 'prod' true && nuxt build",
+    "build:stage": "yarn ci && bash cli-process-env.sh 'rinkeby' 'dev' && yarn generate --fail-on-error",
     "generate": "nuxt generate",
     "test": "jest",
     "format": "prettier --write",
@@ -94,7 +91,6 @@
     }
   },
   "dependencies": {
-    "@inkline/nuxt": "^2.3.6",
     "@matterlabs/zk-wallet-onboarding": "1.18.6",
     "@nuxt/components": "2.1.6",
     "@nuxt/typescript-runtime": "latest",
@@ -105,13 +101,12 @@
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.1.0",
     "lottie-web": "^5.7.7",
-    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.33",
     "nuxt": "latest",
     "nuxt-i18n": "^6.22.3",
-    "nuxt-typed-vuex": "^0.1.22",
+    "nuxt-typed-vuex": "latest",
     "nuxt-webfontloader": "^1.1.0",
     "qrcode": "^1.4.4",
-    "typed-vuex": "^0.1.22",
     "vue": "latest",
     "vue-qrcode": "^0.3.5",
     "vue-scrollto": "^2.20.0",
@@ -119,8 +114,11 @@
     "zksync": "^0.10.9"
   },
   "devDependencies": {
+    "@babel/core": "^7.13.15",
+    "@babel/runtime": "^7.13.10",
+    "@ethersproject/logger": "^5.1.0",
     "@ethersproject/providers": "^5.1.0",
-    "@nuxt/test-utils": "0.2.2",
+    "@inkline/nuxt": "^2.3.6",
     "@nuxt/types": "latest",
     "@nuxt/typescript-build": "latest",
     "@nuxtjs/dotenv": "^1.4.1",
@@ -129,37 +127,42 @@
     "@types/jest": "^26.0.22",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
-    "@vue/test-utils": "^1.1.3",
-    "commitlint": "^12.0.1",
     "dotenv": "^8.2.0",
     "eslint": "^7.23.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "fork-ts-checker-webpack-plugin": "^6.2.0",
-    "jesse-mock-web3-provider": "^0.0.2",
     "jest": "^26.6.3",
-    "node-sass": "4.14.1",
-    "nuxt-property-decorator": "^2.9.1",
+    "node-sass": "4.14.0",
     "prettier": "^2.2.1",
-    "sass-loader": "10.1.1",
+    "sass-loader": "10.0.0",
     "stylelint": "^13.12.0",
     "stylelint-config-recommended": "^4.0.0",
     "stylelint-config-standard": "^21.0.0",
     "stylelint-high-performance-animation": "^1.5.2",
     "stylelint-scss": "^3.19.0",
+    "typed-vuex": "latest",
     "typescript": "^4.2.4",
     "vue-class-component": "^7.2.6",
-    "vue-jest": "^3.0.7",
+    "vue-property-decorator": "^9.1.2",
+    "vuex": "3.5.1",
     "web3-core": "^1.3.5",
     "webpack": "4.46.0"
   },
   "peerDependencies": {
-    "playwright": "1.10.0"
+    "@babel/core": "*",
+    "@babel/runtime": "*",
+    "typed-vuex": "*",
+    "vuex": "3.5.1"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
   },
   "fork-ts-checker": {
     "typescript": true
+  },
+  "optionalDependencies": {
+    "fs-extra": "^9.1.0",
+    "fsevents": "^2.3.2"
   }
 }

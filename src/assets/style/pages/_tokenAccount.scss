@@ -13,10 +13,13 @@
       }
     }
   }
-
+  .tileBlock.transactionsTile {
+    height: calc(100vh - 82px - 80px - 300px) !important;
+  }
   .transactionsTile {
     height: $minRouteHeightMain !important;
     min-height: 250px !important;
+
     @media (max-width: $mobile) {
       height: $minRouteHeightMain !important;
     }

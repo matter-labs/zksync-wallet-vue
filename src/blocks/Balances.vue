@@ -55,7 +55,7 @@
                   &nbsp;&nbsp;{{ item.rawBalance | formatToken(item.symbol) }}
                 </div>
                 <div class="status">
-                  <i-tooltip>
+                  <i-tooltip placement="left">
                     <i v-if="item.status === 'Verified'" class="verified ri-check-double-line"></i>
                     <i v-else class="committed ri-check-line"></i>
                     <template slot="body">{{ item.status }}</template>
@@ -86,7 +86,7 @@ import utils from "@/plugins/utils";
 import { ZkInBalance, ZkInDeposits, ZKInDepositTx } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
-import { TokenSymbol } from "zksync/src/types";
+import { TokenSymbol } from "zksync/build/types";
 
 type DisplayToken = {
   symbol: string;

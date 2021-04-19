@@ -84,12 +84,17 @@
         }
       }
 
+      .tooltip-wrapper {
+        display: block;
+        .tooltip {
+          max-width: 200px;
+          height: auto;
+          white-space: initial;
+          width: max-content;
+        }
+      }
       .mainInfo {
         text-align: left;
-
-        .tooltip-wrapper {
-          display: block;
-        }
 
         .createdAt {
           color: $gray;
@@ -122,16 +127,26 @@
           color: $gray;
           font-size: 16px;
           line-height: 19px;
+
           @media screen and (max-width: $mobile) {
             justify-content: center;
           }
 
           em {
-            position: relative;
-            top: 2px;
             margin-left: 5px;
             font-size: 22px;
             line-height: 22px;
+            &.modalOpenIcon {
+              transition: filter $transition1;
+              cursor: pointer;
+              &:hover {
+                filter: brightness(125%);
+              }
+              &:active {
+                transition-duration: 0.001s;
+                filter: brightness(90%);
+              }
+            }
           }
         }
 

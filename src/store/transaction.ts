@@ -1,7 +1,7 @@
 import { GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
-import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/src/types";
+import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/build/types";
 import { ETHOperation } from "zksync/build/wallet";
 
 export const state = () => ({
@@ -113,7 +113,7 @@ export const actions = actionTree(
     },
     async requestBalancesUpdate(): Promise<void> {
       await this.app.$accessor.wallet.requestZkBalances({ force: true });
-      this.app.$accessor.wallet.requestTransactionsHistory({ offset: 0, force: true });
+      await this.app.$accessor.wallet.requestTransactionsHistory({ offset: 0, force: true });
     },
 
     /**

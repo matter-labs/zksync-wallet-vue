@@ -9,7 +9,7 @@ import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { closestPackableTransactionFee, getDefaultProvider, Provider, Wallet } from "zksync";
-import { Address, Fee, TokenSymbol } from "zksync/src/types";
+import { Address, Fee, TokenSymbol } from "zksync/build/types";
 
 interface feesInterface {
   [symbol: string]: {
@@ -203,9 +203,7 @@ export const actions = actionTree(
         this.app.$accessor.account.setSelectedWallet("");
         return false;
       }
-      this.app.$toast.global.zkCancel({
-        message: "Found previously selected wallet.",
-      });
+      this.app.$toast.show("Found previously selected wallet.");
       this.app.$accessor.account.setSelectedWallet(previouslySelectedWallet);
       return await onboard.walletSelect(previouslySelectedWallet);
     },
@@ -218,7 +216,7 @@ export const actions = actionTree(
       await this.app.$accessor.wallet.requestInitialBalances(true).catch((error: unknown) => {
         this.$sentry.captureException(error);
       });
-      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false }).catch((error) => {
+      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false }).catch((error: unknown) => {
         this.$sentry.captureException(error);
       });
       await this.app.$accessor.wallet.requestTransactionsHistory(true).catch((error: unknown) => {
@@ -441,10 +439,10 @@ export const actions = actionTree(
        * @todo drop ZkInFeesObj as the typed object and simplify fees to a single (normal) except withdraw
        * @type {BigNumber}
        */
-      const batchTransferFee = await syncProvider?.getTransactionsBatchFee(["Transfer"], [address, syncWallet?.address()], feeSymbol);
+      const batchTransferFee = await syncProvider?.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet?.address()], feeSymbol);
       const feesObj: ZkInFeesObj = {
         normal: batchTransferFee !== undefined ? closestPackableTransactionFee(batchTransferFee) : undefined,
-        fast: "",
+        fast: undefined,
       };
       commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
       return feesObj;

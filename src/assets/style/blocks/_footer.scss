@@ -1,4 +1,11 @@
 footer {
+  img {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
   position: relative;
   padding-right: 16px;
   padding-left: 16px;
@@ -18,6 +25,7 @@ footer {
     }
 
     & > div {
+
       @media (max-width: $mobile) {
         flex-direction: column-reverse !important;
       }
@@ -26,6 +34,7 @@ footer {
 
   a {
     font-size: 14px;
+
     @media (max-width: $mobile) {
       font-size: 14px;
     }
@@ -64,7 +73,7 @@ footer {
       }
     }
   }
-  
+
   .floating-on-mobile {
     transform: translateY(-5px);
   }
@@ -79,6 +88,7 @@ footer {
       padding: 0;
       border-radius: 100%;
       box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.08), 0px 6px 10px 0px rgba(0, 0, 0, 0.1), 0px 1px 18px 0px rgba(0, 0, 0, 0.1);
+
       @media (min-width: $mobile) {
         bottom: 80px;
       }

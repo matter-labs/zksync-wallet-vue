@@ -2,7 +2,7 @@ import { GweiBalance, ZkClTransaction } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
 import { Transaction } from "zksync/build/wallet";
-import { Address, SignedTransaction, TokenSymbol } from "zksync/src/types";
+import { Address, SignedTransaction, TokenSymbol } from "zksync/build/types";
 
 /**
  * Make zkSync transaction
@@ -22,17 +22,8 @@ export const transaction = async (
   amountBigValue: GweiBalance,
   feeBigValue: GweiBalance,
   store: typeof accessorType,
-): Promise<Transaction | ZkClTransaction | undefined> => {
+): Promise<Transaction | Transaction[] | ZkClTransaction | undefined> => {
   const syncWallet = walletData.get().syncWallet;
-  let nonce: number = (await syncWallet!.getNonce("committed")) as number;
-  const transferTx = {
-    fee: 0,
-    nonce,
-    amount: amountBigValue,
-    to: address,
-    token,
-  };
-  nonce += 1;
 
   /**
    * @todo: process case when there are 2 transactions
@@ -47,11 +38,27 @@ export const transaction = async (
     store.transaction.watchTransaction({ transactionHash: transaction.txHash });
     return transaction;
   }
-  const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx]);
+  let nonce: number = (await syncWallet!.getNonce("committed")) as number;
+  const transferTx = {
+    fee: "0",
+    nonce,
+    amount: amountBigValue,
+    to: address,
+    token,
+  };
+  nonce += 1;
+  const feeTx = {
+    fee: feeBigValue,
+    nonce,
+    amount: "0",
+    to: syncWallet!.address(),
+    token: feeToken,
+  };
+  const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
   for (let a = 0; a < transferTransaction.length; a++) {
     store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash });
   }
-  return transferTransaction?.shift();
+  return transferTransaction;
 };
 
 interface WithdrawParams {
