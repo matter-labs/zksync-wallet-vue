@@ -78,7 +78,7 @@
         @enter="commitTransaction"
       />
 
-      <i-radio-group
+      <!-- <i-radio-group
         v-if="chosenToken && type === 'withdraw' && (!chosenFeeToken || chosenFeeToken.symbol === chosenToken.symbol) && (feesObj || feesLoading) && inputtedAddress"
         v-model="transactionMode"
         class="_margin-top-2"
@@ -124,7 +124,7 @@
       </i-radio-group>
       <div v-else-if="chosenToken && type === 'withdraw' && feesObj && inputtedAddress" class="secondaryText _text-center _margin-top-1">
         Only normal withdraw ({{ (withdrawTime.normal + 5400) | formatSeconds }}) is available when using different fee token
-      </div>
+      </div> -->
 
       <div class="errorText _text-center _margin-top-1">
         {{ error }}
@@ -385,7 +385,7 @@ export default Vue.extend({
         }
       }
       if (this.type === "withdraw") {
-        await this?.getWithdrawalTime();
+        // await this?.getWithdrawalTime();
       }
       if (!this.ownAccountUnlocked) {
         await this?.getAccountActivationFee();
