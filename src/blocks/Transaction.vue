@@ -132,8 +132,8 @@
 
       <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction">
         <template v-if="ownAccountUnlocked">
-          <i v-if="type === 'withdraw'" class="ri-hand-coin-fill"></i>
-          <i v-else-if="type === 'transfer'" class="ri-send-plane-fill"></i>
+          <i v-if="type === 'withdraw'" class="ri-hand-coin-fill" />
+          <i v-else-if="type === 'transfer'" class="ri-send-plane-fill" />
         </template>
         <span>
           <span v-if="!ownAccountUnlocked">Activate Account and </span>
@@ -159,6 +159,7 @@
             </span>
           </span>
         </div>
+
         <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1">
           Account Activation:
           <span v-if="activateAccountFeeLoading" class="secondaryText">Loading...</span>
@@ -173,6 +174,9 @@
           <span class="linkText" @click="chooseFeeTokenModal = true">Choose fee token</span>
         </div>
       </div>
+
+      <div v-if="showTimeEstimationHint" class="totalPrice">Estimated processing time: <strong>~5 hours</strong></div>
+
       <p v-if="!ownAccountUnlocked" class="tileTextBg _margin-top-1">
         To start using your zkSync account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by
         verifying ETH signatures with zero-knowledge proofs. Please bear with us!
@@ -189,7 +193,7 @@ import amountInput from "@/components/AmountInput.vue";
 
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
+import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 
 import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZkInTransactionType } from "@/plugins/types";
 import utils from "@/plugins/utils";
@@ -282,6 +286,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    showTimeEstimationHint(): boolean {
+      return ETHER_NETWORK_NAME === "mainnet" && this.chosenToken !== false && this.inputtedAddress !== "" && this.type === "withdraw";
+    },
     chosenFeeObj(): BigNumberish | boolean {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
         const selectedFeeTypeAmount = this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal;
