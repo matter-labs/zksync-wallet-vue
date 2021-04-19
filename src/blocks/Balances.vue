@@ -86,7 +86,7 @@ import utils from "@/plugins/utils";
 import { ZkInBalance, ZkInDeposits, ZKInDepositTx } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
-import { TokenSymbol } from "zksync/src/types";
+import { TokenSymbol } from "zksync/build/types";
 
 type DisplayToken = {
   symbol: string;

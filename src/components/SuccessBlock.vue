@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { Address } from "zksync/src/types";
+import { Address } from "zksync/build/types";
 import Checkmark from "@/components/Checkmark.vue";
 import WalletAddress from "@/components/walletAddress.vue";
 import Vue from "vue";

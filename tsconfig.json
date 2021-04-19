@@ -18,11 +18,14 @@
     "experimentalDecorators": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"],
-      "~/*": ["*"]
+      "@/*": [
+        "*"
+      ],
+      "~/*": [
+        "*"
+      ]
     },
     "types": [
-      "typed-vuex",
       "@nuxt/vue-app",
       "@types/node",
       "@types/jest",
@@ -32,8 +35,8 @@
       "@nuxtjs/sentry",
       "@nuxtjs/toast",
       "@inkline/inkline/types",
-      "@inkline/nuxt",
-      "nuxt-i18n",
+      "nuxt-typed-vuex",
+      "nuxt-i18n"
     ]
   },
   "exclude": [

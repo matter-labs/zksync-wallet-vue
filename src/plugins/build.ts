@@ -1,5 +1,5 @@
 import { networkEthId } from "@/plugins/types";
-import { Network } from "zksync/src/types";
+import { Network } from "zksync/build/types";
 
 const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
   { name: "rinkeby", id: 4 },
