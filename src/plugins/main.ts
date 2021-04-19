@@ -2,7 +2,7 @@ import Loader from "@/components/loader.vue";
 import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
 
-import moment from "moment";
+import moment from "moment-timezone";
 import Vue from "vue";
 import VueScrollTo from "vue-scrollto";
 import { ToastAction, ToastOptions } from "vue-toasted";

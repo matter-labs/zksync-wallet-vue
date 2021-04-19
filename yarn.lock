@@ -15369,7 +15369,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"moment@npm:>= 2.9.0, moment@npm:^2.15.1, moment@npm:^2.24.0, moment@npm:^2.29.1":
+"moment@npm:>= 2.9.0, moment@npm:^2.15.1, moment@npm:^2.24.0":
   version: 2.29.1
   resolution: "moment@npm:2.29.1"
   checksum: 86729013febf7160de5b93da69273dd304d674b0224f9544b3abd09a87671ddd2cdd57598261ce57588910d63747ffd5590965e83c790d8bf327083c0e0a06e0
@@ -23787,7 +23787,6 @@ resolve@~1.17.0:
     jesse-mock-web3-provider: ^0.0.2
     jest: ^26.6.3
     lottie-web: ^5.7.7
-    moment: ^2.29.1
     moment-timezone: ^0.5.33
     node-sass: 4.14.1
     nuxt: latest

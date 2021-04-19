@@ -186,8 +186,7 @@ export default Vue.extend({
       return String(address).toLowerCase() === this.walletAddressFull.toLowerCase();
     },
     getTimeAgo(time: string): string {
-      // @ts-ignore
-      return moment.tz("UTC")(time).fromNow();
+      return moment(time).tz("UTC").fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
       if (!this.isFeeTransaction) {

@@ -105,7 +105,6 @@
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.1.0",
     "lottie-web": "^5.7.7",
-    "moment": "^2.29.1",
     "moment-timezone": "^0.5.33",
     "nuxt": "latest",
     "nuxt-i18n": "^6.22.3",
