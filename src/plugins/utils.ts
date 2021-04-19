@@ -106,8 +106,8 @@ export default {
     }
     if (mode && ["light", "dark"].includes(mode)) {
       inklineContext.config.variant = mode === "light" ? "light" : "dark";
-      localStorage.setItem("colorTheme", inklineContext.config.variant);
     }
+    localStorage.setItem("colorTheme", inklineContext.config.variant);
     return inklineContext.config.variant;
   },
 };
