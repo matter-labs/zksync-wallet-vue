@@ -41,7 +41,7 @@ import { ZkInTx } from "@/plugins/types";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 
-import moment from "moment";
+import moment from "moment-timezone";
 import Vue, { PropOptions } from "vue";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
@@ -186,7 +186,8 @@ export default Vue.extend({
       return String(address).toLowerCase() === this.walletAddressFull.toLowerCase();
     },
     getTimeAgo(time: string): string {
-      return moment(time).fromNow();
+      // @ts-ignore
+      return moment.tz("UTC")(time).fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
       if (!this.isFeeTransaction) {

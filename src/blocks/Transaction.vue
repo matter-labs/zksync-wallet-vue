@@ -79,7 +79,7 @@
       />
 
       <i-radio-group
-        v-if="chosenToken && type === 'withdraw' && (!chosenFeeToken || chosenFeeToken.symbol === chosenToken.symbol) && feesObj"
+        v-if="chosenToken && type === 'withdraw' && (!chosenFeeToken || chosenFeeToken.symbol === chosenToken.symbol) && (feesObj || feesLoading) && inputtedAddress"
         v-model="transactionMode"
         class="_margin-top-2"
       >
@@ -88,7 +88,7 @@
           <span class="feeAmount">
             (
             <strong>Fee:</strong>
-            <span v-if="feesObj && feesObj.normal">
+            <span v-if="feesObj && feesObj.normal && !feesLoading">
               {{ feesObj && feesObj.normal | formatToken(feeToken.symbol) }}
               <span class="tokenSymbol">
                 {{ feeToken.symbol }}
@@ -108,7 +108,7 @@
           <span class="feeAmount">
             (
             <strong>Fee:</strong>
-            <span v-if="feesObj && feesObj['fast']">
+            <span v-if="feesObj && feesObj.fast && !feesLoading">
               {{ feesObj.fast | formatToken(feeToken.symbol) }}
               <span class="tokenSymbol">{{ feeToken.symbol }}</span>
               <span class="totalPrice">
@@ -122,7 +122,7 @@
           Processing time: {{ withdrawTime.fast }} minutes
         </i-radio>
       </i-radio-group>
-      <div v-else-if="chosenToken && type === 'withdraw' && feesObj" class="secondaryText _text-center _margin-top-1">
+      <div v-else-if="chosenToken && type === 'withdraw' && feesObj && inputtedAddress" class="secondaryText _text-center _margin-top-1">
         Only normal withdraw ({{ withdrawTime.normal }} minutes) is available when using different fee token
       </div>
 
@@ -149,7 +149,7 @@
         No available tokens on your balance to pay the fee
       </div>
       <div v-else>
-        <div v-if="chosenFeeObj && chosenToken && inputtedAddress" class="_text-center _margin-top-1">
+        <div v-if="(chosenFeeObj || feesLoading) && chosenToken && inputtedAddress" class="_text-center _margin-top-1">
           Fee:
           <span v-if="feesLoading" class="secondaryText">Loading...</span>
           <span v-else>
@@ -431,19 +431,23 @@ export default Vue.extend({
     async requestFees(): Promise<void> {
       if (!this.chosenToken || !this.inputtedAddress || this.feeToken?.restricted) {
         this.feesObj = {
-          normal: "",
-          fast: "",
+          normal: undefined,
+          fast: undefined,
         };
         return;
       }
       this.feesLoading = true;
       try {
-        this.feesObj = await this.$accessor.wallet.requestFees({
+        const savedData = {
           address: this.inputtedAddress,
           symbol: this.chosenToken?.symbol,
           feeSymbol: this.feeToken?.symbol,
           type: this.type,
-        });
+        };
+        const requestedFee = await this.$accessor.wallet.requestFees(savedData);
+        if (savedData.address === this.inputtedAddress && savedData.symbol === this.chosenToken?.symbol && savedData.feeSymbol === this.feeToken?.symbol) {
+          this.feesObj = requestedFee;
+        }
       } catch (error) {
         this.$toast.global.zkException({
           message: error.message,
