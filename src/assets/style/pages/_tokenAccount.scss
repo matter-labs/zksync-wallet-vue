@@ -1,14 +1,34 @@
 .tokenAccount {
-    .infoBlock {
-        .headline {
-            font-size: 16px;
-        }
-        .balance {
-            font-size: 20px;
-            .balancePrice {
-                font-size: 16px;
-                color: $gray;
-            }
-        }
+  .infoBlock {
+    .headline {
+      font-size: 16px;
     }
+
+    .balance {
+      font-size: 20px;
+
+      .balancePrice {
+        color: $gray;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .transactionsTile {
+    height: $minRouteHeightMain !important;
+    min-height: 250px !important;
+    @media (max-width: $mobile) {
+      height: $minRouteHeightMain !important;
+    }
+  }
+}
+
+.balanceWithdraw {
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+
+    & > .infoBlock {
+      margin-bottom: 10px;
+    }
+  }
 }

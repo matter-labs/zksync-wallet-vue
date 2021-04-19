@@ -1,32 +1,47 @@
 .loggingInLoader {
-  z-index: 9;
-  background: white;
   position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 11;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 100%;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  animation-fill-mode: forwards;
   overflow: hidden;
+  background: white;
+  animation-fill-mode: forwards;
 
-    .projectLogo {
-        width: 100%;
-        max-width: 300px;
-        height: auto;
+  .headerWrapper {
+    position: relative;
+    width: max-content;
+    padding-top: 0 !important;
+
+    .zkwallet-logo {
+      height: 55px;
+
+      @media screen and (max-width: $mobile) {
+        height: 35px;
+      }
     }
+    .badge {
+      position: absolute;
+      bottom: 100%;
+      left: 100%;
+    }
+  }
+
   h1 {
+    margin: 0;
     font-size: 36px;
-        margin: 0;
-    }
-    .hint {
-        font-size: 18px;
-        margin-bottom: 0;
+  }
+
+  .hint {
+    margin-bottom: 0;
+    font-size: 18px;
   }
 
   .cancelButton {
@@ -43,25 +58,26 @@
     }
   }
 
-    @media (max-width: $mobile) {
-        padding: 0 5vw;
+  @media (max-width: $mobile) {
+    padding: 0 5vw;
 
-        h1 {
-            font-size: 24px;
-            text-align: center;
-        }
-        .hint {
-            font-size: 16px;
-            text-align: center;
-        }
+    h1 {
+      font-size: 24px;
+      text-align: center;
     }
+    .hint {
+      font-size: 16px;
+      text-align: center;
+    }
+  }
 }
 
 body.inkline {
-    &.-light .loggingInLoader {
-    background-color: #f3f4f7;
+  &.-light .loggingInLoader {
+    background-color: $mediumGrey;
   }
-    &.-dark .loggingInLoader {
+
+  &.-dark .loggingInLoader {
     background-color: #1d2039;
   }
 }

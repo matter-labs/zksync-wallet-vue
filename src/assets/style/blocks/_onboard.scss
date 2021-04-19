@@ -1,75 +1,94 @@
-.bn-onboard-custom {
-  z-index: 10;
-  .bn-onboard-modal-content
-  {
+.bn-onboard-modal {
+  z-index: 11;
+
+  .bn-onboard-custom.bn-onboard-modal-content {
+    width: 100%;
+  }
+
+  .bn-onboard-select-wallet-info {
+    color: $lightViolet !important;
+    font-weight: bold;
+    font-size: 16px;
+    @media screen and (max-width: $mobile) {
+      margin-top: 0.35em;
+    }
+  }
+
+  a,
+  .bn-onboard-select-wallet-info {
+    color: $lightViolet !important;
+    font: normal 16px $firaSans !important;
+    letter-spacing: -0.01rem !important;
+    text-decoration: none !important;
+    &:hover {
+      color: $violet !important;
+    }
+  }
+
+  @media screen and (min-width: $mobile) {
+    b//background-color: transparent !important;
+    .bn-onboard-modal-content {
+      width: 85%;
+    }
+  }
+
+  .bn-onboard-modal-content {
     max-height: calc(100vh - 2.66em);
+    font-family: $firaSans;
+
     @media (max-width: $mobile) {
       height: 100vh !important;
       max-height: 100vh !important;
       border-radius: 0 !important;
-      .bn-onboard-modal-content-header
-      {
+
+      .bn-onboard-modal-content-header {
         margin: 1rem 0 !important;
       }
     }
   }
 
-  &.bn-onboard-dark-mode {
-    background-color: $darkViolet !important;
-
-    .bn-onboard-prepare-error {
-      background-color: transparent !important;
-    }
-
-    .bn-onboard-selected-wallet {
-      background-color: transparentize($color: $gray, $amount: 0.95) !important;
-    }
-  }
-
-
   ul.bn-onboard-modal-select-wallets {
     max-height: 50vh !important;
-    overflow-y: scroll;
+    overflow: auto;
   }
 
   .bn-onboard-custom.bn-onboard-select-wallet-definition {
     font-size: 14px;
 
     span {
-      font-weight: bold;
       display: block;
       margin: 5px 0;
-      a
-      {
-        color: #8c8dfc !important;
+      font-weight: bold;
+
+      a {
+        color: $lightViolet !important;
       }
     }
   }
-  .bn-onboard-select-wallet-info
-  {
-    font-size: 16px;
-    font-weight: bold;
-  }
+
   .bn-onboard-icon-button {
     border-radius: 8px;
   }
 
   .bn-onboard-selected-wallet {
-    background-color: transparentize($color: $gray, $amount: 0.7) !important;
+    background-color: transparentize($color: $gray, $amount: 0.95) !important;
+    box-shadow: 0 0 0 1.5px $violet !important;
 
-    span {
-      i {
-        text-decoration: none;
-        text-transform: capitalize;
-        font-style: normal;
-      }
+    &:hover {
+      box-shadow: 0 0 0 2.5px $lightViolet !important;
+    }
+
+    span i {
+      font-style: normal;
+      text-transform: capitalize;
+      text-decoration: none;
     }
   }
 
   .bn-onboard-prepare-button {
+    color: $white !important;
     background-color: $violet;
     border-color: $violet !important;
-    color: $white !important;
     border-radius: 4px;
     transition: $transition1;
 
@@ -79,32 +98,26 @@
     }
   }
 
-  .bn-onboard-prepare-error {
+  .bn-onboard-prepare-error,
+  .bn-onboard-modal-content-header {
     background-color: transparent !important;
   }
 
-  .bn-onboard-dark-mode-background-hover:hover {
-    background-color: $violet !important;
-  }
-
+  .bn-onboard-dark-mode-background-hover:hover,
   .bn-onboard-dark-mode-background {
     background-color: $violet !important;
   }
 
   .bn-onboard-modal-content-header {
-    background-color: transparent !important;
-  }
-
-  .bn-onboard-modal-content-header {
     height: auto;
-    padding: 0;
     margin-bottom: 2em;
+    padding: 0;
   }
 
   .bn-onboard-modal-content-close {
-    height: 25px;
-    width: 25px;
     top: 1.65em;
+    width: 25px;
+    height: 25px;
 
     svg {
       width: 100%;
@@ -112,79 +125,69 @@
     }
   }
 
-  .bn-onboard-select-wallet-info {
-    color: $lightViolet !important;
-  }
-
   .bn-onboard-custom.bn-onboard-modal-content-header-icon {
     display: none !important;
     visibility: hidden !important;
   }
-}
-.bn-onboard-modal {
+
   @media screen and (max-width: $mobile) {
-    button.bn-onboard-modal.bn-onboard-modal-content
-    {
+    button.bn-onboard-modal.bn-onboard-modal-content {
       margin: 0.25rem 0;
       padding: 0.5rem;
     }
-    .bn-onboard-modal-content
-    {
+    .bn-onboard-select-wallet-definition {
+      margin-top: .8em !important;
+    }
+    .bn-onboard-modal-content {
       padding-bottom: 0;
-      header.bn-onboard-custom.bn-onboard-modal-content-header
-      {
+
+      header.bn-onboard-custom.bn-onboard-modal-content-header {
         margin: 1rem 0 !important;
+
         h3 {
           margin: 0 !important;
         }
       }
-      .bn-onboard-custom.bn-onboard-select-description
-      {
+
+      .bn-onboard-custom.bn-onboard-select-description {
         margin: 0 0 0.5rem;
         padding: 0 0 0.5rem;
       }
-      ul.bn-onboard-custom.bn-onboard-modal-select-wallets
-      {
-        position: relative;
+
+      ul.bn-onboard-custom.bn-onboard-modal-select-wallets {
         height: 100%;
-        //max-height: calc(100% - 150px - 2rem) !important;
+        max-height: calc(100% - 285px - 2rem) !important;
         margin: 0;
         padding: 0;
-
-        @media (max-height: 600px) {
-          max-height: 44vh !important;
-        }
       }
-      .bn-onboard-custom.bn-onboard-select-info-container
-      {
+
+      .bn-onboard-custom.bn-onboard-select-info-container {
         margin: 1rem 0 0.5rem;
         padding: 0.75rem 0 0.5rem;
         border-top: 0.5px solid $lightViolet;
       }
-      .bn-onboard-modal-content-close
-      {
+
+      .bn-onboard-modal-content-close {
         top: 2rem;
       }
 
-      .bn-onboard-custom.bn-onboard-icon-button
-      {
+      .bn-onboard-custom.bn-onboard-icon-button {
         margin: 0.25em;
         padding: 0.25em;
       }
     }
   }
-}
 
-body {
-  &.-dark
-  {
-    .walletconnect-modal__footer a
-    {
-        color: $darkViolet !important;
+  .bn-onboard-dark-mode {
+    background-color: darken($darkViolet, 7) !important;
+    box-shadow: $defaultShadow;
+
+    .bn-onboard-prepare-error {
+      background-color: transparent !important;
     }
-  }
-  &.-light
-  {
 
+    .bn-onboard-selected-wallet {
+      background-color: $accentBg !important;
+    }
   }
 }

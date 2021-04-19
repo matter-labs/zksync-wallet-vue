@@ -1,39 +1,42 @@
 .customButton {
-    width: max-content;
-    min-width: 152px;
-    height: 46px;
-    text-align: center;
-    font-family: $openSans;
-    font-size: 15px;
-    font-weight: 600;
-    color: $white;
-    text-transform: uppercase;
-    border-radius: 4px;
-    background-color: $purple;
-    border: 1px solid $purple;
-    padding: 0 15px;
-    box-sizing: border-box;
-    transition: .2s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.04);
-    outline: none;
-    &.outline {
-        color: $darkerGray;
-        border-color: $darkerGray;
-        background-color: $white;
-    }
-    &.red {
-        color: $red;
-        border-color: $redBg;
-        background-color: $redBg;
-    }
-    &:disabled {
-        color: #BABABA;
-        border-color: #BABABA;
-        background-color: $lighterGray;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
-    }
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 152px;
+  height: 46px;
+  padding: 0 15px;
+  color: $white;
+  font-weight: 600;
+  font-size: 15px;
+  font-family: $firaSans;
+  text-align: center;
+  text-transform: uppercase;
+  background-color: $purple;
+  border: 1px solid $purple;
+  border-radius: 4px;
+  outline: none;
+  box-shadow: $inputContainerShadow;
+  transition: 0.2s ease;
 
-    i {
-        margin-right: 8px;
-    }
+  &.outline {
+    color: $darkerGray;
+    background-color: $white;
+    border-color: $darkerGray;
+  }
+
+  &.red {
+    color: $red;
+    background-color: $redBg;
+    border-color: $redBg;
+  }
+
+  &:disabled {
+    color: $tempLightGray;
+    background-color: $lighterGray;
+    border-color: $tempLightGray;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+  }
+
+  i {
+    margin-right: 8px;
+  }
 }

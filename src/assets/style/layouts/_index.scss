@@ -1,6 +1,6 @@
 .indexLayout {
   .routerContainer {
-    min-height: calc(100vh - 82px);
+    min-height: calc(100vh - 70px - 80px);
     @media (max-width: $mobile) {
       min-height: auto;
     }
@@ -14,33 +14,21 @@
 
   .tileContainer {
     cursor: pointer;
+    @media screen and (min-width: $mobile) {
+      padding-bottom: 70px;
+    }
 
     &:hover .tile {
-      box-shadow: 0 4px 8px #00000015;
+      box-shadow: $hoverShadow;
     }
-
-    &.lockVisible {
-      .tile {
-        background-color: transparentize($color: $white, $amount: 0.6);
-
-        img {
-          opacity: .8;
-        }
-
-        .tileIcon {
-          opacity: 1;
-        }
-      }
-    }
-
     .tile {
-      margin: 20px auto;
-      position: relative;
       width: 130px;
       height: 130px;
+      margin: 20px auto 5px;
+      padding: 20px;
       background-color: $white;
       border-radius: 27px;
-      padding: 20px;
+      box-shadow: $tileShadow;
       transition: $transition1;
 
       img {
@@ -56,22 +44,21 @@
         right: -24px;
         width: 48px;
         height: 48px;
-        opacity: 0;
-        border-radius: 50%;
-        background-color: $white;
-        line-height: 48px;
-        font-size: 20px;
         color: $violet;
+        font-size: 20px;
+        line-height: 48px;
+        background-color: $white;
+        border-radius: 50%;
+        opacity: 0;
         transition: $transition2;
       }
     }
 
     .tileName {
-      font-size: 18px;
       padding-top: 7px;
+      font-size: 18px;
     }
   }
-
 
   .externalWalletPopover .popover {
     width: 330px;
@@ -81,7 +68,6 @@
       .iconsBlock a i {
         color: $darkViolet;
       }
-
     }
 
     &.-light {
@@ -91,15 +77,15 @@
     }
 
     .h5 {
-      font-size: 22px;
       margin: 0;
+      font-size: 22px;
       text-align: center;
     }
 
     .description {
+      margin-bottom: 15px;
       font-size: 16px;
       line-height: 20px;
-      margin-bottom: 15px;
     }
 
     .contactInfo {
@@ -107,7 +93,7 @@
       max-width: 255px;
       margin: 15px auto 0;
 
-      .infoDesciption {
+      .infoDescription {
         font-size: 12px;
         line-height: 15px;
         text-align: center;
@@ -124,27 +110,19 @@
           width: 48px;
           height: 48px;
           overflow: hidden;
-          border-radius: 50%;
           background-color: $violet;
+          border-radius: 50%;
 
           i {
             display: block;
-            text-align: center;
             width: 100%;
             height: 100%;
-            line-height: 48px;
             font-size: 20px;
+            line-height: 48px;
+            text-align: center;
           }
         }
       }
     }
-  }
-}
-
-.inkline.-dark
-{
-  footer > .container .badge{
-    background: #e9ecef;
-    color: #4E529A;
   }
 }

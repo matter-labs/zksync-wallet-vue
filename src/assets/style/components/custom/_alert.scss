@@ -1,34 +1,38 @@
 .alert {
-    width: 100%;
-    height: max-content;
-    display: grid;
-    grid-template-columns: 20px 1fr 20px;
-    grid-template-rows: 100%;
-    align-items: center;
-    background-color: $lighterGray;
-    border-radius: 5px;
-    border: 1px solid #BABABA;
-    padding: 15px 20px;
-    box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: 20px 1fr 20px;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: max-content;
+  padding: 15px 20px;
+  background-color: $lighterGray;
+  border: 1px solid $tempLightGray;
+  border-radius: 5px;
 
-    .alertIcon {
-        color: $darkerGray;
-        font-size: 18px;
+  .alertIcon {
+    color: $darkerGray;
+    font-size: $tempFontSizeMedium;
+  }
+
+  .alertCloseIcon {
+    margin-right: 15px;
+    color: $tempLightGray;
+    font-size: $tempFontSizeMedium;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    will-change: color;
+
+    &:hover {
+      color: $darkerGray;
     }
-    .alertCloseIcon {
-        color: #BABABA;
-        font-size: 18px;
-        margin-right: 15px;
-        transition: color .2s ease;
-        cursor: pointer;
-        &:hover {
-            color: $darkerGray;
-        }
-    }
-    .slotContainer {
-        padding: 0 15px;
-        box-sizing: border-box;
-        text-align: left;
-        color: $darkerGray;
-    }
+  }
+
+  .slotContainer {
+    box-sizing: border-box;
+    padding: 0 15px;
+    color: $darkerGray;
+    text-align: left;
+  }
 }

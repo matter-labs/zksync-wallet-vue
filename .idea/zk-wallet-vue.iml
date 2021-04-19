@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/blocks" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/components" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/layouts" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/middleware" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/pages" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/plugins" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/store" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/src/assets/fonts/fontawsome" />
+      <excludeFolder url="file://$MODULE_DIR$/src/assets/fonts" />
+      <excludeFolder url="file://$MODULE_DIR$/environments" />
+      <excludeFolder url="file://$MODULE_DIR$/.yarn" />
+      <excludeFolder url="file://$MODULE_DIR$/.nuxt" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/.ide-setup" />
+      <excludeFolder url="file://$MODULE_DIR$/.github" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="@types/prettier" level="application" />
+    <orderEntry type="library" name="@types/stylelint" level="application" />
+    <orderEntry type="library" name="@types/webpack" level="application" />
+    <orderEntry type="library" name="@types/type-detect" level="application" />
+    <orderEntry type="library" name="@types/google.fonts" level="application" />
+    <orderEntry type="library" name="@types/eslint" level="application" />
+    <orderEntry type="library" name="@types/yarnpkg__lockfile" level="application" />
+    <orderEntry type="library" name="@types/eslint-config-prettier" level="application" />
+    <orderEntry type="library" name="@types/node-sass" level="application" />
+  </component>
+</module>

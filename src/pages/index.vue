@@ -1,32 +1,21 @@
 <template>
   <div class="indexPage">
     <i-container>
-      <i-row center>
-        <logo />
-      </i-row>
-      <i-row center>
-        <span class="h1 _font-weight-normal">Trustless, scalable crypto payments</span>
-      </i-row>
-      <i-row center class="_padding-top-2">
-        <div class="tileContainer _padding-x-2 _padding-top-1" @click="customWallet()">
-          <div class="tile">
-            <img src="@/assets/imgs/wallets/external.png" alt="External">
-            <i class="tileIcon fas fa-lock"></i>
-          </div>
-          <div class="tileName">Connect your wallet</div>
+      <h1>Connect your L1 ETH Wallet to start</h1>
+      <div data-cy="connectWalet-btn" class="tileContainer _margin-top-1" @click="customWallet">
+        <div class="tile">
+          <img src="@/assets/imgs/wallets/external.png" alt="External" />
         </div>
-      </i-row>
+        <div class="tileName">Connect your wallet</div>
+      </div>
     </i-container>
   </div>
 </template>
 
-<script>
-import logo from "@/blocks/Logo.vue";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
-  components: {
-    logo,
-  },
+export default Vue.extend({
   layout: "index",
   data() {
     return {
@@ -35,22 +24,17 @@ export default {
     };
   },
   methods: {
-    burnerWallet() {
-      this.$router.push("/account");
-    },
     async customWallet() {
-      const onboard = this.$store.getters["wallet/getOnboard"];
-      onboard.config({
+      this.$accessor.wallet.onboard?.config({
         darkMode: this.$inkline.config.variant !== "light",
       });
-
-      const refreshWalletTry = await this.$store.dispatch("wallet/walletRefresh");
-      if (refreshWalletTry !== true) {
-        await this.$store.dispatch("wallet/logout");
+      const refreshWalletTry = await this.$accessor.wallet.walletRefresh(true);
+      if (!refreshWalletTry) {
+        this.$accessor.wallet.logout();
       } else {
         await this.$router.push("/account");
       }
     },
   },
-};
+});
 </script>

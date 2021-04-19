@@ -1,5 +1,5 @@
 <template>
-  <div class="mintTokensContainer">
+  <div v-if="display" class="mintTokensContainer">
     <i-modal v-model="onlyTestNetModal" size="md">
       <template slot="header">Matter Labs Trial Token</template>
       <div>
@@ -7,16 +7,17 @@
       </div>
     </i-modal>
     <div v-if="display">
-      <i-button v-if="networkName!=='mainnet'" block variant="secondary" size="lg" target="_blank" href="///https://zkmint.zksync.io/">⚡ Get some trial tokens! ⚡ </i-button>
-      <i-button v-else block variant="secondary" size="lg" @click="onlyTestNetModal=true">⚡ Get some trial tokens! ⚡ </i-button>
+      <i-button v-if="networkName !== 'mainnet'" block variant="secondary" size="lg" target="_blank" href="https://mint.zksync.dev/">⚡ Get some trial tokens! ⚡ </i-button>
+      <i-button v-else block variant="secondary" size="lg" @click="onlyTestNetModal = true">⚡ Get some trial tokens! ⚡ </i-button>
     </div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ETHER_NETWORK_NAME } from "@/plugins/build";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   props: {
     display: {
       type: Boolean,
@@ -30,15 +31,9 @@ export default {
     };
   },
   computed: {
-    networkName() {
+    networkName(): string {
       return ETHER_NETWORK_NAME;
     },
   },
-};
+});
 </script>
-
-<style lang="scss" scoped>
-.mintTokensContainer {
-  width: 100%;
-}
-</style>
