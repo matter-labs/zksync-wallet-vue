@@ -37,6 +37,11 @@ Vue.filter("formatTimeAgo", (time: moment.MomentInput) => moment(time).fromNow()
 Vue.filter("formatDateTime", (time: moment.MomentInput) => moment(time).format("M/D/YYYY h:mm:ss A"));
 
 /**
+ * Format date as a human-readable "M/D/YYYY h:mm:ss A"
+ */
+Vue.filter("formatSeconds", (time: number) => utils.timeCalc(time));
+
+/**
  * zkException error reporting toaster registered
  */
 Vue.toasted.register(
