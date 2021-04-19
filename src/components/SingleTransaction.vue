@@ -17,10 +17,7 @@
     <div class="actionInfo">
       <div class="actionType">
         <span>{{ transactionTypeData.type }}</span>
-        <i-tooltip v-if="transactionTypeData.tooltip">
-          <em v-if="transactionTypeData.tooltip" :class="transactionTypeData.tooltip.icon" />
-          <div slot="body" v-html="transactionTypeData.tooltip.html"></div>
-        </i-tooltip>
+        <em v-if="transactionTypeData.modal" class="modalOpenIcon" :class="transactionTypeData.modal.icon" @click="$accessor.openModal(transactionTypeData.modal.key)" />
       </div>
       <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your own account</div>
       <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`">
@@ -41,7 +38,7 @@ import { ZkInTx } from "@/plugins/types";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 
-import moment from "moment";
+import moment from "moment-timezone";
 import Vue, { PropOptions } from "vue";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
@@ -103,55 +100,54 @@ export default Vue.extend({
         };
       }
     },
-    transactionTypeData(): { type: string; showAddress: boolean; tooltip: false | { icon: string; html: string } } {
+    transactionTypeData(): { type: string; showAddress: boolean; modal: false | { icon: string; key: string } } {
       switch (this.singleTransaction.tx.type) {
         case "Withdraw":
           return {
             type: "Withdrawn to:",
             showAddress: true,
-            tooltip: false,
+            modal: false,
           };
         case "ChangePubKey":
           return {
             type: "Account activation",
             showAddress: false,
-            tooltip: {
+            modal: {
               icon: "ri-information-fill",
-              html:
-                "Activation is required single-time payment to set the signing key associated with the account.<br>Without it no operation can be authorized by your corresponding account.",
+              key: "AccountActivation",
             },
           };
         case "Deposit":
           return {
             type: "Deposit to:",
             showAddress: true,
-            tooltip: false,
+            modal: false,
           };
         case "Transfer":
           if (this.isFeeTransaction) {
             return {
               type: "Fee transaction",
               showAddress: false,
-              tooltip: false,
+              modal: false,
             };
           } else if (this.isSameAddress(this.displayedAddress)) {
             return {
               type: "Received from:",
               showAddress: true,
-              tooltip: false,
+              modal: false,
             };
           } else {
             return {
               type: "Sent to:",
               showAddress: true,
-              tooltip: false,
+              modal: false,
             };
           }
         default:
           return {
             type: this.singleTransaction.tx.type,
             showAddress: true,
-            tooltip: false,
+            modal: false,
           };
       }
     },
@@ -186,7 +182,7 @@ export default Vue.extend({
       return String(address).toLowerCase() === this.walletAddressFull.toLowerCase();
     },
     getTimeAgo(time: string): string {
-      return moment(time).fromNow();
+      return moment(time).tz("UTC").fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
       if (!this.isFeeTransaction) {

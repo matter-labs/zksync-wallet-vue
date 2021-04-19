@@ -78,8 +78,8 @@
         @enter="commitTransaction"
       />
 
-      <i-radio-group
-        v-if="chosenToken && type === 'withdraw' && (!chosenFeeToken || chosenFeeToken.symbol === chosenToken.symbol) && feesObj"
+      <!-- <i-radio-group
+        v-if="chosenToken && type === 'withdraw' && (!chosenFeeToken || chosenFeeToken.symbol === chosenToken.symbol) && (feesObj || feesLoading) && inputtedAddress"
         v-model="transactionMode"
         class="_margin-top-2"
       >
@@ -88,7 +88,7 @@
           <span class="feeAmount">
             (
             <strong>Fee:</strong>
-            <span v-if="feesObj && feesObj.normal">
+            <span v-if="feesObj && feesObj.normal && !feesLoading">
               {{ feesObj && feesObj.normal | formatToken(feeToken.symbol) }}
               <span class="tokenSymbol">
                 {{ feeToken.symbol }}
@@ -101,14 +101,14 @@
             ).
           </span>
           <br class="desktopOnly" />
-          Processing time: {{ withdrawTime.normal }} minutes
+          Processing time: {{ (withdrawTime.normal + 5400) | formatSeconds }}
         </i-radio>
         <i-radio value="fast">
           Fast withdraw
           <span class="feeAmount">
             (
             <strong>Fee:</strong>
-            <span v-if="feesObj && feesObj['fast']">
+            <span v-if="feesObj && feesObj.fast && !feesLoading">
               {{ feesObj.fast | formatToken(feeToken.symbol) }}
               <span class="tokenSymbol">{{ feeToken.symbol }}</span>
               <span class="totalPrice">
@@ -119,12 +119,12 @@
             ).
           </span>
           <br class="desktopOnly" />
-          Processing time: {{ withdrawTime.fast }} minutes
+          Processing time: {{ (withdrawTime.fast + 5400) | formatSeconds }}
         </i-radio>
       </i-radio-group>
-      <div v-else-if="chosenToken && type === 'withdraw' && feesObj" class="secondaryText _text-center _margin-top-1">
-        Only normal withdraw ({{ withdrawTime.normal }} minutes) is available when using different fee token
-      </div>
+      <div v-else-if="chosenToken && type === 'withdraw' && feesObj && inputtedAddress" class="secondaryText _text-center _margin-top-1">
+        Only normal withdraw ({{ (withdrawTime.normal + 5400) | formatSeconds }}) is available when using different fee token
+      </div> -->
 
       <div class="errorText _text-center _margin-top-1">
         {{ error }}
@@ -149,7 +149,7 @@
         No available tokens on your balance to pay the fee
       </div>
       <div v-else>
-        <div v-if="chosenFeeObj && chosenToken && inputtedAddress" class="_text-center _margin-top-1">
+        <div v-if="(chosenFeeObj || feesLoading) && chosenToken && inputtedAddress" class="_text-center _margin-top-1">
           Fee:
           <span v-if="feesLoading" class="secondaryText">Loading...</span>
           <span v-else>
@@ -299,7 +299,7 @@ export default Vue.extend({
         return "Account Activation";
       }
     },
-    maxAmount(): string {
+    maxAmount(): GweiBalance {
       if (!this.chosenToken) {
         return "0";
       }
@@ -310,12 +310,15 @@ export default Vue.extend({
         !this.feesLoading &&
         (this.transactionMode === "normal" ? this.feesObj?.normal : this.feesObj?.fast)
       ) {
-        amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as string);
+        amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as GweiBalance);
       } else {
         amount = this.chosenToken.rawBalance;
       }
       if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
         amount = amount.sub(this.activateAccountFee);
+      }
+      if (amount.lt("0")) {
+        return "0";
       }
       return closestPackableTransactionAmount(amount).toString();
     },
@@ -385,7 +388,7 @@ export default Vue.extend({
         }
       }
       if (this.type === "withdraw") {
-        await this?.getWithdrawalTime();
+        // await this?.getWithdrawalTime();
       }
       if (!this.ownAccountUnlocked) {
         await this?.getAccountActivationFee();
@@ -431,19 +434,23 @@ export default Vue.extend({
     async requestFees(): Promise<void> {
       if (!this.chosenToken || !this.inputtedAddress || this.feeToken?.restricted) {
         this.feesObj = {
-          normal: "",
-          fast: "",
+          normal: undefined,
+          fast: undefined,
         };
         return;
       }
       this.feesLoading = true;
       try {
-        this.feesObj = await this.$accessor.wallet.requestFees({
+        const savedData = {
           address: this.inputtedAddress,
           symbol: this.chosenToken?.symbol,
           feeSymbol: this.feeToken?.symbol,
           type: this.type,
-        });
+        };
+        const requestedFee = await this.$accessor.wallet.requestFees(savedData);
+        if (savedData.address === this.inputtedAddress && savedData.symbol === this.chosenToken?.symbol && savedData.feeSymbol === this.feeToken?.symbol) {
+          this.feesObj = requestedFee;
+        }
       } catch (error) {
         this.$toast.global.zkException({
           message: error.message,
@@ -473,6 +480,7 @@ export default Vue.extend({
           await this.transfer();
         }
       } catch (error) {
+        console.log("commitTransaction error", error);
         if (error.message) {
           if (error.message.includes("User denied")) {
             this.error = "";

@@ -1,5 +1,6 @@
 <template>
   <div class="transactionsPage">
+    <account-activation-modal />
     <div class="tileBlock transactionsTile">
       <div class="tileHeadline h3">Transactions</div>
       <div class="transactionsListContainer">
@@ -19,6 +20,7 @@
 
 <script lang="ts">
 import SingleTransaction from "@/components/SingleTransaction.vue";
+import AccountActivationModal from "@/blocks/modals/AccountActivation.vue";
 import { ZkInTx } from "@/plugins/types";
 import { Address } from "zksync/build/types";
 import Vue, { PropOptions } from "vue";
@@ -27,6 +29,7 @@ let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
   components: {
     SingleTransaction,
+    AccountActivationModal,
   },
   props: {
     filter: {

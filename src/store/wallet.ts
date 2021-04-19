@@ -439,10 +439,10 @@ export const actions = actionTree(
        * @todo drop ZkInFeesObj as the typed object and simplify fees to a single (normal) except withdraw
        * @type {BigNumber}
        */
-      const batchTransferFee = await syncProvider?.getTransactionsBatchFee(["Transfer"], [address, syncWallet?.address()], feeSymbol);
+      const batchTransferFee = await syncProvider?.getTransactionsBatchFee(["Transfer", "Transfer"], [address, syncWallet?.address()], feeSymbol);
       const feesObj: ZkInFeesObj = {
         normal: batchTransferFee !== undefined ? closestPackableTransactionFee(batchTransferFee) : undefined,
-        fast: "",
+        fast: undefined,
       };
       commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
       return feesObj;

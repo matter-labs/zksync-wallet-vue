@@ -26,11 +26,10 @@
       ]
     },
     "types": [
-      "@nuxt/vue-app",
+      "@nuxt/types",
       "@types/node",
       "@types/jest",
-      "@nuxt/types",
-      "@/types/*.d.ts",
+      "@nuxt/vue-app",
       "@nuxtjs/axios",
       "@nuxtjs/sentry",
       "@nuxtjs/toast",

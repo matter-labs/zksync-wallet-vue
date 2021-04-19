@@ -36,11 +36,18 @@ export default {
     const minutes = Math.floor(timeInSec / 60) - hours * 60;
     const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
 
-    return {
-      hours,
-      minutes,
-      seconds,
-    };
+    const strArr = [];
+    if (hours) {
+      strArr.push(`${hours} hours`);
+    }
+    if (minutes) {
+      strArr.push(`${minutes} minutes`);
+    }
+    if (seconds) {
+      strArr.push(`${seconds} seconds`);
+    }
+
+    return strArr.join(" ");
   },
 
   handleFormatToken,
@@ -106,8 +113,8 @@ export default {
     }
     if (mode && ["light", "dark"].includes(mode)) {
       inklineContext.config.variant = mode === "light" ? "light" : "dark";
-      localStorage.setItem("colorTheme", inklineContext.config.variant);
     }
+    localStorage.setItem("colorTheme", inklineContext.config.variant);
     return inklineContext.config.variant;
   },
 };
