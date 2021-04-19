@@ -473,6 +473,7 @@ export default Vue.extend({
           await this.transfer();
         }
       } catch (error) {
+        console.log("commitTransaction error", error);
         if (error.message) {
           if (error.message.includes("User denied")) {
             this.error = "";
