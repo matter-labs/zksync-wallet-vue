@@ -22,7 +22,7 @@
           <div slot="body" v-html="transactionTypeData.tooltip.html"></div>
         </i-tooltip>
       </div>
-      <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your L1 account</div>
+      <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your own account</div>
       <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`">
         {{ getAddressName(displayedAddress) }}
       </nuxt-link>
