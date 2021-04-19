@@ -64,7 +64,7 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 * [Nuxt.js](https://nuxtjs.org)
 * [Vue.js](https://vuejs.org)
 * [Sentry.io](https://sentry.io)
-* [Onboarding.js](https://docs.blocknative.com/onboard)
+* [Onboarding.js fork](https://docs.blocknative.com/onboard)
 * [Typed Vuex](https://typed-vuex.roe.dev/)
 * [Nuxt TypeScript](https://typescript.nuxtjs.org/)
 

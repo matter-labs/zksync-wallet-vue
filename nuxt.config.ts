@@ -188,7 +188,7 @@ const config: NuxtConfig = {
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
-    position: "top-right" as ToastPosition,
+    position: "bottom-right" as ToastPosition,
     duration: 4000,
     className: "zkToastMain",
     iconPack: "fontawesome" as ToastIconPack,
