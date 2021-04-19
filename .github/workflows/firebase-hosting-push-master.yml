@@ -17,7 +17,7 @@ jobs:
         run: bash cli-dev.sh ci
 
       - name: Configure for rinkeby
-        run: sh ./cli-process-env.sh rinkeby prod 1
+        run: bash ./cli-process-env.sh rinkeby prod 1
 
       - name: Build rinkeby
         run: yarn generate --fail-on-error
@@ -31,7 +31,7 @@ jobs:
           channelID: live
 
       - name: Configure for ropsten
-        run: sh ./cli-process-env.sh rinkeby prod 1
+        run: bash ./cli-process-env.sh rinkeby prod 1
 
       - name: Build ropsten
         run: yarn generate --fail-on-error
@@ -45,7 +45,7 @@ jobs:
           channelID: live
 
       - name: Configure for mainnet
-        run: sh ./cli-process-env.sh rinkeby prod 1
+        run: bash ./cli-process-env.sh rinkeby prod 1
 
       - name: Build mainnet
         run: yarn generate --fail-on-error
