@@ -1,14 +1,12 @@
-# [zkWallet TS-version](https://wallet.zksync.io/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![npm version](https://img.shields.io/npm/v/zksync.svg?style=flat)](https://www.npmjs.com/package/zksync) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Rinkeby](https://img.shields.io/badge/wallet-Live%20on%20Rinkeby-blue)](https://rinkeby.zksync.io) [![Live on Ropsten](https://img.shields.io/badge/wallet-Live%20on%20Ropsten-blue)](https://ropsten.zksync.io) [![Join the technical discussion chat at https://gitter.im/matter-labs/zksync](https://badges.gitter.im/matter-labs/zksync.svg)](https://gitter.im/matter-labs/zksync?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# [zkWallet v.2.3.0-beta](https://wallet.zksync.io/) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![npm version](https://img.shields.io/npm/v/zksync.svg?style=flat)](https://www.npmjs.com/package/zksync) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Rinkeby](https://img.shields.io/badge/wallet-Live%20on%20Rinkeby-blue)](https://rinkeby.zksync.io) [![Live on Ropsten](https://img.shields.io/badge/wallet-Live%20on%20Ropsten-blue)](https://ropsten.zksync.io) [![Join the technical discussion chat at https://gitter.im/matter-labs/zksync](https://badges.gitter.im/matter-labs/zksync.svg)](https://gitter.im/matter-labs/zksync?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
-# zkWallet v.2.2.0-beta
+# zkWallet dApp
 
 A completely different version of zkWallet, built with nuxt+vuejs.
 New architecture, implemented open source design system. Tight roadmap with many awesome features will guide developers into the amazing world of dApps and introduce true
  reactive interaction, dialog-based UX.
  
-**Stay tuned!**
-
 It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, published and ready for mass adoption.
 
 > The nearest milestone for **zkWallet**  will enable **Paypal-scale** throughput for any dApp, wallet or smart
@@ -16,9 +14,15 @@ It's working perfectly on ```mainnet```, ```rinkeby``` and ```ropsten```, publis
 
 ## Released features
 
-✅ Project moved to the typescript;
+✅ **[new]** Customizable allowance of the operations;
 
-✅ Tests added;
+✅ **[new]** Realtime status of your pending / changing balances
+
+✅ **[new]** Minor UI update (“face-lifting”);
+
+✅ **[new]** Updated procedure of **Account unlock**
+
+✅ **[new]** New transactions history supporting all done operations;
 
 ✅ ETH and ERC20 token transfers with instant confirmations and 10 min finality on L1;
 
@@ -55,21 +59,14 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ---
 
-## Surge.sh deployment process
-
-As used by alpha-version is deployed to surge.sh 
-
-``` sh
-$ sh cli-update.sh
-``` 
-
 ## Solutions used
 
 * [Nuxt.js](https://nuxtjs.org)
 * [Vue.js](https://vuejs.org)
 * [Sentry.io](https://sentry.io)
 * [Onboarding.js](https://docs.blocknative.com/onboard)
-* [Onboarding.js](https://docs.blocknative.com/onboard)
+* [Typed Vuex](https://typed-vuex.roe.dev/)
+* [Nuxt TypeScript](https://typescript.nuxtjs.org/)
 
 ## License
 

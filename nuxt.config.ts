@@ -1,11 +1,11 @@
 import { NuxtConfig } from "@nuxt/types";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 
-const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet";
-const env = process.env.APP_ENV ?? "prod";
+const env = process.env.APP_ENV ?? "dev";
+const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet" && env === "prod";
 const srcDir = "src";
-const pageTitle = "Modern dApp with zkSync powers";
-const pageImg = "https://zksync.io/social.jpg";
+const pageTitle = "zkWallet — your access to L2 zkSync Rollup features.";
+const pageImg = "/Cover.jpg";
 
 const pageTitleTemplate = `zkWallet on ${process.env.APP_CURRENT_NETWORK?.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK?.slice(1)}`;
 const pageDescription =
@@ -248,7 +248,6 @@ const config: NuxtConfig = {
   },
   generate: {
     dir: "public",
-    fallback: "404.html",
   },
   typescript: {
     typeCheck: {
