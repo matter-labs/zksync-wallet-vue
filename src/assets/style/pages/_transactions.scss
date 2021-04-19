@@ -133,11 +133,20 @@
           }
 
           em {
-            position: relative;
-            top: 2px;
             margin-left: 5px;
             font-size: 22px;
             line-height: 22px;
+            &.modalOpenIcon {
+              transition: filter $transition1;
+              cursor: pointer;
+              &:hover {
+                filter: brightness(125%);
+              }
+              &:active {
+                transition-duration: 0.001s;
+                filter: brightness(90%);
+              }
+            }
           }
         }
 
