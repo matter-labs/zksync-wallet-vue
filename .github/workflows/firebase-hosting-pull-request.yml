@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: yarn install --check-cache
+        run: bash cli-dev.sh ci
 
       - name: Configure for rinkeby [dev]
         run: sh ./cli-process-env.sh rinkeby dev 1
