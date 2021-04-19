@@ -299,7 +299,7 @@ export default Vue.extend({
         return "Account Activation";
       }
     },
-    maxAmount(): string {
+    maxAmount(): GweiBalance {
       if (!this.chosenToken) {
         return "0";
       }
@@ -310,12 +310,15 @@ export default Vue.extend({
         !this.feesLoading &&
         (this.transactionMode === "normal" ? this.feesObj?.normal : this.feesObj?.fast)
       ) {
-        amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as string);
+        amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as GweiBalance);
       } else {
         amount = this.chosenToken.rawBalance;
       }
       if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
         amount = amount.sub(this.activateAccountFee);
+      }
+      if (amount.lt("0")) {
+        return "0";
       }
       return closestPackableTransactionAmount(amount).toString();
     },
