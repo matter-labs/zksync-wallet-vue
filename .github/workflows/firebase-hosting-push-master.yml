@@ -31,7 +31,7 @@ jobs:
           channelID: live
 
       - name: Configure for ropsten
-        run: bash ./cli-process-env.sh rinkeby prod 1
+        run: bash ./cli-process-env.sh ropsten prod 1
 
       - name: Build ropsten
         run: yarn generate --fail-on-error
@@ -45,7 +45,7 @@ jobs:
           channelID: live
 
       - name: Configure for mainnet
-        run: bash ./cli-process-env.sh rinkeby prod 1
+        run: bash ./cli-process-env.sh mainnet prod 1
 
       - name: Build mainnet
         run: yarn generate --fail-on-error
