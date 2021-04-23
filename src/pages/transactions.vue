@@ -1,12 +1,14 @@
 <template>
-    <transactions />
+  <transactions />
 </template>
 
-<script>
+<script lang="ts">
 import transactions from "@/blocks/Transactions.vue";
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   components: {
     transactions,
   },
-};
+});
 </script>

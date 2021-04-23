@@ -2,23 +2,18 @@
   <transaction :from-route="fromRoute" type="withdraw" />
 </template>
 
-<script>
+<script lang="ts">
 import Transaction from "@/blocks/Transaction.vue";
+import { Vue } from "vue-property-decorator";
 
-/**
- * @property fromRoute
- */
-export default {
+export default Vue.extend({
   components: {
     Transaction,
   },
-  asyncData({ from, store, redirect }) {
-    if (store.getters["wallet/isAccountLocked"]) {
-      redirect("/account/unlock");
-    }
+  asyncData({ from }) {
     return {
       fromRoute: from,
     };
   },
-};
+});
 </script>

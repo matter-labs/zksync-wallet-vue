@@ -1,0 +1,101 @@
+.chooseTokenBlock {
+  .centerBlock {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 15px;
+    text-align: center;
+  }
+
+  .tokenListContainer {
+    height: 100%;
+    max-height: 60vh;
+    overflow: auto;
+    @media (max-width: $mobile) {
+      max-height: 55vh;
+    }
+
+    &::-webkit-scrollbar {
+      width: 10px;
+      background-color: $tempTransparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: $tempTransparent;
+      border-radius: 10px;
+    }
+
+    .tokenItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 60px;
+      padding: 0 20px;
+      border-bottom: 1px solid;
+      cursor: pointer;
+      transition: background-color $transition1;
+
+      &:hover {
+        background-color: transparentize($color: $gray, $amount: 0.9);
+      }
+
+      .tokenSymbol {
+        font-size: 22px;
+      }
+
+      .rightSide {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+
+        .balance {
+          font-size: $tempFontSizeMedium;
+        }
+      }
+
+      @media (max-width: 400px) {
+        flex-direction: column;
+        justify-content: center;
+        height: 70px;
+        text-align: left;
+
+        .rightSide .balance {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+body.inkline {
+  &.-light {
+    .chooseTokenBlock .tokenListContainer {
+      &::-webkit-scrollbar-thumb {
+        background-color: $input-border-color-focus-light;
+      }
+
+      .tokenItem {
+        border-color: $input-border-color-light;
+      }
+    }
+  }
+
+  &.-dark {
+    .chooseTokenBlock .tokenListContainer {
+      &::-webkit-scrollbar-thumb {
+        background-color: $input-border-color-focus-dark;
+      }
+
+      .tokenItem {
+        border-color: $input-border-color-dark;
+      }
+    }
+  }
+}

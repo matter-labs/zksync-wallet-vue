@@ -3,39 +3,41 @@
   height: 100%;
 
   .routerContainer {
-    min-height: calc(100vh - 202px);
+    min-height: $minRouteHeightMain;
+    /* @media (max-width: $mobile) {
+      min-height: $minRouteHeight !important;
+    } */
   }
 
   .tileBlock {
     width: 90%;
-    height: auto;
     max-width: 505px;
+    height: auto;
     margin-top: 15px;
-    padding: 20px 29px 29px;
-    margin-left: auto;
     margin-right: auto;
-    transition: background-color $transition1;
-    box-shadow: 4px 4px 8px 0 rgba(11, 52, 102, 0.12);
+    margin-left: auto;
+    padding: 20px;
     border-radius: 10px;
+    box-shadow: 4px 4px 8px 0 rgba(11, 52, 102, 0.02);
+    transition: background-color $transition1;
 
     .tileHeadline {
-      width: 100%;
       display: flex;
-      //padding-top: 10px;
-      padding-bottom: 20px;
-      margin: 0;
-      text-align: center;
-      font-weight: 400;
       align-items: center;
       justify-content: center;
+      width: 100%;
+      margin: 0;
+      padding-bottom: 20px;
+      font-weight: 400;
       font-family: $firaSans;
+      text-align: center;
 
       &.withBtn {
         display: grid;
-        grid-template-columns: 40px 1fr;
-        padding-right: 40px;
         grid-template-rows: 100%;
+        grid-template-columns: 40px 1fr;
         align-items: center;
+        padding-right: 40px;
       }
 
       @media (max-width: $mobile) {
@@ -48,8 +50,8 @@
           .returnBtn i {
             width: 30px;
             height: 30px;
-            line-height: 30px;
             font-size: 16px;
+            line-height: 30px;
           }
         }
       }
@@ -58,15 +60,15 @@
         display: block;
         width: 25px;
         height: 25px;
-        border-radius: 50%;
+        margin-left: 10px;
         font-size: 11px;
         line-height: 26px;
         background: transparentize($color: $gray, $amount: 0.7);
-        opacity: .9;
-        margin-left: 10px;
+        border-radius: 50%;
         transform: translateY(1px);
-        transition: background-color $transition1;
         cursor: pointer;
+        opacity: 0.9;
+        transition: background-color $transition1;
 
         &:hover {
           background: transparentize($color: $gray, $amount: 0.5);
@@ -80,9 +82,9 @@
         i {
           width: 40px;
           height: 40px;
-          line-height: 40px;
-          font-size: 20px;
           margin-left: 0;
+          font-size: 20px;
+          line-height: 40px;
           transition: color $transition1;
         }
       }
@@ -96,17 +98,27 @@
 
     .tileTextBg {
       margin: 5px 0;
-      font-size: 16px;
-      padding: 15px;
-      border-radius: 5px;
+      padding: 12px 15px;
+      font-size: 15px;
+      text-align: center;
       border: 1px solid;
+      border-radius: 5px;
     }
-
-    /* .form-input-prepend {
-        background-color: transparent !important;
-    } */
   }
 
+  footer {
+    @media (max-width: $mobile) {
+      margin-bottom: 80px; /* Navigation bar space */
+
+      .floating-on-mobile {
+        bottom: calc(4vh + 70px);
+      }
+    }
+  }
+  .headerSpace {
+    width: 100%;
+    height: $headerHeight;
+  }
 }
 
 body.inkline.-light .defaultLayout {
@@ -149,33 +161,35 @@ body.inkline.-dark {
 .form-input-group.-light .form-input input,
 input.form-input.-prefixed {
   background-color: #0000000a !important;
-  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.035) !important;
   border-radius: 0.3rem !important;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.035) !important;
 }
 
-.form-input-group.-light .form-input input:focus, input.form-input.-prefixed:focus {
+.form-input-group.-light .form-input input:focus,
+input.form-input.-prefixed:focus {
   border-color: rgba(30, 30, 30, 0.15) !important;
 }
 
-.totalPrice .tooltip-wrapper {
+.tooltip-wrapper {
   display: flex;
-  margin: 1rem auto;
-  i.withdrawalAnnounce {
-    display: block;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    font-size: 11px;
-    line-height: 26px;
-    background: transparentize($color: $gray, $amount: 0.7);
-    opacity: .9;
-    margin-left: 10px;
-    transform: translateY(1px);
-    transition: background-color $transition1;
-    cursor: pointer;
+}
+i.iconInfo,
+em.iconInfo {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin-left: 10px;
+  font-size: 11px;
+  line-height: 26px;
+  text-align: center;
+  background: transparentize($color: $gray, $amount: 0.7);
+  border-radius: 50%;
+  transform: translateY(1px);
+  cursor: pointer;
+  opacity: 0.9;
+  transition: background-color $transition1;
 
-    &:hover {
-      background: transparentize($color: $gray, $amount: 0.5);
-    }
+  &:hover {
+    background: transparentize($color: $gray, $amount: 0.5);
   }
 }

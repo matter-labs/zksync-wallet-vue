@@ -1,0 +1,40 @@
+.socialIcons {
+  display: grid;
+  grid-auto-columns: 20px;
+  grid-auto-flow: column;
+  grid-gap: 15px;
+  grid-template-rows: 100%;
+  width: max-content;
+  height: 20px;
+
+  .socialItem {
+    display: block;
+    width: 20px;
+    height: 20px;
+    color: $violet;
+    text-decoration: none;
+    transition: color $transition1;
+    &:hover {
+      color: $lightViolet !important;
+    }
+
+    i {
+      font-size: 18px;
+      line-height: 20px;
+    }
+    svg {
+      display: block;
+      width: 19px;
+      height: 19px;
+      object-fit: contain;
+    }
+  }
+}
+
+body.inkline {
+  &.-dark .socialIcons {
+    .socialItem {
+      color: $white;
+    }
+  }
+}

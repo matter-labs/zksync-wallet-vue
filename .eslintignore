@@ -1,11 +1,11 @@
-# don't ever lint node_modules
-/node_modules/*
-/src/static/sw.js
-# don't ever lint public
-/.nuxt/*
-/src/assets/fonts/*
-/src/assets/imgs/*
-/.github/*
-/.idea/*
-/environments/*
-/public/*
+node_modules/*
+.nuxt/*
+src/static/*
+.github/*
+.idea/*
+environments/*
+public/*
+_nuxt/*
+src/static/sw.js
+.eslintrc.js
+tests/*

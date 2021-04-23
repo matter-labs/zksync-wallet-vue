@@ -1,0 +1,33 @@
+.successBlock {
+  .tileHeadline.h3 {
+    padding-bottom: 0;
+  }
+
+  .infoBlockItem {
+    &.smaller {
+      .headline {
+        font-size: 16px;
+      }
+
+      .amount {
+        font-size: 18px;
+      }
+    }
+
+    .headline {
+      font-size: 18px;
+    }
+
+    .amount {
+      font-size: 24px;
+
+      .price {
+        padding-left: 10px;
+      }
+    }
+
+    .walletContainer {
+      margin-top: 5px;
+    }
+  }
+}

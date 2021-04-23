@@ -1,359 +1,450 @@
 <template>
   <div class="transactionPage">
-    <i-modal v-model="cantFindTokenModal" size="md">
-      <template slot="header">Can't find a token</template>
-      <div>
-        <p>
-          zkSync currently supports the most popular tokens, we will be adding more over time.
-          <a href="//zksync.io/contact.html" target="_blank" rel="noopener noreferrer">Let us know what tokens you need</a>!
-        </p>
-      </div>
+    <allowance-modal />
+
+    <!-- Choose token -->
+    <i-modal v-model="chooseTokenModal" size="md">
+      <template slot="header">Choose token</template>
+      <choose-token tokens-type="L1" @chosen="chooseToken($event)" />
     </i-modal>
-    <div class="tileBlock">
-      <div class="tileHeadline h3" :class="{ withBtn: loading === false || tokenSelectionOpened === true }">
-        <nuxt-link v-if="loading === false" :to="returnUrl" class="returnBtn">
-          <i class="far fa-long-arrow-alt-left" />
+
+    <!-- Loading block -->
+    <loading-block v-if="loading === true" :headline="loading && transactionInfo.type === 'unlock' ? `Unlocking ${chosenToken.symbol}` : 'Deposit'">
+      <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
+        Link to the transaction <i class="ri-external-link-line" />
+      </a>
+      <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
+    </loading-block>
+
+    <!-- Transaction success block -->
+    <success-block
+      v-else-if="transactionInfo.success === true"
+      :amount="transactionInfo.type === 'unlock' ? undefined : transactionInfo.amount"
+      :continue-btn-function="transactionInfo.continueBtnFunction"
+      :continue-btn-text="transactionInfo.continueBtnText"
+      :fee="transactionInfo.fee"
+      :tx-link="transactionInfo.explorerLink"
+      :headline="transactionInfo.type === 'unlock' ? `${chosenToken.symbol} unlocked` : 'Deposit'"
+      type="deposit"
+      @continue="successBlockContinue"
+    >
+      <p v-if="transactionInfo.type === 'deposit'" class="_text-center _margin-top-0">
+        Your deposit transaction has been mined and will be processed after required number of confirmations.
+        <br />Use the transaction link to track the progress.
+      </p>
+      <p v-else-if="transactionInfo.type === 'unlock'" class="_text-center _margin-top-0">
+        <span class="tokenSymbol">{{ chosenToken.symbol }}</span> token has been successfully unlocked and now you can proceed to deposit <br />Use the transaction link to track
+        the progress.
+      </p>
+    </success-block>
+
+    <!-- Main Block -->
+    <div v-else class="transactionTile tileBlock">
+      <div class="tileHeadline withBtn h3">
+        <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'" class="returnBtn">
+          <i class="ri-arrow-left-line"></i>
         </nuxt-link>
         <div>Deposit</div>
       </div>
-      <div v-if="success === true">
-        <checkmark />
-        <p class="_text-center _margin-top-0">
-          Your deposit tx has been mined and will be processed after required number of confirmations. Use the transaction link to track the progress.
-        </p>
-        <a class="_display-block _text-center _margin-top-1" target="_blank" :href="`${blockExplorerLink}/tx/${transactionHash}`">
-          Link to the transaction&nbsp;<i class="fas fa-external-link"></i>
-        </a>
-        <div class="totalAmount _margin-top-2">
-          <div class="headline">Amount:</div>
-          <div class="amount">
-            <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
-            {{ transactionAmount }}
-            <span class="totalPrice">{{ inputTotalSumBigNumber | formatUsdAmount(chosenToken.price, chosenToken.symbol) }}</span>
-          </div>
+
+      <div class="_padding-top-1 inputLabel">Amount</div>
+      <amount-input
+        ref="amountInput"
+        v-model="inputtedAmount"
+        :max-amount="maxAmount"
+        :token="chosenToken ? chosenToken : undefined"
+        autofocus
+        type="deposit"
+        @chooseToken="chooseTokenModal = true"
+        @enter="commitTransaction()"
+      />
+
+      <div v-if="displayTokenUnlock && !thresholdLoading">
+        <div class="_padding-top-1 _display-flex _align-items-center inputLabel" @click="$accessor.openModal('Allowance')">
+          <span>{{ chosenToken.symbol }} Allowance</span>
+          <i class="ri-question-mark iconInfo" />
         </div>
-        <i-button block size="lg" variant="secondary" class="_margin-top-1" to="/account">Ok</i-button>
+        <allowance-input
+          ref="allowanceInput"
+          v-model="inputtedAllowance"
+          :token="chosenToken"
+          :min-amount="amountBigNumber.toString()"
+          @error="allowanceError = $event"
+          @enter="commitTransaction()"
+        />
       </div>
-      <div v-else-if="loading === false || tokenSelectionOpened === true">
-        <div class="_padding-bottom-1">Amount / asset</div>
-        <div>
-          <i-input v-model="inputTotalSum" size="lg" lang="en-US" type="number" @keyup.enter="deposit()">
-            <i-button v-if="!chosenToken" slot="append" block link variant="secondary" @click="openTokenSelection()"> Select token</i-button>
-            <i-button v-else slot="append" class="selectedTokenBtn" block link variant="secondary" @click="openTokenSelection()">
-              <span class="tokenSymbol">{{ chosenToken.symbol }}</span
-              >&nbsp;&nbsp;<i class="far fa-angle-down" />
-            </i-button>
-          </i-input>
-        </div>
-        <div v-if="chosenToken" class="_display-flex _justify-content-space-between _margin-top-1">
-          <div class="totalPrice">{{ inputTotalSumBigNumber | formatUsdAmount(chosenToken.price, chosenToken.symbol) }}</div>
-          <div class="maxAmount" @click="handleMaxAmountClick()">Max: {{ transactionMaxAmount | formatToken(chosenToken.symbol) }}</div>
-        </div>
-        <div v-if="chosenToken && chosenToken.unlocked === false" class="tokenLocked">
-          <p class="_text-center">
-            You should firstly unlock selected token in order to authorize deposits for
-            <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
-          </p>
-          <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="unlockToken()"><i class="far fa-lock-open-alt" />&nbsp;Unlock</i-button>
-        </div>
-        <div v-else-if="chosenToken && chosenToken.unlocked === true && inputTotalSum > transactionMaxAmount" class="errorText _text-center _margin-top-1">
-          Not enough <span class="tokenSymbol">{{ chosenToken.symbol }}</span> to perform a transaction
-        </div>
-        <div v-if="mainError" class="errorText _text-center _margin-top-1">{{ mainError }}</div>
-        <i-button v-if="chosenToken && chosenToken.unlocked === true" :disabled="!depositAllowed" block size="lg" variant="secondary" class="_margin-top-1" @click="deposit()">
-          Deposit
-        </i-button>
+
+      <div class="errorText _text-center _margin-top-1">
+        {{ error }}
       </div>
-      <div v-else class="nothingFound _margin-top-1 _padding-bottom-1">
-        <a v-if="transactionHash" class="_display-block _text-center" target="_blank" :href="`${blockExplorerLink}/tx/${transactionHash}`"
-          >Link to the transaction <i class="fas fa-external-link"
-        /></a>
-        <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
-        <loader class="_display-block _margin-top-1" />
-      </div>
+      <p v-if="displayTokenUnlock && !thresholdLoading" class="_text-center">
+        <span v-if="zeroAllowance">
+          You should firstly unlock selected token in order to authorize deposits for
+          <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
+        </span>
+        <span v-else>
+          You do not have enough allowance for
+          <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
+          .<br class="desktopOnly" />
+          Set higher allowance to proceed to deposit.
+        </span>
+      </p>
+
+      <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction()">
+        <span v-if="thresholdLoading"> Loading... </span>
+        <span v-else-if="displayTokenUnlock">
+          Unlock <span class="tokenSymbol">{{ chosenToken.symbol }}</span> and Deposit
+        </span>
+        <span v-else>Deposit</span>
+      </i-button>
     </div>
-    <i-modal v-model="tokenSelectionOpened" size="md">
-      <template slot="header">Balances in L1</template>
-      <div>
-        <i-input v-model="search" placeholder="Filter balances in L1" maxlength="10">
-          <i slot="prefix" class="far fa-search" />
-        </i-input>
-        <div class="tokenListContainer">
-          <div v-for="item in displayedTokenList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
-            <div class="tokenSymbol">{{ item.symbol }}</div>
-            <div class="rightSide">
-              <div class="balance">{{ item.balance | formatToken(item.symbol) }}</div>
-            </div>
-          </div>
-          <div v-if="search && displayedTokenList.length === 0" class="nothingFound">
-            <span
-              >Your search <b>"{{ search }}"</b> did not match any tokens</span
-            >
-          </div>
-        </div>
-        <i-button
-          block
-          link
-          size="lg"
-          variant="secondary"
-          class="_margin-top-1"
-          @click="
-            tokenSelectionOpened = false;
-            cantFindTokenModal = true;
-          "
-        >
-          Can't find a token?
-        </i-button>
-      </div>
-    </i-modal>
   </div>
 </template>
 
-<script>
-import Checkmark from "@/components/Checkmark.vue";
-import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
-import utils from "@/plugins/utils.js";
-import { walletData } from "@/plugins/walletData.js";
+<script lang="ts">
+import chooseToken from "@/blocks/ChooseToken.vue";
+import AllowanceModal from "@/blocks/modals/Allowance.vue";
+import allowanceInput from "@/components/AllowanceInput.vue";
+import amountInput from "@/components/AmountInput.vue";
 
-export default {
+import loadingBlock from "@/components/LoadingBlock.vue";
+import successBlock from "@/components/SuccessBlock.vue";
+import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
+
+import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/plugins/types";
+import utils from "@/plugins/utils";
+import { deposit } from "@/plugins/walletActions/transaction";
+import { walletData } from "@/plugins/walletData";
+import { BigNumber, Contract } from "ethers";
+import Vue from "vue";
+import { closestPackableTransactionAmount } from "zksync";
+import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
+
+let thresholdTimeout: ReturnType<typeof setTimeout>;
+export default Vue.extend({
   components: {
-    Checkmark,
+    loadingBlock,
+    successBlock,
+    amountInput,
+    allowanceInput,
+    chooseToken,
+    AllowanceModal,
   },
-  asyncData({ from }) {
-    return {
-      fromRoute: from,
-    };
+  props: {
+    fromRoute: {
+      type: Object,
+      default: undefined,
+      required: false,
+    },
   },
   data() {
     return {
-      depositAllowed: false,
-      decimalPrecision: 18,
-
-      zksync: null,
-      search: "",
-      inputTotalSumBigNumber: null,
-      inputTotalSum: null,
-      tokenSelectionOpened: false,
-      loading: true,
+      /* Loading block */
+      loading: false,
       tip: "",
-      mainError: "",
-      tokensList: [],
-      chosenToken: false,
-      cantFindTokenModal: false,
-      success: false,
-      transactionHash: "",
-      transactionAmount: "",
+
+      /* Choose token */
+      chooseTokenModal: false,
+      chooseFeeTokenModal: false,
+
+      /* Transaction success block */
+      transactionInfo: <ZkInTransactionInfo>{
+        success: false,
+        continueBtnFunction: false,
+        continueBtnText: "",
+        type: "",
+        hash: "",
+        explorerLink: "",
+        amount: {
+          amount: "",
+          token: false,
+        },
+        fee: {
+          amount: "",
+          token: false,
+        },
+      },
+
+      /* Main Block */
+      inputtedAmount: <DecimalBalance>"",
+      inputtedAllowance: <DecimalBalance>"",
+      allowanceError: false,
+      tokenAllowance: <false | BigNumber>false,
+      chosenToken: <ZkInBalance | false>false,
+      thresholdLoading: false,
+      error: "",
     };
   },
   computed: {
-    displayedTokenList() {
-      if (!this.search.trim()) {
-        return this.tokensList;
+    maxAmount(): string {
+      return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
+    },
+    buttonDisabled(): boolean {
+      return !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.enoughInputedAllowance;
+    },
+    amountBigNumber(): BigNumber {
+      if (!this.chosenToken || !this.inputtedAmount) {
+        return BigNumber.from("0");
       }
-      return this.tokensList.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
-    },
-    transactionMaxAmount() {
-      return this.zksync.closestPackableTransactionAmount(this.chosenToken.balance);
-    },
-    blockExplorerLink() {
-      return APP_ETH_BLOCK_EXPLORER;
-    },
-    returnUrl() {
-      if (!this.fromRoute || this.fromRoute.fullPath === this.$route.fullPath) {
-        return "/account";
+      try {
+        return utils.parseToken(this.chosenToken.symbol, this.inputtedAmount);
+      } catch (error) {
+        return BigNumber.from("0");
       }
-      return this.fromRoute;
+    },
+    zeroAllowance(): boolean {
+      return this.tokenAllowance && this.tokenAllowance.eq(BigNumber.from("0"));
+    },
+    enoughAllowance(): boolean {
+      if (!this.tokenAllowance || !this.chosenToken) {
+        return true;
+      }
+      if (this.zeroAllowance) {
+        return false;
+      }
+      return this.tokenAllowance.gte(this.maxAmount) || this.tokenAllowance.gte(this.amountBigNumber);
+    },
+    enoughInputedAllowance(): boolean {
+      if (!this.inputtedAllowance || !this.tokenAllowance || !this.chosenToken || this.enoughAllowance) {
+        return true;
+      }
+      try {
+        const inputedAllowenceBigNumber = utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance);
+        return inputedAllowenceBigNumber.gte(this.amountBigNumber);
+      } catch (error) {
+        return false;
+      }
+    },
+    displayTokenUnlock(): boolean {
+      return this.chosenToken && !this.enoughAllowance;
     },
   },
   watch: {
-    /**
-     * @param incomingValue
-     */
-    async inputTotalSum(incomingValue) {
-      this.mainError = "";
-
-      /**
-       * Validation launch
-       */
-      const validationResults = await this.isDepositEnabled(incomingValue);
-      if (validationResults === true) {
-        this.inputTotalSum = incomingValue;
-        this.inputTotalSumBigNumber = utils.parseToken(this.chosenToken.symbol, incomingValue);
+    displayTokenUnlock(val) {
+      clearTimeout(thresholdTimeout);
+      if (val === true && !this.zeroAllowance) {
+        this.thresholdLoading = true;
+        thresholdTimeout = setTimeout(() => {
+          if (!this.inputtedAllowance) {
+            this.setAllowanceToCurrent();
+          }
+          this.thresholdLoading = false;
+        }, 800);
+      } else {
+        this.thresholdLoading = false;
       }
     },
   },
   async mounted() {
-    this.zksync = await walletData.zkSync();
-    this.loading = false;
+    try {
+      this.loading = true;
+      if (this.$route.query.token) {
+        const balances = this.$accessor.wallet.getzkBalances;
+        for (const item of balances) {
+          if (item.symbol === this.$route.query.token) {
+            await this.chooseToken(item);
+            break;
+          }
+        }
+      }
+      this.loading = false;
+    } catch (error) {
+      console.log(error);
+      this.loading = false;
+    }
   },
   methods: {
-    async updateDecimals() {
-      const decimals = await this.$store.dispatch("tokens/getTokenDecimals", this.chosenToken.symbol);
-      this.decimalPrecision = this.chosenToken && decimals ? decimals : 18;
-    },
-
-    /**
-     * All validation focused inside this method
-     * @param {string|*} incomingValue
-     * @return {boolean}
-     */
-    async isDepositEnabled(incomingValue = null) {
-      if (!this.chosenToken) {
-        this.mainError = "";
-        return (this.depositAllowed = false);
-      }
-
-      let userAmount = this.inputTotalSum;
-      let userAmountBigNum = null;
-      if (incomingValue !== null) {
-        userAmount = incomingValue;
-      }
-
-      await this.updateDecimals();
-
-      if (!utils.isDecimalsValid(this.chosenToken.symbol, userAmount, this.decimalPrecision)) {
-        this.mainError = `Precision exceeded: ${this.chosenToken.symbol} supports ${this.decimalPrecision} decimal digits max`;
-        return (this.depositAllowed = false);
-      }
-
-      try {
-        userAmountBigNum = utils.parseToken(this.chosenToken.symbol, userAmount);
-      } catch (error) {
-        if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
-          this.mainError = `Precision exceeded: ${this.chosenToken.symbol} supports only limited decimal digits`;
-          return (this.depositAllowed = false);
-        } else {
-          this.mainError = `Amount processing error. Common reason behind it — inaccurate amount.
-          Try again paying attention to the decimal amount number format — it should help`;
-          return (this.depositAllowed = false);
-        }
-      }
-      if (!userAmountBigNum || !userAmountBigNum._isBigNumber) {
-        this.setMainError = `Amount processing error. Common reason behind it — inaccurate amount.
-          Try again paying attention to the decimal amount number format — it should help`;
-        return (this.depositAllowed = false);
-      }
-
-      if (userAmountBigNum.lte(0)) {
-        this.mainError = "";
-        return (this.depositAllowed = false);
-      }
-      if (userAmountBigNum.gt(this.transactionMaxAmount)) {
-        this.mainError = `Not enough ${this.chosenToken.symbol} to perform a deposit`;
-        return (this.depositAllowed = false);
-      }
-
-      this.setMainError = "";
-      return (this.depositAllowed = true);
-    },
-    handleMaxAmountClick() {
-      this.inputTotalSum = utils.handleFormatToken(this.chosenToken.symbol, this.transactionMaxAmount);
-    },
-    async openTokenSelection() {
+    async chooseToken(token: ZkInBalance) {
       this.loading = true;
-      try {
-        const list = await this.$store.dispatch("wallet/getInitialBalances");
-        this.tokensList = list.map((e) => ({ ...e, balance: e.balance }));
-        this.tokenSelectionOpened = true;
-      } catch (error) {
-        await this.$store.dispatch("toaster/error", error.message);
-      }
-      this.loading = false;
-    },
-    async chooseToken(token) {
-      await this.updateDecimals();
-      this.tokenSelectionOpened = false;
-      this.loading = true;
-      if (typeof token.unlocked === "undefined") {
-        token.unlocked = await this.checkTokenState(token);
-      }
-      if (typeof token.price === "undefined") {
-        token.price = await this.$store.dispatch("tokens/getTokenPrice", token.symbol);
-      }
-      this.mainError = "";
+      this.chooseTokenModal = false;
+      this.chosenToken = false;
+      this.tokenAllowance = await this.getTokenAllowance(token);
+      this.setAllowanceToCurrent();
       this.chosenToken = token;
       this.loading = false;
+      this.$nextTick(() => {
+        if (this.inputtedAmount && this.$refs.amountInput) {
+          // @ts-ignore: Unreachable code error
+          this.$refs.amountInput?.emitValue(this.inputtedAmount);
+          // @ts-ignore: Unreachable code error
+          this.$refs.allowanceInput?.emitValue(this.inputtedAllowance);
+        }
+      });
     },
-    async unlockToken() {
+    async commitTransaction(): Promise<void> {
+      if (!this.inputtedAmount) {
+        // @ts-ignore: Unreachable code error
+        this.$refs.amountInput?.emitValue(this.inputtedAmount);
+        // @ts-ignore: Unreachable code error
+        this.$refs.allowanceInput?.emitValue(this.inputtedAllowance);
+      }
+      if (this.buttonDisabled) {
+        return;
+      }
+      this.error = "";
+      this.loading = true;
+      try {
+        if (this.displayTokenUnlock) {
+          await this.unlockToken();
+        } else {
+          await this.deposit();
+        }
+      } catch (error) {
+        if (error.message) {
+          if (error.message.includes("User denied")) {
+            this.error = "";
+          } else if (error.message.includes("Fee Amount is not packable")) {
+            this.error = "Fee Amount is not packable";
+          } else if (error.message.includes("Transaction Amount is not packable")) {
+            this.error = "Transaction Amount is not packable";
+          } else if (String(error.message).length < 60) {
+            this.error = error.message;
+          } else {
+            this.error = "Transaction error";
+          }
+        } else {
+          this.error = "Transaction error";
+        }
+      }
+      this.tip = "";
+      this.loading = false;
+    },
+    async deposit(): Promise<void> {
+      this.tip = "Confirm the transaction to deposit";
+      this.transactionInfo.type = "deposit";
+      const transferTransaction = await deposit((this.chosenToken as ZkInBalance).symbol, this.amountBigNumber.toString(), this.$accessor);
+      if (!transferTransaction) {
+        return;
+      }
+      this.transactionInfo.amount = {
+        amount: this.amountBigNumber.toString(),
+        token: this.chosenToken,
+      };
+      this.transactionInfo.hash = transferTransaction.ethTx.hash;
+      this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + transferTransaction.ethTx.hash;
+      this.tip = "Waiting for the transaction to be mined...";
+      const receipt = await transferTransaction.awaitEthereumTxCommit();
+      if (!receipt) {
+        this.transactionInfo.fee = undefined;
+      } else {
+        this.transactionInfo.fee = {
+          token: this.chosenToken,
+          amount: receipt.gasUsed.toString(),
+        };
+      }
+      this.transactionInfo.continueBtnFunction = false;
+      this.transactionInfo.continueBtnText = "";
+      this.transactionInfo.success = true;
+    },
+    async unlockToken(): Promise<void> {
+      if (!this.chosenToken) {
+        return;
+      }
       this.loading = true;
       try {
         const wallet = walletData.get().syncWallet;
-        this.tip = "Confirm the transaction in order to unlock the token";
-        const approveDeposits = await wallet.approveERC20TokenDeposits(this.chosenToken.address);
-        this.tip = "Waiting for the transaction to be processed...";
-        await approveDeposits.wait();
-        this.tip = "";
-        const isTokenUnlocked = await this.checkTokenState(this.chosenToken);
-        this.chosenToken = { ...this.chosenToken, unlocked: isTokenUnlocked };
-      } catch (error) {
-        this.mainError = error.message;
-        this.tip = "";
-        // @todo: replace it with sentry processing
-        // console.log(error);
-      }
-      this.loading = false;
-    },
-    async checkTokenState(token) {
-      if (token.symbol !== "ETH") {
-        const wallet = walletData.get().syncWallet;
-        const isApprovedDeposits = await wallet.isERC20DepositsApproved(token.address);
-        this.saveUnlockedTokenState(token.symbol, !!isApprovedDeposits);
-        return !!isApprovedDeposits;
-      } else {
-        this.saveUnlockedTokenState(token.symbol, true);
-        return true;
-      }
-    },
-    saveUnlockedTokenState(tokenSymbol, state) {
-      for (const item of this.tokensList) {
-        if (item.symbol === tokenSymbol) {
-          item.unlocked = state;
+        this.tip = `Confirm the transaction in order to unlock ${this.chosenToken.symbol} token`;
+        this.transactionInfo.type = "unlock";
+        const approveAmount = this.inputtedAllowance ? utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance) : undefined;
+        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, approveAmount);
+        const balances = this.$accessor.wallet.getzkBalances;
+        let ETHToken: ZkInBalance | undefined;
+        for (const token of balances) {
+          if (token.symbol === "ETH") {
+            ETHToken = token;
+            break;
+          }
         }
-      }
-    },
-    async deposit() {
-      try {
-        utils.parseToken(this.chosenToken.symbol, this.inputTotalSum.toString());
-      } catch (error) {
-        return (this.mainError =
-          "Amount processing error. Most common reason: wrong/unsafe amount format. Try again paying attention to the decimal amount number format — it should help");
-      }
-
-      try {
-        const validationStatus = await this.isDepositEnabled();
-        if (!validationStatus) {
-          return;
+        if (!ETHToken) {
+          ETHToken = {
+            balance: "0",
+            id: 19,
+            rawBalance: BigNumber.from("0"),
+            restricted: false,
+            status: "Verified",
+            symbol: "ETH",
+            tokenPrice: await this.$accessor.tokens.getTokenPrice("ETH"),
+            verifiedBalance: "0",
+          };
         }
-        this.loading = true;
-
-        const wallet = walletData.get().syncWallet;
-        this.tip = "Confirm the transaction to deposit";
-        const depositResponse = await wallet.depositToSyncFromEthereum({
-          depositTo: wallet.address(),
-          token: this.chosenToken.symbol,
-          amount: this.inputTotalSumBigNumber,
-        });
-        this.transactionAmount = this.inputTotalSum;
-        this.transactionHash = depositResponse.ethTx.hash;
         this.tip = "Waiting for the transaction to be mined...";
-        await depositResponse.awaitEthereumTxCommit();
-        this.tip = "Processing...";
-        await this.$store.dispatch("wallet/forceRefreshData");
-        this.tip = "";
-        this.inputTotalSum = null;
-        this.success = true;
+        const receipt = await approveDeposits.wait();
+        this.transactionInfo.hash = receipt.transactionHash;
+        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + receipt.transactionHash;
+        this.transactionInfo.amount = {
+          amount: "0",
+          token: ETHToken,
+        };
+        this.transactionInfo.fee = {
+          amount: receipt.gasUsed.toString(),
+          token: ETHToken,
+        };
+        this.transactionInfo.continueBtnFunction = true;
+        this.transactionInfo.continueBtnText = "Proceed to deposit";
+        this.transactionInfo.success = true;
+        this.chosenToken = { ...this.chosenToken, unlocked: true };
+        this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
       } catch (error) {
-        this.tip = "";
-        if (error.message && error.message.includes("User denied")) {
-          this.mainError = "";
-        } else if (error.message && String(error.message).length < 60) {
-          this.mainError = error.message;
-        } else {
-          this.mainError = "Transaction error";
+        if (error.message) {
+          if (!error.message.includes("User denied")) {
+            this.error = error.message;
+          }
         }
       }
+      this.tip = "";
       this.loading = false;
+    },
+    async getTokenAllowance(token: ZkInBalance): Promise<BigNumber> {
+      if (token.symbol.toLowerCase() !== "eth") {
+        const wallet = walletData.get().syncWallet;
+        const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
+        const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE, wallet!.ethSigner);
+        return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
+      }
+      return BigNumber.from(ERC20_APPROVE_TRESHOLD);
+    },
+    async successBlockContinue() {
+      this.transactionInfo.success = false;
+      this.transactionInfo.hash = "";
+      this.transactionInfo.explorerLink = "";
+      if (this.transactionInfo.type === "unlock") {
+        if (!this.error) {
+          this.loading = true;
+          try {
+            await this.deposit();
+          } catch (error) {
+            if (error.message) {
+              if (error.message.includes("User denied")) {
+                this.error = "";
+              } else if (error.message.includes("Fee Amount is not packable")) {
+                this.error = "Fee Amount is not packable";
+              } else if (error.message.includes("Transaction Amount is not packable")) {
+                this.error = "Transaction Amount is not packable";
+              } else if (error.message && error.message.toString().length < 60) {
+                this.error = error.message;
+              } else {
+                this.error = "Transaction error";
+              }
+            } else {
+              this.error = "Transaction error";
+            }
+          }
+          this.tip = "";
+          this.loading = false;
+        }
+      }
+    },
+    setAllowanceToCurrent() {
+      if (!this.chosenToken || this.chosenToken.symbol === "ETH" || !this.tokenAllowance || this.zeroAllowance) {
+        this.inputtedAllowance = "";
+      } else {
+        try {
+          this.inputtedAllowance = utils.handleFormatToken(this.chosenToken.symbol, this.tokenAllowance.toString());
+        } catch (error) {
+          this.inputtedAllowance = "";
+        }
+      }
     },
   },
-};
+});
 </script>

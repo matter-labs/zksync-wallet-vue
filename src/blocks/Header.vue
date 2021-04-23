@@ -1,138 +1,90 @@
 <template>
-  <header>
+  <header class="loggedInHeader">
     <i-container>
-      <div class="firstRow">
-        <nuxt-link to="/account">
-          <logo />
-        </nuxt-link>
-        <div class="linksContainer">
-          <div class="userDropdown" @click="accountModal = true">
-            <div class="address">{{ walletName }}</div>
-            <div class="userImgContainer">
-              <user-img :wallet="walletAddressFull" />
-            </div>
-            <div class="dropdownArrow">
-              <i class="far fa-angle-down"></i>
+      <i-row>
+        <i-column :xs="6" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
+          <nuxt-link class="logoLinkContainer" to="/account"> <logo :is-zk-sync-logo="false" /> </nuxt-link>
+        </i-column>
+        <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
+          <div class="pagesContainer linksContainer _margin-x-auto">
+            <nuxt-link class="headerLink" to="/account">
+              <i class="mobileOnly ri-wallet-line"></i>
+              <span>My wallet</span>
+            </nuxt-link>
+            <nuxt-link class="headerLink" to="/contacts">
+              <i class="mobileOnly ri-contacts-line"></i>
+              <span>Contacts</span>
+            </nuxt-link>
+            <nuxt-link class="headerLink" to="/transactions">
+              <i class="mobileOnly ri-history-line"></i>
+              <span>Transactions</span>
+            </nuxt-link>
+          </div>
+        </i-column>
+        <i-column :xs="6" :md="3" class="_margin-left-auto _padding-right-0 _display-flex _justify-content-end">
+          <div class="linksContainer">
+            <div class="userDropdown" @click="togglePopup">
+              <div class="userDropdownAddress">
+                <div class="walletLabel">Wallet</div>
+                <div class="userAddress">
+                  <div class="address">{{ walletName }}</div>
+                </div>
+              </div>
+              <div class="userImgContainer">
+                <user-img :wallet="walletAddressFull"></user-img>
+              </div>
+              <div class="dropdownArrow">
+                <i class="ri-arrow-down-s-line"></i>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="secondRow">
-        <nuxt-link to="/account">My wallet</nuxt-link>
-        <nuxt-link to="/contacts">Contacts</nuxt-link>
-        <nuxt-link to="/transactions">Transactions</nuxt-link>
-      </div>
+        </i-column>
+      </i-row>
     </i-container>
-
-    <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
-      <template slot="header"> Rename wallet </template>
-      <div>
-        <i-input v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()" />
-        <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
-      </div>
-    </i-modal>
-
-    <i-modal v-model="accountModal" size="md">
-      <template slot="header">
-        <b>{{ walletName }}</b>
-      </template>
-      <div>
-        <wallet-address :wallet="walletAddressFull" />
-        <vue-qrcode class="addressQR" :value="walletAddressFull" :margin="1" :scale="6" />
-      </div>
-      <template slot="footer">
-        <a class="modalFooterBtn" :href="`${getZkScanBaseUrl}/accounts/${walletAddressFull}`" target="_blank">
-          <i class="fas fa-external-link"></i>
-          <span>View in block explorer</span>
-        </a>
-        <div class="modalFooterBtn" @click="renameWalletOpen()">
-          <i class="fas fa-pen"></i>
-          <span>Rename wallet</span>
-        </div>
-        <div class="modalFooterBtn" @click="logout()">
-          <i class="far fa-unlink"></i>
-          <span>Disconnect wallet</span>
-        </div>
-      </template>
-    </i-modal>
+    <account-modal />
   </header>
 </template>
 
-<script>
+<script lang="ts">
 import logo from "@/blocks/Logo.vue";
 import userImg from "@/components/userImg.vue";
-import walletAddress from "@/components/walletAddress.vue";
-import { APP_ZK_SCAN } from "@/plugins/build";
-import VueQrcode from "vue-qrcode";
+import accountModal from "@/blocks/modals/AccountModal.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   components: {
     logo,
     userImg,
-    walletAddress,
-    VueQrcode,
-  },
-  data() {
-    return {
-      renameWalletModal: false,
-      walletName: "",
-    };
+    accountModal,
   },
   computed: {
-    walletAddressFull() {
-      return this.$store.getters["account/address"];
+    walletName(): string {
+      return this.$accessor.account.name || "";
     },
-    getZkScanBaseUrl() {
-      return APP_ZK_SCAN;
+    walletAddressFull(): string {
+      return this.$accessor.account.address || "";
     },
     accountModal: {
-      get: function () {
-        return this.$store.getters["getAccountModalState"];
+      get(): boolean {
+        return this.$accessor.getAccountModalState;
       },
-      set(val) {
-        this.$store.commit("setAccountModalState", val);
+      set(val: boolean): boolean {
+        this.$accessor.setAccountModalState(val);
         return val;
       },
     },
   },
-  watch: {
-    renameWalletModal: {
-      immediate: true,
-      handler() {
-        if (!process.client) {
-          return false;
-        }
-        const walletName = window.localStorage.getItem(this.walletAddressFull);
-        if (walletName && walletName !== this.walletAddressFull) {
-          this.walletName = walletName;
-        } else {
-          let address = this.walletAddressFull;
-          if (address.length > 16) {
-            address = address.substr(0, 11) + "..." + address.substr(address.length - 5, address.length - 1);
-          }
-          this.walletName = address;
-        }
-      },
-    },
-  },
   methods: {
-    logout() {
+    logout(): void {
       this.accountModal = false;
       this.$nextTick(async () => {
-        await this.$store.dispatch("wallet/logout");
+        await this.$accessor.wallet.logout();
         await this.$router.push("/");
       });
     },
-    renameWalletOpen() {
-      this.accountModal = false;
-      this.renameWalletModal = true;
-    },
-    renameWallet() {
-      this.renameWalletModal = false;
-      if (process.client && this.walletName.length > 0 && this.walletName !== this.walletAddressFull) {
-        window.localStorage.setItem(this.walletAddressFull, this.walletName);
-      }
+    togglePopup(): void {
+      this.$accessor.setAccountModalState(true);
     },
   },
-};
+});
 </script>

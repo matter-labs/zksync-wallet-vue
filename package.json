@@ -1,5 +1,7 @@
 {
+  "name": "zksync-dapp-wallet",
   "author": "Matter Labs",
+  "private": true,
   "browserslist": {
     "production": [
       ">0.2%",
@@ -12,63 +14,12 @@
       "last 1 safari version"
     ]
   },
+  "version": "2.1.0-beta",
+  "homepage": "https://wallet.zksync.io",
+  "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "bugs": {
     "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
-  "dependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/runtime": "^7.12.5",
-    "@ethersproject/logger": "^5.0.8",
-    "@matterlabs/zk-wallet-onboarding": "^1.18.6",
-    "@nuxtjs/axios": "latest",
-    "@nuxtjs/google-gtag": "^1.0.4",
-    "@nuxtjs/pwa": "latest",
-    "@nuxtjs/sentry": "^4.5.0",
-    "@nuxtjs/toast": "latest",
-    "@walletconnect/web3-provider": "^1.3.1",
-    "ethereum-blockies-base64": "^1.0.2",
-    "ethers": "^5.0.12",
-    "js-cookie": "^2.2.1",
-    "lottie-web": "^5.7.5",
-    "moment": "^2.29.1",
-    "nuxt": "^2.14.12",
-    "nuxt-i18n": "^6.8.1",
-    "nuxt-social-meta": "^0.0.5",
-    "nuxt-webfontloader": "^1.1.0",
-    "qrcode": "^1.0.0",
-    "vue": "^2.6.12",
-    "vue-qrcode": "^0.3.5",
-    "vue-recaptcha": "^1.3.0",
-    "vue-scrollto": "^2.17.1",
-    "walletlink": "^2.0.2",
-    "web3": "^1.3.1",
-    "zksync": "^0.9.0"
-  },
-  "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
-  "devDependencies": {
-    "@inkline/nuxt": "^2.3.5",
-    "@nuxt/types": "^2.14.12",
-    "@nuxt/typescript-build": "^2.0.4",
-    "@nuxtjs/dotenv": "^1.4.1",
-    "@nuxtjs/eslint-config-typescript": "^5.0.0",
-    "@nuxtjs/style-resources": "^1.0.0",
-    "commitlint": "^11.0.0",
-    "dotenv": "8.2.0",
-    "eslint": "^7.20.0",
-    "eslint-config-prettier": "^7.1.0",
-    "eslint-plugin-prettier-vue": "^2.1.1",
-    "eslint-plugin-vue": "^7.0.0",
-    "lodash": "4.17.20",
-    "node-sass": "latest",
-    "prettier": "^2.2.1",
-    "sass-loader": "10.1.1",
-    "stylelint": "^13.8.0",
-    "webpack": "4.46"
-  },
-  "eslintConfig": {
-    "extends": "@nuxtjs/eslint-config-typescript"
-  },
-  "homepage": "https://wallet.zksync.io",
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
@@ -93,68 +44,37 @@
       "yarn run format"
     ]
   },
-  "name": "zksync-zkwallet-vue",
-  "optionalDependencies": {
-    "@sentry/webpack-plugin": "^1.14.0",
-    "fs-extra": "^9.0.1"
-  },
-  "private": true,
   "scripts": {
-    "ci": "rm -fr node_modules && rm -rf 'public/*' && sh ./cli-check-env.sh && yarn install --immutable  --immutable-cache",
-    "ci:build": "yarn run ci && sh ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
-    "start:firebase": "firebase serve --only hosting",
+    "ci:clear": "bash cli-dev.sh ci",
+    "ci:build": "yarn run ci && bash ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
+    "ci:prepare:rinkeby": "bash cli-process-env.sh 'rinkeby' dev 1",
+    "ci:prepare:ropsten": "bash cli-process-env.sh 'ropsten' dev 1",
+    "ci:prepare:mainnet": "bash cli-process-env.sh 'mainnet' dev 1",
+    "ci:validate": "yarn ci && bash cli-process-env.sh 'mainnet' dev 1",
     "deploy:prod": "./cli-deploy-production.sh",
-    "dev": "sh ./cli-check-env.sh && nuxt",
-    "prepare_ci": "yarn run ci && sh cli-process-env.sh 'rinkeby'",
-    "start": "sh ./cli-check-env.sh && nuxt start",
-    "build": "sh ./cli-check-env.sh && nuxt build",
-    "build:stage": "yarn run ci && sh cli-process-env.sh 'rinkeby' && yarn generate --fail-on-error",
+    "dev": "bash cli-process-env.sh 'rinkeby' 'dev' 1 && nuxt",
+    "prepare_ci": "yarn ci && bash cli-process-env.sh 'rinkeby'",
+    "start": "bash bash cli-process-env.sh 'rinkeby' 'dev' && nuxt start",
+    "build": "bash cli-process-env.sh 'mainnet' 'prod' true && nuxt build",
+    "build:stage": "yarn ci && bash cli-process-env.sh 'rinkeby' 'dev' && yarn generate --fail-on-error",
     "generate": "nuxt generate",
-    "test": "echo \"Not implemented.\"",
+    "test": "jest",
     "format": "prettier --write",
-    "lint-ts": "eslint --fix --ext .ts,.js,.vue .",
-    "lint-css": "stylelint --fix \"**/*.scss\"",
-    "audit_dependencies": "yarn audit --package-lock-only --audit-level critical --json | yarn-audit-html --output audit.html"
+    "lint-ts": "eslint --fix --ext .ts,.js,.vue ./src",
+    "lint-css": "stylelint --fix \"**/*.scss\""
   },
   "stylelint": {
     "extends": [
-      "stylelint-config-recommended",
-      "stylelint-config-rational-order"
+      "stylelint-config-recommended"
     ],
     "plugins": [
-      "stylelint-order",
-      "stylelint-scss",
-      "stylelint-config-rational-order/plugin",
-      "stylelint-high-performance-animation",
-      "stylelint-declaration-use-variable"
+      "stylelint-scss"
     ],
     "rules": {
       "no-empty-source": [
         true,
         {
           "severity": "warning"
-        }
-      ],
-      "plugin/no-low-performance-animation-properties": [
-        true,
-        {
-          "severity": "warning"
-        }
-      ],
-      "sh-waqar/declaration-use-variable": [
-        [
-          "/color/",
-          "font-size",
-          "font-family",
-          "font-weight"
-        ]
-      ],
-      "order/properties-order": [],
-      "plugin/rational-order": [
-        true,
-        {
-          "border-in-box-model": false,
-          "empty-line-between-groups": false
         }
       ],
       "selector-type-no-unknown": [
@@ -170,5 +90,79 @@
       "scss/at-rule-no-unknown": true
     }
   },
-  "version": "2.1.0"
+  "dependencies": {
+    "@matterlabs/zk-wallet-onboarding": "1.18.6",
+    "@nuxt/components": "2.1.6",
+    "@nuxt/typescript-runtime": "latest",
+    "@nuxtjs/axios": "^5.13.1",
+    "@nuxtjs/google-gtag": "^1.0.4",
+    "@nuxtjs/sentry": "^5.0.3",
+    "@nuxtjs/toast": "^3.3.1",
+    "ethereum-blockies-base64": "^1.0.2",
+    "ethers": "^5.1.0",
+    "lottie-web": "^5.7.7",
+    "moment-timezone": "^0.5.33",
+    "nuxt": "latest",
+    "nuxt-i18n": "^6.22.3",
+    "nuxt-typed-vuex": "latest",
+    "nuxt-webfontloader": "^1.1.0",
+    "qrcode": "^1.4.4",
+    "vue": "latest",
+    "vue-qrcode": "^0.3.5",
+    "vue-scrollto": "^2.20.0",
+    "web3": "^1.3.5",
+    "zksync": "^0.10.9"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.15",
+    "@babel/runtime": "^7.13.10",
+    "@ethersproject/logger": "^5.1.0",
+    "@ethersproject/providers": "^5.1.0",
+    "@inkline/nuxt": "^2.3.6",
+    "@nuxt/types": "latest",
+    "@nuxt/typescript-build": "latest",
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/eslint-config-typescript": "^6.0.0",
+    "@nuxtjs/style-resources": "latest",
+    "@types/jest": "^26.0.22",
+    "@typescript-eslint/eslint-plugin": "^4.21.0",
+    "@typescript-eslint/parser": "^4.21.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.23.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "fork-ts-checker-webpack-plugin": "^6.2.0",
+    "jest": "^26.6.3",
+    "node-sass": "4.14.0",
+    "prettier": "^2.2.1",
+    "sass-loader": "10.0.0",
+    "stylelint": "^13.12.0",
+    "stylelint-config-recommended": "^4.0.0",
+    "stylelint-config-standard": "^21.0.0",
+    "stylelint-high-performance-animation": "^1.5.2",
+    "stylelint-scss": "^3.19.0",
+    "typed-vuex": "latest",
+    "typescript": "^4.2.4",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.1.2",
+    "vuex": "3.5.1",
+    "web3-core": "^1.3.5",
+    "webpack": "4.46.0"
+  },
+  "peerDependencies": {
+    "@babel/core": "*",
+    "@babel/runtime": "*",
+    "typed-vuex": "*",
+    "vuex": "3.5.1"
+  },
+  "resolutions": {
+    "babel-core": "7.0.0-bridge.0"
+  },
+  "fork-ts-checker": {
+    "typescript": true
+  },
+  "optionalDependencies": {
+    "fs-extra": "^9.1.0",
+    "fsevents": "^2.3.2"
+  }
 }

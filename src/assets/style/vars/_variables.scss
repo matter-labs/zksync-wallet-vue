@@ -1,0 +1,87 @@
+/* Colors */
+$white: #fff;
+$light: #e1e4e8;
+$gray: #9eaebb;
+$black: #242424;
+$violet: #4e529a;
+$green: #1d9b4a;
+$darkViolet: #171a49; //MajorDark
+$mediumViolet: #2f3264;
+$lightViolet: #8c8dfc;
+$red: #f25f5c;
+$link-color: $lightViolet;
+$color-secondary: $violet;
+$openSans: "Open Sans", "sans-serif";
+
+/* Uplifting */
+$bgDesign: #f4f5f7;
+$darkMain: #272640;
+
+/* Extracted values */
+$tempLightGray: #bababa;
+$tempLightYellow: #bababa;
+$tempDarkBlue: #11142b;
+$tempTransparent: transparent;
+
+/* Bg */
+$accentBg: transparentize(
+  $color: $gray,
+  $amount: 0.95,
+);
+$bgLight: #fbfbfb;
+
+/* Input */
+$input-prefix-border-width: 0;
+$input-border-width: 1px;
+$input-border-color-dark: #ffffff14;
+$input-border-color-focus-dark: #ffffff33;
+$input-background-dark: #ffffff05;
+$input-background-light: #00000005;
+$input-border-color-light: #0000000a;
+$input-border-color-focus-light: #00000033;
+
+/* Modal */
+$modal-border-radius: (
+  md: 8px,
+);
+$modal-border-color-dark: #ffffff14;
+$modal-background-dark: $darkViolet;
+$modal-border-color-light: #180d0d05;
+$modal-background-light: $white;
+
+/* Fonts */
+$firaSans: "Fira Sans", "sans-serif";
+$firaCode: "Fira Code", "sans-serif";
+$firaSansExtra: "Fira Sans Extra Condensed", "sans-serif";
+
+$font-family-primary-base: $firaSans;
+
+/* Transitions */
+$transition1: 0.2s ease;
+$transition2: 0.3s ease;
+
+/* Border-radius */
+$borderRadiusXs: 6.6px;
+$borderRadiusSm: 0.25rem;
+$borderRadius: 8px;
+$borderRadiusBig: 16px;
+
+/* Blocks */
+$headerHeight: 80px;
+$minRouteHeight: calc(100vh - 82px - 80px);
+$minRouteHeightMain: calc(100vh - 82px - 80px);
+
+/* Responsive */
+$mobile: 768px;
+$maxWidth: 1370px;
+
+/* Shadows */
+$shadowInset: inset 1px 1px 1px rgba(0, 0, 0, 0.03);
+$popoverShadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+$shadowTop: 0 -3px 10px rgba(0, 0, 0, 0.05);
+$shadowBottom: 0 3px 10px rgba(0, 0, 0, 0.05);
+$inputContainerShadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.04);
+$hoverShadow: 0 4px 8px #00000015;
+$defaultShadow: 0 4px 4px #00000015;
+$layerShadow: 0 1px 5px 0 #0000001a;
+$tileShadow: 0 1px 0.5px #0000001a;
