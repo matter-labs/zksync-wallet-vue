@@ -14,7 +14,7 @@
       "last 1 safari version"
     ]
   },
-  "version": "2.1.0-beta",
+  "version": "2.3.1",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "bugs": {
