@@ -3,8 +3,8 @@ body {
     z-index: 9;
     width: 100%;
     height: 84px;
-    background: rgba(24, 24, 32, 0.01) -moz-linear-gradient(top, rgba(24, 24, 32, 0.9), rgba(24, 24, 32, 0.7));
-    box-shadow: 1px 1px 5px 10px rgba(0, 0, 0, 0.01);
+    background: rgba(24, 24, 32, .01) -moz-linear-gradient(top, rgba(24, 24, 32, .9), rgba(24, 24, 32, .7));
+    box-shadow: 1px 1px 5px 10px rgba(0, 0, 0, .01);
 
     .linksContainer {
       .linkItem {
@@ -119,7 +119,7 @@ body {
       cursor: pointer;
       transition: color $transition1;
 
-      &:before {
+      &::before {
         top: 0;
         left: 0;
         content: "";
@@ -156,6 +156,7 @@ body {
               height: 28px;
             }
           }
+
           .badge {
             position: absolute;
             bottom: 100%;
@@ -163,6 +164,7 @@ body {
           }
         }
       }
+
       &.opened {
         .mobileIndexHeader {
           padding: 0;
@@ -234,6 +236,7 @@ body {
           }
         }
       }
+
       .mainIndexHeader {
         position: absolute;
         top: 0;
@@ -282,9 +285,11 @@ body {
             padding: 10px 0;
             font-size: 18px;
             text-align: left;
+
             &:first-child {
               padding-top: 0;
             }
+
             &:last-child {
               padding-bottom: 0;
             }
@@ -315,10 +320,12 @@ body {
           }
         }
       }
+
       .dropdown {
         height: 52px;
         overflow: hidden;
         transition: height $transition1;
+
         &.opened {
           height: 312px;
         }
@@ -342,6 +349,7 @@ body {
       padding: 0 10px;
       color: $white;
       white-space: nowrap;
+
       @media screen and (min-width: $mobile+1) and (max-width: 991px) {
         padding: 0 5px;
         font-size: 14px;
@@ -359,17 +367,20 @@ body.inkline.-light {
         stroke: $black;
       }
     }
+
     .mainIndexHeader {
       background-color: $white;
 
       .linksContainer {
         a.linkItem {
           color: $violet !important;
+
           &:hover {
             color: $lightViolet !important;
           }
         }
       }
+
       .dropdown .menu {
         background-color: $bgLight;
         border-color: $bgLight;
@@ -377,6 +388,7 @@ body.inkline.-light {
 
         .item {
           color: $violet !important;
+
           &:hover {
             color: $lightViolet !important;
             background-color: darken($white, 5) !important;

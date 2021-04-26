@@ -7,8 +7,9 @@
 
   .bn-onboard-select-wallet-info {
     color: $lightViolet !important;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 16px;
+
     @media screen and (max-width: $mobile) {
       margin-top: 0.35em;
     }
@@ -20,13 +21,15 @@
     font: normal 16px $firaSans !important;
     letter-spacing: -0.01rem !important;
     text-decoration: none !important;
+
     &:hover {
       color: $violet !important;
     }
   }
 
   @media screen and (min-width: $mobile) {
-    b//background-color: transparent !important;
+    background-color: transparent !important;
+
     .bn-onboard-modal-content {
       width: 85%;
     }
@@ -135,9 +138,11 @@
       margin: 0.25rem 0;
       padding: 0.5rem;
     }
+
     .bn-onboard-select-wallet-definition {
-      margin-top: .8em !important;
+      margin-top: 0.8em !important;
     }
+
     .bn-onboard-modal-content {
       padding-bottom: 0;
 

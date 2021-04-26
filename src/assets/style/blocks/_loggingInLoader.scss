@@ -27,6 +27,7 @@
         height: 35px;
       }
     }
+
     .badge {
       position: absolute;
       bottom: 100%;
@@ -53,6 +54,7 @@
     0% {
       transform: rotate(0deg);
     }
+
     100% {
       transform: rotate(360deg);
     }
@@ -65,6 +67,7 @@
       font-size: 24px;
       text-align: center;
     }
+
     .hint {
       font-size: 16px;
       text-align: center;

@@ -12,6 +12,7 @@
     height: 100%;
     max-height: 60vh;
     overflow: auto;
+
     @media (max-width: $mobile) {
       max-height: 55vh;
     }
@@ -43,7 +44,7 @@
       transition: background-color $transition1;
 
       &:hover {
-        background-color: transparentize($color: $gray, $amount: 0.9);
+        background-color: transparentize($color: $gray, $amount: .9);
       }
 
       .tokenSymbol {

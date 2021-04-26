@@ -1,40 +1,65 @@
 // Core
 
 @import "./components/custom/input.scss";
+
 @import "./components/custom/button.scss";
+
 @import "./components/custom/alert.scss";
+
 @import "./default";
 
 //Layouts
 @import "./layouts/default";
+
 @import "./layouts/index";
 
 //Blocks
 @import "./blocks/header";
+
 @import "./blocks/indexHeader";
+
 @import "./blocks/footer";
+
 @import "./blocks/socialBlock";
+
 @import "./blocks/logo";
+
 @import "./blocks/onboard";
+
 @import "./blocks/mint";
+
 @import "./blocks/loggingInLoader";
+
 @import "./blocks/chooseToken";
 
 //Components
 @import "./components/loader";
+
 @import "./components/userImg";
+
 @import "./components/walletAddress";
+
 @import "./components/checkmark";
+
 @import "./components/toaster";
+
 @import "./components/loadingBlock";
+
 @import "./components/amountInput";
+
 @import "./components/successBlock";
+
 @import "./components/note";
 
 //Pages
 @import "./pages/index";
+
 @import "./pages/contacts";
+
 @import "./pages/transactions";
+
 @import "./pages/transaction";
+
 @import "./pages/account";
+
 @import "./pages/tokenAccount";
