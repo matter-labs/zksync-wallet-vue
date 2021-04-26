@@ -24,7 +24,7 @@
           <a target="_blank" class="footer-link" :href="`${blockExplorerLink}`">zkScan</a>
         </div>
       </i-row>
-      <i-row center class="_margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap badge outline-white -secondary">
+      <i-row center class="_margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap badge outline-white -secondary _display-none">
         <a href="https://zksync.io" target="_blank" class="poweredBy">
           <logo />
           <span>Ecosystem</span>

@@ -59,7 +59,7 @@ const config: NuxtConfig = {
       {
         hid: "twitter:title",
         name: "twitter:title",
-        content: pageImg,
+        content: pageTitle,
       },
       {
         hid: "twitter:description",
@@ -84,12 +84,12 @@ const config: NuxtConfig = {
       {
         hid: "twitter:image:alt",
         name: "twitter:image:alt",
-        content: pageImg,
+        content: pageTitle,
       },
       {
         hid: "og:title",
         property: "og:title",
-        content: pageTitleTemplate,
+        content: pageTitle,
       },
       {
         hid: "og:description",
@@ -109,7 +109,7 @@ const config: NuxtConfig = {
       {
         hid: "og:image:alt",
         property: "og:image:alt",
-        content: pageTitleTemplate,
+        content: pageTitle,
       },
 
       { "http-equiv": "pragma", content: "no-cache", property: "pragma" },

@@ -56,7 +56,7 @@ export default Vue.extend({
   computed: {
     zkWalletLogoSrc(): string {
       const variation = utils.defineTheme(this.$inkline, false) === "light" ? "" : "-alt";
-      return require(`@/assets/imgs/logos/zkwallet${variation}.svg`);
+      return require(`@/assets/imgs/logos/logo${variation}.svg`);
     },
     network(): string {
       return ETHER_NETWORK_NAME;
