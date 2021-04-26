@@ -93,7 +93,7 @@ export const actions = actionTree(
       }
       return getters.getAllTokens;
     },
-    async loadRestrictedTokens({ state, commit, getters }, tokensList: Tokens): Promise<Tokens> {
+    async loadRestrictedTokens({ commit, getters }, tokensList: Tokens): Promise<Tokens> {
       if (Object.entries(getters.getRestrictedTokens).length === 0) {
         const acceptableTokens: TokenInfo[] = (await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
         for (const symbol in tokensList) {
