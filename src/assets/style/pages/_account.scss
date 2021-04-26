@@ -1,44 +1,41 @@
 .walletPage {
   .balancesBlock {
-        /* height: calc(100vh - 105px - 316px); */
-        height: max-content;
-    min-height: 340px;
+    height: max-content;
+    //max-height: $minRouteHeightMain;
+    min-height: 320px;
 
-    .form-input-group
-    {
+    .form-input-group {
       margin-bottom: 1rem;
     }
 
     .centerBlock {
-      width: 100%;
-      height: auto;
-      padding-top: 30px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
+      width: 100%;
+      height: auto;
+      padding-top: 30px;
       overflow: hidden;
+      text-align: center;
     }
 
     .balances {
       width: 100%;
-      height: max-content;
-      min-height: 300px;
-      /* max-height: calc(30vh - 160px);
-      overflow: hidden; */
+      height: calc(100% - 50px);
 
       .balancesList {
         width: 100%;
-        height: max-content;
-        /* height: calc(100% - 80px);
-        max-height: calc(30vh - 160px);
-        min-height: 150px; */
-        overflow: auto;
+        height: calc(100% - 170px);
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        background-color: #ffffff10;
+        border-radius: $borderRadius;
+        box-shadow: $shadowInset;
 
         &::-webkit-scrollbar {
           width: 10px;
-          background-color: transparent;
+          background-color: $tempTransparent;
         }
 
         &::-webkit-scrollbar-thumb {
@@ -47,21 +44,21 @@
         }
 
         &::-webkit-scrollbar-track {
-          background-color: transparent;
+          background-color: $tempTransparent;
           border-radius: 10px;
         }
 
         .balanceItem {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
           width: 100%;
           height: 60px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
           padding: 0 20px;
-          border-bottom: 1px solid;
-          transition: background-color $transition1, color $transition1;
           text-decoration: none;
+          border-bottom: 1px solid;
           cursor: pointer;
+          transition: background-color $transition1, color $transition1;
 
           &:hover {
             background-color: transparentize($color: $gray, $amount: 0.9);
@@ -73,23 +70,39 @@
 
           .rightSide {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+
+            .rowItem {
+              display: flex;
+              align-items: center;
+            }
 
             .total {
-              font-size: 18px;
               padding-right: 10px;
+              font-size: 18px;
+              line-height: 25px;
 
               .balancePrice {
-                font-size: 16px;
                 color: $gray;
+                font-size: 16px;
+              }
+              &.small {
+                color: $gray;
+                font-size: 13px;
+
+                .balancePrice {
+                  font-size: 12px;
+                }
               }
             }
 
             .status {
               width: 25px;
               height: 25px;
-              line-height: 25px;
               font-size: 20px;
+              line-height: 25px;
               text-align: center;
 
               .verified {
@@ -102,6 +115,50 @@
 
               .inProgress {
                 color: $gray;
+              }
+
+              .loaderContainer {
+                margin-top: 1px;
+                margin-left: 2px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    @media screen and (max-width: $mobile) {
+      height: max-content;
+      .balances {
+        .balancesList {
+          .balanceItem {
+            display: block;
+            height: max-content;
+            padding: 10px 20px;
+
+            .tokenSymbol {
+              text-align: center;
+            }
+
+            .rightSide {
+              display: block;
+
+              .rowItem {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                &:nth-child(2) {
+                  margin-top: 10px;
+                }
+              }
+
+              .total {
+                text-align: center;
+
+                .balancePrice {
+                  display: block;
+                }
               }
             }
           }
@@ -119,8 +176,8 @@ body.inkline {
       }
 
       .balanceItem {
-        border-color: $input-border-color-light;
         color: $black;
+        border-color: $input-border-color-light;
       }
     }
   }
@@ -132,8 +189,8 @@ body.inkline {
       }
 
       .balanceItem {
-        border-color: $input-border-color-dark;
         color: $white;
+        border-color: $input-border-color-dark;
       }
     }
   }

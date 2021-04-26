@@ -1,45 +1,48 @@
 <template>
   <transition name="fade">
     <div v-if="loggingIn" class="loggingInLoader">
-      <logo class="_margin-bottom-3" />
-      <h1>Logging in{{ titlePostfix }}</h1>
-      <div class="_margin-top-2 _margin-bottom-1" v-if="loadingHint">
-        <p class="hint">
-          <span>{{ loadingHint }}</span>
-        </p>
-      </div>
+      <logo class="_margin-bottom-3" :is-zk-sync-logo="false" />
+      <h1>Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
+      <p v-if="hintText" class="hint">
+        <span>{{ hintText }}</span>
+      </p>
+      <div class="_margin-top-2"></div>
       <loader size="lg" />
       <i-button class="cancelButton" block variant="secondary" size="lg" @click="cancelLogin()">Cancel</i-button>
     </div>
   </transition>
 </template>
 
-<script>
+<script lang="ts">
 import logo from "@/blocks/Logo.vue";
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   components: {
     logo,
   },
   computed: {
-    titlePostfix() {
-      return this.selectedWallet ? ` with ${this.selectedWallet}` : "..";
-    },
     loggingIn() {
-      return this.$store.getters["account/loader"];
+      return this.$accessor.account.loader;
+    },
+    hintText(): string {
+      if (this.$accessor.account.loadingHint === "followInstructions") {
+        return "Follow the instructions in your wallet";
+      }
+      if (this.$accessor.account.loadingHint === "loadingData") {
+        return "Getting wallet information";
+      }
+      return this.$accessor.account.loadingHint;
     },
     selectedWallet() {
-      return this.$store.getters["account/selectedWallet"];
-    },
-    loadingHint() {
-      return this.$store.getters["account/loadingHint"];
+      return this.$accessor.account.selectedWallet;
     },
   },
   methods: {
-    cancelLogin() {
-      this.$store.dispatch("wallet/logout");
+    cancelLogin(): void {
+      this.$accessor.wallet.logout();
       this.$router.push("/");
     },
   },
-};
+});
 </script>

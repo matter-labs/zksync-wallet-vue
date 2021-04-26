@@ -1,17 +1,19 @@
 <template>
-    <div class="walletContainer">
-        <user-img :wallet="wallet" @click="$emit('clickPicture')" />
-        <span class="walletValue walletAddress">{{wallet}}</span>
-        <i-tooltip trigger="click">
-            <i class="copy fas fa-copy" @click="copyAddress()"></i>
-            <template slot="body">Copied!</template>
-        </i-tooltip>
-    </div>
+  <div class="walletContainer">
+    <user-img :wallet="wallet" @click="$emit('clickPicture')" />
+    <span class="walletValue walletAddress">{{ wallet }}</span>
+    <i-tooltip trigger="click">
+      <i class="copy ri-clipboard-line" @click="copyAddress()"></i>
+      <template slot="body">Copied!</template>
+    </i-tooltip>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Address } from "zksync/build/types";
 import userImg from "@/components/userImg.vue";
-export default {
+import Vue, { PropOptions } from "vue";
+export default Vue.extend({
   components: {
     userImg,
   },
@@ -20,7 +22,7 @@ export default {
       type: String,
       default: "",
       required: true,
-    },
+    } as PropOptions<Address>,
   },
   methods: {
     copyAddress() {
@@ -35,5 +37,5 @@ export default {
       document.body.removeChild(elem);
     },
   },
-};
+});
 </script>

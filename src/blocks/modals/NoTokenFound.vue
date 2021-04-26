@@ -1,20 +1,30 @@
 <template>
-  <i-modal v-model="isOpened" size="md">
+  <i-modal v-model="opened" size="md">
     <template slot="header">Can't find a token</template>
-    <div>
-      <p>zkSync currently supports the most popular tokens, we will be adding more over time. <a
-          href="//zksync.io/contact.html" target="_blank" rel="noopener noreferrer">Let us know what tokens you
-        need</a>!</p>
-    </div>
+    <p>
+      zkSync currently supports the most popular tokens, we will be adding more over time.
+      <a href="https://zksync.io/contact.html" target="_blank" rel="noopener noreferrer">Let us know what tokens you need</a>
+      !
+    </p>
   </i-modal>
 </template>
-<script>
-export default {
+
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
   name: "NoTokenFound",
   computed: {
-    isOpened: function () {
-      return this.$store.getters["currentModal"] !== null && this.$store.getters["currentModal"] === "NoTokenFound";
+    opened: {
+      set(val): void {
+        if (val === false) {
+          this.$accessor.closeActiveModal();
+        }
+      },
+      get(): boolean {
+        return this.$accessor.currentModal !== null && this.$accessor.currentModal === "NoTokenFound";
+      },
     },
   },
-};
+});
 </script>

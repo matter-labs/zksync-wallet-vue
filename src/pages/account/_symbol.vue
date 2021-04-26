@@ -3,7 +3,7 @@
     <div class="tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath && fromRoute.path !== '/withdraw' ? fromRoute : '/account'" class="returnBtn">
-          <i class="far fa-long-arrow-alt-left"></i>
+          <i class="ri-arrow-left-line"></i>
         </nuxt-link>
         <span class="tokenSymbol">{{ symbol }}</span>
       </div>
@@ -18,26 +18,30 @@
         <div class="infoBlock _margin-top-1">
           <div class="headline">Your balance:</div>
         </div>
-        <div class="_display-flex _justify-content-space-between">
+        <div class="_display-flex _justify-content-space-between balanceWithdraw">
           <div class="infoBlock">
             <div class="balance">
-              <span class="tokenSymbol">{{ symbol }}</span> {{ token.balance }}&nbsp;&nbsp;<span class="balancePrice">{{ token.formattedTotalPrice }}</span>
+              <span class="tokenSymbol">{{ symbol }}</span> {{ token.balance }}&nbsp;&nbsp;<span class="balancePrice">{{
+                token.rawBalance | formatUsdAmount(token.tokenPrice, token.symbol)
+              }}</span>
             </div>
           </div>
-          <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">- Withdraw</i-button>
+          <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">- Withdraw </i-button>
         </div>
-        <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`"><i class="fas fa-paper-plane" />&nbsp;&nbsp;Transfer</i-button>
+        <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`"> <i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer </i-button>
       </div>
     </div>
     <transactions :filter="symbol" />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import transactions from "@/blocks/Transactions.vue";
-import utils from "@/plugins/utils.js";
+import { ZkInBalance } from "@/plugins/types";
+import Vue from "vue";
+import { TokenSymbol } from "zksync/build/types";
 
-export default {
+export default Vue.extend({
   components: {
     transactions,
   },
@@ -48,12 +52,12 @@ export default {
   },
   data() {
     return {
-      token: {},
+      token: <ZkInBalance>{},
       loading: true,
     };
   },
   computed: {
-    symbol() {
+    symbol(): TokenSymbol {
       return this.$route.params.symbol.toUpperCase();
     },
   },
@@ -61,25 +65,22 @@ export default {
     this.getData();
   },
   methods: {
-    getFormattedTotalPrice(price, amount, symbol) {
-      return utils.getFormattedTotalPrice(price, amount, symbol);
-    },
     async getData() {
       this.loading = true;
-      const balances = await this.$store.dispatch("wallet/getzkBalances");
+      const balances = await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       let found = false;
-      for (let a = 0; a < balances.length; a++) {
-        if (balances[a].symbol === this.symbol) {
-          this.token = balances[a];
+      for (const item of balances) {
+        if (item.symbol === this.symbol) {
+          this.token = item;
           found = true;
           this.loading = false;
           break;
         }
       }
-      if (found === false) {
+      if (!found) {
         await this.$router.push("/account");
       }
     },
   },
-};
+});
 </script>

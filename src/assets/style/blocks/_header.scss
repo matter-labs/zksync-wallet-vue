@@ -1,41 +1,96 @@
 header {
   width: 100%;
-  height: 105px;
-  padding: 16px 16px 0;
+  height: 80px;
+  padding: 0;
   transition: background-color $transition1;
+  &.loggedInHeader {
+    @media screen and (max-width: $mobile) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9;
+      box-shadow: $shadowBottom;
+    }
+    @media screen and (min-width: 992px) and (max-width: 1200px) {
+      .pagesContainer.linksContainer {
+        grid-gap: 3px;
 
-  & > .container {
-    height: 100%;
-    display: grid;
-    grid-template-columns: 100%;
-    grid-template-rows: 35px 1fr;
-    grid-row-gap: 5px;
-    @media screen and (min-width: 1201px) {
-      max-width: 1920px;
+        .headerLink {
+          padding: 10px 10px;
+          font-size: 14px;
+        }
+      }
+    }
+    @media screen and (min-width: 768px) and (max-width: 991px) {
+      .pagesContainer.linksContainer {
+        grid-gap: 3px;
+
+        .headerLink {
+          padding: 10px 15px;
+          font-size: 20px;
+
+          span {
+            display: none;
+          }
+          i {
+            display: block !important;
+          }
+        }
+      }
     }
   }
 
-  .firstRow {
-    height: 100%;
-    width: 100%;
+  & > .container {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    .row {
+      width: 100%;
+      padding: 0 5vw;
+
+      @media screen and (max-width: $mobile) {
+        margin: 0 auto;
+      }
+    }
 
     a {
       text-decoration: none;
     }
 
+    .logoLinkContainer {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
     .headerWrapper {
-      height: 35px !important;
+      height: 30px !important;
+      @media screen and (min-width: 768px) and (max-width: 991px) {
+        height: 25px !important;
 
-      .projectLogo {
-        height: 100% !important;
-        width: auto !important;
+        .badge small {
+          font-size: 10px !important;
+        }
       }
+
+      .zkwallet-logo {
+        width: auto !important;
+        height: 100% !important;
+        object-fit: contain;
+      }
+
       .badge {
         margin-top: -30px;
-        transition: background-color $transition1;
+        padding: 0;
+        color: $lightViolet !important;
+        font-weight: 400;
+        font-size: 12px !important;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        background: transparent !important;
       }
+
       @media (max-width: $mobile) {
         padding-top: 0 !important;
 
@@ -43,101 +98,161 @@ header {
           max-width: 130px !important;
           object-fit: contain !important;
         }
-        .badge {
-          margin-top: 0 !important;
-        }
       }
     }
+    @media screen and (min-width: 1201px) {
+      max-width: 1920px;
+    }
+  }
 
-    .linksContainer {
-      height: 100%;
-      width: max-content;
-      display: grid;
-      grid-auto-flow: column;
-      grid-template-rows: 100%;
-      grid-auto-columns: max-content;
-      align-items: center;
-      grid-gap: 25px;
-      @media screen and (min-width: $mobile) and (max-width: 992px) {
-        grid-gap: 15px;
-
-        .mainLink {
-          font-size: 16px !important;
-        }
-      }
+  .linksContainer {
+    display: grid;
+    grid-auto-columns: max-content;
+    grid-auto-flow: column;
+    grid-gap: 10px;
+    grid-template-rows: 100%;
+    align-items: center;
+    width: max-content;
+    height: 100%;
+    @media screen and (min-width: $mobile) and (max-width: 992px) {
+      grid-gap: 15px;
 
       .mainLink {
-        font-size: 18px;
-        text-decoration: none;
-        transition: color $transition1;
-
-        i {
-          font-size: 12px;
-          color: $gray;
-          padding-left: 2px;
-        }
+        font-size: 16px !important;
       }
     }
 
-    .userDropdown {
-      width: max-content;
-      height: 35px;
-      display: grid;
-      grid-template-columns: max-content 25px 16px;
-      grid-template-rows: 100%;
-      grid-gap: 15px;
-      align-items: center;
-      transition: background-color $transition1;
-      box-sizing: border-box;
-      padding-left: 10px;
-      padding-right: 13px;
-      border-radius: 15px;
-      cursor: pointer;
+    .mainLink {
+      font-size: 18px;
+      text-decoration: none;
+      transition: color $transition1;
 
-      &:hover {
-        background-color: transparentize($color: $gray, $amount: 0.8);
+      i {
+        padding-left: 2px;
+        color: $gray;
+        font-size: 12px;
       }
+    }
+    .headerLink {
+      padding: 10px 15px;
+      color: $violet;
+      border-radius: $borderRadius;
+      transition: $transition1;
+      transition-property: background-color, color;
+      will-change: background-color, color;
 
-      .address {
-        font-size: 18px;
-        line-height: 25px;
-        white-space: nowrap;
+      &.nuxt-link-exact-active {
+        color: #27274e;
+        font-weight: 600;
+        background: #f7fafc;
       }
+    }
+  }
+  @media screen and (max-width: $mobile) {
+    .pagesContainerRow {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .pagesContainer {
+      position: fixed;
+      bottom: -1px;
+      left: 0;
+      z-index: 9;
+      grid-gap: 2px;
+      justify-content: center;
+      width: 100%;
+      height: 80px;
+      padding: 6px 5vw;
+      background-color: $darkViolet;
+      box-shadow: $shadowTop;
 
-      .userImgContainer {
-        height: 25px;
-        width: 25px;
-
-        img {
-          width: 100%;
-          height: 100%;
+      .headerLink {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        padding: 9px 10px;
+        font-size: 14px;
+        &.nuxt-link-exact-active {
+          font-weight: 400;
         }
-      }
 
-      .dropdownArrow {
-        font-size: 20px;
-        color: darken($color: $gray, $amount: 15);
-        text-align: right;
-      }
-
-      @media screen and (max-width: 768px) {
-        grid-template-columns: 25px 16px;
-        padding-right: 0;
-
-        .address {
-          display: none;
+        i {
+          display: block;
+          padding-top: 2px;
+          padding-bottom: 5px;
+          font-size: 20px;
+          text-align: center;
         }
       }
     }
   }
 
-  .secondRow {
-    height: auto;
+  .userDropdown {
     display: grid;
-    grid-template-columns: repeat(3, max-content);
     grid-template-rows: 100%;
+    grid-template-columns: max-content 20px 40px;
+    align-items: center;
+    box-sizing: border-box;
+    width: max-content;
+    height: 40px;
+    cursor: pointer;
+
+    .userDropdownAddress {
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+      width: max-content;
+      height: 100%;
+      padding: 0 13px 0 5px;
+
+      .walletLabel {
+        color: darken($tempLightGray, 20);
+        font-size: 14px;
+        line-height: 20px;
+        text-align: left;
+      }
+      .address {
+        font-size: 14px;
+        line-height: 20px;
+        white-space: nowrap;
+      }
+    }
+
+    .userImgContainer {
+      width: 32px;
+      height: 32px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        border-radius: 40%;
+      }
+    }
+
+    .dropdownArrow {
+      color: $lightViolet;
+      font-size: 20px;
+      text-align: right;
+    }
+
+    @media screen and (max-width: 768px) {
+      grid-template-columns: 32px 30px;
+
+      .userDropdownAddress {
+        display: none;
+      }
+    }
+  }
+
+  .secondRow {
+    display: grid;
     grid-gap: 50px;
+    grid-template-rows: 100%;
+    grid-template-columns: repeat(3, max-content);
     justify-content: center;
+    height: auto;
     @media (max-width: $mobile) {
       grid-gap: 20px;
 
@@ -147,16 +262,17 @@ header {
     }
 
     a {
-      display: block;
       position: relative;
-      text-align: center;
+      display: block;
+      font-weight: 400;
       font-size: 18px;
       line-height: 49px;
-      font-weight: 400;
-      transition: $transition1;
+      text-align: center;
       text-decoration: none !important;
+      transition: $transition1;
 
-      &.nuxt-link-exact-active, &:hover {
+      &.nuxt-link-exact-active,
+      &:hover {
         &::after {
           background: $lightViolet;
         }
@@ -164,12 +280,12 @@ header {
 
       &::after {
         position: absolute;
-        content: '';
+        bottom: -2px;
+        left: 0;
         width: 100%;
         height: 4px;
-        left: 0;
-        bottom: -2px;
-        background: transparent;
+        background: $tempTransparent;
+        content: "";
       }
     }
   }
@@ -188,23 +304,33 @@ header {
 }
 
 body.inkline.-light header {
-  background: $white;
+  background: $bgLight;
 
-  .secondRow a, .linksContainer .mainLink {
+  .linksContainer .mainLink {
     color: $black;
   }
-  .headerWrapper .badge {
-    background-color: $lightViolet !important;
+  .pagesContainer {
+    @media screen and (max-width: $mobile) {
+      background-color: $white;
+    }
   }
 }
 
 body.inkline.-dark header {
   background: $darkViolet;
 
-  .secondRow a, .linksContainer .mainLink {
+  .userDropdown .userDropdownAddress .walletLabel {
+    color: $gray;
+  }
+  .linksContainer .mainLink {
     color: $white;
   }
-  .headerWrapper .badge {
-    background-color: $violet !important;
+  .linksContainer .headerLink {
+    color: $lightViolet;
+
+    &.nuxt-link-exact-active {
+      color: darken($color: $white, $amount: 15);
+      background-color: darken($color: $darkViolet, $amount: 5);
+    }
   }
 }

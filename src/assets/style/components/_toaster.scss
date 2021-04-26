@@ -1,41 +1,44 @@
 .toasted-container {
-    .toasted {
-        &-primary {
-            transition: background-color $transition1, color $transition1;
-            box-shadow: 0 0px 3px 0px rgba(0,0,0,.12) !important;
-            border-radius: 6px !important;
+  .toasted {
+    &-primary {
+      border-radius: 6px !important;
+      box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.12) !important;
+      transition: background-color $transition1, color $transition1;
 
-            &.error {
-                background-color: #fd413c !important;
+      &.error {
+        background-color: #fd413c !important;
 
-                a {
-                    color: $white;
-                }
-            }
+        a {
+          color: $white;
         }
+      }
     }
+  }
 }
 
 body.inkline.-light .toasted-container {
-    .toasted {
-        &-primary.info,&-primary.default {
-            background-color: $white !important;
-            color: $lightViolet;
+  .toasted {
+    &-primary.info,
+    &-primary.default {
+      color: $lightViolet;
+      background-color: $white !important;
 
-            a {
-                color: $gray;
-            }
-        }
+      a {
+        color: $gray;
+      }
     }
+  }
 }
-body.inkline.-dark .toasted-container {
-    .toasted {
-        &-primary.info,&-primary.default {
-            background-color: $violet !important;
 
-            a {
-                color: $gray;
-            }
-        }
+body.inkline.-dark .toasted-container {
+  .toasted {
+    &-primary.info,
+    &-primary.default {
+      background-color: $violet !important;
+
+      a {
+        color: $gray;
+      }
     }
+  }
 }

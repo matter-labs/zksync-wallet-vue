@@ -1,0 +1,6 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Brave Debug" type="ChromiumRemoteDebugType" factoryName="Chromium Remote" editBeforeRun="true" port="3000" isV8Legacy="true" restartOnDisconnect="true">
+    <option name="v8Legacy" value="true" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,4 +1,3 @@
-
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -39,7 +38,6 @@ yarn-error.log*
 .reports/
 /src/static/sw.js
 public
-!public/.gitignore
 .nuxt
 /firebase-debug.log
 /report.txt
@@ -47,3 +45,11 @@ public
 /.yarn/cache/
 /.yarn/build-state.yml
 /.yarn/install-state.gz
+/.yarn/unplugged/
+
+# unignore
+!public/.gitignore
+!.yarn/releases/*
+!.yarn/plugins/*
+/cypress/screenshots/examples/misc.spec.js/
+/cypress/videos/examples/
