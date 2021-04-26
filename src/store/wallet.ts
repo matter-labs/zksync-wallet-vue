@@ -270,13 +270,13 @@ export const actions = actionTree(
         listVerified = newAccountState?.verified.balances || {};
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
-      const restrictedTokens = this.app.$accessor.tokens.restrictedTokens;
       for (const tokenSymbol in listCommitted) {
+        const isRestricted: boolean = this.app.$accessor.tokens.isRestricted(tokenSymbol);
         let price = 0;
-        try {
-          price = await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
-        } catch (error) {
-          this.$sentry.captureException(error);
+        if (!isRestricted) {
+          try {
+            price = await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+          } catch (error) {}
         }
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
@@ -288,7 +288,7 @@ export const actions = actionTree(
           rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
           verifiedBalance,
           tokenPrice: price,
-          restricted: !committedBalance || +committedBalance <= 0 || restrictedTokens.includes(tokenSymbol),
+          restricted: !committedBalance || +committedBalance <= 0 || isRestricted,
         });
       }
       commit("setZkTokens", {
@@ -330,10 +330,8 @@ export const actions = actionTree(
           try {
             price = await this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
           } catch (error) {
-            this.$sentry.captureException(error);
             restricted = true;
             this.commit("tokens/addRestrictedToken", currentToken.symbol);
-            console.log(this.app.$accessor.tokens.restrictedTokens);
           }
           return {
             id: currentToken.id,

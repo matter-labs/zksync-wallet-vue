@@ -42,9 +42,9 @@ export const mutations = mutationTree(state, {
   setTokenPrice(state, { symbol, obj }): void {
     state.tokenPrices[symbol] = obj;
   },
-  addRestrictedToken(state, symbol: TokenSymbol): void {
-    if (!state.restrictedTokens.includes(symbol) && symbol.toLowerCase() !== "eth") {
-      state.restrictedTokens.push(symbol);
+  addRestrictedToken(state, token: TokenSymbol): void {
+    if (!state.restrictedTokens.includes(token) && token.toLowerCase() !== "eth") {
+      state.restrictedTokens.push(token);
     }
   },
 });
@@ -87,22 +87,22 @@ export const actions = actionTree(
       if (Object.entries(getters.getAllTokens).length === 0) {
         await this.app.$accessor.wallet.restoreProviderConnection();
         const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
-        await this.app.$accessor.tokens.loadRestrictedTokens(tokensList);
         commit("setAllTokens", tokensList);
+        await this.app.$accessor.tokens.loadRestrictedTokens(tokensList);
         return tokensList || {};
       }
       return getters.getAllTokens;
     },
-    async loadRestrictedTokens({ state, commit }, tokensList: Tokens): Promise<TokenSymbol[]> {
-      if (state.restrictedTokens.length === 0) {
+    async loadRestrictedTokens({ state, commit, getters }, tokensList: Tokens): Promise<Tokens> {
+      if (Object.entries(getters.getRestrictedTokens).length === 0) {
         const acceptableTokens: TokenInfo[] = (await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
         for (const symbol in tokensList) {
-          if ((symbol.toLowerCase() !== "eth" && !acceptableTokens!.some((element: { id: number }) => element.id === tokensList[symbol]!.id)) || tokensList[symbol]!.id === 0) {
+          if (acceptableTokens!.filter((element: TokenInfo) => element.id === tokensList[symbol].id).length < 1) {
             commit("addRestrictedToken", symbol);
           }
         }
       }
-      return state.restrictedTokens;
+      return getters.getRestrictedTokens;
     },
 
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
@@ -158,5 +158,7 @@ export const actions = actionTree(
       });
       return tokenPrice || 0;
     },
+
+    isRestricted: ({ state }, token: TokenSymbol): boolean => Object.prototype.hasOwnProperty.call(state.restrictedTokens, token),
   },
 );
