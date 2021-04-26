@@ -6,10 +6,13 @@ import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import web3Wallet from "@/plugins/web3";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { provider } from "web3-core";
 import { closestPackableTransactionFee, getDefaultProvider, Provider, Wallet } from "zksync";
 import { Address, Fee, TokenSymbol } from "zksync/build/types";
+import { ExternalProvider } from "@ethersproject/providers";
 
 interface feesInterface {
   [symbol: string]: {
@@ -267,9 +270,14 @@ export const actions = actionTree(
         listVerified = newAccountState?.verified.balances || {};
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
-      const restrictedTokens = this.app.$accessor.tokens.restrictedTokens;
       for (const tokenSymbol in listCommitted) {
-        const price = await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+        const isRestricted: boolean = this.app.$accessor.tokens.isRestricted(tokenSymbol);
+        let price = 0;
+        if (!isRestricted) {
+          try {
+            price = await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+          } catch (error) {}
+        }
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -280,7 +288,7 @@ export const actions = actionTree(
           rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
           verifiedBalance,
           tokenPrice: price,
-          restricted: !committedBalance || +committedBalance <= 0 || restrictedTokens.includes(tokenSymbol),
+          restricted: !committedBalance || +committedBalance <= 0 || isRestricted,
         });
       }
       commit("setZkTokens", {
@@ -316,25 +324,26 @@ export const actions = actionTree(
       const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(
         async (key: number | string): Promise<undefined | ZkInBalance> => {
           const currentToken = loadedTokens.tokens[key];
+          const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+          let price = 0;
+          let restricted = false;
           try {
-            const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
-            const price = await this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
-            return {
-              id: currentToken.id,
-              address: currentToken.address,
-              balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
-              rawBalance: balance,
-              verifiedBalance: balance.toString(),
-              tokenPrice: price,
-              symbol: currentToken.symbol,
-              status: "Verified",
-              restricted: false,
-            };
+            price = await this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
           } catch (error) {
-            this.app.$toast.global.zkException({
-              message: `Error getting ${currentToken.symbol} balance`,
-            });
+            restricted = true;
+            this.commit("tokens/addRestrictedToken", currentToken.symbol);
           }
+          return {
+            id: currentToken.id,
+            address: currentToken.address,
+            balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
+            rawBalance: balance,
+            verifiedBalance: balance.toString(),
+            tokenPrice: price,
+            symbol: currentToken.symbol,
+            status: "Verified",
+            restricted,
+          };
         },
       );
       const balancesResults: (void | ZkInBalance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
@@ -489,15 +498,11 @@ export const actions = actionTree(
           return false;
         }
 
-        // @ts-ignore
-        const web3WalletInstance = new ethers.providers.Web3Provider(window?.ethereum);
-        /**
-         * Provider verification
-         * @todo: add network validation here
-         * @type {ethers.providers.Network}
-         */
-        const networkInfo: ethers.providers.Network = await web3WalletInstance._ready();
-        if (!networkInfo || !web3WalletInstance.provider) {
+        if (!web3Wallet.get()?.eth) {
+          return false;
+        }
+        const getAccounts: string[] | undefined = await web3Wallet.get()?.eth.getAccounts();
+        if (!getAccounts || getAccounts.length === 0) {
           return false;
         }
 
@@ -505,7 +510,11 @@ export const actions = actionTree(
           this.app.$accessor.account.setAddress(walletData.get().syncWallet?.address() || "");
           return true;
         }
-        const ethWallet = web3WalletInstance.getSigner();
+        const currentProvider: provider | undefined = web3Wallet.get()?.eth.currentProvider;
+        if (!currentProvider) {
+          return false;
+        }
+        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
         const syncProvider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
         if (syncProvider === undefined) {
           return false;
@@ -515,7 +524,6 @@ export const actions = actionTree(
 
         watcher.changeNetworkSet(dispatch, this);
         const accountState = await syncWallet?.getAccountState();
-
         walletData.set(<iWalletData>{
           syncProvider,
           syncWallet,
