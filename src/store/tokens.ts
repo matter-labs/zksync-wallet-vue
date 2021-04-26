@@ -1,7 +1,8 @@
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ZkInTokenPrices, TokenInfo } from "@/plugins/types";
-import { TokenSymbol, Tokens } from "zksync/build/types";
+import { APP_ZKSYNC_API_LINK } from "@/plugins/build";
+import { TokenInfo, ZkInTokenPrices } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { Tokens, TokenSymbol } from "zksync/build/types";
 
 /**
  * Operations with the tokens (assets)
@@ -13,7 +14,7 @@ export const state = () => ({
   /**
    * Restricted tokens, fee can't be charged in it
    */
-  restrictedTokens: <Array<TokenSymbol>>["PHNX", "LAMB", "MLTT"],
+  restrictedTokens: <TokenSymbol[]>[],
 
   /**
    * All available tokens:
@@ -40,6 +41,11 @@ export const mutations = mutationTree(state, {
   },
   setTokenPrice(state, { symbol, obj }): void {
     state.tokenPrices[symbol] = obj;
+  },
+  addRestrictedToken(state, symbol: TokenSymbol): void {
+    if (!state.restrictedTokens.includes(symbol) && symbol.toLowerCase() !== "eth") {
+      state.restrictedTokens.push(symbol);
+    }
   },
 });
 
@@ -80,11 +86,23 @@ export const actions = actionTree(
     async loadAllTokens({ commit, getters }): Promise<Tokens> {
       if (Object.entries(getters.getAllTokens).length === 0) {
         await this.app.$accessor.wallet.restoreProviderConnection();
-        const tokensList = await walletData.get().syncProvider!.getTokens();
+        const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
+        await this.app.$accessor.tokens.loadRestrictedTokens(tokensList);
         commit("setAllTokens", tokensList);
         return tokensList || {};
       }
       return getters.getAllTokens;
+    },
+    async loadRestrictedTokens({ state, commit }, tokensList: Tokens): Promise<TokenSymbol[]> {
+      if (state.restrictedTokens.length === 0) {
+        const acceptableTokens: TokenInfo[] = (await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
+        for (const symbol in tokensList) {
+          if ((symbol.toLowerCase() !== "eth" && !acceptableTokens!.some((element: { id: number }) => element.id === tokensList[symbol]!.id)) || tokensList[symbol]!.id === 0) {
+            commit("addRestrictedToken", symbol);
+          }
+        }
+      }
+      return state.restrictedTokens;
     },
 
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {

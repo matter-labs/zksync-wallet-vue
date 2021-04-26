@@ -13480,13 +13480,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"klona@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "klona@npm:1.1.2"
-  checksum: 357ff7d43ca2dbaacda91c37bea559642a128e583a2836c09c252881dd71d054d97e7185e91a899ebd65e2b76f7d4e25ca3d06fd0a0b51a5304586d00157a06d
-  languageName: node
-  linkType: hard
-
 "klona@npm:^2.0.4":
   version: 2.0.4
   resolution: "klona@npm:2.0.4"
@@ -18648,32 +18641,7 @@ resolve@~1.17.0:
   languageName: node
   linkType: hard
 
-"sass-loader@npm:10.0.0":
-  version: 10.0.0
-  resolution: "sass-loader@npm:10.0.0"
-  dependencies:
-    klona: ^1.1.2
-    loader-utils: ^2.0.0
-    neo-async: ^2.6.2
-    schema-utils: ^2.7.0
-    semver: ^7.3.2
-  peerDependencies:
-    fibers: ">= 3.1.0"
-    node-sass: ^4.0.0
-    sass: ^1.3.0
-    webpack: ^4.36.0 || ^5.0.0
-  peerDependenciesMeta:
-    fibers:
-      optional: true
-    node-sass:
-      optional: true
-    sass:
-      optional: true
-  checksum: 7d90a3be884f8a3a3889bf0d68a4dd4b02477dbdc971933f7be2f53abd9aa6c561b9f1366a62194270b75ba0c25644784f219f1497abd62090d68b74656a7304
-  languageName: node
-  linkType: hard
-
-"sass-loader@npm:^10.1.1":
+"sass-loader@npm:10.1.1, sass-loader@npm:^10.1.1":
   version: 10.1.1
   resolution: "sass-loader@npm:10.1.1"
   dependencies:
@@ -18748,7 +18716,7 @@ resolve@~1.17.0:
   languageName: node
   linkType: hard
 
-"schema-utils@npm:^2.0.0, schema-utils@npm:^2.6.5, schema-utils@npm:^2.7.0, schema-utils@npm:^2.7.1":
+"schema-utils@npm:^2.0.0, schema-utils@npm:^2.6.5, schema-utils@npm:^2.7.1":
   version: 2.7.1
   resolution: "schema-utils@npm:2.7.1"
   dependencies:
@@ -23052,7 +23020,7 @@ resolve@~1.17.0:
     nuxt-webfontloader: ^1.1.0
     prettier: ^2.2.1
     qrcode: ^1.4.4
-    sass-loader: 10.0.0
+    sass-loader: 10.1.1
     stylelint: ^13.12.0
     stylelint-config-recommended: ^4.0.0
     stylelint-config-standard: ^21.0.0
