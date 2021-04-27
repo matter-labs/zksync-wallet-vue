@@ -93,12 +93,12 @@ export const actions = actionTree(
         await this.app.$accessor.wallet.restoreProviderConnection();
         const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
         commit("setAllTokens", tokensList);
-        await this.app.$accessor.tokens.loadRestrictedTokens();
+        await this.app.$accessor.tokens.loadAcceptableTokens();
         return tokensList || {};
       }
       return getters.getAllTokens;
     },
-    async loadRestrictedTokens({ commit }): Promise<void> {
+    async loadAcceptableTokens({ commit }): Promise<void> {
       const acceptableTokens: TokenInfo[] = (await this.app.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
       commit("storeAcceptableTokens", acceptableTokens);
     },
@@ -158,7 +158,10 @@ export const actions = actionTree(
     },
 
     isRestricted({ state }, token?: TokenSymbol): boolean {
-      return token ? state.acceptableTokens.filter((tokenData: TokenInfo) => tokenData.symbol.toLowerCase() === token.toLowerCase()).length === 0 : false;
+      if (!token || token?.toLowerCase() === "eth") {
+        return false;
+      }
+      return state.acceptableTokens.filter((tokenData: TokenInfo) => tokenData.symbol.toLowerCase() === token.toLowerCase()).length === 0;
     },
   },
 );
