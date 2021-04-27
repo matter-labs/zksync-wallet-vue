@@ -58,7 +58,6 @@ export default Vue.extend({
     },
     transactionsList(): Array<ZkInTx> {
       let list = this.$accessor.wallet.getTransactionsHistory;
-      console.log(list);
       if (this.filter) {
         list = list.filter((item: ZkInTx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
       }
