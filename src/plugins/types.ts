@@ -231,3 +231,11 @@ export interface DepositsInterface {
     confirmations: number;
   }[];
 }
+
+/**
+ * Redeclared since we use TokenInfo which is a part of this interface
+ */
+export interface Tokens {
+  // Tokens are indexed by their symbol (e.g. "ETH")
+  [token: string]: TokenInfo;
+}
