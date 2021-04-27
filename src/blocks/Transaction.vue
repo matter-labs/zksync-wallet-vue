@@ -688,7 +688,6 @@ export default Vue.extend({
 
         this.transactionInfo.success = true;
       } catch (error) {
-        console.log(error);
         if (error.message && !error.message.includes("User denied")) {
           this.error = error.message;
         }

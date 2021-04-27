@@ -271,7 +271,7 @@ export const actions = actionTree(
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
       for (const tokenSymbol in listCommitted) {
-        const isRestricted: boolean = this.app.$accessor.tokens.isRestricted(tokenSymbol);
+        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
         let price = 0;
         if (!isRestricted) {
           try {
@@ -541,7 +541,6 @@ export const actions = actionTree(
         this.app.$accessor.contacts.getContactsFromStorage();
         return true;
       } catch (error) {
-        console.log("Error during connection", error);
         this.$sentry.captureException(error);
         if (!error.message.includes("User denied")) {
           this.app.$toast.global.zkException({
