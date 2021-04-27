@@ -83,30 +83,40 @@ export const actions = actionTree(
   {
     async watchTransaction({ commit, dispatch, state }, { transactionHash, existingTransaction }) {
       try {
+        const savedAddress = this.app.$accessor.account.address;
         if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
           return;
         }
         if (!existingTransaction) {
-          walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
+          await walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
+          if (savedAddress !== this.app.$accessor.account.address) {
+            return;
+          }
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
           await dispatch("requestBalancesUpdate");
         } else {
           commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
         }
-        walletData.get().syncProvider?.notifyTransaction(transactionHash, "VERIFY");
+        await walletData.get().syncProvider?.notifyTransaction(transactionHash, "VERIFY");
+        if (savedAddress !== this.app.$accessor.account.address) {
+          return;
+        }
         await dispatch("requestBalancesUpdate");
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       } catch (error) {
         commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       }
     },
-    watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
+    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
       try {
+        const savedAddress = this.app.$accessor.account.address;
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
-        depositTx.awaitReceipt().then(async () => {
-          await this.app.$accessor.transaction.requestBalancesUpdate();
-          commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
-        });
+        await depositTx.awaitReceipt();
+        if (savedAddress !== this.app.$accessor.account.address) {
+          return;
+        }
+        await this.app.$accessor.transaction.requestBalancesUpdate();
+        commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       } catch (error) {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       }

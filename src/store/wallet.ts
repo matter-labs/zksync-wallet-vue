@@ -245,7 +245,7 @@ export const actions = actionTree(
      * @param force
      * @return {Promise<[array]|*>}
      */
-    async requestZkBalances({ commit, getters }, { accountState, force = false }) {
+    async requestZkBalances({ state, commit, getters }, { accountState, force = false }) {
       type BalancesList = {
         [token: string]: BigNumberish;
       };
@@ -253,6 +253,7 @@ export const actions = actionTree(
       let listVerified = <BalancesList>{};
       const tokensList = <Array<ZkInBalance>>[];
       const syncWallet = walletData.get().syncWallet;
+      const savedAddress = this.app.$accessor.account.address;
       if (accountState) {
         listCommitted = accountState.committed.balances;
         listVerified = accountState.verified.balances;
@@ -277,6 +278,9 @@ export const actions = actionTree(
           try {
             price = await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
           } catch (error) {}
+        }
+        if (savedAddress !== this.app.$accessor.account.address) {
+          return state.zkTokens.list;
         }
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
@@ -305,6 +309,7 @@ export const actions = actionTree(
      * @return {Promise<*[]|*>}
      */
     async requestInitialBalances({ commit, getters }, force = false) {
+      const savedAddress = this.app.$accessor.account.address;
       const localList = getters.getTokensList;
 
       if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
@@ -353,6 +358,9 @@ export const actions = actionTree(
       const balances = (balancesResults.filter((token) => token && token.rawBalance.gt(0)) as ZkInBalance[]).sort(utils.compareTokensById);
       const balancesEmpty = (balancesResults.filter((token) => token && token.rawBalance.lte(0)) as ZkInBalance[]).sort(utils.sortBalancesAZ);
       balances.push(...balancesEmpty);
+      if (savedAddress !== this.app.$accessor.account.address) {
+        return localList.list;
+      }
       commit("setTokensList", {
         lastUpdated: new Date().getTime(),
         list: balances,
@@ -371,6 +379,7 @@ export const actions = actionTree(
     async requestTransactionsHistory({ commit, getters }, { force = false, offset = 0 }): Promise<ZkInTx[]> {
       clearTimeout(getTransactionHistoryAgain);
       const localList = getters.getTransactionsList;
+      const savedAddress = this.app.$accessor.account.address;
       /**
        * If valid we're returning cached transaction list
        */
@@ -380,6 +389,9 @@ export const actions = actionTree(
       try {
         const syncWallet = walletData.get().syncWallet;
         const fetchTransactionHistory = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
+        if (savedAddress !== this.app.$accessor.account.address) {
+          return localList.list;
+        }
         commit("setTransactionsList", {
           lastUpdated: new Date().getTime(),
           list: offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
@@ -552,6 +564,7 @@ export const actions = actionTree(
     },
 
     clearDataStorage({ commit }): void {
+      this.app.$accessor.account.setAddress("");
       commit("clearDataStorage");
     },
 
