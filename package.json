@@ -52,7 +52,7 @@
     "ci:prepare:mainnet": "sh cli-process-env.sh 'mainnet' dev 1",
     "ci:validate": "yarn ci && sh cli-process-env.sh 'mainnet' dev 1",
     "deploy:prod": "./cli-deploy-production.sh",
-    "dev": "sh cli-process-env.sh 'rinkeby' 'dev' 1 && nuxt",
+    "dev": "sh cli-process-env.sh 'mainnet' 'dev' 1 && nuxt",
     "prepare_ci": "yarn ci && sh cli-process-env.sh 'rinkeby'",
     "start": "sh cli-process-env.sh 'rinkeby' 'dev' && nuxt start",
     "build": "sh cli-process-env.sh 'mainnet' 'prod' true && nuxt build",
