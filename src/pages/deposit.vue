@@ -363,14 +363,13 @@ export default Vue.extend({
             restricted: false,
             status: "Verified",
             symbol: "ETH",
-            tokenPrice: await this.$accessor.tokens.getTokenPrice("ETH"),
             verifiedBalance: "0",
           };
         }
         this.tip = "Waiting for the transaction to be mined...";
+        this.transactionInfo.hash = approveDeposits.hash;
+        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + approveDeposits.hash;
         const receipt = await approveDeposits.wait();
-        this.transactionInfo.hash = receipt.transactionHash;
-        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + receipt.transactionHash;
         this.transactionInfo.amount = {
           amount: "0",
           token: ETHToken,

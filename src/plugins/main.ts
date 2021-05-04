@@ -1,4 +1,3 @@
-import Loader from "@/components/loader.vue";
 import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
 
@@ -9,8 +8,6 @@ import { ToastAction, ToastOptions } from "vue-toasted";
 import { TokenSymbol } from "zksync/build/types";
 
 Vue.use(VueScrollTo);
-
-Vue.component("Loader", Loader);
 
 /**
  * Implementation of the tokenFormatter as a global filter

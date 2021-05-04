@@ -10,7 +10,7 @@ import web3Wallet from "@/plugins/web3";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
-import { closestPackableTransactionFee, getDefaultProvider, Provider, Wallet } from "zksync";
+import { closestPackableTransactionFee, getDefaultProvider, Wallet } from "zksync";
 import { Address, Fee, TokenSymbol } from "zksync/build/types";
 import { ExternalProvider } from "@ethersproject/providers";
 
@@ -31,7 +31,6 @@ export declare interface iWallet {
   isAccountLocked: boolean;
   zkTokens: { lastUpdated: number; list: Array<ZkInBalance> };
   initialTokens: { lastUpdated: number; list: Array<ZkInBalance> };
-  tokenPrices: { [p: string]: { lastUpdated: number; price: number } };
   transactionsHistory: { lastUpdated: number; list: Array<ZkInTx> };
   withdrawalProcessingTime: false | { normal: number; fast: number };
   fees: feesInterface;
@@ -48,7 +47,6 @@ export const state = (): iWallet => ({
     lastUpdated: 0,
     list: [],
   },
-  tokenPrices: {},
   transactionsHistory: {
     lastUpdated: 0,
     list: [],
@@ -71,21 +69,6 @@ export const mutations = mutationTree(state, {
   },
   setZkTokens(state, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
     state.zkTokens = obj;
-  },
-  setTokenPrice(
-    state,
-    {
-      symbol,
-      obj,
-    }: {
-      symbol: TokenSymbol;
-      obj: {
-        lastUpdated: number;
-        price: number;
-      };
-    },
-  ): void {
-    state.tokenPrices[symbol] = obj;
   },
   setTransactionsList(
     state,
@@ -158,14 +141,6 @@ export const getters = getterTree(state, {
   getzkList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.zkTokens,
   getzkBalances: (state): Array<ZkInBalance> => state.zkTokens.list,
   getTransactionsHistory: (state): Array<ZkInTx> => state.transactionsHistory.list,
-  getTokenPrices: (
-    state,
-  ): {
-    [symbol: string]: {
-      lastUpdated: number;
-      price: number;
-    };
-  } => state.tokenPrices,
   getTransactionsList: (
     state,
   ): {
@@ -231,10 +206,11 @@ export const actions = actionTree(
      * Check if the connection to the sync provider is opened and if not - restore it
      */
     async restoreProviderConnection(): Promise<void> {
-      if (walletData.get().syncProvider!.transport !== undefined) {
+      // will probably be used again when websocket will be implemented
+      /* if (walletData.get().syncProvider!.transport !== undefined) {
         const activeProvider: Provider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
         walletData.set({ syncProvider: activeProvider });
-      }
+      } */
     },
 
     /**
@@ -273,11 +249,15 @@ export const actions = actionTree(
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
       for (const tokenSymbol in listCommitted) {
         const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
-        let price = 0;
         if (!isRestricted) {
-          try {
-            price = await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
-          } catch (error) {}
+          (async () => {
+            try {
+              /* Some weird TS error when this is has no await */
+              await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+            } catch (error) {
+              console.log(`Failed to get ${tokenSymbol} price at requestZkBalances`, error);
+            }
+          })();
         }
         if (savedAddress !== this.app.$accessor.account.address) {
           return state.zkTokens.list;
@@ -291,7 +271,6 @@ export const actions = actionTree(
           balance: committedBalance,
           rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
           verifiedBalance,
-          tokenPrice: price,
           restricted: !committedBalance || +committedBalance <= 0 || isRestricted,
         });
       }
@@ -330,12 +309,9 @@ export const actions = actionTree(
         async (key: number | string): Promise<undefined | ZkInBalance> => {
           const currentToken = loadedTokens.tokens[key];
           const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
-          let price = 0;
-          let restricted = false;
           try {
-            price = await this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
+            this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
           } catch (error) {
-            restricted = true;
             this.commit("tokens/addRestrictedToken", currentToken.symbol);
           }
           return {
@@ -344,10 +320,9 @@ export const actions = actionTree(
             balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
             rawBalance: balance,
             verifiedBalance: balance.toString(),
-            tokenPrice: price,
             symbol: currentToken.symbol,
             status: "Verified",
-            restricted,
+            restricted: false,
           };
         },
       );
@@ -396,11 +371,6 @@ export const actions = actionTree(
           lastUpdated: new Date().getTime(),
           list: offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
         });
-        for (const tx of fetchTransactionHistory.data) {
-          if (tx.hash && tx.hash.includes("sync-tx:") && !tx.verified && !tx.fail_reason) {
-            this.dispatch("transaction/watchTransaction", { transactionHash: tx.hash, existingTransaction: true });
-          }
-        }
         return fetchTransactionHistory.data;
       } catch (error) {
         this.$sentry.captureException(error);
@@ -484,8 +454,9 @@ export const actions = actionTree(
     },
     async checkLockedState({ commit }): Promise<void> {
       const syncWallet = walletData.get().syncWallet;
-      const isSigningKeySet = await syncWallet!.isSigningKeySet();
-      commit("setAccountLockedState", !isSigningKeySet);
+      const accountState = walletData.get().accountState;
+      const pubKeyHash = await syncWallet!.signer!.pubKeyHash();
+      commit("setAccountLockedState", pubKeyHash !== accountState!.committed.pubKeyHash);
     },
     /**
      * Refreshing the wallet in case local storage keep token or signer fired event
@@ -543,7 +514,7 @@ export const actions = actionTree(
         });
 
         await this.app.$accessor.tokens.loadTokensAndBalances();
-        await this.app.$accessor.wallet.requestZkBalances(accountState);
+        await this.app.$accessor.wallet.requestZkBalances({ accountState });
 
         await this.app.$accessor.wallet.checkLockedState();
 

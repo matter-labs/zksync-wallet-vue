@@ -91,7 +91,10 @@ export const actions = actionTree(
     async loadAllTokens({ commit, getters }): Promise<Tokens> {
       if (Object.entries(getters.getAllTokens).length === 0) {
         await this.app.$accessor.wallet.restoreProviderConnection();
-        const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
+        /* By taking token list from syncProvider we avoid double getTokens request,
+          but the tokensBySymbol param is private on zksync utils types */
+        // @ts-ignore
+        const tokensList: Tokens = walletData.get().syncProvider!.tokenSet.tokensBySymbol;
         commit("setAllTokens", tokensList);
         await this.app.$accessor.tokens.loadAcceptableTokens();
         return tokensList || {};

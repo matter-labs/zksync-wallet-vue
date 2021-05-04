@@ -81,31 +81,22 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    async watchTransaction({ commit, dispatch, state }, { transactionHash, existingTransaction }) {
+    async watchTransaction({ commit, dispatch, state }, { transactionHash }) {
       try {
         const savedAddress = this.app.$accessor.account.address;
         if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
           return;
         }
-        if (!existingTransaction) {
-          await walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
-          if (savedAddress !== this.app.$accessor.account.address) {
-            return;
-          }
-          commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
-          await dispatch("requestBalancesUpdate");
-        } else {
-          commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
-        }
-        await walletData.get().syncProvider?.notifyTransaction(transactionHash, "VERIFY");
+        await walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
         if (savedAddress !== this.app.$accessor.account.address) {
           return;
         }
+        commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
         await dispatch("requestBalancesUpdate");
-        commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       } catch (error) {
-        commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
+        console.log("watchTransaction error", error);
       }
+      commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
     },
     async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
       try {

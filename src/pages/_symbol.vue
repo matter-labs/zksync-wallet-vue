@@ -13,7 +13,9 @@
       <div v-else>
         <div class="infoBlock">
           <div class="headline">Token price:</div>
-          <div class="balancePrice">~${{ token.tokenPrice.toFixed(2) }}</div>
+          <div class="balancePrice">
+            <token-price :symbol="token.symbol" :amount="1" />
+          </div>
         </div>
         <div class="infoBlock _margin-top-1">
           <div class="headline">Your balance:</div>
@@ -23,7 +25,9 @@
             <div class="balance">
               <span class="tokenSymbol">{{ symbol }}</span>
               {{ token.balance }}&nbsp;&nbsp;
-              <span class="balancePrice">{{ token.rawBalance | formatUsdAmount(token.tokenPrice, token.symbol) }}</span>
+              <span class="balancePrice">
+                <token-price :symbol="token.symbol" :amount="token.rawBalance.toString()" />
+              </span>
             </div>
           </div>
           <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">- Withdraw</i-button>

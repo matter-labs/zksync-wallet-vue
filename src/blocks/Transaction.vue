@@ -94,7 +94,7 @@
                 {{ feeToken.symbol }}
               </span>
               <span class="totalPrice">
-                {{ feesObj.normal | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
+                <token-price :symbol="feeToken.symbol" :amount="feesObj.normal.toString()" />
               </span>
             </span>
             <span v-else class="totalPrice">Loading...</span>
@@ -112,7 +112,7 @@
               {{ feesObj.fast | formatToken(feeToken.symbol) }}
               <span class="tokenSymbol">{{ feeToken.symbol }}</span>
               <span class="totalPrice">
-                {{ feesObj.fast | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
+                <token-price :symbol="feeToken.symbol" :amount="feesObj.fast.toString()" />
               </span>
             </span>
             <span v-else class="totalPrice">Loading...</span>
@@ -155,7 +155,7 @@
           <span v-else>
             {{ feesObj && feesObj[transactionMode] | formatToken(feeToken.symbol) }} <span class="tokenSymbol">{{ feeToken.symbol }}</span>
             <span class="secondaryText">
-              {{ feesObj && feesObj[transactionMode] | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
+              <token-price :symbol="feeToken.symbol" :amount="feesObj[transactionMode].toString()" />
             </span>
           </span>
         </div>
@@ -166,7 +166,7 @@
           <span v-else>
             {{ activateAccountFee | formatToken(feeToken.symbol) }} <span class="tokenSymbol">{{ feeToken.symbol }}</span>
             <span class="secondaryText">
-              {{ activateAccountFee | formatUsdAmount(feeToken.tokenPrice, feeToken.symbol) }}
+              <token-price :symbol="feeToken.symbol" :amount="activateAccountFee.toString()" />
             </span>
           </span>
         </div>
@@ -680,11 +680,10 @@ export default Vue.extend({
         this.setTransactionInfo(changePubkey, true, `Proceed to ${this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : ""}`);
         this.tip = "Waiting for the transaction to be mined...";
         await changePubkey?.awaitReceipt();
-        const isSigningKeySet = await syncWallet!.isSigningKeySet();
-        this.$accessor.wallet.setAccountLockedState(!isSigningKeySet);
 
         const newAccountState = await syncWallet!.getAccountState();
         walletData.set({ accountState: newAccountState });
+        this.$accessor.wallet.checkLockedState();
 
         this.transactionInfo.success = true;
       } catch (error) {

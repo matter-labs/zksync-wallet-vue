@@ -23,7 +23,6 @@ export interface ZkInBalance {
   balance: GweiBalance;
   rawBalance: BigNumber;
   verifiedBalance: GweiBalance;
-  tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
@@ -96,7 +95,6 @@ export interface ZkInToken {
   balance: GweiBalance;
   rawBalance: BigNumber;
   verifiedBalance: GweiBalance;
-  tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
@@ -189,7 +187,6 @@ export interface Balance {
   balance: GweiBalance;
   rawBalance: BigNumber;
   verifiedBalance: GweiBalance;
-  tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
