@@ -22,7 +22,7 @@
           function instead.
         </div>
         <i-checkbox v-model="transferWithdrawWarningCheckmark">Do not show this again</i-checkbox>
-        <i-button block class="_margin-top-1" size="lg" variant="secondary" @click="warningDialogProceedTransfer()">Transfer inside zkSync</i-button>
+        <i-button block class="_margin-top-1 button-with-icon" size="lg" variant="secondary" @click="warningDialogProceedTransfer()">Transfer inside zkSync</i-button>
       </div>
     </i-modal>
 
@@ -130,10 +130,11 @@
         {{ error }}
       </div>
 
-      <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction">
+      <i-button :disabled="buttonDisabled" block class="_margin-top-1 button-with-icon" size="lg" variant="secondary" @click="commitTransaction">
         <template v-if="ownAccountUnlocked">
-          <i v-if="type === 'withdraw'" class="ri-hand-coin-fill" />
+          <i v-if="type === 'withdraw'" class="ri-download-2-fill" />
           <i v-else-if="type === 'transfer'" class="ri-send-plane-fill" />
+          &nbsp;&nbsp;
         </template>
         <span>
           <span v-if="!ownAccountUnlocked">Activate Account and </span>
@@ -148,7 +149,7 @@
         <span class="tokenSymbol">{{ chosenToken.symbol }}</span> is not suitable for paying fees<br />
         No available tokens on your balance to pay the fee
       </div>
-      <div v-else>
+      <div v-else class="_display-flex _justify-content-center">
         <div v-if="(chosenFeeObj || feesLoading) && chosenToken && inputtedAddress" class="_text-center _margin-top-1">
           Fee:
           <span v-if="feesLoading" class="secondaryText">Loading...</span>
@@ -170,7 +171,10 @@
             </span>
           </span>
         </div>
-        <div v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1">
+        <div
+          v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked"
+          class="_text-center _margin-top-1 _margin-left-1"
+        >
           <span class="linkText" @click="chooseFeeTokenModal = true">Choose fee token</span>
         </div>
       </div>
@@ -263,7 +267,7 @@ export default Vue.extend({
       transferWithdrawWarningModal: false,
 
       /* Main Block */
-      inputtedAddress: "",
+      inputtedAddress: <string>"",
       chosenContact: <ZkInContact | false>false,
       inputtedAmount: "",
       chosenToken: <ZkInBalance | false>false,
@@ -292,19 +296,12 @@ export default Vue.extend({
     chosenFeeObj(): BigNumberish | boolean {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
         const selectedFeeTypeAmount = this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal;
-        if (!selectedFeeTypeAmount) {
-          return BigNumber.from("0");
-        }
-        return BigNumber.from(selectedFeeTypeAmount);
+        return !selectedFeeTypeAmount ? BigNumber.from("0") : BigNumber.from(selectedFeeTypeAmount);
       }
       return false;
     },
     transactionTypeName(): string {
-      if (this.transactionInfo.type !== "ActivateAccount") {
-        return this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : "";
-      } else {
-        return "Account Activation";
-      }
+      return this.transactionInfo.type !== "ActivateAccount" ? (this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : "") : "Account Activation";
     },
     maxAmount(): GweiBalance {
       if (!this.chosenToken) {
@@ -368,11 +365,7 @@ export default Vue.extend({
     chosenContact: {
       deep: true,
       handler(val) {
-        if (val && val.address) {
-          this.inputtedAddress = val.address;
-        } else {
-          this.inputtedAddress = "";
-        }
+        this.inputtedAddress = val && val.address ? val.address : "";
       },
     },
     inputtedAddress() {
@@ -406,7 +399,7 @@ export default Vue.extend({
     this.loading = false;
   },
   methods: {
-    chooseToken(token: ZkInBalance) {
+    chooseToken(token: ZkInBalance): void {
       this.chosenToken = token;
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
@@ -432,7 +425,7 @@ export default Vue.extend({
       this.requestFees();
       this.getAccountActivationFee();
     },
-    chooseFeeToken(token: ZkInBalance) {
+    chooseFeeToken(token: ZkInBalance): void {
       this.chosenFeeToken = token;
       this.chooseFeeTokenModal = false;
       this.requestFees();
@@ -634,7 +627,6 @@ export default Vue.extend({
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       try {
-        await this.$accessor.wallet.restoreProviderConnection();
         const foundFee = await syncProvider?.getTransactionFee(
           {
             ChangePubKey: syncWallet!.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA",
@@ -660,7 +652,6 @@ export default Vue.extend({
         this.clearTransactionInfo();
         this.transactionInfo.type = "ActivateAccount";
         const syncWallet = walletData.get().syncWallet;
-        await this.$accessor.wallet.restoreProviderConnection();
         this.tip = "Confirm the transaction to unlock this account";
 
         if (syncWallet!.ethSignerType?.verificationMethod === "ERC-1271") {

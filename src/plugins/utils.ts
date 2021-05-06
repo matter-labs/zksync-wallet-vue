@@ -16,14 +16,17 @@ function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
   return walletData.get().syncProvider?.tokenSet?.parseToken(symbol, amount.toString()) || BigNumber.from("0");
 }
 
+/**
+ * Formatting the token amount and symbol
+ * @param {TokenSymbol} symbol
+ * @param {GweiBalance} amount
+ * @return {string}
+ */
 function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance) {
   if (!amount) return "0";
   const result = walletData.get().syncProvider?.tokenSet?.formatToken(symbol, amount);
   if (result) {
-    if (result && result.endsWith(".0")) {
-      return result.substr(0, result.length - 2);
-    }
-    return result;
+    return result.endsWith(".0") ? result.substr(0, result.length - 2) : result;
   }
   return "0";
 }

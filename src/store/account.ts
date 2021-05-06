@@ -32,16 +32,16 @@ export const mutations = mutationTree(state, {
   setLoggedIn(state, loggedInState: boolean): void {
     state.loggedIn = loggedInState;
   },
-  setSelectedWallet(state, name: string): void {
+  setSelectedWallet(state: AccountModuleState, name: string): void {
     state.selectedWallet = name;
   },
-  setLoadingHint(state, text: string): void {
+  setLoadingHint(state: AccountModuleState, text: string): void {
     state.loadingHint = text;
   },
-  setAddress(state, address: Address): void {
+  setAddress(state: AccountModuleState, address: Address): void {
     state.address = address;
   },
-  setName(state, name: string): void {
+  setName(state: AccountModuleState, name: string): void {
     if (state.address !== undefined) {
       if (name.length < 1) {
         name = getNameFromAddress(state.address);
@@ -50,7 +50,7 @@ export const mutations = mutationTree(state, {
       state.name = getNameFromAddress(state.address);
     }
   },
-  setNameFromStorage(state): void {
+  setNameFromStorage(state: AccountModuleState): void {
     if (state.address !== undefined) {
       state.name = getNameFromAddress(state.address);
     }
@@ -58,11 +58,11 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  loggedIn: (state): boolean => state.loggedIn,
-  selectedWallet: (state): string | undefined => state.selectedWallet,
-  loadingHint: (state): string => state.loadingHint,
-  loader: (state): boolean => !state.loggedIn && state.selectedWallet !== "",
-  address: (state): Address | undefined => state.address,
-  name: (state): string | undefined => state.name,
-  zkScanUrl: (state): string | undefined => (state.address ? `${APP_ZK_SCAN}/accounts/${state.address}` : undefined),
+  loggedIn: (state: AccountModuleState): boolean => state.loggedIn,
+  selectedWallet: (state: AccountModuleState): string | undefined => state.selectedWallet,
+  loadingHint: (state: AccountModuleState): string => state.loadingHint,
+  loader: (state: AccountModuleState): boolean => !state.loggedIn && state.selectedWallet !== "",
+  address: (state: AccountModuleState): Address | undefined => state.address,
+  name: (state: AccountModuleState): string | undefined => state.name,
+  zkScanUrl: (state: AccountModuleState): string | undefined => (state.address ? `${APP_ZK_SCAN}/accounts/${state.address}` : undefined),
 });

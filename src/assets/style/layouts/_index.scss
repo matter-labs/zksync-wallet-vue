@@ -1,7 +1,11 @@
 .indexLayout {
   .routerContainer {
-    min-height: calc(100vh - 70px - 80px);
-    @media (max-width: $mobile) {
+    min-height: $minRouteHeight;
+  }
+
+  @media (max-width: $mobile) {
+    min-height: $minRouteHeightWithExtra;
+    .routerContainer {
       min-height: auto;
     }
   }
@@ -15,12 +19,13 @@
   .tileContainer {
     cursor: pointer;
     @media screen and (min-width: $mobile) {
-      padding-bottom: 70px;
+      padding-bottom: $footerHeight;
     }
 
     &:hover .tile {
       box-shadow: $hoverShadow;
     }
+
     .tile {
       width: 130px;
       height: 130px;

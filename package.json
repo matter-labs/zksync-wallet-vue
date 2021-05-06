@@ -14,7 +14,7 @@
       "last 1 safari version"
     ]
   },
-  "version": "2.3.3",
+  "version": "2.3.4",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "bugs": {
@@ -52,7 +52,7 @@
     "ci:prepare:mainnet": "sh cli-process-env.sh 'mainnet' dev 1",
     "ci:validate": "yarn ci && sh cli-process-env.sh 'mainnet' dev 1",
     "deploy:prod": "./cli-deploy-production.sh",
-    "dev": "sh cli-process-env.sh 'rinkeby' 'dev' 1 && nuxt",
+    "dev": "sh cli-process-env.sh 'rinkeby' 'dev' 1 1 && nuxt",
     "prepare_ci": "yarn ci && sh cli-process-env.sh 'rinkeby'",
     "start": "sh cli-process-env.sh 'rinkeby' 'dev' && nuxt start",
     "build": "sh cli-process-env.sh 'mainnet' 'prod' true && nuxt build",
@@ -92,7 +92,7 @@
   },
   "dependencies": {
     "@matterlabs/zk-wallet-onboarding": "1.18.6",
-    "@nuxt/components": "2.1.6",
+    "@nuxt/components": "2.1.8",
     "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/google-gtag": "^1.0.4",
@@ -100,15 +100,15 @@
     "@nuxtjs/toast": "^3.3.1",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.1.0",
-    "lottie-web": "^5.7.7",
+    "lottie-web": "^5.7.8",
     "moment-timezone": "^0.5.33",
     "nuxt": "latest",
-    "nuxt-i18n": "^6.22.3",
-    "nuxt-typed-vuex": "latest",
+    "nuxt-i18n": "^6.26.0",
+    "nuxt-typed-vuex": "^0.2.0",
     "nuxt-webfontloader": "^1.1.0",
     "qrcode": "^1.4.4",
     "vue": "latest",
-    "vue-qrcode": "^0.3.5",
+    "vue-qrcode": "^0.3.6",
     "vue-scrollto": "^2.20.0",
     "web3": "^1.3.5",
     "zksync": "^0.10.9"
@@ -124,36 +124,35 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config-typescript": "^6.0.0",
     "@nuxtjs/style-resources": "latest",
-    "@types/jest": "^26.0.22",
-    "@typescript-eslint/eslint-plugin": "^4.21.0",
-    "@typescript-eslint/parser": "^4.21.0",
-    "dotenv": "^8.2.0",
-    "eslint": "^7.23.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "fork-ts-checker-webpack-plugin": "^6.2.0",
+    "@sentry/webpack-plugin": "^1.15.1",
+    "@types/jest": "^26.0.23",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
+    "dotenv": "^9.0.0",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "fork-ts-checker-webpack-plugin": "^6.2.6",
     "jest": "^26.6.3",
-    "node-sass": "4.14.0",
+    "node-sass": "4.14.1",
     "prettier": "^2.2.1",
     "sass-loader": "10.1.1",
-    "stylelint": "^13.12.0",
-    "stylelint-config-recommended": "^4.0.0",
-    "stylelint-config-standard": "^21.0.0",
+    "stylelint": "^13.13.1",
+    "stylelint-config-recommended": "^5.0.0",
+    "stylelint-config-standard": "^22.0.0",
     "stylelint-high-performance-animation": "^1.5.2",
     "stylelint-scss": "^3.19.0",
-    "typed-vuex": "latest",
+    "typed-vuex": "0.2.0",
     "typescript": "^4.2.4",
-    "vue-class-component": "^7.2.6",
-    "vue-property-decorator": "^9.1.2",
-    "vuex": "3.5.1",
+    "vue-class-component": "7.2.6",
+    "vue-property-decorator": "9.1.2",
+    "vuex": "^3.6.2",
     "web3-core": "^1.3.5",
-    "webpack": "4.46.0"
+    "webpack": "5.36.2"
   },
   "peerDependencies": {
     "@babel/core": "*",
-    "@babel/runtime": "*",
-    "typed-vuex": "*",
-    "vuex": "3.5.1"
+    "@babel/runtime": "*"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
@@ -162,7 +161,7 @@
     "typescript": true
   },
   "optionalDependencies": {
-    "fs-extra": "^9.1.0",
+    "fs-extra": "^10.0.0",
     "fsevents": "^2.3.2"
   }
 }

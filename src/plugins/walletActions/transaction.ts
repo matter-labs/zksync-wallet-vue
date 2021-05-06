@@ -55,9 +55,9 @@ export const transaction = async (
     token: feeToken,
   };
   const transferTransaction = await syncWallet!.syncMultiTransfer([transferTx, feeTx]);
-  for (let a = 0; a < transferTransaction.length; a++) {
-    store.transaction.watchTransaction({ transactionHash: transferTransaction[a].txHash });
-  }
+  transferTransaction.forEach((item: Transaction): void => {
+    store.transaction.watchTransaction({ transactionHash: item.txHash });
+  });
   return transferTransaction;
 };
 

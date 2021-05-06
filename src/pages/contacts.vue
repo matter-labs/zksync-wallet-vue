@@ -2,8 +2,7 @@
   <div class="contactsPage">
     <i-modal v-model="addContactModal" class="prevent-close" size="md">
       <template slot="header">
-        <span v-if="addContactType === 'add'">{{ $t("pages.contacts.add") }}</span>
-        <span v-else-if="addContactType === 'edit'">{{ $t("pages.contacts.edit") }}</span>
+        <span>{{ modalTitle }}</span>
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
@@ -13,10 +12,10 @@
         <address-input ref="addressInput" v-model="inputtedWallet" @enter="addContact()" />
         <br />
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
-        <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" @click="deleteContact()">
-          <i class="ri-delete-bin-line"></i>&nbsp;&nbsp;Delete contact
+        <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" class="button-with-icon" @click="deleteContact()">
+          <i class="ri-delete-bin-line" />&nbsp;&nbsp;Delete contact
         </i-button>
-        <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
+        <i-button block variant="secondary" class="button-with-icon" size="lg" @click="addContact()"><i class="ri-save-2-fill" />&nbsp;&nbsp;Save</i-button>
       </div>
     </i-modal>
     <div v-if="!openedContact" class="tileBlock contactTile">
@@ -70,7 +69,7 @@
               <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="ri-clipboard-line"></i></i-button>
               <template slot="body">Copied!</template>
             </i-tooltip>
-            <i-button block link size="md" variant="secondary" @click="editContact(item)"><i class="ri-pencil-fill"></i></i-button>
+            <i-button block link size="md" cla variant="secondary" @click="editContact(item)"><i class="ri-pencil-fill" /></i-button>
           </div>
           <div v-else class="iconsBlock">
             <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="ri-arrow-go-back-line"></i></i-button>
@@ -117,17 +116,15 @@
 import transactions from "@/blocks/Transactions.vue";
 import addressInput from "@/components/AddressInput.vue";
 
-import userImg from "@/components/userImg.vue";
 import walletAddress from "@/components/walletAddress.vue";
 import { ZkInContact } from "@/plugins/types";
-import { Address } from "zksync/build/types";
-import { Route } from "vue-router/types";
 import utils from "@/plugins/utils";
 import Vue from "vue";
+import { Route } from "vue-router/types";
+import { Address } from "zksync/build/types";
 
 export default Vue.extend({
   components: {
-    userImg,
     walletAddress,
     transactions,
     addressInput,
@@ -183,6 +180,9 @@ export default Vue.extend({
     },
     isSearching(): boolean {
       return !!this.search.trim();
+    },
+    modalTitle(): string {
+      return this.$t(`pages.contacts.${this.addContactType}`);
     },
   },
   watch: {

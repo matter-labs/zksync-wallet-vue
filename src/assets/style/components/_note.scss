@@ -7,7 +7,7 @@
     padding: 10px 15px;
     text-align: left;
     border: 1px solid $light;
-    border-radius: 6px;
+    border-radius: $borderRadius;
     transition: border-color $transition1;
 
     .noteIcon {

@@ -1,23 +1,26 @@
 import { NuxtConfig } from "@nuxt/types";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
+import { version, name } from "./package.json";
 
 const env = process.env.APP_ENV ?? "dev";
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet" && env === "prod";
-const srcDir = "src";
-const pageTitle = "zkWallet — your access to L2 zkSync Rollup features.";
+const isLocalhost = process.env.IS_LOCALHOST ?? false;
+const srcDir = "src/";
+const pageTitle = "zkSync Wallet";
 const pageImg = "/Cover.jpg";
 
-const pageTitleTemplate = `zkWallet on ${process.env.APP_CURRENT_NETWORK?.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK?.slice(1)}`;
+const pageTitleTemplate = `${process.env.APP_CURRENT_NETWORK?.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK?.slice(1)} v.${version}`;
 const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
 crypto payments, zkWallet, cryptowallet`;
 
 const config: NuxtConfig = {
+  telemetry: false,
   components: true,
   ssr: false,
   target: "static",
-  srcDir: `${srcDir}/`,
+  srcDir: `${srcDir}`,
   vue: {
     config: {
       productionTip: isProduction,
@@ -129,15 +132,13 @@ const config: NuxtConfig = {
         content: "#4e529a",
       },
     ],
-    link: [
-      {rel: "icon", type: "image/x-icon", href: "/favicon-dark.png"}
-    ]
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
   },
   /*
    ** Customize the progress-bar color
    */
   loading: {
-    color: "#8c8dfc",
+    color: "#121429",
     continuous: true,
   },
   /*
@@ -160,20 +161,12 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: [
-    "@nuxtjs/dotenv",
-    "@nuxtjs/axios",
-    "@nuxtjs/toast",
-    "@nuxtjs/google-gtag",
-    "@inkline/nuxt",
-    "nuxt-webfontloader",
-    "nuxt-i18n",
-    "@nuxtjs/sentry",
-  ],
+  modules: ["@nuxtjs/dotenv", "@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "nuxt-webfontloader", "nuxt-i18n", "@nuxtjs/sentry"],
   webfontloader: {
     google: {
-      families: ["Fira+Sans:400,600", "Fira+Sans+Extra+Condensed:400,600", "Fira+Code:400"],
+      families: ["Fira+Sans:400,600", "Fira+Sans+Extra+Condensed:400,600", "Fira+Code:400", "Open"],
     },
+    ssr: false,
   },
   toast: <ToastOptions>{
     singleton: true,
@@ -204,7 +197,7 @@ const config: NuxtConfig = {
     vueI18n: {
       fallbackLocale: "en",
       messages: {
-        en: require(`./${srcDir}/locales/en/translations.json`),
+        en: require(`./${srcDir}locales/en/translations.json`),
       },
     },
   },
@@ -220,24 +213,32 @@ const config: NuxtConfig = {
   sentry: {
     dsn: process.env.SENTRY_DSN,
     disableServerSide: true,
+    lazy: true,
     config: {
+      debug: env === "dev",
+      attachStacktrace: true,
+      release: `${name}@${version}`,
       environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
       tracesSampleRate: 1.0,
     },
   },
-  "google-gtag": {
-    id: process.env.GTAG_ID,
-    config: {
-      anonymize_ip: true, // anonymize IP
-      send_page_view: true, // might be necessary to avoid duplicated page track on page reload
-    },
-    debug: env !== "prod", // enable to track in dev mode
-    disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
-  },
+  // Disabling google-gtag plugin for localhost run
+  "google-gtag": isLocalhost
+    ? false
+    : {
+        id: process.env.GTAG_ID,
+        config: {
+          anonymize_ip: true, // anonymize IP
+          send_page_view: true, // might be necessary to avoid duplicated page track on page reload
+        },
+        debug: env !== "prod", // enable to track in dev mode
+        disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
+      },
   /*
    ** Build configuration
    */
   build: {
+    //    transpile: ["vuex-module-decorators", /typed-vuex/],
     ssr: false,
     extend() {
       config.node = {
@@ -251,7 +252,7 @@ const config: NuxtConfig = {
   typescript: {
     typeCheck: {
       eslint: {
-        files: `${srcDir}/**/*.{ts,js,vue}`,
+        files: `${srcDir}**/*.{ts,js,vue}`,
       },
     },
   },

@@ -42,7 +42,7 @@
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'" class="returnBtn">
-          <i class="ri-arrow-left-line"></i>
+          <i class="ri-arrow-left-line" />
         </nuxt-link>
         <div>Deposit</div>
       </div>
@@ -74,7 +74,7 @@
         />
       </div>
 
-      <div class="errorText _text-center _margin-top-1">
+      <div v-if="error" class="errorText _text-center _margin-top-1">
         {{ error }}
       </div>
       <p v-if="displayTokenUnlock && !thresholdLoading" class="_text-center">
@@ -90,12 +90,12 @@
         </span>
       </p>
 
-      <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction()">
+      <i-button :disabled="buttonDisabled" block class="_margin-top-1 button-with-icon" size="lg" variant="secondary" @click="commitTransaction()">
         <span v-if="thresholdLoading"> Loading... </span>
         <span v-else-if="displayTokenUnlock">
           Unlock <span class="tokenSymbol">{{ chosenToken.symbol }}</span> and Deposit
         </span>
-        <span v-else>Deposit</span>
+        <span v-else><i class="ri-upload-2-fill" />&nbsp;&nbsp;Deposit</span>
       </i-button>
     </div>
   </div>

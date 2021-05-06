@@ -29,7 +29,7 @@
         height: calc(100% - 170px);
         overflow-x: hidden !important;
         overflow-y: auto !important;
-        background-color: #ffffff10;
+        background-color: $bgSecondary;
         border-radius: $borderRadius;
         box-shadow: $shadowInset;
 
@@ -39,13 +39,13 @@
         }
 
         &::-webkit-scrollbar-thumb {
-          border-radius: 10px;
+          border-radius: $borderRadius;
           cursor: pointer;
         }
 
         &::-webkit-scrollbar-track {
           background-color: $tempTransparent;
-          border-radius: 10px;
+          border-radius: $borderRadius;
         }
 
         .balanceItem {
@@ -88,6 +88,7 @@
                 color: $gray;
                 font-size: 16px;
               }
+
               &.small {
                 color: $gray;
                 font-size: 13px;
@@ -130,35 +131,33 @@
     @media screen and (max-width: $mobile) {
       height: max-content;
       .balances {
-        .balancesList {
-          .balanceItem {
-            display: block;
-            height: max-content;
-            padding: 10px 20px;
+        .balancesList .balanceItem {
+          display: block;
+          height: max-content;
+          padding: 10px 20px;
 
-            .tokenSymbol {
-              text-align: center;
+          .tokenSymbol {
+            text-align: center;
+          }
+
+          .rightSide {
+            display: block;
+
+            .rowItem {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+
+              &:nth-child(2) {
+                margin-top: 10px;
+              }
             }
 
-            .rightSide {
-              display: block;
+            .total {
+              text-align: center;
 
-              .rowItem {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-
-                &:nth-child(2) {
-                  margin-top: 10px;
-                }
-              }
-
-              .total {
-                text-align: center;
-
-                .balancePrice {
-                  display: block;
-                }
+              .balancePrice {
+                display: block;
               }
             }
           }

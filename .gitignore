@@ -50,6 +50,7 @@ public
 # unignore
 !public/.gitignore
 !.yarn/releases/*
-!.yarn/plugins/*
+!.yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
+!.yarn/plugins/@yarnpkg/plugin-version.cjs
 /cypress/screenshots/examples/misc.spec.js/
 /cypress/videos/examples/

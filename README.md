@@ -1,4 +1,4 @@
-# [zkWallet v.2.3.3](https://wallet.zksync.io/)  &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![npm version](https://img.shields.io/npm/v/zksync.svg?style=flat)](https://www.npmjs.com/package/zksync) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Rinkeby](https://img.shields.io/badge/wallet-Live%20on%20Rinkeby-blue)](https://rinkeby.zksync.io) [![Live on Ropsten](https://img.shields.io/badge/wallet-Live%20on%20Ropsten-blue)](https://ropsten.zksync.io) [![Join the technical discussion chat at https://gitter.im/matter-labs/zksync](https://badges.gitter.im/matter-labs/zksync.svg)](https://gitter.im/matter-labs/zksync?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# [zkWallet v.2.3.4](https://wallet.zksync.io/)  &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet/blob/master/LICENSE-MIT) [![npm version](https://img.shields.io/npm/v/zksync.svg?style=flat)](https://www.npmjs.com/package/zksync) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Rinkeby](https://img.shields.io/badge/wallet-Live%20on%20Rinkeby-blue)](https://rinkeby.zksync.io) [![Live on Ropsten](https://img.shields.io/badge/wallet-Live%20on%20Ropsten-blue)](https://ropsten.zksync.io) [![Join the technical discussion chat at https://gitter.im/matter-labs/zksync](https://badges.gitter.im/matter-labs/zksync.svg)](https://gitter.im/matter-labs/zksync?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 # zkWallet dApp
@@ -64,9 +64,12 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 * [Nuxt.js](https://nuxtjs.org)
 * [Vue.js](https://vuejs.org)
 * [Sentry.io](https://sentry.io)
-* [Onboarding.js fork](https://docs.blocknative.com/onboard)
+* [Onboarding.js fork](https://github.com/matter-labs-forks/onboard)
 * [Typed Vuex](https://typed-vuex.roe.dev/)
+* [Remix Icon](https://remixicon.com/)
 * [Nuxt TypeScript](https://typescript.nuxtjs.org/)
+* [nuxt-i18n](https://i18n.nuxtjs.org)
+* [zksync.js](https://zksync.io/api/sdk/js/tutorial.html)
 
 ## License
 

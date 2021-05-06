@@ -90,7 +90,6 @@ export const actions = actionTree(
   {
     async loadAllTokens({ commit, getters }): Promise<Tokens> {
       if (Object.entries(getters.getAllTokens).length === 0) {
-        await this.app.$accessor.wallet.restoreProviderConnection();
         /* By taking token list from syncProvider we avoid double getTokens request,
           but the tokensBySymbol param is private on zksync utils types */
         // @ts-ignore
@@ -147,7 +146,6 @@ export const actions = actionTree(
       if (Object.prototype.hasOwnProperty.call(localPricesList, symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
         return localPricesList[symbol].price;
       }
-      await this.app.$accessor.wallet.restoreProviderConnection();
       const syncProvider = walletData.get().syncProvider;
       const tokenPrice = await syncProvider?.getTokenPrice(symbol);
       commit("setTokenPrice", {

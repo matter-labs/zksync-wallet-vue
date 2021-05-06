@@ -17,7 +17,7 @@
             </nuxt-link>
             <nuxt-link class="headerLink" to="/transactions">
               <i class="mobileOnly ri-history-line"></i>
-              <span>Transactions</span>
+              <span>History</span>
             </nuxt-link>
           </div>
         </i-column>
@@ -34,7 +34,7 @@
                 <user-img :wallet="walletAddressFull"></user-img>
               </div>
               <div class="dropdownArrow">
-                <i class="ri-arrow-down-s-line"></i>
+                <i class="ri-arrow-down-s-line" />
               </div>
             </div>
           </div>

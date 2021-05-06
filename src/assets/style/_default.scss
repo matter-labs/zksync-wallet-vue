@@ -65,7 +65,7 @@ body.inkline {
       padding: 7px 12px;
       color: $lightViolet !important;
       text-decoration: none !important;
-      border-radius: 4px;
+      border-radius: $borderRadiusSm;
     }
   }
 
@@ -118,7 +118,7 @@ button.-lg.-circle {
 
 .popover {
   border: none !important;
-  border-radius: 10px !important;
+  border-radius: $borderRadius !important;
   box-shadow: $popoverShadow;
   opacity: 0.975;
 
@@ -206,7 +206,7 @@ button.-lg.-circle {
     > .header {
       font-weight: 400;
       font-size: 1.5rem;
-      font-family: $firaSansExtra;
+      font-family: $firaSans;
 
       & > .close {
         width: 2.2rem !important;
@@ -246,7 +246,7 @@ button.-lg.-circle {
     }
 
     & > div:last-child {
-      border-radius: 0 0 8px 8px;
+      border-radius: 0 0 $borderRadius $borderRadius;
     }
   }
 
@@ -308,7 +308,7 @@ button.-lg.-circle {
       }
 
       span {
-        font-size: 14px;
+        font-size: $fontSizeRegular;
         text-align: left;
       }
     }
@@ -345,10 +345,8 @@ button.-lg.-circle {
     }
 
     .form-input-append {
-      background-color: transparent !important;
-
       &:hover {
-        background-color: rgba(0, 0, 0, 0.01961) !important;
+        background-color: $shadowColor3 !important;
       }
     }
   }
@@ -366,7 +364,11 @@ button.-lg.-circle {
     }
 
     .form-input-append {
-      background-color: transparent !important;
+      background-color: $mediumViolet !important;
+      &:hover {
+        background-color: $darkMain !important;
+        color: $light;
+      }
     }
   }
 

@@ -11,17 +11,14 @@ import {
 import { Store } from "vuex";
 import Web3 from "web3";
 import web3Wallet from "@/plugins/web3";
-import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
+import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME, APP_NAME, APP_ZK_ALTERNATIVE_WITHDRAWAL, ethereum } from "@/plugins/build";
 
-const APP_NAME = "zkSync Beta";
-const FORCED_EXIT_LINK = `https://withdraw${ETHER_NETWORK_NAME === "mainnet" ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
 const INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;
 const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
 const initializedWallets: WalletSelectModuleOptions = {
   wallets: <Array<WalletModule | WalletInitOptions>>[
     { walletName: "imToken", rpcUrl: RPC_URL, preferred: true },
-    { walletName: "metamask", preferred: true },
     {
       walletName: "walletConnect",
       networkId: ETHER_NETWORK_ID,
@@ -66,6 +63,11 @@ const initializedWallets: WalletSelectModuleOptions = {
     { walletName: "atoken" },
   ],
 };
+
+if (ethereum) {
+  initializedWallets.wallets?.unshift({ walletName: "metamask", preferred: true });
+}
+
 export default (ctx: Store<WalletModuleState>): Initialization => {
   const colorTheme: string | null = localStorage.getItem("colorTheme");
   return <Initialization>{
@@ -95,7 +97,7 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
     popupContent: <PopupContent>{
       dismiss: "Dismiss",
       teaser: "Can't find your wallet?",
-      fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
+      fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${APP_ZK_ALTERNATIVE_WITHDRAWAL}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
     },
   };
 };

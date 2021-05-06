@@ -2,14 +2,14 @@
   .transactionsTile {
     display: flex;
     flex-direction: column;
-    height: $minRouteHeightMain;
+    height: $minRouteHeightWithExtra !important;
     min-height: 500px;
   }
 
   .transactionsListContainer {
     height: 100%;
     overflow: auto;
-    border-radius: 0.3rem !important;
+    border-radius: $borderRadiusSm !important;
     box-shadow: $shadowInset;
 
     &::-webkit-scrollbar {
@@ -18,13 +18,13 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
+      border-radius: $borderRadius;
       cursor: pointer;
     }
 
     &::-webkit-scrollbar-track {
       background-color: $tempTransparent;
-      border-radius: 10px;
+      border-radius: $borderRadius;
     }
 
     .transactionItem {
@@ -108,7 +108,7 @@
           line-height: 32px;
 
           &.small {
-            font-size: 14px;
+            font-size: $fontSizeRegular;
           }
         }
 
@@ -168,7 +168,7 @@
         .linkText {
           display: block;
           margin-top: 7px;
-          font-size: 14px;
+          font-size: $fontSizeRegular;
           line-height: 1.1;
         }
       }

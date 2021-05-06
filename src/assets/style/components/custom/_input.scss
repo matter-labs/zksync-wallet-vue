@@ -10,7 +10,7 @@
     height: 46px;
     padding: 15px 5px;
     background: $white;
-    border-radius: 5px;
+    border-radius: $borderRadiusMd;
     box-shadow: $inputContainerShadow;
     transition: background-color 0.2s ease;
 
@@ -42,7 +42,7 @@
       padding: 0 15px;
       color: $purpleDark;
       font-weight: 600;
-      font-size: 14px;
+      font-size: $fontSizeRegular;
       font-family: $openSans;
       text-align: left;
       background-color: $tempTransparent;
@@ -63,7 +63,7 @@
       width: 100%;
       height: 100%;
       color: $violet;
-      font-size: 14px;
+      font-size: $fontSizeRegular;
       border-left: 2px solid $purple;
       transition: color 0.2s ease, border-color 0.2s ease;
     }

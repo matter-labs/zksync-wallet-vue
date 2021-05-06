@@ -53,7 +53,7 @@
         <i-button block link variant="secondary" @click="contactsListModal = true">Select from contacts</i-button>
       </i-column>
       <i-column v-else xs="12" :md="canSaveContact ? 7 : 12">
-        <i-button block link variant="secondary" @click="contactsListModal = true">
+        <i-button block link variant="secondary" class="button-with-icon" @click="contactsListModal = true">
           {{ isOwnAddress ? "Own account" : chosenContact.name }}&nbsp;&nbsp;<i class="ri-arrow-down-s-line" />
         </i-button>
       </i-column>
@@ -103,7 +103,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    ownAddress(): Address {
+    ownAddress(): Address | string {
       return this.$accessor.account.address || "";
     },
     canSaveContact(): boolean {

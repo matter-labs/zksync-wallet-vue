@@ -57,6 +57,37 @@ export const state = (): iWallet => ({
 
 export type WalletModuleState = ReturnType<typeof state>;
 
+export const getters = getterTree(state, {
+  isAccountLocked: (state): boolean => state.isAccountLocked,
+  getOnboard: (state): API | undefined => state.onboard,
+  getTokensList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.initialTokens,
+  getInitialBalances: (state): Array<ZkInBalance> => state.initialTokens.list,
+  getzkList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.zkTokens,
+  getzkBalances: (state): Array<ZkInBalance> => state.zkTokens.list,
+  getTransactionsHistory: (state): Array<ZkInTx> => state.transactionsHistory.list,
+  getTransactionsList: (
+    state,
+  ): {
+    lastUpdated: number;
+    list: Array<ZkInTx>;
+  } => state.transactionsHistory,
+  getWithdrawalProcessingTime: (
+    state,
+  ):
+    | false
+    | {
+        normal: number;
+        fast: number;
+      } => state.withdrawalProcessingTime,
+  getFees: (state): feesInterface => state.fees,
+
+  getSyncWallet: () => walletData.get().syncWallet,
+
+  getProvider: () => walletData.get().syncProvider,
+  getAccountState: () => walletData.get().syncProvider,
+  isLoggedIn: (): boolean => !!(walletData.get().syncWallet && walletData.get().syncWallet?.address),
+});
+
 export const mutations = mutationTree(state, {
   setAccountLockedState(state, accountState: boolean): void {
     state.isAccountLocked = accountState;
@@ -133,37 +164,6 @@ export const mutations = mutationTree(state, {
   },
 });
 
-export const getters = getterTree(state, {
-  isAccountLocked: (state): boolean => state.isAccountLocked,
-  getOnboard: (state): API | undefined => state.onboard,
-  getTokensList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.initialTokens,
-  getInitialBalances: (state): Array<ZkInBalance> => state.initialTokens.list,
-  getzkList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.zkTokens,
-  getzkBalances: (state): Array<ZkInBalance> => state.zkTokens.list,
-  getTransactionsHistory: (state): Array<ZkInTx> => state.transactionsHistory.list,
-  getTransactionsList: (
-    state,
-  ): {
-    lastUpdated: number;
-    list: Array<ZkInTx>;
-  } => state.transactionsHistory,
-  getWithdrawalProcessingTime: (
-    state,
-  ):
-    | false
-    | {
-        normal: number;
-        fast: number;
-      } => state.withdrawalProcessingTime,
-  getFees: (state): feesInterface => state.fees,
-
-  getSyncWallet: () => walletData.get().syncWallet,
-
-  getProvider: () => walletData.get().syncProvider,
-  getAccountState: () => walletData.get().syncProvider,
-  isLoggedIn: (): boolean => !!(walletData.get().syncWallet && walletData.get().syncWallet?.address),
-});
-
 export const actions = actionTree(
   { state, getters, mutations },
   {
@@ -203,18 +203,8 @@ export const actions = actionTree(
     },
 
     /**
-     * Check if the connection to the sync provider is opened and if not - restore it
-     */
-    async restoreProviderConnection(): Promise<void> {
-      // will probably be used again when websocket will be implemented
-      /* if (walletData.get().syncProvider!.transport !== undefined) {
-        const activeProvider: Provider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
-        walletData.set({ syncProvider: activeProvider });
-      } */
-    },
-
-    /**
      *
+     * @param state
      * @param commit
      * @param getters
      * @param accountState
@@ -238,7 +228,6 @@ export const actions = actionTree(
         if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
           return localList.list;
         }
-        await this.app.$accessor.wallet.restoreProviderConnection();
         const newAccountState = await syncWallet?.getAccountState();
         if (!walletData.get().accountState) {
           walletData.set({ accountState: newAccountState });
@@ -294,7 +283,6 @@ export const actions = actionTree(
       if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
         return localList.list;
       }
-      await this.app.$accessor.wallet.restoreProviderConnection();
       const syncWallet = walletData.get().syncWallet;
       const accountState = await syncWallet?.getAccountState();
       if (accountState !== undefined) {
@@ -395,7 +383,6 @@ export const actions = actionTree(
       }
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
-      await this.app.$accessor.wallet.restoreProviderConnection();
       if (type === "withdraw") {
         if (symbol === feeSymbol) {
           const foundFeeFast: Fee = await syncProvider!.getTransactionFee("FastWithdraw", address, symbol);
@@ -467,6 +454,7 @@ export const actions = actionTree(
      * @returns {Promise<boolean>}
      */
     async walletRefresh({ dispatch, state }, firstSelect = true): Promise<boolean> {
+      console.log("refreshing the wallet");
       try {
         this.app.$accessor.account.setLoadingHint("Follow the instructions in your wallet");
         let walletCheck = false;
