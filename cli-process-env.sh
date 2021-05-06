@@ -3,6 +3,7 @@
 NETWORK="$1"
 ENV_VALUE="$2"
 FORCE_REWRITE="$3"
+IS_LOCALHOST="$4"
 
 # Colors
 Red="\033[0;31m"     # Red
@@ -62,4 +63,15 @@ rm -f ./.env &&
   echo "$APP_ENV" >>".env" &&
   echo "$GIT_UPDATED_AT" >>".env"
 
-echo "${Green}Configured successfully "
+if [[ "$IS_LOCALHOST" ]]; then
+  echo "${BBlue}Localhost detected:"
+  echo ""
+  echo "${Default}   Sentry: ${Red}Disabled"
+  echo "${Default}   GTM: ${Red}Disabled"
+  echo ""
+  echo "SENTRY_DISABLED=1" >> ".env"
+  echo "IS_LOCALHOST=1" >> ".env"
+
+fi
+
+echo "${Green}Configured successfully ✅"
