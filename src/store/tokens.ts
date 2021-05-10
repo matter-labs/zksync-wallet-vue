@@ -33,6 +33,7 @@ export const state = () => ({
    * Token prices
    */
   tokenPrices: <ZkInTokenPrices>{},
+  tokenPricesTick: 0, // Used to force update component's
 });
 
 export type TokensModuleState = ReturnType<typeof state>;
@@ -43,6 +44,7 @@ export const mutations = mutationTree(state, {
   },
   setTokenPrice(state, { symbol, obj }): void {
     state.tokenPrices[symbol] = obj;
+    state.tokenPricesTick++;
   },
   storeAcceptableTokens(state, tokenList: TokenInfo[]): void {
     state.acceptableTokens = tokenList;
@@ -66,6 +68,9 @@ export const getters = getterTree(state, {
   },
   getTokenPrices(state): ZkInTokenPrices {
     return state.tokenPrices;
+  },
+  getTokenPriceTick(state): number {
+    return state.tokenPricesTick;
   },
   getTokenByID(state) {
     return (id: number): TokenInfo | undefined => {

@@ -64,20 +64,15 @@
           <span>{{ chosenToken.symbol }} Allowance</span>
           <i class="ri-question-mark iconInfo" />
         </div>
-        <allowance-input
-          ref="allowanceInput"
-          v-model="inputtedAllowance"
-          :token="chosenToken"
-          :min-amount="amountBigNumber.toString()"
-          @error="allowanceError = $event"
-          @enter="commitTransaction()"
-        />
+        <div :class="{ 'grid-cols-2': inputtedAmount }">
+          <i-button block size="md" variant="secondary" @click="unlockToken(true)">Approve unlimited {{ chosenToken.symbol }}</i-button>
+          <i-button v-if="inputtedAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
+            Approve {{ amountBigNumber | formatToken(chosenToken.symbol) }} {{ chosenToken.symbol }}
+          </i-button>
+        </div>
       </div>
 
-      <div class="errorText _text-center _margin-top-1">
-        {{ error }}
-      </div>
-      <p v-if="displayTokenUnlock && !thresholdLoading" class="_text-center">
+      <p v-if="displayTokenUnlock && !thresholdLoading" class="_text-center _margin-top-05">
         <span v-if="zeroAllowance">
           You should firstly unlock selected token in order to authorize deposits for
           <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
@@ -90,11 +85,12 @@
         </span>
       </p>
 
+      <div v-if="error" class="errorText _text-center _margin-top-1">
+        {{ error }}
+      </div>
+
       <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction()">
-        <span v-if="thresholdLoading"> Loading... </span>
-        <span v-else-if="displayTokenUnlock">
-          Unlock <span class="tokenSymbol">{{ chosenToken.symbol }}</span> and Deposit
-        </span>
+        <span v-if="thresholdLoading">Loading...</span>
         <span v-else>Deposit</span>
       </i-button>
     </div>
@@ -104,7 +100,6 @@
 <script lang="ts">
 import chooseToken from "@/blocks/ChooseToken.vue";
 import AllowanceModal from "@/blocks/modals/Allowance.vue";
-import allowanceInput from "@/components/AllowanceInput.vue";
 import amountInput from "@/components/AmountInput.vue";
 
 import loadingBlock from "@/components/LoadingBlock.vue";
@@ -126,7 +121,6 @@ export default Vue.extend({
     loadingBlock,
     successBlock,
     amountInput,
-    allowanceInput,
     chooseToken,
     AllowanceModal,
   },
@@ -180,7 +174,7 @@ export default Vue.extend({
       return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
     },
     buttonDisabled(): boolean {
-      return !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.enoughInputedAllowance;
+      return this.displayTokenUnlock || !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.enoughInputedAllowance;
     },
     amountBigNumber(): BigNumber {
       if (!this.chosenToken || !this.inputtedAmount) {
@@ -284,11 +278,7 @@ export default Vue.extend({
       this.error = "";
       this.loading = true;
       try {
-        if (this.displayTokenUnlock) {
-          await this.unlockToken();
-        } else {
-          await this.deposit();
-        }
+        await this.deposit();
       } catch (error) {
         if (error.message) {
           if (error.message.includes("User denied")) {
@@ -336,7 +326,7 @@ export default Vue.extend({
       this.transactionInfo.continueBtnText = "";
       this.transactionInfo.success = true;
     },
-    async unlockToken(): Promise<void> {
+    async unlockToken(unlimited = true): Promise<void> {
       if (!this.chosenToken) {
         return;
       }
@@ -345,8 +335,8 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         this.tip = `Confirm the transaction in order to unlock ${this.chosenToken.symbol} token`;
         this.transactionInfo.type = "unlock";
-        const approveAmount = this.inputtedAllowance ? utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance) : undefined;
-        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, approveAmount);
+        /* const approveAmount = this.inputtedAllowance ? utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance) : undefined; */
+        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited === true ? undefined : this.amountBigNumber);
         const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken: ZkInBalance | undefined;
         for (const token of balances) {
@@ -378,11 +368,15 @@ export default Vue.extend({
           amount: receipt.gasUsed.toString(),
           token: ETHToken,
         };
+        this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
         this.transactionInfo.continueBtnFunction = true;
-        this.transactionInfo.continueBtnText = "Proceed to deposit";
+        if (unlimited === false) {
+          this.transactionInfo.continueBtnText = "Proceed to deposit";
+        } else {
+          this.transactionInfo.continueBtnText = "Ok";
+        }
         this.transactionInfo.success = true;
         this.chosenToken = { ...this.chosenToken, unlocked: true };
-        this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
       } catch (error) {
         if (error.message) {
           if (!error.message.includes("User denied")) {
@@ -407,6 +401,9 @@ export default Vue.extend({
       this.transactionInfo.hash = "";
       this.transactionInfo.explorerLink = "";
       if (this.transactionInfo.type === "unlock") {
+        if (this.transactionInfo.continueBtnText === "Ok") {
+          return;
+        }
         if (!this.error) {
           this.loading = true;
           try {

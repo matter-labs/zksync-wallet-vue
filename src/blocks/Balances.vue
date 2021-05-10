@@ -107,6 +107,7 @@ export default Vue.extend({
     return {
       search: "",
       loading: false,
+      inited: false,
       balanceInfoModal: false,
     };
   },
@@ -179,11 +180,12 @@ export default Vue.extend({
   },
   methods: {
     async getBalances(): Promise<void> {
-      if (this.displayedList.length === 0) {
+      if (this.displayedList.length === 0 && this.inited === false) {
         this.loading = true;
       }
       await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       this.loading = false;
+      this.inited = true;
     },
     autoUpdateList(): void {
       clearInterval(updateListInterval);

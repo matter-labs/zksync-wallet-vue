@@ -503,8 +503,8 @@ export const actions = actionTree(
           return false;
         }
         const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
-        this.app.$accessor.account.setLoadingHint("Getting wallet information");
 
+        this.app.$accessor.account.setLoadingHint("Getting wallet information");
         watcher.changeNetworkSet(dispatch, this);
         const accountState = await syncWallet?.getAccountState();
         walletData.set(<iWalletData>{
