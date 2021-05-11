@@ -530,9 +530,6 @@ export default Vue.extend({
       const activateTransaction = this.$accessor.wallet.isAccountLocked ? withdrawTransactions.shift() : undefined;
       const withdrawTransaction = withdrawTransactions.shift();
       const feeTransaction = withdrawTransactions.length > 0 ? withdrawTransactions.shift() : withdrawTransaction;
-      console.log("activateTransaction", activateTransaction);
-      console.log("withdrawTransaction", withdrawTransaction);
-      console.log("feeTransaction", feeTransaction);
 
       if (activateTransaction) {
         window.localStorage.removeItem(`pubKeySignature-${this.$accessor.account.address}`);
@@ -599,9 +596,6 @@ export default Vue.extend({
       const activateTransaction = this.$accessor.wallet.isAccountLocked ? transferTransactions.shift() : undefined;
       const transferTransaction = transferTransactions.shift();
       const feeTransaction = transferTransactions.length > 0 ? transferTransactions.shift() : transferTransaction;
-      console.log("activateTransaction", activateTransaction);
-      console.log("transferTransaction", transferTransaction);
-      console.log("feeTransaction", feeTransaction);
 
       if (transferTransaction === undefined) {
         throw new Error("Wrong transaction type");

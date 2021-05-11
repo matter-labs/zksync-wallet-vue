@@ -2,7 +2,7 @@ import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
 import { submitSignedTransactionsBatch } from "zksync/build/wallet";
-import { Address, TokenSymbol } from "zksync/build/types";
+import { Address, ChangePubKey, TokenSymbol } from "zksync/build/types";
 
 /**
  * Make zkSync transaction
@@ -28,29 +28,25 @@ export const transaction = async (
   const nonce = await syncWallet!.getNonce("committed");
   const batchBuilder = syncWallet!.batchBuilder(nonce);
 
-  if (store.wallet.isAccountLocked) {
-    let pubKeyTx = window.localStorage.getItem(`pubKeySignature-${store.account.address}`);
-    if (!pubKeyTx) {
+  if (store.wallet.isAccountLocked && accountActivationFee) {
+    const pubKeyTxJSON = window.localStorage.getItem(`pubKeySignature-${store.account.address}`);
+    if (!pubKeyTxJSON) {
       store.openModal("SignPubkey");
       throw new Error("No signed changePubKey was found for the current account");
     }
+    let pubKeyTx: ChangePubKey;
     try {
-      pubKeyTx = JSON.parse(pubKeyTx);
+      pubKeyTx = JSON.parse(pubKeyTxJSON);
     } catch (error) {
       store.openModal("SignPubkey");
       window.localStorage.removeItem(`pubKeySignature-${store.account.address}`);
       throw new Error("Couldn't parse saved signed changePubKey");
     }
-    // @ts-ignore
-    pubKeyTx = {
-      // @ts-ignore
+    const changePubKeyTx = await syncWallet!.signer!.signSyncChangePubKey({
       ...pubKeyTx,
       fee: accountActivationFee,
-      feeToken: syncWallet!.provider.tokenSet.resolveTokenId(feeToken),
-      feeTokenId: syncWallet!.provider.tokenSet.resolveTokenId(feeToken),
-    };
-    // @ts-ignore
-    const changePubKeyTx = await syncWallet!.signer!.signSyncChangePubKey(pubKeyTx);
+      feeTokenId: pubKeyTx.feeToken,
+    });
     batchBuilder.addChangePubKey({
       tx: changePubKeyTx,
       // @ts-ignore
@@ -79,15 +75,6 @@ export const transaction = async (
     });
   }
   const batchTransactionData = await batchBuilder.build();
-  for (const tx of batchTransactionData.txs) {
-    if (tx.tx.type === "ChangePubKey") {
-      tx.ethereumSignature = {
-        type: "EthereumSignature",
-        signature: tx.tx.ethSignature!,
-      };
-      break;
-    }
-  }
   const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
     store.transaction.watchTransaction({ transactionHash: tx.txHash });
@@ -146,13 +133,6 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     };
     // @ts-ignore
     const changePubKeyTx = await syncWallet!.signer!.signSyncChangePubKey(pubKeyTx);
-    /* const signedTx = await syncWallet!.signSetSigningKey({
-      feeToken,
-      fee: accountActivationFee as string,
-      nonce,
-      ethAuthType: "ECDSA",
-    }); */
-    console.log(changePubKeyTx /* , signedTx.tx */);
     batchBuilder.addChangePubKey({
       tx: changePubKeyTx,
       // @ts-ignore
@@ -183,7 +163,6 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     });
   }
   const batchTransactionData = await batchBuilder.build();
-  console.log("batchTransactionData", batchTransactionData);
   const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
     store.transaction.watchTransaction({ transactionHash: tx.txHash });
