@@ -146,7 +146,13 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     };
     // @ts-ignore
     const changePubKeyTx = await syncWallet!.signer!.signSyncChangePubKey(pubKeyTx);
-    console.log("signed changePubKeyTx", changePubKeyTx);
+    /* const signedTx = await syncWallet!.signSetSigningKey({
+      feeToken,
+      fee: accountActivationFee as string,
+      nonce,
+      ethAuthType: "ECDSA",
+    }); */
+    console.log(changePubKeyTx /* , signedTx.tx */);
     batchBuilder.addChangePubKey({
       tx: changePubKeyTx,
       // @ts-ignore
@@ -178,15 +184,6 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   }
   const batchTransactionData = await batchBuilder.build();
   console.log("batchTransactionData", batchTransactionData);
-  for (const tx of batchTransactionData.txs) {
-    if (tx.tx.type === "ChangePubKey") {
-      tx.ethereumSignature = {
-        type: "EthereumSignature",
-        signature: tx.tx.ethSignature!,
-      };
-      break;
-    }
-  }
   const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
     store.transaction.watchTransaction({ transactionHash: tx.txHash });

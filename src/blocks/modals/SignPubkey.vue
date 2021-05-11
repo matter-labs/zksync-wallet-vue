@@ -81,9 +81,9 @@ export default Vue.extend({
         let changePubKeyMessage;
         const newPubKeyHash = await syncWallet!.signer!.pubKeyHash();
         if (ethAuthType === "ECDSA") {
-          changePubKeyMessage = utils.getChangePubkeyMessage(newPubKeyHash, nonce, syncWallet!.accountId!);
+          changePubKeyMessage = utils.getChangePubkeyMessage(newPubKeyHash, nonce, walletData.get().accountState!.id!);
         } else {
-          changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, syncWallet!.accountId!);
+          changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, walletData.get().accountState!.id!);
         }
         this.step = "sign";
         const ethSignature = (await syncWallet!.getEthMessageSignature(changePubKeyMessage)).signature;
