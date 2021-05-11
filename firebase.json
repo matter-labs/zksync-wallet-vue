@@ -10,6 +10,15 @@
       ]
     },
     {
+      "site": "rinkeby-beta-zksync-vue",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
       "target": "rinkeby",
       "public": "public",
       "ignore": [

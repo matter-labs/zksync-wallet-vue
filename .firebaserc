@@ -11,9 +11,6 @@
         "ropsten": [
           "zksync-vue-ropsten"
         ],
-        "stage": [
-          "zksync-vue"
-        ],
         "rinkeby-dev": [
           "zksync-vue-rinkeby-dev"
         ],
@@ -22,6 +19,12 @@
         ],
         "mainnet-dev": [
           "zksync-vue-mainnet-dev"
+        ],
+        "rinkeby-beta": [
+          "rinkeby-beta-zksync-vue"
+        ],
+        "stage": [
+          "stage-zksync-vue"
         ]
       }
     },
