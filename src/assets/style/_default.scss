@@ -447,17 +447,6 @@ button.-lg.-circle {
   }
 }
 
-.fa-check-double {
-  display: block;
-  min-width: 35px;
-  min-height: 35px;
-  color: transparent !important;
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjI2IDYgMjYgOCIgaGVpZ2h0PSIxMDAiIHdpZHRoPSIxMDAiPjxwYXRoIGZpbGw9JyM1OEFFNjcnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZD0iTTI3LjkyMyAxMC4zM2w1LjQyIDUuNDdMNDMuNjU2IDUuNTZsLTEuOTk4LTEuOTk4LTguMDY1IDcuOS0zLjMzLTMuMzU1em04LjU4NyAyLjkwOGwyLjUzOCAyLjQ5M0w0OS4zNiA1LjQ5MmwtMS45OTgtMS45OTgtOC4wNjUgNy45LS40NDctLjM3OHoiPjwvcGF0aD48L3N2Zz4=);
-  background-repeat: no-repeat;
-  background-position: -2px -6px;
-  background-size: contain;
-}
-
 .tokenSymbol,
 .walletAddress {
   font-weight: 400;
@@ -472,4 +461,21 @@ button.-lg.-circle {
 .h2 {
   font-weight: 600 !important;
   font-family: $firaSans;
+}
+
+._margin-top-05 {
+  margin-top: 0.5em;
+}
+
+.grid-cols-2 {
+  display: grid;
+  height: max-content;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 100%;
+  grid-gap: 15px;
+  @media screen and (max-width: $mobile) {
+    grid-gap: 10px;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(2, 1fr);
+  }
 }

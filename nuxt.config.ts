@@ -115,9 +115,9 @@ const config: NuxtConfig = {
         content: pageTitle,
       },
 
-      { "http-equiv": "pragma", content: "no-cache", property: "pragma" },
+      /* { "http-equiv": "pragma", content: "no-cache", property: "pragma" },
       { "http-equiv": "cache-control", property: "cache-control", content: "no-cache , no-store, must-revalidate" },
-      { "http-equiv": "expires", content: "0", property: "expires" },
+      { "http-equiv": "expires", content: "0", property: "expires" }, */
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {

@@ -90,7 +90,7 @@
       </div>
 
       <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction()">
-        <span v-if="thresholdLoading"> Loading... </span>
+        <span v-if="thresholdLoading">Loading...</span>
         <span v-else>Deposit</span>
       </i-button>
     </div>
