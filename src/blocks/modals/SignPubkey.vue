@@ -114,16 +114,6 @@ export default Vue.extend({
       }
       this.loading = false;
       this.step = false;
-      /* syncWallet!.getEthMessageSignature
-      const signedTx = await syncWallet!.signSetSigningKey({
-        feeToken: "ETH",
-        nonce,
-        ethAuthType: ethAuthType === "ECDSA" ? "ECDSALegacyMessage" : "ECDSA",
-      });
-      batchBuilder.addChangePubKey({
-        ...signedTx.tx,
-        alreadySigned: true,
-      }); */
     },
   },
 });
