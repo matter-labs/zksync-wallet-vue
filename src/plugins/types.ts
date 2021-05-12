@@ -1,7 +1,17 @@
 import { accessorType } from "@/store";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
-import { SignedTransaction, TransactionReceipt, AccountState, Address, TokenSymbol } from "zksync/build/types";
+import {
+  SignedTransaction,
+  TransactionReceipt,
+  AccountState,
+  Address,
+  TokenSymbol,
+  PubKeyHash,
+  ChangePubKeyOnchain,
+  ChangePubKeyECDSA,
+  ChangePubKeyCREATE2,
+} from "zksync/build/types";
 import { Wallet, Provider } from "zksync";
 
 export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";
@@ -23,7 +33,6 @@ export interface ZkInBalance {
   balance: GweiBalance;
   rawBalance: BigNumber;
   verifiedBalance: GweiBalance;
-  tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
@@ -96,7 +105,6 @@ export interface ZkInToken {
   balance: GweiBalance;
   rawBalance: BigNumber;
   verifiedBalance: GweiBalance;
-  tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
@@ -189,7 +197,6 @@ export interface Balance {
   balance: GweiBalance;
   rawBalance: BigNumber;
   verifiedBalance: GweiBalance;
-  tokenPrice: number;
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
@@ -230,4 +237,22 @@ export interface DepositsInterface {
     status: string;
     confirmations: number;
   }[];
+}
+
+/**
+ * Redeclared since we use TokenInfo which is a part of this interface
+ */
+export interface Tokens {
+  // Tokens are indexed by their symbol (e.g. "ETH")
+  [token: string]: TokenInfo;
+}
+export interface CPKLocal {
+  accountId: number;
+  account: Address;
+  newPkHash: PubKeyHash;
+  nonce: number;
+  ethAuthData?: ChangePubKeyOnchain | ChangePubKeyECDSA | ChangePubKeyCREATE2;
+  ethSignature?: string;
+  validFrom: number;
+  validUntil: number;
 }

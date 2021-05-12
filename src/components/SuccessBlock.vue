@@ -20,7 +20,7 @@
         <span class="tokenSymbol">{{ amount.token.symbol }}</span>
         {{ amount.amount | formatToken(amount.token.symbol) }}
         <span class="secondaryText">
-          {{ amount.amount | formatUsdAmount(amount.token.tokenPrice, amount.token.symbol) }}
+          <token-price :symbol="amount.token.symbol" :amount="amount.amount" />
         </span>
       </div>
     </div>
@@ -30,7 +30,7 @@
         <span class="tokenSymbol">{{ fee.token.symbol }}</span>
         {{ fee.amount | formatToken(fee.token.symbol) }}
         <span class="secondaryText">
-          {{ fee.amount | formatUsdAmount(fee.token.tokenPrice, fee.token.symbol) }}
+          <token-price :symbol="fee.token.symbol" :amount="fee.amount" />
         </span>
       </div>
     </div>

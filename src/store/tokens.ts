@@ -1,8 +1,8 @@
 import { APP_ZKSYNC_API_LINK } from "@/plugins/build";
-import { TokenInfo, ZkInTokenPrices } from "@/plugins/types";
+import { TokenInfo, Tokens, ZkInTokenPrices } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { Tokens, TokenSymbol } from "zksync/build/types";
+import { TokenSymbol } from "zksync/build/types";
 
 /**
  * Operations with the tokens (assets)
@@ -15,6 +15,8 @@ export const state = () => ({
    * Restricted tokens, fee can't be charged in it
    */
   restrictedTokens: <TokenSymbol[]>[],
+
+  acceptableTokens: <TokenInfo[]>[],
 
   /**
    * All available tokens:
@@ -31,6 +33,7 @@ export const state = () => ({
    * Token prices
    */
   tokenPrices: <ZkInTokenPrices>{},
+  tokenPricesTick: 0, // Used to force update component's
 });
 
 export type TokensModuleState = ReturnType<typeof state>;
@@ -41,6 +44,10 @@ export const mutations = mutationTree(state, {
   },
   setTokenPrice(state, { symbol, obj }): void {
     state.tokenPrices[symbol] = obj;
+    state.tokenPricesTick++;
+  },
+  storeAcceptableTokens(state, tokenList: TokenInfo[]): void {
+    state.acceptableTokens = tokenList;
   },
   addRestrictedToken(state, token: TokenSymbol): void {
     if (!state.restrictedTokens.includes(token) && token.toLowerCase() !== "eth") {
@@ -53,14 +60,17 @@ export const getters = getterTree(state, {
   getAllTokens(state): Tokens {
     return state.allTokens;
   },
-  getRestrictedTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => state.restrictedTokens.includes(e[1].symbol)));
+  getRestrictedTokens(state): TokenSymbol[] {
+    return state.restrictedTokens;
   },
   getAvailableTokens(state): Tokens {
     return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
   },
   getTokenPrices(state): ZkInTokenPrices {
     return state.tokenPrices;
+  },
+  getTokenPriceTick(state): number {
+    return state.tokenPricesTick;
   },
   getTokenByID(state) {
     return (id: number): TokenInfo | undefined => {
@@ -86,23 +96,19 @@ export const actions = actionTree(
     async loadAllTokens({ commit, getters }): Promise<Tokens> {
       if (Object.entries(getters.getAllTokens).length === 0) {
         await this.app.$accessor.wallet.restoreProviderConnection();
-        const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
+        /* By taking token list from syncProvider we avoid double getTokens request,
+          but the tokensBySymbol param is private on zksync utils types */
+        // @ts-ignore
+        const tokensList: Tokens = walletData.get().syncProvider!.tokenSet.tokensBySymbol;
         commit("setAllTokens", tokensList);
-        await this.app.$accessor.tokens.loadRestrictedTokens(tokensList);
+        await this.app.$accessor.tokens.loadAcceptableTokens();
         return tokensList || {};
       }
       return getters.getAllTokens;
     },
-    async loadRestrictedTokens({ commit, getters }, tokensList: Tokens): Promise<Tokens> {
-      if (Object.entries(getters.getRestrictedTokens).length === 0) {
-        const acceptableTokens: TokenInfo[] = (await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
-        for (const symbol in tokensList) {
-          if (acceptableTokens!.filter((element: TokenInfo) => element.id === tokensList[symbol].id).length < 1) {
-            commit("addRestrictedToken", symbol);
-          }
-        }
-      }
-      return getters.getRestrictedTokens;
+    async loadAcceptableTokens({ commit }): Promise<void> {
+      const acceptableTokens: TokenInfo[] = (await this.app.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
+      commit("storeAcceptableTokens", acceptableTokens);
     },
 
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
@@ -159,6 +165,11 @@ export const actions = actionTree(
       return tokenPrice || 0;
     },
 
-    isRestricted: ({ state }, token: TokenSymbol): boolean => Object.prototype.hasOwnProperty.call(state.restrictedTokens, token),
+    isRestricted({ state }, token?: TokenSymbol): boolean {
+      if (!token || token?.toLowerCase() === "eth") {
+        return false;
+      }
+      return state.acceptableTokens.filter((tokenData: TokenInfo) => tokenData.symbol.toLowerCase() === token.toLowerCase()).length === 0;
+    },
   },
 );

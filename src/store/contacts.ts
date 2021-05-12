@@ -53,6 +53,17 @@ export const getters = getterTree(state, {
       return false;
     };
   },
+  isInContacts(state) {
+    return (address: Address) => {
+      address = address.toLowerCase();
+      for (const contactItem of state.contactsList) {
+        if (contactItem.address.toLowerCase() === address) {
+          return true;
+        }
+      }
+      return false;
+    };
+  },
 });
 
 export const actions = actionTree(
@@ -70,15 +81,6 @@ export const actions = actionTree(
         throw new Error("Storage key is empty");
       }
       return state.storageKey;
-    },
-    isInContacts({ state }, address: Address): boolean {
-      address = address.toLowerCase();
-      for (const contactItem of state.contactsList) {
-        if (contactItem.address.toLowerCase() === address) {
-          return true;
-        }
-      }
-      return false;
     },
     getContactsFromStorage({ commit }): void {
       try {

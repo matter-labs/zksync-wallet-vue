@@ -112,9 +112,9 @@ const config: NuxtConfig = {
         content: pageTitle,
       },
 
-      { "http-equiv": "pragma", content: "no-cache", property: "pragma" },
+      /* { "http-equiv": "pragma", content: "no-cache", property: "pragma" },
       { "http-equiv": "cache-control", property: "cache-control", content: "no-cache , no-store, must-revalidate" },
-      { "http-equiv": "expires", content: "0", property: "expires" },
+      { "http-equiv": "expires", content: "0", property: "expires" }, */
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
@@ -129,9 +129,7 @@ const config: NuxtConfig = {
         content: "#4e529a",
       },
     ],
-    link: [
-      {rel: "icon", type: "image/x-icon", href: "/favicon-dark.png"}
-    ]
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
   },
   /*
    ** Customize the progress-bar color
@@ -160,16 +158,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: [
-    "@nuxtjs/dotenv",
-    "@nuxtjs/axios",
-    "@nuxtjs/toast",
-    "@nuxtjs/google-gtag",
-    "@inkline/nuxt",
-    "nuxt-webfontloader",
-    "nuxt-i18n",
-    "@nuxtjs/sentry",
-  ],
+  modules: ["@nuxtjs/dotenv", "@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "nuxt-webfontloader", "nuxt-i18n", "@nuxtjs/sentry"],
   webfontloader: {
     google: {
       families: ["Fira+Sans:400,600", "Fira+Sans+Extra+Condensed:400,600", "Fira+Code:400"],

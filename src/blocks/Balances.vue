@@ -51,7 +51,9 @@
             <div class="rightSide">
               <div v-if="item.rawBalance" class="rowItem">
                 <div class="total">
-                  <span class="balancePrice">{{ item.rawBalance | formatUsdAmount(item.tokenPrice, item.symbol) }}</span>
+                  <span class="balancePrice">
+                    <token-price :symbol="item.symbol" :amount="item.rawBalance.toString()" />
+                  </span>
                   &nbsp;&nbsp;{{ item.rawBalance | formatToken(item.symbol) }}
                 </div>
                 <div class="status">
@@ -64,7 +66,9 @@
               </div>
               <div v-if="activeDeposits[item.symbol]" class="rowItem">
                 <div class="total small">
-                  <span class="balancePrice">{{ activeDeposits[item.symbol].toString() | formatUsdAmount(item.tokenPrice, item.symbol) }}</span>
+                  <span class="balancePrice">
+                    <token-price :symbol="item.symbol" :amount="activeDeposits[item.symbol].toString()" />
+                  </span>
                   &nbsp;&nbsp;+{{ activeDeposits[item.symbol].toString() | formatToken(item.symbol) }}
                 </div>
                 <div class="status">
@@ -90,7 +94,6 @@ import { TokenSymbol } from "zksync/build/types";
 
 type DisplayToken = {
   symbol: string;
-  tokenPrice: number;
   rawBalance: BigNumber | undefined;
   status: string | undefined;
 };
@@ -104,6 +107,7 @@ export default Vue.extend({
     return {
       search: "",
       loading: false,
+      inited: false,
       balanceInfoModal: false,
     };
   },
@@ -112,7 +116,6 @@ export default Vue.extend({
       return this.$accessor.wallet.getzkBalances;
     },
     displayedList(): DisplayToken[] {
-      const allTokenPrices = this.$accessor.tokens.getTokenPrices;
       const returnTokens = <
         {
           [symbol: string]: DisplayToken;
@@ -121,7 +124,6 @@ export default Vue.extend({
       this.zkBalances.forEach((token) => {
         returnTokens[token.symbol] = {
           symbol: token.symbol,
-          tokenPrice: token.tokenPrice,
           rawBalance: token.rawBalance,
           status: token.status,
         };
@@ -130,9 +132,8 @@ export default Vue.extend({
         if (!returnTokens[symbol]) {
           returnTokens[symbol] = {
             symbol,
-            tokenPrice: allTokenPrices[symbol].price,
-            rawBalance: undefined,
-            status: undefined,
+            rawBalance: BigNumber.from("0"),
+            status: "Pending",
           };
         } else {
           returnTokens[symbol].status = "Pending";
@@ -179,11 +180,12 @@ export default Vue.extend({
   },
   methods: {
     async getBalances(): Promise<void> {
-      if (this.displayedList.length === 0) {
+      if (this.displayedList.length === 0 && this.inited === false) {
         this.loading = true;
       }
       await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       this.loading = false;
+      this.inited = true;
     },
     autoUpdateList(): void {
       clearInterval(updateListInterval);

@@ -196,3 +196,9 @@
     }
   }
 }
+
+#walletconnect-wrapper .walletconnect-modal__base {
+  @media (max-height: 700px) {
+    max-width: 300px;
+  }
+}

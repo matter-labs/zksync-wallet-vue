@@ -12,7 +12,7 @@
     </div>
     <div v-if="token" class="_display-flex _justify-content-space-between">
       <div class="secondaryText">
-        {{ inputtedAmountBigNumber | formatUsdAmount(token.tokenPrice, token.symbol) }}
+        <token-price :symbol="token.symbol" :amount="inputtedAmountBigNumber.toString()" />
       </div>
       <div class="linkText" @click="chooseMaxAmount()">Max: {{ maxAmount | formatToken(token.symbol) }}</div>
     </div>

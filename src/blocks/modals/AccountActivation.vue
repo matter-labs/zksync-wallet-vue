@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template slot="header">AccountActivation</template>
+    <template slot="header">Account Activation</template>
     <p>
       Activation is required single-time payment to set the signing key associated with the account.<br />Without it no operation can be authorized by your corresponding account.
     </p>
