@@ -33,7 +33,7 @@ export const transaction = async (
     if (!accountActivationFee) {
       throw new Error("No account activation fee found");
     }
-    addCPKToBatch(syncWallet!, accountActivationFee, feeToken, batchBuilder, store);
+    await addCPKToBatch(syncWallet!, accountActivationFee, feeToken, batchBuilder, store);
   }
   if (token === feeToken) {
     batchBuilder.addTransfer({
@@ -96,7 +96,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     if (!accountActivationFee) {
       throw new Error("No account activation fee found");
     }
-    addCPKToBatch(syncWallet!, accountActivationFee, feeToken, batchBuilder, store);
+    await addCPKToBatch(syncWallet!, accountActivationFee, feeToken, batchBuilder, store);
   }
   if (token === feeToken) {
     batchBuilder.addWithdraw({
