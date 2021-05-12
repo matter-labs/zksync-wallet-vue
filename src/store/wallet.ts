@@ -4,15 +4,17 @@ import { iWalletData, ZkInBalance, ZkInFeesObj, ZkInTx } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
-import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+
 import web3Wallet from "@/plugins/web3";
+import { ExternalProvider } from "@ethersproject/providers";
+// @ts-ignore
+import Onboard from "bnc-onboard";
+import { API } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
 import { closestPackableTransactionFee, getDefaultProvider, Wallet } from "zksync";
 import { Address, Fee, TokenSymbol } from "zksync/build/types";
-import { ExternalProvider } from "@ethersproject/providers";
 
 interface feesInterface {
   [symbol: string]: {
@@ -53,39 +55,6 @@ export const state = (): iWallet => ({
   },
   withdrawalProcessingTime: false,
   fees: {},
-});
-
-export type WalletModuleState = ReturnType<typeof state>;
-
-export const getters = getterTree(state, {
-  isAccountLocked: (state): boolean => state.isAccountLocked,
-  getOnboard: (state): API | undefined => state.onboard,
-  getTokensList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.initialTokens,
-  getInitialBalances: (state): Array<ZkInBalance> => state.initialTokens.list,
-  getzkList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.zkTokens,
-  getzkBalances: (state): Array<ZkInBalance> => state.zkTokens.list,
-  getTransactionsHistory: (state): Array<ZkInTx> => state.transactionsHistory.list,
-  getTransactionsList: (
-    state,
-  ): {
-    lastUpdated: number;
-    list: Array<ZkInTx>;
-  } => state.transactionsHistory,
-  getWithdrawalProcessingTime: (
-    state,
-  ):
-    | false
-    | {
-        normal: number;
-        fast: number;
-      } => state.withdrawalProcessingTime,
-  getFees: (state): feesInterface => state.fees,
-
-  getSyncWallet: () => walletData.get().syncWallet,
-
-  getProvider: () => walletData.get().syncProvider,
-  getAccountState: () => walletData.get().syncProvider,
-  isLoggedIn: (): boolean => !!(walletData.get().syncWallet && walletData.get().syncWallet?.address),
 });
 
 export const mutations = mutationTree(state, {
@@ -164,6 +133,39 @@ export const mutations = mutationTree(state, {
   },
 });
 
+export type WalletModuleState = ReturnType<typeof state>;
+
+export const getters = getterTree(state, {
+  isAccountLocked: (state): boolean => state.isAccountLocked,
+  getOnboard: (state): API | undefined => state.onboard,
+  getTokensList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.initialTokens,
+  getInitialBalances: (state): Array<ZkInBalance> => state.initialTokens.list,
+  getzkList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.zkTokens,
+  getzkBalances: (state): Array<ZkInBalance> => state.zkTokens.list,
+  getTransactionsHistory: (state): Array<ZkInTx> => state.transactionsHistory.list,
+  getTransactionsList: (
+    state,
+  ): {
+    lastUpdated: number;
+    list: Array<ZkInTx>;
+  } => state.transactionsHistory,
+  getWithdrawalProcessingTime: (
+    state,
+  ):
+    | false
+    | {
+        normal: number;
+        fast: number;
+      } => state.withdrawalProcessingTime,
+  getFees: (state): feesInterface => state.fees,
+
+  getSyncWallet: () => walletData.get().syncWallet,
+
+  getProvider: () => walletData.get().syncProvider,
+  getAccountState: () => walletData.get().syncProvider,
+  isLoggedIn: (): boolean => !!(walletData.get().syncWallet && walletData.get().syncWallet?.address),
+});
+
 export const actions = actionTree(
   { state, getters, mutations },
   {
@@ -176,14 +178,14 @@ export const actions = actionTree(
     async onboardInit({ commit }): Promise<boolean> {
       const onboard: API = Onboard(onboardConfig(this));
       commit("setOnboard", onboard);
-      const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
-      if (!previouslySelectedWallet) {
-        this.app.$accessor.account.setSelectedWallet("");
-        return false;
+      let previouslySelectedWallet: string | null = window.localStorage.getItem("selectedWallet");
+      if (typeof previouslySelectedWallet !== "string") {
+        previouslySelectedWallet = "";
       }
-      this.app.$toast.show("Found previously selected wallet.");
-      this.app.$accessor.account.setSelectedWallet(previouslySelectedWallet);
-      return await onboard.walletSelect(previouslySelectedWallet);
+      this.app.$accessor.account.setSelectedWallet(previouslySelectedWallet ?? null);
+      // @todo: Return param back
+      await onboard.walletSelect();
+      return onboard?.walletCheck();
     },
 
     /**
@@ -239,14 +241,12 @@ export const actions = actionTree(
       for (const tokenSymbol in listCommitted) {
         const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
         if (!isRestricted) {
-          (async () => {
-            try {
-              /* Some weird TS error when this is has no await */
-              await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
-            } catch (error) {
-              console.log(`Failed to get ${tokenSymbol} price at requestZkBalances`, error);
-            }
-          })();
+          try {
+            /* Some weird TS error when this is has no await */
+            await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+          } catch (error) {
+            console.log(`Failed to get ${tokenSymbol} price at requestZkBalances`, error);
+          }
         }
         if (savedAddress !== this.app.$accessor.account.address) {
           return state.zkTokens.list;
@@ -351,15 +351,18 @@ export const actions = actionTree(
       }
       try {
         const syncWallet = walletData.get().syncWallet;
-        const fetchTransactionHistory = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
+        const fetchTransactionHistory = await this.$http.$get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
         if (savedAddress !== this.app.$accessor.account.address) {
           return localList.list;
         }
+        // @ts-ignore
         commit("setTransactionsList", {
           lastUpdated: new Date().getTime(),
-          list: offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
+          // @ts-ignore
+          list: offset === 0 ? fetchTransactionHistory : [...localList.list, ...fetchTransactionHistory],
         });
-        return fetchTransactionHistory.data;
+        // @ts-ignore
+        return fetchTransactionHistory;
       } catch (error) {
         this.$sentry.captureException(error);
         this.app.$toast.global.zkException({
@@ -368,10 +371,11 @@ export const actions = actionTree(
         getTransactionHistoryAgain = setTimeout(() => {
           this.app.$accessor.wallet.requestTransactionsHistory({ force: true });
         }, 15000);
+        // @ts-ignore
         return localList.list;
       }
     },
-    async requestFees({ getters, commit }, { address, symbol, feeSymbol, type }) {
+    async requestFees({ getters, commit }, { address, symbol, feeSymbol, type }): Promise<ZkInFeesObj | undefined> {
       const savedFees = getters.getFees;
       if (
         Object.prototype.hasOwnProperty.call(savedFees, symbol) &&
@@ -427,17 +431,21 @@ export const actions = actionTree(
     },
     async requestWithdrawalProcessingTime({
       getters,
-      commit,
-    }): Promise<{
-      normal: number;
-      fast: number;
-    }> {
+      //      commit,
+    }): Promise<
+      | {
+          normal: number;
+          fast: number;
+        }
+      | unknown
+    > {
       if (getters.getWithdrawalProcessingTime) {
         return getters.getWithdrawalProcessingTime;
       }
-      const withdrawTime = await this.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
-      commit("setWithdrawalProcessingTime", withdrawTime.data);
-      return withdrawTime.data;
+      const withdrawTime = await this.$http.$get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
+      console.log(withdrawTime);
+      //      commit("setWithdrawalProcessingTime", withdrawTime);
+      return withdrawTime;
     },
     async checkLockedState({ commit }): Promise<void> {
       const syncWallet = walletData.get().syncWallet;
@@ -454,7 +462,6 @@ export const actions = actionTree(
      * @returns {Promise<boolean>}
      */
     async walletRefresh({ dispatch, state }, firstSelect = true): Promise<boolean> {
-      console.log("refreshing the wallet");
       try {
         this.app.$accessor.account.setLoadingHint("Follow the instructions in your wallet");
         let walletCheck = false;
@@ -493,7 +500,7 @@ export const actions = actionTree(
         const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
         this.app.$accessor.account.setLoadingHint("Getting wallet information");
 
-        watcher.changeNetworkSet(dispatch, this);
+        watcher.changeNetworkSet(dispatch, this).then(() => {});
         const accountState = await syncWallet?.getAccountState();
         walletData.set(<iWalletData>{
           syncProvider,
@@ -512,7 +519,8 @@ export const actions = actionTree(
         this.app.$accessor.contacts.getContactsFromStorage();
         return true;
       } catch (error) {
-        this.$sentry.captureException(error);
+        console.log(error);
+        this.$sentry?.captureException(error);
         if (!error.message.includes("User denied")) {
           this.app.$toast.global.zkException({
             message: `Refreshing state of the wallet failed... Reason: ${error.message}`,
@@ -541,6 +549,15 @@ export const actions = actionTree(
       this.app.$accessor.account.setLoggedIn(false);
       this.app.$accessor.account.setSelectedWallet("");
       commit("clearDataStorage");
+    },
+    errorDuringLogin({ state }, { force, message }: { force: boolean; message: string }): void {
+      this.app.$toast.global.zkException({
+        message,
+      });
+      if (force) {
+        state.onboard?.walletReset();
+        this.app.$accessor.account.setSelectedWallet("");
+      }
     },
   },
 );

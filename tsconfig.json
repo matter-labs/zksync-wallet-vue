@@ -1,18 +1,19 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": "./src",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./src/",
     "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "inlineSources": true,
+    "importHelpers": true,
     "lib": [
       "esnext",
-      "esnext.AsyncIterable",
+      "esnext.asynciterable",
       "dom"
     ],
     "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
+//    "noImplicitAny": false,
     "paths": {
       "~/*": [
         "./*"
@@ -21,22 +22,25 @@
         "./*"
       ]
     },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
     "types": [
-      "@nuxt/vue-app",
       "@nuxt/types",
       "@types/node",
-      "@nuxt/types",
       "@types/jest",
-      "@nuxtjs/axios",
-      "@nuxtjs/sentry",
-      "@nuxtjs/toast",
-      "@inkline/inkline/types",
+      "@nuxt/vue-app",
+      "@nuxt/types",
       "nuxt-typed-vuex",
-      "nuxt-i18n"
+      "@nuxtjs/sentry",
+      "@nuxt/http",
+      "@nuxtjs/toast",
+      "web3-core/types",
+      "@inkline/inkline/types"
     ]
   },
   "exclude": [

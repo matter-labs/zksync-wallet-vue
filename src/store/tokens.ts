@@ -33,6 +33,7 @@ export const state = () => ({
    * Token prices
    */
   tokenPrices: <ZkInTokenPrices>{},
+  tokenPricesTick: 0, // Used to force update component's
 });
 
 export type TokensModuleState = ReturnType<typeof state>;
@@ -43,6 +44,7 @@ export const mutations = mutationTree(state, {
   },
   setTokenPrice(state, { symbol, obj }): void {
     state.tokenPrices[symbol] = obj;
+    state.tokenPricesTick++;
   },
   storeAcceptableTokens(state, tokenList: TokenInfo[]): void {
     state.acceptableTokens = tokenList;
@@ -66,6 +68,9 @@ export const getters = getterTree(state, {
   },
   getTokenPrices(state): ZkInTokenPrices {
     return state.tokenPrices;
+  },
+  getTokenPriceTick(state): number {
+    return state.tokenPricesTick;
   },
   getTokenByID(state) {
     return (id: number): TokenInfo | undefined => {
@@ -101,10 +106,9 @@ export const actions = actionTree(
       return getters.getAllTokens;
     },
     async loadAcceptableTokens({ commit }): Promise<void> {
-      const acceptableTokens: TokenInfo[] = (await this.app.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
+      const acceptableTokens: TokenInfo[] = (await this.app.$http.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
       commit("storeAcceptableTokens", acceptableTokens);
     },
-
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
       const accountState = walletData.get().accountState;
 
@@ -162,7 +166,7 @@ export const actions = actionTree(
       if (!token || token?.toLowerCase() === "eth") {
         return false;
       }
-      return state.acceptableTokens.filter((tokenData: TokenInfo) => tokenData.symbol.toLowerCase() === token.toLowerCase()).length === 0;
+      return state.acceptableTokens?.filter((tokenData: TokenInfo) => tokenData.symbol.toLowerCase() === token.toLowerCase()).length === 0;
     },
   },
 );

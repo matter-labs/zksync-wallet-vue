@@ -1,9 +1,10 @@
 <template>
   <div class="amountInput" :class="{ error: error }">
     <i-input ref="amountInput" v-model="inputtedAmount" maxlength="35" size="lg" type="text" @keyup.enter="$emit('enter')">
-      <i-button slot="append" block link :class="{ selectedTokenBtn: !!token }" class="_display-inline-flex" variant="secondary" @click="$emit('chooseToken')">
-        <span :class="{ tokenSymbol: !!token }">{{ buttonText }}</span
-        >&nbsp;&nbsp;<i class="ri-arrow-down-s-line" />
+      <i-button v-if="!token" slot="append" block link variant="secondary" @click="$emit('chooseToken')"> Select token</i-button>
+      <i-button v-else slot="append" block class="selectedTokenBtn" link variant="secondary" @click="$emit('chooseToken')">
+        <span class="tokenSymbol">{{ token.symbol }}</span>
+        &nbsp;&nbsp;<i class="ri-arrow-down-s-line" />
       </i-button>
     </i-input>
     <div class="error">
@@ -68,9 +69,6 @@ export default Vue.extend({
         }
       }
       return BigNumber.from("0");
-    },
-    buttonText(): string {
-      return this.token?.symbol.toString() || "Select token";
     },
   },
   watch: {
@@ -142,19 +140,19 @@ export default Vue.extend({
         return;
       }
 
-      if (inputAmount.lte(0)) {
+      if (inputAmount?.lte(0)) {
         this.error = "Wrong amount inputted";
         return;
       }
 
       if (this.maxAmount) {
-        if (inputAmount.gt(this.maxAmount)) {
+        if (inputAmount?.gt(this.maxAmount)) {
           this.error = `Not enough ${this.token.symbol} to ${this.type} requested amount`;
           return;
         }
       }
 
-      if (this.type === "transfer" && !utils.isAmountPackable(inputAmount.toString())) {
+      if (this.type === "transfer" && !utils.isAmountPackable(inputAmount?.toString())) {
         this.error = "Max supported precision for transfers exceeded";
         return;
       }

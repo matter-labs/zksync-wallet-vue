@@ -1,6 +1,6 @@
 import { GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
 import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/build/types";
 import { ETHOperation } from "zksync/build/wallet";
 

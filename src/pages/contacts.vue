@@ -2,7 +2,8 @@
   <div class="contactsPage">
     <i-modal v-model="addContactModal" class="prevent-close" size="md">
       <template slot="header">
-        <span>{{ modalTitle }}</span>
+        <span v-if="addContactType === 'add'">Add contact</span>
+        <span v-else-if="addContactType === 'edit'">Edit contact</span>
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
@@ -12,10 +13,10 @@
         <address-input ref="addressInput" v-model="inputtedWallet" @enter="addContact()" />
         <br />
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
-        <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" class="button-with-icon" @click="deleteContact()">
-          <i class="ri-delete-bin-line" />&nbsp;&nbsp;Delete contact
+        <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" @click="deleteContact()">
+          <i class="ri-delete-bin-line"></i>&nbsp;&nbsp;Delete contact
         </i-button>
-        <i-button block variant="secondary" class="button-with-icon" size="lg" @click="addContact()"><i class="ri-save-2-fill" />&nbsp;&nbsp;Save</i-button>
+        <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
       </div>
     </i-modal>
     <div v-if="!openedContact" class="tileBlock contactTile">
@@ -117,11 +118,11 @@ import transactions from "@/blocks/Transactions.vue";
 import addressInput from "@/components/AddressInput.vue";
 
 import walletAddress from "@/components/walletAddress.vue";
-import { ZkInContact } from "@/plugins/types";
-import utils from "@/plugins/utils";
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { Address } from "zksync/build/types";
+import { ZkInContact } from "~/plugins/types";
+import utils from "~/plugins/utils";
 
 export default Vue.extend({
   components: {
@@ -182,7 +183,7 @@ export default Vue.extend({
       return !!this.search.trim();
     },
     modalTitle(): string {
-      return this.$t(`pages.contacts.${this.addContactType}`);
+      return `${this.addContactType} contact`;
     },
   },
   watch: {

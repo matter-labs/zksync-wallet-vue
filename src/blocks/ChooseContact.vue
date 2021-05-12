@@ -5,7 +5,7 @@
       <template slot="header">Contacts</template>
       <div>
         <i-input v-if="isSearching || hasDisplayedContacts" ref="contactNameInput" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
-          <i slot="prefix" class="ri-search-line"></i>
+          <i slot="prefix" class="ri-search-line" />
         </i-input>
         <div class="contactsListContainer">
           <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
@@ -53,7 +53,7 @@
         <i-button block link variant="secondary" @click="contactsListModal = true">Select from contacts</i-button>
       </i-column>
       <i-column v-else xs="12" :md="canSaveContact ? 7 : 12">
-        <i-button block link variant="secondary" class="button-with-icon" @click="contactsListModal = true">
+        <i-button block link variant="secondary" @click="contactsListModal = true">
           {{ isOwnAddress ? "Own account" : chosenContact.name }}&nbsp;&nbsp;<i class="ri-arrow-down-s-line" />
         </i-button>
       </i-column>
@@ -103,7 +103,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    ownAddress(): Address | string {
+    ownAddress(): Address {
       return this.$accessor.account.address || "";
     },
     canSaveContact(): boolean {

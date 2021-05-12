@@ -1,6 +1,6 @@
 import { NuxtConfig } from "@nuxt/types";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
-import { version, name } from "./package.json";
+import { version } from "./package.json";
 
 const env = process.env.APP_ENV ?? "dev";
 const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet" && env === "prod";
@@ -156,18 +156,12 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxtjs/style-resources", "@nuxt/typescript-build", "nuxt-typed-vuex", ["@nuxtjs/dotenv", { path: __dirname }]],
+  buildModules: ["@nuxtjs/style-resources", "@nuxt/typescript-build", "@nuxtjs/google-fonts", "nuxt-typed-vuex", ["@nuxtjs/dotenv", { path: __dirname }]],
 
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "nuxt-webfontloader", "nuxt-i18n", "@nuxtjs/sentry"],
-  webfontloader: {
-    google: {
-      families: ["Fira+Sans:400,600", "Fira+Sans+Extra+Condensed:400,600", "Fira+Code:400", "Open"],
-    },
-    ssr: false,
-  },
+  modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
@@ -184,23 +178,6 @@ const config: NuxtConfig = {
       },
     },
   },
-  i18n: {
-    locales: [
-      {
-        code: "en",
-        iso: "en_US",
-        file: "en/translations.json",
-      },
-    ],
-    defaultLocale: "en",
-    langDir: "./locales/",
-    vueI18n: {
-      fallbackLocale: "en",
-      messages: {
-        en: require(`./${srcDir}locales/en/translations.json`),
-      },
-    },
-  },
   inkline: {
     config: {
       variant: "dark",
@@ -213,37 +190,39 @@ const config: NuxtConfig = {
   sentry: {
     dsn: process.env.SENTRY_DSN,
     disableServerSide: true,
-    lazy: true,
     config: {
-      debug: env === "dev",
-      attachStacktrace: true,
-      release: `${name}@${version}`,
-      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
       tracesSampleRate: 1.0,
+      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
     },
   },
-  // Disabling google-gtag plugin for localhost run
-  "google-gtag": isLocalhost
-    ? false
-    : {
-        id: process.env.GTAG_ID,
-        config: {
-          anonymize_ip: true, // anonymize IP
-          send_page_view: true, // might be necessary to avoid duplicated page track on page reload
-        },
-        debug: env !== "prod", // enable to track in dev mode
-        disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
-      },
+  "google-gtag": {
+    id: process.env.GTAG_ID,
+    config: {
+      anonymize_ip: true, // anonymize IP
+      send_page_view: true, // might be necessary to avoid duplicated page track on page reload
+    },
+    debug: env !== "prod", // enable to track in dev mode
+    disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
+  },
   /*
    ** Build configuration
    */
   build: {
-    //    transpile: ["vuex-module-decorators", /typed-vuex/],
     ssr: false,
     extend() {
       config.node = {
         fs: "empty",
       };
+    },
+  },
+  googleFonts: {
+    preconnect: true,
+    preload: true,
+    display: "swap",
+    families: {
+      "Fira+Sans": [400, 600],
+      "Fira+Sans+Extra+Condensed": [400, 600],
+      "Fira+Code": [400],
     },
   },
   generate: {

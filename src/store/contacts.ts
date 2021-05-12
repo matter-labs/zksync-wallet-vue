@@ -96,7 +96,7 @@ export const actions = actionTree(
         contactsList = contactsList.filter((contact: ZkInContact) => utils.validateAddress(contact.address) && contact.name.length > 0);
         commit("setContactsList", contactsList);
       } catch (error) {
-        this.$sentry.captureException(error);
+        this.$sentry?.captureException(error);
         commit("initContactsList");
       }
     },

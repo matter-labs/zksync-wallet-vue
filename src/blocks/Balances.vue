@@ -19,7 +19,7 @@
     <div class="balancesBlock tileBlock">
       <div class="tileHeadline h3">
         <span>Balances in L2</span>
-        <i class="ri-question-mark" @click="balanceInfoModal = true"></i>
+        <i class="ri-question-mark" @click="balanceInfoModal = true" />
       </div>
       <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
         <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
@@ -31,9 +31,9 @@
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
           </div>
-          <i-button block class="_margin-y-1 button-with-icon" size="lg" variant="secondary" to="/transfer"> <i class="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
+          <i-button block class="_margin-y-1 button-with-icon" size="lg" variant="secondary" to="/transfer"><i class="ri-send-plane-fill" />&nbsp;&nbsp;Transfer</i-button>
           <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
-            <i slot="prefix" class="ri-search-line"></i>
+            <i slot="prefix" class="ri-search-line" />
           </i-input>
         </div>
 
@@ -58,8 +58,8 @@
                 </div>
                 <div class="status">
                   <i-tooltip placement="left">
-                    <i v-if="item.status === 'Verified'" class="verified ri-check-double-line"></i>
-                    <i v-else class="committed ri-check-line"></i>
+                    <i v-if="item.status === 'Verified'" class="verified ri-check-double-line" />
+                    <i v-else class="committed ri-check-line" />
                     <template slot="body">{{ item.status }}</template>
                   </i-tooltip>
                 </div>
@@ -107,6 +107,7 @@ export default Vue.extend({
     return {
       search: "",
       loading: false,
+      inited: false,
       balanceInfoModal: false,
     };
   },
@@ -179,11 +180,12 @@ export default Vue.extend({
   },
   methods: {
     async getBalances(): Promise<void> {
-      if (this.displayedList.length === 0) {
+      if (this.displayedList.length === 0 && this.inited === false) {
         this.loading = true;
       }
       await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       this.loading = false;
+      this.inited = true;
     },
     autoUpdateList(): void {
       clearInterval(updateListInterval);

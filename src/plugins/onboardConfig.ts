@@ -1,23 +1,16 @@
+import { CURRENT_APP_NAME, APP_ZK_ALTERNATIVE_WITHDRAWAL, ETHER_NETWORK_ID, ETHER_NETWORK_NAME, ethereum } from "@/plugins/build";
 import { WalletModuleState } from "@/store/wallet";
-import {
-  Initialization,
-  PopupContent,
-  Subscriptions,
-  WalletInitOptions,
-  WalletModule,
-  WalletSelectModuleOptions,
-  Wallet as OnBoardingWallet,
-} from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import { Initialization, Subscriptions, Wallet as OnBoardingWallet, WalletInitOptions, WalletModule, WalletSelectModuleOptions } from "bnc-onboard/dist/src/interfaces";
 import { Store } from "vuex";
 import Web3 from "web3";
 import web3Wallet from "@/plugins/web3";
-import { ETHER_NETWORK_ID, ETHER_NETWORK_NAME, APP_NAME, APP_ZK_ALTERNATIVE_WITHDRAWAL, ethereum } from "@/plugins/build";
 
+const APP_NAME = `${CURRENT_APP_NAME}`;
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
 const INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;
 const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
 const initializedWallets: WalletSelectModuleOptions = {
-  wallets: <Array<WalletModule | WalletInitOptions>>[
+  wallets: <WalletModule[] | WalletInitOptions[]>[
     { walletName: "imToken", rpcUrl: RPC_URL, preferred: true },
     {
       walletName: "walletConnect",
@@ -27,7 +20,7 @@ const initializedWallets: WalletSelectModuleOptions = {
       preferred: true,
     },
     // FIXME: enable again
-    // { walletName: "authereum" },
+    { walletName: "authereum" },
     { walletName: "coinbase", preferred: true },
     { walletName: "trust", preferred: true, rpcUrl: RPC_URL },
     { walletName: "dapper", preferred: false },
@@ -78,26 +71,28 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
     darkMode: colorTheme !== null && colorTheme === "dark",
     subscriptions: <Subscriptions>{
       wallet: (wallet: OnBoardingWallet) => {
-        if (wallet && wallet.provider) {
-          wallet.provider.autoRefreshOnNetworkChange = false;
-        }
-        // @ts-ignore
-        web3Wallet.set(new Web3(wallet.provider));
+        const web3LoggedIn = new Web3(wallet.provider);
+        web3Wallet.set(web3LoggedIn);
         if (process.client) {
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
           window.localStorage.setItem("selectedWallet", wallet.name as string);
         }
-        // eslint-disable-next-line no-unused-expressions
-        wallet.provider;
+      },
+      network: (networkId: number) => {
+        if (networkId !== ETHER_NETWORK_ID) {
+          ctx.app.$accessor.wallet.errorDuringLogin({
+            message: `You're using wrong network. Change in to the ${ETHER_NETWORK_NAME}`,
+            force: true,
+          });
+        }
       },
     },
     walletSelect: <WalletSelectModuleOptions>{
+      description: "Can't find your wallet?",
+      explanation: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${APP_ZK_ALTERNATIVE_WITHDRAWAL}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
+      heading: "Can't find your wallet?",
       wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
     },
-    popupContent: <PopupContent>{
-      dismiss: "Dismiss",
-      teaser: "Can't find your wallet?",
-      fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${APP_ZK_ALTERNATIVE_WITHDRAWAL}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
-    },
+    networkName: ETHER_NETWORK_NAME,
   };
 };

@@ -1,10 +1,9 @@
+import * as account from "@/store/account";
+import * as contacts from "@/store/contacts";
+import * as tokens from "@/store/tokens";
+import * as transaction from "@/store/transaction";
+import * as wallet from "@/store/wallet";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
-
-import * as account from "./account";
-import * as contacts from "./contacts";
-import * as tokens from "./tokens";
-import * as transaction from "./transaction";
-import * as wallet from "./wallet";
 
 interface iRootState {
   accountModalOpened: boolean;
@@ -16,7 +15,7 @@ export const state = (): iRootState => ({
   currentModal: undefined,
 });
 
-type RootState = ReturnType<typeof state>;
+export type RootState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
   getAccountModalState: (state: RootState) => state.accountModalOpened,
@@ -24,8 +23,8 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  setAccountModalState(state: RootState, modalState: boolean): void {
-    state.accountModalOpened = modalState;
+  setAccountModalState(state: RootState, modalState: boolean): boolean {
+    return (state.accountModalOpened = modalState);
   },
   setCurrentModal(state: RootState, modalName: string): void {
     state.currentModal = modalName;
@@ -48,10 +47,10 @@ export const actions = actionTree(
 );
 
 export const accessorType = getAccessorType({
-  actions,
+  state,
   getters,
   mutations,
-  state,
+  actions,
   modules: {
     account,
     contacts,
