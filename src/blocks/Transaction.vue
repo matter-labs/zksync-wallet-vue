@@ -203,7 +203,8 @@ import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 
 import { BigNumber, BigNumberish } from "ethers";
-import Vue, { PropOptions } from "vue";
+import Vue from "vue";
+import { PropOptions } from "vue/types/options";
 import { closestPackableTransactionAmount } from "zksync";
 import { Address } from "zksync/build/types";
 import { Transaction } from "zksync/build/wallet";
@@ -510,12 +511,12 @@ export default Vue.extend({
       this.loading = false;
     },
     async withdraw(): Promise<void> {
-      const txAmount = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
+      const txAmount: BigNumber = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
       this.tip = "Confirm the transaction to withdraw";
-      if (this.feesObj === undefined) {
+      if (!this.feesObj) {
         throw new Error("Fee fetching error");
       }
-      const withdrawTransactions = await withdraw({
+      const withdrawTransactions: Transaction[] = await withdraw({
         address: this.inputtedAddress,
         token: (this.chosenToken as ZkInBalance).symbol,
         feeToken: this.feeToken.symbol,
@@ -530,17 +531,17 @@ export default Vue.extend({
       this.transactionInfo.amount!.token = this.chosenToken as ZkInBalance;
       this.transactionInfo.fee!.token = this.feeToken;
 
-      const activateTransaction = this.$accessor.wallet.isAccountLocked ? withdrawTransactions.shift() : undefined;
-      const withdrawTransaction = withdrawTransactions.shift();
+      const activateTransaction: Transaction | undefined = this.$accessor.wallet.isAccountLocked ? withdrawTransactions.shift() : undefined;
+      const withdrawTransaction: Transaction | undefined = withdrawTransactions.shift();
       const feeTransaction = withdrawTransactions.length > 0 ? withdrawTransactions.shift() : withdrawTransaction;
 
       if (activateTransaction) {
         window.localStorage.removeItem(`pubKeySignature-${this.$accessor.account.address}`);
         this.$accessor.wallet.setAccountLockedState(false);
-        activateTransaction.awaitReceipt().then(async () => {
+        activateTransaction?.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });
-          this.$accessor.wallet.checkLockedState();
+          this.$accessor.wallet.checkLockedState().then(() => {});
         });
       }
 
@@ -552,7 +553,7 @@ export default Vue.extend({
         name: this.chosenContact ? this.chosenContact.name : "",
       };
       this.tip = "Waiting for the transaction to be mined...";
-      const receipt = await withdrawTransaction?.awaitReceipt();
+      const receipt = await withdrawTransaction!.awaitReceipt();
       this.transactionInfo.success = !!receipt!.success;
       if (receipt!.failReason) {
         throw new Error(receipt!.failReason);
@@ -573,7 +574,7 @@ export default Vue.extend({
 
       const calculatedFee = this.chosenFeeObj;
 
-      if (calculatedFee === undefined) {
+      if (!calculatedFee) {
         throw new Error("Fee calculation failed");
       }
 

@@ -12,7 +12,7 @@ import { BigNumber, BigNumberish, utils } from "ethers";
  * @param amount
  * @return {BigNumber|*}
  */
-function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
+function parseToken(symbol: TokenSymbol, amount: DecimalBalance): BigNumber {
   return walletData.get().syncProvider?.tokenSet?.parseToken(symbol, amount.toString()) || BigNumber.from("0");
 }
 
@@ -35,11 +35,11 @@ export default {
   parseToken,
 
   timeCalc: (timeInSec: number) => {
-    const hours = Math.floor(timeInSec / 60 / 60);
-    const minutes = Math.floor(timeInSec / 60) - hours * 60;
-    const seconds = timeInSec - hours * 60 * 60 - minutes * 60;
+    const hours: number = Math.floor(timeInSec / 60 / 60);
+    const minutes: number = Math.floor(timeInSec / 60) - hours * 60;
+    const seconds: number = timeInSec - hours * 60 * 60 - minutes * 60;
 
-    const strArr = [];
+    const strArr: Array<string> = [];
     if (hours) {
       strArr.push(`${hours} hours`);
     }

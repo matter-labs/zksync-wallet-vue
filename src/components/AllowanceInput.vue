@@ -18,6 +18,7 @@
 <script lang="ts">
 import { DecimalBalance, GweiBalance, ZkInToken } from "@/plugins/types";
 import utils from "@/plugins/utils";
+import { BigNumber } from "ethers";
 import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
@@ -115,7 +116,7 @@ export default Vue.extend({
         return;
       }
 
-      let inputAmount = null;
+      let inputAmount: BigNumber | null = null;
       try {
         inputAmount = utils.parseToken(this.token.symbol, val);
       } catch (error) {
@@ -127,13 +128,13 @@ export default Vue.extend({
         return;
       }
 
-      if (inputAmount.lte(0)) {
+      if (inputAmount?.lte(0)) {
         this.error = "Wrong amount inputted";
         return;
       }
 
       if (this.minAmount) {
-        if (inputAmount.lt(this.minAmount)) {
+        if (inputAmount?.lt(this.minAmount)) {
           this.error = "Inputted amount is lower than the minimum amount";
           return;
         }

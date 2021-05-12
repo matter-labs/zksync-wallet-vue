@@ -61,7 +61,7 @@
           transition: background-color $transition1, color $transition1;
 
           &:hover {
-            background-color: transparentize($color: $gray, $amount: 0.9);
+            background-color: transparentize($color: $gray, $amount: .9);
           }
 
           .tokenSymbol {
@@ -130,6 +130,7 @@
 
     @media screen and (max-width: $mobile) {
       height: max-content;
+
       .balances {
         .balancesList .balanceItem {
           display: block;

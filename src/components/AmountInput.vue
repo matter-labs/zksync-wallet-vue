@@ -128,7 +128,7 @@ export default Vue.extend({
         return;
       }
 
-      let inputAmount = null;
+      let inputAmount: BigNumber | undefined;
       try {
         inputAmount = utils.parseToken(this.token.symbol, val);
       } catch (error) {

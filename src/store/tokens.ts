@@ -1,5 +1,5 @@
 import { APP_ZKSYNC_API_LINK } from "@/plugins/build";
-import { TokenInfo, Tokens, ZkInTokenPrices } from "@/plugins/types";
+import { BalanceToReturn, TokenInfo, Tokens, ZkInTokenPrices } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { TokenSymbol } from "zksync/build/types";
@@ -69,9 +69,6 @@ export const getters = getterTree(state, {
   getTokenPrices(state): ZkInTokenPrices {
     return state.tokenPrices;
   },
-  getTokenPriceTick(state): number {
-    return state.tokenPricesTick;
-  },
   getTokenByID(state) {
     return (id: number): TokenInfo | undefined => {
       for (const symbol in state.allTokens) {
@@ -82,13 +79,6 @@ export const getters = getterTree(state, {
     };
   },
 });
-
-interface BalanceToReturn {
-  address: string;
-  balance: string;
-  symbol: string;
-  id: number;
-}
 
 export const actions = actionTree(
   { state, getters, mutations },
@@ -162,7 +152,7 @@ export const actions = actionTree(
       return tokenPrice || 0;
     },
 
-    isRestricted({ state }, token?: TokenSymbol): boolean {
+    isRestricted({ state }, token: TokenSymbol): boolean {
       if (!token || token?.toLowerCase() === "eth") {
         return false;
       }

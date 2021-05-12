@@ -1,3 +1,6 @@
+// noinspection JSUnresolvedFunction
+
+import { ethereum } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 
 let changeNetworkWasSet = false;
@@ -43,30 +46,23 @@ const changeAccountHandle = (dispatch, context) => {
   };
 };
 
-/**
- * @todo deprecated in favour of event-bus
- * @param dispatch
- * @param context
- * @return {Promise<void>}
- */
-const changeNetworkSet = (dispatch, context) => {
-  if (changeNetworkWasSet !== true) {
-    if (process.client && window.ethereum) {
-      changeNetworkWasSet = true;
-      window.ethereum?.on("disconnect", () => {
-        context.$toast.global.zkException({
-          message: "Connection with your Wallet was lost. Restarting the DAPP",
-        });
-        dispatch("logout");
-      });
-      window.ethereum?.on("chainChanged", changeNetworkHandle(dispatch, context));
-      window.ethereum?.on("accountsChanged", changeAccountHandle(dispatch, context));
-    }
-  }
-};
-
 export default {
   changeNetworkHandle,
   changeAccountHandle,
-  changeNetworkSet,
+  changeNetworkSet(dispatch, context) {
+    if (changeNetworkWasSet === true || !process.client || !ethereum) {
+      return;
+    }
+
+    changeNetworkWasSet = true;
+    ethereum.on("disconnect", () => {
+      console.log("disconnect!!");
+      context.$toast.global.zkException({
+        message: "Connection with your Wallet was lost. Restarting the DAPP",
+      });
+      dispatch("logout");
+    });
+    ethereum.on("chainChanged", changeNetworkHandle(dispatch, context));
+    ethereum.on("accountsChanged", changeAccountHandle(dispatch, context));
+  },
 };

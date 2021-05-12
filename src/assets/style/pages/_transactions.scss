@@ -37,8 +37,9 @@
       height: 90px;
       padding: 0 15px;
       border-bottom: 1px solid;
+
       &:hover {
-        background-color: transparentize($color: $gray, $amount: 0.9);
+        background-color: transparentize($color: $gray, $amount: .9);
       }
 
       @media screen and (max-width: 768px) {
@@ -51,10 +52,12 @@
         .status {
           justify-self: center;
         }
+
         .mainInfo,
         .actionInfo {
           text-align: center !important;
         }
+
         .button {
           justify-self: center;
           width: 38px;
@@ -86,6 +89,7 @@
 
       .tooltip-wrapper {
         display: block;
+
         .tooltip {
           max-width: 200px;
           height: auto;
@@ -93,6 +97,7 @@
           width: max-content;
         }
       }
+
       .mainInfo {
         text-align: left;
 
@@ -136,14 +141,17 @@
             margin-left: 5px;
             font-size: 22px;
             line-height: 22px;
+
             &.modalOpenIcon {
               transition: filter $transition1;
               cursor: pointer;
+
               &:hover {
                 filter: brightness(125%);
               }
+
               &:active {
-                transition-duration: 0.001s;
+                transition-duration: .001s;
                 filter: brightness(90%);
               }
             }
@@ -199,6 +207,7 @@ body.inkline {
 
       .transactionItem {
         border-color: $input-border-color-light;
+
         .amount,
         .tokenSymbol {
           display: inline-flex;

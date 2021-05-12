@@ -26,7 +26,7 @@
         "indentInsideParens": "once-at-root-twice-in-block"
       }
     ],
-    "max-nesting-depth": 3,
+    "max-nesting-depth": false,
     "no-descending-specificity": true,
     "no-duplicate-selectors": true,
     "no-empty-source": [
@@ -48,7 +48,7 @@
     ],
     "scss/at-rule-no-unknown": true,
     "selector-attribute-quotes": "always",
-    "selector-max-specificity": "0,5,2",
+    "selector-max-specificity": false,
     "selector-pseudo-class-no-unknown": [
       true,
       {

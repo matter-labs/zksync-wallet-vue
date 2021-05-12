@@ -336,7 +336,7 @@ export default Vue.extend({
         this.tip = `Confirm the transaction in order to unlock ${this.chosenToken.symbol} token`;
         this.transactionInfo.type = "unlock";
         /* const approveAmount = this.inputtedAllowance ? utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance) : undefined; */
-        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited === true ? undefined : this.amountBigNumber);
+        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
         const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken: ZkInBalance | undefined;
         for (const token of balances) {
@@ -370,7 +370,7 @@ export default Vue.extend({
         };
         this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
         this.transactionInfo.continueBtnFunction = true;
-        if (unlimited === false) {
+        if (!unlimited) {
           this.transactionInfo.continueBtnText = "Proceed to deposit";
         } else {
           this.transactionInfo.continueBtnText = "Ok";

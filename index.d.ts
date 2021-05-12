@@ -1,9 +1,16 @@
 /**
  * zkSync Types
  */
+import Vue from "vue";
 import { accessorType } from "~/store";
 
 declare module "vue/types/vue" {
+  interface Vue {
+    $accessor: typeof accessorType;
+  }
+}
+
+declare module "vue" {
   interface Vue {
     $accessor: typeof accessorType;
   }

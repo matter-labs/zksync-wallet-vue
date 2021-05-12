@@ -13,10 +13,12 @@
     .noteIcon {
       font-size: 18px;
     }
+
     .noteText {
       font-weight: 300;
       font-size: 12px;
     }
+
     .noteIcon,
     .noteText {
       color: $black;
@@ -30,6 +32,7 @@ body.inkline {
     .noteMain {
       border-color: darken($color: $gray, $amount: 15);
     }
+
     .noteIcon,
     .noteText {
       color: darken($color: $gray, $amount: 15);

@@ -156,7 +156,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxtjs/style-resources", "@nuxt/typescript-build", "@nuxtjs/google-fonts", "nuxt-typed-vuex", ["@nuxtjs/dotenv", { path: __dirname }]],
+  buildModules: ["@nuxtjs/style-resources", "@nuxt/typescript-build", "@nuxtjs/eslint-module", "@nuxtjs/google-fonts", "nuxt-typed-vuex", ["@nuxtjs/dotenv", { path: __dirname }]],
 
   /*
    ** Nuxt.js modules
@@ -231,7 +231,7 @@ const config: NuxtConfig = {
   typescript: {
     typeCheck: {
       eslint: {
-        files: `${srcDir}**/*.{ts,js,vue}`,
+        files: "./src/**/*.{ts,js,vue}",
       },
     },
   },

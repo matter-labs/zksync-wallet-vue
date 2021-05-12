@@ -87,7 +87,7 @@
 <script lang="ts">
 import Mint from "@/blocks/Mint.vue";
 import utils from "@/plugins/utils";
-import { ZkInBalance, ZkInDeposits, ZKInDepositTx } from "@/plugins/types";
+import { ZKInDepositTx, ZkInBalance, ZkInDeposits } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 import { TokenSymbol } from "zksync/build/types";
@@ -143,6 +143,7 @@ export default Vue.extend({
       return <DisplayToken[]>utils.searchInArr(this.search, finalList, (e) => (e as DisplayToken).symbol);
     },
     activeDeposits() {
+      // @ts-ignore
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
       const deposits: ZkInDeposits = this.$accessor.transaction.depositList;
       const activeDeposits = <ZkInDeposits>{};
@@ -180,7 +181,7 @@ export default Vue.extend({
   },
   methods: {
     async getBalances(): Promise<void> {
-      if (this.displayedList.length === 0 && this.inited === false) {
+      if (this.displayedList.length === 0 && !this.inited) {
         this.loading = true;
       }
       await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });

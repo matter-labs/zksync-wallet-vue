@@ -1,9 +1,9 @@
-import { CURRENT_APP_NAME, APP_ZK_ALTERNATIVE_WITHDRAWAL, ETHER_NETWORK_ID, ETHER_NETWORK_NAME, ethereum } from "@/plugins/build";
+import { APP_ZK_ALTERNATIVE_WITHDRAWAL, CURRENT_APP_NAME, ETHER_NETWORK_ID, ETHER_NETWORK_NAME, ethereum } from "@/plugins/build";
+import web3Wallet from "@/plugins/web3";
 import { WalletModuleState } from "@/store/wallet";
 import { Initialization, Subscriptions, Wallet as OnBoardingWallet, WalletInitOptions, WalletModule, WalletSelectModuleOptions } from "bnc-onboard/dist/src/interfaces";
 import { Store } from "vuex";
 import Web3 from "web3";
-import web3Wallet from "@/plugins/web3";
 
 const APP_NAME = `${CURRENT_APP_NAME}`;
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;
@@ -70,20 +70,17 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
     darkMode: colorTheme !== null && colorTheme === "dark",
     subscriptions: <Subscriptions>{
-      wallet: (wallet: OnBoardingWallet) => {
-        const web3LoggedIn = new Web3(wallet.provider);
+      wallet(wallet: OnBoardingWallet): void {
+        const web3LoggedIn: Web3 = new Web3(wallet.provider);
         web3Wallet.set(web3LoggedIn);
         if (process.client) {
           ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
           window.localStorage.setItem("selectedWallet", wallet.name as string);
         }
       },
-      network: (networkId: number) => {
+      network: (networkId: number): void => {
         if (networkId !== ETHER_NETWORK_ID) {
-          ctx.app.$accessor.wallet.errorDuringLogin({
-            message: `You're using wrong network. Change in to the ${ETHER_NETWORK_NAME}`,
-            force: true,
-          });
+          ctx.app.$accessor.wallet.errorDuringLogin({ force: <boolean>true, message: <string>`You're using wrong network. Change in to the ${ETHER_NETWORK_NAME}` });
         }
       },
     },

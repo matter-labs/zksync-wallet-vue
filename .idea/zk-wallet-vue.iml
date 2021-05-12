@@ -28,5 +28,11 @@
     <orderEntry type="library" name="@types/type-detect" level="application" />
     <orderEntry type="library" name="@types/webpack" level="application" />
     <orderEntry type="library" name="@types/node" level="application" />
+    <orderEntry type="library" name="@types/eslint" level="application" />
+    <orderEntry type="library" name="@types/eslint-config-prettier" level="application" />
+    <orderEntry type="library" name="@types/jest" level="application" />
+    <orderEntry type="library" name="@types/node-sass" level="application" />
+    <orderEntry type="library" name="@types/prettier" level="application" />
+    <orderEntry type="library" name="@types/stylelint" level="application" />
   </component>
 </module>

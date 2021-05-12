@@ -69,7 +69,6 @@ if [[ "$IS_LOCALHOST" ]]; then
   echo "${Default}   Sentry: ${Red}Disabled"
   echo "${Default}   GTM: ${Red}Disabled"
   echo ""
-  echo "SENTRY_DISABLED=1" >> ".env"
   echo "IS_LOCALHOST=1" >> ".env"
 
 fi

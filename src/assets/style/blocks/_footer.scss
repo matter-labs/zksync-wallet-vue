@@ -1,4 +1,5 @@
 $colorLightGray: #e9ecef;
+
 footer {
   img {
     -webkit-user-select: none;
@@ -26,6 +27,7 @@ footer {
     }
 
     & > div {
+
       @media (max-width: $mobile) {
         flex-direction: column-reverse !important;
       }
@@ -67,9 +69,11 @@ footer {
       right: 3rem;
       bottom: 5rem;
       box-shadow: $tileShadow;
+
       &:hover {
         box-shadow: $hoverShadow;
       }
+
       @media (max-width: $mobile) {
         right: 8vw;
         bottom: 6rem;

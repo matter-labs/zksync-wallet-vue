@@ -31,11 +31,14 @@ input[type="number"] {
 }
 
 .mobileOnly {
+
   @media screen and (min-width: $mobile) {
     display: none !important;
   }
 }
+
 .desktopOnly {
+
   @media screen and (max-width: $mobile+1) {
     display: none !important;
   }
@@ -54,6 +57,7 @@ input[type="number"] {
 }
 
 .desktopOnly {
+
   @media screen and (max-width: $mobile) {
     display: none;
   }
@@ -81,7 +85,7 @@ body.inkline {
     .button {
       &.-link {
         &:hover {
-          background-color: transparentize($color: $gray, $amount: 0.8) !important;
+          background-color: transparentize($color: $gray, $amount: .8) !important;
         }
       }
     }
@@ -120,7 +124,7 @@ button.-lg.-circle {
   border: none !important;
   border-radius: $borderRadius !important;
   box-shadow: $popoverShadow;
-  opacity: 0.975;
+  opacity: .975;
 
   &.-dark {
     background-color: $darkViolet !important;
@@ -299,7 +303,7 @@ button.-lg.-circle {
       transition: background-color $transition1;
 
       &:hover {
-        background-color: transparentize($color: $gray, $amount: 0.8);
+        background-color: transparentize($color: $gray, $amount: .8);
       }
 
       i {
@@ -365,6 +369,7 @@ button.-lg.-circle {
 
     .form-input-append {
       background-color: $mediumViolet !important;
+
       &:hover {
         background-color: $darkMain !important;
         color: $light;
@@ -380,6 +385,7 @@ button.-lg.-circle {
 .form-group {
   &.-radio {
     margin: 15px 0;
+
     /* display: flex;
     flex-direction: column;
 
@@ -464,7 +470,7 @@ button.-lg.-circle {
 }
 
 ._margin-top-05 {
-  margin-top: 0.5em;
+  margin-top: .5em;
 }
 
 .grid-cols-2 {
@@ -473,6 +479,7 @@ button.-lg.-circle {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 100%;
   grid-gap: 15px;
+
   @media screen and (max-width: $mobile) {
     grid-gap: 10px;
     grid-template-columns: 100%;

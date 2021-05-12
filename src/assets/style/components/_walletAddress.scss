@@ -58,7 +58,7 @@
     transition: background-color $transition1, color $transition1;
 
     &:active {
-      transition: 0.001s;
+      transition: .001s;
     }
   }
 }
@@ -77,12 +77,12 @@ body.inkline.-light .defaultLayout {
 
     .copy {
       &:hover {
-        background-color: transparentize($color: $gray, $amount: 0.85);
+        background-color: transparentize($color: $gray, $amount: .85);
       }
 
       &:active {
         color: $green;
-        background-color: transparentize($color: $gray, $amount: 0.7);
+        background-color: transparentize($color: $gray, $amount: .7);
       }
     }
   }
@@ -102,12 +102,12 @@ body.inkline.-dark .defaultLayout {
 
     .copy {
       &:hover {
-        background-color: transparentize($color: $white, $amount: 0.9);
+        background-color: transparentize($color: $white, $amount: .9);
       }
 
       &:active {
         color: $green;
-        background-color: transparentize($color: $white, $amount: 0.8);
+        background-color: transparentize($color: $white, $amount: .8);
       }
     }
   }

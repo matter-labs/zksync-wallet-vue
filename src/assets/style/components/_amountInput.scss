@@ -1,6 +1,7 @@
 .amountInput {
   transition: box-shadow $transition1;
   will-change: box-shadow;
+
   &.allowance {
     .minAmount {
       min-height: 24px;

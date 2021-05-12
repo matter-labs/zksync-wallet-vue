@@ -1,8 +1,8 @@
 import { accessorType } from "@/store";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
-import { SignedTransaction, TransactionReceipt, AccountState, Address, TokenSymbol } from "zksync/build/types";
-import { Wallet, Provider } from "zksync";
+import { AccountState, Address, SignedTransaction, TokenSymbol, TransactionReceipt } from "zksync/build/types";
+import { Provider, Wallet } from "zksync";
 
 export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";
 
@@ -14,6 +14,13 @@ export declare interface ZkInTokenPrices {
     lastUpdated: number;
     price: number;
   };
+}
+
+export interface BalanceToReturn {
+  address: string;
+  balance: string;
+  symbol: string;
+  id: number;
 }
 
 export interface ZkInBalance {

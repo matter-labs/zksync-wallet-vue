@@ -91,24 +91,27 @@ export default Vue.extend({
     clearInterval(updateListInterval);
   },
   methods: {
-    async loadTransactions(offset = 0): Promise<Array<ZkInTx>> {
+    async loadTransactions(offset = 0): Promise<(ZkInTx | undefined)[]> {
       const list = await this.$accessor.wallet.requestTransactionsHistory({ force: false, offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25; /* 25 transactions are loaded for each request */
       let filteredList = list;
+      if (!list) {
+        return Promise.resolve([]);
+      }
       if (this.filter) {
-        filteredList = filteredList.filter((item: ZkInTx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
+        filteredList = filteredList?.filter((item: ZkInTx | undefined) => (item?.tx.priority_op?.token ?? item?.tx.token) === this.filter);
       }
       if (this.address) {
         const addressLowerCase = this.address.toLowerCase();
         const myAddressLowerCase = this.ownAddress.toLowerCase();
-        filteredList = filteredList.filter((item: ZkInTx) => {
-          if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
-            const addressToLowerCase = item.tx.to?.toLowerCase();
-            const addressFromLowerCase = item.tx.from.toLowerCase();
+        filteredList = filteredList?.filter((item: ZkInTx | undefined) => {
+          if (item && (item?.tx.type === "Withdraw" || item?.tx.type === "Transfer")) {
+            const addressToLowerCase = item!.tx.to?.toLowerCase();
+            const addressFromLowerCase = item?.tx.from.toLowerCase();
             if (
-              (item.tx.type === "Withdraw" && addressToLowerCase === addressLowerCase) ||
-              (item.tx.type === "Transfer" &&
+              (item?.tx.type === "Withdraw" && addressToLowerCase === addressLowerCase) ||
+              (item?.tx.type === "Transfer" &&
                 ((addressToLowerCase === myAddressLowerCase && addressFromLowerCase === addressLowerCase) ||
                   (addressFromLowerCase === myAddressLowerCase && addressToLowerCase === addressLowerCase)))
             ) {

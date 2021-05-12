@@ -15,7 +15,7 @@
   .bn-onboard-select-wallet-info {
     color: $lightViolet !important;
     font: normal 16px $firaSans !important;
-    letter-spacing: -0.01rem !important;
+    letter-spacing: -.01rem !important;
     text-decoration: none !important;
 
     &:hover {
@@ -41,13 +41,14 @@
       display: flex;
       justify-content: space-between;
       padding-bottom: 1rem !important;
+
       header.bn-onboard-modal-content-header {
-        margin: 1rem 0 0.25rem;
+        margin: 1rem 0 .25rem;
       }
 
       .bn-onboard-select-info-container {
-        margin: 0.25rem 0 !important;
-        padding: 0.75rem 0 0.25rem !important;
+        margin: .25rem 0 !important;
+        padding: .75rem 0 .25rem !important;
         display: flex;
         align-items: center;
 
@@ -55,16 +56,18 @@
           margin-top: 0 !important;
         }
       }
+
       p.bn-onboard-select-description {
         padding: 0 0 1rem;
-        border-bottom: 0.5px solid $lightViolet;
-        margin: 0 0 0.5rem;
+        border-bottom: .5px solid $lightViolet;
+        margin: 0 0 .5rem;
         display: block;
       }
+
       p.bn-onboard-select-wallet-definition {
         display: block;
         margin: 0;
-        padding: 0 0 0.25rem;
+        padding: 0 0 .25rem;
         transition: all $transition2;
       }
     }
@@ -94,7 +97,7 @@
   }
 
   .bn-onboard-selected-wallet {
-    background-color: transparentize($color: $gray, $amount: 0.95) !important;
+    background-color: transparentize($color: $gray, $amount: .95) !important;
     box-shadow: 0 0 0 1.5px $violet !important;
 
     &:hover {
@@ -155,9 +158,10 @@
 
   @media screen and (max-width: $mobile) {
     button.bn-onboard-modal.bn-onboard-modal-content {
-      margin: 0.25rem 0;
-      padding: 0.5rem;
+      margin: .25rem 0;
+      padding: .5rem;
     }
+
     .bn-onboard-modal-content {
       header.bn-onboard-custom.bn-onboard-modal-content-header {
         h3 {
@@ -173,9 +177,9 @@
       }
 
       .bn-onboard-custom.bn-onboard-select-info-container {
-        margin: 1rem 0 0.5rem;
-        padding: 0.75rem 0 0.5rem;
-        border-top: 0.5px solid $lightViolet;
+        margin: 1rem 0 .5rem;
+        padding: .75rem 0 .5rem;
+        border-top: .5px solid $lightViolet;
       }
 
       .bn-onboard-modal-content-close {
@@ -183,8 +187,8 @@
       }
 
       .bn-onboard-custom.bn-onboard-icon-button {
-        margin: 0.25em;
-        padding: 0.25em;
+        margin: .25em;
+        padding: .25em;
       }
     }
   }
