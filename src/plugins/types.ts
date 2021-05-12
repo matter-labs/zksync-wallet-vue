@@ -1,7 +1,17 @@
 import { accessorType } from "@/store";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
-import { SignedTransaction, TransactionReceipt, AccountState, Address, TokenSymbol } from "zksync/build/types";
+import {
+  SignedTransaction,
+  TransactionReceipt,
+  AccountState,
+  Address,
+  TokenSymbol,
+  PubKeyHash,
+  ChangePubKeyOnchain,
+  ChangePubKeyECDSA,
+  ChangePubKeyCREATE2,
+} from "zksync/build/types";
 import { Wallet, Provider } from "zksync";
 
 export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";
@@ -235,4 +245,14 @@ export interface DepositsInterface {
 export interface Tokens {
   // Tokens are indexed by their symbol (e.g. "ETH")
   [token: string]: TokenInfo;
+}
+export interface CPKLocal {
+  accountId: number;
+  account: Address;
+  newPkHash: PubKeyHash;
+  nonce: number;
+  ethAuthData?: ChangePubKeyOnchain | ChangePubKeyECDSA | ChangePubKeyCREATE2;
+  ethSignature?: string;
+  validFrom: number;
+  validUntil: number;
 }

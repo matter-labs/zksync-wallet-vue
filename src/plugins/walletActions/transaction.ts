@@ -2,7 +2,8 @@ import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
 import { submitSignedTransactionsBatch } from "zksync/build/wallet";
-import { Address, ChangePubKey, TokenSymbol } from "zksync/build/types";
+import { Address, TokenSymbol } from "zksync/build/types";
+import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 
 /**
  * Make zkSync transaction
@@ -28,30 +29,11 @@ export const transaction = async (
   const nonce = await syncWallet!.getNonce("committed");
   const batchBuilder = syncWallet!.batchBuilder(nonce);
 
-  if (store.wallet.isAccountLocked && accountActivationFee) {
-    const pubKeyTxJSON = window.localStorage.getItem(`pubKeySignature-${store.account.address}`);
-    if (!pubKeyTxJSON) {
-      store.openModal("SignPubkey");
-      throw new Error("No signed changePubKey was found for the current account");
+  if (store.wallet.isAccountLocked) {
+    if (!accountActivationFee) {
+      throw new Error("No account activation fee found");
     }
-    let pubKeyTx: ChangePubKey;
-    try {
-      pubKeyTx = JSON.parse(pubKeyTxJSON);
-    } catch (error) {
-      store.openModal("SignPubkey");
-      window.localStorage.removeItem(`pubKeySignature-${store.account.address}`);
-      throw new Error("Couldn't parse saved signed changePubKey");
-    }
-    const changePubKeyTx = await syncWallet!.signer!.signSyncChangePubKey({
-      ...pubKeyTx,
-      fee: accountActivationFee,
-      feeTokenId: pubKeyTx.feeToken,
-    });
-    batchBuilder.addChangePubKey({
-      tx: changePubKeyTx,
-      // @ts-ignore
-      alreadySigned: true,
-    });
+    addCPKToBatch(syncWallet!, accountActivationFee, feeToken, batchBuilder, store);
   }
   if (token === feeToken) {
     batchBuilder.addTransfer({
@@ -111,33 +93,10 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   const batchBuilder = syncWallet!.batchBuilder(nonce);
 
   if (store.wallet.isAccountLocked) {
-    let pubKeyTx = window.localStorage.getItem(`pubKeySignature-${store.account.address}`);
-    if (!pubKeyTx) {
-      store.openModal("SignPubkey");
-      throw new Error("No signed changePubKey was found for the current account");
+    if (!accountActivationFee) {
+      throw new Error("No account activation fee found");
     }
-    try {
-      pubKeyTx = JSON.parse(pubKeyTx);
-    } catch (error) {
-      store.openModal("SignPubkey");
-      window.localStorage.removeItem(`pubKeySignature-${store.account.address}`);
-      throw new Error("Couldn't parse saved signed changePubKey");
-    }
-    // @ts-ignore
-    pubKeyTx = {
-      // @ts-ignore
-      ...pubKeyTx,
-      fee: accountActivationFee,
-      feeToken: syncWallet!.provider.tokenSet.resolveTokenId(feeToken),
-      feeTokenId: syncWallet!.provider.tokenSet.resolveTokenId(feeToken),
-    };
-    // @ts-ignore
-    const changePubKeyTx = await syncWallet!.signer!.signSyncChangePubKey(pubKeyTx);
-    batchBuilder.addChangePubKey({
-      tx: changePubKeyTx,
-      // @ts-ignore
-      alreadySigned: true,
-    });
+    addCPKToBatch(syncWallet!, accountActivationFee, feeToken, batchBuilder, store);
   }
   if (token === feeToken) {
     batchBuilder.addWithdraw({

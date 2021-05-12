@@ -200,6 +200,7 @@ import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZkInTransactionType } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { transaction, withdraw } from "@/plugins/walletActions/transaction";
+import { getCPKTx, removeCPKTx } from "@/plugins/walletActions/cpk";
 import { walletData } from "@/plugins/walletData";
 
 import { BigNumber, BigNumberish } from "ethers";
@@ -397,7 +398,9 @@ export default Vue.extend({
         // await this?.getWithdrawalTime();
       }
       if (!this.ownAccountUnlocked) {
-        if (!window.localStorage.getItem(`pubKeySignature-${this.$accessor.account.address}`)) {
+        try {
+          getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
+        } catch (error) {
           this.$accessor.openModal("SignPubkey");
         }
         await this?.getAccountActivationFee();
@@ -532,7 +535,7 @@ export default Vue.extend({
       const feeTransaction = withdrawTransactions.length > 0 ? withdrawTransactions.shift() : withdrawTransaction;
 
       if (activateTransaction) {
-        window.localStorage.removeItem(`pubKeySignature-${this.$accessor.account.address}`);
+        removeCPKTx(this.$accessor.account.address!);
         this.$accessor.wallet.setAccountLockedState(false);
         activateTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
@@ -602,7 +605,7 @@ export default Vue.extend({
       }
 
       if (activateTransaction) {
-        window.localStorage.removeItem(`pubKeySignature-${this.$accessor.account.address}`);
+        removeCPKTx(this.$accessor.account.address!);
         this.$accessor.wallet.setAccountLockedState(false);
         activateTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
