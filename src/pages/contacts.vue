@@ -263,17 +263,20 @@ export default Vue.extend({
         });
         return;
       }
-      this.deletedContact = foundContact;
       this.$accessor.contacts.deleteContact(this.editingWallet.address);
+      this.editingWallet.deleted = true;
       this.addContactModal = false;
       this.inputtedName = "";
       this.inputtedWallet = "";
       this.editingWallet = null;
     },
-    restoreDeleted(): void {
-      if (this.deletedContact) {
-        this.$accessor.contacts.saveContact(this.deletedContact);
-        this.deletedContact = undefined;
+    restoreDeleted(contact?: ZkInContact): void {
+      if (contact) {
+        contact.deleted = false;
+        this.$accessor.contacts.saveContact(contact);
+      } else if (this.openedContact) {
+        this.openedContact.deleted = false;
+        this.$accessor.contacts.saveContact(this.openedContact);
       }
     },
     openContact(contact: ZkInContact): void {

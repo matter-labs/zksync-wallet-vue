@@ -26,6 +26,8 @@ import Vue, { PropOptions } from "vue";
 import { Route } from "vue-router/types";
 import { walletData } from "@/plugins/walletData";
 import { utils } from "zksync";
+import { saveCPKTx } from "@/plugins/walletActions/cpk";
+import { CPKLocal } from "@/plugins/types";
 
 export default Vue.extend({
   name: "SignPubkey",
@@ -88,8 +90,8 @@ export default Vue.extend({
         this.step = "sign";
         const ethSignature = (await syncWallet!.getEthMessageSignature(changePubKeyMessage)).signature;
         this.step = "loading";
-        const changePubkeyTx = {
-          accountId: walletData.get().accountState!.id,
+        const changePubkeyTx: CPKLocal = {
+          accountId: walletData.get().accountState!.id!,
           account: syncWallet!.address(),
           newPkHash: newPubKeyHash,
           nonce,
@@ -101,7 +103,7 @@ export default Vue.extend({
           validFrom: 0,
           validUntil: utils.MAX_TIMESTAMP,
         };
-        window.localStorage.setItem(`pubKeySignature-${this.$accessor.account.address}`, JSON.stringify(changePubkeyTx));
+        saveCPKTx(this.$accessor.account.address!, changePubkeyTx);
         this.success = true;
         this.close();
       } catch (error) {
@@ -112,16 +114,6 @@ export default Vue.extend({
       }
       this.loading = false;
       this.step = false;
-      /* syncWallet!.getEthMessageSignature
-      const signedTx = await syncWallet!.signSetSigningKey({
-        feeToken: "ETH",
-        nonce,
-        ethAuthType: ethAuthType === "ECDSA" ? "ECDSALegacyMessage" : "ECDSA",
-      });
-      batchBuilder.addChangePubKey({
-        ...signedTx.tx,
-        alreadySigned: true,
-      }); */
     },
   },
 });

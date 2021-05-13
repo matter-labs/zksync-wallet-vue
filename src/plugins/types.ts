@@ -243,3 +243,13 @@ export interface Tokens {
   // Tokens are indexed by their symbol (e.g. "ETH")
   [token: string]: TokenInfo;
 }
+export interface CPKLocal {
+  accountId: number;
+  account: Address;
+  newPkHash: PubKeyHash;
+  nonce: number;
+  ethAuthData?: ChangePubKeyOnchain | ChangePubKeyECDSA | ChangePubKeyCREATE2;
+  ethSignature?: string;
+  validFrom: number;
+  validUntil: number;
+}
