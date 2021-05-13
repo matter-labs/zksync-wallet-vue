@@ -26,7 +26,7 @@ $tempTransparent: transparent;
 /* Bg */
 $accentBg: transparentize(
   $color: $gray,
-  $amount: .95,
+  $amount: 0.95,
 );
 $bgLight: #fbfbfb;
 
@@ -57,12 +57,12 @@ $firaSansExtra: "Fira Sans Extra Condensed", "sans-serif";
 $font-family-primary-base: $firaSans;
 
 /* Transitions */
-$transition1: .2s ease;
-$transition2: .3s ease;
+$transition1: 0.2s ease;
+$transition2: 0.3s ease;
 
 /* Border-radius */
 $borderRadiusXs: 6.6px;
-$borderRadiusSm: .25rem;
+$borderRadiusSm: 0.25rem;
 $borderRadius: 8px;
 $borderRadiusBig: 16px;
 
@@ -76,12 +76,12 @@ $mobile: 768px;
 $maxWidth: 1370px;
 
 /* Shadows */
-$shadowInset: inset 1px 1px 1px rgba(0, 0, 0, .03);
-$popoverShadow: 0 10px 40px rgba(0, 0, 0, .05);
-$shadowTop: 0 -3px 10px rgba(0, 0, 0, .05);
-$shadowBottom: 0 3px 10px rgba(0, 0, 0, .05);
-$inputContainerShadow: 0 2px 4px rgba(0, 0, 0, .04), 0 4px 6px rgba(0, 0, 0, .04);
+$shadowInset: inset 1px 1px 1px rgba(0, 0, 0, 0.03);
+$popoverShadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+$shadowTop: 0 -3px 10px rgba(0, 0, 0, 0.05);
+$shadowBottom: 0 3px 10px rgba(0, 0, 0, 0.05);
+$inputContainerShadow: 0 2px 4px rgba(0, 0, 0, 0.04), 0 4px 6px rgba(0, 0, 0, 0.04);
 $hoverShadow: 0 4px 8px #00000015;
 $defaultShadow: 0 4px 4px #00000015;
 $layerShadow: 0 1px 5px 0 #0000001a;
-$tileShadow: 0 1px .5px #0000001a;
+$tileShadow: 0 1px 0.5px #0000001a;

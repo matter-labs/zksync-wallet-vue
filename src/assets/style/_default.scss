@@ -31,14 +31,12 @@ input[type="number"] {
 }
 
 .mobileOnly {
-
   @media screen and (min-width: $mobile) {
     display: none !important;
   }
 }
 
 .desktopOnly {
-
   @media screen and (max-width: $mobile+1) {
     display: none !important;
   }
@@ -57,7 +55,6 @@ input[type="number"] {
 }
 
 .desktopOnly {
-
   @media screen and (max-width: $mobile) {
     display: none;
   }
@@ -85,7 +82,7 @@ body.inkline {
     .button {
       &.-link {
         &:hover {
-          background-color: transparentize($color: $gray, $amount: .8) !important;
+          background-color: transparentize($color: $gray, $amount: 0.8) !important;
         }
       }
     }
@@ -124,7 +121,7 @@ button.-lg.-circle {
   border: none !important;
   border-radius: 10px !important;
   box-shadow: $popoverShadow;
-  opacity: .975;
+  opacity: 0.975;
 
   &.-dark {
     background-color: $darkViolet !important;
@@ -303,7 +300,7 @@ button.-lg.-circle {
       transition: background-color $transition1;
 
       &:hover {
-        background-color: transparentize($color: $gray, $amount: .8);
+        background-color: transparentize($color: $gray, $amount: 0.8);
       }
 
       i {
@@ -352,7 +349,7 @@ button.-lg.-circle {
       background-color: transparent !important;
 
       &:hover {
-        background-color: rgba(0, 0, 0, .01961) !important;
+        background-color: rgba(0, 0, 0, 0.01961) !important;
       }
     }
   }

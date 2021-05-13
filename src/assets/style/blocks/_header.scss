@@ -5,7 +5,6 @@ header {
   transition: background-color $transition1;
 
   &.loggedInHeader {
-
     @media screen and (max-width: $mobile) {
       position: fixed;
       top: 0;
@@ -326,7 +325,6 @@ body.inkline.-light header {
   }
 
   .pagesContainer {
-
     @media screen and (max-width: $mobile) {
       background-color: $white;
     }

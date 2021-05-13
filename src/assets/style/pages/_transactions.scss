@@ -9,7 +9,7 @@
   .transactionsListContainer {
     height: 100%;
     overflow: auto;
-    border-radius: .3rem !important;
+    border-radius: 0.3rem !important;
     box-shadow: $shadowInset;
 
     &::-webkit-scrollbar {
@@ -39,7 +39,7 @@
       border-bottom: 1px solid;
 
       &:hover {
-        background-color: transparentize($color: $gray, $amount: .9);
+        background-color: transparentize($color: $gray, $amount: 0.9);
       }
 
       @media screen and (max-width: 768px) {
@@ -151,7 +151,7 @@
               }
 
               &:active {
-                transition-duration: .001s;
+                transition-duration: 0.001s;
                 filter: brightness(90%);
               }
             }

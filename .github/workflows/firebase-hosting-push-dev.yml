@@ -2,7 +2,7 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to rinkeby, ropsten and mainnet permanent DEVs on push into the dev-branch
-'on':
+"on":
   push:
     branches:
       - dev
@@ -21,11 +21,11 @@ jobs:
 
       - name: Build rinkeby
         run: yarn generate --fail-on-error
-      
+
       - name: Deploy to rinkeby site [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: rinkeby-dev
           projectId: zksync-vue
           channelID: live
@@ -39,7 +39,7 @@ jobs:
       - name: Deploy to ropsten site [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: ropsten-dev
           projectId: zksync-vue
           channelID: live
@@ -53,7 +53,7 @@ jobs:
       - name: Deploy to mainnet [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: mainnet-dev
           projectId: zksync-vue
           channelID: live
@@ -67,13 +67,13 @@ jobs:
       - name: Deploy to stage (mainnet) [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: stage
           projectId: zksync-vue
           channelID: live
 
       - name: Configure for rinkeby-beta [dev]
-        run: bash ./cli-process-env.sh rinkeby dev 1
+        run: bash ./cli-process-env.sh rinkeby-beta dev 1
 
       - name: Build rinkeby-beta [dev]
         run: yarn generate --fail-on-error
@@ -81,7 +81,7 @@ jobs:
       - name: Deploy to rinkeby-beta [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: rinkeby-beta
           projectId: zksync-vue
           channelID: live

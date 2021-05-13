@@ -58,7 +58,7 @@
     transition: background-color $transition1;
 
     &:hover {
-      background-color: transparentize($color: $gray, $amount: .9);
+      background-color: transparentize($color: $gray, $amount: 0.9);
     }
 
     &.deleted {
@@ -107,8 +107,8 @@
         &.copyAddress {
           &:active {
             color: $green !important;
-            background-color: transparentize($color: $gray, $amount: .7) !important;
-            transition: .001s;
+            background-color: transparentize($color: $gray, $amount: 0.7) !important;
+            transition: 0.001s;
           }
         }
       }

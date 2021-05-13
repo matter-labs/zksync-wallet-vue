@@ -1,5 +1,6 @@
 import { accessorType } from "@/store";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
+import { HttpProvider } from "web3-core/types";
 import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
 import {
   SignedTransaction,
@@ -13,6 +14,13 @@ import {
   ChangePubKeyCREATE2,
 } from "zksync/build/types";
 import { Wallet, Provider } from "zksync";
+
+/**
+ * Typed definition for the Http-provider
+ */
+export interface ethWindow extends Window {
+  ethereum?: HttpProvider | unknown;
+}
 
 export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";
 

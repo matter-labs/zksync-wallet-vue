@@ -1,4 +1,4 @@
-import { APP_ZKSYNC_API_LINK } from "@/plugins/build";
+import { ZK_API_BASE } from "@/plugins/build";
 import { TokenInfo, Tokens, ZkInTokenPrices } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
@@ -107,7 +107,7 @@ export const actions = actionTree(
       return getters.getAllTokens;
     },
     async loadAcceptableTokens({ commit }): Promise<void> {
-      const acceptableTokens: TokenInfo[] = (await this.app.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
+      const acceptableTokens: TokenInfo[] = (await this.app.$axios.get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`)).data;
       commit("storeAcceptableTokens", acceptableTokens);
     },
 

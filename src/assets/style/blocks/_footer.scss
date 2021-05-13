@@ -25,7 +25,6 @@ footer {
     }
 
     & > div {
-
       @media (max-width: $mobile) {
         flex-direction: column-reverse !important;
       }
@@ -87,7 +86,7 @@ footer {
       height: 2.5rem !important;
       padding: 0;
       border-radius: 100%;
-      box-shadow: 0 3px 5px -1px rgba(0, 0, 0, .08), 0 6px 10px 0 rgba(0, 0, 0, .1), 0 1px 18px 0 rgba(0, 0, 0, .1);
+      box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.08), 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 1px 18px 0 rgba(0, 0, 0, 0.1);
 
       @media (min-width: $mobile) {
         bottom: 80px;

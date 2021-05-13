@@ -19,7 +19,7 @@
     margin-left: auto;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 4px 4px 8px 0 rgba(11, 52, 102, .02);
+    box-shadow: 4px 4px 8px 0 rgba(11, 52, 102, 0.02);
     transition: background-color $transition1;
 
     .tileHeadline {
@@ -64,15 +64,15 @@
         margin-left: 10px;
         font-size: 11px;
         line-height: 26px;
-        background: transparentize($color: $gray, $amount: .7);
+        background: transparentize($color: $gray, $amount: 0.7);
         border-radius: 50%;
         transform: translateY(1px);
         cursor: pointer;
-        opacity: .9;
+        opacity: 0.9;
         transition: background-color $transition1;
 
         &:hover {
-          background: transparentize($color: $gray, $amount: .5);
+          background: transparentize($color: $gray, $amount: 0.5);
         }
       }
 
@@ -107,7 +107,6 @@
   }
 
   footer {
-
     @media (max-width: $mobile) {
       margin-bottom: 80px; /* Navigation bar space */
 
@@ -163,13 +162,13 @@ body.inkline.-dark {
 .form-input-group.-light .form-input input,
 input.form-input.-prefixed {
   background-color: #0000000a !important;
-  border-radius: .3rem !important;
-  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, .035) !important;
+  border-radius: 0.3rem !important;
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.035) !important;
 }
 
 .form-input-group.-light .form-input input:focus,
 input.form-input.-prefixed:focus {
-  border-color: rgba(30, 30, 30, .15) !important;
+  border-color: rgba(30, 30, 30, 0.15) !important;
 }
 
 .tooltip-wrapper {
@@ -185,14 +184,14 @@ em.iconInfo {
   font-size: 11px;
   line-height: 26px;
   text-align: center;
-  background: transparentize($color: $gray, $amount: .7);
+  background: transparentize($color: $gray, $amount: 0.7);
   border-radius: 50%;
   transform: translateY(1px);
   cursor: pointer;
-  opacity: .9;
+  opacity: 0.9;
   transition: background-color $transition1;
 
   &:hover {
-    background: transparentize($color: $gray, $amount: .5);
+    background: transparentize($color: $gray, $amount: 0.5);
   }
 }
