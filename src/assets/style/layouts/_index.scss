@@ -2,7 +2,6 @@
   .routerContainer {
     min-height: $minRouteHeight;
   }
-
   @media (max-width: $mobile) {
     min-height: $minRouteHeightWithExtra;
 

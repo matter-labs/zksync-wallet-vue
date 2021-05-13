@@ -44,6 +44,7 @@
       "yarn run format"
     ]
   },
+  "repository": "https://github.com/matter-labs/zksync-wallet-vue",
   "scripts": {
     "ci:clear": "bash cli-dev.sh ci",
     "ci:build": "yarn run ci && bash ./cli-process-env.sh \"$NETWORK\" && yarn generate --fail-on-error",
