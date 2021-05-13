@@ -130,13 +130,16 @@ export default Vue.extend({
               showAddress: false,
               modal: false,
             };
-          } else if (this.isSameAddress(this.displayedAddress)) {
-            return {
-              type: "Received from:",
-              showAddress: true,
-              modal: false,
-            };
           } else {
+            if (this.singleTransaction.tx.type === "Transfer") {
+              if (this.isSameAddress(this.singleTransaction.tx.to || "")) {
+                return {
+                  type: "Received from:",
+                  showAddress: true,
+                  modal: false,
+                };
+              }
+            }
             return {
               type: "Sent to:",
               showAddress: true,

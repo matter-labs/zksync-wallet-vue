@@ -475,8 +475,8 @@ export const actions = actionTree(
      */
     async walletRefresh({ dispatch, state }, firstSelect = true): Promise<boolean> {
       try {
-        this.app.$accessor.account.setLoadingHint("Follow the instructions in your wallet");
         let walletCheck = false;
+        this.app.$accessor.account.setLoadingHint("Processing...");
         if (firstSelect) {
           walletCheck = !!(await state.onboard?.walletSelect());
           if (!walletCheck) {
@@ -509,9 +509,10 @@ export const actions = actionTree(
         if (syncProvider === undefined) {
           return false;
         }
+        this.app.$accessor.account.setLoadingHint("Follow the instructions in your wallet");
         const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
 
-        this.app.$accessor.account.setLoadingHint("Getting wallet information");
+        this.app.$accessor.account.setLoadingHint("Getting wallet information...");
         watcher.changeNetworkSet(dispatch, this);
         const accountState = await syncWallet?.getAccountState();
         walletData.set(<iWalletData>{
