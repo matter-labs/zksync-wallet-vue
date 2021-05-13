@@ -100,6 +100,20 @@ export default {
     return list.filter((e) => String(searchParam(e)).toLowerCase().includes(search));
   },
 
+  filterError: (error: Error): string | undefined => {
+    if (error.message) {
+      if (error.message.includes("User denied")) {
+        return "";
+      } else if (error.message.includes("Fee Amount is not packable")) {
+        return "Fee Amount is not packable";
+      } else if (error.message.includes("Transaction Amount is not packable")) {
+        return "Transaction Amount is not packable";
+      } else if (error.message.length < 60) {
+        return error.message;
+      }
+    }
+  },
+
   /**
    * Theme definition moved to the utility plugin
    * @param {IPrototype} inklineContext

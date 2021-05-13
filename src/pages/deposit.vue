@@ -280,18 +280,9 @@ export default Vue.extend({
       try {
         await this.deposit();
       } catch (error) {
-        if (error.message) {
-          if (error.message.includes("User denied")) {
-            this.error = "";
-          } else if (error.message.includes("Fee Amount is not packable")) {
-            this.error = "Fee Amount is not packable";
-          } else if (error.message.includes("Transaction Amount is not packable")) {
-            this.error = "Transaction Amount is not packable";
-          } else if (String(error.message).length < 60) {
-            this.error = error.message;
-          } else {
-            this.error = "Transaction error";
-          }
+        const errorMsg = utils.filterError(error);
+        if (typeof errorMsg === "string") {
+          this.error = errorMsg;
         } else {
           this.error = "Transaction error";
         }
@@ -378,10 +369,11 @@ export default Vue.extend({
         this.transactionInfo.success = true;
         this.chosenToken = { ...this.chosenToken, unlocked: true };
       } catch (error) {
-        if (error.message) {
-          if (!error.message.includes("User denied")) {
-            this.error = error.message;
-          }
+        const errorMsg = utils.filterError(error);
+        if (typeof errorMsg === "string") {
+          this.error = errorMsg;
+        } else {
+          this.error = "Unlock token error";
         }
       }
       this.tip = "";
@@ -409,18 +401,9 @@ export default Vue.extend({
           try {
             await this.deposit();
           } catch (error) {
-            if (error.message) {
-              if (error.message.includes("User denied")) {
-                this.error = "";
-              } else if (error.message.includes("Fee Amount is not packable")) {
-                this.error = "Fee Amount is not packable";
-              } else if (error.message.includes("Transaction Amount is not packable")) {
-                this.error = "Transaction Amount is not packable";
-              } else if (error.message && error.message.toString().length < 60) {
-                this.error = error.message;
-              } else {
-                this.error = "Transaction error";
-              }
+            const errorMsg = utils.filterError(error);
+            if (typeof errorMsg === "string") {
+              this.error = errorMsg;
             } else {
               this.error = "Transaction error";
             }

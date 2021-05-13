@@ -10,6 +10,18 @@
   border-radius: 4px;
   box-shadow: $shadowInset;
   transition: background-color $transition1, box-shadow $transition1;
+  &.inputWallet {
+    position: relative;
+
+    .errorText {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 3px);
+      width: 100%;
+      color: $red;
+      font-size: 12px;
+    }
+  }
 
   &.clickablePicture {
     .userImg {

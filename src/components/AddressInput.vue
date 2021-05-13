@@ -15,6 +15,9 @@
         type="text"
         @keyup.enter="$emit('enter')"
       />
+      <transition name="fadeFast">
+        <div v-if="error" class="errorText">{{ error }}</div>
+      </transition>
     </div>
   </div>
 </template>

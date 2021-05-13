@@ -1,7 +1,7 @@
 import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
-import { submitSignedTransactionsBatch } from "zksync/build/wallet";
+import { submitSignedTransactionsBatch, Transaction } from "zksync/build/wallet";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 
@@ -61,7 +61,7 @@ export const transaction = async (
   for (const tx of transactions) {
     store.transaction.watchTransaction({ transactionHash: tx.txHash });
   }
-  return transactions;
+  return labelTransactions(transactions);
 };
 
 interface WithdrawParams {
@@ -126,7 +126,39 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   for (const tx of transactions) {
     store.transaction.watchTransaction({ transactionHash: tx.txHash });
   }
-  return transactions;
+  return labelTransactions(transactions);
+};
+
+export const labelTransactions = (transactions: Transaction[]) => {
+  let transaction: Transaction | null = null;
+  let feeTransaction: Transaction | null = null;
+  let cpkTransaction: Transaction | null = null;
+  for (const tx of transactions) {
+    if (tx.txData.tx.type === "ChangePubKey") {
+      cpkTransaction = tx;
+      continue;
+    }
+    if (tx.txData.tx.fee === "0") {
+      transaction = tx;
+    } else if (tx.txData.tx.amount === "0") {
+      feeTransaction = tx;
+    }
+  }
+  if (!transaction) {
+    for (const tx of transactions) {
+      if (tx.txData.tx.type !== "ChangePubKey") {
+        transaction = tx;
+      }
+    }
+  }
+  if (!feeTransaction) {
+    feeTransaction = transaction;
+  }
+  return {
+    transaction,
+    feeTransaction,
+    cpkTransaction,
+  };
 };
 
 /**

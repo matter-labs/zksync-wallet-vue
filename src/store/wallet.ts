@@ -18,7 +18,10 @@ interface feesInterface {
   [symbol: string]: {
     [feeSymbol: string]: {
       [type: string]: {
-        [address: string]: ZkInFeesObj;
+        [address: string]: {
+          lastUpdated: number;
+          value: ZkInFeesObj;
+        };
       };
     };
   };
@@ -99,7 +102,10 @@ export const mutations = mutationTree(state, {
       state.fees[symbol][feeSymbol][type] = {};
     }
 
-    state.fees[symbol][feeSymbol][type][address] = obj;
+    state.fees[symbol][feeSymbol][type][address] = {
+      lastUpdated: new Date().getTime(),
+      value: obj,
+    };
   },
   /**
    * @todo review and drop (?)
@@ -389,9 +395,10 @@ export const actions = actionTree(
         Object.prototype.hasOwnProperty.call(savedFees, symbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol], feeSymbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol], type) &&
-        Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol][type], address)
+        Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol][type], address) &&
+        savedFees[symbol][feeSymbol][type][address].lastUpdated > new Date().getTime() - 30000
       ) {
-        return savedFees[symbol][feeSymbol][type][address];
+        return savedFees[symbol][feeSymbol][type][address].value;
       }
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
