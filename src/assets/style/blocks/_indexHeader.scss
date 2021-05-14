@@ -48,6 +48,17 @@ body {
 
     .dropdown {
       padding: 0;
+      &.-dark {
+        & > .menu[data-popper-placement="bottom"] {
+          .arrow {
+            border-bottom-color: $darkViolet !important;
+  
+            &::after {
+              border-bottom-color: $darkViolet !important;
+            }
+          }
+        }
+      }
 
       @media screen and (min-width: $mobile+1) and (max-width: 991px) {
         padding: 0 5px;
@@ -60,19 +71,21 @@ body {
         background: $darkViolet;
         border-color: $darkViolet;
         border-radius: $borderRadius;
+        transition: $transition1;
 
         .arrow {
-          border-bottom-color: $darkViolet;
+          transition: $transition1;
 
           &::after {
-            border-bottom-color: $darkViolet;
             border-bottom-width: 5px !important;
+            transition: $transition1;
           }
         }
 
         .item {
           color: $white;
           font: normal normal 16px/2rem $firaSans;
+          transition: color $transition1;
 
           &:hover {
             color: $lightViolet;
