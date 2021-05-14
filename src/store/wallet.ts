@@ -1,4 +1,4 @@
-import { ZK_API_BASE, ETHER_NETWORK_NAME } from "@/plugins/build";
+import { ZK_API_BASE, ZK_NETWORK } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
 import { iWalletData, ZkInBalance, ZkInFeesObj, ZkInTx } from "@/plugins/types";
 import utils from "@/plugins/utils";
@@ -10,8 +10,8 @@ import web3Wallet from "@/plugins/web3";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
-import { closestPackableTransactionFee, getDefaultProvider, Wallet } from "zksync";
-import { Address, Fee, TokenSymbol } from "zksync/build/types";
+import { closestPackableTransactionFee, getDefaultProvider, Provider, Wallet } from "zksync";
+import { Address, Fee, Network, TokenSymbol } from "zksync/build/types";
 import { ExternalProvider } from "@ethersproject/providers";
 
 interface feesInterface {
@@ -221,6 +221,7 @@ export const actions = actionTree(
 
     /**
      *
+     * @param state
      * @param commit
      * @param getters
      * @param accountState
@@ -505,7 +506,7 @@ export const actions = actionTree(
           return false;
         }
         const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
-        const syncProvider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
+        const syncProvider: Provider = await getDefaultProvider(ZK_NETWORK as Network, "HTTP");
         if (syncProvider === undefined) {
           return false;
         }

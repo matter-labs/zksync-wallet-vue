@@ -25,6 +25,7 @@ export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY
 export const { ethereum }: ethWindow = window;
 
 export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
+export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
 
 export const APP_ZK_SCAN = `https://${ETHER_PREFIX_DOT}zkscan.io`;
 export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}/explorer`;
