@@ -61,7 +61,7 @@
     "generate": "nuxt generate",
     "test": "jest",
     "format": "prettier --write",
-    "lint-ts": "eslint --ext .ts,.js,.vue",
+    "lint-ts": "eslint src/**/*.{ts,js,vue} --fix",
     "lint-css": "stylelint --fix \"**/*.scss\""
   },
   "dependencies": {
@@ -77,6 +77,7 @@
     "lottie-web": "^5.7.8",
     "moment-timezone": "^0.5.33",
     "nuxt": "latest",
+    "nuxt-build-optimisations": "^1.0.3",
     "nuxt-typed-vuex": "latest",
     "qrcode": "^1.4.4",
     "ts-node": "^8.3.0",
@@ -107,6 +108,7 @@
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
     "babel-eslint": "latest",
+    "consola": "^2.15.3",
     "dotenv": "latest",
     "eslint": "latest",
     "eslint-config-prettier": "latest",

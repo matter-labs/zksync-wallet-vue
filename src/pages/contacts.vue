@@ -65,15 +65,15 @@
             <div class="contactName">{{ item.name }}</div>
             <div class="contactAddress walletAddress">{{ item.address }}</div>
           </div>
-          <div v-if="!item.deleted" class="iconsBlock">
-            <i-tooltip trigger="click">
-              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="ri-clipboard-line"></i></i-button>
-              <template slot="body">Copied!</template>
-            </i-tooltip>
-            <i-button block link size="md" cla variant="secondary" @click="editContact(item)"><i class="ri-pencil-fill" /></i-button>
-          </div>
-          <div v-else class="iconsBlock">
-            <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="ri-arrow-go-back-line"></i></i-button>
+          <div class="iconsBlock">
+            <template v-if="!item.deleted">
+              <i-tooltip trigger="click">
+                <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="ri-clipboard-line" /></i-button>
+                <template slot="body">Copied!</template>
+              </i-tooltip>
+              <i-button block link size="md" cla variant="secondary" @click="editContact(item)"><i class="ri-pencil-fill" /></i-button>
+            </template>
+            <i-button v-else class="iconsBlock" block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="ri-arrow-go-back-line" /></i-button>
           </div>
         </div>
       </div>
@@ -101,13 +101,13 @@
           inputtedWallet = openedContact.address;
           addContactModal = true;
         "
-        ><i class="ri-add-line"></i>&nbsp;&nbsp;Add contact
+        ><i class="ri-add-line" />&nbsp;&nbsp;Add contact
       </i-button>
       <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)"
-        ><i class="ri-pencil-fill"></i>&nbsp;&nbsp;Edit contact
+        ><i class="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"><i class="ri-arrow-go-back-line"></i>&nbsp;&nbsp;Restore contact</i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer to contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"><i class="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact</i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact</i-button>
     </div>
     <transactions v-if="openedContact" :address="openedContact.address" />
   </div>

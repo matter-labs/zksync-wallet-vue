@@ -8330,6 +8330,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esbuild-loader@npm:^2.12.0":
+  version: 2.13.0
+  resolution: "esbuild-loader@npm:2.13.0"
+  dependencies:
+    esbuild: ^0.11.19
+    joycon: ^3.0.1
+    json5: ^2.2.0
+    loader-utils: ^2.0.0
+    type-fest: ^1.0.1
+    webpack-sources: ^2.2.0
+  peerDependencies:
+    webpack: ^4.40.0 || ^5.0.0
+  checksum: ebf650b8c2abc14e960a6765310047982029a91225f6e27090ab70cae11c1f18acfa7e53de4ba15944c19a0fb488e53142a013035ab78ef78c81f8728fa03eac
+  languageName: node
+  linkType: hard
+
+"esbuild@npm:^0.11.19":
+  version: 0.11.20
+  resolution: "esbuild@npm:0.11.20"
+  bin:
+    esbuild: bin/esbuild
+  checksum: 553f88218a18d018d690f6512b10f4a37b6e7545b48aad02a1ed77e4b7a01d0261dc4213557d694c55f9e130527a064ed1db872c878a2133a0b3a90122299c82
+  languageName: node
+  linkType: hard
+
 "escalade@npm:^3.1.1":
   version: 3.1.1
   resolution: "escalade@npm:3.1.1"
@@ -12705,6 +12730,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"joycon@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "joycon@npm:3.0.1"
+  checksum: db64c93cf05d6f99ea832708ac9ec10e8bbb92d767e3cc38f8c5111b513dbce4b1419b0fe42620e664998639b455dd943e8dd493d8753c5034837501f8e823c4
+  languageName: node
+  linkType: hard
+
 "js-base64@npm:^2.1.8":
   version: 2.6.4
   resolution: "js-base64@npm:2.6.4"
@@ -12945,7 +12977,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"json5@npm:^2.1.2":
+"json5@npm:^2.1.2, json5@npm:^2.2.0":
   version: 2.2.0
   resolution: "json5@npm:2.2.0"
   dependencies:
@@ -14945,6 +14977,19 @@ fsevents@^1.2.7:
     bn.js: 4.11.6
     strip-hex-prefix: 1.0.0
   checksum: 1108f37b1b840d4d92598e51afc13517cfdafd8d71ba20a3bd96bf3a3a6a3918765ad9d261194e8af3ebddb37491437af1952c43b98481ba9668e071a0471aee
+  languageName: node
+  linkType: hard
+
+"nuxt-build-optimisations@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "nuxt-build-optimisations@npm:1.0.3"
+  dependencies:
+    esbuild-loader: ^2.12.0
+    rimraf: ^3.0.2
+    semver: ^7.3.5
+    speed-measure-webpack-plugin: ^1.5.0
+    upath: ^2.0.1
+  checksum: 5694e45a45a4fc4816bd3227b6ca93a539176e76cf9c94d44c7556e0ad0b61d1e78009aec815face114ee0479fd88510074e4dac177bc263a5829240e236901f
   languageName: node
   linkType: hard
 
@@ -18888,6 +18933,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"speed-measure-webpack-plugin@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "speed-measure-webpack-plugin@npm:1.5.0"
+  dependencies:
+    chalk: ^4.1.0
+  peerDependencies:
+    webpack: ^1 || ^2 || ^3 || ^4 || ^5
+  checksum: b7cd794c842af169ff6cd1b787714c630db49743e12b749ea75b2b85b264e7716807a8b69b15b52b93f7586fa893cce6145fea98dd452d042404ddb6c9c3f071
+  languageName: node
+  linkType: hard
+
 "split-on-first@npm:^1.0.0":
   version: 1.1.0
   resolution: "split-on-first@npm:1.1.0"
@@ -20220,6 +20276,13 @@ fsevents@^1.2.7:
   version: 0.8.1
   resolution: "type-fest@npm:0.8.1"
   checksum: f8c4b4249f52e8bea7a4fc55b3653c96c2d547240e4c772e001d02b7cc38b8c3eb493ab9fbe985a76a203cd1aa7044776b728a71ba12bf36e7131f989597885b
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^1.0.1":
+  version: 1.1.1
+  resolution: "type-fest@npm:1.1.1"
+  checksum: 083231eb34b405caaf1a41d3941a6ddc08763c0b89d079ffc634f7ec4e802da717b1e3cd4618c45bc4dc8b243ab34e1d4f09e9b81fe7a4fb6e7d91ab6321d983
   languageName: node
   linkType: hard
 
@@ -21644,7 +21707,7 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"webpack-sources@npm:^2.1.1":
+"webpack-sources@npm:^2.1.1, webpack-sources@npm:^2.2.0":
   version: 2.2.0
   resolution: "webpack-sources@npm:2.2.0"
   dependencies:
@@ -22402,6 +22465,7 @@ typescript@^3.5.1:
     "@typescript-eslint/parser": latest
     babel-eslint: latest
     bnc-onboard: latest
+    consola: ^2.15.3
     dotenv: latest
     eslint: latest
     eslint-config-prettier: latest
@@ -22426,6 +22490,7 @@ typescript@^3.5.1:
     node-sass: 4.14.1
     nodemon: latest
     nuxt: latest
+    nuxt-build-optimisations: ^1.0.3
     nuxt-typed-vuex: latest
     prettier: latest
     qrcode: ^1.4.4

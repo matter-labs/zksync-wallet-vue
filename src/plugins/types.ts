@@ -1,7 +1,17 @@
 import { accessorType } from "@/store";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
-import { AccountState, Address, SignedTransaction, TokenSymbol, TransactionReceipt } from "zksync/build/types";
+import {
+  AccountState,
+  Address,
+  ChangePubKeyCREATE2,
+  ChangePubKeyECDSA,
+  ChangePubKeyOnchain,
+  PubKeyHash,
+  SignedTransaction,
+  TokenSymbol,
+  TransactionReceipt,
+} from "zksync/build/types";
 import { Provider, Wallet } from "zksync";
 
 export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";

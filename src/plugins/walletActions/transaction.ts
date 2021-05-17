@@ -1,9 +1,10 @@
 import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
-import { submitSignedTransactionsBatch } from "zksync/build/wallet";
-import { Address, TokenSymbol } from "zksync/build/types";
+import { ETHOperation, submitSignedTransactionsBatch, Transaction, Wallet } from "zksync/build/wallet";
+import { Address, SignedTransaction, TokenSymbol, TotalFee, TxEthSignature } from "zksync/build/types";
 import { addCPKToBatch } from "@/plugins/walletActions/cpk";
+import { BatchBuilder } from "zksync/build/batch-builder";
 
 /**
  * Make zkSync transaction

@@ -7,7 +7,6 @@ import watcher from "@/plugins/watcher";
 
 import web3Wallet from "@/plugins/web3";
 import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
-// @ts-ignore
 import Onboard from "bnc-onboard";
 import { API } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -171,9 +170,6 @@ export const actions = actionTree(
   {
     /**
      * Initial call, connecting to the wallet
-     * @param commit
-     * @param rootState
-     * @return {Promise<boolean>}
      */
     async onboardInit({ commit }): Promise<unknown> {
       const onboard: API = Onboard(onboardConfig(this));
@@ -185,7 +181,7 @@ export const actions = actionTree(
       this.app.$accessor.account.setSelectedWallet(previouslySelectedWallet ?? "");
 
       try {
-        const walletSelect = await onboard?.walletSelect();
+        const walletSelect = onboard.walletSelect();
         if (!walletSelect) {
           return false;
         }
@@ -247,7 +243,7 @@ export const actions = actionTree(
         listCommitted = newAccountState?.committed.balances || {};
         listVerified = newAccountState?.verified.balances || {};
       }
-      const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
+      const loadedTokens: { zkBalances: BalanceToReturn[]; tokens: Tokens } = await this.app.$accessor.tokens.loadTokensAndBalances();
       for (const tokenSymbol in listCommitted) {
         const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
         if (!isRestricted) {
@@ -286,7 +282,7 @@ export const actions = actionTree(
      * @param force
      * @return {Promise<*[]|*>}
      */
-    async requestInitialBalances({ commit, getters }, force = false): Promise<unknown> {
+    async requestInitialBalances({ commit, getters }, force: boolean = false): Promise<unknown> {
       const savedAddress = this.app.$accessor.account.address;
       const localList = getters.getTokensList;
 
@@ -394,8 +390,8 @@ export const actions = actionTree(
       ) {
         return savedFees[symbol][feeSymbol][type][address];
       }
-      const syncProvider = walletData.get().syncProvider;
-      const syncWallet = walletData.get().syncWallet;
+      const syncProvider: Provider | undefined = walletData.get().syncProvider;
+      const syncWallet: Wallet | undefined = walletData.get().syncWallet;
       if (type === "withdraw") {
         if (symbol === feeSymbol) {
           const foundFeeFast: Fee = await syncProvider!.getTransactionFee("FastWithdraw", address, symbol);
@@ -407,8 +403,8 @@ export const actions = actionTree(
           commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
           return feesObj;
         }
-        const batchWithdrawFeeFast = await syncProvider?.getTransactionsBatchFee(["FastWithdraw", "Transfer"], [address, syncWallet?.address()], feeSymbol);
-        const batchWithdrawFeeNormal = await syncProvider?.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet?.address()], feeSymbol);
+        const batchWithdrawFeeFast: BigNumber = await syncProvider!.getTransactionsBatchFee(["FastWithdraw", "Transfer"], [address, syncWallet?.address()], feeSymbol);
+        const batchWithdrawFeeNormal: BigNumber = await syncProvider!.getTransactionsBatchFee(["Withdraw", "Transfer"], [address, syncWallet?.address()], feeSymbol);
         const feesObj: ZkInFeesObj = {
           fast: batchWithdrawFeeFast !== undefined ? closestPackableTransactionFee(batchWithdrawFeeFast) : undefined,
           normal: batchWithdrawFeeNormal !== undefined ? closestPackableTransactionFee(batchWithdrawFeeNormal) : undefined,

@@ -1,9 +1,12 @@
-import { APP_ZK_ALTERNATIVE_WITHDRAWAL, CURRENT_APP_NAME, ETHER_NETWORK_ID, ETHER_NETWORK_NAME, ethereum } from "@/plugins/build";
+import { APP_ZK_ALTERNATIVE_WITHDRAWAL, CURRENT_APP_NAME, ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
 import web3Wallet from "@/plugins/web3";
 import { WalletModuleState } from "@/store/wallet";
 import { Initialization, Subscriptions, Wallet as OnBoardingWallet, WalletInitOptions, WalletModule, WalletSelectModuleOptions } from "bnc-onboard/dist/src/interfaces";
 import { Store } from "vuex";
 import Web3 from "web3";
+
+// @ts-ignore
+export const { ethereum }: Window = window;
 
 const APP_NAME = `${CURRENT_APP_NAME}`;
 const FORTMATIC_KEY = process.env.APP_FORTMATIC;

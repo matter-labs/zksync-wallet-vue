@@ -12,12 +12,13 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "allowJs": true,
+    "checkJs": true,
     "sourceMap": true,
-    "rootDir": ".",
+    "rootDir": "src/",
     "strict": true,
     "noImplicitAny": false,
     "noEmit": true,
-    "baseUrl": "./src",
+    "baseUrl": "src/",
     "paths": {
       "~/*": [
         "./*"
