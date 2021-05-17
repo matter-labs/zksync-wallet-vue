@@ -17,3 +17,20 @@
 .fadeFast-leave-to {
   opacity: 0;
 }
+
+
+.slide-vertical-fade-enter-active, .slide-vertical-fade-leave-active {
+  transition: 0.2s ease;
+  transition-property: transform, opacity;
+  will-change: transform, opacity;
+}
+
+.slide-vertical-fade-enter, .slide-vertical-fade-leave-to {
+  opacity: 0;
+}
+.slide-vertical-fade-enter {
+  transform: translateY(-15px);
+}
+.slide-vertical-fade-leave-to {
+  transform: translateY(15px);
+}
