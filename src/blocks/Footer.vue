@@ -20,7 +20,7 @@
           <span class="badge">|</span>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" :href="`${blockExplorerLink}`">zkScan</a>
+          <a target="_blank" class="footer-link" :href="blockExplorerLink">zkScan</a>
         </div>
       </i-row>
       <i-row center class="_margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap badge outline-white -secondary _display-none">

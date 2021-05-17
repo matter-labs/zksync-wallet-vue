@@ -68,6 +68,11 @@ body.inkline {
       text-decoration: none !important;
       border-radius: 4px;
     }
+    &.-secondary {
+      &:disabled {
+        opacity: 0.3;
+      }
+    }
   }
 
   &.-light {
@@ -263,7 +268,7 @@ button.-lg.-circle {
       border-color: $light !important;
     }
 
-    .footer .modalFooterBtn {
+    .modalFooterBtn {
       color: $black;
     }
   }
@@ -284,34 +289,40 @@ button.-lg.-circle {
   .header {
     border-bottom: none !important;
   }
-
-  .footer {
-    .modalFooterBtn {
-      display: flex;
-      flex-wrap: nowrap;
-      align-items: center;
-      box-sizing: border-box;
-      margin: 3px 0;
-      padding: 6px 15px;
-      color: $white;
-      text-decoration: none;
-      border-radius: $borderRadius;
-      cursor: pointer;
-      transition: background-color $transition1;
-
-      &:hover {
-        background-color: transparentize($color: $gray, $amount: 0.8);
-      }
-
+  
+  .modalFooterBtn {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 3px 0;
+    padding: 6px 15px;
+    color: $white;
+    text-decoration: none;
+    border-radius: $borderRadius;
+    cursor: pointer;
+    transition: background-color $transition1;
+    &.big {
       i {
-        margin-right: 30px;
-        font-size: 16px;
+        font-size: 20px;
       }
-
       span {
-        font-size: 14px;
-        text-align: left;
+        font-size: 18px;
       }
+    }
+
+    &:hover {
+      background-color: transparentize($color: $gray, $amount: 0.8);
+    }
+
+    i {
+      margin-right: 30px;
+      font-size: 16px;
+    }
+
+    span {
+      font-size: 14px;
+      text-align: left;
     }
   }
 

@@ -64,11 +64,12 @@
           <span>{{ chosenToken.symbol }} Allowance</span>
           <i class="ri-question-mark iconInfo" />
         </div>
-        <div :class="{ 'grid-cols-2': inputtedAmount }">
+        <div class="grid-cols-2">
           <i-button block size="md" variant="secondary" @click="unlockToken(true)">Approve unlimited {{ chosenToken.symbol }}</i-button>
-          <i-button v-if="inputtedAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
+          <i-button v-if="inputtedAmount" key="approveAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
             Approve {{ amountBigNumber | formatToken(chosenToken.symbol) }} {{ chosenToken.symbol }}
           </i-button>
+          <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>Introduce {{ chosenToken.symbol }} amount</i-button>
         </div>
       </div>
 
