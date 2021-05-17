@@ -19,8 +19,8 @@
               <i class="mobileOnly ri-history-line"></i>
               <span>Transactions</span>
             </nuxt-link>
-            <div class="headerLink" @click="footerModal = !footerModal">
-              <i class="mobileOnly ri-more-2-fill"></i>
+            <div class="mobileOnly headerLink" @click="footerModal = !footerModal">
+              <i class="ri-more-2-fill"></i>
               <span>More</span>
             </div>
           </div>
