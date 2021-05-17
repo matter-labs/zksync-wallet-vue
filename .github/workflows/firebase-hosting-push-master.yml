@@ -2,7 +2,7 @@
 # https://github.com/firebase/firebase-tools
 
 name: Deploy to rinkeby, ropsten and mainnet
-'on':
+"on":
   push:
     branches:
       - master
@@ -21,11 +21,11 @@ jobs:
 
       - name: Build rinkeby
         run: yarn generate --fail-on-error
-      
+
       - name: Deploy to rinkeby site
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: rinkeby
           projectId: zksync-vue
           channelID: live
@@ -39,7 +39,7 @@ jobs:
       - name: Deploy to ropsten site
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: ropsten
           projectId: zksync-vue
           channelID: live
@@ -53,7 +53,7 @@ jobs:
       - name: Deploy to mainnet
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
           target: mainnet
           projectId: zksync-vue-mainnet
           channelID: live
