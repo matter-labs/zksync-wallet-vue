@@ -34,10 +34,11 @@
         </span>
       </div>
     </div>
-    <i-button v-if="continueBtnFunction" block size="lg" variant="secondary" class="_margin-top-2" @click="$emit('continue')">
+    <slot name="custom" />
+    <i-button v-if="!noBtn && continueBtnFunction" block size="lg" variant="secondary" class="_margin-top-2" @click="$emit('continue')">
       {{ continueBtnText ? continueBtnText : "Ok" }}
     </i-button>
-    <i-button v-else block size="lg" variant="secondary" class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
+    <i-button v-else-if="!noBtn" block size="lg" variant="secondary" class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
   </div>
 </template>
 
@@ -66,6 +67,11 @@ export default Vue.extend({
     continueBtnLink: {
       type: String,
       default: "/account",
+      required: false,
+    },
+    noBtn: {
+      type: Boolean,
+      default: false,
       required: false,
     },
     continueBtnFunction: {

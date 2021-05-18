@@ -1,5 +1,5 @@
 <template>
-  <div class="transactionPage">
+  <div class="transactionPage depositPage">
     <allowance-modal />
 
     <!-- Choose token -->
@@ -9,7 +9,7 @@
     </i-modal>
 
     <!-- Loading block -->
-    <loading-block v-if="loading === true" :headline="loading && transactionInfo.type === 'unlock' ? `Unlocking ${chosenToken.symbol}` : 'Deposit'">
+    <loading-block v-if="loading === true" :headline="loading && transactionInfo.type === 'unlock' ? `Approving ${chosenToken.symbol}` : 'Deposit'">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
         Link to the transaction <i class="ri-external-link-line" />
       </a>
@@ -24,18 +24,47 @@
       :continue-btn-text="transactionInfo.continueBtnText"
       :fee="transactionInfo.fee"
       :tx-link="transactionInfo.explorerLink"
-      :headline="transactionInfo.type === 'unlock' ? `${chosenToken.symbol} unlocked` : 'Deposit'"
+      :headline="transactionInfo.type === 'unlock' ? `${chosenToken.symbol} approved` : 'Deposit'"
+      :no-btn="transactionInfo.type === 'unlock' && !unlimitedApproval"
       type="deposit"
       @continue="successBlockContinue"
     >
-      <p v-if="transactionInfo.type === 'deposit'" class="_text-center _margin-top-0">
-        Your deposit transaction has been mined and will be processed after required number of confirmations.
-        <br />Use the transaction link to track the progress.
-      </p>
-      <p v-else-if="transactionInfo.type === 'unlock'" class="_text-center _margin-top-0">
-        <span class="tokenSymbol">{{ chosenToken.symbol }}</span> token has been successfully unlocked and now you can proceed to deposit <br />Use the transaction link to track
-        the progress.
-      </p>
+      <template slot="default">
+        <p v-if="transactionInfo.type === 'deposit'" class="_text-center _margin-top-0">
+          Your deposit transaction has been mined and will be processed after required number of confirmations.
+          <br />Use the transaction link to track the progress.
+        </p>
+        <p v-else-if="transactionInfo.type === 'unlock'" class="_text-center _margin-top-0">
+          <span v-if="!unlimitedApproval">
+            Token was successfully approved for {{ inputtedAmount }} <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
+            .
+          </span>
+          <span v-else>
+            <span class="tokenSymbol">{{ chosenToken.symbol }}</span> was successfully approved.
+          </span>
+          <br />
+          Now you can proceed to deposit.
+        </p>
+      </template>
+      <template v-if="transactionInfo.type === 'unlock' && !unlimitedApproval" slot="custom">
+        <div class="border-line _margin-top-1"></div>
+        <div class="infoBlockItem smaller _margin-top-1">
+          <div class="headline">Amount to deposit:</div>
+          <div class="amount">
+            <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
+            {{ amountBigNumber | formatToken(chosenToken.symbol) }}
+            <span class="secondaryText">
+              <token-price :symbol="chosenToken.symbol" :amount="amountBigNumber.toString()" />
+            </span>
+          </div>
+        </div>
+        <div class="goBackContinueBtns _margin-top-1">
+          <i-button size="lg" variant="secondary" circle @click="successBlockGoBack()">
+            <i class="ri-arrow-left-line"></i>
+          </i-button>
+          <i-button block size="lg" variant="secondary" @click="successBlockContinue()">Proceed to deposit</i-button>
+        </div>
+      </template>
     </success-block>
 
     <!-- Main Block -->
@@ -75,7 +104,7 @@
 
       <p v-if="displayTokenUnlock && !thresholdLoading" class="_text-center _margin-top-05">
         <span v-if="zeroAllowance">
-          You should firstly unlock selected token in order to authorize deposits for
+          You should firstly approve selected token in order to authorize deposits for
           <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
         </span>
         <span v-else>
@@ -167,6 +196,7 @@ export default Vue.extend({
       tokenAllowance: <false | BigNumber>false,
       chosenToken: <ZkInBalance | false>false,
       thresholdLoading: false,
+      unlimitedApproval: false,
       error: "",
     };
   },
@@ -322,10 +352,11 @@ export default Vue.extend({
       if (!this.chosenToken) {
         return;
       }
+      this.unlimitedApproval = unlimited;
       this.loading = true;
       try {
         const wallet = walletData.get().syncWallet;
-        this.tip = `Confirm the transaction in order to unlock ${this.chosenToken.symbol} token`;
+        this.tip = `Confirm the transaction in order to approve ${this.chosenToken.symbol} token`;
         this.transactionInfo.type = "unlock";
         const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited === true ? undefined : this.amountBigNumber);
         const balances = this.$accessor.wallet.getzkBalances;
@@ -350,15 +381,12 @@ export default Vue.extend({
         this.tip = "Waiting for the transaction to be mined...";
         this.transactionInfo.hash = approveDeposits.hash;
         this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + approveDeposits.hash;
-        const receipt = await approveDeposits.wait();
+        await approveDeposits.wait();
         this.transactionInfo.amount = {
           amount: "0",
           token: ETHToken,
         };
-        this.transactionInfo.fee = {
-          amount: receipt.gasUsed.toString(),
-          token: ETHToken,
-        };
+        this.transactionInfo.fee = undefined;
         this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
         this.transactionInfo.continueBtnFunction = true;
         if (unlimited === false) {
@@ -373,7 +401,7 @@ export default Vue.extend({
         if (typeof errorMsg === "string") {
           this.error = errorMsg;
         } else {
-          this.error = "Unlock token error";
+          this.error = "Approve token error";
         }
       }
       this.tip = "";
@@ -412,6 +440,11 @@ export default Vue.extend({
           this.loading = false;
         }
       }
+    },
+    successBlockGoBack() {
+      this.transactionInfo.success = false;
+      this.transactionInfo.hash = "";
+      this.transactionInfo.explorerLink = "";
     },
     setAllowanceToCurrent() {
       if (!this.chosenToken || this.chosenToken.symbol === "ETH" || !this.tokenAllowance || this.zeroAllowance) {

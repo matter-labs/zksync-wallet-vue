@@ -16,8 +16,10 @@
     grid-gap: 10px;
 
     .updateBtn {
-      width: 2.8rem;
-      height: 2.8rem;
+      position: relative;
+      top: 0.2rem;
+      width: 2.2rem;
+      height: 2.2rem;
       border-radius: 50%;
       background-color: transparentize($color: $gray, $amount: 0.9);
       transition: background-color $transition1;
@@ -34,7 +36,7 @@
         justify-content: center;
 
         em, i {
-          font-size: 1.5rem;
+          font-size: 1.2rem;
         }
       }
     }
@@ -73,6 +75,10 @@
       border-bottom: 1px solid;
       cursor: pointer;
       transition: background-color $transition1;
+      @media screen and (max-width: $mobile) {
+        height: 74px !important;
+        padding: 7px 20px !important;
+      }
 
       &:hover {
         background-color: transparentize($color: $gray, $amount: 0.9);

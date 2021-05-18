@@ -9,6 +9,7 @@
           <nuxt />
         </transition>
       </div>
+      <div class="mobileOnly" style="height: 90px"></div>
       <footer-component class="desktopOnly" />
     </div>
   </div>

@@ -54,6 +54,12 @@ input[type="number"] {
   }
 }
 
+.border-line {
+  background-color: transparentize($color: $gray, $amount: 0.8);
+  width: 100%;
+  height: 1px;
+}
+
 .desktopOnly {
   @media screen and (max-width: $mobile) {
     display: none;
@@ -71,6 +77,12 @@ body.inkline {
     &.-secondary {
       &:disabled {
         opacity: 0.3;
+      }
+    }
+    &.-dark {
+      &:disabled {
+        background-color: $violet;
+        opacity: 0.4 !important;
       }
     }
   }

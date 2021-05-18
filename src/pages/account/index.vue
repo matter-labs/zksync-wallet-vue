@@ -4,7 +4,6 @@
       <wallet-address class="clickablePicture" :wallet="walletAddress" @clickPicture="openAccountModal()" />
     </div>
     <balances />
-    <div class="mobileOnly" style="height: 95px"></div>
   </div>
 </template>
 
