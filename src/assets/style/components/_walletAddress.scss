@@ -10,6 +10,18 @@
   border-radius: $borderRadiusMd;
   box-shadow: $shadowInset;
   transition: background-color $transition1, box-shadow $transition1;
+  &.inputWallet {
+    position: relative;
+
+    .errorText {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 3px);
+      width: 100%;
+      color: $red;
+      font-size: 12px;
+    }
+  }
 
   &.clickablePicture {
     .userImg {
@@ -58,7 +70,7 @@
     transition: background-color $transition1, color $transition1;
 
     &:active {
-      transition: .001s;
+      transition: 0.001s;
     }
   }
 }
@@ -77,12 +89,12 @@ body.inkline.-light .defaultLayout {
 
     .copy {
       &:hover {
-        background-color: transparentize($color: $gray, $amount: .85);
+        background-color: transparentize($color: $gray, $amount: 0.85);
       }
 
       &:active {
         color: $green;
-        background-color: transparentize($color: $gray, $amount: .7);
+        background-color: transparentize($color: $gray, $amount: 0.7);
       }
     }
   }
@@ -102,12 +114,12 @@ body.inkline.-dark .defaultLayout {
 
     .copy {
       &:hover {
-        background-color: transparentize($color: $white, $amount: .9);
+        background-color: transparentize($color: $white, $amount: 0.9);
       }
 
       &:active {
         color: $green;
-        background-color: transparentize($color: $white, $amount: .8);
+        background-color: transparentize($color: $white, $amount: 0.8);
       }
     }
   }

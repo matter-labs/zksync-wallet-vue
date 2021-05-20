@@ -5,7 +5,6 @@ header {
   transition: background-color $transition1;
 
   &.loggedInHeader {
-
     @media screen and (max-width: $mobile) {
       position: fixed;
       top: 0;

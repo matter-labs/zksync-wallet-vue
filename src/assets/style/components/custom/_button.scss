@@ -15,7 +15,7 @@
   border-radius: $borderRadiusMd;
   outline: none;
   box-shadow: $inputContainerShadow;
-  transition: .2s ease;
+  transition: 0.2s ease;
 
   &.outline {
     color: $darkerGray;
@@ -33,7 +33,7 @@
     color: $tempLightGray;
     background-color: $lighterGray;
     border-color: $tempLightGray;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, .06);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
   }
 
   i {

@@ -1,10 +1,10 @@
 import { walletData } from "@/plugins/walletData";
-import { DecimalBalance, GweiBalance, ZkInBalance } from "@/plugins/types";
 import { utils as zkUtils } from "zksync";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { IPrototype } from "@inkline/inkline/src/plugin.d";
 
 import { BigNumber, BigNumberish, utils } from "ethers";
+import { DecimalBalance, GweiBalance, ZkInBalance } from "~/types/lib";
 
 /**
  *
@@ -101,6 +101,20 @@ export default {
     }
     search = search.trim().toLowerCase();
     return list.filter((e) => String(searchParam(e)).toLowerCase().includes(search));
+  },
+
+  filterError: (error: Error): string | undefined => {
+    if (error.message) {
+      if (error.message.includes("User denied")) {
+        return "";
+      } else if (error.message.includes("Fee Amount is not packable")) {
+        return "Fee Amount is not packable";
+      } else if (error.message.includes("Transaction Amount is not packable")) {
+        return "Transaction Amount is not packable";
+      } else if (error.message.length < 60) {
+        return error.message;
+      }
+    }
   },
 
   /**

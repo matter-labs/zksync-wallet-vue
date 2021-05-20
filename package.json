@@ -2,6 +2,13 @@
   "name": "zksync-dapp-wallet",
   "author": "Matter Labs",
   "private": true,
+  "main": "nuxt.config.ts",
+  "types": "src/types/index.d.ts",
+  "files": [
+    "src/**/*",
+    "tests/*",
+    "!**/*.map"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
@@ -60,9 +67,11 @@
     "build:stage": "yarn ci && sh cli-process-env.sh 'rinkeby' 'dev' && yarn generate --fail-on-error",
     "generate": "nuxt generate",
     "test": "jest",
-    "format": "prettier --write",
-    "lint-ts": "eslint src/**/*.{ts,js,vue} --fix",
-    "lint-css": "stylelint --fix \"**/*.scss\""
+    "fmt:check": "npx prettier --config .prettierrc.js --ignore-path .gitignore -c src/",
+    "lint-ts:check": "eslint -c tsconfig.eslint.json -c .eslintrc.js --fix-dry-run --ext \".js,.ts,.vue\" src/** ",
+    "lint-style:check": "stylelint --config .stylelintrc  --ignore-path .stylelintrc src/",
+    "lint-ts:fix": "eslint -c tsconfig.eslint.json -c .eslintrc.js --ext \".js,.ts,.vue\" --fix src/",
+    "lint-style:fix": "stylelint --config .stylelintrc --ignore-path .stylelintrc src/"
   },
   "dependencies": {
     "@nuxt/components": "latest",
@@ -73,7 +82,7 @@
     "@nuxtjs/toast": "latest",
     "bnc-onboard": "latest",
     "ethereum-blockies-base64": "^1.0.2",
-    "ethers": "^5.1.4",
+    "ethers": "latest",
     "lottie-web": "^5.7.8",
     "moment-timezone": "^0.5.33",
     "nuxt": "latest",
@@ -85,8 +94,8 @@
     "vue-property-decorator": "^9.1.2",
     "vue-qrcode": "^0.4.0",
     "vue-scrollto": "^2.20.0",
-    "web3": "^1.3.5",
-    "zksync": "^0.10.9"
+    "web3": "latest",
+    "zksync": "latest"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
@@ -104,10 +113,12 @@
     "@nuxtjs/eslint-module": "^3.0.2",
     "@nuxtjs/google-fonts": "^1.3.0",
     "@nuxtjs/style-resources": "latest",
+    "@nuxtjs/stylelint-module": "^4.0.0",
     "@types/jest": "^26.0.23",
+    "@types/stylelint": "^9.10.1",
     "@typescript-eslint/eslint-plugin": "latest",
     "@typescript-eslint/parser": "latest",
-    "babel-eslint": "latest",
+    "babel-eslint": "^10.1.0",
     "consola": "^2.15.3",
     "dotenv": "latest",
     "eslint": "latest",
@@ -132,17 +143,21 @@
     "stylelint-config-recommended": "^5.0.0",
     "stylelint-config-standard": "^22.0.0",
     "stylelint-scss": "^3.19.0",
+    "ts-loader": "^9.2.1",
     "typed-vuex": "0.2.0",
     "typescript": "^4.2.4",
     "vue-class-component": "latest",
     "vue-property-decorator": "latest",
     "vuex": "^3.6.2",
-    "web3-core": "^1.3.5",
+    "web3-core": "latest",
     "webpack": "5.36.2"
   },
   "peerDependencies": {
     "@babel/core": "*",
-    "@babel/runtime": "*"
+    "@babel/runtime": "*",
+    "@portis/web3": "*",
+    "prettier-plugin-svelte": "*",
+    "typed-vuex@": "*"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"

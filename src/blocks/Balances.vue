@@ -88,10 +88,10 @@
 <script lang="ts">
 import Mint from "@/blocks/Mint.vue";
 import utils from "@/plugins/utils";
-import { ZKInDepositTx, ZkInBalance, ZkInDeposits } from "@/plugins/types";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 import { TokenSymbol } from "zksync/build/types";
+import { ZKInDepositTx, ZkInBalance, ZkInDeposits } from "~/types/lib";
 
 type DisplayToken = {
   symbol: string;

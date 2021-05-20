@@ -1,8 +1,8 @@
-import { GweiBalance, ZKInDepositTx, ZkInDeposits } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
 import { Address, ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/build/types";
 import { ETHOperation } from "zksync/build/wallet";
+import { GweiBalance, ZKInDepositTx, ZkInDeposits } from "~/types/lib";
 
 export const state = () => ({
   watchedTransactions: <

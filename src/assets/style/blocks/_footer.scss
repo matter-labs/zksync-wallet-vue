@@ -27,7 +27,6 @@ footer {
     }
 
     & > div {
-
       @media (max-width: $mobile) {
         flex-direction: column-reverse !important;
       }
@@ -66,8 +65,6 @@ footer {
       height: 2.5rem !important;
       padding: 0;
       border-radius: 100%;
-      right: 3rem;
-      bottom: 5rem;
       box-shadow: $tileShadow;
 
       &:hover {

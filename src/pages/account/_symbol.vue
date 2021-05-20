@@ -38,9 +38,9 @@
 
 <script lang="ts">
 import transactions from "@/blocks/Transactions.vue";
-import { ZkInBalance } from "@/plugins/types";
 import Vue from "vue";
 import { TokenSymbol } from "zksync/build/types";
+import { ZkInBalance } from "~/types/lib";
 
 export default Vue.extend({
   components: {

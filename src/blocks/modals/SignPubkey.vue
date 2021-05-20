@@ -27,7 +27,8 @@ import { Route } from "vue-router/types";
 import { walletData } from "@/plugins/walletData";
 import { utils } from "zksync";
 import { saveCPKTx } from "@/plugins/walletActions/cpk";
-import { CPKLocal } from "@/plugins/types";
+import zkUtils from "@/plugins/utils";
+import { CPKLocal } from "~/types/lib";
 
 export default Vue.extend({
   name: "SignPubkey",
@@ -107,9 +108,12 @@ export default Vue.extend({
         this.success = true;
         this.close();
       } catch (error) {
-        if (error.message && !error.message.includes("User denied")) {
-          console.log(error);
-          this.error = error.message;
+        console.log("signActivation error", error);
+        const errorMsg = zkUtils.filterError(error);
+        if (typeof errorMsg === "string") {
+          this.error = errorMsg;
+        } else {
+          this.error = "Signing error";
         }
       }
       this.loading = false;

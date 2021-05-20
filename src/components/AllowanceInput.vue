@@ -16,10 +16,10 @@
 </template>
 
 <script lang="ts">
-import { DecimalBalance, GweiBalance, ZkInToken } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
 import Vue, { PropOptions } from "vue";
+import { DecimalBalance, GweiBalance, ZkInToken } from "~/types/lib";
 
 export default Vue.extend({
   props: {

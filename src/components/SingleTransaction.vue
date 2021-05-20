@@ -34,12 +34,12 @@
 <script lang="ts">
 import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { ZkInTx } from "@/types/types";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 
 import moment from "moment-timezone";
 import Vue, { PropOptions } from "vue";
+import { ZkInTx } from "~/types/lib";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -131,12 +131,13 @@ export default Vue.extend({
               modal: false,
             };
           } else {
-            if (this.isSameAddress(this.singleTransaction.tx.to || "")) {
-            return {
-              type: "Received from:",
-              showAddress: true,
-              modal: false,
-            };
+            if (this.singleTransaction.tx.type === "Transfer") {
+              if (this.isSameAddress(this.singleTransaction.tx.to || "")) {
+                return {
+                  type: "Received from:",
+                  showAddress: true,
+                  modal: false,
+                };
               }
             }
             return {

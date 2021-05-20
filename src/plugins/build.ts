@@ -1,6 +1,6 @@
-import { networkEthId } from "@/plugins/types";
 import { Network } from "zksync/build/types";
 import { name, version } from "../../package.json";
+import { networkEthId } from "~/types/lib";
 
 const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
   { name: "rinkeby", id: 4 },
@@ -24,9 +24,26 @@ export const ETHER_PREFIX_MINUS: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" 
 
 export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY.find((value: networkEthId): boolean => value?.name === (ETHER_NETWORK_NAME as string))?.id;
 
-export const APP_ZKSYNC_API_LINK = `${ETHER_PREFIX_MINUS}api.zksync.io`;export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
+/**
+ * The right way of strict-typing for the web3provider
+ *  — thanks to the [global.window] with type NodeJS.Global operation with the typed window is generally possible
+ *  — provider [window.ethereum] should be declared separatelly using shims (index.d.ts)
+ *    @see /src/types/index.d.ts
+ * @author: Serge B. | Matter Labs
+ */
+export const ethWindow: Window = global.window;
+
+export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
+export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
 export const APP_ZK_SCAN = `https://${ETHER_PREFIX_DOT}zkscan.io`;
 export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}/explorer`;
 export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
 
-export const APP_ZK_ALTERNATIVE_WITHDRAWAL = `https://withdraw${ETHER_PRODUCTION ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
+/**
+ * Onboard-only params
+ */
+export const ONBOARD_FORCED_EXIT_LINK: string | undefined = `https://withdraw${ETHER_PREFIX_MINUS}${ETHER_PRODUCTION ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
+export const ONBOARD_FORTMATIC_KEY: string | undefined = process.env.APP_FORTMATIC;
+export const ONBOARD_PORTIS_KEY: string | undefined = process.env.APP_PORTIS;
+export const ONBOARD_INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;
+export const ONBOARD_RPC_URL: string | undefined = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;

@@ -35,7 +35,8 @@
         align-items: center;
         justify-content: center;
 
-        em, i {
+        em,
+        i {
           font-size: 1.2rem;
         }
       }
@@ -75,13 +76,15 @@
       border-bottom: 1px solid;
       cursor: pointer;
       transition: background-color $transition1;
-      @media screen and (max-width: $mobile) {
-        height: 74px !important;
-        padding: 7px 20px !important;
+      @media (max-width: $mobile) {
+        display: flex;
+        flex-direction: row;
+        padding: 5px 10px !important;
+        height: 60px !important;
       }
 
       &:hover {
-        background-color: transparentize($color: $gray, $amount: .9);
+        background-color: transparentize($color: $gray, $amount: 0.9);
       }
 
       .tokenSymbol {
@@ -125,7 +128,6 @@ body.inkline {
     }
     .searchContainer {
       .updateBtn {
-
       }
     }
   }

@@ -13,12 +13,12 @@
 </template>
 
 <script lang="ts">
-import headerComponent from "@/blocks/IndexHeader.vue";
 import footerComponent from "@/blocks/Footer.vue";
+import headerComponent from "@/blocks/IndexHeader.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
-import utils from "@/plugins/utils";
 
 import { GIT_REVISION_SHORT } from "@/plugins/build";
+import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({

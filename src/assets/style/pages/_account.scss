@@ -61,7 +61,7 @@
           transition: background-color $transition1, color $transition1;
 
           &:hover {
-            background-color: transparentize($color: $gray, $amount: .9);
+            background-color: transparentize($color: $gray, $amount: 0.9);
           }
 
           .tokenSymbol {
@@ -128,14 +128,15 @@
       }
     }
 
-    @media screen and (max-width: $mobile) {
+    @media (max-width: $mobile) {
       height: max-content;
 
       .balances {
         .balancesList .balanceItem {
-          display: block;
+          display: flex;
           height: max-content;
           padding: 10px 20px;
+          flex-direction: row;
 
           .tokenSymbol {
             text-align: center;
@@ -146,7 +147,8 @@
 
             .rowItem {
               display: flex;
-              flex-direction: column;
+              flex-direction: row;
+              justify-content: space-around;
               align-items: center;
 
               &:nth-child(2) {
@@ -156,11 +158,7 @@
 
             .total {
               text-align: center;
-                margin-bottom: 0.4rem;
-
-                /* .balancePrice {
-                display: block;
-                } */
+              margin-bottom: 0.4rem;
             }
           }
         }

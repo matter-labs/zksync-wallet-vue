@@ -21,9 +21,9 @@
 <script lang="ts">
 import SingleTransaction from "@/components/SingleTransaction.vue";
 import AccountActivationModal from "@/blocks/modals/AccountActivation.vue";
-import { ZkInTx } from "@/plugins/types";
 import { Address } from "zksync/build/types";
 import Vue, { PropOptions } from "vue";
+import { ZkInTx } from "~/types/lib";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({

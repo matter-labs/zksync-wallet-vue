@@ -1,6 +1,5 @@
-import { APP_ZKSYNC_API_LINK, ZK_NETWORK } from "@/plugins/build";
+import { ZK_API_BASE, ZK_NETWORK } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { BalanceToReturn, Tokens, ZkInBalance, ZkInFeesObj, ZkInTx, iWalletData } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
@@ -13,15 +12,17 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
 import { Wallet, closestPackableTransactionFee, getDefaultProvider, Provider } from "zksync";
-import { Address, Fee, TokenSymbol } from "zksync/build/types";
-import {AccountState, Address, Fee, TokenSymbol} from "zksync/build/types";
-import { ExternalProvider } from "@ethersproject/providers";
+import { AccountState, Address, Fee, Network, TokenSymbol } from "zksync/build/types";
+import { BalanceToReturn, Tokens, ZkInBalance, ZkInFeesObj, ZkInTx, iWalletData } from "~/types/lib";
 
 interface feesInterface {
   [symbol: string]: {
     [feeSymbol: string]: {
       [type: string]: {
-        [address: string]: ZkInFeesObj;
+        [address: string]: {
+          lastUpdated: number;
+          value: ZkInFeesObj;
+        };
       };
     };
   };
@@ -100,16 +101,20 @@ export const mutations = mutationTree(state, {
       state.fees[symbol][feeSymbol][type] = {};
     }
 
-    state.fees[symbol][feeSymbol][type][address] = obj;
+    state.fees[symbol][feeSymbol][type][address] = {
+      lastUpdated: new Date().getTime(),
+      value: obj,
+    };
   },
   /**
    * @todo review and drop (?)
    *
    * @param state
-   * @param {any} status
-   * @param {any} tokenSymbol
+   * @param status
+   * @param tokenSymbol
    */
-  setZkBalanceStatus(state, { status, tokenSymbol }) {
+  // eslint-disable-next-line no-use-before-define
+  setZkBalanceStatus(state: WalletModuleState, { status, tokenSymbol }) {
     for (const item of state.zkTokens.list) {
       if (item.symbol === tokenSymbol) {
         item.status = status;
@@ -262,7 +267,7 @@ export const actions = actionTree(
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
-          id: loadedTokens.tokens[tokenSymbol].id,
+          id: loadedTokens?.tokens[tokenSymbol]?.id,
           symbol: tokenSymbol,
           status: committedBalance !== verifiedBalance ? "Pending" : "Verified",
           balance: committedBalance,
@@ -304,7 +309,7 @@ export const actions = actionTree(
       const loadInitialBalancesPromises: Promise<ZkInBalance | undefined>[] = Object.keys(loadedTokens.tokens).map(async (key: number | string): Promise<
         undefined | ZkInBalance
       > => {
-        const currentToken = loadedTokens.tokens[key];
+        const currentToken: any = loadedTokens.tokens[key];
         const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
         try {
           this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
@@ -312,7 +317,7 @@ export const actions = actionTree(
           this.commit("tokens/addRestrictedToken", currentToken.symbol);
         }
         return {
-          id: currentToken.id,
+          id: currentToken?.id,
           address: currentToken.address,
           balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
           rawBalance: balance,
@@ -345,7 +350,7 @@ export const actions = actionTree(
      * @param force
      * @param offset
      * @param options
-     * @return {Promise<any>}
+     * @return {Promise}
      */
     async requestTransactionsHistory({ commit, getters }, { force = false, offset = 0 }: { force?: boolean; offset?: number }): Promise<Array<ZkInTx | undefined>> {
       clearTimeout(getTransactionHistoryAgain);
@@ -359,9 +364,7 @@ export const actions = actionTree(
       }
       try {
         const syncWallet: Wallet | undefined = walletData.get().syncWallet;
-        const fetchTransactionHistory: Array<ZkInTx | undefined> = await this.$http.$get(
-          `https://${APP_ZKSYNC_API_LINK}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`,
-        );
+        const fetchTransactionHistory: Array<ZkInTx | undefined> = await this.$http.$get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
         if (savedAddress !== this.app.$accessor.account.address) {
           return localList.list;
         }
@@ -388,9 +391,10 @@ export const actions = actionTree(
         Object.prototype.hasOwnProperty.call(savedFees, symbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol], feeSymbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol], type) &&
-        Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol][type], address)
+        Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol][type], address) &&
+        savedFees[symbol][feeSymbol][type][address].lastUpdated > new Date().getTime() - 30000
       ) {
-        return savedFees[symbol][feeSymbol][type][address];
+        return savedFees[symbol][feeSymbol][type][address].value;
       }
       const syncProvider: Provider | undefined = walletData.get().syncProvider;
       const syncWallet: Wallet | undefined = walletData.get().syncWallet;
@@ -436,14 +440,13 @@ export const actions = actionTree(
       commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
       return feesObj;
     },
-    async requestWithdrawalProcessingTime({ getters }): Promise<{ normal: number; fast: number } | unknown> {
+    async requestWithdrawalProcessingTime({ getters, commit }): Promise<{ normal: number; fast: number } | unknown> {
       if (getters.getWithdrawalProcessingTime) {
         return getters.getWithdrawalProcessingTime;
       }
-      const withdrawTime = await this.$http.$get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/withdrawal_processing_time`);
-      console.log(withdrawTime);
-      //      commit("setWithdrawalProcessingTime", withdrawTime);
-      return withdrawTime;
+      const withdrawTime: any = await this.$http.$get(`https://${ZK_API_BASE}/api/v0.1/withdrawal_processing_time`);
+      commit("setWithdrawalProcessingTime", withdrawTime?.data);
+      return withdrawTime?.data;
     },
     async checkLockedState({ commit }): Promise<void> {
       const syncWallet = walletData.get().syncWallet;
@@ -461,8 +464,8 @@ export const actions = actionTree(
      */
     async walletRefresh({ dispatch, state }, firstSelect: boolean = true): Promise<boolean> {
       try {
-        this.app.$accessor.account.setLoadingHint("Follow the instructions in your wallet");
         let walletCheck = false;
+        this.app.$accessor.account.setLoadingHint("Processing...");
         if (firstSelect) {
           walletCheck = !!(await state.onboard?.walletSelect());
           if (!walletCheck) {
@@ -492,18 +495,13 @@ export const actions = actionTree(
         }
 
         const web3Provider: Web3Provider = new ethers.providers.Web3Provider(currentProvider as ExternalProvider);
-        const ethWallet: ethers.providers.JsonRpcSigner = web3Provider.getSigner();
-        const syncProvider: Provider | undefined = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
-
+        const syncProvider: Provider | undefined = await getDefaultProvider(ZK_NETWORK as Network, "HTTP");
 
         const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
-        const syncProvider: ProviderProvider | undefined = getDefaultProvider(ZK_NETWORK as Network, "HTTP");
-
-        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
-        const ethWallet: ethers.providers.JsonRpcSigner = web3Provider.getSigner();
+        //        const ethWallet: ethers.providers.JsonRpcSigner = web3Provider.getSigner();
         const syncWallet: Wallet | undefined = await Wallet.fromEthSigner(ethWallet, syncProvider);
 
-        this.app.$accessor.account.setLoadingHint("Getting wallet information");
+        this.app.$accessor.account.setLoadingHint("Getting wallet information...");
 
         /**
          * Watcher re-configured

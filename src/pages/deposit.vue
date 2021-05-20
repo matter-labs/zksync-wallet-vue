@@ -136,7 +136,6 @@ import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 
-import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
@@ -144,6 +143,7 @@ import { BigNumber, Contract } from "ethers";
 import Vue from "vue";
 import { closestPackableTransactionAmount } from "zksync";
 import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
+import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "~/types/lib";
 
 let thresholdTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
@@ -311,18 +311,9 @@ export default Vue.extend({
       try {
         await this.deposit();
       } catch (error) {
-        if (error.message) {
-          if (error.message.includes("User denied")) {
-            this.error = "";
-          } else if (error.message.includes("Fee Amount is not packable")) {
-            this.error = "Fee Amount is not packable";
-          } else if (error.message.includes("Transaction Amount is not packable")) {
-            this.error = "Transaction Amount is not packable";
-          } else if (String(error.message).length < 60) {
-            this.error = error.message;
-          } else {
-            this.error = "Transaction error";
-          }
+        const errorMsg = utils.filterError(error);
+        if (typeof errorMsg === "string") {
+          this.error = errorMsg;
         } else {
           this.error = "Transaction error";
         }
@@ -367,7 +358,6 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         this.tip = `Confirm the transaction in order to approve ${this.chosenToken.symbol} token`;
         this.transactionInfo.type = "unlock";
-        /* const approveAmount = this.inputtedAllowance ? utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance) : undefined; */
         const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
         const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken: ZkInBalance | undefined;
@@ -439,18 +429,9 @@ export default Vue.extend({
           try {
             await this.deposit();
           } catch (error) {
-            if (error.message) {
-              if (error.message.includes("User denied")) {
-                this.error = "";
-              } else if (error.message.includes("Fee Amount is not packable")) {
-                this.error = "Fee Amount is not packable";
-              } else if (error.message.includes("Transaction Amount is not packable")) {
-                this.error = "Transaction Amount is not packable";
-              } else if (error.message && error.message.toString().length < 60) {
-                this.error = error.message;
-              } else {
-                this.error = "Transaction error";
-              }
+            const errorMsg = utils.filterError(error);
+            if (typeof errorMsg === "string") {
+              this.error = errorMsg;
             } else {
               this.error = "Transaction error";
             }

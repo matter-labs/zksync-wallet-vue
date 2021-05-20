@@ -31,14 +31,12 @@ input[type="number"] {
 }
 
 .mobileOnly {
-
   @media screen and (min-width: $mobile) {
     display: none !important;
   }
 }
 
 .desktopOnly {
-
   @media screen and (max-width: $mobile+1) {
     display: none !important;
   }
@@ -63,7 +61,6 @@ input[type="number"] {
 }
 
 .desktopOnly {
-
   @media screen and (max-width: $mobile) {
     display: none;
   }
@@ -77,11 +74,13 @@ body.inkline {
       text-decoration: none !important;
       border-radius: $borderRadiusSm;
     }
+
     &.-secondary {
       &:disabled {
         opacity: 0.3;
       }
     }
+
     &.-dark {
       &:disabled {
         background-color: $violet;
@@ -102,7 +101,7 @@ body.inkline {
     .button {
       &.-link {
         &:hover {
-          background-color: transparentize($color: $gray, $amount: .8) !important;
+          background-color: transparentize($color: $gray, $amount: 0.8) !important;
         }
       }
     }
@@ -141,7 +140,7 @@ button.-lg.-circle {
   border: none !important;
   border-radius: $borderRadius !important;
   box-shadow: $popoverShadow;
-  opacity: .975;
+  opacity: 0.975;
 
   &.-dark {
     background-color: $darkViolet !important;
@@ -317,17 +316,19 @@ button.-lg.-circle {
     border-radius: $borderRadius;
     cursor: pointer;
     transition: background-color $transition1;
+
     &.big {
       i {
         font-size: 20px;
       }
+
       span {
         font-size: 18px;
       }
     }
 
     &:hover {
-        background-color: transparentize($color: $gray, $amount: .8);
+      background-color: transparentize($color: $gray, $amount: 0.8);
     }
 
     i {
@@ -336,7 +337,7 @@ button.-lg.-circle {
     }
 
     span {
-        font-size: $fontSizeRegular;
+      font-size: $fontSizeRegular;
       text-align: left;
     }
   }
@@ -493,7 +494,7 @@ button.-lg.-circle {
 }
 
 ._margin-top-05 {
-  margin-top: .5em;
+  margin-top: 0.5em;
 }
 
 .grid-cols-2 {

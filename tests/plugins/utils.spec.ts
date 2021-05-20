@@ -4,7 +4,7 @@ describe("getFormattedTotalPrice", () => {
   test("works", () => {
     expect(utils.getFormattedTotalPrice(1, 1)).toBe("~$1.00");
     expect(utils.getFormattedTotalPrice(1, 0)).toBe("$0.00");
-    expect(utils.getFormattedTotalPrice(1, 0.0000001)).toBe("<$0.01");
+    expect(utils.getFormattedTotalPrice(1,.0000001)).toBe("<$0.01");
   });
 });
 

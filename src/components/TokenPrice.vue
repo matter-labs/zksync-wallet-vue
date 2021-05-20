@@ -5,9 +5,9 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 
-import { GweiBalance } from "@/plugins/types";
 import utils from "@/plugins/utils";
 import { TokenSymbol } from "zksync/build/types";
+import { GweiBalance } from "~/types/lib";
 
 export default Vue.extend({
   props: {

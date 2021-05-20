@@ -66,10 +66,10 @@
 
 <script lang="ts">
 import utils from "@/plugins/utils";
-import { ZkInContact } from "@/plugins/types";
 import { Address } from "zksync/build/types";
 import userImg from "@/components/userImg.vue";
 import Vue, { PropOptions } from "vue";
+import { ZkInContact } from "~/types/lib";
 
 export default Vue.extend({
   components: {

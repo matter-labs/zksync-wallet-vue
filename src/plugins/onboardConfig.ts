@@ -1,49 +1,50 @@
-import { APP_ZK_ALTERNATIVE_WITHDRAWAL, CURRENT_APP_NAME, ETHER_NETWORK_ID, ETHER_NETWORK_NAME } from "@/plugins/build";
-import web3Wallet from "@/plugins/web3";
 import { WalletModuleState } from "@/store/wallet";
+import web3Wallet from "@/plugins/web3";
 import { Initialization, Subscriptions, Wallet as OnBoardingWallet, WalletInitOptions, WalletModule, WalletSelectModuleOptions } from "bnc-onboard/dist/src/interfaces";
 import { Store } from "vuex";
 import Web3 from "web3";
+import {
+  ONBOARD_RPC_URL,
+  ONBOARD_FORCED_EXIT_LINK,
+  CURRENT_APP_NAME,
+  ethWindow,
+  ONBOARD_FORTMATIC_KEY,
+  ONBOARD_PORTIS_KEY,
+  ETHER_NETWORK_NAME,
+  ONBOARD_INFURA_KEY,
+  ETHER_NETWORK_ID,
+} from "~/plugins/build";
 
-// @ts-ignore
-export const { ethereum }: Window = window;
-
-const APP_NAME = `${CURRENT_APP_NAME}`;
-const FORTMATIC_KEY = process.env.APP_FORTMATIC;
-const INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;
-const RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
 const initializedWallets: WalletSelectModuleOptions = {
   wallets: <WalletModule[] | WalletInitOptions[]>[
-    { walletName: "imToken", rpcUrl: RPC_URL, preferred: true },
+    { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
     {
       walletName: "walletConnect",
       networkId: ETHER_NETWORK_ID,
-      infuraKey: INFURA_KEY,
+      infuraKey: ONBOARD_INFURA_KEY,
       enableLogging: true,
       preferred: true,
     },
-    // FIXME: enable again
     { walletName: "authereum" },
     { walletName: "coinbase", preferred: true },
-    { walletName: "trust", preferred: true, rpcUrl: RPC_URL },
-    { walletName: "dapper", preferred: false },
+    { walletName: "trust", preferred: true, rpcUrl: ONBOARD_RPC_URL },
     {
       walletName: "ledger",
-      rpcUrl: RPC_URL,
+      rpcUrl: ONBOARD_RPC_URL,
     },
     {
       walletName: "lattice",
-      rpcUrl: RPC_URL,
-      appName: APP_NAME,
+      rpcUrl: ONBOARD_RPC_URL,
+      appName: CURRENT_APP_NAME,
     },
     {
       walletName: "fortmatic",
-      apiKey: FORTMATIC_KEY,
+      apiKey: ONBOARD_FORTMATIC_KEY,
       preferred: true,
     },
     {
       walletName: "portis",
-      apiKey: process.env.APP_PORTIS,
+      apiKey: ONBOARD_PORTIS_KEY,
       preferred: true,
       label: "Portis",
     },
@@ -52,15 +53,15 @@ const initializedWallets: WalletSelectModuleOptions = {
     { walletName: "torus" },
     { walletName: "status" },
     { walletName: "meetone" },
-    { walletName: "mykey", rpcUrl: RPC_URL },
-    { walletName: "huobiwallet", rpcUrl: RPC_URL },
+    { walletName: "mykey", rpcUrl: ONBOARD_RPC_URL },
+    { walletName: "huobiwallet", rpcUrl: ONBOARD_RPC_URL },
     { walletName: "hyperpay" },
-    { walletName: "wallet.io", rpcUrl: RPC_URL },
+    { walletName: "wallet.io", rpcUrl: ONBOARD_RPC_URL },
     { walletName: "atoken" },
   ],
 };
 
-if (ethereum) {
+if (ethWindow?.ethereum) {
   initializedWallets.wallets?.unshift({ walletName: "metamask", preferred: true });
 }
 
@@ -89,7 +90,7 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
     },
     walletSelect: <WalletSelectModuleOptions>{
       description: "Can't find your wallet?",
-      explanation: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${APP_ZK_ALTERNATIVE_WITHDRAWAL}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
+      explanation: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${ONBOARD_FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
       heading: "Can't find your wallet?",
       wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
     },

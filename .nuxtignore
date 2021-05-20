@@ -1,1 +1,4 @@
-tests/*
+cypress
+_old
+tsconfig.json
+cypress.json

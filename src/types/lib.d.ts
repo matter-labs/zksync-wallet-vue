@@ -1,4 +1,3 @@
-import { accessorType } from "@/store";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
 import {
@@ -12,7 +11,8 @@ import {
   TokenSymbol,
   TransactionReceipt,
 } from "zksync/build/types";
-import { Provider, Wallet } from "zksync";
+import { Provider, Wallet } from "zksync/build";
+import { accessorType } from "~/store";
 
 export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";
 

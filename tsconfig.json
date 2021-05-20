@@ -1,9 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es2018",
     "module": "esnext",
-    "moduleResolution": "node",
     "resolveJsonModule": true,
+    "checkJs": false,
+    "moduleResolution": "Node",
     "lib": [
       "esnext",
       "esnext.asynciterable",
@@ -12,13 +14,11 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "allowJs": true,
-    "checkJs": true,
     "sourceMap": true,
-    "rootDir": "src/",
     "strict": true,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "noEmit": true,
-    "baseUrl": "src/",
+    "baseUrl": "./src",
     "paths": {
       "~/*": [
         "./*"
@@ -28,18 +28,25 @@
       ]
     },
     "types": [
+      "@nuxt/types",
       "@types/node",
-      "@nuxt/vue-app",
-      "nuxt-typed-vuex",
-      "typed-vuex",
+      "@nuxt/types",
       "@nuxtjs/sentry",
       "@nuxt/http",
       "@nuxtjs/toast",
       "web3-core/types",
-      "@inkline/inkline/types"
+      "@inkline/inkline/types",
+      "typed-vuex"
     ]
   },
   "exclude": [
+    "node_modules/*",
+    "dist/*",
+    ".yarn/*",
+    "public/*",
+    ".nuxt/*",
+    ".github/*",
+    "environments/*",
     "tests/*"
   ]
 }

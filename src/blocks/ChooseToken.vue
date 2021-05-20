@@ -6,7 +6,7 @@
     <template v-else>
       <div class="searchContainer">
         <i-input ref="tokenSymbolInput" v-model="search" :placeholder="`Filter balances in ${tokensType}`" maxlength="10">
-        <i slot="prefix" class="ri-search-line" />
+          <i slot="prefix" class="ri-search-line" />
         </i-input>
         <div class="updateBtn" :class="{ disabled: spinnerLoading }" @click="getTokenList(true)">
           <i-tooltip placement="left">
@@ -42,9 +42,8 @@
 <script lang="ts">
 import NoTokenFound from "@/blocks/modals/NoTokenFound.vue";
 import utils from "@/plugins/utils";
-import { ZkInBalance } from "@/plugins/types";
-
 import Vue, { PropOptions } from "vue";
+import { ZkInBalance } from "~/types/lib";
 
 type TokensType = "L1" | "L2";
 

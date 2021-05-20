@@ -5,4 +5,6 @@ module.exports = {
   jsxSingleQuote: false,
   printWidth: 180,
   tabWidth: 2,
+  vueIndentScriptAndStyle: false,
+  endOfLine: "auto",
 };

@@ -1,5 +1,4 @@
-// noinspection JSUnresolvedFunction
-
+// @ts-nocheck
 import { ethereum } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 

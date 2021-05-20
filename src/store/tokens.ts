@@ -1,8 +1,10 @@
-import { APP_ZKSYNC_API_LINK } from "@/plugins/build";
-import { BalanceToReturn, TokenInfo, Tokens, ZkInTokenPrices } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
+import { BigNumber, BigNumberish } from "ethers";
+import { Wallet } from "zksync/build";
+import { Address, TokenSymbol } from "zksync/build/types";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { TokenSymbol } from "zksync/build/types";
+import { BalanceToReturn, TokenInfo, Tokens, ZkInTokenPrices } from "~/types/lib";
+import { ZK_API_BASE } from "~/plugins/build";
 
 /**
  * Operations with the tokens (assets)
@@ -64,7 +66,12 @@ export const getters = getterTree(state, {
     return state.restrictedTokens;
   },
   getAvailableTokens(state): Tokens {
-    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
+    // @ts-ignore
+    return Object.entries(
+      Object.entries(state.allTokens).filter((e) => {
+        return !state.restrictedTokens.includes(e[1].symbol);
+      }),
+    );
   },
   getTokenPrices(state): ZkInTokenPrices {
     return state.tokenPrices;
@@ -96,14 +103,14 @@ export const actions = actionTree(
       return getters.getAllTokens;
     },
     async loadAcceptableTokens({ commit }): Promise<void> {
-      const acceptableTokens: TokenInfo[] = (await this.app.$http.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
+      const acceptableTokens: TokenInfo[] = (await this.app.$http.get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`)).data;
       commit("storeAcceptableTokens", acceptableTokens);
     },
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
       const accountState = walletData.get().accountState;
 
       const tokens: Tokens = await this.app.$accessor.tokens.loadAllTokens();
-      const zkBalance = accountState?.committed.balances;
+      const zkBalance: { [p: string]: BigNumberish } | undefined = accountState?.committed.balances;
       if (!zkBalance) {
         return {
           tokens,
@@ -111,12 +118,12 @@ export const actions = actionTree(
         };
       }
       const zkBalances: BalanceToReturn[] = Object.keys(zkBalance).map((key: TokenSymbol) => {
-        const syncWallet = walletData.get().syncWallet;
+        const syncWallet: Wallet | undefined = walletData.get().syncWallet;
         return {
-          address: tokens[key].address,
-          balance: syncWallet!.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
-          symbol: tokens[key].symbol,
-          id: tokens[key].id,
+          address: <Address>tokens[key].address,
+          balance: <BigNumber | string>syncWallet!.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
+          symbol: <TokenSymbol>tokens[key].symbol,
+          id: <number>tokens[key].id,
         } as BalanceToReturn;
       });
 

@@ -1,10 +1,10 @@
-import { GweiBalance } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
 import { ETHOperation, submitSignedTransactionsBatch, Transaction, Wallet } from "zksync/build/wallet";
 import { Address, SignedTransaction, TokenSymbol, TotalFee, TxEthSignature } from "zksync/build/types";
 import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 import { BatchBuilder } from "zksync/build/batch-builder";
+import { GweiBalance } from "~/types/lib";
 
 /**
  * Make zkSync transaction
@@ -63,7 +63,7 @@ export const transaction = async (
   for (const tx of transactions) {
     store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r) => {});
   }
-  return transactions;
+  return labelTransactions(transactions);
 };
 
 interface WithdrawParams {
@@ -90,7 +90,16 @@ interface WithdrawParams {
  * @param store
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
-export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw, fee, accountActivationFee, store }: WithdrawParams): Promise<Transaction[]> => {
+export const withdraw = async ({
+  address,
+  token,
+  feeToken,
+  amount,
+  fastWithdraw,
+  fee,
+  accountActivationFee,
+  store,
+}: WithdrawParams): Promise<{ cpkTransaction: null | Transaction; feeTransaction: Transaction | null; transaction: Transaction | null }> => {
   const syncWallet: Wallet | undefined = walletData.get().syncWallet;
   const nonce: number = await syncWallet!.getNonce("committed");
   const batchBuilder: BatchBuilder = syncWallet!.batchBuilder(nonce);
@@ -129,7 +138,39 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   for (const tx of transactions) {
     store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r) => {});
   }
-  return transactions;
+  return labelTransactions(transactions);
+};
+
+export const labelTransactions = (transactions: Transaction[]) => {
+  let transaction: Transaction | null = null;
+  let feeTransaction: Transaction | null = null;
+  let cpkTransaction: Transaction | null = null;
+  for (const tx of transactions) {
+    if (tx.txData.tx.type === "ChangePubKey") {
+      cpkTransaction = tx;
+      continue;
+    }
+    if (tx.txData.tx.fee === "0") {
+      transaction = tx;
+    } else if (tx.txData.tx.amount === "0") {
+      feeTransaction = tx;
+    }
+  }
+  if (!transaction) {
+    for (const tx of transactions) {
+      if (tx.txData.tx.type !== "ChangePubKey") {
+        transaction = tx;
+      }
+    }
+  }
+  if (!feeTransaction) {
+    feeTransaction = transaction;
+  }
+  return {
+    transaction,
+    feeTransaction,
+    cpkTransaction,
+  };
 };
 
 /**

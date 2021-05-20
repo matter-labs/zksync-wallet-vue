@@ -1,11 +1,13 @@
-import { NuxtConfig } from "@nuxt/types";
+import { Configuration, NuxtConfig } from "@nuxt/types";
+import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
+
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
-const env = process.env.APP_ENV ?? "dev";
-
-const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
 const srcDir: string = "src/";
+
+const env = process.env.APP_ENV ?? "dev";
+const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
 const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
 const pageImg: string = "/Cover.jpg";
 
@@ -16,8 +18,8 @@ const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation,
 crypto payments, zkWallet, cryptowallet`;
 
 const config: NuxtConfig = {
+  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
-  components: true,
   ssr: false,
   target: "static",
   srcDir: `${srcDir}`,
@@ -27,8 +29,7 @@ const config: NuxtConfig = {
       devtools: !isProduction,
     },
   },
-  // @ts-ignore
-  env: {
+  env: <NuxtOptionsEnv>{
     ...process.env,
   },
 
@@ -114,9 +115,9 @@ const config: NuxtConfig = {
         content: pageTitle,
       },
 
-      /* { "http-equiv": "pragma", content: "no-cache", property: "pragma" },
-       { "http-equiv": "cache-control", property: "cache-control", content: "no-cache , no-store, must-revalidate" },
-       { "http-equiv": "expires", content: "0", property: "expires" }, */
+      { "http-equiv": "pragma", content: "no-cache", property: "pragma" },
+      { "http-equiv": "cache-control", property: "cache-control", content: "no-cache , no-store, must-revalidate" },
+      { "http-equiv": "expires", content: "0", property: "expires" },
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
@@ -140,6 +141,14 @@ const config: NuxtConfig = {
     color: "#121429",
     continuous: true,
   },
+  loaders: {
+    ts: {
+      silent: true,
+    },
+    tsx: {
+      silent: true,
+    },
+  },
   /*
    ** Global CSS
    */
@@ -161,10 +170,13 @@ const config: NuxtConfig = {
     [
       "@nuxt/typescript-build",
       {
-        typeCheck: {
-          eslint: {
-            config: `.eslintrc.json`,
-            files: "eslint ./src/**/*.{ts,js,vue}",
+        typescript: {
+          typeCheck: {
+            async: true,
+            eslint: {
+              config: ".eslintrc.js",
+              files: "**/*.{ts,js,vue}",
+            },
           },
         },
       },
@@ -226,7 +238,7 @@ const config: NuxtConfig = {
    */
   build: {
     ssr: false,
-    extend() {
+    extend: (config: Configuration) => {
       config.node = {
         fs: "empty",
       };

@@ -9,8 +9,8 @@
 
 <script lang="ts">
 import socialIcons from "@/plugins/socialIcons";
-import { singleIcon } from "@/plugins/types";
 import Vue, { PropOptions } from "vue";
+import { singleIcon } from "~/types/lib";
 
 type Location = "header" | "footer";
 

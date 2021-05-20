@@ -121,8 +121,8 @@ import walletAddress from "@/components/walletAddress.vue";
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { Address } from "zksync/build/types";
-import { ZkInContact } from "~/plugins/types";
 import utils from "~/plugins/utils";
+import { ZkInContact } from "~/types/lib";
 
 export default Vue.extend({
   components: {

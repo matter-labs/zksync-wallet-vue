@@ -4,10 +4,16 @@
     flex-direction: column;
     height: $minRouteHeightWithExtra !important;
     min-height: 350px;
+    justify-content: center;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 15px;
+    text-align: center;
   }
 
   .transactionsListContainer {
     height: 100%;
+    max-height: 60vh;
     overflow: auto;
     border-radius: $borderRadiusSm !important;
     box-shadow: $shadowInset;
@@ -39,7 +45,7 @@
       border-bottom: 1px solid;
 
       &:hover {
-        background-color: transparentize($color: $gray, $amount: .9);
+        background-color: transparentize($color: $gray, $amount: 0.9);
       }
 
       @media screen and (max-width: 768px) {
@@ -151,7 +157,7 @@
               }
 
               &:active {
-                transition-duration: .001s;
+                transition-duration: 0.001s;
                 filter: brightness(90%);
               }
             }

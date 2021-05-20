@@ -15,16 +15,19 @@
         type="text"
         @keyup.enter="$emit('enter')"
       />
+      <transition name="fadeFast">
+        <div v-if="error" class="errorText">{{ error }}</div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import userImg from "@/components/userImg.vue";
-import { DecimalBalance } from "@/plugins/types";
 
 import utils from "@/plugins/utils";
 import Vue, { PropOptions } from "vue";
+import { DecimalBalance } from "~/types/lib";
 
 export default Vue.extend({
   components: {

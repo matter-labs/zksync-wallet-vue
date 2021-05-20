@@ -1,5 +1,8 @@
 <template>
   <div class="walletPage">
+    <div class="accountBlock tileBlock">
+      <wallet-address class="clickablePicture" :wallet="walletAddress" @clickPicture="openAccountModal()" />
+    </div>
     <balances />
   </div>
 </template>
@@ -11,6 +14,21 @@ import balances from "@/blocks/Balances.vue";
 export default Vue.extend({
   components: {
     balances,
+  },
+  data() {
+    return {
+      walletInfoModal: false,
+    };
+  },
+  computed: {
+    walletAddress() {
+      return this.$accessor.account.address;
+    },
+  },
+  methods: {
+    openAccountModal() {
+      this.$accessor.setAccountModalState(true);
+    },
   },
 });
 </script>

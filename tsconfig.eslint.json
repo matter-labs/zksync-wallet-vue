@@ -3,7 +3,13 @@
   "extends": "./tsconfig.json",
   "include": [
 //    "tests/**/*.ts",
-    "src/**/*.{ts,js,vue}",
-    ".eslintrc.json"
-  ]
+    "./src/**/*.ts",
+    "./src/**/*.vue",
+    "./src/**/*.js"
+  ],
+  "compilerOptions": {
+    "lib": [
+      "dom"
+    ]
+  }
 }

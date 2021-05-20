@@ -1,7 +1,7 @@
-import { ZkInContact } from "@/plugins/types";
 import { Address } from "zksync/build/types";
 import utils from "@/plugins/utils";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { ZkInContact } from "~/types/lib";
 
 export declare interface iContacts {
   contactsList: ZkInContact[];
