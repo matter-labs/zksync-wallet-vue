@@ -193,8 +193,8 @@ import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 
 import utils from "@/plugins/utils";
-import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { getCPKTx, removeCPKTx } from "@/plugins/walletActions/cpk";
+import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 
 import { BigNumber, BigNumberish } from "ethers";
@@ -203,7 +203,7 @@ import { PropOptions } from "vue/types/options";
 import { closestPackableTransactionAmount } from "zksync";
 import { Address } from "zksync/build/types";
 import { Transaction } from "zksync/build/wallet";
-import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZkInTransactionType } from "~/types/lib";
+import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZkInTransactionType, ZkInWithdrawalTime } from "~/types/lib";
 
 export default Vue.extend({
   components: {
@@ -275,7 +275,7 @@ export default Vue.extend({
       feesLoading: false,
       transactionMode: <"normal" | "fast">"normal",
       cantFindFeeToken: false,
-      withdrawTime: {
+      withdrawTime: <ZkInWithdrawalTime>{
         normal: 0,
         fast: 0,
       },
@@ -469,8 +469,7 @@ export default Vue.extend({
       this.feesLoading = false;
     },
     async getWithdrawalTime(): Promise<void> {
-      // @ts-ignore
-      this.withdrawTime = await this.$accessor.wallet.requestWithdrawalProcessingTime();
+      this.withdrawTime = (await this.$accessor.wallet.requestWithdrawalProcessingTime()) as ZkInWithdrawalTime;
     },
     async commitTransaction(): Promise<void> {
       if (!this.inputtedAmount) {
@@ -507,8 +506,7 @@ export default Vue.extend({
       if (!this.feesObj) {
         throw new Error("Fee fetching error");
       }
-      // @ts-ignore
-      const withdrawTransactions: Transaction[] = await withdraw({
+      const withdrawTransactions = await withdraw({
         address: this.inputtedAddress,
         token: (this.chosenToken as ZkInBalance).symbol,
         feeToken: this.feeToken.symbol,
@@ -570,7 +568,7 @@ export default Vue.extend({
       const calculatedFee = this.chosenFeeObj;
 
       if (!calculatedFee) {
-        throw new Error("Fee calculation failed");
+        throw new TypeError("Fee calculation failed");
       }
 
       const txAmount = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
@@ -598,7 +596,7 @@ export default Vue.extend({
         transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });
-          this.$accessor.wallet.checkLockedState();
+          this.$accessor.wallet.checkLockedState().then((): void => {});
         });
       }
 

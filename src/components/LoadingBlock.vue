@@ -14,6 +14,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
+  name: "LoadingBlock",
   props: {
     headline: {
       type: String,

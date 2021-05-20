@@ -1,23 +1,29 @@
 import { WalletModuleState } from "@/store/wallet";
-import web3Wallet from "@/plugins/web3";
-import { Initialization, Subscriptions, Wallet as OnBoardingWallet, WalletInitOptions, WalletModule, WalletSelectModuleOptions } from "bnc-onboard/dist/src/interfaces";
-import { Store } from "vuex";
-import Web3 from "web3";
 import {
-  ONBOARD_RPC_URL,
-  ONBOARD_FORCED_EXIT_LINK,
-  CURRENT_APP_NAME,
-  ethWindow,
-  ONBOARD_FORTMATIC_KEY,
-  ONBOARD_PORTIS_KEY,
+  Initialization,
+  PopupContent,
+  Subscriptions,
+  Wallet as OnBoardingWallet,
+  WalletInitOptions,
+  WalletModule,
+  WalletSelectModuleOptions,
+} from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import { Store } from "vuex";
+import {
   ETHER_NETWORK_NAME,
-  ONBOARD_INFURA_KEY,
+  CURRENT_APP_NAME,
   ETHER_NETWORK_ID,
+  ONBOARD_FORCED_EXIT_LINK,
+  ONBOARD_FORTMATIC_KEY,
+  ONBOARD_INFURA_KEY,
+  ONBOARD_PORTIS_KEY,
+  ONBOARD_RPC_URL,
 } from "~/plugins/build";
 
 const initializedWallets: WalletSelectModuleOptions = {
   wallets: <WalletModule[] | WalletInitOptions[]>[
     { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
+    { walletName: "metamask", preferred: true },
     {
       walletName: "walletConnect",
       networkId: ETHER_NETWORK_ID,
@@ -60,40 +66,48 @@ const initializedWallets: WalletSelectModuleOptions = {
     { walletName: "atoken" },
   ],
 };
-
-if (ethWindow?.ethereum) {
-  initializedWallets.wallets?.unshift({ walletName: "metamask", preferred: true });
-}
-
 export default (ctx: Store<WalletModuleState>): Initialization => {
   const colorTheme: string | null = localStorage.getItem("colorTheme");
   return <Initialization>{
     hideBranding: true,
-    blockPollingInterval: 400000,
+    blockPollingInterval: 3000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
     darkMode: colorTheme !== null && colorTheme === "dark",
+    walletCheck: [
+      { checkName: "derivationPath" },
+      { checkName: "connect" },
+      { checkName: "accounts" },
+      { checkName: "network" },
+      { checkName: "balance", minimumBalance: "100000" },
+    ],
+    walletSelect: <WalletSelectModuleOptions>{
+      wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
+    },
     subscriptions: <Subscriptions>{
-      wallet(wallet: OnBoardingWallet): void {
-        const web3LoggedIn: Web3 = new Web3(wallet.provider);
-        web3Wallet.set(web3LoggedIn);
-        if (process.client) {
-          ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
-          window.localStorage.setItem("selectedWallet", wallet.name as string);
+      wallet: (wallet: OnBoardingWallet): boolean => {
+        if (!process.client || !wallet!.provider) {
+          wallet.provider.autoRefreshOnNetworkChange = false;
+          return false;
         }
+        wallet.provider.autoRefreshOnNetworkChange = true;
+        ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
+        window.localStorage.setItem("selectedWallet", wallet.name as string);
+        return true;
       },
       network: (networkId: number): void => {
         if (networkId !== ETHER_NETWORK_ID) {
-          ctx.app.$accessor.wallet.errorDuringLogin({ force: <boolean>true, message: <string>`You're using wrong network. Change in to the ${ETHER_NETWORK_NAME}` });
+          ctx.app.$accessor.wallet.errorDuringLogin({
+            force: true,
+            message: `You're using wrong network. Change in to the ${ETHER_NETWORK_NAME}`,
+          });
         }
       },
     },
-    walletSelect: <WalletSelectModuleOptions>{
-      description: "Can't find your wallet?",
-      explanation: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${ONBOARD_FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
-      heading: "Can't find your wallet?",
-      wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
+    popupContent: <PopupContent>{
+      dismiss: "Dismiss",
+      teaser: "Can't find your wallet?",
+      fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${ONBOARD_FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
     },
-    networkName: ETHER_NETWORK_NAME,
   };
 };

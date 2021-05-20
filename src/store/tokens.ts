@@ -1,6 +1,6 @@
 import { walletData } from "@/plugins/walletData";
-import { BigNumber, BigNumberish } from "ethers";
-import { Wallet } from "zksync/build";
+import { BigNumber } from "ethers";
+import { Wallet } from "zksync/build/wallet";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { BalanceToReturn, TokenInfo, Tokens, ZkInTokenPrices } from "~/types/lib";
@@ -67,7 +67,7 @@ export const getters = getterTree(state, {
   },
   getAvailableTokens(state): Tokens {
     // @ts-ignore
-    return Object.entries(
+    return Object.fromEntries(
       Object.entries(state.allTokens).filter((e) => {
         return !state.restrictedTokens.includes(e[1].symbol);
       }),
@@ -104,13 +104,14 @@ export const actions = actionTree(
     },
     async loadAcceptableTokens({ commit }): Promise<void> {
       const acceptableTokens: TokenInfo[] = (await this.app.$http.get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`)).data;
+      console.log();
       commit("storeAcceptableTokens", acceptableTokens);
     },
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
       const accountState = walletData.get().accountState;
 
       const tokens: Tokens = await this.app.$accessor.tokens.loadAllTokens();
-      const zkBalance: { [p: string]: BigNumberish } | undefined = accountState?.committed.balances;
+      const zkBalance = accountState?.committed.balances;
       if (!zkBalance) {
         return {
           tokens,
@@ -159,7 +160,7 @@ export const actions = actionTree(
       return tokenPrice || 0;
     },
 
-    isRestricted({ state }, token: TokenSymbol): boolean {
+    isRestricted({ state }, token?: TokenSymbol): boolean {
       if (!token || token?.toLowerCase() === "eth") {
         return false;
       }

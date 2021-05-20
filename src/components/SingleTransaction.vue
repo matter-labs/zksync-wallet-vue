@@ -17,7 +17,7 @@
     <div class="actionInfo">
       <div class="actionType">
         <span>{{ transactionTypeData.type }}</span>
-        <em v-if="transactionTypeData.modal" class="modalOpenIcon" :class="transactionTypeData.modal.icon" @click="$accessor.openModal(transactionTypeData.modal.key)" />
+        <em v-if="transactionTypeData.modal" class="modalOpenIcon" :class="transactionTypeData.modal.icon" @click="$accessor.openModal(transactionTypeData.modal?.key)" />
       </div>
       <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your own account</div>
       <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`">
@@ -131,14 +131,12 @@ export default Vue.extend({
               modal: false,
             };
           } else {
-            if (this.singleTransaction.tx.type === "Transfer") {
-              if (this.isSameAddress(this.singleTransaction.tx.to || "")) {
-                return {
-                  type: "Received from:",
-                  showAddress: true,
-                  modal: false,
-                };
-              }
+            if (this.isSameAddress(this.singleTransaction.tx.to || "")) {
+              return {
+                type: "Received from:",
+                showAddress: true,
+                modal: false,
+              };
             }
             return {
               type: "Sent to:",

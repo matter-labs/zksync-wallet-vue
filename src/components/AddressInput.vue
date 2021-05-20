@@ -23,16 +23,12 @@
 </template>
 
 <script lang="ts">
-import userImg from "@/components/userImg.vue";
-
 import utils from "@/plugins/utils";
 import Vue, { PropOptions } from "vue";
 import { DecimalBalance } from "~/types/lib";
 
 export default Vue.extend({
-  components: {
-    userImg,
-  },
+  name: "AddressInput",
   props: {
     value: {
       type: String,

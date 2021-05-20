@@ -35,13 +35,11 @@
 </template>
 
 <script lang="ts">
-import walletAddress from "@/components/walletAddress.vue";
 import VueQrcode from "vue-qrcode";
 import Vue from "vue";
 
 export default Vue.extend({
   components: {
-    walletAddress,
     VueQrcode,
   },
   data() {

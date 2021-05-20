@@ -35,7 +35,7 @@ export const mutations = mutationTree(state, {
   setSelectedWallet(state, name: string): void {
     state.selectedWallet = name;
   },
-  setLoadingHint(state, text: string): void {
+  setLoadingHint(state: AccountModuleState, text: string): void {
     state.loadingHint = text;
   },
   setAddress(state, address: Address): void {

@@ -117,7 +117,6 @@
 import transactions from "@/blocks/Transactions.vue";
 import addressInput from "@/components/AddressInput.vue";
 
-import walletAddress from "@/components/walletAddress.vue";
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { Address } from "zksync/build/types";
@@ -126,7 +125,6 @@ import { ZkInContact } from "~/types/lib";
 
 export default Vue.extend({
   components: {
-    walletAddress,
     transactions,
     addressInput,
   },

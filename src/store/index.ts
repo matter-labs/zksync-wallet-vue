@@ -23,8 +23,8 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  setAccountModalState(state: RootState, modalState: boolean): boolean {
-    return (state.accountModalOpened = modalState);
+  setAccountModalState(state: RootState, modalState: boolean): void {
+    state.accountModalOpened = modalState;
   },
   setCurrentModal(state: RootState, modalName: string): void {
     state.currentModal = modalName;

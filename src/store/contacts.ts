@@ -1,14 +1,9 @@
 import { Address } from "zksync/build/types";
 import utils from "@/plugins/utils";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ZkInContact } from "~/types/lib";
+import { ZkIContracts, ZkInContact } from "~/types/lib";
 
-export declare interface iContacts {
-  contactsList: ZkInContact[];
-  storageKey?: string;
-}
-
-export const state = (): iContacts => ({
+export const state = (): ZkIContracts => ({
   contactsList: [],
   storageKey: undefined,
 });

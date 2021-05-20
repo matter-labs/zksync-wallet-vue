@@ -1,4 +1,4 @@
-import userImg from "@/components/userImg.vue";
+import userImg from "~/components/UserImg.vue";
 import { shallowMount, Wrapper } from "@vue/test-utils";
 import { Vue } from "vue-property-decorator";
 

@@ -15,6 +15,7 @@ import { singleIcon } from "~/types/lib";
 type Location = "header" | "footer";
 
 export default Vue.extend({
+  name: "SocialBlock",
   props: {
     location: {
       required: false,

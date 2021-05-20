@@ -22,6 +22,7 @@ import Vue, { PropOptions } from "vue";
 import { DecimalBalance, GweiBalance, ZkInToken } from "~/types/lib";
 
 export default Vue.extend({
+  name: "AllowanceInput",
   props: {
     value: {
       type: String,

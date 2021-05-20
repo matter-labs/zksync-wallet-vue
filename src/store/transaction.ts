@@ -1,8 +1,8 @@
+import { GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/types/lib";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
-import { Address, ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/build/types";
+import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/build/types";
 import { ETHOperation } from "zksync/build/wallet";
-import { GweiBalance, ZKInDepositTx, ZkInDeposits } from "~/types/lib";
 
 export const state = () => ({
   watchedTransactions: <
@@ -65,7 +65,7 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  getForceUpdateTick(state) {
+  getForceUpdateTick: (state): number => {
     return state.forceUpdateTick;
   },
   depositList(state) {
@@ -123,7 +123,7 @@ export const actions = actionTree(
      * @param _
      * @param address
      * @param feeToken
-     * @return {Promise<any>}
+     * @return {Promise<Fee | undefined>}
      */
     async fetchChangePubKeyFee(_, { address, feeToken }: { address: Address; feeToken: TokenSymbol }): Promise<Fee | undefined> {
       const syncWallet = walletData.get().syncWallet;

@@ -10,14 +10,11 @@
 </template>
 
 <script lang="ts">
-import userImg from "@/components/userImg.vue";
 import Vue, { PropOptions } from "vue";
 import { Address } from "zksync/build/types";
 
 export default Vue.extend({
-  components: {
-    userImg,
-  },
+  name: "WalletAddress",
   props: {
     wallet: {
       type: String,

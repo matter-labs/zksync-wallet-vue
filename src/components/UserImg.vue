@@ -8,6 +8,7 @@ import blockie from "ethereum-blockies-base64";
 import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
+  name: "UserImg",
   props: {
     wallet: {
       type: String,

@@ -1,10 +1,10 @@
+import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
-import { ETHOperation, submitSignedTransactionsBatch, Transaction, Wallet } from "zksync/build/wallet";
-import { Address, SignedTransaction, TokenSymbol, TotalFee, TxEthSignature } from "zksync/build/types";
-import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 import { BatchBuilder } from "zksync/build/batch-builder";
-import { GweiBalance } from "~/types/lib";
+import { Address, SignedTransaction, TokenSymbol, TotalFee, TxEthSignature } from "zksync/build/types";
+import { ETHOperation, submitSignedTransactionsBatch, Transaction, Wallet } from "zksync/build/wallet";
+import { GweiBalance, ReceivedTransactions } from "~/types/lib";
 
 /**
  * Make zkSync transaction
@@ -27,9 +27,9 @@ export const transaction = async (
   store: typeof accessorType,
   accountActivationFee?: GweiBalance,
 ) => {
-  const syncWallet = walletData.get().syncWallet;
-  const nonce = await syncWallet!.getNonce("committed");
-  const batchBuilder = syncWallet!.batchBuilder(nonce);
+  const syncWallet: Wallet | undefined = walletData.get().syncWallet;
+  const nonce: number = await syncWallet!.getNonce("committed");
+  const batchBuilder: BatchBuilder = syncWallet!.batchBuilder(nonce);
 
   if (store.wallet.isAccountLocked) {
     if (!accountActivationFee) {
@@ -58,10 +58,10 @@ export const transaction = async (
       token: feeToken,
     });
   }
-  const batchTransactionData: { txs: SignedTransaction[]; signature: TxEthSignature; totalFee: TotalFee } = await batchBuilder.build();
-  const transactions: Transaction[] = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  const batchTransactionData = await batchBuilder.build();
+  const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r) => {});
+    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r): void => {});
   }
   return labelTransactions(transactions);
 };
@@ -90,19 +90,10 @@ interface WithdrawParams {
  * @param store
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
-export const withdraw = async ({
-  address,
-  token,
-  feeToken,
-  amount,
-  fastWithdraw,
-  fee,
-  accountActivationFee,
-  store,
-}: WithdrawParams): Promise<{ cpkTransaction: null | Transaction; feeTransaction: Transaction | null; transaction: Transaction | null }> => {
-  const syncWallet: Wallet | undefined = walletData.get().syncWallet;
-  const nonce: number = await syncWallet!.getNonce("committed");
-  const batchBuilder: BatchBuilder = syncWallet!.batchBuilder(nonce);
+export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw, fee, accountActivationFee, store }: WithdrawParams): Promise<ReceivedTransactions> => {
+  const syncWallet = walletData.get().syncWallet;
+  const nonce = await syncWallet!.getNonce("committed");
+  const batchBuilder = syncWallet!.batchBuilder(nonce);
 
   if (store.wallet.isAccountLocked) {
     if (!accountActivationFee) {
@@ -113,7 +104,7 @@ export const withdraw = async ({
   if (token === feeToken) {
     batchBuilder.addWithdraw({
       ethAddress: address,
-      fastProcessing: fastWithdraw,
+      fastProcessing: <boolean>fastWithdraw,
       token,
       amount,
       fee,
@@ -123,7 +114,7 @@ export const withdraw = async ({
       fee: "0",
       amount,
       ethAddress: address,
-      fastProcessing: fastWithdraw,
+      fastProcessing: <boolean>fastWithdraw,
       token,
     });
     batchBuilder.addTransfer({
@@ -133,15 +124,15 @@ export const withdraw = async ({
       token: feeToken,
     });
   }
-  const batchTransactionData = await batchBuilder.build();
-  const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  const batchTransactionData: { txs: SignedTransaction[]; signature: TxEthSignature; totalFee: TotalFee } = await batchBuilder.build();
+  const transactions: Transaction[] = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r) => {});
+    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r): void => {});
   }
   return labelTransactions(transactions);
 };
 
-export const labelTransactions = (transactions: Transaction[]) => {
+export const labelTransactions = (transactions: Transaction[]): ReceivedTransactions => {
   let transaction: Transaction | null = null;
   let feeTransaction: Transaction | null = null;
   let cpkTransaction: Transaction | null = null;
@@ -170,7 +161,7 @@ export const labelTransactions = (transactions: Transaction[]) => {
     transaction,
     feeTransaction,
     cpkTransaction,
-  };
+  } as ReceivedTransactions;
 };
 
 /**
@@ -179,14 +170,14 @@ export const labelTransactions = (transactions: Transaction[]) => {
  * @param {TokenSymbol} token
  * @param {GweiBalance} amount
  * @param store
- * @returns {Promise<any>}
+ * @returns {Promise<ETHOperation>}
  */
-export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: typeof accessorType) => {
+export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: typeof accessorType): Promise<ETHOperation> => {
   const depositResponse: ETHOperation = await walletData.get().syncWallet!.depositToSyncFromEthereum({
     depositTo: walletData.get().syncWallet!.address(),
     token,
     amount,
   });
-  store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount }).then((r) => {});
+  store.transaction.watchDeposit({ depositTx: depositResponse, tokenSymbol: token, amount }).then((r): void => {});
   return depositResponse;
 };

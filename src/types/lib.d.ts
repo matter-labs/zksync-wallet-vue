@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
-import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
+import { ETHOperation, Transaction, ZKSyncTxError, Wallet } from "zksync/build/wallet";
 import {
   AccountState,
   Address,
@@ -11,7 +11,7 @@ import {
   TokenSymbol,
   TransactionReceipt,
 } from "zksync/build/types";
-import { Provider, Wallet } from "zksync/build";
+import { Provider } from "zksync/build";
 import { accessorType } from "~/store";
 
 export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";
@@ -262,4 +262,20 @@ export interface CPKLocal {
   ethSignature?: string;
   validFrom: number;
   validUntil: number;
+}
+
+export interface ReceivedTransactions {
+  transaction: Transaction | null;
+  feeTransaction: Transaction | null;
+  cpkTransaction: null | Transaction;
+}
+
+export declare interface ZkInWithdrawalTime {
+  normal?: number;
+  fast?: number;
+}
+
+export declare interface ZkIContracts {
+  contactsList: ZkInContact[];
+  storageKey?: string;
 }

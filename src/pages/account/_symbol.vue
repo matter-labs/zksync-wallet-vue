@@ -68,9 +68,9 @@ export default Vue.extend({
   methods: {
     async getData(): Promise<void> {
       this.loading = true;
-      const balances: Array<ZkInBalance> | undefined = await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
+      const balances: Array<ZkInBalance> = await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       let found = false;
-      if (balances) {
+      if (balances.length > 0) {
         for (const item of balances) {
           if (item.symbol === this.symbol) {
             this.token = item;
