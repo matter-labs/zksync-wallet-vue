@@ -56,6 +56,12 @@ input[type="number"] {
   }
 }
 
+.border-line {
+  background-color: transparentize($color: $gray, $amount: 0.8);
+  width: 100%;
+  height: 1px;
+}
+
 .desktopOnly {
 
   @media screen and (max-width: $mobile) {
@@ -70,6 +76,17 @@ body.inkline {
       color: $lightViolet !important;
       text-decoration: none !important;
       border-radius: $borderRadiusSm;
+    }
+    &.-secondary {
+      &:disabled {
+        opacity: 0.3;
+      }
+    }
+    &.-dark {
+      &:disabled {
+        background-color: $violet;
+        opacity: 0.4 !important;
+      }
     }
   }
 
@@ -266,7 +283,7 @@ button.-lg.-circle {
       border-color: $light !important;
     }
 
-    .footer .modalFooterBtn {
+    .modalFooterBtn {
       color: $black;
     }
   }
@@ -288,33 +305,39 @@ button.-lg.-circle {
     border-bottom: none !important;
   }
 
-  .footer {
-    .modalFooterBtn {
-      display: flex;
-      flex-wrap: nowrap;
-      align-items: center;
-      box-sizing: border-box;
-      margin: 3px 0;
-      padding: 6px 15px;
-      color: $white;
-      text-decoration: none;
-      border-radius: $borderRadius;
-      cursor: pointer;
-      transition: background-color $transition1;
-
-      &:hover {
-        background-color: transparentize($color: $gray, $amount: .8);
-      }
-
+  .modalFooterBtn {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 3px 0;
+    padding: 6px 15px;
+    color: $white;
+    text-decoration: none;
+    border-radius: $borderRadius;
+    cursor: pointer;
+    transition: background-color $transition1;
+    &.big {
       i {
-        margin-right: 30px;
-        font-size: 16px;
+        font-size: 20px;
       }
-
       span {
-        font-size: $fontSizeRegular;
-        text-align: left;
+        font-size: 18px;
       }
+    }
+
+    &:hover {
+        background-color: transparentize($color: $gray, $amount: .8);
+    }
+
+    i {
+      margin-right: 30px;
+      font-size: 16px;
+    }
+
+    span {
+        font-size: $fontSizeRegular;
+      text-align: left;
     }
   }
 

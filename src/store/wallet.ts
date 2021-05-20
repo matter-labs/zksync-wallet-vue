@@ -1,4 +1,4 @@
-import { APP_ZKSYNC_API_LINK, ETHER_NETWORK_NAME } from "@/plugins/build";
+import { APP_ZKSYNC_API_LINK, ZK_NETWORK } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
 import { BalanceToReturn, Tokens, ZkInBalance, ZkInFeesObj, ZkInTx, iWalletData } from "@/plugins/types";
 import utils from "@/plugins/utils";
@@ -13,7 +13,9 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
 import { Wallet, closestPackableTransactionFee, getDefaultProvider, Provider } from "zksync";
-import { AccountState, Address, Fee, TokenSymbol } from "zksync/build/types";
+import { Address, Fee, TokenSymbol } from "zksync/build/types";
+import {AccountState, Address, Fee, TokenSymbol} from "zksync/build/types";
+import { ExternalProvider } from "@ethersproject/providers";
 
 interface feesInterface {
   [symbol: string]: {
@@ -488,12 +490,17 @@ export const actions = actionTree(
         if (!currentProvider) {
           return false;
         }
+
         const web3Provider: Web3Provider = new ethers.providers.Web3Provider(currentProvider as ExternalProvider);
         const ethWallet: ethers.providers.JsonRpcSigner = web3Provider.getSigner();
         const syncProvider: Provider | undefined = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
-        if (syncProvider === undefined) {
-          return false;
-        }
+
+
+        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
+        const syncProvider: ProviderProvider | undefined = getDefaultProvider(ZK_NETWORK as Network, "HTTP");
+
+        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
+        const ethWallet: ethers.providers.JsonRpcSigner = web3Provider.getSigner();
         const syncWallet: Wallet | undefined = await Wallet.fromEthSigner(ethWallet, syncProvider);
 
         this.app.$accessor.account.setLoadingHint("Getting wallet information");

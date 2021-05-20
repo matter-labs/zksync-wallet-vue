@@ -34,7 +34,7 @@
 <script lang="ts">
 import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { ZkInTx } from "@/plugins/types";
+import { ZkInTx } from "@/types/types";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 
@@ -130,13 +130,15 @@ export default Vue.extend({
               showAddress: false,
               modal: false,
             };
-          } else if (this.isSameAddress(this.displayedAddress)) {
+          } else {
+            if (this.isSameAddress(this.singleTransaction.tx.to || "")) {
             return {
               type: "Received from:",
               showAddress: true,
               modal: false,
             };
-          } else {
+              }
+            }
             return {
               type: "Sent to:",
               showAddress: true,

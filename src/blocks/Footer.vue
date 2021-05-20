@@ -21,7 +21,7 @@
           <span class="badge">|</span>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" :href="`${blockExplorerLink}`">zkScan</a>
+          <a target="_blank" class="footer-link" :href="blockExplorerLink">zkScan</a>
         </div>
       </i-row>
       <i-row center class="_text-nowrap _align-items-center _margin-0">

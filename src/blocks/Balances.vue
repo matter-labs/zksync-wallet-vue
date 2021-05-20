@@ -67,6 +67,7 @@
               <div v-if="activeDeposits[item.symbol]" class="rowItem">
                 <div class="total small">
                   <span class="balancePrice">
+                    Depositing:
                     <token-price :symbol="item.symbol" :amount="activeDeposits[item.symbol].toString()" />
                   </span>
                   &nbsp;&nbsp;+{{ activeDeposits[item.symbol].toString() | formatToken(item.symbol) }}

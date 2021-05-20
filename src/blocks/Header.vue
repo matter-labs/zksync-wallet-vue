@@ -19,6 +19,10 @@
               <i class="mobileOnly ri-history-line"></i>
               <span>History</span>
             </nuxt-link>
+            <div class="mobileOnly headerLink" @click="footerModal = !footerModal">
+              <i class="ri-more-2-fill"></i>
+              <span>More</span>
+            </div>
           </div>
         </i-column>
         <i-column :xs="6" :md="3" class="_margin-left-auto _padding-right-0 _display-flex _justify-content-end">
@@ -42,18 +46,26 @@
       </i-row>
     </i-container>
     <account-modal />
+    <footer-modal v-model="footerModal" />
   </header>
 </template>
 
 <script lang="ts">
 import logo from "@/blocks/Logo.vue";
 import accountModal from "@/blocks/modals/AccountModal.vue";
+import footerModal from "@/blocks/modals/FooterModal.vue";
 import Vue from "vue";
 
 export default Vue.extend({
   components: {
     logo,
     accountModal,
+    footerModal,
+  },
+  data() {
+    return {
+      footerModal: false,
+    };
   },
   computed: {
     walletName(): string {

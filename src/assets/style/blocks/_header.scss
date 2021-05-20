@@ -166,6 +166,10 @@ header {
       left: 0;
     }
 
+    .pagesContainer,.mobileFooter {
+      background-color: $darkViolet;
+      box-shadow: $shadowTop;
+    }
     .pagesContainer {
       position: fixed;
       bottom: -1px;
@@ -176,8 +180,6 @@ header {
       width: 100%;
       height: $headerHeight;
       padding: 6px 5vw;
-      background-color: $darkViolet;
-      box-shadow: $shadowTop;
 
       .headerLink {
         display: flex;
@@ -197,6 +199,13 @@ header {
           display: block;
           text-align: center;
         }
+      }
+      .btnMore {
+        position: relative;
+        top: -5px;
+        padding: 5px 10px;
+        font-size: 20px;
+        margin-left: 10px;
       }
     }
   }
@@ -324,8 +333,7 @@ body.inkline.-light header {
     color: $black;
   }
 
-  .pagesContainer {
-
+  .pagesContainer,.mobileFooter {
     @media screen and (max-width: $mobile) {
       background-color: $white;
     }

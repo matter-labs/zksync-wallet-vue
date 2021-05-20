@@ -4,9 +4,18 @@
       <loader />
     </div>
     <template v-else>
-      <i-input ref="tokenSymbolInput" v-model="search" :placeholder="`Filter balances in ${tokensType}`" maxlength="10">
+      <div class="searchContainer">
+        <i-input ref="tokenSymbolInput" v-model="search" :placeholder="`Filter balances in ${tokensType}`" maxlength="10">
         <i slot="prefix" class="ri-search-line" />
-      </i-input>
+        </i-input>
+        <div class="updateBtn" :class="{ disabled: spinnerLoading }" @click="getTokenList(true)">
+          <i-tooltip placement="left">
+            <i v-if="spinnerLoading" class="ri-loader-5-line"></i>
+            <i v-else class="ri-restart-line"></i>
+            <template slot="body">Update {{ tokensType }} balances</template>
+          </i-tooltip>
+        </div>
+      </div>
       <div class="tokenListContainer">
         <div v-for="item in displayedList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
           <div class="tokenSymbol">{{ item.symbol }}</div>
@@ -58,7 +67,8 @@ export default Vue.extend({
   data() {
     return {
       search: "",
-      loading: false,
+      loading: true,
+      spinnerLoading: false,
     };
   },
   computed: {
@@ -73,21 +83,22 @@ export default Vue.extend({
       return list;
     },
   },
-  mounted() {
-    this.getTokenList();
+  async mounted() {
+    await this.getTokenList();
+    this.loading = false;
   },
   methods: {
     chooseToken(token: ZkInBalance): void {
       this.$emit("chosen", token);
     },
-    async getTokenList(): Promise<void> {
-      this.loading = true;
+    async getTokenList(force = false): Promise<void> {
+      this.spinnerLoading = true;
       if (this.tokensType === "L2") {
-        await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
+        await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force });
       } else {
-        await this.$accessor.wallet.requestInitialBalances(false);
+        await this.$accessor.wallet.requestInitialBalances(force);
       }
-      this.loading = false;
+      this.spinnerLoading = false;
     },
   },
 });
