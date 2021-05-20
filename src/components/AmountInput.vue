@@ -112,11 +112,7 @@ export default Vue.extend({
         return;
       }
       this.validateAmount(val);
-      if (!this.error) {
-        this.$emit("input", val);
-      } else {
-        this.$emit("input", "");
-      }
+      this.$emit("input", this.error ? "" : val);
     },
     validateAmount(val: string): void {
       if (!val || !parseFloat(val)) {

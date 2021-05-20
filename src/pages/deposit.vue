@@ -205,7 +205,7 @@ export default Vue.extend({
       return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
     },
     buttonDisabled(): boolean {
-      return this.displayTokenUnlock || !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.enoughInputedAllowance;
+      return this.displayTokenUnlock || !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.enoughInputtedAllowance;
     },
     amountBigNumber(): BigNumber {
       if (!this.chosenToken || !this.inputtedAmount) {
@@ -229,13 +229,13 @@ export default Vue.extend({
       }
       return this.tokenAllowance.gte(this.maxAmount) || this.tokenAllowance.gte(this.amountBigNumber);
     },
-    enoughInputedAllowance(): boolean {
+    enoughInputtedAllowance(): boolean {
       if (!this.inputtedAllowance || !this.tokenAllowance || !this.chosenToken || this.enoughAllowance) {
         return true;
       }
       try {
-        const inputedAllowenceBigNumber = utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance);
-        return inputedAllowenceBigNumber.gte(this.amountBigNumber);
+        const inputtedAllowanceBigNumber: BigNumber = utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance);
+        return inputtedAllowanceBigNumber.gte(this.amountBigNumber);
       } catch (error) {
         return false;
       }

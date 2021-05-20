@@ -10,6 +10,7 @@ import { TokenSymbol } from "zksync/build/types";
 import { GweiBalance } from "~/types/lib";
 
 export default Vue.extend({
+  name: "TokenPrice",
   props: {
     symbol: {
       type: String,

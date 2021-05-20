@@ -27,7 +27,7 @@ export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY
 /**
  * The right way of strict-typing for the web3provider
  *  — thanks to the [global.window] with type NodeJS.Global operation with the typed window is generally possible
- *  — provider [window.ethereum] should be declared separatelly using shims (index.d.ts)
+ *  — provider [window.ethereum] should be declared separately using shims (index.d.ts)
  *    @see /src/types/index.d.ts
  * @author: Serge B. | Matter Labs
  */

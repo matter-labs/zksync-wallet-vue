@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ethereum } from "@/plugins/build";
+import { ethWindow } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 
 let changeNetworkWasSet = false;
@@ -49,19 +49,19 @@ export default {
   changeNetworkHandle,
   changeAccountHandle,
   changeNetworkSet(dispatch, context) {
-    if (changeNetworkWasSet === true || !process.client || !ethereum) {
+    if (changeNetworkWasSet === true || !process.client || !ethWindow.ethereum) {
       return;
     }
 
     changeNetworkWasSet = true;
-    ethereum.on("disconnect", () => {
+    ethWindow.ethereum.on("disconnect", () => {
       console.log("disconnect!!");
       context.$toast.global.zkException({
         message: "Connection with your Wallet was lost. Restarting the DAPP",
       });
       dispatch("logout");
     });
-    ethereum.on("chainChanged", changeNetworkHandle(dispatch, context));
-    ethereum.on("accountsChanged", changeAccountHandle(dispatch, context));
+    ethWindow.ethereum.on("chainChanged", changeNetworkHandle(dispatch, context));
+    ethWindow.ethereum.on("accountsChanged", changeAccountHandle(dispatch, context));
   },
 };
