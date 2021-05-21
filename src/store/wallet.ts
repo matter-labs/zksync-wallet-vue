@@ -190,7 +190,7 @@ export const actions = actionTree(
         this.app.$accessor.account.setSelectedWallet("");
         return false;
       }
-      this.app.$toast.show("Found previously selected wallet.");
+      this.app.$toast.show(`Found previously selected wallet: ${previouslySelectedWallet}`);
       this.app.$accessor.account.setSelectedWallet(previouslySelectedWallet);
       return await onboard.walletSelect(previouslySelectedWallet);
     },
@@ -203,7 +203,7 @@ export const actions = actionTree(
       await this.app.$accessor.wallet.requestInitialBalances(true).catch((error: unknown): void => {
         console.error(error);
       });
-      await this.app.$accessor.wallet.requestZkBalances({}).catch((error: unknown): void => {
+      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false }).catch((error: unknown): void => {
         console.error(error);
       });
       await this.app.$accessor.wallet.requestTransactionsHistory({ force: true }).catch((error: unknown) => {
@@ -370,7 +370,6 @@ export const actions = actionTree(
       try {
         const syncWallet: Wallet | undefined = walletData.get().syncWallet;
         const fetchTransactionHistory: ZkInTx[] = await this.$http.$get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
-        console.log(fetchTransactionHistory);
         if (savedAddress !== this.app.$accessor.account.address || fetchTransactionHistory.length < 1) {
           return localList.list;
         }
@@ -445,12 +444,14 @@ export const actions = actionTree(
       if (getters.getWithdrawalProcessingTime) {
         return getters.getWithdrawalProcessingTime;
       }
-      const withdrawTime: unknown = await this.$http.$get(`https://${ZK_API_BASE}/api/v0.1/withdrawal_processing_time`);
-      // @ts-ignore
-      commit("setWithdrawalProcessingTime", withdrawTime?.data);
+      const withdrawTime: ZkInWithdrawalTime = await this.$http.$get(`https://${ZK_API_BASE}/api/v0.1/withdrawal_processing_time`);
+      console.log("Withdrawal time");
       console.log(withdrawTime);
+
       // @ts-ignore
-      return withdrawTime?.data as ZkInWithdrawalTime;
+      commit("setWithdrawalProcessingTime", withdrawTime);
+      // @ts-ignore
+      return withdrawTime as ZkInWithdrawalTime;
     },
     async checkLockedState({ commit }): Promise<void> {
       const pubKeyHash: PubKeyHash | undefined = await walletData.get().syncWallet?.signer?.pubKeyHash();
@@ -471,39 +472,28 @@ export const actions = actionTree(
         let walletCheck = false;
         this.app.$accessor.account.updateLoadingHint("Processing...");
         if (firstSelect) {
-          console.log("first select");
           walletCheck = !!(await state.onboard?.walletSelect());
-          console.log(walletCheck);
           if (!walletCheck) {
             return false;
           }
         }
         walletCheck = !!(await state.onboard?.walletCheck());
-        console.log("11221");
         if (!walletCheck) {
           return false;
         }
 
-        console.log("11221-1");
         if (!web3Wallet.get()?.eth) {
           return false;
         }
-
-        console.log("11221-2");
         const getAccounts: string[] | undefined = await web3Wallet.get()?.eth.getAccounts();
         if (!getAccounts || getAccounts.length === 0) {
           return false;
         }
 
-        console.log("11221-4");
-
         if (walletData.get().syncWallet) {
-          console.log(walletData.get().syncWallet?.address());
           this.app.$accessor.account.setAddress(walletData.get().syncWallet?.address() || "");
           return true;
         }
-
-        console.log("11221-5");
         const currentProvider: provider | undefined = web3Wallet.get()?.eth.currentProvider;
         if (!currentProvider) {
           return false;
@@ -516,15 +506,12 @@ export const actions = actionTree(
         if (syncProvider === undefined) {
           return false;
         }
-
-        watcher.changeNetworkSet(dispatch, this);
-
         this.app.$accessor.account.updateLoadingHint("Follow the instructions in your wallet");
 
         const syncWallet: Wallet | undefined = await Wallet.fromEthSigner(ethWallet, syncProvider);
 
         this.app.$accessor.account.updateLoadingHint("Getting wallet information...");
-
+        watcher.changeNetworkSet(dispatch, this);
         const accountState = await syncWallet?.getAccountState();
         walletData.set(<iWalletData>{
           syncProvider,
@@ -547,7 +534,7 @@ export const actions = actionTree(
           this.app.$toast.global.zkException({
             message: `Error: ${error.message}`,
           });
-          this.$router.push("/");
+          this.app.$accessor.wallet.logout();
         }
         return false;
       }

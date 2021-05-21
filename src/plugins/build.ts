@@ -2,7 +2,7 @@ import { Network } from "zksync/build/types";
 import { name, version } from "../../package.json";
 import { networkEthId } from "~/types/lib";
 
-const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
+export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
   { name: "rinkeby", id: 4 },
   { name: "ropsten", id: 3 },
   { name: "mainnet", id: 1 },

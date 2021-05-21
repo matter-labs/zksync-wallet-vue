@@ -13,10 +13,10 @@ const changeNetworkHandle = (dispatch, context) => {
     if (!walletData.get().syncWallet) {
       return;
     }
-    const refreshWalletResult = await context.app.$accessor.wallet.walletRefresh(false);
+    const refreshWalletResult = await dispatch("walletRefresh", false);
     if (refreshWalletResult === false) {
-      await context.$router.push("/");
       await dispatch("logout");
+      await context.$router.push("/");
     } else {
       await dispatch("forceRefreshData");
     }

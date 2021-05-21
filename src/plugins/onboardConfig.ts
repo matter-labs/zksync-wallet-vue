@@ -11,10 +11,20 @@ import {
 } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { Store } from "vuex";
 import Web3 from "web3";
-import { CURRENT_APP_NAME, ETHER_NETWORK_ID, ONBOARD_FORCED_EXIT_LINK, ONBOARD_FORTMATIC_KEY, ONBOARD_INFURA_KEY, ONBOARD_PORTIS_KEY, ONBOARD_RPC_URL } from "~/plugins/build";
+import {
+  _ETHER_NETWORK_ID_DICTIONARY,
+  CURRENT_APP_NAME,
+  ETHER_NETWORK_ID,
+  ETHER_NETWORK_NAME,
+  ONBOARD_FORCED_EXIT_LINK,
+  ONBOARD_FORTMATIC_KEY,
+  ONBOARD_INFURA_KEY,
+  ONBOARD_PORTIS_KEY,
+  ONBOARD_RPC_URL,
+} from "~/plugins/build";
 
 const initializedWallets: WalletSelectModuleOptions = {
-  wallets: <WalletModule[] | WalletInitOptions[]>[
+  wallets: <Array<WalletModule | WalletInitOptions>>[
     { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
     { walletName: "metamask", preferred: true },
     {
@@ -67,7 +77,6 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
     darkMode: colorTheme !== null && colorTheme === "dark",
-
     subscriptions: <Subscriptions>{
       wallet: (wallet: OnBoardingWallet) => {
         if (wallet && wallet.provider) {
@@ -80,10 +89,17 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
           window.localStorage.setItem("selectedWallet", wallet.name as string);
         }
       },
+      network: (networkId: number): void => {
+        if (networkId !== ETHER_NETWORK_ID) {
+          ctx.app.$toast.global.zkException({
+            message: <string>`You're using wrong network. Change in to the ${ETHER_NETWORK_NAME}`,
+          });
+          ctx.app.$accessor.wallet.getOnboard?.walletReset();
+        }
+      },
     },
     walletSelect: <WalletSelectModuleOptions>{
       wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
-      description: 'Please select a wallet to connect to this dapp: (or <a href="">click here</a>.',
     },
     popupContent: <PopupContent>{
       dismiss: "Dismiss",

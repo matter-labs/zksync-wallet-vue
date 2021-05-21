@@ -13,7 +13,7 @@ Vue.use(VueScrollTo);
  * Implementation of the tokenFormatter as a global filter
  */
 Vue.filter("formatToken", (value: string | BigNumber, symbol: TokenSymbol) => {
-  return utils.handleFormatToken(symbol, value.toString());
+  return utils.handleFormatToken(symbol, value?.toString());
 });
 
 /**

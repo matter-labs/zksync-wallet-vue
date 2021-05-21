@@ -103,8 +103,8 @@ export const actions = actionTree(
       return getters.getAllTokens;
     },
     async loadAcceptableTokens({ commit }): Promise<void> {
-      const acceptableTokens: TokenInfo[] = (await this.app.$http.get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`)).data;
-      console.log();
+      const acceptableTokens: TokenInfo[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
+      console.log(acceptableTokens);
       commit("storeAcceptableTokens", acceptableTokens);
     },
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {

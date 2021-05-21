@@ -198,12 +198,11 @@ import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 
 import { BigNumber, BigNumberish } from "ethers";
-import Vue from "vue";
-import { PropOptions } from "vue/types/options";
+import Vue, { PropOptions } from "vue";
 import { closestPackableTransactionAmount } from "zksync";
 import { Address } from "zksync/build/types";
 import { Transaction } from "zksync/build/wallet";
-import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZKTypeTransactionType, ZkInWithdrawalTime } from "~/types/lib";
+import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZKTypeTransactionType, ZkInWithdrawalTime, BalanceToReturn } from "~/types/lib";
 
 export default Vue.extend({
   components: {
@@ -379,7 +378,8 @@ export default Vue.extend({
     try {
       this.loading = true;
       if (this.$route.query.w) {
-        this.inputtedAddress = this.$route.query.w.toString();
+        console.log(this.$route.query);
+        this.inputtedAddress = this.$route.query.w?.toString();
       }
       if (this.$route.query.token) {
         const balances = this.$accessor.wallet.getzkBalances;
@@ -411,9 +411,8 @@ export default Vue.extend({
       this.chosenToken = token;
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
-      const balances = <Array<ZkInBalance>>(
-        JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => BigNumber.from(b.balance).sub(a.balance))
-      );
+      const balances = <Array<ZkInBalance>>// @ts-ignore
+      JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: unknown, b: unknown) => parseFloat(b?.balance) - parseFloat(a?.balance));
       if (this.chosenToken.restricted) {
         let tokenFound = false;
         for (const feeToken of balances) {
@@ -469,7 +468,7 @@ export default Vue.extend({
       this.feesLoading = false;
     },
     async getWithdrawalTime(): Promise<void> {
-      this.withdrawTime = (await this.$accessor.wallet.requestWithdrawalProcessingTime()) as ZkInWithdrawalTime;
+      this.withdrawTime = await this.$accessor.wallet.requestWithdrawalProcessingTime();
     },
     async commitTransaction(): Promise<void> {
       if (!this.inputtedAmount) {
@@ -501,7 +500,7 @@ export default Vue.extend({
       this.loading = false;
     },
     async withdraw(): Promise<void> {
-      const txAmount: BigNumber = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
+      const txAmount = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
       this.tip = "Confirm the transaction to withdraw";
       if (!this.feesObj) {
         throw new Error("Fee fetching error");
@@ -529,7 +528,7 @@ export default Vue.extend({
         withdrawTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });
-          this.$accessor.wallet.checkLockedState().then(() => {});
+          this.$accessor.wallet.checkLockedState();
         });
       }
 
@@ -568,7 +567,7 @@ export default Vue.extend({
       const calculatedFee = this.chosenFeeObj;
 
       if (!calculatedFee) {
-        throw new TypeError("Fee calculation failed");
+        throw new Error("Fee calculation failed");
       }
 
       const txAmount = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
@@ -596,7 +595,7 @@ export default Vue.extend({
         transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });
-          this.$accessor.wallet.checkLockedState().then((): void => {});
+          this.$accessor.wallet.checkLockedState();
         });
       }
 
