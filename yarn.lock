@@ -23899,7 +23899,6 @@ typescript@^3.5.1:
     "@babel/core": "*"
     "@babel/runtime": "*"
     typed-vuex: "*"
-    vuex: 3.5.1
   dependenciesMeta:
     fs-extra:
       optional: true
