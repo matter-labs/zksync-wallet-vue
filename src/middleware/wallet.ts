@@ -3,7 +3,6 @@ import { Context, Middleware } from "@nuxt/types";
 
 const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) => {
   if (walletData.get().syncWallet) {
-    console.log(walletData.get().syncWallet);
     if (route.path === "/") {
       redirect("/account");
     }
@@ -19,7 +18,7 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
       return;
     }
 
-    const refreshWallet: boolean = await $accessor.wallet.walletRefresh(true);
+    const refreshWallet = await $accessor.wallet.walletRefresh(true);
     if (!refreshWallet) {
       $accessor.wallet.logout();
       if (route.path !== "/") {

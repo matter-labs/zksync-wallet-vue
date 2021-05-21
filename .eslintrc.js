@@ -3,27 +3,20 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: ["@nuxtjs/eslint-config-typescript", "plugin:nuxt/recommended", "plugin:prettier/recommended", "prettier"],
-  parser: "vue-eslint-parser",
+  extends: ["@nuxtjs/eslint-config-typescript", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier", "plugin:vue/base"],
   parserOptions: {
-    ecmaFeatures: {
-      legacyDecorators: true,
-      ecmaVersion: 6,
-      sourceType: "module",
-      ecmaFeatures: {
-        "jsx": true
-      }
-    },
-    extraFileExtensions: [".vue", ".ts", ".scss", ".js"],
+    ecmaVersion: 12,
     parser: "@typescript-eslint/parser",
     sourceType: "module",
     project: ["./tsconfig.json", "./tsconfig.eslint.json"],
     tsconfigRootDir: __dirname,
+    extraFileExtensions: [".vue"],
   },
-  ignorePatterns: ['.eslintrc.js'],
   plugins: ["vue", "@typescript-eslint", "prettier"],
   root: true,
   rules: {
+    indent: "off",
+    semi: ["error", "always"],
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
@@ -31,12 +24,13 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "off",
     camelcase: "off",
     "no-console": "off",
-    "no-unused-expressions": "off",
     "prettier/prettier": "error",
     quotes: ["error", "double"],
     "sort-imports": "off",
     "vue/no-v-for-template-key-on-child": "off",
     "vue/no-v-html": "off",
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-empty-function": ["off"],
   },
   settings: {
     "prettier-vue": {
@@ -47,4 +41,5 @@ module.exports = {
       usePrettierrc: true,
     },
   },
+  ignorePatterns: ["sw.js"],
 };

@@ -4,12 +4,12 @@ import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } 
 
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
-const srcDir: string = "src/";
+const srcDir = "src/";
 
 const env = process.env.APP_ENV ?? "dev";
 const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
 const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
-const pageImg: string = "/Cover.jpg";
+const pageImg = "/Cover.jpg";
 
 const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED} v.${VERSION}:${GIT_REVISION_SHORT}`;
 const pageDescription =
@@ -138,14 +138,6 @@ const config: NuxtConfig = {
     color: "#8c8dfc",
     continuous: true,
   },
-  loaders: {
-    ts: {
-      silent: true,
-    },
-    tsx: {
-      silent: true,
-    },
-  },
   /*
    ** Global CSS
    */
@@ -164,6 +156,9 @@ const config: NuxtConfig = {
   buildModules: [
     "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
+    "@nuxtjs/google-fonts",
+    "nuxt-typed-vuex",
+    ["@nuxtjs/dotenv", { path: __dirname }],
     [
       "@nuxt/typescript-build",
       {
@@ -171,17 +166,13 @@ const config: NuxtConfig = {
           typeCheck: {
             async: true,
             eslint: {
-              config: ".eslintrc.js",
-              files: "**/*.{ts,js,vue}",
+              config: [".eslintrc.js", ".tsconfig-eslint.json"],
+              files: ".src/**/*.{ts, js, vue}",
             },
           },
         },
       },
     ],
-    "@nuxtjs/eslint-module",
-    "@nuxtjs/google-fonts",
-    "nuxt-typed-vuex",
-    ["@nuxtjs/dotenv", { path: __dirname }],
   ],
 
   /*
@@ -234,6 +225,7 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
+    hardSource: false,
     ssr: false,
     extend: (config: Configuration) => {
       config.node = {
@@ -243,6 +235,9 @@ const config: NuxtConfig = {
   },
   buildOptimisations: {
     profile: env !== "prod" ? "risky" : "experimental",
+    features: {
+      hardSourcePlugin: false,
+    },
   },
   googleFonts: {
     prefetch: true,

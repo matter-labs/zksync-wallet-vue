@@ -1,5 +1,5 @@
 <template>
-  <div class="transactionsingleTransaction">
+  <div class="singleTransaction">
     <div class="status">
       <i-tooltip>
         <em :class="transactionStatus.icon"></em>
@@ -17,31 +17,32 @@
     <div class="actionInfo">
       <div class="actionType">
         <span>{{ transactionTypeData.type }}</span>
-        <em v-if="transactionTypeData.modal" class="modalOpenIcon" :class="transactionTypeData.modal.icon" @click="$accessor.openModal(transactionTypeData.modal?.key)" />
+        <em v-if="transactionTypeData.modal" :class="transactionTypeData.modal.icon" class="modalOpenIcon" @click="openModal()" />
       </div>
       <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your own account</div>
-      <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`">
+      <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" :to="`/contacts?w=${displayedAddress}`" class="actionValue">
         {{ getAddressName(displayedAddress) }}
       </nuxt-link>
-      <a v-if="ethTx" :href="ethTx" target="_blank" class="linkText">Ethereum Transaction</a>
+      <a v-if="ethTx" :href="ethTx" class="linkText" target="_blank">Ethereum Transaction</a>
     </div>
-    <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(singleTransaction)">
-      <i class="ri-external-link-line"></i>
+    <a :href="getTransactionExplorerLink(singleTransaction)" class="button -md -secondary -link" target="_blank">
+      <i class="ri-external-link-line" />
     </a>
   </div>
 </template>
 
 <script lang="ts">
-import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { Address, TokenSymbol } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 
 import moment from "moment-timezone";
 import Vue, { PropOptions } from "vue";
+import { Address, TokenSymbol } from "zksync/build/types";
+import utils from "~/plugins/utils";
 import { ZkInTx } from "~/types/lib";
 
-let getTimeAgoInterval: ReturnType<typeof setInterval>;
+let getTimeAgoInterval: NodeJS.Timeout;
+
 export default Vue.extend({
   props: {
     singleTransaction: {
@@ -180,38 +181,42 @@ export default Vue.extend({
   },
   methods: {
     isSameAddress(address: string): boolean {
-      return String(address).toLowerCase() === this.walletAddressFull.toLowerCase();
+      return address.toLowerCase() === this.walletAddressFull.toLowerCase();
     },
     getTimeAgo(time: string): string {
       return moment(time).tz("UTC").fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
       if (!this.isFeeTransaction) {
-        return utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount) || "";
+        return utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount);
       } else {
-        return utils.handleFormatToken(this.tokenSymbol, fee) || "";
+        return utils.handleFormatToken(this.tokenSymbol, fee);
       }
     },
     getAddressName(address: string): string {
-      address = address ? String(address).toLowerCase() : "";
+      address = address ? address.toLowerCase() : "";
       const contactFromStore = this.$accessor.contacts.getByAddress(address);
       return contactFromStore ? contactFromStore.name : address.replace(address.slice(6, address.length - 3), "...");
     },
     getTransactionExplorerLink(transaction: ZkInTx): string {
-      return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction.hash}`;
+      console.log(transaction);
+      return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${transaction?.hash}`;
     },
-    async getWithdrawalTx() {
-      const singleTx = this.singleTransaction;
-      if (singleTx && singleTx.tx.type === "Withdraw") {
-        const txFromStore = this.$accessor.transaction.getWithdrawalTx(singleTx.hash);
+    openModal(): void {
+      if (this.transactionTypeData.modal) {
+        this.$accessor.openModal(this.transactionTypeData.modal.key);
+      }
+    },
+    async getWithdrawalTx(): Promise<void> {
+      if (this.singleTransaction.tx.type === "Withdraw") {
+        const txFromStore: string | undefined = this.$accessor.transaction.getWithdrawalTx(this.singleTransaction!.hash);
         if (txFromStore) {
           this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${txFromStore}`;
         } else {
-          const syncProvider = walletData.get().syncProvider;
-          const ethTx = await syncProvider!.getEthTxForWithdrawal(singleTx.hash);
+          const ethTx = await walletData.get().syncProvider!.getEthTxForWithdrawal(this.singleTransaction!.hash);
           if (ethTx) {
             this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${ethTx}`;
-            this.$accessor.transaction.setWithdrawalTx({ tx: singleTx.hash, ethTx });
+            this.$accessor.transaction.setWithdrawalTx({ tx: this.singleTransaction!.hash, ethTx });
           }
         }
       }

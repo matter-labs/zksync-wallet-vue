@@ -61,7 +61,7 @@ export const transaction = async (
   const batchTransactionData = await batchBuilder.build();
   const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r): void => {});
+    store.transaction.watchTransaction(tx.txHash).then((r): void => {});
   }
   return labelTransactions(transactions);
 };
@@ -127,7 +127,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   const batchTransactionData: { txs: SignedTransaction[]; signature: TxEthSignature; totalFee: TotalFee } = await batchBuilder.build();
   const transactions: Transaction[] = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
-    store.transaction.watchTransaction({ transactionHash: tx.txHash }).then((r): void => {});
+    store.transaction.watchTransaction(tx.txHash).then((r): void => {});
   }
   return labelTransactions(transactions);
 };

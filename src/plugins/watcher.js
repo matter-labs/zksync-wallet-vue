@@ -13,7 +13,7 @@ const changeNetworkHandle = (dispatch, context) => {
     if (!walletData.get().syncWallet) {
       return;
     }
-    const refreshWalletResult = await dispatch("walletRefresh", false);
+    const refreshWalletResult = await context.app.$accessor.wallet.walletRefresh(false);
     if (refreshWalletResult === false) {
       await context.$router.push("/");
       await dispatch("logout");
@@ -54,7 +54,6 @@ const changeNetworkSet = (dispatch, context) => {
     if (process.client && window.ethereum) {
       changeNetworkWasSet = true;
       window.ethereum.on("disconnect", (data) => {
-        alert(1);
         console.log(data);
         context.$toast.global.zkException({
           message: "Connection with your Wallet was lost. Restarting the DAPP",

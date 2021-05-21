@@ -4,7 +4,7 @@ import { utils as zkUtils } from "zksync";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { IPrototype } from "@inkline/inkline/src/plugin.d";
 
-import { BigNumber, BigNumberish, utils } from "ethers";
+import { BigNumber, BigNumberish, Bytes, utils } from "ethers";
 
 /**
  *
@@ -22,7 +22,7 @@ function parseToken(symbol: TokenSymbol, amount: DecimalBalance): BigNumber {
  * @param {GweiBalance} amount
  * @return {string}
  */
-function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance) {
+function handleFormatToken(symbol: TokenSymbol, amount: number | bigint | BigNumber | Bytes | string) {
   if (!amount) return "0";
   const result = walletData.get().syncProvider?.tokenSet?.formatToken(symbol, amount);
   if (result) {
@@ -55,8 +55,8 @@ export default {
 
   handleFormatToken,
 
-  getFormattedTotalPrice: (price: number, amount: number) => {
-    const total = price * amount;
+  getFormattedTotalPrice: (price: number, amount: number | string): string => {
+    const total = price * (amount as number);
     if (!amount || total === 0) {
       return "$0.00";
     }

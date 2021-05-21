@@ -4,13 +4,9 @@ import * as tokens from "@/store/tokens";
 import * as transaction from "@/store/transaction";
 import * as wallet from "@/store/wallet";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
+import { ZKIRootState } from "~/types/lib";
 
-interface iRootState {
-  accountModalOpened: boolean;
-  currentModal?: string;
-}
-
-export const state = (): iRootState => ({
+export const state = (): ZKIRootState => ({
   accountModalOpened: false,
   currentModal: undefined,
 });

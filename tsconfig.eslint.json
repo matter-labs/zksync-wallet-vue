@@ -7,6 +7,11 @@
     "./src/**/*.vue",
     "./src/**/*.js"
   ],
+  "exclude": [
+    "./tests",
+    "./src/assets/fonts",
+    "node_modules"
+  ],
   "compilerOptions": {
     "lib": [
       "dom"

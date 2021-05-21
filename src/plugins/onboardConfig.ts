@@ -1,3 +1,4 @@
+import web3Wallet from "@/plugins/web3";
 import { WalletModuleState } from "@/store/wallet";
 import {
   Initialization,
@@ -9,16 +10,8 @@ import {
   WalletSelectModuleOptions,
 } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { Store } from "vuex";
-import {
-  ETHER_NETWORK_NAME,
-  CURRENT_APP_NAME,
-  ETHER_NETWORK_ID,
-  ONBOARD_FORCED_EXIT_LINK,
-  ONBOARD_FORTMATIC_KEY,
-  ONBOARD_INFURA_KEY,
-  ONBOARD_PORTIS_KEY,
-  ONBOARD_RPC_URL,
-} from "~/plugins/build";
+import Web3 from "web3";
+import { CURRENT_APP_NAME, ETHER_NETWORK_ID, ONBOARD_FORCED_EXIT_LINK, ONBOARD_FORTMATIC_KEY, ONBOARD_INFURA_KEY, ONBOARD_PORTIS_KEY, ONBOARD_RPC_URL } from "~/plugins/build";
 
 const initializedWallets: WalletSelectModuleOptions = {
   wallets: <WalletModule[] | WalletInitOptions[]>[
@@ -70,39 +63,27 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
   const colorTheme: string | null = localStorage.getItem("colorTheme");
   return <Initialization>{
     hideBranding: true,
-    blockPollingInterval: 3000,
+    blockPollingInterval: 400000,
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
     darkMode: colorTheme !== null && colorTheme === "dark",
-    walletCheck: [
-      { checkName: "derivationPath" },
-      { checkName: "connect" },
-      { checkName: "accounts" },
-      { checkName: "network" },
-      { checkName: "balance", minimumBalance: "100000" },
-    ],
+
+    subscriptions: <Subscriptions>{
+      wallet: (wallet: OnBoardingWallet) => {
+        if (wallet && wallet.provider) {
+          wallet.provider.autoRefreshOnNetworkChange = false;
+        }
+        // @ts-ignore
+        web3Wallet.set(new Web3(wallet.provider));
+        if (process.client) {
+          ctx.app.$accessor.account.setSelectedWallet(wallet.name as string);
+          window.localStorage.setItem("selectedWallet", wallet.name as string);
+        }
+      },
+    },
     walletSelect: <WalletSelectModuleOptions>{
       wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
-    },
-    subscriptions: <Subscriptions>{
-      wallet: (wallet: OnBoardingWallet): boolean => {
-        if (!process.client || !wallet!.provider) {
-          wallet.provider.autoRefreshOnNetworkChange = false;
-          return false;
-        }
-        wallet.provider.autoRefreshOnNetworkChange = true;
-        ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
-        window.localStorage.setItem("selectedWallet", wallet.name as string);
-        return true;
-      },
-      network: (networkId: number): void => {
-        if (networkId !== ETHER_NETWORK_ID) {
-          ctx.app.$accessor.wallet.errorDuringLogin({
-            force: true,
-            message: `You're using wrong network. Change in to the ${ETHER_NETWORK_NAME}`,
-          });
-        }
-      },
+      description: 'Please select a wallet to connect to this dapp: (or <a href="">click here</a>.',
     },
     popupContent: <PopupContent>{
       dismiss: "Dismiss",

@@ -203,7 +203,7 @@ import { PropOptions } from "vue/types/options";
 import { closestPackableTransactionAmount } from "zksync";
 import { Address } from "zksync/build/types";
 import { Transaction } from "zksync/build/wallet";
-import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZkInTransactionType, ZkInWithdrawalTime } from "~/types/lib";
+import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZKTypeTransactionType, ZkInWithdrawalTime } from "~/types/lib";
 
 export default Vue.extend({
   components: {
@@ -220,7 +220,7 @@ export default Vue.extend({
       type: String,
       default: "transfer",
       required: true,
-    } as PropOptions<ZkInTransactionType>,
+    } as PropOptions<ZKTypeTransactionType>,
     fromRoute: {
       type: Object,
       default: undefined,
@@ -412,7 +412,7 @@ export default Vue.extend({
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
       const balances = <Array<ZkInBalance>>(
-        JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance) - parseFloat(a.balance))
+        JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => BigNumber.from(b.balance).sub(a.balance))
       );
       if (this.chosenToken.restricted) {
         let tokenFound = false;
@@ -457,7 +457,7 @@ export default Vue.extend({
         };
         const requestedFee = await this.$accessor.wallet.requestFees(savedData);
         if (savedData.address === this.inputtedAddress && savedData.symbol === this.chosenToken?.symbol && savedData.feeSymbol === this.feeToken?.symbol) {
-          if (requestedFee !== undefined) {
+          if (!requestedFee) {
             this.feesObj = requestedFee;
           }
         }

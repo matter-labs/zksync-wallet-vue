@@ -1,4 +1,4 @@
-import Web3 from "web3/types";
+import Web3 from "web3";
 
 let web3Wallet: Web3 | undefined;
 
