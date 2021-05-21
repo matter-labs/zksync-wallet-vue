@@ -322,7 +322,7 @@ export default Vue.extend({
       if (amount.lt("0")) {
         return "0";
       }
-      return closestPackableTransactionAmount(amount).toString();
+      return closestPackableTransactionAmount(amount)?.toString();
     },
     feeToken(): ZkInBalance {
       return this.chosenFeeToken ? this.chosenFeeToken : (this.chosenToken as ZkInBalance);
@@ -411,8 +411,9 @@ export default Vue.extend({
       this.chosenToken = token;
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
-      const balances = <Array<ZkInBalance>>// @ts-ignore
-      JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: unknown, b: unknown) => parseFloat(b?.balance) - parseFloat(a?.balance));
+      const balances = <
+        Array<ZkInBalance> // @ts-ignore
+      >JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: unknown, b: unknown) => parseFloat(b?.balance) - parseFloat(a?.balance));
       if (this.chosenToken.restricted) {
         let tokenFound = false;
         for (const feeToken of balances) {
@@ -468,7 +469,7 @@ export default Vue.extend({
       this.feesLoading = false;
     },
     async getWithdrawalTime(): Promise<void> {
-      this.withdrawTime = await this.$accessor.wallet.requestWithdrawalProcessingTime();
+      this.withdrawTime = (await this.$accessor.wallet.requestWithdrawalProcessingTime()) as ZkInWithdrawalTime;
     },
     async commitTransaction(): Promise<void> {
       if (!this.inputtedAmount) {
@@ -509,14 +510,14 @@ export default Vue.extend({
         address: this.inputtedAddress,
         token: (this.chosenToken as ZkInBalance).symbol,
         feeToken: this.feeToken.symbol,
-        amount: txAmount.toString(),
+        amount: txAmount?.toString(),
         fastWithdraw: this.transactionMode === "fast",
         fee: (this.transactionMode === "fast" ? this.feesObj?.fast : this.feesObj?.normal) as string,
         store: this.$accessor,
         accountActivationFee: this.activateAccountFee,
       });
 
-      this.transactionInfo.amount!.amount = txAmount.toString();
+      this.transactionInfo.amount!.amount = txAmount?.toString();
       this.transactionInfo.amount!.token = this.chosenToken as ZkInBalance;
       this.transactionInfo.fee!.token = this.feeToken;
 
@@ -575,13 +576,13 @@ export default Vue.extend({
         this.inputtedAddress,
         (this.chosenToken as ZkInBalance).symbol,
         this.feeToken.symbol,
-        txAmount.toString(),
+        txAmount?.toString(),
         calculatedFee as string,
         this.$accessor,
         this.activateAccountFee,
       );
 
-      this.transactionInfo.amount!.amount = txAmount.toString();
+      this.transactionInfo.amount!.amount = txAmount?.toString();
       this.transactionInfo.amount!.token = this.chosenToken as ZkInBalance;
 
       if (BigNumber.isBigNumber(calculatedFee)) {
@@ -643,7 +644,7 @@ export default Vue.extend({
           syncWallet!.address() || "",
           this.feeToken.symbol,
         );
-        this.activateAccountFee = foundFee!.totalFee.toString();
+        this.activateAccountFee = foundFee!.totalFee?.toString();
       } catch (error) {
         this.$toast.global.zkException({
           message: error.message ?? "Error while receiving an unlock fee",
