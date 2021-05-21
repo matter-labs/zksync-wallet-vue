@@ -294,6 +294,7 @@ export declare interface ZkIAccount {
   loadingHint?: string;
   address?: Address;
   name?: string;
+  errorsSpotted: boolean;
 }
 
 export interface ZkIFeesInterface {

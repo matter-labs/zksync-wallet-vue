@@ -1,4 +1,6 @@
 import { walletData } from "@/plugins/walletData";
+import Web3 from "web3";
+import web3Wallet from "~/plugins/web3";
 
 let changeNetworkWasSet = false;
 
@@ -37,9 +39,9 @@ const changeAccountHandle = (dispatch, context) => {
     if (!walletData.get().syncWallet) {
       return;
     }
-    await dispatch("logout");
+    await context.app.$accessor.wallet.logout();
     await context.$router.push("/");
-    await dispatch("clearDataStorage");
+    await context.app.$accessor.wallet.clearDataStorage();
   };
 };
 
@@ -53,12 +55,14 @@ const changeNetworkSet = (dispatch, context) => {
   if (changeNetworkWasSet !== true) {
     if (process.client && window.ethereum) {
       changeNetworkWasSet = true;
-      window.ethereum.on("disconnect", (data) => {
+      if (web3Wallet.get()?.eth?.subscribe()) {
+      }
+      window.ethereum?.on("disconnect", (data) => {
         console.log(data);
         context.$toast.global.zkException({
           message: "Connection with your Wallet was lost. Restarting the DAPP",
         });
-        dispatch("logout");
+        context.app.$accessor.wallet.logout();
       });
       window.ethereum?.on("chainChanged", changeNetworkHandle(dispatch, context));
       window.ethereum?.on("accountsChanged", changeAccountHandle(dispatch, context));

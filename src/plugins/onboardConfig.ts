@@ -5,6 +5,7 @@ import {
   PopupContent,
   Subscriptions,
   Wallet as OnBoardingWallet,
+  WalletCheckInit,
   WalletInitOptions,
   WalletModule,
   WalletSelectModuleOptions,
@@ -12,10 +13,9 @@ import {
 import { Store } from "vuex";
 import Web3 from "web3";
 import {
-  _ETHER_NETWORK_ID_DICTIONARY,
   CURRENT_APP_NAME,
+  ETHER_NETWORK_CAPITALIZED,
   ETHER_NETWORK_ID,
-  ETHER_NETWORK_NAME,
   ONBOARD_FORCED_EXIT_LINK,
   ONBOARD_FORTMATIC_KEY,
   ONBOARD_INFURA_KEY,
@@ -69,6 +69,9 @@ const initializedWallets: WalletSelectModuleOptions = {
     { walletName: "atoken" },
   ],
 };
+
+const walletChecks: Array<WalletCheckInit> = [{ checkName: "derivationPath" }, { checkName: "accounts" }, { checkName: "connect" }, { checkName: "network" }];
+
 export default (ctx: Store<WalletModuleState>): Initialization => {
   const colorTheme: string | null = localStorage.getItem("colorTheme");
   return <Initialization>{
@@ -77,24 +80,77 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
     dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
     darkMode: colorTheme !== null && colorTheme === "dark",
+    walletCheck: walletChecks,
     subscriptions: <Subscriptions>{
-      wallet: (wallet: OnBoardingWallet) => {
+      network: (networkId: number | undefined): void => {
+        console.log("monitoring shown network change");
+
+        /**
+         * In case user was logged in during triggering network change
+         */
+        if (ctx.app.$accessor.account.loggedIn) {
+          //checking if network was changed
+          if (networkId == undefined || networkId !== ETHER_NETWORK_ID) {
+            // now the user should be logged out
+            ctx.app.$accessor.wallet.logout();
+            ctx.app.$toast.global.zkException({
+              message: <string>`Network of your app was changed. You're being logging out. <br> To get back in, please set your network to ${ETHER_NETWORK_CAPITALIZED}`,
+            });
+            // and best to redirect user to the homepage
+            return ctx.$router.replace(
+              "/",
+              (): void => {
+                // after the redirect refresh wallet state
+                ctx.app.$accessor.wallet.walletRefresh();
+              },
+              (err: Error): void => {
+                // after an error do nothing and report
+                console.error(err.name, err.message);
+              },
+            );
+          }
+          //Do nothing
+          return;
+        }
+        if (networkId == undefined) {
+          console.log("network is undefined");
+          //Do nothing
+          return;
+        }
+
+        if (networkId !== ETHER_NETWORK_ID) {
+          ctx.app?.$accessor.wallet.logout();
+          ctx.app?.$toast.global.zkException({
+            message: <string>(
+              `You're trying to login with the Network in your provider other then ${ETHER_NETWORK_CAPITALIZED}. <br> To get login successfully, please change your provider's network to ${ETHER_NETWORK_CAPITALIZED}`
+            ),
+          });
+          ctx.app?.$router?.push("/");
+        }
+
+        if (networkId === ETHER_NETWORK_ID) {
+          if (ctx.app?.$accessor.account.anyNetworkErrorsRegistered) {
+            ctx.app?.$toast.global.zkCancel({
+              message: <string>`Your provider was switched to the ${ETHER_NETWORK_CAPITALIZED}! <br> Trying to log in...`,
+            });
+
+            ctx.app?.$accessor.wallet.walletRefresh();
+            ctx.app?.$accessor.wallet.getOnboard?.accountSelect();
+          }
+        }
+
+        // register the fact that network at the moment was different
+        if (networkId == undefined || networkId !== ETHER_NETWORK_ID) {
+          ctx.app?.$accessor.account.reportState(true);
+        }
+      },
+      wallet: (wallet: OnBoardingWallet): void => {
         if (wallet && wallet.provider) {
           wallet.provider.autoRefreshOnNetworkChange = false;
         }
-        // @ts-ignore
         web3Wallet.set(new Web3(wallet.provider));
         if (process.client) {
-          ctx.app.$accessor.account.setSelectedWallet(wallet.name as string);
-          window.localStorage.setItem("selectedWallet", wallet.name as string);
-        }
-      },
-      network: (networkId: number): void => {
-        if (networkId !== ETHER_NETWORK_ID) {
-          ctx.app.$toast.global.zkException({
-            message: <string>`You're using wrong network. Change in to the ${ETHER_NETWORK_NAME}`,
-          });
-          ctx.app.$accessor.wallet.getOnboard?.walletReset();
+          ctx.app?.$accessor.account.setSelectedWallet(wallet.name as string);
         }
       },
     },

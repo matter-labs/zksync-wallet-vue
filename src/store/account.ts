@@ -9,17 +9,19 @@ export const state = (): ZkIAccount => ({
   loadingHint: "",
   address: undefined,
   name: undefined,
+  errorsSpotted: false,
 });
 
 export type AccountModuleState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
   loggedIn: (state): boolean => state.loggedIn,
-  selectedWallet: (state): string | undefined => state.selectedWallet,
+  previouslySelectedWallet: (state): string | undefined => state.selectedWallet,
   loadingHint: (state): string | undefined => state.loadingHint,
   loader: (state): boolean => !state.loggedIn && state.selectedWallet !== "",
   address: (state): Address | undefined => state.address,
   name: (state): string | undefined => state.name,
+  anyNetworkErrorsRegistered: (state): boolean => state.errorsSpotted,
   zkScanUrl: (state): string | undefined => (state.address ? `${APP_ZK_SCAN}/accounts/${state.address}` : undefined),
 });
 
@@ -38,6 +40,9 @@ export const mutations = mutationTree(state, {
   },
   storeName(state, name: string): void {
     state.name;
+  },
+  processError(state, clear: boolean = false): void {
+    state.errorsSpotted = !clear;
   },
   clearAll(state): void {
     state.name = undefined;
@@ -74,12 +79,32 @@ export const actions = actionTree(
       }
     },
 
+    reportState({ commit }, wasError: boolean = false): void {
+      commit("processError", wasError);
+    },
+
     logout({ commit }): void {
       commit("clearAll");
     },
 
+    clearSelectedWallet({ commit }): void {
+      commit("storeWallet", undefined);
+      window.localStorage.removeItem("selectedWallet");
+    },
+
+    checkPreviouslySelectedWallet({ commit, state }): string | undefined {
+      if (!state.selectedWallet) {
+        const walletStored: string | null = window.localStorage.getItem("selectedWallet");
+        if (walletStored) {
+          this.app.$accessor.account.setSelectedWallet(walletStored);
+        }
+      }
+      return state.selectedWallet;
+    },
+
     setSelectedWallet({ commit }, name: string | undefined): void {
       commit("storeWallet", name);
+      window.localStorage.setItem("selectedWallet", name as string);
     },
     setNameFromStorage({ state, commit }): string | undefined {
       if (state.address !== undefined) {

@@ -182,17 +182,22 @@ export const actions = actionTree(
      * @param rootState
      * @return {Promise<boolean>}
      */
-    async onboardInit({ commit }): Promise<boolean> {
+    onboardInit({ commit }): Promise<boolean> {
       const onboard: API = Onboard(onboardConfig(this));
       commit("setOnboard", onboard);
-      const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
-      if (!previouslySelectedWallet) {
-        this.app.$accessor.account.setSelectedWallet("");
-        return false;
+
+      // Checking if there is any selected wallet in the past
+      const previouslyStoredWallet: string | undefined = this.app.$accessor.account.checkPreviouslySelectedWallet();
+      if (previouslyStoredWallet) {
+        // reporting about found wallet to the end-user
+        this.app.$toast.show(`Found previously selected wallet: ${previouslyStoredWallet}`);
+
+        //ending onboard init with auto-selection
+        return onboard.walletSelect(previouslyStoredWallet);
       }
-      this.app.$toast.show(`Found previously selected wallet: ${previouslySelectedWallet}`);
-      this.app.$accessor.account.setSelectedWallet(previouslySelectedWallet);
-      return await onboard.walletSelect(previouslySelectedWallet);
+
+      // resolving as False
+      return Promise.resolve(false);
     },
 
     /**
@@ -467,7 +472,7 @@ export const actions = actionTree(
      * @param firstSelect
      * @returns {Promise<boolean>}
      */
-    async walletRefresh({ dispatch, state }, firstSelect = true): Promise<boolean> {
+    async walletRefresh({ dispatch, state }, firstSelect: boolean = true): Promise<boolean> {
       try {
         let walletCheck = false;
         this.app.$accessor.account.updateLoadingHint("Processing...");
@@ -477,8 +482,14 @@ export const actions = actionTree(
             return false;
           }
         }
+
+        /**
+         * check the network
+         */
+
         walletCheck = !!(await state.onboard?.walletCheck());
         if (!walletCheck) {
+          console.error("wallet check failed");
           return false;
         }
 
@@ -512,6 +523,7 @@ export const actions = actionTree(
 
         this.app.$accessor.account.updateLoadingHint("Getting wallet information...");
         watcher.changeNetworkSet(dispatch, this);
+
         const accountState = await syncWallet?.getAccountState();
         walletData.set(<iWalletData>{
           syncProvider,
@@ -522,6 +534,8 @@ export const actions = actionTree(
         await this.app.$accessor.wallet.requestZkBalances({ accountState });
 
         await this.app.$accessor.wallet.checkLockedState();
+
+        this.app.$accessor.account.reportState(false);
 
         this.app.$accessor.account.setAddress(syncWallet.address());
         this.app.$accessor.account.setNameFromStorage();
@@ -566,8 +580,6 @@ export const actions = actionTree(
         message,
       });
       if (force) {
-        state.onboard?.walletReset();
-        this.app.$accessor.account.setSelectedWallet("");
       }
     },
   },

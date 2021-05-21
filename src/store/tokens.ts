@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { Wallet } from "zksync/build/wallet";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
@@ -94,8 +94,7 @@ export const actions = actionTree(
       if (Object.entries(getters.getAllTokens).length === 0) {
         /* By taking token list from syncProvider we avoid double getTokens request,
           but the tokensBySymbol param is private on zksync utils types */
-        // @ts-ignore
-        const tokensList: Tokens = walletData.get().syncProvider!.tokenSet.tokensBySymbol;
+        const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
         commit("setAllTokens", tokensList);
         await this.app.$accessor.tokens.loadAcceptableTokens();
         return tokensList || {};
@@ -111,7 +110,7 @@ export const actions = actionTree(
       const accountState = walletData.get().accountState;
 
       const tokens: Tokens = await this.app.$accessor.tokens.loadAllTokens();
-      const zkBalance = accountState?.committed.balances;
+      const zkBalance: { [p: string]: BigNumberish } | undefined = accountState?.committed.balances;
       if (!zkBalance) {
         return {
           tokens,
