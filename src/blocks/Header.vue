@@ -1,5 +1,5 @@
 <template>
-  <header class="loggedInHeader">
+  <i-layout-header class="loggedInHeader">
     <i-container>
       <i-row>
         <i-column :xs="6" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
@@ -47,7 +47,7 @@
     </i-container>
     <account-modal />
     <footer-modal v-model="footerModal" />
-  </header>
+  </i-layout-header>
 </template>
 
 <script lang="ts">

@@ -41,9 +41,42 @@
 
     @media (max-width: $mobile) {
       height: 100vh !important;
+      //height: calc(100vh - 1rem) !important;
       max-height: 100vh !important;
       border-radius: 0 !important;
-
+      //flex-flow: column;
+      //display: flex;
+      //justify-content: space-between;
+      //padding-bottom: 1rem !important;
+      //
+      //header.bn-onboard-modal-content-header {
+      //  margin: 1rem.25rem;
+      //}
+      //
+      //.bn-onboard-select-info-container {
+      //  margin: 0.25rem 0 !important;
+      //  padding: 0.75rem.25rem !important;
+      //  display: flex;
+      //  align-items: center;
+      //
+      //  span.bn-onboard-select-wallet-info {
+      //    margin-top: 0 !important;
+      //  }
+      //}
+      //
+      //p.bn-onboard-select-description {
+      //  padding: 0 0 1rem;
+      //  border-bottom: 0.5px solid $lightViolet;
+      //  margin: 0.5rem;
+      //  display: block;
+      //}
+      //
+      //p.bn-onboard-select-wallet-definition {
+      //  display: block;
+      //  margin: 0;
+      //  padding: 0.25rem;
+      //  transition: all $transition2;
+      //}
       .bn-onboard-modal-content-header {
         margin: 1rem 0 !important;
       }
@@ -162,6 +195,7 @@
       ul.bn-onboard-custom.bn-onboard-modal-select-wallets {
         height: 100%;
         max-height: calc(100% - 285px - 2rem) !important;
+        //max-height: calc(100% - 150px - 1.5rem) !important;
         margin: 0;
         padding: 0;
       }
@@ -169,6 +203,8 @@
       .bn-onboard-custom.bn-onboard-select-info-container {
         margin: 1rem 0 0.5rem;
         padding: 0.75rem 0 0.5rem;
+        //margin: 1rem .5rem;
+        //padding: 0.75rem .5rem;
         border-top: 0.5px solid $lightViolet;
       }
 

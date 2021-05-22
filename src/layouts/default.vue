@@ -1,9 +1,9 @@
 <template>
-  <div class="defaultLayout">
+  <i-layout class="defaultLayout">
     <logging-in-loader />
-    <div v-if="!loggingIn && loggedIn" class="layoutContent">
+    <header-component ref="header" />
+    <i-layout-content v-if="!loggingIn && loggedIn" class="layoutContent">
       <div class="headerSpace mobileOnly"></div>
-      <header-component ref="header" />
       <div class="routerContainer">
         <transition name="fade" mode="out-in">
           <nuxt />
@@ -11,8 +11,8 @@
       </div>
       <div class="mobileOnly" style="height: 90px"></div>
       <footer-component class="desktopOnly" />
-    </div>
-  </div>
+    </i-layout-content>
+  </i-layout>
 </template>
 
 <script type="ts">

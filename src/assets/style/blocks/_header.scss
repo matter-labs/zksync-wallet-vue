@@ -1,6 +1,6 @@
 header {
   width: 100%;
-  height: 80px;
+  height: $headerHeight;
   padding: 0;
   transition: background-color $transition1;
 
@@ -19,7 +19,7 @@ header {
 
         .headerLink {
           padding: 10px 10px;
-          font-size: 14px;
+          font-size: $fontSizeRegular;
         }
       }
     }
@@ -108,7 +108,7 @@ header {
     }
 
     @media screen and (min-width: 1201px) {
-      max-width: 1920px;
+      max-width: $biggestWidth;
     }
   }
 
@@ -145,7 +145,7 @@ header {
     .headerLink {
       padding: 10px 15px;
       color: $violet;
-      border-radius: $borderRadius;
+      border-radius: $borderRadiusMd;
       transition: $transition1;
       transition-property: background-color, color;
       will-change: background-color, color;
@@ -154,6 +154,7 @@ header {
         color: #27274e;
         font-weight: 600;
         background: #f7fafc;
+        //background: $light;
       }
     }
   }
@@ -165,7 +166,8 @@ header {
       left: 0;
     }
 
-    .pagesContainer,.mobileFooter {
+    .pagesContainer,
+    .mobileFooter {
       background-color: $darkViolet;
       box-shadow: $shadowTop;
     }
@@ -177,7 +179,7 @@ header {
       grid-gap: 2px;
       justify-content: center;
       width: 100%;
-      height: 80px;
+      height: $headerHeight;
       padding: 6px 5vw;
 
       .headerLink {
@@ -186,14 +188,16 @@ header {
         justify-content: center;
         height: 100%;
         padding: 9px 10px;
-        font-size: 14px;
-
+        font-size: $fontSizeRegular;
         &.nuxt-link-exact-active {
           font-weight: 400;
         }
 
         i {
-          display: block;
+          //font-size: 25px;
+          //padding: 0 0 10px;
+          //height: 35px;
+          //display: block;
           padding-top: 2px;
           padding-bottom: 5px;
           font-size: 20px;
@@ -230,13 +234,13 @@ header {
 
       .walletLabel {
         color: darken($tempLightGray, 20);
-        font-size: 14px;
+        font-size: $fontSizeRegular;
         line-height: 20px;
         text-align: left;
       }
 
       .address {
-        font-size: 14px;
+        font-size: $fontSizeRegular;
         line-height: 20px;
         white-space: nowrap;
       }
@@ -280,7 +284,7 @@ header {
       grid-gap: 20px;
 
       a {
-        font-size: 14px !important;
+        font-size: $fontSizeRegular !important;
       }
     }
 
@@ -333,7 +337,8 @@ body.inkline.-light header {
     color: $black;
   }
 
-  .pagesContainer,.mobileFooter {
+  .pagesContainer,
+  .mobileFooter {
     @media screen and (max-width: $mobile) {
       background-color: $white;
     }

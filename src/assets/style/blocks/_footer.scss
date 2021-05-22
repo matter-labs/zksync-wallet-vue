@@ -1,3 +1,5 @@
+$colorLightGray: #e9ecef;
+
 footer {
   img {
     -webkit-user-select: none;
@@ -13,7 +15,7 @@ footer {
   @media screen and (min-width: 1201px) {
     .container {
       width: calc(100vw - 34px);
-      max-width: 1920px;
+      max-width: $biggestWidth;
     }
   }
 
@@ -21,7 +23,7 @@ footer {
     width: 100%;
 
     .row {
-      font-size: 14px !important;
+      font-size: $fontSizeRegular !important;
     }
 
     & > div {
@@ -32,10 +34,10 @@ footer {
   }
 
   a {
-    font-size: 14px;
+    font-size: $fontSizeRegular;
 
     @media (max-width: $mobile) {
-      font-size: 14px;
+      font-size: $fontSizeRegular;
     }
 
     &:hover {
@@ -52,27 +54,6 @@ footer {
     height: auto;
   }
 
-  .poweredBy {
-    display: flex;
-    align-items: center;
-    color: $violet;
-    text-transform: uppercase;
-    text-decoration: none;
-
-    .headerWrapper {
-      width: max-content;
-      margin: 0 10px;
-      padding: 0 !important;
-
-      .projectLogo {
-        width: 127px !important;
-        height: 30px;
-        margin: 0 !important;
-        transform: translateY(-2px);
-      }
-    }
-  }
-
   .floating-on-mobile {
     transform: translateY(-5px);
   }
@@ -80,16 +61,20 @@ footer {
   @media (max-width: 992px) {
     .floating-on-mobile {
       position: fixed;
-      right: 8vw;
-      bottom: 4vh;
       width: 2.5rem !important;
       height: 2.5rem !important;
       padding: 0;
       border-radius: 100%;
-      box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.08), 0 6px 10px 0 rgba(0, 0, 0, 0.1), 0 1px 18px 0 rgba(0, 0, 0, 0.1);
+      box-shadow: $tileShadow;
 
-      @media (min-width: $mobile) {
-        bottom: 80px;
+      &:hover {
+        box-shadow: $hoverShadow;
+      }
+
+      @media (max-width: $mobile) {
+        right: 8vw;
+        bottom: 6rem;
+        //bottom: 80px;
       }
     }
   }
@@ -99,7 +84,7 @@ footer {
   footer {
     a {
       color: $violet !important;
-      font-size: 14px;
+      font-size: $fontSizeRegular;
 
       &:hover {
         color: $lightViolet !important;
@@ -136,6 +121,6 @@ footer {
 .inkline.-dark {
   footer > .container .badge {
     color: $darkerGray;
-    background: #e9ecef;
+    background: $colorLightGray;
   }
 }

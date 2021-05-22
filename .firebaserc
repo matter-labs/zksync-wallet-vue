@@ -20,11 +20,11 @@
         "mainnet-dev": [
           "zksync-vue-mainnet-dev"
         ],
-        "stage": [
-          "stage-mainnet-zksync-vue"
-        ],
         "rinkeby-beta": [
-          "beta-rinkeby-zksync-vue"
+          "rinkeby-beta-zksync-vue"
+        ],
+        "stage": [
+          "stage-zksync-vue"
         ]
       }
     },
