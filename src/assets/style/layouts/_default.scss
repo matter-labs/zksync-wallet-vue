@@ -12,6 +12,7 @@
     width: 90%;
     max-width: 505px;
     height: auto;
+    min-height: 500px;
     //margin-top: 15px;
     //margin-top: 35px;
     margin-right: auto;
@@ -20,6 +21,10 @@
     border-radius: $borderRadius;
     box-shadow: 4px 4px 8px 0 rgba(11, 52, 102, 0.02);
     transition: background-color $transition1;
+    &.accountBlock
+    {
+      min-height: 0;
+    }
 
     .tileHeadline {
       display: flex;
@@ -110,9 +115,7 @@
     footer {
       margin-bottom: $footerHeight; /* Navigation bar space */
 
-      .floating-on-mobile {
-        bottom: calc(4vh + 80px);
-      }
+
     }
   }
 

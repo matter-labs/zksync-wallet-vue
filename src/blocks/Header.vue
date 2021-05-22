@@ -52,7 +52,6 @@
 
 <script lang="ts">
 import logo from "@/blocks/Logo.vue";
-import userImg from "@/components/userImg.vue";
 import accountModal from "@/blocks/modals/AccountModal.vue";
 import footerModal from "@/blocks/modals/FooterModal.vue";
 import Vue from "vue";
@@ -60,7 +59,6 @@ import Vue from "vue";
 export default Vue.extend({
   components: {
     logo,
-    userImg,
     accountModal,
     footerModal,
   },

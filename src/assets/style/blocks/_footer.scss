@@ -19,6 +19,12 @@ footer {
     }
   }
 
+  @media screen and (max-width: $mobile) {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+  }
+
   &.mainFooter {
     width: 100%;
 
@@ -27,6 +33,7 @@ footer {
     }
 
     & > div {
+
       @media (max-width: $mobile) {
         flex-direction: column-reverse !important;
       }
@@ -72,9 +79,8 @@ footer {
       }
 
       @media (max-width: $mobile) {
-        right: 8vw;
-        bottom: 6rem;
-        //bottom: 80px;
+        bottom: 110px;
+        right: 10px;
       }
     }
   }

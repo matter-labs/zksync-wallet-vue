@@ -4,14 +4,16 @@ header {
   padding: 0;
   transition: background-color $transition1;
 
+  @media screen and (max-width: $mobile) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    box-shadow: $shadowBottom;
+  }
+
   &.loggedInHeader {
-    @media screen and (max-width: $mobile) {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 9;
-      box-shadow: $shadowBottom;
-    }
+
 
     @media screen and (min-width: 992px) and (max-width: 1200px) {
       .pagesContainer.linksContainer {
@@ -339,6 +341,7 @@ body.inkline.-light header {
 
   .pagesContainer,
   .mobileFooter {
+
     @media screen and (max-width: $mobile) {
       background-color: $white;
     }

@@ -1,6 +1,8 @@
 import { Network } from "zksync/build/types";
-import { name, version } from "../../package.json";
+import { version, dependencies } from "../../package.json";
 import { networkEthId } from "~/types/lib";
+
+console.log(dependencies);
 
 export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
   { name: "rinkeby", id: 4 },
@@ -11,9 +13,12 @@ export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 export const GIT_REVISION_SHORT: string = GIT_REVISION ? GIT_REVISION.slice(-7) : "";
 export const VERSION: string = version;
+export const ZK_IS_BETA: boolean =
+  process.env.ZK_NETWORK !== undefined || (process.env.ZK_SPECIAL_API !== undefined && (process.env.ZK_SPECIAL_API as string).search("beta") !== -1);
 export const ETHER_NETWORK_NAME: Network = process.env.APP_CURRENT_NETWORK as Network;
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
-export const CURRENT_APP_NAME = `${name}@${ETHER_NETWORK_CAPITALIZED}`;
+export const CURRENT_APP_NAME = `zkSync Wallet${ZK_IS_BETA ? ":beta" : ""}`;
+export const ZK_LIB_VERSION = dependencies?.zksync ?? "latest";
 
 export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 
@@ -35,7 +40,7 @@ export const ethWindow: Window = global.window;
 
 export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
-export const APP_ZK_SCAN = `https://${ETHER_PREFIX_DOT}zkscan.io`;
+export const APP_ZK_SCAN: string = process.env.ZK_SPECIAL_SCAN ? process.env.ZK_SPECIAL_SCAN : `https://${ETHER_PREFIX_DOT}zkscan.io`;
 export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}/explorer`;
 export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
 

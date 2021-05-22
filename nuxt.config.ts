@@ -2,6 +2,7 @@ import { Configuration, NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 
+// noinspection ES6PreferShortImport
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
 const srcDir = "./src/";
@@ -167,7 +168,7 @@ const config: NuxtConfig = {
             async: true,
             eslint: {
               config: [".eslintrc.js", ".tsconfig-eslint.json"],
-              files: `${srcDir}/**/*.{ts,js,vue, scss}`,
+              files: "**/*.{ts,js,vue,scss}",
             },
           },
         },
@@ -178,7 +179,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/axios", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
+  modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
@@ -225,7 +226,7 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
-    hardSource: true,
+    hardSource: false,
     ssr: false,
     extend: (config: Configuration) => {
       config.node = {
@@ -235,6 +236,9 @@ const config: NuxtConfig = {
   },
   buildOptimisations: {
     profile: env !== "prod" ? "risky" : "experimental",
+    features: {
+      hardSourcePlugin: false,
+    },
   },
   googleFonts: {
     prefetch: true,

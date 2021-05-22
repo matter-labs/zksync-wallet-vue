@@ -68,13 +68,9 @@
 import utils from "@/plugins/utils";
 import { ZkInContact } from "@/types/lib";
 import { Address } from "zksync/build/types";
-import userImg from "@/components/userImg.vue";
 import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
-  components: {
-    userImg,
-  },
   props: {
     address: {
       type: String,

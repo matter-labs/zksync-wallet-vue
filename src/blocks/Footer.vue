@@ -28,7 +28,10 @@
         <div class="_padding-1-2 _padding-md-x-1 _hidden-sm-and-down">
           <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
             <strong>v.{{ version }}</strong
-            >:{{ revision }} |
+            ><span class="revision">:{{ revision }}</span
+            ><span class="network">@{{ netName }}</span
+            ><strong v-if="isBeta" class="beta">@{{ netName }}</strong>
+            <span class="separator">|</span>
             <a href="https://uptime.com/s/zksync" target="_blank">uptime</a>
           </i-badge>
         </div>
@@ -42,14 +45,23 @@
 </template>
 
 <script lang="ts">
-import { APP_ZK_SCAN, GIT_REVISION_SHORT, VERSION } from "@/plugins/build";
+import { APP_ZKSYNC_BLOCK_EXPLORER, GIT_REVISION_SHORT, VERSION, ZK_NETWORK, ZK_IS_BETA, ZK_LIB_VERSION } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
   computed: {
     blockExplorerLink(): string {
-      return APP_ZK_SCAN;
+      return APP_ZKSYNC_BLOCK_EXPLORER;
+    },
+    netName(): string {
+      return ZK_NETWORK;
+    },
+    isBeta(): boolean {
+      return ZK_IS_BETA;
+    },
+    zkLibVersion(): string {
+      return ZK_LIB_VERSION;
     },
     version(): string {
       return VERSION;

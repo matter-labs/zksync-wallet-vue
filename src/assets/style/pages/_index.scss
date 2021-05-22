@@ -25,7 +25,7 @@
 
   @media (max-width: $mobile) {
     .container {
-      justify-content: start;
+      justify-content: flex-start;
       padding-top: 2rem;
 
       h1 {
