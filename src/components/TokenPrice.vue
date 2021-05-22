@@ -5,7 +5,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 
-import { GweiBalance } from "@/plugins/types";
+import { GweiBalance } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { TokenSymbol } from "zksync/build/types";
 
@@ -28,7 +28,7 @@ export default Vue.extend({
       if (this.$accessor.tokens.getTokenPrices[this.symbol]) {
         return utils.getFormattedTotalPrice(
           Number(this.$accessor.tokens.getTokenPrices[this.symbol].price),
-          typeof this.amount === "string" ? +utils.handleFormatToken(this.symbol, this.amount) : this.amount,
+          (typeof this.amount === "string" ? +utils.handleFormatToken(this.symbol, this.amount) : this.amount) as number,
         );
       } else {
         return "";

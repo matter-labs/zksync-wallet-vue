@@ -21,7 +21,7 @@
 <script lang="ts">
 import SingleTransaction from "@/components/SingleTransaction.vue";
 import AccountActivationModal from "@/blocks/modals/AccountActivation.vue";
-import { ZkInTx } from "@/plugins/types";
+import { ZkInTx } from "@/types/lib";
 import { Address } from "zksync/build/types";
 import Vue, { PropOptions } from "vue";
 

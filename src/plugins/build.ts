@@ -1,8 +1,8 @@
-import { networkEthId, ethWindow } from "@/plugins/types";
 import { Network } from "zksync/build/types";
 import { name, version } from "../../package.json";
+import { networkEthId } from "~/types/lib";
 
-const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
+export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
   { name: "rinkeby", id: 4 },
   { name: "ropsten", id: 3 },
   { name: "mainnet", id: 1 },
@@ -18,15 +18,23 @@ export const CURRENT_APP_NAME = `${name}@${ETHER_NETWORK_CAPITALIZED}`;
 export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 
 export const ETHER_PREFIX: string = ETHER_PRODUCTION ? "" : ETHER_NETWORK_NAME;
+
 export const ETHER_PREFIX_DOT: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : ".");
 export const ETHER_PREFIX_MINUS: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : "-");
 
 export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY.find((value: networkEthId): boolean => value?.name === (ETHER_NETWORK_NAME as string))?.id;
-export const { ethereum }: ethWindow = window;
+
+/**
+ * The right way of strict-typing for the web3provider
+ *  — thanks to the [global.window] with type NodeJS.Global operation with the typed window is generally possible
+ *  — provider [window.ethereum] should be declared separately using shims (index.d.ts)
+ *    @see /src/types/index.d.ts
+ * @author: Serge B. | Matter Labs
+ */
+export const ethWindow: Window = global.window;
 
 export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
-
 export const APP_ZK_SCAN = `https://${ETHER_PREFIX_DOT}zkscan.io`;
 export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}/explorer`;
 export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;

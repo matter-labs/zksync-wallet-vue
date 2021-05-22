@@ -1,5 +1,5 @@
 import { ZK_API_BASE } from "@/plugins/build";
-import { TokenInfo, Tokens, ZkInTokenPrices } from "@/plugins/types";
+import { TokenInfo, Tokens, ZkInTokenPrices } from "@/types/lib";
 import { walletData } from "@/plugins/walletData";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { TokenSymbol } from "zksync/build/types";

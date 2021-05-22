@@ -42,7 +42,7 @@
 <script lang="ts">
 import NoTokenFound from "@/blocks/modals/NoTokenFound.vue";
 import utils from "@/plugins/utils";
-import { ZkInBalance } from "@/plugins/types";
+import { ZkInBalance } from "@/types/lib";
 
 import Vue, { PropOptions } from "vue";
 

@@ -136,7 +136,7 @@ import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 
-import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/plugins/types";
+import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
@@ -358,7 +358,7 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         this.tip = `Confirm the transaction in order to approve ${this.chosenToken.symbol} token`;
         this.transactionInfo.type = "unlock";
-        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited === true ? undefined : this.amountBigNumber);
+        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
         const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken: ZkInBalance | undefined;
         for (const token of balances) {
@@ -389,7 +389,7 @@ export default Vue.extend({
         this.transactionInfo.fee = undefined;
         this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
         this.transactionInfo.continueBtnFunction = true;
-        if (unlimited === false) {
+        if (!unlimited) {
           this.transactionInfo.continueBtnText = "Proceed to deposit";
         } else {
           this.transactionInfo.continueBtnText = "Ok";

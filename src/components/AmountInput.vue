@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { DecimalBalance, GweiBalance, ZkInToken } from "@/plugins/types";
+import { DecimalBalance, GweiBalance, ZkInToken } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
 import Vue, { PropOptions } from "vue";

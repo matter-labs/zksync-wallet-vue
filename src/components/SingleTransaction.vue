@@ -34,7 +34,7 @@
 <script lang="ts">
 import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { ZkInTx } from "@/plugins/types";
+import { ZkInTx } from "@/types/lib";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { walletData } from "@/plugins/walletData";
 

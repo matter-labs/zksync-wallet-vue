@@ -9,7 +9,7 @@
   padding: 15px 20px;
   background-color: $lighterGray;
   border: 1px solid $tempLightGray;
-  border-radius: 5px;
+  border-radius: $borderRadiusMd;
 
   .alertIcon {
     color: $darkerGray;
@@ -21,7 +21,7 @@
     color: $tempLightGray;
     font-size: $tempFontSizeMedium;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color.2s ease;
     will-change: color;
 
     &:hover {

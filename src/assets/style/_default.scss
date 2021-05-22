@@ -1,11 +1,10 @@
-//#__nuxt,
-//#__layout,
-//.layoutContent,
-//.defaultLayout {
-//  width: 100%;
-//  height: max-content;
-//  min-height: 100vh;
-//}
+#__nuxt,
+#__layout,
+.defaultLayout {
+  width: 100%;
+  height: max-content;
+  min-height: 100vh;
+}
 
 #nuxt-loading {
   background-color: $darkViolet !important;
@@ -74,11 +73,13 @@ body.inkline {
       text-decoration: none !important;
       border-radius: $borderRadiusSm;
     }
+
     &.-secondary {
       &:disabled {
         opacity: 0.3;
       }
     }
+
     &.-dark {
       &:disabled {
         background-color: $violet;
@@ -314,10 +315,12 @@ button.-lg.-circle {
     border-radius: $borderRadius;
     cursor: pointer;
     transition: background-color $transition1;
+
     &.big {
       i {
         font-size: 20px;
       }
+
       span {
         font-size: 18px;
       }
@@ -369,7 +372,7 @@ button.-lg.-circle {
     }
 
     .form-input-append {
-      background-color: transparent !important;
+      //background-color: transparent !important;
 
       &:hover {
         //background-color: rgba(0, 0, 0, 0.01961) !important;
@@ -502,6 +505,7 @@ button.-lg.-circle {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 100%;
   grid-gap: 15px;
+
   @media screen and (max-width: $mobile) {
     grid-gap: 10px;
     grid-template-columns: 100%;

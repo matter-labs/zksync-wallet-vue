@@ -2,8 +2,20 @@
   // extend your base config so you don't have to redefine your compilerOptions
   "extends": "./tsconfig.json",
   "include": [
-    "./src/**/*.ts",
-    "./src/**/*.vue",
-    "./src/**/*.js",
-  ]
+    "**/*.ts",
+    "**/*.vue",
+    "**/*.js"
+  ],
+  "exclude": [
+    "tests/*",
+    "src/assets/fonts/*"
+  ],
+  "compilerOptions": {
+    "rootDir": ".src/",
+    "lib": [
+      "ES2019",
+      "dom",
+      "node"
+    ]
+  }
 }

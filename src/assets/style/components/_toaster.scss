@@ -1,7 +1,7 @@
 .toasted-container {
   .toasted {
     &-primary {
-      border-radius: 6px !important;
+      border-radius: $borderRadius !important;
       box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.12) !important;
       transition: background-color $transition1, color $transition1;
 

@@ -3,22 +3,21 @@
   height: 100%;
 
   .routerContainer {
-    min-height: $minRouteHeightMain;
-
+    min-height: $minRouteHeightWithExtra;
     /* @media (max-width: $mobile) {
       min-height: $minRouteHeight !important;
     } */
   }
-
   .tileBlock {
     width: 90%;
     max-width: 505px;
     height: auto;
-    margin-top: 15px;
+    //margin-top: 15px;
+    //margin-top: 35px;
     margin-right: auto;
     margin-left: auto;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: $borderRadius;
     box-shadow: 4px 4px 8px 0 rgba(11, 52, 102, 0.02);
     transition: background-color $transition1;
 
@@ -97,21 +96,22 @@
       text-align: center;
     }
   }
+
   .tileTextBg {
     margin: 5px 0;
     padding: 12px 15px;
     font-size: 15px;
     text-align: center;
     border: 1px solid;
-    border-radius: 5px;
+    border-radius: $borderRadiusMd;
   }
 
-  footer {
-    @media (max-width: $mobile) {
-      margin-bottom: 80px; /* Navigation bar space */
+  @media (max-width: $mobile) {
+    footer {
+      margin-bottom: $footerHeight; /* Navigation bar space */
 
       .floating-on-mobile {
-        bottom: calc(4vh + 70px);
+        bottom: calc(4vh + 80px);
       }
     }
   }
@@ -161,8 +161,8 @@ body.inkline.-dark {
 
 .form-input-group.-light .form-input input,
 input.form-input.-prefixed {
-  background-color: #0000000a !important;
-  border-radius: 0.3rem !important;
+  background-color: $input-border-color-light !important;
+  border-radius: $borderRadiusSm;
   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.035) !important;
 }
 
@@ -193,5 +193,24 @@ em.iconInfo {
 
   &:hover {
     background: transparentize($color: $gray, $amount: 0.5);
+  }
+}
+
+@media (min-width: $mobile)
+{
+  .defaultLayout
+  {
+    justify-content: stretch;
+    align-items: stretch;
+  }
+  .layoutContent, .layoutContent .routerContainer, .layoutContent .routerContainer > div
+  {
+    min-height: min-content;
+    display: flex;
+    height: min-content;
+    flex-direction: column;
+    padding: 1rem 0;
+    gap: 1rem;
+    justify-content: stretch;
   }
 }

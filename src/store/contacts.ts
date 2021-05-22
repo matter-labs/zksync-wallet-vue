@@ -1,14 +1,9 @@
-import { ZkInContact } from "@/plugins/types";
 import { Address } from "zksync/build/types";
 import utils from "@/plugins/utils";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { ZkIContracts, ZkInContact } from "~/types/lib";
 
-export declare interface iContacts {
-  contactsList: ZkInContact[];
-  storageKey?: string;
-}
-
-export const state = (): iContacts => ({
+export const state = (): ZkIContracts => ({
   contactsList: [],
   storageKey: undefined,
 });
@@ -98,7 +93,7 @@ export const actions = actionTree(
         contactsList = contactsList.filter((contact: ZkInContact) => utils.validateAddress(contact.address) && contact.name.length > 0);
         commit("setContactsList", contactsList);
       } catch (error) {
-        this.$sentry.captureException(error);
+        this.$sentry?.captureException(error);
         commit("initContactsList");
       }
     },

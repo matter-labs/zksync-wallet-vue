@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { DecimalBalance, GweiBalance, ZkInBalance } from "@/plugins/types";
+import { DecimalBalance, GweiBalance, ZkInBalance } from "@/types/lib";
 import { utils as zkUtils } from "zksync";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { IPrototype } from "@inkline/inkline/src/plugin.d";

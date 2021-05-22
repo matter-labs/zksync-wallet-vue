@@ -192,7 +192,7 @@ import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 
-import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZkInTransactionType } from "@/plugins/types";
+import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZKTypeTransactionType } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { transaction, withdraw } from "@/plugins/walletActions/transaction";
 import { getCPKTx, removeCPKTx } from "@/plugins/walletActions/cpk";
@@ -219,7 +219,7 @@ export default Vue.extend({
       type: String,
       default: "transfer",
       required: true,
-    } as PropOptions<ZkInTransactionType>,
+    } as PropOptions<ZKTypeTransactionType>,
     fromRoute: {
       type: Object,
       default: undefined,
@@ -411,7 +411,7 @@ export default Vue.extend({
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
       const balances = <Array<ZkInBalance>>(
-        JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance) - parseFloat(a.balance))
+        JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance as string) - parseFloat(a.balance as string))
       );
       if (this.chosenToken.restricted) {
         let tokenFound = false;

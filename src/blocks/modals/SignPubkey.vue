@@ -27,7 +27,7 @@ import { Route } from "vue-router/types";
 import { walletData } from "@/plugins/walletData";
 import { utils } from "zksync";
 import { saveCPKTx } from "@/plugins/walletActions/cpk";
-import { CPKLocal } from "@/plugins/types";
+import { CPKLocal } from "@/types/lib";
 import zkUtils from "@/plugins/utils";
 
 export default Vue.extend({
@@ -55,7 +55,7 @@ export default Vue.extend({
   methods: {
     close() {
       this.$accessor.closeActiveModal();
-      if (this.success === true) {
+      if (this.success) {
         return;
       }
       if (!this.fromRoute) {

@@ -13,7 +13,7 @@ Vue.use(VueScrollTo);
  * Implementation of the tokenFormatter as a global filter
  */
 Vue.filter("formatToken", (value: string | BigNumber, symbol: TokenSymbol) => {
-  return utils.handleFormatToken(symbol, value.toString());
+  return utils.handleFormatToken(symbol, value?.toString());
 });
 
 /**
@@ -47,7 +47,7 @@ Vue.toasted.register(
     return payload.message ?? "Oops...Something went wrong";
   },
   <ToastOptions>{
-    duration: undefined,
+    duration: 4000,
     className: "zkToastException",
     icon: "fa-times-circle",
     type: "error",

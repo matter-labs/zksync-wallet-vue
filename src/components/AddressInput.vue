@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import userImg from "@/components/userImg.vue";
-import { DecimalBalance } from "@/plugins/types";
+import { DecimalBalance } from "@/types/lib";
 
 import utils from "@/plugins/utils";
 import Vue, { PropOptions } from "vue";

@@ -1,4 +1,4 @@
-import { iWalletData, iWalletWrapper } from "@/plugins/types";
+import { iWalletData, iWalletWrapper } from "@/types/lib";
 
 const internalWalletData: iWalletData = {
   syncProvider: undefined,

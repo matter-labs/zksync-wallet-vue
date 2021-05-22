@@ -76,6 +76,7 @@
       border-bottom: 1px solid;
       cursor: pointer;
       transition: background-color $transition1;
+
       @media screen and (max-width: $mobile) {
         height: 74px !important;
         padding: 7px 20px !important;

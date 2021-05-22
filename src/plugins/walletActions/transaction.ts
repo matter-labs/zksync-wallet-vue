@@ -1,4 +1,4 @@
-import { GweiBalance } from "@/plugins/types";
+import { GweiBalance } from "@/types/lib";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
 import { submitSignedTransactionsBatch, Transaction } from "zksync/build/wallet";
@@ -14,6 +14,7 @@ import { addCPKToBatch } from "@/plugins/walletActions/cpk";
  * @param {GweiBalance} amountBigValue
  * @param {GweiBalance} feeBigValue
  * @param store
+ * @param accountActivationFee
  * @returns {Promise<Transaction[]>}
  */
 export const transaction = async (
@@ -84,6 +85,7 @@ interface WithdrawParams {
  * @param amount
  * @param fastWithdraw
  * @param fee
+ * @param accountActivationFee
  * @param store
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
@@ -101,7 +103,7 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   if (token === feeToken) {
     batchBuilder.addWithdraw({
       ethAddress: address,
-      fastProcessing: !!fastWithdraw,
+      fastProcessing: fastWithdraw,
       token,
       amount,
       fee,

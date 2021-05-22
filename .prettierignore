@@ -7,7 +7,7 @@ src/static/
 environments/*
 public/*
 _nuxt/*
-sw.js
+src/static/sw.js
 tests/*
 *.example
 src/assets/fonts/

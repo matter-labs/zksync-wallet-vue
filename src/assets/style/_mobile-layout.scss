@@ -55,6 +55,10 @@
     min-height: 100vh !important;
   }
 
+  #__layout {
+    overflow: hidden;
+  }
+
   main.layout.indexLayout {
     display: flex;
     width: 100%;
@@ -66,17 +70,6 @@
     line-height: 1.4;
   }
 
-  div#__layout {
-    max-width: 100vh !important;
-    overflow: hidden;
-  }
-
-  body.inkline.-light,
-  div#__layout,
-  div#__nuxt {
-    max-height: 100vh !important;
-  }
-
   footer.layout-footer._padding-top-1.mainFooter {
     min-height: 80px;
   }
@@ -85,16 +78,6 @@
     min-height: 80px;
   }
 
-  div#__layout {
-    max-width: 100vh !important;
-    overflow: hidden;
-  }
-
-  body.inkline.-light,
-  div#__layout,
-  div#__nuxt {
-    max-height: 100vh !important;
-  }
 
   footer.layout-footer._padding-top-1.mainFooter {
     min-height: 80px;
@@ -114,22 +97,13 @@
     display: none;
   }
 
-  div#__layout {
+  #__layout {
     max-width: 100vh !important;
     overflow: hidden;
   }
 
-  body.inkline.-light,
-  div#__layout,
-  div#__nuxt {
-    max-height: 100vh !important;
-  }
 
   footer.layout-footer._padding-top-1.mainFooter {
-    min-height: 80px;
-  }
-
-  header.indexHeader {
     min-height: 80px;
   }
 
@@ -144,12 +118,12 @@
   }
 
   footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer.svelte-mi6ahc {
-    justify-content: spaces-between;
+    justify-content: space-between;
     margin: 0;
     padding: 0;
   }
 
-  bn-onboard-custom.bn-onboard-modal-content {
+  .bn-onboard-custom.bn-onboard-modal-content {
     section.bn-onboard-custom.bn-onboard-modal-content {
       margin: 0 !important;
       padding: 0 !important;
@@ -177,8 +151,6 @@
     overflow-y: scroll;
   }
 
-  div.headerSpace.mobileOnly {
-  }
 
   main.layout.defaultLayout {
     flex-flow: column nowrap;
@@ -208,27 +180,34 @@
   }
 
   section.layoutContent {
-    margin-bottom: 80px;
+    margin: 0 0 80px;
+
 
     .mobileOnly {
       display: none !important;
     }
   }
 
-  section.layout-content.layoutContent {
-    min-height: auto !important;
-    position: initial !important;
-    flex: initial;
-    display: flex;
-    flex-direction: column;
-    height: auto;
-  }
+
 
   header.layout-header.loggedInHeader {
     position: initial;
   }
 
-  section.layout-content.layoutContent {
-    margin: 0;
+}
+
+.layout-content.layoutContent {
+  min-height: auto !important;
+  position: initial !important;
+  flex: initial;
+  flex-direction: column;
+  height: auto;
+  align-items: stretch;
+  display: flex;
+  justify-content: stretch;
+  .routerContainer
+  {
+    min-height: 0;
+    margin: 1rem auto;
   }
 }

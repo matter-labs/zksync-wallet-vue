@@ -1,6 +1,6 @@
 import { ZK_API_BASE, ZK_NETWORK } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { iWalletData, ZkInBalance, ZkInFeesObj, ZkInTx } from "@/plugins/types";
+import { iWalletData, ZkInBalance, ZkInFeesObj, ZkInTx, ZkInWithdrawalTime } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
@@ -312,27 +312,25 @@ export const actions = actionTree(
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
 
-      const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(
-        async (key: number | string): Promise<undefined | ZkInBalance> => {
-          const currentToken = loadedTokens.tokens[key];
-          const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
-          try {
-            this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
-          } catch (error) {
-            this.commit("tokens/addRestrictedToken", currentToken.symbol);
-          }
-          return {
-            id: currentToken.id,
-            address: currentToken.address,
-            balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
-            rawBalance: balance,
-            verifiedBalance: balance.toString(),
-            symbol: currentToken.symbol,
-            status: "Verified",
-            restricted: false,
-          };
-        },
-      );
+      const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key: number | string): Promise<undefined | ZkInBalance> => {
+        const currentToken = loadedTokens.tokens[key];
+        const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+        try {
+          this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
+        } catch (error) {
+          this.commit("tokens/addRestrictedToken", currentToken.symbol);
+        }
+        return {
+          id: currentToken.id,
+          address: currentToken.address,
+          balance: utils.handleFormatToken(currentToken.symbol, balance ? balance.toString() : "0"),
+          rawBalance: balance,
+          verifiedBalance: balance.toString(),
+          symbol: currentToken.symbol,
+          status: "Verified",
+          restricted: false,
+        };
+      });
       const balancesResults: (void | ZkInBalance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
         this.$sentry.captureException(error);
         return [];
@@ -370,15 +368,15 @@ export const actions = actionTree(
       }
       try {
         const syncWallet = walletData.get().syncWallet;
-        const fetchTransactionHistory = await this.$axios.get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
+        const fetchTransactionHistory: ZkInTx[] = await this.$http.$get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
         if (savedAddress !== this.app.$accessor.account.address) {
           return localList.list;
         }
         commit("setTransactionsList", {
           lastUpdated: new Date().getTime(),
-          list: offset === 0 ? fetchTransactionHistory.data : [...localList.list, ...fetchTransactionHistory.data],
+          list: offset === 0 ? fetchTransactionHistory : [...localList.list, ...fetchTransactionHistory],
         });
-        return fetchTransactionHistory.data;
+        return fetchTransactionHistory;
       } catch (error) {
         this.$sentry.captureException(error);
         this.app.$toast.global.zkException({
@@ -446,19 +444,14 @@ export const actions = actionTree(
       commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
       return feesObj;
     },
-    async requestWithdrawalProcessingTime({
-      getters,
-      commit,
-    }): Promise<{
-      normal: number;
-      fast: number;
-    }> {
+    async requestWithdrawalProcessingTime({ getters, commit }): Promise<ZkInWithdrawalTime> {
       if (getters.getWithdrawalProcessingTime) {
         return getters.getWithdrawalProcessingTime;
       }
-      const withdrawTime = await this.$axios.get(`https://${ZK_API_BASE}/api/v0.1/withdrawal_processing_time`);
-      commit("setWithdrawalProcessingTime", withdrawTime.data);
-      return withdrawTime.data;
+      const withdrawTime: ZkInWithdrawalTime = await this.$http.$get(`https://${ZK_API_BASE}/api/v0.1/withdrawal_processing_time`);
+      // @ts-ignore
+      commit("setWithdrawalProcessingTime", withdrawTime);
+      return withdrawTime;
     },
     async checkLockedState({ commit }): Promise<void> {
       const syncWallet = walletData.get().syncWallet;

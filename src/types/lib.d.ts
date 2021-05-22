@@ -1,30 +1,23 @@
-import { accessorType } from "@/store";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
-import { HttpProvider } from "web3-core/types";
-import { ETHOperation, ZKSyncTxError } from "zksync/build/wallet";
+import { Provider } from "zksync/build";
 import {
-  SignedTransaction,
-  TransactionReceipt,
   AccountState,
   Address,
-  TokenSymbol,
-  PubKeyHash,
-  ChangePubKeyOnchain,
-  ChangePubKeyECDSA,
   ChangePubKeyCREATE2,
+  ChangePubKeyECDSA,
+  ChangePubKeyOnchain,
+  PubKeyHash,
+  SignedTransaction,
+  TokenSymbol,
+  TransactionReceipt,
 } from "zksync/build/types";
-import { Wallet, Provider } from "zksync";
+import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
+import { accessorType } from "~/store";
 
-/**
- * Typed definition for the Http-provider
- */
-export interface ethWindow extends Window {
-  ethereum?: HttpProvider | unknown;
-}
+export declare type ZKTypeFeeOption = "fast" | "normal";
+export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit";
 
-export declare type ZkInTransactionType = "withdraw" | "transfer" | "deposit";
-
-export declare type GweiBalance = string;
+export declare type GweiBalance = string | BigNumberish;
 export declare type DecimalBalance = string;
 
 export declare interface ZkInTokenPrices {
@@ -32,6 +25,13 @@ export declare interface ZkInTokenPrices {
     lastUpdated: number;
     price: number;
   };
+}
+
+export interface BalanceToReturn {
+  address: string;
+  balance: string;
+  symbol: string;
+  id: number;
 }
 
 export interface ZkInBalance {
@@ -101,12 +101,14 @@ export interface ZkInTx {
     type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
   };
 }
+
 export interface TokenInfo {
   address: string;
   id: number;
   symbol: string;
   decimals: number;
 }
+
 export interface ZkInToken {
   id: number;
   symbol: TokenSymbol;
@@ -117,6 +119,7 @@ export interface ZkInToken {
   unlocked?: boolean;
   address?: string;
 }
+
 //
 // export declare interface ZkInTransactionInfo {
 //  continueBtnFunction: boolean;
@@ -167,7 +170,9 @@ export declare class ZkClTransaction extends ETHOperation {
   sidechainProvider: Provider;
   state: "Sent" | "Committed" | "Verified" | "Failed";
   error?: ZKSyncTxError;
+
   constructor(txData: ContractTransaction, txHash: string, sidechainProvider: Provider);
+
   awaitReceipt(): Promise<TransactionReceipt>;
 }
 
@@ -188,6 +193,7 @@ export declare interface iWalletWrapper {
   set: (val: iWalletData) => void;
   get: () => iWalletData;
 }
+
 export declare interface ZKInDepositTx extends ETHOperation {
   hash: string;
   amount: BigNumber | string;
@@ -254,6 +260,7 @@ export interface Tokens {
   // Tokens are indexed by their symbol (e.g. "ETH")
   [token: string]: TokenInfo;
 }
+
 export interface CPKLocal {
   accountId: number;
   account: Address;
@@ -263,4 +270,71 @@ export interface CPKLocal {
   ethSignature?: string;
   validFrom: number;
   validUntil: number;
+}
+
+export interface ReceivedTransactions {
+  transaction: Transaction | null;
+  feeTransaction: Transaction | null;
+  cpkTransaction: null | Transaction;
+}
+
+export declare interface ZkInWithdrawalTime {
+  normal: number;
+  fast: number;
+}
+
+export declare interface ZkIContracts {
+  contactsList: ZkInContact[];
+  storageKey?: string;
+}
+
+export declare interface ZkIAccount {
+  loggedIn: boolean;
+  selectedWallet?: string;
+  loadingHint?: string;
+  address?: Address;
+  name?: string;
+  errorsSpotted: boolean;
+}
+
+export interface ZkIFeesInterface {
+  [symbol: string]: {
+    [feeSymbol: string]: {
+      [type: string]: {
+        [address: string]: {
+          lastUpdated: number;
+          value: ZkInFeesObj;
+        };
+      };
+    };
+  };
+}
+
+export interface ZKIRootState {
+  accountModalOpened: boolean;
+  currentModal?: string;
+}
+
+export type BalancesList = {
+  [token: string]: BigNumberish;
+};
+
+export interface ZKITransactionsStore {
+  watchedTransactions: {
+    [txHash: string]: {
+      [prop: string]: string;
+      status: string;
+    };
+  };
+  deposits: ZkInDeposits;
+  forceUpdateTick: number;
+  withdrawalTxToEthTx: Map<string, string>;
+}
+
+export interface ZKIDepositStatus {
+  tokenSymbol: TokenSymbol;
+  hash: string;
+  amount: GweiBalance;
+  status: string;
+  confirmations: number;
 }

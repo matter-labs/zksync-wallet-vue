@@ -4,6 +4,9 @@
 import { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers/lib/web3-provider";
 import { accessorType } from "~/store";
 
+// All interfaces, mappings and specific types
+import "~/types/lib";
+
 declare module "vue/types/vue" {
   interface Vue {
     inactive: boolean;

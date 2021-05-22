@@ -1,8 +1,8 @@
 import { Wallet } from "zksync";
 import { Address, TokenSymbol } from "zksync/build/types";
 import { accessorType } from "@/store";
-import { GweiBalance, CPKLocal } from "@/plugins/types";
 import { BatchBuilder } from "zksync/build/batch-builder";
+import { GweiBalance, CPKLocal } from "~/types/lib";
 
 function getCPKStorageKey(address: Address) {
   return `pubKeySignature-${address}`;

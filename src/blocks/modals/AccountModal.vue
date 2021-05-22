@@ -18,15 +18,15 @@
       </div>
       <template slot="footer">
         <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank">
-          <i class="ri-external-link-line"></i>
+          <i class="ri-external-link-line" />
           <span>View in block explorer</span>
         </a>
-        <div class="modalFooterBtn" @click="renameWalletOpen()">
-          <i class="ri-pencil-line"></i>
+        <div class="modalFooterBtn" @click="renameWalletOpen">
+          <i class="ri-pencil-line" />
           <span>Rename wallet</span>
         </div>
         <div class="modalFooterBtn" @click="logout()">
-          <i class="ri-link-unlink-m"></i>
+          <i class="ri-link-unlink-m" />
           <span>Disconnect wallet</span>
         </div>
       </template>
@@ -35,13 +35,11 @@
 </template>
 
 <script lang="ts">
-import walletAddress from "@/components/walletAddress.vue";
 import VueQrcode from "vue-qrcode";
 import Vue from "vue";
 
 export default Vue.extend({
   components: {
-    walletAddress,
     VueQrcode,
   },
   data() {

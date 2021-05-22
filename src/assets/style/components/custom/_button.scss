@@ -12,7 +12,7 @@
   text-transform: uppercase;
   background-color: $purple;
   border: 1px solid $purple;
-  border-radius: 4px;
+  border-radius: $borderRadiusMd;
   outline: none;
   box-shadow: $inputContainerShadow;
   transition: 0.2s ease;
