@@ -202,22 +202,24 @@
       .transactionItem {
         position: relative;
         padding: 0.5rem 0;
-        align-items: flex-start;
-        justify-content: stretch;
+        justify-content: space-between;
         grid-template-rows: none;
         grid-template-columns: none;
         display: flex;
         gap: 0.15rem;
         height: auto;
+        align-items: center;
 
         .status {
           width: 2rem;
+          margin-top: -0.8rem;
           justify-self: center;
           align-self: flex-start;
-          min-height: 3rem;
+          flex-basis: 10%
         }
 
         .mainInfo {
+          flex-basis: auto;
           display: inline-flex;
           text-align: left;
           justify-content: flex-start;
@@ -264,22 +266,23 @@
 
         //
         .actionInfo {
-          flex-basis: 35vw !important;
+          flex-basis: 50% !important;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: flex-start;
+          line-height: 120%!important;
 
           .actionType {
             text-align: left !important;
             font-size: 12px;
-            line-height: 14px;
+            line-height: 120% !important;
             white-space: nowrap;
           }
 
           .actionValue {
             font-size: 12px;
-            line-height: 14px;
+            line-height: 120% !important;
             text-align: left !important;
             margin: 0;
           }
@@ -288,8 +291,7 @@
             width: auto !important;
             text-align: left !important;
             font-size: 11px !important;
-            line-height: 1rem;
-            text-indent: 0;
+            line-height: 120% !important;
             align-self: flex-start;
             justify-self: flex-start;
           }

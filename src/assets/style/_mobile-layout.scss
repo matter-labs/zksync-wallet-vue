@@ -281,6 +281,18 @@
       display: flex;
       flex-direction: column;
 
+      .balancesList, .transactionsListContainer, .contactsListContainer
+      {
+        background-color: $bgSecondary;
+        & > * {
+          padding: 0.3rem 0.5rem !important;
+          &:last-child
+          {
+            border-bottom-width: 0 !important;
+          }
+        }
+      }
+
       &.contactTile {
         display: flex;
         flex-direction: column;
@@ -297,6 +309,24 @@
           align-items: stretch;
           height: auto;
           justify-content: stretch;
+          .contactItem
+          {
+            padding: 0 0.5rem;
+            gap: 0.2rem;
+            height: 40px;
+            .contactInfo
+            {
+              .contactName {
+                font-size: 16px;
+                line-height: 150%;
+              }
+              .contactAddress
+              {
+                font-size: 10px;
+                font-family: $firaSans;
+              }
+            }
+          }
         }
       }
 
@@ -390,5 +420,66 @@
 
   .transactionsPage .transactionsListContainer {
     max-height: none !important;
+  }
+
+  .footerModalContainer
+  {
+
+    .footer {
+      position: relative;
+      button.floating-on-mobile {
+
+        position: absolute;
+        right: 0.8rem;
+        bottom: 0.5rem;
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+        box-shadow: $tileShadow;
+      }
+    }
+  }
+  .walletPage .balancesBlock .balances .balancesList .balanceItem .rightSide .rowItem:nth-child(2)
+  {
+    justify-content: flex-end;
+    .total {
+      font-family: $firaSans;
+      letter-spacing: 0;
+      font-size: 10px;
+    }
+  }
+  .chooseTokenBlock {
+    .tokenListContainer {
+      margin: 1rem auto 0.5rem;
+      overflow-x: hidden;
+      overflow-y: scroll !important;
+      background-color: $bgSecondary;
+      border-radius: $borderRadius;
+      box-shadow: $shadowInset;
+
+      &::-webkit-scrollbar {
+        width: 10px;
+        background-color: $tempTransparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: $borderRadius;
+        cursor: pointer;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: $tempTransparent;
+        border-radius: $borderRadius;
+      }
+
+      .tokenItem {
+        display: flex;
+        flex-direction: row !important;
+        height: 50px !important;
+
+        .tokenSymbol, .balance {
+          font-size: 16px;
+        }
+      }
+    }
   }
 }

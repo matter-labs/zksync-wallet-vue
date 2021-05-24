@@ -6,24 +6,27 @@
       </template>
       <template slot="default">
         <a class="modalFooterBtn big" href="https://zksync.io/faq/intro.html" target="_blank">
-          <i class="ri-book-2-line"></i>
+          <i class="ri-book-2-line" />
           <span>Docs</span>
         </a>
         <a class="modalFooterBtn big" href="https://zksync.io/legal/terms.html" target="_blank">
-          <i class="ri-profile-line"></i>
+          <i class="ri-profile-line" />
           <span>Terms</span>
         </a>
         <a class="modalFooterBtn big" href="https://zksync.io/contact.html" target="_blank">
-          <i class="ri-contacts-book-line"></i>
+          <i class="ri-contacts-book-line" />
           <span>Contact</span>
         </a>
         <a class="modalFooterBtn big" :href="blockExplorerLink" target="_blank">
-          <i class="ri-external-link-line"></i>
+          <i class="ri-external-link-line" />
           <span>zkScan</span>
         </a>
       </template>
       <template slot="footer">
         <div>v.{{ version }} | <a href="https://uptime.com/s/zksync" target="_blank">uptime</a></div>
+        <i-button block size="lg" circle class="floating-on-mobile" @click="toggleDarkMode">
+          <i-icon icon="light" />
+        </i-button>
       </template>
     </i-modal>
   </div>
@@ -31,6 +34,7 @@
 
 <script lang="ts">
 import { GIT_REVISION_SHORT, APP_ZK_SCAN } from "@/plugins/build";
+import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -55,6 +59,11 @@ export default Vue.extend({
     },
     version(): string {
       return GIT_REVISION_SHORT;
+    },
+  },
+  methods: {
+    toggleDarkMode(): void {
+      utils.defineTheme(this.$inkline, true);
     },
   },
 });
