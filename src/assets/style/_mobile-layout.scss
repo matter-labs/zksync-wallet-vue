@@ -1,10 +1,13 @@
 @media (max-width: $mobile) {
   html {
+
     box-sizing: border-box;
   }
   body.inkline {
-    footer.layout-footer
-    {
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+
+    footer.layout-footer {
       height: 4.5rem;
     }
   }
@@ -58,14 +61,15 @@
     }
 
     button.bn-onboard-custom.bn-onboard-icon-button {
-      padding: 0 !important;
       margin: 0 0 .25rem !important;
+      padding: 0.25rem !important;
     }
   }
 
   #__layout {
     main {
       padding: 60px 0 95px;
+      height: 0 !important;
 
       @supports (-webkit-touch-callout: none) {
         //noinspection CssInvalidPropertyValue
@@ -176,9 +180,10 @@ section.layoutContent {
       padding: .75rem 1rem 0.5rem !important;
       //min-height: 40vh;
       width: 90vw;
-      
+
       .balancesList, .transactionsListContainer, .contactsListContainer {
-        background-color: $bgSecondary;
+        background-color: #f7fafc;
+        margin: 0.25rem 0 !important;
 
         & > * {
           padding: 0.3rem 0.5rem !important;
@@ -230,18 +235,19 @@ section.layoutContent {
         overflow-x: hidden;
       }
 
-      button.button {
+      .button.-block {
+        padding: 0.3rem 0 !important;
+        margin: 0.75rem 0 !important;
+        font-size: 16px !important;
+
         &.-secondary {
-          padding: 0.3rem 0.5rem;
-          font-size: 14px;
+          padding: 0.3rem 0 !important;
+          margin: 0.75rem 0 !important;
+          font-size: 16px !important;
+
 
           &.-link {
-            margin-bottom: 0.5rem !important;
-          }
-
-          &.-block {
-            margin-top: 0.25rem !important;
-            margin-bottom: 0.5rem !important;
+            margin: 0.2rem !important;
           }
         }
       }
@@ -352,7 +358,7 @@ section.layoutContent {
       border-radius: $borderRadius;
       box-shadow: $shadowInset;
 
-      .form-input.-prefixed > .form-input.-prefixed > input{
+      .form-input.-prefixed > .form-input.-prefixed > input {
         font-size: 16px !important;
         padding: 0.5rem 1rem 0.5rem 2.5rem !important;
       }
@@ -383,8 +389,26 @@ section.layoutContent {
       }
     }
   }
-  .modal.-md .header, .modal.-md .footer, .modal.-md .body
-  {
+  .modal.-md .header, .modal.-md .footer, .modal.-md .body {
     padding: 1rem !important;
+  }
+}
+
+
+.inkline.-dark {
+  .dappPageWrapper {
+    .transactionsListContainer, .contactsListContainer, .tokenListContainer, .balancesList {
+      margin: 1.5rem 0;
+      border-radius: $borderRadius !important;
+      background-color: $bgSecondary;
+    }
+  }
+}
+
+.inkline.-light {
+  .dappPageWrapper {
+    .balancesList, .transactionsListContainer, .contactsListContainer {
+      background-color: #f7fafc;
+    }
   }
 }

@@ -245,7 +245,7 @@
           //
           .tooltip-wrapper {
             & > div {
-              font-size: 9px !important;
+              font-size: 10px !important;
               text-align: left;
               line-height: 1rem;
             }
@@ -267,12 +267,13 @@
             word-break: break-word;
             line-height: 1rem !important;
             letter-spacing: -0.01rem;
+            font-size: 14px;
           }
 
           .actionType, .actionType > span {
             text-align: left !important;
             white-space: nowrap;
-            font-size: 9px !important;
+            font-size: 10px !important;
           }
 
           .actionValue {
@@ -286,7 +287,7 @@
             margin-top: 0;
             width: auto !important;
             text-align: left !important;
-            font-size: 11px !important;
+            font-size: 12px !important;
             align-self: flex-start;
             white-space: nowrap;
             justify-self: flex-start;
