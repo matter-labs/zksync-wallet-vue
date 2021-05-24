@@ -3,7 +3,7 @@
     <allowance-modal />
 
     <!-- Choose token -->
-    <i-modal v-model="chooseTokenModal" size="md">
+    <i-modal v-if="chooseTokenModal" v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
       <choose-token tokens-type="L1" @chosen="chooseToken($event)" />
     </i-modal>
