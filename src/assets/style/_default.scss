@@ -4,6 +4,9 @@
   width: 100%;
   height: max-content;
   min-height: 100vh;
+  //noinspection CssInvalidPropertyValue
+  min-height: -webkit-fill-available;
+  overflow: hidden;
 }
 
 #__layout {

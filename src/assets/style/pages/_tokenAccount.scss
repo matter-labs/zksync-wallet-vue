@@ -14,10 +14,6 @@
     }
   }
 
-  .tileBlock.transactionsTile {
-    height: calc(100vh - 82px - 105px - 300px) !important;
-  }
-
   .transactionsTile {
     height: $minRouteHeightMain !important;
     min-height: 250px !important;

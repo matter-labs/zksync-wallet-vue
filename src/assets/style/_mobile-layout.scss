@@ -2,6 +2,40 @@
   html {
     box-sizing: border-box;
   }
+  body.inkline.-light {
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    //noinspection CssInvalidPropertyValue
+    min-height: -webkit-fill-available;
+    //noinspection CssInvalidPropertyValue
+    height: -webkit-fill-available;
+
+    #__layout {
+      max-height: 100vh; /* Use vh as a fallback for browsers that do not support Custom Properties */
+      max-height: calc(var(--vh, 1vh) * 100);
+      //noinspection CssInvalidPropertyValue
+      max-height: -webkit-fill-available;
+
+      main
+      {
+        height: 95vh;
+        height: calc(var(--vh, 1 vh) * 95);
+        //noinspection CssInvalidPropertyValue
+        height: -webkit-fill-available;
+      }
+    }
+  }
+
+  aside.bn-onboard-custom.bn-onboard-modal {
+    max-height: 100vh;
+    max-height: calc(var(--vh, 1vh) * 100);
+    padding-bottom: 5rem;
+    //noinspection CssInvalidPropertyValue
+    height: -webkit-fill-available;
+  }
+
 
   *,
   *::before,
@@ -52,7 +86,7 @@
   #__layout {
     display: flex !important;
     flex-direction: column !important;
-    max-width: 100vh !important;
+    max-width: 100vw !important;
     overflow: hidden;
 
     main {
@@ -88,14 +122,6 @@
   #__nuxt {
     overflow: hidden;
   }
-
-  #__nuxt,
-  #__layout,
-  .layoutContent,
-  .defaultLayout {
-    min-height: 100vh !important;
-  }
-
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -178,10 +204,6 @@
     align-items: stretch;
   }
 
-  body.inkline.-light {
-    min-height: 100vh;
-    height: 100vh;
-  }
 
 
   aside.bn-onboard-custom.bn-onboard-modal {

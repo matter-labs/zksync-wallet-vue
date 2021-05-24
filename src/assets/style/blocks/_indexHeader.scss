@@ -175,11 +175,7 @@ body {
           padding-top: 0 !important;
 
           .zkwallet-logo {
-            height: 35px;
-
-            @media screen and (max-width: 365px) {
-              height: 22px;
-            }
+            height: 22px !important;
           }
 
           .badge {
