@@ -32,7 +32,6 @@ export default Vue.extend({
     };
   },
   mounted() {
-    utils.workAroundForVhMobile();
     utils.defineTheme(this.$inkline, false);
   },
 });

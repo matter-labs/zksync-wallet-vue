@@ -192,107 +192,112 @@
     .transactionsTile {
       display: flex;
       flex-direction: column;
-      //height: $minRouteHeightWithExtra !important;
       min-height: 350px;
       justify-content: flex-start;
       width: 100%;
-      //padding: 0.15rem 0.10rem !important;
       text-align: center;
 
       .transactionItem {
         position: relative;
-        padding: 0.5rem 0;
-        justify-content: space-between;
-        grid-template-rows: none;
-        grid-template-columns: none;
-        display: flex;
+        display: grid;
+        grid-template-columns: 1.2rem 1fr 1fr;
+        padding: 0.5rem 0 !important;
         gap: 0.15rem;
         height: auto;
-        align-items: center;
+        align-items: flex-start;
 
         .status {
-          width: 2rem;
-          margin-top: -0.8rem;
-          justify-self: center;
-          align-self: flex-start;
-          flex-basis: 10%
+          text-align: left;
+          height: 100%;
+
+          margin-top: -.7rem;
+
+          .tooltip-wrapper {
+            em {
+              width: 2rem;
+              height: 2rem;
+              font-size: 18px;
+            }
+          }
         }
 
         .mainInfo {
-          flex-basis: auto;
           display: inline-flex;
           text-align: left;
           justify-content: flex-start;
-          align-items: baseline;
+          align-items: stretch;
           flex-wrap: wrap;
           flex-grow: 1;
-          //margin: 1rem 0 0 auto !important;
-          //flex-direction: row;
-          //display: flex;
-          //white-space: nowrap;
-          //flex-grow: 2;
-          //align-items: flex-start;
+
           & > * {
-            font-size: 11px !important;
             text-align: left !important;
-            line-height: 14px !important;
             word-break: break-word;
+            line-height: 1rem !important;
+            letter-spacing: -0.02rem;
           }
 
-          .amount
-          {
-            max-width: 20vw;
+          .amount {
             word-break: break-all;
             white-space: normal
           }
-          .amount, .tokenSymbol
-          {
-            line-height: 150% !important;
+
+          .amount, .tokenSymbol {
             font-size: 12px !important;
+            font-family: $firaCode;
+
           }
 
-          .tokenSymbol
-          {
+          .tokenSymbol {
             margin-left: 0.1rem;
           }
 
           //
           .tooltip-wrapper {
+            & > div {
+              font-size: 9px !important;
+              text-align: left;
+              line-height: 1rem;
+            }
+
+            white-space: nowrap;
+            flex-grow: 1;
             width: 100%;
-            font-size: 9px !important;
-            line-height: 120% !important;
           }
         }
 
         //
         .actionInfo {
-          flex-basis: 50% !important;
           display: flex;
           flex-direction: column;
-          justify-content: center;
           align-items: flex-start;
-          line-height: 120%!important;
 
-          .actionType {
+          & > * {
             text-align: left !important;
-            font-size: 12px;
-            line-height: 120% !important;
+            word-break: break-word;
+            line-height: 1rem !important;
+            letter-spacing: -0.01rem;
+          }
+
+          .actionType, .actionType > span {
+            text-align: left !important;
             white-space: nowrap;
+            font-size: 9px !important;
           }
 
           .actionValue {
-            font-size: 12px;
-            line-height: 120% !important;
+            font-size: 12px !important;
             text-align: left !important;
             margin: 0;
+            white-space: nowrap;
           }
 
           .linkText {
+            margin-top: 0;
             width: auto !important;
             text-align: left !important;
             font-size: 11px !important;
-            line-height: 120% !important;
             align-self: flex-start;
+            white-space: nowrap;
             justify-self: flex-start;
           }
         }
@@ -300,7 +305,7 @@
         .button {
           position: absolute;
           left: 0;
-          bottom: 0rem;
+          bottom: -0.1rem;
           padding: 0 !important;
           justify-self: center;
           width: 2rem;

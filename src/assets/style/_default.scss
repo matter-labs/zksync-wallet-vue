@@ -4,9 +4,14 @@
   width: 100%;
   height: max-content;
   min-height: 100vh;
-  //noinspection CssInvalidPropertyValue
-  min-height: -webkit-fill-available;
   overflow: hidden;
+
+  /* Avoid Chrome to see Safari hack */
+  @supports (-webkit-touch-callout: none) {
+    /* The hack for Safari */
+    //noinspection CssInvalidPropertyValue
+    min-height: -webkit-fill-available;
+  }
 }
 
 #__layout {

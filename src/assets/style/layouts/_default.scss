@@ -199,7 +199,13 @@ em.iconInfo {
   {
     justify-content: stretch;
     align-items: stretch;
-    max-height: 95vh;
+    max-height: 100vh;
+
+    /* Avoid Chrome to see Safari hack */
+    @supports (-webkit-touch-callout: none) {
+      //noinspection CssInvalidPropertyValue
+      max-height: -webkit-fill-available;
+    }
   }
   main {
     section.layoutContent {

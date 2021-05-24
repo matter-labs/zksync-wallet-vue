@@ -67,7 +67,7 @@ jobs:
       - name: Deploy to rinkeby-beta [beta]
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
           target: rinkeby-beta
           projectId: zksync-vue
           channelID: live

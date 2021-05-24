@@ -135,24 +135,4 @@ export default {
     localStorage.setItem("colorTheme", inklineContext.config.variant);
     return inklineContext.config.variant;
   },
-  workAroundForVhMobile(): void {
-    if (process.client) {
-      this._applyVhFix();
-      window.addEventListener(
-        "resize",
-        () => {
-          this._applyVhFix();
-        },
-        { passive: true },
-      );
-    }
-  },
-
-  _applyVhFix(): void {
-    if (process.client) {
-      const vh: number = window.innerHeight * 0.01;
-      // Then we set the value in the --vh custom property to the root of the document
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    }
-  },
 };

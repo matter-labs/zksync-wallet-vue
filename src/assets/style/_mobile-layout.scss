@@ -4,41 +4,50 @@
   }
   body.inkline.-light {
     min-height: 100vh;
-    //noinspection CssOverwrittenProperties
-    min-height: calc(var(--vh, 1vh) * 100);
     height: 100vh;
-    //noinspection CssOverwrittenProperties
-    height: calc(var(--vh, 1vh) * 100);
-    //noinspection CssInvalidPropertyValue
-    min-height: -webkit-fill-available !important;
-    //noinspection CssInvalidPropertyValue
-    height: -webkit-fill-available !important;
+
+    /* Avoid Chrome to see Safari hack */
+    @supports (-webkit-touch-callout: none) {
+      /* The hack for Safari */
+      //noinspection CssInvalidPropertyValue
+      min-height: -webkit-fill-available;
+      //noinspection CssInvalidPropertyValue
+      height: -webkit-fill-available;
+    }
 
     #__layout {
       max-height: 100vh; /* Use vh as a fallback for browsers that do not support Custom Properties */
-      //noinspection CssOverwrittenProperties
-      max-height: calc(var(--vh, 1vh) * 100);
-      //noinspection CssInvalidPropertyValue
-      max-height: -webkit-fill-available!important;
 
-      main
-      {
-        height: 95vh;
-        //noinspection CssOverwrittenProperties
-        height: calc(var(--vh, 1 vh) * 95);
+      /* Avoid Chrome to see Safari hack */
+      @supports (-webkit-touch-callout: none) {
+        /* The hack for Safari */
         //noinspection CssInvalidPropertyValue
-        height: -webkit-fill-available;
+        max-height: -webkit-fill-available;
+      }
+
+
+      main {
+        height: 100vh;
+
+        /* Avoid Chrome to see Safari hack */
+        @supports (-webkit-touch-callout: none) {
+          /* The hack for Safari */
+          //noinspection CssInvalidPropertyValue
+          height: -webkit-fill-available;
+        }
+
       }
     }
   }
 
   aside.bn-onboard-custom.bn-onboard-modal {
     max-height: 100vh;
-    //noinspection CssOverwrittenProperties
-    max-height: calc(var(--vh, 1vh) * 100);
+
+    @supports (-webkit-touch-callout: none) {
+      //noinspection CssInvalidPropertyValue
+      max-height: -webkit-fill-available;
+    }
     padding-bottom: 5rem;
-    //noinspection CssInvalidPropertyValue
-    height: -webkit-fill-available;
   }
 
 
@@ -55,7 +64,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 60px!important;
+    height: 60px !important;
   }
 
   .content {
@@ -83,179 +92,195 @@
       padding: .5rem;
       margin: 0.25rem 0;
     }
-
-    //.bn-onboard-custom.bn-onboard-modal-content-close
-
   }
 
   #__layout {
     display: flex !important;
     flex-direction: column !important;
-    max-width: 100vw !important;
+    align-items: stretch;
+    margin: 0 auto !important;
+    padding: 0 !important;
     overflow: hidden;
 
     main {
-      padding: 60px 0 $footerHeight;
-      max-height: 95vh;
+      padding: 60px 0 95px;
+      max-height: 100vh;
 
-      .layout-content.layoutContent {
+      @supports (-webkit-touch-callout: none) {
+        //noinspection CssInvalidPropertyValue
+        max-height: -webkit-fill-available;
+      }
+    }
+
+    .layout-content.layoutContent {
+      display: flex;
+      height: 100% !important;
+      flex-direction: column;
+      justify-content: stretch;
+      overflow: hidden;
+
+      .routerContainer {
         display: flex;
         height: 100% !important;
         flex-direction: column;
         justify-content: stretch;
         overflow: hidden;
 
-        .routerContainer {
+        .dappPageWrapper {
+          align-items: stretch;
+          margin: 0 auto !important;
+          padding: 1rem 0 !important;
           display: flex;
           height: 100% !important;
           flex-direction: column;
           justify-content: stretch;
           overflow: hidden;
-
-          .dappPageWrapper {
-            display: flex;
-            height: 100% !important;
-            flex-direction: column;
-            justify-content: stretch;
-            overflow: hidden;
-          }
         }
       }
     }
   }
+}
 
-  #__nuxt {
-    overflow: hidden;
-  }
+#__nuxt {
+  overflow: hidden;
+}
 
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-    line-height: 1.4;
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  line-height: 1.4;
 
-    main.layout {
-      .indexLayout {
-        display: flex;
-        width: 100%;
-        flex-direction: column;
-      }
+  main.layout {
+    .indexLayout {
+      display: flex;
+      width: 100%;
+      flex-direction: column;
     }
   }
+}
 
 
-  footer.layout-footer {
-    min-height: 80px;
-    background: transparent;
+footer.layout-footer {
+  min-height: 80px;
+  background: transparent;
+}
+
+header.indexHeader {
+  min-height: 60px;
+}
+
+header > .container .headerWrapper img.zkwallet-logo {
+  height: 20px !important;
+}
+
+main > div.mobileOnly {
+  display: none;
+}
+
+
+footer.layout-footer._padding-top-1.mainFooter {
+  min-height: 80px;
+}
+
+
+section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}
+
+.bn-onboard-custom.bn-onboard-modal-content {
+  section.bn-onboard-custom.bn-onboard-modal-content {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  header.indexHeader {
-    min-height: 60px;
+  header.bn-onboard-custom.bn-onboard-modal-content-header {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
   }
 
-  header > .container .headerWrapper img.zkwallet-logo {
-    height: 20px !important;
+  div.bn-onboard-custom.bn-onboard-modal-content-close.svelte-rntogh {
+    top: 1rem;
+    right: 1rem;
+    width: 20px;
+    height: 20px;
   }
+}
 
-  main > div.mobileOnly {
-    display: none;
-  }
-
-
-  footer.layout-footer._padding-top-1.mainFooter {
-    min-height: 80px;
-  }
+div.routerContainer {
+  min-height: auto !important;
+  height: auto !important;
+}
 
 
-  section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
+main.layout.defaultLayout {
+  flex-flow: column nowrap;
+  display: flex;
+  justify-content: space-between !important;
+  align-items: stretch;
+}
 
-  footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
-    justify-content: space-between;
-    margin: 0;
-    padding: 0;
+
+aside.bn-onboard-custom.bn-onboard-modal {
+  max-height: 100vh;
+  padding: 2vh 2vw;
+
+  /* Avoid Chrome to see Safari hack */
+  @supports (-webkit-touch-callout: none) {
+    /* The hack for Safari */
+    //noinspection CssInvalidPropertyValue
+    max-height: -webkit-fill-available;
   }
 
   .bn-onboard-custom.bn-onboard-modal-content {
-    section.bn-onboard-custom.bn-onboard-modal-content {
-      margin: 0 !important;
-      padding: 0 !important;
-    }
+    max-height: 90vh !important;
 
-    header.bn-onboard-custom.bn-onboard-modal-content-header {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-
-    div.bn-onboard-custom.bn-onboard-modal-content-close.svelte-rntogh {
-      top: 1rem;
-      right: 1rem;
-      width: 20px;
-      height: 20px;
-    }
-  }
-
-  div.routerContainer {
-    min-height: auto !important;
-    height: auto !important;
-  }
-
-
-  main.layout.defaultLayout {
-    flex-flow: column nowrap;
-    display: flex;
-    justify-content: space-between !important;
-    align-items: stretch;
-  }
-
-
-
-  aside.bn-onboard-custom.bn-onboard-modal {
-    max-height: 95vh;
-    //noinspection CssInvalidPropertyValue
-    max-height: -webkit-fill-available !important;
-
-    .bn-onboard-custom.bn-onboard-modal-content {
-      max-height: 90vh !important;
+    /* Avoid Chrome to see Safari hack */
+    @supports (-webkit-touch-callout: none) {
+      /* The hack for Safari */
       //noinspection CssInvalidPropertyValue
-      max-height: -webkit-fill-available !important;
-    }
-
-    section.bn-onboard-custom.bn-onboard-modal-content {
-      overflow: hidden;
+      min-height: -webkit-fill-available;
     }
   }
 
-  main.defaultLayout {
-    padding-bottom: 80px !important;
-    max-height: calc(80px);
+  section.bn-onboard-custom.bn-onboard-modal-content {
+    overflow: hidden;
   }
+}
 
-  section.layoutContent {
-    .mobileOnly {
-      display: none !important;
-    }
+main.defaultLayout {
+  padding-bottom: 80px !important;
+  max-height: calc(80px);
+}
+
+section.layoutContent {
+  .mobileOnly {
+    display: none !important;
   }
+}
 
 
-  .layout-content.layoutContent {
-    display: flex;
-    min-height: max-content !important;
-    position: initial !important;
-    flex: initial;
-    flex-direction: column;
-    height: auto;
-    align-items: stretch;
-    justify-content: stretch;
+.layout-content.layoutContent {
+  display: flex;
+  min-height: max-content !important;
+  position: initial !important;
+  flex: initial;
+  flex-direction: column;
+  height: auto;
+  align-items: stretch;
+  justify-content: stretch;
 
-    .routerContainer {
-      min-height: 0;
-      margin: 1rem auto;
-      width: 100%;
-    }
+  .routerContainer {
+    min-height: 0;
+    margin: 1rem auto;
+    width: 100%;
   }
-
 }
 
 .layout-content.layoutContent {
@@ -295,30 +320,53 @@
   .dappPageWrapper {
     width: calc(100vw - .5rem);
     margin: 1rem auto 0.5rem !important;
+    display: grid !important;
 
-    &.contactsPage
+    .walletContainer
     {
+      padding: 0.8rem 1.1rem !important;
+    }
+
+    .row._margin-top-1
+    {
+      margin-top: 0 !important;
+    }
+
+    &.contactsPage {
       padding: 0;
     }
 
+    &.depositPage, &.tokenAccount
+    {
+      .tileBlock
+      {
+        min-height: auto;
+      }
+    }
+
     .tileBlock {
-      padding: .75rem 1rem !important;
+      padding: .75rem 1rem 1.5rem !important;
       //min-height: 40vh;
       width: 90vw;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto !important;
       align-items: stretch;
       justify-content: stretch;
       display: flex;
       flex-direction: column;
 
-      .balancesList, .transactionsListContainer, .contactsListContainer
-      {
+      &.transactionTile {
+        .inputLabel, .tileHeadline.withBtn
+        {
+          padding: 0 !important;
+        }
+      }
+      .balancesList, .transactionsListContainer, .contactsListContainer {
         background-color: $bgSecondary;
+
         & > * {
           padding: 0.3rem 0.5rem !important;
-          &:last-child
-          {
+
+          &:last-child {
             border-bottom-width: 0 !important;
           }
         }
@@ -340,19 +388,19 @@
           align-items: stretch;
           height: auto;
           justify-content: stretch;
-          .contactItem
-          {
+
+          .contactItem {
             padding: 0 0.5rem;
             gap: 0.2rem;
             height: 40px;
-            .contactInfo
-            {
+
+            .contactInfo {
               .contactName {
                 font-size: 16px;
                 line-height: 150%;
               }
-              .contactAddress
-              {
+
+              .contactAddress {
                 font-size: 10px;
                 font-family: $firaSans;
               }
@@ -453,11 +501,11 @@
     max-height: none !important;
   }
 
-  .footerModalContainer
-  {
+  .footerModalContainer {
 
     .footer {
       position: relative;
+
       button.floating-on-mobile {
 
         position: absolute;
@@ -469,9 +517,9 @@
       }
     }
   }
-  .walletPage .balancesBlock .balances .balancesList .balanceItem .rightSide .rowItem:nth-child(2)
-  {
+  .walletPage .balancesBlock .balances .balancesList .balanceItem .rightSide .rowItem:nth-child(2) {
     justify-content: flex-end;
+
     .total {
       font-family: $firaSans;
       letter-spacing: 0;
@@ -486,6 +534,11 @@
       background-color: $bgSecondary;
       border-radius: $borderRadius;
       box-shadow: $shadowInset;
+
+      .form-input.-prefixed > .form-input.-prefixed > input{
+        font-size: 16px !important;
+        padding: 0.5rem 1rem 0.5rem 2.5rem !important;
+      }
 
       &::-webkit-scrollbar {
         width: 10px;
@@ -512,5 +565,9 @@
         }
       }
     }
+  }
+  .modal.-md .header, .modal.-md .footer, .modal.-md .body
+  {
+    padding: 1rem !important;
   }
 }
