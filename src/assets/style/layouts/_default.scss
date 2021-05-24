@@ -2,12 +2,6 @@
   width: 100%;
   height: 100%;
 
-  .routerContainer {
-    min-height: $minRouteHeightWithExtra;
-    /* @media (max-width: $mobile) {
-      min-height: $minRouteHeight !important;
-    } */
-  }
   .tileBlock {
     width: 90%;
     max-width: 505px;

@@ -15,11 +15,11 @@
   }
 
   .transactionsTile {
-    height: $minRouteHeightMain !important;
+    //height: $minRouteHeightMain !important;
     min-height: 250px !important;
 
     @media (max-width: $mobile) {
-      height: $minRouteHeightMain !important;
+      //height: $minRouteHeightMain !important;
     }
   }
 }
