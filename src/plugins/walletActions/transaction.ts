@@ -103,7 +103,6 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
   if (token === feeToken) {
     batchBuilder.addWithdraw({
       ethAddress: address,
-      fastProcessing: fastWithdraw,
       token,
       amount,
       fee,
@@ -113,7 +112,6 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       fee: "0",
       amount,
       ethAddress: address,
-      fastProcessing: !!fastWithdraw,
       token,
     });
     batchBuilder.addTransfer({
