@@ -1,5 +1,5 @@
 <template>
-  <i-modal v-if="opened" v-model="opened" size="md">
+  <i-modal v-model="opened" size="md">
     <template slot="header">Allowance</template>
     <p>
       Allowance is used to limit the amount of L1 balance that zkSync will be able to use. It is recomended to set unlimited allowance so you would have to pay the fee only once.

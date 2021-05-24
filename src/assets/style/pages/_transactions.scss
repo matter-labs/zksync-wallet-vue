@@ -1,10 +1,7 @@
 .transactionsPage {
   .transactionsTile {
-    display: flex;
-    flex-direction: column;
     //height: $minRouteHeightWithExtra !important;
     min-height: 350px;
-    justify-content: center;
     width: 100%;
     padding-top: 20px;
     padding-bottom: 15px;
@@ -183,12 +180,6 @@
   }
 
   @media (max-width: $mobile) {
-    display: flex;
-    flex-direction: column;
-    justify-content: stretch;
-    align-items: stretch;
-    min-height: 100%;
-
     .transactionsTile {
       display: flex;
       flex-direction: column;

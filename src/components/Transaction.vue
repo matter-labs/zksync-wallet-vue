@@ -2,19 +2,19 @@
   <div class="transactionPage dappPageWrapper">
     <sign-pubkey-modal :from-route="fromRoute" />
 
-    <i-modal v-if="chooseTokenModal" v-model="chooseTokenModal" size="md">
+    <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
       <choose-token @chosen="chooseToken($event)" />
     </i-modal>
 
     <!-- Choose fee token -->
-    <i-modal v-if="chooseFeeTokenModal" v-model="chooseFeeTokenModal" size="md">
+    <i-modal v-model="chooseFeeTokenModal" size="md">
       <template slot="header">Choose fee token</template>
       <choose-token :only-allowed="true" @chosen="chooseFeeToken($event)" />
     </i-modal>
 
     <!-- Transfer warning modal -->
-    <i-modal v-if="transferWithdrawWarningModal" v-model="transferWithdrawWarningModal" class="prevent-close" size="md">
+    <i-modal v-model="transferWithdrawWarningModal" class="prevent-close" size="md">
       <template slot="header">Transfer warning</template>
       <div>
         <div class="_padding-bottom-1">
