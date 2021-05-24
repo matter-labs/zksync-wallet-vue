@@ -205,15 +205,37 @@ em.iconInfo {
   {
     justify-content: stretch;
     align-items: stretch;
+    max-height: 95vh;
   }
-  .layoutContent, .layoutContent .routerContainer, .layoutContent .routerContainer > div
-  {
-    min-height: min-content;
-    display: flex;
-    height: min-content;
-    flex-direction: column;
-    padding: 1rem 0;
-    gap: 1rem;
-    justify-content: stretch;
+  main {
+    section.layoutContent {
+      min-height: min-content;
+      display: flex !important;
+      height: auto;
+      overflow: hidden;
+      flex-direction: column;
+      padding: 1rem 0;
+      gap: 1rem;
+      justify-content: stretch;
+
+      .routerContainer {
+        align-items: stretch;
+        display: flex !important;
+        height: auto;
+        overflow: hidden;
+        flex-direction: column;
+        gap: 1rem;
+        justify-content: stretch;
+
+        & > div {
+          display: flex !important;
+          height: auto;
+          overflow: hidden;
+          flex-direction: column;
+          gap: 1rem;
+          justify-content: stretch;
+        }
+      }
+    }
   }
 }

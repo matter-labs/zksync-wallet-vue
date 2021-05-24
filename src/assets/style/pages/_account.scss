@@ -1,8 +1,12 @@
 .walletPage {
   .balancesBlock {
-    height: max-content;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    //height: max-content;
     //max-height: $minRouteHeightMain;
-    min-height: 320px;
+    min-height: 0 !important;
+    align-items: stretch;
 
     .form-input-group {
       margin-bottom: 1rem;
@@ -22,13 +26,17 @@
 
     .balances {
       width: 100%;
-      height: calc(100% - 50px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      //height: calc(100% - 50px);
 
       .balancesList {
         width: 100%;
-        height: calc(100% - 170px);
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
+        //height: calc(100% - 170px);
+        overflow-x: hidden;
+        height: 100%;
+        overflow-y: scroll !important;
         background-color: $bgSecondary;
         border-radius: $borderRadius;
         box-shadow: $shadowInset;
@@ -135,20 +143,35 @@
         .balancesList .balanceItem {
           display: flex;
           height: max-content;
-          padding: 10px 20px;
+          align-items: center;
+          padding: 0.3rem 0.5rem;
           flex-direction: row;
+          gap: 0.2rem;
+          justify-content: stretch;
 
           .tokenSymbol {
             text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: $firaCode;
+            letter-spacing: -0.03rem;
           }
 
-          .rightSide {
+          .rightSide{
+            flex-grow: 2;
+            margin-left: auto;
             display: block;
 
+            .status
+            {
+              width: 1.5rem;
+              height: 1.5rem;
+              order: -1;
+            }
             .rowItem {
               display: flex;
               flex-direction: row;
-              justify-content: space-around;
+              justify-content: space-between;
               align-items: center;
 
               &:nth-child(2) {
@@ -157,8 +180,26 @@
             }
 
             .total {
-              text-align: center;
-              margin-bottom: 0.4rem;
+              flex-direction: column;
+              display: flex;
+              justify-content: center;
+              align-items: flex-end;
+              text-align: right;
+              margin-bottom: 0;
+              gap: 0.2rem;
+              font-size: 12px;
+              line-height: 12px;
+              letter-spacing: -0.05rem;
+              padding-right: 0.1rem;
+              font-family: $firaCode;
+
+              .balancePrice
+              {
+                order: 1;
+              }
+              .tokenPrice {
+                font-size: 11px;
+              }
             }
           }
         }

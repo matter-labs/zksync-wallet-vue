@@ -18286,7 +18286,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"qrcode@npm:1.4.4, qrcode@npm:^1.4.4":
+"qrcode@npm:*, qrcode@npm:1.4.4":
   version: 1.4.4
   resolution: "qrcode@npm:1.4.4"
   dependencies:
@@ -23909,7 +23909,7 @@ typescript@^3.5.1:
     nuxt-build-optimisations: ^1.0.3
     nuxt-typed-vuex: latest
     prettier: ^2.2.1
-    qrcode: ^1.4.4
+    qrcode: "*"
     sass-loader: 10.1.1
     stylelint: ^13.12.0
     stylelint-config-recommended: ^4.0.0

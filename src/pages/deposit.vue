@@ -1,5 +1,5 @@
 <template>
-  <div class="transactionPage depositPage">
+  <div class="transactionPage depositPage dappPageWrapper">
     <allowance-modal />
 
     <!-- Choose token -->

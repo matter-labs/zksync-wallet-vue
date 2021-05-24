@@ -11,11 +11,12 @@
     "src/assets/fonts/*"
   ],
   "compilerOptions": {
-    "rootDir": ".src/",
     "lib": [
-      "ES2019",
-      "dom",
-      "node"
+      "es2019",
+      "es2019.object",
+      "esnext",
+      "esnext.asynciterable",
+      "dom"
     ]
   }
 }

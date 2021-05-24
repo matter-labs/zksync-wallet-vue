@@ -26,11 +26,26 @@
       </i-row>
       <i-row center class="_text-nowrap _align-items-center _margin-0">
         <div class="_padding-1-2 _padding-md-x-1 _hidden-sm-and-down">
-          <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
-            <strong>v.{{ version }}</strong
-            ><span class="revision">:{{ revision }}</span
-            ><span class="network">@{{ netName }}</span
-            ><strong v-if="isBeta" class="beta">@{{ netName }}</strong>
+          <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1 system-info">
+            <i-popover size="sm" class="system-env-popover" :trigger="['hover', 'click']">
+              <strong class="version">v.{{ version }}<sup v-if="isBeta" class="beta _text-danger">BETA</sup></strong>
+              <template slot="header">Environment details</template>
+              <template slot="body">
+                <span class="env-details">
+                  <i class="ri-npmjs-fill" />
+                  zksync v.{{ zkLibVersion }}
+                </span>
+                <span class="env-details">
+                  <i class="ri-reserved-fill" />
+                  zkSync API <code class="_padding-y-0">{{ zkApiBase }}</code>
+                </span>
+              </template>
+            </i-popover>
+            <a :href="githubLink" class="revision _background-gray-40" target="_blank">
+              <i class="ri-github-fill" />
+              {{ revision }}
+            </a>
+            <small class="network">{{ netName }}</small>
             <span class="separator">|</span>
             <a href="https://uptime.com/s/zksync" target="_blank">uptime</a>
           </i-badge>
@@ -45,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { APP_ZKSYNC_BLOCK_EXPLORER, GIT_REVISION_SHORT, VERSION, ZK_NETWORK, ZK_IS_BETA, ZK_LIB_VERSION } from "@/plugins/build";
+import { APP_ZKSYNC_BLOCK_EXPLORER, GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_IS_BETA, ZK_LIB_VERSION, ZK_NETWORK } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import Vue from "vue";
 
@@ -66,8 +81,14 @@ export default Vue.extend({
     version(): string {
       return VERSION;
     },
+    githubLink(): string | undefined {
+      return `https://github.com/matter-labs/zksync-wallet-vue/commit/${this.revision}`;
+    },
     revision(): string {
       return GIT_REVISION_SHORT;
+    },
+    zkApiBase(): string {
+      return ZK_API_BASE;
     },
   },
   methods: {

@@ -6,6 +6,9 @@ module.exports = {
   extends: ["@nuxtjs/eslint-config-typescript", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier", "plugin:vue/base"],
   parserOptions: {
     ecmaVersion: 12,
+    ecmaFeatures: {
+      experimentalObjectRestSpread: true,
+    },
     parser: "@typescript-eslint/parser",
     sourceType: "module",
     project: ["./tsconfig.json", "./tsconfig.eslint.json"],

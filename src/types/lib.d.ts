@@ -16,6 +16,16 @@ import { accessorType } from "~/store";
 
 export declare type ZKTypeFeeOption = "fast" | "normal";
 export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit";
+export declare type ZKTypeDisplayToken = {
+  symbol: TokenSymbol;
+  rawBalance?: BigNumber;
+  status?: string;
+  pendingBalance?: BigNumber;
+};
+
+export declare type ZKTypeDisplayBalances = {
+  [symbol: string]: ZKTypeDisplayToken;
+};
 
 export declare type GweiBalance = string | BigNumberish;
 export declare type DecimalBalance = string;
@@ -316,7 +326,7 @@ export interface ZKIRootState {
 }
 
 export type BalancesList = {
-  [token: string]: BigNumberish;
+  [token: string]: BigNumber;
 };
 
 export interface ZKITransactionsStore {

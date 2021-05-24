@@ -1,5 +1,5 @@
 <template>
-  <div class="tokenAccount">
+  <div class="tokenAccount dappPageWrapper">
     <div class="tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath && fromRoute.path !== '/withdraw' ? fromRoute : '/account'" class="returnBtn">
@@ -37,15 +37,11 @@
 </template>
 
 <script lang="ts">
-import transactions from "@/blocks/Transactions.vue";
 import { ZkInBalance } from "@/types/lib";
 import Vue from "vue";
 import { TokenSymbol } from "zksync/build/types";
 
 export default Vue.extend({
-  components: {
-    transactions,
-  },
   asyncData({ from }) {
     return {
       fromRoute: from,

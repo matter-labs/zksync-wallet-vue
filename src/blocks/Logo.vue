@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { ETHER_NETWORK_NAME } from "@/plugins/build";
+import { ZK_NETWORK, ZK_IS_BETA } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import Vue from "vue";
 
@@ -59,7 +59,10 @@ export default Vue.extend({
       return require(`@/assets/imgs/logos/logo${variation}.svg`);
     },
     network(): string {
-      return ETHER_NETWORK_NAME;
+      return ZK_NETWORK;
+    },
+    isBeta(): boolean {
+      return ZK_IS_BETA;
     },
   },
 });

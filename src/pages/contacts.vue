@@ -1,6 +1,6 @@
 <template>
-  <div class="contactsPage">
-    <i-modal v-model="addContactModal" class="prevent-close" size="md">
+  <div class="contactsPage dappPageWrapper">
+    <i-modal v-if="addContactType" v-model="addContactModal" class="prevent-close" size="md">
       <template slot="header">
         <span v-if="addContactType === 'add'">Add contact</span>
         <span v-else-if="addContactType === 'edit'">Edit contact</span>
@@ -110,14 +110,11 @@
       <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"><i class="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact</i-button>
       <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact</i-button>
     </div>
-    <transactions v-if="openedContact" :address="openedContact.address" />
+    <lazy-transactions v-if="openedContact" :address="openedContact.address" />
   </div>
 </template>
 
 <script lang="ts">
-import transactions from "@/blocks/Transactions.vue";
-import addressInput from "@/components/AddressInput.vue";
-
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { Address } from "zksync/build/types";
@@ -125,10 +122,6 @@ import utils from "~/plugins/utils";
 import { ZkInContact } from "~/types/lib";
 
 export default Vue.extend({
-  components: {
-    transactions,
-    addressInput,
-  },
   asyncData({ from }) {
     return {
       fromRoute: from,

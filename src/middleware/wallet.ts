@@ -8,7 +8,6 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
     }
     return;
   }
-  console.log(route.path);
   (async () => {
     const onboardResult = await $accessor.wallet.onboardInit();
     if (!onboardResult) {

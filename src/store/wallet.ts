@@ -1,18 +1,18 @@
 import { ZK_API_BASE, ZK_NETWORK } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
-import { iWalletData, ZkInBalance, ZkInFeesObj, ZkInTx, ZkInWithdrawalTime } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
+import web3Wallet from "@/plugins/web3";
+import { BalancesList, iWalletData, ZkInBalance, ZkInFeesObj, ZkInTx, ZkInWithdrawalTime, ZKTypeDisplayBalances, ZKTypeDisplayToken } from "@/types/lib";
+import { ExternalProvider } from "@ethersproject/providers";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
-import web3Wallet from "@/plugins/web3";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
 import { closestPackableTransactionFee, getDefaultProvider, Provider, Wallet } from "zksync";
 import { Address, Fee, Network, TokenSymbol } from "zksync/build/types";
-import { ExternalProvider } from "@ethersproject/providers";
 
 interface feesInterface {
   [symbol: string]: {
@@ -214,9 +214,9 @@ export const actions = actionTree(
     async restoreProviderConnection(): Promise<void> {
       // will probably be used again when websocket will be implemented
       /* if (walletData.get().syncProvider!.transport !== undefined) {
-        const activeProvider: Provider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
-        walletData.set({ syncProvider: activeProvider });
-      } */
+       const activeProvider: Provider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
+       walletData.set({ syncProvider: activeProvider });
+       } */
     },
 
     /**
@@ -232,9 +232,9 @@ export const actions = actionTree(
       type BalancesList = {
         [token: string]: BigNumberish;
       };
-      let listCommitted = <BalancesList>{};
-      let listVerified = <BalancesList>{};
-      const tokensList = <Array<ZkInBalance>>[];
+      let listCommitted: BalancesList = <BalancesList>{};
+      let listVerified: BalancesList = <BalancesList>{};
+      const tokensList: Array<ZkInBalance> = <Array<ZkInBalance>>[];
       const syncWallet = walletData.get().syncWallet;
       const savedAddress = this.app.$accessor.account.address;
       if (accountState) {
@@ -555,6 +555,36 @@ export const actions = actionTree(
       this.app.$accessor.account.setLoggedIn(false);
       this.app.$accessor.account.setSelectedWallet("");
       commit("clearDataStorage");
+    },
+
+    /**
+     * Preparing ZKBalances to show up with status & pending depositing
+     * @type {string}_filter
+     * @return {Promise<ZKTypeDisplayToken[]>}
+     */
+    async displayZkBalances({ state }, _filter = ""): Promise<ZKTypeDisplayToken[]> {
+      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
+      const returnTokens: ZKTypeDisplayBalances = {};
+      state.zkTokens.list.forEach((token: ZKTypeDisplayToken): void => {
+        returnTokens[token.symbol] = {
+          symbol: token.symbol,
+          rawBalance: token.rawBalance,
+          status: token.status,
+        };
+      });
+      const activeDeposits: BalancesList = await this.app.$accessor.transaction.getActiveDeposits();
+      for (const symbol in activeDeposits) {
+        if (!returnTokens[symbol]) {
+          returnTokens[symbol] = {
+            symbol,
+            rawBalance: BigNumber.from("0"),
+          };
+        }
+        returnTokens[symbol].status = "Pending";
+        returnTokens[symbol].pendingBalance = activeDeposits[symbol];
+      }
+      const convertedResult: ZKTypeDisplayToken[] = <ZKTypeDisplayToken[]>Object.keys(returnTokens).map((e: TokenSymbol) => returnTokens[e]);
+      return _filter ? convertedResult.filter((singleBalance: ZKTypeDisplayToken): boolean => singleBalance.symbol.search(_filter?.trim()) !== -1) : convertedResult;
     },
   },
 );

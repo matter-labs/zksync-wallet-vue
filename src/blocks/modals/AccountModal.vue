@@ -1,5 +1,5 @@
 <template>
-  <div class="accountModalContainer">
+  <div v-if="renameWalletModal" class="accountModalContainer">
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
       <template slot="header">Rename wallet</template>
       <div>
@@ -14,7 +14,7 @@
       </template>
       <div>
         <wallet-address :wallet="accountAddress" />
-        <vue-qrcode class="addressQR" :value="accountAddress" :margin="1" :scale="6" />
+        <vue-qrcode v-if="accountAddress" class="addressQR" :value="accountAddress" :margin="1" :scale="6" />
       </div>
       <template slot="footer">
         <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank">
@@ -53,7 +53,7 @@ export default Vue.extend({
       return this.$accessor.account.name;
     },
     accountAddress(): string {
-      return this.$accessor.account.address;
+      return this.$accessor.account.address ?? "";
     },
     accountZkScanUrl(): string {
       return this.$accessor.account.zkScanUrl;

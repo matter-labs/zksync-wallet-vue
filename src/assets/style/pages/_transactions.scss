@@ -48,28 +48,6 @@
         background-color: transparentize($color: $gray, $amount: 0.9);
       }
 
-      @media screen and (max-width: 768px) {
-        grid-gap: 5px;
-        grid-template-rows: 30px 75px 45px 30px;
-        grid-template-columns: 100%;
-        height: max-content;
-        padding: 10px 10px;
-
-        .status {
-          justify-self: center;
-        }
-
-        .mainInfo,
-        .actionInfo {
-          text-align: center !important;
-        }
-
-        .button {
-          justify-self: center;
-          width: 38px;
-        }
-      }
-
       .status {
         width: 35px;
         height: 35px;
@@ -184,6 +162,7 @@
           margin-top: 7px;
           font-size: $fontSizeRegular;
           line-height: 1.1;
+          text-align: left !important;
         }
       }
     }
@@ -199,6 +178,131 @@
 
       &.loadMoreAvailable {
         height: calc(100% - 45px);
+      }
+    }
+  }
+
+  @media (max-width: $mobile) {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    align-items: stretch;
+    min-height: 100%;
+
+    .transactionsTile {
+      display: flex;
+      flex-direction: column;
+      //height: $minRouteHeightWithExtra !important;
+      min-height: 350px;
+      justify-content: flex-start;
+      width: 100%;
+      //padding: 0.15rem 0.10rem !important;
+      text-align: center;
+
+      .transactionItem {
+        position: relative;
+        padding: 0.5rem 0;
+        align-items: flex-start;
+        justify-content: stretch;
+        grid-template-rows: none;
+        grid-template-columns: none;
+        display: flex;
+        gap: 0.15rem;
+        height: auto;
+
+        .status {
+          width: 2rem;
+          justify-self: center;
+          align-self: flex-start;
+          min-height: 3rem;
+        }
+
+        .mainInfo {
+          display: inline-flex;
+          text-align: left;
+          justify-content: flex-start;
+          align-items: baseline;
+          flex-wrap: wrap;
+          flex-grow: 1;
+          //margin: 1rem 0 0 auto !important;
+          //flex-direction: row;
+          //display: flex;
+          //white-space: nowrap;
+          //flex-grow: 2;
+          //align-items: flex-start;
+          & > * {
+            font-size: 11px !important;
+            text-align: left !important;
+            line-height: 14px !important;
+            word-break: break-word;
+          }
+
+          .amount
+          {
+            max-width: 20vw;
+            word-break: break-all;
+            white-space: normal
+          }
+          .amount, .tokenSymbol
+          {
+            line-height: 150% !important;
+            font-size: 12px !important;
+          }
+
+          .tokenSymbol
+          {
+            margin-left: 0.1rem;
+          }
+
+          //
+          .tooltip-wrapper {
+            width: 100%;
+            font-size: 9px !important;
+            line-height: 120% !important;
+          }
+        }
+
+        //
+        .actionInfo {
+          flex-basis: 35vw !important;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: flex-start;
+
+          .actionType {
+            text-align: left !important;
+            font-size: 12px;
+            line-height: 14px;
+            white-space: nowrap;
+          }
+
+          .actionValue {
+            font-size: 12px;
+            line-height: 14px;
+            text-align: left !important;
+            margin: 0;
+          }
+
+          .linkText {
+            width: auto !important;
+            text-align: left !important;
+            font-size: 11px !important;
+            line-height: 1rem;
+            text-indent: 0;
+            align-self: flex-start;
+            justify-self: flex-start;
+          }
+        }
+
+        .button {
+          position: absolute;
+          left: 0;
+          bottom: 0rem;
+          padding: 0 !important;
+          justify-self: center;
+          width: 2rem;
+        }
       }
     }
   }

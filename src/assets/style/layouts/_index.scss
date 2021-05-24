@@ -2,6 +2,13 @@
   .routerContainer {
     min-height: $minRouteHeight;
     //min-height: calc(100vh - 70px - 105px);
+
+    .dappPageWrapper
+    {
+      &>*{
+        margin: 1rem 0;
+      }
+    }
   }
 
   @media (max-width: $mobile) {

@@ -4,6 +4,11 @@
     text-align: center;
   }
 
+  .tileBlock
+  {
+    min-height: min-content;
+  }
+
   .transactionsTile {
     //height: $minRouteHeightMain !important;
     //min-height: 200px !important;

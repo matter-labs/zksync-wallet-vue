@@ -13,6 +13,7 @@ $red: #f25f5c;
 $link-color: $lightViolet;
 $color-secondary: $violet;
 $openSans: "Open Sans", "sans-serif";
+$colorLightGray: #e9ecef;
 
 /* Uplifting */
 $bgDesign: #f4f5f7;
@@ -23,6 +24,7 @@ $tempLightGray: #bababa;
 $tempLightYellow: #bababa;
 $tempDarkBlue: #11142b;
 $tempTransparent: transparent;
+$grayBG: rgba(186, 186, 186, 0.47);
 
 /* Bg */
 $accentBg: transparentize(
@@ -81,6 +83,7 @@ $maxWidth: 1370px;
 $biggestWidth: 1920px;
 
 /* Font sizes */
+$fontSizeXs: 10px;
 $fontSizeRegular: 14px;
 
 /* Shadow colors */

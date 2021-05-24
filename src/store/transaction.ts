@@ -1,7 +1,8 @@
-import { GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/types/lib";
 import { walletData } from "@/plugins/walletData";
+import { BalancesList, GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/types/lib";
+import { BigNumber } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
-import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/build/types";
+import { Address, ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/build/types";
 import { ETHOperation } from "zksync/build/wallet";
 
 export const state = () => ({
@@ -147,6 +148,35 @@ export const actions = actionTree(
       };
 
       return syncProvider?.getTransactionFee(txType, address, feeToken);
+    },
+
+    /**
+     * Getting the list of pending transactions to update balances status
+     * @param state
+     * @return {BalancesList}
+     */
+    getActiveDeposits({ getters }): BalancesList {
+      // @ts-ignore
+      getters.getForceUpdateTick; // Force to update the list
+      const deposits: ZkInDeposits = getters.depositList;
+      const activeDeposits: ZkInDeposits = {};
+      const finalDeposits: BalancesList = {};
+      let ticker: TokenSymbol;
+      for (ticker in deposits) {
+        activeDeposits[ticker] = deposits[ticker].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
+      }
+      for (ticker in activeDeposits) {
+        if (activeDeposits[ticker].length > 0) {
+          if (!finalDeposits[ticker]) {
+            finalDeposits[ticker] = BigNumber.from("0");
+          }
+          let tx: ZKInDepositTx;
+          for (tx of activeDeposits[ticker]) {
+            finalDeposits[ticker] = finalDeposits[ticker].add(tx.amount);
+          }
+        }
+      }
+      return finalDeposits;
     },
   },
 );

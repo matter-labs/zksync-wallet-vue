@@ -48,6 +48,7 @@ body {
 
     .dropdown {
       padding: 0;
+
       &.-dark {
         & > .menu[data-popper-placement="bottom"] {
           .arrow {
@@ -153,9 +154,20 @@ body {
       height: 100%;
     }
 
-    @media screen and (max-width: $mobile) {
+    @media (max-width: $mobile) {
+      padding: 0 !important;
+      .column {
+        padding: 0 !important;
+      }
       .mobileIndexHeader {
-        padding: 0;
+        padding: 1rem;
+        margin: 0 auto !important;
+
+        .container.mobileOnly {
+          margin: 0 auto !important;
+          padding-left: 12px;
+          padding-right: 0;
+        }
 
         .headerWrapper {
           position: relative;
@@ -166,7 +178,7 @@ body {
             height: 35px;
 
             @media screen and (max-width: 365px) {
-              height: 28px;
+              height: 22px;
             }
           }
 
@@ -370,6 +382,10 @@ body {
       }
     }
   }
+}
+
+.mainFooter {
+  background-color: transparent !important;
 }
 
 body.inkline.-light {

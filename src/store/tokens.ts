@@ -101,7 +101,6 @@ export const actions = actionTree(
     },
     loadAcceptableTokens({ commit }): void {
       this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`).then((acceptableTokens: TokenInfo[]) => {
-        console.log(acceptableTokens);
         commit("storeAcceptableTokens", acceptableTokens);
       });
     },

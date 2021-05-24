@@ -1,5 +1,5 @@
 <template>
-  <div class="footerModalContainer">
+  <div v-if="modal" class="footerModalContainer">
     <i-modal v-model="modal" size="md">
       <template slot="header">
         <b>Information</b>

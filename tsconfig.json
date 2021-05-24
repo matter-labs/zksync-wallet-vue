@@ -4,15 +4,17 @@
     "allowJs": true,
     "baseUrl": "./src",
     "checkJs": false,
+    "declaration": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "lib": [
+      "es2019",
+      "dom",
+      "es2019.object",
       "esnext",
-      "ES2019",
-      "esnext.asynciterable",
-      "dom"
+      "esnext.asynciterable"
     ],
-    "module": "ESNext",
+    "module": "esnext",
     "moduleResolution": "node",
     "noEmit": true,
     "noImplicitAny": true,

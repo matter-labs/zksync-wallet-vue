@@ -1,6 +1,6 @@
-$colorLightGray: #e9ecef;
-
-footer {
+footer.layout-footer {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   img {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -114,6 +114,105 @@ footer {
       }
     }
   }
+
+  footer .badge.system-info {
+    display: inline-flex;
+    align-items: center;
+
+    a.revision {
+      display: inline-flex;
+      line-height: 14px;
+      height: 14px;
+      color: $lighterGray;
+      padding: 0 4px;
+
+      border-radius: 5px;
+      margin: 0 0 0 5px;
+      font-size: 10px;
+
+      &:hover {
+        background-color: lighten($grayBG, 15);
+        transition: $transition2;
+        color: $blackViolet !important;
+      }
+    }
+
+    .version {
+      cursor: pointer;
+
+      &:hover {
+        transition: $transition1;
+        text-decoration: underline;
+        text-decoration-color: $lightViolet;
+        text-decoration-style: dashed;
+        text-decoration-skip: objects spaces;
+        text-decoration-width: 0.4px;
+
+        sup.beta {
+          text-decoration: none !important;
+        }
+      }
+
+      sup.beta {
+
+        margin-left: 0.3rem;
+      }
+    }
+
+    .popover-wrapper.system-env-popover {
+      .popover {
+        width: min-content;
+        white-space: nowrap;
+
+        .header {
+          padding: 0.33rem;
+          font-size: $fontSizeXs;
+
+        }
+
+        .body {
+          padding: 0.20rem 0.33rem;
+          text-transform: none;
+          font-size: $fontSizeXs;
+          display: flex;
+          flex-direction: column;
+
+          .env-details {
+            display: inline-flex;
+            gap: 4px;
+            line-height: 20px;
+
+            i {
+              font-size: 14px;
+            }
+
+            code {
+              font-size: $fontSizeXs;
+              line-height: 20px;
+              height: 20px;
+            }
+          }
+        }
+      }
+    }
+
+    .network {
+      display: inline-flex;
+      padding: 0 !important;
+      color: $lightViolet !important;
+      font-size: 12px !important;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: transparent !important;
+      margin: 0 5px;
+      font-weight: bold;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      cursor: default;
+    }
+  }
 }
 
 .inkline.-light {
@@ -125,8 +224,22 @@ footer {
 }
 
 .inkline.-dark {
-  footer > .container .badge {
-    color: $darkerGray;
-    background: $colorLightGray;
+  footer {
+    & > .container .badge {
+      color: $darkerGray;
+      background: $colorLightGray;
+    }
+
+    .badge.system-info {
+      a.revision {
+        background-color: $darkerGray !important;
+        color: $darkViolet !important;
+
+        &:hover {
+          background-color: $mediumViolet !important;
+          color: $lightViolet !important;
+        }
+      }
+    }
   }
 }

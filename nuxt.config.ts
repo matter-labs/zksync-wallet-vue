@@ -167,9 +167,10 @@ const config: NuxtConfig = {
           typeCheck: {
             async: true,
             eslint: {
-              config: [".eslintrc.js", ".tsconfig-eslint.json"],
+              config: [".eslintrc.js", "tsconfig-eslint.json"],
               files: "**/*.{ts,js,vue,scss}",
             },
+            files: "**/*.{ts,vue}",
           },
         },
       },
@@ -226,7 +227,7 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
-    hardSource: false,
+    hardSource: isProduction,
     ssr: false,
     extend: (config: Configuration) => {
       config.node = {
@@ -237,8 +238,10 @@ const config: NuxtConfig = {
   buildOptimisations: {
     profile: env !== "prod" ? "risky" : "experimental",
     features: {
-      hardSourcePlugin: false,
+      postcssNoPolyfills: isProduction,
+      hardSourcePlugin: isProduction,
     },
+    esbuildLoaderOptions: "esnext",
   },
   googleFonts: {
     prefetch: true,

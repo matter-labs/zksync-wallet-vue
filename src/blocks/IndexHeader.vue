@@ -1,5 +1,5 @@
 <template>
-  <header class="indexHeader" :class="{ opened: opened }">
+  <i-layout-header class="indexHeader" :class="{ opened: opened }">
     <div class="mobileIndexHeader">
       <i-container class="mobileOnly">
         <i-row class="_disaply-flex _justify-content-between _flex-nowrap">
@@ -60,7 +60,7 @@
         </i-row>
       </i-container>
     </div>
-  </header>
+  </i-layout-header>
 </template>
 
 <script lang="ts">

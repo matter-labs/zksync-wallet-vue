@@ -1,5 +1,5 @@
 <template>
-  <div class="transactionsPage">
+  <div class="transactionsPage dappPageWrapper">
     <account-activation-modal />
     <div class="tileBlock transactionsTile">
       <div class="tileHeadline h3">Transactions</div>

@@ -16,42 +16,72 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-height: 65px;
+    height: 60px!important;
   }
 
   .content {
     overflow-y: auto;
   }
-
-  section.bn-onboard-custom.bn-onboard-modal-content.svelte-rntogh {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 0.5rem;
-    padding: 1rem;
-    border-radius: 8px !important;
-    height: fit-content !important;
-  }
-
-  header.bn-onboard-custom.bn-onboard-modal-content-header.svelte-8i8o6j {
-    margin: 0 !important;
-  }
-
-  aside.bn-onboard-custom.bn-onboard-modal.svelte-rntogh {
+  aside.bn-onboard-custom.bn-onboard-modal {
     padding: 1rem;
     align-items: flex-end;
+
+    section.bn-onboard-custom.bn-onboard-modal-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-radius: 8px !important;
+      height: fit-content !important;
+    }
+
+    header.bn-onboard-custom.bn-onboard-modal-content-header {
+      margin: 0 !important;
+    }
+
+    .bn-onboard-custom.bn-onboard-icon-button {
+      padding: .5rem;
+      margin: 0.25rem 0;
+    }
+
+    //.bn-onboard-custom.bn-onboard-modal-content-close
+
   }
 
-  #__layout
-  {
-    display: flex;
-    flex-direction: column;
+  #__layout {
+    display: flex !important;
+    flex-direction: column !important;
     max-width: 100vh !important;
     overflow: hidden;
 
-    main
-    {
-      padding: $headerHeight 0 $footerHeight;
+    main {
+      padding: 60px 0 $footerHeight;
+      max-height: 95vh;
+
+      .layout-content.layoutContent {
+        display: flex;
+        height: 100% !important;
+        flex-direction: column;
+        justify-content: stretch;
+        overflow: hidden;
+
+        .routerContainer {
+          display: flex;
+          height: 100% !important;
+          flex-direction: column;
+          justify-content: stretch;
+          overflow: hidden;
+
+          .dappPageWrapper {
+            display: flex;
+            height: 100% !important;
+            flex-direction: column;
+            justify-content: stretch;
+            overflow: hidden;
+          }
+        }
+      }
     }
   }
 
@@ -62,22 +92,24 @@
   #__nuxt,
   #__layout,
   .layoutContent,
-  .defaultLayout,
-  .indexLayout {
+  .defaultLayout {
     min-height: 100vh !important;
   }
 
 
-  main.layout.indexLayout {
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-  }
-
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
     line-height: 1.4;
+
+    main.layout {
+      .indexLayout {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+      }
+    }
   }
+
 
   footer.layout-footer {
     min-height: 80px;
@@ -85,7 +117,11 @@
   }
 
   header.indexHeader {
-    min-height: 80px;
+    min-height: 60px;
+  }
+
+  header > .container .headerWrapper img.zkwallet-logo {
+    height: 20px !important;
   }
 
   main > div.mobileOnly {
@@ -97,17 +133,14 @@
     min-height: 80px;
   }
 
-  section.bn-onboard-custom.bn-onboard-modal-content.svelte-rntogh {
-    max-height: 100vh !important;
-  }
 
-  section.bn-onboard-custom.bn-onboard-modal-selected-wallet.svelte-mi6ahc {
+  section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
 
-  footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer.svelte-mi6ahc {
+  footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
     justify-content: space-between;
     margin: 0;
     padding: 0;
@@ -137,10 +170,6 @@
     height: auto !important;
   }
 
-  div.walletPage {
-    overflow-y: scroll;
-  }
-
 
   main.layout.defaultLayout {
     flex-flow: column nowrap;
@@ -156,14 +185,20 @@
 
 
   aside.bn-onboard-custom.bn-onboard-modal {
+    max-height: 100vh;
+
+    .bn-onboard-custom.bn-onboard-modal-content {
+      max-height: 90vh !important;
+    }
+
     section.bn-onboard-custom.bn-onboard-modal-content {
-      max-height: 80vh !important;
       overflow: hidden;
     }
   }
 
   main.defaultLayout {
     padding-bottom: 80px !important;
+    max-height: calc(80px);
   }
 
   section.layoutContent {
@@ -174,18 +209,19 @@
 
 
   .layout-content.layoutContent {
-    min-height: auto !important;
+    display: flex;
+    min-height: max-content !important;
     position: initial !important;
     flex: initial;
     flex-direction: column;
     height: auto;
     align-items: stretch;
-    display: flex;
     justify-content: stretch;
 
     .routerContainer {
       min-height: 0;
       margin: 1rem auto;
+      width: 100%;
     }
   }
 
@@ -200,9 +236,159 @@
   align-items: stretch;
   display: flex;
   justify-content: stretch;
-  .routerContainer
-  {
+
+  .routerContainer {
     min-height: 0;
-    margin: 1rem auto;
+  }
+}
+
+
+@media (max-width: $mobile) {
+  ._mobile-nomargin {
+    margin: 0.25rem 0 0 !important;
+  }
+  .successBlock .infoBlockItem {
+    &.smaller .amount {
+      font-size: 14px;
+    }
+
+    .amount {
+      font-size: 18px;
+    }
+  }
+  .layout-content.layoutContent .routerContainer {
+    margin: 0 auto 0;
+    padding: 0;
+  }
+  //.successBlock .infoBlockItem.smaller .amount
+  .dappPageWrapper {
+    width: calc(100vw - .5rem);
+    margin: 1rem auto 0.5rem !important;
+
+    &.contactsPage
+    {
+      padding: 0;
+    }
+
+    .tileBlock {
+      padding: .75rem 1rem !important;
+      //min-height: 40vh;
+      width: 90vw;
+      margin-left: auto;
+      margin-right: auto;
+      align-items: stretch;
+      justify-content: stretch;
+      display: flex;
+      flex-direction: column;
+
+      &.contactTile {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        overflow: hidden;
+        justify-content: stretch;
+        margin-top: 0;
+
+        .contactsListContainer {
+          overflow-x: hidden;
+          overflow-y: scroll;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          height: auto;
+          justify-content: stretch;
+        }
+      }
+
+      .transactionsListContainer {
+        overflow-x: hidden;
+      }
+
+      button.button {
+        &.-secondary {
+          padding: 0.3rem 0.5rem;
+          font-size: 14px;
+
+          &.-link {
+            margin-bottom: 0.5rem !important;
+          }
+
+          &.-block {
+            margin-top: 0.25rem !important;
+            margin-bottom: 0.5rem !important;
+          }
+        }
+      }
+
+      .form-input-group {
+        margin-bottom: 0.5rem;
+
+        .form-input input {
+          font-size: 12px !important;
+        }
+      }
+
+      .animatedCheckmark {
+        max-height: 5rem;
+      }
+
+      & > * {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+      }
+
+      .tileHeadline {
+        font-size: 18px;
+        line-height: 30px;
+        padding-top: 0 !important;
+        padding-bottom: 0.5rem !important;
+
+        i {
+          line-height: 20px;
+          height: 20px;
+          width: 20px;
+
+        }
+      }
+    }
+
+    & > * {
+      margin: 1rem auto;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .defaultLayout .walletContainer.clickablePicture {
+    grid-template-columns: 1fr auto;
+    grid-gap: 0.25rem;
+    padding: 0.25rem !important;
+
+    .walletAddress {
+      letter-spacing: -0.05rem;
+      font-size: 10px;
+    }
+
+    .userImg {
+      display: none;
+    }
+
+    .tooltip-wrapper {
+      i.copy {
+        padding: 0.25rem;
+      }
+    }
+  }
+
+  .transactionsPage .transactionsListContainer {
+    max-height: none !important;
   }
 }
