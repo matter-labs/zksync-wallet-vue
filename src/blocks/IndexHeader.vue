@@ -5,7 +5,7 @@
         <i-row class="_disaply-flex _justify-content-between _flex-nowrap">
           <i-column>
             <transition name="fade">
-              <logo :is-zk-sync-logo="false" />
+              <block-logo :is-zk-sync-logo="false" />
             </transition>
           </i-column>
           <i-column class="_padding-right-0">
@@ -30,11 +30,11 @@
       <i-container>
         <i-row>
           <i-column :xs="12" :md="4" class="_padding-left-0 desktopOnly">
-            <logo :is-zk-sync-logo="false" />
+            <block-logo :is-zk-sync-logo="false" />
           </i-column>
           <i-column :xs="12" :md="4" class="_padding-y-0">
             <div class="linksContainer">
-              <a href="https://zksync.io/faq/" target="_blank" class="linkItem">FAQ</a>
+              <a href="https://zksync.io/faq/" target="_blank" class="linkItem"> FAQ</a>
               <a href="https://zksync.io/dev/" target="_blank" class="linkItem">Docs</a>
               <i-dropdown
                 class="_background-transparent _border-none likeLinkItem"
@@ -42,7 +42,7 @@
                 size="sm"
                 variation="dark"
                 placement="bottom"
-                trigger="manual"
+                trigger="click"
               >
                 <a class="dropDownHandler linkItem _position-top-0" @click.capture="dropdownOpened = !dropdownOpened">
                   zkTools <i class="fal" :class="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"></i>
@@ -55,7 +55,7 @@
             </div>
           </i-column>
           <i-column :xs="12" :md="4" class="_margin-left-auto _padding-right-0 _justify-content-end desktopOnly">
-            <social-block />
+            <block-social-block />
           </i-column>
         </i-row>
       </i-container>
@@ -64,8 +64,6 @@
 </template>
 
 <script lang="ts">
-import logo from "@/blocks/Logo.vue";
-import SocialBlock from "@/blocks/SocialBlock.vue";
 import Vue from "vue";
 
 interface DropdownOption {
@@ -74,10 +72,7 @@ interface DropdownOption {
 }
 
 export default Vue.extend({
-  components: {
-    logo,
-    SocialBlock,
-  },
+  name: "IndexHeader",
   data() {
     return {
       opened: false,

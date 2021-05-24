@@ -1,6 +1,10 @@
 footer.layout-footer {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  position: relative;
+  background-color: transparent !important;
+  height: 3.5rem;
+  align-content: center;
+  padding: 0 1rem 0.5rem !important;
+
   img {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -8,11 +12,7 @@ footer.layout-footer {
     user-select: none;
   }
 
-  position: relative;
-  padding-right: 16px;
-  padding-left: 16px;
-
-  @media screen and (min-width: 1201px) {
+  @media screen and (min-width: $desktop) {
     .container {
       width: calc(100vw - 34px);
       max-width: $biggestWidth;
@@ -23,6 +23,11 @@ footer.layout-footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+
+    &.mobileFooter {
+      background-color: $darkViolet;
+      box-shadow: $shadowTop;
+    }
   }
 
   &.mainFooter {
@@ -33,7 +38,6 @@ footer.layout-footer {
     }
 
     & > div {
-
       @media (max-width: $mobile) {
         flex-direction: column-reverse !important;
       }
@@ -52,21 +56,9 @@ footer.layout-footer {
     }
   }
 
-  .zkSyncBootomLogo {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    z-index: -1;
-    width: 100%;
-    height: auto;
-  }
-
   .floating-on-mobile {
-    transform: translateY(-5px);
-  }
-
-  @media (max-width: 992px) {
-    .floating-on-mobile {
+    //transform: translateY(-5px);
+    @media (max-width: $tablet) {
       position: fixed;
       width: 2.5rem !important;
       height: 2.5rem !important;
@@ -79,53 +71,25 @@ footer.layout-footer {
       }
 
       @media (max-width: $mobile) {
-        bottom: 110px;
+        bottom: 2.5rem;
         right: 10px;
       }
     }
   }
-}
 
-.indexLayout {
-  footer {
-    a {
-      color: $violet !important;
-      font-size: $fontSizeRegular;
-
-      &:hover {
-        color: $lightViolet !important;
-      }
-    }
-  }
-}
-
-.inkline {
-  footer {
-    .badge {
-      font-weight: 400;
-      font-size: 12px !important;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background-color: transparent !important;
-
-      a {
-        font-weight: 400;
-        text-transform: lowercase;
-      }
-    }
-  }
-
-  footer .badge.system-info {
+  // Block with the dev-debug data
+  .badge.system-info {
+    align-items: baseline;
     display: inline-flex;
-    align-items: center;
+    line-height: 1.2rem !important;
+    gap: 0.4rem;
 
     a.revision {
       display: inline-flex;
-      line-height: 14px;
-      height: 14px;
+      height: 1.2rem;
+      line-height: 1.2rem !important;
       color: $lighterGray;
       padding: 0 4px;
-
       border-radius: 5px;
       margin: 0 0 0 5px;
       font-size: 10px;
@@ -138,6 +102,8 @@ footer.layout-footer {
     }
 
     .version {
+      line-height: 1.2rem !important;
+
       cursor: pointer;
 
       &:hover {
@@ -154,7 +120,6 @@ footer.layout-footer {
       }
 
       sup.beta {
-
         margin-left: 0.3rem;
       }
     }
@@ -197,6 +162,7 @@ footer.layout-footer {
     }
 
     .network {
+      line-height: 1.2rem !important;
       display: inline-flex;
       padding: 0 !important;
       color: $lightViolet !important;
@@ -206,13 +172,44 @@ footer.layout-footer {
       background: transparent !important;
       margin: 0 5px;
       font-weight: bold;
-      line-height: 1;
       text-align: center;
       white-space: nowrap;
       vertical-align: baseline;
       cursor: default;
     }
   }
+}
+
+.indexLayout {
+  footer {
+    a {
+      color: $violet !important;
+      font-size: $fontSizeRegular;
+
+      &:hover {
+        color: $lightViolet !important;
+      }
+    }
+  }
+}
+
+.inkline {
+  footer {
+    .badge {
+      font-weight: 400;
+      font-size: 12px !important;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background-color: transparent !important;
+
+      a {
+        font-weight: 400;
+        text-transform: lowercase;
+      }
+    }
+  }
+
+
 }
 
 .inkline.-light {

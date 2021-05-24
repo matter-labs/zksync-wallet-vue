@@ -20,6 +20,7 @@ import Vue from "vue";
 
 let loggedInAnimationTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
+  name: "LoggingInLoader",
   components: {
     logo,
   },

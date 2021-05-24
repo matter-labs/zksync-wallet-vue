@@ -10,19 +10,19 @@
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
           <div class="pagesContainer linksContainer _margin-x-auto">
             <nuxt-link class="headerLink" to="/account">
-              <i class="mobileOnly ri-wallet-line"></i>
+              <i class="mobileOnly ri-wallet-line" />
               <span>My wallet</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/contacts">
-              <i class="mobileOnly ri-contacts-line"></i>
+              <i class="mobileOnly ri-contacts-line" />
               <span>Contacts</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/transactions">
-              <i class="mobileOnly ri-history-line"></i>
+              <i class="mobileOnly ri-history-line" />
               <span>Transactions</span>
             </nuxt-link>
             <div class="mobileOnly headerLink" @click="footerModal = !footerModal">
-              <i class="ri-more-2-fill"></i>
+              <i class="ri-more-2-fill" />
               <span>More</span>
             </div>
           </div>
@@ -59,6 +59,7 @@ import footerModal from "@/blocks/modals/FooterModal.vue";
 import Vue from "vue";
 
 export default Vue.extend({
+  name: "Header",
   components: {
     logo,
     accountModal,

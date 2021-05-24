@@ -49,7 +49,6 @@ input[type="number"] {
 }
 
 .desktopOnly {
-
   @media screen and (max-width: $mobile+1) {
     display: none !important;
   }

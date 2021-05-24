@@ -25,7 +25,7 @@
 }
 
 .balanceWithdraw {
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: $mobile) {
     flex-direction: column;
 
     & > .infoBlock {

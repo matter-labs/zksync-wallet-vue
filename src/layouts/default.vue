@@ -1,7 +1,7 @@
 <template>
   <i-layout class="defaultLayout">
-    <logging-in-loader />
-    <header-component ref="header" />
+    <block-logging-in-loader />
+    <block-header ref="header" />
     <i-layout-content v-if="!loggingIn && loggedIn" class="layoutContent">
       <div class="routerContainer">
         <transition name="fade" mode="out-in">
@@ -9,32 +9,24 @@
         </transition>
       </div>
     </i-layout-content>
-    <footer-component class="desktopOnly" />
+    <block-footer class="desktopOnly" />
   </i-layout>
 </template>
 
-<script type="ts">
-import footerComponent from "@/blocks/Footer.vue";
-import headerComponent from "@/blocks/Header.vue";
-import loggingInLoader from "@/blocks/LoggingInLoader.vue";
+<script lang="ts">
 import utils from "@/plugins/utils";
 import Vue from "vue";
 export default Vue.extend({
-  components: {
-    headerComponent,
-    footerComponent,
-    loggingInLoader,
-  },
   computed: {
-    loggingIn(){
+    loggingIn() {
       return this.$accessor.account.loader;
     },
-    loggedIn(){
+    loggedIn() {
       return this.$accessor.account.loggedIn;
     },
   },
-  mounted(){
+  mounted() {
     utils.defineTheme(this.$inkline, false);
-  }
+  },
 });
 </script>

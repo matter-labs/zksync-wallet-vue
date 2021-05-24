@@ -15,7 +15,7 @@ header {
   }
 
   &.loggedInHeader {
-    @media screen and (min-width: 992px) and (max-width: 1200px) {
+    @media screen and (min-width: $tablet) and (max-width: $desktop) {
       .pagesContainer.linksContainer {
         grid-gap: 3px;
 
@@ -26,7 +26,7 @@ header {
       }
     }
 
-    @media screen and (min-width: 768px) and (max-width: 991px) {
+    @media screen and (min-width: $mobile) and (max-width: $tablet) {
       .pagesContainer.linksContainer {
         grid-gap: 3px;
 
@@ -74,7 +74,7 @@ header {
     .headerWrapper {
       height: 30px !important;
 
-      @media screen and (min-width: 768px) and (max-width: 991px) {
+      @media screen and (min-width: $mobile) and (max-width: $tablet) {
         height: 25px !important;
 
         .badge small {
@@ -109,7 +109,7 @@ header {
       }
     }
 
-    @media screen and (min-width: 1201px) {
+    @media screen and (min-width: $desktop) {
       max-width: $biggestWidth;
     }
   }
@@ -124,7 +124,7 @@ header {
     width: max-content;
     height: 100%;
 
-    @media screen and (min-width: $mobile) and (max-width: 992px) {
+    @media screen and (min-width: $mobile) and (max-width: $tablet) {
       grid-gap: 15px;
 
       .mainLink {
@@ -168,8 +168,7 @@ header {
       left: 0;
     }
 
-    .pagesContainer,
-    .mobileFooter {
+    .pagesContainer{
       background-color: $darkViolet;
       box-shadow: $shadowTop;
     }
@@ -265,7 +264,7 @@ header {
       text-align: right;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: $mobile) {
       grid-template-columns: 32px 30px;
 
       .userDropdownAddress {

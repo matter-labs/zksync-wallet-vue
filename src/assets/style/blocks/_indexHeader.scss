@@ -51,17 +51,19 @@ body {
 
       &.-dark {
         & > .menu[data-popper-placement="bottom"] {
-          .arrow {
-            border-bottom-color: $darkViolet !important;
+          .arrow::after {
+            border-bottom-color: $mediumViolet !important;
+          }
 
-            &::after {
+          &.firstElementHovered {
+            .arrow::after {
               border-bottom-color: $darkViolet !important;
             }
           }
         }
       }
 
-      @media screen and (min-width: $mobile+1) and (max-width: 991px) {
+      @media screen and (min-width: $mobile+1) and (max-width: $tablet) {
         padding: 0 5px;
         font-size: $fontSizeRegular;
       }
@@ -87,6 +89,7 @@ body {
           color: $white;
           font: normal normal 16px/2rem $firaSans;
           transition: color $transition1;
+
 
           &:hover {
             color: $lightViolet;
@@ -372,16 +375,12 @@ body {
       color: $white;
       white-space: nowrap;
 
-      @media screen and (min-width: $mobile+1) and (max-width: 991px) {
+      @media screen and (min-width: $mobile+1) and (max-width: $tablet) {
         padding: 0 5px;
         font-size: 14px;
       }
     }
   }
-}
-
-.mainFooter {
-  background-color: transparent !important;
 }
 
 body.inkline.-light {
@@ -411,7 +410,7 @@ body.inkline.-light {
 
       .dropdown .menu {
         background-color: $bgLight;
-        border-color: $bgLight;
+        border: none;
         box-shadow: $layerShadow;
 
         .item {

@@ -22,7 +22,7 @@
         <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
       </div>
       <div v-else class="balances">
-        <div v-if="!loading" class="_margin-top-1 _mobile-nomargin">
+        <div v-if="!loading" class="_margin-top-1 _mobile-no-margin">
           <div class="_display-flex _justify-content-space-between">
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
