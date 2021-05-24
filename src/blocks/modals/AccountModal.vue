@@ -1,5 +1,5 @@
 <template>
-  <div v-if="renameWalletModal" class="accountModalContainer">
+  <div v-if="renameWalletModal || accountModal" class="accountModalContainer">
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
       <template slot="header">Rename wallet</template>
       <div>
