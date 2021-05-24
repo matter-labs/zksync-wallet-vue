@@ -47,24 +47,10 @@ jobs:
       - name: Configure for mainnet [dev]
         run: bash ./cli-process-env.sh mainnet dev 1
 
-      - name: Build mainnet
+      - name: Build mainnet [dev]
         run: yarn generate --fail-on-error
 
       - name: Deploy to mainnet [dev]
-        uses: matter-labs/action-hosting-deploy@v0
-        with:
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: mainnet-dev
-          projectId: zksync-vue
-          channelID: live
-
-      - name: Configure for stage [dev]
-        run: bash ./cli-process-env.sh mainnet dev 1
-
-      - name: Build stage (mainnet) [dev]
-        run: yarn generate --fail-on-error
-
-      - name: Deploy to stage (mainnet) [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
@@ -72,13 +58,13 @@ jobs:
           projectId: zksync-vue
           channelID: live
 
-      - name: Configure for rinkeby-beta [dev]
+      - name: Configure for rinkeby-beta [beta]
         run: bash ./cli-process-env.sh rinkeby-beta dev 1
 
-      - name: Build rinkeby-beta [dev]
+      - name: Build rinkeby-beta [beta]
         run: yarn generate --fail-on-error
 
-      - name: Deploy to rinkeby-beta [dev]
+      - name: Deploy to rinkeby-beta [beta]
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
