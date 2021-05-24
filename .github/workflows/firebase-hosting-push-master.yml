@@ -30,20 +30,6 @@ jobs:
           projectId: zksync-vue
           channelID: live
 
-      - name: Configure for ropsten
-        run: bash ./cli-process-env.sh ropsten prod 1
-
-      - name: Build ropsten
-        run: yarn generate --fail-on-error
-
-      - name: Deploy to ropsten site
-        uses: matter-labs/action-hosting-deploy@v0
-        with:
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: ropsten
-          projectId: zksync-vue
-          channelID: live
-
       - name: Configure for mainnet
         run: bash ./cli-process-env.sh mainnet prod 1
 
