@@ -1,6 +1,6 @@
 <template>
   <div class="contactsPage dappPageWrapper">
-    <i-modal v-if="addContactModal" v-model="addContactModal" class="prevent-close" size="md">
+    <i-modal v-model="addContactModal" class="prevent-close" size="md">
       <template slot="header">
         <span v-if="addContactType === 'add'">Add contact</span>
         <span v-else-if="addContactType === 'edit'">Edit contact</span>

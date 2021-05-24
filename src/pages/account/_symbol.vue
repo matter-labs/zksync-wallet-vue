@@ -32,7 +32,7 @@
         <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`"> <i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer </i-button>
       </div>
     </div>
-    <transactions :filter="symbol" />
+    <transactions class="_margin-top-1" :filter="symbol" />
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <i-modal v-if="opened" v-model="opened" size="md">
+  <i-modal v-model="opened" size="md">
     <template slot="header">Can't find a token</template>
     <p>
       zkSync currently supports the most popular tokens, we will be adding more over time.

@@ -556,35 +556,5 @@ export const actions = actionTree(
       this.app.$accessor.account.setSelectedWallet("");
       commit("clearDataStorage");
     },
-
-    /**
-     * Preparing ZKBalances to show up with status & pending depositing
-     * @type {string}_filter
-     * @return {Promise<ZKTypeDisplayToken[]>}
-     */
-    async displayZkBalances({ state }, _filter = ""): Promise<ZKTypeDisplayToken[]> {
-      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
-      const returnTokens: ZKTypeDisplayBalances = {};
-      state.zkTokens.list.forEach((token: ZKTypeDisplayToken): void => {
-        returnTokens[token.symbol] = {
-          symbol: token.symbol,
-          rawBalance: token.rawBalance,
-          status: token.status,
-        };
-      });
-      const activeDeposits: BalancesList = await this.app.$accessor.transaction.getActiveDeposits();
-      for (const symbol in activeDeposits) {
-        if (!returnTokens[symbol]) {
-          returnTokens[symbol] = {
-            symbol,
-            rawBalance: BigNumber.from("0"),
-          };
-        }
-        returnTokens[symbol].status = "Pending";
-        returnTokens[symbol].pendingBalance = activeDeposits[symbol];
-      }
-      const convertedResult: ZKTypeDisplayToken[] = <ZKTypeDisplayToken[]>Object.keys(returnTokens).map((e: TokenSymbol) => returnTokens[e]);
-      return _filter ? convertedResult.filter((singleBalance: ZKTypeDisplayToken): boolean => singleBalance.symbol.search(_filter?.trim()) !== -1) : convertedResult;
-    },
   },
 );

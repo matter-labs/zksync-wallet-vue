@@ -3,41 +3,6 @@
     box-sizing: border-box;
   }
   body.inkline {
-    min-height: 100vh;
-    height: 100vh;
-
-    /* Avoid Chrome to see Safari hack */
-    @supports (-webkit-touch-callout: none) {
-      /* The hack for Safari */
-      //noinspection CssInvalidPropertyValue
-      min-height: -webkit-fill-available;
-      //noinspection CssInvalidPropertyValue
-      height: -webkit-fill-available;
-    }
-
-    #__layout {
-      max-height: 100vh; /* Use vh as a fallback for browsers that do not support Custom Properties */
-
-      /* Avoid Chrome to see Safari hack */
-      @supports (-webkit-touch-callout: none) {
-        /* The hack for Safari */
-        //noinspection CssInvalidPropertyValue
-        max-height: -webkit-fill-available;
-      }
-
-
-      main {
-        height: 100vh;
-
-        /* Avoid Chrome to see Safari hack */
-        @supports (-webkit-touch-callout: none) {
-          /* The hack for Safari */
-          //noinspection CssInvalidPropertyValue
-          height: -webkit-fill-available;
-        }
-
-      }
-    }
     footer.layout-footer
     {
       height: 4.5rem;
@@ -99,70 +64,21 @@
   }
 
   #__layout {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch;
-    margin: 0 auto !important;
-    padding: 0 !important;
-    overflow: hidden;
-
     main {
       padding: 60px 0 95px;
-      max-height: 100vh;
 
       @supports (-webkit-touch-callout: none) {
         //noinspection CssInvalidPropertyValue
-        max-height: -webkit-fill-available;
-      }
-    }
-
-    .layout-content.layoutContent {
-      display: flex;
-      height: 100% !important;
-      flex-direction: column;
-      justify-content: stretch;
-      overflow: hidden;
-
-      .routerContainer {
-        display: flex;
-        height: 100% !important;
-        flex-direction: column;
-        justify-content: stretch;
-        overflow: hidden;
-
-        .dappPageWrapper {
-          align-items: stretch;
-          margin: 0 auto !important;
-          padding: 1rem 0 !important;
-          display: flex;
-          height: 100% !important;
-          flex-direction: column;
-          justify-content: stretch;
-          overflow: hidden;
-        }
+        min-height: -webkit-fill-available;
       }
     }
   }
-}
-
-#__nuxt {
-  overflow: hidden;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   line-height: 1.4;
-
-  main.layout {
-    .indexLayout {
-      display: flex;
-      width: 100%;
-      flex-direction: column;
-    }
-  }
 }
-
-
 
 header.indexHeader {
   min-height: 60px;
@@ -207,20 +123,6 @@ footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
   }
 }
 
-div.routerContainer {
-  min-height: auto !important;
-  height: auto !important;
-}
-
-
-main.layout.defaultLayout {
-  flex-flow: column nowrap;
-  display: flex;
-  justify-content: space-between !important;
-  align-items: stretch;
-}
-
-
 aside.bn-onboard-custom.bn-onboard-modal {
   max-height: 100vh;
   padding: 2vh 2vw;
@@ -248,46 +150,9 @@ aside.bn-onboard-custom.bn-onboard-modal {
   }
 }
 
-main.defaultLayout {
-  padding-bottom: 80px !important;
-}
-
 section.layoutContent {
   .mobileOnly {
     display: none !important;
-  }
-}
-
-
-.layout-content.layoutContent {
-  display: flex;
-  min-height: max-content !important;
-  position: initial !important;
-  flex: initial;
-  flex-direction: column;
-  height: auto;
-  align-items: stretch;
-  justify-content: stretch;
-
-  .routerContainer {
-    min-height: 0;
-    margin: 1rem auto;
-    width: 100%;
-  }
-}
-
-.layout-content.layoutContent {
-  min-height: auto !important;
-  position: initial !important;
-  flex: initial;
-  flex-direction: column;
-  height: auto;
-  align-items: stretch;
-  display: flex;
-  justify-content: stretch;
-
-  .routerContainer {
-    min-height: 0;
   }
 }
 
@@ -305,55 +170,13 @@ section.layoutContent {
       font-size: 18px;
     }
   }
-  .layout-content.layoutContent .routerContainer {
-    margin: 0 auto 0;
-    padding: 0;
-  }
 
-  //.successBlock .infoBlockItem.smaller .amount
   .dappPageWrapper {
-    width: calc(100vw - .5rem);
-    margin: 1rem auto 0.5rem !important;
-    display: grid !important;
-
-    .walletContainer
-    {
-      padding: 0.8rem 1.1rem !important;
-    }
-
-    .row._margin-top-1
-    {
-      margin-top: 0 !important;
-    }
-
-    &.contactsPage {
-      padding: 0;
-    }
-
-    &.depositPage, &.tokenAccount
-    {
-      .tileBlock
-      {
-        min-height: auto;
-      }
-    }
-
     .tileBlock {
-      padding: .75rem 1rem 1.5rem !important;
+      padding: .75rem 1rem 0.5rem !important;
       //min-height: 40vh;
       width: 90vw;
-      margin: 0 auto !important;
-      align-items: stretch;
-      justify-content: stretch;
-      display: flex;
-      flex-direction: column;
-
-      &.transactionTile {
-        .inputLabel, .tileHeadline.withBtn
-        {
-          padding: 0 !important;
-        }
-      }
+      
       .balancesList, .transactionsListContainer, .contactsListContainer {
         background-color: $bgSecondary;
 

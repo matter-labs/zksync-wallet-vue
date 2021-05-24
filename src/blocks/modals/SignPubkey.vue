@@ -1,5 +1,5 @@
 <template>
-  <i-modal v-if="opened" :value="opened" class="prevent-close" size="md" @hide="close()">
+  <i-modal :value="opened" class="prevent-close" size="md" @hide="close()">
     <template slot="header">Account Activation</template>
     <div>
       <p v-if="step === false">

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="renameWalletModal || accountModal" class="accountModalContainer">
+  <div class="accountModalContainer">
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
       <template slot="header">Rename wallet</template>
       <div>
@@ -10,7 +10,7 @@
 
     <i-modal v-model="accountModal" size="md">
       <template slot="header">
-        <b>{{ walletName }}</b>
+        <b>{{ accountName }}</b>
       </template>
       <div>
         <wallet-address :wallet="accountAddress" />
@@ -102,6 +102,7 @@ export default Vue.extend({
     renameWallet(): void {
       this.$accessor.account.setName(this.walletName);
       this.renameWalletModal = false;
+      this.walletName = this.accountName;
     },
     togglePopup(): void {
       this.$accessor.setAccountModalState(true);
