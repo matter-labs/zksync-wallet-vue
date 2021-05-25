@@ -50,7 +50,7 @@ jobs:
       - name: Deploy to mainnet [dev]
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: mainnet-dev
           projectId: zksync-vue
           channelID: dev
