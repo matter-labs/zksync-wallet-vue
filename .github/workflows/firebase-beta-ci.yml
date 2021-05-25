@@ -34,7 +34,6 @@ jobs:
         run: bash ./cli-process-env.sh rinkeby-beta dev 1
 
       - name: "[Rinkeby-beta release stage] Step 2: Building rinkeby-beta"
-      - name: Build rinkeby-beta [beta]
         run: yarn generate --fail-on-error
 
       - name: "[Rinkeby-beta release stage] Step 3: Publishing rinkeby-beta"
