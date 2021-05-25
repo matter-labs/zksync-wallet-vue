@@ -27,7 +27,7 @@
     }
   }
 
-  @media screen and (min-width: $mobile) {
+  @media (min-width: $mobile) {
     background-color: transparent !important;
 
     .bn-onboard-modal-content {
@@ -218,8 +218,8 @@
         //margin: 1rem .5rem;
         //padding: 0.75rem .5rem;
         border-top: 0.5px solid $lightViolet;
-        span.bn-onboard-select-wallet-info
-        {
+
+        span.bn-onboard-select-wallet-info {
           margin-top: .4rem;
         }
       }
@@ -301,7 +301,6 @@ aside.bn-onboard-custom.bn-onboard-modal {
 
   .bn-onboard-custom.bn-onboard-modal-content {
     max-height: 90vh !important;
-    background-color: #212457;
 
     /* Avoid Chrome to see Safari hack */
     @supports (-webkit-touch-callout: none) {
@@ -313,5 +312,31 @@ aside.bn-onboard-custom.bn-onboard-modal {
 
   section.bn-onboard-custom.bn-onboard-modal-content {
     overflow: hidden;
+  }
+}
+
+@media (max-height: $mobile) {
+  aside.bn-onboard-custom.bn-onboard-modal {
+    padding: 1rem;
+    align-items: flex-end;
+
+    section.bn-onboard-custom.bn-onboard-modal-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-radius: 8px !important;
+      height: fit-content !important;
+    }
+
+    header.bn-onboard-custom.bn-onboard-modal-content-header {
+      margin: 0 !important;
+    }
+
+    button.bn-onboard-custom.bn-onboard-icon-button {
+      margin: 0 0 .25rem !important;
+      padding: 0.25rem !important;
+    }
   }
 }

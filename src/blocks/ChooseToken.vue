@@ -20,7 +20,7 @@
           </i-tooltip>
         </div>
       </div>
-      <div class="tokenListContainer">
+      <div class="tokenListContainer genericListContainer">
         <div v-for="item in displayedList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
           <div class="tokenSymbol">{{ item.symbol }}</div>
           <div class="rightSide">

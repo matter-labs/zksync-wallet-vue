@@ -29,7 +29,7 @@
       font-weight: 400;
       font-family: $firaSans;
       text-align: center;
-      align-items: baseline;
+      align-items: center;
       display: inline-flex;
 
       &.withBtn {
@@ -124,22 +124,21 @@
       height: 2rem;
       width: 2rem;
     }
+
     &.-rounded {
-      border-radius: 1rem;
-      overflow: hidden;
+      border-radius: 1rem !important;
+      overflow: hidden !important;
     }
-    &.-sm
-    {
+
+    &.-sm {
       width: 2rem;
       height: 2rem;
     }
   }
 }
 
-.genericListContainer
-{
-  &.balancesList, &.transactionsListContainer, &.contactsListContainer
-  {
+.genericListContainer {
+  &.balancesList, &.transactionsListContainer, &.contactsListContainer {
     width: 100%;
     //height: calc(100% - 170px);
     overflow-x: hidden;
@@ -248,21 +247,29 @@
         overflow-x: hidden;
       }
 
-      .button.-block {
-        padding: 0.3rem 0 !important;
-        margin: 0.75rem 0 !important;
+      button.button {
         font-size: 16px !important;
 
-        &.-secondary {
-          padding: 0.3rem 0 !important;
-          margin: 0.75rem 0 !important;
-          font-size: 16px !important;
+        &.-lg {
+          &.-block {
+            padding: 0.3rem 0 !important;
+            margin: 0.5rem 0 1rem !important;
 
+            &.-secondary {
+              padding: 0.3rem 0 !important;
+              font-size: 16px !important;
+
+
+            }
+          }
 
           &.-link {
             margin: 0.2rem !important;
           }
+
         }
+
+
       }
 
       .form-input-group {

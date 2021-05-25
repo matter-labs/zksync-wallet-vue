@@ -14,7 +14,7 @@
     <div class="balancesBlock tileBlock">
       <div class="tileHeadline h3">
         <span>Balances in L2</span>
-        <a class="_wrapped-icon -rounded -sm" @click="balanceInfoModal = true">
+        <a class="_icon-wrapped -rounded -sm" @click="balanceInfoModal = true">
           <v-icon name="ri-question-fill" />
         </a>
       </div>

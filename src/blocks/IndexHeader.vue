@@ -2,7 +2,7 @@
   <i-layout-header class="indexHeader" :class="{ opened: opened }">
     <div class="mobileIndexHeader">
       <i-container class="mobileOnly">
-        <i-row class="_disaply-flex _justify-content-between _flex-nowrap">
+        <i-row class="_display-flex _justify-content-between _flex-nowrap">
           <i-column>
             <transition name="fade">
               <block-logo :is-zk-sync-logo="false" />
@@ -77,7 +77,7 @@ export default Vue.extend({
     return {
       opened: false,
       dropdownOpened: false,
-      dropdownOptions: <Array<DropdownOption>>[
+      dropdownOptions: <DropdownOption[]>[
         {
           name: "zkLink",
           link: "https://link.zksync.io/",

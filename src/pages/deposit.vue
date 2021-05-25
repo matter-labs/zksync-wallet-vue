@@ -12,7 +12,7 @@
     <loading-block v-if="loading === true" :headline="loading && transactionInfo.type === 'unlock' ? `Approving ${chosenToken.symbol}` : 'Deposit'">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
         Link to the transaction
-        <v-icon name="ri-external-link-line" />
+        <v-icon name="ri-external-link-line _margin-left-2" />
       </a>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
     </loading-block>
@@ -38,7 +38,6 @@
         <p v-else-if="transactionInfo.type === 'unlock'" class="_text-center _margin-top-0">
           <span v-if="!unlimitedApproval">
             Token was successfully approved for {{ inputtedAmount }} <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
-            .
           </span>
           <span v-else>
             <span class="tokenSymbol">{{ chosenToken.symbol }}</span> was successfully approved.

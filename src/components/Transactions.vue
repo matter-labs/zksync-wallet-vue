@@ -3,7 +3,7 @@
     <account-activation-modal />
     <div class="tileBlock transactionsTile">
       <div class="tileHeadline h3">Transactions</div>
-      <div class="transactionsListContainer">
+      <div class="transactionsListContainer genericListContainer">
         <div v-if="loading === true" class="nothingFound">
           <loader class="_display-block" />
         </div>

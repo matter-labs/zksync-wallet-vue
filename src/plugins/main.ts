@@ -55,6 +55,7 @@ import {
   RiSearchLine,
   RiSendPlaneFill,
   RiWalletLine,
+  RiArrowUpSLine,
 } from "oh-vue-icons/icons";
 import Vue from "vue";
 
@@ -68,6 +69,8 @@ Vue.component("VueQrcode", VueQrcode);
 
 Vue.use(VueScrollTo);
 OhVueIcon.add(
+  RiArrowUpSLine,
+  RiArrowDownSLine,
   BiDownload,
   IoWalletOutline,
   RiCloseCircleFill,

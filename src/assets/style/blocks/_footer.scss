@@ -59,7 +59,7 @@ footer.layout-footer {
 
   .floating-on-mobile {
     //transform: translateY(-5px);
-    @media (max-width: $tablet) {
+    @media (max-width: $mobile) {
       position: fixed;
       width: 2.5rem !important;
       height: 2.5rem !important;
