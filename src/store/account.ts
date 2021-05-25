@@ -20,7 +20,7 @@ export const state = (): iAccount => ({
 
 function getNameFromAddress(userAddress: Address): string {
   const walletName: string = window.localStorage.getItem(userAddress) || "";
-  if (walletName.trim().length >= 1 && walletName !== userAddress) {
+  if (walletName.trim().length > 1 && walletName !== userAddress) {
     return walletName;
   }
   return userAddress.substr(0, 5) + "..." + userAddress.substr(userAddress.length - 5, userAddress.length - 1);
@@ -43,7 +43,7 @@ export const mutations = mutationTree(state, {
   },
   setName(state, name: string): void {
     if (state.address !== undefined) {
-      if (name.length === 0) {
+      if (name.length < 1) {
         name = getNameFromAddress(state.address);
         window.localStorage.removeItem(state.address);
       }

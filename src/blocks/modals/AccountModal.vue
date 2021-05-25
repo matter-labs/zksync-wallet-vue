@@ -1,5 +1,5 @@
 <template>
-  <div class="accountModalContainer">
+  <div v-if="renameWalletModal || accountModal" class="accountModalContainer">
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
       <template slot="header">Rename wallet</template>
       <div>
@@ -18,15 +18,15 @@
       </div>
       <template slot="footer">
         <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank">
-          <i class="ri-external-link-line" />
+          <v-icon name="ri-external-link-line" />
           <span>View in block explorer</span>
         </a>
         <div class="modalFooterBtn" @click="renameWalletOpen">
-          <i class="ri-pencil-line" />
+          <v-icon name="ri-pencil-line" />
           <span>Rename wallet</span>
         </div>
         <div class="modalFooterBtn" @click="logout()">
-          <i class="ri-link-unlink-m" />
+          <v-icon name="ri-link-unlink-m" />
           <span>Disconnect wallet</span>
         </div>
       </template>
@@ -35,13 +35,9 @@
 </template>
 
 <script lang="ts">
-import VueQrcode from "vue-qrcode";
 import Vue from "vue";
 
 export default Vue.extend({
-  components: {
-    VueQrcode,
-  },
   data() {
     return {
       renameWalletModal: false,
@@ -50,13 +46,13 @@ export default Vue.extend({
   },
   computed: {
     accountName(): string {
-      return this.$accessor.account.name;
+      return this.$accessor.account.name as string;
     },
     accountAddress(): string {
       return this.$accessor.account.address ?? "";
     },
     accountZkScanUrl(): string {
-      return this.$accessor.account.zkScanUrl;
+      return this.$accessor.account.zkScanUrl as string;
     },
     accountModal: {
       get(): boolean {

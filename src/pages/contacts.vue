@@ -1,6 +1,6 @@
 <template>
   <div class="contactsPage dappPageWrapper">
-    <i-modal v-model="addContactModal" class="prevent-close" size="md">
+    <i-modal v-if="addContactModal" v-model="addContactModal" class="prevent-close" size="md">
       <template slot="header">
         <span v-if="addContactType === 'add'">Add contact</span>
         <span v-else-if="addContactType === 'edit'">Edit contact</span>
@@ -14,7 +14,7 @@
         <br />
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
         <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" @click="deleteContact()">
-          <i class="ri-delete-bin-line"></i>&nbsp;&nbsp;Delete contact
+          <v-icon name="ri-delete-bin-line"></v-icon>&nbsp;&nbsp;Delete contact
         </i-button>
         <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
       </div>
@@ -24,20 +24,24 @@
         <span>Contacts</span>
         <i-tooltip>
           <i
-            class="ri-add-fill"
+            class="_icon-wrapped -rounded -sm"
             @click="
               addContactType = 'add';
               addContactModal = true;
             "
-          />
+          >
+            <v-icon name="ri-add-circle-fill" />
+          </i>
           <template slot="body">Add contact</template>
         </i-tooltip>
       </div>
       <i-input v-if="isSearching || hasDisplayedContacts" ref="searchInput" v-model="search" placeholder="Filter contacts" autofocus maxlength="20">
-        <i slot="prefix" class="ri-search-line" />
+        <i slot="prefix">
+          <v-icon name="ri-search-line" />
+        </i>
       </i-input>
 
-      <div class="contactsListContainer">
+      <div class="contactsListContainer genericListContainer">
         <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
           <div>The contact list is empty</div>
 
@@ -69,12 +73,18 @@
           <div class="iconsBlock">
             <template v-if="!item.deleted">
               <i-tooltip trigger="click">
-                <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="ri-clipboard-line" /></i-button>
+                <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)">
+                  <v-icon name="ri-clipboard-line" />
+                </i-button>
                 <template slot="body">Copied!</template>
               </i-tooltip>
-              <i-button block link size="md" cla variant="secondary" @click="editContact(item)"><i class="ri-pencil-fill" /></i-button>
+              <i-button block link size="md" cla variant="secondary" @click="editContact(item)">
+                <v-icon name="ri-pencil-fill" />
+              </i-button>
             </template>
-            <i-button v-else class="iconsBlock" block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="ri-arrow-go-back-line" /></i-button>
+            <i-button v-else class="iconsBlock" block link size="md" variant="secondary" @click="restoreDeleted(item)">
+              <v-icon name="ri-arrow-go-back-line" />
+            </i-button>
           </div>
         </div>
       </div>
@@ -82,7 +92,7 @@
     <div v-else class="tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="computedReturnLink" class="returnBtn">
-          <i class="ri-arrow-left-line" />
+          <v-icon name="ri-arrow-left-line" />
         </nuxt-link>
         <div>
           <span v-if="openedContact.notInContacts">{{ openedContact.address.replace(openedContact.address.slice(6, openedContact.address.length - 3), "...") }}</span>
@@ -102,13 +112,14 @@
           inputtedWallet = openedContact.address;
           addContactModal = true;
         "
-        ><i class="ri-add-line" />&nbsp;&nbsp;Add contact
+      >
+        <v-icon name="ri-add-cycle-fill" />&nbsp;&nbsp;Add contact
       </i-button>
-      <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)"
-        ><i class="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
+      <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)">
+        <v-icon name="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"><i class="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact</i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"> <v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact </i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"> <v-icon name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact </i-button>
     </div>
     <lazy-transactions v-if="openedContact" :address="openedContact.address" />
   </div>

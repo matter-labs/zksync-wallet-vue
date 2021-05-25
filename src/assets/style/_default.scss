@@ -1,3 +1,10 @@
+body
+{
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+
 #__nuxt,
 #__layout,
 .defaultLayout {
@@ -48,6 +55,7 @@ input[type="number"] {
 }
 
 .desktopOnly {
+
   @media screen and (max-width: $mobile+1) {
     display: none !important;
   }
@@ -239,21 +247,6 @@ button.-lg.-circle {
         height: 2.2rem !important;
         line-height: 2rem !important;
 
-        &::before {
-          display: inline-block;
-          color: $white;
-          font-weight: 300;
-          font-size: 2rem;
-          //noinspection CssNoGenericFontName
-          font-family: "remixicon" !important;
-          font-style: normal;
-          -webkit-font-smoothing: antialiased;
-          content: "\eb98";
-        }
-
-        .icon {
-          display: none !important;
-        }
       }
 
       @media (max-width: $mobile) {
@@ -286,6 +279,7 @@ button.-lg.-circle {
     .body {
       border-color: $light !important;
     }
+
     .footer,
     .body {
       background: $modal-background-light !important;
@@ -294,6 +288,10 @@ button.-lg.-circle {
 
     .modalFooterBtn {
       color: $black;
+    }
+
+    .close .icon {
+      font-size: 18px;
     }
   }
 
@@ -310,12 +308,12 @@ button.-lg.-circle {
       border-color: $modal-border-color-dark !important;
     }
 
-    .header
-    {
+    .header {
       background: $modal-background-dark !important;
     }
 
     .close .icon {
+      font-size: 18px;
       color: $white;
     }
   }

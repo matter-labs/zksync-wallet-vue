@@ -26,7 +26,7 @@
       <a v-if="ethTx" :href="ethTx" target="_blank" class="linkText">Ethereum Transaction</a>
     </div>
     <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(singleTransaction)">
-      <i class="ri-external-link-line"></i>
+      <v-icon name="ri-external-link-line"></v-icon>
     </a>
   </div>
 </template>

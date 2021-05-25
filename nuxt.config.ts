@@ -1,8 +1,9 @@
+// noinspection ES6PreferShortImport
+
 import { Configuration, NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 
-// noinspection ES6PreferShortImport
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
 const srcDir = "./src/";
@@ -227,6 +228,7 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
+    transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
     hardSource: isProduction,
     ssr: false,
     extend: (config: Configuration) => {

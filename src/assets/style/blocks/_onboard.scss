@@ -254,3 +254,63 @@
     max-width: 300px;
   }
 }
+
+
+section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}
+
+.bn-onboard-custom.bn-onboard-modal-content {
+  section.bn-onboard-custom.bn-onboard-modal-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  header.bn-onboard-custom.bn-onboard-modal-content-header {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  div.bn-onboard-custom.bn-onboard-modal-content-close {
+    top: 1rem;
+    right: 1rem;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+aside.bn-onboard-custom.bn-onboard-modal {
+  max-height: 100vh;
+  padding: 2vh 2vw;
+
+  /* Avoid Chrome to see Safari hack */
+  @supports (-webkit-touch-callout: none) {
+    /* The hack for Safari */
+    //noinspection CssInvalidPropertyValue
+    max-height: -webkit-fill-available;
+  }
+
+  .bn-onboard-custom.bn-onboard-modal-content {
+    max-height: 90vh !important;
+    background-color: #212457;
+
+    /* Avoid Chrome to see Safari hack */
+    @supports (-webkit-touch-callout: none) {
+      /* The hack for Safari */
+      //noinspection CssInvalidPropertyValue
+      min-height: -webkit-fill-available;
+    }
+  }
+
+  section.bn-onboard-custom.bn-onboard-modal-content {
+    overflow: hidden;
+  }
+}

@@ -5,6 +5,7 @@ header {
   transition: background-color $transition1;
 
   &.layout-header {
+
     @media screen and (max-width: $mobile) {
       position: fixed;
       top: 0;
@@ -12,9 +13,20 @@ header {
       z-index: 9;
       box-shadow: $shadowBottom;
     }
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(239, 241, 244);
+    box-shadow: 0 1px 0.5px #0000001a;
+    transition: $transition1;
   }
 
+  &.indexHeader {
+    min-height: 60px;
+  }
+
+
   &.loggedInHeader {
+
     @media screen and (min-width: $tablet) and (max-width: $desktop) {
       .pagesContainer.linksContainer {
         grid-gap: 3px;
@@ -82,10 +94,14 @@ header {
         }
       }
 
+
       .zkwallet-logo {
         width: auto !important;
         height: 100% !important;
         object-fit: contain;
+        @media (max-width: $mobile) {
+          height: 25px !important;
+        }
       }
 
       .badge {
@@ -168,7 +184,7 @@ header {
       left: 0;
     }
 
-    .pagesContainer{
+    .pagesContainer {
       background-color: $darkViolet;
       box-shadow: $shadowTop;
     }
@@ -190,6 +206,7 @@ header {
         height: 100%;
         padding: 9px 10px;
         font-size: $fontSizeRegular;
+
         &.nuxt-link-exact-active {
           font-weight: 400;
         }
@@ -205,6 +222,7 @@ header {
           text-align: center;
         }
       }
+
       .btnMore {
         position: relative;
         top: -5px;
@@ -347,8 +365,9 @@ body.inkline.-light header {
   }
 }
 
-body.inkline.-dark header {
+body.inkline.-dark header.layout-header {
   background: $darkViolet;
+  border-bottom-color: rgba(3, 5, 17, 0.98) !important;
 
   .userDropdown .userDropdownAddress .walletLabel {
     color: $gray;

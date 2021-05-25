@@ -3,7 +3,7 @@
     <allowance-modal />
 
     <!-- Choose token -->
-    <i-modal v-model="chooseTokenModal" size="md">
+    <i-modal v-if="chooseTokenModal" v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
       <choose-token tokens-type="L1" @chosen="chooseToken($event)" />
     </i-modal>
@@ -11,7 +11,8 @@
     <!-- Loading block -->
     <loading-block v-if="loading === true" :headline="loading && transactionInfo.type === 'unlock' ? `Approving ${chosenToken.symbol}` : 'Deposit'">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
-        Link to the transaction <i class="ri-external-link-line" />
+        Link to the transaction
+        <v-icon name="ri-external-link-line" />
       </a>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
     </loading-block>
@@ -60,7 +61,7 @@
         </div>
         <div class="goBackContinueBtns _margin-top-1">
           <i-button size="lg" variant="secondary" circle @click="successBlockGoBack()">
-            <i class="ri-arrow-left-line"></i>
+            <v-icon name="ri-arrow-left-line" />
           </i-button>
           <i-button block size="lg" variant="secondary" @click="successBlockContinue()">Proceed to deposit</i-button>
         </div>
@@ -71,7 +72,7 @@
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'" class="returnBtn">
-          <i class="ri-arrow-left-line"></i>
+          <v-icon name="ri-arrow-left-line" />
         </nuxt-link>
         <div>Deposit</div>
       </div>
@@ -91,7 +92,7 @@
       <div v-if="displayTokenUnlock && !thresholdLoading">
         <div class="_padding-top-1 _display-flex _align-items-center inputLabel" @click="$accessor.openModal('Allowance')">
           <span>{{ chosenToken.symbol }} Allowance</span>
-          <i class="ri-question-mark iconInfo" />
+          <v-icon name="ri-question-mark" class="iconInfo" />
         </div>
         <div class="grid-cols-2">
           <i-button block size="md" variant="secondary" @click="unlockToken(true)">Approve unlimited {{ chosenToken.symbol }}</i-button>
@@ -119,9 +120,16 @@
         {{ error }}
       </div>
 
-      <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction()">
+      <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" :loading="thresholdLoading" @click="commitTransaction()">
+        <template #loading>
+          <loader size="xs" class="_margin-right-1-2" />
+          Loading
+        </template>
         <span v-if="thresholdLoading">Loading...</span>
-        <span v-else>Deposit</span>
+        <span v-else>
+          <v-icon name="bi-download" scale="1.5" />
+          Deposit
+        </span>
       </i-button>
     </div>
   </div>
@@ -132,14 +140,12 @@ import chooseToken from "@/blocks/ChooseToken.vue";
 import AllowanceModal from "@/blocks/modals/Allowance.vue";
 import amountInput from "@/components/AmountInput.vue";
 
-import loadingBlock from "@/components/LoadingBlock.vue";
-import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
-
-import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
+
+import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/types/lib";
 import { BigNumber, Contract } from "ethers";
 import Vue from "vue";
 import { closestPackableTransactionAmount } from "zksync";
@@ -148,8 +154,6 @@ import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
 let thresholdTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
   components: {
-    loadingBlock,
-    successBlock,
     amountInput,
     chooseToken,
     AllowanceModal,

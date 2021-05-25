@@ -6,12 +6,13 @@
     "stylelint-scss"
   ],
   "rules": {
-    "block-no-empty": null,
     "at-rule-no-unknown": false,
+    "block-no-empty": null,
     "block-opening-brace-newline-after": "always",
     "color-named": "never",
     "custom-property-empty-line-before": false,
     "declaration-block-semicolon-newline-after": "always",
+    "declaration-block-trailing-semicolon": false,
     "font-family-name-quotes": "always-where-recommended",
     "font-weight-notation": "numeric",
     "function-url-quotes": "always",
@@ -22,7 +23,6 @@
       }
     ],
     "no-descending-specificity": null,
-    "declaration-block-trailing-semicolon": false,
     "no-duplicate-selectors": "never",
     "no-empty-source": [
       true,
@@ -52,6 +52,7 @@
         ]
       }
     ],
+    "selector-pseudo-element-colon-notation": "",
     "selector-type-no-unknown": [
       true,
       {
@@ -62,7 +63,6 @@
     ],
     "string-quotes": "double",
     "value-list-comma-newline-before": "never-multi-line",
-    "value-no-vendor-prefix": true,
-    "selector-pseudo-element-colon-notation": ""
+    "value-no-vendor-prefix": false
   }
 }

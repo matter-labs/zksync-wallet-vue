@@ -4,7 +4,7 @@
       <i-row class="_margin-md-y-1 _hidden-md-and-up">
         <i-badge v-if="version" variant="secondary" class="outline-white _margin-left-1">
           v.{{ version }} |
-          <a href="https://uptime.com/s/zksync" target="_blank">uptime</a>
+          <a href="https://uptime.com/s/zksync" class="uptime-link" target="_blank">uptime</a>
         </i-badge>
       </i-row>
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
@@ -32,22 +32,25 @@
               <template slot="header">Environment details</template>
               <template slot="body">
                 <span class="env-details">
-                  <i class="ri-npmjs-fill" />
+                  <v-icon name="ri-npmjs-fill" />
                   zksync v.{{ zkLibVersion }}
                 </span>
                 <span class="env-details">
-                  <i class="ri-reserved-fill" />
+                  <v-icon name="ri-reserved-fill" />
                   zkSync API <code class="_padding-y-0">{{ zkApiBase }}</code>
+                </span>
+                <span class="env-details">
+                  <v-icon name="ri-reserved-fill" />
+                  Ethereum env <code class="_padding-y-0">{{ netName }}</code>
                 </span>
               </template>
             </i-popover>
             <a :href="githubLink" class="revision _background-gray-40" target="_blank">
-              <i class="ri-github-fill" />
+              <v-icon name="ri-github-fill" />
               {{ revision }}
             </a>
-            <small class="network">{{ netName }}</small>
             <span class="separator">|</span>
-            <a href="https://uptime.com/s/zksync" target="_blank">uptime</a>
+            <a href="https://uptime.com/s/zksync" class="modalFooterBtn big" target="_blank">uptime</a>
           </i-badge>
         </div>
 

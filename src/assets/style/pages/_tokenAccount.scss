@@ -17,10 +17,22 @@
   .transactionsTile {
     min-height: 250px !important;
   }
+
+  @media screen and (max-width: $mobile) {
+    .balance, .balancePrice {
+      font-size: $fontSizeRegular;
+
+
+
+    }
+  }
 }
 
-.balanceWithdraw {
-  @media screen and (max-width: $mobile) {
+@media screen and (max-width: $mobile) {
+  .balance, .balancePrice {
+    font-size: $fontSizeRegular;
+  }
+  .balanceWithdraw {
     flex-direction: column;
 
     & > .infoBlock {

@@ -1,29 +1,29 @@
 <template>
-  <div class="footerModalContainer">
+  <div v-if="modal" class="footerModalContainer">
     <i-modal v-model="modal" size="md">
       <template slot="header">
         <b>Information</b>
       </template>
       <template slot="default">
         <a class="modalFooterBtn big" href="https://zksync.io/faq/intro.html" target="_blank">
-          <i class="ri-book-2-line" />
+          <v-icon name="ri-book-2-line" />
           <span>Docs</span>
         </a>
         <a class="modalFooterBtn big" href="https://zksync.io/legal/terms.html" target="_blank">
-          <i class="ri-profile-line" />
+          <v-icon name="ri-profile-line" />
           <span>Terms</span>
         </a>
         <a class="modalFooterBtn big" href="https://zksync.io/contact.html" target="_blank">
-          <i class="ri-contacts-book-line" />
+          <v-icon name="ri-contacts-book-line" />
           <span>Contact</span>
         </a>
         <a class="modalFooterBtn big" :href="blockExplorerLink" target="_blank">
-          <i class="ri-external-link-line" />
+          <i><v-icon name="ri-external-link-line" /> </i>
           <span>zkScan</span>
         </a>
       </template>
       <template slot="footer">
-        <div>v.{{ version }} | <a href="https://uptime.com/s/zksync" target="_blank">uptime</a></div>
+        <div>v.{{ version }} | <a href="https://uptime.com/s/zksync" class="modalFooterBtn big" target="_blank">uptime</a></div>
         <i-button block size="lg" circle class="floating-on-mobile" @click="toggleDarkMode">
           <i-icon icon="light" />
         </i-button>

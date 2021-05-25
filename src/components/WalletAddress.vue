@@ -3,7 +3,7 @@
     <user-img :wallet="wallet" @click="$emit('clickPicture')" />
     <span class="walletValue walletAddress">{{ wallet }}</span>
     <i-tooltip trigger="click">
-      <i class="copy ri-clipboard-line" @click="copyAddress()"></i>
+      <i class="copy" @click="copyAddress()"><v-icon name="ri-clipboard-line" /></i>
       <template slot="body">Copied!</template>
     </i-tooltip>
   </div>
@@ -24,6 +24,7 @@ export default Vue.extend({
   },
   methods: {
     copyAddress() {
+      alert(1);
       const elem = document.createElement("textarea");
       elem.style.position = "absolute";
       elem.style.left = -99999999 + "px";
