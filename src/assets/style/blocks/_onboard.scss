@@ -18,7 +18,7 @@
   a,
   .bn-onboard-select-wallet-info {
     color: $lightViolet !important;
-    font: normal 16px $firaSans !important;
+    font: 400 16px $firaSans !important;
     letter-spacing: -0.01rem !important;
     text-decoration: none !important;
 
@@ -50,9 +50,9 @@
       @supports (-webkit-touch-callout: none) {
         /* The hack for Safari */
         //noinspection CssInvalidPropertyValue
-        max-height: -webkit-fill-available;
+        max-height: fill-available;
         //noinspection CssInvalidPropertyValue
-        height: -webkit-fill-available;
+        height: fill-available;
       }
 
 
@@ -106,7 +106,7 @@
     span {
       display: block;
       margin: 5px 0;
-      font-weight: bold;
+      font-weight: 600;
 
       a {
         color: $lightViolet !important;
@@ -250,6 +250,7 @@
 }
 
 #walletconnect-wrapper .walletconnect-modal__base {
+
   @media (max-height: $mobile) {
     max-width: 300px;
   }
@@ -295,7 +296,7 @@ aside.bn-onboard-custom.bn-onboard-modal {
   @supports (-webkit-touch-callout: none) {
     /* The hack for Safari */
     //noinspection CssInvalidPropertyValue
-    max-height: -webkit-fill-available;
+    max-height: fill-available;
   }
 
   .bn-onboard-custom.bn-onboard-modal-content {
@@ -306,7 +307,7 @@ aside.bn-onboard-custom.bn-onboard-modal {
     @supports (-webkit-touch-callout: none) {
       /* The hack for Safari */
       //noinspection CssInvalidPropertyValue
-      min-height: -webkit-fill-available;
+      min-height: fill-available;
     }
   }
 
