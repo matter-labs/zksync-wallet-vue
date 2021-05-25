@@ -14,7 +14,7 @@
         <br />
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
         <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" @click="deleteContact()">
-          <v-icon name="ri-delete-bin-line"></v-icon>&nbsp;&nbsp;Delete contact
+          <v-icon name="ri-delete-bin-line" />&nbsp;&nbsp;Delete contact
         </i-button>
         <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
       </div>
@@ -113,7 +113,7 @@
           addContactModal = true;
         "
       >
-        <v-icon name="ri-add-cycle-fill" />&nbsp;&nbsp;Add contact
+        <v-icon name="ri-add-cicle-fill" />&nbsp;&nbsp;Add contact <v-icon name="ri-add-cicle-fill" />&nbsp;&nbsp;Add contact
       </i-button>
       <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)">
         <v-icon name="ri-pencil-fill" />&nbsp;&nbsp;Edit contact

@@ -8,17 +8,12 @@
     overscroll-behavior-x: none;
 
     footer.layout-footer {
-      height: 4.5rem;
+      height: 5rem;
     }
   }
 
   aside.bn-onboard-custom.bn-onboard-modal {
-    max-height: 100vh;
-
-    @supports (-webkit-touch-callout: none) {
-      //noinspection CssInvalidPropertyValue
-      max-height: -webkit-fill-available;
-    }
+    max-height: 100%;
     padding-bottom: 5rem;
   }
 
@@ -62,15 +57,16 @@
     }
 
     button.bn-onboard-custom.bn-onboard-icon-button {
+      padding: 0.4rem 1.1rem !important;
       margin: 0 0 .25rem !important;
-      padding: 0.25rem !important;
     }
   }
 
   #__layout {
     main {
       padding: 60px 0 95px;
-      height: 0 !important;
+      min-height: 100vh;
+      //height: 0 !important;
 
       @supports (-webkit-touch-callout: none) {
         //noinspection CssInvalidPropertyValue
@@ -115,8 +111,8 @@ section.layoutContent {
     padding: 0.25rem !important;
 
     .walletAddress {
-      letter-spacing: -0.05rem;
-      font-size: 10px;
+      letter-spacing: -0.02rem;
+      font-size: 12px;
     }
 
     .userImg {
@@ -199,7 +195,15 @@ section.layoutContent {
       }
     }
   }
-  .modal.-md .header, .modal.-md .footer, .modal.-md .body {
-    padding: 1rem !important;
+  .modal {
+    &.-md {
+      .header, .footer, .body {
+        padding: 1rem !important;
+      }
+    }
+    .modalFooterBtn
+    {
+      gap: 0.5rem;
+    }
   }
 }

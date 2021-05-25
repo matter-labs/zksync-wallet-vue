@@ -3,7 +3,7 @@
     <div class="tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath && fromRoute.path !== '/withdraw' ? fromRoute : '/account'" class="returnBtn">
-          <v-icon name="ri-arrow-left-line"></v-icon>
+          <v-icon name="ri-arrow-left-line" />
         </nuxt-link>
         <span class="tokenSymbol">{{ symbol }}</span>
       </div>

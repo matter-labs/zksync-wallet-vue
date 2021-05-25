@@ -1,13 +1,11 @@
-body
-{
+body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 
 #__nuxt,
-#__layout,
-.defaultLayout {
+#__layout {
   width: 100%;
   height: max-content;
   min-height: 100vh;
@@ -17,6 +15,63 @@ body
     /* The hack for Safari */
     //noinspection CssInvalidPropertyValue
     min-height: -webkit-fill-available;
+  }
+}
+
+main.layout.defaultLayout {
+  max-height: 100%;
+  overflow: hidden;
+  padding: 40px 0 70px;
+}
+
+/**
+ * Only for the desktops
+ */
+@media (min-width: $tablet) {
+  main.layout.defaultLayout {
+    max-height: 100%;
+    display: flex;
+    padding: 80px 0 60px;
+    justify-content: stretch;
+    height: 100vh;
+    /* Avoid Chrome to see Safari hack */
+    @supports (-webkit-touch-callout: none) {
+      /* The hack for Safari */
+      //noinspection CssInvalidPropertyValue
+      min-height: -webkit-fill-available;
+    }
+
+    @media (min-width: 1200px)
+    {
+      padding-bottom: 0;
+    }
+
+    section.layout-content.layoutContent {
+      display: flex;
+      overflow: hidden;
+
+      .routerContainer {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        .dappPageWrapper {
+          overflow-y: scroll !important;
+          height: max-content;
+        }
+      }
+    }
+
+    .tileBlock {
+      margin: 0 auto !important;
+    }
+
+    .balancesList {
+      margin: 0 !important;
+    }
+  }
+  .bn-onboard-custom.bn-onboard-modal-content {
+    align-self: center;
   }
 }
 
@@ -350,7 +405,6 @@ button.-lg.-circle {
     }
 
     i {
-      margin-right: 30px;
       font-size: 16px;
     }
 

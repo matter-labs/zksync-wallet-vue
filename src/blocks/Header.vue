@@ -10,20 +10,20 @@
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
           <div class="pagesContainer linksContainer _margin-x-auto">
             <nuxt-link class="headerLink" to="/account">
-              <i>
-                <v-icon class="mobileOnly" name="ri-wallet-line" />
+              <i class="mobileOnly">
+                <v-icon name="ri-wallet-line" />
               </i>
               <span>My wallet</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/contacts">
-              <i>
-                <v-icon class="mobileOnly" name="ri-contacts-line" />
+              <i class="mobileOnly">
+                <v-icon name="ri-contacts-line" />
               </i>
               <span>Contacts</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/transactions">
-              <i>
-                <v-icon class="mobileOnly" name="ri-history-line" />
+              <i class="mobileOnly">
+                <v-icon name="ri-history-line" />
               </i>
               <span>Transactions</span>
             </nuxt-link>

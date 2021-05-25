@@ -7,7 +7,7 @@
         <div v-if="!loggedInAnimation" :key="hintText">{{ hintText }}</div>
         <div v-else key="success" class="green">Wallet successfully connected!</div>
       </transition-group>
-      <loader size="lg" class="_margin-top-2" />
+      <loader size="lg" class="_margin-y-2" />
       <i-button class="cancelButton" block variant="secondary" size="lg" @click="cancelLogin()">Cancel</i-button>
     </div>
   </transition>

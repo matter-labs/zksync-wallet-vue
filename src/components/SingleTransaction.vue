@@ -2,7 +2,7 @@
   <div class="transactionsingleTransaction">
     <div class="status">
       <i-tooltip>
-        <em :class="transactionStatus.icon"></em>
+        <i><v-icon :name="transactionStatus.icon" :class="transactionStatus.class" /></i>
         <template slot="body">{{ transactionStatus.text }}</template>
       </i-tooltip>
     </div>
@@ -23,10 +23,10 @@
       <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts?w=${displayedAddress}`">
         {{ getAddressName(displayedAddress) }}
       </nuxt-link>
-      <a v-if="ethTx" :href="ethTx" target="_blank" class="linkText">Ethereum Transaction</a>
+      <a v-if="ethTx" :href="ethTx" target="_blank" class="linkText">Eth Transaction</a>
     </div>
     <a class="button -md -secondary -link" target="_blank" :href="getTransactionExplorerLink(singleTransaction)">
-      <v-icon name="ri-external-link-line"></v-icon>
+      <v-icon name="ri-external-link-line" scale="0.8" />
     </a>
   </div>
 </template>
@@ -76,27 +76,31 @@ export default Vue.extend({
       }
       return this.singleTransaction.tx.to || "";
     },
-    transactionStatus(): { text: string; icon: string } {
+    transactionStatus(): { text: string; icon: string; class: string } {
       if (this.singleTransaction.success === false) {
         return {
           text: this.singleTransaction.fail_reason ? this.singleTransaction.fail_reason : "Rejected",
-          icon: "rejected ri-close-circle-fill",
+          icon: "ri-close-circle-fill",
+          class: "rejected",
         };
       }
       if (this.singleTransaction.verified) {
         return {
           text: "Finalized",
-          icon: "verified ri-check-double-line",
+          icon: "ri-check-double-line",
+          class: "verified",
         };
       } else if (this.singleTransaction.commited) {
         return {
           text: "Committed",
-          icon: "committed ri-check-line",
+          icon: "ri-check-line",
+          class: "committed",
         };
       } else {
         return {
           text: "In progress",
-          icon: "inProgress ri-loader-5-line",
+          icon: "ri-loader-5-line",
+          class: "inProgress",
         };
       }
     },

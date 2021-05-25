@@ -36,7 +36,6 @@ import {
   RiContactsBookLine,
   RiContactsLine,
   RiDeleteBinLine,
-  RiExternalLinkLine,
   RiGithubFill,
   RiHandCoinFill,
   RiHistoryLine,
@@ -56,6 +55,7 @@ import {
   RiSendPlaneFill,
   RiWalletLine,
   RiArrowUpSLine,
+  RiExternalLinkLine,
 } from "oh-vue-icons/icons";
 import Vue from "vue";
 
@@ -69,6 +69,7 @@ Vue.component("VueQrcode", VueQrcode);
 
 Vue.use(VueScrollTo);
 OhVueIcon.add(
+  RiAddCircleFill,
   RiArrowUpSLine,
   RiArrowDownSLine,
   BiDownload,
@@ -115,7 +116,7 @@ Vue.component("VIcon", OhVueIcon);
 /**
  * Implementation of the tokenFormatter as a global filter
  */
-Vue.filter("formatToken", (value: string | BigNumber, symbol: TokenSymbol) => {
+Vue.filter("formatToken", (value: string | BigNumber | ArrayLike<number> | bigint | number, symbol: TokenSymbol) => {
   return utils.handleFormatToken(symbol, value?.toString());
 });
 

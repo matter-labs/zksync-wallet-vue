@@ -12,7 +12,7 @@
     <loading-block v-if="loading === true" :headline="loading && transactionInfo.type === 'unlock' ? `Approving ${chosenToken.symbol}` : 'Deposit'">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
         Link to the transaction
-        <v-icon name="ri-external-link-line _margin-left-2" />
+        <v-icon name="ri-external-link-line" class="_margin-left-2" />
       </a>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
     </loading-block>
@@ -30,20 +30,16 @@
       type="deposit"
       @continue="successBlockContinue"
     >
-      <template slot="default">
-        <p v-if="transactionInfo.type === 'deposit'" class="_text-center _margin-top-0">
-          Your deposit transaction has been mined and will be processed after required number of confirmations.
-          <br />Use the transaction link to track the progress.
-        </p>
-        <p v-else-if="transactionInfo.type === 'unlock'" class="_text-center _margin-top-0">
-          <span v-if="!unlimitedApproval">
-            Token was successfully approved for {{ inputtedAmount }} <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
-          </span>
-          <span v-else>
-            <span class="tokenSymbol">{{ chosenToken.symbol }}</span> was successfully approved.
-          </span>
-          <br />
-          Now you can proceed to deposit.
+      <template v-if="['deposit', 'unlock'].includes(transactionInfo.type)" slot="default">
+        <p class="_text-center _margin-top-0">
+          <template v-if="transactionInfo.type === 'deposit'">
+            Your deposit transaction has been mined and will be processed after required number of confirmations.<br />Use the transaction link to track the progress.
+          </template>
+          <template v-else>
+            Token <span class="tokenSymbol">{{ chosenToken.symbol }}</span> was successfully approved <span v-if="!unlimitedApproval"> for the {{ inputtedAmount }}</span>
+            <br />
+            Now you can proceed to deposit.
+          </template>
         </p>
       </template>
       <template v-if="transactionInfo.type === 'unlock' && !unlimitedApproval" slot="custom">
@@ -58,20 +54,23 @@
             </span>
           </div>
         </div>
-        <div class="goBackContinueBtns _margin-top-1">
+        <i-button-group class="goBackContinueBtns _margin-top-1">
           <i-button size="lg" variant="secondary" circle @click="successBlockGoBack()">
             <v-icon name="ri-arrow-left-line" />
           </i-button>
           <i-button block size="lg" variant="secondary" @click="successBlockContinue()">Proceed to deposit</i-button>
-        </div>
+        </i-button-group>
       </template>
     </success-block>
 
     <!-- Main Block -->
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
-        <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'" class="returnBtn">
-          <v-icon name="ri-arrow-left-line" />
+        <nuxt-link
+          class="_icon-wrapped -rounded -sm returnBtn _background-gray-10 _display-flex"
+          :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'"
+        >
+          <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
         <div>Deposit</div>
       </div>
@@ -115,20 +114,22 @@
         </span>
       </p>
 
-      <div v-if="error" class="errorText _text-center _margin-top-1">
-        {{ error }}
-      </div>
+      <div v-if="error" class="errorText _text-center _margin-top-1">{{ error }}</div>
 
-      <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" :loading="thresholdLoading" @click="commitTransaction()">
+      <i-button
+        :disabled="buttonDisabled"
+        block
+        class="_margin-top-1 _display-flex flex-row"
+        size="lg"
+        variant="secondary"
+        :loading="thresholdLoading"
+        @click="commitTransaction()"
+      >
         <template #loading>
-          <loader size="xs" class="_margin-right-1-2" />
+          <loader size="xs" variant="dark" class="_margin-right-1-2" />
           Loading
         </template>
-        <span v-if="thresholdLoading">Loading...</span>
-        <span v-else>
-          <v-icon name="bi-download" scale="1.5" />
-          Deposit
-        </span>
+        <v-icon name="bi-download" scale="1.35" />&nbsp;&nbsp;Deposit
       </i-button>
     </div>
   </div>
@@ -137,7 +138,6 @@
 <script lang="ts">
 import chooseToken from "@/blocks/ChooseToken.vue";
 import AllowanceModal from "@/blocks/modals/Allowance.vue";
-import amountInput from "@/components/AmountInput.vue";
 
 import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
@@ -153,7 +153,6 @@ import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
 let thresholdTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
   components: {
-    amountInput,
     chooseToken,
     AllowanceModal,
   },
@@ -208,7 +207,7 @@ export default Vue.extend({
       return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
     },
     buttonDisabled(): boolean {
-      return this.displayTokenUnlock || !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.enoughInputedAllowance;
+      return this.displayTokenUnlock || !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.isEnoughAllowance;
     },
     amountBigNumber(): BigNumber {
       if (!this.chosenToken || !this.inputtedAmount) {
@@ -232,13 +231,12 @@ export default Vue.extend({
       }
       return this.tokenAllowance.gte(this.maxAmount) || this.tokenAllowance.gte(this.amountBigNumber);
     },
-    enoughInputedAllowance(): boolean {
+    isEnoughAllowance(): boolean {
       if (!this.inputtedAllowance || !this.tokenAllowance || !this.chosenToken || this.enoughAllowance) {
         return true;
       }
       try {
-        const inputedAllowenceBigNumber = utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance);
-        return inputedAllowenceBigNumber.gte(this.amountBigNumber);
+        return (utils.parseToken(this.chosenToken.symbol, this.inputtedAllowance) as BigNumber).gte(this.amountBigNumber);
       } catch (error) {
         return false;
       }
@@ -294,8 +292,6 @@ export default Vue.extend({
         if (this.inputtedAmount && this.$refs.amountInput) {
           // @ts-ignore: Unreachable code error
           this.$refs.amountInput?.emitValue(this.inputtedAmount);
-          // @ts-ignore: Unreachable code error
-          this.$refs.allowanceInput?.emitValue(this.inputtedAllowance);
         }
       });
     },
@@ -303,8 +299,6 @@ export default Vue.extend({
       if (!this.inputtedAmount) {
         // @ts-ignore: Unreachable code error
         this.$refs.amountInput?.emitValue(this.inputtedAmount);
-        // @ts-ignore: Unreachable code error
-        this.$refs.allowanceInput?.emitValue(this.inputtedAllowance);
       }
       if (this.buttonDisabled) {
         return;

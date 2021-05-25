@@ -31,7 +31,7 @@
     <!-- Loading block -->
     <loading-block v-if="loading === true" :headline="transactionTypeName">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
-        Link to the transaction <v-icon name="ri-external-link-line" />
+        Link to the transaction <i><v-icon name="ri-external-link-line" scale="0.8" /></i>
       </a>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
     </loading-block>
@@ -57,7 +57,7 @@
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'" class="returnBtn">
-          <v-icon name="ri-arrow-left-line"></v-icon>
+          <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
         <div>
           {{ transactionTypeName }}
@@ -161,7 +161,7 @@
           </span>
         </div>
 
-        <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1">
+        <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1-2">
           Account Activation single-time fee:
           <span v-if="activateAccountFeeLoading" class="secondaryText">Loading...</span>
           <span v-else>
@@ -171,8 +171,8 @@
             </span>
           </span>
         </div>
-        <div v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1">
-          <span class="linkText" @click="chooseFeeTokenModal = true">Choose fee token</span>
+        <div v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1-2">
+          <span class="linkText" @click="chooseFeeTokenModal = true">Change fee token</span>
         </div>
       </div>
 

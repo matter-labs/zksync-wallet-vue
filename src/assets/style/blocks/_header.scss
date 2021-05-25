@@ -5,7 +5,9 @@ header {
   transition: background-color $transition1;
 
   &.layout-header {
-
+    position: fixed;
+    top: 0;
+    z-index: 3;
     @media screen and (max-width: $mobile) {
       position: fixed;
       top: 0;
@@ -196,7 +198,7 @@ header {
       grid-gap: 2px;
       justify-content: center;
       width: 100%;
-      height: $headerHeight;
+      height: 70px;
       padding: 6px 5vw;
 
       .headerLink {

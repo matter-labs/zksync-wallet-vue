@@ -236,7 +236,7 @@
   }
 
   .bn-onboard-dark-mode {
-    background-color: darken($darkViolet, 7) !important;
+    background-color: lighten($darkViolet, 2) !important;
     box-shadow: $defaultShadow;
 
     .bn-onboard-prepare-error {
