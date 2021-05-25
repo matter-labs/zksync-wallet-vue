@@ -45,7 +45,7 @@
                 trigger="click"
               >
                 <a class="dropDownHandler linkItem _position-top-0" @click.capture="dropdownOpened = !dropdownOpened">
-                  zkTools <i class="fal" :class="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"></i>
+                  zkTools <v-icon class="fal" :name="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'" />
                 </a>
                 <i-dropdown-menu v-model="dropdownOpened">
                   <i-dropdown-item v-for="(item, index) in dropdownOptions" :key="index" :href="item.link" target="_blank">{{ item.name }}</i-dropdown-item>
@@ -77,7 +77,7 @@ export default Vue.extend({
     return {
       opened: false,
       dropdownOpened: false,
-      dropdownOptions: <Array<DropdownOption>>[
+      dropdownOptions: <DropdownOption[]>[
         {
           name: "zkLink",
           link: "https://link.zksync.io/",

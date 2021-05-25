@@ -14,9 +14,11 @@
     <div class="balancesBlock tileBlock">
       <div class="tileHeadline h3">
         <span>Balances in L2</span>
-        <i class="ri-question-mark" @click="balanceInfoModal = true" />
+        <a class="_icon-wrapped -rounded -sm" @click="balanceInfoModal = true">
+          <v-icon name="ri-question-fill" />
+        </a>
       </div>
-      <wallet-address class="clickablePicture" :wallet="walletAddress" @clickPicture="openAccountModal()" />
+      <wallet-address v-if="walletAddress" class="clickablePicture" :wallet="walletAddress" @clickPicture="openAccountModal()" />
       <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
         <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
         <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
@@ -27,9 +29,9 @@
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
             <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
           </div>
-          <i-button block class="_margin-y-1 button-with-icon" size="lg" variant="secondary" to="/transfer"><i class="ri-send-plane-fill" />&nbsp;&nbsp;Transfer</i-button>
+          <i-button block class="_margin-y-1 button-with-icon" size="lg" variant="secondary" to="/transfer"><v-icon name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
           <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
-            <i slot="prefix" class="ri-search-line" />
+            <v-icon slot="prefix" name="ri-search-line" />
           </i-input>
         </div>
 
@@ -54,13 +56,15 @@
                 </div>
                 <div class="status">
                   <i-tooltip placement="left">
-                    <i v-if="item.status === 'Verified'" class="verified ri-check-double-line" />
-                    <i v-else class="committed ri-check-line" />
+                    <i>
+                      <v-icon v-if="item.status === 'Verified'" class="verified" name="ri-check-double-line" />
+                      <v-icon v-else class="committed" name="ri-check-line" />
+                    </i>
                     <template slot="body">{{ item.status }}</template>
                   </i-tooltip>
                 </div>
               </div>
-              <div v-if="item.pendingBalance" class="rowItem">
+              <div v-if="item.pendingBalance" class="rowItem _flex-nowrap">
                 <div class="total small">
                   <span class="balancePrice">
                     Depositing:
@@ -100,8 +104,8 @@ export default Vue.extend({
     await this.getBalances();
   },
   computed: {
-    walletAddress() {
-      return this.$accessor.account.address;
+    walletAddress(): string {
+      return this.$accessor.account.address as string;
     },
     hasDisplayedBalances(): boolean {
       return this.zkBalances.length > 0;
@@ -131,7 +135,7 @@ export default Vue.extend({
         this.getBalances();
       }, 120000);
     },
-    openAccountModal() {
+    openAccountModal(): void {
       this.$accessor.setAccountModalState(true);
     },
   },

@@ -4,6 +4,7 @@ footer.layout-footer {
   height: 3.5rem;
   align-content: center;
   padding: 0 1rem 0.5rem !important;
+  z-index: 3;
 
   img {
     -webkit-user-select: none;
@@ -32,12 +33,15 @@ footer.layout-footer {
 
   &.mainFooter {
     width: 100%;
+    bottom: 0 !important;
+    position: fixed;
 
     .row {
       font-size: $fontSizeRegular !important;
     }
 
     & > div {
+
       @media (max-width: $mobile) {
         flex-direction: column-reverse !important;
       }
@@ -58,7 +62,7 @@ footer.layout-footer {
 
   .floating-on-mobile {
     //transform: translateY(-5px);
-    @media (max-width: $tablet) {
+    @media (max-width: $mobile) {
       position: fixed;
       width: 2.5rem !important;
       height: 2.5rem !important;
@@ -79,20 +83,21 @@ footer.layout-footer {
 
   // Block with the dev-debug data
   .badge.system-info {
-    align-items: baseline;
+    align-items: center;
     display: inline-flex;
     line-height: 1.2rem !important;
-    gap: 0.4rem;
+    gap: 1rem;
+    height: auto;
 
     a.revision {
       display: inline-flex;
-      height: 1.2rem;
       line-height: 1.2rem !important;
       color: $lighterGray;
-      padding: 0 4px;
+      padding: 0.1rem 0.2rem;
       border-radius: 5px;
       margin: 0 0 0 5px;
       font-size: 10px;
+      align-self: center;
 
       &:hover {
         background-color: lighten($grayBG, 15);
@@ -103,7 +108,6 @@ footer.layout-footer {
 
     .version {
       line-height: 1.2rem !important;
-
       cursor: pointer;
 
       &:hover {
@@ -112,7 +116,6 @@ footer.layout-footer {
         text-decoration-color: $lightViolet;
         text-decoration-style: dashed;
         text-decoration-skip: objects spaces;
-        text-decoration-width: 0.4px;
 
         sup.beta {
           text-decoration: none !important;
@@ -121,6 +124,10 @@ footer.layout-footer {
 
       sup.beta {
         margin-left: 0.3rem;
+      }
+      a.uptime-link
+      {
+        line-height: 1.2rem !important;
       }
     }
 
@@ -170,11 +177,11 @@ footer.layout-footer {
       letter-spacing: 1px;
       text-transform: uppercase;
       background: transparent !important;
-      margin: 0 5px;
-      font-weight: bold;
+      margin: 0;
+      font-weight: 600;
       text-align: center;
       white-space: nowrap;
-      vertical-align: baseline;
+      align-self: center;
       cursor: default;
     }
   }

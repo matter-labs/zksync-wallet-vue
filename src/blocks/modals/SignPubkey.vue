@@ -49,7 +49,7 @@ export default Vue.extend({
   },
   computed: {
     opened(): boolean {
-      return this.$accessor.currentModal !== null && this.$accessor.currentModal === "SignPubkey";
+      return this.$accessor?.currentModal === "SignPubkey";
     },
   },
   methods: {

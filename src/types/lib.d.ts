@@ -1,4 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
+import Vue from "@nuxt/vue-app";
 import { Provider } from "zksync/build";
 import {
   AccountState,
@@ -22,6 +23,8 @@ export declare type ZKTypeDisplayToken = {
   status?: string;
   pendingBalance?: BigNumber;
 };
+
+export declare type VueRefs = Vue & { validate: () => boolean };
 
 export declare type ZKTypeDisplayBalances = {
   [symbol: string]: ZKTypeDisplayToken;

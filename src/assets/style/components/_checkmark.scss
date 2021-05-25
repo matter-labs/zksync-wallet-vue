@@ -1,6 +1,12 @@
 .animatedCheckmark {
   display: block;
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  height: max-content;
   margin: 0 auto;
+  text-align: center;
+  svg
+  {
+    width: 150px;
+    height: 150px;
+  }
 }

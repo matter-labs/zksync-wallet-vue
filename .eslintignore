@@ -10,5 +10,4 @@ _nuxt/*
 src/static/sw.js
 .eslintrc.js
 tests/*
-src/assets/fonts/*
 *.example

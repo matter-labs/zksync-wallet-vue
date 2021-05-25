@@ -89,6 +89,7 @@
     "nuxt": "latest",
     "nuxt-build-optimisations": "^1.0.3",
     "nuxt-typed-vuex": "latest",
+    "oh-vue-icons": "^0.4.3",
     "vue": "latest",
     "vue-qrcode": "^0.3.5",
     "vue-scrollto": "^2.20.0",

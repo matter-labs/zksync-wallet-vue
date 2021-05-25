@@ -31,7 +31,7 @@
     <!-- Loading block -->
     <loading-block v-if="loading === true" :headline="transactionTypeName">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
-        Link to the transaction <i class="ri-external-link-line" />
+        Link to the transaction <i><v-icon name="ri-external-link-line" scale="0.8" /></i>
       </a>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
     </loading-block>
@@ -57,7 +57,7 @@
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'" class="returnBtn">
-          <i class="ri-arrow-left-line"></i>
+          <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
         <div>
           {{ transactionTypeName }}
@@ -134,8 +134,8 @@
 
       <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction">
         <template v-if="ownAccountUnlocked">
-          <i v-if="type === 'withdraw'" class="ri-hand-coin-fill" />
-          <i v-else-if="type === 'transfer'" class="ri-send-plane-fill" />
+          <v-icon v-if="type === 'withdraw'" name="ri-hand-coin-fill" />
+          <v-icon v-else-if="type === 'transfer'" name="ri-send-plane-fill" />
         </template>
         <span>
           <span>{{ transactionTypeName }}</span>
@@ -161,7 +161,7 @@
           </span>
         </div>
 
-        <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1">
+        <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1-2">
           Account Activation single-time fee:
           <span v-if="activateAccountFeeLoading" class="secondaryText">Loading...</span>
           <span v-else>
@@ -171,8 +171,8 @@
             </span>
           </span>
         </div>
-        <div v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1">
-          <span class="linkText" @click="chooseFeeTokenModal = true">Choose fee token</span>
+        <div v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1-2">
+          <span class="linkText" @click="chooseFeeTokenModal = true">Change fee token</span>
         </div>
       </div>
 
@@ -498,7 +498,7 @@ export default Vue.extend({
       this.loading = false;
     },
     async withdraw(): Promise<void> {
-      const txAmount = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
+      const txAmount: BigNumber = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
       this.tip = "Confirm the transaction to withdraw";
       if (this.feesObj === undefined) {
         throw new Error("Fee fetching error");

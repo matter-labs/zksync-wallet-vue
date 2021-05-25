@@ -10,4 +10,3 @@ _nuxt/*
 src/static/sw.js
 tests/*
 *.example
-src/assets/fonts/

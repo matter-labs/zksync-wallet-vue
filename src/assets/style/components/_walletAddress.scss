@@ -6,7 +6,7 @@
   align-items: center;
   width: 100%;
   height: max-content;
-  padding: 15px;
+  padding: 0.5rem;
   border-radius: $borderRadiusMd;
   box-shadow: $shadowInset;
   transition: background-color $transition1, box-shadow $transition1;
@@ -27,6 +27,7 @@
     .userImg {
       cursor: pointer;
     }
+
   }
 
   &.error {
@@ -68,6 +69,7 @@
     transform: translateX(-7px);
     cursor: pointer;
     transition: background-color $transition1, color $transition1;
+    display: inline-flex;
 
     &:active {
       transition: 0.001s;

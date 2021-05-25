@@ -384,7 +384,7 @@ export const actions = actionTree(
         });
         getTransactionHistoryAgain = setTimeout(() => {
           this.app.$accessor.wallet.requestTransactionsHistory({ force: true });
-        }, 15000);
+        }, 1500);
         return localList.list;
       }
     },

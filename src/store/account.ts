@@ -45,6 +45,7 @@ export const mutations = mutationTree(state, {
     if (state.address !== undefined) {
       if (name.length < 1) {
         name = getNameFromAddress(state.address);
+        window.localStorage.removeItem(state.address);
       }
       window.localStorage.setItem(state.address, name);
       state.name = getNameFromAddress(state.address);

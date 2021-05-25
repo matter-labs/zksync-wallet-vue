@@ -6,17 +6,21 @@
     <template v-else>
       <div class="searchContainer">
         <i-input ref="tokenSymbolInput" v-model="search" :placeholder="`Filter balances in ${tokensType}`" maxlength="10">
-          <i slot="prefix" class="ri-search-line"></i>
+          <i>
+            <v-icon slot="prefix" name="ri-search-line" />
+          </i>
         </i-input>
         <div class="updateBtn" :class="{ disabled: spinnerLoading }" @click="getTokenList(true)">
           <i-tooltip placement="left">
-            <i v-if="spinnerLoading" class="ri-loader-5-line"></i>
-            <i v-else class="ri-restart-line"></i>
+            <i>
+              <v-icon v-if="spinnerLoading" name="ri-loader-5-line" />
+              <v-icon v-else name="ri-restart-line" />
+            </i>
             <template slot="body">Update {{ tokensType }} balances</template>
           </i-tooltip>
         </div>
       </div>
-      <div class="tokenListContainer">
+      <div class="tokenListContainer genericListContainer">
         <div v-for="item in displayedList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
           <div class="tokenSymbol">{{ item.symbol }}</div>
           <div class="rightSide">
@@ -33,7 +37,7 @@
         </div>
       </div>
       <!--suppress JSCheckFunctionSignatures -->
-      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token? </i-button>
+      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token?</i-button>
       <no-token-found />
     </template>
   </div>

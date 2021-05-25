@@ -1,56 +1,19 @@
 @media (max-width: $mobile) {
   html {
+
     box-sizing: border-box;
   }
   body.inkline {
-    min-height: 100vh;
-    height: 100vh;
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
 
-    /* Avoid Chrome to see Safari hack */
-    @supports (-webkit-touch-callout: none) {
-      /* The hack for Safari */
-      //noinspection CssInvalidPropertyValue
-      min-height: -webkit-fill-available;
-      //noinspection CssInvalidPropertyValue
-      height: -webkit-fill-available;
-    }
-
-    #__layout {
-      max-height: 100vh; /* Use vh as a fallback for browsers that do not support Custom Properties */
-
-      /* Avoid Chrome to see Safari hack */
-      @supports (-webkit-touch-callout: none) {
-        /* The hack for Safari */
-        //noinspection CssInvalidPropertyValue
-        max-height: -webkit-fill-available;
-      }
-
-
-      main {
-        height: 100vh;
-
-        /* Avoid Chrome to see Safari hack */
-        @supports (-webkit-touch-callout: none) {
-          /* The hack for Safari */
-          //noinspection CssInvalidPropertyValue
-          height: -webkit-fill-available;
-        }
-
-      }
-    }
-    footer.layout-footer
-    {
-      height: 4.5rem;
+    footer.layout-footer {
+      height: 5rem;
     }
   }
 
   aside.bn-onboard-custom.bn-onboard-modal {
-    max-height: 100vh;
-
-    @supports (-webkit-touch-callout: none) {
-      //noinspection CssInvalidPropertyValue
-      max-height: -webkit-fill-available;
-    }
+    max-height: 100%;
     padding-bottom: 5rem;
   }
 
@@ -75,7 +38,7 @@
     overflow-y: auto;
   }
   aside.bn-onboard-custom.bn-onboard-modal {
-    padding: 1rem;
+    padding: 1rem 1rem 3rem;
     align-items: flex-end;
 
     section.bn-onboard-custom.bn-onboard-modal-content {
@@ -86,6 +49,7 @@
       padding: 1rem;
       border-radius: 8px !important;
       height: fit-content !important;
+      max-height: 80vh !important;
     }
 
     header.bn-onboard-custom.bn-onboard-modal-content-header {
@@ -93,201 +57,37 @@
     }
 
     button.bn-onboard-custom.bn-onboard-icon-button {
-      padding: 0 !important;
+      padding: 0.4rem 1.1rem !important;
       margin: 0 0 .25rem !important;
     }
   }
 
   #__layout {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch;
-    margin: 0 auto !important;
-    padding: 0 !important;
-    overflow: hidden;
-
     main {
       padding: 60px 0 95px;
-      max-height: 100vh;
+      min-height: 100vh;
+      //height: 0 !important;
 
       @supports (-webkit-touch-callout: none) {
         //noinspection CssInvalidPropertyValue
-        max-height: -webkit-fill-available;
-      }
-    }
-
-    .layout-content.layoutContent {
-      display: flex;
-      height: 100% !important;
-      flex-direction: column;
-      justify-content: stretch;
-      overflow: hidden;
-
-      .routerContainer {
-        display: flex;
-        height: 100% !important;
-        flex-direction: column;
-        justify-content: stretch;
-        overflow: hidden;
-
-        .dappPageWrapper {
-          align-items: stretch;
-          margin: 0 auto !important;
-          padding: 1rem 0 !important;
-          display: flex;
-          height: 100% !important;
-          flex-direction: column;
-          justify-content: stretch;
-          overflow: hidden;
-        }
+        min-height: -webkit-fill-available;
       }
     }
   }
-}
-
-#__nuxt {
-  overflow: hidden;
 }
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   line-height: 1.4;
-
-  main.layout {
-    .indexLayout {
-      display: flex;
-      width: 100%;
-      flex-direction: column;
-    }
-  }
-}
-
-
-
-header.indexHeader {
-  min-height: 60px;
-}
-
-header > .container .headerWrapper img.zkwallet-logo {
-  height: 20px !important;
 }
 
 main > div.mobileOnly {
   display: none;
 }
 
-section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
-  justify-content: space-between;
-  margin: 0;
-  padding: 0;
-}
-
-.bn-onboard-custom.bn-onboard-modal-content {
-  section.bn-onboard-custom.bn-onboard-modal-content {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  header.bn-onboard-custom.bn-onboard-modal-content-header {
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-  }
-
-  div.bn-onboard-custom.bn-onboard-modal-content-close {
-    top: 1rem;
-    right: 1rem;
-    width: 20px;
-    height: 20px;
-  }
-}
-
-div.routerContainer {
-  min-height: auto !important;
-  height: auto !important;
-}
-
-
-main.layout.defaultLayout {
-  flex-flow: column nowrap;
-  display: flex;
-  justify-content: space-between !important;
-  align-items: stretch;
-}
-
-
-aside.bn-onboard-custom.bn-onboard-modal {
-  max-height: 100vh;
-  padding: 2vh 2vw;
-
-  /* Avoid Chrome to see Safari hack */
-  @supports (-webkit-touch-callout: none) {
-    /* The hack for Safari */
-    //noinspection CssInvalidPropertyValue
-    max-height: -webkit-fill-available;
-  }
-
-  .bn-onboard-custom.bn-onboard-modal-content {
-    max-height: 90vh !important;
-
-    /* Avoid Chrome to see Safari hack */
-    @supports (-webkit-touch-callout: none) {
-      /* The hack for Safari */
-      //noinspection CssInvalidPropertyValue
-      min-height: -webkit-fill-available;
-    }
-  }
-
-  section.bn-onboard-custom.bn-onboard-modal-content {
-    overflow: hidden;
-  }
-}
-
-main.defaultLayout {
-  padding-bottom: 80px !important;
-}
-
 section.layoutContent {
   .mobileOnly {
     display: none !important;
-  }
-}
-
-
-.layout-content.layoutContent {
-  display: flex;
-  min-height: max-content !important;
-  position: initial !important;
-  flex: initial;
-  flex-direction: column;
-  height: auto;
-  align-items: stretch;
-  justify-content: stretch;
-
-  .routerContainer {
-    min-height: 0;
-    margin: 1rem auto;
-    width: 100%;
-  }
-}
-
-.layout-content.layoutContent {
-  min-height: auto !important;
-  position: initial !important;
-  flex: initial;
-  flex-direction: column;
-  height: auto;
-  align-items: stretch;
-  display: flex;
-  justify-content: stretch;
-
-  .routerContainer {
-    min-height: 0;
   }
 }
 
@@ -305,179 +105,14 @@ section.layoutContent {
       font-size: 18px;
     }
   }
-  .layout-content.layoutContent .routerContainer {
-    margin: 0 auto 0;
-    padding: 0;
-  }
-
-  //.successBlock .infoBlockItem.smaller .amount
-  .dappPageWrapper {
-    width: calc(100vw - .5rem);
-    margin: 1rem auto 0.5rem !important;
-    display: grid !important;
-
-    .walletContainer
-    {
-      padding: 0.8rem 1.1rem !important;
-    }
-
-    .row._margin-top-1
-    {
-      margin-top: 0 !important;
-    }
-
-    &.contactsPage {
-      padding: 0;
-    }
-
-    &.depositPage, &.tokenAccount
-    {
-      .tileBlock
-      {
-        min-height: auto;
-      }
-    }
-
-    .tileBlock {
-      padding: .75rem 1rem 1.5rem !important;
-      //min-height: 40vh;
-      width: 90vw;
-      margin: 0 auto !important;
-      align-items: stretch;
-      justify-content: stretch;
-      display: flex;
-      flex-direction: column;
-
-      &.transactionTile {
-        .inputLabel, .tileHeadline.withBtn
-        {
-          padding: 0 !important;
-        }
-      }
-      .balancesList, .transactionsListContainer, .contactsListContainer {
-        background-color: $bgSecondary;
-
-        & > * {
-          padding: 0.3rem 0.5rem !important;
-
-          &:last-child {
-            border-bottom-width: 0 !important;
-          }
-        }
-      }
-
-      &.contactTile {
-        display: flex;
-        flex-direction: column;
-        height: auto;
-        overflow: hidden;
-        justify-content: stretch;
-        margin-top: 0;
-
-        .contactsListContainer {
-          overflow-x: hidden;
-          overflow-y: scroll;
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-          height: auto;
-          justify-content: stretch;
-
-          .contactItem {
-            padding: 0 0.5rem;
-            gap: 0.2rem;
-            height: 40px;
-
-            .contactInfo {
-              .contactName {
-                font-size: 16px;
-                line-height: 150%;
-              }
-
-              .contactAddress {
-                font-size: 10px;
-                font-family: $firaSans;
-              }
-            }
-          }
-        }
-      }
-
-      .transactionsListContainer {
-        overflow-x: hidden;
-      }
-
-      button.button {
-        &.-secondary {
-          padding: 0.3rem 0.5rem;
-          font-size: 14px;
-
-          &.-link {
-            margin-bottom: 0.5rem !important;
-          }
-
-          &.-block {
-            margin-top: 0.25rem !important;
-            margin-bottom: 0.5rem !important;
-          }
-        }
-      }
-
-      .form-input-group {
-        margin-bottom: 0.5rem;
-
-        .form-input input {
-          font-size: 12px !important;
-        }
-      }
-
-      .animatedCheckmark {
-        max-height: 5rem;
-      }
-
-      & > * {
-        padding-top: 0.5rem !important;
-        padding-bottom: 0.5rem !important;
-        margin-top: 0 !important;
-        margin-bottom: 0 !important;
-      }
-
-      .tileHeadline {
-        font-size: 18px;
-        line-height: 30px;
-        padding-top: 0 !important;
-        padding-bottom: 0.5rem !important;
-
-        i {
-          line-height: 20px;
-          height: 20px;
-          width: 20px;
-
-        }
-      }
-    }
-
-    & > * {
-      margin: 1rem auto;
-
-      &:first-child {
-        margin-top: 0;
-      }
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-  }
-
   .defaultLayout .walletContainer.clickablePicture {
     grid-template-columns: 1fr auto;
     grid-gap: 0.25rem;
     padding: 0.25rem !important;
 
     .walletAddress {
-      letter-spacing: -0.05rem;
-      font-size: 10px;
+      letter-spacing: -0.02rem;
+      font-size: 12px;
     }
 
     .userImg {
@@ -529,7 +164,7 @@ section.layoutContent {
       border-radius: $borderRadius;
       box-shadow: $shadowInset;
 
-      .form-input.-prefixed > .form-input.-prefixed > input{
+      .form-input.-prefixed > .form-input.-prefixed > input {
         font-size: 16px !important;
         padding: 0.5rem 1rem 0.5rem 2.5rem !important;
       }
@@ -560,8 +195,15 @@ section.layoutContent {
       }
     }
   }
-  .modal.-md .header, .modal.-md .footer, .modal.-md .body
-  {
-    padding: 1rem !important;
+  .modal {
+    &.-md {
+      .header, .footer, .body {
+        padding: 1rem !important;
+      }
+    }
+    .modalFooterBtn
+    {
+      gap: 0.5rem;
+    }
   }
 }

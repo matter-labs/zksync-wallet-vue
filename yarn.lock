@@ -16340,6 +16340,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"oh-vue-icons@npm:^0.4.3":
+  version: 0.4.3
+  resolution: "oh-vue-icons@npm:0.4.3"
+  checksum: 2f175865f35e3a36fd6170623a1af9af1baa5d9788c86e3ff3958a8bae288b5d0e37687ab24d27524f0d463df55ade6cc8cf410411f9891278b70e9a39cab120
+  languageName: node
+  linkType: hard
+
 "on-finished@npm:^2.3.0, on-finished@npm:~2.3.0":
   version: 2.3.0
   resolution: "on-finished@npm:2.3.0"
@@ -23908,6 +23915,7 @@ typescript@^3.5.1:
     nuxt: latest
     nuxt-build-optimisations: ^1.0.3
     nuxt-typed-vuex: latest
+    oh-vue-icons: ^0.4.3
     prettier: ^2.2.1
     qrcode: ^1.0.0
     sass-loader: 10.1.1

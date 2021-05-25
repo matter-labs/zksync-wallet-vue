@@ -61,10 +61,12 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [Vue.js](https://vuejs.org)
 - [Sentry.io](https://sentry.io)
 - [Onboarding.js](https://github.com/matter-labs-forks/onboard)
-* [Typed Vuex](https://typed-vuex.roe.dev/)
-* [Remix Icon](https://remixicon.com/)
-* [Nuxt TypeScript](https://typescript.nuxtjs.org/)
-* [zksync.js](https://zksync.io/api/sdk/js/tutorial.html)
+- [Typed Vuex](https://typed-vuex.roe.dev/)
+- [Remix Icon](https://remixicon.com/)
+- [Oh, Vue Icons!](https://oh-vue-icons.netlify.app)
+- [Nuxt TypeScript](https://typescript.nuxtjs.org/)
+- [zksync.js](https://zksync.io/api/sdk/js/tutorial.html)
+- [EthersJs](https://docs.ethers.io/v5/)
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
