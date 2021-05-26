@@ -80,8 +80,7 @@ input.form-input.-prefixed:focus {
   display: flex;
 }
 
-i.iconInfo,
-em.iconInfo {
+.iconInfo {
   display: block;
   width: 25px;
   height: 25px;
@@ -98,6 +97,11 @@ em.iconInfo {
 
   &:hover {
     background: transparentize($color: $gray, $amount: 0.5);
+  }
+
+  svg {
+    position: relative;
+    top: 2px;
   }
 }
 

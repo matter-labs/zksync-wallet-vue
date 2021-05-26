@@ -4,7 +4,7 @@ footer.layout-footer {
   height: 3.5rem;
   align-content: center;
   padding: 0 1rem 0.5rem !important;
-  z-index: 3;
+  z-index: 1;
 
   img {
     -webkit-user-select: none;
@@ -154,7 +154,7 @@ footer.layout-footer {
             gap: 4px;
             line-height: 20px;
 
-            i {
+            em, i {
               font-size: 14px;
             }
 

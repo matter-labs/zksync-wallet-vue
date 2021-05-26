@@ -3,6 +3,7 @@ header {
   height: $headerHeight;
   padding: 0;
   transition: background-color $transition1;
+  transition-property: background-color, border, box-shadow;
 
   &.layout-header {
     position: fixed;
@@ -19,7 +20,6 @@ header {
     border-bottom-style: solid;
     border-bottom-color: rgb(239, 241, 244);
     box-shadow: 0 1px 0.5px #0000001a;
-    transition: $transition1;
   }
 
   &.indexHeader {
@@ -45,14 +45,14 @@ header {
         grid-gap: 3px;
 
         .headerLink {
-          padding: 10px 15px;
+          padding: 13px 15px;
           font-size: 20px;
 
           span {
             display: none;
           }
 
-          i {
+          svg {
             display: block !important;
           }
         }
@@ -155,7 +155,7 @@ header {
       text-decoration: none;
       transition: color $transition1;
 
-      i {
+      em, i {
         padding-left: 2px;
         color: $gray;
         font-size: 12px;
@@ -213,15 +213,12 @@ header {
           font-weight: 400;
         }
 
-        i {
-          //font-size: 25px;
-          //padding: 0 0 10px;
-          //height: 35px;
-          //display: block;
-          padding-top: 2px;
-          padding-bottom: 5px;
-          font-size: 20px;
-          text-align: center;
+        svg {
+          display: block;
+          margin: 0 auto;
+        }
+        span {
+          margin-top: 2px;
         }
       }
 
@@ -317,7 +314,6 @@ header {
       line-height: 49px;
       text-align: center;
       text-decoration: none !important;
-      transition: $transition1;
 
       &.nuxt-link-exact-active,
       &:hover {

@@ -19,6 +19,7 @@ import moment from "moment-timezone";
 import OhVueIcon from "oh-vue-icons";
 import {
   BiDownload,
+  RiInformationFill,
   IoWalletOutline,
   RiAddCircleFill,
   RiAddFill,
@@ -69,6 +70,7 @@ Vue.component("VueQrcode", VueQrcode);
 
 Vue.use(VueScrollTo);
 OhVueIcon.add(
+  RiInformationFill,
   RiAddCircleFill,
   RiArrowUpSLine,
   RiArrowDownSLine,

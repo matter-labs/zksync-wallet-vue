@@ -10,27 +10,19 @@
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
           <div class="pagesContainer linksContainer _margin-x-auto">
             <nuxt-link class="headerLink" to="/account">
-              <i class="mobileOnly">
-                <v-icon name="ri-wallet-line" />
-              </i>
+              <v-icon class="mobileOnly" name="ri-wallet-line" />
               <span>My wallet</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/contacts">
-              <i class="mobileOnly">
-                <v-icon name="ri-contacts-line" />
-              </i>
+              <v-icon class="mobileOnly" name="ri-contacts-line" />
               <span>Contacts</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/transactions">
-              <i class="mobileOnly">
-                <v-icon name="ri-history-line" />
-              </i>
+              <v-icon class="mobileOnly" name="ri-history-line" />
               <span>Transactions</span>
             </nuxt-link>
             <div class="mobileOnly headerLink" @click="footerModal = !footerModal">
-              <i>
-                <v-icon name="ri-more-2-fill" />
-              </i>
+              <v-icon class="mobileOnly" name="ri-more-2-fill" />
               <span>More</span>
             </div>
           </div>

@@ -159,7 +159,7 @@ section.layoutContent {
     .tokenListContainer {
       margin: 1rem auto 0.5rem;
       overflow-x: hidden;
-      overflow-y: scroll !important;
+      overflow-y: auto !important;
       background-color: $bgSecondary;
       border-radius: $borderRadius;
       box-shadow: $shadowInset;

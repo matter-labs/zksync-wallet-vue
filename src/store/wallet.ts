@@ -255,20 +255,18 @@ export const actions = actionTree(
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
       for (const tokenSymbol in listCommitted) {
-        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
-        if (!isRestricted) {
-          (async () => {
-            try {
-              /* Some weird TS error when this is has no await */
-              await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
-            } catch (error) {
-              console.log(`Failed to get ${tokenSymbol} price at requestZkBalances`, error);
-            }
-          })();
-        }
+        (async () => {
+          try {
+            /* Some weird TS error when this is has no await */
+            await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+          } catch (error) {
+            console.log(`Failed to get ${tokenSymbol} price at requestZkBalances`, error);
+          }
+        })();
         if (savedAddress !== this.app.$accessor.account.address) {
           return state.zkTokens.list;
         }
+        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -315,11 +313,6 @@ export const actions = actionTree(
       const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key: number | string): Promise<undefined | ZkInBalance> => {
         const currentToken = loadedTokens.tokens[key];
         const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
-        try {
-          this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
-        } catch (error) {
-          this.commit("tokens/addRestrictedToken", currentToken.symbol);
-        }
         return {
           id: currentToken.id,
           address: currentToken.address,

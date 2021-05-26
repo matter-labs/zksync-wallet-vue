@@ -66,10 +66,7 @@
     <!-- Main Block -->
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
-        <nuxt-link
-          class="_icon-wrapped -rounded -sm returnBtn _background-gray-10 _display-flex"
-          :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'"
-        >
+        <nuxt-link class="_icon-wrapped -rounded -sm returnBtn _display-flex" :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'">
           <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
         <div>Deposit</div>
@@ -89,15 +86,23 @@
 
       <div v-if="displayTokenUnlock && !thresholdLoading">
         <div class="_padding-top-1 _display-flex _align-items-center inputLabel" @click="$accessor.openModal('Allowance')">
-          <span>{{ chosenToken.symbol }} Allowance</span>
-          <v-icon name="ri-question-mark" class="iconInfo" />
+          <span>
+            <span class="tokenSymbol">{{ chosenToken.symbol }}</span> Allowance
+          </span>
+          <div class="iconInfo">
+            <v-icon name="ri-question-mark" />
+          </div>
         </div>
         <div class="grid-cols-2">
-          <i-button block size="md" variant="secondary" @click="unlockToken(true)">Approve unlimited {{ chosenToken.symbol }}</i-button>
-          <i-button v-if="inputtedAmount" key="approveAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
-            Approve {{ amountBigNumber | formatToken(chosenToken.symbol) }} {{ chosenToken.symbol }}
+          <i-button block size="md" variant="secondary" @click="unlockToken(true)">
+            Approve unlimited <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
-          <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>Introduce {{ chosenToken.symbol }} amount</i-button>
+          <i-button v-if="inputtedAmount" key="approveAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
+            Approve {{ amountBigNumber | formatToken(chosenToken.symbol) }} <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
+          </i-button>
+          <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>
+            Introduce <span class="tokenSymbol">{{ chosenToken.symbol }}</span> amount
+          </i-button>
         </div>
       </div>
 
@@ -281,6 +286,12 @@ export default Vue.extend({
   },
   methods: {
     async chooseToken(token: ZkInBalance) {
+      try {
+        this.$accessor.tokens.getTokenPrice(token.symbol);
+      } catch (error) {
+        console.log(`Error getting ${token.symbol} price`, error);
+        this.$accessor.tokens.addRestrictedToken(token.symbol);
+      }
       this.loading = true;
       this.chooseTokenModal = false;
       this.chosenToken = false;

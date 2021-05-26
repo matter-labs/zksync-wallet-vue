@@ -72,7 +72,7 @@
           </div>
           <div class="iconsBlock">
             <template v-if="!item.deleted">
-              <i-tooltip trigger="click">
+              <i-tooltip placement="left" trigger="click">
                 <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)">
                   <v-icon name="ri-clipboard-line" />
                 </i-button>

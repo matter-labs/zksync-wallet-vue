@@ -36,7 +36,7 @@
         //height: calc(100% - 170px);
         overflow-x: hidden;
         height: 100%;
-        overflow-y: scroll !important;
+        overflow-y: auto !important;
         background-color: $bgSecondary;
         border-radius: $borderRadius;
         box-shadow: $shadowInset;
@@ -66,7 +66,12 @@
           text-decoration: none;
           border-bottom: 1px solid;
           cursor: pointer;
-          transition: background-color $transition1, color $transition1;
+          transition: $transition1;
+          transition-property: background-color, color;
+
+          &:last-child {
+            border-bottom: none;
+          }
 
           &:hover {
             background-color: transparentize($color: $gray, $amount: 0.9);
@@ -124,6 +129,12 @@
 
               .inProgress {
                 color: $gray;
+              }
+
+              svg {
+                position: relative;
+                display: block;
+                top: 1.5px;
               }
 
               .loaderContainer {

@@ -139,10 +139,12 @@
     //height: calc(100% - 170px);
     overflow-x: hidden;
     height: 100%;
-    overflow-y: scroll !important;
+    overflow-y: auto !important;
     background-color: $bgSecondary;
     border-radius: $borderRadius;
     box-shadow: $shadowInset;
+    transition: 0.1s ease;
+    transition-property: background-color, box-shadow;
 
     &::-webkit-scrollbar {
       width: 10px;
@@ -268,7 +270,7 @@
 
         .contactsListContainer {
           overflow-x: hidden;
-          overflow-y: scroll;
+          overflow-y: auto;
           display: flex;
           flex-direction: column;
           align-items: stretch;
@@ -316,7 +318,7 @@
         padding-top: 0 !important;
         padding-bottom: 0.5rem !important;
 
-        i {
+        em, i {
 
           height: min-content;
           width: min-content;
@@ -348,10 +350,8 @@
 
 
 .inkline.-dark {
-  .dappPageWrapper, .dappModalWindowWrapper {
-    .transactionsListContainer, .contactsListContainer, .tokenListContainer, .balancesList {
-      margin: 1.5rem 0;
-      border-radius: $borderRadius !important;
+  .dappPageWrapper {
+    .balancesList, .transactionsListContainer, .contactsListContainer {
       background-color: $bgSecondary;
     }
   }

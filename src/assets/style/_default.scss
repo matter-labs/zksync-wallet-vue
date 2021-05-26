@@ -56,7 +56,7 @@ main.layout.defaultLayout {
         flex-direction: column;
 
         .dappPageWrapper {
-          overflow-y: scroll !important;
+          overflow-y: auto !important;
           height: max-content;
         }
       }
@@ -123,7 +123,7 @@ input[type="number"] {
   cursor: pointer;
 
   &:hover {
-    color: $lightViolet;
+    filter: brightness(125%);
     text-decoration: none !important;
   }
 }
@@ -275,16 +275,20 @@ button.-lg.-circle {
   }
 }
 
-.modal-wrapper.prevent-close {
-  .modal {
-    &::before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      width: 100%;
-      height: 100%;
-      content: "";
+.modal-wrapper {
+  position: absolute !important;
+
+  &.prevent-close {
+    .modal {
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        content: "";
+      }
     }
   }
 }
@@ -346,6 +350,7 @@ button.-lg.-circle {
     }
 
     .close .icon {
+      line-height: 18px;
       font-size: 18px;
     }
   }
@@ -368,6 +373,7 @@ button.-lg.-circle {
     }
 
     .close .icon {
+      line-height: 18px;
       font-size: 18px;
       color: $white;
     }
@@ -404,8 +410,8 @@ button.-lg.-circle {
       background-color: transparentize($color: $gray, $amount: 0.8);
     }
 
-    i {
-      font-size: 16px;
+    svg {
+      margin-right: 10px;
     }
 
     span {
