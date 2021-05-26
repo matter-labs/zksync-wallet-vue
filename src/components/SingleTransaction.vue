@@ -2,7 +2,7 @@
   <div class="singleTransaction">
     <div class="status">
       <i-tooltip>
-        <i><v-icon :name="transactionStatus.icon" :class="transactionStatus.class" /></i>
+        <v-icon :name="transactionStatus.icon" :class="transactionStatus.class" />
         <template slot="body">{{ transactionStatus.text }}</template>
       </i-tooltip>
     </div>

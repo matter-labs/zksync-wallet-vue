@@ -21,7 +21,7 @@
               <v-icon class="mobileOnly" name="ri-history-line" />
               <span>Transactions</span>
             </nuxt-link>
-            <div class="mobileOnly headerLink" @click="footerModal = !footerModal">
+            <div class="mobileOnly headerLink _cursor-pointer" @click="footerModal = !footerModal">
               <v-icon class="mobileOnly" name="ri-more-2-fill" />
               <span>More</span>
             </div>

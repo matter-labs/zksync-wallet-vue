@@ -2,19 +2,19 @@
   <div class="transactionPage dappPageWrapper">
     <sign-pubkey-modal :from-route="fromRoute" />
 
-    <i-modal v-if="chooseTokenModal" v-model="chooseTokenModal" size="md">
+    <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
       <choose-token @chosen="chooseToken($event)" />
     </i-modal>
 
     <!-- Choose fee token -->
-    <i-modal v-if="chooseFeeTokenModal" v-model="chooseFeeTokenModal" size="md">
+    <i-modal v-model="chooseFeeTokenModal" size="md">
       <template slot="header">Choose fee token</template>
       <choose-token :only-allowed="true" @chosen="chooseFeeToken($event)" />
     </i-modal>
 
     <!-- Transfer warning modal -->
-    <i-modal v-if="transferWithdrawWarningModal" v-model="transferWithdrawWarningModal" class="prevent-close" size="md">
+    <i-modal v-model="transferWithdrawWarningModal" class="prevent-close" size="md">
       <template slot="header">Transfer warning</template>
       <div>
         <div class="_padding-bottom-1">
@@ -66,7 +66,7 @@
 
       <div class="_padding-top-1 inputLabel">Address</div>
       <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction" />
-      <choose-contact v-model="chosenContact" :address.sync="inputtedAddress" :display-own-address="type === 'withdraw'" />
+      <choose-contact class="_margin-top-05" v-model="chosenContact" :address.sync="inputtedAddress" :display-own-address="type === 'withdraw'" />
 
       <div class="_padding-top-1 inputLabel">Amount</div>
       <amount-input
@@ -132,7 +132,7 @@
         {{ error }}
       </div>
 
-      <i-button :disabled="buttonDisabled" block class="_margin-top-1" size="lg" variant="secondary" @click="commitTransaction">
+      <i-button :disabled="buttonDisabled" block class="_margin-top-05" size="lg" variant="secondary" @click="commitTransaction">
         <template v-if="ownAccountUnlocked">
           <v-icon v-if="type === 'withdraw'" name="ri-hand-coin-fill" />
           <v-icon v-else-if="type === 'transfer'" name="ri-send-plane-fill" />

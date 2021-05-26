@@ -1,6 +1,6 @@
 <template>
   <div class="contactsPage dappPageWrapper">
-    <i-modal v-if="addContactModal" v-model="addContactModal" class="prevent-close" size="md">
+    <i-modal v-model="addContactModal" class="prevent-close" size="md">
       <template slot="header">
         <span v-if="addContactType === 'add'">Add contact</span>
         <span v-else-if="addContactType === 'edit'">Edit contact</span>
@@ -121,7 +121,7 @@
       <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"> <v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact </i-button>
       <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"> <v-icon name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact </i-button>
     </div>
-    <lazy-transactions v-if="openedContact" :address="openedContact.address" />
+    <lazy-transactions class="_margin-top-0" v-if="openedContact" :address="openedContact.address" />
   </div>
 </template>
 

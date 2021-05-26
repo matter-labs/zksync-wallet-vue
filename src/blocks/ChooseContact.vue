@@ -48,7 +48,7 @@
     </i-modal>
 
     <!-- Main -->
-    <i-row class="_margin-top-1">
+    <i-row class="_margin-top-md-1">
       <i-column v-if="!chosenContact || (!chosenContact.name && !isOwnAddress)" :md="canSaveContact ? 7 : 12" xs="12">
         <i-button block link variant="secondary" @click="contactsListModal = true">Select from contacts</i-button>
       </i-column>

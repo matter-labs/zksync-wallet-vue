@@ -166,14 +166,17 @@ header {
       padding: 10px 15px;
       color: $violet;
       border-radius: $borderRadiusMd;
-      transition: $transition1;
       transition-property: background-color, color;
       will-change: background-color, color;
+
+      @media screen and (min-width: $mobile) {
+        transition: $transition1;
+      }
 
       &.nuxt-link-exact-active {
         color: #27274e;
         font-weight: 600;
-        background: #f7fafc;
+        background: $mediumGrey;
         //background: $light;
       }
     }

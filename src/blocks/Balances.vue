@@ -34,7 +34,7 @@
           </div>
           <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer </i-button>
           <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
-            <i slot="prefix" class="ri-search-line"></i>
+            <v-icon slot="prefix" name="ri-search-line" />
           </i-input>
         </div>
 

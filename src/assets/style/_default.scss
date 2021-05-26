@@ -31,7 +31,7 @@ main.layout.defaultLayout {
   main.layout.defaultLayout {
     max-height: 100%;
     display: flex;
-    padding: 80px 0 60px;
+    padding: 60px 0 60px;
     justify-content: stretch;
     height: 100vh;
     /* Avoid Chrome to see Safari hack */
@@ -141,6 +141,7 @@ body.inkline {
       color: $lightViolet !important;
       text-decoration: none !important;
       border-radius: $borderRadiusSm;
+      transition: background-color $transition1;
     }
 
     &.-secondary {

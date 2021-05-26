@@ -92,7 +92,6 @@ export default Vue.extend({
   },
   methods: {
     async loadTransactions(offset = 0): Promise<Array<ZkInTx>> {
-      console.log("Load transactions");
       const list = await this.$accessor.wallet.requestTransactionsHistory({ force: false, offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25; /* 25 transactions are loaded for each request */

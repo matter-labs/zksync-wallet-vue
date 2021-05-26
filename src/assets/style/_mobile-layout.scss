@@ -1,15 +1,10 @@
 @media (max-width: $mobile) {
   html {
-
     box-sizing: border-box;
   }
   body.inkline {
     overscroll-behavior-y: none;
     overscroll-behavior-x: none;
-
-    footer.layout-footer {
-      height: 5rem;
-    }
   }
 
   aside.bn-onboard-custom.bn-onboard-modal {
@@ -128,6 +123,7 @@ section.layoutContent {
 
   .transactionsPage .transactionsListContainer {
     max-height: none !important;
+    padding-top: 0 !important;
   }
 
   .footerModalContainer {

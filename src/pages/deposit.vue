@@ -3,7 +3,7 @@
     <allowance-modal />
 
     <!-- Choose token -->
-    <i-modal v-if="chooseTokenModal" v-model="chooseTokenModal" size="md">
+    <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
       <choose-token tokens-type="L1" @chosen="chooseToken($event)" />
     </i-modal>
@@ -12,7 +12,7 @@
     <loading-block v-if="loading === true" :headline="loading && transactionInfo.type === 'unlock' ? `Approving ${chosenToken.symbol}` : 'Deposit'">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
         Link to the transaction
-        <v-icon name="ri-external-link-line" class="_margin-left-2" />
+        <v-icon name="ri-external-link-line" class="_margin-left-05" />
       </a>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
     </loading-block>
