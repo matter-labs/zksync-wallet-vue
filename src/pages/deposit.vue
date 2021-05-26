@@ -54,12 +54,12 @@
             </span>
           </div>
         </div>
-        <i-button-group class="goBackContinueBtns _margin-top-1">
+        <div class="goBackContinueBtns _margin-top-1">
           <i-button size="lg" variant="secondary" circle @click="successBlockGoBack()">
             <v-icon name="ri-arrow-left-line" />
           </i-button>
           <i-button block size="lg" variant="secondary" @click="successBlockContinue()">Proceed to deposit</i-button>
-        </i-button-group>
+        </div>
       </template>
     </success-block>
 
@@ -344,14 +344,7 @@ export default Vue.extend({
       this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + transferTransaction.ethTx.hash;
       this.tip = "Waiting for the transaction to be mined...";
       const receipt = await transferTransaction.awaitEthereumTxCommit();
-      if (!receipt) {
-        this.transactionInfo.fee = undefined;
-      } else {
-        this.transactionInfo.fee = {
-          token: this.chosenToken,
-          amount: receipt.gasUsed.toString(),
-        };
-      }
+      this.transactionInfo.fee = undefined;
       this.transactionInfo.continueBtnFunction = false;
       this.transactionInfo.continueBtnText = "";
       this.transactionInfo.success = true;
