@@ -29,6 +29,9 @@
       border-bottom: 1px solid;
       transition: $transition1;
       transition-property: background-color, border-color;
+      &:last-child {
+        border-bottom: none;
+      }
 
       .amount, .tokenSymbol {
         display: inline-flex;

@@ -68,6 +68,9 @@
     border-bottom: 1px solid;
     cursor: pointer;
     transition: background-color $transition1;
+    &:last-child {
+      border-bottom: none;
+    }
 
     &:hover {
       background-color: transparentize($color: $gray, $amount: 0.9);
