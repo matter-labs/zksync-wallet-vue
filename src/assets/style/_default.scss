@@ -41,11 +41,6 @@ main.layout.defaultLayout {
       min-height: -webkit-fill-available;
     }
 
-    @media (min-width: 1200px)
-    {
-      padding-bottom: 0;
-    }
-
     section.layout-content.layoutContent {
       display: flex;
       overflow: hidden;
