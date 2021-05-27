@@ -14,7 +14,7 @@ jobs:
         run: sh cli-dev.sh ci &&  yarn install --immutable
 
       - name: Building rinkeby [preview]
-        run: yarn build:rinkeby
+        run: yarn ci:build:rinkeby
 
       - name: Deploying to rinkeby [preview]
         uses: matter-labs/action-hosting-deploy@v0
@@ -27,7 +27,7 @@ jobs:
           FIREBASE_CLI_PREVIEWS: hostingchannels
 
       - name: Building ropsten [preview]
-        run: yarn build:ropsten
+        run: yarn ci:build:ropsten
 
       - name: Deploying to ropsten [preview]
         uses: matter-labs/action-hosting-deploy@v0
@@ -40,7 +40,7 @@ jobs:
           FIREBASE_CLI_PREVIEWS: hostingchannels
 
       - name: Building mainnet [preview]
-        run: yarn build:prod
+        run: yarn ci:build:prod
 
       - name: Deploying to mainnet [preview]
         uses: matter-labs/action-hosting-deploy@v0

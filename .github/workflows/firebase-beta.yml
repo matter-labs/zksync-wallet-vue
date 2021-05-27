@@ -17,7 +17,7 @@ jobs:
         run: bash cli-dev.sh ci && yarn install --immutable
 
       - name: "[Ropsten release] Configuring ropsten env"
-        run: yarn build:ropsten
+        run: yarn ci:build:ropsten
 
       - name: "[Ropsten release] Publishing ropsten static"
         uses: matter-labs/action-hosting-deploy@v0

@@ -17,7 +17,7 @@ jobs:
         run: bash cli-dev.sh ci && yarn install --immutable
 
       - name: Build rinkeby
-        run: yarn build:rinkeby
+        run: yarn ci:build:rinkeby
 
       - name: Deploy to rinkeby
         uses: matter-labs/action-hosting-deploy@v0
@@ -28,7 +28,7 @@ jobs:
           channelID: live
 
       - name: Build mainnet
-        run: yarn build:prod
+        run: yarn ci:build:prod
 
       - name: Deploy to mainnet
         uses: matter-labs/action-hosting-deploy@v0
