@@ -27,14 +27,10 @@ jobs:
           projectId: zksync-vue
           channelID: live
 
-      - name: "[Rinkeby-beta release] Step 1: Configuring rinkeby-beta env"
-        run: bash ./cli-process-env.sh rinkeby-beta dev 1
+      - name: "[Rinkeby-beta release] Configuring rinkeby-beta env"
+        run: yarn ci:build:rinkeby-beta
 
-      - name: "[Rinkeby-beta release] Step 2: Building rinkeby-beta"
-      - name: Build rinkeby-beta [beta]
-        run: yarn generate --fail-on-error
-
-      - name: "[Rinkeby-beta release] Step 3: Publishing rinkeby-beta"
+      - name: "[Rinkeby-beta release] Publishing rinkeby-beta"
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"

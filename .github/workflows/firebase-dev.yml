@@ -9,7 +9,7 @@ name: Deploy to rinkeby, ropsten and mainnet permanent DEVs on push into the dev
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    environment: dev
+    environment: test
     steps:
       - uses: actions/checkout@v2
 

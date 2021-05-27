@@ -10,7 +10,7 @@
       ]
     },
     {
-      "site": "dev-rinkeby",
+      "target": "dev-rinkeby",
       "public": "public",
       "ignore": [
         "firebase.json",
