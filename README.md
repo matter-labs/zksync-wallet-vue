@@ -38,6 +38,23 @@ It's working perfectly on [**mainnet**](https://wallet.zksync.io) | [rinkeby](ht
 
 zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet. [Learn more](https://zksync.io/)
 
+## Firebase hosting configuration
+
+> Resource targets for zksync-vue:
+
+### Hosting
+
+  1) Production-ready, deployed for the clients, users or developers:
+     * **mainnet** → [zksync-vue-mainnet](https://wallet.zksync.io)
+     * **prod-rinkeby** → [zksync-vue-rinkeby-2](https://rinkeby.zksync.io)
+  2) Beta version (w/t partial NFT-support & upcoming NFT+Swap support)
+     * **beta-rinkeby** → [beta-rinkeby-zksync-vue](https://wallet-rinkeby-beta.zksync.dev)
+     * **prod-ropsten** → [zksync-vue-ropsten](https://ropsten.zksync.io)
+  3) Dev-only hosts: 
+     * **stage-mainnet** → [zksync-vue](https://stage.zksync.io)
+     * **dev-rinkeby** → [rinkeby-wallet-zksync](https://rinkeby-wallet-zksync.web.app/)
+
+
 ## Build Setup
 
 ``` bash
