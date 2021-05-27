@@ -547,6 +547,7 @@ export const actions = actionTree(
       localStorage.removeItem("selectedWallet");
       this.app.$accessor.account.setLoggedIn(false);
       this.app.$accessor.account.setSelectedWallet("");
+      this.app.$accessor.closeActiveModal();
       commit("clearDataStorage");
     },
 

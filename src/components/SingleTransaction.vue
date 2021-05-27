@@ -1,7 +1,7 @@
 <template>
   <div class="singleTransaction">
     <div class="status">
-      <i-tooltip>
+      <i-tooltip placement="right">
         <v-icon :name="transactionStatus.icon" :class="transactionStatus.class" />
         <template slot="body">{{ transactionStatus.text }}</template>
       </i-tooltip>

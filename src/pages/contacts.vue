@@ -113,7 +113,7 @@
           addContactModal = true;
         "
       >
-        <v-icon name="ri-add-cicle-fill" />&nbsp;&nbsp;Add contact <v-icon name="ri-add-cicle-fill" />&nbsp;&nbsp;Add contact
+        <v-icon name="ri-add-circle-fill" />&nbsp;&nbsp;Add contact
       </i-button>
       <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)">
         <v-icon name="ri-pencil-fill" />&nbsp;&nbsp;Edit contact

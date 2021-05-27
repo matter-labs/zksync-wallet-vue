@@ -71,7 +71,6 @@ Vue.component("VueQrcode", VueQrcode);
 Vue.use(VueScrollTo);
 OhVueIcon.add(
   RiInformationFill,
-  RiAddCircleFill,
   RiArrowUpSLine,
   RiArrowDownSLine,
   BiDownload,

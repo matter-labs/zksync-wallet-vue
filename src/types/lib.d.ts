@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
-import Vue from "@nuxt/vue-app";
+import { Route } from "vue-router/types";
 import { Provider } from "zksync/build";
 import {
   AccountState,
@@ -326,6 +326,7 @@ export interface ZkIFeesInterface {
 export interface ZKIRootState {
   accountModalOpened: boolean;
   currentModal?: string;
+  previousRoute?: Route;
 }
 
 export type BalancesList = {

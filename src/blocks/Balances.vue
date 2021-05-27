@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="balancesBlock tileBlock">
     <i-modal v-model="balanceInfoModal" size="md">
       <template slot="header">Balances in L2</template>
       <div>
@@ -16,73 +16,71 @@
         <p>To move them back from zkSync to L1 you can make a Withdraw</p>
       </div>
     </i-modal>
-    <div class="balancesBlock tileBlock">
-      <div class="tileHeadline h3">
-        <span>Balances in L2</span>
-        <i class="ri-question-mark" @click="balanceInfoModal = true"></i>
-      </div>
-      <slot />
-      <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
-        <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
-        <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
-      </div>
-      <div v-else class="balances">
-        <div v-if="!loading">
-          <div class="_display-flex _justify-content-space-between">
-            <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
-            <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
-          </div>
-          <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer </i-button>
-          <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
-            <v-icon slot="prefix" name="ri-search-line" />
-          </i-input>
+    <div class="tileHeadline h3">
+      <span>Balances in L2</span>
+      <i class="ri-question-mark" @click="balanceInfoModal = true"></i>
+    </div>
+    <slot />
+    <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
+      <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
+      <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
+    </div>
+    <div v-else class="balances">
+      <div v-if="!loading">
+        <div class="_display-flex _justify-content-space-between">
+          <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
+          <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
         </div>
+        <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer </i-button>
+        <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
+          <v-icon slot="prefix" name="ri-search-line" />
+        </i-input>
+      </div>
 
-        <div v-if="loading" class="centerBlock">
-          <loader />
-        </div>
-        <div v-else-if="isSearching && !hasDisplayedBalances" class="centerBlock">
-          <span>
-            Your search <strong>"{{ search }}"</strong> did not match any tokens
-          </span>
-        </div>
-        <div v-else class="balancesList">
-          <nuxt-link v-for="(item, index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
-            <div class="tokenSymbol">{{ item.symbol }}</div>
-            <div class="rightSide">
-              <div v-if="item.rawBalance" class="rowItem">
-                <div class="total">
-                  <span class="balancePrice">
-                    <token-price :symbol="item.symbol" :amount="item.rawBalance.toString()" />
-                  </span>
-                  &nbsp;&nbsp;{{ item.rawBalance | formatToken(item.symbol) }}
-                </div>
-                <div class="status">
-                  <i-tooltip placement="left">
-                    <v-icon v-if="item.status === 'Verified'" class="verified" name="ri-check-double-line" />
-                    <v-icon v-else class="committed" name="ri-check-line" />
-                    <template slot="body">{{ item.status }}</template>
-                  </i-tooltip>
-                </div>
+      <div v-if="loading" class="centerBlock">
+        <loader />
+      </div>
+      <div v-else-if="isSearching && !hasDisplayedBalances" class="centerBlock">
+        <span>
+          Your search <strong>"{{ search }}"</strong> did not match any tokens
+        </span>
+      </div>
+      <div v-else class="balancesList">
+        <nuxt-link v-for="(item, index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
+          <div class="tokenSymbol">{{ item.symbol }}</div>
+          <div class="rightSide">
+            <div v-if="item.rawBalance" class="rowItem">
+              <div class="total">
+                <span class="balancePrice">
+                  <token-price :symbol="item.symbol" :amount="item.rawBalance.toString()" />
+                </span>
+                &nbsp;&nbsp;{{ item.rawBalance | formatToken(item.symbol) }}
               </div>
-              <div v-if="activeDeposits[item.symbol]" class="rowItem">
-                <div class="total small">
-                  <span class="balancePrice">
-                    Depositing:
-                    <token-price :symbol="item.symbol" :amount="activeDeposits[item.symbol].toString()" />
-                  </span>
-                  &nbsp;&nbsp;+{{ activeDeposits[item.symbol].toString() | formatToken(item.symbol) }}
-                </div>
-                <div class="status">
-                  <loader size="xs" />
-                </div>
+              <div class="status">
+                <i-tooltip placement="left">
+                  <v-icon v-if="item.status === 'Verified'" class="verified" name="ri-check-double-line" />
+                  <v-icon v-else class="committed" name="ri-check-line" />
+                  <template slot="body">{{ item.status }}</template>
+                </i-tooltip>
               </div>
             </div>
-          </nuxt-link>
-        </div>
+            <div v-if="activeDeposits[item.symbol]" class="rowItem">
+              <div class="total small">
+                <span class="balancePrice">
+                  Depositing:
+                  <token-price :symbol="item.symbol" :amount="activeDeposits[item.symbol].toString()" />
+                </span>
+                &nbsp;&nbsp;+{{ activeDeposits[item.symbol].toString() | formatToken(item.symbol) }}
+              </div>
+              <div class="status">
+                <loader size="xs" />
+              </div>
+            </div>
+          </div>
+        </nuxt-link>
       </div>
-      <mint :display="!isSearching && !hasDisplayedBalances && loading === false" class="_margin-top-2" @received="getBalances()" />
     </div>
+    <mint :display="!isSearching && !hasDisplayedBalances && loading === false" class="_margin-top-2" @received="getBalances()" />
   </div>
 </template>
 

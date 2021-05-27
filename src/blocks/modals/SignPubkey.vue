@@ -22,8 +22,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import { Route } from "vue-router/types";
+import Vue from "vue";
 import { walletData } from "@/plugins/walletData";
 import { utils } from "zksync";
 import { saveCPKTx } from "@/plugins/walletActions/cpk";
@@ -32,13 +31,6 @@ import zkUtils from "@/plugins/utils";
 
 export default Vue.extend({
   name: "SignPubkey",
-  props: {
-    fromRoute: {
-      type: Object,
-      default: undefined,
-      required: false,
-    } as PropOptions<Route>,
-  },
   data() {
     return {
       error: "",
@@ -49,7 +41,7 @@ export default Vue.extend({
   },
   computed: {
     opened(): boolean {
-      return this.$accessor?.currentModal === "SignPubkey";
+      return this.$accessor.currentModal === "SignPubkey";
     },
   },
   methods: {
@@ -58,11 +50,11 @@ export default Vue.extend({
       if (this.success) {
         return;
       }
-      if (!this.fromRoute) {
+      if (!this.$accessor.getPreviousRoute) {
         this.$router.push("/");
       } else {
         // @ts-ignore
-        this.$router.push(this.fromRoute);
+        this.$router.push(this.$accessor.getPreviousRoute);
       }
     },
     async signActivation() {

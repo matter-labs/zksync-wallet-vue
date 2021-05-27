@@ -1,6 +1,6 @@
 <template>
   <div class="transactionPage dappPageWrapper">
-    <sign-pubkey-modal :from-route="fromRoute" />
+    <!-- <sign-pubkey-modal :from-route="fromRoute" /> -->
 
     <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
@@ -184,7 +184,6 @@
 <script lang="ts">
 import chooseContact from "@/blocks/ChooseContact.vue";
 import chooseToken from "@/blocks/ChooseToken.vue";
-import SignPubkeyModal from "@/blocks/modals/SignPubkey.vue";
 import addressInput from "@/components/AddressInput.vue";
 import amountInput from "@/components/AmountInput.vue";
 
@@ -212,7 +211,6 @@ export default Vue.extend({
     chooseContact,
     amountInput,
     chooseToken,
-    SignPubkeyModal,
   },
   props: {
     type: {
