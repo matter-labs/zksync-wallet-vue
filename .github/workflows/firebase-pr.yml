@@ -17,7 +17,7 @@ jobs:
         run: yarn build:rinkeby
 
       - name: Deploying to rinkeby [preview]
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
@@ -30,7 +30,7 @@ jobs:
         run: yarn build:ropsten
 
       - name: Deploying to ropsten [preview]
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
@@ -43,7 +43,7 @@ jobs:
         run: yarn build:prod
 
       - name: Deploying to mainnet [preview]
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
