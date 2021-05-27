@@ -23,7 +23,9 @@ footer.layout-footer {
   @media screen and (max-width: $mobile) {
     position: fixed;
     bottom: 0;
+    height: 4.5rem;
     width: 100%;
+    margin-bottom: 0.5rem;
 
     &.mobileFooter {
       background-color: $darkViolet;
@@ -195,19 +197,6 @@ footer.layout-footer {
     white-space: nowrap;
     align-self: center;
     cursor: default;
-  }
-}
-
-.indexLayout {
-  footer {
-    a {
-      color: $violet !important;
-      font-size: $fontSizeRegular;
-
-      &:hover {
-        color: $lightViolet !important;
-      }
-    }
   }
 }
 

@@ -66,7 +66,7 @@
 
       <div class="_padding-top-1 inputLabel">Address</div>
       <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction" />
-      <choose-contact class="_margin-top-05" v-model="chosenContact" :address.sync="inputtedAddress" :display-own-address="type === 'withdraw'" />
+      <choose-contact v-model="chosenContact" class="_margin-top-05" :address.sync="inputtedAddress" :display-own-address="type === 'withdraw'" />
 
       <div class="_padding-top-1 inputLabel">Amount</div>
       <amount-input

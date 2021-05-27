@@ -8,13 +8,6 @@
     width: 100%;
   }
 
-
-  @media (max-width: $mobile) {
-    footer {
-      margin-bottom: $footerHeight; /* Navigation bar space */
-    }
-  }
-
   .headerSpace {
     width: 100%;
     height: $headerHeight;

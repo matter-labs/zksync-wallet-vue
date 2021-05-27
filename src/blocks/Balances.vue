@@ -47,7 +47,15 @@
       </div>
       <div v-else class="balancesList">
         <nuxt-link v-for="(item, index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
-          <div class="tokenSymbol">{{ item.symbol }}</div>
+          <div class="leftSide _display-flex _align-items-center">
+            <div class="tokenSymbol">
+              {{ item.symbol }}
+            </div>
+            <div class="status _margin-left-05 _hidden-md-and-up">
+              <v-icon v-if="item.status === 'Verified'" class="verified" name="ri-check-double-line" />
+              <v-icon v-else class="committed" name="ri-check-line" />
+            </div>
+          </div>
           <div class="rightSide">
             <div v-if="item.rawBalance" class="rowItem">
               <div class="total">
@@ -56,7 +64,7 @@
                 </span>
                 &nbsp;&nbsp;{{ item.rawBalance | formatToken(item.symbol) }}
               </div>
-              <div class="status">
+              <div class="status _hidden-md-and-down">
                 <i-tooltip placement="left">
                   <v-icon v-if="item.status === 'Verified'" class="verified" name="ri-check-double-line" />
                   <v-icon v-else class="committed" name="ri-check-line" />
@@ -145,18 +153,18 @@ export default Vue.extend({
       const deposits: ZkInDeposits = this.$accessor.transaction.depositList;
       const activeDeposits = <ZkInDeposits>{};
       const finalDeposits = <{ [tokenSymbol: string]: BigNumber }>{};
-      let ticker: TokenSymbol;
-      for (ticker in deposits) {
-        activeDeposits[ticker] = deposits[ticker].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
+      let symbol: TokenSymbol;
+      for (symbol in deposits) {
+        activeDeposits[symbol] = deposits[symbol].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
       }
-      for (ticker in activeDeposits) {
-        if (activeDeposits[ticker].length > 0) {
-          if (!finalDeposits[ticker]) {
-            finalDeposits[ticker] = BigNumber.from("0");
+      for (symbol in activeDeposits) {
+        if (activeDeposits[symbol].length > 0) {
+          if (!finalDeposits[symbol]) {
+            finalDeposits[symbol] = BigNumber.from("0");
           }
           let tx: ZKInDepositTx;
-          for (tx of activeDeposits[ticker]) {
-            finalDeposits[ticker] = finalDeposits[ticker].add(tx.amount);
+          for (tx of activeDeposits[symbol]) {
+            finalDeposits[symbol] = finalDeposits[symbol].add(tx.amount);
           }
         }
       }

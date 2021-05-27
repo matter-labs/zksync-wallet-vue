@@ -80,6 +80,39 @@
             font-size: 20px;
           }
 
+          .status {
+            width: 25px;
+            height: 25px;
+            font-size: 20px;
+            line-height: 25px;
+            text-align: center;
+
+            .verified {
+              color: $green;
+            }
+
+            .committed {
+              color: #aa935d;
+            }
+
+            .inProgress {
+              color: $gray;
+            }
+
+            svg {
+              position: relative;
+              display: block;
+              top: 1.5px;
+            }
+
+            .loaderContainer {
+              position: relative;
+              left: 1px;
+              margin-top: 1px;
+              margin-left: 2px;
+            }
+          }
+          
           .rightSide {
             display: flex;
             flex-direction: column;
@@ -108,37 +141,6 @@
                 .balancePrice {
                   font-size: 12px;
                 }
-              }
-            }
-
-            .status {
-              width: 25px;
-              height: 25px;
-              font-size: 20px;
-              line-height: 25px;
-              text-align: center;
-
-              .verified {
-                color: $green;
-              }
-
-              .committed {
-                color: #aa935d;
-              }
-
-              .inProgress {
-                color: $gray;
-              }
-
-              svg {
-                position: relative;
-                display: block;
-                top: 1.5px;
-              }
-
-              .loaderContainer {
-                margin-top: 1px;
-                margin-left: 2px;
               }
             }
           }

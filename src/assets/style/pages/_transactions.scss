@@ -57,6 +57,7 @@
 
         .inProgress {
           color: $gray;
+          animation: spin 0.5s linear 0s infinite;
         }
 
         .rejected {
