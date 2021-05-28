@@ -136,11 +136,12 @@ export default Vue.extend({
     activeDeposits() {
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
       const deposits: ZkInDeposits = this.$accessor.transaction.depositList;
+      console.log("deposits", deposits);
       const activeDeposits = <ZkInDeposits>{};
       const finalDeposits = <{ [tokenSymbol: string]: BigNumber }>{};
       let symbol: TokenSymbol;
       for (symbol in deposits) {
-        activeDeposits[symbol] = deposits[symbol].filter((tx: ZKInDepositTx) => tx.status === "initialised");
+        activeDeposits[symbol] = deposits[symbol].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
       }
       for (symbol in activeDeposits) {
         if (activeDeposits[symbol].length > 0) {
@@ -153,6 +154,7 @@ export default Vue.extend({
           }
         }
       }
+      console.log("finalDeposits", finalDeposits);
       return finalDeposits;
     },
     hasDisplayedBalances(): boolean {
