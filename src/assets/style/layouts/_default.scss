@@ -103,7 +103,7 @@ input.form-input.-prefixed:focus {
     align-items: stretch;
     max-height: 100vh;
 
-    /* Avoid Chrome to see Safari hack */
+    /* The hack for Safari */
     @supports (-webkit-touch-callout: none) {
       //noinspection CssInvalidPropertyValue
       max-height: -webkit-fill-available;

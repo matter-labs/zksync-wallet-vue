@@ -4,12 +4,14 @@
   "include": [
     "**/*.ts",
     "**/*.vue",
-    "**/*.js"
+    "**/*.js",
+    ".eslintrc.js"
   ],
   "exclude": [
     "tests/*",
   ],
   "compilerOptions": {
+    "types": ["@types/node"],
     "lib": [
       "es2019",
       "es2019.object",

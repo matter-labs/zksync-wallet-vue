@@ -46,9 +46,8 @@
       border-radius: 0 !important;
 
 
-      /* Avoid Chrome to see Safari hack */
+      /* autoprefixer: off */
       @supports (-webkit-touch-callout: none) {
-        /* The hack for Safari */
         //noinspection CssInvalidPropertyValue
         max-height: fill-available;
         //noinspection CssInvalidPropertyValue
@@ -286,14 +285,13 @@ footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
     height: 20px;
   }
 }
-
+/* autoprefixer: off */
 aside.bn-onboard-custom.bn-onboard-modal {
   max-height: 100vh;
   padding: 2vh 2vw;
 
   /* Avoid Chrome to see Safari hack */
   @supports (-webkit-touch-callout: none) {
-    /* The hack for Safari */
     //noinspection CssInvalidPropertyValue
     max-height: fill-available;
   }
@@ -303,7 +301,6 @@ aside.bn-onboard-custom.bn-onboard-modal {
 
     /* Avoid Chrome to see Safari hack */
     @supports (-webkit-touch-callout: none) {
-      /* The hack for Safari */
       //noinspection CssInvalidPropertyValue
       min-height: fill-available;
     }

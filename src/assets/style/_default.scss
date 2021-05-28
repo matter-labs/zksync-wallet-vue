@@ -11,8 +11,8 @@ body {
   min-height: 100vh;
 
   /* Avoid Chrome to see Safari hack */
+  /* autoprefixer: off */
   @supports (-webkit-touch-callout: none) {
-    /* The hack for Safari */
     //noinspection CssInvalidPropertyValue
     min-height: -webkit-fill-available;
   }
@@ -34,9 +34,8 @@ main.layout.defaultLayout {
     padding: 60px 0 60px;
     justify-content: stretch;
     height: 100vh;
-    /* Avoid Chrome to see Safari hack */
+    /* autoprefixer: off */
     @supports (-webkit-touch-callout: none) {
-      /* The hack for Safari */
       //noinspection CssInvalidPropertyValue
       min-height: -webkit-fill-available;
     }

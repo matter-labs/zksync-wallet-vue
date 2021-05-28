@@ -147,7 +147,7 @@ const config: NuxtConfig = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main"],
+  plugins: ["@/plugins/icons", "@/plugins/main"],
 
   router: {
     middleware: ["wallet"],
@@ -231,6 +231,9 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
+    babel: {
+      compact: true,
+    },
     transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
     hardSource: isProduction,
     ssr: false,

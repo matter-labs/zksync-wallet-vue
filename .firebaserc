@@ -19,6 +19,10 @@
         ],
         "stage-mainnet": [
           "zksync-vue"
+        ],
+        "dev-mainnet": [
+          "mainnet-wallet-zksync",
+          "zksync-vue"
         ]
       }
     },
