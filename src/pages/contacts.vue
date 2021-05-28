@@ -23,15 +23,15 @@
       <div class="tileHeadline h3">
         <span>Contacts</span>
         <i-tooltip>
-          <i
-            class="_icon-wrapped -rounded -sm"
+          <span
+            class="icon-container _display-flex"
             @click="
               addContactType = 'add';
               addContactModal = true;
             "
           >
-            <v-icon name="ri-add-circle-fill" />
-          </i>
+            <v-icon name="ri-add-fill" class="iconInfo" />
+          </span>
           <template slot="body">Add contact</template>
         </i-tooltip>
       </div>
@@ -121,7 +121,7 @@
       <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"> <v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact </i-button>
       <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"> <v-icon name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact </i-button>
     </div>
-    <lazy-transactions class="_margin-top-0" v-if="openedContact" :address="openedContact.address" />
+    <lazy-transactions v-if="openedContact" class="_margin-top-0" :address="openedContact.address" />
   </div>
 </template>
 

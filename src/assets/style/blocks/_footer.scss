@@ -62,7 +62,14 @@ footer.layout-footer {
     }
   }
 
+  .versionBadge {
+    grid-gap: 5px;
+    margin-top: 0.5rem;
+  }
 
+  .dividerLine {
+    transition: color $transition2;
+  }
 }
 
 .floating-on-mobile {
@@ -93,26 +100,29 @@ footer.layout-footer {
   line-height: 1.2rem !important;
   gap: 1rem;
   height: auto;
-  font-weight: 400;
+  font-weight: 400 !important;
   font-size: 12px !important;
+  padding: 0.1rem 0 0 0 !important;
   letter-spacing: 1px;
   text-transform: uppercase;
   background-color: transparent !important;
-
+  
   a {
     font-weight: 400;
     text-transform: lowercase;
   }
-
+  
   a.revision {
     display: inline-flex;
     line-height: 1.2rem !important;
-    color: $lighterGray;
+    color: $violet;
     padding: 0.1rem 0.2rem;
     border-radius: 5px;
     margin: 0 0 0 5px;
     font-size: 10px;
     align-self: center;
+    transition: $transition1;
+    transition-property: background-color, color;
 
     &:hover {
       background-color: lighten($grayBG, 15);
@@ -203,6 +213,10 @@ footer.layout-footer {
 .inkline.-light {
   footer.mainFooter {
     background-color: $mediumGrey !important;
+
+    .dividerLine {
+      color: #343a40;
+    }
   }
   .badge.system-info {
     color: #343a40;
@@ -212,6 +226,10 @@ footer.layout-footer {
 .inkline.-dark {
   footer.mainFooter {
     background-color: $tempDarkBlue !important;
+
+    .dividerLine {
+      color: $darkerGray;
+    }
   }
   .badge.system-info {
     color: $darkerGray;
