@@ -135,7 +135,7 @@
       <i-button :disabled="buttonDisabled" block class="_margin-top-05" size="lg" variant="secondary" @click="commitTransaction">
         <template v-if="ownAccountUnlocked">
           <v-icon v-if="type === 'withdraw'" name="ri-hand-coin-fill" />
-          <v-icon v-else-if="type === 'transfer'" name="ri-send-plane-fill" />
+          <v-icon v-else-if="type === 'transfer'" class="planeIcon" name="ri-send-plane-fill" />
         </template>
         <span>
           <span>{{ transactionTypeName }}</span>
