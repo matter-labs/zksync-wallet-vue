@@ -109,6 +109,6 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ## License
 
-zkWithdrawal is distributed under the terms of both the MIT license, and the Apache License (v.2.0).
+zkWallet is distributed under the terms of both the MIT license, and the Apache License (v.2.0).
 
 See [LICENSE-APACHE](LICENSE-APACHE), [LICENSE-MIT](LICENSE-MIT) for details.

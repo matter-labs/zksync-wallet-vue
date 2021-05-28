@@ -232,9 +232,9 @@ export const actions = actionTree(
       type BalancesList = {
         [token: string]: BigNumberish;
       };
-      let listCommitted: BalancesList = <BalancesList>{};
-      let listVerified: BalancesList = <BalancesList>{};
-      const tokensList: Array<ZkInBalance> = <Array<ZkInBalance>>[];
+      let listCommitted: BalancesList = {};
+      let listVerified: BalancesList = {};
+      const tokensList: Array<ZkInBalance> = [];
       const syncWallet = walletData.get().syncWallet;
       const savedAddress = this.app.$accessor.account.address;
       if (accountState) {
