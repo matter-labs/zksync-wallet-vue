@@ -19,6 +19,15 @@
       ]
     },
     {
+      "target": "dev-mainnet",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
       "target": "prod-ropsten",
       "public": "public",
       "ignore": [
