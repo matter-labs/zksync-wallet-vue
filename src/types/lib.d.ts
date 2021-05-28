@@ -24,6 +24,12 @@ export declare type ZKTypeDisplayToken = {
   pendingBalance?: BigNumber;
 };
 
+export declare type ZKDisplayToken = {
+  symbol: string;
+  rawBalance: BigNumber | undefined;
+  status: string | undefined;
+};
+
 export declare type VueRefs = Vue & { validate: () => boolean };
 
 export declare type ZKTypeDisplayBalances = {

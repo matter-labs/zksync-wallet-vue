@@ -72,10 +72,7 @@ input.form-input.-prefixed:focus {
 }
 
 .iconInfo {
-  display: block;
-  width: 25px;
-  height: 25px;
-  margin-left: 10px;
+  margin: 2px 0!important;
   font-size: 11px;
   line-height: 26px;
   text-align: center;
@@ -85,6 +82,14 @@ input.form-input.-prefixed:focus {
   cursor: pointer;
   opacity: 0.9;
   transition: background-color $transition1;
+  padding: 5px;
+  height: 26px !important;
+  width: 26px!important;
+  display: inline-block;
+  @media (max-width: $mobile) {
+    height: 20px !important;
+    width: 20px!important;
+  }
 
   &:hover {
     background: transparentize($color: $gray, $amount: 0.5);
@@ -97,8 +102,7 @@ input.form-input.-prefixed:focus {
 }
 
 @media (min-width: $mobile) {
-  .defaultLayout
-  {
+  .defaultLayout {
     justify-content: stretch;
     align-items: stretch;
     max-height: 100vh;

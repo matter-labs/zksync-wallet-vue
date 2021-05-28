@@ -1,18 +1,14 @@
 <template>
   <div class="walletPage dappPageWrapper">
-    <balances>
+    <block-balances>
       <wallet-address class="clickablePicture _margin-bottom-1" :wallet="walletAddress" @clickPicture="openAccountModal()" />
-    </balances>
+    </block-balances>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import balances from "@/blocks/Balances.vue";
 export default Vue.extend({
-  components: {
-    balances,
-  },
   data() {
     return {
       walletInfoModal: false,
