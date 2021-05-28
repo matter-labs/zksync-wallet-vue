@@ -119,7 +119,9 @@
         <v-icon name="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
       </i-button>
       <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"> <v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact </i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"> <v-icon name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact </i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`">
+        <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact
+      </i-button>
     </div>
     <lazy-transactions v-if="openedContact" class="_margin-top-0" :address="openedContact.address" />
   </div>

@@ -28,7 +28,7 @@
           <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
           <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
         </div>
-        <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <v-icon name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
+        <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
           <v-icon slot="prefix" name="ri-search-line" />
         </i-input>
