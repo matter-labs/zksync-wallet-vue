@@ -21,7 +21,7 @@
           "zksync-vue"
         ],
         "dev-mainnet": [
-          "mainnet-wallet-zksync",
+          "mainnet-wallet-zksync"
         ]
       }
     },
