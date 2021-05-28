@@ -25,7 +25,7 @@ Vue.filter("formatToken", (value: string | BigNumber | ArrayLike<number> | bigin
  * Implementation of the tokenFormatter as a global filter
  */
 Vue.filter("formatUsdAmount", (value: string | BigNumber, price: number, symbol: TokenSymbol) => {
-  return utils.getFormattedTotalPrice(Number(price), +utils.handleFormatToken(symbol, <string>value));
+  return utils.getFormattedTotalPrice(+price, +utils.handleFormatToken(symbol, <string>value));
 });
 
 /**
