@@ -23,7 +23,7 @@ jobs:
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: ropsten
+          target: prod-ropsten
           projectId: zksync-vue
           channelID: live
 
@@ -34,6 +34,6 @@ jobs:
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
-          target: rinkeby-beta
+          target: beta-rinkeby
           projectId: zksync-vue
           channelID: live
