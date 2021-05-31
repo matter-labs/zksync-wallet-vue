@@ -54,7 +54,6 @@
     "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
   },
   "dependencies": {
-    "@ethersproject/logger": "^5.0.9",
     "@matterlabs/zk-wallet-onboarding": "1.18.6",
     "@nuxt/http": "latest",
     "@nuxt/typescript-runtime": "latest",
@@ -76,7 +75,7 @@
     "vue-scrollto": "^2.20.0",
     "vuex": "^3.6.2",
     "web3": "^1.3.5",
-    "zksync": "latest"
+    "zksync": "^0.10.9"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
