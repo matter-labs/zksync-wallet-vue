@@ -106,7 +106,7 @@ export default {
 
   filterError: (error: Error): string | undefined => {
     if (error.message) {
-      if (error.message.includes("User denied")) {
+      if (error.message.includes("User denied") || error.message.includes("User rejected")) {
         return "";
       } else if (error.message.includes("Fee Amount is not packable")) {
         return "Fee Amount is not packable";
