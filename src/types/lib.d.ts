@@ -211,6 +211,10 @@ export interface iWalletData {
 export declare interface iWalletWrapper {
   set: (val: iWalletData) => void;
   get: () => iWalletData;
+  syncProvider: {
+    load: () => void;
+    get: () => Promise<Provider>;
+  };
 }
 
 export declare interface ZKInDepositTx extends ETHOperation {

@@ -9,6 +9,7 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
     return;
   }
   (async () => {
+    walletData.syncProvider.load();
     const onboardResult = await $accessor.wallet.onboardInit();
     if (!onboardResult) {
       $accessor.wallet.logout();

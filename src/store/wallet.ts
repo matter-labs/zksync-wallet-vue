@@ -1,18 +1,18 @@
-import { ZK_API_BASE, ZK_NETWORK } from "@/plugins/build";
+import { ZK_API_BASE } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
 import web3Wallet from "@/plugins/web3";
-import { BalancesList, iWalletData, ZkInBalance, ZkInFeesObj, ZkInTx, ZkInWithdrawalTime, ZKTypeDisplayBalances, ZKTypeDisplayToken } from "@/types/lib";
+import { BalancesList, ZkInBalance, ZkInFeesObj, ZkInTx, ZkInWithdrawalTime, ZKTypeDisplayBalances, ZKTypeDisplayToken } from "@/types/lib";
 import { ExternalProvider } from "@ethersproject/providers";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
-import { closestPackableTransactionFee, getDefaultProvider, Provider, Wallet } from "zksync";
-import { Address, Fee, Network, TokenSymbol } from "zksync/build/types";
+import { closestPackableTransactionFee, Wallet } from "zksync";
+import { Address, Fee, TokenSymbol } from "zksync/build/types";
 
 interface feesInterface {
   [symbol: string]: {
@@ -492,7 +492,8 @@ export const actions = actionTree(
           return false;
         }
         const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
-        const syncProvider: Provider = await getDefaultProvider(ZK_NETWORK as Network, "HTTP");
+        // const syncProvider: Provider = await getDefaultProvider(ZK_NETWORK as Network, "HTTP");
+        const syncProvider = await walletData.syncProvider.get();
         if (syncProvider === undefined) {
           return false;
         }
@@ -502,8 +503,7 @@ export const actions = actionTree(
         this.app.$accessor.account.setLoadingHint("Getting wallet information...");
         watcher.changeNetworkSet(dispatch, this);
         const accountState = await syncWallet!.getAccountState();
-        walletData.set(<iWalletData>{
-          syncProvider,
+        walletData.set({
           syncWallet,
           accountState,
         });
@@ -543,7 +543,7 @@ export const actions = actionTree(
     logout({ state, commit }): void {
       state.onboard?.walletReset();
       clearTimeout(getTransactionHistoryAgain);
-      walletData.set({ syncProvider: undefined, syncWallet: undefined, accountState: undefined });
+      walletData.set({ syncWallet: undefined, accountState: undefined });
       localStorage.removeItem("selectedWallet");
       this.app.$accessor.account.setLoggedIn(false);
       this.app.$accessor.account.setSelectedWallet("");
