@@ -1,6 +1,6 @@
 <template>
   <div class="balancesBlock tileBlock">
-    <i-modal v-if="balanceInfoModal" v-model="balanceInfoModal" size="md">
+    <i-modal v-model="balanceInfoModal" size="md">
       <template slot="header">zkSync is a Layer-2 protocol</template>
       <p>
         Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
@@ -13,7 +13,9 @@
     </i-modal>
     <div class="tileHeadline h3">
       <span>Balances in L2</span>
-      <span class="icon-container _display-flex" @click="balanceInfoModal = true"><v-icon name="ri-question-mark" class="iconInfo" scale="0.9" /></span>
+      <span class="icon-container _display-flex" @click="balanceInfoModal = true">
+        <v-icon name="ri-question-mark" class="iconInfo" scale="0.9" />
+      </span>
     </div>
     <slot />
     <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
@@ -26,7 +28,7 @@
           <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
           <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
         </div>
-        <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <v-icon name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
+        <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
           <v-icon slot="prefix" name="ri-search-line" />
         </i-input>
@@ -136,11 +138,12 @@ export default Vue.extend({
     activeDeposits() {
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
       const deposits: ZkInDeposits = this.$accessor.transaction.depositList;
+      console.log("deposits", deposits);
       const activeDeposits = <ZkInDeposits>{};
       const finalDeposits = <{ [tokenSymbol: string]: BigNumber }>{};
       let symbol: TokenSymbol;
       for (symbol in deposits) {
-        activeDeposits[symbol] = deposits[symbol].filter((tx: ZKInDepositTx) => tx.status === "initialised");
+        activeDeposits[symbol] = deposits[symbol].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
       }
       for (symbol in activeDeposits) {
         if (activeDeposits[symbol].length > 0) {
@@ -153,6 +156,7 @@ export default Vue.extend({
           }
         }
       }
+      console.log("finalDeposits", finalDeposits);
       return finalDeposits;
     },
     hasDisplayedBalances(): boolean {

@@ -150,6 +150,11 @@ body.inkline {
         opacity: 0.4 !important;
       }
     }
+
+    .planeIcon {
+      position: relative;
+      top: -2px;
+    }
   }
 
   &.-light {

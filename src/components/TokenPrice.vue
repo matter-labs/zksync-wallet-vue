@@ -27,7 +27,7 @@ export default Vue.extend({
       this.$accessor.tokens.getTokenPriceTick; // Force update price
       if (this.$accessor.tokens.getTokenPrices[this.symbol]) {
         return utils.getFormattedTotalPrice(
-          Number(this.$accessor.tokens.getTokenPrices[this.symbol].price),
+          +this.$accessor.tokens.getTokenPrices[this.symbol].price,
           (typeof this.amount === "string" ? +utils.handleFormatToken(this.symbol, this.amount) : this.amount) as number,
         );
       } else {
