@@ -26,12 +26,12 @@
         "*"
       ]
     },
+    "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
     "target": "ESNext",
     "types": [
-      "@nuxt/types",
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",

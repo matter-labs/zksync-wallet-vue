@@ -94,15 +94,14 @@ export const actions = actionTree(
         const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
         commit("setAllTokens", tokensList);
         // Added async loading of the restricted tokens
-        this.app.$accessor.tokens.loadAcceptableTokens();
+        await this.app.$accessor.tokens.loadAcceptableTokens();
         return tokensList || {};
       }
       return getters.getAllTokens;
     },
-    loadAcceptableTokens({ commit }): void {
-      this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`).then((acceptableTokens: TokenInfo[]) => {
-        commit("storeAcceptableTokens", acceptableTokens);
-      });
+    async loadAcceptableTokens({ commit }): Promise<void> {
+      const acceptableTokens: TokenInfo[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
+      commit("storeAcceptableTokens", acceptableTokens);
     },
 
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
@@ -155,11 +154,16 @@ export const actions = actionTree(
       return tokenPrice || 0;
     },
 
-    isRestricted({ state }, token?: TokenSymbol): boolean {
-      if (!token || token?.toLowerCase() === "eth") {
+    isRestricted({ state }, token: TokenSymbol): boolean {
+      if (token.toLowerCase() === "eth") {
         return false;
       }
-      return state.acceptableTokens?.filter((tokenData: TokenInfo) => tokenData.symbol.toLowerCase() === token.toLowerCase()).length === 0;
+      for (const tokenData of state.acceptableTokens) {
+        if (tokenData.symbol.toLowerCase() === token.toLowerCase()) {
+          return false;
+        }
+      }
+      return true;
     },
   },
 );

@@ -6,7 +6,11 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  asyncData({ from }) {
+  asyncData({ from, app }) {
+    if (from) {
+      // @ts-ignore
+      app.$accessor.setPreviousRoute({ path: from.path, query: from.query, params: from.params });
+    }
     return {
       fromRoute: from,
     };

@@ -232,9 +232,9 @@ export const actions = actionTree(
       type BalancesList = {
         [token: string]: BigNumberish;
       };
-      let listCommitted: BalancesList = <BalancesList>{};
-      let listVerified: BalancesList = <BalancesList>{};
-      const tokensList: Array<ZkInBalance> = <Array<ZkInBalance>>[];
+      let listCommitted: BalancesList = {};
+      let listVerified: BalancesList = {};
+      const tokensList: Array<ZkInBalance> = [];
       const syncWallet = walletData.get().syncWallet;
       const savedAddress = this.app.$accessor.account.address;
       if (accountState) {
@@ -255,20 +255,18 @@ export const actions = actionTree(
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
       for (const tokenSymbol in listCommitted) {
-        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
-        if (!isRestricted) {
-          (async () => {
-            try {
-              /* Some weird TS error when this is has no await */
-              await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
-            } catch (error) {
-              console.log(`Failed to get ${tokenSymbol} price at requestZkBalances`, error);
-            }
-          })();
-        }
+        (async () => {
+          try {
+            /* Some weird TS error when this is has no await */
+            await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+          } catch (error) {
+            console.log(`Failed to get ${tokenSymbol} price at requestZkBalances`, error);
+          }
+        })();
         if (savedAddress !== this.app.$accessor.account.address) {
           return state.zkTokens.list;
         }
+        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -315,11 +313,6 @@ export const actions = actionTree(
       const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key: number | string): Promise<undefined | ZkInBalance> => {
         const currentToken = loadedTokens.tokens[key];
         const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
-        try {
-          this.app.$accessor.tokens.getTokenPrice(currentToken.symbol);
-        } catch (error) {
-          this.commit("tokens/addRestrictedToken", currentToken.symbol);
-        }
         return {
           id: currentToken.id,
           address: currentToken.address,
@@ -508,7 +501,8 @@ export const actions = actionTree(
 
         this.app.$accessor.account.setLoadingHint("Getting wallet information...");
         watcher.changeNetworkSet(dispatch, this);
-        const accountState = await syncWallet?.getAccountState();
+        const accountState = await syncWallet!.getAccountState();
+        console.log("accountState", accountState);
         walletData.set(<iWalletData>{
           syncProvider,
           syncWallet,
@@ -554,6 +548,7 @@ export const actions = actionTree(
       localStorage.removeItem("selectedWallet");
       this.app.$accessor.account.setLoggedIn(false);
       this.app.$accessor.account.setSelectedWallet("");
+      this.app.$accessor.closeActiveModal();
       commit("clearDataStorage");
     },
 

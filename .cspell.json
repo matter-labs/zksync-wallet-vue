@@ -6,6 +6,8 @@
     "typescript",
     "zksync"
   ],
+  "showStatus": true,
+  "allowCompoundWords": true,
   "dictionaryDefinitions": [
     {
       "name": "zksync",

@@ -1,9 +1,9 @@
 <template>
-  <i-modal v-if="opened" :value="opened" class="prevent-close" size="md" @hide="close()">
+  <i-modal :value="opened" class="prevent-close" size="md" @hide="close()">
     <template slot="header">Account Activation</template>
     <div>
       <p v-if="step === false">
-        To start using your zkSync account you need to register your public key once. This operation costs 15000 gas on-chain. In the future, we will eliminate this step by
+        To start using your zkSync account you need to register your public key once. This operation costs 15000 gas on-chain. In zkSync 2.0, we will eliminate this step by
         verifying ETH signatures with zero-knowledge proofs. Please bear with us!
       </p>
       <p v-else-if="step === 'sign'" class="_text-center">Sign the message in your wallet to continue</p>
@@ -22,8 +22,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import { Route } from "vue-router/types";
+import Vue from "vue";
 import { walletData } from "@/plugins/walletData";
 import { utils } from "zksync";
 import { saveCPKTx } from "@/plugins/walletActions/cpk";
@@ -32,13 +31,6 @@ import zkUtils from "@/plugins/utils";
 
 export default Vue.extend({
   name: "SignPubkey",
-  props: {
-    fromRoute: {
-      type: Object,
-      default: undefined,
-      required: false,
-    } as PropOptions<Route>,
-  },
   data() {
     return {
       error: "",
@@ -49,7 +41,7 @@ export default Vue.extend({
   },
   computed: {
     opened(): boolean {
-      return this.$accessor?.currentModal === "SignPubkey";
+      return this.$accessor.currentModal === "SignPubkey";
     },
   },
   methods: {
@@ -58,11 +50,11 @@ export default Vue.extend({
       if (this.success) {
         return;
       }
-      if (!this.fromRoute) {
+      if (!this.$accessor.getPreviousRoute) {
         this.$router.push("/");
       } else {
         // @ts-ignore
-        this.$router.push(this.fromRoute);
+        this.$router.push(this.$accessor.getPreviousRoute);
       }
     },
     async signActivation() {
@@ -70,36 +62,30 @@ export default Vue.extend({
         this.error = "";
         this.loading = true;
         this.step = "loading";
-        const syncWallet = walletData.get().syncWallet;
-        const nonce = await syncWallet!.getNonce("committed");
-        if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
-          const isOnchainAuthSigningKeySet = await syncWallet!.isOnchainAuthSigningKeySet();
+        const syncWallet = walletData.get().syncWallet!;
+        const nonce = await syncWallet.getNonce("committed");
+        if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
+          const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
           if (!isOnchainAuthSigningKeySet) {
-            const onchainAuthTransaction = await syncWallet!.onchainAuthSigningKey();
+            const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
             await onchainAuthTransaction?.wait();
           }
         }
 
-        const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-        let changePubKeyMessage;
-        const newPubKeyHash = await syncWallet!.signer!.pubKeyHash();
-        if (ethAuthType === "ECDSA") {
-          changePubKeyMessage = utils.getChangePubkeyMessage(newPubKeyHash, nonce, walletData.get().accountState!.id!);
-        } else {
-          changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, walletData.get().accountState!.id!);
+        const newPubKeyHash = await syncWallet.signer!.pubKeyHash();
+        if (typeof walletData.get().accountState!.id !== "number") {
+          const accountState = await syncWallet.getAccountState();
+          walletData.set({ accountState });
         }
+        const changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, walletData.get().accountState!.id!);
         this.step = "sign";
-        const ethSignature = (await syncWallet!.getEthMessageSignature(changePubKeyMessage)).signature;
+        const ethSignature = (await syncWallet.getEthMessageSignature(changePubKeyMessage)).signature;
         this.step = "loading";
         const changePubkeyTx: CPKLocal = {
           accountId: walletData.get().accountState!.id!,
-          account: syncWallet!.address(),
+          account: syncWallet.address(),
           newPkHash: newPubKeyHash,
           nonce,
-          ethAuthData: {
-            type: ethAuthType,
-            ethSignature,
-          },
           ethSignature,
           validFrom: 0,
           validUntil: utils.MAX_TIMESTAMP,

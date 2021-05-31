@@ -3,7 +3,7 @@
     <allowance-modal />
 
     <!-- Choose token -->
-    <i-modal v-if="chooseTokenModal" v-model="chooseTokenModal" size="md">
+    <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
       <choose-token tokens-type="L1" @chosen="chooseToken($event)" />
     </i-modal>
@@ -12,7 +12,7 @@
     <loading-block v-if="loading === true" :headline="loading && transactionInfo.type === 'unlock' ? `Approving ${chosenToken.symbol}` : 'Deposit'">
       <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
         Link to the transaction
-        <v-icon name="ri-external-link-line" class="_margin-left-2" />
+        <v-icon name="ri-external-link-line" class="_margin-left-05" />
       </a>
       <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
     </loading-block>
@@ -54,22 +54,19 @@
             </span>
           </div>
         </div>
-        <i-button-group class="goBackContinueBtns _margin-top-1">
+        <div class="goBackContinueBtns _margin-top-1">
           <i-button size="lg" variant="secondary" circle @click="successBlockGoBack()">
             <v-icon name="ri-arrow-left-line" />
           </i-button>
           <i-button block size="lg" variant="secondary" @click="successBlockContinue()">Proceed to deposit</i-button>
-        </i-button-group>
+        </div>
       </template>
     </success-block>
 
     <!-- Main Block -->
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
-        <nuxt-link
-          class="_icon-wrapped -rounded -sm returnBtn _background-gray-10 _display-flex"
-          :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'"
-        >
+        <nuxt-link class="_icon-wrapped -rounded -sm returnBtn _display-flex" :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'">
           <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
         <div>Deposit</div>
@@ -89,15 +86,23 @@
 
       <div v-if="displayTokenUnlock && !thresholdLoading">
         <div class="_padding-top-1 _display-flex _align-items-center inputLabel" @click="$accessor.openModal('Allowance')">
-          <span>{{ chosenToken.symbol }} Allowance</span>
-          <v-icon name="ri-question-mark" class="iconInfo" />
+          <span>
+            <span class="tokenSymbol">{{ chosenToken.symbol }}</span> Allowance
+          </span>
+          <div class="iconInfo">
+            <v-icon name="ri-question-mark" />
+          </div>
         </div>
         <div class="grid-cols-2">
-          <i-button block size="md" variant="secondary" @click="unlockToken(true)">Approve unlimited {{ chosenToken.symbol }}</i-button>
-          <i-button v-if="inputtedAmount" key="approveAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
-            Approve {{ amountBigNumber | formatToken(chosenToken.symbol) }} {{ chosenToken.symbol }}
+          <i-button block size="md" variant="secondary" @click="unlockToken(true)">
+            Approve unlimited <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
-          <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>Introduce {{ chosenToken.symbol }} amount</i-button>
+          <i-button v-if="inputtedAmount" key="approveAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
+            Approve {{ amountBigNumber | formatToken(chosenToken.symbol) }} <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
+          </i-button>
+          <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>
+            Introduce <span class="tokenSymbol">{{ chosenToken.symbol }}</span> amount
+          </i-button>
         </div>
       </div>
 
@@ -281,6 +286,12 @@ export default Vue.extend({
   },
   methods: {
     async chooseToken(token: ZkInBalance) {
+      try {
+        this.$accessor.tokens.getTokenPrice(token.symbol);
+      } catch (error) {
+        console.log(`Error getting ${token.symbol} price`, error);
+        this.$accessor.tokens.addRestrictedToken(token.symbol);
+      }
       this.loading = true;
       this.chooseTokenModal = false;
       this.chosenToken = false;
@@ -333,14 +344,7 @@ export default Vue.extend({
       this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + transferTransaction.ethTx.hash;
       this.tip = "Waiting for the transaction to be mined...";
       const receipt = await transferTransaction.awaitEthereumTxCommit();
-      if (!receipt) {
-        this.transactionInfo.fee = undefined;
-      } else {
-        this.transactionInfo.fee = {
-          token: this.chosenToken,
-          amount: receipt.gasUsed.toString(),
-        };
-      }
+      this.transactionInfo.fee = undefined;
       this.transactionInfo.continueBtnFunction = false;
       this.transactionInfo.continueBtnText = "";
       this.transactionInfo.success = true;

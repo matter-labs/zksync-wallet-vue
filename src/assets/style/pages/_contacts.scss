@@ -6,6 +6,11 @@
 
   .tileBlock {
     min-height: min-content;
+
+    @media screen and (max-width: $mobile) {
+      margin-bottom: 0;
+      margin-top: 0;
+    }
   }
 }
 
@@ -19,12 +24,11 @@
   flex-direction: column;
   //height: $minRouteHeightWithExtra !important;
   min-height: 300px;
-  .tileHeadline
-  {
+
+  .tileHeadline {
     display: flex;
     align-items: stretch;
-    span
-    {
+    span {
       line-height: 24px;
     }
   }
@@ -64,6 +68,9 @@
     border-bottom: 1px solid;
     cursor: pointer;
     transition: background-color $transition1;
+    &:last-child {
+      border-bottom: none;
+    }
 
     &:hover {
       background-color: transparentize($color: $gray, $amount: 0.9);

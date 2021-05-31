@@ -1,6 +1,6 @@
 <template>
   <div class="tokenAccount dappPageWrapper">
-    <div class="tileBlock">
+    <div class="tileBlock _margin-bottom-0">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath && fromRoute.path !== '/withdraw' ? fromRoute : '/account'" class="returnBtn">
           <v-icon name="ri-arrow-left-line" />
@@ -29,10 +29,12 @@
           </div>
           <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">- Withdraw</i-button>
         </div>
-        <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`"> <v-icon name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
+        <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`">
+          <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
+        </i-button>
       </div>
     </div>
-    <transactions class="_margin-top-1" :filter="symbol" />
+    <transactions class="_margin-top-0" :filter="symbol" />
   </div>
 </template>
 

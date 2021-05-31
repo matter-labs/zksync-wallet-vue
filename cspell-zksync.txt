@@ -84,3 +84,10 @@ convertion
 Keyhash
 Armeabi
 scijava
+defbtn
+closebtn
+nuxt
+getzk
+Vuex
+zsync
+Syncjs

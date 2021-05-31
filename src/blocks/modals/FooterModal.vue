@@ -1,5 +1,5 @@
 <template>
-  <div v-if="modal" class="footerModalContainer">
+  <div class="footerModalContainer">
     <i-modal v-model="modal" size="md">
       <template slot="header">
         <b>Information</b>
@@ -18,26 +18,33 @@
           <span>Contact</span>
         </a>
         <a class="modalFooterBtn big" :href="blockExplorerLink" target="_blank">
-          <i><v-icon name="ri-external-link-line" /> </i>
+          <v-icon name="ri-external-link-line" />
           <span>zkScan</span>
+        </a>
+        <a class="modalFooterBtn big" href="https://uptime.com/s/zksync" target="_blank">
+          <v-icon name="ri-contacts-book-line" />
+          <span>Uptime</span>
         </a>
       </template>
       <template slot="footer">
-        <div>v.{{ version }} | <a href="https://uptime.com/s/zksync" class="modalFooterBtn big" target="_blank">uptime</a></div>
-        <i-button block size="lg" circle class="floating-on-mobile" @click="toggleDarkMode">
-          <i-icon icon="light" />
-        </i-button>
+        <div class="_display-flex _justify-content-space-between">
+          <block-system-info />
+          <i-button block size="md" circle @click="toggleDarkMode">
+            <i-icon icon="light" />
+          </i-button>
+        </div>
       </template>
     </i-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { GIT_REVISION_SHORT, APP_ZK_SCAN } from "@/plugins/build";
+import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
+  components: {},
   props: {
     value: {
       type: Boolean,
@@ -55,10 +62,7 @@ export default Vue.extend({
       },
     },
     blockExplorerLink(): string {
-      return APP_ZK_SCAN;
-    },
-    version(): string {
-      return GIT_REVISION_SHORT;
+      return APP_ZKSYNC_BLOCK_EXPLORER;
     },
   },
   methods: {

@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
-import Vue from "@nuxt/vue-app";
+import { Route } from "vue-router/types";
 import { Provider } from "zksync/build";
 import {
   AccountState,
@@ -22,6 +22,12 @@ export declare type ZKTypeDisplayToken = {
   rawBalance?: BigNumber;
   status?: string;
   pendingBalance?: BigNumber;
+};
+
+export declare type ZKDisplayToken = {
+  symbol: string;
+  rawBalance: BigNumber | undefined;
+  status: string | undefined;
 };
 
 export declare type VueRefs = Vue & { validate: () => boolean };
@@ -326,6 +332,7 @@ export interface ZkIFeesInterface {
 export interface ZKIRootState {
   accountModalOpened: boolean;
   currentModal?: string;
+  previousRoute?: Route;
 }
 
 export type BalancesList = {

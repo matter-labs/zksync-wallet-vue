@@ -147,7 +147,7 @@ const config: NuxtConfig = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main"],
+  plugins: ["@/plugins/icons", "@/plugins/main"],
 
   router: {
     middleware: ["wallet"],
@@ -167,9 +167,13 @@ const config: NuxtConfig = {
         typescript: {
           typeCheck: {
             async: true,
+            stylelint: {
+              config: [".stylelintrc"],
+              files: "src/**.scss",
+            },
             eslint: {
               config: [".eslintrc.js", "tsconfig-eslint.json"],
-              files: "**/*.{ts,js,vue,scss}",
+              files: "**/*.{ts,js,vue}",
             },
             files: "**/*.{ts,vue}",
           },
@@ -200,12 +204,11 @@ const config: NuxtConfig = {
   },
   inkline: {
     config: {
-      variant: "dark",
       autodetectVariant: true,
     },
   },
   styleResources: {
-    scss: ["@/assets/style/vars/*.scss"],
+    scss: ["@/assets/style/vars/*.scss", "@/assets/style/_variables.scss"],
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
@@ -228,6 +231,9 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
+    babel: {
+      compact: true,
+    },
     transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
     hardSource: isProduction,
     ssr: false,
@@ -258,6 +264,7 @@ const config: NuxtConfig = {
   },
   generate: {
     dir: "public",
+    devtools: env !== "prod",
   },
 };
 export default config;

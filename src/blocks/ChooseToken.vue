@@ -12,10 +12,8 @@
         </i-input>
         <div class="updateBtn" :class="{ disabled: spinnerLoading }" @click="getTokenList(true)">
           <i-tooltip placement="left">
-            <i>
-              <v-icon v-if="spinnerLoading" name="ri-loader-5-line" />
-              <v-icon v-else name="ri-restart-line" />
-            </i>
+            <v-icon v-if="spinnerLoading" name="ri-loader-5-line" class="spin-animation" />
+            <v-icon v-else name="ri-restart-line" />
             <template slot="body">Update {{ tokensType }} balances</template>
           </i-tooltip>
         </div>

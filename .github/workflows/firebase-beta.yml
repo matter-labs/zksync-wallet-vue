@@ -13,16 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: "[Setup stage] building dependencies"
-        run: bash cli-dev.sh ci
+      - name: "[Setup] building dependencies"
+        run: bash cli-dev.sh ci && yarn install --immutable
 
-      - name: "[Ropsten release stage] Step 1: Configuring ropsten env"
-        run: bash ./cli-process-env.sh ropsten prod 1
+      - name: "[Ropsten release] Configuring ropsten env"
+        run: yarn ci:build:ropsten
 
-      - name: "[Ropsten release stage] Step 2: Building ropsten"
-        run: yarn generate --fail-on-error
-
-      - name: "[Ropsten release stage] Step 3: Publishing ropsten"
+      - name: "[Ropsten release] Publishing ropsten static"
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
@@ -30,13 +27,10 @@ jobs:
           projectId: zksync-vue
           channelID: live
 
-      - name: "[Rinkeby-beta release stage] Step 1: Configuring rinkeby-beta env"
-        run: bash ./cli-process-env.sh rinkeby-beta dev 1
+      - name: "[Rinkeby-beta release] Configuring rinkeby-beta env"
+        run: yarn ci:build:rinkeby-beta
 
-      - name: "[Rinkeby-beta release stage] Step 2: Building rinkeby-beta"
-        run: yarn generate --fail-on-error
-
-      - name: "[Rinkeby-beta release stage] Step 3: Publishing rinkeby-beta"
+      - name: "[Rinkeby-beta release] Publishing rinkeby-beta"
         uses: matter-labs/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"

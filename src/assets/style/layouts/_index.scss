@@ -9,6 +9,15 @@
       }
     }
   }
+  
+  footer a {
+    color: $purple;
+    transition: color $transition2;
+    
+    &:hover {
+      color: $lightViolet;
+    }
+  }
 
   @media (max-width: $mobile) {
     //min-height: $minRouteHeightWithExtra;

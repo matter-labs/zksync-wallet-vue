@@ -37,10 +37,10 @@ export const addCPKToBatch = async (syncWallet: Wallet, fee: GweiBalance, feeTok
   if (!pubKeyTx) {
     return store.openModal("SignPubkey");
   }
-  const changePubKeyTx = await syncWallet!.signer!.signSyncChangePubKey({
+  const changePubKeyTx = await syncWallet.signer!.signSyncChangePubKey({
     ...pubKeyTx,
     fee,
-    feeTokenId: syncWallet!.provider.tokenSet.resolveTokenId(feeToken),
+    feeTokenId: syncWallet.provider.tokenSet.resolveTokenId(feeToken),
   });
   batchBuilder.addChangePubKey({
     tx: changePubKeyTx,

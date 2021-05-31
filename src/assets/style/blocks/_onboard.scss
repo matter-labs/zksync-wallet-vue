@@ -28,7 +28,7 @@
   }
 
   @media (min-width: $mobile) {
-    background-color: transparent !important;
+    //background-color: transparentize($color: $violet, $amount: 0.9) !important;
 
     .bn-onboard-modal-content {
       width: 85%;
@@ -46,9 +46,8 @@
       border-radius: 0 !important;
 
 
-      /* Avoid Chrome to see Safari hack */
+      /* autoprefixer: off */
       @supports (-webkit-touch-callout: none) {
-        /* The hack for Safari */
         //noinspection CssInvalidPropertyValue
         max-height: fill-available;
         //noinspection CssInvalidPropertyValue
@@ -97,7 +96,6 @@
 
   ul.bn-onboard-modal-select-wallets {
     max-height: 50vh !important;
-    overflow: auto;
   }
 
   .bn-onboard-custom.bn-onboard-select-wallet-definition {
@@ -116,6 +114,7 @@
 
   .bn-onboard-icon-button {
     border-radius: 8px;
+    overflow: hidden;
   }
 
   .bn-onboard-selected-wallet {
@@ -287,14 +286,13 @@ footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
     height: 20px;
   }
 }
-
+/* autoprefixer: off */
 aside.bn-onboard-custom.bn-onboard-modal {
   max-height: 100vh;
   padding: 2vh 2vw;
 
   /* Avoid Chrome to see Safari hack */
   @supports (-webkit-touch-callout: none) {
-    /* The hack for Safari */
     //noinspection CssInvalidPropertyValue
     max-height: fill-available;
   }
@@ -304,7 +302,6 @@ aside.bn-onboard-custom.bn-onboard-modal {
 
     /* Avoid Chrome to see Safari hack */
     @supports (-webkit-touch-callout: none) {
-      /* The hack for Safari */
       //noinspection CssInvalidPropertyValue
       min-height: fill-available;
     }
@@ -318,7 +315,6 @@ aside.bn-onboard-custom.bn-onboard-modal {
 @media (max-height: $mobile) {
   aside.bn-onboard-custom.bn-onboard-modal {
     padding: 1rem;
-    align-items: flex-end;
 
     section.bn-onboard-custom.bn-onboard-modal-content {
       display: flex;
@@ -336,7 +332,7 @@ aside.bn-onboard-custom.bn-onboard-modal {
 
     button.bn-onboard-custom.bn-onboard-icon-button {
       margin: 0 0 .25rem !important;
-      padding: 0.25rem !important;
+      padding: 0.5rem !important;
     }
   }
 }

@@ -12,15 +12,15 @@ Green="\033[0;32m"   # Green
 Blue="\033[0;34m"    # Blue
 BBlue="\033[1;34m"   # Bold Blue
 
-if [[ "$FORCE_REWRITE" ]]; then
+if [ -n $FORCE_REWRITE ]; then
   echo "${Red}Attention! Existing .env would be overridden"
 fi
 
-if [[ -z "$NETWORK" ]]; then
+if [ -z $NETWORK ]; then
   NETWORK="rinkeby"
 fi
 
-if [[ -z "$ENV_VALUE" ]]; then
+if [ -z $ENV_VALUE ]; then
   ENV_VALUE="dev"
 fi
 
@@ -30,7 +30,7 @@ echo "${BBlue}Chosen configuration... \n" "" "$NC"
 echo "${Default}   Environment: $ENV_VALUE"
 echo "   Ethereum network: $NETWORK"
 printf "${Default}   Generate .env anyway:"
-if [[ FORCE_REWRITE ]]; then
+if [ -n $FORCE_REWRITE ]; then
   echo "${Red}yes"
 else
   echo "${Green}nope"
@@ -39,7 +39,7 @@ fi
 printf "${BBlue}\nCLI: Checking env...\n\n"
 printf "${Default}   File status: "
 
-if [ -e "$FILE" ]; then
+if [ -e $FILE ]; then
   echo "${Green}.env found"
 else
   echo "${Default} Configuring .env for $NETWORK ethereum network"
@@ -63,7 +63,7 @@ rm -f ./.env &&
   echo "$APP_ENV" >>".env" &&
   echo "$GIT_UPDATED_AT" >>".env"
 
-if [[ "$IS_LOCALHOST" ]]; then
+if [ -n $IS_LOCALHOST ]; then
   echo "${BBlue}Localhost detected:"
   echo ""
   echo "${Default}   Sentry: ${Red}Disabled"

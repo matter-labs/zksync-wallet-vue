@@ -8,15 +8,6 @@
     width: 100%;
   }
 
-
-  @media (max-width: $mobile) {
-    footer {
-      margin-bottom: $footerHeight; /* Navigation bar space */
-
-
-    }
-  }
-
   .headerSpace {
     width: 100%;
     height: $headerHeight;
@@ -80,14 +71,11 @@ input.form-input.-prefixed:focus {
   display: flex;
 }
 
-i.iconInfo,
-em.iconInfo {
-  display: block;
-  width: 25px;
-  height: 25px;
+.iconInfo {
+  margin: 2px 0;
   margin-left: 10px;
   font-size: 11px;
-  line-height: 26px;
+  line-height: 28px;
   text-align: center;
   background: transparentize($color: $gray, $amount: 0.7);
   border-radius: 50%;
@@ -95,20 +83,37 @@ em.iconInfo {
   cursor: pointer;
   opacity: 0.9;
   transition: background-color $transition1;
+  padding: 5px;
+  height: 28px;
+  width: 28px;
+  display: inline-block;
+  @media (max-width: $mobile) {
+    height: 24px;
+    width: 24px;
+    margin-left: 6px;
+  }
 
   &:hover {
     background: transparentize($color: $gray, $amount: 0.5);
   }
+
+  svg {
+    position: relative;
+    display: block;
+    top: 1px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 }
 
 @media (min-width: $mobile) {
-  .defaultLayout
-  {
+  .defaultLayout {
     justify-content: stretch;
     align-items: stretch;
     max-height: 100vh;
 
-    /* Avoid Chrome to see Safari hack */
+    /* The hack for Safari */
     @supports (-webkit-touch-callout: none) {
       //noinspection CssInvalidPropertyValue
       max-height: -webkit-fill-available;

@@ -25,6 +25,7 @@ module.exports = {
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-undef": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
     camelcase: "off",
     "no-console": "off",
     "prettier/prettier": "error",
@@ -32,8 +33,15 @@ module.exports = {
     "sort-imports": "off",
     "vue/no-v-for-template-key-on-child": "off",
     "vue/no-v-html": "off",
+    "vue/html-self-closing": "off",
+    "pt-eslint/no-explicit-any": "off",
+    "no-prototype-builtins": "off",
     "no-unused-expressions": "off",
+    "no-use-before-define": "off",
+    "vue/singleline-html-element-content-newline": "off",
     "@typescript-eslint/no-empty-function": ["off"],
+    "vue/max-attribute": "off",
+    "vue/require-prop-types": "off",
   },
   settings: {
     "prettier-vue": {

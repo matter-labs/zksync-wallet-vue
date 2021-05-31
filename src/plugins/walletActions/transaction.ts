@@ -26,15 +26,15 @@ export const transaction = async (
   store: typeof accessorType,
   accountActivationFee?: GweiBalance,
 ) => {
-  const syncWallet = walletData.get().syncWallet;
-  const nonce = await syncWallet!.getNonce("committed");
-  const batchBuilder = syncWallet!.batchBuilder(nonce);
+  const syncWallet = walletData.get().syncWallet!;
+  const nonce = await syncWallet.getNonce("committed");
+  const batchBuilder = syncWallet.batchBuilder(nonce);
 
   if (store.wallet.isAccountLocked) {
     if (!accountActivationFee) {
       throw new Error("No account activation fee found");
     }
-    await addCPKToBatch(syncWallet!, accountActivationFee, feeToken, batchBuilder, store);
+    await addCPKToBatch(syncWallet, accountActivationFee, feeToken, batchBuilder, store);
   }
   if (token === feeToken) {
     batchBuilder.addTransfer({
@@ -53,12 +53,12 @@ export const transaction = async (
     batchBuilder.addTransfer({
       fee: feeBigValue,
       amount: "0",
-      to: syncWallet!.address(),
+      to: syncWallet.address(),
       token: feeToken,
     });
   }
   const batchTransactionData = await batchBuilder.build();
-  const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  const transactions = await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
     store.transaction.watchTransaction({ transactionHash: tx.txHash });
   }
@@ -90,15 +90,15 @@ interface WithdrawParams {
  * @return {Promise<{txData: *, txHash: *}[]>}
  */
 export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw, fee, accountActivationFee, store }: WithdrawParams) => {
-  const syncWallet = walletData.get().syncWallet;
-  const nonce = await syncWallet!.getNonce("committed");
-  const batchBuilder = syncWallet!.batchBuilder(nonce);
+  const syncWallet = walletData.get().syncWallet!;
+  const nonce = await syncWallet.getNonce("committed");
+  const batchBuilder = syncWallet.batchBuilder(nonce);
 
   if (store.wallet.isAccountLocked) {
     if (!accountActivationFee) {
       throw new Error("No account activation fee found");
     }
-    await addCPKToBatch(syncWallet!, accountActivationFee, feeToken, batchBuilder, store);
+    await addCPKToBatch(syncWallet, accountActivationFee, feeToken, batchBuilder, store);
   }
   if (token === feeToken) {
     batchBuilder.addWithdraw({
@@ -117,12 +117,12 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
     batchBuilder.addTransfer({
       fee,
       amount: "0",
-      to: syncWallet!.address(),
+      to: syncWallet.address(),
       token: feeToken,
     });
   }
   const batchTransactionData = await batchBuilder.build();
-  const transactions = await submitSignedTransactionsBatch(syncWallet!.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  const transactions = await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {
     store.transaction.watchTransaction({ transactionHash: tx.txHash });
   }
@@ -170,8 +170,9 @@ export const labelTransactions = (transactions: Transaction[]) => {
  * @returns {Promise<any>}
  */
 export const deposit = async (token: TokenSymbol, amount: GweiBalance, store: typeof accessorType) => {
-  const depositResponse = await walletData.get().syncWallet!.depositToSyncFromEthereum({
-    depositTo: walletData.get().syncWallet!.address(),
+  const syncWallet = walletData.get().syncWallet!;
+  const depositResponse = await syncWallet.depositToSyncFromEthereum({
+    depositTo: syncWallet.address(),
     token,
     amount,
   });

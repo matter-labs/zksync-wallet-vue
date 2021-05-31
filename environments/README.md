@@ -1,6 +1,13 @@
-# PAGES
+# Environment
 
-This directory contains your Application Views and Routes.
-The framework reads all the `*.vue` files inside this directory and creates the router of your application.
+Wallet configuration is stored inside env-files, managed with help of ```@nuxtjs/dotenv``` package.
+This directory contains your .env-files:
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/guide/routing).
+`Production`
+
+* mainnet
+* rinkeby
+
+`Beta releases`
+* rinkeby-beta
+* ropsten

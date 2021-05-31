@@ -1,6 +1,6 @@
 <template>
   <div class="contactsPage dappPageWrapper">
-    <i-modal v-if="addContactModal" v-model="addContactModal" class="prevent-close" size="md">
+    <i-modal v-model="addContactModal" class="prevent-close" size="md">
       <template slot="header">
         <span v-if="addContactType === 'add'">Add contact</span>
         <span v-else-if="addContactType === 'edit'">Edit contact</span>
@@ -23,15 +23,15 @@
       <div class="tileHeadline h3">
         <span>Contacts</span>
         <i-tooltip>
-          <i
-            class="_icon-wrapped -rounded -sm"
+          <span
+            class="icon-container _display-flex"
             @click="
               addContactType = 'add';
               addContactModal = true;
             "
           >
-            <v-icon name="ri-add-circle-fill" />
-          </i>
+            <v-icon name="ri-add-fill" class="iconInfo" />
+          </span>
           <template slot="body">Add contact</template>
         </i-tooltip>
       </div>
@@ -72,7 +72,7 @@
           </div>
           <div class="iconsBlock">
             <template v-if="!item.deleted">
-              <i-tooltip trigger="click">
+              <i-tooltip placement="left" trigger="click">
                 <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)">
                   <v-icon name="ri-clipboard-line" />
                 </i-button>
@@ -113,15 +113,17 @@
           addContactModal = true;
         "
       >
-        <v-icon name="ri-add-cicle-fill" />&nbsp;&nbsp;Add contact <v-icon name="ri-add-cicle-fill" />&nbsp;&nbsp;Add contact
+        <v-icon name="ri-add-circle-fill" />&nbsp;&nbsp;Add contact
       </i-button>
       <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)">
         <v-icon name="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
       </i-button>
       <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"> <v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact </i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"> <v-icon name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact </i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`">
+        <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact
+      </i-button>
     </div>
-    <lazy-transactions v-if="openedContact" :address="openedContact.address" />
+    <lazy-transactions v-if="openedContact" class="_margin-top-0" :address="openedContact.address" />
   </div>
 </template>
 

@@ -121,7 +121,9 @@ export default Vue.extend({
       return filteredList;
     },
     async getTransactions(): Promise<void> {
-      this.loading = true;
+      if (this.$accessor.wallet.getTransactionsHistory.length === 0) {
+        this.loading = true;
+      }
       try {
         await this.loadTransactions();
       } catch (error) {
