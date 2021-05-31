@@ -14,6 +14,10 @@
   overflow: hidden;
   background: white;
   animation-fill-mode: forwards;
+  transition-delay: 0.35s;
+  &.fade-leave-active {
+    transition-delay: 0.5s;
+  }
 
   .headerWrapper {
     position: relative;
@@ -27,6 +31,7 @@
         height: 35px;
       }
     }
+
     .badge {
       position: absolute;
       bottom: 100%;
@@ -42,6 +47,23 @@
   .hint {
     margin-bottom: 0;
     font-size: 18px;
+    position: relative;
+    height: 20px;
+    width: 100%;
+    margin-top: 1rem;
+    text-align: center;
+
+    & > div {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+    }
+
+    .green {
+      color: $green;
+    }
   }
 
   .cancelButton {
@@ -53,6 +75,7 @@
     0% {
       transform: rotate(0deg);
     }
+
     100% {
       transform: rotate(360deg);
     }
@@ -64,7 +87,9 @@
     h1 {
       font-size: 24px;
       text-align: center;
+      line-height: 35px;
     }
+
     .hint {
       font-size: 16px;
       text-align: center;

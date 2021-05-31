@@ -14,14 +14,16 @@
     color: $violet;
     text-decoration: none;
     transition: color $transition1;
+
     &:hover {
       color: $lightViolet !important;
     }
 
-    i {
+    em, i {
       font-size: 18px;
       line-height: 20px;
     }
+
     svg {
       display: block;
       width: 19px;

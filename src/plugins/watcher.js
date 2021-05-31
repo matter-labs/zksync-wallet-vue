@@ -50,18 +50,16 @@ const changeAccountHandle = (dispatch, context) => {
  * @return {Promise<void>}
  */
 const changeNetworkSet = (dispatch, context) => {
-  if (changeNetworkWasSet !== true) {
-    if (process.client && window.ethereum) {
-      changeNetworkWasSet = true;
-      window.ethereum?.on("disconnect", () => {
-        context.$toast.global.zkException({
-          message: "Connection with your Wallet was lost. Restarting the DAPP",
-        });
-        dispatch("logout");
+  if (changeNetworkWasSet !== true && process.client && window.ethereum) {
+    changeNetworkWasSet = true;
+    window.ethereum?.on("disconnect", () => {
+      context.$toast.global?.zkException({
+        message: "Connection with your Wallet was lost. Restarting the DAPP",
       });
-      window.ethereum?.on("chainChanged", changeNetworkHandle(dispatch, context));
-      window.ethereum?.on("accountsChanged", changeAccountHandle(dispatch, context));
-    }
+      dispatch("logout");
+    });
+    window.ethereum?.on("chainChanged", changeNetworkHandle(dispatch, context));
+    window.ethereum?.on("accountsChanged", changeAccountHandle(dispatch, context));
   }
 };
 

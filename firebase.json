@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "target": "stage",
+      "target": "stage-mainnet",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -10,7 +10,7 @@
       ]
     },
     {
-      "target": "rinkeby",
+      "target": "dev-rinkeby",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -19,7 +19,7 @@
       ]
     },
     {
-      "target": "rinkeby-dev",
+      "target": "dev-mainnet",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -28,7 +28,7 @@
       ]
     },
     {
-      "target": "ropsten",
+      "target": "prod-ropsten",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -37,7 +37,16 @@
       ]
     },
     {
-      "target": "ropsten-dev",
+      "target": "prod-rinkeby",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "beta-rinkeby",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -47,15 +56,6 @@
     },
     {
       "target": "mainnet",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
-    },
-    {
-      "target": "mainnet-dev",
       "public": "public",
       "ignore": [
         "firebase.json",

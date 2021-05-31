@@ -1,12 +1,12 @@
 <template>
   <div class="_display-flex _flex-direction-row _align-items-center headerWrapper">
-    <svg v-if="isZkSyncLogo" class="projectLogo _margin-right-1-2" viewBox="0 0 1407 276" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M485.481 137.772L347.819 0.254944V100.967L211.134 201.801L347.819 201.896V275.289L485.481 137.772Z" fill="#4E529A" />
+    <svg v-if="isZkSyncLogo" class="projectLogo _margin-right-1-2" fill="none" viewBox="0 0 1407 276" xmlns="http://www.w3.org/2000/svg">
+      <path clip-rule="evenodd" d="M485.481 137.772L347.819.254944V100.967L211.134 201.801L347.819 201.896V275.289L485.481 137.772Z" fill="#4E529A" fill-rule="evenodd" />
       <path
-        fill-rule="evenodd"
         clip-rule="evenodd"
-        d="M0.200116 137.722L137.862 275.239L137.862 175.337L274.547 73.6923L137.862 73.5981L137.862 0.205097L0.200116 137.722Z"
+        d="M0.200116 137.722L137.862 275.239L137.862 175.337L274.547 73.6923L137.862 73.5981L137.862.205097L0.200116 137.722Z"
         fill="#8C8DFC"
+        fill-rule="evenodd"
       />
       <path class="logoLetter" d="M697.395 218.752H591.773V188.421L652.239 121.018H593.33V91.2059H696.357V119.982L634.073 188.68H697.395V218.752Z" fill-opacity="0.9" />
       <path
@@ -32,7 +32,7 @@
       />
     </svg>
     <template v-else>
-      <img class="zkwallet-logo" alt="zkWallet" :src="zkWalletLogoSrc" />
+      <img :src="zkWalletLogoSrc" alt="zkWallet" class="zkwallet-logo" />
       <i-badge variant="primary">
         <small v-if="network">{{ network }}</small>
       </i-badge>
@@ -41,9 +41,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { ETHER_NETWORK_NAME } from "@/plugins/build";
+import { ZK_NETWORK, ZK_IS_BETA } from "@/plugins/build";
 import utils from "@/plugins/utils";
+import Vue from "vue";
 
 export default Vue.extend({
   props: {
@@ -59,7 +59,10 @@ export default Vue.extend({
       return require(`@/assets/imgs/logos/logo${variation}.svg`);
     },
     network(): string {
-      return ETHER_NETWORK_NAME;
+      return ZK_NETWORK;
+    },
+    isBeta(): boolean {
+      return ZK_IS_BETA;
     },
   },
 });

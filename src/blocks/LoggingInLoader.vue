@@ -1,13 +1,13 @@
 <template>
   <transition name="fade">
-    <div v-if="loggingIn" class="loggingInLoader">
+    <div v-if="loggingIn || loggedInAnimation" class="loggingInLoader">
       <logo class="_margin-bottom-3" :is-zk-sync-logo="false" />
       <h1>Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
-      <p v-if="hintText" class="hint">
-        <span>{{ hintText }}</span>
-      </p>
-      <div class="_margin-top-2"></div>
-      <loader size="lg" />
+      <transition-group v-if="hintText" tag="div" name="slide-vertical-fade" class="hint">
+        <div v-if="!loggedInAnimation" :key="hintText">{{ hintText }}</div>
+        <div v-else key="success" class="green">Wallet successfully connected!</div>
+      </transition-group>
+      <loader size="lg" class="_margin-y-2" />
       <i-button class="cancelButton" block variant="secondary" size="lg" @click="cancelLogin()">Cancel</i-button>
     </div>
   </transition>
@@ -17,11 +17,21 @@
 import logo from "@/blocks/Logo.vue";
 import Vue from "vue";
 
+let loggedInAnimationTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
+  name: "LoggingInLoader",
   components: {
     logo,
   },
+  data() {
+    return {
+      loggedInAnimation: false,
+    };
+  },
   computed: {
+    loggedIn() {
+      return this.$accessor.account.loggedIn;
+    },
     loggingIn() {
       return this.$accessor.account.loader;
     },
@@ -38,10 +48,23 @@ export default Vue.extend({
       return this.$accessor.account.selectedWallet;
     },
   },
+  watch: {
+    loggedIn(val) {
+      clearTimeout(loggedInAnimationTimeout);
+      this.loggedInAnimation = val;
+      if (val === true) {
+        loggedInAnimationTimeout = setTimeout(() => {
+          this.loggedInAnimation = false;
+        }, 550);
+      }
+    },
+  },
   methods: {
     cancelLogin(): void {
       this.$accessor.wallet.logout();
       this.$router.push("/");
+      this.loggedInAnimation = false;
+      clearTimeout(loggedInAnimationTimeout);
     },
   },
 });

@@ -1,42 +1,37 @@
 <template>
-  <div class="defaultLayout">
-    <logging-in-loader />
-    <div v-if="!loggingIn && loggedIn" class="layoutContent">
-      <div class="headerSpace mobileOnly"></div>
-      <header-component ref="header" />
+  <i-layout class="defaultLayout">
+    <block-logging-in-loader />
+    <block-header ref="header" />
+    <i-layout-content v-if="!loggingIn && loggedIn" class="layoutContent">
+      <sign-pubkey-modal />
       <div class="routerContainer">
         <transition name="fade" mode="out-in">
           <nuxt />
         </transition>
       </div>
-      <footer-component />
-    </div>
-  </div>
+    </i-layout-content>
+    <block-footer class="desktopOnly" />
+  </i-layout>
 </template>
 
-<script type="ts">
-import footerComponent from "@/blocks/Footer.vue";
-import headerComponent from "@/blocks/Header.vue";
-import loggingInLoader from "@/blocks/LoggingInLoader.vue";
+<script lang="ts">
 import utils from "@/plugins/utils";
 import Vue from "vue";
-
+import SignPubkeyModal from "@/blocks/modals/SignPubkey.vue";
 export default Vue.extend({
   components: {
-    headerComponent,
-    footerComponent,
-    loggingInLoader,
+    SignPubkeyModal,
   },
   computed: {
-    loggingIn(){
+    loggingIn() {
       return this.$accessor.account.loader;
     },
-    loggedIn(){
+    loggedIn() {
       return this.$accessor.account.loggedIn;
     },
   },
-  mounted(){
+  mounted() {
     utils.defineTheme(this.$inkline, false);
-  }
+  },
 });
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="socialIcons">
     <a v-for="(socialProfile, numIndex) in socialNetworks" :key="numIndex" :href="socialProfile.url" class="socialItem" target="_blank">
-      <i v-if="socialProfile.icon" :class="socialProfile.icon"></i>
+      <i v-if="socialProfile.icon" :class="socialProfile.icon" />
       <div v-else-if="socialProfile.img" class="svgContainer" v-html="socialIcons[socialProfile.img]"></div>
     </a>
   </div>
@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import socialIcons from "@/plugins/socialIcons";
-import { singleIcon } from "@/plugins/types";
+import { singleIcon } from "@/types/lib";
 import Vue, { PropOptions } from "vue";
 
 type Location = "header" | "footer";

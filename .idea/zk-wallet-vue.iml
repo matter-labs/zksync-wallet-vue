@@ -19,17 +19,20 @@
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/.ide-setup" />
       <excludeFolder url="file://$MODULE_DIR$/.github" />
+      <excludeFolder url="file://$MODULE_DIR$/.firebase" />
+      <excludeFolder url="file://$MODULE_DIR$/coverage" />
+      <excludeFolder url="file://$MODULE_DIR$/public" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="@types/type-detect" level="application" />
+    <orderEntry type="library" name="@types/webpack" level="application" />
+    <orderEntry type="library" name="@types/node" level="application" />
+    <orderEntry type="library" name="@types/eslint" level="application" />
+    <orderEntry type="library" name="@types/eslint-config-prettier" level="application" />
+    <orderEntry type="library" name="@types/jest" level="application" />
+    <orderEntry type="library" name="@types/node-sass" level="application" />
     <orderEntry type="library" name="@types/prettier" level="application" />
     <orderEntry type="library" name="@types/stylelint" level="application" />
-    <orderEntry type="library" name="@types/webpack" level="application" />
-    <orderEntry type="library" name="@types/type-detect" level="application" />
-    <orderEntry type="library" name="@types/google.fonts" level="application" />
-    <orderEntry type="library" name="@types/eslint" level="application" />
-    <orderEntry type="library" name="@types/yarnpkg__lockfile" level="application" />
-    <orderEntry type="library" name="@types/eslint-config-prettier" level="application" />
-    <orderEntry type="library" name="@types/node-sass" level="application" />
   </component>
 </module>

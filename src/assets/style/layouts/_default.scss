@@ -4,117 +4,10 @@
 
   .routerContainer {
     min-height: $minRouteHeightMain;
-    /* @media (max-width: $mobile) {
-      min-height: $minRouteHeight !important;
-    } */
+    //margin: 1rem auto;
+    width: 100%;
   }
 
-  .tileBlock {
-    width: 90%;
-    max-width: 505px;
-    height: auto;
-    margin-top: 15px;
-    margin-right: auto;
-    margin-left: auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 4px 4px 8px 0 rgba(11, 52, 102, 0.02);
-    transition: background-color $transition1;
-
-    .tileHeadline {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      margin: 0;
-      padding-bottom: 20px;
-      font-weight: 400;
-      font-family: $firaSans;
-      text-align: center;
-
-      &.withBtn {
-        display: grid;
-        grid-template-rows: 100%;
-        grid-template-columns: 40px 1fr;
-        align-items: center;
-        padding-right: 40px;
-      }
-
-      @media (max-width: $mobile) {
-        font-size: 22px;
-
-        &.withBtn {
-          grid-template-columns: 30px 1fr;
-          padding-right: 30px;
-
-          .returnBtn i {
-            width: 30px;
-            height: 30px;
-            font-size: 16px;
-            line-height: 30px;
-          }
-        }
-      }
-
-      i {
-        display: block;
-        width: 25px;
-        height: 25px;
-        margin-left: 10px;
-        font-size: 11px;
-        line-height: 26px;
-        background: transparentize($color: $gray, $amount: 0.7);
-        border-radius: 50%;
-        transform: translateY(1px);
-        cursor: pointer;
-        opacity: 0.9;
-        transition: background-color $transition1;
-
-        &:hover {
-          background: transparentize($color: $gray, $amount: 0.5);
-        }
-      }
-
-      .returnBtn {
-        display: block;
-        text-decoration: none;
-
-        i {
-          width: 40px;
-          height: 40px;
-          margin-left: 0;
-          font-size: 20px;
-          line-height: 40px;
-          transition: color $transition1;
-        }
-      }
-    }
-
-    .tileText {
-      margin: 5px 0;
-      font-size: 16px;
-      text-align: center;
-    }
-
-    .tileTextBg {
-      margin: 5px 0;
-      padding: 12px 15px;
-      font-size: 15px;
-      text-align: center;
-      border: 1px solid;
-      border-radius: 5px;
-    }
-  }
-
-  footer {
-    @media (max-width: $mobile) {
-      margin-bottom: 80px; /* Navigation bar space */
-
-      .floating-on-mobile {
-        bottom: calc(4vh + 70px);
-      }
-    }
-  }
   .headerSpace {
     width: 100%;
     height: $headerHeight;
@@ -125,8 +18,10 @@ body.inkline.-light .defaultLayout {
   .tileBlock {
     background: $white;
 
-    .tileHeadline .returnBtn i {
-      color: $black;
+    .tileHeadline .returnBtn {
+      i, .ov-icon {
+        color: $black;
+      }
     }
   }
 
@@ -140,8 +35,10 @@ body.inkline.-dark .defaultLayout {
   .tileBlock {
     background: $darkViolet;
 
-    .tileHeadline .returnBtn i {
-      color: $white;
+    .tileHeadline .returnBtn {
+      i, .ov-icon {
+        color: $white;
+      }
     }
   }
 
@@ -160,8 +57,8 @@ body.inkline.-dark {
 
 .form-input-group.-light .form-input input,
 input.form-input.-prefixed {
-  background-color: #0000000a !important;
-  border-radius: 0.3rem !important;
+  background-color: $input-border-color-light !important;
+  border-radius: $borderRadiusSm;
   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.035) !important;
 }
 
@@ -173,14 +70,12 @@ input.form-input.-prefixed:focus {
 .tooltip-wrapper {
   display: flex;
 }
-i.iconInfo,
-em.iconInfo {
-  display: block;
-  width: 25px;
-  height: 25px;
+
+.iconInfo {
+  margin: 2px 0;
   margin-left: 10px;
   font-size: 11px;
-  line-height: 26px;
+  line-height: 28px;
   text-align: center;
   background: transparentize($color: $gray, $amount: 0.7);
   border-radius: 50%;
@@ -188,8 +83,40 @@ em.iconInfo {
   cursor: pointer;
   opacity: 0.9;
   transition: background-color $transition1;
+  padding: 5px;
+  height: 28px;
+  width: 28px;
+  display: inline-block;
+  @media (max-width: $mobile) {
+    height: 24px;
+    width: 24px;
+    margin-left: 6px;
+  }
 
   &:hover {
     background: transparentize($color: $gray, $amount: 0.5);
+  }
+
+  svg {
+    position: relative;
+    display: block;
+    top: 1px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+@media (min-width: $mobile) {
+  .defaultLayout {
+    justify-content: stretch;
+    align-items: stretch;
+    max-height: 100vh;
+
+    /* The hack for Safari */
+    @supports (-webkit-touch-callout: none) {
+      //noinspection CssInvalidPropertyValue
+      max-height: -webkit-fill-available;
+    }
   }
 }

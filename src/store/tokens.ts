@@ -1,8 +1,9 @@
-import { APP_ZKSYNC_API_LINK } from "@/plugins/build";
-import { TokenInfo, Tokens, ZkInTokenPrices } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { BigNumberish } from "ethers";
 import { TokenSymbol } from "zksync/build/types";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { BalanceToReturn, TokenInfo, Tokens, ZkInTokenPrices } from "~/types/lib";
+import { ZK_API_BASE } from "~/plugins/build";
 
 /**
  * Operations with the tokens (assets)
@@ -33,6 +34,7 @@ export const state = () => ({
    * Token prices
    */
   tokenPrices: <ZkInTokenPrices>{},
+  tokenPricesTick: 0, // Used to force update component's
 });
 
 export type TokensModuleState = ReturnType<typeof state>;
@@ -43,6 +45,7 @@ export const mutations = mutationTree(state, {
   },
   setTokenPrice(state, { symbol, obj }): void {
     state.tokenPrices[symbol] = obj;
+    state.tokenPricesTick++;
   },
   storeAcceptableTokens(state, tokenList: TokenInfo[]): void {
     state.acceptableTokens = tokenList;
@@ -67,6 +70,9 @@ export const getters = getterTree(state, {
   getTokenPrices(state): ZkInTokenPrices {
     return state.tokenPrices;
   },
+  getTokenPriceTick(state): number {
+    return state.tokenPricesTick;
+  },
   getTokenByID(state) {
     return (id: number): TokenInfo | undefined => {
       for (const symbol in state.allTokens) {
@@ -78,36 +84,29 @@ export const getters = getterTree(state, {
   },
 });
 
-interface BalanceToReturn {
-  address: string;
-  balance: string;
-  symbol: string;
-  id: number;
-}
-
 export const actions = actionTree(
   { state, getters, mutations },
   {
     async loadAllTokens({ commit, getters }): Promise<Tokens> {
       if (Object.entries(getters.getAllTokens).length === 0) {
-        await this.app.$accessor.wallet.restoreProviderConnection();
+        /* By taking token list from syncProvider we avoid double getTokens request,
+          but the tokensBySymbol param is private on zksync utils types */
         const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
         commit("setAllTokens", tokensList);
+        // Added async loading of the restricted tokens
         await this.app.$accessor.tokens.loadAcceptableTokens();
         return tokensList || {};
       }
       return getters.getAllTokens;
     },
     async loadAcceptableTokens({ commit }): Promise<void> {
-      const acceptableTokens: TokenInfo[] = (await this.app.$axios.get(`https://${APP_ZKSYNC_API_LINK}/api/v0.1/tokens_acceptable_for_fees`)).data;
+      const acceptableTokens: TokenInfo[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
       commit("storeAcceptableTokens", acceptableTokens);
     },
 
     async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
-      const accountState = walletData.get().accountState;
-
       const tokens: Tokens = await this.app.$accessor.tokens.loadAllTokens();
-      const zkBalance = accountState?.committed.balances;
+      const zkBalance: { [p: string]: BigNumberish } | undefined = walletData.get().accountState?.committed.balances;
       if (!zkBalance) {
         return {
           tokens,
@@ -115,10 +114,9 @@ export const actions = actionTree(
         };
       }
       const zkBalances: BalanceToReturn[] = Object.keys(zkBalance).map((key: TokenSymbol) => {
-        const syncWallet = walletData.get().syncWallet;
         return {
           address: tokens[key].address,
-          balance: syncWallet!.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
+          balance: walletData.get().syncWallet!.provider.tokenSet.formatToken(tokens[key].symbol, zkBalance[key] ? zkBalance[key].toString() : "0"),
           symbol: tokens[key].symbol,
           id: tokens[key].id,
         } as BalanceToReturn;
@@ -144,7 +142,6 @@ export const actions = actionTree(
       if (Object.prototype.hasOwnProperty.call(localPricesList, symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
         return localPricesList[symbol].price;
       }
-      await this.app.$accessor.wallet.restoreProviderConnection();
       const syncProvider = walletData.get().syncProvider;
       const tokenPrice = await syncProvider?.getTokenPrice(symbol);
       commit("setTokenPrice", {
@@ -157,11 +154,16 @@ export const actions = actionTree(
       return tokenPrice || 0;
     },
 
-    isRestricted({ state }, token?: TokenSymbol): boolean {
-      if (!token || token?.toLowerCase() === "eth") {
+    isRestricted({ state }, token: TokenSymbol): boolean {
+      if (token.toLowerCase() === "eth") {
         return false;
       }
-      return state.acceptableTokens.filter((tokenData: TokenInfo) => tokenData.symbol.toLowerCase() === token.toLowerCase()).length === 0;
+      for (const tokenData of state.acceptableTokens) {
+        if (tokenData.symbol.toLowerCase() === token.toLowerCase()) {
+          return false;
+        }
+      }
+      return true;
     },
   },
 );

@@ -2,7 +2,7 @@ body {
   .indexHeader {
     z-index: 9;
     width: 100%;
-    height: 84px;
+    height: $headerHeight;
     background: rgba(24, 24, 32, 0.01) -moz-linear-gradient(top, rgba(24, 24, 32, 0.9), rgba(24, 24, 32, 0.7));
     box-shadow: 1px 1px 5px 10px rgba(0, 0, 0, 0.01);
 
@@ -33,10 +33,12 @@ body {
     .column {
       display: flex;
       align-items: center;
+      height: 100%;
     }
 
     .headerWrapper {
       padding-top: 0 !important;
+      height: 100%;
 
       .projectLogo {
         width: auto;
@@ -49,34 +51,51 @@ body {
     .dropdown {
       padding: 0;
 
-      @media screen and (min-width: $mobile+1) and (max-width: 991px) {
+      &.-dark {
+        & > .menu[data-popper-placement="bottom"] {
+          .arrow::after {
+            border-bottom-color: $mediumViolet !important;
+          }
+
+          &.firstElementHovered {
+            .arrow::after {
+              border-bottom-color: $darkViolet !important;
+            }
+          }
+        }
+      }
+
+      @media screen and (min-width: $mobile+1) and (max-width: $tablet) {
         padding: 0 5px;
-        font-size: 14px;
+        font-size: $fontSizeRegular;
       }
 
       & > .menu[data-popper-placement="bottom"] {
         min-width: 150px;
         padding: 0;
-        background: $darkViolet;
+        background: $mediumViolet;
         border-color: $darkViolet;
         border-radius: $borderRadius;
+        transition: $transition1;
 
         .arrow {
-          border-bottom-color: $darkViolet;
+          transition: $transition1;
 
           &::after {
-            border-bottom-color: $darkViolet;
             border-bottom-width: 5px !important;
+            transition: $transition1;
           }
         }
 
         .item {
           color: $white;
           font: normal normal 16px/2rem $firaSans;
+          transition: color $transition1;
+
 
           &:hover {
             color: $lightViolet;
-            background-color: lighten($darkViolet, 10) !important;
+            background-color: lighten($darkViolet, 5) !important;
             transition: color, background-color $transition1 !important;
             will-change: color, backgroud;
           }
@@ -119,7 +138,7 @@ body {
       cursor: pointer;
       transition: color $transition1;
 
-      &:before {
+      &::before {
         top: 0;
         left: 0;
         content: "";
@@ -140,9 +159,20 @@ body {
       height: 100%;
     }
 
-    @media screen and (max-width: $mobile) {
+    @media (max-width: $mobile) {
+      padding: 0 !important;
+      .column {
+        padding: 0 !important;
+      }
       .mobileIndexHeader {
-        padding: 0;
+        padding: 1rem;
+        margin: 0 auto !important;
+
+        .container.mobileOnly {
+          margin: 0 auto !important;
+          padding-left: 0;
+          padding-right: 0;
+        }
 
         .headerWrapper {
           position: relative;
@@ -150,19 +180,17 @@ body {
           padding-top: 0 !important;
 
           .zkwallet-logo {
-            height: 35px;
-
-            @media screen and (max-width: 365px) {
-              height: 28px;
-            }
+            height: 22px !important;
           }
+
           .badge {
             position: absolute;
-            bottom: 100%;
+            bottom: 85%;
             left: 100%;
           }
         }
       }
+
       &.opened {
         .mobileIndexHeader {
           padding: 0;
@@ -183,7 +211,7 @@ body {
         .mainIndexHeader {
           height: auto;
           min-height: 220px;
-          transform: translateY(80px);
+          transform: translateY(60px);
         }
       }
 
@@ -234,6 +262,7 @@ body {
           }
         }
       }
+
       .mainIndexHeader {
         position: absolute;
         top: 0;
@@ -282,9 +311,11 @@ body {
             padding: 10px 0;
             font-size: 18px;
             text-align: left;
+
             &:first-child {
               padding-top: 0;
             }
+
             &:last-child {
               padding-bottom: 0;
             }
@@ -300,6 +331,7 @@ body {
             }
 
             & > .menu[data-popper-placement="bottom"] {
+              background-color: $bgSecondary;
               position: initial !important;
               width: 100% !important;
 
@@ -315,10 +347,12 @@ body {
           }
         }
       }
+
       .dropdown {
         height: 52px;
         overflow: hidden;
         transition: height $transition1;
+
         &.opened {
           height: 312px;
         }
@@ -342,7 +376,8 @@ body {
       padding: 0 10px;
       color: $white;
       white-space: nowrap;
-      @media screen and (min-width: $mobile+1) and (max-width: 991px) {
+
+      @media screen and (min-width: $mobile+1) and (max-width: $tablet) {
         padding: 0 5px;
         font-size: 14px;
       }
@@ -352,6 +387,8 @@ body {
 
 body.inkline.-light {
   .indexHeader {
+    background-color: $white;
+
     .mobileIndexHeader {
       background-color: $white;
 
@@ -359,24 +396,28 @@ body.inkline.-light {
         stroke: $black;
       }
     }
+
     .mainIndexHeader {
       background-color: $white;
 
       .linksContainer {
         a.linkItem {
           color: $violet !important;
+
           &:hover {
             color: $lightViolet !important;
           }
         }
       }
+
       .dropdown .menu {
         background-color: $bgLight;
-        border-color: $bgLight;
+        border: none;
         box-shadow: $layerShadow;
 
         .item {
           color: $violet !important;
+
           &:hover {
             color: $lightViolet !important;
             background-color: darken($white, 5) !important;

@@ -3,14 +3,14 @@
 </template>
 
 <script lang="ts">
-import Transaction from "@/blocks/Transaction.vue";
-import { Vue } from "vue-property-decorator";
+import Vue from "vue";
 
 export default Vue.extend({
-  components: {
-    Transaction,
-  },
-  asyncData({ from }) {
+  asyncData({ from, app }) {
+    if (from) {
+      // @ts-ignore
+      app.$accessor.setPreviousRoute({ path: from.path, query: from.query, params: from.params });
+    }
     return {
       fromRoute: from,
     };

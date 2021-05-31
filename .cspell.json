@@ -1,0 +1,17 @@
+{
+  "version": "0.1",
+  "language": "en",
+  "words": [],
+  "dictionaries": [
+    "typescript",
+    "zksync"
+  ],
+  "showStatus": true,
+  "allowCompoundWords": true,
+  "dictionaryDefinitions": [
+    {
+      "name": "zksync",
+      "path": "./cspell-zksync.txt"
+    }
+  ]
+}

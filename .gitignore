@@ -22,10 +22,6 @@
 .env.test.local
 .env.production.local
 
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
 .firebase/
 .vscode/
 
@@ -34,14 +30,12 @@ yarn-error.log*
 .brotli_cache/
 .gzip_cache/
 .assets_cache/
-.buildx-cache/
 .reports/
 /src/static/sw.js
 public
 .nuxt
-/firebase-debug.log
-/report.txt
-/tokens.txt
+*debug.log*
+*error.log*
 /.yarn/cache/
 /.yarn/build-state.yml
 /.yarn/install-state.gz
@@ -50,6 +44,8 @@ public
 # unignore
 !public/.gitignore
 !.yarn/releases/*
-!.yarn/plugins/*
+!.yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
+!.yarn/plugins/@yarnpkg/plugin-version.cjs
 /cypress/screenshots/examples/misc.spec.js/
 /cypress/videos/examples/
+/.eslintcache

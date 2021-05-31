@@ -1,7 +1,8 @@
-import { GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/plugins/types";
 import { walletData } from "@/plugins/walletData";
+import { BalancesList, GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/types/lib";
+import { BigNumber } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
-import { ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol, Address } from "zksync/build/types";
+import { Address, ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/build/types";
 import { ETHOperation } from "zksync/build/wallet";
 
 export const state = () => ({
@@ -81,32 +82,33 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    async watchTransaction({ commit, dispatch, state }, { transactionHash, existingTransaction }) {
+    async watchTransaction({ commit, dispatch, state }, { transactionHash }) {
       try {
+        const savedAddress = this.app.$accessor.account.address;
         if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
           return;
         }
-        if (!existingTransaction) {
-          walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
-          commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
-          await dispatch("requestBalancesUpdate");
-        } else {
-          commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
+        await walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
+        if (savedAddress !== this.app.$accessor.account.address) {
+          return;
         }
-        walletData.get().syncProvider?.notifyTransaction(transactionHash, "VERIFY");
+        commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
         await dispatch("requestBalancesUpdate");
-        commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
       } catch (error) {
-        commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
+        console.log("watchTransaction error", error);
       }
+      commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
     },
-    watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
+    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
       try {
+        const savedAddress = this.app.$accessor.account.address;
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
-        depositTx.awaitReceipt().then(async () => {
-          await this.app.$accessor.transaction.requestBalancesUpdate();
-          commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
-        });
+        await depositTx.awaitReceipt();
+        if (savedAddress !== this.app.$accessor.account.address) {
+          return;
+        }
+        await this.app.$accessor.transaction.requestBalancesUpdate();
+        commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       } catch (error) {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       }
@@ -146,6 +148,35 @@ export const actions = actionTree(
       };
 
       return syncProvider?.getTransactionFee(txType, address, feeToken);
+    },
+
+    /**
+     * Getting the list of pending transactions to update balances status
+     * @param state
+     * @return {BalancesList}
+     */
+    getActiveDeposits({ getters }): BalancesList {
+      // @ts-ignore
+      getters.getForceUpdateTick; // Force to update the list
+      const deposits: ZkInDeposits = getters.depositList;
+      const activeDeposits: ZkInDeposits = {};
+      const finalDeposits: BalancesList = {};
+      let ticker: TokenSymbol;
+      for (ticker in deposits) {
+        activeDeposits[ticker] = deposits[ticker].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
+      }
+      for (ticker in activeDeposits) {
+        if (activeDeposits[ticker].length > 0) {
+          if (!finalDeposits[ticker]) {
+            finalDeposits[ticker] = BigNumber.from("0");
+          }
+          let tx: ZKInDepositTx;
+          for (tx of activeDeposits[ticker]) {
+            finalDeposits[ticker] = finalDeposits[ticker].add(tx.amount);
+          }
+        }
+      }
+      return finalDeposits;
     },
   },
 );

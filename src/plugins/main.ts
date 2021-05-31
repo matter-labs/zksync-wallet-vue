@@ -1,29 +1,31 @@
-import Loader from "@/components/loader.vue";
 import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
 
 import moment from "moment-timezone";
+
 import Vue from "vue";
+
+import VueQrcode from "vue-qrcode";
 import VueScrollTo from "vue-scrollto";
 import { ToastAction, ToastOptions } from "vue-toasted";
 import { TokenSymbol } from "zksync/build/types";
 
 Vue.use(VueScrollTo);
 
-Vue.component("Loader", Loader);
+Vue.component("VueQrcode", VueQrcode);
 
 /**
  * Implementation of the tokenFormatter as a global filter
  */
-Vue.filter("formatToken", (value: string | BigNumber, symbol: TokenSymbol) => {
-  return utils.handleFormatToken(symbol, value.toString());
+Vue.filter("formatToken", (value: string | BigNumber | ArrayLike<number> | bigint | number, symbol: TokenSymbol) => {
+  return utils.handleFormatToken(symbol, value?.toString());
 });
 
 /**
  * Implementation of the tokenFormatter as a global filter
  */
 Vue.filter("formatUsdAmount", (value: string | BigNumber, price: number, symbol: TokenSymbol) => {
-  return utils.getFormattedTotalPrice(Number(price), +utils.handleFormatToken(symbol, <string>value));
+  return utils.getFormattedTotalPrice(+price, +utils.handleFormatToken(symbol, <string>value));
 });
 
 /**
@@ -43,6 +45,7 @@ Vue.filter("formatSeconds", (time: number) => utils.timeCalc(time));
 
 /**
  * zkException error reporting toaster registered
+ * @uses vue-toasted npm-package
  */
 Vue.toasted.register(
   "zkException",
@@ -50,7 +53,7 @@ Vue.toasted.register(
     return payload.message ?? "Oops...Something went wrong";
   },
   <ToastOptions>{
-    duration: undefined,
+    duration: 4000,
     className: "zkToastException",
     icon: "fa-times-circle",
     type: "error",
@@ -59,6 +62,7 @@ Vue.toasted.register(
 
 /**
  * zkCancel — first implementation of “push” with route action (on testing)
+ * @uses vue-toasted npm-package
  */
 Vue.toasted.register(
   "zkCancel",

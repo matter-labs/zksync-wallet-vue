@@ -1,24 +1,30 @@
 <template>
-  <header class="loggedInHeader">
+  <i-layout-header class="loggedInHeader">
     <i-container>
       <i-row>
         <i-column :xs="6" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
-          <nuxt-link class="logoLinkContainer" to="/account"> <logo :is-zk-sync-logo="false" /> </nuxt-link>
+          <nuxt-link class="logoLinkContainer" to="/account">
+            <logo :is-zk-sync-logo="false" />
+          </nuxt-link>
         </i-column>
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
           <div class="pagesContainer linksContainer _margin-x-auto">
             <nuxt-link class="headerLink" to="/account">
-              <i class="mobileOnly ri-wallet-line"></i>
+              <v-icon class="mobileOnly" name="ri-wallet-line" />
               <span>My wallet</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/contacts">
-              <i class="mobileOnly ri-contacts-line"></i>
+              <v-icon class="mobileOnly" name="ri-contacts-line" />
               <span>Contacts</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/transactions">
-              <i class="mobileOnly ri-history-line"></i>
+              <v-icon class="mobileOnly" name="ri-history-line" />
               <span>Transactions</span>
             </nuxt-link>
+            <div class="mobileOnly headerLink _cursor-pointer" @click="footerModal = !footerModal">
+              <v-icon class="mobileOnly" name="ri-more-2-fill" />
+              <span>More</span>
+            </div>
           </div>
         </i-column>
         <i-column :xs="6" :md="3" class="_margin-left-auto _padding-right-0 _display-flex _justify-content-end">
@@ -34,7 +40,7 @@
                 <user-img :wallet="walletAddressFull"></user-img>
               </div>
               <div class="dropdownArrow">
-                <i class="ri-arrow-down-s-line"></i>
+                <v-icon name="ri-arrow-down-s-line" />
               </div>
             </div>
           </div>
@@ -42,20 +48,27 @@
       </i-row>
     </i-container>
     <account-modal />
-  </header>
+    <footer-modal v-model="footerModal" />
+  </i-layout-header>
 </template>
 
 <script lang="ts">
 import logo from "@/blocks/Logo.vue";
-import userImg from "@/components/userImg.vue";
 import accountModal from "@/blocks/modals/AccountModal.vue";
+import footerModal from "@/blocks/modals/FooterModal.vue";
 import Vue from "vue";
 
 export default Vue.extend({
+  name: "Header",
   components: {
     logo,
-    userImg,
     accountModal,
+    footerModal,
+  },
+  data() {
+    return {
+      footerModal: false,
+    };
   },
   computed: {
     walletName(): string {

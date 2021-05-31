@@ -1,14 +1,14 @@
 <template>
-  <div class="indexLayout">
+  <i-layout class="indexLayout">
     <logging-in-loader />
     <header-component />
-    <div class="routerContainer">
+    <i-layout-content class="routerContainer">
       <transition name="fade" mode="out-in">
         <nuxt />
       </transition>
-    </div>
+    </i-layout-content>
     <footer-component />
-  </div>
+  </i-layout>
 </template>
 
 <script lang="ts">

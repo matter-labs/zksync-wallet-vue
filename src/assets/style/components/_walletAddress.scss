@@ -6,15 +6,28 @@
   align-items: center;
   width: 100%;
   height: max-content;
-  padding: 15px;
-  border-radius: 4px;
+  padding: 0.5rem;
+  border-radius: $borderRadiusMd;
   box-shadow: $shadowInset;
   transition: background-color $transition1, box-shadow $transition1;
+  &.inputWallet {
+    position: relative;
+
+    .errorText {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 3px);
+      width: 100%;
+      color: $red;
+      font-size: 12px;
+    }
+  }
 
   &.clickablePicture {
     .userImg {
       cursor: pointer;
     }
+
   }
 
   &.error {
@@ -52,10 +65,11 @@
     padding: 7px 10px;
     color: $gray;
     font-size: 16px;
-    border-radius: 4px;
+    border-radius: $borderRadiusMd;
     transform: translateX(-7px);
     cursor: pointer;
     transition: background-color $transition1, color $transition1;
+    display: inline-flex;
 
     &:active {
       transition: 0.001s;

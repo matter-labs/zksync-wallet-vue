@@ -1,4 +1,5 @@
-node_modules/*
+node_modules
+cypress/*
 .nuxt/*
 src/static/*
 .github/*
@@ -9,3 +10,20 @@ _nuxt/*
 src/static/sw.js
 .eslintrc.js
 tests/*
+*.example
+fonts/**
+src/assets/imgs/*
+.github/*
+.idea/*
+environments/*
+public/*
+src/static/sw.js
+*.css
+*.eot
+*.svg
+*.ttf
+*.woff
+*.woff2
+successCheckmark.json
+sw.js
+./src/static/sw.js

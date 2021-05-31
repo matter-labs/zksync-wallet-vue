@@ -1,0 +1,223 @@
+@media (max-width: $mobile) {
+  html {
+    box-sizing: border-box;
+  }
+  body.inkline {
+    overscroll-behavior-y: none;
+    overscroll-behavior-x: none;
+  }
+
+  aside.bn-onboard-custom.bn-onboard-modal {
+    max-height: 100%;
+    padding-bottom: 5rem;
+  }
+
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+    padding: 0;
+    margin: 0;
+  }
+
+  header {
+    background-color: #222327;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px !important;
+  }
+
+  .content {
+    overflow-y: auto;
+  }
+  aside.bn-onboard-custom.bn-onboard-modal {
+    padding: 1rem 1rem 3.5rem;
+    align-items: flex-end;
+
+    section.bn-onboard-custom.bn-onboard-modal-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-radius: 8px !important;
+      height: fit-content !important;
+      max-height: 70vh !important;
+    }
+
+    header.bn-onboard-custom.bn-onboard-modal-content-header {
+      margin: 0 !important;
+    }
+
+    button.bn-onboard-custom.bn-onboard-icon-button {
+      padding: 0.4rem 1.1rem !important;
+      margin: 0 0 .25rem !important;
+    }
+  }
+
+  #__layout {
+    main {
+      padding: 60px 0 95px;
+      min-height: 100vh;
+      //height: 0 !important;
+      /* autoprefixer: off */
+      @supports (-webkit-touch-callout: none) {
+        //noinspection CssInvalidPropertyValue
+        min-height: -webkit-fill-available;
+      }
+    }
+  }
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  line-height: 1.4;
+}
+
+main > div.mobileOnly {
+  display: none;
+}
+
+section.layoutContent {
+  .mobileOnly {
+    display: none !important;
+  }
+}
+
+
+@media (max-width: $mobile) {
+  ._mobile-no-margin {
+    margin: 0.25rem 0 0 !important;
+  }
+  .successBlock .infoBlockItem {
+    &.smaller .amount {
+      font-size: 14px;
+    }
+
+    .amount {
+      font-size: 18px;
+    }
+  }
+  .defaultLayout .walletContainer.clickablePicture {
+    grid-template-columns: 1fr auto;
+    grid-gap: 0.25rem;
+    padding: 0.25rem !important;
+
+    .walletAddress {
+      letter-spacing: -0.02rem;
+      font-size: 12px;
+    }
+
+    .userImg {
+      display: none;
+    }
+
+    .tooltip-wrapper {
+      i.copy {
+        padding: 0.25rem;
+      }
+    }
+  }
+
+  .transactionsPage .transactionsListContainer {
+    max-height: none !important;
+    padding-top: 0 !important;
+  }
+
+  .footerModalContainer {
+    .footer {
+      position: relative;
+
+      button.floating-on-mobile {
+        position: absolute;
+        right: 0.8rem;
+        bottom: 0.5rem;
+        width: 2.5rem !important;
+        height: 2.5rem !important;
+        box-shadow: $tileShadow;
+      }
+    }
+  }
+  .walletPage .balancesBlock .balances .balancesList .balanceItem {
+    .leftSide {
+      .status {
+        position: relative;
+        top: 1.5px;
+      }
+    }
+    .rightSide .rowItem {
+      justify-content: flex-end;
+  
+      &:nth-child(2) {
+        .total {
+          font-family: $firaSans;
+          letter-spacing: 0;
+          font-size: 10px;
+        }
+        .status {
+          position: relative;
+          top: 0.25rem;
+          margin-right: 0.5rem;
+  
+          &, .loaderContainer, .loaderContainer .loaderSpinner {
+            width: 1rem;
+            height: 1rem;
+          }
+        }
+      }
+    }
+  }
+  .chooseTokenBlock {
+    .tokenListContainer {
+      margin: 1rem auto 0.5rem;
+      overflow-x: hidden;
+      overflow-y: auto !important;
+      background-color: $bgSecondary;
+      border-radius: $borderRadius;
+      box-shadow: $shadowInset;
+
+      .form-input.-prefixed > .form-input.-prefixed > input {
+        font-size: 16px !important;
+        padding: 0.5rem 1rem 0.5rem 2.5rem !important;
+      }
+
+      &::-webkit-scrollbar {
+        width: 10px;
+        background-color: $tempTransparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: $borderRadius;
+        cursor: pointer;
+      }
+
+      &::-webkit-scrollbar-track {
+        background-color: $tempTransparent;
+        border-radius: $borderRadius;
+      }
+
+      .tokenItem {
+        display: flex;
+        flex-direction: row !important;
+        height: 50px !important;
+
+        .tokenSymbol, .balance {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  .modal {
+    &.-md {
+      .header, .footer, .body {
+        padding: 1rem !important;
+      }
+    }
+    .modalFooterBtn
+    {
+      gap: 0.5rem;
+    }
+  }
+}

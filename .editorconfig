@@ -62,7 +62,6 @@ ij_vue_interpolation_wrap = on_every_item
 ij_vue_keep_indents_on_empty_lines = false
 ij_vue_spaces_within_interpolation_expressions = true
 ij_vue_uniform_indent = false
-ij_vue_use_double_quotes = true
 
 [.editorconfig]
 ij_editorconfig_align_group_field_declarations = true
@@ -229,7 +228,7 @@ ij_typescript_ternary_operation_signs_on_next_line = false
 ij_typescript_ternary_operation_wrap = on_every_item
 ij_typescript_union_types_wrap = on_every_item
 ij_typescript_use_chained_calls_group_indents = false
-ij_javascript_force_quote_style = true
+ij_typescript_use_double_quotes = true
 ij_typescript_use_explicit_js_extension = global
 ij_typescript_use_path_mapping = always
 ij_typescript_use_public_modifier = false

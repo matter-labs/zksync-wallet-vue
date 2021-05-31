@@ -1,31 +1,37 @@
-import { NuxtConfig } from "@nuxt/types";
+// noinspection ES6PreferShortImport
+
+import { Configuration, NuxtConfig } from "@nuxt/types";
+import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
+
+const srcDir = "./src/";
+
 const env = process.env.APP_ENV ?? "dev";
-const isProduction = process.env.APP_CURRENT_NETWORK === "mainnet" && env === "prod";
-const srcDir = "src";
-const pageTitle = "zkWallet — your access to L2 zkSync Rollup features.";
+const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
+const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
 const pageImg = "/Cover.jpg";
 
-const pageTitleTemplate = `zkWallet on ${process.env.APP_CURRENT_NETWORK?.toString().charAt(0).toUpperCase()}${process.env.APP_CURRENT_NETWORK?.slice(1)}`;
+const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED} v.${VERSION}:${GIT_REVISION_SHORT}`;
 const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
 crypto payments, zkWallet, cryptowallet`;
 
 const config: NuxtConfig = {
-  components: true,
+  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
+  telemetry: false,
   ssr: false,
   target: "static",
-  srcDir: `${srcDir}/`,
+  srcDir: `${srcDir}`,
   vue: {
     config: {
       productionTip: isProduction,
       devtools: !isProduction,
     },
   },
-  // @ts-ignore
-  env: {
+  env: <NuxtOptionsEnv>{
     ...process.env,
   },
 
@@ -37,8 +43,7 @@ const config: NuxtConfig = {
     titleTemplate: `%s | ${pageTitleTemplate}`,
     htmlAttrs: {
       lang: "en",
-      // @ts-ignore
-      amp: true,
+      amp: "true",
     },
     meta: [
       {
@@ -112,9 +117,6 @@ const config: NuxtConfig = {
         content: pageTitle,
       },
 
-      { "http-equiv": "pragma", content: "no-cache", property: "pragma" },
-      { "http-equiv": "cache-control", property: "cache-control", content: "no-cache , no-store, must-revalidate" },
-      { "http-equiv": "expires", content: "0", property: "expires" },
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
@@ -129,9 +131,7 @@ const config: NuxtConfig = {
         content: "#4e529a",
       },
     ],
-    link: [
-      {rel: "icon", type: "image/x-icon", href: "/favicon-dark.png"}
-    ]
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
   },
   /*
    ** Customize the progress-bar color
@@ -147,7 +147,7 @@ const config: NuxtConfig = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/main"],
+  plugins: ["@/plugins/icons", "@/plugins/main"],
 
   router: {
     middleware: ["wallet"],
@@ -155,26 +155,37 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ["@nuxtjs/style-resources", "@nuxt/typescript-build", "nuxt-typed-vuex", ["@nuxtjs/dotenv", { path: __dirname }]],
+  buildModules: [
+    "nuxt-build-optimisations",
+    "@nuxtjs/style-resources",
+    "@nuxtjs/google-fonts",
+    "nuxt-typed-vuex",
+    ["@nuxtjs/dotenv", { path: __dirname }],
+    [
+      "@nuxt/typescript-build",
+      {
+        typescript: {
+          typeCheck: {
+            async: true,
+            stylelint: {
+              config: [".stylelintrc"],
+              files: "src/**.scss",
+            },
+            eslint: {
+              config: [".eslintrc.js", "tsconfig-eslint.json"],
+              files: "**/*.{ts,js,vue}",
+            },
+            files: "**/*.{ts,vue}",
+          },
+        },
+      },
+    ],
+  ],
 
   /*
    ** Nuxt.js modules
    */
-  modules: [
-    "@nuxtjs/dotenv",
-    "@nuxtjs/axios",
-    "@nuxtjs/toast",
-    "@nuxtjs/google-gtag",
-    "@inkline/nuxt",
-    "nuxt-webfontloader",
-    "nuxt-i18n",
-    "@nuxtjs/sentry",
-  ],
-  webfontloader: {
-    google: {
-      families: ["Fira+Sans:400,600", "Fira+Sans+Extra+Condensed:400,600", "Fira+Code:400"],
-    },
-  },
+  modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
@@ -191,38 +202,20 @@ const config: NuxtConfig = {
       },
     },
   },
-  i18n: {
-    locales: [
-      {
-        code: "en",
-        iso: "en_US",
-        file: "en/translations.json",
-      },
-    ],
-    defaultLocale: "en",
-    langDir: "./locales/",
-    vueI18n: {
-      fallbackLocale: "en",
-      messages: {
-        en: require(`./${srcDir}/locales/en/translations.json`),
-      },
-    },
-  },
   inkline: {
     config: {
-      variant: "dark",
       autodetectVariant: true,
     },
   },
   styleResources: {
-    scss: ["@/assets/style/vars/*.scss"],
+    scss: ["@/assets/style/vars/*.scss", "@/assets/style/_variables.scss"],
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
     disableServerSide: true,
     config: {
-      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
       tracesSampleRate: 1.0,
+      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
     },
   },
   "google-gtag": {
@@ -238,22 +231,40 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
+    babel: {
+      compact: true,
+    },
+    transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
+    hardSource: isProduction,
     ssr: false,
-    extend() {
+    extend: (config: Configuration) => {
       config.node = {
         fs: "empty",
       };
     },
   },
+  buildOptimisations: {
+    profile: env !== "prod" ? "risky" : "experimental",
+    features: {
+      postcssNoPolyfills: isProduction,
+      hardSourcePlugin: isProduction,
+    },
+    esbuildLoaderOptions: "esnext",
+  },
+  googleFonts: {
+    prefetch: true,
+    preconnect: true,
+    preload: true,
+    display: "swap",
+    families: {
+      "Fira+Sans": [400, 600],
+      "Fira+Sans+Extra+Condensed": [400, 600],
+      "Fira+Code": [400],
+    },
+  },
   generate: {
     dir: "public",
-  },
-  typescript: {
-    typeCheck: {
-      eslint: {
-        files: `${srcDir}/**/*.{ts,js,vue}`,
-      },
-    },
+    devtools: env !== "prod",
   },
 };
 export default config;

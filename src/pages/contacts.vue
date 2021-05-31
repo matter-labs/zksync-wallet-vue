@@ -1,9 +1,9 @@
 <template>
-  <div class="contactsPage">
+  <div class="contactsPage dappPageWrapper">
     <i-modal v-model="addContactModal" class="prevent-close" size="md">
       <template slot="header">
-        <span v-if="addContactType === 'add'">{{ $t("pages.contacts.add") }}</span>
-        <span v-else-if="addContactType === 'edit'">{{ $t("pages.contacts.edit") }}</span>
+        <span v-if="addContactType === 'add'">Add contact</span>
+        <span v-else-if="addContactType === 'edit'">Edit contact</span>
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
@@ -14,7 +14,7 @@
         <br />
         <div v-if="modalError" class="modalError _padding-bottom-2">{{ modalError }}</div>
         <i-button v-if="addContactType === 'edit'" block link size="md" variant="secondary" @click="deleteContact()">
-          <i class="ri-delete-bin-line"></i>&nbsp;&nbsp;Delete contact
+          <v-icon name="ri-delete-bin-line" />&nbsp;&nbsp;Delete contact
         </i-button>
         <i-button block variant="secondary" size="lg" @click="addContact()">Save</i-button>
       </div>
@@ -23,23 +23,28 @@
       <div class="tileHeadline h3">
         <span>Contacts</span>
         <i-tooltip>
-          <i
-            class="ri-add-fill"
+          <span
+            class="icon-container _display-flex"
             @click="
               addContactType = 'add';
               addContactModal = true;
             "
-          ></i>
+          >
+            <v-icon name="ri-add-fill" class="iconInfo" />
+          </span>
           <template slot="body">Add contact</template>
         </i-tooltip>
       </div>
       <i-input v-if="isSearching || hasDisplayedContacts" ref="searchInput" v-model="search" placeholder="Filter contacts" autofocus maxlength="20">
-        <i slot="prefix" class="ri-search-line" />
+        <i slot="prefix">
+          <v-icon name="ri-search-line" />
+        </i>
       </i-input>
 
-      <div class="contactsListContainer">
+      <div class="contactsListContainer genericListContainer">
         <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
           <div>The contact list is empty</div>
+
           <i-button
             block
             link
@@ -65,15 +70,21 @@
             <div class="contactName">{{ item.name }}</div>
             <div class="contactAddress walletAddress">{{ item.address }}</div>
           </div>
-          <div v-if="!item.deleted" class="iconsBlock">
-            <i-tooltip trigger="click">
-              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)"><i class="ri-clipboard-line"></i></i-button>
-              <template slot="body">Copied!</template>
-            </i-tooltip>
-            <i-button block link size="md" variant="secondary" @click="editContact(item)"><i class="ri-pencil-fill"></i></i-button>
-          </div>
-          <div v-else class="iconsBlock">
-            <i-button block link size="md" variant="secondary" @click="restoreDeleted(item)"><i class="ri-arrow-go-back-line"></i></i-button>
+          <div class="iconsBlock">
+            <template v-if="!item.deleted">
+              <i-tooltip placement="left" trigger="click">
+                <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(item.address)">
+                  <v-icon name="ri-clipboard-line" />
+                </i-button>
+                <template slot="body">Copied!</template>
+              </i-tooltip>
+              <i-button block link size="md" cla variant="secondary" @click="editContact(item)">
+                <v-icon name="ri-pencil-fill" />
+              </i-button>
+            </template>
+            <i-button v-else class="iconsBlock" block link size="md" variant="secondary" @click="restoreDeleted(item)">
+              <v-icon name="ri-arrow-go-back-line" />
+            </i-button>
           </div>
         </div>
       </div>
@@ -81,7 +92,7 @@
     <div v-else class="tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="computedReturnLink" class="returnBtn">
-          <i class="ri-arrow-left-line" />
+          <v-icon name="ri-arrow-left-line" />
         </nuxt-link>
         <div>
           <span v-if="openedContact.notInContacts">{{ openedContact.address.replace(openedContact.address.slice(6, openedContact.address.length - 3), "...") }}</span>
@@ -101,37 +112,29 @@
           inputtedWallet = openedContact.address;
           addContactModal = true;
         "
-        ><i class="ri-add-line"></i>&nbsp;&nbsp;Add contact
+      >
+        <v-icon name="ri-add-circle-fill" />&nbsp;&nbsp;Add contact
       </i-button>
-      <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)"
-        ><i class="ri-pencil-fill"></i>&nbsp;&nbsp;Edit contact
+      <i-button v-else-if="openedContact.deleted === false" block link size="md" variant="secondary" @click="editContact(openedContact)">
+        <v-icon name="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"><i class="ri-arrow-go-back-line"></i>&nbsp;&nbsp;Restore contact</i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`"><i class="ri-send-plane-fill"></i>&nbsp;&nbsp;Transfer to contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"> <v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact </i-button>
+      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${openedContact.address}`">
+        <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to contact
+      </i-button>
     </div>
-    <transactions v-if="openedContact" :address="openedContact.address" />
+    <lazy-transactions v-if="openedContact" class="_margin-top-0" :address="openedContact.address" />
   </div>
 </template>
 
 <script lang="ts">
-import transactions from "@/blocks/Transactions.vue";
-import addressInput from "@/components/AddressInput.vue";
-
-import userImg from "@/components/userImg.vue";
-import walletAddress from "@/components/walletAddress.vue";
-import { ZkInContact } from "@/plugins/types";
-import { Address } from "zksync/build/types";
-import { Route } from "vue-router/types";
-import utils from "@/plugins/utils";
 import Vue from "vue";
+import { Route } from "vue-router/types";
+import { Address } from "zksync/build/types";
+import utils from "~/plugins/utils";
+import { ZkInContact } from "~/types/lib";
 
 export default Vue.extend({
-  components: {
-    userImg,
-    walletAddress,
-    transactions,
-    addressInput,
-  },
   asyncData({ from }) {
     return {
       fromRoute: from,
@@ -183,6 +186,9 @@ export default Vue.extend({
     },
     isSearching(): boolean {
       return !!this.search.trim();
+    },
+    modalTitle(): string {
+      return `${this.addContactType} contact`;
     },
   },
   watch: {
@@ -262,17 +268,20 @@ export default Vue.extend({
         });
         return;
       }
-      this.deletedContact = foundContact;
       this.$accessor.contacts.deleteContact(this.editingWallet.address);
+      this.editingWallet.deleted = true;
       this.addContactModal = false;
       this.inputtedName = "";
       this.inputtedWallet = "";
       this.editingWallet = null;
     },
-    restoreDeleted(): void {
-      if (this.deletedContact) {
-        this.$accessor.contacts.saveContact(this.deletedContact);
-        this.deletedContact = undefined;
+    restoreDeleted(contact?: ZkInContact): void {
+      if (contact) {
+        contact.deleted = false;
+        this.$accessor.contacts.saveContact(contact);
+      } else if (this.openedContact) {
+        this.openedContact.deleted = false;
+        this.$accessor.contacts.saveContact(this.openedContact);
       }
     },
     openContact(contact: ZkInContact): void {

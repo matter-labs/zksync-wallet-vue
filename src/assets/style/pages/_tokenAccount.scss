@@ -13,25 +13,33 @@
       }
     }
   }
-  .tileBlock.transactionsTile {
-    height: calc(100vh - 82px - 80px - 300px) !important;
-  }
-  .transactionsTile {
-    height: $minRouteHeightMain !important;
-    min-height: 250px !important;
 
-    @media (max-width: $mobile) {
-      height: $minRouteHeightMain !important;
-    }
+  .transactionsTile {
+    min-height: 250px !important;
   }
 }
 
 .balanceWithdraw {
-  @media screen and (max-width: 768px) {
+
+  @media (max-width: $mobile) {
     flex-direction: column;
 
     & > .infoBlock {
       margin-bottom: 10px;
+      .headline
+      {
+        margin-top: 0 !important;
+        font-size: 12px;
+        color: $gray;
+      }
+      .balancePrice
+      {
+        font-size: $mobileNormal;
+      }
+      .balance
+      {
+        font-size: $mobileHeader;
+      }
     }
   }
 }

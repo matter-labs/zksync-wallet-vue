@@ -1,11 +1,11 @@
 <template>
-  <header class="indexHeader" :class="{ opened: opened }">
+  <i-layout-header class="indexHeader" :class="{ opened: opened }">
     <div class="mobileIndexHeader">
       <i-container class="mobileOnly">
-        <i-row class="_disaply-flex _justify-content-between _flex-nowrap">
+        <i-row class="_display-flex _justify-content-between _flex-nowrap">
           <i-column>
             <transition name="fade">
-              <logo :is-zk-sync-logo="false" />
+              <block-logo :is-zk-sync-logo="false" />
             </transition>
           </i-column>
           <i-column class="_padding-right-0">
@@ -30,7 +30,7 @@
       <i-container>
         <i-row>
           <i-column :xs="12" :md="4" class="_padding-left-0 desktopOnly">
-            <logo :is-zk-sync-logo="false" />
+            <block-logo :is-zk-sync-logo="false" />
           </i-column>
           <i-column :xs="12" :md="4" class="_padding-y-0">
             <div class="linksContainer">
@@ -42,10 +42,10 @@
                 size="sm"
                 variation="dark"
                 placement="bottom"
-                trigger="manual"
+                trigger="click"
               >
                 <a class="dropDownHandler linkItem _position-top-0" @click.capture="dropdownOpened = !dropdownOpened">
-                  zkTools <i class="fal" :class="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'"></i>
+                  zkTools <v-icon class="fal" :name="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'" />
                 </a>
                 <i-dropdown-menu v-model="dropdownOpened">
                   <i-dropdown-item v-for="(item, index) in dropdownOptions" :key="index" :href="item.link" target="_blank">{{ item.name }}</i-dropdown-item>
@@ -55,17 +55,15 @@
             </div>
           </i-column>
           <i-column :xs="12" :md="4" class="_margin-left-auto _padding-right-0 _justify-content-end desktopOnly">
-            <social-block />
+            <block-social-block />
           </i-column>
         </i-row>
       </i-container>
     </div>
-  </header>
+  </i-layout-header>
 </template>
 
 <script lang="ts">
-import logo from "@/blocks/Logo.vue";
-import SocialBlock from "@/blocks/SocialBlock.vue";
 import Vue from "vue";
 
 interface DropdownOption {
@@ -74,15 +72,12 @@ interface DropdownOption {
 }
 
 export default Vue.extend({
-  components: {
-    logo,
-    SocialBlock,
-  },
+  name: "IndexHeader",
   data() {
     return {
       opened: false,
       dropdownOpened: false,
-      dropdownOptions: <Array<DropdownOption>>[
+      dropdownOptions: <DropdownOption[]>[
         {
           name: "zkLink",
           link: "https://link.zksync.io/",

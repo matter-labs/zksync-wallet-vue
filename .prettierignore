@@ -1,0 +1,12 @@
+node_modules/*
+cypress/*
+.nuxt/*
+src/static/
+.github/*
+.idea/*
+environments/*
+public/*
+_nuxt/*
+src/static/sw.js
+tests/*
+*.example

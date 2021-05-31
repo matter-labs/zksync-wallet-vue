@@ -1,8 +1,12 @@
 .walletPage {
   .balancesBlock {
-    height: max-content;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    //height: max-content;
     //max-height: $minRouteHeightMain;
-    min-height: 320px;
+    min-height: 0 !important;
+    align-items: stretch;
 
     .form-input-group {
       margin-bottom: 1rem;
@@ -22,14 +26,18 @@
 
     .balances {
       width: 100%;
-      height: calc(100% - 50px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      //height: calc(100% - 50px);
 
       .balancesList {
         width: 100%;
-        height: calc(100% - 170px);
-        overflow-x: hidden !important;
+        //height: calc(100% - 170px);
+        overflow-x: hidden;
+        height: 100%;
         overflow-y: auto !important;
-        background-color: #ffffff10;
+        background-color: $bgSecondary;
         border-radius: $borderRadius;
         box-shadow: $shadowInset;
 
@@ -39,13 +47,13 @@
         }
 
         &::-webkit-scrollbar-thumb {
-          border-radius: 10px;
+          border-radius: $borderRadius;
           cursor: pointer;
         }
 
         &::-webkit-scrollbar-track {
           background-color: $tempTransparent;
-          border-radius: 10px;
+          border-radius: $borderRadius;
         }
 
         .balanceItem {
@@ -58,7 +66,11 @@
           text-decoration: none;
           border-bottom: 1px solid;
           cursor: pointer;
-          transition: background-color $transition1, color $transition1;
+          transition: $transition1;
+          transition-property: background-color, color;
+          &:last-child {
+            border-bottom: none;
+          }
 
           &:hover {
             background-color: transparentize($color: $gray, $amount: 0.9);
@@ -68,6 +80,39 @@
             font-size: 20px;
           }
 
+          .status {
+            width: 25px;
+            height: 25px;
+            font-size: 20px;
+            line-height: 25px;
+            text-align: center;
+
+            .verified {
+              color: $green;
+            }
+
+            .committed {
+              color: #aa935d;
+            }
+
+            .inProgress {
+              color: $gray;
+            }
+
+            svg {
+              position: relative;
+              display: block;
+              top: 1.5px;
+            }
+
+            .loaderContainer {
+              position: relative;
+              left: 1px;
+              margin-top: 1px;
+              margin-left: 2px;
+            }
+          }
+          
           .rightSide {
             display: flex;
             flex-direction: column;
@@ -88,6 +133,7 @@
                 color: $gray;
                 font-size: 16px;
               }
+
               &.small {
                 color: $gray;
                 font-size: 13px;
@@ -97,68 +143,72 @@
                 }
               }
             }
-
-            .status {
-              width: 25px;
-              height: 25px;
-              font-size: 20px;
-              line-height: 25px;
-              text-align: center;
-
-              .verified {
-                color: $green;
-              }
-
-              .committed {
-                color: #aa935d;
-              }
-
-              .inProgress {
-                color: $gray;
-              }
-
-              .loaderContainer {
-                margin-top: 1px;
-                margin-left: 2px;
-              }
-            }
           }
         }
       }
     }
 
-    @media screen and (max-width: $mobile) {
+    @media (max-width: $mobile) {
       height: max-content;
-      .balances {
-        .balancesList {
-          .balanceItem {
-            display: block;
-            height: max-content;
-            padding: 10px 20px;
 
-            .tokenSymbol {
-              text-align: center;
+      .balances {
+        .balancesList .balanceItem {
+          display: flex;
+          height: max-content;
+          align-items: center;
+          padding: 0.3rem 0.5rem;
+          flex-direction: row;
+          gap: 0.2rem;
+          justify-content: stretch;
+
+          .tokenSymbol {
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: -0.03rem;
+          }
+
+          .rightSide{
+            flex-grow: 2;
+            margin-left: auto;
+            display: block;
+
+            .status
+            {
+              width: 1.5rem;
+              height: 1.5rem;
+              order: -1;
+            }
+            .rowItem {
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+
+              &:nth-child(2) {
+                margin-top: 10px;
+              }
             }
 
-            .rightSide {
-              display: block;
+            .total {
+              flex-direction: column;
+              display: flex;
+              justify-content: center;
+              align-items: flex-end;
+              text-align: right;
+              margin-bottom: 0;
+              gap: 0.2rem;
+              font-size: 12px;
+              line-height: 12px;
+              letter-spacing: -0.05rem;
+              padding-right: 0.1rem;
+              font-family: $firaCode;
 
-              .rowItem {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-
-                &:nth-child(2) {
-                  margin-top: 10px;
-                }
+              .balancePrice
+              {
+                order: 1;
               }
-
-              .total {
-                text-align: center;
-
-                .balancePrice {
-                  display: block;
-                }
+              .tokenPrice {
+                font-size: 11px;
               }
             }
           }

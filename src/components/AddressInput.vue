@@ -1,7 +1,7 @@
 <template>
   <div class="addressInput">
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
-      <user-img v-if="isValid" :wallet="inputtedWallet" />
+      <lazy-user-img v-if="isValid" :wallet="inputtedWallet" />
       <div v-else class="userImgPlaceholder userImg"></div>
       <!--suppress HtmlFormInputWithoutLabel -->
       <input
@@ -15,21 +15,20 @@
         type="text"
         @keyup.enter="$emit('enter')"
       />
+      <transition name="fadeFast">
+        <div v-if="error" class="errorText">{{ error }}</div>
+      </transition>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import userImg from "@/components/userImg.vue";
-import { DecimalBalance } from "@/plugins/types";
+import { DecimalBalance } from "@/types/lib";
 
 import utils from "@/plugins/utils";
 import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
-  components: {
-    userImg,
-  },
   props: {
     value: {
       type: String,

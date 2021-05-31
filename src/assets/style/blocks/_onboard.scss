@@ -7,8 +7,9 @@
 
   .bn-onboard-select-wallet-info {
     color: $lightViolet !important;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 16px;
+
     @media screen and (max-width: $mobile) {
       margin-top: 0.35em;
     }
@@ -17,16 +18,18 @@
   a,
   .bn-onboard-select-wallet-info {
     color: $lightViolet !important;
-    font: normal 16px $firaSans !important;
+    font: 400 16px $firaSans !important;
     letter-spacing: -0.01rem !important;
     text-decoration: none !important;
+
     &:hover {
       color: $violet !important;
     }
   }
 
-  @media screen and (min-width: $mobile) {
-    b//background-color: transparent !important;
+  @media (min-width: $mobile) {
+    //background-color: transparentize($color: $violet, $amount: 0.9) !important;
+
     .bn-onboard-modal-content {
       width: 85%;
     }
@@ -38,9 +41,53 @@
 
     @media (max-width: $mobile) {
       height: 100vh !important;
+      //height: calc(100vh - 1rem) !important;
       max-height: 100vh !important;
       border-radius: 0 !important;
 
+
+      /* autoprefixer: off */
+      @supports (-webkit-touch-callout: none) {
+        //noinspection CssInvalidPropertyValue
+        max-height: fill-available;
+        //noinspection CssInvalidPropertyValue
+        height: fill-available;
+      }
+
+
+      //flex-flow: column;
+      //display: flex;
+      //justify-content: space-between;
+      //padding-bottom: 1rem !important;
+      //
+      //header.bn-onboard-modal-content-header {
+      //  margin: 1rem.25rem;
+      //}
+      //
+      //.bn-onboard-select-info-container {
+      //  margin: 0.25rem 0 !important;
+      //  padding: 0.75rem.25rem !important;
+      //  display: flex;
+      //  align-items: center;
+      //
+      //  span.bn-onboard-select-wallet-info {
+      //    margin-top: 0 !important;
+      //  }
+      //}
+      //
+      //p.bn-onboard-select-description {
+      //  padding: 0 0 1rem;
+      //  border-bottom: 0.5px solid $lightViolet;
+      //  margin: 0.5rem;
+      //  display: block;
+      //}
+      //
+      //p.bn-onboard-select-wallet-definition {
+      //  display: block;
+      //  margin: 0;
+      //  padding: 0.25rem;
+      //  transition: all $transition2;
+      //}
       .bn-onboard-modal-content-header {
         margin: 1rem 0 !important;
       }
@@ -49,7 +96,6 @@
 
   ul.bn-onboard-modal-select-wallets {
     max-height: 50vh !important;
-    overflow: auto;
   }
 
   .bn-onboard-custom.bn-onboard-select-wallet-definition {
@@ -58,7 +104,7 @@
     span {
       display: block;
       margin: 5px 0;
-      font-weight: bold;
+      font-weight: 600;
 
       a {
         color: $lightViolet !important;
@@ -68,6 +114,7 @@
 
   .bn-onboard-icon-button {
     border-radius: 8px;
+    overflow: hidden;
   }
 
   .bn-onboard-selected-wallet {
@@ -135,9 +182,11 @@
       margin: 0.25rem 0;
       padding: 0.5rem;
     }
+
     .bn-onboard-select-wallet-definition {
-      margin-top: .8em !important;
+      margin-top: 0.8em !important;
     }
+
     .bn-onboard-modal-content {
       padding-bottom: 0;
 
@@ -157,14 +206,21 @@
       ul.bn-onboard-custom.bn-onboard-modal-select-wallets {
         height: 100%;
         max-height: calc(100% - 285px - 2rem) !important;
+        //max-height: calc(100% - 150px - 1.5rem) !important;
         margin: 0;
         padding: 0;
       }
 
       .bn-onboard-custom.bn-onboard-select-info-container {
-        margin: 1rem 0 0.5rem;
-        padding: 0.75rem 0 0.5rem;
+        margin: 0.25rem 0 0.5rem;
+        padding: 0.5rem 0 0;
+        //margin: 1rem .5rem;
+        //padding: 0.75rem .5rem;
         border-top: 0.5px solid $lightViolet;
+
+        span.bn-onboard-select-wallet-info {
+          margin-top: .4rem;
+        }
       }
 
       .bn-onboard-modal-content-close {
@@ -179,7 +235,7 @@
   }
 
   .bn-onboard-dark-mode {
-    background-color: darken($darkViolet, 7) !important;
+    background-color: lighten($darkViolet, 2) !important;
     box-shadow: $defaultShadow;
 
     .bn-onboard-prepare-error {
@@ -188,6 +244,95 @@
 
     .bn-onboard-selected-wallet {
       background-color: $accentBg !important;
+    }
+  }
+}
+
+#walletconnect-wrapper .walletconnect-modal__base {
+
+  @media (max-height: $mobile) {
+    max-width: 300px;
+  }
+}
+
+
+section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+}
+
+.bn-onboard-custom.bn-onboard-modal-content {
+  section.bn-onboard-custom.bn-onboard-modal-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  header.bn-onboard-custom.bn-onboard-modal-content-header {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  div.bn-onboard-custom.bn-onboard-modal-content-close {
+    top: 1rem;
+    right: 1rem;
+    width: 20px;
+    height: 20px;
+  }
+}
+/* autoprefixer: off */
+aside.bn-onboard-custom.bn-onboard-modal {
+  max-height: 100vh;
+  padding: 2vh 2vw;
+
+  /* Avoid Chrome to see Safari hack */
+  @supports (-webkit-touch-callout: none) {
+    //noinspection CssInvalidPropertyValue
+    max-height: fill-available;
+  }
+
+  .bn-onboard-custom.bn-onboard-modal-content {
+    max-height: 90vh !important;
+
+    /* Avoid Chrome to see Safari hack */
+    @supports (-webkit-touch-callout: none) {
+      //noinspection CssInvalidPropertyValue
+      min-height: fill-available;
+    }
+  }
+
+  section.bn-onboard-custom.bn-onboard-modal-content {
+    overflow: hidden;
+  }
+}
+
+@media (max-height: $mobile) {
+  aside.bn-onboard-custom.bn-onboard-modal {
+    padding: 1rem;
+
+    section.bn-onboard-custom.bn-onboard-modal-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 0.5rem;
+      padding: 1rem;
+      border-radius: 8px !important;
+      height: fit-content !important;
+    }
+
+    header.bn-onboard-custom.bn-onboard-modal-content-header {
+      margin: 0 !important;
+    }
+
+    button.bn-onboard-custom.bn-onboard-icon-button {
+      margin: 0 0 .25rem !important;
+      padding: 0.5rem !important;
     }
   }
 }

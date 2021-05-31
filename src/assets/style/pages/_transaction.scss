@@ -35,13 +35,13 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
+      border-radius: $borderRadius;
       cursor: pointer;
     }
 
     &::-webkit-scrollbar-track {
       background-color: transparent;
-      border-radius: 10px;
+      border-radius: $borderRadius;
     }
 
     .tokenItem {

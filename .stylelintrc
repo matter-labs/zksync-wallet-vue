@@ -1,15 +1,35 @@
 {
-  "extends": "stylelint-config-standard",
+  "extends": [
+    "stylelint-config-standard"
+  ],
+  "plugins": [
+    "stylelint-scss"
+  ],
   "rules": {
+    "at-rule-no-unknown": false,
+    "block-no-empty": null,
+    "block-opening-brace-newline-after": "always",
     "color-named": "never",
+    "custom-property-empty-line-before": false,
+    "declaration-block-semicolon-newline-after": "always",
+    "declaration-block-trailing-semicolon": false,
     "font-family-name-quotes": "always-where-recommended",
     "font-weight-notation": "numeric",
-    "string-quotes": "double",
     "function-url-quotes": "always",
-    "number-leading-zero": "never",
-    "value-no-vendor-prefix": true,
-    "value-list-comma-newline-before": "never-multi-line",
-    "custom-property-empty-line-before": "never",
+    "indentation": [
+      2,
+      {
+        "indentInsideParens": "once-at-root-twice-in-block"
+      }
+    ],
+    "no-descending-specificity": null,
+    "no-duplicate-selectors": "never",
+    "no-empty-source": [
+      true,
+      {
+        "severity": "warning"
+      }
+    ],
     "property-no-unknown": [
       true,
       {
@@ -20,10 +40,9 @@
         ]
       }
     ],
-    "declaration-block-semicolon-newline-after": "always",
-    "block-opening-brace-newline-after": "always",
+    "scss/at-rule-no-unknown": true,
     "selector-attribute-quotes": "always",
-    "selector-max-specificity": "0,5,2",
+    "selector-max-specificity": false,
     "selector-pseudo-class-no-unknown": [
       true,
       {
@@ -33,21 +52,17 @@
         ]
       }
     ],
-    "at-rule-empty-line-before": [
-      "always",
+    "selector-pseudo-element-colon-notation": "",
+    "selector-type-no-unknown": [
+      true,
       {
         "ignore": [
-          "after-comment"
+          "custom-elements"
         ]
       }
     ],
-    "indentation": [
-      2,
-      {
-        "indentInsideParens": "once-at-root-twice-in-block"
-      }
-    ],
-    "max-nesting-depth": 3,
-    "no-duplicate-selectors": true
+    "string-quotes": "double",
+    "value-list-comma-newline-before": "never-multi-line",
+    "value-no-vendor-prefix": false
   }
 }

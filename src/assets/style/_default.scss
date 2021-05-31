@@ -1,10 +1,76 @@
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+
 #__nuxt,
-#__layout,
-.layoutContent,
-.defaultLayout {
+#__layout {
   width: 100%;
   height: max-content;
   min-height: 100vh;
+
+  /* Avoid Chrome to see Safari hack */
+  /* autoprefixer: off */
+  @supports (-webkit-touch-callout: none) {
+    //noinspection CssInvalidPropertyValue
+    min-height: -webkit-fill-available;
+  }
+}
+
+main.layout.defaultLayout {
+  max-height: 100%;
+  overflow: hidden;
+  padding: 40px 0 70px;
+}
+
+/**
+ * Only for the desktops
+ */
+@media (min-width: $tablet) {
+  main.layout.defaultLayout {
+    max-height: 100%;
+    display: flex;
+    padding: 60px 0 60px;
+    justify-content: stretch;
+    height: 100vh;
+    /* autoprefixer: off */
+    @supports (-webkit-touch-callout: none) {
+      //noinspection CssInvalidPropertyValue
+      min-height: -webkit-fill-available;
+    }
+
+    section.layout-content.layoutContent {
+      display: flex;
+      overflow: hidden;
+
+      .routerContainer {
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        .dappPageWrapper {
+          overflow-y: auto !important;
+          height: max-content;
+        }
+      }
+    }
+
+    .tileBlock {
+      margin: 0 auto !important;
+    }
+
+    .balancesList {
+      margin: 0 !important;
+    }
+  }
+  .bn-onboard-custom.bn-onboard-modal-content {
+    align-self: center;
+  }
+}
+
+#__layout {
+  display: flex;
 }
 
 #nuxt-loading {
@@ -31,11 +97,14 @@ input[type="number"] {
 }
 
 .mobileOnly {
+
   @media screen and (min-width: $mobile) {
     display: none !important;
   }
 }
+
 .desktopOnly {
+
   @media screen and (max-width: $mobile+1) {
     display: none !important;
   }
@@ -48,15 +117,15 @@ input[type="number"] {
   cursor: pointer;
 
   &:hover {
-    color: $lightViolet;
+    filter: brightness(125%);
     text-decoration: none !important;
   }
 }
 
-.desktopOnly {
-  @media screen and (max-width: $mobile) {
-    display: none;
-  }
+.border-line {
+  background-color: transparentize($color: $gray, $amount: 0.8);
+  width: 100%;
+  height: 1px;
 }
 
 body.inkline {
@@ -65,7 +134,26 @@ body.inkline {
       padding: 7px 12px;
       color: $lightViolet !important;
       text-decoration: none !important;
-      border-radius: 4px;
+      border-radius: $borderRadiusSm;
+      transition: background-color $transition1;
+    }
+
+    &.-secondary {
+      &:disabled {
+        opacity: 0.3;
+      }
+    }
+
+    &.-dark {
+      &:disabled {
+        background-color: $violet;
+        opacity: 0.4 !important;
+      }
+    }
+
+    .planeIcon {
+      position: relative;
+      top: -2px;
     }
   }
 
@@ -112,13 +200,13 @@ body.inkline {
 
 button.-lg.-circle {
   .inkline-icon {
-    line-height: 2;
+    line-height: 1.9;
   }
 }
 
 .popover {
   border: none !important;
-  border-radius: 10px !important;
+  border-radius: $borderRadius !important;
   box-shadow: $popoverShadow;
   opacity: 0.975;
 
@@ -187,16 +275,20 @@ button.-lg.-circle {
   }
 }
 
-.modal-wrapper.prevent-close {
-  .modal {
-    &::before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      width: 100%;
-      height: 100%;
-      content: "";
+.modal-wrapper {
+  position: absolute !important;
+
+  &.prevent-close {
+    .modal {
+      &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        content: "";
+      }
     }
   }
 }
@@ -206,28 +298,14 @@ button.-lg.-circle {
     > .header {
       font-weight: 400;
       font-size: 1.5rem;
-      font-family: $firaSansExtra;
+      font-family: $firaSans;
+
 
       & > .close {
         width: 2.2rem !important;
         height: 2.2rem !important;
         line-height: 2rem !important;
 
-        &::before {
-          display: inline-block;
-          color: $white;
-          font-weight: 300;
-          font-size: 2rem;
-          //noinspection CssNoGenericFontName
-          font-family: "remixicon" !important;
-          font-style: normal;
-          -webkit-font-smoothing: antialiased;
-          content: "\eb98";
-        }
-
-        .icon {
-          display: none !important;
-        }
       }
 
       @media (max-width: $mobile) {
@@ -246,7 +324,7 @@ button.-lg.-circle {
     }
 
     & > div:last-child {
-      border-radius: 0 0 8px 8px;
+      border-radius: 0 0 $borderRadius $borderRadius;
     }
   }
 
@@ -258,12 +336,22 @@ button.-lg.-circle {
     .header,
     .footer,
     .body {
+      border-color: $light !important;
+    }
+
+    .footer,
+    .body {
       background: $modal-background-light !important;
       border-color: $light !important;
     }
 
-    .footer .modalFooterBtn {
+    .modalFooterBtn {
       color: $black;
+    }
+
+    .close .icon {
+      line-height: 18px;
+      font-size: 18px;
     }
   }
 
@@ -271,11 +359,22 @@ button.-lg.-circle {
     .header,
     .footer,
     .body {
+      border-color: $modal-border-color-dark !important;
+    }
+
+    .footer,
+    .body {
       background: $modal-background-dark !important;
       border-color: $modal-border-color-dark !important;
     }
 
+    .header {
+      background: $modal-background-dark !important;
+    }
+
     .close .icon {
+      line-height: 18px;
+      font-size: 18px;
       color: $white;
     }
   }
@@ -284,33 +383,40 @@ button.-lg.-circle {
     border-bottom: none !important;
   }
 
-  .footer {
-    .modalFooterBtn {
-      display: flex;
-      flex-wrap: nowrap;
-      align-items: center;
-      box-sizing: border-box;
-      margin: 3px 0;
-      padding: 6px 15px;
-      color: $white;
-      text-decoration: none;
-      border-radius: $borderRadius;
-      cursor: pointer;
-      transition: background-color $transition1;
+  .modalFooterBtn {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 3px 0;
+    padding: 6px 15px;
+    color: $white;
+    text-decoration: none;
+    border-radius: $borderRadius;
+    cursor: pointer;
+    transition: background-color $transition1;
 
-      &:hover {
-        background-color: transparentize($color: $gray, $amount: 0.8);
-      }
-
+    &.big {
       i {
-        margin-right: 30px;
-        font-size: 16px;
+        font-size: 20px;
       }
 
       span {
-        font-size: 14px;
-        text-align: left;
+        font-size: 18px;
       }
+    }
+
+    &:hover {
+      background-color: transparentize($color: $gray, $amount: 0.8);
+    }
+
+    svg {
+      margin-right: 10px;
+    }
+
+    span {
+      font-size: $fontSizeRegular;
+      text-align: left;
     }
   }
 
@@ -318,7 +424,7 @@ button.-lg.-circle {
     border-top: none !important;
 
     p {
-      margin: 15px 0;
+      margin: 0 0 15px;
       line-height: 1.4;
     }
   }
@@ -367,6 +473,10 @@ button.-lg.-circle {
 
     .form-input-append {
       background-color: transparent !important;
+
+      &:hover {
+        background-color: $mediumViolet !important;
+      }
     }
   }
 
@@ -378,6 +488,7 @@ button.-lg.-circle {
 .form-group {
   &.-radio {
     margin: 15px 0;
+
     /* display: flex;
     flex-direction: column;
 
@@ -445,17 +556,6 @@ button.-lg.-circle {
   }
 }
 
-.fa-check-double {
-  display: block;
-  min-width: 35px;
-  min-height: 35px;
-  color: transparent !important;
-  background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjI2IDYgMjYgOCIgaGVpZ2h0PSIxMDAiIHdpZHRoPSIxMDAiPjxwYXRoIGZpbGw9JyM1OEFFNjcnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgZD0iTTI3LjkyMyAxMC4zM2w1LjQyIDUuNDdMNDMuNjU2IDUuNTZsLTEuOTk4LTEuOTk4LTguMDY1IDcuOS0zLjMzLTMuMzU1em04LjU4NyAyLjkwOGwyLjUzOCAyLjQ5M0w0OS4zNiA1LjQ5MmwtMS45OTgtMS45OTgtOC4wNjUgNy45LS40NDctLjM3OHoiPjwvcGF0aD48L3N2Zz4=);
-  background-repeat: no-repeat;
-  background-position: -2px -6px;
-  background-size: contain;
-}
-
 .tokenSymbol,
 .walletAddress {
   font-weight: 400;
@@ -470,4 +570,25 @@ button.-lg.-circle {
 .h2 {
   font-weight: 600 !important;
   font-family: $firaSans;
+}
+
+._margin-top-05 {
+  margin-top: 0.5em;
+}
+._margin-left-05 {
+  margin-left: 0.4em;
+}
+
+.grid-cols-2 {
+  display: grid;
+  height: max-content;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 100%;
+  grid-gap: 15px;
+
+  @media screen and (max-width: $mobile) {
+    grid-gap: 10px;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(2, 1fr);
+  }
 }

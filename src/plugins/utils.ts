@@ -1,10 +1,10 @@
 import { walletData } from "@/plugins/walletData";
-import { DecimalBalance, GweiBalance, ZkInBalance } from "@/plugins/types";
-import { utils as zkUtils } from "zksync";
-import { Address, TokenSymbol } from "zksync/build/types";
+import { DecimalBalance, GweiBalance, ZkInBalance, ZKTypeDisplayToken } from "@/types/lib";
 import { IPrototype } from "@inkline/inkline/src/plugin.d";
 
 import { BigNumber, BigNumberish, utils } from "ethers";
+import { utils as zkUtils } from "zksync";
+import { Address, TokenSymbol } from "zksync/build/types";
 
 /**
  *
@@ -16,16 +16,20 @@ function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
   return walletData.get().syncProvider?.tokenSet?.parseToken(symbol, amount.toString()) || BigNumber.from("0");
 }
 
-function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance) {
+/**
+ * Formatting token amount output to human readable string
+ *
+ * @param {TokenSymbol} symbol
+ * @param {GweiBalance} amount
+ * @return {string}
+ */
+function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance): string {
   if (!amount) return "0";
-  const result = walletData.get().syncProvider?.tokenSet?.formatToken(symbol, amount);
-  if (result) {
-    if (result && result.endsWith(".0")) {
-      return result.substr(0, result.length - 2);
-    }
-    return result;
+  const result: string | undefined = walletData.get().syncProvider?.tokenSet?.formatToken(symbol, amount);
+  if (result === undefined) {
+    return "0";
   }
-  return "0";
+  return result && result.endsWith(".0") ? result.substr(0, result.length - 2) : result;
 }
 
 export default {
@@ -92,12 +96,26 @@ export default {
     return utils.isAddress(address);
   },
 
-  searchInArr: (search: string, list: Array<unknown>, searchParam: (e: unknown) => string) => {
+  searchInArr: (search: string, list: Array<unknown> | ZKTypeDisplayToken[], searchParam: (e: unknown) => string) => {
     if (!search.trim()) {
       return list;
     }
     search = search.trim().toLowerCase();
     return list.filter((e) => String(searchParam(e)).toLowerCase().includes(search));
+  },
+
+  filterError: (error: Error): string | undefined => {
+    if (error.message) {
+      if (error.message.includes("User denied")) {
+        return "";
+      } else if (error.message.includes("Fee Amount is not packable")) {
+        return "Fee Amount is not packable";
+      } else if (error.message.includes("Transaction Amount is not packable")) {
+        return "Transaction Amount is not packable";
+      } else if (error.message.length < 60) {
+        return error.message;
+      }
+    }
   },
 
   /**

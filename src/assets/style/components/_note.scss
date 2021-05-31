@@ -7,16 +7,18 @@
     padding: 10px 15px;
     text-align: left;
     border: 1px solid $light;
-    border-radius: 6px;
+    border-radius: $borderRadius;
     transition: border-color $transition1;
 
     .noteIcon {
       font-size: 18px;
     }
+
     .noteText {
       font-weight: 300;
       font-size: 12px;
     }
+
     .noteIcon,
     .noteText {
       color: $black;
@@ -30,6 +32,7 @@ body.inkline {
     .noteMain {
       border-color: darken($color: $gray, $amount: 15);
     }
+
     .noteIcon,
     .noteText {
       color: darken($color: $gray, $amount: 15);

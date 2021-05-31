@@ -2,8 +2,22 @@
   // extend your base config so you don't have to redefine your compilerOptions
   "extends": "./tsconfig.json",
   "include": [
-    "./src/**/*.ts",
-    "./src/**/*.vue",
-    "./src/**/*.js",
-  ]
+    "**/*.ts",
+    "**/*.vue",
+    "**/*.js",
+    ".eslintrc.js"
+  ],
+  "exclude": [
+    "tests/*",
+  ],
+  "compilerOptions": {
+    "types": ["@types/node"],
+    "lib": [
+      "es2019",
+      "es2019.object",
+      "esnext",
+      "esnext.asynciterable",
+      "dom"
+    ]
+  }
 }

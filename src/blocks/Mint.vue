@@ -18,6 +18,7 @@ import { ETHER_NETWORK_NAME } from "@/plugins/build";
 import Vue from "vue";
 
 export default Vue.extend({
+  name: "Mint",
   props: {
     display: {
       type: Boolean,

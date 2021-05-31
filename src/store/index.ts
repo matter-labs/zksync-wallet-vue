@@ -1,25 +1,23 @@
-import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
-
 import * as account from "@/store/account";
 import * as contacts from "@/store/contacts";
 import * as tokens from "@/store/tokens";
 import * as transaction from "@/store/transaction";
 import * as wallet from "@/store/wallet";
+import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
+import { Route } from "vue-router/types";
+import { ZKIRootState } from "~/types/lib";
 
-interface iRootState {
-  accountModalOpened: boolean;
-  currentModal?: string;
-}
-
-export const state = (): iRootState => ({
+export const state = (): ZKIRootState => ({
   accountModalOpened: false,
   currentModal: undefined,
+  previousRoute: undefined,
 });
 
 export type RootState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
   getAccountModalState: (state: RootState) => state.accountModalOpened,
+  getPreviousRoute: (state: RootState) => state.previousRoute,
   currentModal: (state: RootState) => state.currentModal,
 });
 
@@ -29,6 +27,9 @@ export const mutations = mutationTree(state, {
   },
   setCurrentModal(state: RootState, modalName: string): void {
     state.currentModal = modalName;
+  },
+  setPreviousRoute(state: RootState, route: Route): void {
+    state.previousRoute = route;
   },
   removeCurrentModal(state: RootState): void {
     state.currentModal = undefined;

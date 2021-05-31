@@ -4,10 +4,21 @@
       <loader />
     </div>
     <template v-else>
-      <i-input ref="tokenSymbolInput" v-model="search" :placeholder="`Filter balances in ${tokensType}`" maxlength="10">
-        <i slot="prefix" class="ri-search-line"></i>
-      </i-input>
-      <div class="tokenListContainer">
+      <div class="searchContainer">
+        <i-input ref="tokenSymbolInput" v-model="search" :placeholder="`Filter balances in ${tokensType}`" maxlength="10">
+          <i>
+            <v-icon slot="prefix" name="ri-search-line" />
+          </i>
+        </i-input>
+        <div class="updateBtn" :class="{ disabled: spinnerLoading }" @click="getTokenList(true)">
+          <i-tooltip placement="left">
+            <v-icon v-if="spinnerLoading" name="ri-loader-5-line" class="spin-animation" />
+            <v-icon v-else name="ri-restart-line" />
+            <template slot="body">Update {{ tokensType }} balances</template>
+          </i-tooltip>
+        </div>
+      </div>
+      <div class="tokenListContainer genericListContainer">
         <div v-for="item in displayedList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
           <div class="tokenSymbol">{{ item.symbol }}</div>
           <div class="rightSide">
@@ -24,7 +35,7 @@
         </div>
       </div>
       <!--suppress JSCheckFunctionSignatures -->
-      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token? </i-button>
+      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token?</i-button>
       <no-token-found />
     </template>
   </div>
@@ -33,7 +44,7 @@
 <script lang="ts">
 import NoTokenFound from "@/blocks/modals/NoTokenFound.vue";
 import utils from "@/plugins/utils";
-import { ZkInBalance } from "@/plugins/types";
+import { ZkInBalance } from "@/types/lib";
 
 import Vue, { PropOptions } from "vue";
 
@@ -58,7 +69,8 @@ export default Vue.extend({
   data() {
     return {
       search: "",
-      loading: false,
+      loading: true,
+      spinnerLoading: false,
     };
   },
   computed: {
@@ -73,21 +85,22 @@ export default Vue.extend({
       return list;
     },
   },
-  mounted() {
-    this.getTokenList();
+  async mounted() {
+    await this.getTokenList();
+    this.loading = false;
   },
   methods: {
     chooseToken(token: ZkInBalance): void {
       this.$emit("chosen", token);
     },
-    async getTokenList(): Promise<void> {
-      this.loading = true;
+    async getTokenList(force = false): Promise<void> {
+      this.spinnerLoading = true;
       if (this.tokensType === "L2") {
-        await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
+        await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force });
       } else {
-        await this.$accessor.wallet.requestInitialBalances(false);
+        await this.$accessor.wallet.requestInitialBalances(force);
       }
-      this.loading = false;
+      this.spinnerLoading = false;
     },
   },
 });

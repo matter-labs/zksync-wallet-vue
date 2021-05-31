@@ -1,9 +1,14 @@
 header {
   width: 100%;
-  height: 80px;
+  height: $headerHeight;
   padding: 0;
   transition: background-color $transition1;
-  &.loggedInHeader {
+  transition-property: background-color, border, box-shadow;
+
+  &.layout-header {
+    position: fixed;
+    top: 0;
+    z-index: 3;
     @media screen and (max-width: $mobile) {
       position: fixed;
       top: 0;
@@ -11,28 +16,43 @@ header {
       z-index: 9;
       box-shadow: $shadowBottom;
     }
-    @media screen and (min-width: 992px) and (max-width: 1200px) {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(239, 241, 244);
+    box-shadow: 0 1px 0.5px #0000001a;
+  }
+
+  &.indexHeader {
+    min-height: 60px;
+  }
+
+
+  &.loggedInHeader {
+
+    @media screen and (min-width: $tablet) and (max-width: $desktop) {
       .pagesContainer.linksContainer {
         grid-gap: 3px;
 
         .headerLink {
           padding: 10px 10px;
-          font-size: 14px;
+          font-size: $fontSizeRegular;
         }
       }
     }
-    @media screen and (min-width: 768px) and (max-width: 991px) {
+
+    @media screen and (min-width: $mobile) and (max-width: $tablet) {
       .pagesContainer.linksContainer {
         grid-gap: 3px;
 
         .headerLink {
-          padding: 10px 15px;
+          padding: 13px 15px;
           font-size: 20px;
 
           span {
             display: none;
           }
-          i {
+
+          svg {
             display: block !important;
           }
         }
@@ -40,7 +60,7 @@ header {
     }
   }
 
-  & > .container {
+  .container {
     display: flex;
     align-items: center;
     width: 100%;
@@ -48,7 +68,6 @@ header {
 
     .row {
       width: 100%;
-      padding: 0 5vw;
 
       @media screen and (max-width: $mobile) {
         margin: 0 auto;
@@ -64,9 +83,11 @@ header {
       align-items: center;
       height: 100%;
     }
+
     .headerWrapper {
       height: 30px !important;
-      @media screen and (min-width: 768px) and (max-width: 991px) {
+
+      @media screen and (min-width: $mobile) and (max-width: $tablet) {
         height: 25px !important;
 
         .badge small {
@@ -74,10 +95,14 @@ header {
         }
       }
 
+
       .zkwallet-logo {
         width: auto !important;
         height: 100% !important;
         object-fit: contain;
+        @media (max-width: $mobile) {
+          height: 25px !important;
+        }
       }
 
       .badge {
@@ -100,8 +125,9 @@ header {
         }
       }
     }
-    @media screen and (min-width: 1201px) {
-      max-width: 1920px;
+
+    @media screen and (min-width: $desktop) {
+      max-width: $biggestWidth;
     }
   }
 
@@ -114,7 +140,8 @@ header {
     align-items: center;
     width: max-content;
     height: 100%;
-    @media screen and (min-width: $mobile) and (max-width: 992px) {
+
+    @media screen and (min-width: $mobile) and (max-width: $tablet) {
       grid-gap: 15px;
 
       .mainLink {
@@ -127,32 +154,43 @@ header {
       text-decoration: none;
       transition: color $transition1;
 
-      i {
+      em, i {
         padding-left: 2px;
         color: $gray;
         font-size: 12px;
       }
     }
+
     .headerLink {
       padding: 10px 15px;
       color: $violet;
-      border-radius: $borderRadius;
-      transition: $transition1;
+      border-radius: $borderRadiusMd;
       transition-property: background-color, color;
       will-change: background-color, color;
+
+      @media screen and (min-width: $mobile) {
+        transition: $transition1;
+      }
 
       &.nuxt-link-exact-active {
         color: #27274e;
         font-weight: 600;
-        background: #f7fafc;
+        background: $mediumGrey;
+        //background: $light;
       }
     }
   }
+
   @media screen and (max-width: $mobile) {
     .pagesContainerRow {
       position: absolute;
       top: 0;
       left: 0;
+    }
+
+    .pagesContainer {
+      background-color: $darkViolet;
+      box-shadow: $shadowTop;
     }
     .pagesContainer {
       position: fixed;
@@ -162,10 +200,8 @@ header {
       grid-gap: 2px;
       justify-content: center;
       width: 100%;
-      height: 80px;
+      height: 70px;
       padding: 6px 5vw;
-      background-color: $darkViolet;
-      box-shadow: $shadowTop;
 
       .headerLink {
         display: flex;
@@ -173,18 +209,27 @@ header {
         justify-content: center;
         height: 100%;
         padding: 9px 10px;
-        font-size: 14px;
+        font-size: $fontSizeRegular;
+
         &.nuxt-link-exact-active {
           font-weight: 400;
         }
 
-        i {
+        svg {
           display: block;
-          padding-top: 2px;
-          padding-bottom: 5px;
-          font-size: 20px;
-          text-align: center;
+          margin: 0 auto;
         }
+        span {
+          margin-top: 2px;
+        }
+      }
+
+      .btnMore {
+        position: relative;
+        top: -5px;
+        padding: 5px 10px;
+        font-size: 20px;
+        margin-left: 10px;
       }
     }
   }
@@ -209,12 +254,13 @@ header {
 
       .walletLabel {
         color: darken($tempLightGray, 20);
-        font-size: 14px;
+        font-size: $fontSizeRegular;
         line-height: 20px;
         text-align: left;
       }
+
       .address {
-        font-size: 14px;
+        font-size: $fontSizeRegular;
         line-height: 20px;
         white-space: nowrap;
       }
@@ -237,7 +283,7 @@ header {
       text-align: right;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: $mobile) {
       grid-template-columns: 32px 30px;
 
       .userDropdownAddress {
@@ -253,11 +299,12 @@ header {
     grid-template-columns: repeat(3, max-content);
     justify-content: center;
     height: auto;
+
     @media (max-width: $mobile) {
       grid-gap: 20px;
 
       a {
-        font-size: 14px !important;
+        font-size: $fontSizeRegular !important;
       }
     }
 
@@ -269,7 +316,6 @@ header {
       line-height: 49px;
       text-align: center;
       text-decoration: none !important;
-      transition: $transition1;
 
       &.nuxt-link-exact-active,
       &:hover {
@@ -309,22 +355,28 @@ body.inkline.-light header {
   .linksContainer .mainLink {
     color: $black;
   }
-  .pagesContainer {
+
+  .pagesContainer,
+  .mobileFooter {
+
     @media screen and (max-width: $mobile) {
       background-color: $white;
     }
   }
 }
 
-body.inkline.-dark header {
+body.inkline.-dark header.layout-header {
   background: $darkViolet;
+  border-bottom-color: rgba(3, 5, 17, 0.98) !important;
 
   .userDropdown .userDropdownAddress .walletLabel {
     color: $gray;
   }
+
   .linksContainer .mainLink {
     color: $white;
   }
+
   .linksContainer .headerLink {
     color: $lightViolet;
 

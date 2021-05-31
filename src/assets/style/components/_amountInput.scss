@@ -1,6 +1,7 @@
 .amountInput {
   transition: box-shadow $transition1;
   will-change: box-shadow;
+
   &.allowance {
     .minAmount {
       min-height: 24px;
@@ -8,11 +9,11 @@
   }
 
   input {
-    border-radius: 0.3rem 0 0 0.3rem !important;
+    border-radius: $borderRadiusSm 0 0 $borderRadiusSm !important;
   }
 
   button {
-    border-radius: 0 0.3rem 0.3rem 0 !important;
+    border-radius: 0 $borderRadiusSm $borderRadiusSm 0 !important;
   }
 
   &.error .form-input-group input {
@@ -25,6 +26,6 @@
     padding-top: 5px;
     color: $red;
     font-size: 12px;
-    line-height: 14px;
+    line-height: $fontSizeRegular;
   }
 }

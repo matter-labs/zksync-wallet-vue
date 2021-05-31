@@ -4,7 +4,7 @@
       <i-button v-if="!token" slot="append" block link variant="secondary" @click="$emit('chooseToken')"> Select token</i-button>
       <i-button v-else slot="append" block class="selectedTokenBtn" link variant="secondary" @click="$emit('chooseToken')">
         <span class="tokenSymbol">{{ token.symbol }}</span>
-        &nbsp;&nbsp;<i class="ri-arrow-down-s-line" />
+        &nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
       </i-button>
     </i-input>
     <div class="error">
@@ -12,7 +12,7 @@
     </div>
     <div v-if="token" class="_display-flex _justify-content-space-between">
       <div class="secondaryText">
-        {{ inputtedAmountBigNumber | formatUsdAmount(token.tokenPrice, token.symbol) }}
+        <token-price :symbol="token.symbol" :amount="inputtedAmountBigNumber.toString()" />
       </div>
       <div class="linkText" @click="chooseMaxAmount()">Max: {{ maxAmount | formatToken(token.symbol) }}</div>
     </div>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { DecimalBalance, GweiBalance, ZkInToken } from "@/plugins/types";
+import { DecimalBalance, GweiBalance, ZkInToken } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { BigNumber } from "ethers";
 import Vue, { PropOptions } from "vue";
