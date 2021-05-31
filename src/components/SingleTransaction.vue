@@ -41,14 +41,14 @@
 </template>
 
 <script lang="ts">
-import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { ZkInTx } from "@/types/lib";
-import { Address, TokenSymbol } from "zksync/build/types";
+import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
+import { ZkInTx } from "@/types/lib";
 
 import moment from "moment-timezone";
 import Vue, { PropOptions } from "vue";
+import { Address, TokenSymbol } from "zksync/build/types";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -121,6 +121,12 @@ export default Vue.extend({
             showAddress: true,
             modal: false,
           };
+        case "Swap":
+          return {
+            type: "Pair Swap",
+            showAddress: true,
+            modal: false,
+          };
         case "ChangePubKey":
           return {
             type: "Account activation",
@@ -159,7 +165,7 @@ export default Vue.extend({
           }
         default:
           return {
-            type: this.singleTransaction.tx.type,
+            type: this.singleTransaction.tx.type.toString(),
             showAddress: true,
             modal: false,
           };

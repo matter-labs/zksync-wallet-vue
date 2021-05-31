@@ -7,14 +7,28 @@ import {
   ChangePubKeyCREATE2,
   ChangePubKeyECDSA,
   ChangePubKeyOnchain,
+  LegacyChangePubKeyFee,
   PubKeyHash,
   SignedTransaction,
   TokenSymbol,
   TransactionReceipt,
 } from "zksync/build/types";
 import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
+import { ChangePubkeyTypes } from "zksync/src/types";
 import { accessorType } from "~/store";
 
+export declare type ZKTypeOperations =
+  | "Deposit"
+  | "Withdraw"
+  | "Transfer"
+  | "FastWithdraw"
+  | "MintNFT"
+  | "WithdrawNFT"
+  | "FastWithdrawNFT"
+  | "ChangePubKey"
+  | ChangePubkeyTypes
+  | LegacyChangePubKeyFee
+  | "Swap";
 export declare type ZKTypeFeeOption = "fast" | "normal";
 export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit";
 export declare type ZKTypeDisplayToken = {
@@ -86,7 +100,7 @@ export declare interface ZkInTransactionInfo {
   explorerLink: string;
 }
 
-export interface ZkInTx {
+export interface ZkInTx extends ETHOperation {
   tx_id: string; // Unique identifier of a transaction, designated to be used in relative tx history queries.
   hash: string; // Hash of a transaction.
   eth_block?: number; // Number of Ethereum block in which priority operation was added. `null` for transactions.
@@ -117,7 +131,7 @@ export interface ZkInTx {
     to?: string;
     token?: string;
     feeToken?: number;
-    type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
+    type: ZKTypeOperations;
   };
 }
 

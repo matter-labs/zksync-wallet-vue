@@ -61,20 +61,20 @@ export const state = (): iWallet => ({
 export type WalletModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setAccountLockedState(state, accountState: boolean): void {
+  setAccountLockedState(state: WalletModuleState, accountState: boolean): void {
     state.isAccountLocked = accountState;
   },
-  setOnboard(state, obj: API) {
+  setOnboard(state: WalletModuleState, obj: API): void {
     state.onboard = obj;
   },
-  setTokensList(state, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
+  setTokensList(state: WalletModuleState, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
     state.initialTokens = obj;
   },
-  setZkTokens(state, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
+  setZkTokens(state: WalletModuleState, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
     state.zkTokens = obj;
   },
   setTransactionsList(
-    state,
+    state: WalletModuleState,
     obj: {
       lastUpdated: number;
       list: Array<ZkInTx>;
@@ -83,7 +83,7 @@ export const mutations = mutationTree(state, {
     state.transactionsHistory = obj;
   },
   setWithdrawalProcessingTime(
-    state,
+    state: WalletModuleState,
     obj: {
       normal: number;
       fast: number;
@@ -91,7 +91,10 @@ export const mutations = mutationTree(state, {
   ): void {
     state.withdrawalProcessingTime = obj;
   },
-  setFees(state, { symbol, feeSymbol, type, address, obj }: { symbol: TokenSymbol; feeSymbol: TokenSymbol; type: string; address: Address; obj: ZkInFeesObj }): void {
+  setFees(
+    state: WalletModuleState,
+    { symbol, feeSymbol, type, address, obj }: { symbol: TokenSymbol; feeSymbol: TokenSymbol; type: string; address: Address; obj: ZkInFeesObj },
+  ): void {
     if (!Object.prototype.hasOwnProperty.call(state.fees, symbol)) {
       state.fees[symbol] = {};
     }
@@ -114,7 +117,7 @@ export const mutations = mutationTree(state, {
    * @param {any} status
    * @param {any} tokenSymbol
    */
-  setZkBalanceStatus(state, { status, tokenSymbol }) {
+  setZkBalanceStatus(state: WalletModuleState, { status, tokenSymbol }: { status: "Pending" | "Verified"; tokenSymbol: TokenSymbol }) {
     for (const item of state.zkTokens.list) {
       if (item.symbol === tokenSymbol) {
         item.status = status;
@@ -122,7 +125,7 @@ export const mutations = mutationTree(state, {
       }
     }
   },
-  clearDataStorage(state) {
+  clearDataStorage(state: WalletModuleState) {
     state.zkTokens = {
       lastUpdated: 0,
       list: [],
@@ -140,28 +143,28 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  isAccountLocked: (state): boolean => state.isAccountLocked,
-  getOnboard: (state): API | undefined => state.onboard,
-  getTokensList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.initialTokens,
-  getInitialBalances: (state): Array<ZkInBalance> => state.initialTokens.list,
-  getzkList: (state): { lastUpdated: number; list: Array<ZkInBalance> } => state.zkTokens,
-  getzkBalances: (state): Array<ZkInBalance> => state.zkTokens.list,
-  getTransactionsHistory: (state): Array<ZkInTx> => state.transactionsHistory.list,
+  isAccountLocked: (state: WalletModuleState): boolean => state.isAccountLocked,
+  getOnboard: (state: WalletModuleState): API | undefined => state.onboard,
+  getTokensList: (state: WalletModuleState): { lastUpdated: number; list: Array<ZkInBalance> } => state.initialTokens,
+  getInitialBalances: (state: WalletModuleState): Array<ZkInBalance> => state.initialTokens.list,
+  getzkList: (state: WalletModuleState): { lastUpdated: number; list: Array<ZkInBalance> } => state.zkTokens,
+  getzkBalances: (state: WalletModuleState): Array<ZkInBalance> => state.zkTokens.list,
+  getTransactionsHistory: (state: WalletModuleState): Array<ZkInTx> => state.transactionsHistory.list,
   getTransactionsList: (
-    state,
+    state: WalletModuleState,
   ): {
     lastUpdated: number;
     list: Array<ZkInTx>;
   } => state.transactionsHistory,
   getWithdrawalProcessingTime: (
-    state,
+    state: WalletModuleState,
   ):
     | false
     | {
         normal: number;
         fast: number;
       } => state.withdrawalProcessingTime,
-  getFees: (state): feesInterface => state.fees,
+  getFees: (state: WalletModuleState): feesInterface => state.fees,
 
   getSyncWallet: () => walletData.get().syncWallet,
 

@@ -95,7 +95,7 @@ export default Vue.extend({
       saveContactModalError: "",
 
       /* Main */
-      chosenContact: <ZkInContact | false>false,
+      chosenContact: <ZkInContact | undefined>undefined,
     };
   },
   computed: {
@@ -163,7 +163,7 @@ export default Vue.extend({
   methods: {
     chooseContact(contact?: ZkInContact): void {
       if (!contact?.address) {
-        this.chosenContact = false;
+        this.chosenContact = undefined;
         return;
       }
       if (!contact?.name) {

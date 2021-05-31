@@ -11,33 +11,33 @@ export const state = (): ZkIContracts => ({
 export type ContactsModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setContactsList(state, contactsList: ZkInContact[]): void {
+  setContactsList(state: ContactsModuleState, contactsList: ZkInContact[]): void {
     state.contactsList = contactsList;
   },
-  add(state, contact: ZkInContact): void {
+  add(state: ContactsModuleState, contact: ZkInContact): void {
     state.contactsList.unshift(contact);
   },
-  delete(state, contact: ZkInContact): void {
+  delete(state: ContactsModuleState, contact: ZkInContact): void {
     const foundIndex = state.contactsList.indexOf(contact);
     if (foundIndex !== -1) {
       state.contactsList = state.contactsList.filter((singleContact) => singleContact.address.toLowerCase() !== contact.address.toLowerCase());
     }
   },
-  setStorageKey(state, storageKey: string): void {
+  setStorageKey(state: ContactsModuleState, storageKey: string): void {
     state.storageKey = storageKey;
   },
 
-  initContactsList(state): void {
+  initContactsList(state: ContactsModuleState): void {
     state.contactsList = [];
   },
 });
 
 export const getters = getterTree(state, {
   get: (state: ContactsModuleState): ZkInContact[] => state.contactsList,
-  getStorageKey(_, __, ___, rootGetters): string {
+  getStorageKey(_: unknown, __: unknown, ___: unknown, rootGetters: { [x: string]: any }): string {
     return `contacts-${rootGetters["account/address"]}`;
   },
-  getByAddress(state) {
+  getByAddress(state: ContactsModuleState, address: Address) {
     return (address: Address) => {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {
@@ -48,7 +48,7 @@ export const getters = getterTree(state, {
       return false;
     };
   },
-  isInContacts(state) {
+  isInContacts(state: ContactsModuleState) {
     return (address: Address) => {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {

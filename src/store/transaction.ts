@@ -5,24 +5,40 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
 import { Address, ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/build/types";
 import { ETHOperation } from "zksync/build/wallet";
 
-export const state = () => ({
-  watchedTransactions: <
-    {
-      [txHash: string]: {
-        [prop: string]: string;
-        status: string;
-      };
-    }
-  >{},
-  deposits: <ZkInDeposits>{},
-  forceUpdateTick: 0 /* Used to force update computed active deposits list */,
-  withdrawalTxToEthTx: <Map<string, string>>new Map(),
-});
+interface ZKITransactionsState {
+  watchedTransactions: { [p: string]: { [p: string]: string; status: string } };
+  deposits: ZkInDeposits;
+  forceUpdateTick: number;
+  withdrawalTxToEthTx: Map<string, string>;
+}
+
+export const state = () =>
+  ({
+    watchedTransactions: <
+      {
+        [txHash: string]: {
+          [prop: string]: string;
+          status: string;
+        };
+      }
+    >{},
+    deposits: <ZkInDeposits>{},
+    forceUpdateTick: 0 /* Used to force update computed active deposits list */,
+    withdrawalTxToEthTx: <Map<string, string>>new Map(),
+  } as ZKITransactionsState);
 
 export type TransactionModuleState = ReturnType<typeof state>;
 
+interface ZKITransactionParams {
+  tokenSymbol: TokenSymbol;
+  hash: string;
+  amount?: BigNumber | GweiBalance;
+  status: string;
+  confirmations?: number;
+}
+
 export const mutations = mutationTree(state, {
-  updateTransactionStatus(state, { hash, status }): void {
+  updateTransactionStatus(state: TransactionModuleState, { hash, status }: { hash: string; status: string }): void {
     if (status === "Verified") {
       delete state.watchedTransactions[hash];
       return;
@@ -35,7 +51,7 @@ export const mutations = mutationTree(state, {
       state.watchedTransactions[hash].status = status;
     }
   },
-  updateDepositStatus: (state, { tokenSymbol, hash, amount, status, confirmations }) => {
+  updateDepositStatus: (state: TransactionModuleState, { tokenSymbol, hash, amount, status, confirmations }: ZKITransactionParams): void => {
     if (!Array.isArray(state.deposits[tokenSymbol])) {
       state.deposits[tokenSymbol] = [];
     }
@@ -60,19 +76,19 @@ export const mutations = mutationTree(state, {
     }
     state.forceUpdateTick++;
   },
-  setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }) {
+  setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }: { tx: string; ethTx: string }) {
     state.withdrawalTxToEthTx.set(tx, ethTx);
   },
 });
 
 export const getters = getterTree(state, {
-  getForceUpdateTick(state) {
+  getForceUpdateTick(state: TransactionModuleState) {
     return state.forceUpdateTick;
   },
-  depositList(state) {
+  depositList(state: TransactionModuleState) {
     return state.deposits;
   },
-  getWithdrawalTx(state) {
+  getWithdrawalTx(state: TransactionModuleState) {
     return (tx: string): string | undefined => {
       return state.withdrawalTxToEthTx.get(tx);
     };
