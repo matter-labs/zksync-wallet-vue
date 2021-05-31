@@ -72,14 +72,12 @@ export default Vue.extend({
           }
         }
 
-        const ethAuthType = syncWallet?.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA";
-        let changePubKeyMessage;
         const newPubKeyHash = await syncWallet!.signer!.pubKeyHash();
-        if (ethAuthType === "ECDSA") {
-          changePubKeyMessage = utils.getChangePubkeyMessage(newPubKeyHash, nonce, walletData.get().accountState!.id!);
-        } else {
-          changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, walletData.get().accountState!.id!);
+        if (typeof walletData.get().accountState!.id !== "number") {
+          const accountState = await syncWallet!.getAccountState();
+          walletData.set({ accountState });
         }
+        const changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, walletData.get().accountState!.id!);
         this.step = "sign";
         const ethSignature = (await syncWallet!.getEthMessageSignature(changePubKeyMessage)).signature;
         this.step = "loading";
@@ -88,10 +86,6 @@ export default Vue.extend({
           account: syncWallet!.address(),
           newPkHash: newPubKeyHash,
           nonce,
-          ethAuthData: {
-            type: ethAuthType,
-            ethSignature,
-          },
           ethSignature,
           validFrom: 0,
           validUntil: utils.MAX_TIMESTAMP,
