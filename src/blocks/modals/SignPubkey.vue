@@ -3,8 +3,7 @@
     <template slot="header">Account Activation</template>
     <div>
       <p v-if="step === false">
-        To start using your zkSync account you need to register your public key once. This operation costs 15000 gas on-chain. In zkSync 2.0, we will eliminate this step by
-        verifying ETH signatures with zero-knowledge proofs. Please bear with us!
+        Sign a message once to activate your zkSync account.
       </p>
       <p v-else-if="step === 'sign'" class="_text-center">Sign the message in your wallet to continue</p>
       <p v-else-if="step === 'loading'" class="_text-center">Loading account data...</p>
