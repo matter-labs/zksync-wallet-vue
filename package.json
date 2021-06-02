@@ -1,6 +1,6 @@
 {
-  "name": "@matterlabs/zksync-dapp-checkout",
-  "title": "zkCheckout — simple permissionless DeFi payment gateway",
+  "name": "@matterlabs/zksync-zkwallet-vue",
+  "title": "zkSync.io Wallet | Try solution for the Ethereum scalability\n with zero security compromises",
   "main": "nuxt.config.ts",
   "types": "src/types/index.d.ts",
   "files": [
@@ -51,7 +51,7 @@
     ]
   },
   "bugs": {
-    "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
+    "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
   "dependencies": {
     "@ethersproject/logger": "^5.0.9",
