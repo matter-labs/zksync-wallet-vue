@@ -76,29 +76,24 @@ export const mutations = mutationTree(state, {
     }
     state.forceUpdateTick++;
   },
-  setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }: { tx: string; ethTx: string }) {
+  setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }: { tx: string; ethTx: string }): void {
     state.withdrawalTxToEthTx.set(tx, ethTx);
   },
 });
 
 export const getters = getterTree(state, {
-  getForceUpdateTick(state: TransactionModuleState) {
+  getForceUpdateTick: (state: TransactionModuleState): number => {
     return state.forceUpdateTick;
   },
-  depositList(state: TransactionModuleState) {
+  depositList: (state: TransactionModuleState): ZkInDeposits => {
     return state.deposits;
-  },
-  getWithdrawalTx(state: TransactionModuleState) {
-    return (tx: string): string | undefined => {
-      return state.withdrawalTxToEthTx.get(tx);
-    };
   },
 });
 
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    async watchTransaction({ commit, dispatch, state }, { transactionHash }) {
+    async watchTransaction({ commit, dispatch, state }, { transactionHash }): Promise<void> {
       try {
         const savedAddress = this.app.$accessor.account.address;
         if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
@@ -115,7 +110,7 @@ export const actions = actionTree(
       }
       commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
     },
-    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
+    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
       try {
         const savedAddress = this.app.$accessor.account.address;
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
@@ -193,6 +188,15 @@ export const actions = actionTree(
         }
       }
       return finalDeposits;
+    },
+
+    /**
+     * @param {any} state
+     * @param {string} tx
+     * @return {string | undefined}
+     */
+    getWithdrawalTx({ state }, tx = ""): string | undefined {
+      return state.withdrawalTxToEthTx.get(tx);
     },
   },
 );

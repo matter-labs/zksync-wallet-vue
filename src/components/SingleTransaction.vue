@@ -171,14 +171,14 @@ export default Vue.extend({
           };
       }
     },
-    tokenSymbol(): TokenSymbol {
-      if (!this.isFeeTransaction) {
-        if (this.singleTransaction.tx.priority_op) {
-          return this.singleTransaction.tx.priority_op.token;
-        }
-      } else if (typeof this.singleTransaction.tx.feeToken === "number") {
+    tokenSymbol(): TokenSymbol | undefined {
+      if (!this.isFeeTransaction && this.singleTransaction.tx.priority_op) {
+        return this.singleTransaction.tx.priority_op.token;
+      }
+      if (typeof this.singleTransaction.tx.feeToken === "number") {
         return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol;
-      } else if (this.singleTransaction.tx.priority_op) {
+      }
+      if (this.singleTransaction.tx.priority_op) {
         return this.singleTransaction.tx.priority_op.token;
       }
       return this.singleTransaction.tx.token!;
@@ -206,9 +206,9 @@ export default Vue.extend({
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
       if (!this.isFeeTransaction) {
-        return utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount) || "";
+        return utils.handleFormatToken(this.tokenSymbol as string, type === "Deposit" && priority_op ? priority_op.amount : amount) || "";
       } else {
-        return utils.handleFormatToken(this.tokenSymbol, fee) || "";
+        return utils.handleFormatToken(this.tokenSymbol as string, fee) || "";
       }
     },
     getAddressName(address: string): string {

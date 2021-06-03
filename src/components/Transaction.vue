@@ -265,7 +265,7 @@ export default Vue.extend({
       inputtedAmount: "",
       chosenToken: <ZkInBalance | false>false,
       chosenFeeToken: <ZkInBalance | false>false,
-      feesObj: <ZkInFeesObj>{
+      feesObj: <ZkInFeesObj | undefined>{
         normal: "",
         fast: "",
       },
@@ -288,7 +288,8 @@ export default Vue.extend({
     },
     chosenFeeObj(): BigNumberish | boolean {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
-        const selectedFeeTypeAmount = this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal;
+        const selectedFeeTypeAmount: string | BigNumber | ArrayLike<number> | bigint | number | undefined =
+          this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal;
         if (!selectedFeeTypeAmount) {
           return BigNumber.from("0");
         }
@@ -399,7 +400,7 @@ export default Vue.extend({
         await this?.getAccountActivationFee();
       }
     } catch (error) {
-      this?.$sentry.captureException(error);
+      this.$sentry?.captureException(error);
     }
     this.loading = false;
   },
@@ -635,7 +636,7 @@ export default Vue.extend({
         );
         this.activateAccountFee = foundFee!.totalFee.toString();
       } catch (error) {
-        await this.$toast.global.zkException({
+        await this.$toast?.global.zkException({
           message: error.message ?? "Error while receiving an unlock fee",
         });
       }

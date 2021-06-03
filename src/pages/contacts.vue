@@ -239,7 +239,7 @@ export default Vue.extend({
           };
           this.$accessor.contacts.saveContact(contact);
         } catch (error) {
-          this.$sentry.captureException(error);
+          this.$sentry?.captureException(error);
 
           this.$toast.global.zkException({
             message: error.message ?? "Error while saving your contact book.",

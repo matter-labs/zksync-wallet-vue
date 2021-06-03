@@ -65,7 +65,7 @@ export default Vue.extend({
         try {
           return utils.parseToken(this.token.symbol, this.inputtedAmount);
         } catch (error) {
-          this.$sentry.captureException(error);
+          this.$sentry?.captureException(error);
         }
       }
       return BigNumber.from("0");
