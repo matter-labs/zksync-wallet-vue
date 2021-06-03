@@ -33,19 +33,18 @@
     </svg>
     <template v-else>
       <img :src="zkWalletLogoSrc" alt="zkWallet" class="zkwallet-logo" />
-      <i-badge variant="primary">
-        <small v-if="network">{{ network }}</small>
-      </i-badge>
+      <block-network-badge />
     </template>
   </div>
 </template>
 
 <script lang="ts">
-import { ZK_NETWORK, ZK_IS_BETA } from "@/plugins/build";
+import { ZK_NETWORK, ZK_IS_BETA, ETHER_PRODUCTION } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
+  name: "Logo",
   props: {
     isZkSyncLogo: {
       default: true,
@@ -55,8 +54,11 @@ export default Vue.extend({
   },
   computed: {
     zkWalletLogoSrc(): string {
-      const variation = utils.defineTheme(this.$inkline, false) === "light" ? "" : "-alt";
-      return require(`@/assets/imgs/logos/logo${variation}.svg`);
+      const prefix = utils.defineTheme(this.$inkline, false) === "light" ? "" : "-alt";
+      return require(`@/assets/imgs/logos/logo${prefix}.svg`);
+    },
+    isMainnet(): boolean {
+      return ETHER_PRODUCTION;
     },
     network(): string {
       return ZK_NETWORK;

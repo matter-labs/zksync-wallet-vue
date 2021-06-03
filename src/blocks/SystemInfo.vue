@@ -1,6 +1,6 @@
 <template>
   <i-badge v-if="version" variant="secondary" :class="{ 'outline-white': true, 'system-info': true }">
-    <i-popover size="sm" class="system-env-popover" :trigger="['hover', 'click']">
+    <i-popover size="sm" class="system-env-popover" :trigger="['hover']">
       <span class="version">v.{{ version }}<sup v-if="isBeta" class="beta _text-danger">BETA</sup></span>
       <template slot="header">Environment details</template>
       <template slot="body">
@@ -26,9 +26,9 @@
 </template>
 <script lang="ts">
 import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_IS_BETA, ZK_LIB_VERSION, ZK_NETWORK } from "@/plugins/build";
+import Vue from "vue";
 
-export default {
-  name: "SystemInfo",
+export default Vue.extend({
   computed: {
     netName(): string {
       return ZK_NETWORK;
@@ -52,5 +52,5 @@ export default {
       return ZK_API_BASE;
     },
   },
-};
+});
 </script>
