@@ -11,10 +11,11 @@ module.exports = {
     },
     parser: "@typescript-eslint/parser",
     sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.eslint.json"],
+    project: ["tsconfig.json", "tsconfig.eslint.json"],
     tsconfigRootDir: __dirname,
     extraFileExtensions: [".vue", ".scss"],
   },
+  ignorePatterns: ["node_modules"],
   plugins: ["vue", "@typescript-eslint", "prettier"],
   root: true,
   rules: {
@@ -50,6 +51,16 @@ module.exports = {
         script: true,
       },
       usePrettierrc: true,
+      // Set the options for `prettier.getFileInfo`.
+      // @see https://prettier.io/docs/en/api.html#prettiergetfileinfofilepath-options
+      fileInfoOptions: {
+        // Path to ignore file (default: `'.prettierignore'`)
+        // Notice that the ignore file is only used for this plugin
+        ignorePath: "..prettierignore",
+
+        // Process the files in `node_modules` or not (default: `false`)
+        withNodeModules: false,
+      },
     },
   },
 };

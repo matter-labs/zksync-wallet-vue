@@ -1,3 +1,4 @@
+import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { Route } from "vue-router/types";
 import { Provider } from "zksync/build";
@@ -12,9 +13,11 @@ import {
   SignedTransaction,
   TokenSymbol,
   TransactionReceipt,
+  ChangePubkeyTypes,
+  Order,
 } from "zksync/build/types";
 import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
-import { ChangePubkeyTypes } from "zksync/src/types";
+
 import { accessorType } from "~/store";
 
 export declare type ZKTypeOperations =
@@ -112,6 +115,7 @@ export interface ZkInTx extends ETHOperation {
   created_at: string; // Timestamp of the transaction execution.
   confirmCount: number;
   tx: {
+    orders?: [Order, Order];
     // Transaction / Priority operation contents. Structure depends on the type of operation.
     fast: boolean;
     amount: string;
@@ -371,4 +375,32 @@ export interface ZKIDepositStatus {
   amount: GweiBalance;
   status: string;
   confirmations: number;
+}
+
+export interface ZKStoreRequestBalancesParams {
+  force?: boolean;
+  offset?: number;
+}
+
+export declare interface feesInterface {
+  [symbol: string]: {
+    [feeSymbol: string]: {
+      [type: string]: {
+        [address: string]: {
+          lastUpdated: number;
+          value: ZkInFeesObj;
+        };
+      };
+    };
+  };
+}
+
+export declare interface iWallet {
+  onboard?: API;
+  isAccountLocked: boolean;
+  zkTokens: { lastUpdated: number; list: ZkInBalance[] };
+  initialTokens: { lastUpdated: number; list: ZkInBalance[] };
+  transactionsHistory: { lastUpdated: number; list: ZkInTx[] };
+  withdrawalProcessingTime: false | { normal: number; fast: number };
+  fees: feesInterface;
 }

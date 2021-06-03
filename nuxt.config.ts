@@ -169,13 +169,13 @@ const config: NuxtConfig = {
             async: true,
             stylelint: {
               config: [".stylelintrc"],
-              files: "src/**.scss",
+              files: "src/**/*.scss",
             },
             eslint: {
-              config: [".eslintrc.js", "tsconfig-eslint.json"],
-              files: "**/*.{ts,js,vue}",
+              config: ["tsconfig-eslint.json", ".eslintrc.js"],
+              files: "@/**/*.{ts,vue,js}",
             },
-            files: "**/*.{ts,vue}",
+            files: "@/**/*.{ts,vue,js}",
           },
         },
       },

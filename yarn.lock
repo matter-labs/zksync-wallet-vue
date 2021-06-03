@@ -2575,9 +2575,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-dapp-checkout@workspace:.":
+"@matterlabs/zksync-zkwallet-vue@workspace:.":
   version: 0.0.0-use.local
-  resolution: "@matterlabs/zksync-dapp-checkout@workspace:."
+  resolution: "@matterlabs/zksync-zkwallet-vue@workspace:."
   dependencies:
     "@babel/core": ^7.13.15
     "@babel/preset-env": ^7.13.9
@@ -9770,7 +9770,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"es-abstract@npm:^1.17.0-next.0":
+"es-abstract@npm:^1.17.0-next.0, es-abstract@npm:^1.17.2, es-abstract@npm:^1.18.0, es-abstract@npm:^1.18.0-next.1, es-abstract@npm:^1.18.0-next.2":
   version: 1.18.3
   resolution: "es-abstract@npm:1.18.3"
   dependencies:
@@ -9791,30 +9791,6 @@ __metadata:
     string.prototype.trimstart: ^1.0.4
     unbox-primitive: ^1.0.1
   checksum: 85cd62cabad4714e945e1ed8ed1c5086237daa544448b1562765857dbe33f3415f56e53b03552ea4599f8e836f7e6ecd4ce70560b23a534f78f77780565d6985
-  languageName: node
-  linkType: hard
-
-"es-abstract@npm:^1.17.2, es-abstract@npm:^1.18.0, es-abstract@npm:^1.18.0-next.1, es-abstract@npm:^1.18.0-next.2":
-  version: 1.18.0
-  resolution: "es-abstract@npm:1.18.0"
-  dependencies:
-    call-bind: ^1.0.2
-    es-to-primitive: ^1.2.1
-    function-bind: ^1.1.1
-    get-intrinsic: ^1.1.1
-    has: ^1.0.3
-    has-symbols: ^1.0.2
-    is-callable: ^1.2.3
-    is-negative-zero: ^2.0.1
-    is-regex: ^1.1.2
-    is-string: ^1.0.5
-    object-inspect: ^1.9.0
-    object-keys: ^1.1.1
-    object.assign: ^4.1.2
-    string.prototype.trimend: ^1.0.4
-    string.prototype.trimstart: ^1.0.4
-    unbox-primitive: ^1.0.0
-  checksum: 019fa7c51e10532cd07ca3aa9b76e4c6ad6f421e15064205d144da08da54f8fc057edc262f6f95775e0b249ecbb753b497050dd75ab69a3c1c89cb9b734e42ca
   languageName: node
   linkType: hard
 
@@ -13814,7 +13790,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"is-regex@npm:^1.0.4, is-regex@npm:^1.1.2, is-regex@npm:^1.1.3":
+"is-regex@npm:^1.0.4, is-regex@npm:^1.1.3":
   version: 1.1.3
   resolution: "is-regex@npm:1.1.3"
   dependencies:
@@ -22623,7 +22599,7 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"unbox-primitive@npm:^1.0.0, unbox-primitive@npm:^1.0.1":
+"unbox-primitive@npm:^1.0.1":
   version: 1.0.1
   resolution: "unbox-primitive@npm:1.0.1"
   dependencies:

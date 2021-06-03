@@ -4,8 +4,8 @@
   "main": "nuxt.config.ts",
   "types": "src/types/index.d.ts",
   "files": [
-    "src/**/*",
-    "tests/*"
+    "src/types",
+    "src"
   ],
   "keywords": [
     "zksync",
