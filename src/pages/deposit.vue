@@ -36,7 +36,10 @@
             Your deposit transaction has been mined and will be processed after required number of confirmations.<br />Use the transaction link to track the progress.
           </template>
           <template v-else>
-            Token <span class="tokenSymbol">{{ chosenToken.symbol }}</span> was successfully approved <span v-if="!unlimitedApproval"> for the {{ inputtedAmount }}</span>
+            Token <span class="tokenSymbol">{{ chosenToken.symbol }}</span> was successfully approved
+            <span v-if="!unlimitedApproval">
+              for {{ tokenAllowance | formatToken(chosenToken.symbol) }} <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
+            </span>
             <br />
             Now you can proceed to deposit.
           </template>
@@ -390,6 +393,9 @@ export default Vue.extend({
         this.transactionInfo.fee = undefined;
         this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
         this.transactionInfo.continueBtnFunction = true;
+        if (this.amountBigNumber.gt(this.tokenAllowance)) {
+          this.inputtedAmount = utils.handleFormatToken(this.chosenToken.symbol, this.tokenAllowance);
+        }
         if (!unlimited) {
           this.transactionInfo.continueBtnText = "Proceed to deposit";
         } else {

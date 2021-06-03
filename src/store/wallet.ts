@@ -489,7 +489,6 @@ export const actions = actionTree(
         this.app.$accessor.account.setLoadingHint("Getting wallet information...");
         watcher.changeNetworkSet(dispatch, this);
         const accountState = await syncWallet!.getAccountState();
-        console.log("accountState", accountState);
         walletData.set(<iWalletData>{
           syncProvider,
           syncWallet,
