@@ -1,0 +1,214 @@
+<template>
+  <div class="transactionPage depositPage dappPageWrapper">
+    <!-- Choose fee token -->
+    <i-modal v-model="chooseFeeTokenModal" size="md">
+      <template slot="header">Choose fee token</template>
+      <block-choose-token :only-allowed="true" @chosen="chooseFeeToken($event)" />
+    </i-modal>
+
+    <!-- Loading block -->
+    <loading-block v-if="loading === true" headline="Minting NFT">
+      <a v-if="transactionInfo.hash" :href="transactionInfo.explorerLink" class="_display-block _text-center" target="_blank">
+        Link to the transaction
+        <v-icon name="ri-external-link-line" class="_margin-left-05" />
+      </a>
+      <p v-if="tip" class="_display-block _text-center">{{ tip }}</p>
+    </loading-block>
+
+    <!-- Transaction success block -->
+    <success-block v-else-if="transactionInfo.success === true" :fee="transactionInfo.fee" :tx-link="transactionInfo.explorerLink" headline="NFT Minted successfully">
+      <p class="_text-center _margin-top-0">
+        Your NFT mint transaction has been mined and will be processed after required number of confirmations.<br />Use the transaction link to track the progress.
+      </p>
+    </success-block>
+
+    <!-- Main Block -->
+    <div v-else class="transactionTile tileBlock">
+      <div class="tileHeadline withBtn h3">
+        <nuxt-link class="_icon-wrapped -rounded -sm returnBtn _display-flex" :to="fromRoute && fromRoute.fullPath !== $route.fullPath ? fromRoute : '/account'">
+          <v-icon name="ri-arrow-left-line" scale="1" />
+        </nuxt-link>
+        <div>Mint NFT</div>
+      </div>
+
+      <div class="_padding-top-1 inputLabel">Hash</div>
+      <hash-input ref="hashInput" v-model="inputtedHash" class="_margin-bottom-2" autofocus @enter="commitTransaction()" />
+
+      <div v-if="error" class="errorText _text-center _margin-top-1">{{ error }}</div>
+
+      <i-button :disabled="buttonDisabled" block class="_margin-top-1 _display-flex flex-row" size="lg" variant="secondary" @click="commitTransaction()">
+        <v-icon name="bi-download" scale="1.35" />&nbsp;&nbsp;Mint
+      </i-button>
+      <div v-if="chosenFeeToken" class="_text-center _margin-top-1">
+        Fee:
+        <span v-if="feesLoading" class="secondaryText">Loading...</span>
+        <span v-else-if="fee !== false">
+          {{ fee | formatToken(chosenFeeToken.symbol) }} <span class="tokenSymbol">{{ chosenFeeToken.symbol }}</span>
+          <span class="secondaryText">
+            <token-price :symbol="chosenFeeToken.symbol" :amount="fee.toString()" />
+          </span>
+        </span>
+      </div>
+      <span class="linkText _width-100 _display-block _text-center _margin-top-05" @click="chooseFeeTokenModal = true">Change fee token</span>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
+import utils from "@/plugins/utils";
+import { walletData } from "@/plugins/walletData";
+
+import { GweiBalance, Hash, ZkInBalance, ZkInTransactionInfo } from "@/types/lib";
+import Vue from "vue";
+
+export default Vue.extend({
+  props: {
+    fromRoute: {
+      type: Object,
+      default: undefined,
+      required: false,
+    },
+  },
+  data() {
+    return {
+      /* Loading block */
+      loading: false,
+      tip: "",
+
+      /* Choose fee token */
+      cantFindFeeToken: false,
+      chooseFeeTokenModal: false,
+
+      /* Transaction success block */
+      transactionInfo: <ZkInTransactionInfo>{
+        success: false,
+        type: "",
+        hash: "",
+        explorerLink: "",
+        fee: {
+          amount: "",
+          token: false,
+        },
+      },
+
+      /* Main Block */
+      inputtedHash: <Hash>"",
+      fee: <GweiBalance | false>false,
+      chosenFeeToken: <ZkInBalance | false>false,
+      feesLoading: false,
+      error: "",
+    };
+  },
+  computed: {
+    buttonDisabled(): boolean {
+      return !this.inputtedHash || !this.fee || this.feesLoading || !this.chosenFeeToken || this.chosenFeeToken?.restricted;
+    },
+  },
+  watch: {
+    inputtedHash() {
+      this.requestFees();
+    },
+    chosenFeeToken: {
+      deep: true,
+      handler() {
+        this.requestFees();
+      },
+    },
+  },
+  mounted() {
+    this.chooseFeeToken();
+  },
+  methods: {
+    chooseFeeToken(token?: ZkInBalance) {
+      if (token) {
+        this.chosenFeeToken = token;
+        this.cantFindFeeToken = false;
+        this.chooseFeeTokenModal = false;
+      } else {
+        const balances = <Array<ZkInBalance>>(
+          JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort(
+            (a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance as string) - parseFloat(a.balance as string),
+          )
+        );
+        let tokenFound = false;
+        for (const feeToken of balances) {
+          if (!feeToken.restricted) {
+            this.cantFindFeeToken = false;
+            this.chosenFeeToken = feeToken;
+            tokenFound = true;
+            break;
+          }
+        }
+        if (!tokenFound) {
+          this.cantFindFeeToken = true;
+        }
+      }
+    },
+    async commitTransaction(): Promise<void> {
+      if (this.buttonDisabled) {
+        return;
+      }
+      this.error = "";
+      this.loading = true;
+      try {
+        await this.mint();
+      } catch (error) {
+        const errorMsg = utils.filterError(error);
+        if (typeof errorMsg === "string") {
+          this.error = errorMsg;
+        } else {
+          this.error = "Transaction error";
+        }
+      }
+      this.tip = "";
+      this.loading = false;
+    },
+    async mint(): Promise<void> {
+      this.tip = "Confirm the transaction to mint";
+      this.transactionInfo.type = "deposit";
+      const syncWallet = walletData.get().syncWallet!;
+      const mintTransaction = await syncWallet.mintNFT({
+        recipient: syncWallet.address(),
+        contentHash: this.inputtedHash,
+        feeToken: "ETH",
+        fee: this.fee as GweiBalance,
+      });
+      this.transactionInfo.hash = mintTransaction.txHash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/tx/" + mintTransaction.txHash;
+      this.tip = "Waiting for the transaction to be mined...";
+      await mintTransaction.awaitReceipt();
+      this.transactionInfo.fee = {
+        token: this.chosenFeeToken,
+        amount: mintTransaction.txData.tx.fee,
+      };
+      this.transactionInfo.success = true;
+      this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+    },
+    async requestFees(): Promise<void> {
+      if (!this.chosenFeeToken || this.chosenFeeToken?.restricted) {
+        this.fee = false;
+        return;
+      }
+      this.feesLoading = true;
+      try {
+        const savedData = {
+          address: this.$accessor.account.address,
+          symbol: this.chosenFeeToken?.symbol,
+          feeSymbol: this.chosenFeeToken?.symbol,
+          type: "MintNFT",
+        };
+        const requestedFee = await this.$accessor.wallet.requestFees(savedData);
+        if (savedData.address === this.$accessor.account.address && savedData.feeSymbol === this.chosenFeeToken.symbol) {
+          this.fee = requestedFee.normal!;
+        }
+      } catch (error) {
+        this.$toast.global.zkException({
+          message: error.message,
+        });
+      }
+      this.feesLoading = false;
+    },
+  },
+});
+</script>

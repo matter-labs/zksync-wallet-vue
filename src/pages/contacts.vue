@@ -288,15 +288,7 @@ export default Vue.extend({
       this.$router.push({ ...this.$route, query: { w: contact.address } });
     },
     copyAddress(address: Address): void {
-      const elem = document.createElement("textarea");
-      elem.style.position = "absolute";
-      elem.style.left = -99999999 + "px";
-      elem.style.top = -99999999 + "px";
-      elem.value = address;
-      document.body.appendChild(elem);
-      elem.select();
-      document.execCommand("copy");
-      document.body.removeChild(elem);
+      utils.copy(address);
     },
   },
 });

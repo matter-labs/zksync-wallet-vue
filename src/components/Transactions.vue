@@ -59,7 +59,15 @@ export default Vue.extend({
     transactionsList(): Array<ZkInTx> {
       let list = this.$accessor.wallet.getTransactionsHistory;
       if (this.filter) {
-        list = list.filter((item: ZkInTx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
+        let filter: string | number = "";
+        if (this.filter.includes("NFT-")) {
+          filter = parseInt(this.filter.substr(4, this.filter.length));
+        } else {
+          filter = this.filter;
+        }
+        if (filter) {
+          list = list.filter((item: ZkInTx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === filter);
+        }
       }
       if (this.address) {
         const addressLowerCase = this.address.toLowerCase();
@@ -95,30 +103,7 @@ export default Vue.extend({
       const list = await this.$accessor.wallet.requestTransactionsHistory({ force: false, offset });
       this.totalLoadedItem += list.length;
       this.loadMoreAvailable = list.length >= 25; /* 25 transactions are loaded for each request */
-      let filteredList = list;
-      if (this.filter) {
-        filteredList = filteredList.filter((item: ZkInTx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
-      }
-      if (this.address) {
-        const addressLowerCase = this.address.toLowerCase();
-        const myAddressLowerCase = this.ownAddress.toLowerCase();
-        filteredList = filteredList.filter((item: ZkInTx) => {
-          if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
-            const addressToLowerCase = item.tx.to?.toLowerCase();
-            const addressFromLowerCase = item.tx.from.toLowerCase();
-            if (
-              (item.tx.type === "Withdraw" && addressToLowerCase === addressLowerCase) ||
-              (item.tx.type === "Transfer" &&
-                ((addressToLowerCase === myAddressLowerCase && addressFromLowerCase === addressLowerCase) ||
-                  (addressFromLowerCase === myAddressLowerCase && addressToLowerCase === addressLowerCase)))
-            ) {
-              return true;
-            }
-          }
-          return false;
-        });
-      }
-      return filteredList;
+      return list;
     },
     async getTransactions(): Promise<void> {
       if (this.$accessor.wallet.getTransactionsHistory.length === 0) {

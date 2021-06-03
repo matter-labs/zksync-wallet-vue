@@ -90,7 +90,7 @@
 </template>
 <script lang="ts">
 import utils from "@/plugins/utils";
-import { ZkInBalance, ZkInDeposits, ZKInDepositTx, ZKDisplayToken } from "@/types/lib";
+import { ZkInBalance, ZkInDeposits, ZKInDepositTx, ZKDisplayToken, ZkInNFT } from "@/types/lib";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 import { TokenSymbol } from "zksync/build/types";
@@ -138,7 +138,6 @@ export default Vue.extend({
     activeDeposits() {
       this.$accessor.transaction.getForceUpdateTick; // Force to update the list
       const deposits: ZkInDeposits = this.$accessor.transaction.depositList;
-      console.log("deposits", deposits);
       const activeDeposits = <ZkInDeposits>{};
       const finalDeposits = <{ [tokenSymbol: string]: BigNumber }>{};
       let symbol: TokenSymbol;
@@ -156,7 +155,6 @@ export default Vue.extend({
           }
         }
       }
-      console.log("finalDeposits", finalDeposits);
       return finalDeposits;
     },
     hasDisplayedBalances(): boolean {

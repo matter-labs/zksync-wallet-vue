@@ -14,7 +14,7 @@ import {
   TransactionReceipt,
 } from "zksync/build/types";
 import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
-import { ChangePubkeyTypes } from "zksync/src/types";
+import { ChangePubkeyTypes, NFT } from "zksync/src/types";
 import { accessorType } from "~/store";
 
 export declare type ZKTypeOperations =
@@ -30,7 +30,7 @@ export declare type ZKTypeOperations =
   | LegacyChangePubKeyFee
   | "Swap";
 export declare type ZKTypeFeeOption = "fast" | "normal";
-export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit";
+export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit" | "nft-transfer" | "nft-withdraw";
 export declare type ZKTypeDisplayToken = {
   symbol: TokenSymbol;
   rawBalance?: BigNumber;
@@ -52,6 +52,7 @@ export declare type ZKTypeDisplayBalances = {
 
 export declare type GweiBalance = string | BigNumberish;
 export declare type DecimalBalance = string;
+export declare type Hash = string;
 
 export declare interface ZkInTokenPrices {
   [token: string]: {
@@ -77,6 +78,10 @@ export interface ZkInBalance {
   restricted: boolean;
   unlocked?: boolean;
   address?: string;
+}
+
+export interface ZkInNFT extends NFT {
+  status: "Pending" | "Verified";
 }
 
 export declare interface ZkInTransactionInfo {
