@@ -1,5 +1,7 @@
 <template>
   <div class="transactionPage depositPage dappPageWrapper">
+    <content-hash-modal />
+
     <!-- Choose fee token -->
     <i-modal v-model="chooseFeeTokenModal" size="md">
       <template slot="header">Choose fee token</template>
@@ -31,7 +33,16 @@
         <div>Mint NFT</div>
       </div>
 
-      <div class="_padding-top-1 inputLabel">Hash</div>
+      <div class="_padding-top-1 inputLabel">Address</div>
+      <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction" />
+      <block-choose-contact v-model="chosenContact" class="_margin-top-05" :address.sync="inputtedAddress" display-own-address />
+
+      <div class="_padding-top-1 inputLabel _display-flex _align-items-center">
+        <div>Content Hash</div>
+        <div class="icon-container _display-flex" @click="$accessor.openModal('ContentHash')">
+          <v-icon name="ri-question-mark" class="iconInfo" scale="0.9" />
+        </div>
+      </div>
       <hash-input ref="hashInput" v-model="inputtedHash" class="_margin-bottom-2" autofocus @enter="commitTransaction()" />
 
       <div v-if="error" class="errorText _text-center _margin-top-1">{{ error }}</div>
@@ -39,7 +50,7 @@
       <i-button :disabled="buttonDisabled" block class="_margin-top-1 _display-flex flex-row" size="lg" variant="secondary" @click="commitTransaction()">
         <v-icon name="bi-download" scale="1.35" />&nbsp;&nbsp;Mint
       </i-button>
-      <div v-if="chosenFeeToken" class="_text-center _margin-top-1">
+      <div v-if="chosenFeeToken && inputtedAddress" class="_text-center _margin-top-1">
         Fee:
         <span v-if="feesLoading" class="secondaryText">Loading...</span>
         <span v-else-if="fee !== false">
@@ -55,14 +66,19 @@
 </template>
 
 <script lang="ts">
+import { Address } from "@/../node_modules/zksync/build/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
+import ContentHashModal from "@/blocks/modals/ContentHashModal.vue";
 
-import { GweiBalance, Hash, ZkInBalance, ZkInTransactionInfo } from "@/types/lib";
+import { GweiBalance, Hash, ZkInBalance, ZkInContact, ZkInTransactionInfo } from "@/types/lib";
 import Vue from "vue";
 
 export default Vue.extend({
+  components: {
+    ContentHashModal,
+  },
   props: {
     fromRoute: {
       type: Object,
@@ -93,6 +109,8 @@ export default Vue.extend({
       },
 
       /* Main Block */
+      inputtedAddress: <Address>"",
+      chosenContact: <ZkInContact | false>false,
       inputtedHash: <Hash>"",
       fee: <GweiBalance | false>false,
       chosenFeeToken: <ZkInBalance | false>false,
@@ -102,10 +120,23 @@ export default Vue.extend({
   },
   computed: {
     buttonDisabled(): boolean {
-      return !this.inputtedHash || !this.fee || this.feesLoading || !this.chosenFeeToken || this.chosenFeeToken?.restricted;
+      return !this.inputtedHash || !this.inputtedAddress || !this.fee || this.feesLoading || !this.chosenFeeToken || this.chosenFeeToken?.restricted;
     },
   },
   watch: {
+    chosenContact: {
+      deep: true,
+      handler(val) {
+        if (val && val.address) {
+          this.inputtedAddress = val.address;
+        } else {
+          this.inputtedAddress = "";
+        }
+      },
+    },
+    inputtedAddress() {
+      this.requestFees();
+    },
     inputtedHash() {
       this.requestFees();
     },
@@ -186,20 +217,20 @@ export default Vue.extend({
       this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
     },
     async requestFees(): Promise<void> {
-      if (!this.chosenFeeToken || this.chosenFeeToken?.restricted) {
+      if (!this.chosenFeeToken || !this.inputtedAddress || this.chosenFeeToken?.restricted) {
         this.fee = false;
         return;
       }
       this.feesLoading = true;
       try {
         const savedData = {
-          address: this.$accessor.account.address,
+          address: this.inputtedAddress,
           symbol: this.chosenFeeToken?.symbol,
           feeSymbol: this.chosenFeeToken?.symbol,
           type: "MintNFT",
         };
         const requestedFee = await this.$accessor.wallet.requestFees(savedData);
-        if (savedData.address === this.$accessor.account.address && savedData.feeSymbol === this.chosenFeeToken.symbol) {
+        if (savedData.address === this.inputtedAddress && savedData.feeSymbol === this.chosenFeeToken.symbol) {
           this.fee = requestedFee.normal!;
         }
       } catch (error) {
