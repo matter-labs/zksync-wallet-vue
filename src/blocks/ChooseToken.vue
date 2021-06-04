@@ -5,7 +5,7 @@
     </div>
     <template v-else>
       <div class="searchContainer">
-        <i-input ref="tokenSymbolInput" v-model="search" :placeholder="`Filter balances in ${tokensType}`" maxlength="10">
+        <i-input ref="tokenSymbolInput" v-model="search" :placeholder="tokensType === 'NFT' ? 'Filter NFT tokens' : `Filter balances in ${tokensType}`" maxlength="10">
           <i>
             <v-icon slot="prefix" name="ri-search-line" />
           </i>
@@ -21,7 +21,7 @@
       <div class="tokenListContainer genericListContainer">
         <div v-for="item in displayedList" :key="item.symbol" class="tokenItem" @click="chooseToken(item)">
           <div class="tokenSymbol">{{ item.symbol }}</div>
-          <div class="rightSide">
+          <div v-if="tokensType === 'L1' || tokensType === 'L2'" class="rightSide">
             <div class="balance">{{ item.balance }}</div>
           </div>
         </div>
@@ -31,28 +31,37 @@
           </span>
         </div>
         <div v-else-if="displayedList.length === 0" class="centerBlock">
-          <span>No balances yet. Please make a deposit or request money from someone!</span>
+          <span v-if="tokensType === 'NFT'">No available NFT tokens yet. You can either <nuxt-link to="/account/nft/mint">mint</nuxt-link> or request them from someone!</span>
+          <span v-else>No balances yet. Please make a deposit or request money from someone!</span>
         </div>
       </div>
-      <!--suppress JSCheckFunctionSignatures -->
-      <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token?</i-button>
-      <no-token-found />
+      <template v-if="tokensType !== 'NFT'">
+        <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token?</i-button>
+        <no-token-found />
+      </template>
+      <template v-else>
+        <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoNftTokenFound')"> Can't find a token?</i-button>
+        <no-nft-token-found />
+      </template>
     </template>
   </div>
 </template>
 
 <script lang="ts">
 import NoTokenFound from "@/blocks/modals/NoTokenFound.vue";
+import NoNftTokenFound from "@/blocks/modals/NoNftTokenFound.vue";
 import utils from "@/plugins/utils";
-import { ZkInBalance } from "@/types/lib";
+import { walletData } from "@/plugins/walletData";
+import { ZkInBalance, ZkInNFT } from "@/types/lib";
 
 import Vue, { PropOptions } from "vue";
 
-type TokensType = "L1" | "L2";
+type TokensType = "L1" | "L2" | "NFT";
 
 export default Vue.extend({
   components: {
     NoTokenFound,
+    NoNftTokenFound,
   },
   props: {
     onlyAllowed: {
@@ -74,13 +83,21 @@ export default Vue.extend({
     };
   },
   computed: {
-    balances(): ZkInBalance[] {
-      return this.tokensType === "L2" ? this.$accessor.wallet.getzkBalances : this.$accessor.wallet.getInitialBalances;
+    balances(): ZkInBalance[] | ZkInNFT[] {
+      switch (this.tokensType) {
+        case "L1":
+          return this.$accessor.wallet.getInitialBalances;
+        case "NFT":
+          return this.getNFTs();
+
+        default:
+          return this.$accessor.wallet.getzkBalances;
+      }
     },
-    displayedList(): ZkInBalance[] {
-      let list: ZkInBalance[] = utils.searchInArr(this.search, this.balances, (e) => (e as ZkInBalance).symbol) as ZkInBalance[];
-      if (this.onlyAllowed) {
-        list = list.filter((e) => !e.restricted);
+    displayedList(): ZkInBalance[] | ZkInNFT[] {
+      let list = utils.searchInArr(this.search, this.balances, (e) => (e as ZkInBalance | ZkInNFT).symbol) as ZkInBalance[] | ZkInNFT[];
+      if (this.tokensType !== "NFT" && this.onlyAllowed) {
+        list = (list as ZkInBalance[]).filter((e) => !e.restricted);
       }
       return list;
     },
@@ -90,17 +107,28 @@ export default Vue.extend({
     this.loading = false;
   },
   methods: {
-    chooseToken(token: ZkInBalance): void {
+    chooseToken(token: ZkInBalance | ZkInNFT): void {
       this.$emit("chosen", token);
     },
     async getTokenList(force = false): Promise<void> {
       this.spinnerLoading = true;
-      if (this.tokensType === "L2") {
+      if (this.tokensType === "L2" || this.tokensType === "NFT") {
         await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force });
       } else {
         await this.$accessor.wallet.requestInitialBalances(force);
       }
       this.spinnerLoading = false;
+    },
+    getNFTs() {
+      const mintedNfts = walletData.get().accountState!.committed.mintedNfts;
+      const finalArr = [];
+      for (const nft of this.$accessor.wallet.getNftBalances) {
+        if (mintedNfts.hasOwnProperty(nft.id) && nft.status === "Pending") {
+          continue;
+        }
+        finalArr.push(nft);
+      }
+      return finalArr;
     },
   },
 });

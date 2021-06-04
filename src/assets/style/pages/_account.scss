@@ -40,6 +40,9 @@
         background-color: $bgSecondary;
         border-radius: $borderRadius;
         box-shadow: $shadowInset;
+        &.nftList {
+          max-height: 35vh;
+        }
 
         &::-webkit-scrollbar {
           width: 10px;

@@ -3,6 +3,7 @@
     <block-balances>
       <wallet-address class="clickablePicture _margin-bottom-1" :wallet="walletAddress" @clickPicture="openAccountModal()" />
     </block-balances>
+    <block-nft-balances class="_margin-top-1" />
   </div>
 </template>
 

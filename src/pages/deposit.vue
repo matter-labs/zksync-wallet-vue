@@ -418,6 +418,7 @@ export default Vue.extend({
       if (token.symbol.toLowerCase() !== "eth") {
         const wallet = walletData.get().syncWallet;
         const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
+        // @ts-ignore
         const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE, wallet!.ethSigner);
         return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
       }

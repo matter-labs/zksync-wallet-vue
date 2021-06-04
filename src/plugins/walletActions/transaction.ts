@@ -1,4 +1,4 @@
-import { GweiBalance } from "@/types/lib";
+import { GweiBalance, ZkInNFT } from "@/types/lib";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
 import { submitSignedTransactionsBatch, Transaction } from "zksync/build/wallet";
@@ -76,19 +76,6 @@ interface WithdrawParams {
   store: typeof accessorType;
 }
 
-/**
- * Generic method for batch transaction creation
- *
- * @param address
- * @param token
- * @param feeToken
- * @param amount
- * @param fastWithdraw
- * @param fee
- * @param accountActivationFee
- * @param store
- * @return {Promise<{txData: *, txHash: *}[]>}
- */
 export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw, fee, accountActivationFee, store }: WithdrawParams) => {
   const syncWallet = walletData.get().syncWallet!;
   const nonce = await syncWallet.getNonce("committed");
@@ -121,6 +108,92 @@ export const withdraw = async ({ address, token, feeToken, amount, fastWithdraw,
       token: feeToken,
     });
   }
+  const batchTransactionData = await batchBuilder.build();
+  const transactions = await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  for (const tx of transactions) {
+    store.transaction.watchTransaction({ transactionHash: tx.txHash });
+  }
+  return labelTransactions(transactions);
+};
+
+interface WithdrawNFTParams {
+  address: Address;
+  token: ZkInNFT;
+  feeToken: TokenSymbol;
+  fastWithdraw: boolean;
+  fee: GweiBalance;
+  accountActivationFee?: GweiBalance;
+  store: typeof accessorType;
+}
+
+/**
+ * Generic method for batch transaction creation
+ *
+ * @param address
+ * @param token
+ * @param feeToken
+ * @param amount
+ * @param fastWithdraw
+ * @param fee
+ * @param accountActivationFee
+ * @param store
+ * @return {Promise<{txData: *, txHash: *}[]>}
+ */
+export const withdrawNFT = async ({ address, token, feeToken, fastWithdraw, fee, accountActivationFee, store }: WithdrawNFTParams) => {
+  const syncWallet = walletData.get().syncWallet!;
+  const nonce = await syncWallet.getNonce("committed");
+  const batchBuilder = syncWallet.batchBuilder(nonce);
+
+  if (store.wallet.isAccountLocked) {
+    if (!accountActivationFee) {
+      throw new Error("No account activation fee found");
+    }
+    await addCPKToBatch(syncWallet, accountActivationFee, feeToken, batchBuilder, store);
+  }
+  batchBuilder.addWithdrawNFT({
+    to: address,
+    token: token.id,
+    feeToken,
+    fee,
+  });
+  const batchTransactionData = await batchBuilder.build();
+  const transactions = await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  for (const tx of transactions) {
+    store.transaction.watchTransaction({ transactionHash: tx.txHash });
+  }
+  return labelTransactions(transactions);
+};
+
+export const transferNFT = async (
+  address: Address,
+  token: ZkInNFT,
+  feeToken: TokenSymbol,
+  feeBigValue: GweiBalance,
+  store: typeof accessorType,
+  accountActivationFee?: GweiBalance,
+) => {
+  const syncWallet = walletData.get().syncWallet!;
+  const nonce = await syncWallet.getNonce("committed");
+  const batchBuilder = syncWallet.batchBuilder(nonce);
+
+  if (store.wallet.isAccountLocked) {
+    if (!accountActivationFee) {
+      throw new Error("No account activation fee found");
+    }
+    await addCPKToBatch(syncWallet, accountActivationFee, feeToken, batchBuilder, store);
+  }
+  batchBuilder.addTransfer({
+    fee: "0",
+    amount: 1,
+    to: address,
+    token: token.id,
+  });
+  batchBuilder.addTransfer({
+    fee: feeBigValue,
+    amount: "0",
+    to: syncWallet.address(),
+    token: feeToken,
+  });
   const batchTransactionData = await batchBuilder.build();
   const transactions = await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
   for (const tx of transactions) {

@@ -1,7 +1,6 @@
 <template>
   <div class="transactionPage dappPageWrapper">
-    <!-- <sign-pubkey-modal :from-route="fromRoute" /> -->
-
+    <!-- Choose token -->
     <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
       <choose-token @chosen="chooseToken($event)" />
@@ -66,22 +65,28 @@
 
       <div class="_padding-top-1 inputLabel">Address</div>
       <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction" />
-      <choose-contact v-model="chosenContact" class="_margin-top-05" :address.sync="inputtedAddress" :display-own-address="type === 'withdraw'" />
+      <choose-contact v-model="chosenContact" class="_margin-top-05" :address.sync="inputtedAddress" :display-own-address="type === 'withdraw' || type === 'nft-withdraw'" />
 
-      <div class="_padding-top-1 inputLabel">Amount</div>
-      <amount-input
-        ref="amountInput"
-        v-model="inputtedAmount"
-        :max-amount="maxAmount"
-        :token="chosenToken ? chosenToken : undefined"
-        :type="type"
-        autofocus
-        @chooseToken="chooseTokenModal = true"
-        @enter="commitTransaction"
-      />
+      <template v-if="type === 'transfer' || type === 'withdraw'">
+        <div class="_padding-top-1 inputLabel">Amount</div>
+        <amount-input
+          ref="amountInput"
+          v-model="inputtedAmount"
+          :max-amount="maxAmount"
+          :token="chosenToken ? chosenToken : undefined"
+          :type="type"
+          autofocus
+          @chooseToken="chooseTokenModal = true"
+          @enter="commitTransaction"
+        />
+      </template>
+      <template v-if="type === 'nft-transfer' || type === 'nft-withdraw'">
+        <div class="_padding-top-1 inputLabel">Token</div>
+        <nft-choose-token v-model="chosenToken" @input="chooseToken($event)" />
+      </template>
 
       <!-- <i-radio-group
-        v-if="chosenToken && type === 'withdraw' && (!chosenFeeToken || chosenFeeToken.symbol === chosenToken.symbol) && (feesObj || feesLoading) && inputtedAddress"
+        v-if="chosenToken && (type === 'withdraw' || type === 'nft-withdraw') && (!chosenFeeToken || chosenFeeToken.symbol === chosenToken.symbol) && (feesObj || feesLoading) && inputtedAddress"
         v-model="transactionMode"
         class="_margin-top-2"
       >
@@ -134,8 +139,8 @@
 
       <i-button :disabled="buttonDisabled" block class="_margin-top-05" size="lg" variant="secondary" @click="commitTransaction">
         <template v-if="ownAccountUnlocked">
-          <v-icon v-if="type === 'withdraw'" name="ri-hand-coin-fill" />
-          <v-icon v-else-if="type === 'transfer'" class="planeIcon" name="ri-send-plane-fill" />
+          <v-icon v-if="type === 'withdraw' || type === 'nft-withdraw'" name="ri-hand-coin-fill" />
+          <v-icon v-else-if="type === 'transfer' || type === 'nft-transfer'" class="planeIcon" name="ri-send-plane-fill" />
         </template>
         <span>
           <span>{{ transactionTypeName }}</span>
@@ -153,9 +158,9 @@
         <div v-if="(chosenFeeObj || feesLoading) && chosenToken && inputtedAddress" class="_text-center _margin-top-1">
           Fee:
           <span v-if="feesLoading" class="secondaryText">Loading...</span>
-          <span v-else>
+          <span v-else-if="feeToken">
             {{ feesObj && feesObj[transactionMode] | formatToken(feeToken.symbol) }} <span class="tokenSymbol">{{ feeToken.symbol }}</span>
-            <span class="secondaryText">
+            <span v-if="feesObj[transactionMode]" class="secondaryText">
               <token-price :symbol="feeToken.symbol" :amount="feesObj[transactionMode].toString()" />
             </span>
           </span>
@@ -164,7 +169,7 @@
         <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1-2">
           Account Activation single-time fee:
           <span v-if="activateAccountFeeLoading" class="secondaryText">Loading...</span>
-          <span v-else>
+          <span v-else-if="feeToken">
             {{ activateAccountFee | formatToken(feeToken.symbol) }} <span class="tokenSymbol">{{ feeToken.symbol }}</span>
             <span class="secondaryText">
               <token-price :symbol="feeToken.symbol" :amount="activateAccountFee.toString()" />
@@ -191,9 +196,9 @@ import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 
-import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInTransactionInfo, ZKTypeTransactionType } from "@/types/lib";
+import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInNFT, ZkInTransactionInfo, ZKTypeTransactionType } from "@/types/lib";
 import utils from "@/plugins/utils";
-import { transaction, withdraw } from "@/plugins/walletActions/transaction";
+import { transaction, transferNFT, withdraw, withdrawNFT } from "@/plugins/walletActions/transaction";
 import { getCPKTx, removeCPKTx } from "@/plugins/walletActions/cpk";
 import { walletData } from "@/plugins/walletData";
 
@@ -263,7 +268,7 @@ export default Vue.extend({
       inputtedAddress: "",
       chosenContact: <ZkInContact | false>false,
       inputtedAmount: "",
-      chosenToken: <ZkInBalance | false>false,
+      chosenToken: <ZkInBalance | ZkInNFT | false>false,
       chosenFeeToken: <ZkInBalance | false>false,
       feesObj: <ZkInFeesObj | undefined>{
         normal: "",
@@ -298,7 +303,19 @@ export default Vue.extend({
       return false;
     },
     transactionTypeName(): string {
-      return this.type === "withdraw" ? "Withdraw" : this.type === "transfer" ? "Transfer" : "";
+      switch (this.type) {
+        case "withdraw":
+          return "Withdraw";
+        case "transfer":
+          return "Transfer";
+        case "nft-withdraw":
+          return "NFT Withdraw";
+        case "nft-transfer":
+          return "NFT Transfer";
+
+        default:
+          return "";
+      }
     },
     maxAmount(): GweiBalance {
       if (!this.chosenToken) {
@@ -311,9 +328,9 @@ export default Vue.extend({
         !this.feesLoading &&
         (this.transactionMode === "normal" ? this.feesObj?.normal : this.feesObj?.fast)
       ) {
-        amount = this.chosenToken.rawBalance.sub(this.chosenFeeObj as GweiBalance);
+        amount = (this.chosenToken as ZkInBalance).rawBalance.sub(this.chosenFeeObj as GweiBalance);
       } else {
-        amount = this.chosenToken.rawBalance;
+        amount = (this.chosenToken as ZkInBalance).rawBalance;
       }
       if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
         amount = amount.sub(this.activateAccountFee);
@@ -324,6 +341,9 @@ export default Vue.extend({
       return closestPackableTransactionAmount(amount).toString();
     },
     feeToken(): ZkInBalance {
+      if (this.type === "nft-transfer" || this.type === "nft-withdraw") {
+        return this.chosenFeeToken as ZkInBalance;
+      }
       return this.chosenFeeToken ? this.chosenFeeToken : (this.chosenToken as ZkInBalance);
     },
     enoughFeeToken(): boolean {
@@ -352,7 +372,14 @@ export default Vue.extend({
       if (!this.ownAccountUnlocked && !(this.feeToken && this.activateAccountFee && !this.activateAccountFeeLoading && this.enoughFeeToken)) {
         return true;
       }
-      return !this.inputtedAddress || !this.inputtedAmount || !this.chosenToken || this.feesLoading || this.cantFindFeeToken || !this.enoughFeeToken;
+      return (
+        !this.inputtedAddress ||
+        ((this.type === "withdraw" || this.type === "transfer") && !this.inputtedAmount) ||
+        !this.chosenToken ||
+        this.feesLoading ||
+        this.cantFindFeeToken ||
+        !this.enoughFeeToken
+      );
     },
     ownAccountUnlocked(): boolean {
       return !this.$accessor.wallet.isAccountLocked;
@@ -403,16 +430,26 @@ export default Vue.extend({
       this.$sentry?.captureException(error);
     }
     this.loading = false;
+    /* const contentHash = "0xbd7289936758c562235a3a42ba2c4a56cbb23a263bb8f8d27aead80d74d9d996";
+    const syncWallet = walletData.get().syncWallet!;
+    const handle = await syncWallet.mintNFT({
+      recipient: syncWallet.address(),
+      contentHash,
+      feeToken: "ETH",
+    });
+    console.log("handle", handle);
+    const mintNftReceipt = await handle.awaitReceipt();
+    console.log("mintNftReceipt", mintNftReceipt); */
   },
   methods: {
-    chooseToken(token: ZkInBalance) {
+    chooseToken(token: ZkInBalance | ZkInNFT) {
       this.chosenToken = token;
       this.chooseTokenModal = false;
       this.transactionMode = "normal";
       const balances = <Array<ZkInBalance>>(
         JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance as string) - parseFloat(a.balance as string))
       );
-      if (this.chosenToken.restricted) {
+      if ((this.chosenToken as ZkInBalance).restricted || this.type === "nft-transfer" || this.type === "nft-withdraw") {
         let tokenFound = false;
         for (const feeToken of balances) {
           if (!feeToken.restricted) {
@@ -468,7 +505,7 @@ export default Vue.extend({
       this.withdrawTime = await this.$accessor.wallet.requestWithdrawalProcessingTime();
     },
     async commitTransaction(): Promise<void> {
-      if (!this.inputtedAmount) {
+      if ((this.type === "transfer" || this.type === "withdraw") && !this.inputtedAmount) {
         // @ts-ignore: Unreachable code error
         (this.$refs.amountInput as Vue).emitValue(this.inputtedAmount);
       }
@@ -482,6 +519,10 @@ export default Vue.extend({
           await this.withdraw();
         } else if (this.type === "transfer") {
           await this.transfer();
+        } else if (this.type === "nft-transfer") {
+          await this.nftTransfer();
+        } else if (this.type === "nft-withdraw") {
+          await this.nftWithdraw();
         }
       } catch (error) {
         console.log("commitTransaction error", error);
@@ -517,15 +558,7 @@ export default Vue.extend({
       this.transactionInfo.amount!.token = this.chosenToken as ZkInBalance;
       this.transactionInfo.fee!.token = this.feeToken;
 
-      if (withdrawTransactions.cpkTransaction) {
-        removeCPKTx(this.$accessor.account.address!);
-        this.$accessor.wallet.setAccountLockedState(false);
-        withdrawTransactions.cpkTransaction.awaitReceipt().then(async () => {
-          const newAccountState = await walletData.get().syncWallet!.getAccountState();
-          walletData.set({ accountState: newAccountState });
-          this.$accessor.wallet.checkLockedState();
-        });
-      }
+      this.checkUnlock(withdrawTransactions);
 
       this.transactionInfo.hash = withdrawTransactions.transaction!.txHash;
       this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + withdrawTransactions.transaction!.txHash;
@@ -579,15 +612,7 @@ export default Vue.extend({
         this.transactionInfo.fee!.token = this.feeToken;
       }
 
-      if (transferTransactions.cpkTransaction) {
-        removeCPKTx(this.$accessor.account.address!);
-        this.$accessor.wallet.setAccountLockedState(false);
-        transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
-          const newAccountState = await walletData.get().syncWallet!.getAccountState();
-          walletData.set({ accountState: newAccountState });
-          this.$accessor.wallet.checkLockedState();
-        });
-      }
+      this.checkUnlock(transferTransactions);
 
       this.transactionInfo.hash = transferTransactions.transaction!.txHash;
       this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
@@ -601,6 +626,103 @@ export default Vue.extend({
       this.transactionInfo.success = !!receipt.success;
       if (receipt.failReason) {
         throw new Error(receipt.failReason);
+      }
+    },
+    async nftTransfer(): Promise<void> {
+      const transferWithdrawWarning = localStorage.getItem("canceledTransferWithdrawWarning");
+      this.tip = "Processing...";
+      if (!transferWithdrawWarning && !this.transferWithdrawWarningModal) {
+        const accountUnlocked = await this.accountUnlocked(this.inputtedAddress);
+        if (!accountUnlocked) {
+          this.transferWithdrawWarningModal = true;
+          this.loading = false;
+          return;
+        }
+      }
+      this.tip = "Confirm the transaction to transfer NFT";
+
+      const calculatedFee = this.chosenFeeObj;
+
+      if (calculatedFee === undefined) {
+        throw new Error("Fee calculation failed");
+      }
+      const transferTransactions = await transferNFT(
+        this.inputtedAddress,
+        this.chosenToken as ZkInNFT,
+        this.feeToken.symbol,
+        calculatedFee as string,
+        this.$accessor,
+        this.activateAccountFee,
+      );
+
+      this.transactionInfo.amount = undefined;
+
+      if (BigNumber.isBigNumber(calculatedFee)) {
+        this.transactionInfo.fee!.amount = calculatedFee;
+        this.transactionInfo.fee!.token = this.feeToken;
+      }
+
+      this.checkUnlock(transferTransactions);
+
+      this.transactionInfo.hash = transferTransactions.transaction!.txHash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
+      this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
+      this.transactionInfo.recipient = {
+        address: transferTransactions.transaction!.txData.tx.to,
+        name: this.chosenContact ? this.chosenContact.name : "",
+      };
+      this.tip = "Waiting for the transaction to be mined...";
+      const receipt = await transferTransactions.transaction!.awaitReceipt();
+      this.transactionInfo.success = !!receipt.success;
+      this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+      if (receipt.failReason) {
+        throw new Error(receipt.failReason);
+      }
+    },
+    async nftWithdraw(): Promise<void> {
+      this.tip = "Confirm the transaction to withdraw";
+      if (this.feesObj === undefined) {
+        throw new Error("Fee fetching error");
+      }
+      const withdrawTransactions = await withdrawNFT({
+        address: this.inputtedAddress,
+        token: this.chosenToken as ZkInNFT,
+        feeToken: this.feeToken.symbol,
+        fastWithdraw: this.transactionMode === "fast",
+        fee: (this.transactionMode === "fast" ? this.feesObj?.fast : this.feesObj?.normal) as string,
+        store: this.$accessor,
+        accountActivationFee: this.activateAccountFee,
+      });
+
+      this.transactionInfo.amount = undefined;
+      this.transactionInfo.fee!.token = this.feeToken;
+
+      this.checkUnlock(withdrawTransactions);
+
+      this.transactionInfo.hash = withdrawTransactions.transaction!.txHash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + withdrawTransactions.transaction!.txHash;
+      this.transactionInfo.fee!.amount = withdrawTransactions.feeTransaction!.txData.tx.fee;
+      this.transactionInfo.recipient = {
+        address: withdrawTransactions.transaction!.txData.tx.to,
+        name: this.chosenContact ? this.chosenContact.name : "",
+      };
+      this.tip = "Waiting for the transaction to be mined...";
+      const receipt = await withdrawTransactions.transaction?.awaitReceipt();
+      this.transactionInfo.success = !!receipt!.success;
+      this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+      if (receipt!.failReason) {
+        throw new Error(receipt!.failReason);
+      }
+    },
+    checkUnlock(transferTransactions: { cpkTransaction: Transaction | null; transaction: Transaction | null; feeTransaction: Transaction | null }): void {
+      if (transferTransactions.cpkTransaction) {
+        removeCPKTx(this.$accessor.account.address!);
+        this.$accessor.wallet.setAccountLockedState(false);
+        transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
+          const newAccountState = await walletData.get().syncWallet!.getAccountState();
+          walletData.set({ accountState: newAccountState });
+          this.$accessor.wallet.checkLockedState();
+        });
       }
     },
     async accountUnlocked(address: Address): Promise<boolean> {

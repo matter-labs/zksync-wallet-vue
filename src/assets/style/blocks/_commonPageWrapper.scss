@@ -140,9 +140,8 @@
     overflow-x: hidden;
     height: 100%;
     overflow-y: auto !important;
-    background-color: $bgSecondary;
-    border-radius: $borderRadius;
-    box-shadow: $shadowInset;
+    //border-radius: $borderRadius;
+    //box-shadow: $shadowInset;
     transition: 0.1s ease;
     transition-property: background-color, box-shadow;
 
@@ -245,7 +244,7 @@
       width: 90vw;
 
       .balancesList, .transactionsListContainer, .contactsListContainer {
-        background-color: #f7fafc;
+        //background-color: #f7fafc;
         margin: 0.25rem 0 !important;
 
         & > * {
@@ -342,7 +341,7 @@
 .inkline.-dark {
   .dappPageWrapper {
     .balancesList, .transactionsListContainer, .contactsListContainer {
-      background-color: $bgSecondary;
+      //background-color: $bgSecondary;
     }
   }
 }
@@ -350,7 +349,7 @@
 .inkline.-light {
   .dappPageWrapper {
     .balancesList, .transactionsListContainer, .contactsListContainer {
-      background-color: #f7fafc;
+      //background-color: #f7fafc;
     }
   }
 }

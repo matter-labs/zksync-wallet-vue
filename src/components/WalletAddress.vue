@@ -12,6 +12,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { Address } from "zksync/build/types";
+import utils from "@/plugins/utils";
 
 export default Vue.extend({
   name: "WalletAddress",
@@ -24,15 +25,7 @@ export default Vue.extend({
   },
   methods: {
     copyAddress() {
-      const elem = document.createElement("textarea");
-      elem.style.position = "absolute";
-      elem.style.left = -99999999 + "px";
-      elem.style.top = -99999999 + "px";
-      elem.value = this.wallet;
-      document.body.appendChild(elem);
-      elem.select();
-      document.execCommand("copy");
-      document.body.removeChild(elem);
+      utils.copy(this.wallet);
     },
   },
 });
