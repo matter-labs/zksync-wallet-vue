@@ -4,13 +4,14 @@
       <span>NFT Tokens</span>
     </div>
     <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
-      <p class="tileText">No NFT tokens yet. You can either mint or request them from someone!</p>
-      <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/nft/mint">+ Mint NFT</i-button>
+      <p class="tileText">No NFT tokens yet. You can request them from someone!</p>
+      <!-- <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/nft/mint">+ Mint NFT</i-button> -->
     </div>
     <div v-else class="balances">
       <div v-if="!loading">
         <div class="_display-flex _justify-content-space-between">
-          <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/nft/mint">+ Mint NFT</i-button>
+          <div></div>
+          <!-- <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/nft/mint">+ Mint NFT</i-button> -->
           <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/nft/withdraw">- Withdraw NFT</i-button>
         </div>
         <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/nft/transfer">
