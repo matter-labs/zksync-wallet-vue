@@ -749,7 +749,6 @@ export default Vue.extend({
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       try {
-        await this.$accessor.wallet.restoreProviderConnection();
         const foundFee = await syncProvider?.getTransactionFee(
           {
             ChangePubKey: syncWallet!.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA",

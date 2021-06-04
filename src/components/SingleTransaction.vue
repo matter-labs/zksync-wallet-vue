@@ -97,6 +97,10 @@ export default Vue.extend({
       } else if (this.singleTransaction.tx.priority_op) {
         return this.singleTransaction.tx.priority_op.to;
       }
+      if (this.singleTransaction.tx.type === "MintNFT") {
+        // @ts-ignore
+        return this.singleTransaction.tx?.recipient;
+      }
       return this.singleTransaction.tx.to || "";
     },
     transactionStatus(): { text: string; icon: string; class: string } {
@@ -159,7 +163,7 @@ export default Vue.extend({
         case "MintNFT":
           return {
             type: "Mint NFT",
-            showAddress: false,
+            showAddress: true,
             modal: false,
           };
         case "Transfer":
@@ -193,21 +197,21 @@ export default Vue.extend({
     },
     tokenSymbol(): TokenSymbol | undefined {
       if (!this.isFeeTransaction && this.singleTransaction.tx.priority_op) {
-        return this.singleTransaction.tx.priority_op.token;
+        return this.singleTransaction.tx.priority_op.token as TokenSymbol;
       }
       if (typeof this.singleTransaction.tx.feeToken === "number") {
-        return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol;
+        return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol as TokenSymbol;
       }
       if (this.singleTransaction.tx.priority_op) {
-        return this.singleTransaction.tx.priority_op.token;
+        return this.singleTransaction.tx.priority_op.token as TokenSymbol;
       }
-      return this.singleTransaction.tx.token!;
+      return this.singleTransaction.tx.token as TokenSymbol;
     },
     isNFT(): boolean {
       if (this.singleTransaction.tx.type === "MintNFT") {
         return true;
       }
-      return utils.isNFT(this.tokenSymbol);
+      return utils.isNFT(this.tokenSymbol as TokenSymbol);
     },
   },
   mounted() {
@@ -224,18 +228,14 @@ export default Vue.extend({
     clearInterval(getTimeAgoInterval);
   },
   methods: {
-    isSameAddress(address: string): boolean {
+    isSameAddress(address: Address): boolean {
       return String(address).toLowerCase() === this.walletAddressFull.toLowerCase();
     },
     getTimeAgo(time: string): string {
       return moment(time).tz("UTC").fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
-      if (!this.isFeeTransaction) {
-        return zkUtils.handleFormatToken(this.tokenSymbol as string, type === "Deposit" && priority_op ? priority_op.amount : amount) || "";
-      } else {
-        return zkUtils.handleFormatToken(this.tokenSymbol as string, fee) || "";
-      }
+      return zkUtils.handleFormatToken(this.tokenSymbol as TokenSymbol, this.isFeeTransaction ? fee : type === "Deposit" && priority_op ? priority_op.amount : amount) || "";
     },
     getAddressName(address: string): string {
       address = address ? String(address).toLowerCase() : "";

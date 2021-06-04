@@ -3,19 +3,23 @@
     .headline {
       font-size: 16px;
     }
+
     .hash {
       font-size: 12px;
     }
+
     .address {
       font-size: 14px;
       padding-bottom: 4px;
     }
+
     .copyGrid {
       display: grid;
       grid-template-columns: 1fr max-content;
       grid-template-rows: 100%;
       grid-gap: 10px;
       align-items: center;
+
       &.addressCopy {
         padding-bottom: 4.5px;
         width: 95%;
@@ -27,15 +31,16 @@
         color: $gray;
         cursor: pointer;
         transition: color $transition1;
+
         &:active {
           transition-duration: 0.0001s;
           color: $green !important;
         }
-        
+
         .iconContainer {
           display: flex;
           align-items: center;
-          
+
           svg {
             position: relative;
             top: -0.5px;
@@ -47,12 +52,15 @@
         }
       }
     }
-    .hash,.address {
+
+    .hash,
+    .address {
       display: block;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     .balance {
       font-size: 20px;
       display: flex;
@@ -72,30 +80,28 @@
 }
 
 .balanceWithdraw {
-
   @media (max-width: $mobile) {
     flex-direction: column;
 
     & > .infoBlock {
       margin-bottom: 10px;
-      .headline
-      {
+
+      .headline {
         margin-top: 0 !important;
         font-size: 12px;
         color: $gray;
       }
-      .balancePrice
-      {
+
+      .balancePrice {
         font-size: $mobileNormal;
       }
-      .balance
-      {
+
+      .balance {
         font-size: $mobileHeader;
       }
     }
   }
 }
-
 
 body.inkline {
   &.-light {
@@ -112,5 +118,9 @@ body.inkline {
         color: $white;
       }
     }
+  }
+
+  .nftButtonGroup {
+    gap: 0.2rem;
   }
 }

@@ -3,8 +3,6 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    //height: max-content;
-    //max-height: $minRouteHeightMain;
     min-height: 0 !important;
     align-items: stretch;
 
@@ -29,17 +27,16 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      //height: calc(100% - 50px);
 
       .balancesList {
         width: 100%;
-        //height: calc(100% - 170px);
         overflow-x: hidden;
         height: 100%;
         overflow-y: auto !important;
         background-color: $bgSecondary;
         border-radius: $borderRadius;
         box-shadow: $shadowInset;
+
         &.nftList {
           max-height: 35vh;
         }
@@ -71,6 +68,7 @@
           cursor: pointer;
           transition: $transition1;
           transition-property: background-color, color;
+
           &:last-child {
             border-bottom: none;
           }
@@ -115,7 +113,7 @@
               margin-left: 2px;
             }
           }
-          
+
           .rightSide {
             display: flex;
             flex-direction: column;
@@ -170,17 +168,17 @@
             letter-spacing: -0.03rem;
           }
 
-          .rightSide{
+          .rightSide {
             flex-grow: 2;
             margin-left: auto;
             display: block;
 
-            .status
-            {
+            .status {
               width: 1.5rem;
               height: 1.5rem;
               order: -1;
             }
+
             .rowItem {
               display: flex;
               flex-direction: row;
@@ -206,10 +204,10 @@
               padding-right: 0.1rem;
               font-family: $firaCode;
 
-              .balancePrice
-              {
+              .balancePrice {
                 order: 1;
               }
+
               .tokenPrice {
                 font-size: 11px;
               }
@@ -247,4 +245,10 @@ body.inkline {
       }
     }
   }
+}
+
+#questionMark {
+  height: 30px;
+  width: 30px;
+  margin: -5px 0 0;
 }

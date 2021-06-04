@@ -203,7 +203,7 @@ export default Vue.extend({
       inputtedAmount: <DecimalBalance>"",
       inputtedAllowance: <DecimalBalance>"",
       allowanceError: false,
-      tokenAllowance: <false | BigNumber>false,
+      tokenAllowance: <BigNumber | undefined>undefined,
       chosenToken: <ZkInBalance | false>false,
       thresholdLoading: false,
       unlimitedApproval: false,
@@ -227,8 +227,12 @@ export default Vue.extend({
         return BigNumber.from("0");
       }
     },
-    zeroAllowance(): boolean {
-      return this.tokenAllowance && this.tokenAllowance.eq(BigNumber.from("0"));
+    zeroAllowance(): boolean | undefined {
+      const allowance: BigNumber | undefined = this.tokenAllowance;
+      if (allowance === undefined) {
+        return false;
+      }
+      return allowance!.eq(BigNumber.from("0"));
     },
     enoughAllowance(): boolean {
       if (!this.tokenAllowance || !this.chosenToken) {
@@ -269,17 +273,14 @@ export default Vue.extend({
       }
     },
   },
-  async mounted() {
+  mounted() {
     try {
       this.loading = true;
       if (this.$route.query.token) {
-        const balances = this.$accessor.wallet.getzkBalances;
-        for (const item of balances) {
-          if (item.symbol === this.$route.query.token) {
-            await this.chooseToken(item);
-            break;
-          }
-        }
+        const chosenToken = this.$accessor.wallet.getzkBalances.find((singleBalance) => {
+          return singleBalance.symbol === this.$route.query.token;
+        });
+        this.chooseToken(chosenToken as ZkInBalance);
       }
       this.loading = false;
     } catch (error) {
@@ -290,7 +291,9 @@ export default Vue.extend({
   methods: {
     async chooseToken(token: ZkInBalance) {
       try {
-        this.$accessor.tokens.getTokenPrice(token.symbol);
+        this.$accessor.tokens.getTokenPrice(token.symbol).then((result) => {
+          console.log(`loaded price for: ${result}`);
+        });
       } catch (error) {
         console.log(`Error getting ${token.symbol} price`, error);
         this.$accessor.tokens.addRestrictedToken(token.symbol);
@@ -346,7 +349,7 @@ export default Vue.extend({
       this.transactionInfo.hash = transferTransaction.ethTx.hash;
       this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + transferTransaction.ethTx.hash;
       this.tip = "Waiting for the transaction to be mined...";
-      const receipt = await transferTransaction.awaitEthereumTxCommit();
+      await transferTransaction.awaitEthereumTxCommit();
       this.transactionInfo.fee = undefined;
       this.transactionInfo.continueBtnFunction = false;
       this.transactionInfo.continueBtnText = "";

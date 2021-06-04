@@ -14,7 +14,7 @@
     <div class="tileHeadline h3">
       <span>Balances in L2</span>
       <span class="icon-container _display-flex" @click="balanceInfoModal = true">
-        <v-icon name="ri-question-mark" class="iconInfo" scale="0.9" />
+        <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" scale="0.9" />
       </span>
     </div>
     <slot />

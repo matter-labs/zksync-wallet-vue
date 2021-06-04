@@ -66,13 +66,14 @@
 </template>
 
 <script lang="ts">
-import { Address } from "@/../node_modules/zksync/build/types";
+import { Address } from "zksync/build/types";
+import { Transaction } from "zksync/build/wallet";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import ContentHashModal from "@/blocks/modals/ContentHashModal.vue";
 
-import { GweiBalance, Hash, ZkInBalance, ZkInContact, ZkInTransactionInfo } from "@/types/lib";
+import { GweiBalance, Hash, ZkInBalance, ZkInContact, ZkInTransactionInfo, ZkInFeesObj } from "@/types/lib";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -198,23 +199,22 @@ export default Vue.extend({
     async mint(): Promise<void> {
       this.tip = "Confirm the transaction to mint";
       this.transactionInfo.type = "deposit";
-      const syncWallet = walletData.get().syncWallet!;
-      const mintTransaction = await syncWallet.mintNFT({
-        recipient: syncWallet.address(),
+      const mintTransaction: Transaction | undefined = await walletData.get().syncWallet?.mintNFT({
+        recipient: walletData.get().syncWallet!.address() as Address,
         contentHash: this.inputtedHash,
         feeToken: "ETH",
         fee: this.fee as GweiBalance,
       });
-      this.transactionInfo.hash = mintTransaction.txHash;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/tx/" + mintTransaction.txHash;
+      this.transactionInfo.hash = mintTransaction?.txHash as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/tx/" + mintTransaction?.txHash;
       this.tip = "Waiting for the transaction to be mined...";
-      await mintTransaction.awaitReceipt();
+      await mintTransaction?.awaitReceipt();
       this.transactionInfo.fee = {
         token: this.chosenFeeToken,
-        amount: mintTransaction.txData.tx.fee,
+        amount: mintTransaction?.txData.tx.fee,
       };
       this.transactionInfo.success = true;
-      this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+      await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
     },
     async requestFees(): Promise<void> {
       if (!this.chosenFeeToken || !this.inputtedAddress || this.chosenFeeToken?.restricted) {
@@ -229,9 +229,9 @@ export default Vue.extend({
           feeSymbol: this.chosenFeeToken?.symbol,
           type: "MintNFT",
         };
-        const requestedFee = await this.$accessor.wallet.requestFees(savedData);
+        const requestedFee: ZkInFeesObj | undefined = await this.$accessor.wallet.requestFees(savedData);
         if (savedData.address === this.inputtedAddress && savedData.feeSymbol === this.chosenFeeToken.symbol) {
-          this.fee = requestedFee.normal!;
+          this.fee = requestedFee!.normal!;
         }
       } catch (error) {
         this.$toast.global.zkException({

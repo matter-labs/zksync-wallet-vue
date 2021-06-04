@@ -37,11 +37,15 @@
               <div v-else>Own account</div>
             </div>
           </div>
-          <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/nft/withdraw?token=${nftID}`">- Withdraw</i-button>
         </div>
-        <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/nft/transfer?token=${nftID}`">
-          <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
-        </i-button>
+        <i-button-group size="lg" class="_width-100 _margin-top-1 _display-flex nftButtonGroup">
+          <i-button class="_flex-fill _margin-0" size="lg" block variant="dark" :to="`/nft/withdraw?token=${nftID}`"
+            ><v-icon class="planeIcon" name="ri-hand-coin-fill" />&nbsp;&nbsp;Withdraw</i-button
+          >
+          <i-button class="_flex-fill _margin-0" block size="lg" variant="secondary" :to="`/nft/transfer?token=${nftID}`"
+            ><v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer</i-button
+          >
+        </i-button-group>
       </div>
     </div>
     <transactions class="_margin-top-0" :filter="`NFT-${nftID}`" />
@@ -49,8 +53,8 @@
 </template>
 
 <script lang="ts">
-import { ZkInNFT } from "@/types/lib";
 import utils from "@/plugins/utils";
+import { ZkInNFT } from "@/types/lib";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -80,7 +84,7 @@ export default Vue.extend({
     this.getData();
   },
   methods: {
-    async getData() {
+    async getData(): Promise<void> {
       this.loading = true;
       const balances = this.$accessor.wallet.getNftBalances;
       let found = false;
@@ -101,7 +105,7 @@ export default Vue.extend({
       const contactFromStore = this.$accessor.contacts.getByAddress(address);
       return contactFromStore ? contactFromStore.name : address.replace(address.slice(10, address.length - 5), "...");
     },
-    copy(value: string) {
+    copy(value: string): void {
       utils.copy(value);
     },
   },

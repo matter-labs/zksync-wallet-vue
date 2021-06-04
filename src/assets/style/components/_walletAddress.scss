@@ -77,6 +77,16 @@
   }
 }
 
+@media screen and (max-width: $mobile) {
+  .walletValue {
+    white-space: nowrap;
+    font-size: 10px !important;
+    letter-spacing: -0.04rem;
+    width: 100%;
+    overflow: hidden;
+  }
+}
+
 body.inkline.-light .defaultLayout {
   .walletContainer {
     background-color: #0000000a;
