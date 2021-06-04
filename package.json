@@ -2,7 +2,10 @@
   "name": "@matterlabs/zksync-zkwallet-vue",
   "title": "zkSync.io Wallet | Try solution for the Ethereum scalability\n with zero security compromises",
   "main": "nuxt.config.ts",
-  "types": "src/types/index.d.ts",
+  "types": [
+    "src/types/index.d.ts",
+    "src/types/lib.d.ts"
+  ],
   "files": [
     "src/types",
     "src"
@@ -75,6 +78,7 @@
     "vue": "2.*",
     "vue-class-component": "latest",
     "vue-qrcode": "latest",
+    "vue-router": "^3.5.1",
     "vue-scrollto": "^2.20.0",
     "web3": "^1.3.5",
     "zksync": "beta"

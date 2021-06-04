@@ -10,7 +10,8 @@ import {
   iWalletData,
   ZkInBalance,
   ZkInFeesObj,
- ZkInNFT, ZkInTx,
+  ZkInNFT,
+  ZkInTx,
   ZkInWithdrawalTime,
   ZKStoreRequestBalancesParams,
   ZKTypeDisplayBalances,
@@ -23,7 +24,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
 import { closestPackableTransactionFee, getDefaultProvider, Provider, Wallet } from "zksync";
-import { Address, Fee, Network, NFT, TokenSymbol } from "zksync/build/types";
+import { Address, Fee, Network, NFT, TokenSymbol, AccountState } from "zksync/build/types";
 
 let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
 
@@ -210,17 +211,6 @@ export const actions = actionTree(
     },
 
     /**
-     * Check if the connection to the sync provider is opened and if not - restore it
-     */
-    async restoreProviderConnection(): Promise<void> {
-      // will probably be used again when websocket will be implemented
-      /* if (walletData.get().syncProvider!.transport !== undefined) {
-       const activeProvider: Provider = await getDefaultProvider(ETHER_NETWORK_NAME, "HTTP");
-       walletData.set({ syncProvider: activeProvider });
-       } */
-    },
-
-    /**
      *
      * @param state
      * @param commit
@@ -229,7 +219,10 @@ export const actions = actionTree(
      * @param force
      * @return {Promise<[array]|*>}
      */
-    async requestZkBalances({ state, commit, getters }, { accountState, force = false }): Promise<ZkInBalance[]> {
+    async requestZkBalances(
+      { state, commit, getters },
+      { accountState, force = false }: { accountState?: AccountState; force?: boolean },
+    ): Promise<{ balances: ZkInBalance[]; nfts: ZkInNFT[] }> {
       type BalancesList = {
         [token: string]: BigNumberish;
       };
@@ -257,8 +250,7 @@ export const actions = actionTree(
             nfts: getters.getNftBalances,
           };
         }
-        await this.app.$accessor.wallet.restoreProviderConnection();
-        const newAccountState = await syncWallet?.getAccountState();
+        const newAccountState: AccountState | undefined = await syncWallet?.getAccountState();
         walletData.set({ accountState: newAccountState });
         listCommitted = newAccountState?.committed.balances || {};
         listVerified = newAccountState?.verified.balances || {};
@@ -327,7 +319,6 @@ export const actions = actionTree(
       if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
         return localList.list;
       }
-      await this.app.$accessor.wallet.restoreProviderConnection();
       const syncWallet = walletData.get().syncWallet;
       const accountState = await syncWallet?.getAccountState();
       if (accountState !== undefined) {
@@ -409,6 +400,7 @@ export const actions = actionTree(
         return localList.list;
       }
     },
+
     async requestFees({ getters, commit }, { address, symbol, feeSymbol, type }): Promise<ZkInFeesObj | undefined> {
       const savedFees = getters.getFees;
       if (
@@ -422,7 +414,6 @@ export const actions = actionTree(
       }
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
-      await this.app.$accessor.wallet.restoreProviderConnection();
       if (type === "withdraw") {
         if (symbol === feeSymbol) {
           const foundFeeFast: Fee = await syncProvider!.getTransactionFee("FastWithdraw", address, symbol);
@@ -482,6 +473,7 @@ export const actions = actionTree(
       commit("setFees", { symbol, feeSymbol, type, address, obj: feesObj });
       return feesObj;
     },
+
     async requestWithdrawalProcessingTime({ getters, commit }): Promise<ZkInWithdrawalTime> {
       if (getters.getWithdrawalProcessingTime) {
         return getters.getWithdrawalProcessingTime;
@@ -491,12 +483,14 @@ export const actions = actionTree(
       commit("setWithdrawalProcessingTime", withdrawTime);
       return withdrawTime;
     },
+
     async checkLockedState({ commit }): Promise<void> {
       const syncWallet = walletData.get().syncWallet;
       const accountState = walletData.get().accountState;
       const pubKeyHash = await syncWallet!.signer!.pubKeyHash();
       commit("setAccountLockedState", pubKeyHash !== accountState!.committed.pubKeyHash);
     },
+
     /**
      * Refreshing the wallet in case local storage keep token or signer fired event
      *
@@ -546,7 +540,9 @@ export const actions = actionTree(
 
         this.app.$accessor.account.setLoadingHint("Getting wallet information...");
         watcher.changeNetworkSet(dispatch, this);
-        const accountState = await syncWallet!.getAccountState();
+
+        const accountState: AccountState | undefined = await syncWallet!.getAccountState();
+
         walletData.set(<iWalletData>{
           syncProvider,
           syncWallet,
