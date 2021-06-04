@@ -23,7 +23,8 @@
         <div class="_display-flex _justify-content-space-between balanceWithdraw">
           <div class="infoBlock">
             <div class="balance">
-              <span class="tokenSymbol">{{ symbol }}</span> {{ token.balance }}&nbsp;&nbsp;
+              <span class="tokenSymbol">{{ symbol }}</span>
+              &nbsp;{{ token.balance }}&nbsp;&nbsp;
               <token-price :symbol="token.symbol" :amount="token.rawBalance.toString()" />
             </div>
           </div>
