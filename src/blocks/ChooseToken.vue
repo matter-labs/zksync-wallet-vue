@@ -31,7 +31,7 @@
           </span>
         </div>
         <div v-else-if="displayedList.length === 0" class="centerBlock">
-          <span v-if="tokensType === 'NFT'">No available NFT tokens yet. You can request them from someone!</span>
+          <span v-if="tokensType === 'NFT'">No available NFT tokens yet. You can either <nuxt-link to="/account/nft/mint">mint</nuxt-link> or request them from someone!</span>
           <span v-else>No balances yet. Please make a deposit or request money from someone!</span>
         </div>
       </div>
