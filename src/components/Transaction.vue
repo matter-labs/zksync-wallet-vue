@@ -474,7 +474,7 @@ export default Vue.extend({
       this.getAccountActivationFee();
     },
     async requestFees(): Promise<void> {
-      if (!this.chosenToken || !this.inputtedAddress || this.feeToken?.restricted) {
+      if (!this.chosenToken || !this.inputtedAddress || !this.feeToken || this.feeToken.restricted) {
         this.feesObj = {
           normal: undefined,
           fast: undefined,
