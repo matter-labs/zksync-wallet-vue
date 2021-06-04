@@ -3,7 +3,6 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-
 #__nuxt,
 #__layout {
   width: 100%;
@@ -11,6 +10,7 @@ body {
   min-height: 100vh;
 
   /* Avoid Chrome to see Safari hack */
+
   /* autoprefixer: off */
   @supports (-webkit-touch-callout: none) {
     //noinspection CssInvalidPropertyValue
@@ -34,6 +34,7 @@ main.layout.defaultLayout {
     padding: 60px 0 60px;
     justify-content: stretch;
     height: 100vh;
+
     /* autoprefixer: off */
     @supports (-webkit-touch-callout: none) {
       //noinspection CssInvalidPropertyValue
@@ -64,6 +65,7 @@ main.layout.defaultLayout {
       margin: 0 !important;
     }
   }
+
   .bn-onboard-custom.bn-onboard-modal-content {
     align-self: center;
   }
@@ -97,14 +99,12 @@ input[type="number"] {
 }
 
 .mobileOnly {
-
   @media screen and (min-width: $mobile) {
     display: none !important;
   }
 }
 
 .desktopOnly {
-
   @media screen and (max-width: $mobile+1) {
     display: none !important;
   }
@@ -300,12 +300,10 @@ button.-lg.-circle {
       font-size: 1.5rem;
       font-family: $firaSans;
 
-
       & > .close {
         width: 2.2rem !important;
         height: 2.2rem !important;
         line-height: 2rem !important;
-
       }
 
       @media (max-width: $mobile) {
@@ -575,6 +573,7 @@ button.-lg.-circle {
 ._margin-top-05 {
   margin-top: 0.5em;
 }
+
 ._margin-left-05 {
   margin-left: 0.4em;
 }

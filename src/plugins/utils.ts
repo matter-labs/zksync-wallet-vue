@@ -124,7 +124,7 @@ export default {
    * @param {boolean} toggleTheme
    * @return {"light" | "dark"}
    */
-  defineTheme(inklineContext: IPrototype, toggleTheme: boolean): "light" | "dark" {
+  defineTheme(inklineContext: IPrototype, toggleTheme = false): "light" | "dark" {
     let mode: string | null | undefined = localStorage.getItem("colorTheme");
     if (toggleTheme) {
       mode = inklineContext.config.variant = mode === "light" ? "dark" : "light";

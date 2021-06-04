@@ -10,13 +10,12 @@
  * @uses remixicon,oh-vue-icons
  * @link https://oh-vue-icons.netlify.app
  */
-import Vue from "vue";
 import { Context, Plugin } from "@nuxt/types";
 import { Route } from "@nuxt/vue-app";
 import OhVueIcon from "oh-vue-icons/dist/v2/icon.es";
 import {
   BiDownload,
-  RiInformationFill,
+  RiGalleryLine,
   IoWalletOutline,
   RiAddCircleFill,
   RiAddFill,
@@ -24,6 +23,7 @@ import {
   RiArrowDownSLine,
   RiArrowGoBackLine,
   RiArrowLeftLine,
+  RiArrowUpSLine,
   RiAtLine,
   RiBook2Line,
   RiCheckDoubleLine,
@@ -34,11 +34,15 @@ import {
   RiContactsBookLine,
   RiContactsLine,
   RiDeleteBinLine,
+  RiExternalLinkLine,
   RiGithubFill,
   RiHandCoinFill,
   RiHistoryLine,
+  RiInformationFill,
+  RiLightbulbLine,
   RiLinkUnlinkM,
   RiLoader5Line,
+  RiMoonFill,
   RiMore2Fill,
   RiMore2Line,
   RiNpmjsFill,
@@ -51,19 +55,20 @@ import {
   RiRestartLine,
   RiSearchLine,
   RiSendPlaneFill,
+  RiSunFill,
   RiWalletLine,
-  RiArrowUpSLine,
-  RiExternalLinkLine,
+  RiWifiLine,
 } from "oh-vue-icons/icons";
+import Vue from "vue";
 
 /**
  * Special plugin to implement oh-awesome-icons into zkDapp
  * @param {{(status: number, path: string, query?: Route["query"]): void, (path: string, query?: Route["query"]): void, (location: Location): void, (status: number, location: Location): void}} redirect
- * @param {any} $accessor
  * @param {Route} route
  */
-const iconsPlugin: Plugin = ({ redirect, app: { $accessor }, route }: Context) => {
+const iconsPlugin: Plugin = ({ route }: Context) => {
   OhVueIcon.add(
+    RiGalleryLine,
     RiInformationFill,
     RiArrowUpSLine,
     RiArrowDownSLine,
@@ -105,6 +110,10 @@ const iconsPlugin: Plugin = ({ redirect, app: { $accessor }, route }: Context) =
     RiReservedFill,
     RiContactsLine,
     RiDeleteBinLine,
+    RiWifiLine,
+    RiLightbulbLine,
+    RiMoonFill,
+    RiSunFill,
   ); // Used icons (to reduce bundle-size)
 
   Vue.component("VIcon", OhVueIcon);

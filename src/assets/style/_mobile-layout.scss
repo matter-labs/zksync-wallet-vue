@@ -2,6 +2,7 @@
   html {
     box-sizing: border-box;
   }
+
   body.inkline {
     overscroll-behavior-y: none;
     overscroll-behavior-x: none;
@@ -11,7 +12,6 @@
     max-height: 100%;
     padding-bottom: 5rem;
   }
-
 
   *,
   *::before,
@@ -32,6 +32,7 @@
   .content {
     overflow-y: auto;
   }
+
   aside.bn-onboard-custom.bn-onboard-modal {
     padding: 1rem 1rem 3.5rem;
     align-items: flex-end;
@@ -53,7 +54,7 @@
 
     button.bn-onboard-custom.bn-onboard-icon-button {
       padding: 0.4rem 1.1rem !important;
-      margin: 0 0 .25rem !important;
+      margin: 0 0 0.25rem !important;
     }
   }
 
@@ -62,6 +63,7 @@
       padding: 60px 0 95px;
       min-height: 100vh;
       //height: 0 !important;
+
       /* autoprefixer: off */
       @supports (-webkit-touch-callout: none) {
         //noinspection CssInvalidPropertyValue
@@ -86,11 +88,11 @@ section.layoutContent {
   }
 }
 
-
 @media (max-width: $mobile) {
   ._mobile-no-margin {
     margin: 0.25rem 0 0 !important;
   }
+
   .successBlock .infoBlockItem {
     &.smaller .amount {
       font-size: 14px;
@@ -100,6 +102,7 @@ section.layoutContent {
       font-size: 18px;
     }
   }
+
   .defaultLayout .walletContainer.clickablePicture {
     grid-template-columns: 1fr auto;
     grid-gap: 0.25rem;
@@ -132,7 +135,7 @@ section.layoutContent {
 
       button.floating-on-mobile {
         position: absolute;
-        right: 0.8rem;
+        right: 1.5rem;
         bottom: 0.5rem;
         width: 2.5rem !important;
         height: 2.5rem !important;
@@ -140,6 +143,7 @@ section.layoutContent {
       }
     }
   }
+
   .walletPage .balancesBlock .balances .balancesList .balanceItem {
     .leftSide {
       .status {
@@ -147,21 +151,25 @@ section.layoutContent {
         top: 1.5px;
       }
     }
+
     .rightSide .rowItem {
       justify-content: flex-end;
-  
+
       &:nth-child(2) {
         .total {
           font-family: $firaSans;
           letter-spacing: 0;
           font-size: 10px;
         }
+
         .status {
           position: relative;
           top: 0.25rem;
           margin-right: 0.5rem;
-  
-          &, .loaderContainer, .loaderContainer .loaderSpinner {
+
+          &,
+          .loaderContainer,
+          .loaderContainer .loaderSpinner {
             width: 1rem;
             height: 1rem;
           }
@@ -169,6 +177,7 @@ section.layoutContent {
       }
     }
   }
+
   .chooseTokenBlock {
     .tokenListContainer {
       margin: 1rem auto 0.5rem;
@@ -203,20 +212,24 @@ section.layoutContent {
         flex-direction: row !important;
         height: 50px !important;
 
-        .tokenSymbol, .balance {
+        .tokenSymbol,
+        .balance {
           font-size: 16px;
         }
       }
     }
   }
+
   .modal {
     &.-md {
-      .header, .footer, .body {
+      .header,
+      .footer,
+      .body {
         padding: 1rem !important;
       }
     }
-    .modalFooterBtn
-    {
+
+    .modalFooterBtn {
       gap: 0.5rem;
     }
   }
