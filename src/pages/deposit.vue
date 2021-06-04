@@ -396,11 +396,7 @@ export default Vue.extend({
         if (this.amountBigNumber.gt(this.tokenAllowance)) {
           this.inputtedAmount = utils.handleFormatToken(this.chosenToken.symbol, this.tokenAllowance);
         }
-        if (!unlimited) {
-          this.transactionInfo.continueBtnText = "Proceed to deposit";
-        } else {
-          this.transactionInfo.continueBtnText = "Ok";
-        }
+        this.transactionInfo.continueBtnText = unlimited ? "Ok" : "Proceed to deposit";
         this.transactionInfo.success = true;
         this.chosenToken = { ...this.chosenToken, unlocked: true };
       } catch (error) {
@@ -418,6 +414,7 @@ export default Vue.extend({
       if (token.symbol.toLowerCase() !== "eth") {
         const wallet = walletData.get().syncWallet;
         const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
+        // @ts-ignore
         const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE, wallet!.ethSigner);
         return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
       }

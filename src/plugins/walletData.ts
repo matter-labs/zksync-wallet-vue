@@ -30,6 +30,11 @@ export const walletData: iWalletWrapper = {
     }
   },
 
+  clear: () => {
+    internalWalletData.syncWallet = undefined;
+    internalWalletData.accountState = undefined;
+  },
+
   syncProvider: {
     async load() {
       if (internalWalletData.syncProvider) {

@@ -4,7 +4,7 @@ import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
 import web3Wallet from "@/plugins/web3";
-import { BalancesList, ZkInBalance, ZkInFeesObj, ZkInTx, ZkInWithdrawalTime, ZKTypeDisplayBalances, ZKTypeDisplayToken } from "@/types/lib";
+import { ZkInBalancesList, ZkInBalance, ZkInFeesInterface, ZkInFeesObj, ZkInTx, ZkInWithdrawalTime, ZKTypeDisplayBalances, ZKTypeDisplayToken } from "@/types/lib";
 import { ExternalProvider } from "@ethersproject/providers";
 import Onboard from "@matterlabs/zk-wallet-onboarding";
 import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
@@ -13,19 +13,6 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
 import { closestPackableTransactionFee, Wallet } from "zksync";
 import { Address, Fee, TokenSymbol } from "zksync/build/types";
-
-interface feesInterface {
-  [symbol: string]: {
-    [feeSymbol: string]: {
-      [type: string]: {
-        [address: string]: {
-          lastUpdated: number;
-          value: ZkInFeesObj;
-        };
-      };
-    };
-  };
-}
 
 let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
 
@@ -36,7 +23,7 @@ export declare interface iWallet {
   initialTokens: { lastUpdated: number; list: Array<ZkInBalance> };
   transactionsHistory: { lastUpdated: number; list: Array<ZkInTx> };
   withdrawalProcessingTime: false | { normal: number; fast: number };
-  fees: feesInterface;
+  fees: ZkInFeesInterface;
 }
 
 export const state = (): iWallet => ({
@@ -161,7 +148,7 @@ export const getters = getterTree(state, {
         normal: number;
         fast: number;
       } => state.withdrawalProcessingTime,
-  getFees: (state): feesInterface => state.fees,
+  getFees: (state): ZkInFeesInterface => state.fees,
 
   getSyncWallet: () => walletData.get().syncWallet,
 
@@ -543,7 +530,7 @@ export const actions = actionTree(
     logout({ state, commit }): void {
       state.onboard?.walletReset();
       clearTimeout(getTransactionHistoryAgain);
-      walletData.set({ syncWallet: undefined, accountState: undefined });
+      walletData.clear();
       localStorage.removeItem("selectedWallet");
       this.app.$accessor.account.setLoggedIn(false);
       this.app.$accessor.account.setSelectedWallet("");
@@ -566,7 +553,7 @@ export const actions = actionTree(
           status: token.status,
         };
       });
-      const activeDeposits: BalancesList = await this.app.$accessor.transaction.getActiveDeposits();
+      const activeDeposits: ZkInBalancesList = await this.app.$accessor.transaction.getActiveDeposits();
       for (const symbol in activeDeposits) {
         if (!returnTokens[symbol]) {
           returnTokens[symbol] = {

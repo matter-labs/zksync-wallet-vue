@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { BalancesList, GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/types/lib";
+import { ZkInBalancesList, GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/types/lib";
 import { BigNumber } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
 import { Address, ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/build/types";
@@ -153,14 +153,14 @@ export const actions = actionTree(
     /**
      * Getting the list of pending transactions to update balances status
      * @param state
-     * @return {BalancesList}
+     * @return {ZkInBalancesList}
      */
-    getActiveDeposits({ getters }): BalancesList {
+    getActiveDeposits({ getters }): ZkInBalancesList {
       // @ts-ignore
       getters.getForceUpdateTick; // Force to update the list
       const deposits: ZkInDeposits = getters.depositList;
       const activeDeposits: ZkInDeposits = {};
-      const finalDeposits: BalancesList = {};
+      const finalDeposits: ZkInBalancesList = {};
       let ticker: TokenSymbol;
       for (ticker in deposits) {
         activeDeposits[ticker] = deposits[ticker].filter((tx: ZKInDepositTx) => tx.status === "Initiated");

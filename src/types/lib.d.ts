@@ -15,6 +15,19 @@ import {
 import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
 import { accessorType } from "~/store";
 
+export interface ZkInFeesInterface {
+  [symbol: string]: {
+    [feeSymbol: string]: {
+      [type: string]: {
+        [address: string]: {
+          lastUpdated: number;
+          value: ZkInFeesObj;
+        };
+      };
+    };
+  };
+}
+
 export declare type ZKTypeFeeOption = "fast" | "normal";
 export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit";
 export declare type ZKTypeDisplayToken = {
@@ -211,6 +224,7 @@ export interface iWalletData {
 export declare interface iWalletWrapper {
   set: (val: iWalletData) => void;
   get: () => iWalletData;
+  clear: () => void;
   syncProvider: {
     load: () => void;
     get: () => Promise<Provider>;
@@ -339,7 +353,7 @@ export interface ZKIRootState {
   previousRoute?: Route;
 }
 
-export type BalancesList = {
+export type ZkInBalancesList = {
   [token: string]: BigNumber;
 };
 
