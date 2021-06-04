@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: sh cli-dev.sh ci &&  yarn install --immutable
+        run: bash cli-dev.sh ci && yarn install --immutable
 
       - name: Building rinkeby [preview]
         run: yarn ci:build:rinkeby
@@ -38,17 +38,3 @@ jobs:
           projectId: zksync-vue
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
-
-      - name: Building mainnet [preview]
-        run: yarn ci:build:prod
-
-      - name: Deploying to mainnet [preview]
-        uses: matter-labs/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: stage-mainnet
-          projectId: zksync-vue
-        env:
-          FIREBASE_CLI_PREVIEWS: hostingchannels
-
