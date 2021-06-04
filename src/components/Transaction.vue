@@ -406,11 +406,22 @@ export default Vue.extend({
         this.inputtedAddress = this.$route.query.w.toString();
       }
       if (this.$route.query.token) {
-        const balances = this.$accessor.wallet.getzkBalances;
-        for (const item of balances) {
-          if (item.symbol === this.$route.query.token) {
-            this.chooseToken(item);
-            break;
+        if (this.type === "transfer" || this.type === "withdraw") {
+          const balances = this.$accessor.wallet.getzkBalances;
+          for (const item of balances) {
+            if (item.symbol === this.$route.query.token) {
+              this.chooseToken(item);
+              break;
+            }
+          }
+        } else if (this.type === "nft-transfer" || this.type === "nft-withdraw") {
+          const tokens = this.$accessor.wallet.getNftBalances;
+          const tokenID = parseInt(this.$route.query.token as string);
+          for (const item of tokens) {
+            if (item.id === tokenID) {
+              this.chooseToken(item);
+              break;
+            }
           }
         }
       }
@@ -429,16 +440,6 @@ export default Vue.extend({
       this?.$sentry.captureException(error);
     }
     this.loading = false;
-    /* const contentHash = "0xbd7289936758c562235a3a42ba2c4a56cbb23a263bb8f8d27aead80d74d9d996";
-    const syncWallet = walletData.get().syncWallet!;
-    const handle = await syncWallet.mintNFT({
-      recipient: syncWallet.address(),
-      contentHash,
-      feeToken: "ETH",
-    });
-    console.log("handle", handle);
-    const mintNftReceipt = await handle.awaitReceipt();
-    console.log("mintNftReceipt", mintNftReceipt); */
   },
   methods: {
     chooseToken(token: ZkInBalance | ZkInNFT) {
