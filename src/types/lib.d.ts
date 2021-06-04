@@ -1,7 +1,7 @@
 import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { Route } from "vue-router/types";
-import { Provider } from "zksync/build";
+import { Provider } from "zksync/build/provider";
 import {
   AccountState,
   Address,
@@ -14,9 +14,10 @@ import {
   TokenSymbol,
   TransactionReceipt,
   Order,
+  ChangePubkeyTypes,
+  NFT,
 } from "zksync/build/types";
 import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
-import { ChangePubkeyTypes, NFT } from "zksync/src/types";
 import { accessorType } from "~/store";
 
 export declare type ZKTypeOperations =
@@ -31,7 +32,6 @@ export declare type ZKTypeOperations =
   | ChangePubkeyTypes
   | LegacyChangePubKeyFee
   | "Swap";
-export declare type ZKTypeFeeOption = "fast" | "normal";
 export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit" | "nft-transfer" | "nft-withdraw";
 export declare type ZKTypeDisplayToken = {
   symbol: TokenSymbol;
@@ -140,6 +140,10 @@ export interface ZkInTx extends ETHOperation {
     token?: string;
     feeToken?: number;
     type: ZKTypeOperations;
+    creatorId?: number;
+    creatorAddress?: Address;
+    recipient?: Address;
+    contentHash?: string;
   };
 }
 
