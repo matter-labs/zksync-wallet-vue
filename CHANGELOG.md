@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.1](https://github.com/matter-labs/zksync-wallet-vue/compare/2.4.0...2.4.1) - 2021-06-07
+
+### Merged
+
+- Pre-release zkSync Wallet v.2.4.0 [`#58`](https://github.com/matter-labs/zksync-wallet-vue/pull/66)
+
+### Commits
+
+- Handle no account id CPK tx [`31a26bd`](https://github.com/matter-labs/zksync-wallet-vue/pull/66/commits/31a26bd33b3a814dce240d8132e621f9fe5b5fc6)
+- Fix IERC20 contract ts-ignore [`7687f5e`](https://github.com/matter-labs/zksync-wallet-vue/pull/66/commits/7687f5e43d869af916176b9cd0b831b9a3410f2f)
+
 ## [2.4.0](https://github.com/matter-labs/zksync-wallet-vue/compare/2.4.0-prerelease...2.4.0) - 2021-05-31
 
 ### Merged
