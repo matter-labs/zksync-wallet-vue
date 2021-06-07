@@ -37,9 +37,8 @@
         overflow-x: hidden;
         height: 100%;
         overflow-y: auto !important;
-        background-color: $bgSecondary;
-        border-radius: $borderRadius;
-        box-shadow: $shadowInset;
+        //border-radius: $borderRadius;
+        //box-shadow: $shadowInset;
 
         &::-webkit-scrollbar {
           width: 10px;

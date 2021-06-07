@@ -153,7 +153,7 @@ import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 
 import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/types/lib";
-import { BigNumber, Contract } from "ethers";
+import { BigNumber, Contract, ContractInterface } from "ethers";
 import Vue from "vue";
 import { closestPackableTransactionAmount } from "zksync";
 import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
@@ -414,8 +414,7 @@ export default Vue.extend({
       if (token.symbol.toLowerCase() !== "eth") {
         const wallet = walletData.get().syncWallet;
         const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
-        // @ts-ignore
-        const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE, wallet!.ethSigner);
+        const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, wallet!.ethSigner);
         return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
       }
       return BigNumber.from(ERC20_APPROVE_TRESHOLD);

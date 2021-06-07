@@ -29,6 +29,9 @@ export const addCPKToBatch = async (syncWallet: Wallet, fee: GweiBalance, feeTok
   let pubKeyTx: CPKLocal | undefined;
   try {
     pubKeyTx = getCPKTx(store.account.address!);
+    if (typeof pubKeyTx!.accountId !== "number") {
+      throw new TypeError("Wrong account ID. Try to sign account activation again.");
+    }
   } catch (error) {
     removeCPKTx(store.account.address!);
     store.openModal("SignPubkey");

@@ -394,7 +394,13 @@ export default Vue.extend({
         try {
           getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
         } catch (error) {
-          this.$accessor.openModal("SignPubkey");
+          const accountID = await walletData.get().syncWallet!.getAccountId();
+          if (typeof accountID !== "number") {
+            await this.$router.push("/account");
+            return;
+          } else {
+            this.$accessor.openModal("SignPubkey");
+          }
         }
         await this?.getAccountActivationFee();
       }

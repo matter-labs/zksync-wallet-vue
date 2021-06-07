@@ -2,10 +2,7 @@
   <i-modal :value="opened" class="prevent-close" size="md" @hide="close()">
     <template slot="header">Account Activation</template>
     <div>
-      <p v-if="step === false">
-        To start using your zkSync account you need to register your public key once. This operation costs 15000 gas on-chain. In zkSync 2.0, we will eliminate this step by
-        verifying ETH signatures with zero-knowledge proofs. Please bear with us!
-      </p>
+      <p v-if="step === false">Sign a message once to activate your zkSync account.</p>
       <p v-else-if="step === 'sign'" class="_text-center">Sign the message in your wallet to continue</p>
       <p v-else-if="step === 'loading'" class="_text-center">Loading account data...</p>
       <i-button :disabled="loading" class="_margin-top-2" block size="lg" variant="secondary" @click="signActivation()">
@@ -50,7 +47,16 @@ export default Vue.extend({
       if (this.success) {
         return;
       }
-      if (!this.$accessor.getPreviousRoute) {
+      const isForbiddenRoute = () => {
+        const forbiddenRoutes = ["/transfer", "/withdraw", "/nft/transfer", "/nft/withdraw"];
+        for (const route of forbiddenRoutes) {
+          if (this.$accessor.getPreviousRoute?.path === route || this.$accessor.getPreviousRoute?.path === route + "/") {
+            return true;
+          }
+        }
+        return false;
+      };
+      if (!this.$accessor.getPreviousRoute || isForbiddenRoute()) {
         this.$router.push("/");
       } else {
         // @ts-ignore
@@ -73,16 +79,16 @@ export default Vue.extend({
         }
 
         const newPubKeyHash = await syncWallet.signer!.pubKeyHash();
-        if (typeof walletData.get().accountState!.id !== "number") {
-          const accountState = await syncWallet.getAccountState();
-          walletData.set({ accountState });
+        const accountID = await syncWallet.getAccountId();
+        if (typeof accountID !== "number") {
+          throw new TypeError("It is required to have a history of balances on the account to activate it.");
         }
-        const changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, walletData.get().accountState!.id!);
+        const changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, accountID!);
         this.step = "sign";
         const ethSignature = (await syncWallet.getEthMessageSignature(changePubKeyMessage)).signature;
         this.step = "loading";
         const changePubkeyTx: CPKLocal = {
-          accountId: walletData.get().accountState!.id!,
+          accountId: accountID!,
           account: syncWallet.address(),
           newPkHash: newPubKeyHash,
           nonce,
