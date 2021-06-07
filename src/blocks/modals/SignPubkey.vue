@@ -47,7 +47,16 @@ export default Vue.extend({
       if (this.success) {
         return;
       }
-      if (!this.$accessor.getPreviousRoute) {
+      const isForbiddenRoute = () => {
+        const forbiddenRoutes = ["/transfer", "/withdraw", "/nft/transfer", "/nft/withdraw"];
+        for (const route of forbiddenRoutes) {
+          if (this.$accessor.getPreviousRoute?.path === route || this.$accessor.getPreviousRoute?.path === route + "/") {
+            return true;
+          }
+        }
+        return false;
+      };
+      if (!this.$accessor.getPreviousRoute || isForbiddenRoute()) {
         this.$router.push("/");
       } else {
         // @ts-ignore
