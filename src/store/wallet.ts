@@ -1,19 +1,20 @@
-import { ZK_API_BASE, ZK_NETWORK } from "@/plugins/build";
+import { ZK_API_BASE } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import watcher from "@/plugins/watcher";
 import web3Wallet from "@/plugins/web3";
 import {
-  BalancesList,
-  feesInterface,
-  iWalletData,
+  iWallet,
   ZkInBalance,
+  ZkInBalancesList,
+  ZkInFeesInterface,
   ZkInFeesObj,
   ZkInNFT,
   ZkInTx,
   ZkInWithdrawalTime,
   ZKStoreRequestBalancesParams,
+  zkTokensParam,
   ZKTypeDisplayBalances,
   ZKTypeDisplayToken,
 } from "@/types/lib";
@@ -23,21 +24,10 @@ import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
-import { closestPackableTransactionFee, getDefaultProvider, Provider, Wallet } from "zksync";
-import { Address, Fee, Network, NFT, TokenSymbol, AccountState } from "zksync/build/types";
+import { closestPackableTransactionFee, Provider, Wallet } from "zksync";
+import { AccountState, Address, Fee, NFT, TokenSymbol } from "zksync/build/types";
 
 let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
-
-export declare interface iWallet {
-  onboard?: API;
-  isAccountLocked: boolean;
-  zkTokens: { lastUpdated: number; list: ZkInBalance[] };
-  nftTokens: { lastUpdated: number; list: Array<ZkInNFT> };
-  initialTokens: { lastUpdated: number; list: ZkInBalance[] };
-  transactionsHistory: { lastUpdated: number; list: ZkInTx[] };
-  withdrawalProcessingTime: false | { normal: number; fast: number };
-  fees: feesInterface;
-}
 
 export const state = (): iWallet => ({
   onboard: undefined,
@@ -74,8 +64,8 @@ export const mutations = mutationTree(state, {
   setTokensList(state: WalletModuleState, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
     state.initialTokens = obj;
   },
-  setZkTokens(state: WalletModuleState, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
-    state.zkTokens = obj;
+  setZkTokens(state: WalletModuleState, zkTokensParam: zkTokensParam): void {
+    state.zkTokens = zkTokensParam;
   },
   setNftTokens(state: WalletModuleState, obj: { lastUpdated: number; list: ZkInNFT[] }): void {
     state.nftTokens = obj;
@@ -117,21 +107,6 @@ export const mutations = mutationTree(state, {
       value: obj,
     };
   },
-  /**
-   * @todo review and drop (?)
-   *
-   * @param state
-   * @param {any} status
-   * @param {any} tokenSymbol
-   */
-  setZkBalanceStatus(state: WalletModuleState, { status, tokenSymbol }: { status: "Pending" | "Verified"; tokenSymbol: TokenSymbol }): void {
-    for (const item of state.zkTokens.list) {
-      if (item.symbol === tokenSymbol) {
-        item.status = status;
-        break;
-      }
-    }
-  },
   clearDataStorage(state: WalletModuleState): void {
     state.zkTokens = {
       lastUpdated: 0,
@@ -155,21 +130,16 @@ export const mutations = mutationTree(state, {
 
 export const getters = getterTree(state, {
   isAccountLocked: (state: WalletModuleState): boolean => state.isAccountLocked,
-  getOnboard: (state: WalletModuleState): API | undefined => state.onboard,
   getTokensList: (state: WalletModuleState): { lastUpdated: number; list: ZkInBalance[] } => state.initialTokens,
   getInitialBalances: (state: WalletModuleState): ZkInBalance[] => state.initialTokens.list,
   getzkList: (state: WalletModuleState): { lastUpdated: number; list: ZkInBalance[] } => state.zkTokens,
   getzkBalances: (state: WalletModuleState): ZkInBalance[] => state.zkTokens.list,
-  getNftList: (state: WalletModuleState): { lastUpdated: number; list: Array<ZkInNFT> } => state.nftTokens,
   getNftBalances: (state: WalletModuleState): Array<ZkInNFT> => state.nftTokens.list,
   getTransactionsHistory: (state: WalletModuleState): ZkInTx[] => state.transactionsHistory.list,
   getTransactionsList: (state: WalletModuleState): { lastUpdated: number; list: ZkInTx[] } => state.transactionsHistory,
   getWithdrawalProcessingTime: (state: WalletModuleState): false | { normal: number; fast: number } => state.withdrawalProcessingTime,
-  getFees: (state: WalletModuleState): feesInterface => state.fees,
-  getSyncWallet: (): Wallet | undefined => walletData.get().syncWallet,
-  getProvider: (): Provider | undefined => walletData.get().syncProvider,
+  getFees: (state: WalletModuleState): ZkInFeesInterface => state.fees,
   getAccountState: (): Provider | undefined => walletData.get().syncProvider,
-  isLoggedIn: (): boolean => !!(walletData.get().syncWallet && walletData.get().syncWallet?.address),
 });
 
 export const actions = actionTree(
@@ -531,7 +501,8 @@ export const actions = actionTree(
           return false;
         }
         const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
-        const syncProvider: Provider = await getDefaultProvider(ZK_NETWORK as Network, "HTTP");
+        // const syncProvider: Provider = await getDefaultProvider(ZK_NETWORK as Network, "HTTP");
+        const syncProvider = await walletData.syncProvider.get();
         if (syncProvider === undefined) {
           return false;
         }
@@ -543,8 +514,7 @@ export const actions = actionTree(
 
         const accountState: AccountState | undefined = await syncWallet!.getAccountState();
 
-        walletData.set(<iWalletData>{
-          syncProvider,
+        walletData.set({
           syncWallet,
           accountState,
         });
@@ -584,7 +554,7 @@ export const actions = actionTree(
     logout({ state, commit }): void {
       state.onboard?.walletReset();
       clearTimeout(getTransactionHistoryAgain);
-      walletData.set({ syncProvider: undefined, syncWallet: undefined, accountState: undefined });
+      walletData.clear();
       localStorage.removeItem("selectedWallet");
       this.app.$accessor.account.setLoggedIn(false);
       this.app.$accessor.account.setSelectedWallet("");
@@ -607,7 +577,7 @@ export const actions = actionTree(
           status: token.status,
         };
       });
-      const activeDeposits: BalancesList = await this.app.$accessor.transaction.getActiveDeposits();
+      const activeDeposits: ZkInBalancesList = await this.app.$accessor.transaction.getActiveDeposits();
       for (const symbol in activeDeposits) {
         if (!returnTokens[symbol]) {
           returnTokens[symbol] = {

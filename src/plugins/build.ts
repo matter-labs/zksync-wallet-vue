@@ -12,7 +12,6 @@ export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 export const GIT_REVISION_SHORT: string = GIT_REVISION ? GIT_REVISION.slice(-7) : "";
 export const VERSION: string = version;
-
 export const ETHER_NETWORK_NAME: Network = process.env.APP_CURRENT_NETWORK as Network;
 export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 
@@ -27,14 +26,7 @@ export const ZK_LIB_VERSION: string = zkSyncVersion as string;
  *
  * @type {boolean}
  */
-export const ZK_IS_BETA = !(
-  !ETHER_PRODUCTION ||
-  (process.env?.ZK_NETWORK && process.env.ZK_SPECIAL_API) ||
-  window?.location.host.search("beta") !== -1 ||
-  (process.env?.ZK_SPECIAL_API as string).toLowerCase().search("beta") !== -1 ||
-  (process.env?.ZK_NETWORK as string).toLowerCase().search("beta") !== -1 ||
-  ZK_LIB_VERSION.toLowerCase().search("beta") !== -1
-);
+export const ZK_IS_BETA = ZK_LIB_VERSION.search("beta") !== -1;
 
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
 export const CURRENT_APP_NAME = `zkSync Wallet${ZK_IS_BETA ? ":beta" : ""}`;

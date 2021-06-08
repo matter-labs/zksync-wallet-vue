@@ -1,24 +1,39 @@
 import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { Route } from "vue-router/types";
-import { Provider } from "zksync/build/provider";
+import { Provider } from "zksync";
 import {
   AccountState,
   Address,
   ChangePubKeyCREATE2,
   ChangePubKeyECDSA,
   ChangePubKeyOnchain,
+  ChangePubkeyTypes,
   LegacyChangePubKeyFee,
+  NFT,
+  Order,
   PubKeyHash,
   SignedTransaction,
   TokenSymbol,
   TransactionReceipt,
-  Order,
-  ChangePubkeyTypes,
-  NFT,
 } from "zksync/build/types";
 import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
 import { accessorType } from "~/store";
+
+export interface ZkInFeesInterface {
+  [symbol: string]: {
+    [feeSymbol: string]: {
+      [type: string]: {
+        [address: string]: {
+          lastUpdated: number;
+          value: ZkInFeesObj;
+        };
+      };
+    };
+  };
+}
+
+export declare type ZKTypeFeeOption = "fast" | "normal";
 
 export declare type ZKTypeOperations =
   | "Deposit"
@@ -237,6 +252,11 @@ export interface iWalletData {
 export declare interface iWalletWrapper {
   set: (val: iWalletData) => void;
   get: () => iWalletData;
+  clear: () => void;
+  syncProvider: {
+    load: () => void;
+    get: () => Promise<Provider>;
+  };
 }
 
 export declare interface ZKInDepositTx extends ETHOperation {
@@ -361,7 +381,7 @@ export interface ZKIRootState {
   previousRoute?: Route;
 }
 
-export type BalancesList = {
+export type ZkInBalancesList = {
   [token: string]: BigNumber;
 };
 
@@ -407,8 +427,14 @@ export declare interface iWallet {
   onboard?: API;
   isAccountLocked: boolean;
   zkTokens: { lastUpdated: number; list: ZkInBalance[] };
+  nftTokens: { lastUpdated: number; list: ZkInNFT[] };
   initialTokens: { lastUpdated: number; list: ZkInBalance[] };
   transactionsHistory: { lastUpdated: number; list: ZkInTx[] };
   withdrawalProcessingTime: false | { normal: number; fast: number };
-  fees: feesInterface;
+  fees: ZkInFeesInterface;
+}
+
+export interface zkTokensParam {
+  lastUpdated: number;
+  list: ZkInBalance[];
 }

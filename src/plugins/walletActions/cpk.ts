@@ -26,14 +26,7 @@ export const getCPKTx = (address: Address): CPKLocal | undefined => {
 };
 
 export const addCPKToBatch = async (syncWallet: Wallet, fee: GweiBalance, feeToken: TokenSymbol, batchBuilder: BatchBuilder, store: typeof accessorType) => {
-  let pubKeyTx: CPKLocal | undefined;
-  try {
-    pubKeyTx = getCPKTx(store.account.address!);
-  } catch (error) {
-    removeCPKTx(store.account.address!);
-    store.openModal("SignPubkey");
-    throw error;
-  }
+  const pubKeyTx: CPKLocal | undefined = getCPKTx(store.account.address!);
   if (!pubKeyTx) {
     return store.openModal("SignPubkey");
   }
