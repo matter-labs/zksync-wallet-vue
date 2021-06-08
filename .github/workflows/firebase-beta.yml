@@ -9,7 +9,7 @@ name: Beta version release to ropsten & rinkeby-beta
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    environment: test
+    environment: beta
     steps:
       - uses: actions/checkout@v2
 
@@ -38,13 +38,13 @@ jobs:
           projectId: zksync-vue
           channelID: live
 
-    - name: "[Rinkeby release] Configuring rinkeby env"
-      run: yarn ci:build:rinkeby
+      - name: "[Rinkeby release] Configuring rinkeby env"
+        run: yarn ci:build:rinkeby
 
-    - name: "[Rinkeby release] Publishing rinkeby"
-      uses: matter-labs/action-hosting-deploy@v0
-      with:
-        firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-        target: prod-rinkeby
-        projectId: zksync-vue
-        channelID: live
+      - name: "[Rinkeby release] Publishing rinkeby"
+        uses: matter-labs/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+          target: prod-rinkeby
+          projectId: zksync-vue
+          channelID: live
