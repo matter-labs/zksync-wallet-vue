@@ -11,7 +11,7 @@ const srcDir = "./src/";
 const env = process.env.APP_ENV ?? "dev";
 const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
 const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
-const pageImg = "/Cover.jpg";
+const pageImg = "/screenshot.jpg";
 
 const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED} v.${VERSION}:${GIT_REVISION_SHORT}`;
 const pageDescription =
@@ -208,7 +208,7 @@ const config: NuxtConfig = {
     },
   },
   styleResources: {
-    scss: ["@/assets/style/vars/*.scss", "@/assets/style/_variables.scss"],
+    scss: ["@/assets/style/vars/*.scss"],
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
