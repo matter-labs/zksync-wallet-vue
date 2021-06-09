@@ -200,7 +200,7 @@ export default Vue.extend({
       this.tip = "Confirm the transaction to mint";
       this.transactionInfo.type = "deposit";
       const mintTransaction: Transaction | undefined = await walletData.get().syncWallet?.mintNFT({
-        recipient: walletData.get().syncWallet!.address() as Address,
+        recipient: this.inputtedAddress,
         contentHash: this.inputtedHash,
         feeToken: "ETH",
         fee: this.fee as GweiBalance,
