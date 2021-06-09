@@ -9,7 +9,7 @@ name: Beta version release to ropsten & rinkeby-beta
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    environment: test
+    environment: beta
     steps:
       - uses: actions/checkout@v2
 

@@ -25795,25 +25795,25 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"zksync-crypto@npm:^0.6.0-beta.0":
-  version: 0.6.0-beta.0
-  resolution: "zksync-crypto@npm:0.6.0-beta.0"
-  checksum: 5ab50b238b278b154999d795951a6cd73d45a660b2617f5ed2db5c78aca33a9898acccb33b363da503f29db13e4c8bf2d0f95c36279fd21915f1f3dc1c803cc2
+"zksync-crypto@npm:^0.6.0-beta.1":
+  version: 0.6.0-beta.1
+  resolution: "zksync-crypto@npm:0.6.0-beta.1"
+  checksum: 6b1057d824a58713399da1683c0361e208526807979cdad9e4c4c666f5c8c0d602c8694e1f079be6f2f5da985a1aa23271c728a1b33294f40cf1b6b2f936363e
   languageName: node
   linkType: hard
 
 "zksync@npm:beta":
-  version: 0.11.0-beta.5
-  resolution: "zksync@npm:0.11.0-beta.5"
+  version: 0.11.0-beta.7
+  resolution: "zksync@npm:0.11.0-beta.7"
   dependencies:
     axios: ^0.21.1
     websocket: ^1.0.30
     websocket-as-promised: ^1.1.0
-    zksync-crypto: ^0.6.0-beta.0
+    zksync-crypto: ^0.6.0-beta.1
   peerDependencies:
     "@ethersproject/logger": ^5.0.0
     ethers: ^5.0.0
-  checksum: 3cdcbbc0febb4de3c3c595989cb2c4903dc2bdf630e26956153312d41aa9b87dcc7843ffef3f20f7f6c8097dfeed5c45417faea4f1a689ac71871399a04febb5
+  checksum: c4853b193bdf0b1305f49edbf80835816b42915e7aac1752cd4048640264cf29db1d399ce10b9c7df34e4cef011d3c04da28a3ae99bacae6818cb4a51c65bcb4
   languageName: node
   linkType: hard
 
