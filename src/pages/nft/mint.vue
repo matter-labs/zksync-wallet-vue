@@ -202,7 +202,7 @@ export default Vue.extend({
       const mintTransaction: Transaction | undefined = await walletData.get().syncWallet?.mintNFT({
         recipient: this.inputtedAddress,
         contentHash: this.inputtedHash,
-        feeToken: "ETH",
+        feeToken: (this.chosenFeeToken as ZkInBalance).symbol,
         fee: this.fee as GweiBalance,
       });
       this.transactionInfo.hash = mintTransaction?.txHash as string;
