@@ -509,20 +509,45 @@ export const actions = actionTree(
         this.app.$accessor.account.setLoadingHint("Follow the instructions in your wallet");
         const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
 
+        walletData.set({
+          syncWallet,
+        });
+
         this.app.$accessor.account.setLoadingHint("Getting wallet information...");
         watcher.changeNetworkSet(dispatch, this);
+
+        /* The user can press Cancel login anytime so we need to check if he did after every long action (request) */
+        if (!walletData.get().syncWallet) {
+          return false;
+        }
 
         const accountState: AccountState | undefined = await syncWallet!.getAccountState();
 
         walletData.set({
-          syncWallet,
           accountState,
         });
 
+        if (!walletData.get().syncWallet) {
+          return false;
+        }
+
         await this.app.$accessor.tokens.loadTokensAndBalances();
+
+        if (!walletData.get().syncWallet) {
+          return false;
+        }
+
         await this.app.$accessor.wallet.requestZkBalances({ accountState });
 
+        if (!walletData.get().syncWallet) {
+          return false;
+        }
+
         await this.app.$accessor.wallet.checkLockedState();
+
+        if (!walletData.get().syncWallet) {
+          return false;
+        }
 
         this.app.$accessor.account.setAddress(syncWallet.address());
         this.app.$accessor.account.setNameFromStorage();
