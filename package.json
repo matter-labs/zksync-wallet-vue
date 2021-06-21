@@ -1,11 +1,14 @@
 {
-  "name": "@matterlabs/zksync-dapp-checkout",
-  "title": "zkCheckout — simple permissionless DeFi payment gateway",
+  "name": "@matterlabs/zksync-zkwallet-vue",
+  "title": "zkSync.io Wallet | Try solution for the Ethereum scalability\n with zero security compromises",
   "main": "nuxt.config.ts",
-  "types": "src/types/index.d.ts",
+  "types": [
+    "src/types/index.d.ts",
+    "src/types/lib.d.ts"
+  ],
   "files": [
-    "src/**/*",
-    "tests/*"
+    "src/types",
+    "src"
   ],
   "keywords": [
     "zksync",
@@ -21,7 +24,7 @@
     "dapp",
     "ethers"
   ],
-  "private": true,
+  "private": false,
   "license": "MIT",
   "licenses": [
     {
@@ -33,7 +36,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "2.4.1",
+  "version": "2.4.2",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
@@ -51,7 +54,7 @@
     ]
   },
   "bugs": {
-    "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
+    "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
   "dependencies": {
     "@ethersproject/logger": "^5.0.9",
@@ -149,7 +152,7 @@
     "yarn spell-check"
   ],
   "scripts": {
-    "local": "sh ./cli-process-env.sh 'rinkeby' 'dev' 1 1",
+    "local": "sh ./cli-process-env.sh 'ropsten' 'dev' 1 1",
     "dev": "yarn local && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",

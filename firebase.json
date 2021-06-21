@@ -10,15 +10,6 @@
       ]
     },
     {
-      "target": "dev-rinkeby",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ]
-    },
-    {
       "target": "dev-mainnet",
       "public": "public",
       "ignore": [
