@@ -479,7 +479,6 @@ export const actions = actionTree(
           return false;
         }
         const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
-        // const syncProvider: Provider = await getDefaultProvider(ZK_NETWORK as Network, "HTTP");
         const syncProvider = await walletData.syncProvider.get();
         if (syncProvider === undefined) {
           return false;
