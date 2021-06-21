@@ -42,11 +42,6 @@ export const walletData: iWalletWrapper = {
       }
       providerPromise = getDefaultProvider(ZK_NETWORK as Network, "HTTP");
       try {
-        await new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(undefined);
-          }, 3000);
-        });
         internalWalletData.syncProvider = await providerPromise;
       } catch (error) {
         console.log("Failed to load provider", error);
