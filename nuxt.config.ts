@@ -156,6 +156,7 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    "@nuxtjs/tailwindcss",
     "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
@@ -258,7 +259,6 @@ const config: NuxtConfig = {
     display: "swap",
     families: {
       "Fira+Sans": [400, 600],
-      "Fira+Sans+Extra+Condensed": [400, 600],
       "Fira+Code": [400],
     },
   },

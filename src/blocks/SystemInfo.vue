@@ -1,5 +1,5 @@
 <template>
-  <i-badge v-if="version" variant="secondary" :class="{ 'outline-white': true, 'system-info': true }">
+  <i-badge v-if="version" variant="secondary" class="system-info">
     <i-popover size="sm" class="system-env-popover" :trigger="['hover']">
       <span class="version">v.{{ version }}<sup v-if="isBeta" class="beta _text-danger">BETA</sup></span>
       <template slot="header">Environment details</template>
