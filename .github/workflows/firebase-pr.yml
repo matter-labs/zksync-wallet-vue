@@ -16,6 +16,11 @@ jobs:
       - name: Building rinkeby [preview]
         run: yarn ci:build:rinkeby
 
+      - name: Run tests
+        run: |
+          yarn dev
+          yarn test -- ./tests/*
+
       - name: Deploying to rinkeby [preview]
         uses: matter-labs/action-hosting-deploy@v0
         with:
