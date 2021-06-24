@@ -75,12 +75,12 @@ export default Vue.extend({
           console.log(1);
           const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
           console.log(2, isOnchainAuthSigningKeySet);
-          if (!isOnchainAuthSigningKeySet) {
+          /* if (!isOnchainAuthSigningKeySet) { */
             console.log(3);
             const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
             console.log(4, onchainAuthTransaction);
             await onchainAuthTransaction?.wait();
-          }
+          /* } */
         }
 
         console.log(5);
