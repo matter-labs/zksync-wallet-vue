@@ -72,18 +72,13 @@ export default Vue.extend({
         const nonce = await syncWallet.getNonce("committed");
         console.log("syncWallet.ethSignerType?.verificationMethod", syncWallet.ethSignerType?.verificationMethod);
         if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
-          console.log(1);
           const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
-          console.log(2, isOnchainAuthSigningKeySet);
-          /* if (!isOnchainAuthSigningKeySet) { */
-            console.log(3);
+          if (!isOnchainAuthSigningKeySet) {
             const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
-            console.log(4, onchainAuthTransaction);
             await onchainAuthTransaction?.wait();
-          /* } */
+          }
         }
 
-        console.log(5);
         const newPubKeyHash = await syncWallet.signer!.pubKeyHash();
         const accountID = await syncWallet.getAccountId();
         if (typeof accountID !== "number") {
