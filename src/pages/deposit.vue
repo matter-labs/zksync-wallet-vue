@@ -96,7 +96,7 @@
             <v-icon name="ri-question-mark" />
           </div>
         </div>
-        <div class="grid-cols-2">
+        <div class="grid-cols-2-layout">
           <i-button block size="md" variant="secondary" @click="unlockToken(true)">
             Approve unlimited <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
