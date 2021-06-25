@@ -84,6 +84,7 @@ export default Vue.extend({
           throw new TypeError("It is required to have a history of balances on the account to activate it.");
         }
         const changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, accountID!);
+        console.log("changePubKeyMessage", changePubKeyMessage);
         this.step = "sign";
         const ethSignature = (await syncWallet.getEthMessageSignature(changePubKeyMessage)).signature;
         this.step = "loading";
