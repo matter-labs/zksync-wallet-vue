@@ -3756,7 +3756,6 @@ __metadata:
     "@nuxtjs/sentry": latest
     "@nuxtjs/style-resources": latest
     "@nuxtjs/toast": latest
-    "@schmid.digital/dappeteer": ^2.0.2
     "@sentry/webpack-plugin": ^1.14.0
     "@types/jest": ^26.0.23
     "@typescript-eslint/eslint-plugin": ^4.21.0
@@ -3785,7 +3784,7 @@ __metadata:
     nuxt-typed-vuex: latest
     oh-vue-icons: ^0.4.3
     prettier: ^2.2.1
-    puppeteer: ^10.0.0
+    puppeteer: latest
     qrcode: ^1.0.0
     sass-loader: ^10.1.1
     stylelint: latest
@@ -4573,15 +4572,6 @@ __metadata:
   version: 0.2.5
   resolution: "@restless/sanitizers@npm:0.2.5"
   checksum: c77c19cc0609d3fa97b8f29ae4be3b47d9a56a9c9f46dbf1a703a09600f5d9c5bbbe4b4feca9fccf2880340193300afa870dfa81a0adbbdfc5dcd15744452e8b
-  languageName: node
-  linkType: hard
-
-"@schmid.digital/dappeteer@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "@schmid.digital/dappeteer@npm:2.0.2"
-  peerDependencies:
-    puppeteer: ^5.5.0
-  checksum: 2fae86f06b021bfe591f114baa03be700cf626bc0855f4bd054f4ae6ed421cc25fb7d5a42472813be525489a57faa6673d35ad41f517539cd89b63954d5f820b
   languageName: node
   linkType: hard
 
@@ -20790,9 +20780,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"puppeteer@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "puppeteer@npm:10.0.0"
+"puppeteer@npm:latest":
+  version: 10.1.0
+  resolution: "puppeteer@npm:10.1.0"
   dependencies:
     debug: 4.3.1
     devtools-protocol: 0.0.883894
@@ -20806,7 +20796,7 @@ fsevents@^1.2.7:
     tar-fs: 2.0.0
     unbzip2-stream: 1.3.3
     ws: 7.4.6
-  checksum: 409ac732a33a152d47aa1b07f92532fcc18a321b31b91027854efb119212f96c6336e62764a5ecd097f0d04b3612961964433199a4a9667d6d9299b3bc00edba
+  checksum: 6d6d53c6a06ea875057d3f7535d13eb7ebd881b1e57095fb4492f8c851ad6beba60d04322ee545fb439395531b9c2b1e1fd7bd83f3b4fee1626c0323df1e9927
   languageName: node
   linkType: hard
 

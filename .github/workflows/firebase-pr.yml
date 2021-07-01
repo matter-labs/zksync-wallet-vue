@@ -18,6 +18,7 @@ jobs:
 
       - name: Run tests
         run: |
+          yarn add '@warsmit/dappeteer@https://github.com/warsmit/dappeteer.git#ms/develop' || true
           yarn dev
           yarn test -- ./tests/*
 

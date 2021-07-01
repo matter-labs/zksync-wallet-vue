@@ -1,4 +1,4 @@
-describe("Deposit", () => {
+describe("Withdraw", () => {
   const puppeteer = require('puppeteer');
   const dappeteer = require('@warsmit/dappeteer');
   var browser;
@@ -10,7 +10,10 @@ describe("Deposit", () => {
     return walletPage.evaluate(text => [...document.querySelectorAll('*')].find(e => e.innerText === text).click(), text)
   }
   const waitInnerText = text => {
-    return walletPage.waitForFunction(text => [...document.querySelectorAll('*')].find(e => e.innerText === text), {}, text)
+    return walletPage.waitForFunction(text => [...document.querySelectorAll('*')].find(e => e.innerText === text), {timeout: 60000}, text)
+  }
+  const waitEnabledInnerText = text => {
+    return walletPage.waitForFunction(text => [...document.querySelectorAll('*')].find(e => e.innerText === text && e.disabled === false), {timeout: 60000}, text)
   }
 
   test('Account connect to MetaMask extention', async () => {
@@ -55,46 +58,41 @@ describe("Deposit", () => {
     await metamask.sign()
   }, 60000);
 
-  test('Click Deposit', async () => {
+  test('Select \'- Withdraw\'', async () => {
     await walletPage.bringToFront()
-    await waitInnerText("+ Deposit")
-    await clickInnerText("+ Deposit")
+    await waitInnerText("- Withdraw")
+    await clickInnerText("- Withdraw")
+  }, 60000);
+
+  test('Write address', async () => {
+    await waitInnerText("Address")
+    await walletPage.focus('input.walletAddress')
+    walletPage.keyboard.type('0x7519bf7a23e98dAa9859D301C1066eFAA42054dD')
+    await walletPage.waitForTimeout(500)
   }, 60000);
 
   test('Choise token', async () => {
     await waitInnerText("Select token")
     await clickInnerText("Select token")
-
     await waitInnerText("DAI")
     await clickInnerText("DAI")
     await walletPage.waitForTimeout(1000)
   }, 60000);
 
   test('Write token amount', async () => {
-    await walletPage.focus('input')
+    await waitInnerText("Amount")
+    await walletPage.focus('div.amountInput input')
     walletPage.keyboard.type('0.01')
     await walletPage.waitForTimeout(500)
   }, 60000);
 
-  test('Approve token', async () => {
-    await waitInnerText("Approve 0.01 DAI")
-    await clickInnerText("Approve 0.01 DAI")
-    await walletPage.waitForTimeout(500)
-
-    metamask.confirmTransaction()
-    await walletPage.waitForTimeout(2000)
-  }, 60000);
-
-  test('Proceed to deposit', async () => {
-    await walletPage.bringToFront()
-    await waitInnerText("Proceed to deposit")
-    await clickInnerText("Proceed to deposit")
-
-    await walletPage.waitForTimeout(500)
-    metamask.confirmTransaction()
+  test('Withdraw', async () => {
+    await waitEnabledInnerText(" Withdraw")
+    await clickInnerText(" Withdraw")
+    await walletPage.waitForTimeout(1000)
+    await metamask.sign()
     await walletPage.waitForTimeout(2000)
     await walletPage.bringToFront()
-  
     await waitInnerText("Ok")
     await clickInnerText("Ok")
   }, 60000);
