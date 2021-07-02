@@ -5,7 +5,7 @@ describe("Withdraw", () => {
   var metamask;
   var walletPage;
   var metamaskPage;
-
+  
   const clickInnerText = text => {
     return walletPage.evaluate(text => [...document.querySelectorAll('*')].find(e => e.innerText === text).click(), text)
   }
@@ -20,11 +20,17 @@ describe("Withdraw", () => {
     browser = await dappeteer.launch(puppeteer, {
       headless: false,
       slowMo: 10,
+      args: [
+        `--no-sandbox`,
+        `--disable-setuid-sandbox`
+      ],
+      executablePath: process.env.PUPPETEER_EXEC_PATH,
     })
     const metamaskOptions = {
       seed: 'cover rival figure blast opinion catalog weather share sorry surround spin scene',
       password: '@Ntcnvtnfvfc1',
     }
+    console.log("1")
     metamask = await dappeteer.getMetamask(browser, metamaskOptions)
     await metamask.closeNewsPopup()
     await metamask.switchNetwork('rinkeby')
@@ -32,11 +38,12 @@ describe("Withdraw", () => {
 
   test('Goto local zkSync', async () => {
     walletPage = await browser.newPage()
-    var tempPage = await browser.newPage()
-    await tempPage.bringToFront()
-    await walletPage.goto('http://localhost:3000/')
-    await walletPage.bringToFront()
-    await tempPage.close()
+    //var tempPage = await browser.newPage()
+    //await tempPage.bringToFront()
+    //await walletPage.goto('http://localhost:3000/')
+    await walletPage.goto('https://zksync-vue-rinkeby-2--pr71-fix-onchain-cpk-ux3a8uav.web.app')
+    //await walletPage.bringToFront()
+    //await tempPage.close()
   }, 60000);
 
   test('Connect your wallet', async () => {

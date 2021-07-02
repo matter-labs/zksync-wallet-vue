@@ -13,14 +13,25 @@ jobs:
       - name: Install dependencies
         run: bash cli-dev.sh ci && yarn install --immutable
 
+      - name: Try use @warsmit/dappeteer package
+        run: yarn add '@warsmit/dappeteer@https://github.com/warsmit/dappeteer.git#ms/develop' || true
+
+      - name: Install test dependencies
+        uses: actions/setup-node@v1
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+        with:
+          args: install
+      
+      - name: Test Code
+        uses: mujo-code/puppeteer-headful@master
+        env:
+          CI: 'true'
+        with:
+          args: yarn test -- ./tests/withdraw.test.js
+
       - name: Building rinkeby [preview]
         run: yarn ci:build:rinkeby
-
-      - name: Run tests
-        run: |
-          yarn add '@warsmit/dappeteer@https://github.com/warsmit/dappeteer.git#ms/develop' || true
-          yarn dev
-          yarn test -- ./tests/*
 
       - name: Deploying to rinkeby [preview]
         uses: matter-labs/action-hosting-deploy@v0

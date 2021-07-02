@@ -29,11 +29,12 @@ describe("Deposit", () => {
 
   test('Goto local zkSync', async () => {
     walletPage = await browser.newPage()
-    var tempPage = await browser.newPage()
-    await tempPage.bringToFront()
-    await walletPage.goto('http://localhost:3000/')
-    await walletPage.bringToFront()
-    await tempPage.close()
+    //var tempPage = await browser.newPage()
+    //await tempPage.bringToFront()
+    //await walletPage.goto('http://localhost:3000/')
+    await walletPage.goto('https://zksync-vue-rinkeby-2--pr71-fix-onchain-cpk-ux3a8uav.web.app')
+    //await walletPage.bringToFront()
+    //await tempPage.close()
   }, 60000);
 
   test('Connect your wallet', async () => {
