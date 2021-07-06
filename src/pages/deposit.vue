@@ -58,10 +58,10 @@
           </div>
         </div>
         <div class="goBackContinueBtns _margin-top-1">
-          <i-button size="lg" variant="secondary" circle @click="successBlockGoBack()">
+          <i-button id="deposit_arrow_back_button" size="lg" variant="secondary" circle @click="successBlockGoBack()">
             <v-icon name="ri-arrow-left-line" />
           </i-button>
-          <i-button block size="lg" variant="secondary" @click="successBlockContinue()">Proceed to deposit</i-button>
+          <i-button id="deposit_proceed_to_deposit_button" block size="lg" variant="secondary" @click="successBlockContinue()">Proceed to deposit</i-button>
         </div>
       </template>
     </success-block>
@@ -97,10 +97,10 @@
           </div>
         </div>
         <div class="grid-cols-2">
-          <i-button block size="md" variant="secondary" @click="unlockToken(true)">
+          <i-button id="deposit_approve_unlimited_button" block size="md" variant="secondary" @click="unlockToken(true)">
             Approve unlimited <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
-          <i-button v-if="inputtedAmount" key="approveAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
+          <i-button id="deposit_approve_button" v-if="inputtedAmount" key="approveAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
             Approve {{ amountBigNumber | formatToken(chosenToken.symbol) }} <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
           <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>
@@ -128,6 +128,7 @@
         :disabled="buttonDisabled"
         block
         class="_margin-top-1 _display-flex flex-row"
+        id="deposit_deposit_button"
         size="lg"
         variant="secondary"
         :loading="thresholdLoading"
