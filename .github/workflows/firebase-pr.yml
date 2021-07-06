@@ -24,7 +24,7 @@ jobs:
           args: install
       
       - name: Test Code
-        uses: mujo-code/puppeteer-headful@master
+        uses: matter-labs/puppeteer-headful@master
         env:
           CI: 'true'
         with:

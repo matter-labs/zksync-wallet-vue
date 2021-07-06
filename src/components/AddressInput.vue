@@ -9,6 +9,7 @@
         v-model="inputtedWallet"
         autocomplete="none"
         class="walletAddress"
+        id="address_block_wallet_address_input"
         maxlength="45"
         placeholder="0x address"
         spellcheck="false"

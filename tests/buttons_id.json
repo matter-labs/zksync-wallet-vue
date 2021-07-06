@@ -1,0 +1,25 @@
+{
+    "account": {
+        "transfer": "account_transfer_button",
+        "withdraw": "account_withdraw_button",
+        "deposit": "account_deposit_button"
+    },
+    "deposit": {
+        "deposit": "deposit_deposit_button",
+        "approve_unlimited": "deposit_approve_unlimited_button",
+        "approve": "deposit_approve_button",
+        "proceed_to_deposit": "deposit_proceed_to_deposit_button",
+        "arrow_back": "deposit_arrow_back_button"
+    },
+    "address_block" : {
+        "wallet_address_input": "address_block_wallet_address_input",
+        "select_from_contacts": "address_block_select_from_contacts_button"
+    },
+    "amount_block" : {
+        "token_input": "amount_block_token_input",
+        "token_select": "amount_block_token_select_button"
+    },    
+    "success_block" : {
+        "ok": "success_block_ok_button"
+    }
+}

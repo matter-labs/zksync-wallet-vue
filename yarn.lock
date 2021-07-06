@@ -3761,6 +3761,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^4.21.0
     "@typescript-eslint/parser": ^4.21.0
     "@walletconnect/web3-provider": ^1.3.6
+    "@warsmit/dappeteer": "https://github.com/warsmit/dappeteer.git#ms/develop"
     babel-core: ^7.0.0-bridge.0
     commitlint: ^11.0.0
     cspell: latest
@@ -6100,6 +6101,15 @@ __metadata:
     "@walletconnect/utils": ^1.4.1
     web3-provider-engine: 16.0.1
   checksum: 66d107525a824c309d97c471c87cfaf7b612d0fb4e5308968822109cd03c71ca133f5bbad719e23d4fd2fc281c210ab025fa63738e2f979d756ca461a22eeaf1
+  languageName: node
+  linkType: hard
+
+"@warsmit/dappeteer@https://github.com/warsmit/dappeteer.git#ms/develop":
+  version: 2.0.3
+  resolution: "@warsmit/dappeteer@https://github.com/warsmit/dappeteer.git#commit=df34c6a617d70b2974ecb91724c5ae3c2f7e0b84"
+  peerDependencies:
+    puppeteer: "*"
+  checksum: b4cb4d24fd71aac73f86c556bbd970aa2fe426733234e33e56aaffb2dd35a0624e888bb96834948f8217510809252b3c7e8902e6f8160f7939b2a60b51c89f61
   languageName: node
   linkType: hard
 

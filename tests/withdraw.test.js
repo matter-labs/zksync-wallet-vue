@@ -5,6 +5,7 @@ describe("Withdraw", () => {
   var metamask;
   var walletPage;
   var metamaskPage;
+  let buttonsId = require('@tests/buttons_id.json');
   
   const clickInnerText = text => {
     return walletPage.evaluate(text => [...document.querySelectorAll('*')].find(e => e.innerText === text).click(), text)
@@ -14,6 +15,13 @@ describe("Withdraw", () => {
   }
   const waitEnabledInnerText = text => {
     return walletPage.waitForFunction(text => [...document.querySelectorAll('*')].find(e => e.innerText === text && e.disabled === false), {timeout: 60000}, text)
+  }
+
+  const clickID = text => {
+    return walletPage.evaluate(text => [...document.querySelectorAll('*')].find(e => e.id === text).click(), text)
+  }
+  const waitID = text => {
+    return walletPage.waitForFunction(text => [...document.querySelectorAll('*')].find(e => e.id === text), {timeout: 60000}, text)
   }
 
   test('Account connect to MetaMask extention', async () => {
@@ -30,7 +38,6 @@ describe("Withdraw", () => {
       seed: 'cover rival figure blast opinion catalog weather share sorry surround spin scene',
       password: '@Ntcnvtnfvfc1',
     }
-    console.log("1")
     metamask = await dappeteer.getMetamask(browser, metamaskOptions)
     await metamask.closeNewsPopup()
     await metamask.switchNetwork('rinkeby')
@@ -38,12 +45,12 @@ describe("Withdraw", () => {
 
   test('Goto local zkSync', async () => {
     walletPage = await browser.newPage()
-    //var tempPage = await browser.newPage()
-    //await tempPage.bringToFront()
-    //await walletPage.goto('http://localhost:3000/')
-    await walletPage.goto('https://zksync-vue-rinkeby-2--pr71-fix-onchain-cpk-ux3a8uav.web.app')
-    //await walletPage.bringToFront()
-    //await tempPage.close()
+    var tempPage = await browser.newPage()
+    await tempPage.bringToFront()
+    await walletPage.goto('http://localhost:3000/')
+    //await walletPage.goto('https://zksync-vue-rinkeby-2--pr71-fix-onchain-cpk-ux3a8uav.web.app')
+    await walletPage.bringToFront()
+    await tempPage.close()
   }, 60000);
 
   test('Connect your wallet', async () => {
@@ -67,8 +74,10 @@ describe("Withdraw", () => {
 
   test('Select \'- Withdraw\'', async () => {
     await walletPage.bringToFront()
-    await waitInnerText("- Withdraw")
-    await clickInnerText("- Withdraw")
+    //await waitInnerText("- Withdraw")
+    await waitID(buttonsId.account.withdraw)
+    //await clickInnerText("- Withdraw")
+    await clickID(buttonsId.account.withdraw)
   }, 60000);
 
   test('Write address', async () => {
@@ -96,6 +105,53 @@ describe("Withdraw", () => {
   test('Withdraw', async () => {
     await waitEnabledInnerText(" Withdraw")
     await clickInnerText(" Withdraw")
+    await walletPage.waitForTimeout(1000)
+    await metamask.sign()
+    await walletPage.waitForTimeout(2000)
+    await walletPage.bringToFront()
+    await waitInnerText("Ok")
+    await clickInnerText("Ok")
+    await walletPage.waitForTimeout(2000)
+  }, 60000);
+
+  test('Select \'  Transfer\'', async () => {
+    console.log("0")
+    // const butt = "button.button._margin-y-1.-lg.-secondary.-block";
+    // const butt1 = await metamaskPage.waitForSelector(selectAllCheckboxSelector);
+    //await waitInnerText("  Transfer")
+    await waitID(buttonsId.account.transfer)
+    console.log("1")
+    // await butt1.click();
+    //await clickInnerText("  Transfer ")
+    await clickID(buttonsId.account.transfer)
+    console.log("2")
+  }, 5000);
+
+  test('Write address', async () => {
+    await waitInnerText("Address")
+    await walletPage.focus('input.walletAddress')
+    walletPage.keyboard.type('0x7519bf7a23e98dAa9859D301C1066eFAA42054dD')
+    await walletPage.waitForTimeout(500)
+  }, 5000);
+
+  test('Choise token', async () => {
+    await waitInnerText("Select token")
+    await clickInnerText("Select token")
+    await waitInnerText("DAI")
+    await clickInnerText("DAI")
+    await walletPage.waitForTimeout(1000)
+  }, 5000);
+
+  test('Write token amount', async () => {
+    await waitInnerText("Amount")
+    await walletPage.focus('div.amountInput input')
+    walletPage.keyboard.type('0.01')
+    await walletPage.waitForTimeout(500)
+  }, 5000);
+
+  test('Transfer', async () => {
+    await waitEnabledInnerText(" Transfer")
+    await clickInnerText(" Transfer")
     await walletPage.waitForTimeout(1000)
     await metamask.sign()
     await walletPage.waitForTimeout(2000)

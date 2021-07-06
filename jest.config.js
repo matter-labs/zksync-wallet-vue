@@ -4,6 +4,7 @@ module.exports = {
     "^@/(.*)$": "<rootDir>/src/$1",
     "^~/(.*)$": "<rootDir>/src/$1",
     "^vue$": "vue/dist/vue.common.js",
+    "^@tests/(.*)$": "<rootDir>/tests/$1",
   },
   transform: {
     "^.+\\.ts?$": "ts-jest",
