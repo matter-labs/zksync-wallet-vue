@@ -54,7 +54,7 @@ describe("Withdraw", () => {
   }, 60000);
 
   test('Connect your wallet', async () => {
-    await clickInnerText("Connect your wallet")
+    await clickID(buttonsId.elements.connect_wallet_button)
     await walletPage.evaluate(() => {
       const elements = [...document.querySelectorAll('*')]
       const element = elements.find(el => el.innerText === "MetaMask" && el.className === "bn-onboard-custom bn-onboard-icon-button svelte-1skxsnk")
@@ -74,9 +74,7 @@ describe("Withdraw", () => {
 
   test('Select \'- Withdraw\'', async () => {
     await walletPage.bringToFront()
-    //await waitInnerText("- Withdraw")
     await waitID(buttonsId.account.withdraw)
-    //await clickInnerText("- Withdraw")
     await clickID(buttonsId.account.withdraw)
   }, 60000);
 
@@ -88,8 +86,8 @@ describe("Withdraw", () => {
   }, 60000);
 
   test('Choise token', async () => {
-    await waitInnerText("Select token")
-    await clickInnerText("Select token")
+    await waitID(buttonsId.amount_block.token_input)
+    await clickID(buttonsId.amount_block.token_select)
     await waitInnerText("DAI")
     await clickInnerText("DAI")
     await walletPage.waitForTimeout(1000)
@@ -103,28 +101,20 @@ describe("Withdraw", () => {
   }, 60000);
 
   test('Withdraw', async () => {
-    await waitEnabledInnerText(" Withdraw")
-    await clickInnerText(" Withdraw")
+    await waitID(buttonsId.withdraw.withdraw)
+    await clickID(buttonsId.withdraw.withdraw)
     await walletPage.waitForTimeout(1000)
     await metamask.sign()
     await walletPage.waitForTimeout(2000)
     await walletPage.bringToFront()
-    await waitInnerText("Ok")
-    await clickInnerText("Ok")
+    await waitID(buttonsId.success_block.ok)
+    await clickID(buttonsId.success_block.ok)
     await walletPage.waitForTimeout(2000)
   }, 60000);
 
   test('Select \'  Transfer\'', async () => {
-    console.log("0")
-    // const butt = "button.button._margin-y-1.-lg.-secondary.-block";
-    // const butt1 = await metamaskPage.waitForSelector(selectAllCheckboxSelector);
-    //await waitInnerText("  Transfer")
     await waitID(buttonsId.account.transfer)
-    console.log("1")
-    // await butt1.click();
-    //await clickInnerText("  Transfer ")
     await clickID(buttonsId.account.transfer)
-    console.log("2")
   }, 5000);
 
   test('Write address', async () => {
@@ -135,8 +125,8 @@ describe("Withdraw", () => {
   }, 5000);
 
   test('Choise token', async () => {
-    await waitInnerText("Select token")
-    await clickInnerText("Select token")
+    await waitID(buttonsId.amount_block.token_select)
+    await clickID(buttonsId.amount_block.token_select)
     await waitInnerText("DAI")
     await clickInnerText("DAI")
     await walletPage.waitForTimeout(1000)
@@ -150,14 +140,14 @@ describe("Withdraw", () => {
   }, 5000);
 
   test('Transfer', async () => {
-    await waitEnabledInnerText(" Transfer")
-    await clickInnerText(" Transfer")
+    await waitID(buttonsId.transfer.transfer)
+    await clickID(buttonsId.transfer.transfer)
     await walletPage.waitForTimeout(1000)
     await metamask.sign()
     await walletPage.waitForTimeout(2000)
     await walletPage.bringToFront()
-    await waitInnerText("Ok")
-    await clickInnerText("Ok")
+    await waitID(buttonsId.success_block.ok)
+    await clickID(buttonsId.success_block.ok)
   }, 60000);
 
   test('Close browser', async () => {

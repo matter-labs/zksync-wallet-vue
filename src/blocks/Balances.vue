@@ -20,7 +20,7 @@
     <slot />
     <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
       <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
-      <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
+      <i-button id="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
     </div>
     <div v-else class="balances">
       <div v-if="!loading">

@@ -11,6 +11,12 @@
         "proceed_to_deposit": "deposit_proceed_to_deposit_button",
         "arrow_back": "deposit_arrow_back_button"
     },
+    "transfer": {
+        "transfer": "transaction_withdraw_transfer_button"
+    },
+    "withdraw": {
+        "withdraw": "transaction_withdraw_transfer_button"
+    },
     "address_block" : {
         "wallet_address_input": "address_block_wallet_address_input",
         "select_from_contacts": "address_block_select_from_contacts_button"
@@ -21,5 +27,8 @@
     },    
     "success_block" : {
         "ok": "success_block_ok_button"
+    },
+    "elements" : {
+        "connect_wallet_button": "connect_wallet_button"
     }
 }
