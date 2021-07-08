@@ -1,0 +1,19 @@
+// Core
+@import "./variables.scss";
+@import "./default.scss";
+@import "./transitions.scss";
+@import "./fonts.scss";
+
+// Layouts
+@import "./layouts/default.scss";
+
+// Components
+@import "./components/closebtn.scss";
+@import "./components/defbtn.scss";
+@import "./components/input.scss";
+@import "./components/loader.scss";
+@import "./components/successCheckMark.scss";
+@import "./components/maxHeight.scss";
+@import "./components/modal.scss";
+
+// Blocks

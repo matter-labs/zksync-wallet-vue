@@ -1,0 +1,186 @@
+.inputContainer {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 2px;
+  display: flex;
+  align-items: center;
+  border: 1px solid $light;
+  transition: $transition;
+  transition-property: border-color;
+  will-change: border-color;
+  &:not(.disabled) {
+    cursor: text;
+    &.focused {
+      border-color: $violet;
+    }
+  }
+  &.disabled {
+    border-color: lighten($color: $light, $amount: 5);
+
+    .inputBody input {
+      color: $gray;
+      &::placeholder {
+        color: lighten($color: $gray, $amount: 20);
+      }
+    }
+  }
+  &.error {
+    border-color: $red !important;
+
+    .inputBody input {
+      color: $red;
+    }
+  }
+  &.hasUnderInput {
+    .inputBody {
+      height: 100%;
+    }
+  }
+  &.autoWidth {
+    width: max-content;
+
+    .inputBody {
+      width: max-content;
+
+      .input {
+        width: 0;
+      }
+    }
+  }
+  &.size- {
+    &sm {
+      height: 30px;
+
+      .inputBody {
+        height: 18px;
+        padding: 0 5px;
+
+        input, .sizeSpan, .iconContainer {
+          line-height: 18px;
+        }
+        .iconContainer {
+          font-size: 12px;
+          margin-right: 4px;
+          padding-left: 4px;
+        }
+        input, .sizeSpan {
+          font-size: 15px;
+          font-weight: 400;
+        }
+      }
+    }
+    &md {
+      height: 36px;
+
+      .inputBody {
+        height: 18px;
+        padding: 0 10px;
+
+        input, .sizeSpan, .iconContainer {
+          line-height: 18px;
+        }
+        .iconContainer {
+          font-size: 14px;
+          margin-right: 5px;
+        }
+        input, .sizeSpan {
+          font-size: 16px;
+          font-weight: 600;
+        }
+      }
+    }
+    &xs {
+      height: 48px;
+
+      .inputBody {
+        height: 25px;
+        padding: 0 10px;
+
+        input, .sizeSpan, .iconContainer {
+          line-height: 25px;
+        }
+        .iconContainer {
+          font-size: 18px;
+          margin-right: 5px;
+        }
+        input, .sizeSpan {
+          font-size: 20px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .inputBody {
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    .iconContainer {
+      color: $gray;
+    }
+
+    input, .sizeSpan {
+      display: block;
+      font-family: $firaSans;
+    }
+
+    input {
+      position: relative;
+      left: 2px;
+      height: 100%;
+      width: 100%;
+      min-width: 50px;
+      color: $black2;
+      text-align: left;
+      background-color: transparent;
+      outline: none !important;
+      border: none;
+      transition: .05s ease;
+      transition-property: width;
+      will-change: width;
+      padding: 0 2px;
+      box-sizing: content-box;
+
+      &::placeholder {
+        color: $gray;
+        font-weight: 400;
+        font-size: 14px;
+        transition: color $transition;
+        will-change: color;
+      }
+    }
+
+    .sizeSpan {
+      position: absolute;
+      width: max-content;
+      z-index: -9999;
+      left: -9999px;
+      top: -9999px;
+      opacity: 0;
+    }
+  }
+  .underInput {
+    color: $gray;
+    font-size: 9px;
+    line-height: 12px;
+  }
+}
+
+.darkMode .inputContainer {
+  border-color: $dark2;
+  &:not(:disabled).focused {
+    border-color: $lightViolet;
+  }
+  .inputBody {
+    input {
+      color: $gray;
+      &::placeholder {
+        color: $dark2;
+      }
+    }
+    .underInput {
+      color: $dark3;
+    }
+  }
+}

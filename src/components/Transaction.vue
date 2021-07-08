@@ -405,6 +405,8 @@ export default Vue.extend({
       this.loading = true;
       if (this.$route.query.w) {
         this.inputtedAddress = this.$route.query.w.toString();
+      } else if (this.type === "withdraw") {
+        this.inputtedAddress = this.$accessor.account.address!;
       }
       if (this.$route.query.token) {
         if (this.type === "transfer" || this.type === "withdraw") {
@@ -441,7 +443,7 @@ export default Vue.extend({
             this.$accessor.openModal("SignPubkey");
           }
         }
-        await this?.getAccountActivationFee();
+        await this.getAccountActivationFee();
       }
     } catch (error) {
       this.$sentry?.captureException(error);

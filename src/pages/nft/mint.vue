@@ -149,6 +149,7 @@ export default Vue.extend({
     },
   },
   mounted() {
+    this.inputtedAddress = this.$accessor.account.address!;
     this.chooseFeeToken();
   },
   methods: {

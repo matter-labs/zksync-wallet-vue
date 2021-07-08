@@ -1,0 +1,98 @@
+.defbtn {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  height: 30px;
+  padding: 0 15px;
+  font-weight: 400;
+  font-size: 14px;
+  white-space: nowrap;
+  background-color: $violet;
+  border-radius: 4px;
+  outline: none !important;
+  transition: $transition;
+  &:disabled {
+    cursor: default;
+  }
+  &.filled {
+    color: $white;
+    background-color: $violet;
+    border: none;
+    transition-property: background-color;
+    will-change: background-color;
+
+    &:disabled {
+      background-color: transparentize($color: $lightViolet, $amount: 0.5);
+    }
+
+    &:not(:disabled) {
+      &:hover {
+        background-color: $lightViolet;
+      }
+
+      &:active {
+        background-color: $violet;
+        transition-delay: 0.0001s;
+      }
+    }
+  }
+  &.outline {
+    color: $violet;
+    background-color: #F6F8FA;
+    border: 0.5px solid #E1E4E8;
+    transition-property: color, border-color, background-color, box-shadow;
+    will-change: color, border-color, background-color, box-shadow;
+
+    &:disabled {
+      color: $gray;
+      background-color: $white;
+      border-color: $gray;
+    }
+
+    &:not(:disabled) {
+      box-shadow: 0 2px 2px rgba(28, 5, 77, 0.05), 0 12px 8px rgba(0, 0, 0, 0.02);
+
+      &:hover {
+        color: $lightViolet;
+        box-shadow: 0 0 2px rgba(28, 5, 77, 0.05), 0 0 4px rgba(0, 0, 0, 0.02);
+      }
+
+      &:active {
+        border-color: $lightViolet;
+        transition-delay: 0.0001s;
+      }
+    }
+  }
+  &[big] {
+    height: 50px;
+    font-size: 18px;
+
+    &[square] {
+      width: 50px;
+    }
+  }
+  &[square] {
+    width: 29px;
+    padding: 0;
+
+    i, em {
+      width: 100%;
+    }
+  }
+
+  i, em {
+    &:first-child {
+      margin-right: 6px;
+    }
+
+    &:last-child {
+      margin-left: 6px;
+    }
+  }
+
+  .loaderSpinnerContainer {
+    position: relative;
+    top: -.5px;
+    margin-left: 8px;
+  }
+}
