@@ -11,10 +11,10 @@
         <div class="createdAt">{{ timeAgo }}</div>
         <template slot="body">{{ singleTransaction.created_at | formatDateTime }}</template>
       </i-tooltip>
-      <div v-if="!isNFT" :class="{ small: getFormattedAmount(singleTransaction).length > 10 }" class="amount">{{ getFormattedAmount(singleTransaction) }}</div>
+      <div v-if="!isNFT || isMintNFT" :class="{ small: getFormattedAmount(singleTransaction).length > 10 }" class="amount">{{ getFormattedAmount(singleTransaction) }}</div>
       <div class="tokenSymbol">
-        <span v-if="isNFT && tokenSymbol">NFT-</span>
-        <div v-else-if="isNFT && singleTransaction.tx.contentHash" class="nft">
+        <span v-if="isNFT && tokenSymbol && !isMintNFT">NFT-</span>
+        <div v-else-if="isNFT && !isMintNFT && singleTransaction.tx.contentHash" class="nft">
           <span class="contentHash">{{ singleTransaction.tx.contentHash }}</span>
           <i-tooltip placement="left" trigger="click" class="copyContentHash" @click.native="copy(singleTransaction.tx.contentHash)">
             <div class="iconContainer">
@@ -207,8 +207,11 @@ export default Vue.extend({
       }
       return this.singleTransaction.tx.token as TokenSymbol;
     },
+    isMintNFT(): boolean {
+      return this.singleTransaction.tx?.type === "MintNFT";
+    },
     isNFT(): boolean {
-      if (this.singleTransaction.tx.type === "MintNFT") {
+      if (this.isMintNFT) {
         return true;
       }
       return utils.isNFT(this.tokenSymbol as TokenSymbol);
@@ -235,7 +238,15 @@ export default Vue.extend({
       return moment(time).tz("UTC").fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
-      return zkUtils.handleFormatToken(this.tokenSymbol as TokenSymbol, this.isFeeTransaction ? fee : type === "Deposit" && priority_op ? priority_op.amount : amount) || "";
+      let finalAmount = "0";
+      if (this.isMintNFT || this.isFeeTransaction || type === "WithdrawNFT") {
+        finalAmount = fee;
+      } else if (type === "Deposit" && priority_op) {
+        finalAmount = priority_op.amount;
+      } else {
+        finalAmount = amount;
+      }
+      return zkUtils.handleFormatToken(this.tokenSymbol as TokenSymbol, finalAmount) || "";
     },
     getAddressName(address: string): string {
       address = address ? String(address).toLowerCase() : "";

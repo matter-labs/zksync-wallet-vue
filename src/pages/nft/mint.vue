@@ -207,7 +207,7 @@ export default Vue.extend({
         fee: this.fee as GweiBalance,
       });
       this.transactionInfo.hash = mintTransaction?.txHash as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/tx/" + mintTransaction?.txHash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transaction/" + mintTransaction?.txHash;
       this.tip = "Waiting for the transaction to be mined...";
       await mintTransaction?.awaitReceipt();
       this.transactionInfo.fee = {
