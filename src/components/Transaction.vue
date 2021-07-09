@@ -405,7 +405,7 @@ export default Vue.extend({
       this.loading = true;
       if (this.$route.query.w) {
         this.inputtedAddress = this.$route.query.w.toString();
-      } else if (this.type === "withdraw") {
+      } else if (this.type === "withdraw" || this.type === "nft-withdraw") {
         this.inputtedAddress = this.$accessor.account.address!;
       }
       if (this.$route.query.token) {
