@@ -18,7 +18,13 @@
     </loading-block>
 
     <!-- Transaction success block -->
-    <success-block v-else-if="transactionInfo.success === true" :fee="transactionInfo.fee" :tx-link="transactionInfo.explorerLink" headline="NFT Minted successfully">
+    <success-block
+      v-else-if="transactionInfo.success === true"
+      :fee="transactionInfo.fee"
+      :tx-link="transactionInfo.explorerLink"
+      continue-btn-link="/account/nft"
+      headline="NFT Minted successfully"
+    >
       <p class="_text-center _margin-top-0">
         Your NFT mint transaction has been mined and will be processed after required number of confirmations.<br />Use the transaction link to track the progress.
       </p>
