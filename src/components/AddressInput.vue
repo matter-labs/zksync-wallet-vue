@@ -10,6 +10,7 @@
         autocomplete="none"
         class="walletAddress"
         maxlength="45"
+        id="address_block_wallet_address_input"
         placeholder="0x address"
         spellcheck="false"
         type="text"
