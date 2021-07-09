@@ -96,7 +96,6 @@
     "@nuxtjs/eslint-config-typescript": "latest",
     "@nuxtjs/google-fonts": "latest",
     "@nuxtjs/style-resources": "latest",
-    "@nuxtjs/tailwindcss": "^4.2.0",
     "@types/jest": "^26.0.23",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",

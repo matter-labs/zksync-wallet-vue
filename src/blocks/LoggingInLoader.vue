@@ -8,7 +8,7 @@
         <div v-else key="success" class="green">Wallet successfully connected!</div>
       </transition-group>
       <loader size="lg" class="_margin-y-2" />
-      <zk-button size="lg" @click="cancelLogin()">Cancel</zk-button>
+      <i-button class="cancelButton _padding-x-2" size="sm" variant="secondary" @click="cancelLogin()">Cancel</i-button>
     </div>
   </transition>
 </template>

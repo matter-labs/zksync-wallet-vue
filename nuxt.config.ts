@@ -4,7 +4,6 @@ import { Configuration, NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 
-import * as zkTailwindDefault from "./src/modules/tailwind.config.js";
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
 // @ts-ignore
@@ -159,8 +158,6 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    "@nuxtjs/tailwindcss",
-    "@/modules/",
     "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
@@ -264,29 +261,6 @@ const config: NuxtConfig = {
     families: {
       "Fira+Sans": [400, 600],
       "Fira+Code": [400],
-    },
-  },
-  tailwindcss: {
-    config: {
-      ...zkTailwindDefault,
-      purge: {
-        enabled: process.env.NODE_ENV === "production",
-        content: [
-          `${srcDir}/components/**/*.vue`,
-          `${srcDir}/blocks/**/*.vue`,
-          `${srcDir}/blocks/**/*.vue`,
-          `${srcDir}/layouts/**/*.vue`,
-          `${srcDir}/pages/**/*.vue`,
-          `${srcDir}/plugins/**/*.{js,ts}`,
-
-          `${srcDir}/modules/components/**/*.vue`,
-          `${srcDir}/modules/blocks/**/*.vue`,
-          `${srcDir}/modules/blocks/**/*.vue`,
-          `${srcDir}/modules/layouts/**/*.vue`,
-          `${srcDir}/modules/pages/**/*.vue`,
-          `${srcDir}/modules/plugins/**/*.{js,ts}`,
-        ],
-      },
     },
   },
   generate: {
