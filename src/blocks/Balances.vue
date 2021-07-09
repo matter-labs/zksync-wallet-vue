@@ -20,15 +20,15 @@
     <slot />
     <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
       <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
-      <i-button id="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
+      <i-button data-cy="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
     </div>
     <div v-else class="balances">
       <div v-if="!loading">
         <div class="_display-flex _justify-content-space-between">
-          <i-button id="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
-          <i-button id="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
+          <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
+          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
         </div>
-        <i-button id="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
+        <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
           <v-icon slot="prefix" name="ri-search-line" />
         </i-input>

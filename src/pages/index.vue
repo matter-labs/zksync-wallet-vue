@@ -2,7 +2,7 @@
   <div class="indexPage">
     <i-container>
       <h1>Connect your L1 ETH Wallet to start</h1>
-      <div data-cy="connectWalet-btn" id="connect_wallet_button" class="tileContainer _margin-top-1" @click="customWallet">
+      <div data-cy="connect_wallet_button" class="tileContainer _margin-top-1" @click="customWallet">
         <div class="tile">
           <img src="@/assets/imgs/wallets/external.png" alt="External" />
         </div>

@@ -38,7 +38,7 @@
     <i-button v-if="!noBtn && continueBtnFunction" block size="lg" variant="secondary" class="_margin-top-2" @click="$emit('continue')">
       {{ continueBtnText ? continueBtnText : "Ok" }}
     </i-button>
-    <i-button v-else-if="!noBtn" id="success_block_ok_button" block size="lg" variant="secondary" class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
+    <i-button v-else-if="!noBtn" data-cy="success_block_ok_button" block size="lg" variant="secondary" class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
   </div>
 </template>
 
