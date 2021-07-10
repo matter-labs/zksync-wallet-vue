@@ -138,7 +138,7 @@
         {{ error }}
       </div>
 
-      <i-button id="transaction_withdraw_transfer_button" :disabled="buttonDisabled" block class="_margin-top-05" size="lg" variant="secondary" @click="commitTransaction">
+      <i-button data-cy="transaction_withdraw_transfer_button" :disabled="buttonDisabled" block class="_margin-top-05" size="lg" variant="secondary" @click="commitTransaction">
         <template v-if="ownAccountUnlocked">
           <v-icon v-if="type === 'withdraw' || type === 'nft-withdraw'" name="ri-hand-coin-fill" />
           <v-icon v-else-if="type === 'transfer' || type === 'nft-transfer'" class="planeIcon" name="ri-send-plane-fill" />
