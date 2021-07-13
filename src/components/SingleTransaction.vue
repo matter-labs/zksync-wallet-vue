@@ -199,6 +199,9 @@ export default Vue.extend({
       if (!this.isFeeTransaction && this.singleTransaction.tx.priority_op) {
         return this.singleTransaction.tx.priority_op.token as TokenSymbol;
       }
+      if (this.singleTransaction.tx.type === "WithdrawNFT") {
+        return this.singleTransaction.tx.token as TokenSymbol;
+      }
       if (typeof this.singleTransaction.tx.feeToken === "number") {
         return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol as TokenSymbol;
       }
@@ -239,7 +242,7 @@ export default Vue.extend({
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
       let finalAmount = "0";
-      if (this.isMintNFT || this.isFeeTransaction || type === "WithdrawNFT") {
+      if (this.isMintNFT || this.isFeeTransaction) {
         finalAmount = fee;
       } else if (type === "Deposit" && priority_op) {
         finalAmount = priority_op.amount;
