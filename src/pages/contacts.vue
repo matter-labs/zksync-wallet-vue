@@ -42,7 +42,7 @@
       </i-input>
 
       <div class="contactsListContainer genericListContainer">
-        <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
+        <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound _margin-bottom-0">
           <div>The contact list is empty</div>
 
           <i-button
