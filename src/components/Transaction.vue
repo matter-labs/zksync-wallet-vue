@@ -459,6 +459,7 @@ export default Vue.extend({
       const balances = <Array<ZkInBalance>>(
         JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance as string) - parseFloat(a.balance as string))
       );
+      console.log(this.chosenToken);
       if ((this.chosenToken as ZkInBalance).restricted || this.type === "nft-transfer" || this.type === "nft-withdraw") {
         let tokenFound = false;
         for (const feeToken of balances) {

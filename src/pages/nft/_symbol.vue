@@ -1,5 +1,8 @@
 <template>
   <div class="tokenAccount dappPageWrapper">
+    <no-nft-token-found>
+      <template slot="header">Token unavailable</template>
+    </no-nft-token-found>
     <div class="tileBlock _margin-bottom-0">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="fromRoute && fromRoute.fullPath !== $route.fullPath && fromRoute.path !== '/withdraw' ? fromRoute : '/account'" class="returnBtn">
@@ -27,10 +30,10 @@
             </div>
           </div>
         </div>
-        <div class="infoBlock _margin-top-1">
-          <div class="headline">Creator address:</div>
-        </div>
-        <div class="_display-flex _justify-content-space-between balanceWithdraw">
+        <div>
+          <div class="infoBlock _margin-top-1">
+            <div class="headline">Creator address:</div>
+          </div>
           <div class="infoBlock">
             <div class="balance">
               <nuxt-link v-if="!isOwnAddress" :to="`/contacts?w=${token.creatorAddress}`" class="tokenSymbol address">{{ getAddressName(token.creatorAddress) }}</nuxt-link>
@@ -38,11 +41,21 @@
             </div>
           </div>
         </div>
+        <div>
+          <div class="infoBlock _margin-top-1">
+            <div class="headline">Status:</div>
+          </div>
+          <div class="infoBlock">
+            <div class="balance">
+              <div>{{ token.status }}</div>
+            </div>
+          </div>
+        </div>
         <i-button-group size="lg" class="_width-100 _margin-top-1 _display-flex nftButtonGroup">
-          <i-button class="_flex-fill _margin-0" size="lg" block variant="dark" :to="`/nft/withdraw?token=${nftID}`"
+          <i-button class="_flex-fill _margin-0" size="lg" block variant="dark" @click="withdraw()"
             ><v-icon class="planeIcon" name="ri-hand-coin-fill" />&nbsp;&nbsp;Withdraw</i-button
           >
-          <i-button class="_flex-fill _margin-0" block size="lg" variant="secondary" :to="`/nft/transfer?token=${nftID}`"
+          <i-button class="_flex-fill _margin-0" block size="lg" variant="secondary" @click="transfer()"
             ><v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer</i-button
           >
         </i-button-group>
@@ -53,11 +66,15 @@
 </template>
 
 <script lang="ts">
+import NoNftTokenFound from "@/blocks/modals/NoNftTokenFound.vue";
 import utils from "@/plugins/utils";
 import { ZkInNFT } from "@/types/lib";
 import Vue from "vue";
 
 export default Vue.extend({
+  components: {
+    NoNftTokenFound,
+  },
   asyncData({ from }) {
     return {
       fromRoute: from,
@@ -107,6 +124,20 @@ export default Vue.extend({
     },
     copy(value: string): void {
       utils.copy(value);
+    },
+    withdraw(): void {
+      if (this.token.status === "Verified") {
+        this.$router.push(`/nft/withdraw?token=${this.nftID}`);
+      } else {
+        this.$accessor.openModal("NoNftTokenFound");
+      }
+    },
+    transfer(): void {
+      if (this.token.status === "Verified") {
+        this.$router.push(`/nft/transfer?token=${this.nftID}`);
+      } else {
+        this.$accessor.openModal("NoNftTokenFound");
+      }
     },
   },
 });
