@@ -252,7 +252,7 @@ export default Vue.extend({
       this.loading = false;
     },
     async mint(): Promise<void> {
-      this.tip = "Confirm the transaction to mint";
+      this.tip = "Follow the instructions in your Ethereum wallet";
       this.transactionInfo.type = "deposit";
       const transferTransactions = await mintNFT(
         this.inputtedAddress,

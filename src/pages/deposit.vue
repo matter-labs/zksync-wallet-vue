@@ -100,7 +100,16 @@
           <i-button data-cy="deposit_approve_unlimited_button" block size="md" variant="secondary" @click="unlockToken(true)">
             Approve unlimited <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
-          <i-button data-cy="deposit_approve_button" v-if="inputtedAmount" key="approveAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
+          <i-button
+            v-if="inputtedAmount"
+            key="approveAmount"
+            data-cy="deposit_approve_button"
+            block
+            class="_margin-top-0"
+            size="md"
+            variant="secondary"
+            @click="unlockToken(false)"
+          >
             Approve {{ amountBigNumber | formatToken(chosenToken.symbol) }} <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
           <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>
@@ -337,7 +346,7 @@ export default Vue.extend({
       this.loading = false;
     },
     async deposit(): Promise<void> {
-      this.tip = "Confirm the transaction to deposit";
+      this.tip = "Follow the instructions in your Ethereum wallet";
       this.transactionInfo.type = "deposit";
       const transferTransaction = await deposit((this.chosenToken as ZkInBalance).symbol, this.amountBigNumber.toString(), this.$accessor);
       if (!transferTransaction) {
@@ -364,7 +373,7 @@ export default Vue.extend({
       this.loading = true;
       try {
         const wallet = walletData.get().syncWallet;
-        this.tip = `Confirm the transaction in order to approve ${this.chosenToken.symbol} token`;
+        this.tip = "Follow the instructions in your Ethereum wallet";
         this.transactionInfo.type = "unlock";
         const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
         const balances = this.$accessor.wallet.getzkBalances;
