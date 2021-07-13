@@ -105,8 +105,10 @@ export const actions = actionTree(
       }
     },
     saveContact({ state, commit }, contact: ZkInContact): void {
-      if (state.contactsList.includes(contact)) {
-        commit("delete", contact);
+      for (let a = 0; a < state.contactsList.length; a++) {
+        if (state.contactsList[a].address.toLowerCase() === contact.address.toLowerCase()) {
+          commit("delete", state.contactsList[a]);
+        }
       }
       commit("add", contact);
       this.app.$accessor.contacts.updateLocalStorage();
