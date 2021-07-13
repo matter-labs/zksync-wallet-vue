@@ -202,6 +202,37 @@ export const transferNFT = async (
   return labelTransactions(transactions);
 };
 
+export const mintNFT = async (address: Address, hash: string, feeToken: TokenSymbol, feeBigValue: GweiBalance, store: typeof accessorType, accountActivationFee?: GweiBalance) => {
+  const syncWallet = walletData.get().syncWallet!;
+  const nonce = await syncWallet.getNonce("committed");
+  const batchBuilder = syncWallet.batchBuilder(nonce);
+
+  if (store.wallet.isAccountLocked) {
+    if (!accountActivationFee) {
+      throw new Error("No account activation fee found");
+    }
+    await addCPKToBatch(syncWallet, accountActivationFee, feeToken, batchBuilder, store);
+  }
+  batchBuilder.addMintNFT({
+    fee: "0",
+    recipient: address,
+    contentHash: hash,
+    feeToken,
+  });
+  batchBuilder.addTransfer({
+    fee: feeBigValue,
+    amount: "0",
+    to: syncWallet.address(),
+    token: feeToken,
+  });
+  const batchTransactionData = await batchBuilder.build();
+  const transactions = await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
+  for (const tx of transactions) {
+    store.transaction.watchTransaction({ transactionHash: tx.txHash });
+  }
+  return labelTransactions(transactions);
+};
+
 export const labelTransactions = (transactions: Transaction[]) => {
   let transaction: Transaction | null = null;
   let feeTransaction: Transaction | null = null;
