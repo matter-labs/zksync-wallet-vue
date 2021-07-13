@@ -88,6 +88,11 @@ export const getters = getterTree(state, {
   depositList: (state: TransactionModuleState): ZkInDeposits => {
     return state.deposits;
   },
+  getWithdrawalTx(state: TransactionModuleState) {
+    return (tx: string) => {
+      return state.withdrawalTxToEthTx.get(tx);
+    };
+  },
 });
 
 export const actions = actionTree(
@@ -188,15 +193,6 @@ export const actions = actionTree(
         }
       }
       return finalDeposits;
-    },
-
-    /**
-     * @param {any} state
-     * @param {string} tx
-     * @return {string | undefined}
-     */
-    getWithdrawalTx({ state }, tx = ""): string | undefined {
-      return state.withdrawalTxToEthTx.get(tx);
     },
   },
 );

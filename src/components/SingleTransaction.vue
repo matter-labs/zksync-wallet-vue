@@ -261,7 +261,7 @@ export default Vue.extend({
     },
     async getWithdrawalTx() {
       const singleTx = this.singleTransaction;
-      if (singleTx && singleTx.tx.type === "Withdraw") {
+      if (singleTx && (singleTx.tx.type === "Withdraw" || singleTx.tx.type === "WithdrawNFT")) {
         const txFromStore = this.$accessor.transaction.getWithdrawalTx(singleTx.hash);
         if (txFromStore) {
           this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${txFromStore}`;
