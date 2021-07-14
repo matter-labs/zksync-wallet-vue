@@ -17,11 +17,8 @@ export const mutations = mutationTree(state, {
   add(state: ContactsModuleState, contact: ZkInContact): void {
     state.contactsList.unshift(contact);
   },
-  delete(state: ContactsModuleState, contact: ZkInContact): void {
-    const foundIndex = state.contactsList.indexOf(contact);
-    if (foundIndex !== -1) {
-      state.contactsList = state.contactsList.filter((singleContact) => singleContact.address.toLowerCase() !== contact.address.toLowerCase());
-    }
+  deleteLocal(state: ContactsModuleState, contact: ZkInContact): void {
+    state.contactsList = state.contactsList.filter((singleContact) => singleContact.address.toLowerCase() !== contact.address.toLowerCase());
   },
   setStorageKey(state: ContactsModuleState, storageKey: string): void {
     state.storageKey = storageKey;
@@ -37,7 +34,7 @@ export const getters = getterTree(state, {
   getStorageKey(_: unknown, __: unknown, ___: unknown, rootGetters: { [x: string]: any }): string {
     return `contacts-${rootGetters["account/address"]}`;
   },
-  getByAddress(state: ContactsModuleState, address: Address) {
+  getByAddress(state: ContactsModuleState) {
     return (address: Address) => {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {
@@ -98,16 +95,17 @@ export const actions = actionTree(
       }
     },
     deleteContact({ commit }, address: Address): void {
+      console.log("delete contact", address);
       const contact = this.app.$accessor.contacts.getByAddress(address);
       if (contact) {
-        commit("delete", contact);
+        commit("deleteLocal", contact);
         this.app.$accessor.contacts.updateLocalStorage();
       }
     },
     saveContact({ state, commit }, contact: ZkInContact): void {
       for (let a = 0; a < state.contactsList.length; a++) {
         if (state.contactsList[a].address.toLowerCase() === contact.address.toLowerCase()) {
-          commit("delete", state.contactsList[a]);
+          commit("deleteLocal", state.contactsList[a]);
         }
       }
       commit("add", contact);

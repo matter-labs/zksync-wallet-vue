@@ -10,6 +10,10 @@
   }
 }
 
+.errorText {
+  color: $red;
+}
+
 main.layout.defaultLayout {
   max-height: 100%;
   overflow: hidden;

@@ -11,8 +11,8 @@
         <div class="createdAt">{{ timeAgo }}</div>
         <template slot="body">{{ singleTransaction.created_at | formatDateTime }}</template>
       </i-tooltip>
-      <div v-if="!isNFT || isMintNFT" :class="{ small: getFormattedAmount(singleTransaction).length > 10 }" class="amount">{{ getFormattedAmount(singleTransaction) }}</div>
-      <div class="tokenSymbol">
+      <div v-if="!isNFT" :class="{ small: getFormattedAmount(singleTransaction).length > 10 }" class="amount">{{ getFormattedAmount(singleTransaction) }}</div>
+      <div v-if="!isMintNFT" class="tokenSymbol">
         <span v-if="isNFT && tokenSymbol && !isMintNFT">NFT-</span>
         <div v-else-if="isNFT && !isMintNFT && singleTransaction.tx.contentHash" class="nft">
           <span class="contentHash">{{ singleTransaction.tx.contentHash }}</span>

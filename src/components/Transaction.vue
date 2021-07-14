@@ -310,9 +310,9 @@ export default Vue.extend({
         case "transfer":
           return "Transfer";
         case "nft-withdraw":
-          return "NFT Withdraw";
+          return "Withdraw NFT";
         case "nft-transfer":
-          return "NFT Transfer";
+          return "Transfer NFT";
 
         default:
           return "";
@@ -550,7 +550,7 @@ export default Vue.extend({
     },
     async withdraw(): Promise<void> {
       const txAmount: BigNumber = utils.parseToken((this.chosenToken as ZkInBalance).symbol, this.inputtedAmount);
-      this.tip = "Confirm the transaction to withdraw";
+      this.tip = "Follow the instructions in your Ethereum wallet";
       if (this.feesObj === undefined) {
         throw new Error("Fee fetching error");
       }
@@ -596,7 +596,7 @@ export default Vue.extend({
           return;
         }
       }
-      this.tip = "Confirm the transaction to transfer";
+      this.tip = "Follow the instructions in your Ethereum wallet";
 
       const calculatedFee = this.chosenFeeObj;
 
@@ -650,7 +650,7 @@ export default Vue.extend({
           return;
         }
       }
-      this.tip = "Confirm the transaction to transfer NFT";
+      this.tip = "Follow the instructions in your Ethereum wallet";
 
       const calculatedFee = this.chosenFeeObj;
 
@@ -691,7 +691,7 @@ export default Vue.extend({
       }
     },
     async nftWithdraw(): Promise<void> {
-      this.tip = "Confirm the transaction to withdraw";
+      this.tip = "Follow the instructions in your Ethereum wallet";
       if (this.feesObj === undefined) {
         throw new Error("Fee fetching error");
       }

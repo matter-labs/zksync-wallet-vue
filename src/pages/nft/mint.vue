@@ -66,6 +66,16 @@
           </span>
         </span>
       </div>
+      <div v-if="!ownAccountUnlocked && chosenFeeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1-2">
+        Account Activation single-time fee:
+        <span v-if="activateAccountFeeLoading" class="secondaryText">Loading...</span>
+        <span v-else-if="chosenFeeToken">
+          {{ activateAccountFee | formatToken(chosenFeeToken.symbol) }} <span class="tokenSymbol">{{ chosenFeeToken.symbol }}</span>
+          <span class="secondaryText">
+            <token-price :symbol="chosenFeeToken.symbol" :amount="activateAccountFee.toString()" />
+          </span>
+        </span>
+      </div>
       <span class="linkText _width-100 _display-block _text-center _margin-top-05" @click="chooseFeeTokenModal = true">Change fee token</span>
     </div>
   </div>
@@ -78,20 +88,26 @@ import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import ContentHashModal from "@/blocks/modals/ContentHashModal.vue";
-
+import { getCPKTx, removeCPKTx } from "@/plugins/walletActions/cpk";
+import Context from "@nuxt/types";
+import { Route } from "vue-router/types";
+import { mintNFT } from "@/plugins/walletActions/transaction";
 import { GweiBalance, Hash, ZkInBalance, ZkInContact, ZkInTransactionInfo, ZkInFeesObj } from "@/types/lib";
 import Vue from "vue";
+import { BigNumber } from "ethers";
 
 export default Vue.extend({
   components: {
     ContentHashModal,
   },
-  props: {
-    fromRoute: {
-      type: Object,
-      default: undefined,
-      required: false,
-    },
+  asyncData({ from, app }: Context.Context): { fromRoute: Route } {
+    if (from) {
+      // @ts-ignore
+      app.$accessor.setPreviousRoute({ path: from.path, query: from.query, params: from.params });
+    }
+    return {
+      fromRoute: from,
+    };
   },
   data() {
     return {
@@ -122,12 +138,26 @@ export default Vue.extend({
       fee: <GweiBalance | false>false,
       chosenFeeToken: <ZkInBalance | false>false,
       feesLoading: false,
+      activateAccountFeeLoading: false,
+      activateAccountFee: <GweiBalance | undefined>undefined,
       error: "",
     };
   },
   computed: {
     buttonDisabled(): boolean {
-      return !this.inputtedHash || !this.inputtedAddress || !this.fee || this.feesLoading || !this.chosenFeeToken || this.chosenFeeToken?.restricted;
+      return (
+        !this.inputtedHash ||
+        !this.inputtedAddress ||
+        !this.fee ||
+        this.feesLoading ||
+        this.activateAccountFeeLoading ||
+        (!this.activateAccountFee && !this.ownAccountUnlocked) ||
+        !this.chosenFeeToken ||
+        this.chosenFeeToken?.restricted
+      );
+    },
+    ownAccountUnlocked(): boolean {
+      return !this.$accessor.wallet.isAccountLocked;
     },
   },
   watch: {
@@ -154,9 +184,27 @@ export default Vue.extend({
       },
     },
   },
-  mounted() {
-    this.inputtedAddress = this.$accessor.account.address!;
-    this.chooseFeeToken();
+  async mounted() {
+    this.loading = true;
+    try {
+      this.inputtedAddress = this.$accessor.account.address!;
+      this.chooseFeeToken();
+      if (!this.ownAccountUnlocked) {
+        try {
+          getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
+        } catch (error) {
+          const accountID = await walletData.get().syncWallet!.getAccountId();
+          if (typeof accountID === "number") {
+            this.$accessor.openModal("SignPubkey");
+          }
+        }
+        await this.getAccountActivationFee();
+      }
+    } catch (error) {
+      console.log("Mounted error", error);
+      this.$sentry?.captureException(error);
+    }
+    this.loading = false;
   },
   methods: {
     chooseFeeToken(token?: ZkInBalance) {
@@ -204,24 +252,40 @@ export default Vue.extend({
       this.loading = false;
     },
     async mint(): Promise<void> {
-      this.tip = "Confirm the transaction to mint";
+      this.tip = "Follow the instructions in your Ethereum wallet";
       this.transactionInfo.type = "deposit";
-      const mintTransaction: Transaction | undefined = await walletData.get().syncWallet?.mintNFT({
-        recipient: this.inputtedAddress,
-        contentHash: this.inputtedHash,
-        feeToken: (this.chosenFeeToken as ZkInBalance).symbol,
-        fee: this.fee as GweiBalance,
-      });
-      this.transactionInfo.hash = mintTransaction?.txHash as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transaction/" + mintTransaction?.txHash;
-      this.tip = "Waiting for the transaction to be mined...";
-      await mintTransaction?.awaitReceipt();
-      this.transactionInfo.fee = {
-        token: this.chosenFeeToken,
-        amount: mintTransaction?.txData.tx.fee,
+      const transferTransactions = await mintNFT(
+        this.inputtedAddress,
+        this.inputtedHash,
+        (this.chosenFeeToken as ZkInBalance).symbol,
+        this.fee as GweiBalance,
+        this.$accessor,
+        this.activateAccountFee,
+      );
+
+      this.transactionInfo.amount = undefined;
+
+      if (BigNumber.isBigNumber(this.fee)) {
+        this.transactionInfo.fee!.amount = this.fee;
+        this.transactionInfo.fee!.token = this.chosenFeeToken;
+      }
+
+      this.checkUnlock(transferTransactions);
+
+      this.transactionInfo.hash = transferTransactions.transaction!.txHash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
+      this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
+      this.transactionInfo.recipient = {
+        address: transferTransactions.transaction!.txData.tx.to,
+        name: this.chosenContact ? this.chosenContact.name : "",
       };
-      this.transactionInfo.success = true;
-      await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+      this.tip = "Waiting for the transaction to be mined...";
+      const receipt = await transferTransactions.transaction!.awaitReceipt();
+      this.transactionInfo.success = !!receipt.success;
+      this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+      if (receipt.failReason) {
+        throw new Error(receipt.failReason);
+      }
     },
     async requestFees(): Promise<void> {
       if (!this.chosenFeeToken || !this.inputtedAddress || this.chosenFeeToken?.restricted) {
@@ -246,6 +310,40 @@ export default Vue.extend({
         });
       }
       this.feesLoading = false;
+    },
+    async getAccountActivationFee(): Promise<void> {
+      if (!this.chosenFeeToken && !this.ownAccountUnlocked) {
+        return;
+      }
+      this.activateAccountFeeLoading = true;
+      const syncWallet = walletData.get().syncWallet;
+      const syncProvider = walletData.get().syncProvider;
+      try {
+        const foundFee = await syncProvider?.getTransactionFee(
+          {
+            ChangePubKey: syncWallet!.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA",
+          },
+          syncWallet!.address() || "",
+          (this.chosenFeeToken as ZkInBalance).symbol,
+        );
+        this.activateAccountFee = foundFee!.totalFee.toString();
+      } catch (error) {
+        await this.$toast?.global.zkException({
+          message: error.message ?? "Error while receiving an unlock fee",
+        });
+      }
+      this.activateAccountFeeLoading = false;
+    },
+    checkUnlock(transferTransactions: { cpkTransaction: Transaction | null; transaction: Transaction | null; feeTransaction: Transaction | null }): void {
+      if (transferTransactions.cpkTransaction) {
+        removeCPKTx(this.$accessor.account.address!);
+        this.$accessor.wallet.setAccountLockedState(false);
+        transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
+          const newAccountState = await walletData.get().syncWallet!.getAccountState();
+          walletData.set({ accountState: newAccountState });
+          this.$accessor.wallet.checkLockedState();
+        });
+      }
     },
   },
 });
