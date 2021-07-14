@@ -57,6 +57,7 @@ const initializedWallets: WalletSelectModuleOptions = {
     { walletName: "hyperpay" },
     { walletName: "wallet.io", rpcUrl: ONBOARD_RPC_URL },
     { walletName: "atoken" },
+    { walletName: 'tokenpocket', rpcUrl: ONBOARD_RPC_URL }
   ],
 };
 export default (ctx: Store<WalletModuleState>): Initialization => {
