@@ -1,0 +1,11 @@
+{
+  "branches": [
+    "master",
+    "develop",
+    {
+      "name": "beta",
+      "prerelease": true
+    }
+  ],
+  "tagFormat": "${version}"
+}

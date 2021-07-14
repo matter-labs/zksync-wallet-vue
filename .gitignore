@@ -44,8 +44,7 @@ public
 # unignore
 !public/.gitignore
 !.yarn/releases/*
-!.yarn/plugins/@yarnpkg/plugin-interactive-tools.cjs
-!.yarn/plugins/@yarnpkg/plugin-version.cjs
+!.yarn/plugins/@yarnpkg/
 /cypress/screenshots/examples/misc.spec.js/
 /cypress/videos/examples/
 /.eslintcache

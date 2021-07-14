@@ -1,17 +1,17 @@
-// noinspection ES6PreferShortImport
-
 import { Configuration, NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 
+// @ts-ignore noinspection ES6PreferShortImport
+//noinspection ES6PreferShortImport
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
-
-// @ts-ignore
 
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
-const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
+const isLocalhost: boolean = (process.env.IS_LOCALHOST ?? false) as boolean;
+const isProduction: boolean = ETHER_PRODUCTION && env === "prod" && !isLocalhost;
+const debugEnabled: boolean = env === "dev" && !isProduction && !isLocalhost;
 const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
 
@@ -22,7 +22,7 @@ const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation,
 crypto payments, zkWallet, cryptowallet`;
 
 const config: NuxtConfig = {
-  components: ["@/components/", { path: "@/blocks/", prefix: "block" }, { path: "@/modules/components", prefix: "zk" }],
+  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
   ssr: false,
   target: "static",
@@ -30,7 +30,7 @@ const config: NuxtConfig = {
   vue: {
     config: {
       productionTip: isProduction,
-      devtools: !isProduction,
+      devtools: debugEnabled,
     },
   },
   env: <NuxtOptionsEnv>{
@@ -158,7 +158,6 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     "nuxt-typed-vuex",
@@ -177,7 +176,6 @@ const config: NuxtConfig = {
               config: ["tsconfig-eslint.json", ".eslintrc.js"],
               files: "@/**/*.{ts,vue,js}",
             },
-            files: "@/**/*.{ts,vue,js}",
           },
         },
       },
@@ -187,7 +185,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
+  modules: ["@nuxt/http", "@nuxtjs/toast", "@nuxtjs/gtm", "@inkline/nuxt", "@nuxtjs/sentry"],
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
@@ -215,19 +213,11 @@ const config: NuxtConfig = {
   sentry: {
     dsn: process.env.SENTRY_DSN,
     disableServerSide: true,
+    disabled: isLocalhost,
     config: {
       tracesSampleRate: 1.0,
       environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
     },
-  },
-  "google-gtag": {
-    id: process.env.GTAG_ID,
-    config: {
-      anonymize_ip: true, // anonymize IP
-      send_page_view: true, // might be necessary to avoid duplicated page track on page reload
-    },
-    debug: env !== "prod", // enable to track in dev mode
-    disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
   /*
    ** Build configuration
@@ -245,14 +235,6 @@ const config: NuxtConfig = {
       };
     },
   },
-  buildOptimisations: {
-    profile: env !== "prod" ? "risky" : "experimental",
-    features: {
-      postcssNoPolyfills: isProduction,
-      hardSourcePlugin: isProduction,
-    },
-    esbuildLoaderOptions: "esnext",
-  },
   googleFonts: {
     prefetch: true,
     preconnect: true,
@@ -263,9 +245,22 @@ const config: NuxtConfig = {
       "Fira+Code": [400],
     },
   },
+  gtm: {
+    enabled: !isLocalhost /* see below */,
+    debug: debugEnabled,
+    id: process.env.GTAG_ID,
+    pageTracking: true,
+    pageViewEventName: "nuxtRoute",
+    autoInit: true,
+    respectDoNotTrack: true,
+    scriptId: "gtm-script",
+    scriptDefer: true,
+    crossOrigin: true,
+    noscript: true,
+  },
   generate: {
     dir: "public",
-    devtools: env !== "prod",
+    devtools: false,
   },
 };
 export default config;

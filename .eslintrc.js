@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: ["@nuxtjs/eslint-config-typescript", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier", "plugin:vue/base"],
+  extends: ["@nuxtjs/eslint-config-typescript"],
   parserOptions: {
     ecmaVersion: 12,
     ecmaFeatures: {

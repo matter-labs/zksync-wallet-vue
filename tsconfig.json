@@ -19,11 +19,11 @@
     "noEmit": true,
     "noImplicitAny": true,
     "paths": {
-      "@/*": [
-        "*"
-      ],
       "~/*": [
-        "*"
+        "./*"
+      ],
+      "@/*": [
+        "./*"
       ]
     },
     "suppressImplicitAnyIndexErrors": true,
@@ -32,16 +32,18 @@
     "strict": true,
     "target": "ESNext",
     "types": [
-      "@types/node",
       "@nuxt/types",
-      "@nuxtjs/sentry",
       "@nuxt/http",
+      "@inkline/inkline/types",
+      "vuex",
+      "@types/nuxt",
+      "@types/node",
+      "@nuxtjs/sentry",
       "@types/jest",
       "@nuxtjs/toast",
       "web3-core/types",
-      "@inkline/inkline/types",
-      "nuxt-typed-vuex",
-      "typed-vuex"
+      "typed-vuex",
+      "oh-vue-icons/types"
     ]
   },
   "exclude": [
