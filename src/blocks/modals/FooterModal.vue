@@ -22,7 +22,7 @@
           <span>zkScan</span>
         </a>
         <a class="modalFooterBtn big" href="https://uptime.com/s/zksync" target="_blank">
-          <v-icon name="ri-contacts-book-line" />
+          <v-icon name="ri-wifi-line" />
           <span>Uptime</span>
         </a>
       </template>
@@ -30,7 +30,8 @@
         <div class="_display-flex _justify-content-space-between">
           <block-system-info />
           <i-button block size="md" circle @click="toggleDarkMode">
-            <i-icon icon="light" />
+            <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
+            <v-icon v-else name="ri-moon-fill" />
           </i-button>
         </div>
       </template>
@@ -63,6 +64,9 @@ export default Vue.extend({
     },
     blockExplorerLink(): string {
       return APP_ZKSYNC_BLOCK_EXPLORER;
+    },
+    isDarkTheme(): boolean {
+      return utils.defineTheme(this.$inkline) === "dark";
     },
   },
   methods: {

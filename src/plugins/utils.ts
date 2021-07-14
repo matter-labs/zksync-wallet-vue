@@ -1,5 +1,5 @@
 import { walletData } from "@/plugins/walletData";
-import { DecimalBalance, GweiBalance, ZkInBalance, ZKTypeDisplayToken } from "@/types/lib";
+import { DecimalBalance, GweiBalance, ZkInBalance, ZkInNFT, ZKTypeDisplayToken } from "@/types/lib";
 import { IPrototype } from "@inkline/inkline/src/plugin.d";
 
 import { BigNumber, BigNumberish, utils } from "ethers";
@@ -69,7 +69,7 @@ export default {
    * @param b
    * @return {number}
    */
-  compareTokensById: (a: ZkInBalance, b: ZkInBalance) => {
+  compareTokensById: (a: ZkInBalance | ZkInNFT, b: ZkInBalance | ZkInNFT) => {
     if (a.id < b.id) {
       return -1;
     } else if (a.id > b.id) {
@@ -106,13 +106,13 @@ export default {
 
   filterError: (error: Error): string | undefined => {
     if (error.message) {
-      if (error.message.includes("User denied")) {
+      if (error.message.includes("User denied") || error.message.includes("User rejected")) {
         return "";
       } else if (error.message.includes("Fee Amount is not packable")) {
         return "Fee Amount is not packable";
       } else if (error.message.includes("Transaction Amount is not packable")) {
         return "Transaction Amount is not packable";
-      } else if (error.message.length < 60) {
+      } else if (error.message.length < 150) {
         return error.message;
       }
     }
@@ -124,7 +124,7 @@ export default {
    * @param {boolean} toggleTheme
    * @return {"light" | "dark"}
    */
-  defineTheme(inklineContext: IPrototype, toggleTheme: boolean): "light" | "dark" {
+  defineTheme(inklineContext: IPrototype, toggleTheme = false): "light" | "dark" {
     let mode: string | null | undefined = localStorage.getItem("colorTheme");
     if (toggleTheme) {
       mode = inklineContext.config.variant = mode === "light" ? "dark" : "light";
@@ -134,5 +134,20 @@ export default {
     }
     localStorage.setItem("colorTheme", inklineContext.config.variant);
     return inklineContext.config.variant;
+  },
+
+  /**
+   * Copy text
+   */
+  copy(value: string) {
+    const elem = document.createElement("textarea");
+    elem.style.position = "absolute";
+    elem.style.left = -99999999 + "px";
+    elem.style.top = -99999999 + "px";
+    elem.value = value;
+    document.body.appendChild(elem);
+    elem.select();
+    document.execCommand("copy");
+    document.body.removeChild(elem);
   },
 };

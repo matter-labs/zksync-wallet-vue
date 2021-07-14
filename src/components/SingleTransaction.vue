@@ -11,8 +11,21 @@
         <div class="createdAt">{{ timeAgo }}</div>
         <template slot="body">{{ singleTransaction.created_at | formatDateTime }}</template>
       </i-tooltip>
-      <div :class="{ small: getFormattedAmount(singleTransaction).length > 10 }" class="amount">{{ getFormattedAmount(singleTransaction) }}</div>
-      <div class="tokenSymbol">{{ tokenSymbol }}</div>
+      <div v-if="!isNFT" :class="{ small: getFormattedAmount(singleTransaction).length > 10 }" class="amount">{{ getFormattedAmount(singleTransaction) }}</div>
+      <div v-if="!isMintNFT" class="tokenSymbol">
+        <span v-if="isNFT && tokenSymbol && !isMintNFT">NFT-</span>
+        <div v-else-if="isNFT && !isMintNFT && singleTransaction.tx.contentHash" class="nft">
+          <span class="contentHash">{{ singleTransaction.tx.contentHash }}</span>
+          <i-tooltip placement="left" trigger="click" class="copyContentHash" @click.native="copy(singleTransaction.tx.contentHash)">
+            <div class="iconContainer">
+              <v-icon name="ri-clipboard-line" />
+              <span>Copy hash</span>
+            </div>
+            <template slot="body">Copied!</template>
+          </i-tooltip>
+        </div>
+        {{ tokenSymbol }}
+      </div>
     </div>
     <div class="actionInfo">
       <div class="actionType">
@@ -41,14 +54,15 @@
 </template>
 
 <script lang="ts">
-import utils from "@/plugins/utils";
 import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import { ZkInTx } from "@/types/lib";
-import { Address, TokenSymbol } from "zksync/build/types";
+import zkUtils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
+import { ZkInTx } from "@/types/lib";
+import { utils } from "zksync";
 
 import moment from "moment-timezone";
 import Vue, { PropOptions } from "vue";
+import { Address, TokenSymbol } from "zksync/build/types";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -82,6 +96,10 @@ export default Vue.extend({
         }
       } else if (this.singleTransaction.tx.priority_op) {
         return this.singleTransaction.tx.priority_op.to;
+      }
+      if (this.singleTransaction.tx.type === "MintNFT") {
+        // @ts-ignore
+        return this.singleTransaction.tx?.recipient;
       }
       return this.singleTransaction.tx.to || "";
     },
@@ -121,6 +139,12 @@ export default Vue.extend({
             showAddress: true,
             modal: false,
           };
+        case "Swap":
+          return {
+            type: "Pair Swap",
+            showAddress: true,
+            modal: false,
+          };
         case "ChangePubKey":
           return {
             type: "Account activation",
@@ -133,6 +157,12 @@ export default Vue.extend({
         case "Deposit":
           return {
             type: "Deposit to:",
+            showAddress: true,
+            modal: false,
+          };
+        case "MintNFT":
+          return {
+            type: "Mint NFT",
             showAddress: true,
             modal: false,
           };
@@ -159,23 +189,35 @@ export default Vue.extend({
           }
         default:
           return {
-            type: this.singleTransaction.tx.type,
+            type: this.singleTransaction.tx.type.toString(),
             showAddress: true,
             modal: false,
           };
       }
     },
-    tokenSymbol(): TokenSymbol {
-      if (!this.isFeeTransaction) {
-        if (this.singleTransaction.tx.priority_op) {
-          return this.singleTransaction.tx.priority_op.token;
-        }
-      } else if (typeof this.singleTransaction.tx.feeToken === "number") {
-        return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol;
-      } else if (this.singleTransaction.tx.priority_op) {
-        return this.singleTransaction.tx.priority_op.token;
+    tokenSymbol(): TokenSymbol | undefined {
+      if (!this.isFeeTransaction && this.singleTransaction.tx.priority_op) {
+        return this.singleTransaction.tx.priority_op.token as TokenSymbol;
       }
-      return this.singleTransaction.tx.token!;
+      if (this.singleTransaction.tx.type === "WithdrawNFT") {
+        return this.singleTransaction.tx.token as TokenSymbol;
+      }
+      if (typeof this.singleTransaction.tx.feeToken === "number") {
+        return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol as TokenSymbol;
+      }
+      if (this.singleTransaction.tx.priority_op) {
+        return this.singleTransaction.tx.priority_op.token as TokenSymbol;
+      }
+      return this.singleTransaction.tx.token as TokenSymbol;
+    },
+    isMintNFT(): boolean {
+      return this.singleTransaction.tx?.type === "MintNFT";
+    },
+    isNFT(): boolean {
+      if (this.isMintNFT) {
+        return true;
+      }
+      return utils.isNFT(this.tokenSymbol as TokenSymbol);
     },
   },
   mounted() {
@@ -192,18 +234,22 @@ export default Vue.extend({
     clearInterval(getTimeAgoInterval);
   },
   methods: {
-    isSameAddress(address: string): boolean {
+    isSameAddress(address: Address): boolean {
       return String(address).toLowerCase() === this.walletAddressFull.toLowerCase();
     },
     getTimeAgo(time: string): string {
       return moment(time).tz("UTC").fromNow();
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
-      if (!this.isFeeTransaction) {
-        return utils.handleFormatToken(this.tokenSymbol, type === "Deposit" && priority_op ? priority_op.amount : amount) || "";
+      let finalAmount = "0";
+      if (this.isMintNFT || this.isFeeTransaction) {
+        finalAmount = fee;
+      } else if (type === "Deposit" && priority_op) {
+        finalAmount = priority_op.amount;
       } else {
-        return utils.handleFormatToken(this.tokenSymbol, fee) || "";
+        finalAmount = amount;
       }
+      return zkUtils.handleFormatToken(this.tokenSymbol as TokenSymbol, finalAmount) || "";
     },
     getAddressName(address: string): string {
       address = address ? String(address).toLowerCase() : "";
@@ -215,7 +261,7 @@ export default Vue.extend({
     },
     async getWithdrawalTx() {
       const singleTx = this.singleTransaction;
-      if (singleTx && singleTx.tx.type === "Withdraw") {
+      if (singleTx && (singleTx.tx.type === "Withdraw" || singleTx.tx.type === "WithdrawNFT")) {
         const txFromStore = this.$accessor.transaction.getWithdrawalTx(singleTx.hash);
         if (txFromStore) {
           this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${txFromStore}`;
@@ -228,6 +274,9 @@ export default Vue.extend({
           }
         }
       }
+    },
+    copy(value: string) {
+      zkUtils.copy(value);
     },
   },
 });

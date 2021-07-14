@@ -50,10 +50,10 @@
     <!-- Main -->
     <i-row class="_margin-top-md-1">
       <i-column v-if="!chosenContact || (!chosenContact.name && !isOwnAddress)" :md="canSaveContact ? 7 : 12" xs="12">
-        <i-button block link variant="secondary" @click="contactsListModal = true">Select from contacts</i-button>
+        <i-button data-cy="address_block_select_from_contacts_button" block link variant="secondary" @click="contactsListModal = true">Select from contacts</i-button>
       </i-column>
       <i-column v-else xs="12" :md="canSaveContact ? 7 : 12">
-        <i-button block link variant="secondary" @click="contactsListModal = true">
+        <i-button data-cy="address_block_select_from_contacts_button" block link variant="secondary" @click="contactsListModal = true">
           {{ isOwnAddress ? "Own account" : chosenContact.name }}&nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
         </i-button>
       </i-column>
@@ -95,7 +95,7 @@ export default Vue.extend({
       saveContactModalError: "",
 
       /* Main */
-      chosenContact: <ZkInContact | false>false,
+      chosenContact: <ZkInContact | undefined>undefined,
     };
   },
   computed: {
@@ -163,7 +163,7 @@ export default Vue.extend({
   methods: {
     chooseContact(contact?: ZkInContact): void {
       if (!contact?.address) {
-        this.chosenContact = false;
+        this.chosenContact = undefined;
         return;
       }
       if (!contact?.name) {

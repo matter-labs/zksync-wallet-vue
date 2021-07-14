@@ -6,12 +6,14 @@ import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } 
 
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
+// @ts-ignore
+
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
 const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
 const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
-const pageImg = "/Cover.jpg";
+const pageImg = "/screenshot.jpg";
 
 const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED} v.${VERSION}:${GIT_REVISION_SHORT}`;
 const pageDescription =
@@ -169,13 +171,13 @@ const config: NuxtConfig = {
             async: true,
             stylelint: {
               config: [".stylelintrc"],
-              files: "src/**.scss",
+              files: "src/**/*.scss",
             },
             eslint: {
-              config: [".eslintrc.js", "tsconfig-eslint.json"],
-              files: "**/*.{ts,js,vue}",
+              config: ["tsconfig-eslint.json", ".eslintrc.js"],
+              files: "@/**/*.{ts,vue,js}",
             },
-            files: "**/*.{ts,vue}",
+            files: "@/**/*.{ts,vue,js}",
           },
         },
       },
@@ -208,7 +210,7 @@ const config: NuxtConfig = {
     },
   },
   styleResources: {
-    scss: ["@/assets/style/vars/*.scss", "@/assets/style/_variables.scss"],
+    scss: ["@/assets/style/vars/*.scss"],
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
@@ -258,7 +260,6 @@ const config: NuxtConfig = {
     display: "swap",
     families: {
       "Fira+Sans": [400, 600],
-      "Fira+Sans+Extra+Condensed": [400, 600],
       "Fira+Code": [400],
     },
   },

@@ -1,21 +1,17 @@
-body {
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+.desktopOnly {
+  @media screen and (max-width: $mobile+1) {
+    display: none !important;
+  }
 }
 
-
-#__nuxt,
-#__layout {
-  width: 100%;
-  height: max-content;
-  min-height: 100vh;
-
-  /* Avoid Chrome to see Safari hack */
-  /* autoprefixer: off */
-  @supports (-webkit-touch-callout: none) {
-    //noinspection CssInvalidPropertyValue
-    min-height: -webkit-fill-available;
+.mobileOnly {
+  @media screen and (min-width: $mobile) {
+    display: none !important;
   }
+}
+
+.errorText {
+  color: $red;
 }
 
 main.layout.defaultLayout {
@@ -34,6 +30,7 @@ main.layout.defaultLayout {
     padding: 60px 0 60px;
     justify-content: stretch;
     height: 100vh;
+
     /* autoprefixer: off */
     @supports (-webkit-touch-callout: none) {
       //noinspection CssInvalidPropertyValue
@@ -57,13 +54,14 @@ main.layout.defaultLayout {
     }
 
     .tileBlock {
-      margin: 0 auto !important;
+      margin: 0 auto;
     }
 
     .balancesList {
       margin: 0 !important;
     }
   }
+
   .bn-onboard-custom.bn-onboard-modal-content {
     align-self: center;
   }
@@ -73,41 +71,9 @@ main.layout.defaultLayout {
   display: flex;
 }
 
-#nuxt-loading {
-  background-color: $darkViolet !important;
-}
-
-head {
-  display: none;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  margin: 0;
-  -webkit-appearance: none;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
 .secondaryText {
   color: $gray;
   font-size: 16px;
-}
-
-.mobileOnly {
-
-  @media screen and (min-width: $mobile) {
-    display: none !important;
-  }
-}
-
-.desktopOnly {
-
-  @media screen and (max-width: $mobile+1) {
-    display: none !important;
-  }
 }
 
 .linkText {
@@ -300,12 +266,10 @@ button.-lg.-circle {
       font-size: 1.5rem;
       font-family: $firaSans;
 
-
       & > .close {
         width: 2.2rem !important;
         height: 2.2rem !important;
         line-height: 2rem !important;
-
       }
 
       @media (max-width: $mobile) {
@@ -550,12 +514,6 @@ button.-lg.-circle {
   }
 }
 
-.recaptchaContainer {
-  & > div {
-    margin: 0 auto;
-  }
-}
-
 .tokenSymbol,
 .walletAddress {
   font-weight: 400;
@@ -575,11 +533,12 @@ button.-lg.-circle {
 ._margin-top-05 {
   margin-top: 0.5em;
 }
+
 ._margin-left-05 {
   margin-left: 0.4em;
 }
 
-.grid-cols-2 {
+.grid-cols-2-layout {
   display: grid;
   height: max-content;
   grid-template-columns: repeat(2, 1fr);

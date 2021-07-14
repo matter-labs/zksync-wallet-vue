@@ -4,14 +4,18 @@
       <i-row>
         <i-column :xs="6" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
           <nuxt-link class="logoLinkContainer" to="/account">
-            <logo :is-zk-sync-logo="false" />
+            <block-logo :is-zk-sync-logo="false" />
           </nuxt-link>
         </i-column>
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
           <div class="pagesContainer linksContainer _margin-x-auto">
             <nuxt-link class="headerLink" to="/account">
               <v-icon class="mobileOnly" name="ri-wallet-line" />
-              <span>My wallet</span>
+              <span>Home</span>
+            </nuxt-link>
+            <nuxt-link class="headerLink" to="/account/nft">
+              <v-icon class="mobileOnly" name="ri-gallery-line" />
+              <span>NFTs</span>
             </nuxt-link>
             <nuxt-link class="headerLink" to="/contacts">
               <v-icon class="mobileOnly" name="ri-contacts-line" />
@@ -19,7 +23,7 @@
             </nuxt-link>
             <nuxt-link class="headerLink" to="/transactions">
               <v-icon class="mobileOnly" name="ri-history-line" />
-              <span>Transactions</span>
+              <span>History</span>
             </nuxt-link>
             <div class="mobileOnly headerLink _cursor-pointer" @click="footerModal = !footerModal">
               <v-icon class="mobileOnly" name="ri-more-2-fill" />
@@ -53,7 +57,6 @@
 </template>
 
 <script lang="ts">
-import logo from "@/blocks/Logo.vue";
 import accountModal from "@/blocks/modals/AccountModal.vue";
 import footerModal from "@/blocks/modals/FooterModal.vue";
 import Vue from "vue";
@@ -61,7 +64,6 @@ import Vue from "vue";
 export default Vue.extend({
   name: "Header",
   components: {
-    logo,
     accountModal,
     footerModal,
   },

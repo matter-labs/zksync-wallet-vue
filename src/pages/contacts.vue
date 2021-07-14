@@ -42,7 +42,7 @@
       </i-input>
 
       <div class="contactsListContainer genericListContainer">
-        <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
+        <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound _margin-bottom-0">
           <div>The contact list is empty</div>
 
           <i-button
@@ -225,11 +225,11 @@ export default Vue.extend({
         this.addContactModal = false;
         this.modalError = "";
         try {
-          const addressToSearch = this.addContactType === "add" ? this.inputtedWallet : this.editingWallet?.address || "";
-          for (let a = 0; a < this.contactsList.length; a++) {
-            if (this.contactsList[a].address.toLowerCase() === addressToSearch.toLowerCase()) {
+          for (let a = this.contactsList.length - 1; a >= 0; a--) {
+            const lowercaseContact = this.contactsList[a].address.toLowerCase();
+            if ((this.addContactType === "edit" && lowercaseContact === this.editingWallet?.address.toLowerCase()) || lowercaseContact === this.inputtedWallet.toLowerCase()) {
+              this.$accessor.contacts.deleteLocal(this.contactsList[a]);
               this.contactsList.splice(a, 1);
-              break;
             }
           }
           this.contactsList.unshift({ name: this.inputtedName.trim(), address: this.inputtedWallet, deleted: false });
@@ -239,7 +239,7 @@ export default Vue.extend({
           };
           this.$accessor.contacts.saveContact(contact);
         } catch (error) {
-          this.$sentry.captureException(error);
+          this.$sentry?.captureException(error);
 
           this.$toast.global.zkException({
             message: error.message ?? "Error while saving your contact book.",
@@ -288,15 +288,7 @@ export default Vue.extend({
       this.$router.push({ ...this.$route, query: { w: contact.address } });
     },
     copyAddress(address: Address): void {
-      const elem = document.createElement("textarea");
-      elem.style.position = "absolute";
-      elem.style.left = -99999999 + "px";
-      elem.style.top = -99999999 + "px";
-      elem.value = address;
-      document.body.appendChild(elem);
-      elem.select();
-      document.execCommand("copy");
-      document.body.removeChild(elem);
+      utils.copy(address);
     },
   },
 });

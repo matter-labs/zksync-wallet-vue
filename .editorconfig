@@ -228,7 +228,6 @@ ij_typescript_ternary_operation_signs_on_next_line = false
 ij_typescript_ternary_operation_wrap = on_every_item
 ij_typescript_union_types_wrap = on_every_item
 ij_typescript_use_chained_calls_group_indents = false
-ij_typescript_use_double_quotes = true
 ij_typescript_use_explicit_js_extension = global
 ij_typescript_use_path_mapping = always
 ij_typescript_use_public_modifier = false
@@ -237,7 +236,6 @@ ij_typescript_var_declaration_wrap = normal
 ij_typescript_while_brace_force = never
 ij_typescript_while_on_new_line = false
 ij_typescript_wrap_comments = false
-ij_typescript_use_double_quotes = true
 
 [{*.bash,*.sh,*.zsh}]
 

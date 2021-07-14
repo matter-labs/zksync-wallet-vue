@@ -43,7 +43,6 @@ footer.layout-footer {
     }
 
     & > div {
-
       @media (max-width: $mobile) {
         flex-direction: column-reverse !important;
       }
@@ -72,12 +71,12 @@ footer.layout-footer {
   }
 }
 
-.floating-on-mobile {
-  //transform: translateY(-5px);
+button.floating-on-mobile {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+
   @media (max-width: $mobile) {
     position: fixed;
-    width: 2.5rem !important;
-    height: 2.5rem !important;
     padding: 0;
     border-radius: 100%;
     box-shadow: $tileShadow;
@@ -88,7 +87,8 @@ footer.layout-footer {
 
     @media (max-width: $mobile) {
       bottom: 2.5rem;
-      right: 10px;
+      right: 1.2rem;
+      filter: opacity(0.95);
     }
   }
 }
@@ -106,12 +106,12 @@ footer.layout-footer {
   letter-spacing: 1px;
   text-transform: uppercase;
   background-color: transparent !important;
-  
+
   a {
     font-weight: 400;
     text-transform: lowercase;
   }
-  
+
   a.revision {
     display: inline-flex;
     line-height: 1.2rem !important;
@@ -149,8 +149,8 @@ footer.layout-footer {
     sup.beta {
       margin-left: 0.3rem;
     }
-    a.uptime-link
-    {
+
+    a.uptime-link {
       line-height: 1.2rem !important;
     }
   }
@@ -163,11 +163,10 @@ footer.layout-footer {
       .header {
         padding: 0.33rem;
         font-size: $fontSizeXs;
-
       }
 
       .body {
-        padding: 0.20rem 0.33rem;
+        padding: 0.2rem 0.33rem;
         text-transform: none;
         font-size: $fontSizeXs;
         display: flex;
@@ -178,7 +177,8 @@ footer.layout-footer {
           gap: 4px;
           line-height: 20px;
 
-          em, i {
+          em,
+          i {
             font-size: 14px;
           }
 
@@ -218,6 +218,7 @@ footer.layout-footer {
       color: #343a40;
     }
   }
+
   .badge.system-info {
     color: #343a40;
   }
@@ -231,6 +232,7 @@ footer.layout-footer {
       color: $darkerGray;
     }
   }
+
   .badge.system-info {
     color: $darkerGray;
     background: $colorLightGray;
@@ -242,6 +244,25 @@ footer.layout-footer {
       &:hover {
         background-color: $mediumViolet !important;
         color: $lightViolet !important;
+      }
+    }
+  }
+}
+
+@media (max-width: $mobile) {
+  .badge.system-info .popover-wrapper.system-env-popover .popover {
+    display: block !important;
+    position: fixed;
+    top: 1rem;
+    width: 80vw;
+    left: 10vw;
+  }
+
+  .modal.-light > .footer {
+    .badge.system-info {
+      a.revision {
+        font-size: 12px;
+        background: none !important;
       }
     }
   }

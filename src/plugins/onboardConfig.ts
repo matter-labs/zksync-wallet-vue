@@ -10,7 +10,7 @@ import {
   WalletModule,
   WalletSelectModuleOptions,
 } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
-import { Store } from "vuex";
+import { Store } from "vuex/types/index";
 import Web3 from "web3";
 
 const initializedWallets: WalletSelectModuleOptions = {
@@ -57,6 +57,7 @@ const initializedWallets: WalletSelectModuleOptions = {
     { walletName: "hyperpay" },
     { walletName: "wallet.io", rpcUrl: ONBOARD_RPC_URL },
     { walletName: "atoken" },
+    { walletName: 'tokenpocket', rpcUrl: ONBOARD_RPC_URL }
   ],
 };
 export default (ctx: Store<WalletModuleState>): Initialization => {

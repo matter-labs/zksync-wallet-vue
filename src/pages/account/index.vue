@@ -8,6 +8,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Address } from "zksync/build/types";
 export default Vue.extend({
   data() {
     return {
@@ -15,12 +16,12 @@ export default Vue.extend({
     };
   },
   computed: {
-    walletAddress() {
+    walletAddress(): Address | undefined {
       return this.$accessor.account.address;
     },
   },
   methods: {
-    openAccountModal() {
+    openAccountModal(): void {
       this.$accessor.setAccountModalState(true);
     },
   },

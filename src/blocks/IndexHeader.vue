@@ -64,11 +64,48 @@
 </template>
 
 <script lang="ts">
+import { ETHER_NETWORK_NAME } from "@/plugins/build";
 import Vue from "vue";
 
 interface DropdownOption {
   name: string;
   link: string;
+}
+
+const dropdownLinks = {
+  zkLink: {
+    mainnet: "https://link.zksync.io/",
+    rinkeby: "https://link.zksync.io/",
+    ropsten: "https://link.zksync.io/",
+  },
+  zkScan: {
+    mainnet: "https://zkscan.io/",
+    rinkeby: "https://rinkeby.zkscan.io",
+    ropsten: "https://ropsten.zkscan.io",
+  },
+  withdrawal: {
+    mainnet: "https://withdraw.zksync.io",
+    rinkeby: "https://withdraw.zksync.io",
+    ropsten: "https://withdraw.zksync.io",
+  },
+  zkCheckout: {
+    mainnet: "https://checkout.zksync.io",
+    rinkeby: "https://checkout-rinkeby.zksync.io",
+    ropsten: "https://checkout-ropsten.zksync.io",
+  },
+  zkMint: {
+    mainnet: "https://mint.zksync.dev",
+    rinkeby: "https://mint.zksync.dev",
+    ropsten: "https://mint-ropsten.zksync.dev",
+  },
+};
+
+function getLinkItem(type: string): string {
+  if (dropdownLinks[type][ETHER_NETWORK_NAME]) {
+    return dropdownLinks[type][ETHER_NETWORK_NAME];
+  } else {
+    return dropdownLinks[type].mainnet;
+  }
 }
 
 export default Vue.extend({
@@ -80,23 +117,23 @@ export default Vue.extend({
       dropdownOptions: <DropdownOption[]>[
         {
           name: "zkLink",
-          link: "https://link.zksync.io/",
+          link: getLinkItem("zkLink"),
         },
         {
           name: "zkScan",
-          link: "https://zkscan.io/",
+          link: getLinkItem("zkScan"),
         },
         {
           name: "Alternative Withdrawal",
-          link: "https://withdraw.zksync.io/",
+          link: getLinkItem("withdrawal"),
         },
         {
           name: "zkCheckout",
-          link: "https://checkout.zksync.io/",
+          link: getLinkItem("zkCheckout"),
         },
         {
           name: "zkMint",
-          link: "https://mint.zksync.dev/",
+          link: getLinkItem("zkMint"),
         },
       ],
     };

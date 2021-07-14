@@ -95,6 +95,46 @@
           }
         }
 
+        .nft {
+          .contentHash {
+            display: block;
+            font-size: 12px;
+            max-width: 100px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          }
+          .copyContentHash {
+            display: flex;
+            align-items: center;
+            color: $gray;
+            cursor: pointer;
+            transition: color $transition1;
+            &:active {
+              transition-duration: 0.0001s;
+              color: $green !important;
+            }
+            
+            .iconContainer {
+              display: flex;
+              align-items: center;
+              
+              svg {
+                position: relative;
+                top: -0.5px;
+                height: 15px;
+                width: auto;
+                overflow: visible;
+                margin-right: 4px;
+              }
+              span {
+                font-size: 12px;
+              }
+            }
+          }
+        }
+
+
         .tokenSymbol {
           font-size: $tempFontSizeMedium;
           line-height: 20px;
@@ -332,6 +372,10 @@ body.inkline {
 
       .transactionItem {
         border-color: $input-border-color-light;
+
+        .copyContentHash:hover {
+          color: $black;
+        }
       }
     }
   }
@@ -344,6 +388,10 @@ body.inkline {
 
       .transactionItem {
         border-color: $input-border-color-dark;
+
+        .copyContentHash:hover {
+          color: $white;
+        }
       }
     }
   }

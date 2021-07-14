@@ -1,11 +1,14 @@
 {
-  "name": "@matterlabs/zksync-dapp-checkout",
-  "title": "zkCheckout — simple permissionless DeFi payment gateway",
+  "name": "@matterlabs/zksync-zkwallet-vue",
+  "title": "zkSync.io Wallet | Try solution for the Ethereum scalability\n with zero security compromises",
   "main": "nuxt.config.ts",
-  "types": "src/types/index.d.ts",
+  "types": [
+    "src/types/index.d.ts",
+    "src/types/lib.d.ts"
+  ],
   "files": [
-    "src/**/*",
-    "tests/*"
+    "src/types",
+    "src"
   ],
   "keywords": [
     "zksync",
@@ -21,7 +24,6 @@
     "dapp",
     "ethers"
   ],
-  "private": true,
   "license": "MIT",
   "licenses": [
     {
@@ -33,7 +35,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "2.4.1",
+  "version": "2.4.2",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
@@ -51,10 +53,11 @@
     ]
   },
   "bugs": {
-    "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
+    "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
   "dependencies": {
     "@ethersproject/logger": "^5.0.9",
+    "@ethersproject/units": "5.3.0",
     "@matterlabs/zk-wallet-onboarding": "1.18.6",
     "@nuxt/http": "latest",
     "@nuxt/typescript-runtime": "latest",
@@ -63,7 +66,7 @@
     "@nuxtjs/toast": "latest",
     "@walletconnect/web3-provider": "^1.3.6",
     "ethereum-blockies-base64": "latest",
-    "ethers": "^5.0.31",
+    "ethers": "5.1.3",
     "lottie-web": "^5.7.8",
     "moment-timezone": "^0.5.33",
     "nuxt": "latest",
@@ -74,10 +77,10 @@
     "vue": "2.*",
     "vue-class-component": "latest",
     "vue-qrcode": "latest",
+    "vue-router": "^3.5.1",
     "vue-scrollto": "^2.20.0",
-    "vuex": "^3.6.2",
-    "web3": "^1.3.4",
-    "zksync": "latest"
+    "web3": "^1.3.5",
+    "zksync": "beta"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
@@ -108,6 +111,7 @@
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "jest": "^26.6.3",
     "node-sass": "4.14.0",
+    "postcss": "latest",
     "prettier": "^2.2.1",
     "qrcode": "^1.0.0",
     "sass-loader": "^10.1.1",
@@ -116,6 +120,7 @@
     "stylelint-scss": "latest",
     "typescript": "^4.2.4",
     "vue-property-decorator": "latest",
+    "vuex": "^3.6.2",
     "web3-core": "^1.3.5",
     "webpack": "^4.46.0"
   },

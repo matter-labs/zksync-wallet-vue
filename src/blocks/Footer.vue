@@ -2,7 +2,7 @@
   <i-layout-footer class="mainFooter">
     <div class="_display-flex _flex-direction-row container _align-items-center _justify-content-space-between">
       <i-row class="_margin-md-y-1 _hidden-lg-and-up">
-        <i-badge v-if="version" variant="secondary" class="system-info versionBadge outline-white _margin-left-1">
+        <i-badge v-if="version" variant="secondary" class="system-info versionBadge _margin-left-1">
           v.{{ version }} |
           <a href="https://uptime.com/s/zksync" class="uptime-link" target="_blank">uptime</a>
         </i-badge>
@@ -30,8 +30,9 @@
           <span class="_padding-x-1 dividerLine">|</span>
           <a href="https://uptime.com/s/zksync" class="uptime-link" target="_blank">uptime</a>
         </div>
-        <i-button block size="lg" circle class="floating-on-mobile" @click="toggleDarkMode">
-          <i-icon icon="light" />
+        <i-button size="md" circle class="floating-on-mobile" outline variant="dark" @click="toggleDarkMode">
+          <v-icon v-if="isDarkTheme" name="ri-sun-fill" scale="1" />
+          <v-icon v-else name="ri-moon-fill" scale="1" />
         </i-button>
       </i-row>
     </div>
@@ -51,6 +52,9 @@ export default Vue.extend({
     },
     version(): string {
       return VERSION;
+    },
+    isDarkTheme(): boolean {
+      return utils.defineTheme(this.$inkline) === "dark";
     },
   },
   methods: {

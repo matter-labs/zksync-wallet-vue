@@ -1,28 +1,44 @@
 import { walletData } from "@/plugins/walletData";
-import { BalancesList, GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/types/lib";
+import { ZkInBalancesList, GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/types/lib";
 import { BigNumber } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
 import { Address, ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/build/types";
 import { ETHOperation } from "zksync/build/wallet";
 
-export const state = () => ({
-  watchedTransactions: <
-    {
-      [txHash: string]: {
-        [prop: string]: string;
-        status: string;
-      };
-    }
-  >{},
-  deposits: <ZkInDeposits>{},
-  forceUpdateTick: 0 /* Used to force update computed active deposits list */,
-  withdrawalTxToEthTx: <Map<string, string>>new Map(),
-});
+interface ZKITransactionsState {
+  watchedTransactions: { [p: string]: { [p: string]: string; status: string } };
+  deposits: ZkInDeposits;
+  forceUpdateTick: number;
+  withdrawalTxToEthTx: Map<string, string>;
+}
+
+export const state = () =>
+  ({
+    watchedTransactions: <
+      {
+        [txHash: string]: {
+          [prop: string]: string;
+          status: string;
+        };
+      }
+    >{},
+    deposits: <ZkInDeposits>{},
+    forceUpdateTick: 0 /* Used to force update computed active deposits list */,
+    withdrawalTxToEthTx: <Map<string, string>>new Map(),
+  } as ZKITransactionsState);
 
 export type TransactionModuleState = ReturnType<typeof state>;
 
+interface ZKITransactionParams {
+  tokenSymbol: TokenSymbol;
+  hash: string;
+  amount?: BigNumber | GweiBalance;
+  status: string;
+  confirmations?: number;
+}
+
 export const mutations = mutationTree(state, {
-  updateTransactionStatus(state, { hash, status }): void {
+  updateTransactionStatus(state: TransactionModuleState, { hash, status }: { hash: string; status: string }): void {
     if (status === "Verified") {
       delete state.watchedTransactions[hash];
       return;
@@ -35,7 +51,7 @@ export const mutations = mutationTree(state, {
       state.watchedTransactions[hash].status = status;
     }
   },
-  updateDepositStatus: (state, { tokenSymbol, hash, amount, status, confirmations }) => {
+  updateDepositStatus: (state: TransactionModuleState, { tokenSymbol, hash, amount, status, confirmations }: ZKITransactionParams): void => {
     if (!Array.isArray(state.deposits[tokenSymbol])) {
       state.deposits[tokenSymbol] = [];
     }
@@ -60,20 +76,20 @@ export const mutations = mutationTree(state, {
     }
     state.forceUpdateTick++;
   },
-  setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }) {
+  setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }: { tx: string; ethTx: string }): void {
     state.withdrawalTxToEthTx.set(tx, ethTx);
   },
 });
 
 export const getters = getterTree(state, {
-  getForceUpdateTick(state) {
+  getForceUpdateTick: (state: TransactionModuleState): number => {
     return state.forceUpdateTick;
   },
-  depositList(state) {
+  depositList: (state: TransactionModuleState): ZkInDeposits => {
     return state.deposits;
   },
-  getWithdrawalTx(state) {
-    return (tx: string): string | undefined => {
+  getWithdrawalTx(state: TransactionModuleState) {
+    return (tx: string) => {
       return state.withdrawalTxToEthTx.get(tx);
     };
   },
@@ -82,7 +98,7 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    async watchTransaction({ commit, dispatch, state }, { transactionHash }) {
+    async watchTransaction({ commit, dispatch, state }, { transactionHash }): Promise<void> {
       try {
         const savedAddress = this.app.$accessor.account.address;
         if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
@@ -99,7 +115,7 @@ export const actions = actionTree(
       }
       commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
     },
-    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }) {
+    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
       try {
         const savedAddress = this.app.$accessor.account.address;
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
@@ -153,14 +169,14 @@ export const actions = actionTree(
     /**
      * Getting the list of pending transactions to update balances status
      * @param state
-     * @return {BalancesList}
+     * @return {ZkInBalancesList}
      */
-    getActiveDeposits({ getters }): BalancesList {
+    getActiveDeposits({ getters }): ZkInBalancesList {
       // @ts-ignore
       getters.getForceUpdateTick; // Force to update the list
       const deposits: ZkInDeposits = getters.depositList;
       const activeDeposits: ZkInDeposits = {};
-      const finalDeposits: BalancesList = {};
+      const finalDeposits: ZkInBalancesList = {};
       let ticker: TokenSymbol;
       for (ticker in deposits) {
         activeDeposits[ticker] = deposits[ticker].filter((tx: ZKInDepositTx) => tx.status === "Initiated");

@@ -40,17 +40,18 @@ export const state = () => ({
 export type TokensModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setAllTokens(state, tokenList: Tokens): void {
+  setAllTokens(state: TokensModuleState, tokenList: Tokens): void {
     state.allTokens = tokenList;
   },
-  setTokenPrice(state, { symbol, obj }): void {
+  setTokenPrice(state: TokensModuleState, { symbol, obj }: { symbol: TokenSymbol; obj: { lastUpdated?: number; price: number } }): void {
+    // @ts-ignore
     state.tokenPrices[symbol] = obj;
     state.tokenPricesTick++;
   },
-  storeAcceptableTokens(state, tokenList: TokenInfo[]): void {
+  storeAcceptableTokens(state: TokensModuleState, tokenList: TokenInfo[]): void {
     state.acceptableTokens = tokenList;
   },
-  addRestrictedToken(state, token: TokenSymbol): void {
+  addRestrictedToken(state: TokensModuleState, token: TokenSymbol): void {
     if (!state.restrictedTokens.includes(token) && token.toLowerCase() !== "eth") {
       state.restrictedTokens.push(token);
     }
@@ -58,22 +59,22 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  getAllTokens(state): Tokens {
+  getAllTokens(state: TokensModuleState): Tokens {
     return state.allTokens;
   },
-  getRestrictedTokens(state): TokenSymbol[] {
+  getRestrictedTokens(state: TokensModuleState): TokenSymbol[] {
     return state.restrictedTokens;
   },
-  getAvailableTokens(state): Tokens {
+  getAvailableTokens(state: TokensModuleState): Tokens {
     return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
   },
-  getTokenPrices(state): ZkInTokenPrices {
+  getTokenPrices(state: TokensModuleState): ZkInTokenPrices {
     return state.tokenPrices;
   },
-  getTokenPriceTick(state): number {
+  getTokenPriceTick(state: TokensModuleState): number {
     return state.tokenPricesTick;
   },
-  getTokenByID(state) {
+  getTokenByID(state: TokensModuleState) {
     return (id: number): TokenInfo | undefined => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
@@ -144,6 +145,7 @@ export const actions = actionTree(
       }
       const syncProvider = walletData.get().syncProvider;
       const tokenPrice = await syncProvider?.getTokenPrice(symbol);
+      // @ts-ignore
       commit("setTokenPrice", {
         symbol,
         obj: {

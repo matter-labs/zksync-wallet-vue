@@ -16,17 +16,6 @@ jobs:
       - name: Install dependencies
         run: bash cli-dev.sh ci && yarn install --immutable
 
-      - name: Build rinkeby
-        run: yarn ci:build:rinkeby
-
-      - name: Deploy to rinkeby
-        uses: matter-labs/action-hosting-deploy@v0
-        with:
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: prod-rinkeby
-          projectId: zksync-vue
-          channelID: live
-
       - name: Build mainnet
         run: yarn ci:build:prod
 
