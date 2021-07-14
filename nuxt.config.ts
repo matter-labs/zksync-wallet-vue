@@ -22,7 +22,7 @@ const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation,
 crypto payments, zkWallet, cryptowallet`;
 
 const config: NuxtConfig = {
-  components: ["@/components/", { path: "@/blocks/", prefix: "block" }, { path: "@/modules/components", prefix: "zk" }],
+  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
   ssr: false,
   target: "static",

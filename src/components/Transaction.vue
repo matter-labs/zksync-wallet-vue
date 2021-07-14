@@ -310,9 +310,9 @@ export default Vue.extend({
         case "transfer":
           return "Transfer";
         case "nft-withdraw":
-          return "NFT Withdraw";
+          return "Withdraw NFT";
         case "nft-transfer":
-          return "NFT Transfer";
+          return "Transfer NFT";
 
         default:
           return "";

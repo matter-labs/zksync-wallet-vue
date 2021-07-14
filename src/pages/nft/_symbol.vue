@@ -52,7 +52,7 @@
           </div>
         </div>
         <i-button-group size="lg" class="_width-100 _margin-top-1 _display-flex nftButtonGroup">
-          <i-button class="_flex-fill _margin-0" size="lg" block variant="dark" @click="withdraw()"
+          <i-button class="_flex-fill _margin-0" size="lg" block variant="secondary" @click="withdraw()"
             ><v-icon class="planeIcon" name="ri-hand-coin-fill" />&nbsp;&nbsp;Withdraw</i-button
           >
           <i-button class="_flex-fill _margin-0" block size="lg" variant="secondary" @click="transfer()"
