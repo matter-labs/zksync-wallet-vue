@@ -6,6 +6,8 @@ import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } 
 
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, GIT_REVISION_SHORT, VERSION } from "./src/plugins/build";
 
+// @ts-ignore
+
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
@@ -169,13 +171,13 @@ const config: NuxtConfig = {
             async: true,
             stylelint: {
               config: [".stylelintrc"],
-              files: "src/**.scss",
+              files: "src/**/*.scss",
             },
             eslint: {
-              config: [".eslintrc.js", "tsconfig-eslint.json"],
-              files: "**/*.{ts,js,vue}",
+              config: ["tsconfig-eslint.json", ".eslintrc.js"],
+              files: "@/**/*.{ts,vue,js}",
             },
-            files: "**/*.{ts,vue}",
+            files: "@/**/*.{ts,vue,js}",
           },
         },
       },
@@ -258,7 +260,6 @@ const config: NuxtConfig = {
     display: "swap",
     families: {
       "Fira+Sans": [400, 600],
-      "Fira+Sans+Extra+Condensed": [400, 600],
       "Fira+Code": [400],
     },
   },

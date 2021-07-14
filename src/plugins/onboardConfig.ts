@@ -10,7 +10,7 @@ import {
   WalletModule,
   WalletSelectModuleOptions,
 } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
-import { Store } from "vuex";
+import { Store } from "vuex/types/index";
 import Web3 from "web3";
 
 const initializedWallets: WalletSelectModuleOptions = {

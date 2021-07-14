@@ -14,21 +14,21 @@
     <div class="tileHeadline h3">
       <span>Balances in L2</span>
       <span class="icon-container _display-flex" @click="balanceInfoModal = true">
-        <v-icon name="ri-question-mark" class="iconInfo" scale="0.9" />
+        <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" scale="0.9" />
       </span>
     </div>
     <slot />
     <div v-if="!isSearching && !hasDisplayedBalances && loading === false" class="centerBlock">
       <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
-      <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
+      <i-button data-cy="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
     </div>
     <div v-else class="balances">
       <div v-if="!loading">
         <div class="_display-flex _justify-content-space-between">
-          <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
-          <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
+          <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
+          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
         </div>
-        <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
+        <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
           <v-icon slot="prefix" name="ri-search-line" />
         </i-input>
@@ -90,7 +90,7 @@
 </template>
 <script lang="ts">
 import utils from "@/plugins/utils";
-import { ZkInBalance, ZkInDeposits, ZKInDepositTx, ZKDisplayToken } from "@/types/lib";
+import { ZkInBalance, ZkInDeposits, ZKInDepositTx, ZKDisplayToken, ZkInNFT } from "@/types/lib";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 import { TokenSymbol } from "zksync/build/types";

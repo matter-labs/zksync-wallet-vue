@@ -27,24 +27,24 @@ jobs:
           projectId: zksync-vue
           channelID: live
 
+      - name: Build rinkeby
+        run: yarn ci:build:rinkeby
+
+      - name: "[Rinkeby release] Publishing rinkeby for external devs"
+        uses: matter-labs/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+          target: prod-rinkeby
+          projectId: zksync-vue
+          channelID: live
+
       - name: "[Rinkeby-beta release] Configuring rinkeby-beta env"
         run: yarn ci:build:rinkeby-beta
 
       - name: "[Rinkeby-beta release] Publishing rinkeby-beta"
         uses: matter-labs/action-hosting-deploy@v0
         with:
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
-          target: beta-rinkeby
-          projectId: zksync-vue
-          channelID: live
-
-      - name: "[Rinkeby release] Configuring rinkeby env"
-        run: yarn ci:build:rinkeby
-
-      - name: "[Rinkeby release] Publishing rinkeby"
-        uses: matter-labs/action-hosting-deploy@v0
-        with:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: prod-rinkeby
+          target: beta-rinkeby
           projectId: zksync-vue
           channelID: live

@@ -1,5 +1,5 @@
 import { Network } from "zksync/build/types";
-import { version as zksyncVersion } from "zksync/package.json";
+import { version as zkSyncVersion } from "zksync/package.json";
 import { version } from "../../package.json";
 import { networkEthId } from "~/types/lib";
 
@@ -12,13 +12,24 @@ export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 export const GIT_REVISION_SHORT: string = GIT_REVISION ? GIT_REVISION.slice(-7) : "";
 export const VERSION: string = version;
-export const ZK_IS_BETA: boolean = zksyncVersion.search("beta") !== -1;
 export const ETHER_NETWORK_NAME: Network = process.env.APP_CURRENT_NETWORK as Network;
+export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
+
+export const ZK_LIB_VERSION: string = zkSyncVersion as string;
+/**
+ * Beta marker is applied in case of:
+ *   1) Custom configuration “slug” imported from the ```.evn: ZK_NETWORK``` share the config w/t ```ZK_SPECIAL_API```.
+ *      Together this params should be considered **CUSTOM** API-endpoint && same **CUSTOM** config-file.
+ *      Obviously, the env is targeted testnets: (rinkeby | ropsten) *BUT...*
+ *
+ *   2) Simpler way to name beta-version is to search for the beta in .env-file, URL or API address.
+ *
+ * @type {boolean}
+ */
+export const ZK_IS_BETA = ZK_LIB_VERSION.search("beta") !== -1;
+
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
 export const CURRENT_APP_NAME = `zkSync Wallet${ZK_IS_BETA ? ":beta" : ""}`;
-export const ZK_LIB_VERSION = zksyncVersion;
-
-export const ETHER_PRODUCTION: boolean = ETHER_NETWORK_NAME === "mainnet";
 
 export const ETHER_PREFIX: string = ETHER_PRODUCTION ? "" : ETHER_NETWORK_NAME;
 

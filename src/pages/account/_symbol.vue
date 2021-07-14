@@ -23,7 +23,8 @@
         <div class="_display-flex _justify-content-space-between balanceWithdraw">
           <div class="infoBlock">
             <div class="balance">
-              <span class="tokenSymbol">{{ symbol }}</span> {{ token.balance }}&nbsp;&nbsp;
+              <span class="tokenSymbol">{{ symbol }}</span>
+              &nbsp;{{ token.balance }}&nbsp;&nbsp;
               <token-price :symbol="token.symbol" :amount="token.rawBalance.toString()" />
             </div>
           </div>
@@ -68,7 +69,7 @@ export default Vue.extend({
       this.loading = true;
       const balances = await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
       let found = false;
-      for (const item of balances) {
+      for (const item of balances.balances) {
         if (item.symbol === this.symbol) {
           this.token = item;
           found = true;

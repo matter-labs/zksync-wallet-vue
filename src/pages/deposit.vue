@@ -58,10 +58,10 @@
           </div>
         </div>
         <div class="goBackContinueBtns _margin-top-1">
-          <i-button size="lg" variant="secondary" circle @click="successBlockGoBack()">
+          <i-button data-cy="deposit_arrow_back_button" size="lg" variant="secondary" circle @click="successBlockGoBack()">
             <v-icon name="ri-arrow-left-line" />
           </i-button>
-          <i-button block size="lg" variant="secondary" @click="successBlockContinue()">Proceed to deposit</i-button>
+          <i-button data-cy="deposit_proceed_to_deposit_button" block size="lg" variant="secondary" @click="successBlockContinue()">Proceed to deposit</i-button>
         </div>
       </template>
     </success-block>
@@ -96,11 +96,20 @@
             <v-icon name="ri-question-mark" />
           </div>
         </div>
-        <div class="grid-cols-2">
-          <i-button block size="md" variant="secondary" @click="unlockToken(true)">
+        <div class="grid-cols-2-layout">
+          <i-button data-cy="deposit_approve_unlimited_button" block size="md" variant="secondary" @click="unlockToken(true)">
             Approve unlimited <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
-          <i-button v-if="inputtedAmount" key="approveAmount" block class="_margin-top-0" size="md" variant="secondary" @click="unlockToken(false)">
+          <i-button
+            v-if="inputtedAmount"
+            key="approveAmount"
+            data-cy="deposit_approve_button"
+            block
+            class="_margin-top-0"
+            size="md"
+            variant="secondary"
+            @click="unlockToken(false)"
+          >
             Approve {{ amountBigNumber | formatToken(chosenToken.symbol) }} <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
           <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>
@@ -128,6 +137,7 @@
         :disabled="buttonDisabled"
         block
         class="_margin-top-1 _display-flex flex-row"
+        data-cy="deposit_deposit_button"
         size="lg"
         variant="secondary"
         :loading="thresholdLoading"
@@ -203,7 +213,7 @@ export default Vue.extend({
       inputtedAmount: <DecimalBalance>"",
       inputtedAllowance: <DecimalBalance>"",
       allowanceError: false,
-      tokenAllowance: <false | BigNumber>false,
+      tokenAllowance: <BigNumber | undefined>undefined,
       chosenToken: <ZkInBalance | false>false,
       thresholdLoading: false,
       unlimitedApproval: false,
@@ -227,8 +237,12 @@ export default Vue.extend({
         return BigNumber.from("0");
       }
     },
-    zeroAllowance(): boolean {
-      return this.tokenAllowance && this.tokenAllowance.eq(BigNumber.from("0"));
+    zeroAllowance(): boolean | undefined {
+      const allowance: BigNumber | undefined = this.tokenAllowance;
+      if (allowance === undefined) {
+        return false;
+      }
+      return allowance!.eq(BigNumber.from("0"));
     },
     enoughAllowance(): boolean {
       if (!this.tokenAllowance || !this.chosenToken) {
@@ -269,17 +283,14 @@ export default Vue.extend({
       }
     },
   },
-  async mounted() {
+  mounted() {
     try {
       this.loading = true;
       if (this.$route.query.token) {
-        const balances = this.$accessor.wallet.getzkBalances;
-        for (const item of balances) {
-          if (item.symbol === this.$route.query.token) {
-            await this.chooseToken(item);
-            break;
-          }
-        }
+        const chosenToken = this.$accessor.wallet.getzkBalances.find((singleBalance) => {
+          return singleBalance.symbol === this.$route.query.token;
+        });
+        this.chooseToken(chosenToken as ZkInBalance);
       }
       this.loading = false;
     } catch (error) {
@@ -290,7 +301,9 @@ export default Vue.extend({
   methods: {
     async chooseToken(token: ZkInBalance) {
       try {
-        this.$accessor.tokens.getTokenPrice(token.symbol);
+        this.$accessor.tokens.getTokenPrice(token.symbol).then((result) => {
+          console.log(`loaded price for: ${result}`);
+        });
       } catch (error) {
         console.log(`Error getting ${token.symbol} price`, error);
         this.$accessor.tokens.addRestrictedToken(token.symbol);
@@ -333,7 +346,7 @@ export default Vue.extend({
       this.loading = false;
     },
     async deposit(): Promise<void> {
-      this.tip = "Confirm the transaction to deposit";
+      this.tip = "Follow the instructions in your Ethereum wallet";
       this.transactionInfo.type = "deposit";
       const transferTransaction = await deposit((this.chosenToken as ZkInBalance).symbol, this.amountBigNumber.toString(), this.$accessor);
       if (!transferTransaction) {
@@ -346,7 +359,7 @@ export default Vue.extend({
       this.transactionInfo.hash = transferTransaction.ethTx.hash;
       this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + transferTransaction.ethTx.hash;
       this.tip = "Waiting for the transaction to be mined...";
-      const receipt = await transferTransaction.awaitEthereumTxCommit();
+      await transferTransaction.awaitEthereumTxCommit();
       this.transactionInfo.fee = undefined;
       this.transactionInfo.continueBtnFunction = false;
       this.transactionInfo.continueBtnText = "";
@@ -360,7 +373,7 @@ export default Vue.extend({
       this.loading = true;
       try {
         const wallet = walletData.get().syncWallet;
-        this.tip = `Confirm the transaction in order to approve ${this.chosenToken.symbol} token`;
+        this.tip = "Follow the instructions in your Ethereum wallet";
         this.transactionInfo.type = "unlock";
         const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
         const balances = this.$accessor.wallet.getzkBalances;

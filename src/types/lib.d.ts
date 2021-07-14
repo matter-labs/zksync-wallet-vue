@@ -1,12 +1,17 @@
+import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { Route } from "vue-router/types";
-import { Provider } from "zksync/build";
+import { Provider } from "zksync";
 import {
   AccountState,
   Address,
   ChangePubKeyCREATE2,
   ChangePubKeyECDSA,
   ChangePubKeyOnchain,
+  ChangePubkeyTypes,
+  LegacyChangePubKeyFee,
+  NFT,
+  Order,
   PubKeyHash,
   SignedTransaction,
   TokenSymbol,
@@ -29,7 +34,20 @@ export interface ZkInFeesInterface {
 }
 
 export declare type ZKTypeFeeOption = "fast" | "normal";
-export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit";
+
+export declare type ZKTypeOperations =
+  | "Deposit"
+  | "Withdraw"
+  | "Transfer"
+  | "FastWithdraw"
+  | "MintNFT"
+  | "WithdrawNFT"
+  | "FastWithdrawNFT"
+  | "ChangePubKey"
+  | ChangePubkeyTypes
+  | LegacyChangePubKeyFee
+  | "Swap";
+export declare type ZKTypeTransactionType = "withdraw" | "transfer" | "deposit" | "nft-transfer" | "nft-withdraw";
 export declare type ZKTypeDisplayToken = {
   symbol: TokenSymbol;
   rawBalance?: BigNumber;
@@ -51,6 +69,7 @@ export declare type ZKTypeDisplayBalances = {
 
 export declare type GweiBalance = string | BigNumberish;
 export declare type DecimalBalance = string;
+export declare type Hash = string;
 
 export declare interface ZkInTokenPrices {
   [token: string]: {
@@ -78,6 +97,10 @@ export interface ZkInBalance {
   address?: string;
 }
 
+export interface ZkInNFT extends NFT {
+  status: "Pending" | "Verified";
+}
+
 export declare interface ZkInTransactionInfo {
   continueBtnFunction: boolean;
   amount?: {
@@ -99,7 +122,7 @@ export declare interface ZkInTransactionInfo {
   explorerLink: string;
 }
 
-export interface ZkInTx {
+export interface ZkInTx extends ETHOperation {
   tx_id: string; // Unique identifier of a transaction, designated to be used in relative tx history queries.
   hash: string; // Hash of a transaction.
   eth_block?: number; // Number of Ethereum block in which priority operation was added. `null` for transactions.
@@ -111,6 +134,7 @@ export interface ZkInTx {
   created_at: string; // Timestamp of the transaction execution.
   confirmCount: number;
   tx: {
+    orders?: [Order, Order];
     // Transaction / Priority operation contents. Structure depends on the type of operation.
     fast: boolean;
     amount: string;
@@ -130,7 +154,11 @@ export interface ZkInTx {
     to?: string;
     token?: string;
     feeToken?: number;
-    type: "Transfer" | "Withdraw" | "Deposit" | "ChangePubKey";
+    type: ZKTypeOperations;
+    creatorId?: number;
+    creatorAddress?: Address;
+    recipient?: Address;
+    contentHash?: string;
   };
 }
 
@@ -375,4 +403,38 @@ export interface ZKIDepositStatus {
   amount: GweiBalance;
   status: string;
   confirmations: number;
+}
+
+export interface ZKStoreRequestBalancesParams {
+  force?: boolean;
+  offset?: number;
+}
+
+export declare interface feesInterface {
+  [symbol: string]: {
+    [feeSymbol: string]: {
+      [type: string]: {
+        [address: string]: {
+          lastUpdated: number;
+          value: ZkInFeesObj;
+        };
+      };
+    };
+  };
+}
+
+export declare interface iWallet {
+  onboard?: API;
+  isAccountLocked: boolean;
+  zkTokens: { lastUpdated: number; list: ZkInBalance[] };
+  nftTokens: { lastUpdated: number; list: ZkInNFT[] };
+  initialTokens: { lastUpdated: number; list: ZkInBalance[] };
+  transactionsHistory: { lastUpdated: number; list: ZkInTx[] };
+  withdrawalProcessingTime: false | { normal: number; fast: number };
+  fees: ZkInFeesInterface;
+}
+
+export interface zkTokensParam {
+  lastUpdated: number;
+  list: ZkInBalance[];
 }

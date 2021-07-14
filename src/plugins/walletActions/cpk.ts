@@ -26,19 +26,14 @@ export const getCPKTx = (address: Address): CPKLocal | undefined => {
 };
 
 export const addCPKToBatch = async (syncWallet: Wallet, fee: GweiBalance, feeToken: TokenSymbol, batchBuilder: BatchBuilder, store: typeof accessorType) => {
-  let pubKeyTx: CPKLocal | undefined;
-  try {
-    pubKeyTx = getCPKTx(store.account.address!);
-    if (typeof pubKeyTx!.accountId !== "number") {
-      throw new TypeError("Wrong account ID. Try to sign account activation again.");
-    }
-  } catch (error) {
-    removeCPKTx(store.account.address!);
-    store.openModal("SignPubkey");
-    throw error;
-  }
+  const pubKeyTx: CPKLocal | undefined = getCPKTx(store.account.address!);
   if (!pubKeyTx) {
     return store.openModal("SignPubkey");
+  }
+  if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
+    pubKeyTx.ethAuthData = {
+      type: 'Onchain'
+    }
   }
   const changePubKeyTx = await syncWallet.signer!.signSyncChangePubKey({
     ...pubKeyTx,

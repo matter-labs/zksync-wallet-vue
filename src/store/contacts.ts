@@ -11,33 +11,30 @@ export const state = (): ZkIContracts => ({
 export type ContactsModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setContactsList(state, contactsList: ZkInContact[]): void {
+  setContactsList(state: ContactsModuleState, contactsList: ZkInContact[]): void {
     state.contactsList = contactsList;
   },
-  add(state, contact: ZkInContact): void {
+  add(state: ContactsModuleState, contact: ZkInContact): void {
     state.contactsList.unshift(contact);
   },
-  delete(state, contact: ZkInContact): void {
-    const foundIndex = state.contactsList.indexOf(contact);
-    if (foundIndex !== -1) {
-      state.contactsList = state.contactsList.filter((singleContact) => singleContact.address.toLowerCase() !== contact.address.toLowerCase());
-    }
+  deleteLocal(state: ContactsModuleState, contact: ZkInContact): void {
+    state.contactsList = state.contactsList.filter((singleContact) => singleContact.address.toLowerCase() !== contact.address.toLowerCase());
   },
-  setStorageKey(state, storageKey: string): void {
+  setStorageKey(state: ContactsModuleState, storageKey: string): void {
     state.storageKey = storageKey;
   },
 
-  initContactsList(state): void {
+  initContactsList(state: ContactsModuleState): void {
     state.contactsList = [];
   },
 });
 
 export const getters = getterTree(state, {
   get: (state: ContactsModuleState): ZkInContact[] => state.contactsList,
-  getStorageKey(_, __, ___, rootGetters): string {
+  getStorageKey(_: unknown, __: unknown, ___: unknown, rootGetters: { [x: string]: any }): string {
     return `contacts-${rootGetters["account/address"]}`;
   },
-  getByAddress(state) {
+  getByAddress(state: ContactsModuleState) {
     return (address: Address) => {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {
@@ -48,7 +45,7 @@ export const getters = getterTree(state, {
       return false;
     };
   },
-  isInContacts(state) {
+  isInContacts(state: ContactsModuleState) {
     return (address: Address) => {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {
@@ -93,20 +90,23 @@ export const actions = actionTree(
         contactsList = contactsList.filter((contact: ZkInContact) => utils.validateAddress(contact.address) && contact.name.length > 0);
         commit("setContactsList", contactsList);
       } catch (error) {
-        this.$sentry?.captureException(error);
+        this.app.$sentry?.captureException(error);
         commit("initContactsList");
       }
     },
     deleteContact({ commit }, address: Address): void {
+      console.log("delete contact", address);
       const contact = this.app.$accessor.contacts.getByAddress(address);
       if (contact) {
-        commit("delete", contact);
+        commit("deleteLocal", contact);
         this.app.$accessor.contacts.updateLocalStorage();
       }
     },
     saveContact({ state, commit }, contact: ZkInContact): void {
-      if (state.contactsList.includes(contact)) {
-        commit("delete", contact);
+      for (let a = 0; a < state.contactsList.length; a++) {
+        if (state.contactsList[a].address.toLowerCase() === contact.address.toLowerCase()) {
+          commit("deleteLocal", state.contactsList[a]);
+        }
       }
       commit("add", contact);
       this.app.$accessor.contacts.updateLocalStorage();
