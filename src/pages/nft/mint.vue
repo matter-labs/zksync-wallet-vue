@@ -153,7 +153,7 @@ export default Vue.extend({
         !this.inputtedHash ||
         !this.inputtedAddress ||
         !this.fee ||
-        !this.enoughFeeToken ||
+        /* !this.enoughFeeToken || */
         this.feesLoading ||
         this.activateAccountFeeLoading ||
         (!this.activateAccountFee && !this.ownAccountUnlocked) ||
