@@ -1,6 +1,7 @@
 <template>
   <div class="transactionPage depositPage dappPageWrapper">
     <content-hash-modal />
+    <fee-calc-error />
 
     <!-- Choose fee token -->
     <i-modal v-model="chooseFeeTokenModal" size="md">
@@ -92,6 +93,7 @@ import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import ContentHashModal from "@/blocks/modals/ContentHashModal.vue";
+import FeeCalcError from "@/blocks/modals/FeeCalcError.vue";
 import { getCPKTx } from "@/plugins/walletActions/cpk";
 import Context from "@nuxt/types";
 import { Route } from "vue-router/types";
@@ -103,6 +105,7 @@ import { BigNumber } from "ethers";
 export default Vue.extend({
   components: {
     ContentHashModal,
+    FeeCalcError,
   },
   asyncData({ from, app }: Context.Context): { fromRoute: Route } {
     if (from) {
@@ -325,9 +328,7 @@ export default Vue.extend({
           message: error.message,
         });
         console.log("Get fee error", error);
-        if (this.chosenFeeToken) {
-          this.$accessor.tokens.addRestrictedToken((this.chosenFeeToken as ZkInBalance).symbol);
-        }
+        this.$accessor.openModal("FeeCalcError");
         this.chosenFeeToken = false;
         this.fee = false;
       }

@@ -1,5 +1,7 @@
 <template>
   <div class="transactionPage dappPageWrapper">
+    <fee-calc-error />
+
     <!-- Choose token -->
     <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
@@ -193,6 +195,7 @@ import chooseToken from "@/blocks/ChooseToken.vue";
 import addressInput from "@/components/AddressInput.vue";
 import amountInput from "@/components/AmountInput.vue";
 
+import FeeCalcError from "@/blocks/modals/FeeCalcError.vue";
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
@@ -217,6 +220,7 @@ export default Vue.extend({
     chooseContact,
     amountInput,
     chooseToken,
+    FeeCalcError,
   },
   props: {
     type: {
@@ -513,9 +517,7 @@ export default Vue.extend({
           message: error.message,
         });
         console.log("Get fee error", error);
-        if (this.feeToken) {
-          this.$accessor.tokens.addRestrictedToken((this.feeToken as ZkInBalance).symbol);
-        }
+        this.$accessor.openModal("FeeCalcError");
         this.chosenFeeToken = false;
         this.feesObj = undefined;
       }
