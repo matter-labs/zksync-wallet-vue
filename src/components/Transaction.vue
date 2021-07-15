@@ -177,7 +177,7 @@
             </span>
           </span>
         </div>
-        <div v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1-2">
+        <div v-if="inputtedAddress || !ownAccountUnlocked" class="_text-center _margin-top-1-2">
           <span class="linkText" @click="chooseFeeTokenModal = true">Change fee token</span>
         </div>
       </div>
@@ -459,7 +459,6 @@ export default Vue.extend({
       const balances = <Array<ZkInBalance>>(
         JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance as string) - parseFloat(a.balance as string))
       );
-      console.log(this.chosenToken);
       if ((this.chosenToken as ZkInBalance).restricted || this.type === "nft-transfer" || this.type === "nft-withdraw") {
         let tokenFound = false;
         for (const feeToken of balances) {
@@ -509,6 +508,15 @@ export default Vue.extend({
         this.$toast.global.zkException({
           message: error.message,
         });
+        console.log("Get fee error", error);
+        if (this.feeToken) {
+          this.$accessor.tokens.addRestrictedToken((this.feeToken as ZkInBalance).symbol);
+        }
+        this.chosenFeeToken = false;
+        this.feesObj = {
+          normal: undefined,
+          fast: undefined,
+        };
       }
       this.feesLoading = false;
     },
