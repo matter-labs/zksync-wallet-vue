@@ -139,7 +139,7 @@ export default Vue.extend({
       },
 
       /* Main Block */
-      inputtedAddress: <Address>"",
+      inputtedAddress: <Address>this.$accessor.account.address!,
       chosenContact: <ZkInContact | false>false,
       inputtedHash: <Hash>"",
       fee: <GweiBalance | false>false,
@@ -192,9 +192,6 @@ export default Vue.extend({
     inputtedAddress() {
       this.requestFees();
     },
-    inputtedHash() {
-      this.requestFees();
-    },
     chosenFeeToken: {
       deep: true,
       handler() {
@@ -205,9 +202,8 @@ export default Vue.extend({
   },
   async mounted() {
     this.loading = true;
+    this.chooseFeeToken();
     try {
-      this.inputtedAddress = this.$accessor.account.address!;
-      this.chooseFeeToken();
       if (!this.ownAccountUnlocked) {
         try {
           getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
@@ -217,7 +213,6 @@ export default Vue.extend({
             this.$accessor.openModal("SignPubkey");
           }
         }
-        await this.getAccountActivationFee();
       }
     } catch (error) {
       console.log("Mounted error", error);
@@ -328,7 +323,9 @@ export default Vue.extend({
           message: error.message,
         });
         console.log("Get fee error", error);
-        this.$accessor.openModal("FeeCalcError");
+        if (!this.$accessor.currentModal) {
+          this.$accessor.openModal("FeeCalcError");
+        }
         this.chosenFeeToken = false;
         this.fee = false;
       }

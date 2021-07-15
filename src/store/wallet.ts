@@ -382,6 +382,7 @@ export const actions = actionTree(
       ) {
         return savedFees[symbol][feeSymbol][type][address].value;
       }
+      console.log("Fee requested", { address, symbol, feeSymbol, type });
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
       if (type === "withdraw") {
@@ -458,7 +459,6 @@ export const actions = actionTree(
       const syncWallet = walletData.get().syncWallet;
       const accountState = walletData.get().accountState;
       const pubKeyHash = await syncWallet!.signer!.pubKeyHash();
-      console.log("isAccountLocked", pubKeyHash !== accountState!.committed.pubKeyHash);
       commit("setAccountLockedState", pubKeyHash !== accountState!.committed.pubKeyHash);
     },
 

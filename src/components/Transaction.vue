@@ -517,7 +517,9 @@ export default Vue.extend({
           message: error.message,
         });
         console.log("Get fee error", error);
-        this.$accessor.openModal("FeeCalcError");
+        if (!this.$accessor.currentModal) {
+          this.$accessor.openModal("FeeCalcError");
+        }
         this.chosenFeeToken = false;
         this.feesObj = undefined;
       }
