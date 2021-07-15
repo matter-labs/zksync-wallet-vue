@@ -89,7 +89,7 @@ import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import ContentHashModal from "@/blocks/modals/ContentHashModal.vue";
-import { getCPKTx, removeCPKTx } from "@/plugins/walletActions/cpk";
+import { getCPKTx } from "@/plugins/walletActions/cpk";
 import Context from "@nuxt/types";
 import { Route } from "vue-router/types";
 import { mintNFT } from "@/plugins/walletActions/transaction";
@@ -181,7 +181,6 @@ export default Vue.extend({
     chosenFeeToken: {
       deep: true,
       handler() {
-        console.log("Fee token changed");
         this.requestFees();
         this.getAccountActivationFee();
       },
@@ -345,8 +344,7 @@ export default Vue.extend({
     },
     checkUnlock(transferTransactions: { cpkTransaction: Transaction | null; transaction: Transaction | null; feeTransaction: Transaction | null }): void {
       if (transferTransactions.cpkTransaction) {
-        removeCPKTx(this.$accessor.account.address!);
-        this.$accessor.wallet.setAccountLockedState(false);
+        this.$accessor.wallet.checkLockedState();
         transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });

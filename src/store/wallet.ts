@@ -458,6 +458,7 @@ export const actions = actionTree(
       const syncWallet = walletData.get().syncWallet;
       const accountState = walletData.get().accountState;
       const pubKeyHash = await syncWallet!.signer!.pubKeyHash();
+      console.log("isAccountLocked", pubKeyHash !== accountState!.committed.pubKeyHash);
       commit("setAccountLockedState", pubKeyHash !== accountState!.committed.pubKeyHash);
     },
 

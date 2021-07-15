@@ -200,7 +200,7 @@ import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInNFT, ZkInTransactionInfo, ZKTypeTransactionType } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { transaction, transferNFT, withdraw, withdrawNFT } from "@/plugins/walletActions/transaction";
-import { getCPKTx, removeCPKTx } from "@/plugins/walletActions/cpk";
+import { getCPKTx } from "@/plugins/walletActions/cpk";
 import { walletData } from "@/plugins/walletData";
 
 import { BigNumber, BigNumberish } from "ethers";
@@ -736,8 +736,7 @@ export default Vue.extend({
     },
     checkUnlock(transferTransactions: { cpkTransaction: Transaction | null; transaction: Transaction | null; feeTransaction: Transaction | null }): void {
       if (transferTransactions.cpkTransaction) {
-        removeCPKTx(this.$accessor.account.address!);
-        this.$accessor.wallet.setAccountLockedState(false);
+        this.$accessor.wallet.checkLockedState();
         transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });
