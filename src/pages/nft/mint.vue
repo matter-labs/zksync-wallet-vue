@@ -181,7 +181,9 @@ export default Vue.extend({
     chosenFeeToken: {
       deep: true,
       handler() {
+        console.log("Fee token changed");
         this.requestFees();
+        this.getAccountActivationFee();
       },
     },
   },
@@ -309,6 +311,12 @@ export default Vue.extend({
         this.$toast.global.zkException({
           message: error.message,
         });
+        console.log("Get fee error", error);
+        if (this.chosenFeeToken) {
+          this.$accessor.tokens.addRestrictedToken((this.chosenFeeToken as ZkInBalance).symbol);
+        }
+        this.chosenFeeToken = false;
+        this.fee = false;
       }
       this.feesLoading = false;
     },
