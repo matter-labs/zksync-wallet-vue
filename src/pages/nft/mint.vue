@@ -56,6 +56,9 @@
       <i-button :disabled="buttonDisabled" block class="_margin-top-1 _display-flex flex-row" size="lg" variant="secondary" @click="commitTransaction()">
         <v-icon name="bi-download" scale="1.35" />&nbsp;&nbsp;Mint
       </i-button>
+      <div v-if="!enoughFeeToken" class="errorText _text-center _margin-top-1">
+        Not enough <span class="tokenSymbol">{{ chosenFeeToken.symbol }}</span> to pay the fee
+      </div>
       <div v-if="cantFindFeeToken === true" class="errorText _text-center _margin-top-1">No available tokens on your balance to pay the fee</div>
       <div v-if="chosenFeeToken && inputtedAddress" class="_text-center _margin-top-1">
         Fee:
@@ -150,6 +153,7 @@ export default Vue.extend({
         !this.inputtedHash ||
         !this.inputtedAddress ||
         !this.fee ||
+        !this.enoughFeeToken ||
         this.feesLoading ||
         this.activateAccountFeeLoading ||
         (!this.activateAccountFee && !this.ownAccountUnlocked) ||
@@ -159,6 +163,16 @@ export default Vue.extend({
     },
     ownAccountUnlocked(): boolean {
       return !this.$accessor.wallet.isAccountLocked;
+    },
+    enoughFeeToken(): boolean {
+      if (this.cantFindFeeToken || !this.inputtedAddress || !this.fee || !this.chosenFeeToken || this.feesLoading) {
+        return true;
+      }
+      let feeAmount = BigNumber.from(this.fee);
+      if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
+        feeAmount = feeAmount.add(this.activateAccountFee);
+      }
+      return BigNumber.from(this.chosenFeeToken.rawBalance).gt(feeAmount);
     },
   },
   watch: {
