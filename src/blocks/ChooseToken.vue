@@ -97,7 +97,8 @@ export default Vue.extend({
     displayedList(): ZkInBalance[] | ZkInNFT[] {
       let list = utils.searchInArr(this.search, this.balances, (e) => (e as ZkInBalance | ZkInNFT).symbol) as ZkInBalance[] | ZkInNFT[];
       if (this.tokensType !== "NFT" && this.onlyAllowed) {
-        list = (list as ZkInBalance[]).filter((e) => !e.restricted);
+        const availableTokens = this.$accessor.tokens.getAvailableTokens;
+        list = (list as ZkInBalance[]).filter((e) => availableTokens.hasOwnProperty(e.symbol));
       }
       return list;
     },

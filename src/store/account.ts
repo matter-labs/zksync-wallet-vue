@@ -1,6 +1,6 @@
 import { getterTree, mutationTree } from "typed-vuex";
 import { Address } from "zksync/build/types";
-import { APP_ZK_SCAN } from "@/plugins/build";
+import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 
 export declare interface iAccount {
   loggedIn: boolean;
@@ -65,5 +65,5 @@ export const getters = getterTree(state, {
   loader: (state: AccountModuleState): boolean => !state.loggedIn && state.selectedWallet !== "",
   address: (state: AccountModuleState): Address | undefined => state.address,
   name: (state: AccountModuleState): string | undefined => state.name,
-  zkScanUrl: (state: AccountModuleState): string | undefined => (state.address ? `${APP_ZK_SCAN}/accounts/${state.address}` : undefined),
+  zkScanUrl: (state: AccountModuleState): string | undefined => (state.address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.address}` : undefined),
 });
