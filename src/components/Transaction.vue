@@ -370,7 +370,11 @@ export default Vue.extend({
       return BigNumber.from(this.chosenFeeToken.rawBalance).gt(feeAmount);
     },
     buttonDisabled(): boolean {
-      if (!this.ownAccountUnlocked && !(this.feeToken && this.activateAccountFee && !this.activateAccountFeeLoading && this.enoughFeeToken)) {
+      if (
+        !this.feesObj ||
+        !this.feesObj[this.transactionMode] ||
+        (!this.ownAccountUnlocked && !(this.feeToken && this.activateAccountFee && !this.activateAccountFeeLoading && this.enoughFeeToken))
+      ) {
         return true;
       }
       return (
@@ -513,10 +517,7 @@ export default Vue.extend({
           this.$accessor.tokens.addRestrictedToken((this.feeToken as ZkInBalance).symbol);
         }
         this.chosenFeeToken = false;
-        this.feesObj = {
-          normal: undefined,
-          fast: undefined,
-        };
+        this.feesObj = undefined;
       }
       this.feesLoading = false;
     },
