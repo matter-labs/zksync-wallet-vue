@@ -382,7 +382,6 @@ export const actions = actionTree(
       ) {
         return savedFees[symbol][feeSymbol][type][address].value;
       }
-      console.log("Fee requested", { address, symbol, feeSymbol, type });
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
       if (type === "withdraw") {
