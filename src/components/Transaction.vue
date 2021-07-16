@@ -517,11 +517,7 @@ export default Vue.extend({
           message: error.message,
         });
         console.log("Get fee error", error);
-        if (!this.$accessor.currentModal) {
-          this.$accessor.openModal("FeeCalcError");
-        }
-        this.chosenFeeToken = false;
-        this.feesObj = undefined;
+        this.handleFeeError();
       }
       this.feesLoading = false;
     },
@@ -780,11 +776,23 @@ export default Vue.extend({
         );
         this.activateAccountFee = foundFee!.totalFee.toString();
       } catch (error) {
-        await this.$toast?.global.zkException({
-          message: error.message ?? "Error while receiving an unlock fee",
+        this.$toast.global.zkException({
+          message: error.message,
         });
+        console.log("Get account activation fee error", error);
+        this.handleFeeError();
       }
       this.activateAccountFeeLoading = false;
+    },
+    handleFeeError() {
+      this.$nextTick(() => {
+        if (!this.$accessor.currentModal) {
+          this.$accessor.openModal("FeeCalcError");
+        }
+      });
+      this.chosenFeeToken = false;
+      this.feesObj = undefined;
+      this.activateAccountFee = undefined;
     },
     clearTransactionInfo() {
       this.transactionInfo = {

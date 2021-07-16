@@ -350,6 +350,9 @@ export const actions = actionTree(
       }
       try {
         const syncWallet = walletData.get().syncWallet;
+        if (!syncWallet || !syncWallet.address() || !String(syncWallet.address()).includes("0x")) {
+          return localList.list;
+        }
         const fetchTransactionHistory: ZkInTx[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
         if (savedAddress !== this.app.$accessor.account.address) {
           return localList.list;
@@ -382,7 +385,6 @@ export const actions = actionTree(
       ) {
         return savedFees[symbol][feeSymbol][type][address].value;
       }
-      console.log("Fee requested", { address, symbol, feeSymbol, type });
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
       if (type === "withdraw") {
