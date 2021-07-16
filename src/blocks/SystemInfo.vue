@@ -1,7 +1,7 @@
 <template>
   <i-badge v-if="version" variant="secondary" class="system-info">
     <i-popover size="sm" class="system-env-popover" :trigger="['hover']">
-      <span class="version">v.{{ version }}<sup v-if="isBeta" class="beta _text-danger">BETA</sup></span>
+      <span class="version">v.{{ version }}</span>
       <template slot="header">Environment details</template>
       <template slot="body">
         <span class="env-details">
@@ -32,9 +32,6 @@ export default Vue.extend({
   computed: {
     netName(): string {
       return ZK_NETWORK;
-    },
-    isBeta(): boolean {
-      return ZK_IS_BETA;
     },
     zkLibVersion(): string {
       return ZK_LIB_VERSION;

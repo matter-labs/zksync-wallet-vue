@@ -116,12 +116,12 @@ export default Vue.extend({
       dropdownOpened: false,
       dropdownOptions: <DropdownOption[]>[
         {
-          name: "zkLink",
-          link: getLinkItem("zkLink"),
-        },
-        {
           name: "zkScan",
           link: getLinkItem("zkScan"),
+        },
+        {
+          name: "zkLink",
+          link: getLinkItem("zkLink"),
         },
         {
           name: "Alternative Withdrawal",

@@ -1,6 +1,7 @@
 <template>
   <div class="transactionPage depositPage dappPageWrapper">
     <content-hash-modal />
+    <fee-calc-error />
 
     <!-- Choose fee token -->
     <i-modal v-model="chooseFeeTokenModal" size="md">
@@ -56,6 +57,9 @@
       <i-button :disabled="buttonDisabled" block class="_margin-top-1 _display-flex flex-row" size="lg" variant="secondary" @click="commitTransaction()">
         <v-icon name="bi-download" scale="1.35" />&nbsp;&nbsp;Mint
       </i-button>
+      <div v-if="!enoughFeeToken" class="errorText _text-center _margin-top-1">
+        Not enough <span class="tokenSymbol">{{ chosenFeeToken.symbol }}</span> to pay the fee
+      </div>
       <div v-if="cantFindFeeToken === true" class="errorText _text-center _margin-top-1">No available tokens on your balance to pay the fee</div>
       <div v-if="chosenFeeToken && inputtedAddress" class="_text-center _margin-top-1">
         Fee:
@@ -89,7 +93,8 @@ import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import ContentHashModal from "@/blocks/modals/ContentHashModal.vue";
-import { getCPKTx, removeCPKTx } from "@/plugins/walletActions/cpk";
+import FeeCalcError from "@/blocks/modals/FeeCalcError.vue";
+import { getCPKTx } from "@/plugins/walletActions/cpk";
 import Context from "@nuxt/types";
 import { Route } from "vue-router/types";
 import { mintNFT } from "@/plugins/walletActions/transaction";
@@ -100,6 +105,7 @@ import { BigNumber } from "ethers";
 export default Vue.extend({
   components: {
     ContentHashModal,
+    FeeCalcError,
   },
   asyncData({ from, app }: Context.Context): { fromRoute: Route } {
     if (from) {
@@ -133,7 +139,7 @@ export default Vue.extend({
       },
 
       /* Main Block */
-      inputtedAddress: <Address>"",
+      inputtedAddress: <Address>this.$accessor.account.address!,
       chosenContact: <ZkInContact | false>false,
       inputtedHash: <Hash>"",
       fee: <GweiBalance | false>false,
@@ -150,6 +156,7 @@ export default Vue.extend({
         !this.inputtedHash ||
         !this.inputtedAddress ||
         !this.fee ||
+        !this.enoughFeeToken ||
         this.feesLoading ||
         this.activateAccountFeeLoading ||
         (!this.activateAccountFee && !this.ownAccountUnlocked) ||
@@ -159,6 +166,16 @@ export default Vue.extend({
     },
     ownAccountUnlocked(): boolean {
       return !this.$accessor.wallet.isAccountLocked;
+    },
+    enoughFeeToken(): boolean {
+      if (this.cantFindFeeToken || !this.inputtedAddress || !this.fee || !this.chosenFeeToken || this.feesLoading) {
+        return true;
+      }
+      let feeAmount = BigNumber.from(this.fee);
+      if (!this.ownAccountUnlocked && !this.activateAccountFeeLoading && this.activateAccountFee) {
+        feeAmount = feeAmount.add(this.activateAccountFee);
+      }
+      return BigNumber.from(this.chosenFeeToken.rawBalance).gt(feeAmount);
     },
   },
   watch: {
@@ -175,21 +192,18 @@ export default Vue.extend({
     inputtedAddress() {
       this.requestFees();
     },
-    inputtedHash() {
-      this.requestFees();
-    },
     chosenFeeToken: {
       deep: true,
       handler() {
         this.requestFees();
+        this.getAccountActivationFee();
       },
     },
   },
   async mounted() {
     this.loading = true;
+    this.chooseFeeToken();
     try {
-      this.inputtedAddress = this.$accessor.account.address!;
-      this.chooseFeeToken();
       if (!this.ownAccountUnlocked) {
         try {
           getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
@@ -199,7 +213,6 @@ export default Vue.extend({
             this.$accessor.openModal("SignPubkey");
           }
         }
-        await this.getAccountActivationFee();
       }
     } catch (error) {
       console.log("Mounted error", error);
@@ -309,6 +322,12 @@ export default Vue.extend({
         this.$toast.global.zkException({
           message: error.message,
         });
+        console.log("Get fee error", error);
+        if (!this.$accessor.currentModal) {
+          this.$accessor.openModal("FeeCalcError");
+        }
+        this.chosenFeeToken = false;
+        this.fee = false;
       }
       this.feesLoading = false;
     },
@@ -337,8 +356,7 @@ export default Vue.extend({
     },
     checkUnlock(transferTransactions: { cpkTransaction: Transaction | null; transaction: Transaction | null; feeTransaction: Transaction | null }): void {
       if (transferTransactions.cpkTransaction) {
-        removeCPKTx(this.$accessor.account.address!);
-        this.$accessor.wallet.setAccountLockedState(false);
+        this.$accessor.wallet.checkLockedState();
         transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });

@@ -1,5 +1,7 @@
 <template>
   <div class="transactionPage dappPageWrapper">
+    <fee-calc-error />
+
     <!-- Choose token -->
     <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
@@ -177,7 +179,7 @@
             </span>
           </span>
         </div>
-        <div v-if="(((feesObj && feesObj[transactionMode]) || feesLoading) && chosenToken && inputtedAddress) || !ownAccountUnlocked" class="_text-center _margin-top-1-2">
+        <div v-if="inputtedAddress || !ownAccountUnlocked" class="_text-center _margin-top-1-2">
           <span class="linkText" @click="chooseFeeTokenModal = true">Change fee token</span>
         </div>
       </div>
@@ -193,6 +195,7 @@ import chooseToken from "@/blocks/ChooseToken.vue";
 import addressInput from "@/components/AddressInput.vue";
 import amountInput from "@/components/AmountInput.vue";
 
+import FeeCalcError from "@/blocks/modals/FeeCalcError.vue";
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
@@ -200,7 +203,7 @@ import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInNFT, ZkInTransactionInfo, ZKTypeTransactionType } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { transaction, transferNFT, withdraw, withdrawNFT } from "@/plugins/walletActions/transaction";
-import { getCPKTx, removeCPKTx } from "@/plugins/walletActions/cpk";
+import { getCPKTx } from "@/plugins/walletActions/cpk";
 import { walletData } from "@/plugins/walletData";
 
 import { BigNumber, BigNumberish } from "ethers";
@@ -217,6 +220,7 @@ export default Vue.extend({
     chooseContact,
     amountInput,
     chooseToken,
+    FeeCalcError,
   },
   props: {
     type: {
@@ -370,7 +374,11 @@ export default Vue.extend({
       return BigNumber.from(this.chosenFeeToken.rawBalance).gt(feeAmount);
     },
     buttonDisabled(): boolean {
-      if (!this.ownAccountUnlocked && !(this.feeToken && this.activateAccountFee && !this.activateAccountFeeLoading && this.enoughFeeToken)) {
+      if (
+        !this.feesObj ||
+        !this.feesObj[this.transactionMode] ||
+        (!this.ownAccountUnlocked && !(this.feeToken && this.activateAccountFee && !this.activateAccountFeeLoading && this.enoughFeeToken))
+      ) {
         return true;
       }
       return (
@@ -459,7 +467,6 @@ export default Vue.extend({
       const balances = <Array<ZkInBalance>>(
         JSON.parse(JSON.stringify(this.$accessor.wallet.getzkBalances)).sort((a: ZkInBalance, b: ZkInBalance) => parseFloat(b.balance as string) - parseFloat(a.balance as string))
       );
-      console.log(this.chosenToken);
       if ((this.chosenToken as ZkInBalance).restricted || this.type === "nft-transfer" || this.type === "nft-withdraw") {
         let tokenFound = false;
         for (const feeToken of balances) {
@@ -509,6 +516,12 @@ export default Vue.extend({
         this.$toast.global.zkException({
           message: error.message,
         });
+        console.log("Get fee error", error);
+        if (!this.$accessor.currentModal) {
+          this.$accessor.openModal("FeeCalcError");
+        }
+        this.chosenFeeToken = false;
+        this.feesObj = undefined;
       }
       this.feesLoading = false;
     },
@@ -727,8 +740,7 @@ export default Vue.extend({
     },
     checkUnlock(transferTransactions: { cpkTransaction: Transaction | null; transaction: Transaction | null; feeTransaction: Transaction | null }): void {
       if (transferTransactions.cpkTransaction) {
-        removeCPKTx(this.$accessor.account.address!);
-        this.$accessor.wallet.setAccountLockedState(false);
+        this.$accessor.wallet.checkLockedState();
         transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });
