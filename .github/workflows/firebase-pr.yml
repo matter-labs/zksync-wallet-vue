@@ -2,11 +2,14 @@
 # https://github.com/firebase/firebase-tools
 
 name: "Firebase PR preview hosts generation"
-"on": pull_request
+on: [pull_request]
+
 jobs:
   build_and_preview:
     runs-on: ubuntu-latest
     environment: test
+    outputs:
+      rinkeby_urls: "${{ steps.rinkeby_deploy.outputs.urls }}"
     steps:
       - uses: actions/checkout@v2
 
@@ -17,6 +20,7 @@ jobs:
         run: yarn ci:build:rinkeby
 
       - name: Deploying to rinkeby [preview]
+        id: rinkeby_deploy
         uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
@@ -38,3 +42,46 @@ jobs:
           projectId: zksync-vue
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
+
+  testing:
+    needs: build_and_preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: Checkout zksync-test-ui repository
+        uses: actions/checkout@v2
+        with:
+          repository: matter-labs/zksync-test-ui
+          ref: master
+          token: ${{ secrets.TEST_ACCESS_TOKEN }}
+      
+      - name: Install dependencies
+        run: |
+          bash ./cli-dev.sh clean yarn
+          yarn install --immutable || true
+
+      # this is needed to run chromium (puppeteer / dappeteer) with metamask extension.
+      - name: Install setup-node
+        uses: actions/setup-node@v1
+        env:
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+        with:
+          args: install
+
+      - name: Launch tests
+        uses: mujo-code/puppeteer-headful@8baa091f83c74d2eda8603b7f9990b20535e7a9c
+        env:
+          CI: 'true'
+          TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.rinkeby_urls)[0]}}"
+        with:
+          args: yarn test --runInBand
+
+      - name: Save artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: wallet-artifacts_${{ github.run_number }}_${{ steps.date.outputs.date }}
+          path: artifacts/*
