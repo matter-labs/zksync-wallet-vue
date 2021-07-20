@@ -3476,7 +3476,7 @@ __metadata:
     web3: ^1.3.5
     web3-core: ^1.3.5
     webpack: ^4.46.0
-    zksync: beta
+    zksync: ^0.11.1
   peerDependencies:
     "@babel/core": "*"
     "@babel/runtime": "*"
@@ -18062,7 +18062,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"object-inspect@npm:^1.10.3, object-inspect@npm:^1.9.0":
+"object-inspect@npm:^1.10.3":
+  version: 1.11.0
+  resolution: "object-inspect@npm:1.11.0"
+  checksum: 7890688465619b0947d4370c82d7454cbca855012facb0e1083eb9c44f35718a3479f06887a0acf72b1f181930151a465e899bc16127f7d8c5fb2eee0c61c093
+  languageName: node
+  linkType: hard
+
+"object-inspect@npm:^1.9.0":
   version: 1.10.3
   resolution: "object-inspect@npm:1.10.3"
   checksum: f5d21d86dbedf7224f5e2bee8235beb1e94a419443102ae0d6c17603ace26b930de584ece5695ae6c338ec996656477d5ca425b1f8770b4aa3340aa3d188aa9a
@@ -25814,25 +25821,25 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"zksync-crypto@npm:^0.6.0-beta.1":
-  version: 0.6.0-beta.1
-  resolution: "zksync-crypto@npm:0.6.0-beta.1"
-  checksum: 6b1057d824a58713399da1683c0361e208526807979cdad9e4c4c666f5c8c0d602c8694e1f079be6f2f5da985a1aa23271c728a1b33294f40cf1b6b2f936363e
+"zksync-crypto@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "zksync-crypto@npm:0.6.0"
+  checksum: 62b11c0dd4214743fd2bd1bdb4c30f0a7511f3d6a4173bbf8f0460c72f9e3365dc9ac28b2a700e8767d5382391d8afafcc3c5ea847cf0d22d3fc8593e17052bc
   languageName: node
   linkType: hard
 
-"zksync@npm:beta":
-  version: 0.11.0-beta.7
-  resolution: "zksync@npm:0.11.0-beta.7"
+"zksync@npm:^0.11.1":
+  version: 0.11.1
+  resolution: "zksync@npm:0.11.1"
   dependencies:
     axios: ^0.21.1
     websocket: ^1.0.30
     websocket-as-promised: ^1.1.0
-    zksync-crypto: ^0.6.0-beta.1
+    zksync-crypto: ^0.6.0
   peerDependencies:
     "@ethersproject/logger": ^5.0.0
     ethers: ^5.0.0
-  checksum: c4853b193bdf0b1305f49edbf80835816b42915e7aac1752cd4048640264cf29db1d399ce10b9c7df34e4cef011d3c04da28a3ae99bacae6818cb4a51c65bcb4
+  checksum: 2de532948b83d9a9a9917fca49f47c9c4cbc0fccd6adfc4986a09eeb3127dbb3b71cbbd4b5159b3fde929894c11e593527d0d25803be29a813b85954a5442bf3
   languageName: node
   linkType: hard
 
