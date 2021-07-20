@@ -6,7 +6,7 @@ const newAccountWithNfts = "0x2D9835a1C1662559975B00AEA00e326D1F9f13d0";
 
 async function main() {
   const ethProvider = await ethers.providers.getDefaultProvider("ropsten");
-  const syncProvider = await zksync.getDefaultProvider("ropsten");
+  const syncProvider = await zksync.getDefaultRestProvider("ropsten");
   const ethWallet = new ethers.Wallet(absolutelyNewAccount).connect(ethProvider);
   const syncWallet = await zksync.Wallet.fromEthSigner(ethWallet, syncProvider);
   /// Prepare wallet for generating NFTs
