@@ -301,9 +301,7 @@ export default Vue.extend({
   methods: {
     async chooseToken(token: ZkInBalance) {
       try {
-        this.$accessor.tokens.getTokenPrice(token.symbol).then((result) => {
-          console.log(`loaded price for: ${result}`);
-        });
+        this.$accessor.tokens.getTokenPrice(token.symbol);
       } catch (error) {
         console.log(`Error getting ${token.symbol} price`, error);
         this.$accessor.tokens.addRestrictedToken(token.symbol);
