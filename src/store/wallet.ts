@@ -301,7 +301,13 @@ export const actions = actionTree(
 
       const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key: number | string): Promise<undefined | ZkInBalance> => {
         const currentToken = loadedTokens.tokens[key];
-        const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+        let balance;
+        try {
+          balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+        } catch (error) {
+          console.log(`Can't get L1 balance of ${key.toLocaleString()}`, error);
+          balance = BigNumber.from(0);
+        }
         return {
           id: currentToken.id,
           address: currentToken.address,
@@ -315,6 +321,7 @@ export const actions = actionTree(
       });
       const balancesResults: (void | ZkInBalance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
         this.app.$sentry?.captureException(error);
+        console.log("balancesResults error", error);
         return [];
       });
       const balances = (balancesResults.filter((token) => token && token.rawBalance.gt(0)) as ZkInBalance[]).sort(utils.compareTokensById);
