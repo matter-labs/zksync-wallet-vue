@@ -301,7 +301,13 @@ export const actions = actionTree(
 
       const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key: number | string): Promise<undefined | ZkInBalance> => {
         const currentToken = loadedTokens.tokens[key];
-        const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+        let balance;
+        try {
+          balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+        } catch (error) {
+          console.log(`Can't get L1 balance of ${key.toLocaleString()}`, error);
+          balance = BigNumber.from(0);
+        }
         return {
           id: currentToken.id,
           address: currentToken.address,
@@ -315,6 +321,7 @@ export const actions = actionTree(
       });
       const balancesResults: (void | ZkInBalance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
         this.app.$sentry?.captureException(error);
+        console.log("balancesResults error", error);
         return [];
       });
       const balances = (balancesResults.filter((token) => token && token.rawBalance.gt(0)) as ZkInBalance[]).sort(utils.compareTokensById);
@@ -350,6 +357,9 @@ export const actions = actionTree(
       }
       try {
         const syncWallet = walletData.get().syncWallet;
+        if (!syncWallet || !syncWallet.address() || !String(syncWallet.address()).includes("0x")) {
+          return localList.list;
+        }
         const fetchTransactionHistory: ZkInTx[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
         if (savedAddress !== this.app.$accessor.account.address) {
           return localList.list;
@@ -382,7 +392,6 @@ export const actions = actionTree(
       ) {
         return savedFees[symbol][feeSymbol][type][address].value;
       }
-      console.log("Fee requested", { address, symbol, feeSymbol, type });
       const syncProvider = walletData.get().syncProvider;
       const syncWallet = walletData.get().syncWallet;
       if (type === "withdraw") {
