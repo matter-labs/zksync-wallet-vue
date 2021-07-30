@@ -423,10 +423,10 @@ export const actions = actionTree(
         commit("setFees", { symbol: feeSymbol, feeSymbol, type, address, obj: feesObj });
         return feesObj;
       } else if (type === "MintNFT") {
-        const foundFeeNormal = await syncProvider!.getTransactionsBatchFee(["MintNFT", "Transfer"], [address, syncWallet?.address()], feeSymbol);
+        const foundFeeNormal = await syncProvider!.getTransactionFee("MintNFT", address, feeSymbol);
         const feesObj: ZkInFeesObj = {
           fast: undefined,
-          normal: foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal) : undefined,
+          normal: foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined,
         };
         commit("setFees", { symbol: feeSymbol, feeSymbol, type, address, obj: feesObj });
         return feesObj;

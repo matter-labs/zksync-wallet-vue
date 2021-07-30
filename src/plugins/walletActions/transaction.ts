@@ -214,16 +214,10 @@ export const mintNFT = async (address: Address, hash: string, feeToken: TokenSym
     await addCPKToBatch(syncWallet, accountActivationFee, feeToken, batchBuilder, store);
   }
   batchBuilder.addMintNFT({
-    fee: "0",
+    fee: feeBigValue,
     recipient: address,
     contentHash: hash,
     feeToken,
-  });
-  batchBuilder.addTransfer({
-    fee: feeBigValue,
-    amount: "0",
-    to: syncWallet.address(),
-    token: feeToken,
   });
   const batchTransactionData = await batchBuilder.build();
   const transactions = await submitSignedTransactionsBatch(syncWallet.provider, batchTransactionData.txs, [batchTransactionData.signature]);
