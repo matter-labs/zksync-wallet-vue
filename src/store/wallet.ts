@@ -381,9 +381,10 @@ export const actions = actionTree(
       }
     },
 
-    async requestFees({ getters, commit }, { address, symbol, feeSymbol, type }): Promise<ZkInFeesObj | undefined> {
+    async requestFees({ getters, commit }, { address, symbol, feeSymbol, type, force }): Promise<ZkInFeesObj | undefined> {
       const savedFees = getters.getFees;
       if (
+        !force &&
         Object.prototype.hasOwnProperty.call(savedFees, symbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol], feeSymbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol], type) &&
