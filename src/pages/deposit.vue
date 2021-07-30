@@ -369,61 +369,61 @@ export default Vue.extend({
       }
       this.unlimitedApproval = unlimited;
       this.loading = true;
-      try {
-        const wallet = walletData.get().syncWallet;
-        this.tip = "Follow the instructions in your Ethereum wallet";
-        this.transactionInfo.type = "unlock";
-        console.log(1);
-        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
-        console.log(2);
-        const balances = this.$accessor.wallet.getzkBalances;
-        let ETHToken: ZkInBalance | undefined;
-        for (const token of balances) {
-          if (token.symbol === "ETH") {
-            ETHToken = token;
-            break;
-          }
+      /* try { */
+      const wallet = walletData.get().syncWallet;
+      this.tip = "Follow the instructions in your Ethereum wallet";
+      this.transactionInfo.type = "unlock";
+      console.log(1);
+      const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
+      console.log(2);
+      const balances = this.$accessor.wallet.getzkBalances;
+      let ETHToken: ZkInBalance | undefined;
+      for (const token of balances) {
+        if (token.symbol === "ETH") {
+          ETHToken = token;
+          break;
         }
-        if (!ETHToken) {
-          ETHToken = {
-            balance: "0",
-            id: 19,
-            rawBalance: BigNumber.from("0"),
-            restricted: false,
-            status: "Verified",
-            symbol: "ETH",
-            verifiedBalance: "0",
-          };
-        }
-        this.tip = "Waiting for the transaction to be mined...";
-        this.transactionInfo.hash = approveDeposits.hash;
-        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + approveDeposits.hash;
-        console.log(3);
-        await approveDeposits.wait();
-        console.log(4);
-        this.transactionInfo.amount = {
-          amount: "0",
-          token: ETHToken,
+      }
+      if (!ETHToken) {
+        ETHToken = {
+          balance: "0",
+          id: 19,
+          rawBalance: BigNumber.from("0"),
+          restricted: false,
+          status: "Verified",
+          symbol: "ETH",
+          verifiedBalance: "0",
         };
-        this.transactionInfo.fee = undefined;
-        console.log(5);
-        this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
-        console.log(7);
-        this.transactionInfo.continueBtnFunction = true;
-        if (this.amountBigNumber.gt(this.tokenAllowance)) {
-          this.inputtedAmount = utils.handleFormatToken(this.chosenToken.symbol, this.tokenAllowance);
-        }
-        this.transactionInfo.continueBtnText = unlimited ? "Ok" : "Proceed to deposit";
-        this.transactionInfo.success = true;
-        this.chosenToken = { ...this.chosenToken, unlocked: true };
-      } catch (error) {
+      }
+      this.tip = "Waiting for the transaction to be mined...";
+      this.transactionInfo.hash = approveDeposits.hash;
+      this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + approveDeposits.hash;
+      console.log(3);
+      await approveDeposits.wait();
+      console.log(4);
+      this.transactionInfo.amount = {
+        amount: "0",
+        token: ETHToken,
+      };
+      this.transactionInfo.fee = undefined;
+      console.log(5);
+      this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
+      console.log(7);
+      this.transactionInfo.continueBtnFunction = true;
+      if (this.amountBigNumber.gt(this.tokenAllowance)) {
+        this.inputtedAmount = utils.handleFormatToken(this.chosenToken.symbol, this.tokenAllowance);
+      }
+      this.transactionInfo.continueBtnText = unlimited ? "Ok" : "Proceed to deposit";
+      this.transactionInfo.success = true;
+      this.chosenToken = { ...this.chosenToken, unlocked: true };
+      /* } catch (error) {
         const errorMsg = utils.filterError(error);
         if (typeof errorMsg === "string") {
           this.error = errorMsg;
         } else {
           this.error = "Approve token error";
         }
-      }
+      } */
       this.tip = "";
       this.loading = false;
     },
