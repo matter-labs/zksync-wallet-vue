@@ -373,7 +373,9 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         this.tip = "Follow the instructions in your Ethereum wallet";
         this.transactionInfo.type = "unlock";
+        console.log(1);
         const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
+        console.log(2);
         const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken: ZkInBalance | undefined;
         for (const token of balances) {
@@ -396,13 +398,17 @@ export default Vue.extend({
         this.tip = "Waiting for the transaction to be mined...";
         this.transactionInfo.hash = approveDeposits.hash;
         this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + approveDeposits.hash;
+        console.log(3);
         await approveDeposits.wait();
+        console.log(4);
         this.transactionInfo.amount = {
           amount: "0",
           token: ETHToken,
         };
         this.transactionInfo.fee = undefined;
+        console.log(5);
         this.tokenAllowance = await this.getTokenAllowance(this.chosenToken);
+        console.log(7);
         this.transactionInfo.continueBtnFunction = true;
         if (this.amountBigNumber.gt(this.tokenAllowance)) {
           this.inputtedAmount = utils.handleFormatToken(this.chosenToken.symbol, this.tokenAllowance);
@@ -426,6 +432,7 @@ export default Vue.extend({
         const wallet = walletData.get().syncWallet;
         const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
         const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, wallet!.ethSigner);
+        console.log(6);
         return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
       }
       return BigNumber.from(ERC20_APPROVE_TRESHOLD);
