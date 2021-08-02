@@ -225,7 +225,15 @@ export default Vue.extend({
       return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
     },
     buttonDisabled(): boolean {
-      return this.displayTokenUnlock || !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.isEnoughAllowance;
+      return (
+        this.displayTokenUnlock ||
+        !this.inputtedAmount ||
+        !this.chosenToken ||
+        this.amountBigNumber.eq("0") ||
+        this.allowanceError ||
+        this.thresholdLoading ||
+        !this.isEnoughAllowance
+      );
     },
     amountBigNumber(): BigNumber {
       if (!this.chosenToken || !this.inputtedAmount) {
@@ -346,6 +354,9 @@ export default Vue.extend({
     async deposit(): Promise<void> {
       this.tip = "Follow the instructions in your Ethereum wallet";
       this.transactionInfo.type = "deposit";
+      if (this.amountBigNumber.eq("0")) {
+        throw new Error("Deposit amount can't be 0");
+      }
       const transferTransaction = await deposit((this.chosenToken as ZkInBalance).symbol, this.amountBigNumber.toString(), this.$accessor);
       if (!transferTransaction) {
         return;
