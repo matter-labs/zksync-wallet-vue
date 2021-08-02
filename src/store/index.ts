@@ -40,6 +40,7 @@ export const actions = actionTree(
   { state, getters, mutations },
   {
     openModal({ commit }, modalName: string): void {
+      console.log(modalName);
       commit("setCurrentModal", modalName);
     },
     closeActiveModal({ commit }): void {

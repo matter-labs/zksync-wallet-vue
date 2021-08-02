@@ -53,12 +53,14 @@
     </i-container>
     <account-modal />
     <footer-modal v-model="footerModal" />
+    <environment-modal />
   </i-layout-header>
 </template>
 
 <script lang="ts">
 import accountModal from "@/blocks/modals/AccountModal.vue";
 import footerModal from "@/blocks/modals/FooterModal.vue";
+import environmentModal from "@/blocks/modals/Environment.vue";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -66,6 +68,7 @@ export default Vue.extend({
   components: {
     accountModal,
     footerModal,
+    environmentModal,
   },
   data() {
     return {
