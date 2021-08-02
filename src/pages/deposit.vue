@@ -96,7 +96,7 @@
             <v-icon name="ri-question-mark" />
           </div>
         </div>
-        <div class="grid-cols-2-layout">
+        <div class="grid-cols-2-layout" :class="{ 'single-col': inputtedAmount && $options.filters.formatToken(amountBigNumber, chosenToken.symbol).length > 13 }">
           <i-button data-cy="deposit_approve_unlimited_button" block size="md" variant="secondary" @click="unlockToken(true)">
             Approve unlimited <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>

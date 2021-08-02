@@ -545,6 +545,11 @@ button.-lg.-circle {
   grid-template-rows: 100%;
   grid-gap: 15px;
 
+  &.single-col {
+    grid-gap: 10px;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(2, 1fr);
+  }
   @media screen and (max-width: $mobile) {
     grid-gap: 10px;
     grid-template-columns: 100%;
