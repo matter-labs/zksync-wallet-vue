@@ -381,9 +381,10 @@ export const actions = actionTree(
       }
     },
 
-    async requestFees({ getters, commit }, { address, symbol, feeSymbol, type }): Promise<ZkInFeesObj | undefined> {
+    async requestFees({ getters, commit }, { address, symbol, feeSymbol, type, force }): Promise<ZkInFeesObj | undefined> {
       const savedFees = getters.getFees;
       if (
+        !force &&
         Object.prototype.hasOwnProperty.call(savedFees, symbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol], feeSymbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol], type) &&
@@ -423,10 +424,10 @@ export const actions = actionTree(
         commit("setFees", { symbol: feeSymbol, feeSymbol, type, address, obj: feesObj });
         return feesObj;
       } else if (type === "MintNFT") {
-        const foundFeeNormal = await syncProvider!.getTransactionsBatchFee(["MintNFT", "Transfer"], [address, syncWallet?.address()], feeSymbol);
+        const foundFeeNormal = await syncProvider!.getTransactionFee("MintNFT", address, feeSymbol);
         const feesObj: ZkInFeesObj = {
           fast: undefined,
-          normal: foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal) : undefined,
+          normal: foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined,
         };
         commit("setFees", { symbol: feeSymbol, feeSymbol, type, address, obj: feesObj });
         return feesObj;

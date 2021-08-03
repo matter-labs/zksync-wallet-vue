@@ -71,6 +71,12 @@ export declare type GweiBalance = string | BigNumberish;
 export declare type DecimalBalance = string;
 export declare type Hash = string;
 
+export declare interface ZkInFeeChange {
+  headline: string;
+  symbol: TokenSymbol;
+  amount: GweiBalance;
+}
+
 export declare interface ZkInTokenPrices {
   [token: string]: {
     lastUpdated: number;
