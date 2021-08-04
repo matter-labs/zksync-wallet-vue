@@ -19,8 +19,8 @@ import {
   ZKTypeDisplayToken,
 } from "@/types/lib";
 import { ExternalProvider } from "@ethersproject/providers";
-import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import Onboard from "bnc-onboard";
+import { API } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
