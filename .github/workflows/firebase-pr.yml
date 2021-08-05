@@ -29,7 +29,7 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
           projectId: zksync-vue
-          target: ropsten
+          target: prod-ropsten
 
 
       - name: "Build ropsten-beta"
