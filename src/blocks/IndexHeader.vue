@@ -5,7 +5,7 @@
         <i-row class="_display-flex _justify-content-between _flex-nowrap">
           <i-column>
             <transition name="fade">
-              <block-logo :is-zk-sync-logo="false" />
+              <block-logo :is-zk-sync-logo="true" />
             </transition>
           </i-column>
           <i-column class="_padding-right-0">
@@ -30,7 +30,7 @@
       <i-container>
         <i-row>
           <i-column :xs="12" :md="4" class="_padding-left-0 desktopOnly">
-            <block-logo :is-zk-sync-logo="false" />
+            <block-logo :is-zk-sync-logo="true" />
           </i-column>
           <i-column :xs="12" :md="4" class="_padding-y-0">
             <div class="linksContainer">

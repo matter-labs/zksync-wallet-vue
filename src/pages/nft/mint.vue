@@ -2,6 +2,14 @@
   <div class="transactionPage depositPage dappPageWrapper">
     <content-hash-modal />
     <fee-calc-error />
+    <fee-changed
+      v-model="feeChangedModal.opened"
+      type="Mint NFT"
+      :changed-fees="feeChangedModal.changedFees"
+      :can-proceed="!buttonDisabled"
+      @back="feeChangedModal.opened = false"
+      @proceed="commitTransaction()"
+    />
 
     <!-- Choose fee token -->
     <i-modal v-model="chooseFeeTokenModal" size="md">
@@ -94,18 +102,20 @@ import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import ContentHashModal from "@/blocks/modals/ContentHashModal.vue";
 import FeeCalcError from "@/blocks/modals/FeeCalcError.vue";
+import FeeChanged from "@/blocks/modals/FeeChanged.vue";
 import { getCPKTx } from "@/plugins/walletActions/cpk";
 import Context from "@nuxt/types";
 import { Route } from "vue-router/types";
 import { mintNFT } from "@/plugins/walletActions/transaction";
-import { GweiBalance, Hash, ZkInBalance, ZkInContact, ZkInTransactionInfo, ZkInFeesObj } from "@/types/lib";
+import { GweiBalance, Hash, ZkInBalance, ZkInContact, ZkInTransactionInfo, ZkInFeesObj, ZkInFeeChange } from "@/types/lib";
 import Vue from "vue";
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 
 export default Vue.extend({
   components: {
     ContentHashModal,
     FeeCalcError,
+    FeeChanged,
   },
   asyncData({ from, app }: Context.Context): { fromRoute: Route } {
     if (from) {
@@ -144,6 +154,10 @@ export default Vue.extend({
       inputtedHash: <Hash>"",
       fee: <GweiBalance | false>false,
       chosenFeeToken: <ZkInBalance | false>false,
+      feeChangedModal: {
+        opened: false,
+        changedFees: <ZkInFeeChange[]>[],
+      },
       feesLoading: false,
       activateAccountFeeLoading: false,
       activateAccountFee: <GweiBalance | undefined>undefined,
@@ -253,6 +267,48 @@ export default Vue.extend({
       this.error = "";
       this.loading = true;
       try {
+        this.tip = "Processing...";
+        const changedFees = <ZkInFeeChange[]>[];
+        const oldFee = this.fee;
+        await this.requestFees(true);
+        const newFee = this.fee;
+        if (BigNumber.from(oldFee).lt(newFee as BigNumberish)) {
+          changedFees.push({
+            headline: "Old Mint NFT fee",
+            symbol: (this.chosenFeeToken as ZkInBalance).symbol,
+            amount: <BigNumberish>oldFee.toString(),
+          });
+          changedFees.push({
+            headline: "New Mint NFT fee",
+            symbol: (this.chosenFeeToken as ZkInBalance).symbol,
+            amount: <BigNumberish>newFee.toString(),
+          });
+        }
+        if (!this.ownAccountUnlocked) {
+          const oldActivationFee = this.activateAccountFee as string;
+          await this.getAccountActivationFee();
+          const newActivationFee = this.activateAccountFee as string;
+          if (BigNumber.from(oldActivationFee).lt(newActivationFee as BigNumberish)) {
+            changedFees.push({
+              headline: "Old Account Activation fee",
+              symbol: (this.chosenFeeToken as ZkInBalance).symbol,
+              amount: <BigNumberish>oldActivationFee.toString(),
+            });
+            changedFees.push({
+              headline: "New Account Activation fee",
+              symbol: (this.chosenFeeToken as ZkInBalance).symbol,
+              amount: <BigNumberish>newActivationFee.toString(),
+            });
+          }
+        }
+        if (changedFees.length > 0) {
+          this.feeChangedModal = {
+            opened: true,
+            changedFees,
+          };
+          this.loading = false;
+          return;
+        }
         await this.mint();
       } catch (error) {
         const errorMsg = utils.filterError(error);
@@ -301,7 +357,7 @@ export default Vue.extend({
         throw new Error(receipt.failReason);
       }
     },
-    async requestFees(): Promise<void> {
+    async requestFees(force?: boolean): Promise<void> {
       if (!this.chosenFeeToken || !this.inputtedAddress || this.chosenFeeToken?.restricted) {
         this.fee = false;
         return;
@@ -313,6 +369,7 @@ export default Vue.extend({
           symbol: this.chosenFeeToken?.symbol,
           feeSymbol: this.chosenFeeToken?.symbol,
           type: "MintNFT",
+          force,
         };
         const requestedFee: ZkInFeesObj | undefined = await this.$accessor.wallet.requestFees(savedData);
         if (savedData.address === this.inputtedAddress && savedData.feeSymbol === this.chosenFeeToken.symbol) {

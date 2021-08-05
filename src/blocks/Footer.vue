@@ -1,12 +1,6 @@
 <template>
   <i-layout-footer class="mainFooter">
     <div class="_display-flex _flex-direction-row container _align-items-center _justify-content-space-between">
-      <i-row class="_margin-md-y-1 _hidden-lg-and-up">
-        <i-badge v-if="version" variant="secondary" class="system-info versionBadge _margin-left-1">
-          v.{{ version }} |
-          <a href="https://uptime.com/s/zksync" class="uptime-link" target="_blank">uptime</a>
-        </i-badge>
-      </i-row>
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
         <div class="_padding-1-2 _padding-md-x-1 _padding-left-0">
           <a target="_blank" class="footer-link" href="https://zksync.io/faq/intro.html">Docs</a>
