@@ -96,7 +96,7 @@
             <v-icon name="ri-question-mark" />
           </div>
         </div>
-        <div class="grid-cols-2-layout" :class="{ 'single-col': inputtedAmount && $options.filters.formatToken(amountBigNumber, chosenToken.symbol).length > 13 }">
+        <div class="grid-cols-2-layout" :class="{ 'single-col': singleColumnButtons }">
           <i-button data-cy="deposit_approve_unlimited_button" block size="md" variant="secondary" @click="unlockToken(true)">
             Approve unlimited <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
@@ -223,6 +223,12 @@ export default Vue.extend({
   computed: {
     maxAmount(): string {
       return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
+    },
+    singleColumnButtons(): boolean {
+      return (
+        (!this.inputtedAmount && this.chosenToken && this.chosenToken.symbol.length > 5) ||
+        (!!this.inputtedAmount && this.$options.filters!.formatToken(this.amountBigNumber, (this.chosenToken as ZkInBalance).symbol).length > 13)
+      );
     },
     buttonDisabled(): boolean {
       return (
