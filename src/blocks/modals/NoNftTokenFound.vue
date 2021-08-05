@@ -1,6 +1,9 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template slot="header">Can't find a token</template>
+    <template slot="header">
+      <slot v-if="$slots.header" name="header" />
+      <span v-else>Can't find a token</span>
+    </template>
     <p>Minted tokens are available for transactions only after the Mint transaction gets verified.</p>
   </i-modal>
 </template>

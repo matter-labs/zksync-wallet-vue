@@ -56,7 +56,7 @@ export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
 /**
  * Onboard-only params
  */
-export const ONBOARD_FORCED_EXIT_LINK: string | undefined = `https://withdraw${ETHER_PREFIX_MINUS}${ETHER_PRODUCTION ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
+export const ONBOARD_FORCED_EXIT_LINK: string | undefined = `https://withdraw${ETHER_PRODUCTION ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
 export const ONBOARD_FORTMATIC_KEY: string | undefined = process.env.APP_FORTMATIC;
 export const ONBOARD_PORTIS_KEY: string | undefined = process.env.APP_PORTIS;
 export const ONBOARD_INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;

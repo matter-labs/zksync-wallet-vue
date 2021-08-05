@@ -19,8 +19,8 @@ import {
   ZKTypeDisplayToken,
 } from "@/types/lib";
 import { ExternalProvider } from "@ethersproject/providers";
-import Onboard from "@matterlabs/zk-wallet-onboarding";
-import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import Onboard from "bnc-onboard";
+import { API } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { provider } from "web3-core";
@@ -301,7 +301,13 @@ export const actions = actionTree(
 
       const loadInitialBalancesPromises = Object.keys(loadedTokens.tokens).map(async (key: number | string): Promise<undefined | ZkInBalance> => {
         const currentToken = loadedTokens.tokens[key];
-        const balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+        let balance;
+        try {
+          balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+        } catch (error) {
+          console.log(`Can't get L1 balance of ${key.toLocaleString()}`, error);
+          balance = BigNumber.from(0);
+        }
         return {
           id: currentToken.id,
           address: currentToken.address,
@@ -315,6 +321,7 @@ export const actions = actionTree(
       });
       const balancesResults: (void | ZkInBalance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
         this.app.$sentry?.captureException(error);
+        console.log("balancesResults error", error);
         return [];
       });
       const balances = (balancesResults.filter((token) => token && token.rawBalance.gt(0)) as ZkInBalance[]).sort(utils.compareTokensById);
@@ -350,6 +357,9 @@ export const actions = actionTree(
       }
       try {
         const syncWallet = walletData.get().syncWallet;
+        if (!syncWallet || !syncWallet.address() || !String(syncWallet.address()).includes("0x")) {
+          return localList.list;
+        }
         const fetchTransactionHistory: ZkInTx[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
         if (savedAddress !== this.app.$accessor.account.address) {
           return localList.list;
@@ -378,7 +388,7 @@ export const actions = actionTree(
         Object.prototype.hasOwnProperty.call(savedFees[symbol], feeSymbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol], type) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol][type], address) &&
-        savedFees[symbol][feeSymbol][type][address].lastUpdated > new Date().getTime() - 30000
+        savedFees[symbol][feeSymbol][type][address].lastUpdated > new Date().getTime() - 10000
       ) {
         return savedFees[symbol][feeSymbol][type][address].value;
       }
@@ -413,10 +423,10 @@ export const actions = actionTree(
         commit("setFees", { symbol: feeSymbol, feeSymbol, type, address, obj: feesObj });
         return feesObj;
       } else if (type === "MintNFT") {
-        const foundFeeNormal: Fee = await syncProvider!.getTransactionFee("MintNFT", address, feeSymbol);
+        const foundFeeNormal = await syncProvider!.getTransactionsBatchFee(["MintNFT", "Transfer"], [address, syncWallet?.address()], feeSymbol);
         const feesObj: ZkInFeesObj = {
           fast: undefined,
-          normal: foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal.totalFee) : undefined,
+          normal: foundFeeNormal !== undefined ? closestPackableTransactionFee(foundFeeNormal) : undefined,
         };
         commit("setFees", { symbol: feeSymbol, feeSymbol, type, address, obj: feesObj });
         return feesObj;
@@ -501,7 +511,6 @@ export const actions = actionTree(
           return false;
         }
         const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
-        // const syncProvider: Provider = await getDefaultProvider(ZK_NETWORK as Network, "HTTP");
         const syncProvider = await walletData.syncProvider.get();
         if (syncProvider === undefined) {
           return false;

@@ -31,7 +31,7 @@
           </span>
         </div>
         <div v-else-if="displayedList.length === 0" class="centerBlock">
-          <span v-if="tokensType === 'NFT'">No available NFT tokens yet. You can either <nuxt-link to="/account/nft/mint">mint</nuxt-link> or request them from someone!</span>
+          <span v-if="tokensType === 'NFT'">No available NFT tokens yet. You can either <nuxt-link to="/nft/mint">mint</nuxt-link> or request them from someone!</span>
           <span v-else>No balances yet. Please make a deposit or request money from someone!</span>
         </div>
       </div>
@@ -97,7 +97,8 @@ export default Vue.extend({
     displayedList(): ZkInBalance[] | ZkInNFT[] {
       let list = utils.searchInArr(this.search, this.balances, (e) => (e as ZkInBalance | ZkInNFT).symbol) as ZkInBalance[] | ZkInNFT[];
       if (this.tokensType !== "NFT" && this.onlyAllowed) {
-        list = (list as ZkInBalance[]).filter((e) => !e.restricted);
+        const availableTokens = this.$accessor.tokens.getAvailableTokens;
+        list = (list as ZkInBalance[]).filter((e) => availableTokens.hasOwnProperty(e.symbol));
       }
       return list;
     },

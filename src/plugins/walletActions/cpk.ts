@@ -32,8 +32,8 @@ export const addCPKToBatch = async (syncWallet: Wallet, fee: GweiBalance, feeTok
   }
   if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
     pubKeyTx.ethAuthData = {
-      type: "Onchain",
-    };
+      type: 'Onchain'
+    }
   }
   const changePubKeyTx = await syncWallet.signer!.signSyncChangePubKey({
     ...pubKeyTx,

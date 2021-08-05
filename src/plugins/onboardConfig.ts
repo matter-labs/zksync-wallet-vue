@@ -3,13 +3,12 @@ import web3Wallet from "@/plugins/web3";
 import { WalletModuleState } from "@/store/wallet";
 import {
   Initialization,
-  PopupContent,
   Subscriptions,
   Wallet as OnBoardingWallet,
   WalletInitOptions,
   WalletModule,
   WalletSelectModuleOptions,
-} from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+} from "bnc-onboard/dist/src/interfaces";
 import { Store } from "vuex/types/index";
 import Web3 from "web3";
 
@@ -57,6 +56,7 @@ const initializedWallets: WalletSelectModuleOptions = {
     { walletName: "hyperpay" },
     { walletName: "wallet.io", rpcUrl: ONBOARD_RPC_URL },
     { walletName: "atoken" },
+    { walletName: 'tokenpocket', rpcUrl: ONBOARD_RPC_URL }
   ],
 };
 export default (ctx: Store<WalletModuleState>): Initialization => {
@@ -84,11 +84,8 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
     },
     walletSelect: <WalletSelectModuleOptions>{
       wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
-    },
-    popupContent: <PopupContent>{
-      dismiss: "Dismiss",
-      teaser: "Can't find your wallet?",
-      fullHtml: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${ONBOARD_FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
+      description: "",
+      explanation: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${ONBOARD_FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
     },
   };
 };

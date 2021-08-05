@@ -63,9 +63,6 @@ export default Vue.extend({
     network(): string {
       return ZK_NETWORK;
     },
-    isBeta(): boolean {
-      return ZK_IS_BETA;
-    },
   },
 });
 </script>

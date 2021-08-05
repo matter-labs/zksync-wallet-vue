@@ -42,7 +42,7 @@
       </i-input>
 
       <div class="contactsListContainer genericListContainer">
-        <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
+        <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound _margin-bottom-0">
           <div>The contact list is empty</div>
 
           <i-button
@@ -225,11 +225,11 @@ export default Vue.extend({
         this.addContactModal = false;
         this.modalError = "";
         try {
-          const addressToSearch = this.addContactType === "add" ? this.inputtedWallet : this.editingWallet?.address || "";
-          for (let a = 0; a < this.contactsList.length; a++) {
-            if (this.contactsList[a].address.toLowerCase() === addressToSearch.toLowerCase()) {
+          for (let a = this.contactsList.length - 1; a >= 0; a--) {
+            const lowercaseContact = this.contactsList[a].address.toLowerCase();
+            if ((this.addContactType === "edit" && lowercaseContact === this.editingWallet?.address.toLowerCase()) || lowercaseContact === this.inputtedWallet.toLowerCase()) {
+              this.$accessor.contacts.deleteLocal(this.contactsList[a]);
               this.contactsList.splice(a, 1);
-              break;
             }
           }
           this.contactsList.unshift({ name: this.inputtedName.trim(), address: this.inputtedWallet, deleted: false });

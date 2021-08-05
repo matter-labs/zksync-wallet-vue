@@ -11,8 +11,8 @@
         <div class="createdAt">{{ timeAgo }}</div>
         <template slot="body">{{ singleTransaction.created_at | formatDateTime }}</template>
       </i-tooltip>
-      <div v-if="!isNFT || isMintNFT" :class="{ small: getFormattedAmount(singleTransaction).length > 10 }" class="amount">{{ getFormattedAmount(singleTransaction) }}</div>
-      <div class="tokenSymbol">
+      <div v-if="!isNFT" :class="{ small: getFormattedAmount(singleTransaction).length > 10 }" class="amount">{{ getFormattedAmount(singleTransaction) }}</div>
+      <div v-if="!isMintNFT" class="tokenSymbol">
         <span v-if="isNFT && tokenSymbol && !isMintNFT">NFT-</span>
         <div v-else-if="isNFT && !isMintNFT && singleTransaction.tx.contentHash" class="nft">
           <span class="contentHash">{{ singleTransaction.tx.contentHash }}</span>
@@ -199,6 +199,9 @@ export default Vue.extend({
       if (!this.isFeeTransaction && this.singleTransaction.tx.priority_op) {
         return this.singleTransaction.tx.priority_op.token as TokenSymbol;
       }
+      if (this.singleTransaction.tx.type === "WithdrawNFT") {
+        return this.singleTransaction.tx.token as TokenSymbol;
+      }
       if (typeof this.singleTransaction.tx.feeToken === "number") {
         return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol as TokenSymbol;
       }
@@ -239,7 +242,7 @@ export default Vue.extend({
     },
     getFormattedAmount({ tx: { type, priority_op, amount, fee } }: ZkInTx): string {
       let finalAmount = "0";
-      if (this.isMintNFT || this.isFeeTransaction || type === "WithdrawNFT") {
+      if (this.isMintNFT || this.isFeeTransaction) {
         finalAmount = fee;
       } else if (type === "Deposit" && priority_op) {
         finalAmount = priority_op.amount;
@@ -258,7 +261,7 @@ export default Vue.extend({
     },
     async getWithdrawalTx() {
       const singleTx = this.singleTransaction;
-      if (singleTx && singleTx.tx.type === "Withdraw") {
+      if (singleTx && (singleTx.tx.type === "Withdraw" || singleTx.tx.type === "WithdrawNFT")) {
         const txFromStore = this.$accessor.transaction.getWithdrawalTx(singleTx.hash);
         if (txFromStore) {
           this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${txFromStore}`;
