@@ -270,7 +270,7 @@ export default Vue.extend({
           const ethTx = await syncProvider!.getEthTxForWithdrawal(singleTx.hash);
           if (ethTx) {
             this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${this.formatTxHash(ethTx)}`;
-            this.$accessor.transaction.setWithdrawalTx({ tx: singleTx.hash, ethTx: this.formatTxHash(ethTx) });
+            this.$accessor.transaction.setWithdrawalTx({ tx: singleTx.hash, ethTx: String(this.formatTxHash(ethTx)) });
           }
         }
       }
@@ -279,13 +279,7 @@ export default Vue.extend({
       zkUtils.copy(value);
     },
     formatTxHash(txHash: string) {
-      if (txHash.startsWith("sync-tx:")) {
-        txHash = txHash.substr("sync-tx:".length, txHash.length);
-      }
-      if (!txHash.startsWith("0x")) {
-        txHash = "0x" + txHash;
-      }
-      return txHash;
+      return zkUtils.formatTxHash(txHash);
     },
   },
 });
