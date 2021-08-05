@@ -5,9 +5,7 @@
     </div>
     <checkmark />
     <slot />
-    <a v-if="txLink" :href="formatTxHash(txLink)" class="_display-block _text-center _margin-top-1" target="_blank">
-      Link to the transaction <v-icon name="ri-external-link-line"></v-icon>
-    </a>
+    <a v-if="txLink" :href="txLink" class="_display-block _text-center _margin-top-1" target="_blank"> Link to the transaction <v-icon name="ri-external-link-line"></v-icon> </a>
     <div v-if="recipient" class="infoBlockItem smaller _margin-top-2">
       <div class="amount">
         <span>Recipient:</span>
@@ -45,7 +43,6 @@
 </template>
 
 <script lang="ts">
-import zkUtils from "@/plugins/utils";
 import { Address } from "zksync/build/types";
 import Vue from "vue";
 
@@ -110,9 +107,6 @@ export default Vue.extend({
   methods: {
     isOwnAddress(address: Address): boolean {
       return this.ownAddress.toLowerCase() === address.toLowerCase();
-    },
-    formatTxHash(txHash: string) {
-      return zkUtils.formatTxHash(txHash);
     },
   },
 });
