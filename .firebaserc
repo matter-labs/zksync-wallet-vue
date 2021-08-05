@@ -22,6 +22,9 @@
         ],
         "dev-mainnet": [
           "mainnet-wallet-zksync"
+        ],
+        "ropsten-beta": [
+          "ropsten-beta-wallet-zksync"
         ]
       }
     },
