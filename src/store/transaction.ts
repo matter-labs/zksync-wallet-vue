@@ -12,8 +12,8 @@ interface ZKITransactionsState {
   withdrawalTxToEthTx: Map<string, string>;
 }
 
-export const state = () =>
-  ({
+export const state = () => {
+  return <ZKITransactionsState>{
     watchedTransactions: <
       {
         [txHash: string]: {
@@ -25,7 +25,8 @@ export const state = () =>
     deposits: <ZkInDeposits>{},
     forceUpdateTick: 0 /* Used to force update computed active deposits list */,
     withdrawalTxToEthTx: <Map<string, string>>new Map(),
-  } as ZKITransactionsState);
+  };
+};
 
 export type TransactionModuleState = ReturnType<typeof state>;
 
@@ -37,8 +38,21 @@ interface ZKITransactionParams {
   confirmations?: number;
 }
 
+export const getters = getterTree(state, {
+  getForceUpdateTick: (state): number => {
+    return state.forceUpdateTick;
+  },
+  depositList: (state): ZkInDeposits => {
+    return state.deposits;
+  },
+  getWithdrawalTx(state) {
+    return (tx: string) => {
+      return state.withdrawalTxToEthTx.get(tx);
+    };
+  },
+});
 export const mutations = mutationTree(state, {
-  updateTransactionStatus(state: TransactionModuleState, { hash, status }: { hash: string; status: string }): void {
+  updateTransactionStatus(state, { hash, status }: { hash: string; status: string }): void {
     if (status === "Verified") {
       delete state.watchedTransactions[hash];
       return;
@@ -51,7 +65,7 @@ export const mutations = mutationTree(state, {
       state.watchedTransactions[hash].status = status;
     }
   },
-  updateDepositStatus: (state: TransactionModuleState, { tokenSymbol, hash, amount, status, confirmations }: ZKITransactionParams): void => {
+  updateDepositStatus: (state, { tokenSymbol, hash, amount, status, confirmations }: ZKITransactionParams): void => {
     if (!Array.isArray(state.deposits[tokenSymbol])) {
       state.deposits[tokenSymbol] = [];
     }
@@ -76,22 +90,8 @@ export const mutations = mutationTree(state, {
     }
     state.forceUpdateTick++;
   },
-  setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }: { tx: string; ethTx: string }): void {
+  setWithdrawalTx(state, { tx, ethTx }: { tx: string; ethTx: string }): void {
     state.withdrawalTxToEthTx.set(tx, ethTx);
-  },
-});
-
-export const getters = getterTree(state, {
-  getForceUpdateTick: (state: TransactionModuleState): number => {
-    return state.forceUpdateTick;
-  },
-  depositList: (state: TransactionModuleState): ZkInDeposits => {
-    return state.deposits;
-  },
-  getWithdrawalTx(state: TransactionModuleState) {
-    return (tx: string) => {
-      return state.withdrawalTxToEthTx.get(tx);
-    };
   },
 });
 
@@ -115,7 +115,7 @@ export const actions = actionTree(
       }
       commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
     },
-    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
+    async watchDeposit({ commit, dispatch }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
       try {
         const savedAddress = this.app.$accessor.account.address;
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
@@ -123,7 +123,7 @@ export const actions = actionTree(
         if (savedAddress !== this.app.$accessor.account.address) {
           return;
         }
-        await this.app.$accessor.transaction.requestBalancesUpdate();
+        await dispatch("requestBalancesUpdate");
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       } catch (error) {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
@@ -142,7 +142,7 @@ export const actions = actionTree(
      * @param feeToken
      * @return {Promise<any>}
      */
-    async fetchChangePubKeyFee(_, { address, feeToken }: { address: Address; feeToken: TokenSymbol }): Promise<Fee | undefined> {
+    async fetchChangePubKeyFee({ state }, { address, feeToken }: { address: Address; feeToken: TokenSymbol }): Promise<Fee | undefined> {
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {
@@ -182,6 +182,9 @@ export const actions = actionTree(
         activeDeposits[ticker] = deposits[ticker].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
       }
       for (ticker in activeDeposits) {
+        if (!activeDeposits.hasOwnProperty(ticker)) {
+          continue;
+        }
         if (activeDeposits[ticker].length > 0) {
           if (!finalDeposits[ticker]) {
             finalDeposits[ticker] = BigNumber.from("0");

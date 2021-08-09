@@ -2,7 +2,7 @@ import { ZK_API_BASE } from "@/plugins/build";
 import onboardConfig from "@/plugins/onboardConfig";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
-import watcher from "@/plugins/watcher";
+import { changeNetworkSet } from "@/plugins/watcher";
 import web3Wallet from "@/plugins/web3";
 import {
   iWallet,
@@ -18,38 +18,52 @@ import {
   ZKTypeDisplayBalances,
   ZKTypeDisplayToken,
 } from "@/types/lib";
-import { ExternalProvider } from "@ethersproject/providers";
 import Onboard from "bnc-onboard";
 import { API } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { provider } from "web3-core";
 import { closestPackableTransactionFee, Provider, Wallet } from "zksync";
 import { AccountState, Address, Fee, NFT, TokenSymbol } from "zksync/build/types";
 
 let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
 
-export const state = (): iWallet => ({
-  onboard: undefined,
-  isAccountLocked: false,
-  zkTokens: {
-    lastUpdated: 0,
-    list: [],
-  },
-  nftTokens: {
-    lastUpdated: 0,
-    list: [],
-  },
-  initialTokens: {
-    lastUpdated: 0,
-    list: [],
-  },
-  transactionsHistory: {
-    lastUpdated: 0,
-    list: [],
-  },
-  withdrawalProcessingTime: false,
-  fees: {},
+export const state = () => {
+  return <iWallet>{
+    onboard: undefined,
+    isAccountLocked: false,
+    zkTokens: {
+      lastUpdated: 0,
+      list: [],
+    },
+    nftTokens: {
+      lastUpdated: 0,
+      list: [],
+    },
+    initialTokens: {
+      lastUpdated: 0,
+      list: [],
+    },
+    transactionsHistory: {
+      lastUpdated: 0,
+      list: [],
+    },
+    withdrawalProcessingTime: false,
+    fees: {},
+  };
+};
+
+export const getters = getterTree(state, {
+  isAccountLocked: (state: WalletModuleState): boolean => state.isAccountLocked,
+  getTokensList: (state: WalletModuleState): { lastUpdated: number; list: ZkInBalance[] } => state.initialTokens,
+  getInitialBalances: (state: WalletModuleState): ZkInBalance[] => state.initialTokens.list,
+  getzkList: (state: WalletModuleState): { lastUpdated: number; list: ZkInBalance[] } => state.zkTokens,
+  getzkBalances: (state: WalletModuleState): ZkInBalance[] => state.zkTokens.list,
+  getNftBalances: (state: WalletModuleState): Array<ZkInNFT> => state.nftTokens.list,
+  getTransactionsHistory: (state: WalletModuleState): ZkInTx[] => state.transactionsHistory.list,
+  getTransactionsList: (state: WalletModuleState): { lastUpdated: number; list: ZkInTx[] } => state.transactionsHistory,
+  getWithdrawalProcessingTime: (state: WalletModuleState): false | { normal: number; fast: number } => state.withdrawalProcessingTime,
+  getFees: (state: WalletModuleState): ZkInFeesInterface => state.fees,
+  getAccountState: (): Provider | undefined => walletData.get().syncProvider,
 });
 
 export type WalletModuleState = ReturnType<typeof state>;
@@ -128,20 +142,7 @@ export const mutations = mutationTree(state, {
   },
 });
 
-export const getters = getterTree(state, {
-  isAccountLocked: (state: WalletModuleState): boolean => state.isAccountLocked,
-  getTokensList: (state: WalletModuleState): { lastUpdated: number; list: ZkInBalance[] } => state.initialTokens,
-  getInitialBalances: (state: WalletModuleState): ZkInBalance[] => state.initialTokens.list,
-  getzkList: (state: WalletModuleState): { lastUpdated: number; list: ZkInBalance[] } => state.zkTokens,
-  getzkBalances: (state: WalletModuleState): ZkInBalance[] => state.zkTokens.list,
-  getNftBalances: (state: WalletModuleState): Array<ZkInNFT> => state.nftTokens.list,
-  getTransactionsHistory: (state: WalletModuleState): ZkInTx[] => state.transactionsHistory.list,
-  getTransactionsList: (state: WalletModuleState): { lastUpdated: number; list: ZkInTx[] } => state.transactionsHistory,
-  getWithdrawalProcessingTime: (state: WalletModuleState): false | { normal: number; fast: number } => state.withdrawalProcessingTime,
-  getFees: (state: WalletModuleState): ZkInFeesInterface => state.fees,
-  getAccountState: (): Provider | undefined => walletData.get().syncProvider,
-});
-
+// @ts-ignore
 export const actions = actionTree(
   { state, getters, mutations },
   {
@@ -243,7 +244,7 @@ export const actions = actionTree(
             nfts: state.nftTokens.list,
           };
         }
-        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
+        const isRestricted: boolean = this.app.$accessor.tokens.isRestricted(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -257,6 +258,9 @@ export const actions = actionTree(
         });
       }
       for (const nftID in nftCommitted) {
+        if (!nftCommitted.hasOwnProperty(nftID)) {
+          continue;
+        }
         nftList.push({
           ...nftCommitted[nftID],
           status: nftVerified.hasOwnProperty(nftID) ? "Verified" : "Pending",
@@ -330,6 +334,7 @@ export const actions = actionTree(
       if (savedAddress !== this.app.$accessor.account.address) {
         return localList.list;
       }
+      console.log(balances);
       commit("setTokensList", {
         lastUpdated: new Date().getTime(),
         list: balances,
@@ -345,7 +350,7 @@ export const actions = actionTree(
      * @param options
      * @return {Promise<any>}
      */
-    async requestTransactionsHistory({ commit, getters }, { force = false, offset = 0 }: ZKStoreRequestBalancesParams): Promise<ZkInTx[]> {
+    async requestTransactionsHistory({ commit, getters, dispatch }, { force = false, offset = 0 }: ZKStoreRequestBalancesParams): Promise<ZkInTx[]> {
       clearTimeout(getTransactionHistoryAgain);
       const localList = getters.getTransactionsList;
       const savedAddress = this.app.$accessor.account.address;
@@ -494,11 +499,7 @@ export const actions = actionTree(
           return false;
         }
 
-        if (!web3Wallet.get()?.eth) {
-          return false;
-        }
-        const getAccounts: string[] | undefined = await web3Wallet.get()?.eth.getAccounts();
-        if (!getAccounts || getAccounts.length === 0) {
+        if (!web3Wallet.get()) {
           return false;
         }
 
@@ -506,11 +507,8 @@ export const actions = actionTree(
           this.app.$accessor.account.setAddress(walletData.get().syncWallet?.address() || "");
           return true;
         }
-        const currentProvider: provider | undefined = web3Wallet.get()?.eth.currentProvider;
-        if (!currentProvider) {
-          return false;
-        }
-        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
+
+        const ethWallet: ethers.providers.JsonRpcSigner = web3Wallet.get()!.getSigner();
         const syncProvider = await walletData.syncProvider.get();
         if (syncProvider === undefined) {
           return false;
@@ -523,7 +521,9 @@ export const actions = actionTree(
         });
 
         this.app.$accessor.account.setLoadingHint("Getting wallet information...");
-        watcher.changeNetworkSet(dispatch, this);
+
+        /* Simplified event watcher call */
+        changeNetworkSet(this.dispatch, this);
 
         /* The user can press Cancel login anytime so we need to check if he did after every long action (request) */
         if (!walletData.get().syncWallet) {
@@ -613,6 +613,10 @@ export const actions = actionTree(
       });
       const activeDeposits: ZkInBalancesList = await this.app.$accessor.transaction.getActiveDeposits();
       for (const symbol in activeDeposits) {
+        if (!activeDeposits.hasOwnProperty(symbol)) {
+          continue;
+        }
+
         if (!returnTokens[symbol]) {
           returnTokens[symbol] = {
             symbol,

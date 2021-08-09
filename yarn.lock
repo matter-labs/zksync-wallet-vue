@@ -5,6 +5,13 @@ __metadata:
   version: 4
   cacheKey: 7
 
+"@apocentre/alias-sampling@npm:^0.5.3":
+  version: 0.5.3
+  resolution: "@apocentre/alias-sampling@npm:0.5.3"
+  checksum: 75e662ac791309838d97f6e331d5061413af0d7352850b6fc400d32433859c9238df255d2ff83ac59c7a7c1f1a08fb1b0fe1c2f779ffd77d3cf0b8a337e1dd00
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:7.12.11":
   version: 7.12.11
   resolution: "@babel/code-frame@npm:7.12.11"
@@ -2100,6 +2107,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ethereumjs/tx@npm:3.0.0":
+  version: 3.0.0
+  resolution: "@ethereumjs/tx@npm:3.0.0"
+  dependencies:
+    "@ethereumjs/common": ^2.0.0
+    ethereumjs-util: ^7.0.7
+  checksum: be46f777df5af5896c1e138435c694e6d746fa1c489c438b735066550a0f0ab827a421f513df7095566e7458ce92c1d80acc3eed9d0becfcd2b62cf5de668ea6
+  languageName: node
+  linkType: hard
+
 "@ethereumjs/tx@npm:^3.0.0":
   version: 3.3.0
   resolution: "@ethereumjs/tx@npm:3.3.0"
@@ -3861,6 +3878,63 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@keystonehq/bc-ur-registry-eth@npm:^0.6.3":
+  version: 0.6.5
+  resolution: "@keystonehq/bc-ur-registry-eth@npm:0.6.5"
+  dependencies:
+    "@keystonehq/bc-ur-registry": ^0.4.4
+    ethereumjs-util: ^7.0.8
+    hdkey: ^2.0.1
+    uuid: ^8.3.2
+  checksum: 01677999e7c6b51942c8f702fc107306db62aa1c82942f6dcdcc99c0531c56ed695dd923a3941374cb7bc3d7490f416f2a2c0be7551fd17e719f928b7def3ee2
+  languageName: node
+  linkType: hard
+
+"@keystonehq/bc-ur-registry@npm:^0.4.4":
+  version: 0.4.4
+  resolution: "@keystonehq/bc-ur-registry@npm:0.4.4"
+  dependencies:
+    "@ngraveio/bc-ur": ^1.1.5
+    base58check: ^2.0.0
+    tslib: ^2.3.0
+  checksum: ea5662ca2faba3b3e834d37fdd4ac72682a6e7b8082c12a454ec0e68502a07e086e7cef169452be6455df66801ba427980679b7dbff7b34c539f45a92b8527d4
+  languageName: node
+  linkType: hard
+
+"@keystonehq/eth-keyring@npm:0.7.2":
+  version: 0.7.2
+  resolution: "@keystonehq/eth-keyring@npm:0.7.2"
+  dependencies:
+    "@ethereumjs/tx": 3.0.0
+    "@keystonehq/bc-ur-registry-eth": ^0.6.3
+    "@keystonehq/sdk": ^0.7.3
+    bs58check: ^2.1.2
+    ethereumjs-util: ^7.0.8
+    hdkey: ^2.0.1
+    uuid: ^8.3.2
+  checksum: d3a832b13fc6f8ce55b24ac323f9437358f6b3e1b82a66bf722fb6fa257bf047fbff75be52f3c2d88ae1b9a838d9549050ff61b9c84764ce7b8a1b94c644b618
+  languageName: node
+  linkType: hard
+
+"@keystonehq/sdk@npm:^0.7.3":
+  version: 0.7.5
+  resolution: "@keystonehq/sdk@npm:0.7.5"
+  dependencies:
+    "@ngraveio/bc-ur": ^1.0.0
+    "@types/qrcode.react": ^1.0.1
+    "@types/react-dom": ^17.0.9
+    "@types/react-modal": ^3.12.0
+    "@types/react-qr-reader": ^2.1.3
+    qrcode.react: ^1.0.1
+    react: 16.13.1
+    react-dom: 16.13.1
+    react-modal: ^3.12.1
+    react-qr-reader: ^2.2.1
+    rxjs: ^6.6.3
+  checksum: 66870590e0f516d90c902c6c1adf7a490477f6253296ddc2d91d7ad63a1959087ec17445256de7b25af3dbc3c21838fb31588e0eecb6756886bf12f6ab39de4a
+  languageName: node
+  linkType: hard
+
 "@ledgerhq/cryptoassets@npm:^5.52.0":
   version: 5.52.0
   resolution: "@ledgerhq/cryptoassets@npm:5.52.0"
@@ -4040,7 +4114,7 @@ __metadata:
     "@typescript-eslint/parser": ^4.21.0
     "@walletconnect/web3-provider": ^1.3.6
     babel-core: ^7.0.0-bridge.0
-    bnc-onboard: ^1.32.0
+    bnc-onboard: ^1.33.0
     commitlint: ^11.0.0
     cspell: latest
     dotenv: 8.2.0
@@ -4131,6 +4205,21 @@ __metadata:
     call-me-maybe: ^1.0.1
     glob-to-regexp: ^0.3.0
   checksum: e01193b783ed7682710a9af87ba05c69d15cc2183eedca36e37c720bbb7d7449f7d5cd8ad15c991f20c5d95cdce1a3a10ef6d82b1bb8a9762a193ad4245cc9da
+  languageName: node
+  linkType: hard
+
+"@ngraveio/bc-ur@npm:^1.0.0, @ngraveio/bc-ur@npm:^1.1.5":
+  version: 1.1.6
+  resolution: "@ngraveio/bc-ur@npm:1.1.6"
+  dependencies:
+    "@apocentre/alias-sampling": ^0.5.3
+    assert: ^2.0.0
+    bignumber.js: ^9.0.1
+    cbor-sync: ^1.0.4
+    crc: ^3.8.0
+    jsbi: ^3.1.5
+    sha.js: ^2.4.11
+  checksum: 7709b60417283461e9e100b0c4485d3dbe6700ae4c978bfd066e98a20aa558a6c949d23f2f19a12caa0b8091ce0519b45f1ff75d6209c3a2ea38e4395d3f7c17
   languageName: node
   linkType: hard
 
@@ -5826,7 +5915,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^17.0.1":
+"@types/react-dom@npm:^17.0.1, @types/react-dom@npm:^17.0.9":
   version: 17.0.9
   resolution: "@types/react-dom@npm:17.0.9"
   dependencies:
@@ -7726,6 +7815,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"assert@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "assert@npm:2.0.0"
+  dependencies:
+    es6-object-assign: ^1.1.0
+    is-nan: ^1.2.1
+    object-is: ^1.0.1
+    util: ^0.12.0
+  checksum: c3593bcc4c63c1e6fd3b62a7c788cf7337118d79b827d79b0ed60e596d4968b80b2f8aa8e41bc5742621596bd60aa9de62ea166d85a584a6db177d7087e907f3
+  languageName: node
+  linkType: hard
+
 "assign-symbols@npm:^1.0.0":
   version: 1.0.0
   resolution: "assign-symbols@npm:1.0.0"
@@ -8659,12 +8760,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"base-x@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "base-x@npm:1.1.0"
+  checksum: 97378e8fd4e75e5cf722047202bd0ff911d1fbe091c4b1dd841c1c4e91e161627ddf8b2c6d4a8ba88d3facc8bd7d692f5c755642c5ccad33bc925c2a4babe4eb
+  languageName: node
+  linkType: hard
+
 "base-x@npm:^3.0.2, base-x@npm:^3.0.8":
   version: 3.0.8
   resolution: "base-x@npm:3.0.8"
   dependencies:
     safe-buffer: ^5.0.1
   checksum: 9e5832ab00f4413d63f8227901c18b2a9db5f379525f70b627e6e284007dc5e7940a765ef4ab03974b4c14a664153208758656ebb86979451d1995d13e3fa29b
+  languageName: node
+  linkType: hard
+
+"base58check@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "base58check@npm:2.0.0"
+  dependencies:
+    bs58: ^3.0.0
+  checksum: d7d2f439deaa2cce4adb1ffea563c3d581cc27791ef16c79f919552069ea36352980ea854024133bbb7b4999228d848843382d145591cc4e6caf92e5d98c810f
   languageName: node
   linkType: hard
 
@@ -8903,9 +9020,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bnc-onboard@npm:^1.32.0":
-  version: 1.32.0
-  resolution: "bnc-onboard@npm:1.32.0"
+"bnc-onboard@npm:^1.33.0":
+  version: 1.33.0
+  resolution: "bnc-onboard@npm:1.33.0"
   dependencies:
     "@cvbb/eth-keyring": ^1.1.0
     "@ensdomains/ensjs": ^2.0.1
@@ -8913,6 +9030,7 @@ __metadata:
     "@ethereumjs/tx": ^3.0.0
     "@gnosis.pm/safe-apps-provider": ^0.5.0
     "@gnosis.pm/safe-apps-sdk": ^3.0.0
+    "@keystonehq/eth-keyring": 0.7.2
     "@ledgerhq/hw-app-eth": ^5.49.0
     "@ledgerhq/hw-transport-u2f": ^5.21.0
     "@ledgerhq/hw-transport-webusb": 5.53.0
@@ -8937,7 +9055,7 @@ __metadata:
     trezor-connect: ^8.1.9
     walletlink: ^2.1.6
     web3-provider-engine: ^15.0.4
-  checksum: 1223c695faa4a550406e3b9b8f950302269bc0fbe05d1731cc1df858f828ecff03a19d7ee89d94134abf68564a1a5aa5dce3dfff4e78451084921f2bb95f4ff3
+  checksum: c19788daf9a8b05e0795a67e16f55f11e56f16034ab29af4dec17a5b7b766f855ac7b860d9fdc67481171838232adf2bae0aec4834dac98e7a4b7119e4bdb08b
   languageName: node
   linkType: hard
 
@@ -9173,6 +9291,15 @@ __metadata:
   bin:
     browserslist: cli.js
   checksum: ebb0ab279c5e61f882467f7ccd7d22c0edfcc01201eba06e85e835ca4d355e682f9aa3310bfa18c3a23bb244f0b8e498b3113dae3e9b0fa4908c5ffb4a26b3a2
+  languageName: node
+  linkType: hard
+
+"bs58@npm:^3.0.0":
+  version: 3.1.0
+  resolution: "bs58@npm:3.1.0"
+  dependencies:
+    base-x: ^1.1.0
+  checksum: b6151c46a5d8f4507821a64674ef96f0a4c3d9bb3ce8ca2730dbb952f652ef3ecdc7f0a99ef8d7e26e27fdbbf7a3829cd80ffe38c7c52bf7ed95cbb36ec02680
   languageName: node
   linkType: hard
 
@@ -9637,6 +9764,13 @@ __metadata:
   version: 0.12.0
   resolution: "caseless@npm:0.12.0"
   checksum: 147f48bff9bebf029d7050e2335da3f8d295f26d157edf08d8c3282c804dae04a462c4cd6efa8179755686aa3aeaca5c28f3e7f3559698bc0484c65e46c36c5b
+  languageName: node
+  linkType: hard
+
+"cbor-sync@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "cbor-sync@npm:1.0.4"
+  checksum: 3dd074d81c44b728a0f8da844bc901b1855276ea88ffaaf09cdcfc26071b7939c0399da86875a55161bca8274b71230c8e3c5089c5631c5b1c27a618fa514c5d
   languageName: node
   linkType: hard
 
@@ -12179,6 +12313,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"es6-object-assign@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "es6-object-assign@npm:1.1.0"
+  checksum: 18f01190b46b15a5fd6275dfc37c1c10bb331be4e392362785f63a141aa33edd0d8fbd2d5150c4b0a524aa14b8c4f825a559274cbc765bce59331e015923b4d8
+  languageName: node
+  linkType: hard
+
 "es6-promise@npm:^4.2.8":
   version: 4.2.8
   resolution: "es6-promise@npm:4.2.8"
@@ -13358,7 +13499,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethereumjs-util@npm:^7.0.8, ethereumjs-util@npm:^7.1.0":
+"ethereumjs-util@npm:^7.0.7, ethereumjs-util@npm:^7.0.8, ethereumjs-util@npm:^7.1.0":
   version: 7.1.0
   resolution: "ethereumjs-util@npm:7.1.0"
   dependencies:
@@ -16377,6 +16518,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"is-nan@npm:^1.2.1":
+  version: 1.3.2
+  resolution: "is-nan@npm:1.3.2"
+  dependencies:
+    call-bind: ^1.0.0
+    define-properties: ^1.1.3
+  checksum: 258ecdd2c149c4e073a3c7dff0ee1316950509d9a507c6f8e8ccce8c4ef73e9f29cdf7836cc1037bbbada283ac9fe189c0451016a9aca6c27eb12eaa900452f8
+  languageName: node
+  linkType: hard
+
 "is-negative-zero@npm:^2.0.1":
   version: 2.0.1
   resolution: "is-negative-zero@npm:2.0.1"
@@ -17300,6 +17451,13 @@ fsevents@^1.2.7:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: 46b61f889796a20d16b0b64580a01b6a02b2e45c1a2744906346da54d07e14cde764e887ab6d1512d8b2541c63711bd4b75859c28eb99605baf59fa173fc38c2
+  languageName: node
+  linkType: hard
+
+"jsbi@npm:^3.1.5":
+  version: 3.1.6
+  resolution: "jsbi@npm:3.1.6"
+  checksum: fd71db9229c41c00f78bf0ac849441c352803217cee8e0a15d57ad485cb2f386a8bc3b1681f3a1fe881ee6a33364a864c0e270d86d24748e470b00c67f1ad2ee
   languageName: node
   linkType: hard
 
@@ -21874,7 +22032,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.0, prop-types@npm:^15.7.2":
+"prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2":
   version: 15.7.2
   resolution: "prop-types@npm:15.7.2"
   dependencies:
@@ -22258,6 +22416,20 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"react-dom@npm:16.13.1":
+  version: 16.13.1
+  resolution: "react-dom@npm:16.13.1"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    prop-types: ^15.6.2
+    scheduler: ^0.19.1
+  peerDependencies:
+    react: ^16.13.1
+  checksum: fb5c3ad41360c6a8674f33916aa895d05e79d063d31a6963074220c1cda9e07e880799d01670b4ebd570b4d3457584f13cc898b5033a05641e8e801f5611607e
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:^17.0.1":
   version: 17.0.2
   resolution: "react-dom@npm:17.0.2"
@@ -22318,6 +22490,17 @@ fsevents@^1.2.7:
     react: ~16
     react-dom: ~16
   checksum: c16fc3e2ebd42738f3d5630562235142019fe79d9ba7c82df600a8982d89d0405b3609770a3d802efc6786baca410e6d715b1e13d9bc392ce35b61c7d0268b9c
+  languageName: node
+  linkType: hard
+
+"react@npm:16.13.1":
+  version: 16.13.1
+  resolution: "react@npm:16.13.1"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    prop-types: ^15.6.2
+  checksum: 13dcc9ba8a7521ecc3d7e69998dbc5703ae9515308d06a94a474ad34b42f1fc109372265e924a8c9b11d20fa1828407c290b8f61617c36734c4ca907ae7e5f45
   languageName: node
   linkType: hard
 
@@ -23374,6 +23557,16 @@ resolve@~1.17.0:
   dependencies:
     xmlchars: ^2.2.0
   checksum: 6ad14be68da9b84af0fa3de346fd78bd3a8e8a73a462e2852279a1fff1e2619988919294001abe3ecef3783f9498962a0619d960ccca4ec2ca914526fde1acc2
+  languageName: node
+  linkType: hard
+
+"scheduler@npm:^0.19.1":
+  version: 0.19.1
+  resolution: "scheduler@npm:0.19.1"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+  checksum: 804f990b9f370cca6d42b65f3cba2cc2bfed4973ee5623bed1ea36a6627842db8c891e2e5ac003f06f9ee892d1d3396921e27fa077346caf0213af05776e8dee
   languageName: node
   linkType: hard
 
@@ -25589,6 +25782,13 @@ resolve@~1.17.0:
   languageName: node
   linkType: hard
 
+"tslib@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "tslib@npm:2.3.0"
+  checksum: 7b4fc9feff0f704743c3760f5d8d708f6417fac6458159e63df3a6b1100f0736e3b99edb9fe370f274ad15160a1f49ff05cb49402534c818ff552c48e38c3e6e
+  languageName: node
+  linkType: hard
+
 "tsutils@npm:^3.17.1":
   version: 3.21.0
   resolution: "tsutils@npm:3.21.0"
@@ -26308,7 +26508,7 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"uuid@npm:8.3.2, uuid@npm:^8.3.0":
+"uuid@npm:8.3.2, uuid@npm:^8.3.0, uuid@npm:^8.3.2":
   version: 8.3.2
   resolution: "uuid@npm:8.3.2"
   bin:

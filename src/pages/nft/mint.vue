@@ -296,7 +296,7 @@ export default Vue.extend({
       this.tip = "Waiting for the transaction to be mined...";
       const receipt = await transferTransactions.transaction!.awaitReceipt();
       this.transactionInfo.success = !!receipt.success;
-      this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+      await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
       if (receipt.failReason) {
         throw new Error(receipt.failReason);
       }
@@ -368,7 +368,7 @@ export default Vue.extend({
         transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });
-          this.$accessor.wallet.checkLockedState();
+          await this.$accessor.wallet.checkLockedState();
         });
       }
     },

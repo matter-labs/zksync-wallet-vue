@@ -28,6 +28,7 @@ export const state = () => ({
    *
    * Addressed by id
    */
+
   allTokens: <Tokens>{},
 
   /**
@@ -38,25 +39,6 @@ export const state = () => ({
 });
 
 export type TokensModuleState = ReturnType<typeof state>;
-
-export const mutations = mutationTree(state, {
-  setAllTokens(state: TokensModuleState, tokenList: Tokens): void {
-    state.allTokens = tokenList;
-  },
-  setTokenPrice(state: TokensModuleState, { symbol, obj }: { symbol: TokenSymbol; obj: { lastUpdated?: number; price: number } }): void {
-    // @ts-ignore
-    state.tokenPrices[symbol] = obj;
-    state.tokenPricesTick++;
-  },
-  storeAcceptableTokens(state: TokensModuleState, tokenList: TokenInfo[]): void {
-    state.acceptableTokens = tokenList;
-  },
-  addRestrictedToken(state: TokensModuleState, token: TokenSymbol): void {
-    if (!state.restrictedTokens.includes(token) && token.toLowerCase() !== "eth") {
-      state.restrictedTokens.push(token);
-    }
-  },
-});
 
 export const getters = getterTree(state, {
   getAllTokens(state: TokensModuleState): Tokens {
@@ -77,11 +59,33 @@ export const getters = getterTree(state, {
   getTokenByID(state: TokensModuleState) {
     return (id: number): TokenInfo | undefined => {
       for (const symbol in state.allTokens) {
+        if (!state.allTokens.hasOwnProperty(symbol)) {
+          continue;
+        }
         if (state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];
         }
       }
     };
+  },
+});
+
+export const mutations = mutationTree(state, {
+  setAllTokens(state: TokensModuleState, tokenList: Tokens): void {
+    state.allTokens = tokenList;
+  },
+  setTokenPrice(state: TokensModuleState, { symbol, obj }: { symbol: TokenSymbol; obj: { lastUpdated?: number; price: number } }): void {
+    // @ts-ignore
+    state.tokenPrices[symbol] = obj;
+    state.tokenPricesTick++;
+  },
+  storeAcceptableTokens(state: TokensModuleState, tokenList: TokenInfo[]): void {
+    state.acceptableTokens = tokenList;
+  },
+  addRestrictedToken(state: TokensModuleState, token: TokenSymbol): void {
+    if (!state.restrictedTokens.includes(token) && token.toLowerCase() !== "eth") {
+      state.restrictedTokens.push(token);
+    }
   },
 });
 

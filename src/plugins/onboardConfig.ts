@@ -1,16 +1,8 @@
 import { CURRENT_APP_NAME, ETHER_NETWORK_ID, ONBOARD_FORCED_EXIT_LINK, ONBOARD_FORTMATIC_KEY, ONBOARD_INFURA_KEY, ONBOARD_PORTIS_KEY, ONBOARD_RPC_URL } from "@/plugins/build";
-import web3Wallet from "@/plugins/web3";
-import { WalletModuleState } from "@/store/wallet";
-import {
-  Initialization,
-  Subscriptions,
-  Wallet as OnBoardingWallet,
-  WalletInitOptions,
-  WalletModule,
-  WalletSelectModuleOptions,
-} from "bnc-onboard/dist/src/interfaces";
+import { Web3Provider } from "@ethersproject/providers";
+import { Initialization, Subscriptions, WalletInitOptions, WalletModule, WalletSelectModuleOptions } from "bnc-onboard/dist/src/interfaces";
 import { Store } from "vuex/types/index";
-import Web3 from "web3";
+import web3Wallet from "./web3";
 
 const initializedWallets: WalletSelectModuleOptions = {
   wallets: <Array<WalletModule | WalletInitOptions>>[
@@ -56,10 +48,11 @@ const initializedWallets: WalletSelectModuleOptions = {
     { walletName: "hyperpay" },
     { walletName: "wallet.io", rpcUrl: ONBOARD_RPC_URL },
     { walletName: "atoken" },
-    { walletName: 'tokenpocket', rpcUrl: ONBOARD_RPC_URL }
+    { walletName: "tokenpocket", rpcUrl: ONBOARD_RPC_URL },
   ],
 };
-export default (ctx: Store<WalletModuleState>): Initialization => {
+
+export default (ctx: Store<unknown>): Initialization => {
   const colorTheme: string | null = localStorage.getItem("colorTheme");
   return <Initialization>{
     hideBranding: true,
@@ -68,20 +61,21 @@ export default (ctx: Store<WalletModuleState>): Initialization => {
     networkId: ETHER_NETWORK_ID, // [Integer] The Ethereum network ID your Dapp uses.
     darkMode: colorTheme !== null && colorTheme === "dark",
     subscriptions: <Subscriptions>{
-      wallet: (wallet: OnBoardingWallet) => {
+      wallet: (wallet) => {
         if (wallet && wallet.provider) {
-          wallet.provider.autoRefreshOnNetworkChange = false;
+          wallet.provider!.autoRefreshOnNetworkChange = false;
+          const ethersProvider = new Web3Provider(wallet.provider);
+          web3Wallet.set(ethersProvider);
+          if (process.client && wallet!.name) {
+            ctx.app.$accessor.account.setSelectedWallet(wallet!.name as string);
+            window.localStorage.setItem("selectedWallet", wallet.name as string);
+          }
+        } else {
+          ctx.app.$accessor.wallet.logout();
         }
-        // @ts-ignore
-        web3Wallet.set(new Web3(wallet.provider));
-        if (process.client) {
-          ctx.commit("account/setSelectedWallet", wallet.name, { root: true });
-          window.localStorage.setItem("selectedWallet", wallet.name as string);
-        }
-        // eslint-disable-next-line no-unused-expressions
-        wallet.provider;
       },
     },
+    walletCheck: [{ checkName: "derivationPath" }, { checkName: "accounts" }, { checkName: "connect" }, { checkName: "network" }],
     walletSelect: <WalletSelectModuleOptions>{
       wallets: <Array<WalletModule | WalletInitOptions>>initializedWallets.wallets,
       description: "",

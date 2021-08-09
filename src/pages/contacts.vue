@@ -150,7 +150,8 @@ export default Vue.extend({
       inputtedWallet: <Address>"",
       editingWallet: <ZkInContact | null>null,
       modalError: <string>"",
-      contactsList: <ZkInContact[]>this.$accessor.contacts.get.map((e) => ({ ...e, deleted: false, notInContacts: false })),
+      // @ts-ignore
+      contactsList: <ZkInContact[]>this.$accessor.contacts.getContactsFromStorage().map((e) => ({ ...e, deleted: false, notInContacts: false })),
       fromRoute: <Route>{},
     };
   },
@@ -209,6 +210,7 @@ export default Vue.extend({
     },
   },
   mounted(): void {
+    this.$accessor.contacts.requestStorageKey();
     if (this.$refs.searchInput) {
       (this.$refs.searchInput as Vue).$el?.querySelector("input")?.focus();
     }

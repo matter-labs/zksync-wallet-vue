@@ -162,7 +162,7 @@ import utils from "@/plugins/utils";
 import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
 
-import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/types/lib";
+import { DecimalBalance, ZkInBalance, ZkInTransactionInfo, ZKTypeDisplayToken } from "@/types/lib";
 import { BigNumber, Contract, ContractInterface } from "ethers";
 import Vue from "vue";
 import { closestPackableTransactionAmount } from "zksync";
@@ -287,7 +287,8 @@ export default Vue.extend({
     try {
       this.loading = true;
       if (this.$route.query.token) {
-        const chosenToken = this.$accessor.wallet.getzkBalances.find((singleBalance) => {
+        await this.getBalances();
+        const chosenToken = this.$accessor.wallet.getzkList.find((singleBalance: ZKTypeDisplayToken) => {
           return singleBalance.symbol === this.$route.query.token;
         });
         this.chooseToken(chosenToken as ZkInBalance);
@@ -301,7 +302,7 @@ export default Vue.extend({
   methods: {
     async chooseToken(token: ZkInBalance) {
       try {
-        this.$accessor.tokens.getTokenPrice(token.symbol);
+        await this.$accessor.tokens.getTokenPrice(token.symbol);
       } catch (error) {
         console.log(`Error getting ${token.symbol} price`, error);
         this.$accessor.tokens.addRestrictedToken(token.symbol);
@@ -470,6 +471,11 @@ export default Vue.extend({
           this.inputtedAllowance = "";
         }
       }
+    },
+    async getBalances(): Promise<void> {
+      this.loading = true;
+      await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
+      this.loading = false;
     },
   },
 });

@@ -1,7 +1,8 @@
 /**
  * zkSync Types
  */
-import { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers/lib/web3-provider";
+import { BaseProvider } from "@ethersproject/providers";
+import { Provider } from "zksync";
 import { accessorType } from "~/store";
 
 // All interfaces, mappings and specific types
@@ -14,18 +15,13 @@ declare module "vue/types/vue" {
   }
 }
 
-declare module "@nuxt/types" {
-  interface NuxtAppOptions {
-    $accessor: typeof accessorType;
-  }
-}
-
 /**
  * @author Serge B. | Matter Labs
  * Shims-declaration of the [window.ethereum] (possibly undefined)
  */
 declare global {
   interface Window {
-    ethereum?: ExternalProvider | JsonRpcFetchFunc;
+    ethereum?: BaseProvider;
+    syncProvider?: Provider;
   }
 }

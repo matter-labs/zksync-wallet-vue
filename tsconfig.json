@@ -38,20 +38,17 @@
       "@nuxt/http",
       "@types/jest",
       "@nuxtjs/toast",
-      "web3-core/types",
-      "@inkline/inkline/types",
-      "nuxt-typed-vuex",
-      "typed-vuex"
+      "typed-vuex",
     ]
   },
   "exclude": [
-    "node_modules/*",
-    "dist/*",
-    ".yarn/*",
-    "public/*",
-    ".nuxt/*",
-    ".github/*",
-    "environments/*",
-    "tests/*"
+    "node_modules",
+    "dist",
+    ".yarn",
+    "public",
+    ".nuxt",
+    ".github",
+    "environments",
+    "tests"
   ]
 }

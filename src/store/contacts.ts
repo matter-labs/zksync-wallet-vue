@@ -3,39 +3,22 @@ import utils from "@/plugins/utils";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { ZkIContracts, ZkInContact } from "~/types/lib";
 
-export const state = (): ZkIContracts => ({
-  contactsList: [],
-  storageKey: undefined,
-});
+export const state = () => {
+  return <ZkIContracts>{
+    contactsList: [],
+    storageKey: undefined,
+  };
+};
 
 export type ContactsModuleState = ReturnType<typeof state>;
 
-export const mutations = mutationTree(state, {
-  setContactsList(state: ContactsModuleState, contactsList: ZkInContact[]): void {
-    state.contactsList = contactsList;
-  },
-  add(state: ContactsModuleState, contact: ZkInContact): void {
-    state.contactsList.unshift(contact);
-  },
-  deleteLocal(state: ContactsModuleState, contact: ZkInContact): void {
-    state.contactsList = state.contactsList.filter((singleContact) => singleContact.address.toLowerCase() !== contact.address.toLowerCase());
-  },
-  setStorageKey(state: ContactsModuleState, storageKey: string): void {
-    state.storageKey = storageKey;
-  },
-
-  initContactsList(state: ContactsModuleState): void {
-    state.contactsList = [];
-  },
-});
-
 export const getters = getterTree(state, {
   get: (state: ContactsModuleState): ZkInContact[] => state.contactsList,
-  getStorageKey(_: unknown, __: unknown, ___: unknown, rootGetters: { [x: string]: any }): string {
-    return `contacts-${rootGetters["account/address"]}`;
+  getStorageKey: (state: ContactsModuleState): string => {
+    return state.storageKey!.toString();
   },
-  getByAddress(state: ContactsModuleState) {
-    return (address: Address) => {
+  getByAddress: (state: ContactsModuleState) => {
+    return (address: Address): ZkInContact | false => {
       address = address.toLowerCase();
       for (const contactItem of state.contactsList) {
         if (contactItem.address.toLowerCase() === address) {
@@ -55,6 +38,24 @@ export const getters = getterTree(state, {
       }
       return false;
     };
+  },
+});
+
+export const mutations = mutationTree(state, {
+  setContactsList(state: ContactsModuleState, contactsList: ZkInContact[]): void {
+    state.contactsList = contactsList;
+  },
+  add(state: ContactsModuleState, contact: ZkInContact): void {
+    state.contactsList.unshift(contact);
+  },
+  deleteLocal(state: ContactsModuleState, contact: ZkInContact): void {
+    state.contactsList = state.contactsList.filter((singleContact) => singleContact.address.toLowerCase() !== contact.address.toLowerCase());
+  },
+  setStorageKey(state: ContactsModuleState, storageKey: string): void {
+    state.storageKey = storageKey;
+  },
+  initContactsList(state: ContactsModuleState): void {
+    state.contactsList = [];
   },
 });
 

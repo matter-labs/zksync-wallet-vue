@@ -1,4 +1,4 @@
-import { getterTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Address } from "zksync/build/types";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 
@@ -8,15 +8,18 @@ export declare interface iAccount {
   loadingHint: string;
   address?: Address;
   name?: string;
+  accountData?: unknown;
 }
 
-export const state = (): iAccount => ({
-  loggedIn: false,
-  selectedWallet: undefined,
-  loadingHint: "",
-  address: undefined,
-  name: undefined,
-});
+export const state = () => {
+  return {
+    loggedIn: false,
+    selectedWallet: undefined,
+    loadingHint: "",
+    address: undefined as undefined | number,
+    name: undefined,
+  } as iAccount;
+};
 
 function getNameFromAddress(userAddress: Address): string {
   const walletName: string = window.localStorage.getItem(userAddress) || "";
@@ -27,6 +30,16 @@ function getNameFromAddress(userAddress: Address): string {
 }
 
 export type AccountModuleState = ReturnType<typeof state>;
+
+export const getters = getterTree(state, {
+  loggedIn: (state: AccountModuleState): boolean => state.loggedIn,
+  selectedWallet: (state: AccountModuleState): string | undefined => state.selectedWallet,
+  loadingHint: (state: AccountModuleState): string => state.loadingHint,
+  loader: (state: AccountModuleState): boolean => !state.loggedIn && state.selectedWallet !== "",
+  address: (state: AccountModuleState): Address | undefined => state.address,
+  name: (state: AccountModuleState): string | undefined => state.name,
+  zkScanUrl: (state: AccountModuleState): string | undefined => (state.address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.address}` : undefined),
+});
 
 export const mutations = mutationTree(state, {
   setLoggedIn(state: AccountModuleState, loggedInState: boolean): void {
@@ -58,12 +71,4 @@ export const mutations = mutationTree(state, {
   },
 });
 
-export const getters = getterTree(state, {
-  loggedIn: (state: AccountModuleState): boolean => state.loggedIn,
-  selectedWallet: (state: AccountModuleState): string | undefined => state.selectedWallet,
-  loadingHint: (state: AccountModuleState): string => state.loadingHint,
-  loader: (state: AccountModuleState): boolean => !state.loggedIn && state.selectedWallet !== "",
-  address: (state: AccountModuleState): Address | undefined => state.address,
-  name: (state: AccountModuleState): string | undefined => state.name,
-  zkScanUrl: (state: AccountModuleState): string | undefined => (state.address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.address}` : undefined),
-});
+export const actions = actionTree({ state, getters, mutations }, {});

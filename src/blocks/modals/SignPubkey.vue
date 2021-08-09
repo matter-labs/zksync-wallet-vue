@@ -102,12 +102,7 @@ export default Vue.extend({
         this.close();
       } catch (error) {
         console.log("signActivation error", error);
-        const errorMsg = zkUtils.filterError(error);
-        if (typeof errorMsg === "string") {
-          this.error = errorMsg;
-        } else {
-          this.error = "Signing error";
-        }
+        this.error = zkUtils.filterError(error) || "Signing error";
       }
       this.loading = false;
       this.step = false;
