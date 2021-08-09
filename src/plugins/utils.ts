@@ -150,20 +150,4 @@ export default {
     document.execCommand("copy");
     document.body.removeChild(elem);
   },
-
-  /**
-   * Format transaction to a single format
-   */
-  formatTxHash(txHash: string) {
-    if (typeof txHash !== "string") {
-      return;
-    }
-    if (txHash.startsWith("sync-tx:")) {
-      txHash = txHash.substr("sync-tx:".length, txHash.length);
-    }
-    if (!txHash.startsWith("0x")) {
-      txHash = "0x" + txHash;
-    }
-    return txHash;
-  },
 };

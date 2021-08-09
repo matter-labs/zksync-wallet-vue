@@ -257,7 +257,10 @@ export default Vue.extend({
       return contactFromStore ? contactFromStore.name : address.replace(address.slice(6, address.length - 3), "...");
     },
     getTransactionExplorerLink(transaction: ZkInTx): string {
-      return (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) + `/${this.formatTxHash(transaction.hash)}`;
+      return (
+        (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}/tx` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions`) +
+        `/${this.$options.filters!.formatTxHash(transaction.hash)}`
+      );
     },
     async getWithdrawalTx() {
       const singleTx = this.singleTransaction;
@@ -269,17 +272,14 @@ export default Vue.extend({
           const syncProvider = walletData.get().syncProvider;
           const ethTx = await syncProvider!.getEthTxForWithdrawal(singleTx.hash);
           if (ethTx) {
-            this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${this.formatTxHash(ethTx)}`;
-            this.$accessor.transaction.setWithdrawalTx({ tx: singleTx.hash, ethTx: String(this.formatTxHash(ethTx)) });
+            this.ethTx = `${APP_ETH_BLOCK_EXPLORER}/tx/${this.$options.filters!.formatTxHash(ethTx)}`;
+            this.$accessor.transaction.setWithdrawalTx({ tx: singleTx.hash, ethTx: String(this.$options.filters!.formatTxHash(ethTx)) });
           }
         }
       }
     },
     copy(value: string) {
       zkUtils.copy(value);
-    },
-    formatTxHash(txHash: string) {
-      return zkUtils.formatTxHash(txHash);
     },
   },
 });
