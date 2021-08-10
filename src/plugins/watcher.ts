@@ -8,7 +8,7 @@ import { ethWindow } from "~/plugins/build";
 let changeNetworkWasSet = false;
 
 /**
- * @todo avoid cross-colling
+ * @todo avoid cross-calling
  * @param dispatch
  * @param context
  * @return {function(): Promise<void>}
