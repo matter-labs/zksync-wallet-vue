@@ -1,7 +1,7 @@
 /**
  * zkSync Types
  */
-import { BaseProvider } from "@ethersproject/providers";
+import { providers } from "ethers";
 import { Provider } from "zksync";
 import { accessorType } from "~/store";
 
@@ -15,13 +15,19 @@ declare module "vue/types/vue" {
   }
 }
 
+declare module "@nuxt/types" {
+  interface NuxtAppOptions {
+    $accessor: typeof accessorType;
+  }
+}
+
 /**
  * @author Serge B. | Matter Labs
  * Shims-declaration of the [window.ethereum] (possibly undefined)
  */
 declare global {
   interface Window {
-    ethereum?: BaseProvider;
+    ethereum?: providers.BaseProvider;
     syncProvider?: Provider;
   }
 }

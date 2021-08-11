@@ -8,18 +8,15 @@ export declare interface iAccount {
   loadingHint: string;
   address?: Address;
   name?: string;
-  accountData?: unknown;
 }
 
-export const state = () => {
-  return {
-    loggedIn: false,
-    selectedWallet: undefined,
-    loadingHint: "",
-    address: undefined as undefined | number,
-    name: undefined,
-  } as iAccount;
-};
+export const state = (): iAccount => ({
+  loggedIn: false,
+  selectedWallet: undefined,
+  loadingHint: "",
+  address: undefined,
+  name: undefined,
+});
 
 function getNameFromAddress(userAddress: Address): string {
   const walletName: string = window.localStorage.getItem(userAddress) || "";
@@ -42,17 +39,21 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  setLoggedIn(state: AccountModuleState, loggedInState: boolean): void {
-    state.loggedIn = loggedInState;
-  },
   setSelectedWallet(state: AccountModuleState, name: string): void {
+    if (name) {
+      window.localStorage.setItem("selectedWallet", name as string);
+    }
     state.selectedWallet = name;
   },
   setLoadingHint(state: AccountModuleState, text: string): void {
     state.loadingHint = text;
   },
-  setAddress(state: AccountModuleState, address: Address): void {
-    state.address = address;
+  setAddress(state: AccountModuleState, address?: Address): void {
+    if (address !== undefined) {
+      state.address = address;
+      state.name = getNameFromAddress(state.address);
+      state.loggedIn = true;
+    }
   },
   setName(state: AccountModuleState, name: string): void {
     if (state.address !== undefined) {
@@ -64,11 +65,23 @@ export const mutations = mutationTree(state, {
       state.name = getNameFromAddress(state.address);
     }
   },
-  setNameFromStorage(state: AccountModuleState): void {
-    if (state.address !== undefined) {
-      state.name = getNameFromAddress(state.address);
-    }
+  clearDataStorage(state: AccountModuleState): void {
+    state.loggedIn = false;
+    state.selectedWallet = undefined;
+    state.loadingHint = "Logging out";
+    state.name = undefined;
+    state.address = undefined;
   },
 });
 
-export const actions = actionTree({ state, getters, mutations }, {});
+export const actions = actionTree(
+  { state, getters, mutations },
+  {
+    logout: ({ commit }) => {
+      commit("clearDataStorage");
+    },
+    processLogin: ({ commit }, address?: Address) => {
+      commit("setAddress", address);
+    },
+  },
+);

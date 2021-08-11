@@ -12,8 +12,8 @@ interface ZKITransactionsState {
   withdrawalTxToEthTx: Map<string, string>;
 }
 
-export const state = () => {
-  return <ZKITransactionsState>{
+export const state = () =>
+  ({
     watchedTransactions: <
       {
         [txHash: string]: {
@@ -25,8 +25,7 @@ export const state = () => {
     deposits: <ZkInDeposits>{},
     forceUpdateTick: 0 /* Used to force update computed active deposits list */,
     withdrawalTxToEthTx: <Map<string, string>>new Map(),
-  };
-};
+  } as ZKITransactionsState);
 
 export type TransactionModuleState = ReturnType<typeof state>;
 
@@ -39,20 +38,20 @@ interface ZKITransactionParams {
 }
 
 export const getters = getterTree(state, {
-  getForceUpdateTick: (state): number => {
+  getForceUpdateTick: (state: TransactionModuleState): number => {
     return state.forceUpdateTick;
   },
-  depositList: (state): ZkInDeposits => {
+  depositList: (state: TransactionModuleState): ZkInDeposits => {
     return state.deposits;
   },
-  getWithdrawalTx(state) {
+  getWithdrawalTx(state: TransactionModuleState) {
     return (tx: string) => {
       return state.withdrawalTxToEthTx.get(tx);
     };
   },
 });
 export const mutations = mutationTree(state, {
-  updateTransactionStatus(state, { hash, status }: { hash: string; status: string }): void {
+  updateTransactionStatus(state: TransactionModuleState, { hash, status }: { hash: string; status: string }): void {
     if (status === "Verified") {
       delete state.watchedTransactions[hash];
       return;
@@ -65,7 +64,7 @@ export const mutations = mutationTree(state, {
       state.watchedTransactions[hash].status = status;
     }
   },
-  updateDepositStatus: (state, { tokenSymbol, hash, amount, status, confirmations }: ZKITransactionParams): void => {
+  updateDepositStatus: (state: TransactionModuleState, { tokenSymbol, hash, amount, status, confirmations }: ZKITransactionParams): void => {
     if (!Array.isArray(state.deposits[tokenSymbol])) {
       state.deposits[tokenSymbol] = [];
     }
@@ -90,7 +89,7 @@ export const mutations = mutationTree(state, {
     }
     state.forceUpdateTick++;
   },
-  setWithdrawalTx(state, { tx, ethTx }: { tx: string; ethTx: string }): void {
+  setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }: { tx: string; ethTx: string }): void {
     state.withdrawalTxToEthTx.set(tx, ethTx);
   },
 });
@@ -115,7 +114,7 @@ export const actions = actionTree(
       }
       commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
     },
-    async watchDeposit({ commit, dispatch }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
+    async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
       try {
         const savedAddress = this.app.$accessor.account.address;
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
@@ -123,7 +122,7 @@ export const actions = actionTree(
         if (savedAddress !== this.app.$accessor.account.address) {
           return;
         }
-        await dispatch("requestBalancesUpdate");
+        await this.app.$accessor.transaction.requestBalancesUpdate();
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
       } catch (error) {
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, status: "Committed" });
@@ -182,9 +181,6 @@ export const actions = actionTree(
         activeDeposits[ticker] = deposits[ticker].filter((tx: ZKInDepositTx) => tx.status === "Initiated");
       }
       for (ticker in activeDeposits) {
-        if (!activeDeposits.hasOwnProperty(ticker)) {
-          continue;
-        }
         if (activeDeposits[ticker].length > 0) {
           if (!finalDeposits[ticker]) {
             finalDeposits[ticker] = BigNumber.from("0");

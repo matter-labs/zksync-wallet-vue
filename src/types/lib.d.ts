@@ -1,4 +1,4 @@
-import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import { API } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { Route } from "vue-router/types";
 import { Provider } from "zksync";

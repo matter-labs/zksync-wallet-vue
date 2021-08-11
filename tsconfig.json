@@ -39,6 +39,7 @@
       "@types/jest",
       "@nuxtjs/toast",
       "typed-vuex",
+      "btn-onboard"
     ]
   },
   "exclude": [

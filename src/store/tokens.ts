@@ -59,9 +59,6 @@ export const getters = getterTree(state, {
   getTokenByID(state: TokensModuleState) {
     return (id: number): TokenInfo | undefined => {
       for (const symbol in state.allTokens) {
-        if (!state.allTokens.hasOwnProperty(symbol)) {
-          continue;
-        }
         if (state.allTokens[symbol].id === id) {
           return state.allTokens[symbol];
         }
