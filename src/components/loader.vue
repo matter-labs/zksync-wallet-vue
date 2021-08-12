@@ -1,5 +1,5 @@
 <template>
-  <div class="loaderContainer" :class="`size-${size}`">
+  <div class="loaderContainer" data-cy="core_loader_spinner" :class="`size-${size}`">
     <div class="loaderSpinner">Loading...</div>
   </div>
 </template>
