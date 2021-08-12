@@ -7,14 +7,14 @@
         &nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
       </i-button>
     </i-input>
-    <div class="error" data-cy="amount_block_token_error_message">
+    <div class="error">
       {{ error }}
     </div>
     <div v-if="token" class="_display-flex _justify-content-space-between">
       <div class="secondaryText">
         <token-price :symbol="token.symbol" :amount="inputtedAmountBigNumber.toString()" />
       </div>
-      <div class="linkText" data-cy="amount_block_token_max_amount" @click="chooseMaxAmount()">Max: {{ maxAmount | formatToken(token.symbol) }}</div>
+      <div class="linkText" @click="chooseMaxAmount()">Max: {{ maxAmount | formatToken(token.symbol) }}</div>
     </div>
   </div>
 </template>

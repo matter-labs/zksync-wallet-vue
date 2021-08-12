@@ -144,7 +144,7 @@
         Only normal withdraw ({{ (withdrawTime.normal + 5400) | formatSeconds }}) is available when using different fee token
       </div> -->
 
-      <div class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">
+      <div class="errorText _text-center _margin-top-1">
         {{ error }}
       </div>
 
@@ -158,7 +158,7 @@
         </span>
       </i-button>
 
-      <div v-if="!enoughFeeToken" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">
+      <div v-if="!enoughFeeToken" class="errorText _text-center _margin-top-1">
         Not enough <span class="tokenSymbol">{{ feeToken.symbol }}</span> to pay the fee
       </div>
       <div v-if="cantFindFeeToken === true && feesObj && chosenToken && inputtedAddress" class="errorText _text-center _margin-top-1">
@@ -166,7 +166,7 @@
         No available tokens on your balance to pay the fee
       </div>
       <div v-else>
-        <div v-if="(chosenFeeObj || feesLoading) && chosenToken && inputtedAddress" class="_text-center _margin-top-1" data-cy="fee_block_fee_message">
+        <div v-if="(chosenFeeObj || feesLoading) && chosenToken && inputtedAddress" class="_text-center _margin-top-1">
           Fee:
           <span v-if="feesLoading" class="secondaryText">Loading...</span>
           <span v-else-if="feeToken">
@@ -177,7 +177,7 @@
           </span>
         </div>
 
-        <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1-2" data-cy="fee_block_account_activation_message">
+        <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1-2">
           Account Activation single-time fee:
           <span v-if="activateAccountFeeLoading" class="secondaryText">Loading...</span>
           <span v-else-if="feeToken">
@@ -188,7 +188,7 @@
           </span>
         </div>
         <div v-if="inputtedAddress || !ownAccountUnlocked" class="_text-center _margin-top-1-2">
-          <span class="linkText" data-cy="fee_block_change_fee_token_button" @click="chooseFeeTokenModal = true">Change fee token</span>
+          <span class="linkText" @click="chooseFeeTokenModal = true">Change fee token</span>
         </div>
       </div>
 
