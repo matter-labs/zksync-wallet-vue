@@ -90,7 +90,7 @@
         </span>
       </div>
       <span class="linkText _width-100 _display-block _text-center _margin-top-05" data-cy="fee_block_change_fee_token_button" @click="chooseFeeTokenModal = true"
-        >Change fee token</span
+        data-cy="fee_block_change_fee_token_button">Change fee token</span
       >
     </div>
   </div>

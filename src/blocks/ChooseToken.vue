@@ -7,7 +7,7 @@
       <div class="searchContainer">
         <i-input
           ref="tokenSymbolInput"
-          v-model="search"
+         data-cy="choose_token_block_token_input" v-model="search"
           data-cy="choose_token_block_token_input"
           :placeholder="tokensType === 'NFT' ? 'Filter NFT tokens' : `Filter balances in ${tokensType}`"
           maxlength="10"
