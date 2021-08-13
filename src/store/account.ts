@@ -1,6 +1,6 @@
+import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Address } from "zksync/build/types";
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 
 export declare interface iAccount {
   loggedIn: boolean;
@@ -28,18 +28,11 @@ function getNameFromAddress(userAddress: Address): string {
 
 export type AccountModuleState = ReturnType<typeof state>;
 
-export const getters = getterTree(state, {
-  loggedIn: (state: AccountModuleState): boolean => state.loggedIn,
-  selectedWallet: (state: AccountModuleState): string | undefined => state.selectedWallet,
-  loadingHint: (state: AccountModuleState): string => state.loadingHint,
-  loader: (state: AccountModuleState): boolean => !state.loggedIn && state.selectedWallet !== "",
-  address: (state: AccountModuleState): Address | undefined => state.address,
-  name: (state: AccountModuleState): string | undefined => state.name,
-  zkScanUrl: (state: AccountModuleState): string | undefined => (state.address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.address}` : undefined),
-});
-
 export const mutations = mutationTree(state, {
-  setSelectedWallet(state: AccountModuleState, name: string): void {
+  setLoggedIn(state: AccountModuleState, isLoggedIn: boolean): void {
+    state.loggedIn = isLoggedIn;
+  },
+  setSelectedWallet(state: AccountModuleState, name): void {
     if (name) {
       window.localStorage.setItem("selectedWallet", name as string);
     }
@@ -49,15 +42,14 @@ export const mutations = mutationTree(state, {
     state.loadingHint = text;
   },
   setAddress(state: AccountModuleState, address?: Address): void {
-    if (address !== undefined) {
-      state.address = address;
-      state.name = getNameFromAddress(state.address);
-      state.loggedIn = true;
-    }
+    state.address = address;
   },
-  setName(state: AccountModuleState, name: string): void {
+  setName(state: AccountModuleState, name?: string): void {
     if (state.address !== undefined) {
-      if (name.length < 1) {
+      if (!name) {
+        if (!state.name) {
+          name = window.localStorage.getItem(state.address) as string;
+        }
         name = getNameFromAddress(state.address);
         window.localStorage.removeItem(state.address);
       }
@@ -68,20 +60,51 @@ export const mutations = mutationTree(state, {
   clearDataStorage(state: AccountModuleState): void {
     state.loggedIn = false;
     state.selectedWallet = undefined;
-    state.loadingHint = "Logging out";
-    state.name = undefined;
+    state.name = "";
     state.address = undefined;
   },
+});
+
+export const getters = getterTree(state, {
+  loggedIn: (state: AccountModuleState): boolean => state.loggedIn,
+  selectedWallet: (state: AccountModuleState): string | undefined => state.selectedWallet,
+  loadingHint: (state: AccountModuleState): string => state.loadingHint,
+  loader: (state: AccountModuleState): boolean => !state.loggedIn && !!state.selectedWallet,
+  address: (state: AccountModuleState): Address | undefined => state.address,
+  name: (state: AccountModuleState): string | undefined => state.name,
+  zkScanUrl: (state: AccountModuleState): string | undefined => (state.address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.address}` : undefined),
 });
 
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    logout: ({ commit }) => {
+    logout({ commit }): void {
       commit("clearDataStorage");
+      this.app.$accessor.account.setWallet(undefined);
     },
-    processLogin: ({ commit }, address?: Address) => {
-      commit("setAddress", address);
+    processLogin: ({ commit }, address?: Address | string) => {
+      if (address) {
+        commit("setAddress", address as Address);
+        commit("setLoggedIn", true);
+        commit("setName", undefined);
+      }
+    },
+    setWallet: ({ commit }, selectedWallet?: string): void => {
+      commit("setSelectedWallet", selectedWallet);
+      if (selectedWallet) {
+        window.localStorage.setItem("selectedWallet", selectedWallet as string);
+      } else {
+        window.localStorage.removeItem("selectedWallet");
+      }
+    },
+    setWalletFromStorage(_str): string | undefined {
+      const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
+      console.log("wallet from storage", previouslySelectedWallet);
+      if (previouslySelectedWallet) {
+        this.app.$toast.show("Found previously selected wallet.");
+        this.app.$accessor.account.setWallet(previouslySelectedWallet);
+      }
+      return previouslySelectedWallet || undefined;
     },
   },
 );

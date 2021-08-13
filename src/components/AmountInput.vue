@@ -1,20 +1,20 @@
 <template>
   <div class="amountInput" :class="{ error: error }">
-    <i-input data-cy="amount_block_token_input" ref="amountInput" v-model="inputtedAmount" maxlength="35" size="lg" type="text" @keyup.enter="$emit('enter')">
-      <i-button data-cy="amount_block_token_select_button" v-if="!token" slot="append" block link variant="secondary" @click="$emit('chooseToken')"> Select token</i-button>
-      <i-button data-cy="amount_block_token_select_button" v-else slot="append" block class="selectedTokenBtn" link variant="secondary" @click="$emit('chooseToken')">
+    <i-input ref="amountInput" v-model="inputtedAmount" data-cy="amount_block_token_input" maxlength="35" size="lg" type="text" @keyup.enter="$emit('enter')">
+      <i-button v-if="!token" slot="append" data-cy="amount_block_token_select_button" block link variant="secondary" @click="$emit('chooseToken')"> Select token</i-button>
+      <i-button v-else slot="append" data-cy="amount_block_token_select_button" block class="selectedTokenBtn" link variant="secondary" @click="$emit('chooseToken')">
         <span class="tokenSymbol">{{ token.symbol }}</span>
         &nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
       </i-button>
     </i-input>
-    <div class="error">
+    <div class="error" data-cy="amount_block_token_error_message">
       {{ error }}
     </div>
     <div v-if="token" class="_display-flex _justify-content-space-between">
       <div class="secondaryText">
         <token-price :symbol="token.symbol" :amount="inputtedAmountBigNumber.toString()" />
       </div>
-      <div class="linkText" @click="chooseMaxAmount()">Max: {{ maxAmount | formatToken(token.symbol) }}</div>
+      <div class="linkText" data-cy="amount_block_token_max_amount" @click="chooseMaxAmount()">Max: {{ maxAmount | formatToken(token.symbol) }}</div>
     </div>
   </div>
 </template>

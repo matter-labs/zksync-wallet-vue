@@ -2,6 +2,7 @@
  * zkSync Types
  */
 import { providers } from "ethers";
+import { WalletLinkProvider } from "walletlink";
 import { Provider } from "zksync";
 import { accessorType } from "~/store";
 
@@ -27,7 +28,8 @@ declare module "@nuxt/types" {
  */
 declare global {
   interface Window {
-    ethereum?: providers.BaseProvider;
+    // @ts-ignore
+    ethereum: providers.BaseProvider | providers.ExternalProvider | providers.JsonRpcFetchFunc | WalletLinkProvider | undefined;
     syncProvider?: Provider;
   }
 }

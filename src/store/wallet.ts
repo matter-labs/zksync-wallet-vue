@@ -4,8 +4,6 @@ import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import { changeNetworkSet } from "@/plugins/watcher";
 import web3Wallet from "@/plugins/web3";
-import { ExternalProvider } from "@ethersproject/providers";
-import Web3 from "web3";
 
 import {
   iWallet,
@@ -21,11 +19,13 @@ import {
   ZKTypeDisplayBalances,
   ZKTypeDisplayToken,
 } from "@/types/lib";
+import { ExternalProvider } from "@ethersproject/providers";
 import Onboard from "bnc-onboard";
-import { BigNumber, BigNumberish, ethers } from "ethers";
 import { API, Subscriptions, Wallet as OnboardWallet } from "bnc-onboard/dist/src/interfaces";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import Web3 from "web3";
 import { provider } from "web3-core";
 import { closestPackableTransactionFee, Provider, Wallet } from "zksync";
 import { AccountState, Address, Fee, NFT, TokenSymbol } from "zksync/build/types";
@@ -145,7 +145,6 @@ export const mutations = mutationTree(state, {
   },
 });
 
-// @ts-ignore
 export const actions = actionTree(
   { state, getters, mutations },
   {
@@ -155,31 +154,33 @@ export const actions = actionTree(
      * @param rootState
      * @return {Promise<boolean>}
      */
-    onboardInit({ commit }): Promise<boolean> {
-      const onboard: API = Onboard({
-        ...onboardConfig,
-        subscriptions: <Subscriptions>{
-          wallet: (wallet: OnboardWallet) => {
-            console.log(wallet);
-            if (wallet && wallet.provider) {
+    onboardInit({ state, commit }): Promise<boolean> | boolean {
+      console.log("onboard init called");
+      if (!state.onboard) {
+        const onboard: API = Onboard({
+          ...onboardConfig,
+          subscriptions: <Subscriptions>{
+            wallet: (wallet: OnboardWallet) => {
+              console.log("subscription 'wallet' called");
+              console.log(wallet);
+              if (!process.client || !wallet.provider) {
+                this.app.$accessor.wallet.logout(true);
+                this.app.$accessor.account.setWallet("");
+                return false;
+              }
               wallet.provider!.autoRefreshOnNetworkChange = false;
               web3Wallet.set(new Web3(wallet.provider));
-              if (process.client && wallet!.name) {
-                this.app.$accessor.account.setSelectedWallet(wallet.name as string);
+              if (wallet.name && wallet.name !== "WalletConnect") {
+                this.app.$accessor.account.setWallet(wallet.name);
               }
-            } else {
-              this.app.$accessor.wallet.logout();
-            }
+            },
           },
-        },
-      });
-      commit("setOnboard", onboard);
-      const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
-      if (previouslySelectedWallet) {
-        this.app.$toast.show("Found previously selected wallet.");
-        this.app.$accessor.account.setSelectedWallet(previouslySelectedWallet);
+        });
+        commit("setOnboard", onboard);
       }
-      return onboard.walletSelect(previouslySelectedWallet || undefined);
+      const previouslySelectedWallet = this.app.$accessor.account.setWalletFromStorage();
+      // @ts-ignore
+      return state.onboard.walletSelect(previouslySelectedWallet);
     },
 
     /**
@@ -261,7 +262,7 @@ export const actions = actionTree(
             nfts: state.nftTokens.list,
           };
         }
-        const isRestricted: boolean = this.app.$accessor.tokens.isRestricted(tokenSymbol);
+        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -399,9 +400,10 @@ export const actions = actionTree(
       }
     },
 
-    async requestFees({ getters, commit }, { address, symbol, feeSymbol, type }): Promise<ZkInFeesObj | undefined> {
+    async requestFees({ getters, commit }, { address, symbol, feeSymbol, type, force }): Promise<ZkInFeesObj | undefined> {
       const savedFees = getters.getFees;
       if (
+        !force &&
         Object.prototype.hasOwnProperty.call(savedFees, symbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol], feeSymbol) &&
         Object.prototype.hasOwnProperty.call(savedFees[symbol][feeSymbol], type) &&
@@ -503,7 +505,8 @@ export const actions = actionTree(
         this.app.$accessor.account.setLoadingHint("Processing...");
 
         if (firstSelect) {
-          walletCheck = !!(await state.onboard?.walletSelect());
+          const previouslySelectedWallet = this.app.$accessor.account.setWalletFromStorage();
+          walletCheck = !!(await state.onboard?.walletSelect(previouslySelectedWallet));
           if (!walletCheck) {
             return false;
           }
@@ -587,11 +590,12 @@ export const actions = actionTree(
 
         return true;
       } catch (error) {
-        this.app.$sentry?.captureException(error);
+        this.app.$sentry!.captureException(error);
         if (!error.message.includes("User denied")) {
           this.app.$toast.global.zkException({
             message: `Refreshing state of the wallet failed... Reason: ${error.message}`,
           });
+          this.app.$accessor.wallet.logout(false);
         }
         return false;
       }
@@ -601,16 +605,28 @@ export const actions = actionTree(
      * Perform logout and fire a couple of events
      * @param state
      * @param commit
+     * @param withoutReset
      * @returns {Promise<void>}
      */
-    logout({ state, commit }): void {
-      state.onboard?.walletReset();
-      clearTimeout(getTransactionHistoryAgain);
-      walletData.clear();
-      localStorage.removeItem("selectedWallet");
-      this.app.$accessor.account.logout();
-      this.app.$accessor.closeActiveModal();
-      commit("clearDataStorage");
+    logout({ state, commit }, withoutReset = false): void {
+      try {
+        console.log("logout called");
+        if (!withoutReset) {
+          state.onboard?.walletReset();
+        }
+        clearTimeout(getTransactionHistoryAgain);
+        walletData.clear();
+        this.app.$accessor.account.logout();
+        this.app.$accessor.closeActiveModal();
+        commit("clearDataStorage");
+        if ((process.client && window.ethereum!.connected) || window.ethereum!.isConnected()) {
+          if (typeof window.ethereum!.disconnect === "function") {
+            window.ethereum!.disconnect();
+          }
+        }
+      } catch (error) {
+        console.log("ERROR ON DISCONNECTION", error);
+      }
     },
 
     /**

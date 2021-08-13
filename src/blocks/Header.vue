@@ -93,7 +93,7 @@ export default Vue.extend({
     logout(): void {
       this.accountModal = false;
       this.$nextTick(async () => {
-        await this.$accessor.wallet.logout();
+        await this.$accessor.wallet.logout(false);
         await this.$router.push("/");
       });
     },

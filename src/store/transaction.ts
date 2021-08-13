@@ -37,19 +37,6 @@ interface ZKITransactionParams {
   confirmations?: number;
 }
 
-export const getters = getterTree(state, {
-  getForceUpdateTick: (state: TransactionModuleState): number => {
-    return state.forceUpdateTick;
-  },
-  depositList: (state: TransactionModuleState): ZkInDeposits => {
-    return state.deposits;
-  },
-  getWithdrawalTx(state: TransactionModuleState) {
-    return (tx: string) => {
-      return state.withdrawalTxToEthTx.get(tx);
-    };
-  },
-});
 export const mutations = mutationTree(state, {
   updateTransactionStatus(state: TransactionModuleState, { hash, status }: { hash: string; status: string }): void {
     if (status === "Verified") {
@@ -91,6 +78,20 @@ export const mutations = mutationTree(state, {
   },
   setWithdrawalTx(state: TransactionModuleState, { tx, ethTx }: { tx: string; ethTx: string }): void {
     state.withdrawalTxToEthTx.set(tx, ethTx);
+  },
+});
+
+export const getters = getterTree(state, {
+  getForceUpdateTick: (state: TransactionModuleState): number => {
+    return state.forceUpdateTick;
+  },
+  depositList: (state: TransactionModuleState): ZkInDeposits => {
+    return state.deposits;
+  },
+  getWithdrawalTx(state: TransactionModuleState) {
+    return (tx: string) => {
+      return state.withdrawalTxToEthTx.get(tx);
+    };
   },
 });
 
@@ -141,7 +142,7 @@ export const actions = actionTree(
      * @param feeToken
      * @return {Promise<any>}
      */
-    async fetchChangePubKeyFee({ state }, { address, feeToken }: { address: Address; feeToken: TokenSymbol }): Promise<Fee | undefined> {
+    async fetchChangePubKeyFee(_, { address, feeToken }: { address: Address; feeToken: TokenSymbol }): Promise<Fee | undefined> {
       const syncWallet = walletData.get().syncWallet;
       const syncProvider = walletData.get().syncProvider;
       if (syncWallet?.ethSignerType?.verificationMethod === "ERC-1271") {

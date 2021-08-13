@@ -9,19 +9,24 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
     return;
   }
   (async () => {
+    console.log("async run provider loader");
     walletData.syncProvider.load();
     const onboardResult = await $accessor.wallet.onboardInit();
+    console.log("onboard initialized with the result:", onboardResult);
     if (!onboardResult) {
-      $accessor.wallet.logout();
       if (route.path !== "/") {
+        console.log("after logout 1");
+        $accessor.wallet.logout(false);
         redirect("/");
       }
       return;
     }
 
-    const refreshWallet = await $accessor.wallet.walletRefresh(true);
+    const refreshWallet = await $accessor.wallet.walletRefresh(false);
+    console.log("refresh ended up with value:", refreshWallet);
     if (!refreshWallet) {
-      $accessor.wallet.logout();
+      $accessor.wallet.logout(false);
+      console.log("after logout 2");
       if (route.path !== "/") {
         redirect("/");
       }
@@ -29,6 +34,7 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
       redirect("/account");
     }
   })();
+  console.log("middleware end");
 };
 
 export default wallet;

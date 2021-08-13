@@ -150,8 +150,7 @@ export default Vue.extend({
       inputtedWallet: <Address>"",
       editingWallet: <ZkInContact | null>null,
       modalError: <string>"",
-      // @ts-ignore
-      contactsList: <ZkInContact[]>this.$accessor.contacts.getContactsFromStorage().map((e) => ({ ...e, deleted: false, notInContacts: false })),
+      contactsList: <ZkInContact[]>this.$accessor.contacts.get.map((e) => ({ ...e, deleted: false, notInContacts: false })),
       fromRoute: <Route>{},
     };
   },

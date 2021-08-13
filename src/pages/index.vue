@@ -2,7 +2,7 @@
   <div class="indexPage">
     <i-container>
       <h1>Connect your L1 ETH Wallet to start</h1>
-      <div data-cy="connect_wallet_button" class="tileContainer _margin-top-1" @click="customWallet">
+      <div data-cy="core_connect_wallet_button" class="tileContainer _margin-top-1" @click="customWallet">
         <div class="tile">
           <img src="@/assets/imgs/wallets/external.png" alt="External" />
         </div>
@@ -30,7 +30,8 @@ export default Vue.extend({
       });
       const refreshWalletTry = await this.$accessor.wallet.walletRefresh(true);
       if (!refreshWalletTry) {
-        this.$accessor.wallet.logout();
+        console.log("calling logout from vue");
+        this.$accessor.wallet.logout(true);
       } else {
         await this.$router.push("/account");
       }

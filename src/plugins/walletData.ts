@@ -1,7 +1,7 @@
 import { iWalletData, iWalletWrapper } from "@/types/lib";
 import { getDefaultProvider, Provider } from "zksync";
 import { Network } from "zksync/build/types";
-import { ZK_NETWORK } from "./build";
+import { ZK_NETWORK } from "@/plugins/build";
 
 const internalWalletData: iWalletData = {
   syncProvider: undefined,

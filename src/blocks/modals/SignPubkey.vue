@@ -1,11 +1,11 @@
 <template>
-  <i-modal :value="opened" class="prevent-close" size="md" @hide="close()">
+  <i-modal :value="opened" class="prevent-close" size="md" data-cy="account_activation_modal" @hide="close()">
     <template slot="header">Account Activation</template>
     <div class="_text-center">
       <p v-if="step === false">Sign a message once to activate your zkSync account.</p>
       <p v-else-if="step === 'sign'" class="_text-center">Sign the message in your wallet to continue</p>
       <p v-else-if="step === 'loading'" class="_text-center">Loading account data...</p>
-      <i-button :disabled="loading" class="_margin-top-2" block size="lg" variant="secondary" @click="signActivation()">
+      <i-button :disabled="loading" class="_margin-top-2" block size="lg" variant="secondary" data-cy="account_activation_sign_button" @click="signActivation()">
         <div class="_display-flex _justify-content-center _align-items-center">
           <div>Sign account activation</div>
           <loader v-if="loading" class="_margin-left-1" size="xs" />

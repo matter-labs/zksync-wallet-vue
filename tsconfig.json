@@ -38,18 +38,21 @@
       "@nuxt/http",
       "@types/jest",
       "@nuxtjs/toast",
-      "typed-vuex",
-      "btn-onboard"
+      "web3-core/types",
+      "@inkline/inkline/types",
+      "btn-onboard",
+      "nuxt-typed-vuex",
+      "typed-vuex"
     ]
   },
   "exclude": [
-    "node_modules",
-    "dist",
-    ".yarn",
-    "public",
-    ".nuxt",
-    ".github",
-    "environments",
-    "tests"
+    "node_modules/*",
+    "dist/*",
+    ".yarn/*",
+    "public/*",
+    ".nuxt/*",
+    ".github/*",
+    "environments/*",
+    "tests/*"
   ]
 }

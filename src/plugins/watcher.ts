@@ -1,10 +1,23 @@
 import { walletData } from "@/plugins/walletData";
 import { iWallet } from "@/types/lib";
+import { Route } from "vue-router/types";
 import { Dispatch } from "vuex";
 import { Store } from "vuex/types/index";
 import { Address } from "zksync/build/types";
 
 import { ethWindow } from "~/plugins/build";
+
+const walletRefresh = function (context: Store<iWallet>) {
+  context.app.$accessor.wallet.walletRefresh(false).then((refreshWalletResult: boolean): Promise<void | Route> => {
+    console.log("walletRefresh called with result", refreshWalletResult);
+    if (!refreshWalletResult) {
+      context.app.$accessor.wallet.logout(false);
+      return context.$router.push("/");
+    } else {
+      return context.app.$accessor.wallet.forceRefreshData();
+    }
+  });
+};
 
 let changeNetworkWasSet = false;
 /**
@@ -20,46 +33,47 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
      */
     ethWindow.ethereum!.on("disconnect", () => {
       context!.app.$toast.global?.zkException({
-        message: "Connection with your Wallet was lost. Restarting the DAPP",
+        message: "Wallet disconnected",
       });
-      context.app.$accessor.wallet.logout();
+      context.app.$accessor.wallet.logout(false);
+      context.$router.push("/");
     });
 
     /**
      * Triggered on change of the Network
      */
-    ethWindow.ethereum?.on("chainChanged", async (_chainId) => {
-      console.log("chainChanged", _chainId);
+    ethWindow.ethereum?.on("chainChanged", (_chainId) => {
+      context!.app.$toast.global?.zkException({
+        message: "ETH Network change spotted",
+      });
       if (!walletData.get().syncWallet) {
+        context.$router.push("/");
         return;
       }
-      const refreshWalletResult = await context.app.$accessor.wallet.walletRefresh(false);
-      if (!refreshWalletResult) {
-        await context.app.$accessor.wallet.logout();
-        await context.$router.push("/");
-      } else {
-        await context.app.$accessor.wallet.forceRefreshData();
-      }
+      return walletRefresh(context);
     });
 
-    ethWindow.ethereum?.on("accountsChanged", (walletAddress: Address) => {
+    ethWindow.ethereum?.on("accountsChanged", (changedValue: Address) => {
+      const walletAddress = Array.isArray(changedValue) ? changedValue.pop() : changedValue;
       console.log("accountsChanged", walletAddress, context.app.$accessor.account.address);
-      if (context.app.$accessor.account.address === walletAddress) {
+      if (!context.app.$accessor.account.address) {
+        console.log("undefined account");
+        context.app.$accessor.wallet.walletRefresh(true);
         return;
       }
-      context.app.$toast.global.zkException({ message: "You've changes active account. Restarting the DAPP" });
-      return async () => {
-        if (!walletData.get().syncWallet) {
-          return;
-        }
-        const refreshWalletResult = await context.app.$accessor.wallet.walletRefresh(false);
-        if (!refreshWalletResult) {
-          await context.app.$accessor.wallet.logout();
-          await context.$router.push("/");
-        } else {
-          await context.app.$accessor.wallet.forceRefreshData();
-        }
-      };
+      if (context.app.$accessor.account.address === walletAddress) {
+        console.log("calling wallet check");
+        context.app.$accessor.wallet.walletRefresh(true);
+        return;
+      }
+      context.app.$toast.global.zkException({ message: "Wallet account change spotted" });
+      context.app.$accessor.wallet.logout(false);
+
+      if (!walletData.get().syncWallet) {
+        context.$router.push("/");
+        return;
+      }
+      return walletRefresh(context);
     });
   }
 };

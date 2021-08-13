@@ -1,10 +1,7 @@
 import { Network } from "zksync/build/types";
-// @ts-ignore
 import { version as zkSyncVersion } from "zksync/package.json";
-// @ts-ignore
-import { networkEthId } from "@/types/lib";
-// @ts-ignore
 import { version } from "../../package.json";
+import { networkEthId } from "~/types/lib";
 
 export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
   { name: "rinkeby", id: 4 },
