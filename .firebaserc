@@ -14,14 +14,14 @@
         "prod-ropsten": [
           "zksync-vue-ropsten"
         ],
-        "dev-rinkeby": [
-          "rinkeby-wallet-zksync"
-        ],
         "stage-mainnet": [
           "zksync-vue"
         ],
         "dev-mainnet": [
           "mainnet-wallet-zksync"
+        ],
+        "beta-ropsten": [
+          "ropsten-beta-wallet-zksync"
         ]
       }
     },
