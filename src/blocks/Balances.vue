@@ -61,7 +61,7 @@
                 </span>
                 &nbsp;&nbsp;{{ item.rawBalance | formatToken(item.symbol) }}
               </div>
-              <div class="status _hidden-md-and-down">
+              <div class="status _hidden-sm-and-down">
                 <i-tooltip placement="left">
                   <v-icon v-if="item.status === 'Verified'" class="verified" name="ri-check-double-line" />
                   <v-icon v-else class="committed" name="ri-check-line" />
