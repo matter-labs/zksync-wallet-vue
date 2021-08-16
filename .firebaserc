@@ -8,21 +8,21 @@
         "beta-rinkeby": [
           "beta-rinkeby-zksync-vue"
         ],
+        "beta-ropsten": [
+          "ropsten-beta-wallet-zksync"
+        ]
         "prod-rinkeby": [
           "zksync-vue-rinkeby-2"
         ],
         "prod-ropsten": [
           "zksync-vue-ropsten"
         ],
-        "dev-rinkeby": [
-          "rinkeby-wallet-zksync"
-        ],
         "stage-mainnet": [
           "zksync-vue"
         ],
         "dev-mainnet": [
           "mainnet-wallet-zksync"
-        ]
+        ],
       }
     },
     "zksync-vue-mainnet": {
