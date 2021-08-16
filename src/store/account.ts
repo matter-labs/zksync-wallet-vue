@@ -98,13 +98,15 @@ export const actions = actionTree(
       }
     },
     setWalletFromStorage(_str): string | undefined {
-      const previouslySelectedWallet = window.localStorage.getItem("selectedWallet");
+      const previouslySelectedWallet: string | null = window.localStorage.getItem("selectedWallet");
       console.log("wallet from storage", previouslySelectedWallet);
-      if (previouslySelectedWallet) {
-        this.app.$toast.show("Found previously selected wallet.");
+      if (previouslySelectedWallet !== null && previouslySelectedWallet !== "WalletConnect") {
+        this.app.$toast.show("Found previously selected wallet: " + previouslySelectedWallet);
         this.app.$accessor.account.setWallet(previouslySelectedWallet);
+        return previouslySelectedWallet;
       }
-      return previouslySelectedWallet || undefined;
+      this.app.$accessor.account.setWallet(undefined);
+      return undefined;
     },
   },
 );

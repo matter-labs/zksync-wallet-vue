@@ -50,7 +50,6 @@ export default Vue.extend({
   },
   watch: {
     loggedIn(val) {
-      console.log("val changed", val);
       clearTimeout(loggedInAnimationTimeout);
       this.loggedInAnimation = val;
       if (val === true) {
@@ -62,7 +61,7 @@ export default Vue.extend({
   },
   methods: {
     cancelLogin(): void {
-      this.$accessor.wallet.logout(true);
+      this.$accessor.wallet.logout(false);
       this.loggedInAnimation = false;
       clearTimeout(loggedInAnimationTimeout);
       if (this.$route.path !== "/") {

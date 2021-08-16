@@ -165,12 +165,12 @@ export const actions = actionTree(
               console.log(wallet);
               if (!process.client || !wallet.provider) {
                 this.app.$accessor.wallet.logout(true);
-                this.app.$accessor.account.setWallet("");
+                this.app.$accessor.account.setWallet(undefined);
                 return false;
               }
               wallet.provider!.autoRefreshOnNetworkChange = false;
               web3Wallet.set(new Web3(wallet.provider));
-              if (wallet.name && wallet.name !== "WalletConnect") {
+              if (wallet.name) {
                 this.app.$accessor.account.setWallet(wallet.name);
               }
             },
@@ -514,6 +514,17 @@ export const actions = actionTree(
         walletCheck = !!(await state.onboard?.walletCheck());
         if (!walletCheck) {
           return false;
+        }
+
+        /**
+         * Special hardware wallets hack
+         */
+        if (state.onboard?.getState().wallet?.type === "hardware") {
+          console.log("detected hardware wallet");
+          const accountSelected = await state.onboard.accountSelect();
+          if (!accountSelected) {
+            return false;
+          }
         }
 
         if (!web3Wallet.get()?.eth) {

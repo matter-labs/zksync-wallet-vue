@@ -54,6 +54,7 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
     });
 
     ethWindow.ethereum?.on("accountsChanged", (changedValue: Address) => {
+      console.log("Account change spotted");
       const walletAddress = Array.isArray(changedValue) ? changedValue.pop() : changedValue;
       console.log("accountsChanged", walletAddress, context.app.$accessor.account.address);
       if (!context.app.$accessor.account.address) {
@@ -66,14 +67,12 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
         context.app.$accessor.wallet.walletRefresh(true);
         return;
       }
-      context.app.$toast.global.zkException({ message: "Wallet account change spotted" });
+      context.app.$toast.global.zkException({ message: "Wallet account has changed. Restarting the dApp..." });
       context.app.$accessor.wallet.logout(false);
 
-      if (!walletData.get().syncWallet) {
-        context.$router.push("/");
-        return;
-      }
-      return walletRefresh(context);
+      setTimeout(() => {
+        return (window.location.href = "/");
+      }, 1500);
     });
   }
 };
