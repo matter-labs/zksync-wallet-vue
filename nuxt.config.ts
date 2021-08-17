@@ -49,6 +49,26 @@ const config: NuxtConfig = {
     },
     meta: [
       {
+        property: "cache-control",
+        httpEquiv: "cache-control",
+        content: "no-cache , no-store, must-revalidate",
+      },
+      {
+        httpEquiv: "pragma",
+        content: "no-cache",
+        property: "pragma",
+      },
+      {
+        httpEquiv: "cache-control",
+        property: "cache-control",
+        content: "no-cache , no-store, must-revalidate",
+      },
+      {
+        httpEquiv: "expires",
+        content: "0",
+        property: "expires",
+      },
+      {
         hid: "keywords",
         name: "keywords",
         content: pageKeywords,
