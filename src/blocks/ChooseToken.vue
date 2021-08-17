@@ -5,7 +5,7 @@
     </div>
     <template v-else>
       <div class="searchContainer">
-        <i-input ref="tokenSymbolInput" v-model="search" :placeholder="tokensType === 'NFT' ? 'Filter NFT tokens' : `Filter balances in ${tokensType}`" maxlength="10">
+        <i-input ref="tokenSymbolInput" data-cy="choose_token_block_token_input" v-model="search" :placeholder="tokensType === 'NFT' ? 'Filter NFT tokens' : `Filter balances in ${tokensType}`" maxlength="10">
           <i>
             <v-icon slot="prefix" name="ri-search-line" />
           </i>
