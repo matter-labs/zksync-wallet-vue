@@ -8,6 +8,7 @@ import {
   ONBOARD_PORTIS_KEY,
   ONBOARD_RPC_URL,
 } from "@/plugins/build";
+
 import { Initialization, WalletInitOptions, WalletSelectModuleOptions, WalletModule } from "bnc-onboard/dist/src/interfaces";
 
 const wallets: WalletModule[] | WalletInitOptions[] = [
@@ -58,7 +59,7 @@ const wallets: WalletModule[] | WalletInitOptions[] = [
 
 const colorTheme: string | null = localStorage.getItem("colorTheme");
 
-export const onboardConfig: Initialization = {
+const onboardConfig: Initialization = {
   hideBranding: true,
   blockPollingInterval: 400000,
   dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
@@ -72,3 +73,5 @@ export const onboardConfig: Initialization = {
     explanation: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${ONBOARD_FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
   },
 };
+
+export default onboardConfig;

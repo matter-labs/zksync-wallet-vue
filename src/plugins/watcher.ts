@@ -53,26 +53,28 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
       return walletRefresh(context);
     });
 
-    ethWindow.ethereum?.on("accountsChanged", (changedValue: Address) => {
+    ethWindow.ethereum?.on("accountsChanged", async (changedValue: Address) => {
       console.log("Account change spotted");
-      const walletAddress = Array.isArray(changedValue) ? changedValue.pop() : changedValue;
-      console.log("accountsChanged", walletAddress, context.app.$accessor.account.address);
-      if (!context.app.$accessor.account.address) {
-        console.log("undefined account");
-        context.app.$accessor.wallet.walletRefresh(true);
-        return;
-      }
-      if (context.app.$accessor.account.address === walletAddress) {
-        console.log("calling wallet check");
-        context.app.$accessor.wallet.walletRefresh(true);
-        return;
-      }
-      context.app.$toast.global.zkException({ message: "Wallet account has changed. Restarting the dApp..." });
-      context.app.$accessor.wallet.logout(false);
+      return await context.app.$accessor.auth.login(true);
 
-      setTimeout(() => {
-        return (window.location.href = "/");
-      }, 1500);
+      //      const walletAddress = Array.isArray(changedValue) ? changedValue.pop() : changedValue;
+      //      console.log("accountsChanged", walletAddress, context.app.$accessor.account.address);
+      //      if (!context.app.$accessor.account.address) {
+      //        console.log("undefined account");
+      //        context.app.$accessor.wallet.walletRefresh(true);
+      //        return;
+      //      }
+      //      if (context.app.$accessor.account.address === walletAddress) {
+      //        console.log("calling wallet check");
+      //        context.app.$accessor.wallet.walletRefresh(true);
+      //        return;
+      //      }
+      //      context.app.$toast.global.zkException({ message: "Wallet account has changed. Restarting the dApp..." });
+      //      context.app.$accessor.wallet.logout(false);
+      //
+      //      setTimeout(() => {
+      //        return (window.location.href = "/");
+      //      }, 1500);
     });
   }
 };

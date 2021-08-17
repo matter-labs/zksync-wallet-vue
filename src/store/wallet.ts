@@ -1,5 +1,5 @@
 import { ZK_API_BASE } from "@/plugins/build";
-import { onboardConfig } from "@/plugins/onboardConfig";
+import onboardConfig from "@/configs/onboard";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import { changeNetworkSet } from "@/plugins/watcher";
@@ -20,8 +20,6 @@ import {
   ZKTypeDisplayToken,
 } from "@/types/lib";
 import { ExternalProvider } from "@ethersproject/providers";
-import Onboard from "bnc-onboard";
-import { API, Subscriptions, Wallet as OnboardWallet } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
@@ -74,9 +72,6 @@ export const getters = getterTree(state, {
 export const mutations = mutationTree(state, {
   setAccountLockedState(state: WalletModuleState, accountState: boolean): void {
     state.isAccountLocked = accountState;
-  },
-  setOnboard(state: WalletModuleState, obj: API): void {
-    state.onboard = obj;
   },
   setTokensList(state: WalletModuleState, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
     state.initialTokens = obj;
@@ -154,34 +149,6 @@ export const actions = actionTree(
      * @param rootState
      * @return {Promise<boolean>}
      */
-    onboardInit({ state, commit }): Promise<boolean> | boolean {
-      console.log("onboard init called");
-      if (!state.onboard) {
-        const onboard: API = Onboard({
-          ...onboardConfig,
-          subscriptions: <Subscriptions>{
-            wallet: (wallet: OnboardWallet) => {
-              console.log("subscription 'wallet' called");
-              console.log(wallet);
-              if (!process.client || !wallet.provider) {
-                this.app.$accessor.wallet.logout(true);
-                this.app.$accessor.account.setWallet(undefined);
-                return false;
-              }
-              wallet.provider!.autoRefreshOnNetworkChange = false;
-              web3Wallet.set(new Web3(wallet.provider));
-              if (wallet.name) {
-                this.app.$accessor.account.setWallet(wallet.name);
-              }
-            },
-          },
-        });
-        commit("setOnboard", onboard);
-      }
-      const previouslySelectedWallet = this.app.$accessor.account.setWalletFromStorage();
-      // @ts-ignore
-      return state.onboard.walletSelect(previouslySelectedWallet);
-    },
 
     /**
      * Reload zkBalances, initial balances & the history of transaction
@@ -501,31 +468,9 @@ export const actions = actionTree(
      */
     async walletRefresh({ dispatch, state }, firstSelect = true): Promise<boolean> {
       try {
-        let walletCheck = false;
         this.app.$accessor.account.setLoadingHint("Processing...");
 
-        if (firstSelect) {
-          const previouslySelectedWallet = this.app.$accessor.account.setWalletFromStorage();
-          walletCheck = !!(await state.onboard?.walletSelect(previouslySelectedWallet));
-          if (!walletCheck) {
-            return false;
-          }
-        }
-        walletCheck = !!(await state.onboard?.walletCheck());
-        if (!walletCheck) {
-          return false;
-        }
-
-        /**
-         * Special hardware wallets hack
-         */
-        if (state.onboard?.getState().wallet?.type === "hardware") {
-          console.log("detected hardware wallet");
-          const accountSelected = await state.onboard.accountSelect();
-          if (!accountSelected) {
-            return false;
-          }
-        }
+        await this.app.$accessor.auth.login(firstSelect);
 
         if (!web3Wallet.get()?.eth) {
           return false;
@@ -551,6 +496,7 @@ export const actions = actionTree(
         }
         this.app.$accessor.account.setLoadingHint("Follow the instructions in your wallet");
         const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
+        this.app.$accessor.auth.setAuthStage("authorized");
 
         walletData.set({
           syncWallet,
@@ -628,6 +574,7 @@ export const actions = actionTree(
         clearTimeout(getTransactionHistoryAgain);
         walletData.clear();
         this.app.$accessor.account.logout();
+        this.app.$accessor.auth.reset();
         this.app.$accessor.closeActiveModal();
         commit("clearDataStorage");
         if ((process.client && window.ethereum!.connected) || window.ethereum!.isConnected()) {

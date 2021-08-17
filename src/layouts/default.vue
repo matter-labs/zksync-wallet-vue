@@ -27,7 +27,7 @@ export default Vue.extend({
       return this.$accessor.account.loader;
     },
     loggedIn() {
-      return this.$accessor.account.loggedIn;
+      return this.$accessor.auth.loggedIn;
     },
   },
   mounted() {
