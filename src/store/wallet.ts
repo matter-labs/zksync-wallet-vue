@@ -1,5 +1,4 @@
 import { ZK_API_BASE } from "@/plugins/build";
-import onboardConfig from "@/configs/onboard";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import { changeNetworkSet } from "@/plugins/watcher";
@@ -23,7 +22,6 @@ import { ExternalProvider } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import Web3 from "web3";
 import { provider } from "web3-core";
 import { closestPackableTransactionFee, Provider, Wallet } from "zksync";
 import { AccountState, Address, Fee, NFT, TokenSymbol } from "zksync/build/types";
@@ -466,18 +464,14 @@ export const actions = actionTree(
      * @param firstSelect
      * @returns {Promise<boolean>}
      */
-    async walletRefresh({ dispatch, state }, firstSelect = true): Promise<boolean> {
+    async walletRefresh(_, firstSelect = true): Promise<boolean> {
       try {
-        this.app.$accessor.account.setLoadingHint("Processing...");
+        this.app.$accessor.auth.setLoadingHint("Processing...");
 
         await this.app.$accessor.auth.login(firstSelect);
+        this.app.$accessor.auth.setAuthStage("connecting");
 
         if (!web3Wallet.get()?.eth) {
-          return false;
-        }
-        console.log("TEST", web3Wallet.get()?.eth);
-        const getAccounts: string[] | undefined = await web3Wallet.get()?.eth.getAccounts();
-        if (!getAccounts || getAccounts.length === 0) {
           return false;
         }
 
@@ -494,7 +488,7 @@ export const actions = actionTree(
         if (syncProvider === undefined) {
           return false;
         }
-        this.app.$accessor.account.setLoadingHint("Follow the instructions in your wallet");
+        this.app.$accessor.auth.setLoadingHint("Follow the instructions in your wallet");
         const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
         this.app.$accessor.auth.setAuthStage("authorized");
 
@@ -502,7 +496,7 @@ export const actions = actionTree(
           syncWallet,
         });
 
-        this.app.$accessor.account.setLoadingHint("Getting wallet information...");
+        this.app.$accessor.auth.setLoadingHint("Getting wallet information...");
 
         /* Simplified event watcher call */
         changeNetworkSet(this.dispatch, this);
@@ -513,8 +507,6 @@ export const actions = actionTree(
         }
 
         const accountState: AccountState | undefined = await syncWallet!.getAccountState();
-
-        console.log(accountState);
 
         walletData.set({
           accountState,
@@ -573,7 +565,6 @@ export const actions = actionTree(
         }
         clearTimeout(getTransactionHistoryAgain);
         walletData.clear();
-        this.app.$accessor.account.logout();
         this.app.$accessor.auth.reset();
         this.app.$accessor.closeActiveModal();
         commit("clearDataStorage");

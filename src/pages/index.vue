@@ -25,7 +25,10 @@ export default Vue.extend({
   },
   methods: {
     async customWallet() {
-      await this.$accessor.auth.login(false);
+      const result = await this.$accessor.wallet.walletRefresh(false);
+      if (result) {
+        this.$router.push("/account");
+      }
     },
   },
 });

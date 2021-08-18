@@ -3,17 +3,11 @@ import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Address } from "zksync/build/types";
 
 export declare interface iAccount {
-  loggedIn: boolean;
-  selectedWallet?: string;
-  loadingHint: string;
   address?: Address;
   name?: string;
 }
 
 export const state = (): iAccount => ({
-  loggedIn: false,
-  selectedWallet: undefined,
-  loadingHint: "",
   address: undefined,
   name: undefined,
 });
@@ -29,18 +23,6 @@ function getNameFromAddress(userAddress: Address): string {
 export type AccountModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setLoggedIn(state: AccountModuleState, isLoggedIn: boolean): void {
-    state.loggedIn = isLoggedIn;
-  },
-  setSelectedWallet(state: AccountModuleState, name): void {
-    if (name) {
-      window.localStorage.setItem("selectedWallet", name as string);
-    }
-    state.selectedWallet = name;
-  },
-  setLoadingHint(state: AccountModuleState, text: string): void {
-    state.loadingHint = text;
-  },
   setAddress(state: AccountModuleState, address?: Address): void {
     state.address = address;
   },
@@ -57,19 +39,9 @@ export const mutations = mutationTree(state, {
       state.name = getNameFromAddress(state.address);
     }
   },
-  clearDataStorage(state: AccountModuleState): void {
-    state.loggedIn = false;
-    state.selectedWallet = undefined;
-    state.name = "";
-    state.address = undefined;
-  },
 });
 
 export const getters = getterTree(state, {
-  loggedIn: (state: AccountModuleState): boolean => state.loggedIn,
-  selectedWallet: (state: AccountModuleState): string | undefined => state.selectedWallet,
-  loadingHint: (state: AccountModuleState): string => state.loadingHint,
-  loader: (state: AccountModuleState): boolean => !state.loggedIn && !!state.selectedWallet,
   address: (state: AccountModuleState): Address | undefined => state.address,
   name: (state: AccountModuleState): string | undefined => state.name,
   zkScanUrl: (state: AccountModuleState): string | undefined => (state.address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.address}` : undefined),
@@ -78,35 +50,11 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    logout({ commit }): void {
-      commit("clearDataStorage");
-      this.app.$accessor.account.setWallet(undefined);
-    },
     processLogin: ({ commit }, address?: Address | string) => {
       if (address) {
         commit("setAddress", address as Address);
-        commit("setLoggedIn", true);
         commit("setName", undefined);
       }
-    },
-    setWallet: ({ commit }, selectedWallet?: string): void => {
-      commit("setSelectedWallet", selectedWallet);
-      if (selectedWallet) {
-        window.localStorage.setItem("selectedWallet", selectedWallet as string);
-      } else {
-        window.localStorage.removeItem("selectedWallet");
-      }
-    },
-    setWalletFromStorage(_str): string | undefined {
-      const previouslySelectedWallet: string | null = window.localStorage.getItem("selectedWallet");
-      console.log("wallet from storage", previouslySelectedWallet);
-      if (previouslySelectedWallet !== null && previouslySelectedWallet !== "WalletConnect") {
-        this.app.$toast.show("Found previously selected wallet: " + previouslySelectedWallet);
-        this.app.$accessor.account.setWallet(previouslySelectedWallet);
-        return previouslySelectedWallet;
-      }
-      this.app.$accessor.account.setWallet(undefined);
-      return undefined;
     },
   },
 );

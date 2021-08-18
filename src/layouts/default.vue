@@ -1,6 +1,5 @@
 <template>
   <i-layout class="defaultLayout">
-    <block-logging-in-loader />
     <block-header ref="header" />
     <i-layout-content v-if="!loggingIn && loggedIn" class="layoutContent">
       <sign-pubkey-modal />
@@ -24,7 +23,7 @@ export default Vue.extend({
   },
   computed: {
     loggingIn() {
-      return this.$accessor.account.loader;
+      return this.$accessor.auth.loader;
     },
     loggedIn() {
       return this.$accessor.auth.loggedIn;

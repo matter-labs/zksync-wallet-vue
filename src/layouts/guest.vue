@@ -1,6 +1,5 @@
 <template>
   <i-layout class="indexLayout">
-    <block-logging-in-loader />
     <block-index-header />
     <i-layout-content class="routerContainer">
       <transition name="fade" mode="out-in">

@@ -30,22 +30,22 @@ export default Vue.extend({
   },
   computed: {
     loggedIn() {
-      return this.$accessor.account.loggedIn;
+      return this.$accessor.auth.loggedIn;
     },
     loggingIn() {
-      return this.$accessor.account.loader;
+      return this.$accessor.auth.loader;
     },
     hintText(): string {
-      if (this.$accessor.account.loadingHint === "followInstructions") {
+      if (this.$accessor.auth.loadingHint === "followInstructions") {
         return "Follow the instructions in your wallet";
       }
-      if (this.$accessor.account.loadingHint === "loadingData") {
+      if (this.$accessor.auth.loadingHint === "loadingData") {
         return "Getting wallet information";
       }
-      return this.$accessor.account.loadingHint;
+      return this.$accessor.auth.loadingHint;
     },
     selectedWallet() {
-      return this.$accessor.account.selectedWallet;
+      return this.$accessor.auth.selectedWallet;
     },
   },
   watch: {

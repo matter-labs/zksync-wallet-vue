@@ -14,6 +14,7 @@ declare interface iAuthModuleState {
   authStep?: tAuthStage;
   onboardConfig: Initialization;
   selectedWallet?: string;
+  loadingHint: string;
 }
 
 export const state = () =>
@@ -22,6 +23,7 @@ export const state = () =>
     authStep: "initial",
     onboardConfig,
     selectedWallet: localStorage.getItem("onboardSelectedWallet") || undefined,
+    loadingHint: "",
   };
 
 export type AuthModuleStore = ReturnType<typeof state>;
@@ -42,6 +44,9 @@ export const mutations = mutationTree(state, {
     state.selectedWallet = selectedWallet;
     state.selectedWallet = selectedWallet;
   },
+  setLoadingHint(state: AuthModuleStore, text: string): void {
+    state.loadingHint = text;
+  },
 });
 
 export const getters = getterTree(state, {
@@ -49,6 +54,7 @@ export const getters = getterTree(state, {
   selectedWallet: (state: AuthModuleStore): string | undefined => state.selectedWallet,
   loader: (state: AuthModuleStore): boolean => state.authStep === "connecting",
   address: (state: AuthModuleStore): Address | undefined => (state.onboard!.getState().address.length ? (state.onboard!.getState().address as Address) : undefined),
+  loadingHint: (state: AuthModuleStore): string => state.loadingHint,
 });
 
 export const actions = actionTree(
@@ -71,7 +77,7 @@ export const actions = actionTree(
                 commit("storeSelectedWallet", undefined);
                 return;
               }
-              wallet.provider!.autoRefreshOnNetworkChange = false;
+              wallet.provider.autoRefreshOnNetworkChange = false;
               web3Wallet.set(new Web3(wallet.provider));
               if (wallet.name) {
                 commit("storeSelectedWallet", wallet.name);
@@ -96,8 +102,9 @@ export const actions = actionTree(
     },
 
     async walletSelect({ dispatch, state, commit }): Promise<boolean> {
-      const storedSelectedWallet = state.selectedWallet as string | undefined;
-      const result = await ((await dispatch("getOnboard")) as API).walletSelect(storedSelectedWallet);
+      /* const storedSelectedWallet = state.selectedWallet as string | undefined;
+      const result = await ((await dispatch("getOnboard")) as API).walletSelect(storedSelectedWallet); */
+      const result = await ((await dispatch("getOnboard")) as API).walletSelect();
       if (result) {
         commit("setAuthStage", "selectWallet");
       }
@@ -125,7 +132,7 @@ export const actions = actionTree(
       commit("setAuthStage", "loaded");
     },
 
-    async login({ state, dispatch }, forceReset = false): Promise<void> {
+    async login({ state, dispatch, commit }, forceReset = false): Promise<void> {
       if (state.authStep === "authorized") {
         return;
       }

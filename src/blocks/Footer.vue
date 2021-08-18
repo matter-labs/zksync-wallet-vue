@@ -1,5 +1,6 @@
 <template>
   <i-layout-footer class="mainFooter">
+    <block-logging-in-loader />
     <div class="_display-flex _flex-direction-row container _align-items-center _justify-content-space-between">
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
         <div class="_padding-1-2 _padding-md-x-1 _padding-left-0">
