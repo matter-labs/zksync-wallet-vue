@@ -177,7 +177,11 @@
           </span>
         </div>
 
-        <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1-2" data-cy="fee_block_account_activation_message">
+        <div
+          v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)"
+          class="_text-center _margin-top-1-2"
+          data-cy="fee_block_account_activation_message"
+        >
           Account Activation single-time fee:
           <span v-if="activateAccountFeeLoading" class="secondaryText">Loading...</span>
           <span v-else-if="feeToken">
@@ -822,7 +826,7 @@ export default Vue.extend({
       try {
         const foundFee = await syncProvider?.getTransactionFee(
           {
-            ChangePubKey: syncWallet!.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA",
+            ChangePubKey: { onchainPubkeyAuth: false },
           },
           syncWallet!.address() || "",
           this.feeToken.symbol,
