@@ -176,7 +176,6 @@
             </span>
           </span>
         </div>
-
         <div
           v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)"
           class="_text-center _margin-top-1-2"
