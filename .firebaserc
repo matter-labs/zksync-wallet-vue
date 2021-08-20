@@ -5,9 +5,6 @@
   "targets": {
     "zksync-vue": {
       "hosting": {
-        "beta-rinkeby": [
-          "beta-rinkeby-zksync-vue"
-        ],
         "prod-rinkeby": [
           "zksync-vue-rinkeby-2"
         ],
@@ -22,6 +19,12 @@
         ],
         "dev-mainnet": [
           "mainnet-wallet-zksync"
+        ],
+        "ropsten-beta": [
+          "ropsten-beta-wallet-zksync"
+        ],
+        "rinkeby-beta": [
+          "beta-rinkeby-zksync-vue"
         ]
       }
     },

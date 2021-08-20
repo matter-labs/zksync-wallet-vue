@@ -82,6 +82,10 @@ header {
       display: flex;
       align-items: center;
       height: 100%;
+
+      svg {
+        height: 100%;
+      }
     }
 
     .headerWrapper {

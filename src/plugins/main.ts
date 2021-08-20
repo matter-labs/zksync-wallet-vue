@@ -44,6 +44,22 @@ Vue.filter("formatDateTime", (time: moment.MomentInput) => moment(time).format("
 Vue.filter("formatSeconds", (time: number) => utils.timeCalc(time));
 
 /**
+ * Format transaction to a single format
+ */
+Vue.filter("formatTxHash", (txHash: string) => {
+  if (typeof txHash !== "string") {
+    return;
+  }
+  if (txHash.startsWith("sync-tx:")) {
+    txHash = txHash.substr("sync-tx:".length, txHash.length);
+  }
+  if (!txHash.startsWith("0x")) {
+    txHash = "0x" + txHash;
+  }
+  return txHash;
+});
+
+/**
  * zkException error reporting toaster registered
  * @uses vue-toasted npm-package
  */

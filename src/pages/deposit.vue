@@ -96,7 +96,7 @@
             <v-icon name="ri-question-mark" />
           </div>
         </div>
-        <div class="grid-cols-2-layout">
+        <div class="grid-cols-2-layout" :class="{ 'single-col': singleColumnButtons }">
           <i-button data-cy="deposit_approve_unlimited_button" block size="md" variant="secondary" @click="unlockToken(true)">
             Approve unlimited <span class="tokenSymbol">{{ chosenToken.symbol }}</span>
           </i-button>
@@ -224,8 +224,22 @@ export default Vue.extend({
     maxAmount(): string {
       return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
     },
+    singleColumnButtons(): boolean {
+      return (
+        (!this.inputtedAmount && this.chosenToken && this.chosenToken.symbol.length > 5) ||
+        (!!this.inputtedAmount && this.$options.filters!.formatToken(this.amountBigNumber, (this.chosenToken as ZkInBalance).symbol).length > 13)
+      );
+    },
     buttonDisabled(): boolean {
-      return this.displayTokenUnlock || !this.inputtedAmount || !this.chosenToken || this.allowanceError || this.thresholdLoading || !this.isEnoughAllowance;
+      return (
+        this.displayTokenUnlock ||
+        !this.inputtedAmount ||
+        !this.chosenToken ||
+        this.amountBigNumber.eq("0") ||
+        this.allowanceError ||
+        this.thresholdLoading ||
+        !this.isEnoughAllowance
+      );
     },
     amountBigNumber(): BigNumber {
       if (!this.chosenToken || !this.inputtedAmount) {
@@ -346,6 +360,9 @@ export default Vue.extend({
     async deposit(): Promise<void> {
       this.tip = "Follow the instructions in your Ethereum wallet";
       this.transactionInfo.type = "deposit";
+      if (this.amountBigNumber.eq("0")) {
+        throw new Error("Deposit amount can't be 0");
+      }
       const transferTransaction = await deposit((this.chosenToken as ZkInBalance).symbol, this.amountBigNumber.toString(), this.$accessor);
       if (!transferTransaction) {
         return;
@@ -354,8 +371,8 @@ export default Vue.extend({
         amount: this.amountBigNumber.toString(),
         token: this.chosenToken,
       };
-      this.transactionInfo.hash = transferTransaction.ethTx.hash;
-      this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + transferTransaction.ethTx.hash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransaction.ethTx.hash) as string;
+      this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + this.$options.filters!.formatTxHash(transferTransaction.ethTx.hash);
       this.tip = "Waiting for the transaction to be mined...";
       await transferTransaction.awaitEthereumTxCommit();
       this.transactionInfo.fee = undefined;
@@ -394,8 +411,8 @@ export default Vue.extend({
           };
         }
         this.tip = "Waiting for the transaction to be mined...";
-        this.transactionInfo.hash = approveDeposits.hash;
-        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + approveDeposits.hash;
+        this.transactionInfo.hash = this.$options.filters!.formatTxHash(approveDeposits.hash) as string;
+        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + this.$options.filters!.formatTxHash(approveDeposits.hash);
         await approveDeposits.wait();
         this.transactionInfo.amount = {
           amount: "0",

@@ -6,7 +6,7 @@
       <template slot="body">
         <span class="env-details">
           <v-icon name="ri-npmjs-fill" />
-          zksync v.{{ zkLibVersion }}
+          zkSync v.{{ zkLibVersion }}
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
@@ -26,7 +26,7 @@
   </i-badge>
 </template>
 <script lang="ts">
-import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_IS_BETA, ZK_LIB_VERSION, ZK_NETWORK } from "@/plugins/build";
+import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_LIB_VERSION, ZK_NETWORK } from "@/plugins/build";
 import Vue from "vue";
 
 export default Vue.extend({

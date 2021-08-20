@@ -12,7 +12,9 @@
         </div>
         <single-transaction v-for="item in transactionsList" v-else :key="item.hash" class="transactionItem" :single-transaction="item" />
         <i-button v-if="loadingMore === false && loadMoreAvailable === true" block link size="lg" variant="secondary" @click="loadMore()">Load more</i-button>
-        <loader v-else-if="loadingMore === true" class="_display-block _margin-x-auto _margin-y-2" />
+        <div v-else-if="loadingMore === true">
+          <loader class="_display-block _margin-x-auto _margin-y-2" />
+        </div>
       </div>
     </div>
   </div>
