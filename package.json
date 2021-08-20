@@ -165,7 +165,6 @@
     "ci:build:rinkeby-beta": "yarn ci:prepare:rinkeby-beta && yarn generate --fail-on-error",
     "ci:build:ropsten-beta": "yarn ci:prepare:ropsten-beta && yarn generate --fail-on-error",
     "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
-    "ci:build:mainnet": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
     "ci:build:rinkeby": "yarn ci:prepare:rinkeby && yarn generate --fail-on-error",
     "ci:build:ropsten": "yarn ci:prepare:ropsten && yarn generate --fail-on-error",
     "ci:prepare:rinkeby-beta": "sh cli-process-env.sh 'rinkeby-beta' dev 1",
