@@ -76,7 +76,7 @@
       ]
     },
     {
-      "target": "beta-rinkeby",
+      "target": "rinkeby-beta",
       "public": "public",
       "ignore": [
         "firebase.json",
