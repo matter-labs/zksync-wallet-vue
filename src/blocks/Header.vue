@@ -51,22 +51,17 @@
         </i-column>
       </i-row>
     </i-container>
-    <account-modal />
-    <footer-modal v-model="footerModal" />
+    <block-modals-account-modal />
+    <block-modals-footer-modal v-model="footerModal" />
+    <block-modals-environment />
   </i-layout-header>
 </template>
 
 <script lang="ts">
-import accountModal from "@/blocks/modals/AccountModal.vue";
-import footerModal from "@/blocks/modals/FooterModal.vue";
 import Vue from "vue";
 
 export default Vue.extend({
   name: "Header",
-  components: {
-    accountModal,
-    footerModal,
-  },
   data() {
     return {
       footerModal: false,

@@ -1,5 +1,5 @@
 <template>
-  <i-modal :value="value" size="md" @hide="close()">
+  <i-modal :value="value" size="md" data-cy="fee_changed_modal" @hide="close()">
     <template slot="header">Fee changed</template>
     <p>The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.</p>
     <div class="successBlock _margin-top-1">
@@ -27,6 +27,7 @@
         <v-icon name="ri-arrow-left-line" />
       </i-button>
       <i-button
+        data-cy="fee_changed_proceed_button"
         block
         size="lg"
         variant="secondary"

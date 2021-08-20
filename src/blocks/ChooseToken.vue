@@ -5,7 +5,13 @@
     </div>
     <template v-else>
       <div class="searchContainer">
-        <i-input ref="tokenSymbolInput" data-cy="choose_token_block_token_input" v-model="search" :placeholder="tokensType === 'NFT' ? 'Filter NFT tokens' : `Filter balances in ${tokensType}`" maxlength="10">
+        <i-input
+          ref="tokenSymbolInput"
+          v-model="search"
+          data-cy="choose_token_block_token_input"
+          :placeholder="tokensType === 'NFT' ? 'Filter NFT tokens' : `Filter balances in ${tokensType}`"
+          maxlength="10"
+        >
           <i>
             <v-icon slot="prefix" name="ri-search-line" />
           </i>
@@ -18,7 +24,7 @@
           </i-tooltip>
         </div>
       </div>
-      <div class="tokenListContainer genericListContainer">
+      <div class="tokenListContainer genericListContainer _margin-top-05">
         <div v-for="item in displayedList" :key="item.symbol" class="tokenItem" :data-cy="`token_item_${item.symbol}`" @click="chooseToken(item)">
           <div class="tokenSymbol">{{ item.symbol }}</div>
           <div v-if="tokensType === 'L1' || tokensType === 'L2'" class="rightSide">
