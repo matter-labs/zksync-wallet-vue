@@ -8,6 +8,8 @@ jobs:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     environment: test
+    outputs:
+      rinkeby_urls: "${{ steps.rinkeby_deploy.outputs.urls }}"
     steps:
       - uses: actions/checkout@v2
       - run: bash cli-dev.sh ci
