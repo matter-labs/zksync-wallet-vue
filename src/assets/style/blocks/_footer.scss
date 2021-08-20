@@ -250,14 +250,6 @@ button.floating-on-mobile {
 }
 
 @media (max-width: $mobile) {
-  .badge.system-info .popover-wrapper.system-env-popover .popover {
-    display: block !important;
-    position: fixed;
-    top: 1rem;
-    width: 80vw;
-    left: 10vw;
-  }
-
   .modal.-light > .footer {
     .badge.system-info {
       a.revision {

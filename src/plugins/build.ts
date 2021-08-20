@@ -29,7 +29,7 @@ export const ZK_LIB_VERSION: string = zkSyncVersion as string;
 export const ZK_IS_BETA = ZK_LIB_VERSION.search("beta") !== -1;
 
 export const ETHER_NETWORK_CAPITALIZED = `${ETHER_NETWORK_NAME.charAt(0).toUpperCase()}${ETHER_NETWORK_NAME?.slice(1)}`;
-export const CURRENT_APP_NAME = `zkSync Wallet${ZK_IS_BETA ? ":beta" : ""}`;
+export const CURRENT_APP_NAME = "zkSync Wallet";
 
 export const ETHER_PREFIX: string = ETHER_PRODUCTION ? "" : ETHER_NETWORK_NAME;
 
