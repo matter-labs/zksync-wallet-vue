@@ -20,14 +20,14 @@ jobs:
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: beta-rinkeby
+          target: rinkeby-beta
           projectId: zksync-vue
 
-      - name: "Deploying ropsten-beta [beta]"
+      - name: "Build ropsten-beta [beta]"
         run: yarn run ci:build:ropsten-beta
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: beta-ropsten
+          target: ropsten-beta
           projectId: zksync-vue
