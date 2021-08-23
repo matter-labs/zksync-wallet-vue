@@ -54,7 +54,7 @@ export default Vue.extend({
   },
   computed: {
     ownAddress(): Address {
-      return this.$accessor.account.address || "";
+      return this.$accessor.provider.address || "";
     },
     transactionsList(): Array<ZkInTx> {
       let list = this.$accessor.wallet.getTransactionsHistory;

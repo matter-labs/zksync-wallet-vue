@@ -50,25 +50,17 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
         context.$router.push("/");
         return;
       }
-      return walletRefresh(context);
+      return context.app.$accessor.provider.walletCheck();
     });
 
-    ethWindow.ethereum?.on("accountsChanged", async (changedValue: Address) => {
-      console.log("Account change spotted");
-      return await context.app.$accessor.auth.login(true);
+    ethWindow.ethereum?.on("accountsChanged", (changedValue: Address) => {
+      const walletAddress = Array.isArray(changedValue) ? changedValue.pop() : changedValue;
+      console.log("accountsChanged", walletAddress, context.app.$accessor.provider.address);
+      if (!!context.app.$accessor.provider.address && context.app.$accessor.provider.address !== walletAddress) {
+        context.app.$accessor.wallet.logout(false);
+        context.$router.push("/");
+      }
 
-      //      const walletAddress = Array.isArray(changedValue) ? changedValue.pop() : changedValue;
-      //      console.log("accountsChanged", walletAddress, context.app.$accessor.account.address);
-      //      if (!context.app.$accessor.account.address) {
-      //        console.log("undefined account");
-      //        context.app.$accessor.wallet.walletRefresh(true);
-      //        return;
-      //      }
-      //      if (context.app.$accessor.account.address === walletAddress) {
-      //        console.log("calling wallet check");
-      //        context.app.$accessor.wallet.walletRefresh(true);
-      //        return;
-      //      }
       //      context.app.$toast.global.zkException({ message: "Wallet account has changed. Restarting the dApp..." });
       //      context.app.$accessor.wallet.logout(false);
       //

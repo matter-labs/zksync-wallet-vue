@@ -23,10 +23,10 @@ export default Vue.extend({
   },
   computed: {
     loggingIn() {
-      return this.$accessor.auth.loader;
+      return this.$accessor.provider.loader;
     },
     loggedIn() {
-      return this.$accessor.auth.loggedIn;
+      return this.$accessor.provider.loggedIn;
     },
   },
   mounted() {

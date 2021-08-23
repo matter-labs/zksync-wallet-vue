@@ -151,7 +151,7 @@ export default Vue.extend({
       },
 
       /* Main Block */
-      inputtedAddress: <Address>this.$accessor.account.address!,
+      inputtedAddress: <Address>this.$accessor.provider.address!,
       chosenContact: <ZkInContact | false>false,
       inputtedHash: <Hash>"",
       fee: <GweiBalance | false>false,
@@ -222,7 +222,7 @@ export default Vue.extend({
     try {
       if (!this.ownAccountUnlocked) {
         try {
-          getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
+          getCPKTx(this.$accessor.provider.address!); /* will throw an error if no cpk tx found */
         } catch (error) {
           const accountID = await walletData.get().syncWallet!.getAccountId();
           if (typeof accountID === "number") {

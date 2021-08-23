@@ -87,7 +87,7 @@ export default Vue.extend({
       );
     },
     walletAddressFull(): Address {
-      return this.$accessor.account.address || "";
+      return this.$accessor.provider.address || "";
     },
     displayedAddress(): Address {
       if (this.singleTransaction.tx.type === "Transfer") {

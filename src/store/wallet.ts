@@ -2,7 +2,6 @@ import { ZK_API_BASE } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import { changeNetworkSet } from "@/plugins/watcher";
-import web3Wallet from "@/plugins/web3";
 
 import {
   iWallet,
@@ -19,10 +18,10 @@ import {
   ZKTypeDisplayToken,
 } from "@/types/lib";
 import { ExternalProvider } from "@ethersproject/providers";
+import { UserState } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { provider } from "web3-core";
 import { closestPackableTransactionFee, Provider, Wallet } from "zksync";
 import { AccountState, Address, Fee, NFT, TokenSymbol } from "zksync/build/types";
 
@@ -68,20 +67,20 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  setAccountLockedState(state: WalletModuleState, accountState: boolean): void {
+  setAccountLockedState(state, accountState: boolean) {
     state.isAccountLocked = accountState;
   },
-  setTokensList(state: WalletModuleState, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
+  setTokensList(state, obj: { lastUpdated: number; list: ZkInBalance[] }): void {
     state.initialTokens = obj;
   },
-  setZkTokens(state: WalletModuleState, zkTokensParam: zkTokensParam): void {
+  setZkTokens(state, zkTokensParam: zkTokensParam) {
     state.zkTokens = zkTokensParam;
   },
-  setNftTokens(state: WalletModuleState, obj: { lastUpdated: number; list: ZkInNFT[] }): void {
+  setNftTokens(state, obj: { lastUpdated: number; list: ZkInNFT[] }): void {
     state.nftTokens = obj;
   },
   setTransactionsList(
-    state: WalletModuleState,
+    state,
     obj: {
       lastUpdated: number;
       list: ZkInTx[];
@@ -90,7 +89,7 @@ export const mutations = mutationTree(state, {
     state.transactionsHistory = obj;
   },
   setWithdrawalProcessingTime(
-    state: WalletModuleState,
+    state,
     obj: {
       normal: number;
       fast: number;
@@ -98,10 +97,7 @@ export const mutations = mutationTree(state, {
   ): void {
     state.withdrawalProcessingTime = obj;
   },
-  setFees(
-    state: WalletModuleState,
-    { symbol, feeSymbol, type, address, obj }: { symbol: TokenSymbol; feeSymbol: TokenSymbol; type: string; address: Address; obj: ZkInFeesObj },
-  ): void {
+  setFees(state, { symbol, feeSymbol, type, address, obj }: { symbol: TokenSymbol; feeSymbol: TokenSymbol; type: string; address: Address; obj: ZkInFeesObj }): void {
     if (!Object.prototype.hasOwnProperty.call(state.fees, symbol)) {
       state.fees[symbol] = {};
     }
@@ -190,7 +186,7 @@ export const actions = actionTree(
       const tokensList: ZkInBalance[] = [];
       const nftList: Array<ZkInNFT> = [];
       const syncWallet = walletData.get().syncWallet;
-      const savedAddress = this.app.$accessor.account.address;
+      const savedAddress = this.app.$accessor.provider.address;
       if (accountState) {
         listCommitted = accountState.committed.balances;
         listVerified = accountState.verified.balances;
@@ -213,21 +209,14 @@ export const actions = actionTree(
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
       for (const tokenSymbol in listCommitted) {
-        (async () => {
-          try {
-            /* Some weird TS error when this is has no await */
-            await this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
-          } catch (error) {
-            console.log(`Failed to get ${tokenSymbol} price at requestZkBalances`, error);
-          }
-        })();
-        if (savedAddress !== this.app.$accessor.account.address) {
+        this.app.$accessor.tokens.getTokenPrice(tokenSymbol);
+        if (savedAddress !== this.app.$accessor.provider.address) {
           return {
             balances: state.zkTokens.list,
             nfts: state.nftTokens.list,
           };
         }
-        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
+        const isRestricted: boolean = this.app.$accessor.tokens.isRestricted(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -267,7 +256,7 @@ export const actions = actionTree(
      * @return {Promise<*[]|*>}
      */
     async requestInitialBalances({ commit, getters }, force = false): Promise<ZkInBalance[] | undefined> {
-      const savedAddress = this.app.$accessor.account.address;
+      const savedAddress = this.app.$accessor.provider.address;
       const localList = getters.getTokensList;
 
       if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
@@ -311,7 +300,7 @@ export const actions = actionTree(
       const balances = (balancesResults.filter((token) => token && token.rawBalance.gt(0)) as ZkInBalance[]).sort(utils.compareTokensById);
       const balancesEmpty = (balancesResults.filter((token) => token && token.rawBalance.lte(0)) as ZkInBalance[]).sort(utils.sortBalancesAZ);
       balances.push(...balancesEmpty);
-      if (savedAddress !== this.app.$accessor.account.address) {
+      if (savedAddress !== this.app.$accessor.provider.address) {
         return localList.list;
       }
       commit("setTokensList", {
@@ -332,7 +321,7 @@ export const actions = actionTree(
     async requestTransactionsHistory({ commit, getters }, { force = false, offset = 0 }: ZKStoreRequestBalancesParams): Promise<ZkInTx[]> {
       clearTimeout(getTransactionHistoryAgain);
       const localList = getters.getTransactionsList;
-      const savedAddress = this.app.$accessor.account.address;
+      const savedAddress = this.app.$accessor.provider.address;
       /**
        * If valid we're returning cached transaction list
        */
@@ -345,7 +334,7 @@ export const actions = actionTree(
           return localList.list;
         }
         const fetchTransactionHistory: ZkInTx[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
-        if (savedAddress !== this.app.$accessor.account.address) {
+        if (savedAddress !== this.app.$accessor.provider.address) {
           return localList.list;
         }
         commit("setTransactionsList", {
@@ -464,42 +453,40 @@ export const actions = actionTree(
      * @param firstSelect
      * @returns {Promise<boolean>}
      */
-    async walletRefresh(_, firstSelect = true): Promise<boolean> {
+    async walletRefresh({ dispatch }, firstSelect = true): Promise<boolean> {
       try {
-        this.app.$accessor.auth.setLoadingHint("Processing...");
+        this.app.$accessor.provider.setLoadingHint("Processing...");
 
-        await this.app.$accessor.auth.login(firstSelect);
-        this.app.$accessor.auth.setAuthStage("connecting");
+        const authState: UserState = await this.app.$accessor.provider.login(firstSelect);
+        this.app.$accessor.provider.setAuthStage("connecting");
 
-        if (!web3Wallet.get()?.eth) {
+        const ethProvider = authState.wallet.provider;
+
+        if (ethProvider?.eth) {
+          await dispatch("logout");
+          console.log("no eth selected");
           return false;
         }
 
         if (walletData.get().syncWallet) {
-          this.app.$accessor.account.setAddress(walletData.get().syncWallet?.address() || "");
           return true;
         }
-        const currentProvider: provider | undefined = web3Wallet.get()?.eth.currentProvider;
-        if (!currentProvider) {
-          return false;
-        }
-        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(currentProvider as ExternalProvider).getSigner();
+        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(ethProvider as ExternalProvider).getSigner();
         const syncProvider = await walletData.syncProvider.get();
         if (syncProvider === undefined) {
           return false;
         }
-        this.app.$accessor.auth.setLoadingHint("Follow the instructions in your wallet");
+        this.app.$accessor.provider.setLoadingHint("Follow the instructions in your wallet");
         const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
-        this.app.$accessor.auth.setAuthStage("authorized");
+        this.app.$accessor.provider.setAuthStage("authorized");
 
         walletData.set({
           syncWallet,
         });
 
-        this.app.$accessor.auth.setLoadingHint("Getting wallet information...");
+        this.app.$accessor.provider.setLoadingHint("Getting wallet information...");
 
         /* Simplified event watcher call */
-        changeNetworkSet(this.dispatch, this);
 
         /* The user can press Cancel login anytime so we need to check if he did after every long action (request) */
         if (!walletData.get().syncWallet) {
@@ -534,7 +521,7 @@ export const actions = actionTree(
           return false;
         }
 
-        this.app.$accessor.account.processLogin(syncWallet.address());
+        changeNetworkSet(dispatch, this);
         this.app.$accessor.contacts.getContactsFromStorage();
 
         return true;
@@ -560,19 +547,11 @@ export const actions = actionTree(
     logout({ state, commit }, withoutReset = false): void {
       try {
         console.log("logout called");
-        if (!withoutReset) {
-          state.onboard?.walletReset();
-        }
         clearTimeout(getTransactionHistoryAgain);
         walletData.clear();
-        this.app.$accessor.auth.reset();
+        this.app.$accessor.provider.reset();
         this.app.$accessor.closeActiveModal();
         commit("clearDataStorage");
-        if ((process.client && window.ethereum!.connected) || window.ethereum!.isConnected()) {
-          if (typeof window.ethereum!.disconnect === "function") {
-            window.ethereum!.disconnect();
-          }
-        }
       } catch (error) {
         console.log("ERROR ON DISCONNECTION", error);
       }

@@ -159,7 +159,7 @@ export default Vue.extend({
       return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute?.path !== "/transfer" ? this.fromRoute : "/contacts";
     },
     walletAddressFull(): string {
-      return this.$accessor.account.address || "";
+      return this.$accessor.provider.address || "";
     },
     displayedContactsList(): ZkInContact[] {
       return utils.searchInArr(this.search, this.contactsList, (e) => (e as ZkInContact).name) as ZkInContact[];

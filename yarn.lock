@@ -3120,7 +3120,7 @@ __metadata:
     qrcode: ^1.0.0
     sass-loader: ^10.1.1
     stylelint: latest
-    stylelint-config-standard: latest
+    stylelint-config-standard: ^22.0.0
     stylelint-scss: latest
     typed-vuex: latest
     typescript: ^4.2.4
@@ -21980,7 +21980,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"stylelint-config-standard@npm:latest":
+"stylelint-config-standard@npm:^22.0.0":
   version: 22.0.0
   resolution: "stylelint-config-standard@npm:22.0.0"
   dependencies:

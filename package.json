@@ -113,7 +113,7 @@
     "qrcode": "^1.0.0",
     "sass-loader": "^10.1.1",
     "stylelint": "latest",
-    "stylelint-config-standard": "latest",
+    "stylelint-config-standard": "^22.0.0",
     "stylelint-scss": "latest",
     "typescript": "^4.2.4",
     "vue-property-decorator": "latest",

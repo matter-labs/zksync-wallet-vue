@@ -433,7 +433,7 @@ export default Vue.extend({
       if (this.$route.query.w) {
         this.inputtedAddress = this.$route.query.w.toString();
       } else if (this.type === "withdraw" || this.type === "nft-withdraw") {
-        this.inputtedAddress = this.$accessor.account.address!;
+        this.inputtedAddress = this.$accessor.provider.address!;
       }
       if (this.$route.query.token) {
         if (this.type === "transfer" || this.type === "withdraw") {
@@ -460,7 +460,7 @@ export default Vue.extend({
       }
       if (!this.ownAccountUnlocked) {
         try {
-          getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
+          getCPKTx(this.$accessor.provider.address!); /* will throw an error if no cpk tx found */
         } catch (error) {
           const accountID = await walletData.get().syncWallet!.getAccountId();
           if (typeof accountID !== "number") {

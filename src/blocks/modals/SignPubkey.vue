@@ -97,7 +97,7 @@ export default Vue.extend({
           validFrom: 0,
           validUntil: utils.MAX_TIMESTAMP,
         };
-        saveCPKTx(this.$accessor.account.address!, changePubkeyTx);
+        saveCPKTx(this.$accessor.provider.address!, changePubkeyTx);
         this.success = true;
         this.close();
       } catch (error) {

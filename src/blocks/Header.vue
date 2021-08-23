@@ -74,10 +74,10 @@ export default Vue.extend({
   },
   computed: {
     walletName(): string {
-      return this.$accessor.account.name || "";
+      return this.$accessor.provider.name || "";
     },
     walletAddressFull(): string {
-      return this.$accessor.account.address || "";
+      return this.$accessor.provider.address || "";
     },
     accountModal: {
       get(): boolean {

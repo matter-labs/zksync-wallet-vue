@@ -179,7 +179,6 @@ const config: NuxtConfig = {
     "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
-    "nuxt-typed-vuex",
     ["@nuxtjs/dotenv", { path: __dirname }],
     [
       "@nuxt/typescript-build",
@@ -200,6 +199,7 @@ const config: NuxtConfig = {
         },
       },
     ],
+    "nuxt-typed-vuex",
   ],
 
   /*

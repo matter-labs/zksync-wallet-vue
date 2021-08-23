@@ -139,21 +139,26 @@ export const actions = actionTree(
      * @return {Promise<{n: number, d: number}|number|*>}
      */
     async getTokenPrice({ commit, getters }, symbol: TokenSymbol): Promise<number> {
-      const localPricesList = getters.getTokenPrices;
-      if (Object.prototype.hasOwnProperty.call(localPricesList, symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
-        return localPricesList[symbol].price;
+      try {
+        const localPricesList = getters.getTokenPrices;
+        if (Object.prototype.hasOwnProperty.call(localPricesList, symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
+          return localPricesList[symbol].price;
+        }
+        const syncProvider = walletData.get().syncProvider;
+        const tokenPrice = await syncProvider?.getTokenPrice(symbol);
+        // @ts-ignore
+        commit("setTokenPrice", {
+          symbol,
+          obj: {
+            lastUpdated: new Date().getTime(),
+            price: tokenPrice,
+          },
+        });
+        return tokenPrice || 0;
+      } catch (error) {
+        console.log(`Failed to get ${symbol} price at requestZkBalances`, error);
       }
-      const syncProvider = walletData.get().syncProvider;
-      const tokenPrice = await syncProvider?.getTokenPrice(symbol);
-      // @ts-ignore
-      commit("setTokenPrice", {
-        symbol,
-        obj: {
-          lastUpdated: new Date().getTime(),
-          price: tokenPrice,
-        },
-      });
-      return tokenPrice || 0;
+      return 0;
     },
 
     isRestricted({ state }, token: TokenSymbol): boolean {
