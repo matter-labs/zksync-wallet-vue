@@ -345,7 +345,7 @@ export default Vue.extend({
       this.checkUnlock(transferTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
