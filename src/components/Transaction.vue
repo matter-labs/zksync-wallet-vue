@@ -1,6 +1,14 @@
 <template>
   <div class="transactionPage dappPageWrapper">
     <fee-calc-error />
+    <fee-changed
+      v-model="feeChangedModal.opened"
+      :type="transactionTypeName"
+      :changed-fees="feeChangedModal.changedFees"
+      :can-proceed="!buttonDisabled"
+      @back="feeChangedModal.opened = false"
+      @proceed="commitTransaction()"
+    />
 
     <!-- Choose token -->
     <i-modal v-model="chooseTokenModal" size="md">
@@ -67,7 +75,7 @@
       </div>
 
       <div class="_padding-top-1 inputLabel">Address</div>
-      <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction" />
+      <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" />
       <choose-contact v-model="chosenContact" class="_margin-top-05" :address.sync="inputtedAddress" :display-own-address="type === 'withdraw' || type === 'nft-withdraw'" />
 
       <template v-if="type === 'transfer' || type === 'withdraw'">
@@ -80,7 +88,7 @@
           :type="type"
           autofocus
           @chooseToken="chooseTokenModal = true"
-          @enter="commitTransaction"
+          @enter="commitTransaction()"
         />
       </template>
       <template v-if="type === 'nft-transfer' || type === 'nft-withdraw'">
@@ -140,7 +148,7 @@
         {{ error }}
       </div>
 
-      <i-button data-cy="transaction_withdraw_transfer_button" :disabled="buttonDisabled" block class="_margin-top-05" size="lg" variant="secondary" @click="commitTransaction">
+      <i-button data-cy="transaction_withdraw_transfer_button" :disabled="buttonDisabled" block class="_margin-top-05" size="lg" variant="secondary" @click="commitTransaction()">
         <template v-if="ownAccountUnlocked">
           <v-icon v-if="type === 'withdraw' || type === 'nft-withdraw'" name="ri-hand-coin-fill" />
           <v-icon v-else-if="type === 'transfer' || type === 'nft-transfer'" class="planeIcon" name="ri-send-plane-fill" />
@@ -168,8 +176,11 @@
             </span>
           </span>
         </div>
-
-        <div v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)" class="_text-center _margin-top-1-2" data-cy="fee_block_account_activation_message">
+        <div
+          v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)"
+          class="_text-center _margin-top-1-2"
+          data-cy="fee_block_account_activation_message"
+        >
           Account Activation single-time fee:
           <span v-if="activateAccountFeeLoading" class="secondaryText">Loading...</span>
           <span v-else-if="feeToken">
@@ -196,11 +207,12 @@ import addressInput from "@/components/AddressInput.vue";
 import amountInput from "@/components/AmountInput.vue";
 
 import FeeCalcError from "@/blocks/modals/FeeCalcError.vue";
+import FeeChanged from "@/blocks/modals/FeeChanged.vue";
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
 
-import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInNFT, ZkInTransactionInfo, ZKTypeTransactionType } from "@/types/lib";
+import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInNFT, ZkInTransactionInfo, ZKTypeTransactionType, ZkInFeeChange } from "@/types/lib";
 import utils from "@/plugins/utils";
 import { transaction, transferNFT, withdraw, withdrawNFT } from "@/plugins/walletActions/transaction";
 import { getCPKTx } from "@/plugins/walletActions/cpk";
@@ -221,6 +233,7 @@ export default Vue.extend({
     amountInput,
     chooseToken,
     FeeCalcError,
+    FeeChanged,
   },
   props: {
     type: {
@@ -275,6 +288,10 @@ export default Vue.extend({
       inputtedAmount: "",
       chosenToken: <ZkInBalance | ZkInNFT | false>false,
       chosenFeeToken: <ZkInBalance | false>false,
+      feeChangedModal: {
+        opened: false,
+        changedFees: <ZkInFeeChange[]>[],
+      },
       feesObj: <ZkInFeesObj | undefined>{
         normal: "",
         fast: "",
@@ -296,7 +313,7 @@ export default Vue.extend({
     showTimeEstimationHint(): boolean {
       return ETHER_NETWORK_NAME === "mainnet" && this.chosenToken !== false && this.inputtedAddress !== "" && this.type === "withdraw";
     },
-    chosenFeeObj(): BigNumberish | boolean {
+    chosenFeeObj(): BigNumberish | false {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
         const selectedFeeTypeAmount: string | BigNumber | ArrayLike<number> | bigint | number | undefined =
           this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal;
@@ -492,7 +509,7 @@ export default Vue.extend({
       this.requestFees();
       this.getAccountActivationFee();
     },
-    async requestFees(): Promise<void> {
+    async requestFees(force?: boolean): Promise<void> {
       if (!this.chosenToken || !this.inputtedAddress || !this.feeToken || this.feeToken.restricted) {
         this.feesObj = {
           normal: undefined,
@@ -507,6 +524,7 @@ export default Vue.extend({
           symbol: this.chosenToken?.symbol,
           feeSymbol: this.feeToken?.symbol,
           type: this.type,
+          force,
         };
         const requestedFee = await this.$accessor.wallet.requestFees(savedData);
         if (savedData.address === this.inputtedAddress && savedData.symbol === this.chosenToken?.symbol && savedData.feeSymbol === this.feeToken?.symbol) {
@@ -524,7 +542,7 @@ export default Vue.extend({
     async getWithdrawalTime(): Promise<void> {
       this.withdrawTime = await this.$accessor.wallet.requestWithdrawalProcessingTime();
     },
-    async commitTransaction(): Promise<void> {
+    async commitTransaction(someData?: unknown): Promise<void> {
       if ((this.type === "transfer" || this.type === "withdraw") && !this.inputtedAmount) {
         // @ts-ignore: Unreachable code error
         (this.$refs.amountInput as Vue).emitValue(this.inputtedAmount);
@@ -535,12 +553,54 @@ export default Vue.extend({
       this.error = "";
       this.loading = true;
       try {
+        this.tip = "Processing...";
+        const changedFees = <ZkInFeeChange[]>[];
+        const oldFee = this.chosenFeeObj;
+        await this.requestFees(true);
+        const newFee = this.chosenFeeObj;
+        if (BigNumber.from(oldFee).lt(newFee as BigNumberish)) {
+          changedFees.push({
+            headline: `Old ${this.transactionTypeName} fee`,
+            symbol: this.feeToken.symbol,
+            amount: <BigNumberish>oldFee.toString(),
+          });
+          changedFees.push({
+            headline: `New ${this.transactionTypeName} fee`,
+            symbol: this.feeToken.symbol,
+            amount: <BigNumberish>newFee.toString(),
+          });
+        }
+        if (!this.ownAccountUnlocked) {
+          const oldActivationFee = this.activateAccountFee as string;
+          await this.getAccountActivationFee();
+          const newActivationFee = this.activateAccountFee as string;
+          if (BigNumber.from(oldActivationFee).lt(newActivationFee as BigNumberish)) {
+            changedFees.push({
+              headline: "Old Account Activation fee",
+              symbol: this.feeToken.symbol,
+              amount: <BigNumberish>oldActivationFee.toString(),
+            });
+            changedFees.push({
+              headline: "New Account Activation fee",
+              symbol: this.feeToken.symbol,
+              amount: <BigNumberish>newActivationFee.toString(),
+            });
+          }
+        }
+        if (changedFees.length > 0) {
+          this.feeChangedModal = {
+            opened: true,
+            changedFees,
+          };
+          this.loading = false;
+          return;
+        }
         if (this.type === "withdraw") {
           await this.withdraw();
         } else if (this.type === "transfer") {
-          await this.transfer();
+          await this.transfer(!!someData);
         } else if (this.type === "nft-transfer") {
-          await this.nftTransfer();
+          await this.nftTransfer(!!someData);
         } else if (this.type === "nft-withdraw") {
           await this.nftWithdraw();
         }
@@ -580,8 +640,8 @@ export default Vue.extend({
 
       this.checkUnlock(withdrawTransactions);
 
-      this.transactionInfo.hash = withdrawTransactions.transaction!.txHash;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + withdrawTransactions.transaction!.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash) as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash);
       this.transactionInfo.fee!.amount = withdrawTransactions.feeTransaction!.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: withdrawTransactions.transaction!.txData.tx.to,
@@ -594,10 +654,10 @@ export default Vue.extend({
         throw new Error(receipt!.failReason);
       }
     },
-    async transfer(): Promise<void> {
+    async transfer(skipAccountCheck: boolean): Promise<void> {
       const transferWithdrawWarning = localStorage.getItem("canceledTransferWithdrawWarning");
       this.tip = "Processing...";
-      if (!transferWithdrawWarning && !this.transferWithdrawWarningModal) {
+      if (!transferWithdrawWarning && !skipAccountCheck) {
         const accountUnlocked = await this.accountUnlocked(this.inputtedAddress);
         if (!accountUnlocked) {
           this.transferWithdrawWarningModal = true;
@@ -634,8 +694,8 @@ export default Vue.extend({
 
       this.checkUnlock(transferTransactions);
 
-      this.transactionInfo.hash = transferTransactions.transaction!.txHash;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash);
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
@@ -648,10 +708,10 @@ export default Vue.extend({
         throw new Error(receipt.failReason);
       }
     },
-    async nftTransfer(): Promise<void> {
+    async nftTransfer(skipAccountCheck: boolean): Promise<void> {
       const transferWithdrawWarning = localStorage.getItem("canceledTransferWithdrawWarning");
       this.tip = "Processing...";
-      if (!transferWithdrawWarning && !this.transferWithdrawWarningModal) {
+      if (!transferWithdrawWarning && !skipAccountCheck) {
         const accountUnlocked = await this.accountUnlocked(this.inputtedAddress);
         if (!accountUnlocked) {
           this.transferWithdrawWarningModal = true;
@@ -684,8 +744,8 @@ export default Vue.extend({
 
       this.checkUnlock(transferTransactions);
 
-      this.transactionInfo.hash = transferTransactions.transaction!.txHash;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash);
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
@@ -719,8 +779,8 @@ export default Vue.extend({
 
       this.checkUnlock(withdrawTransactions);
 
-      this.transactionInfo.hash = withdrawTransactions.transaction!.txHash;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + withdrawTransactions.transaction!.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash) as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash);
       this.transactionInfo.fee!.amount = withdrawTransactions.feeTransaction!.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: withdrawTransactions.transaction!.txData.tx.to,
@@ -752,12 +812,8 @@ export default Vue.extend({
       if (this.transferWithdrawWarningCheckmark) {
         localStorage.setItem("canceledTransferWithdrawWarning", "true");
       }
-      this.commitTransaction();
-      this.$nextTick(() => {
-        setTimeout(() => {
-          this.transferWithdrawWarningModal = false;
-        }, 100);
-      });
+      this.commitTransaction(true);
+      this.transferWithdrawWarningModal = false;
     },
     async getAccountActivationFee(): Promise<void> {
       if (!this.feeToken && !this.ownAccountUnlocked) {
@@ -769,7 +825,7 @@ export default Vue.extend({
       try {
         const foundFee = await syncProvider?.getTransactionFee(
           {
-            ChangePubKey: syncWallet!.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA",
+            ChangePubKey: { onchainPubkeyAuth: false },
           },
           syncWallet!.address() || "",
           this.feeToken.symbol,
@@ -818,9 +874,9 @@ export default Vue.extend({
     },
     setTransactionInfo(transaction: Transaction, continueAfter = false, btnText = "") {
       this.transactionInfo.continueBtnFunction = continueAfter;
-      this.transactionInfo.hash = transaction.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(transaction.txHash) as string;
       this.transactionInfo.continueBtnText = btnText;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transaction.txHash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(transaction.txHash);
       this.transactionInfo.fee!.token = this.feeToken;
       this.transactionInfo.fee!.amount = transaction.txData.tx.fee;
       this.transactionInfo.amount = undefined;

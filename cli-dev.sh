@@ -31,7 +31,7 @@ if [[ $CATEGORY == "clean" ]]; then
   fi
 fi
 
-if [[ $CATEGORY == "ci" ]]; then
+if [ $CATEGORY == "ci" ]; then
     echo "Yarn pre-deploy garbage collection started"
     echo ""
     bash cli-dev.sh clean nuxt
@@ -39,5 +39,7 @@ if [[ $CATEGORY == "ci" ]]; then
     echo ""
     bash cli-dev.sh clean yarn
     echo ""
+    echo "Running yarn install (without modifying yarn.lock)"
+    yarn install --check-cache
     echo "Done"
 fi

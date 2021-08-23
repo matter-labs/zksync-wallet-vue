@@ -4,7 +4,7 @@
       <i-row>
         <i-column :xs="6" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
           <nuxt-link class="logoLinkContainer" to="/account">
-            <block-logo :is-zk-sync-logo="false" />
+            <block-logo :is-zk-sync-logo="true" />
           </nuxt-link>
         </i-column>
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
@@ -51,22 +51,17 @@
         </i-column>
       </i-row>
     </i-container>
-    <account-modal />
-    <footer-modal v-model="footerModal" />
+    <block-modals-account-modal />
+    <block-modals-footer-modal v-model="footerModal" />
+    <block-modals-environment />
   </i-layout-header>
 </template>
 
 <script lang="ts">
-import accountModal from "@/blocks/modals/AccountModal.vue";
-import footerModal from "@/blocks/modals/FooterModal.vue";
 import Vue from "vue";
 
 export default Vue.extend({
   name: "Header",
-  components: {
-    accountModal,
-    footerModal,
-  },
   data() {
     return {
       footerModal: false,
