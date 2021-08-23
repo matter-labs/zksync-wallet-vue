@@ -526,13 +526,7 @@ export const actions = actionTree(
 
         return true;
       } catch (error) {
-        this.app.$sentry!.captureException(error);
-        if (!error.message.includes("User denied")) {
-          this.app.$toast.global.zkException({
-            message: `Refreshing state of the wallet failed... Reason: ${error.message}`,
-          });
-          this.app.$accessor.wallet.logout(false);
-        }
+        this.app.$accessor.wallet.logout(false);
         return false;
       }
     },

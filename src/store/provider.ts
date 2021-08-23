@@ -1,7 +1,7 @@
 import onboardConfig from "@/configs/onboard";
 import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import Onboard from "bnc-onboard";
-import { API, Subscriptions, Ens, UserState, Wallet as OnboardWallet } from "bnc-onboard/dist/src/interfaces";
+import { API, Ens, Subscriptions, UserState, Wallet as OnboardWallet } from "bnc-onboard/dist/src/interfaces";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Address } from "zksync/build/types";
@@ -14,7 +14,7 @@ function getNameFromAddress(userAddress: Address): string {
   return userAddress.substr(0, 5) + "..." + userAddress.substr(userAddress.length - 5, userAddress.length - 1);
 }
 
-export declare type tProviderState = "ready" | "selectWallet" | "checkWallet" | "accountSelect" | "connecting" | "authorized";
+export declare type tProviderState = "ready" | "selectWallet" | "checkWallet" | "connecting" | "authorized";
 
 export const state = () => ({
   onboard: Onboard({
@@ -38,7 +38,7 @@ export const state = () => ({
     },
   }) as API,
   accountName: <string>"",
-  authStep: "ready",
+  authStep: <tProviderState>"ready",
   selectedWallet: localStorage.getItem("onboardSelectedWallet") || undefined,
   loadingHint: "",
 });
@@ -78,7 +78,6 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  onboard: (state) => state.onboard,
   loggedIn: (state) => {
     const authState = state.onboard.getState();
     return authState.address !== undefined && authState.wallet.provider !== undefined;
@@ -102,6 +101,8 @@ export const actions = actionTree(
     },
 
     async walletSelect({ state, commit }): Promise<boolean> {
+      const storedWallet = state.onboard.getState();
+      console.log(storedWallet);
       /* const storedSelectedWallet = state.selectedWallet as string | undefined;
        const result = await ((await dispatch("getOnboard")) as API).walletSelect(storedSelectedWallet); */
       const result = await state.onboard.walletSelect();
@@ -111,26 +112,39 @@ export const actions = actionTree(
       return result;
     },
 
-    async walletCheck({ state, commit }): Promise<boolean> {
-      const result = await state.onboard.walletCheck();
-      if (result) {
-        commit("setAuthStage", "checkWallet");
+    async walletCheck({ state, commit, dispatch }): Promise<boolean> {
+      commit("setAuthStage", "connecting");
+      commit("setLoadingHint", "Follow the instructions in your Ethereum wallet");
+      let checkStatus = false;
+      try {
+        checkStatus = await state.onboard.walletCheck();
+      } catch (e) {
+        console.error(e);
       }
-      return result;
+      if (checkStatus) {
+        commit("setAuthStage", "authorized");
+      } else {
+        dispatch("reset");
+      }
+      return checkStatus;
     },
 
     async accountSelect({ state, commit }): Promise<boolean> {
       const result = await state.onboard.accountSelect();
       if (result) {
-        commit("setAuthStage", "accountSelect");
+        commit("setAuthStage", "connecting");
       }
       return result;
     },
 
-    async reset({ state, commit }) {
+    reset({ state, commit }) {
       console.log("reset called");
+      state.onboard.walletReset();
       commit("setAuthStage", "ready");
-      await state.onboard.walletReset();
+    },
+
+    processWrongNetwork({ state, commit }) {
+      commit("setAuthStage", "connecting");
     },
 
     async login({ state, dispatch, commit }, forceReset = false): Promise<UserState> {
@@ -153,14 +167,14 @@ export const actions = actionTree(
         }
       }
       console.log("before check wallet");
-      if (state.authStep !== "checkWallet") {
-        const checkResult: boolean = await dispatch("walletCheck");
-        dispatch("authState");
-        if (!checkResult) {
-          await dispatch("reset");
-          return dispatch("authState");
-        }
+      //      if (state.authStep !== "checkWallet") {
+      const checkResult: boolean = await dispatch("walletCheck");
+      dispatch("authState");
+      if (!checkResult) {
+        await dispatch("reset");
+        return dispatch("authState");
       }
+      //      }
       console.log("before auth state");
       const authState: UserState = await dispatch("authState");
       if (authState.wallet!.type === "hardware") {
