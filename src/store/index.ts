@@ -17,22 +17,22 @@ export const state = () =>
 export type RootState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
-  getAccountModalState: (state: RootState) => state.accountModalOpened,
-  getPreviousRoute: (state: RootState) => state.previousRoute,
-  currentModal: (state: RootState) => state.currentModal,
+  getAccountModalState: (state) => state.accountModalOpened,
+  getPreviousRoute: (state) => state.previousRoute,
+  currentModal: (state) => state.currentModal,
 });
 
 export const mutations = mutationTree(state, {
-  setAccountModalState(state: RootState, modalState: boolean): void {
+  setAccountModalState(state, modalState: boolean) {
     state.accountModalOpened = modalState;
   },
-  setCurrentModal(state: RootState, modalName: string): void {
+  setCurrentModal(state, modalName: string) {
     state.currentModal = modalName;
   },
-  setPreviousRoute(state: RootState, route: Route): void {
+  setPreviousRoute(state, route: Route) {
     state.previousRoute = route;
   },
-  removeCurrentModal(state: RootState): void {
+  removeCurrentModal(state) {
     state.currentModal = undefined;
   },
 });
