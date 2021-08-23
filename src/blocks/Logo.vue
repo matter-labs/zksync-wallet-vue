@@ -33,13 +33,13 @@
     </svg>
     <template v-else>
       <img :src="zkWalletLogoSrc" alt="zkWallet" class="zkwallet-logo" />
-      <block-network-badge />
     </template>
+    <block-network-badge />
   </div>
 </template>
 
 <script lang="ts">
-import { ZK_NETWORK, ZK_IS_BETA, ETHER_PRODUCTION } from "@/plugins/build";
+import { ZK_NETWORK, ETHER_PRODUCTION } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import Vue from "vue";
 

@@ -1,9 +1,9 @@
 // noinspection ES6PreferShortImport
+
 import { Configuration, NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 
-// noinspection ES6PreferShortImport
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
 
 const srcDir = "./src/";

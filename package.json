@@ -35,7 +35,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "2.4.2",
+  "version": "2.5.0",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
@@ -152,7 +152,7 @@
   ],
   "scripts": {
     "local": "sh ./cli-process-env.sh 'rinkeby' 'dev' 1 1",
-    "dev": "yarn local && nuxt",
+    "dev": "yarn ci:build:rinkeby && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",

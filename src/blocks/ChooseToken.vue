@@ -24,7 +24,7 @@
           </i-tooltip>
         </div>
       </div>
-      <div class="tokenListContainer genericListContainer">
+      <div class="tokenListContainer genericListContainer _margin-top-05">
         <div v-for="item in displayedList" :key="item.symbol" class="tokenItem" :data-cy="`token_item_${item.symbol}`" @click="chooseToken(item)">
           <div class="tokenSymbol">{{ item.symbol }}</div>
           <div v-if="tokensType === 'L1' || tokensType === 'L2'" class="rightSide">

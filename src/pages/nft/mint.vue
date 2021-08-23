@@ -344,7 +344,7 @@ export default Vue.extend({
 
       this.checkUnlock(transferTransactions);
 
-      this.transactionInfo.hash = transferTransactions.transaction!.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
       this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
@@ -396,7 +396,7 @@ export default Vue.extend({
       try {
         const foundFee = await syncProvider?.getTransactionFee(
           {
-            ChangePubKey: syncWallet!.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA",
+            ChangePubKey: { onchainPubkeyAuth: false },
           },
           syncWallet!.address() || "",
           (this.chosenFeeToken as ZkInBalance).symbol,

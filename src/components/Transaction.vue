@@ -176,7 +176,6 @@
             </span>
           </span>
         </div>
-
         <div
           v-if="!ownAccountUnlocked && feeToken && (activateAccountFee || activateAccountFeeLoading)"
           class="_text-center _margin-top-1-2"
@@ -641,8 +640,8 @@ export default Vue.extend({
 
       this.checkUnlock(withdrawTransactions);
 
-      this.transactionInfo.hash = withdrawTransactions.transaction!.txHash;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + withdrawTransactions.transaction!.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash) as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash);
       this.transactionInfo.fee!.amount = withdrawTransactions.feeTransaction!.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: withdrawTransactions.transaction!.txData.tx.to,
@@ -695,8 +694,8 @@ export default Vue.extend({
 
       this.checkUnlock(transferTransactions);
 
-      this.transactionInfo.hash = transferTransactions.transaction!.txHash;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash);
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
@@ -745,8 +744,8 @@ export default Vue.extend({
 
       this.checkUnlock(transferTransactions);
 
-      this.transactionInfo.hash = transferTransactions.transaction!.txHash;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash);
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
@@ -780,8 +779,8 @@ export default Vue.extend({
 
       this.checkUnlock(withdrawTransactions);
 
-      this.transactionInfo.hash = withdrawTransactions.transaction!.txHash;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + withdrawTransactions.transaction!.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash) as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash);
       this.transactionInfo.fee!.amount = withdrawTransactions.feeTransaction!.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: withdrawTransactions.transaction!.txData.tx.to,
@@ -826,7 +825,7 @@ export default Vue.extend({
       try {
         const foundFee = await syncProvider?.getTransactionFee(
           {
-            ChangePubKey: syncWallet!.ethSignerType?.verificationMethod === "ERC-1271" ? "Onchain" : "ECDSA",
+            ChangePubKey: { onchainPubkeyAuth: false },
           },
           syncWallet!.address() || "",
           this.feeToken.symbol,
@@ -875,9 +874,9 @@ export default Vue.extend({
     },
     setTransactionInfo(transaction: Transaction, continueAfter = false, btnText = "") {
       this.transactionInfo.continueBtnFunction = continueAfter;
-      this.transactionInfo.hash = transaction.txHash;
+      this.transactionInfo.hash = this.$options.filters!.formatTxHash(transaction.txHash) as string;
       this.transactionInfo.continueBtnText = btnText;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transaction.txHash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(transaction.txHash);
       this.transactionInfo.fee!.token = this.feeToken;
       this.transactionInfo.fee!.amount = transaction.txData.tx.fee;
       this.transactionInfo.amount = undefined;

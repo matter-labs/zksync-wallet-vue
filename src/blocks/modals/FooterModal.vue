@@ -25,6 +25,10 @@
           <v-icon name="ri-wifi-line" />
           <span>Uptime</span>
         </a>
+        <div class="modalFooterBtn big" @click="$accessor.openModal('environment')">
+          <v-icon name="ri-reserved-line" />
+          <span>Environment</span>
+        </div>
       </template>
       <template slot="footer">
         <div class="_display-flex _justify-content-space-between">

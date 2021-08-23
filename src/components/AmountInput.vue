@@ -100,7 +100,7 @@ export default Vue.extend({
     },
   },
   mounted() {
-    if (this.autofocus) {
+    if (this.autofocus && !this.$accessor.currentModal) {
       (this.$refs.amountInput as Vue)?.$el?.querySelector("input")?.focus();
     }
   },

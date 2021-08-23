@@ -22,6 +22,7 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: rinkeby-beta
           projectId: zksync-vue
+          channelID: live
 
       - name: "Build ropsten-beta [beta]"
         run: yarn run ci:build:ropsten-beta
@@ -31,3 +32,4 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: ropsten-beta
           projectId: zksync-vue
+          channelID: live

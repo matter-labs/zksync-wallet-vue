@@ -196,6 +196,7 @@ export default Vue.extend({
       if (!val) {
         this.inputtedName = "";
         this.inputtedWallet = "";
+        this.modalError = "";
       } else {
         this.$nextTick(() => {
           if (this.$refs.nameInput) {
