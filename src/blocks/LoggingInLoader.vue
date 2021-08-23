@@ -29,23 +29,17 @@ export default Vue.extend({
     };
   },
   computed: {
-    loggedIn() {
-      return this.$accessor.account.loggedIn;
-    },
     loggingIn() {
-      return this.$accessor.account.loader;
+      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting";
+    },
+    loggedIn() {
+      return this.$store.getters["zk-onboard/onboardStatus"] === "connected";
     },
     hintText(): string {
-      if (this.$accessor.account.loadingHint === "followInstructions") {
-        return "Follow the instructions in your wallet";
-      }
-      if (this.$accessor.account.loadingHint === "loadingData") {
-        return "Getting wallet information";
-      }
-      return this.$accessor.account.loadingHint;
+      return this.$store.getters["zk-onboard/loadingHint"];
     },
     selectedWallet() {
-      return this.$accessor.account.selectedWallet;
+      return this.$store.getters["zk-onboard/selectedWallet"];
     },
   },
   watch: {
@@ -60,8 +54,8 @@ export default Vue.extend({
     },
   },
   methods: {
-    cancelLogin(): void {
-      this.$accessor.wallet.logout();
+    async cancelLogin() {
+      await this.$store.dispatch("zk-account/logout");
       this.$router.push("/");
       this.loggedInAnimation = false;
       clearTimeout(loggedInAnimationTimeout);

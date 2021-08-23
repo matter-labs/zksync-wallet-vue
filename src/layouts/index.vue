@@ -15,9 +15,8 @@
 import headerComponent from "@/blocks/IndexHeader.vue";
 import footerComponent from "@/blocks/Footer.vue";
 import loggingInLoader from "@/blocks/LoggingInLoader.vue";
-import utils from "@/plugins/utils";
 
-import { GIT_REVISION_SHORT } from "@/plugins/build";
+import { GIT_REVISION_SHORT } from "@/utils/config";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -32,7 +31,7 @@ export default Vue.extend({
     };
   },
   mounted() {
-    utils.defineTheme(this.$inkline, false);
+    // utils.defineTheme(this.$inkline, false);
   },
 });
 </script>

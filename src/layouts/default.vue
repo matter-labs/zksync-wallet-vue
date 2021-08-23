@@ -15,7 +15,6 @@
 </template>
 
 <script lang="ts">
-import utils from "@/plugins/utils";
 import Vue from "vue";
 import SignPubkeyModal from "@/blocks/modals/SignPubkey.vue";
 export default Vue.extend({
@@ -24,14 +23,14 @@ export default Vue.extend({
   },
   computed: {
     loggingIn() {
-      return this.$accessor.account.loader;
+      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting";
     },
     loggedIn() {
-      return this.$accessor.account.loggedIn;
+      return this.$store.getters["zk-onboard/onboardStatus"] === "connected";
     },
   },
   mounted() {
-    utils.defineTheme(this.$inkline, false);
+    // utils.defineTheme(this.$inkline, false);
   },
 });
 </script>

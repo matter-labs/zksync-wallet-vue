@@ -25,12 +25,9 @@ export default Vue.extend({
   },
   methods: {
     async customWallet() {
-      this.$accessor.wallet.onboard?.config({
-        darkMode: this.$inkline.config.variant !== "light",
-      });
-      const refreshWalletTry = await this.$accessor.wallet.walletRefresh(true);
+      const refreshWalletTry = await this.$store.dispatch("zk-onboard/login");
       if (!refreshWalletTry) {
-        this.$accessor.wallet.logout();
+        await this.$store.dispatch("zk-account/logout");
       } else {
         await this.$router.push("/account");
       }

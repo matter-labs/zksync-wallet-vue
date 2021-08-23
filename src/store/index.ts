@@ -1,11 +1,6 @@
-import * as account from "@/store/account";
-import * as contacts from "@/store/contacts";
-import * as tokens from "@/store/tokens";
-import * as transaction from "@/store/transaction";
-import * as wallet from "@/store/wallet";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import { Route } from "vue-router/types";
-import { ZKIRootState } from "~/types/lib";
+import { ZKIRootState } from "@/types/lib";
 
 export const state = (): ZKIRootState => ({
   accountModalOpened: false,
@@ -53,11 +48,5 @@ export const accessorType = getAccessorType({
   getters,
   mutations,
   actions,
-  modules: {
-    account,
-    contacts,
-    tokens,
-    transaction,
-    wallet,
-  },
+  modules: {},
 });

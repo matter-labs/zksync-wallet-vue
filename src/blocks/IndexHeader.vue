@@ -64,7 +64,6 @@
 </template>
 
 <script lang="ts">
-import { ETHER_NETWORK_NAME } from "@/plugins/build";
 import Vue from "vue";
 
 interface DropdownOption {
@@ -101,8 +100,8 @@ const dropdownLinks = {
 };
 
 function getLinkItem(type: string): string {
-  if (dropdownLinks[type][ETHER_NETWORK_NAME]) {
-    return dropdownLinks[type][ETHER_NETWORK_NAME];
+  if (dropdownLinks[type][process.env.network]) {
+    return dropdownLinks[type][process.env.network];
   } else {
     return dropdownLinks[type].mainnet;
   }

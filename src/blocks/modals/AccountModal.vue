@@ -41,18 +41,18 @@ export default Vue.extend({
   data() {
     return {
       renameWalletModal: false,
-      walletName: this.$accessor.account.name,
+      walletName: this.$store.getters["zk-account/name"],
     };
   },
   computed: {
     accountName(): string {
-      return this.$accessor.account.name as string;
+      return this.$store.getters["zk-account/name"];
     },
     accountAddress(): string {
-      return this.$accessor.account.address ?? "";
+      return this.$store.getters["zk-account/address"];
     },
     accountZkScanUrl(): string {
-      return this.$accessor.account.zkScanUrl as string;
+      return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer + "account/" + this.accountAddress;
     },
     accountModal: {
       get(): boolean {
@@ -87,7 +87,7 @@ export default Vue.extend({
     logout(): void {
       this.accountModal = false;
       this.$nextTick(async () => {
-        await this.$accessor.wallet.logout();
+        await this.$store.dispatch("zk-account/logout");
         await this.$router.push("/");
       });
     },
@@ -96,7 +96,7 @@ export default Vue.extend({
       this.renameWalletModal = true;
     },
     renameWallet(): void {
-      this.$accessor.account.setName(this.walletName);
+      this.$store.commit("zk-account/setName", this.walletName);
       this.renameWalletModal = false;
       this.walletName = this.accountName;
     },

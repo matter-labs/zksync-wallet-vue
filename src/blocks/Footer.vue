@@ -34,26 +34,25 @@
 </template>
 
 <script lang="ts">
-import { APP_ZKSYNC_BLOCK_EXPLORER, VERSION } from "@/plugins/build";
-import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
   name: "Footer",
   computed: {
     blockExplorerLink(): string {
-      return APP_ZKSYNC_BLOCK_EXPLORER;
+      return "";
     },
     version(): string {
-      return VERSION;
+      return "";
     },
     isDarkTheme(): boolean {
-      return utils.defineTheme(this.$inkline) === "dark";
+      return false;
+      // return utils.defineTheme(this.$inkline) === "dark";
     },
   },
   methods: {
     toggleDarkMode(): void {
-      utils.defineTheme(this.$inkline, true);
+      // utils.defineTheme(this.$inkline, true);
     },
   },
 });

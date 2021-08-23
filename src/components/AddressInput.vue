@@ -24,10 +24,9 @@
 </template>
 
 <script lang="ts">
-import { DecimalBalance } from "@/types/lib";
-
-import utils from "@/plugins/utils";
 import Vue, { PropOptions } from "vue";
+import { Address } from "zksync/build/types";
+import { validateAddress } from "matter-dapp-ui/utils";
 
 export default Vue.extend({
   props: {
@@ -35,7 +34,7 @@ export default Vue.extend({
       type: String,
       default: "",
       required: false,
-    } as PropOptions<DecimalBalance>,
+    } as PropOptions<Address>,
   },
   data() {
     return {
@@ -44,7 +43,7 @@ export default Vue.extend({
   },
   computed: {
     isValid(): boolean {
-      return utils.validateAddress(this.inputtedWallet);
+      return validateAddress(this.inputtedWallet);
     },
     error(): string {
       if (this.inputtedWallet && !this.isValid) {

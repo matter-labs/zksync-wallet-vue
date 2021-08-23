@@ -1,9 +1,9 @@
 import { Network } from "zksync/build/types";
 import { version as zkSyncVersion } from "zksync/package.json";
 import { version } from "../../package.json";
-import { networkEthId } from "~/types/lib";
+import { NetworkEthId } from "~/types/lib";
 
-export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
+export const _ETHER_NETWORK_ID_DICTIONARY: NetworkEthId[] = [
   { name: "rinkeby", id: 4 },
   { name: "ropsten", id: 3 },
   { name: "mainnet", id: 1 },
@@ -36,7 +36,7 @@ export const ETHER_PREFIX: string = ETHER_PRODUCTION ? "" : ETHER_NETWORK_NAME;
 export const ETHER_PREFIX_DOT: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : ".");
 export const ETHER_PREFIX_MINUS: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : "-");
 
-export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY.find((value: networkEthId): boolean => value?.name === (ETHER_NETWORK_NAME as string))?.id;
+export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY.find((value: NetworkEthId): boolean => value?.name === (ETHER_NETWORK_NAME as string))?.id;
 
 /**
  * The right way of strict-typing for the web3provider

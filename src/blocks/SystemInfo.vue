@@ -26,7 +26,7 @@
   </i-badge>
 </template>
 <script lang="ts">
-import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_LIB_VERSION, ZK_NETWORK } from "@/plugins/build";
+import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_LIB_VERSION, ZK_NETWORK } from "@/utils/config";
 import Vue from "vue";
 
 export default Vue.extend({

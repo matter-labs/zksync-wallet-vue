@@ -20,11 +20,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { walletData } from "@/plugins/walletData";
 import { utils } from "zksync";
-import { saveCPKTx } from "@/plugins/walletActions/cpk";
-import { CPKLocal } from "@/types/lib";
-import zkUtils from "@/plugins/utils";
 
 export default Vue.extend({
   name: "SignPubkey",
@@ -64,7 +60,7 @@ export default Vue.extend({
       }
     },
     async signActivation() {
-      try {
+      /* try {
         this.error = "";
         this.loading = true;
         this.step = "loading";
@@ -110,7 +106,7 @@ export default Vue.extend({
         }
       }
       this.loading = false;
-      this.step = false;
+      this.step = false; */
     },
   },
 });

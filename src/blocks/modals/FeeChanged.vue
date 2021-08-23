@@ -9,7 +9,7 @@
           <span class="tokenSymbol">{{ item.symbol }}</span>
           {{ item.amount | formatToken(item.symbol) }}
           <span class="secondaryText">
-            <token-price :symbol="item.symbol" :amount="item.amount" />
+            <!-- <token-price :symbol="item.symbol" :amount="item.amount" /> -->
           </span>
         </div>
       </div>

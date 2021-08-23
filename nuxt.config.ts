@@ -3,17 +3,16 @@
 import { Configuration, NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
-
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
+import { ModuleOptions } from "matter-dapp-ui/types";
 
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
-const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
-const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
+const isProduction: boolean = env === "prod";
+const pageTitle = "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED}`;
+const pageTitleTemplate = process.env.APP_CURRENT_NETWORK!.substr(0, 1).toUpperCase() + process.env.APP_CURRENT_NETWORK!.substr(1, process.env.APP_CURRENT_NETWORK!.length);
 const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
@@ -167,10 +166,10 @@ const config: NuxtConfig = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/icons", "@/plugins/main"],
+  plugins: ["@/plugins/icons"],
 
   router: {
-    middleware: ["wallet"],
+    middleware: [],
   },
   /*
    ** Nuxt.js dev-modules
@@ -197,6 +196,22 @@ const config: NuxtConfig = {
             },
             files: "@/**/*.{ts,vue,js}",
           },
+        },
+      },
+    ],
+    [
+      "matter-dapp-ui",
+      <ModuleOptions>{
+        useTheme: true,
+        network: process.env.APP_CURRENT_NETWORK,
+        onboardConfig: {
+          APP_NAME: pageTitle,
+          APP_ID: process.env.APP_ONBOARDING_APP_ID,
+          WALLET_CONNECT_KEY: process.env.APP_WALLET_CONNECT,
+          FORTMATIC_KEY: process.env.APP_FORTMATIC,
+          PORTIS_KEY: process.env.APP_PORTIS,
+          INFURA_KEY: process.env.APP_ALCHEMY_API_KEY,
+          WS_API_ETHERSCAN_TOKEN: process.env.APP_WS_API_ETHERSCAN_TOKEN,
         },
       },
     ],

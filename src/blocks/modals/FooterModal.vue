@@ -44,8 +44,6 @@
 </template>
 
 <script lang="ts">
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -67,15 +65,16 @@ export default Vue.extend({
       },
     },
     blockExplorerLink(): string {
-      return APP_ZKSYNC_BLOCK_EXPLORER;
+      return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;
     },
     isDarkTheme(): boolean {
-      return utils.defineTheme(this.$inkline) === "dark";
+      return true;
+      // return utils.defineTheme(this.$inkline) === "dark";
     },
   },
   methods: {
     toggleDarkMode(): void {
-      utils.defineTheme(this.$inkline, true);
+      // utils.defineTheme(this.$inkline, true);
     },
   },
 });

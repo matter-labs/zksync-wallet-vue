@@ -1,7 +1,7 @@
 <template>
   <i-modal v-model="opened" size="md">
     <template slot="header">Environment</template>
-    <template slot="default">
+    <!-- <template slot="default">
       <div class="modalFooterBtn">
         <v-icon name="ri-npmjs-fill" />
         <span>zkSync:</span>
@@ -17,13 +17,13 @@
         <span>Ethereum env:</span>
         <strong>{{ netName }}</strong>
       </div>
-    </template>
+    </template> -->
   </i-modal>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_LIB_VERSION, ZK_NETWORK } from "@/plugins/build";
+/* import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_LIB_VERSION, ZK_NETWORK } from "@/plugins/build"; */
 
 export default Vue.extend({
   name: "Environment",
@@ -38,7 +38,7 @@ export default Vue.extend({
         return this.$accessor.currentModal !== null && this.$accessor.currentModal === "environment";
       },
     },
-    netName(): string {
+    /* netName(): string {
       return ZK_NETWORK;
     },
     zkLibVersion(): string {
@@ -55,7 +55,7 @@ export default Vue.extend({
     },
     zkApiBase(): string {
       return ZK_API_BASE;
-    },
+    }, */
   },
 });
 </script>

@@ -3757,14 +3757,15 @@ __metadata:
     fs-extra: ^9.1.0
     fsevents: ^2.3.2
     jest: ^26.6.3
+    js-cache: ^1.0.3
     lottie-web: ^5.7.8
+    matter-dapp-ui: "link:../nuxt-ui"
     moment-timezone: ^0.5.33
     node-sass: 4.14.0
     nuxt: latest
     nuxt-build-optimisations: latest
     nuxt-typed-vuex: latest
     oh-vue-icons: ^0.4.3
-    postcss: latest
     prettier: ^2.2.1
     qrcode: ^1.0.0
     sass-loader: ^10.1.1
@@ -3783,7 +3784,7 @@ __metadata:
     web3: ^1.3.5
     web3-core: ^1.3.5
     webpack: ^4.46.0
-    zksync: beta
+    zksync: latest
   peerDependencies:
     "@babel/core": "*"
     "@babel/runtime": "*"
@@ -7860,6 +7861,13 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0
   checksum: 466ca17bba2638cadda5c25f3108dab1867b30e5d728366d0d2309be5d6555db8738a6cacd2c43284bee2ce7917e3285194c223a22b3d9817794f00c2775fdb2
+  languageName: node
+  linkType: hard
+
+"backbone-events-standalone@npm:*":
+  version: 0.2.7
+  resolution: "backbone-events-standalone@npm:0.2.7"
+  checksum: a7b885647e688d97257c25b566378b751efa71d1a6314bb07c0a937c6ee3f2aefbaa17b8b2e4783156192801ab64e23ec61d38cd3dcc2905311b55fea77bd171
   languageName: node
   linkType: hard
 
@@ -14696,6 +14704,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"infinite-timeout@npm:*":
+  version: 0.1.0
+  resolution: "infinite-timeout@npm:0.1.0"
+  checksum: 446b3daf2f55362255022b62ae36e7662acdf39f3db8944640ce10113178c811c8cfae0d09d4e91174b371e5374f1740a1fba9e49056c0f1bdd1972cb976eaef
+  languageName: node
+  linkType: hard
+
 "inflight@npm:^1.0.4":
   version: 1.0.6
   resolution: "inflight@npm:1.0.6"
@@ -15980,6 +15995,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"js-cache@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "js-cache@npm:1.0.3"
+  dependencies:
+    backbone-events-standalone: "*"
+    infinite-timeout: "*"
+  checksum: f0a47053935fc7d9f18aa57a6047b8a6382c4935935258399abd4021a775e414ab5970eaf3213cc8e2a1141ac716bb268eb37f0666bbc41b7d67391073b3780a
+  languageName: node
+  linkType: hard
+
 "js-sha256@npm:0.9.0":
   version: 0.9.0
   resolution: "js-sha256@npm:0.9.0"
@@ -17087,6 +17112,12 @@ fsevents@^1.2.7:
   checksum: 72ef7c8b5ed488f609c50e66b6a06c389c05374b12b9a6128b99d62ce71f283f0e853b11b50f29689253dc525cbefeb908130e52f5ae77e3f73225da96d58ff6
   languageName: node
   linkType: hard
+
+"matter-dapp-ui@link:../nuxt-ui::locator=%40matterlabs%2Fzksync-zkwallet-vue%40workspace%3A.":
+  version: 0.0.0-use.local
+  resolution: "matter-dapp-ui@link:../nuxt-ui::locator=%40matterlabs%2Fzksync-zkwallet-vue%40workspace%3A."
+  languageName: node
+  linkType: soft
 
 "md5.js@npm:^1.3.4":
   version: 1.3.5
@@ -20166,17 +20197,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"postcss@npm:latest":
-  version: 8.3.5
-  resolution: "postcss@npm:8.3.5"
-  dependencies:
-    colorette: ^1.2.2
-    nanoid: ^3.1.23
-    source-map-js: ^0.6.2
-  checksum: 87dc16efcf40286fad4ded0a433497ddbc55dfad3d7ddb200ba9c0761ec376280fa2c06a522628583c9284def85894c52bc361cffedf0679f4936370c084a145
-  languageName: node
-  linkType: hard
-
 "preact@npm:10.4.1":
   version: 10.4.1
   resolution: "preact@npm:10.4.1"
@@ -22375,13 +22395,6 @@ fsevents@^1.2.7:
   version: 2.0.1
   resolution: "source-list-map@npm:2.0.1"
   checksum: d8d45f29987d00d995ccda308dcc78b710031a9958fdb5d26674d32220c952eb7a8562062638d91896628ae4eef30e1cd112a6a547563dfda0b013024c2a9bf7
-  languageName: node
-  linkType: hard
-
-"source-map-js@npm:^0.6.2":
-  version: 0.6.2
-  resolution: "source-map-js@npm:0.6.2"
-  checksum: 8e2f992cfbedb71286fa6f6e011e2fa756b7f4d944ea4b0f49e9ff6ea34ad0a17dc655f067fdddb32efa7b45000e8c59e47a2e875d91744c86a56329b5f58b32
   languageName: node
   linkType: hard
 
@@ -26571,25 +26584,25 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"zksync-crypto@npm:^0.6.0-beta.1":
-  version: 0.6.0-beta.1
-  resolution: "zksync-crypto@npm:0.6.0-beta.1"
-  checksum: 6b1057d824a58713399da1683c0361e208526807979cdad9e4c4c666f5c8c0d602c8694e1f079be6f2f5da985a1aa23271c728a1b33294f40cf1b6b2f936363e
+"zksync-crypto@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "zksync-crypto@npm:0.6.0"
+  checksum: 62b11c0dd4214743fd2bd1bdb4c30f0a7511f3d6a4173bbf8f0460c72f9e3365dc9ac28b2a700e8767d5382391d8afafcc3c5ea847cf0d22d3fc8593e17052bc
   languageName: node
   linkType: hard
 
-"zksync@npm:beta":
-  version: 0.11.0-beta.7
-  resolution: "zksync@npm:0.11.0-beta.7"
+"zksync@npm:latest":
+  version: 0.11.2
+  resolution: "zksync@npm:0.11.2"
   dependencies:
     axios: ^0.21.1
     websocket: ^1.0.30
     websocket-as-promised: ^1.1.0
-    zksync-crypto: ^0.6.0-beta.1
+    zksync-crypto: ^0.6.0
   peerDependencies:
-    "@ethersproject/logger": ^5.0.0
-    ethers: ^5.0.0
-  checksum: c4853b193bdf0b1305f49edbf80835816b42915e7aac1752cd4048640264cf29db1d399ce10b9c7df34e4cef011d3c04da28a3ae99bacae6818cb4a51c65bcb4
+    "@ethersproject/logger": ^5.4.0
+    ethers: ^5.4.4
+  checksum: 9f041ee74f81074406c86226a5c470dd6f92f3aa4973e99e9a2d13534329c5ee467252364fc38bb628ded62e0e99f8f72b42ebd77e035726a7963dc6a5882945
   languageName: node
   linkType: hard
 

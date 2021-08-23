@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts">
-import socialIcons from "@/plugins/socialIcons";
-import { singleIcon } from "@/types/lib";
+import socialIcons from "@/utils/socialIcons";
+import { SingleIcon } from "@/types/lib";
 import Vue, { PropOptions } from "vue";
 
 type Location = "header" | "footer";
@@ -28,8 +28,8 @@ export default Vue.extend({
     };
   },
   computed: {
-    socialNetworks(): singleIcon[] {
-      const socialIcons = <singleIcon[]>[
+    socialNetworks(): SingleIcon[] {
+      const socialIcons = <SingleIcon[]>[
         {
           name: "Medium Blog",
           img: "medium",

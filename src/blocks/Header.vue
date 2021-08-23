@@ -69,10 +69,10 @@ export default Vue.extend({
   },
   computed: {
     walletName(): string {
-      return this.$accessor.account.name || "";
+      return this.$store.getters["zk-account/name"];
     },
     walletAddressFull(): string {
-      return this.$accessor.account.address || "";
+      return this.$store.getters["zk-account/address"];
     },
     accountModal: {
       get(): boolean {
@@ -88,7 +88,7 @@ export default Vue.extend({
     logout(): void {
       this.accountModal = false;
       this.$nextTick(async () => {
-        await this.$accessor.wallet.logout();
+        await this.$store.dispatch("zk-account/logout");
         await this.$router.push("/");
       });
     },

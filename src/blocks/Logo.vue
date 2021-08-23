@@ -39,8 +39,6 @@
 </template>
 
 <script lang="ts">
-import { ZK_NETWORK, ETHER_PRODUCTION } from "@/plugins/build";
-import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -54,14 +52,14 @@ export default Vue.extend({
   },
   computed: {
     zkWalletLogoSrc(): string {
-      const prefix = utils.defineTheme(this.$inkline, false) === "light" ? "" : "-alt";
-      return require(`@/assets/imgs/logos/logo${prefix}.svg`);
+      // const prefix = utils.defineTheme(this.$inkline, false) === "light" ? "" : "-alt";
+      return require("@/assets/imgs/logos/logo.svg");
     },
     isMainnet(): boolean {
-      return ETHER_PRODUCTION;
+      return process.env.network === "mainnet";
     },
-    network(): string {
-      return ZK_NETWORK;
+    network() {
+      return process.env.network;
     },
   },
 });

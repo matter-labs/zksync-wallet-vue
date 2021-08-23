@@ -23,8 +23,7 @@
 </template>
 
 <script lang="ts">
-import { DecimalBalance } from "@/types/lib";
-
+import { DecimalBalance } from "matter-dapp-ui/types";
 import { ethers } from "ethers";
 import Vue, { PropOptions } from "vue";
 
