@@ -169,7 +169,7 @@ const config: NuxtConfig = {
   plugins: ["@/plugins/icons"],
 
   router: {
-    middleware: [],
+    middleware: ["auth"],
   },
   /*
    ** Nuxt.js dev-modules

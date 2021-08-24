@@ -36,8 +36,10 @@
 
 <script lang="ts">
 import Vue from "vue";
+import VueQrcode from "vue-qrcode";
 
 export default Vue.extend({
+  components: { VueQrcode },
   data() {
     return {
       renameWalletModal: false,
@@ -96,7 +98,7 @@ export default Vue.extend({
       this.renameWalletModal = true;
     },
     renameWallet(): void {
-      this.$store.commit("zk-account/setName", this.walletName);
+      this.$store.dispatch("zk-account/saveAccountName", this.walletName);
       this.renameWalletModal = false;
       this.walletName = this.accountName;
     },

@@ -26,11 +26,12 @@ export default Vue.extend({
       return this.$store.getters["zk-onboard/onboardStatus"] === "connecting";
     },
     loggedIn() {
-      return this.$store.getters["zk-onboard/onboardStatus"] === "connected";
+      return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
     },
   },
   mounted() {
     // utils.defineTheme(this.$inkline, false);
+    this.$store.dispatch("zk-provider/requestProvider");
   },
 });
 </script>

@@ -158,7 +158,7 @@
   ],
   "scripts": {
     "local": "sh ./cli-process-env.sh 'rinkeby' 'dev' 1 1",
-    "dev": "yarn ci:build:rinkeby && nuxt",
+    "dev": "yarn local && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",
