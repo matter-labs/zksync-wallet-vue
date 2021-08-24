@@ -45,7 +45,6 @@
       max-height: 100vh !important;
       border-radius: 0 !important;
 
-
       /* autoprefixer: off */
       @supports (-webkit-touch-callout: none) {
         //noinspection CssInvalidPropertyValue
@@ -53,7 +52,6 @@
         //noinspection CssInvalidPropertyValue
         height: fill-available;
       }
-
 
       //flex-flow: column;
       //display: flex;
@@ -222,7 +220,7 @@
         border-top: 0.5px solid $lightViolet;
 
         span.bn-onboard-select-wallet-info {
-          margin-top: .4rem;
+          margin-top: 0.4rem;
         }
       }
 
@@ -252,12 +250,10 @@
 }
 
 #walletconnect-wrapper .walletconnect-modal__base {
-
   @media (max-height: $mobile) {
     max-width: 300px;
   }
 }
-
 
 section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
   display: flex;
@@ -289,6 +285,7 @@ footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
     height: 20px;
   }
 }
+
 /* autoprefixer: off */
 aside.bn-onboard-custom.bn-onboard-modal {
   max-height: 100vh;
@@ -334,8 +331,14 @@ aside.bn-onboard-custom.bn-onboard-modal {
     }
 
     button.bn-onboard-custom.bn-onboard-icon-button {
-      margin: 0 0 .25rem !important;
+      margin: 0 0 0.25rem !important;
       padding: 0.5rem !important;
     }
+  }
+}
+
+body.-dark {
+  .walletconnect-modal__mobile__toggle a {
+    color: #1d2039 !important;
   }
 }
