@@ -1,9 +1,9 @@
 import { walletData } from "@/plugins/walletData";
 import { BigNumberish } from "ethers";
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { TokenSymbol } from "zksync/build/types";
-import { ZK_API_BASE } from "~/plugins/build";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { BalanceToReturn, TokenInfo, Tokens, ZkInTokenPrices } from "~/types/lib";
+import { ZK_API_BASE } from "~/plugins/build";
 
 /**
  * Operations with the tokens (assets)
@@ -40,18 +40,18 @@ export const state = () => ({
 export type TokensModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setAllTokens(state, tokenList: Tokens) {
+  setAllTokens(state: TokensModuleState, tokenList: Tokens): void {
     state.allTokens = tokenList;
   },
-  setTokenPrice(state, { symbol, obj }: { symbol: TokenSymbol; obj: { lastUpdated?: number; price: number } }) {
+  setTokenPrice(state: TokensModuleState, { symbol, obj }: { symbol: TokenSymbol; obj: { lastUpdated?: number; price: number } }): void {
     // @ts-ignore
     state.tokenPrices[symbol] = obj;
     state.tokenPricesTick++;
   },
-  storeAcceptableTokens(state, tokenList: TokenInfo[]) {
+  storeAcceptableTokens(state: TokensModuleState, tokenList: TokenInfo[]): void {
     state.acceptableTokens = tokenList;
   },
-  addRestrictedToken(state, token: TokenSymbol) {
+  addRestrictedToken(state: TokensModuleState, token: TokenSymbol): void {
     if (!state.restrictedTokens.includes(token) && token.toLowerCase() !== "eth") {
       state.restrictedTokens.push(token);
     }
@@ -59,12 +59,22 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  getAllTokens: (state): Tokens => state.allTokens,
-  getRestrictedTokens: (state): TokenSymbol[] => state.restrictedTokens,
-  getAvailableTokens: (state): Tokens => Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol))),
-  getTokenPrices: (state): ZkInTokenPrices => state.tokenPrices,
-  getTokenPriceTick: (state): number => state.tokenPricesTick,
-  getTokenByID: (state) => {
+  getAllTokens(state: TokensModuleState): Tokens {
+    return state.allTokens;
+  },
+  getRestrictedTokens(state: TokensModuleState): TokenSymbol[] {
+    return state.restrictedTokens;
+  },
+  getAvailableTokens(state: TokensModuleState): Tokens {
+    return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
+  },
+  getTokenPrices(state: TokensModuleState): ZkInTokenPrices {
+    return state.tokenPrices;
+  },
+  getTokenPriceTick(state: TokensModuleState): number {
+    return state.tokenPricesTick;
+  },
+  getTokenByID(state: TokensModuleState) {
     return (id: number): TokenInfo | undefined => {
       for (const symbol in state.allTokens) {
         if (state.allTokens[symbol].id === id) {
@@ -81,7 +91,7 @@ export const actions = actionTree(
     async loadAllTokens({ commit, getters }): Promise<Tokens> {
       if (Object.entries(getters.getAllTokens).length === 0) {
         /* By taking token list from syncProvider we avoid double getTokens request,
-         but the tokensBySymbol param is private on zksync utils types */
+          but the tokensBySymbol param is private on zksync utils types */
         const tokensList: Tokens = await walletData.get().syncProvider!.getTokens();
         commit("setAllTokens", tokensList);
         // Added async loading of the restricted tokens
@@ -95,8 +105,8 @@ export const actions = actionTree(
       commit("storeAcceptableTokens", acceptableTokens);
     },
 
-    async loadTokensAndBalances({ dispatch }): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
-      const tokens: Tokens = await dispatch("loadAllTokens");
+    async loadTokensAndBalances(): Promise<{ zkBalances: BalanceToReturn[]; tokens: Tokens }> {
+      const tokens: Tokens = await this.app.$accessor.tokens.loadAllTokens();
       const zkBalance: { [p: string]: BigNumberish } | undefined = walletData.get().accountState?.committed.balances;
       if (!zkBalance) {
         return {

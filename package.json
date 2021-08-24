@@ -63,8 +63,7 @@
     "@nuxtjs/google-gtag": "latest",
     "@nuxtjs/sentry": "latest",
     "@nuxtjs/toast": "latest",
-    "@walletconnect/web3-provider": "^1.5.5",
-    "bnc-onboard": "^1.33.0",
+    "bnc-onboard": "^1.34.1",
     "ethereum-blockies-base64": "latest",
     "ethers": "^5.4.4",
     "lottie-web": "^5.7.8",
@@ -72,7 +71,7 @@
     "nuxt": "latest",
     "nuxt-build-optimisations": "latest",
     "nuxt-typed-vuex": "latest",
-    "oh-vue-icons": "^0.4.3",
+    "oh-vue-icons": "^0.4.7",
     "typed-vuex": "latest",
     "vue": "2.*",
     "vue-class-component": "latest",
@@ -151,7 +150,7 @@
     "yarn spell-check"
   ],
   "scripts": {
-    "local": "sh ./cli-process-env.sh 'rinkeby' 'dev' 1 1",
+    "local": "sh ./cli-process-env.sh 'ropsten-beta' 'dev' 1 1",
     "dev": "yarn ci:build:rinkeby && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",

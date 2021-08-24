@@ -46,11 +46,11 @@ export const state = () => ({
 export type ProviderModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
-  setAuthStage(state, currentStep: tProviderState) {
+  setAuthStage(state: ProviderModuleState, currentStep: tProviderState) {
     console.log("auth step:", currentStep);
     state.authStep = currentStep;
   },
-  storeSelectedWallet(state, selectedWallet: string | undefined) {
+  storeSelectedWallet(state: ProviderModuleState, selectedWallet: string | undefined) {
     localStorage.setItem("onboardSelectedWallet", selectedWallet as string);
     if (selectedWallet === undefined) {
       localStorage.removeItem("onboardSelectedWallet");
@@ -58,10 +58,10 @@ export const mutations = mutationTree(state, {
     state.selectedWallet = selectedWallet;
     state.selectedWallet = selectedWallet;
   },
-  setLoadingHint(state, text: string) {
+  setLoadingHint(state: ProviderModuleState, text: string) {
     state.loadingHint = text;
   },
-  setName(state, name?: string): void {
+  setName(state: ProviderModuleState, name?: string): void {
     const currentAddress = state.onboard.getState().address;
     if (currentAddress) {
       if (!name) {
@@ -78,16 +78,17 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  loggedIn: (state) => {
+  loggedIn: (state: ProviderModuleState) => {
     const authState = state.onboard.getState();
     return authState.address !== undefined && authState.wallet.provider !== undefined;
   },
-  selectedWallet: (state) => state.selectedWallet,
-  name: (state): string | undefined => state.accountName,
-  loader: (state) => state.authStep === "connecting",
-  address: (state) => (state.onboard!.getState().address.length ? (state.onboard!.getState().address as Address) : undefined),
-  loadingHint: (state): string => state.loadingHint,
-  zkScanUrl: (state): string | undefined => (state.onboard.getState().address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.onboard.getState().address}` : undefined),
+  selectedWallet: (state: ProviderModuleState) => state.selectedWallet,
+  name: (state: ProviderModuleState): string | undefined => state.accountName,
+  loader: (state: ProviderModuleState) => state.authStep === "connecting",
+  address: (state: ProviderModuleState) => (state.onboard!.getState().address.length ? (state.onboard!.getState().address as Address) : undefined),
+  loadingHint: (state: ProviderModuleState): string => state.loadingHint,
+  zkScanUrl: (state: ProviderModuleState): string | undefined =>
+    state.onboard.getState().address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.onboard.getState().address}` : undefined,
 });
 
 export const actions = actionTree(
@@ -143,7 +144,7 @@ export const actions = actionTree(
       commit("setAuthStage", "ready");
     },
 
-    processWrongNetwork({ state, commit }) {
+    processWrongNetwork({ commit }) {
       commit("setAuthStage", "connecting");
     },
 

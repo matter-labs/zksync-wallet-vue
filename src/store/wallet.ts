@@ -97,7 +97,10 @@ export const mutations = mutationTree(state, {
   ): void {
     state.withdrawalProcessingTime = obj;
   },
-  setFees(state, { symbol, feeSymbol, type, address, obj }: { symbol: TokenSymbol; feeSymbol: TokenSymbol; type: string; address: Address; obj: ZkInFeesObj }): void {
+  setFees(
+    state: WalletModuleState,
+    { symbol, feeSymbol, type, address, obj }: { symbol: TokenSymbol; feeSymbol: TokenSymbol; type: string; address: Address; obj: ZkInFeesObj },
+  ): void {
     if (!Object.prototype.hasOwnProperty.call(state.fees, symbol)) {
       state.fees[symbol] = {};
     }
@@ -216,7 +219,7 @@ export const actions = actionTree(
             nfts: state.nftTokens.list,
           };
         }
-        const isRestricted: boolean = this.app.$accessor.tokens.isRestricted(tokenSymbol);
+        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
