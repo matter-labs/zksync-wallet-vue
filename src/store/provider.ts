@@ -4,6 +4,7 @@ import { walletData } from "@/plugins/walletData";
 
 import Onboard from "bnc-onboard";
 import { API, Subscriptions, UserState, Wallet } from "bnc-onboard/dist/src/interfaces";
+import account from "bnc-sdk/dist/types/src/account";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Address } from "zksync/build/types";
@@ -16,6 +17,14 @@ function getNameFromAddress(userAddress: Address): string {
   return userAddress.substr(0, 5) + "..." + userAddress.substr(userAddress.length - 5, userAddress.length - 1);
 }
 
+/**
+ * Testing-only closure
+ * @param {string} message
+ */
+const debugReport = (message: string): void => {
+  window.$nuxt.$toast.global?.zkException({ message });
+};
+
 export declare type tProviderState = "ready" | "selectWallet" | "checkWallet" | "connecting" | "authorized";
 
 export const state = () => ({
@@ -23,35 +32,42 @@ export const state = () => ({
     ...onboardConfig,
     subscriptions: <Subscriptions>{
       address: (address: string | undefined): void => {
-        console.log("subscription: address", address);
-        if (window.$nuxt!.$accessor.provider.authStep === "authorized") {
-          if (
-            (address !== undefined && window.$nuxt!.$accessor.provider.address !== address) ||
-            (window.$nuxt!.$accessor.provider.address === undefined && address === undefined)
-          ) {
+        const provider = window.$nuxt!.$accessor.provider;
+        debugReport(`subscription[address]: received address: (${address}), step: (${provider.authStep}) UserState: (${JSON.stringify(provider.authState())})`);
+        if (provider.authStep === "authorized") {
+          debugReport(`subscription[address]: condition matched. Current wallet address: ${provider.address} `);
+          if ((address !== undefined && provider.address !== address) || (provider.address === undefined && address === undefined)) {
             window.$nuxt.$toast.global?.zkException({
               message: "Account switching spotted",
             });
+            debugReport("subscription[address]: logging out...");
             window.$nuxt.$accessor.wallet.logout(false);
+            debugReport(`subscription[address]: logged out. Current wallet address: ${provider.address}. Redirecting....`);
             window.$nuxt.$router.push("/");
           }
         }
       },
       wallet: (wallet: Wallet | undefined): void => {
-        console.log("subscription: wallet", wallet);
+        const provider = window.$nuxt!.$accessor.provider;
+        debugReport(`subscription[wallet]: received wallet: (${JSON.stringify(wallet)}), step: (${provider.authStep}) UserState: (${JSON.stringify(provider.authState())})`);
       },
       network: (networkId: number | undefined): void => {
-        console.log("subscription: network", networkId);
+        const provider = window.$nuxt!.$accessor.provider;
+        debugReport(`subscription[network]: received networkId: (${networkId}), step: (${provider.authStep}) UserState: (${JSON.stringify(provider.authState())})`);
         if (window.$nuxt!.$accessor.provider.authStep === "authorized") {
           if (networkId !== undefined && networkId !== ETHER_NETWORK_ID) {
+            debugReport(`subscription[address]: condition matched. Expected NET id: ${ETHER_NETWORK_ID} `);
             window.$nuxt!.$toast.global?.zkException({
               message: "ETH Network change spotted",
             });
-            if (!walletData.get().syncWallet || window.$nuxt!.$accessor.provider.onboard.getState().wallet!.provider!.name === "WalletConnect") {
+            if (!walletData.get().syncWallet) {
+              debugReport(`subscription[network]: walletData syncWallet undefined, step: (${provider.authStep}) UserState: (${JSON.stringify(provider.authState())}). Loggin out.`);
               window.$nuxt!.$accessor.wallet.logout(false);
+              debugReport(`subscription[address]: logged out. step: (${provider.authStep}) UserState: (${JSON.stringify(provider.authState())})`);
               window.$nuxt.$router.push("/");
               return;
             }
+            debugReport(`subscription[address]: walletCheck called. step: (${provider.authStep}) UserState: (${JSON.stringify(provider.authState())})`);
             window.$nuxt.$accessor.provider.walletCheck();
           }
         }
@@ -68,7 +84,7 @@ export type ProviderModuleState = ReturnType<typeof state>;
 
 export const mutations = mutationTree(state, {
   setAuthStage(state: ProviderModuleState, currentStep: tProviderState) {
-    console.log("auth step:", currentStep);
+    debugReport("set auth stage called w/t the result: " + currentStep);
     state.authStep = currentStep;
   },
   storeSelectedWallet(state: ProviderModuleState, selectedWallet: string | undefined) {
@@ -124,7 +140,6 @@ export const actions = actionTree(
 
     async walletSelect({ state, commit }): Promise<boolean> {
       const storedWallet = state.onboard.getState();
-      console.log(storedWallet);
       /* const storedSelectedWallet = state.selectedWallet as string | undefined;
        const result = await ((await dispatch("getOnboard")) as API).walletSelect(storedSelectedWallet); */
       const result = await state.onboard.walletSelect();
@@ -170,44 +185,52 @@ export const actions = actionTree(
     },
 
     async login({ state, dispatch, commit }, forceReset = false): Promise<UserState> {
+      debugReport(`login called: step (${state.authStep}), UserState: (${JSON.stringify(dispatch("authState"))})`);
       if (state.authStep === "authorized") {
-        console.log("authorized");
+        debugReport(`login ended, is already authorized, UserState: (${JSON.stringify(dispatch("authState"))})`);
         return dispatch("authState");
       }
       if (forceReset) {
         alert("forced");
-        await dispatch("reset");
+        dispatch("reset");
       }
       console.log("before wallet select");
       if (!["checkWallet", "accountSelect", "authorized", "connecting"].includes(state.authStep as string)) {
-        console.log("wallet select required");
+        debugReport(`login, walletSelect should be called. UserState: (${JSON.stringify(dispatch("authState"))})`);
         dispatch("authState");
         const selectResult: boolean = await dispatch("walletSelect");
+        debugReport(`login, after walletSelect: ${selectResult.toString()} should be called. UserState: (${JSON.stringify(dispatch("authState"))})`);
         if (!selectResult) {
-          await dispatch("reset");
+          debugReport(`login ended after walletSelect, UserState: (${JSON.stringify(dispatch("authState"))})`);
+          dispatch("reset");
           return dispatch("authState");
         }
       }
-      console.log("before check wallet");
+      debugReport(`login, before walletCheck should be called.: step (${state.authStep}), UserState: (${JSON.stringify(dispatch("authState"))})`);
       //      if (state.authStep !== "checkWallet") {
       const checkResult: boolean = await dispatch("walletCheck");
       dispatch("authState");
+      debugReport(`login, walletCheck result: (${checkResult.toString()}) step (${state.authStep}), UserState: (${JSON.stringify(dispatch("authState"))})`);
       if (!checkResult) {
-        await dispatch("reset");
+        debugReport(`login ended after walletCheck, UserState: (${JSON.stringify(dispatch("authState"))})`);
+        dispatch("reset");
         return dispatch("authState");
       }
       //      }
       console.log("before auth state");
       const authState: UserState = await dispatch("authState");
       if (authState.wallet!.type === "hardware") {
+        debugReport(`login, hardware wallet found. Calling accountSelect. step (${state.authStep}), UserState: (${JSON.stringify(dispatch("authState"))})`);
         console.log("special call for the hardware wallet");
         const accountSelection: boolean = await dispatch("accountSelect");
+        debugReport(`login, accountSelect result: (${accountSelection.toString()}) reset step (${state.authStep}), UserState: (${JSON.stringify(dispatch("authState"))})`);
         dispatch("authState");
         if (!accountSelection) {
-          await dispatch("reset");
+          dispatch("reset");
           return dispatch("authState");
         }
       }
+      debugReport(`login ended successfully, step (${state.authStep}) UserState: (${JSON.stringify(dispatch("authState"))})`);
       return await dispatch("authState");
     },
   },
