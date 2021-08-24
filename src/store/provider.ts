@@ -1,7 +1,9 @@
 import onboardConfig from "@/configs/onboard";
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
+import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_ID } from "@/plugins/build";
+import { walletData } from "@/plugins/walletData";
+
 import Onboard from "bnc-onboard";
-import { API, Ens, Subscriptions, UserState, Wallet as OnboardWallet } from "bnc-onboard/dist/src/interfaces";
+import { API, Subscriptions, UserState, Wallet } from "bnc-onboard/dist/src/interfaces";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Address } from "zksync/build/types";
@@ -20,20 +22,39 @@ export const state = () => ({
   onboard: Onboard({
     ...onboardConfig,
     subscriptions: <Subscriptions>{
-      address: (address: string): void => {
+      address: (address: string | undefined): void => {
         console.log("subscription: address", address);
+        if (window.$nuxt!.$accessor.provider.authStep === "authorized") {
+          if (
+            (address !== undefined && window.$nuxt!.$accessor.provider.address !== address) ||
+            (window.$nuxt!.$accessor.provider.address === undefined && address === undefined)
+          ) {
+            window.$nuxt.$toast.global?.zkException({
+              message: "Account switching spotted",
+            });
+            window.$nuxt.$accessor.wallet.logout(false);
+            window.$nuxt.$router.push("/");
+          }
+        }
       },
-      ens: (ens: Ens): void => {
-        console.log("subscription: ens", ens);
-      },
-      network: (networkId: number): void => {
-        console.log("subscription: network", networkId);
-      },
-      balance: (balance: string): void => {
-        console.log("subscription: balance", balance);
-      },
-      wallet: (wallet: OnboardWallet): void => {
+      wallet: (wallet: Wallet | undefined): void => {
         console.log("subscription: wallet", wallet);
+      },
+      network: (networkId: number | undefined): void => {
+        console.log("subscription: network", networkId);
+        if (window.$nuxt!.$accessor.provider.authStep === "authorized") {
+          if (networkId !== undefined && networkId !== ETHER_NETWORK_ID) {
+            window.$nuxt!.$toast.global?.zkException({
+              message: "ETH Network change spotted",
+            });
+            if (!walletData.get().syncWallet || window.$nuxt!.$accessor.provider.onboard.getState().wallet!.provider!.name === "WalletConnect") {
+              window.$nuxt!.$accessor.wallet.logout(false);
+              window.$nuxt.$router.push("/");
+              return;
+            }
+            window.$nuxt.$accessor.provider.walletCheck();
+          }
+        }
       },
     },
   }) as API,

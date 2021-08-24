@@ -506,6 +506,8 @@ export const actions = actionTree(
           return false;
         }
 
+        changeNetworkSet(dispatch, this);
+
         await this.app.$accessor.tokens.loadTokensAndBalances();
 
         if (!walletData.get().syncWallet) {
@@ -524,7 +526,6 @@ export const actions = actionTree(
           return false;
         }
 
-        changeNetworkSet(dispatch, this);
         this.app.$accessor.contacts.getContactsFromStorage();
 
         return true;

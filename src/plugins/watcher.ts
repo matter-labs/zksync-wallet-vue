@@ -26,21 +26,6 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
       return context.$router.push("/");
     });
 
-    /**
-     * Triggered on change of the Network
-     */
-    ethWindow.ethereum?.on("chainChanged", (_chainId) => {
-      if (!context.app.$accessor.provider.loader) {
-        context!.app.$toast.global?.zkException({
-          message: "ETH Network change spotted",
-        });
-        if (!walletData.get().syncWallet) {
-          return context.$router.push("/");
-        }
-        return context.app.$accessor.provider.walletCheck();
-      }
-    });
-
     ethWindow.ethereum?.on("accountsChanged", (changedValue: Address) => {
       if (!context.app.$accessor.provider.loader) {
         context!.app.$toast.global?.zkException({
