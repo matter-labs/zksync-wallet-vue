@@ -219,7 +219,7 @@ export const actions = actionTree(
             nfts: state.nftTokens.list,
           };
         }
-        const isRestricted: boolean = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
+        const isRestricted = this.app.$accessor.tokens.isRestricted(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -461,15 +461,8 @@ export const actions = actionTree(
         this.app.$accessor.provider.setLoadingHint("Processing...");
 
         const authState: UserState = await this.app.$accessor.provider.login(firstSelect);
-        this.app.$accessor.provider.setAuthStage("connecting");
 
         const ethProvider = authState.wallet.provider;
-
-        if (ethProvider?.eth) {
-          await dispatch("logout");
-          console.log("no eth selected");
-          return false;
-        }
 
         if (walletData.get().syncWallet) {
           return true;
@@ -479,13 +472,15 @@ export const actions = actionTree(
         if (syncProvider === undefined) {
           return false;
         }
-        this.app.$accessor.provider.setLoadingHint("Follow the instructions in your wallet");
-        const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
-        this.app.$accessor.provider.setAuthStage("authorized");
 
-        walletData.set({
-          syncWallet,
-        });
+        if (!walletData.get().syncWallet) {
+          this.app.$accessor.provider.setLoadingHint("Follow the instructions in your wallet");
+          const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
+          this.app.$accessor.provider.setAuthStage("authorized");
+          walletData.set({
+            syncWallet,
+          });
+        }
 
         this.app.$accessor.provider.setLoadingHint("Getting wallet information...");
 
@@ -496,7 +491,7 @@ export const actions = actionTree(
           return false;
         }
 
-        const accountState: AccountState | undefined = await syncWallet!.getAccountState();
+        const accountState: AccountState | undefined = await walletData.get().syncWallet!.getAccountState();
 
         walletData.set({
           accountState,
