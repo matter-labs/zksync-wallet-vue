@@ -338,7 +338,10 @@ aside.bn-onboard-custom.bn-onboard-modal {
 }
 
 body.-dark {
-  .walletconnect-modal__mobile__toggle a {
-    color: #1d2039 !important;
+  .walletconnect-modal__mobile__toggle,
+  .walletconnect-modal__footer {
+    a {
+      color: #1d2039 !important;
+    }
   }
 }
