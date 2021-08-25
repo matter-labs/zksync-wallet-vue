@@ -42,12 +42,12 @@ export const state = () => ({
       network: async (networkId: number | undefined) => {
         const windowProvider = process.client ? window.$nuxt!.$accessor!.provider : undefined;
         console.log("subscription: network", networkId);
-        if (window.$nuxt!.$accessor.provider.authStep === "authorized") {
+        if (windowProvider!.authStep === "authorized") {
           if (networkId !== undefined && networkId !== ETHER_NETWORK_ID) {
             window.$nuxt!.$toast.global?.zkException({
               message: "ETH Network change spotted",
             });
-            if (!walletData.get().syncWallet || windowProvider!.authState().wallet!.provider!.name === "WalletConnect") {
+            if (!walletData.get().syncWallet) {
               alert("logging out triggered by network");
               window.$nuxt!.$accessor.wallet.logout(false);
               await window.$nuxt.$router.push("/");

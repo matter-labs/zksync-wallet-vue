@@ -13,7 +13,6 @@ let changeNetworkWasSet = false;
  * @return {Promise<void>}
  */
 export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) => {
-  const provider = context.app.$accessor.provider;
   if (!changeNetworkWasSet && process.client) {
     changeNetworkWasSet = true;
     /**
@@ -29,7 +28,7 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
     });
 
     ethWindow.ethereum?.on("accountsChanged", (changedValue: Address) => {
-      if (!provider.loader) {
+      if (context.app.$accessor.provider.authStep === "authorized") {
         context!.app.$toast.global?.zkException({
           message: "Account switching spotted",
         });
