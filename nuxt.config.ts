@@ -220,7 +220,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
+  modules: ["@nuxtjs/dotenv", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt"],
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
@@ -244,14 +244,6 @@ const config: NuxtConfig = {
   },
   styleResources: {
     scss: ["@/assets/style/vars/*.scss"],
-  },
-  sentry: {
-    dsn: process.env.SENTRY_DSN,
-    disableServerSide: true,
-    config: {
-      tracesSampleRate: 1.0,
-      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
-    },
   },
   "google-gtag": {
     id: process.env.GTAG_ID,

@@ -53,7 +53,6 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [prettier.js](https://prettier.io)
 - [eslint.js](https://eslint.org/)
 - [Vue.js](https://vuejs.org)
-- [Sentry.io](https://sentry.io)
 - [Onboarding.js](https://github.com/matter-labs-forks/onboard)
 - [Typed Vuex](https://typed-vuex.roe.dev/)
 - [Remix Icon](https://remixicon.com/)

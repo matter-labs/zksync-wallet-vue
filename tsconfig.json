@@ -34,8 +34,6 @@
     "types": [
       "@types/node",
       "@nuxt/types",
-      "@nuxtjs/sentry",
-      "@nuxt/http",
       "@types/jest",
       "@nuxtjs/toast",
       "web3-core/types",
