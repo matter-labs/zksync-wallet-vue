@@ -1,7 +1,6 @@
 import { iWallet } from "@/types/lib";
 import { Dispatch } from "vuex";
 import { Store } from "vuex/types/index";
-import { Address } from "zksync/build/types";
 
 import { ethWindow } from "~/plugins/build";
 
@@ -24,19 +23,6 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
       });
       context.app.$accessor.wallet.logout(false);
       return context.$router.push("/");
-    });
-
-    ethWindow.ethereum?.on("accountsChanged", (changedValue: Address) => {
-      if (context.app.$accessor.provider.loggedIn) {
-        context!.app.$toast.global?.zkException({
-          message: "Account switching spotted",
-        });
-        const walletAddress = Array.isArray(changedValue) ? changedValue.pop() : changedValue;
-        if (!!context.app.$accessor.provider.address && context.app.$accessor.provider.address !== walletAddress) {
-          context.app.$accessor.wallet.logout(false);
-          return context.$router.push("/");
-        }
-      }
     });
   }
 };

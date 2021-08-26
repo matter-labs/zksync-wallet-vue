@@ -31,8 +31,6 @@ export interface ZkInFeesInterface {
     };
   };
 }
-export declare type ZKTypeProviderState = "ready" | "selectWallet" | "checkWallet" | "connecting" | "authorized";
-
 export declare type ZKTypeOperations =
   | "Deposit"
   | "Withdraw"
