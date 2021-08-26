@@ -44,7 +44,7 @@ footer.layout-footer {
 
     & > div {
       @media (max-width: $mobile) {
-        flex-direction: column-reverse !important;
+        flex-direction: column-reverse;
       }
     }
   }
