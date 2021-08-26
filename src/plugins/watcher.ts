@@ -19,7 +19,6 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
      * triggered on disconnect
      */
     ethWindow.ethereum?.on("disconnect", () => {
-      alert("account disconnect triggers exit");
       context!.app.$toast.global?.zkException({
         message: "Wallet disconnected",
       });
@@ -28,13 +27,12 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
     });
 
     ethWindow.ethereum?.on("accountsChanged", (changedValue: Address) => {
-      if (context.app.$accessor.provider.authStep === "authorized") {
+      if (context.app.$accessor.provider.loggedIn) {
         context!.app.$toast.global?.zkException({
           message: "Account switching spotted",
         });
         const walletAddress = Array.isArray(changedValue) ? changedValue.pop() : changedValue;
         if (!!context.app.$accessor.provider.address && context.app.$accessor.provider.address !== walletAddress) {
-          alert("account change triggers exit");
           context.app.$accessor.wallet.logout(false);
           return context.$router.push("/");
         }

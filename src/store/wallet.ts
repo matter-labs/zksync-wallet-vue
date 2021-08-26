@@ -219,7 +219,7 @@ export const actions = actionTree(
             nfts: state.nftTokens.list,
           };
         }
-        const isRestricted = this.app.$accessor.tokens.isRestricted(tokenSymbol);
+        const isRestricted = await this.app.$accessor.tokens.isRestricted(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -525,6 +525,7 @@ export const actions = actionTree(
 
         return true;
       } catch (error) {
+        console.log(error);
         this.app.$accessor.wallet.logout(false);
         return false;
       }
