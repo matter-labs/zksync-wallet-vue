@@ -147,12 +147,5 @@ export const actions = actionTree(
       }
       return 0;
     },
-
-    isRestricted({ state }, token: TokenSymbol): boolean {
-      if (token.toLowerCase() === "eth") {
-        return false;
-      }
-      return state.acceptableTokens.find((tokenData) => tokenData.symbol.toLowerCase() === token.toLowerCase()) === undefined;
-    },
   },
 );

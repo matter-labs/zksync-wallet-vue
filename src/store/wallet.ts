@@ -219,7 +219,6 @@ export const actions = actionTree(
             nfts: state.nftTokens.list,
           };
         }
-        const isRestricted = this.app.$accessor.tokens.isRestricted(tokenSymbol);
         const committedBalance = utils.handleFormatToken(tokenSymbol, listCommitted[tokenSymbol] ? listCommitted[tokenSymbol].toString() : "0");
         const verifiedBalance = utils.handleFormatToken(tokenSymbol, listVerified[tokenSymbol] ? listVerified[tokenSymbol].toString() : "0");
         tokensList.push({
@@ -229,7 +228,7 @@ export const actions = actionTree(
           balance: committedBalance,
           rawBalance: BigNumber.from(listCommitted[tokenSymbol] ? listCommitted[tokenSymbol] : "0"),
           verifiedBalance,
-          restricted: !committedBalance || +committedBalance <= 0 || isRestricted,
+          restricted: !committedBalance || +committedBalance <= 0 || !this.app.$accessor.tokens.acceptableTokens[loadedTokens.tokens[tokenSymbol].id],
         });
       }
       for (const nftID in nftCommitted) {
