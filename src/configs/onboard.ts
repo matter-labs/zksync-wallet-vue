@@ -23,7 +23,6 @@ const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOption
   },
   { walletName: "authereum" },
   { walletName: "coinbase", preferred: true },
-  { walletName: "trust", preferred: true, rpcUrl: ONBOARD_RPC_URL },
   {
     walletName: "ledger",
     rpcUrl: ONBOARD_RPC_URL,
