@@ -16,7 +16,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  layout: "index",
+  layout: "guest",
   data() {
     return {
       lockVisible: false,
@@ -25,13 +25,8 @@ export default Vue.extend({
   },
   methods: {
     async customWallet() {
-      this.$accessor.wallet.onboard?.config({
-        darkMode: this.$inkline.config.variant !== "light",
-      });
-      const refreshWalletTry = await this.$accessor.wallet.walletRefresh(true);
-      if (!refreshWalletTry) {
-        this.$accessor.wallet.logout();
-      } else {
+      const result = await this.$accessor.wallet.walletRefresh(false);
+      if (result) {
         await this.$router.push("/account");
       }
     },

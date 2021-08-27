@@ -89,7 +89,9 @@
           </span>
         </span>
       </div>
-      <span class="linkText _width-100 _display-block _text-center _margin-top-05" @click="chooseFeeTokenModal = true" data-cy="fee_block_change_fee_token_button">Change fee token</span>
+      <span class="linkText _width-100 _display-block _text-center _margin-top-05" data-cy="fee_block_change_fee_token_button" @click="chooseFeeTokenModal = true"
+        >Change fee token</span
+      >
     </div>
   </div>
 </template>
@@ -149,7 +151,7 @@ export default Vue.extend({
       },
 
       /* Main Block */
-      inputtedAddress: <Address>this.$accessor.account.address!,
+      inputtedAddress: <Address>this.$accessor.provider.address!,
       chosenContact: <ZkInContact | false>false,
       inputtedHash: <Hash>"",
       fee: <GweiBalance | false>false,
@@ -220,7 +222,7 @@ export default Vue.extend({
     try {
       if (!this.ownAccountUnlocked) {
         try {
-          getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
+          getCPKTx(this.$accessor.provider.address!); /* will throw an error if no cpk tx found */
         } catch (error) {
           const accountID = await walletData.get().syncWallet!.getAccountId();
           if (typeof accountID === "number") {
@@ -343,7 +345,7 @@ export default Vue.extend({
       this.checkUnlock(transferTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + transferTransactions.transaction!.txHash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
@@ -425,7 +427,7 @@ export default Vue.extend({
         transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });
-          this.$accessor.wallet.checkLockedState();
+          await this.$accessor.wallet.checkLockedState();
         });
       }
     },

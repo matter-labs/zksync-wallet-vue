@@ -1,8 +1,8 @@
 import { walletData } from "@/plugins/walletData";
 import { BigNumberish } from "ethers";
-import { TokenSymbol } from "zksync/build/types";
+import { TokenSymbol, Tokens } from "zksync/build/types";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { BalanceToReturn, TokenInfo, Tokens, ZkInTokenPrices } from "~/types/lib";
+import { BalanceToReturn, TokenInfo, ZkInTokenPrices } from "~/types/lib";
 import { ZK_API_BASE } from "~/plugins/build";
 
 /**
@@ -59,30 +59,17 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  getAllTokens(state: TokensModuleState): Tokens {
+  getAllTokens: (state: TokensModuleState): Tokens => {
     return state.allTokens;
   },
-  getRestrictedTokens(state: TokensModuleState): TokenSymbol[] {
+  getRestrictedTokens: (state: TokensModuleState): TokenSymbol[] => {
     return state.restrictedTokens;
   },
-  getAvailableTokens(state: TokensModuleState): Tokens {
+  getAvailableTokens: (state: TokensModuleState): Tokens => {
     return Object.fromEntries(Object.entries(state.allTokens).filter((e) => !state.restrictedTokens.includes(e[1].symbol)));
   },
-  getTokenPrices(state: TokensModuleState): ZkInTokenPrices {
-    return state.tokenPrices;
-  },
-  getTokenPriceTick(state: TokensModuleState): number {
-    return state.tokenPricesTick;
-  },
-  getTokenByID(state: TokensModuleState) {
-    return (id: number): TokenInfo | undefined => {
-      for (const symbol in state.allTokens) {
-        if (state.allTokens[symbol].id === id) {
-          return state.allTokens[symbol];
-        }
-      }
-    };
-  },
+  getTokenPrices: (state: TokensModuleState): ZkInTokenPrices => state.tokenPrices,
+  getTokenPriceTick: (state: TokensModuleState): number => state.tokenPricesTick,
 });
 
 export const actions = actionTree(
@@ -139,33 +126,26 @@ export const actions = actionTree(
      * @return {Promise<{n: number, d: number}|number|*>}
      */
     async getTokenPrice({ commit, getters }, symbol: TokenSymbol): Promise<number> {
-      const localPricesList = getters.getTokenPrices;
-      if (Object.prototype.hasOwnProperty.call(localPricesList, symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
-        return localPricesList[symbol].price;
-      }
-      const syncProvider = walletData.get().syncProvider;
-      const tokenPrice = await syncProvider?.getTokenPrice(symbol);
-      // @ts-ignore
-      commit("setTokenPrice", {
-        symbol,
-        obj: {
-          lastUpdated: new Date().getTime(),
-          price: tokenPrice,
-        },
-      });
-      return tokenPrice || 0;
-    },
-
-    isRestricted({ state }, token: TokenSymbol): boolean {
-      if (token.toLowerCase() === "eth") {
-        return false;
-      }
-      for (const tokenData of state.acceptableTokens) {
-        if (tokenData.symbol.toLowerCase() === token.toLowerCase()) {
-          return false;
+      try {
+        const localPricesList = getters.getTokenPrices;
+        if (Object.prototype.hasOwnProperty.call(localPricesList, symbol) && localPricesList[symbol].lastUpdated > new Date().getTime() - 3600000) {
+          return localPricesList[symbol].price;
         }
+        const syncProvider = walletData.get().syncProvider;
+        const tokenPrice = await syncProvider?.getTokenPrice(symbol);
+        // @ts-ignore
+        commit("setTokenPrice", {
+          symbol,
+          obj: {
+            lastUpdated: new Date().getTime(),
+            price: tokenPrice,
+          },
+        });
+        return tokenPrice || 0;
+      } catch (error) {
+        console.log(`Failed to get ${symbol} price at requestZkBalances`, error);
       }
-      return true;
+      return 0;
     },
   },
 );

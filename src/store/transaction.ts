@@ -100,12 +100,12 @@ export const actions = actionTree(
   {
     async watchTransaction({ commit, dispatch, state }, { transactionHash }): Promise<void> {
       try {
-        const savedAddress = this.app.$accessor.account.address;
+        const savedAddress = this.app.$accessor.provider.address;
         if (Object.prototype.hasOwnProperty.call(state.watchedTransactions, transactionHash)) {
           return;
         }
         await walletData.get().syncProvider?.notifyTransaction(transactionHash, "COMMIT");
-        if (savedAddress !== this.app.$accessor.account.address) {
+        if (savedAddress !== this.app.$accessor.provider.address) {
           return;
         }
         commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
@@ -117,10 +117,10 @@ export const actions = actionTree(
     },
     async watchDeposit({ commit }, { depositTx, tokenSymbol, amount }: { depositTx: ETHOperation; tokenSymbol: TokenSymbol; amount: GweiBalance }): Promise<void> {
       try {
-        const savedAddress = this.app.$accessor.account.address;
+        const savedAddress = this.app.$accessor.provider.address;
         commit("updateDepositStatus", { hash: depositTx.ethTx.hash, tokenSymbol, amount, status: "Initiated", confirmations: 1 });
         await depositTx.awaitReceipt();
-        if (savedAddress !== this.app.$accessor.account.address) {
+        if (savedAddress !== this.app.$accessor.provider.address) {
           return;
         }
         await this.app.$accessor.transaction.requestBalancesUpdate();

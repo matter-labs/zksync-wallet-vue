@@ -372,7 +372,7 @@ export default Vue.extend({
         token: this.chosenToken,
       };
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransaction.ethTx.hash) as string;
-      this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + this.$options.filters!.formatTxHash(transferTransaction.ethTx.hash);
+      this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + this.transactionInfo.hash;
       this.tip = "Waiting for the transaction to be mined...";
       await transferTransaction.awaitEthereumTxCommit();
       this.transactionInfo.fee = undefined;
@@ -412,7 +412,7 @@ export default Vue.extend({
         }
         this.tip = "Waiting for the transaction to be mined...";
         this.transactionInfo.hash = this.$options.filters!.formatTxHash(approveDeposits.hash) as string;
-        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + this.$options.filters!.formatTxHash(approveDeposits.hash);
+        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + this.transactionInfo.hash;
         await approveDeposits.wait();
         this.transactionInfo.amount = {
           amount: "0",

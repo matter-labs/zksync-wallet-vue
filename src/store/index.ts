@@ -1,37 +1,38 @@
-import * as account from "@/store/account";
+import * as provider from "@/store/provider";
 import * as contacts from "@/store/contacts";
 import * as tokens from "@/store/tokens";
 import * as transaction from "@/store/transaction";
 import * as wallet from "@/store/wallet";
+import { ZKIRootState } from "@/types/lib";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import { Route } from "vue-router/types";
-import { ZKIRootState } from "~/types/lib";
 
-export const state = (): ZKIRootState => ({
-  accountModalOpened: false,
-  currentModal: undefined,
-  previousRoute: undefined,
-});
+export const state = () =>
+  <ZKIRootState>{
+    accountModalOpened: false,
+    currentModal: <string | undefined>undefined,
+    previousRoute: <Route | undefined>undefined,
+  };
 
 export type RootState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
-  getAccountModalState: (state: RootState) => state.accountModalOpened,
-  getPreviousRoute: (state: RootState) => state.previousRoute,
-  currentModal: (state: RootState) => state.currentModal,
+  getAccountModalState: (state) => state.accountModalOpened,
+  getPreviousRoute: (state) => state.previousRoute,
+  currentModal: (state) => state.currentModal,
 });
 
 export const mutations = mutationTree(state, {
-  setAccountModalState(state: RootState, modalState: boolean): void {
+  setAccountModalState(state, modalState: boolean) {
     state.accountModalOpened = modalState;
   },
-  setCurrentModal(state: RootState, modalName: string): void {
+  setCurrentModal(state, modalName: string) {
     state.currentModal = modalName;
   },
-  setPreviousRoute(state: RootState, route: Route): void {
+  setPreviousRoute(state, route: Route) {
     state.previousRoute = route;
   },
-  removeCurrentModal(state: RootState): void {
+  removeCurrentModal(state) {
     state.currentModal = undefined;
   },
 });
@@ -54,7 +55,7 @@ export const accessorType = getAccessorType({
   mutations,
   actions,
   modules: {
-    account,
+    provider,
     contacts,
     tokens,
     transaction,

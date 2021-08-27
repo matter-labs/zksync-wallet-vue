@@ -87,7 +87,7 @@ export default Vue.extend({
       );
     },
     walletAddressFull(): Address {
-      return this.$accessor.account.address || "";
+      return this.$accessor.provider.address || "";
     },
     displayedAddress(): Address {
       if (this.singleTransaction.tx.type === "Transfer") {
@@ -203,7 +203,7 @@ export default Vue.extend({
         return this.singleTransaction.tx.token as TokenSymbol;
       }
       if (typeof this.singleTransaction.tx.feeToken === "number") {
-        return this.$accessor.tokens.getTokenByID(this.singleTransaction.tx.feeToken)!.symbol as TokenSymbol;
+        return walletData.get().syncWallet!.provider.tokenSet.resolveTokenSymbol(this.singleTransaction.tx.feeToken) as TokenSymbol;
       }
       if (this.singleTransaction.tx.priority_op) {
         return this.singleTransaction.tx.priority_op.token as TokenSymbol;

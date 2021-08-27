@@ -17,7 +17,7 @@ export default Vue.extend({
   },
   computed: {
     walletAddress(): Address | undefined {
-      return this.$accessor.account.address;
+      return this.$accessor.provider.address;
     },
   },
   methods: {
