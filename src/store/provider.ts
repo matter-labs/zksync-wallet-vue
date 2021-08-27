@@ -22,25 +22,35 @@ export const state = () => ({
   onboard: Onboard({
     ...onboardConfig,
     subscriptions: <Subscriptions>{
-      address: async (address: Address | undefined): Promise<void> => {
-        console.log("subscription: address", address);
+      address: (address: Address) => {
         const windowProvider = process.client ? window.$nuxt!.$accessor!.provider : undefined;
-        if (windowProvider!.authStep === "authorized") {
-          if ((address !== undefined && windowProvider!.address !== address) || (windowProvider!.address === undefined && address === undefined)) {
+        if (windowProvider!.loggedIn) {
+          if ((address !== undefined && windowProvider!.address !== address) || (windowProvider!.address !== undefined && address === undefined)) {
             window.$nuxt!.$toast.global?.zkException({
               message: "Account switching spotted",
             });
             window.$nuxt!.$accessor.wallet.logout(false);
-            await window.$nuxt!.$router.push("/");
+            window.$nuxt!.$router.push("/");
           }
         }
       },
-      wallet: (wallet: Wallet | undefined) => {
-        console.log("subscription: wallet", wallet);
+      /**
+       * Core method effecting the loggedIn status
+       * @param {Wallet} wallet
+       */
+      wallet: (wallet: Wallet) => {
+        const windowProvider = window.$nuxt!.$accessor!.provider;
+        if (wallet.provider) {
+          wallet.provider;
+          if (wallet.name) {
+            windowProvider!.storeSelectedWallet(wallet.name);
+          }
+        } else {
+          windowProvider!.storeSelectedWallet("");
+        }
       },
-      network: async (networkId: number | undefined) => {
+      network: (networkId: number) => {
         const windowProvider = process.client ? window.$nuxt!.$accessor!.provider : undefined;
-        console.log("subscription: network", networkId);
         if (windowProvider!.loggedIn) {
           if (networkId !== undefined && networkId !== ETHER_NETWORK_ID) {
             window.$nuxt!.$toast.global?.zkException({
@@ -48,9 +58,9 @@ export const state = () => ({
             });
             if (!walletData.get().syncWallet) {
               window.$nuxt!.$accessor.wallet.logout(false);
-              await window.$nuxt.$router.push("/");
+              window.$nuxt.$router.push("/");
             } else {
-              await windowProvider!.walletCheck();
+              windowProvider!.walletCheck();
             }
           }
         }
@@ -59,8 +69,8 @@ export const state = () => ({
   }) as API,
   accountName: <string>"",
   authStep: <tProviderState>"ready",
-  selectedWallet: localStorage.getItem("onboardSelectedWallet") || undefined,
-  loadingHint: "",
+  selectedWallet: <string>"",
+  loadingHint: <string>"",
 });
 
 export type ProviderModuleState = ReturnType<typeof state>;
@@ -69,7 +79,7 @@ export const mutations = mutationTree(state, {
   setAuthStage(state: ProviderModuleState, currentStep: tProviderState) {
     state.authStep = currentStep;
   },
-  storeSelectedWallet(state: ProviderModuleState, selectedWallet: string | undefined) {
+  storeSelectedWallet(state: ProviderModuleState, selectedWallet: string) {
     localStorage.setItem("onboardSelectedWallet", selectedWallet as string);
     if (selectedWallet === undefined) {
       localStorage.removeItem("onboardSelectedWallet");
@@ -86,7 +96,7 @@ export const mutations = mutationTree(state, {
 
 export const getters = getterTree(state, {
   loggedIn: (state: ProviderModuleState) => state.authStep === "authorized" && !!state.onboard.getState().wallet!.provider && !!state.onboard.getState().address,
-  selectedWallet: (state: ProviderModuleState) => state.selectedWallet,
+  getSelectedWallet: (state: ProviderModuleState) => state.selectedWallet,
   name: (state: ProviderModuleState): string | undefined => state.accountName,
   loader: (state: ProviderModuleState) => state.authStep === "connecting" || state.authStep === "checkWallet",
   address: (state: ProviderModuleState) => (state.onboard!.getState().address.length ? (state.onboard!.getState().address as Address) : undefined),
@@ -101,7 +111,6 @@ export const actions = actionTree(
     authState({ state }): UserState {
       const accountState = state.onboard.getState();
       this.app.$accessor.provider.saveName(undefined);
-      console.warn("current account state", accountState);
       return accountState;
     },
 
@@ -121,29 +130,33 @@ export const actions = actionTree(
     },
 
     async walletSelect({ state, commit }): Promise<boolean> {
-      const storedSelectedWallet = state.selectedWallet as string | undefined;
-      const result = await state.onboard.walletSelect(storedSelectedWallet);
-      commit("setAuthStage", result ? "selectWallet" : "ready");
+      const result: boolean = await state.onboard.walletSelect();
+      if (result) {
+        commit("setAuthStage", "selectWallet");
+      }
       return result;
     },
 
     async walletCheck({ state, commit, dispatch }): Promise<boolean> {
-      commit("setAuthStage", "checkWallet");
+      commit("setAuthStage", "connecting");
       commit("setLoadingHint", "Follow the instructions in your Ethereum wallet");
       const checkStatus: boolean = await state.onboard.walletCheck();
-      commit("setAuthStage", (checkStatus ? "loading" : "selectWallet") as tProviderState);
+      commit("setAuthStage", (checkStatus ? "connecting" : "selectWallet") as tProviderState);
       if (!checkStatus) {
         dispatch("reset");
       }
       return checkStatus;
     },
 
-    async accountSelect({ state }): Promise<boolean> {
-      return await state.onboard.accountSelect();
+    async accountSelect({ state, commit }): Promise<boolean> {
+      const result = await state.onboard.accountSelect();
+      if (result) {
+        commit("setAuthStage", "connecting");
+      }
+      return result;
     },
 
     reset({ state, commit }) {
-      console.log("reset called");
       state.onboard.walletReset();
       commit("setAuthStage", "ready");
     },
@@ -158,13 +171,10 @@ export const actions = actionTree(
         dispatch("reset");
       }
       if (getters.loggedIn) {
-        console.log("authorized");
         return dispatch("authState");
       }
 
-      console.log("before wallet select");
-      if (state.authStep === "ready") {
-        console.log("wallet select required");
+      if (!["checkWallet", "accountSelect", "authorized", "connecting"].includes(state.authStep as string)) {
         dispatch("authState");
         const selectResult: boolean = await dispatch("walletSelect");
         if (!selectResult) {
@@ -172,16 +182,13 @@ export const actions = actionTree(
           return dispatch("authState");
         }
       }
-      console.log("before check wallet");
       const checkResult: boolean = await dispatch("walletCheck");
       if (!checkResult) {
         dispatch("reset");
         return dispatch("authState");
       }
-      console.log("before auth state");
       const authState: UserState = await dispatch("authState");
       if (authState.wallet!.type === "hardware") {
-        console.log("special call for the hardware wallet");
         const accountSelection: boolean = await dispatch("accountSelect");
         dispatch("authState");
         if (!accountSelection) {
@@ -189,7 +196,7 @@ export const actions = actionTree(
           return dispatch("authState");
         }
       }
-      return dispatch("authState");
+      return await dispatch("authState");
     },
   },
 );
