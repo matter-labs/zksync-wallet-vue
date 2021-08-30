@@ -108,7 +108,7 @@ export default Vue.extend({
       return this.$store.getters["zk-contacts/contacts"];
     },
     displayedContactsList(): ZkContacts {
-      return searchInObject(this.contactsList, this.search, ([_, contact]: [string, ZkContact]) => `${contact.name} - ${contact.address}`);
+      return <ZkContacts>searchInObject(this.contactsList, this.search, ([_, contact]: [string, ZkContact]) => `${contact.name} - ${contact.address}`);
     },
     hasDisplayedContacts(): boolean {
       return Object.keys(this.displayedContactsList).length !== 0;

@@ -7,7 +7,7 @@
         <div class="headline">{{ item.headline }}:</div>
         <div class="amount">
           <span class="tokenSymbol">{{ item.symbol }}</span>
-          {{ item.amount | formatToken(item.symbol) }}
+          {{ item.amount | parseBigNumberish(item.symbol) }}
           <span class="secondaryText">
             <!-- <token-price :symbol="item.symbol" :amount="item.amount" /> -->
           </span>

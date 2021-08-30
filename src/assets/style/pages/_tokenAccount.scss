@@ -73,7 +73,10 @@
       }
     }
   }
-
+  .tokenNotFound {
+    font-size: 22px;
+    text-align: center;
+  }
   .transactionsTile {
     min-height: 250px !important;
   }

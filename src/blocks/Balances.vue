@@ -45,7 +45,7 @@
         </span>
       </div>
       <div v-else class="balancesList">
-        <nuxt-link v-for="(item, symbol) in displayedList" :key="symbol" :to="`/account/${symbol}`" class="balanceItem">
+        <nuxt-link v-for="(item, symbol) in displayedList" :key="symbol" :to="`/token/${symbol}`" class="balanceItem">
           <div class="leftSide _display-flex _align-items-center">
             <div class="tokenSymbol">
               {{ symbol }}
@@ -77,7 +77,7 @@
                   Depositing:
                   <token-price :symbol="symbol" :amount="activeDeposits[symbol]" />
                 </span>
-                &nbsp;&nbsp;+{{ activeDeposits[symbol] | formatToken(symbol) }}
+                &nbsp;&nbsp;+{{ activeDeposits[symbol] | parseBigNumberish(symbol) }}
               </div>
               <div class="status">
                 <loader size="xs" />

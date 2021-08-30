@@ -18,7 +18,7 @@ body.inkline.-light .defaultLayout {
   .tileBlock {
     background: $white;
 
-    .tileHeadline .returnBtn {
+    .tileHeadline {
       i, .ov-icon {
         color: $black;
       }
@@ -35,7 +35,7 @@ body.inkline.-dark .defaultLayout {
   .tileBlock {
     background: $darkViolet;
 
-    .tileHeadline .returnBtn {
+    .tileHeadline {
       i, .ov-icon {
         color: $white;
       }

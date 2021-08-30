@@ -203,7 +203,7 @@ const config: NuxtConfig = {
       "matter-dapp-ui",
       <ModuleOptions>{
         useTheme: true,
-        network: process.env.APP_CURRENT_NETWORK,
+        network: process.env.ZK_NETWORK,
         onboardConfig: {
           APP_NAME: pageTitle,
           APP_ID: process.env.APP_ONBOARDING_APP_ID,

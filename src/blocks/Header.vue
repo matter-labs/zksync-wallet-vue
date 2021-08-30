@@ -21,7 +21,7 @@
               <v-icon class="mobileOnly" name="ri-contacts-line" />
               <span>Contacts</span>
             </nuxt-link>
-            <nuxt-link class="headerLink" to="/transactions">
+            <nuxt-link class="headerLink" to="/transaction/history">
               <v-icon class="mobileOnly" name="ri-history-line" />
               <span>History</span>
             </nuxt-link>
