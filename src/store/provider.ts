@@ -3,7 +3,7 @@ import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_ID } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
 
 import Onboard from "bnc-onboard";
-import { API, Subscriptions, UserState, Wallet } from "bnc-onboard/dist/src/interfaces";
+import { API, Subscriptions, UserState, Wallet, Ens } from "bnc-onboard/dist/src/interfaces";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { Address } from "zksync/build/types";
@@ -22,6 +22,9 @@ export const state = () => ({
   onboard: Onboard({
     ...onboardConfig,
     subscriptions: <Subscriptions>{
+      ens: (ens: Ens) => {
+        console.log("subscription watcher (ens): ", ens);
+      },
       address: (address: Address) => {
         const windowProvider = process.client ? window.$nuxt!.$accessor!.provider : undefined;
         if (windowProvider!.loggedIn) {
@@ -39,14 +42,12 @@ export const state = () => ({
        * @param {Wallet} wallet
        */
       wallet: (wallet: Wallet) => {
-        const windowProvider = window.$nuxt!.$accessor!.provider;
+        const windowProvider = process.client ? window.$nuxt!.$accessor!.provider : undefined;
         if (wallet.provider) {
-          wallet.provider;
+          wallet.provider!.autoRefreshOnNetworkChange = false;
           if (wallet.name) {
             windowProvider!.storeSelectedWallet(wallet.name);
           }
-        } else {
-          windowProvider!.storeSelectedWallet("");
         }
       },
       network: (networkId: number) => {
@@ -69,7 +70,7 @@ export const state = () => ({
   }) as API,
   accountName: <string>"",
   authStep: <tProviderState>"ready",
-  selectedWallet: <string>"",
+  selectedWallet: <string | undefined>window.localStorage.getItem("onboardSelectedWallet") === null ? undefined : (window.localStorage.getItem("onboardSelectedWallet") as string),
   loadingHint: <string>"",
 });
 
@@ -79,27 +80,46 @@ export const mutations = mutationTree(state, {
   setAuthStage(state: ProviderModuleState, currentStep: tProviderState) {
     state.authStep = currentStep;
   },
-  storeSelectedWallet(state: ProviderModuleState, selectedWallet: string) {
-    localStorage.setItem("onboardSelectedWallet", selectedWallet as string);
-    if (selectedWallet === undefined) {
-      localStorage.removeItem("onboardSelectedWallet");
+  storeSelectedWallet(state: ProviderModuleState, selectedWallet: string | undefined = undefined) {
+    if (selectedWallet) {
+      localStorage.setItem("onboardSelectedWallet", selectedWallet);
     }
     state.selectedWallet = selectedWallet;
   },
   setLoadingHint(state: ProviderModuleState, text: string) {
     state.loadingHint = text;
   },
-  setName(state: ProviderModuleState, name: string) {
-    state.accountName = name;
+  setName(state: ProviderModuleState, name?: string) {
+    if (name !== undefined) {
+      state.accountName = name;
+    }
   },
 });
 
 export const getters = getterTree(state, {
   loggedIn: (state: ProviderModuleState) => state.authStep === "authorized" && !!state.onboard.getState().wallet!.provider && !!state.onboard.getState().address,
-  getSelectedWallet: (state: ProviderModuleState) => state.selectedWallet,
-  name: (state: ProviderModuleState): string | undefined => state.accountName,
+  getSelectedWallet: (state: ProviderModuleState): string | undefined => (state.authStep ? state.selectedWallet : undefined),
+  name: (state: ProviderModuleState): string => {
+    if (state.authStep !== "authorized") {
+      return "";
+    }
+    if (!state.accountName) {
+      const currentAddress = state.onboard.getState()?.address;
+      return currentAddress !== undefined ? getNameFromAddress(currentAddress) : "";
+    }
+    return state.accountName;
+  },
   loader: (state: ProviderModuleState) => state.authStep === "connecting" || state.authStep === "checkWallet",
-  address: (state: ProviderModuleState) => (state.onboard!.getState().address.length ? (state.onboard!.getState().address as Address) : undefined),
+  address: (state: ProviderModuleState): Address | undefined => {
+    if (state.authStep !== "authorized") {
+      return undefined;
+    }
+    const address = state.onboard.getState().address;
+    if (!address) {
+      return undefined;
+    }
+    return address as Address;
+  },
   loadingHint: (state: ProviderModuleState): string => state.loadingHint,
   zkScanUrl: (state: ProviderModuleState): string | undefined =>
     state.onboard.getState().address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.onboard.getState().address}` : undefined,
@@ -108,23 +128,14 @@ export const getters = getterTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    authState({ state }): UserState {
-      const accountState = state.onboard.getState();
-      this.app.$accessor.provider.saveName(undefined);
-      return accountState;
-    },
+    authState: ({ state }): UserState => state.onboard.getState(),
 
-    saveName({ state, commit }, name?: string): void {
-      const currentAddress = state.onboard.getState().address;
-      if (currentAddress) {
-        if (!name) {
-          if (!state.accountName) {
-            name = window.localStorage.getItem(currentAddress) as string;
-          }
-          name = getNameFromAddress(currentAddress);
-          window.localStorage.removeItem(currentAddress);
+    saveName({ state, commit, getters }, name?: string) {
+      const currentAddress: Address | undefined = getters.address;
+      if (currentAddress !== undefined) {
+        if (!name || !name.trim()) {
+          name = window.localStorage.getItem(currentAddress)!.trim();
         }
-        window.localStorage.setItem(currentAddress, name);
         commit("setName", name);
       }
     },
@@ -158,6 +169,7 @@ export const actions = actionTree(
 
     reset({ state, commit }) {
       state.onboard.walletReset();
+      commit("storeSelectedWallet", undefined);
       commit("setAuthStage", "ready");
     },
 
@@ -165,17 +177,12 @@ export const actions = actionTree(
       commit("setAuthStage", "connecting");
     },
 
-    async login({ state, dispatch, commit, getters }, forceReset = false): Promise<UserState> {
-      if (forceReset) {
-        alert("forced");
-        dispatch("reset");
-      }
+    async login({ state, dispatch, getters }): Promise<UserState> {
       if (getters.loggedIn) {
         return dispatch("authState");
       }
 
-      if (!["checkWallet", "accountSelect", "authorized", "connecting"].includes(state.authStep as string)) {
-        dispatch("authState");
+      if (!["checkWallet", "accountSelect", "authorized", "connecting"].includes(state.authStep)) {
         const selectResult: boolean = await dispatch("walletSelect");
         if (!selectResult) {
           dispatch("reset");
