@@ -17,12 +17,14 @@ export const changeNetworkSet = (dispatch: Dispatch, context: Store<iWallet>) =>
     /**
      * triggered on disconnect
      */
-    ethWindow.ethereum?.on("disconnect", () => {
-      context!.app.$toast.global?.zkException({
-        message: "Wallet disconnected",
-      });
-      context.app.$accessor.wallet.logout(false);
-      return context.$router.push("/");
+    ethWindow.ethereum?.on("disconnect", (): void => {
+      if (context.app.$accessor.provider.loggedIn) {
+        context!.app.$toast.global?.zkException({
+          message: "Wallet disconnected",
+        });
+        context.app.$accessor.wallet.logout(false);
+        context.$router.push("/");
+      }
     });
   }
 };
