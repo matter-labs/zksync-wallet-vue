@@ -1,24 +1,15 @@
-import { CURRENT_APP_NAME, ETHER_NETWORK_ID, ETHER_NETWORK_NAME, ONBOARD_FORCED_EXIT_LINK, ONBOARD_FORTMATIC_KEY, ONBOARD_PORTIS_KEY, ONBOARD_RPC_URL, rpc } from "@/plugins/build";
+import { CURRENT_APP_NAME, ETHER_NETWORK_ID, ONBOARD_FORCED_EXIT_LINK, ONBOARD_FORTMATIC_KEY, ONBOARD_PORTIS_KEY, ONBOARD_RPC_URL, rpc } from "@/plugins/build";
 
-import {
-  AllWalletInitOptions,
-  CommonWalletOptions,
-  Initialization,
-  WalletCheckInit,
-  WalletCheckModule,
-  WalletInitOptions,
-  WalletSelectModuleOptions,
-} from "bnc-onboard/dist/src/interfaces";
+import { AllWalletInitOptions, CommonWalletOptions, Initialization, WalletConnectOptions, WalletInitOptions, WalletSelectModuleOptions } from "bnc-onboard/dist/src/interfaces";
 
 const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOptions[] = [
   { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
-  { walletName: "metamask", preferred: true },
-  {
+  { walletName: "metamask", preferred: true, networkId: ETHER_NETWORK_ID },
+  <WalletConnectOptions>{
     walletName: "walletConnect",
     rpc,
     bridge: "https://bridge.walletconnect.org/",
     networkId: ETHER_NETWORK_ID,
-    enableLogging: true,
     preferred: true,
   },
   { walletName: "authereum" },
@@ -43,8 +34,9 @@ const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOption
     preferred: true,
     label: "Portis",
   },
+  { walletName: "atoken" },
   { walletName: "opera" },
-  { walletName: "operaTouch" },
+  { walletName: "operaTouch", display: { desktop: false, mobile: true } },
   { walletName: "torus" },
   { walletName: "status" },
   { walletName: "meetone" },
@@ -52,20 +44,20 @@ const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOption
   { walletName: "huobiwallet", rpcUrl: ONBOARD_RPC_URL },
   { walletName: "hyperpay" },
   { walletName: "wallet.io", rpcUrl: ONBOARD_RPC_URL },
-  { walletName: "atoken" },
   { walletName: "tokenpocket", rpcUrl: ONBOARD_RPC_URL },
 ];
 
 const colorTheme: string | null = localStorage.getItem("colorTheme");
 
+const walletChecks = [{ checkName: "derivationPath" }, { checkName: "accounts" }, { checkName: "connect" }, { checkName: "network" }];
+
 const onboardConfig: Initialization = {
   hideBranding: true,
-  blockPollingInterval: 40000,
+  blockPollingInterval: 7500,
   dappId: process.env.APP_ONBOARDING_APP_ID, // [String] The API key created by step one above
   networkId: ETHER_NETWORK_ID as number, // [Integer] The Ethereum network ID your Dapp uses.
-  networkName: ETHER_NETWORK_NAME,
   darkMode: colorTheme !== null && colorTheme === "dark",
-  walletCheck: <(WalletCheckModule | WalletCheckInit)[]>[{ checkName: "derivationPath" }, { checkName: "connect" }, { checkName: "accounts" }, { checkName: "network" }],
+  walletCheck: walletChecks,
   walletSelect: <WalletSelectModuleOptions>{
     wallets,
     description: "",
