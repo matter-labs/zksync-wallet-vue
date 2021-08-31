@@ -2,7 +2,7 @@
   <div class="indexPage">
     <i-container>
       <h1>Connect your L1 ETH Wallet to start</h1>
-      <div data-cy="core_connect_wallet_button" class="tileContainer _margin-top-1" @click="customWallet">
+      <div data-cy="core_connect_wallet_button" class="tileContainer _margin-top-1" @click="auth">
         <div class="tile">
           <img src="@/assets/imgs/wallets/external.png" alt="External" />
         </div>
@@ -24,11 +24,8 @@ export default Vue.extend({
     };
   },
   methods: {
-    async customWallet() {
-      const result = await this.$accessor.wallet.walletRefresh(false);
-      if (result) {
-        await this.$router.push("/account");
-      }
+    auth() {
+      this.$accessor.wallet.authorize(false);
     },
   },
 });

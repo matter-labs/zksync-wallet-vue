@@ -1,4 +1,4 @@
-import { ZK_API_BASE } from "@/plugins/build";
+import { ETHER_NETWORK_ID, ZK_API_BASE } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import { changeNetworkSet } from "@/plugins/watcher";
@@ -19,7 +19,7 @@ import {
 } from "@/types/lib";
 import { ExternalProvider } from "@ethersproject/providers";
 import { UserState } from "bnc-onboard/dist/src/interfaces";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, providers } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { closestPackableTransactionFee, Provider, Wallet } from "zksync";
@@ -140,13 +140,6 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    /**
-     * Initial call, connecting to the wallet
-     * @param commit
-     * @param rootState
-     * @return {Promise<boolean>}
-     */
-
     /**
      * Reload zkBalances, initial balances & the history of transaction
      * @return {Promise<void>}
@@ -449,40 +442,43 @@ export const actions = actionTree(
 
     /**
      * Refreshing the wallet in case local storage keep token or signer fired event
-     *
-     * @param dispatch
-     * @param commit
-     * @param firstSelect
-     * @returns {Promise<boolean>}
      */
-    async walletRefresh({ dispatch }, firstSelect = true): Promise<boolean> {
+    async authorize({ dispatch }, firstSelect = true): Promise<boolean | void> {
       try {
-        this.app.$accessor.provider.setLoadingHint("Processing...");
+        console.log("authorisation started");
+        const currentState: UserState = await this.app.$accessor.provider.login(firstSelect);
+        console.log("refresh!", currentState);
 
-        const authState: UserState = await this.app.$accessor.provider.login(firstSelect);
+        const incomingProvider = currentState.wallet.provider;
 
-        const ethProvider = authState.wallet.provider;
+        if (!incomingProvider) {
+          await this.app.$accessor.wallet.logout(false);
+          return;
+        }
 
         if (walletData.get().syncWallet) {
           return true;
         }
-        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(ethProvider as ExternalProvider).getSigner();
+        const ethWallet: providers.Web3Provider = new providers.Web3Provider(incomingProvider as ExternalProvider, ETHER_NETWORK_ID);
+        this.app.$accessor.provider.setLoadingHint("Follow the instructions in your wallet");
+        const ethSigner = ethWallet.getSigner(this.app.$accessor.provider.address);
+
         const syncProvider = await walletData.syncProvider.get();
         if (syncProvider === undefined) {
           return false;
         }
 
-        if (!walletData.get().syncWallet) {
-          this.app.$accessor.provider.setLoadingHint("Follow the instructions in your wallet");
-          const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
-          this.app.$accessor.provider.setAuthStage("authorized");
-          walletData.set({
-            syncWallet,
-          });
-        }
+        console.log("syncProvider", syncProvider);
+
+        console.log(ethSigner);
+        const syncWallet = await Wallet.fromEthSigner(ethSigner, syncProvider);
+        this.app.$accessor.provider.setAuthStage("authorized");
+
+        walletData.set({
+          syncWallet,
+        });
 
         this.app.$accessor.provider.setLoadingHint("Getting wallet information...");
-
         /* Simplified event watcher call */
 
         /* The user can press Cancel login anytime so we need to check if he did after every long action (request) */
@@ -504,24 +500,28 @@ export const actions = actionTree(
 
         await this.app.$accessor.tokens.loadTokensAndBalances();
 
-        if (!walletData.get().syncWallet) {
-          return false;
-        }
-
         await this.app.$accessor.wallet.requestZkBalances({ accountState });
 
-        if (!walletData.get().syncWallet) {
-          return false;
-        }
+        console.log("1111");
+
+        console.log("2222");
 
         await this.app.$accessor.wallet.checkLockedState();
 
-        if (!walletData.get().syncWallet) {
-          return false;
-        }
+        console.log("3333");
+
+        console.log("4444");
 
         this.app.$accessor.contacts.getContactsFromStorage();
 
+        console.log("555");
+
+        console.log(this.app.$accessor.provider, this.app.$accessor.provider.loggedIn);
+
+        if (!this.app.$accessor.provider.loggedIn) {
+          throw new Error("Login procedure failed");
+        }
+        this.$router.push("/account");
         return true;
       } catch (error) {
         console.log(error);
@@ -548,6 +548,7 @@ export const actions = actionTree(
       } catch (error) {
         console.log("ERROR ON DISCONNECTION", error);
       }
+      this.$router!.push("/");
     },
 
     /**

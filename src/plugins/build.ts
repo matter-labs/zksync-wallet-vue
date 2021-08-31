@@ -66,5 +66,5 @@ export const ONBOARD_WALLET_CONNECT_RPC = `https://${ETHER_NETWORK_NAME}.infura.
 export const rpc = {};
 for (const item in _ETHER_NETWORK_ID_DICTIONARY) {
   const netCnf = _ETHER_NETWORK_ID_DICTIONARY[item];
-  rpc[netCnf.id] = netCnf.id === ETHER_NETWORK_ID ? ONBOARD_WALLET_CONNECT_RPC : `https://${netCnf.name}.infura.io/v3/${process.env.APP_WALLET_CONNECT_UNIVERSAL}`;
+  rpc[netCnf.id] = netCnf.id === ETHER_NETWORK_ID ? ONBOARD_WALLET_CONNECT_RPC : `wss://${netCnf.name}.infura.io/ws/v3/${process.env.APP_WALLET_CONNECT_UNIVERSAL}`;
 }

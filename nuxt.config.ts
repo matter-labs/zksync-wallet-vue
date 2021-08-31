@@ -1,6 +1,7 @@
 // noinspection ES6PreferShortImport
 
-import { Configuration, NuxtConfig } from "@nuxt/types";
+import { NuxtConfig } from "@nuxt/types";
+import { Configuration } from "webpack";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 
@@ -35,8 +36,8 @@ const config: NuxtConfig = {
     ...process.env,
   },
 
-  /*
-   ** Headers of the page
+  /**
+   * Head-placed HTML-tags / configuration of the `<meta>`
    */
   head: {
     title: pageTitle as string | undefined,
@@ -46,6 +47,9 @@ const config: NuxtConfig = {
       amp: "true",
     },
     meta: [
+      /**
+       * Cache-control
+       */
       {
         property: "cache-control",
         httpEquiv: "cache-control",
@@ -66,6 +70,18 @@ const config: NuxtConfig = {
         content: "0",
         property: "expires",
       },
+
+      /**
+       * UX / UI settings
+       */
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" },
+
+      /**
+       * Page meta:
+       * - SEO tags (keywords, description, author)
+       * - OpenGraph tags (thumbnail,
+       */
       {
         hid: "keywords",
         name: "keywords",
@@ -131,14 +147,12 @@ const config: NuxtConfig = {
         property: "og:image:secure_url",
         content: pageImg,
       },
+
       {
         hid: "og:image:alt",
         property: "og:image:alt",
         content: pageTitle,
       },
-
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
@@ -160,23 +174,29 @@ const config: NuxtConfig = {
     color: "#8c8dfc",
     continuous: true,
   },
-  /*
-   ** Global CSS
+
+  /**
+   * Single-entry global-scope scss
    */
   css: ["@/assets/style/main.scss"],
-  /*
-   ** Plugins to load before mounting the App
+
+  styleResources: {
+    scss: ["@/assets/style/vars/*.scss"],
+  },
+
+  /**
+   * Plugins that should be loaded before the mounting
    */
   plugins: ["@/plugins/icons", "@/plugins/main"],
 
   router: {
     middleware: ["wallet"],
   },
-  /*
-   ** Nuxt.js dev-modules
+  /**
+   * Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-build-optimisations",
+    //    "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
@@ -192,9 +212,9 @@ const config: NuxtConfig = {
             },
             eslint: {
               config: ["tsconfig-eslint.json", ".eslintrc.js"],
-              files: "@/**/*.{ts,vue,js}",
+              files: "src/**/*.{ts,vue,js}",
             },
-            files: "@/**/*.{ts,vue,js}",
+            files: "src/**/*.{ts,vue,js}",
           },
         },
       },
@@ -202,10 +222,11 @@ const config: NuxtConfig = {
     "nuxt-typed-vuex",
   ],
 
-  /*
-   ** Nuxt.js modules
+  /**
+   * Nuxt.js modules
    */
   modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
+
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
@@ -222,13 +243,14 @@ const config: NuxtConfig = {
       },
     },
   },
+
+  /**
+   * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
+   */
   inkline: {
     config: {
       autodetectVariant: true,
     },
-  },
-  styleResources: {
-    scss: ["@/assets/style/vars/*.scss"],
   },
   sentry: {
     dsn: process.env.SENTRY_DSN,
@@ -247,8 +269,9 @@ const config: NuxtConfig = {
     debug: env !== "prod", // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
-  /*
-   ** Build configuration
+
+  /**
+   * Build configuration
    */
   build: {
     babel: {
@@ -263,14 +286,15 @@ const config: NuxtConfig = {
       };
     },
   },
-  buildOptimisations: {
-    profile: env !== "prod" ? "risky" : "experimental",
-    features: {
-      postcssNoPolyfills: isProduction,
-      hardSourcePlugin: isProduction,
-    },
-    esbuildLoaderOptions: "esnext",
-  },
+
+  //  buildOptimisations: {
+  //    profile: env !== "prod" ? "risky" : "experimental",
+  //    features: {
+  //      postcssNoPolyfills: isProduction,
+  //      hardSourcePlugin: isProduction,
+  //    },
+  //    esbuildLoaderOptions: "esnext",
+  //  },
   googleFonts: {
     prefetch: true,
     preconnect: true,

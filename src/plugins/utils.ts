@@ -104,18 +104,23 @@ export default {
     return list.filter((e) => String(searchParam(e)).toLowerCase().includes(search));
   },
 
+  /**
+   * Pre-processes any error to mute complex IT-debug and turn it into the human-readable text
+   *
+   * @param {Error} error
+   * @return {string | undefined}
+   */
   filterError: (error: Error): string | undefined => {
-    if (error.message) {
-      if (error.message.includes("User denied") || error.message.includes("User rejected")) {
-        return "";
-      } else if (error.message.includes("Fee Amount is not packable")) {
-        return "Fee Amount is not packable";
-      } else if (error.message.includes("Transaction Amount is not packable")) {
-        return "Transaction Amount is not packable";
-      } else if (error.message.length < 150) {
-        return error.message;
-      }
+    if (!error.message) {
+      return undefined;
     }
+
+    if (error.message.includes("Fee Amount is not packable")) {
+      return "Fee Amount is not packable";
+    } else if (error.message.includes("Transaction Amount is not packable")) {
+      return "Transaction Amount is not packable";
+    }
+    return error.message.length < 150 && error.message.search(/denied|rejected/) === -1 ? error.message : undefined;
   },
 
   /**

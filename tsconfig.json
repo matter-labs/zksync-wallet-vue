@@ -12,7 +12,7 @@
       "dom",
       "es2019.object",
       "esnext",
-      "esnext.asynciterable",
+      "esnext.asynciterable"
     ],
     "module": "esnext",
     "moduleResolution": "node",
@@ -32,6 +32,7 @@
     "strict": true,
     "target": "esnext",
     "types": [
+      "@nuxtjs/toast/index",
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
@@ -43,7 +44,7 @@
       "btn-onboard",
       "nuxt-typed-vuex",
       "typed-vuex"
-    ],
+    ]
   },
   "exclude": [
     "node_modules",
