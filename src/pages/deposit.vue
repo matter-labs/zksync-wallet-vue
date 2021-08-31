@@ -315,7 +315,9 @@ export default Vue.extend({
   methods: {
     async chooseToken(token: ZkInBalance) {
       try {
-        this.$accessor.tokens.getTokenPrice(token.symbol);
+        this.$accessor.tokens.getTokenPrice(token.symbol).catch((error) => {
+          throw error;
+        });
       } catch (error) {
         console.log(`Error getting ${token.symbol} price`, error);
         this.$accessor.tokens.addRestrictedToken(token.symbol);
@@ -347,12 +349,7 @@ export default Vue.extend({
       try {
         await this.deposit();
       } catch (error) {
-        const errorMsg = utils.filterError(error);
-        if (typeof errorMsg === "string") {
-          this.error = errorMsg;
-        } else {
-          this.error = "Transaction error";
-        }
+        this.error = utils.filterError(error) || "Transaction error";
       }
       this.tip = "";
       this.loading = false;
@@ -442,6 +439,7 @@ export default Vue.extend({
       if (token.symbol.toLowerCase() !== "eth") {
         const wallet = walletData.get().syncWallet;
         const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
+        // @ts-ignore
         const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, wallet!.ethSigner);
         return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
       }

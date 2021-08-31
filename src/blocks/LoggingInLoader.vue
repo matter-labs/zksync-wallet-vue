@@ -61,7 +61,7 @@ export default Vue.extend({
   },
   methods: {
     cancelLogin(): void {
-      this.$accessor.wallet.logout(false);
+      this.$accessor.wallet.logout();
       this.loggedInAnimation = false;
       clearTimeout(loggedInAnimationTimeout);
       if (this.$route.path !== "/") {

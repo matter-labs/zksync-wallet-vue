@@ -1,28 +1,25 @@
 import { ZK_API_BASE } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
-import { changeNetworkSet } from "@/plugins/watcher";
 
 import {
   iWallet,
   ZkInBalance,
-  ZkInBalancesList,
-  ZkInFeesInterface,
   ZkInFeesObj,
   ZkInNFT,
   ZkInTx,
+  ZkInFeesInterface,
   ZkInWithdrawalTime,
   ZKStoreRequestBalancesParams,
   zkTokensParam,
   ZKTypeDisplayBalances,
   ZKTypeDisplayToken,
+  ZkInBalancesList,
 } from "@/types/lib";
-import { ExternalProvider } from "@ethersproject/providers";
-import { UserState } from "bnc-onboard/dist/src/interfaces";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { closestPackableTransactionFee, Provider, Wallet } from "zksync";
+import { closestPackableTransactionFee, Provider } from "zksync";
 import { AccountState, Address, Fee, NFT, TokenSymbol } from "zksync/build/types";
 
 let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
@@ -141,13 +138,6 @@ export const actions = actionTree(
   { state, getters, mutations },
   {
     /**
-     * Initial call, connecting to the wallet
-     * @param commit
-     * @param rootState
-     * @return {Promise<boolean>}
-     */
-
-    /**
      * Reload zkBalances, initial balances & the history of transaction
      * @return {Promise<void>}
      */
@@ -155,7 +145,7 @@ export const actions = actionTree(
       await this.app.$accessor.wallet.requestInitialBalances(true).catch((error: unknown) => {
         this.app.$sentry?.captureException(error);
       });
-      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false }).catch((error: unknown) => {
+      await this.app.$accessor.wallet.requestZkBalances().catch((error: unknown) => {
         this.app.$sentry?.captureException(error);
       });
       await this.app.$accessor.wallet.requestTransactionsHistory({ force: true }).catch((error: unknown) => {
@@ -172,10 +162,9 @@ export const actions = actionTree(
      * @param force
      * @return {Promise<[array]|*>}
      */
-    async requestZkBalances(
-      { state, commit, getters },
-      { accountState, force = false }: { accountState?: AccountState; force?: boolean },
-    ): Promise<{ balances: ZkInBalance[]; nfts: ZkInNFT[] }> {
+    async requestZkBalances({ state, commit, getters }, force: boolean | undefined = undefined): Promise<{ balances: ZkInBalance[]; nfts: ZkInNFT[] }> {
+      const accountState = walletData.get().accountState;
+
       type BalancesList = {
         [token: string]: BigNumberish;
       };
@@ -448,98 +437,10 @@ export const actions = actionTree(
     },
 
     /**
-     * Refreshing the wallet in case local storage keep token or signer fired event
-     *
-     * @param dispatch
-     * @param commit
-     * @param firstSelect
-     * @returns {Promise<boolean>}
-     */
-    async walletRefresh({ dispatch }, firstSelect = true): Promise<boolean> {
-      try {
-        this.app.$accessor.provider.setLoadingHint("Processing...");
-
-        const authState: UserState = await this.app.$accessor.provider.login(firstSelect);
-
-        const ethProvider = authState.wallet.provider;
-
-        if (walletData.get().syncWallet) {
-          return true;
-        }
-        const ethWallet: ethers.providers.JsonRpcSigner = new ethers.providers.Web3Provider(ethProvider as ExternalProvider).getSigner();
-        const syncProvider = await walletData.syncProvider.get();
-        if (syncProvider === undefined) {
-          return false;
-        }
-
-        if (!walletData.get().syncWallet) {
-          this.app.$accessor.provider.setLoadingHint("Follow the instructions in your wallet");
-          const syncWallet = await Wallet.fromEthSigner(ethWallet, syncProvider);
-          this.app.$accessor.provider.setAuthStage("authorized");
-          walletData.set({
-            syncWallet,
-          });
-        }
-
-        this.app.$accessor.provider.setLoadingHint("Getting wallet information...");
-
-        /* Simplified event watcher call */
-
-        /* The user can press Cancel login anytime so we need to check if he did after every long action (request) */
-        if (!walletData.get().syncWallet) {
-          return false;
-        }
-
-        const accountState: AccountState | undefined = await walletData.get().syncWallet!.getAccountState();
-
-        walletData.set({
-          accountState,
-        });
-
-        if (!walletData.get().syncWallet) {
-          return false;
-        }
-
-        changeNetworkSet(dispatch, this);
-
-        await this.app.$accessor.tokens.loadTokensAndBalances();
-
-        if (!walletData.get().syncWallet) {
-          return false;
-        }
-
-        await this.app.$accessor.wallet.requestZkBalances({ accountState });
-
-        if (!walletData.get().syncWallet) {
-          return false;
-        }
-
-        await this.app.$accessor.wallet.checkLockedState();
-
-        if (!walletData.get().syncWallet) {
-          return false;
-        }
-
-        this.app.$accessor.contacts.getContactsFromStorage();
-
-        return true;
-      } catch (error) {
-        console.log(error);
-        this.app.$accessor.wallet.logout(false);
-        return false;
-      }
-    },
-
-    /**
      * Perform logout and fire a couple of events
-     * @param state
-     * @param commit
-     * @param withoutReset
-     * @returns {Promise<void>}
      */
-    logout({ state, commit }, withoutReset = false): void {
+    logout({ commit }): void {
       try {
-        console.log("logout called");
         clearTimeout(getTransactionHistoryAgain);
         walletData.clear();
         this.app.$accessor.provider.reset();
@@ -548,6 +449,7 @@ export const actions = actionTree(
       } catch (error) {
         console.log("ERROR ON DISCONNECTION", error);
       }
+      this.$router!.push("/");
     },
 
     /**
@@ -556,7 +458,7 @@ export const actions = actionTree(
      * @return {Promise<ZKTypeDisplayToken[]>}
      */
     async displayZkBalances({ state }, _filter = ""): Promise<ZKTypeDisplayToken[]> {
-      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
+      await this.app.$accessor.wallet.requestZkBalances();
       const returnTokens: ZKTypeDisplayBalances = {};
       state.zkTokens.list.forEach((token: ZKTypeDisplayToken): void => {
         returnTokens[token.symbol] = {
@@ -578,6 +480,19 @@ export const actions = actionTree(
       }
       const convertedResult: ZKTypeDisplayToken[] = <ZKTypeDisplayToken[]>Object.keys(returnTokens).map((e: TokenSymbol) => returnTokens[e]);
       return _filter ? convertedResult.filter((singleBalance: ZKTypeDisplayToken): boolean => singleBalance.symbol.search(_filter?.trim()) !== -1) : convertedResult;
+    },
+
+    /**
+     * New preloader
+     * @param {any} state
+     * @return {Promise<void>}
+     */
+    async preloadWallet({ state }): Promise<void> {
+      await this.app.$accessor.tokens.loadTokensAndBalances();
+      await this.app.$accessor.wallet.requestZkBalances();
+
+      await this.app.$accessor.wallet.checkLockedState();
+      this.app.$accessor.contacts.getContactsFromStorage();
     },
   },
 );

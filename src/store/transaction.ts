@@ -130,7 +130,7 @@ export const actions = actionTree(
       }
     },
     async requestBalancesUpdate(): Promise<void> {
-      await this.app.$accessor.wallet.requestZkBalances({ force: true });
+      await this.app.$accessor.wallet.requestZkBalances(true);
       await this.app.$accessor.wallet.requestTransactionsHistory({ offset: 0, force: true });
     },
 
