@@ -18,12 +18,12 @@
       </span>
     </div>
     <slot />
-    <div v-if="!isSearching && !hasDisplayedBalances && accountStateLoading === false" class="centerBlock">
+    <div v-if="!isSearching && !hasDisplayedBalances && (accountStateLoading === false || accountStateRequested)" class="centerBlock">
       <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
       <i-button data-cy="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
     </div>
     <div v-else class="balances">
-      <div v-if="!accountStateLoading">
+      <div v-if="!accountStateLoading || accountStateRequested">
         <div class="_display-flex _justify-content-space-between">
           <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
           <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
@@ -36,7 +36,7 @@
         </i-input>
       </div>
 
-      <div v-if="accountStateLoading" class="centerBlock">
+      <div v-if="accountStateLoading && !accountStateRequested" class="centerBlock">
         <loader />
       </div>
       <div v-else-if="isSearching && !hasDisplayedBalances" class="centerBlock">
@@ -65,7 +65,7 @@
               </div>
               <div class="status _hidden-sm-and-down">
                 <i-tooltip placement="left">
-                  <v-icon v-if="item.status === 'Verified'" class="verified" name="ri-check-double-line" />
+                  <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
                   <v-icon v-else class="committed" name="ri-check-line" />
                   <template slot="body">{{ item.status }}</template>
                 </i-tooltip>
@@ -103,6 +103,9 @@ export default Vue.extend({
   computed: {
     accountStateLoading(): boolean {
       return this.$store.getters["zk-account/accountStateLoading"];
+    },
+    accountStateRequested(): boolean {
+      return this.$store.getters["zk-account/accountStateRequested"];
     },
     zkBalances(): ZkTokenBalances {
       return this.$store.getters["zk-balances/balances"];

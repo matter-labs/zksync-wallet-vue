@@ -166,7 +166,7 @@ const config: NuxtConfig = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/icons"],
+  plugins: ["@/plugins/icons", "@/plugins/filters"],
 
   router: {
     middleware: ["auth"],

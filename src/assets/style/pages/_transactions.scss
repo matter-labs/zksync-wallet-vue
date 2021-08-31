@@ -78,6 +78,12 @@
 
       .mainInfo {
         text-align: left;
+        &.noInfo {
+          @media screen and (min-width: $mobile) {
+            position: relative;
+            top: 4px;
+          }
+        }
 
         .createdAt {
           color: $gray;
@@ -164,8 +170,6 @@
           svg {
             margin-left: 5px;
             &.modalOpenIcon {
-              position: relative;
-              top: 2px;
               transition: filter $transition1;
               cursor: pointer;
 

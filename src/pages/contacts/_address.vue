@@ -60,6 +60,7 @@ export default Vue.extend({
         error: "",
         name: "",
       },
+      forceUpdateVal: Number.MIN_SAFE_INTEGER,
     };
   },
   fetch({ params, redirect }) {
@@ -72,6 +73,7 @@ export default Vue.extend({
       return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transfer" ? this.fromRoute : "/contacts";
     },
     openedContact(): ZkContact {
+      this.forceUpdateVal;
       return this.$store.getters["zk-contacts/contactByAddress"](this.address);
     },
     computedName(): string {
@@ -103,14 +105,17 @@ export default Vue.extend({
       }
       this.$store.dispatch("zk-contacts/setContact", { address: this.address, name: this.contactModal.name });
       this.contactModal.enabled = false;
+      this.forceUpdateVal++;
     },
     deleteContact() {
       this.$store.dispatch("zk-contacts/removeContact", this.address);
       this.contactModal.enabled = false;
+      this.forceUpdateVal++;
     },
     restoreDeleted() {
       this.$store.dispatch("zk-contacts/setContact", { address: this.openedContact.address, name: this.openedContact.name });
       this.contactModal.enabled = false;
+      this.forceUpdateVal++;
     },
   },
 });
