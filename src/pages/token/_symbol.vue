@@ -23,10 +23,13 @@
             <token-price :symbol="symbol" :amount="'1'.padEnd(token.decimals + 1, '0')" />
           </div>
         </div>
-        <div class="infoBlock _margin-top-1">
+        <div v-if="feeAcceptableTokensLoading" class="infoBlock _display-flex _margin-top-1">
           <div class="headline">Allowed for paying fees:</div>
-          <div v-if="feeAcceptableTokensLoading" class="secondaryText">Loading...</div>
-          <div v-else class="balancePrice">{{ feeAcceptable }}</div>
+          <div class="secondaryText _margin-left-05">Loading...</div>
+          <div class="balancePrice">{{ feeAcceptable }}</div>
+        </div>
+        <div v-else class="infoBlock _display-flex _margin-top-1">
+          <div class="headline">Token is allowed for paying fees</div>
         </div>
         <div class="infoBlock _margin-top-1">
           <div class="headline">Your balance:</div>
