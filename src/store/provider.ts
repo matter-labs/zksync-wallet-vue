@@ -1,7 +1,7 @@
 import onboardConfig from "@/configs/onboard";
 import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_ID, ONBOARD_INFURA_KEY } from "@/plugins/build";
 import { walletData } from "@/plugins/walletData";
-import is from "@sindresorhus/is";
+import { ExternalProvider } from "@ethersproject/providers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 import Onboard from "bnc-onboard";
@@ -11,7 +11,6 @@ import { providers } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { AccountState, Address } from "zksync/build/types";
 import { Wallet } from "zksync/build/wallet";
-import undefined = is.undefined;
 
 export declare type tProviderState = "ready" | "isSelecting" | "walletSelected" | "isChecking" | "walletChecked" | "isSelectingAccount" | "accountSelected" | "authorized";
 
@@ -34,10 +33,10 @@ export const state = () => ({
   onboard: <API>onboard,
   accountName: <string>"",
   authStep: <tProviderState>"ready",
-  selectedWallet: <string | "">window.localStorage.getItem("onboardSelectedWallet") === null ? "" : (window.localStorage.getItem("onboardSelectedWallet") as string),
+  selectedWallet: <string | undefined>window.localStorage.getItem("onboardSelectedWallet") === null ? undefined : (window.localStorage.getItem("onboardSelectedWallet") as string),
   loadingHint: <string>"",
   isProviderStored: <boolean>false,
-  address: <Address | string>"",
+  address: <Address | string | undefined>undefined,
 });
 
 export type ProviderModuleState = ReturnType<typeof state>;
@@ -46,10 +45,10 @@ export const mutations = mutationTree(state, {
   setAuthStage(state: ProviderModuleState, currentStep: tProviderState) {
     state.authStep = currentStep;
   },
-  setAddress(state: ProviderModuleState, address: Address) {
+  setAddress(state: ProviderModuleState, address?: Address) {
     state.address = address;
   },
-  storeSelectedWallet(state: ProviderModuleState, selectedWallet) {
+  storeSelectedWallet(state: ProviderModuleState, selectedWallet?: string) {
     if (selectedWallet) {
       localStorage.setItem("onboardSelectedWallet", selectedWallet);
     }
@@ -59,32 +58,35 @@ export const mutations = mutationTree(state, {
     state.loadingHint = text;
   },
   setName(state: ProviderModuleState, name?: string) {
-    if (name) {
+    if (name !== undefined) {
       state.accountName = name;
     }
   },
 });
 
 export const getters = getterTree(state, {
-  loggedIn: (state): boolean => state.authStep === "authorized",
-  getSelectedWallet: (state: ProviderModuleState): string => {
-    return state.authStep !== "ready" && state.authStep !== "isSelecting" ? state.selectedWallet : "";
+  loggedIn: (state): boolean => state.authStep === "authorized" && state.onboard.getState().wallet.provider && state.onboard.getState().address && walletData.get().syncWallet,
+  getSelectedWallet: (state: ProviderModuleState): string | undefined => {
+    return state.authStep !== "ready" && state.authStep !== "isSelecting" ? state.selectedWallet : undefined;
   },
   name: (state: ProviderModuleState): string => {
-    const currentAddress: string = state.onboard.getState().address || state.address;
+    const currentAddress: string | undefined = state.onboard.getState().address || state.address;
     if (state.authStep !== "authorized" || currentAddress!.length < 2) {
       return "";
     }
     if (state.accountName) {
       return state.accountName as string;
     }
-    return window.localStorage.getItem(currentAddress) || `${currentAddress.substr(0, 5)}...${currentAddress.substr(currentAddress!.length - 4, currentAddress!.length - 1)}`;
+    return currentAddress
+      ? window.localStorage.getItem(currentAddress) || `${currentAddress.substr(0, 5)}...${currentAddress.substr(currentAddress!.length - 4, currentAddress!.length - 1)}`
+      : "";
   },
   loader: (state: ProviderModuleState): boolean => ["walletSelected", "isChecking", "walletChecked", "isSelectingAccount", "accountSelected"].includes(state.authStep),
-  address: (state: ProviderModuleState): Address =>
+  address: (state: ProviderModuleState): Address | undefined =>
     state.authStep === "authorized" && state.onboard.getState().address ? (state.onboard.getState().address as Address) : state.address,
   loadingHint: (state: ProviderModuleState): string => state.loadingHint,
-  zkScanUrl: (state: ProviderModuleState): string => (state.onboard.getState().address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.onboard.getState().address}` : ""),
+  zkScanUrl: (state: ProviderModuleState): string | undefined =>
+    state.onboard.getState().address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.onboard.getState().address}` : undefined,
 });
 
 export const actions = actionTree(
@@ -93,9 +95,9 @@ export const actions = actionTree(
     authState({ state }): UserState {
       return state.onboard.getState();
     },
-    saveName({ state, commit, getters }, name = ""): void {
+    saveName({ state, commit, getters }, name: string | undefined = undefined): void {
       const currentAddress: Address | undefined = getters.address;
-      if (!currentAddress) {
+      if (currentAddress !== undefined) {
         if (!name || !name.trim()) {
           name = window.localStorage.getItem(currentAddress)!.trim();
         }
@@ -128,7 +130,8 @@ export const actions = actionTree(
     reset({ state, commit }) {
       localStorage.removeItem("walletconnect");
       state.onboard.walletReset();
-      commit("storeSelectedWallet", "");
+      commit("setAddress", undefined);
+      commit("storeSelectedWallet", undefined);
       commit("setAuthStage", "ready");
     },
 
@@ -150,6 +153,21 @@ export const actions = actionTree(
           pollingInterval: 500,
           qrcode: true,
           chainId: ETHER_NETWORK_ID,
+        });
+
+        //        export interface ISessionParams {
+        //          approved: boolean;
+        //          chainId: number | null;
+        //          networkId: number | null;
+        //          accounts: string[] | null;
+        //          rpcUrl?: string | null;
+        //          peerId?: string | null;
+        //          peerMeta?: IClientMeta | null;
+        //        }
+
+        await providerWalletConnect.updateState({
+          chainId: ETHER_NETWORK_ID,
+          networkId: ETHER_NETWORK_ID,
         });
 
         /**
@@ -221,9 +239,8 @@ export const actions = actionTree(
         if (walletData.get().syncWallet) {
           return true;
         }
-        const ethWallet: providers.Web3Provider = new providers.Web3Provider(providerWalletConnect, ETHER_NETWORK_ID);
-        this.app.$accessor.provider.setLoadingHint("Follow the instructions in your wallet");
-        await this.app.$accessor.provider.__internalLogin(ethWallet);
+
+        return await this.app.$accessor.provider.__internalLogin(providerWalletConnect);
       } catch (error) {
         console.log(error);
         this.app.$accessor.wallet.logout();
@@ -235,6 +252,7 @@ export const actions = actionTree(
      * Refreshing the wallet in case local storage keep token or signer fired event
      */
     async connectWithOnboard({ state }): Promise<boolean | void | UserState> {
+      this.app.$accessor.wallet.logout();
       try {
         console.log(state);
         if (state.authStep === "ready") {
@@ -274,19 +292,10 @@ export const actions = actionTree(
       }
     },
 
-    /**
-     *
-     * @param {any} dispatch
-     * @param {any} state
-     * @param {any} getters
-     * @param {providers.Web3Provider} web3Provider
-     * @return {Promise<boolean | void | UserState>}
-     */
-    async __internalLogin({ dispatch, state, getters }, web3Provider: providers.Web3Provider): Promise<boolean | void | UserState> {
-      if (!web3Provider) {
-        this.app.$accessor.wallet.logout();
-        return false;
-      }
+    async __internalLogin({ dispatch, state, getters }, provider: ExternalProvider | WalletConnectProvider): Promise<boolean | void | UserState> {
+      const ethWallet: providers.Web3Provider = new providers.Web3Provider(provider, ETHER_NETWORK_ID);
+      this.app.$accessor.provider.setLoadingHint("Follow the instructions in your wallet");
+
       const syncProvider = await walletData.syncProvider.get();
       if (!syncProvider) {
         return false;
@@ -294,7 +303,7 @@ export const actions = actionTree(
 
       console.log("syncProvider", syncProvider);
 
-      const syncWallet = await Wallet.fromEthSigner(web3Provider.getSigner(this.app.$accessor.provider.address), syncProvider);
+      const syncWallet = await Wallet.fromEthSigner(ethWallet.getSigner(this.app.$accessor.provider.address), syncProvider);
       this.app.$accessor.provider.setAuthStage("authorized");
 
       walletData.set({

@@ -439,7 +439,7 @@ export const actions = actionTree(
     /**
      * Perform logout and fire a couple of events
      */
-    logout({ state, commit }): void {
+    logout({ commit }): void {
       try {
         clearTimeout(getTransactionHistoryAgain);
         walletData.clear();
