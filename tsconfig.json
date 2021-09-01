@@ -43,7 +43,8 @@
       "@inkline/inkline/types",
       "btn-onboard",
       "nuxt-typed-vuex",
-      "typed-vuex"
+      "typed-vuex",
+      "@walletconnect/types"
     ]
   },
   "exclude": [

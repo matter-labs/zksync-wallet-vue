@@ -28,7 +28,9 @@
           <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
           <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
         </div>
-        <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"> <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer </i-button>
+        <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transfer">
+          <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
+        </i-button>
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
           <v-icon slot="prefix" name="ri-search-line" />
         </i-input>
@@ -176,7 +178,7 @@ export default Vue.extend({
       if (this.displayedList.length === 0 && !this.initialised) {
         this.loading = true;
       }
-      await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: false });
+      await this.$accessor.wallet.requestZkBalances();
       this.loading = false;
       this.initialised = true;
     },
