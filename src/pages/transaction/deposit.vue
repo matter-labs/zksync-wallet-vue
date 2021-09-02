@@ -9,6 +9,7 @@ import Vue from "vue";
 export default Vue.extend({
   async asyncData({ store }) {
     await store.dispatch("zk-transaction/setType", "Deposit");
+    return {};
   },
   mounted() {
     this.$store.dispatch("zk-balances/requestEthereumBalances");

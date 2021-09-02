@@ -1,25 +1,184 @@
 <template>
   <div class="transactionBlock">
+    <block-modals-allowance />
+
     <!-- Choose token -->
     <i-modal v-model="chooseTokenModal" size="md">
       <template slot="header">Choose token</template>
-      <choose-token :tokens-type="mainToken" @chosen="$emit('token-chosen', $event)" />
+      <choose-token :tokens-type="mainToken" @chosen="chooseToken($event)" />
     </i-modal>
+
+    <!-- Main Block -->
+    <div class="transactionTile tileBlock">
+      <div class="tileHeadline withBtn h3">
+        <nuxt-link class="_icon-wrapped -rounded -sm returnBtn _display-flex" :to="routeBack">
+          <v-icon name="ri-arrow-left-line" scale="1" />
+        </nuxt-link>
+        <div>{{ type }}</div>
+      </div>
+
+      <div class="_padding-top-1 inputLabel">Amount</div>
+      <amount-input
+        ref="amountInput"
+        v-model="inputtedAmount"
+        :max-amount="maxAmount.toString()"
+        :token="chosenToken ? chosenToken : undefined"
+        autofocus
+        type="deposit"
+        @chooseToken="chooseTokenModal = true"
+        @enter="commitTransaction()"
+      />
+
+      <div v-if="chosenToken && displayTokenUnlock">
+        <div class="_padding-top-1 _display-flex _align-items-center inputLabel" @click="$accessor.openModal('Allowance')">
+          <span>
+            <span class="tokenSymbol">{{ chosenToken }}</span> Allowance
+          </span>
+          <div class="iconInfo">
+            <v-icon name="ri-question-mark" />
+          </div>
+        </div>
+        <div class="grid-cols-2-layout">
+          <!-- :class="{ 'single-col': singleColumnButtons }" -->
+          <i-button data-cy="deposit_approve_unlimited_button" block size="md" variant="secondary" @click="unlockToken(true)">
+            Approve unlimited <span class="tokenSymbol">{{ chosenToken }}</span>
+          </i-button>
+          <i-button
+            v-if="inputtedAmount && amountBigNumber"
+            key="approveAmount"
+            data-cy="deposit_approve_button"
+            block
+            class="_margin-top-0"
+            size="md"
+            variant="secondary"
+            @click="unlockToken(false)"
+          >
+            Approve {{ amountBigNumber | parseBigNumberish(chosenToken) }} <span class="tokenSymbol">{{ chosenToken }}</span>
+          </i-button>
+          <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>
+            Introduce <span class="tokenSymbol">{{ chosenToken }}</span> amount
+          </i-button>
+        </div>
+        <p class="_text-center _margin-top-05">
+          <span v-if="zeroAllowance">
+            You should firstly approve selected token in order to authorize deposits for
+            <span class="tokenSymbol">{{ chosenToken }}</span>
+          </span>
+          <span v-else>
+            You do not have enough allowance for
+            <span class="tokenSymbol">{{ chosenToken }}</span>
+            .<br class="desktopOnly" />
+            Set higher allowance to proceed to deposit.
+          </span>
+        </p>
+      </div>
+
+      <div v-if="error" class="errorText _text-center _margin-top-1">{{ error }}</div>
+
+      <i-button
+        :disabled="!commitAllowed"
+        block
+        class="_margin-top-1 _display-flex flex-row"
+        data-cy="deposit_deposit_button"
+        size="lg"
+        variant="secondary"
+        @click="commitTransaction()"
+      >
+        {{ type }}
+      </i-button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { ZkTransactionMainToken } from "matter-dapp-ui/types";
+import Vue, { PropOptions } from "vue";
+import { ZkTransactionMainToken, ZkTransactionType } from "matter-dapp-ui/types";
+import { TokenLike } from "zksync/build/types";
+import { Route } from "vue-router/types";
+import { BigNumber } from "@ethersproject/bignumber";
 export default Vue.extend({
+  props: {
+    fromRoute: {
+      required: false,
+      type: Object,
+      default: () => {},
+    } as PropOptions<Route>,
+  },
   data() {
     return {
-      chooseTokenModal: true,
+      inputtedAmount: this.$store.getters["zk-transaction/amount"],
+      chooseTokenModal: false,
     };
   },
   computed: {
+    routeBack(): Route | string {
+      if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
+        return this.fromRoute;
+      } else if (this.mainToken === "L2-NFT") {
+        return "/account/nft";
+      }
+      return "/account";
+    },
+    type(): ZkTransactionType {
+      return this.$store.getters["zk-transaction/type"];
+    },
     mainToken(): ZkTransactionMainToken {
       return this.$store.getters["zk-transaction/mainToken"];
+    },
+    chosenToken(): TokenLike {
+      return this.$store.getters["zk-transaction/symbol"];
+    },
+    commitAllowed(): boolean {
+      return this.$store.getters["zk-transaction/commitAllowed"];
+    },
+    error(): Error {
+      return this.$store.getters["zk-transaction/error"];
+    },
+    amountBigNumber(): BigNumber | undefined {
+      return this.$store.getters["zk-transaction/amountBigNumber"];
+    },
+    zeroAllowance(): boolean {
+      if (!this.chosenToken) {
+        return false;
+      }
+      const tokenAllowance: BigNumber | undefined = this.$store.getters["zk-balances/tokenAllowance"](this.chosenToken);
+      if (!tokenAllowance) {
+        return false;
+      }
+      return tokenAllowance.eq("0");
+    },
+    maxAmount(): BigNumber {
+      if (!this.chosenToken) {
+        return BigNumber.from("0");
+      }
+      const tokenEthereumBalance: BigNumber | undefined = this.$store.getters["zk-balances/ethereumBalance"](this.chosenToken);
+      if (!tokenEthereumBalance) {
+        return BigNumber.from("0");
+      }
+      return tokenEthereumBalance;
+    },
+    enoughAllowance(): boolean {
+      return this.$store.getters["zk-transaction/enoughAllowance"];
+    },
+    displayTokenUnlock(): boolean {
+      return this.mainToken === "L1-Tokens" && this.chosenToken !== undefined && !this.enoughAllowance;
+    },
+  },
+  watch: {
+    inputtedAmount(val) {
+      this.$store.commit("zk-transaction/setAmount", val);
+    },
+  },
+  methods: {
+    async chooseToken(token: TokenLike) {
+      this.chooseTokenModal = false;
+      await this.$store.dispatch("zk-transaction/setSymbol", token);
+    },
+    async commitTransaction() {
+      if (!this.commitAllowed) {
+        return;
+      }
+      await this.$store.dispatch("zk-transaction/commitTransaction");
     },
   },
 });

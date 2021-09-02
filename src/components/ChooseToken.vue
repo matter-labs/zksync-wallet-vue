@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="tokenListContainer genericListContainer _margin-top-05">
-        <div v-for="(balance, symbolOrID) in displayedList" :key="symbolOrID" class="tokenItem" :data-cy="`token_item_${symbolOrID}`" @click="chooseToken(item)">
+        <div v-for="(balance, symbolOrID) in displayedList" :key="symbolOrID" class="tokenItem" :data-cy="`token_item_${symbolOrID}`" @click="$emit('chosen', symbolOrID)">
           <div class="tokenSymbol">{{ symbolOrID }}</div>
           <div v-if="tokensType === 'L1-Tokens' || tokensType === 'L2-Tokens'" class="rightSide">
             <div class="balance">{{ balance | parseBigNumberish(symbolOrID) }}</div>
