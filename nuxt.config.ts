@@ -186,10 +186,6 @@ const config: NuxtConfig = {
         typescript: {
           typeCheck: {
             async: true,
-            stylelint: {
-              config: [".stylelintrc"],
-              files: "src/**/*.scss",
-            },
             eslint: {
               config: ["tsconfig-eslint.json", ".eslintrc.js"],
               files: "@/**/*.{ts,vue,js}",
@@ -241,9 +237,6 @@ const config: NuxtConfig = {
     config: {
       autodetectVariant: true,
     },
-  },
-  styleResources: {
-    scss: ["@/assets/style/vars/*.scss"],
   },
   "google-gtag": {
     id: process.env.GTAG_ID,

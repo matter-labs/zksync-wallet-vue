@@ -9,7 +9,11 @@
     </i-modal>
 
     <!-- Main Block -->
-    <div class="transactionTile tileBlock">
+    <div v-if="activeTransaction && activeTransaction.step !== 'initial'">
+      <block-loading-block v-if="activeTransaction.step !== 'finished'" :headline="type" />
+      <block-success-block v-else :headline="type" />
+    </div>
+    <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link class="_icon-wrapped -rounded -sm returnBtn _display-flex" :to="routeBack">
           <v-icon name="ri-arrow-left-line" scale="1" />
@@ -92,7 +96,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { ZkTransactionMainToken, ZkTransactionType } from "matter-dapp-ui/types";
+import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction } from "matter-dapp-ui/types";
 import { TokenLike } from "zksync/build/types";
 import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -162,6 +166,9 @@ export default Vue.extend({
     },
     displayTokenUnlock(): boolean {
       return this.mainToken === "L1-Tokens" && this.chosenToken !== undefined && !this.enoughAllowance;
+    },
+    activeTransaction(): ZkActiveTransaction {
+      return this.$store.getters["zk-transaction/activeTransaction"];
     },
   },
   watch: {

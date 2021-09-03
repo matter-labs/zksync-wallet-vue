@@ -1,7 +1,7 @@
 <template>
   <div class="addressInput">
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
-      <lazy-user-img v-if="isValid" :wallet="inputtedHash" />
+      <user-img v-if="isValid" :wallet="inputtedHash" />
       <div v-else class="userImgPlaceholder userImg"></div>
       <!--suppress HtmlFormInputWithoutLabel -->
       <input

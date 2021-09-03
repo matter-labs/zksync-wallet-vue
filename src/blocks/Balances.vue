@@ -75,9 +75,9 @@
               <div class="total small">
                 <span class="balancePrice">
                   Depositing:
-                  <token-price :symbol="symbol" :amount="activeDeposits[symbol]" />
+                  <token-price :symbol="symbol" :amount="activeDeposits[symbol].amount" />
                 </span>
-                &nbsp;&nbsp;+{{ activeDeposits[symbol] | parseBigNumberish(symbol) }}
+                &nbsp;&nbsp;+{{ activeDeposits[symbol].amount | parseBigNumberish(symbol) }}
               </div>
               <div class="status">
                 <loader size="xs" />

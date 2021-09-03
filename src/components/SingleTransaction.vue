@@ -322,10 +322,10 @@ export default Vue.extend({
       if (tx.op.type === "Withdraw" || tx.op.type === "WithdrawNFT" || tx.op.type === "ForcedExit") {
         const withdrawalEthTxHash = await this.$store.dispatch("zk-history/getWithdrawalEthTxHash", tx.txHash);
         if (withdrawalEthTxHash) {
-          this.ethTx = `${this.config.ethereumNetwork.explorer}/tx/${withdrawalEthTxHash}`;
+          this.ethTx = `${this.config.ethereumNetwork.explorer}tx/${withdrawalEthTxHash}`;
         }
       } else if (tx.op.type === "Deposit" || tx.op.type === "FullExit") {
-        this.ethTx = `${this.config.ethereumNetwork.explorer}/tx/${tx.op.ethHash}`;
+        this.ethTx = `${this.config.ethereumNetwork.explorer}tx/${tx.op.ethHash}`;
       }
     },
     copy(value: string) {
