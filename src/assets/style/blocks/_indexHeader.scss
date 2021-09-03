@@ -349,13 +349,11 @@ body {
       }
 
       .dropdown {
-        height: 52px;
+        min-height: 52px;
+        height: fit-content;
+        max-height: 312px;
         overflow: hidden;
         transition: height $transition1;
-
-        &.opened {
-          height: 312px;
-        }
       }
     }
   }
