@@ -221,14 +221,15 @@ export default Vue.extend({
     };
   },
   computed: {
-    maxAmount(): string {
-      return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
-    },
-    singleColumnButtons(): boolean {
-      return (
-        (!this.inputtedAmount && this.chosenToken && this.chosenToken.symbol.length > 5) ||
-        (!!this.inputtedAmount && this.$options.filters!.formatToken(this.amountBigNumber, (this.chosenToken as ZkInBalance).symbol).length > 13)
-      );
+    amountBigNumber(): BigNumber {
+      if (!this.chosenToken || !this.inputtedAmount) {
+        return BigNumber.from("0");
+      }
+      try {
+        return utils.parseToken(this.chosenToken.symbol, this.inputtedAmount);
+      } catch (error) {
+        return BigNumber.from("0");
+      }
     },
     buttonDisabled(): boolean {
       return (
@@ -241,22 +242,8 @@ export default Vue.extend({
         !this.isEnoughAllowance
       );
     },
-    amountBigNumber(): BigNumber {
-      if (!this.chosenToken || !this.inputtedAmount) {
-        return BigNumber.from("0");
-      }
-      try {
-        return utils.parseToken(this.chosenToken.symbol, this.inputtedAmount);
-      } catch (error) {
-        return BigNumber.from("0");
-      }
-    },
-    zeroAllowance(): boolean | undefined {
-      const allowance: BigNumber | undefined = this.tokenAllowance;
-      if (allowance === undefined) {
-        return false;
-      }
-      return allowance!.eq(BigNumber.from("0"));
+    displayTokenUnlock(): boolean {
+      return this.chosenToken && !this.enoughAllowance;
     },
     enoughAllowance(): boolean {
       if (!this.tokenAllowance || !this.chosenToken) {
@@ -277,8 +264,21 @@ export default Vue.extend({
         return false;
       }
     },
-    displayTokenUnlock(): boolean {
-      return this.chosenToken && !this.enoughAllowance;
+    maxAmount(): string {
+      return !this.chosenToken ? "0" : closestPackableTransactionAmount(this.chosenToken.rawBalance).toString();
+    },
+    singleColumnButtons(): boolean {
+      return (
+        (!this.inputtedAmount && this.chosenToken && this.chosenToken.symbol.length > 5) ||
+        (!!this.inputtedAmount && this.$options.filters!.formatToken(this.amountBigNumber, (this.chosenToken as ZkInBalance).symbol).length > 13)
+      );
+    },
+    zeroAllowance(): boolean | undefined {
+      const allowance: BigNumber | undefined = this.tokenAllowance;
+      if (allowance === undefined) {
+        return false;
+      }
+      return allowance!.eq(BigNumber.from("0"));
     },
   },
   watch: {
@@ -307,6 +307,7 @@ export default Vue.extend({
         this.chooseToken(chosenToken as ZkInBalance);
       }
       this.loading = false;
+      this.error = "";
     } catch (error) {
       console.log(error);
       this.loading = false;
@@ -377,17 +378,68 @@ export default Vue.extend({
       this.transactionInfo.continueBtnText = "";
       this.transactionInfo.success = true;
     },
+    async getTokenAllowance(token: ZkInBalance): Promise<BigNumber> {
+      if (token.symbol.toLowerCase() !== "eth") {
+        const wallet = walletData.get().syncWallet;
+        const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
+        // @ts-ignore
+        const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, wallet!.ethSigner);
+        return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
+      }
+      return BigNumber.from(ERC20_APPROVE_TRESHOLD);
+    },
+    setAllowanceToCurrent() {
+      if (!this.chosenToken || this.chosenToken.symbol === "ETH" || !this.tokenAllowance || this.zeroAllowance) {
+        this.inputtedAllowance = "";
+      } else {
+        try {
+          this.inputtedAllowance = utils.handleFormatToken(this.chosenToken.symbol, this.tokenAllowance.toString());
+        } catch (error) {
+          this.inputtedAllowance = "";
+        }
+      }
+    },
+    async successBlockContinue() {
+      this.transactionInfo.success = false;
+      this.transactionInfo.hash = "";
+      this.transactionInfo.explorerLink = "";
+      if (this.transactionInfo.type === "unlock") {
+        if (this.transactionInfo.continueBtnText === "Ok") {
+          return;
+        }
+        if (!this.error) {
+          this.loading = true;
+          try {
+            await this.deposit();
+          } catch (error) {
+            const errorMsg = utils.filterError(error);
+            if (typeof errorMsg === "string") {
+              this.error = errorMsg;
+            } else {
+              this.error = "Transaction error";
+            }
+          }
+          this.tip = "";
+          this.loading = false;
+        }
+      }
+    },
+    successBlockGoBack() {
+      this.transactionInfo.success = false;
+      this.transactionInfo.hash = "";
+      this.transactionInfo.explorerLink = "";
+    },
     async unlockToken(unlimited = true): Promise<void> {
       if (!this.chosenToken) {
         return;
       }
       this.unlimitedApproval = unlimited;
       this.loading = true;
+      this.error = "";
       try {
-        const wallet = walletData.get().syncWallet;
         this.tip = "Follow the instructions in your Ethereum wallet";
         this.transactionInfo.type = "unlock";
-        const approveDeposits = await wallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
+        const approveDeposits = await walletData.get().syncWallet!.approveERC20TokenDeposits(this.chosenToken.address as string, unlimited ? undefined : this.amountBigNumber);
         const balances = this.$accessor.wallet.getzkBalances;
         let ETHToken: ZkInBalance | undefined;
         for (const token of balances) {
@@ -434,57 +486,6 @@ export default Vue.extend({
       }
       this.tip = "";
       this.loading = false;
-    },
-    async getTokenAllowance(token: ZkInBalance): Promise<BigNumber> {
-      if (token.symbol.toLowerCase() !== "eth") {
-        const wallet = walletData.get().syncWallet;
-        const tokenAddress = wallet!.provider.tokenSet.resolveTokenAddress(token.symbol);
-        // @ts-ignore
-        const erc20contract = new Contract(tokenAddress, IERC20_INTERFACE as ContractInterface, wallet!.ethSigner);
-        return await erc20contract.allowance(wallet!.address(), wallet!.provider.contractAddress.mainContract);
-      }
-      return BigNumber.from(ERC20_APPROVE_TRESHOLD);
-    },
-    async successBlockContinue() {
-      this.transactionInfo.success = false;
-      this.transactionInfo.hash = "";
-      this.transactionInfo.explorerLink = "";
-      if (this.transactionInfo.type === "unlock") {
-        if (this.transactionInfo.continueBtnText === "Ok") {
-          return;
-        }
-        if (!this.error) {
-          this.loading = true;
-          try {
-            await this.deposit();
-          } catch (error) {
-            const errorMsg = utils.filterError(error);
-            if (typeof errorMsg === "string") {
-              this.error = errorMsg;
-            } else {
-              this.error = "Transaction error";
-            }
-          }
-          this.tip = "";
-          this.loading = false;
-        }
-      }
-    },
-    successBlockGoBack() {
-      this.transactionInfo.success = false;
-      this.transactionInfo.hash = "";
-      this.transactionInfo.explorerLink = "";
-    },
-    setAllowanceToCurrent() {
-      if (!this.chosenToken || this.chosenToken.symbol === "ETH" || !this.tokenAllowance || this.zeroAllowance) {
-        this.inputtedAllowance = "";
-      } else {
-        try {
-          this.inputtedAllowance = utils.handleFormatToken(this.chosenToken.symbol, this.tokenAllowance.toString());
-        } catch (error) {
-          this.inputtedAllowance = "";
-        }
-      }
     },
   },
 });
