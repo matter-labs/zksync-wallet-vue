@@ -13,11 +13,11 @@ import {
 const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOptions[] = [
   { walletName: "metamask", preferred: true, networkId: ETHER_NETWORK_ID },
   { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
-  { walletName: "authereum" },
-  { walletName: "coinbase", preferred: true },
+  { walletName: "coinbase" },
   {
     walletName: "ledger",
     rpcUrl: ONBOARD_RPC_URL,
+    preferred: true,
   },
   {
     walletName: "lattice",
@@ -32,13 +32,14 @@ const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOption
   {
     walletName: "portis",
     apiKey: ONBOARD_PORTIS_KEY,
-    preferred: true,
+    display: { desktop: true, mobile: false },
     label: "Portis",
   },
+  { walletName: "authereum" },
   { walletName: "atoken" },
   { walletName: "opera", display: { desktop: true, mobile: false } },
   { walletName: "operaTouch", display: { desktop: false, mobile: true } },
-  { walletName: "torus" },
+  { walletName: "torus", display: { desktop: true, mobile: false } },
   { walletName: "status" },
   { walletName: "meetone" },
   { walletName: "mykey", rpcUrl: ONBOARD_RPC_URL },
@@ -48,8 +49,10 @@ const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOption
   { walletName: "tokenpocket", rpcUrl: ONBOARD_RPC_URL },
   { walletName: "gnosis" },
   { walletName: "xdefi" },
-  { walletName: "binance" },
-  { walletName: "coinbase" },
+  {
+    walletName: "binance",
+    preferred: true,
+  },
 ];
 
 const colorTheme: string | null = localStorage.getItem("colorTheme");
