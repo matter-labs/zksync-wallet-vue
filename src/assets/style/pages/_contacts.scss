@@ -28,6 +28,7 @@
   .tileHeadline {
     display: flex;
     align-items: stretch;
+
     span {
       line-height: 24px;
     }
@@ -68,6 +69,7 @@
     border-bottom: 1px solid;
     cursor: pointer;
     transition: background-color $transition1;
+
     &:last-child {
       border-bottom: none;
     }

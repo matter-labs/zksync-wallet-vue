@@ -9,6 +9,7 @@ import { API, UserState, Wallet as OnboardWallet } from "bnc-onboard/dist/src/in
 import { providers } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import Web3 from "web3";
 import { AccountState, Address } from "zksync/build/types";
 import { Wallet } from "zksync/build/wallet";
 
@@ -65,7 +66,9 @@ export const mutations = mutationTree(state, {
 });
 
 export const getters = getterTree(state, {
-  loggedIn: (state): boolean => state.authStep === "authorized" && state.onboard.getState().wallet.provider && state.onboard.getState().address && walletData.get().syncWallet,
+  loggedIn: (state): boolean => {
+    return !(state.authStep !== "authorized" || (!state.address && !state.onboard.getState().address));
+  },
   getSelectedWallet: (state: ProviderModuleState): string | undefined => {
     return state.authStep !== "ready" && state.authStep !== "isSelecting" ? state.selectedWallet : undefined;
   },
@@ -143,7 +146,6 @@ export const actions = actionTree(
      * @return {Promise<boolean | void | UserState>}
      */
     async connectWithWalletConnect({ commit, state, getters }): Promise<boolean | void | UserState> {
-      this.app.$accessor.wallet.logout();
       try {
         /**
          * Placing here the component code
@@ -155,51 +157,9 @@ export const actions = actionTree(
           chainId: ETHER_NETWORK_ID,
         });
 
-        //        export interface ISessionParams {
-        //          approved: boolean;
-        //          chainId: number | null;
-        //          networkId: number | null;
-        //          accounts: string[] | null;
-        //          rpcUrl?: string | null;
-        //          peerId?: string | null;
-        //          peerMeta?: IClientMeta | null;
-        //        }
-
         await providerWalletConnect.updateState({
           chainId: ETHER_NETWORK_ID,
           networkId: ETHER_NETWORK_ID,
-        });
-
-        /**
-         * Authorizing the wallet (better avoid since it's “async magic”
-         */
-        providerWalletConnect.onConnect((connection: unknown) => {
-          commit("setAuthStage", "walletChecked");
-          console.log(connection);
-        });
-
-        providerWalletConnect.on("session_request", (error: Error, payload: unknown): void => {
-          if (error) {
-            console.error(error);
-          }
-          commit("setAuthStage", "isChecking");
-          commit("setLoadingHint", "Follow the instructions in your wallet");
-          console.log(payload, "session_request");
-        });
-
-        providerWalletConnect.on("session_update", (error: Error, payload: unknown): void => {
-          if (error) {
-            console.error(error);
-          }
-          console.log("session_update", payload);
-        });
-
-        providerWalletConnect.on("disconnect", (error: Error, payload: unknown): void => {
-          if (error) {
-            console.error(error);
-          }
-          this.app.$accessor.wallet.logout();
-          console.log("disconnect", payload);
         });
 
         if (providerWalletConnect.connected) {
@@ -209,35 +169,13 @@ export const actions = actionTree(
         //  Enable session (triggers QR Code modal)
         const response = await providerWalletConnect.enable();
 
-        console.log("response", response);
-
         if (response && Array.isArray(response) && response[0]) {
           commit("setAddress", response[0]);
         }
 
         if (!providerWalletConnect) {
-          // @todo: consider implementation — it's all registered events
-          //
-          //      "session_request",
-          //        "session_update",
-          //        "exchange_key",
-          //        "connect",
-          //        "disconnect",
-          //        "display_uri",
-          //        "modal_closed",
-          //        "transport_open",
-          //        "transport_close",
-          //        "transport_error",
-
           await this.app.$accessor.wallet.logout();
           return;
-        }
-
-        const address = providerWalletConnect.accounts[0] as Address;
-        this.app.$accessor.provider.setAddress(address);
-
-        if (walletData.get().syncWallet) {
-          return true;
         }
 
         return await this.app.$accessor.provider.__internalLogin(providerWalletConnect);
@@ -251,91 +189,139 @@ export const actions = actionTree(
     /**
      * Refreshing the wallet in case local storage keep token or signer fired event
      */
-    async connectWithOnboard({ state }): Promise<boolean | void | UserState> {
-      this.app.$accessor.wallet.logout();
+    async connectWithOnboard({ state, commit }): Promise<boolean | void | UserState> {
+      if (state.authStep !== "ready") {
+        this.app.$accessor.provider.reset();
+      }
       try {
-        console.log(state);
-        if (state.authStep === "ready") {
-          const selectResult: boolean = await this.app.$accessor.provider.walletSelect();
-          console.log(state);
-          if (!selectResult) {
-            this.app.$accessor.provider.reset();
-            return false;
-          }
-        }
-        console.log("check", state);
-        const checkResult: boolean = await this.app.$accessor.provider.walletCheck();
-        if (!checkResult) {
-          this.app.$accessor.provider.reset();
+        const selectResult: boolean = await state.onboard.walletSelect();
+        if (!selectResult) {
+          this.app.$accessor.wallet.logout();
           return false;
         }
-        console.log(state);
-        const authState: UserState = state.onboard.getState();
-        if (authState.wallet?.type === "hardware") {
-          const accountSelection: boolean = await this.app.$accessor.provider.accountSelect();
-          if (!accountSelection) {
-            this.app.$accessor.provider.reset();
-          }
+        commit("setAuthStage", "walletSelected");
+        const checkResult: boolean = await state.onboard.walletCheck();
+        if (!checkResult) {
+          this.app.$accessor.wallet.logout();
+          return false;
         }
+        commit("setAuthStage", "walletChecked");
+        const authState: UserState = state.onboard.getState();
+
+        if (authState.wallet?.type === "hardware") {
+          const accountSelection: boolean = await state.onboard.accountSelect();
+          if (!accountSelection) {
+            this.app.$accessor.wallet.logout();
+            return false;
+          }
+          commit("setAddress", state.onboard.getState().address);
+        } else {
+          commit("setAddress", authState.address);
+        }
+
         console.log("authorisation started");
         const incomingProvider = state.onboard.getState().wallet.provider;
 
         if (!incomingProvider) {
+          console.log("error");
           this.app.$accessor.wallet.logout();
-          return;
+          return false;
         }
         return await this.app.$accessor.provider.__internalLogin(incomingProvider);
       } catch (error) {
         console.log(error);
+        if (state.onboard.getState().wallet!.provider!.disconnect) {
+          state.onboard.getState().wallet!.provider!.disconnect();
+        }
+
         this.app.$accessor.wallet.logout();
         return false;
       }
     },
 
-    async __internalLogin({ dispatch, state, getters }, provider: ExternalProvider | WalletConnectProvider): Promise<boolean | void | UserState> {
-      const ethWallet: providers.Web3Provider = new providers.Web3Provider(provider, ETHER_NETWORK_ID);
-      this.app.$accessor.provider.setLoadingHint("Follow the instructions in your wallet");
+    async __internalLogin({ dispatch, state, getters, commit }, provider: ExternalProvider | WalletConnectProvider): Promise<boolean | void | UserState> {
+      if (state.authStep === "ready") {
+        return;
+      }
+      console.log("internal login called");
+      if (!walletData.get().syncWallet) {
+        // @ts-ignore
+        const web3Provider = new Web3(provider);
 
-      const syncProvider = await walletData.syncProvider.get();
-      if (!syncProvider) {
+        console.log("provider:", web3Provider);
+        if (!web3Provider.eth.currentProvider) {
+          this.app.$accessor.wallet.logout();
+          return false;
+        }
+        commit("setLoadingHint", "Follow the instructions in your wallet");
+
+        console.log("account:", web3Provider.defaultAccount);
+
+        console.log("let's create web3");
+
+        const ethWallet: providers.Web3Provider = new providers.Web3Provider(provider as providers.ExternalProvider, ETHER_NETWORK_ID);
+
+        console.log(ethWallet);
+
+        const syncProvider = await walletData.syncProvider.get();
+        if (!syncProvider) {
+          this.app.$accessor.wallet.logout();
+          return false;
+        }
+
+        console.log("Provider", syncProvider);
+
+        const syncWallet = await Wallet.fromEthSigner(ethWallet.getSigner(), syncProvider);
+
+        console.log("newSyncWallet", syncWallet);
+
+        walletData.set({
+          syncWallet,
+        });
+
+        commit("setLoadingHint", "Follow the instructions in your wallet");
+        //      this.app.$accessor.provider.
+      }
+
+      /* The user can press Cancel login anytime so we need to check if he did after every long action (request) */
+      if (!walletData.get().syncWallet) {
+        this.app.$accessor.wallet.logout();
         return false;
       }
 
-      console.log("syncProvider", syncProvider);
-
-      const syncWallet = await Wallet.fromEthSigner(ethWallet.getSigner(this.app.$accessor.provider.address), syncProvider);
-      this.app.$accessor.provider.setAuthStage("authorized");
-
-      walletData.set({
-        syncWallet,
-      });
-
-      console.log("login hint sent");
-
       this.app.$accessor.provider.setLoadingHint("Getting wallet information...");
 
-      /* Simplified event watcher call */
-      const accountState: AccountState | undefined = await walletData.get().syncWallet!.getAccountState();
+      const accountState: AccountState | undefined = await walletData.get().syncWallet?.getAccountState();
+
+      console.log("accountState", accountState);
+
+      commit("setAddress", accountState?.address);
 
       walletData.set({
         accountState,
       });
+
+      console.log("newSyncWallet", accountState);
+
+      commit("setAuthStage", "authorized");
+
+      console.log("login hint sent");
 
       await this.app.$accessor.wallet.preloadWallet();
 
       console.log(getters.loggedIn);
 
       if (!getters.loggedIn) {
+        this.app.$accessor.wallet.logout();
         return false;
       }
-      this.$router.push("/account");
+      await this.$router.push("/account");
       return true;
     },
 
     onEventAddress({ getters }, address: string): void {
-      console.log("subscription watcher (wallet): ", address);
+      console.log("subscription watcher (address): ", address);
       if (getters.loggedIn) {
-        // @ts-ignore
         if ((address !== undefined && getters.address !== (address as Address)) || (getters.address !== undefined && address === undefined)) {
           this.app.$toast.global?.zkException({
             message: "Account switching spotted",
@@ -345,45 +331,45 @@ export const actions = actionTree(
       }
     },
     onEventWallet({ state, commit }, wallet: OnboardWallet): void {
-      console.log("subscription watcher (wallet): ", wallet.provider, wallet.instance);
+      console.log("subscription watcher (wallet): ", wallet);
       console.log(wallet.provider);
-      if (wallet && wallet.provider) {
+      if (wallet.provider && wallet.name) {
         console.log(wallet.provider);
         wallet.provider.autoRefreshOnNetworkChange = false;
 
         if (wallet.name) {
           commit("storeSelectedWallet", wallet.name);
         }
+        console.log("wallet: ", wallet);
+
+        try {
+          this.app.$accessor.provider.__internalLogin(wallet.provider);
+        } catch (error) {
+          this.app.$accessor.wallet.logout();
+        }
       }
     },
     onEventNetwork({ getters, state }, networkId: number): void {
       console.log("subscription watcher (network): ", networkId);
-      if (getters.loggedIn) {
-        if (!!networkId && networkId !== ETHER_NETWORK_ID) {
-          this.app.$toast.global?.zkException({
-            message: "ETH Network change spotted",
-          });
+      if (getters.loggedIn && networkId !== ETHER_NETWORK_ID && networkId !== undefined) {
+        this.app.$toast.global?.zkException({
+          message: "ETH Network change spotted",
+        });
 
-          if (walletData.get().syncWallet) {
-            if (state.onboard.getState().mobileDevice) {
-              return;
+        this.app.$accessor.provider
+          .walletCheck()
+          .then((checkState: boolean) => {
+            if (checkState) {
+              this.app.$accessor.provider.setAuthStage("authorized");
+              this.$router.back();
+            } else {
+              this.app.$accessor.wallet.logout();
             }
-            this.app.$accessor.provider
-              .walletCheck()
-              .then((checkState: boolean) => {
-                if (checkState) {
-                  this.app.$accessor.provider.setAuthStage("authorized");
-                  this.$router.back();
-                } else {
-                  this.app.$accessor.wallet.logout();
-                }
-              })
-              .catch((reason: unknown) => {
-                console.log(reason);
-                this.app.$accessor.wallet.logout();
-              });
-          }
-        }
+          })
+          .catch((reason: unknown) => {
+            console.log(reason);
+            this.app.$accessor.wallet.logout();
+          });
       }
     },
   },

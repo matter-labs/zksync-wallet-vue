@@ -87,9 +87,8 @@ export default Vue.extend({
   methods: {
     logout(): void {
       this.accountModal = false;
-      this.$nextTick(async () => {
-        await this.$accessor.wallet.logout();
-        await this.$router.push("/");
+      this.$nextTick(() => {
+        this.$accessor.wallet.logout();
       });
     },
     togglePopup(): void {

@@ -11,8 +11,8 @@ import {
 } from "bnc-onboard/dist/src/interfaces";
 
 const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOptions[] = [
-  { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
   { walletName: "metamask", preferred: true, networkId: ETHER_NETWORK_ID },
+  { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
   { walletName: "authereum" },
   { walletName: "coinbase", preferred: true },
   {
@@ -36,7 +36,7 @@ const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOption
     label: "Portis",
   },
   { walletName: "atoken" },
-  { walletName: "opera" },
+  { walletName: "opera", display: { desktop: true, mobile: false } },
   { walletName: "operaTouch", display: { desktop: false, mobile: true } },
   { walletName: "torus" },
   { walletName: "status" },
@@ -48,7 +48,6 @@ const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOption
   { walletName: "tokenpocket", rpcUrl: ONBOARD_RPC_URL },
   { walletName: "gnosis" },
   { walletName: "xdefi" },
-  { walletName: "bitpie" },
   { walletName: "binance" },
   { walletName: "coinbase" },
 ];
@@ -79,7 +78,7 @@ const onboardConfig: Initialization = {
   walletCheck: walletChecks as (WalletCheckModule | WalletCheckInit)[],
   walletSelect: <WalletSelectModuleOptions>{
     wallets,
-    description: "DESCRIPTION",
+    description: "",
     explanation: `If you have funds on zkSync on an account that you can't control (a smart contract or an exchange deposit account) it is possible to use the <a href="${ONBOARD_FORCED_EXIT_LINK}" target="_blank">Alternative Withdrawal</a> to move the funds to Layer 1 without interacting with Layer 2.`,
   },
 };
