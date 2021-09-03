@@ -11,6 +11,7 @@ import {
 } from "bnc-onboard/dist/src/interfaces";
 
 const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOptions[] = [
+  { walletName: "detectedwallet", preferred: true },
   { walletName: "metamask", preferred: true, networkId: ETHER_NETWORK_ID },
   { walletName: "imToken", rpcUrl: ONBOARD_RPC_URL, preferred: true },
   { walletName: "coinbase" },

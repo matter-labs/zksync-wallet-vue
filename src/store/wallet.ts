@@ -253,12 +253,10 @@ export const actions = actionTree(
       if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
         return localList.list;
       }
-      const syncWallet = walletData.get().syncWallet;
-      const accountState = await syncWallet?.getAccountState();
+      const accountState = await walletData.get().syncWallet!.getAccountState();
       if (accountState !== undefined) {
         walletData.set({ accountState });
-      }
-      if (!syncWallet || !accountState) {
+      } else {
         return localList.list;
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
@@ -267,7 +265,7 @@ export const actions = actionTree(
         const currentToken = loadedTokens.tokens[key];
         let balance;
         try {
-          balance = await syncWallet.getEthereumBalance(key.toLocaleString());
+          balance = await walletData.get().syncWallet!.getEthereumBalance(key.toLocaleString());
         } catch (error) {
           console.log(`Can't get L1 balance of ${key.toLocaleString()}`, error);
           balance = BigNumber.from(0);

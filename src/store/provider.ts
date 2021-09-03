@@ -36,7 +36,6 @@ export const state = () => ({
   authStep: <tProviderState>"ready",
   selectedWallet: <string | undefined>window.localStorage.getItem("onboardSelectedWallet") === null ? undefined : (window.localStorage.getItem("onboardSelectedWallet") as string),
   loadingHint: <string>"",
-  isProviderStored: <boolean>false,
   address: <Address | string | undefined>undefined,
 });
 
@@ -108,28 +107,6 @@ export const actions = actionTree(
       }
     },
 
-    async walletSelect({ state, commit }): Promise<boolean> {
-      commit("setAuthStage", "isSelecting");
-      const result: boolean = await state.onboard.walletSelect();
-      commit("setAuthStage", result ? "walletSelected" : "ready");
-      return result;
-    },
-
-    async walletCheck({ state, commit }): Promise<boolean> {
-      commit("setAuthStage", "isChecking");
-      commit("setLoadingHint", "Follow the instructions in your Ethereum wallet");
-      const result: boolean = await state.onboard.walletCheck();
-      commit("setAuthStage", result ? "walletChecked" : "walletSelected");
-      return result;
-    },
-
-    async accountSelect({ state, commit }): Promise<boolean> {
-      commit("setAuthStage", "isSelectingAccount");
-      const result: boolean = await state.onboard.accountSelect();
-      commit("setAuthStage", result ? "accountSelected" : "walletChecked");
-      return result;
-    },
-
     reset({ state, commit }) {
       localStorage.removeItem("walletconnect");
       state.onboard.walletReset();
@@ -146,23 +123,51 @@ export const actions = actionTree(
      * @return {Promise<boolean | void | UserState>}
      */
     async connectWithWalletConnect({ commit, state, getters }): Promise<boolean | void | UserState> {
+      const providerWalletConnect = new WalletConnectProvider({
+        infuraId: ONBOARD_INFURA_KEY,
+        pollingInterval: 6500,
+        qrcode: true,
+        chainId: ETHER_NETWORK_ID,
+      });
+
       try {
+        if (!providerWalletConnect) {
+          throw new Error("Provider not found");
+        }
+
         /**
-         * Placing here the component code
+         * Authorizing the wallet (better avoid since it's “async magic”
          */
-        const providerWalletConnect: WalletConnectProvider = new WalletConnectProvider({
-          infuraId: ONBOARD_INFURA_KEY,
-          pollingInterval: 500,
-          qrcode: true,
-          chainId: ETHER_NETWORK_ID,
+        providerWalletConnect.onConnect((connection: unknown) => {
+          commit("setAuthStage", "walletChecked");
+          console.log(connection);
         });
 
-        await providerWalletConnect.updateState({
-          chainId: ETHER_NETWORK_ID,
-          networkId: ETHER_NETWORK_ID,
+        providerWalletConnect.on("session_request", (error: Error, payload: unknown): void => {
+          if (error) {
+            console.error(error);
+          }
+          commit("setAuthStage", "isChecking");
+          commit("setLoadingHint", "Follow the instructions in your wallet");
+          console.log(payload, "session_request");
         });
 
-        if (providerWalletConnect.connected) {
+        providerWalletConnect.on("session_update", (error: Error, payload: unknown): void => {
+          if (error) {
+            console.error(error);
+          }
+          console.log("session_update", payload);
+        });
+
+        providerWalletConnect.on("disconnect", (error: Error, payload: unknown): void => {
+          if (error) {
+            console.error(error);
+          }
+          this.app.$accessor.wallet.logout();
+          console.log("disconnect", payload);
+        });
+
+        if (providerWalletConnect.connected || providerWalletConnect.isConnecting) {
           await providerWalletConnect.disconnect();
         }
 
@@ -173,14 +178,14 @@ export const actions = actionTree(
           commit("setAddress", response[0]);
         }
 
-        if (!providerWalletConnect) {
-          await this.app.$accessor.wallet.logout();
-          return;
-        }
-
-        return await this.app.$accessor.provider.__internalLogin(providerWalletConnect);
+        // @ts-ignore
+        const web3Provider: Web3 = new Web3(providerWalletConnect);
+        return await this.app.$accessor.provider.__internalLogin(web3Provider);
       } catch (error) {
         console.log(error);
+        if (providerWalletConnect!.isConnecting || providerWalletConnect!.connected) {
+          await providerWalletConnect.disconnect();
+        }
         this.app.$accessor.wallet.logout();
         return false;
       }
@@ -196,14 +201,12 @@ export const actions = actionTree(
       try {
         const selectResult: boolean = await state.onboard.walletSelect();
         if (!selectResult) {
-          this.app.$accessor.wallet.logout();
-          return false;
+          throw new Error("No wallet selected");
         }
         commit("setAuthStage", "walletSelected");
         const checkResult: boolean = await state.onboard.walletCheck();
         if (!checkResult) {
-          this.app.$accessor.wallet.logout();
-          return false;
+          throw new Error("Wallet check failed");
         }
         commit("setAuthStage", "walletChecked");
         const authState: UserState = state.onboard.getState();
@@ -211,23 +214,22 @@ export const actions = actionTree(
         if (authState.wallet?.type === "hardware") {
           const accountSelection: boolean = await state.onboard.accountSelect();
           if (!accountSelection) {
-            this.app.$accessor.wallet.logout();
-            return false;
+            throw new Error("Failed to choose the account");
           }
-          commit("setAddress", state.onboard.getState().address);
+          //          commit("setAddress", state.onboard.getState().address);
         } else {
-          commit("setAddress", authState.address);
+          //          commit("setAddress", authState.address);
         }
 
         console.log("authorisation started");
         const incomingProvider = state.onboard.getState().wallet.provider;
 
         if (!incomingProvider) {
-          console.log("error");
-          this.app.$accessor.wallet.logout();
-          return false;
+          throw new Error("Provider not found");
         }
-        return await this.app.$accessor.provider.__internalLogin(incomingProvider);
+
+        const web3Provider: Web3 = new Web3(incomingProvider);
+        return await this.app.$accessor.provider.__internalLogin(web3Provider);
       } catch (error) {
         console.log(error);
         if (state.onboard.getState().wallet!.provider!.disconnect) {
@@ -239,84 +241,110 @@ export const actions = actionTree(
       }
     },
 
-    async __internalLogin({ dispatch, state, getters, commit }, provider: ExternalProvider | WalletConnectProvider): Promise<boolean | void | UserState> {
+    async __internalLogin({ dispatch, state, getters, commit }, web3Provider: Web3): Promise<boolean | void | UserState> {
+      /**
+       * Pre-run check: in case the __internalLogin method is called when the auth state doesn't allow to login
+       **/
+
       if (state.authStep === "ready") {
         return;
       }
-      console.log("internal login called");
-      if (!walletData.get().syncWallet) {
-        // @ts-ignore
-        const web3Provider = new Web3(provider);
+      try {
+        console.log("internal login called");
 
-        console.log("provider:", web3Provider);
-        if (!web3Provider.eth.currentProvider) {
-          this.app.$accessor.wallet.logout();
-          return false;
+        /**
+         * If no syncWallet or syncProvider fetched (supposed to be called once
+         **/
+        if (!walletData.get().syncWallet) {
+          console.log("provider:", web3Provider);
+          if (!web3Provider.eth!.currentProvider) {
+            throw new Error("Web3 Provider has no Eth-network connection unavailable");
+          }
+          commit("setLoadingHint", "Follow the instructions in your wallet");
+
+          /**
+           * Step #2: requesting an access to the accounts
+           **/
+
+          console.log(web3Provider.eth);
+
+          const fetchedAccounts = await web3Provider.eth.getAccounts();
+          console.log(fetchedAccounts);
+          if (!fetchedAccounts) {
+            throw new Error("No account found");
+          }
+
+          const walletAccount = fetchedAccounts.shift();
+
+          console.log("requested accounts", fetchedAccounts, walletAccount);
+
+          /**
+           * Step #3: request access to the account
+           **/
+
+          console.log("fetched accounts: ", fetchedAccounts);
+
+          const ethWallet: providers.Web3Provider = new providers.Web3Provider(web3Provider.eth!.currentProvider as ExternalProvider, ETHER_NETWORK_ID);
+
+          console.log(ethWallet);
+
+          const syncProvider = await walletData.syncProvider.get();
+          if (!syncProvider) {
+            throw new Error("Connection to L2 SyncProvider failed");
+          }
+
+          console.log("Provider", syncProvider);
+
+          const syncWallet = await Wallet.fromEthSigner(ethWallet.getSigner(walletAccount), syncProvider);
+
+          console.log("newSyncWallet", syncWallet);
+
+          walletData.set({
+            syncWallet,
+          });
+
+          commit("setLoadingHint", "Follow the instructions in your wallet");
         }
-        commit("setLoadingHint", "Follow the instructions in your wallet");
 
-        console.log("account:", web3Provider.defaultAccount);
-
-        console.log("let's create web3");
-
-        const ethWallet: providers.Web3Provider = new providers.Web3Provider(provider as providers.ExternalProvider, ETHER_NETWORK_ID);
-
-        console.log(ethWallet);
-
-        const syncProvider = await walletData.syncProvider.get();
-        if (!syncProvider) {
-          this.app.$accessor.wallet.logout();
-          return false;
+        /* The user can press Cancel login anytime so we need to check if he did after every long action (request) */
+        if (!walletData.get().syncWallet) {
+          throw new Error("Sync Wallet not found");
         }
 
-        console.log("Provider", syncProvider);
+        this.app.$accessor.provider.setLoadingHint("Getting wallet information...");
 
-        const syncWallet = await Wallet.fromEthSigner(ethWallet.getSigner(), syncProvider);
+        const accountState: AccountState | undefined = await walletData.get().syncWallet!.getAccountState();
 
-        console.log("newSyncWallet", syncWallet);
+        if (accountState === undefined) {
+          throw new Error("Failed to get L2 wallet state");
+        }
+
+        console.log("accountState", accountState);
+
+        commit("setAddress", accountState.address);
 
         walletData.set({
-          syncWallet,
+          accountState,
         });
 
-        commit("setLoadingHint", "Follow the instructions in your wallet");
-        //      this.app.$accessor.provider.
-      }
+        commit("setAuthStage", "authorized");
 
-      /* The user can press Cancel login anytime so we need to check if he did after every long action (request) */
-      if (!walletData.get().syncWallet) {
+        console.log("login hint sent");
+
+        await this.app.$accessor.wallet.preloadWallet();
+
+        console.log(getters.loggedIn);
+
+        if (!getters.loggedIn) {
+          throw new Error("Account disconnected");
+        }
+        await this.$router.push("/account");
+        return true;
+      } catch (error) {
+        console.warn(error);
         this.app.$accessor.wallet.logout();
         return false;
       }
-
-      this.app.$accessor.provider.setLoadingHint("Getting wallet information...");
-
-      const accountState: AccountState | undefined = await walletData.get().syncWallet?.getAccountState();
-
-      console.log("accountState", accountState);
-
-      commit("setAddress", accountState?.address);
-
-      walletData.set({
-        accountState,
-      });
-
-      console.log("newSyncWallet", accountState);
-
-      commit("setAuthStage", "authorized");
-
-      console.log("login hint sent");
-
-      await this.app.$accessor.wallet.preloadWallet();
-
-      console.log(getters.loggedIn);
-
-      if (!getters.loggedIn) {
-        this.app.$accessor.wallet.logout();
-        return false;
-      }
-      await this.$router.push("/account");
-      return true;
     },
 
     onEventAddress({ getters }, address: string): void {
@@ -343,7 +371,16 @@ export const actions = actionTree(
         console.log("wallet: ", wallet);
 
         try {
-          this.app.$accessor.provider.__internalLogin(wallet.provider);
+          const web3Provider: Web3 = new Web3(wallet.provider);
+          this.app.$accessor.provider.__internalLogin(web3Provider).then(
+            (value) => {
+              console.log(value);
+            },
+            (error) => {
+              console.warn(error);
+              this.app.$accessor.wallet.logout();
+            },
+          );
         } catch (error) {
           this.app.$accessor.wallet.logout();
         }
@@ -355,8 +392,8 @@ export const actions = actionTree(
         this.app.$toast.global?.zkException({
           message: "ETH Network change spotted",
         });
-
-        this.app.$accessor.provider
+        console.log("before wallet check", state);
+        this.app.$accessor.provider.onboard
           .walletCheck()
           .then((checkState: boolean) => {
             if (checkState) {
