@@ -5,8 +5,7 @@
       <span v-else>Can't find a token</span>
     </template>
     <p>
-      An NFT can only be transferred / withdrawn after the block with it's mint transaction is verified. This means the newly minted NFT may have to wait a few hours before it can
-      be transferred.
+      An NFT can only be transferred/withdrawn after the block with its mint transaction is verified. This means the newly minted NFT may need to wait a few hours before it can
     </p>
   </i-modal>
 </template>

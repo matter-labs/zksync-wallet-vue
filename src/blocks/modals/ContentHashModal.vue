@@ -4,8 +4,7 @@
     <p>
       A content hash is a cryptographic hash of raw content. Different systems have different ways of turning this hash (called a digest) into an identifier that their system uses
       to locate content. The most popular decentralized data storage services are IPFS and Arweave.
-      <br /><br />No experience with content hashes? Use <a href="https://ipfs.io/#install" target="_blank">IPFS tools</a>! After uploading your content and getting the content
-      hash, zkSync Wallet will automagically mint an NFT to your zkSync account.
+      <br /><br />No experience with content hashes? Use <a href="https://ipfs.io/#install" target="_blank">IPFS tools</a>
     </p>
   </i-modal>
 </template>

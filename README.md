@@ -25,7 +25,7 @@ zkWallet was created to unleash the power of zkSync L2 operations and give every
      * **mainnet** → [zksync-vue-mainnet](https://wallet.zksync.io)
      * **prod-rinkeby** → [zksync-vue-rinkeby-2](https://rinkeby.zksync.io)
   2) Beta version (w/t partial NFT-support & upcoming NFT+Swap support)
-     * **rinkeby-beta** → [beta-rinkeby-zksync-vue](https://wallet-rinkeby-beta.zksync.dev)
+     * **rinkeby-beta** → [beta-rinkeby-zksync-vue](https://rinkeby-beta-wallet.zksync.dev/)
      * **prod-ropsten** → [zksync-vue-ropsten](https://ropsten.zksync.io)
   3) Dev-only hosts: 
      * **stage-mainnet** → [zksync-vue](https://stage.zksync.io)
