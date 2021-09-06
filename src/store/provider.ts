@@ -87,8 +87,7 @@ export const getters = getterTree(state, {
   address: (state: ProviderModuleState): Address | undefined =>
     state.authStep === "authorized" && state.onboard.getState().address ? (state.onboard.getState().address as Address) : state.address,
   loadingHint: (state: ProviderModuleState): string => state.loadingHint,
-  zkScanUrl: (state: ProviderModuleState): string | undefined =>
-    state.onboard.getState().address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.onboard.getState().address}` : undefined,
+  zkScanUrl: (state: ProviderModuleState): string | undefined => (state.address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.address}` : undefined),
 });
 
 export const actions = actionTree(
