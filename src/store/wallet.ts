@@ -145,7 +145,7 @@ export const actions = actionTree(
       await this.app.$accessor.wallet.requestInitialBalances(true).catch((error: unknown) => {
         this.app.$sentry?.captureException(error);
       });
-      await this.app.$accessor.wallet.requestZkBalances().catch((error: unknown) => {
+      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true }).catch((error: unknown) => {
         this.app.$sentry?.captureException(error);
       });
       await this.app.$accessor.wallet.requestTransactionsHistory({ force: true }).catch((error: unknown) => {
@@ -162,9 +162,10 @@ export const actions = actionTree(
      * @param force
      * @return {Promise<[array]|*>}
      */
-    async requestZkBalances({ state, commit, getters }, force: boolean | undefined = undefined): Promise<{ balances: ZkInBalance[]; nfts: ZkInNFT[] }> {
-      const accountState = walletData.get().accountState;
-
+    async requestZkBalances(
+      { state, commit, getters },
+      { accountState, force = false }: { accountState?: AccountState; force?: boolean },
+    ): Promise<{ balances: ZkInBalance[]; nfts: ZkInNFT[] }> {
       type BalancesList = {
         [token: string]: BigNumberish;
       };
@@ -253,10 +254,12 @@ export const actions = actionTree(
       if (!force && localList.lastUpdated > new Date().getTime() - 60000) {
         return localList.list;
       }
-      const accountState = await walletData.get().syncWallet!.getAccountState();
+      const syncWallet = walletData.get().syncWallet;
+      const accountState = await syncWallet?.getAccountState();
       if (accountState !== undefined) {
         walletData.set({ accountState });
-      } else {
+      }
+      if (!syncWallet || !accountState) {
         return localList.list;
       }
       const loadedTokens = await this.app.$accessor.tokens.loadTokensAndBalances();
@@ -265,7 +268,7 @@ export const actions = actionTree(
         const currentToken = loadedTokens.tokens[key];
         let balance;
         try {
-          balance = await walletData.get().syncWallet!.getEthereumBalance(key.toLocaleString());
+          balance = await syncWallet.getEthereumBalance(key.toLocaleString());
         } catch (error) {
           console.log(`Can't get L1 balance of ${key.toLocaleString()}`, error);
           balance = BigNumber.from(0);
@@ -456,7 +459,7 @@ export const actions = actionTree(
      * @return {Promise<ZKTypeDisplayToken[]>}
      */
     async displayZkBalances({ state }, _filter = ""): Promise<ZKTypeDisplayToken[]> {
-      await this.app.$accessor.wallet.requestZkBalances();
+      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
       const returnTokens: ZKTypeDisplayBalances = {};
       state.zkTokens.list.forEach((token: ZKTypeDisplayToken): void => {
         returnTokens[token.symbol] = {
@@ -487,7 +490,7 @@ export const actions = actionTree(
      */
     async preloadWallet({ state }): Promise<void> {
       await this.app.$accessor.tokens.loadTokensAndBalances();
-      await this.app.$accessor.wallet.requestZkBalances();
+      await this.app.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
 
       await this.app.$accessor.wallet.checkLockedState();
       this.app.$accessor.contacts.getContactsFromStorage();

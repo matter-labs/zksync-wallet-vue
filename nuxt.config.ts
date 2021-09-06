@@ -1,9 +1,9 @@
 // noinspection ES6PreferShortImport
 
 import { NuxtConfig } from "@nuxt/types";
-import { Configuration } from "webpack";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
+import { Configuration } from "webpack";
 
 import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
 
@@ -287,14 +287,14 @@ const config: NuxtConfig = {
     },
   },
 
-  //  buildOptimisations: {
-  //    profile: env !== "prod" ? "risky" : "experimental",
-  //    features: {
-  //      postcssNoPolyfills: isProduction,
-  //      hardSourcePlugin: isProduction,
-  //    },
-  //    esbuildLoaderOptions: "esnext",
-  //  },
+  buildOptimisations: {
+    profile: env !== "prod" ? "risky" : "experimental",
+    features: {
+      postcssNoPolyfills: isProduction,
+      hardSourcePlugin: isProduction,
+    },
+    esbuildLoaderOptions: "esnext",
+  },
   googleFonts: {
     prefetch: true,
     preconnect: true,

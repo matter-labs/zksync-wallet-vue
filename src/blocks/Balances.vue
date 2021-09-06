@@ -92,7 +92,7 @@
 </template>
 <script lang="ts">
 import utils from "@/plugins/utils";
-import { ZkInBalance, ZkInDeposits, ZKInDepositTx, ZKDisplayToken, ZkInNFT } from "@/types/lib";
+import { ZkInBalance, ZkInDeposits, ZKInDepositTx, ZKDisplayToken } from "@/types/lib";
 import { BigNumber } from "ethers";
 import Vue from "vue";
 import { TokenSymbol } from "zksync/build/types";
@@ -178,7 +178,7 @@ export default Vue.extend({
       if (this.displayedList.length === 0 && !this.initialised) {
         this.loading = true;
       }
-      await this.$accessor.wallet.requestZkBalances();
+      await this.$accessor.wallet.requestZkBalances({ force: true });
       this.loading = false;
       this.initialised = true;
     },
