@@ -1,6 +1,57 @@
 # Changelog
 
-## [2.5.0](https://github.com/matter-labs/zksync-wallet-vue/compare/v2.4.1...2.5.0) 
+All notable changes to this project will be documented in this file. Dates are displayed in UTC.
+
+## [2.6.1](https://github.com/matter-labs/zksync-wallet-vue/compare/2.6.0...2.6.1)
+> 7 September 2021
+### PR's includes
+
+- hotfix(CI): fixed channel for the firebase [`#121`](https://github.com/matter-labs/zksync-wallet-vue/pull/121)
+- 2.6.0: Improved onboard (login) and added up to 10 new providers [`#119`](https://github.com/matter-labs/zksync-wallet-vue/pull/119)
+- Hardware wallets reconfigured (trezor / ledger)
+- Cancel handler added to prevent ```isChecking authStep``` to hang
+- Release prepared
+
+## [2.6.0](https://github.com/matter-labs/zksync-wallet-vue/compare/2.5.0...2.6.0)
+> 6 September 2021
+
+### PR's includes
+
+- feature(onboard): Onboarding re-assembled: procedure is split onto onboard.js & native wallet connect
+— merged with the beta branch (CI & Deployment)
+— fee fixes — tsconfig fixes — data-cy attributes merged — env isProduction handled differently — nuxt-build-optimization re-included
+- transpiled lib `@inkline/inkline`
+- Fix explorer link format #ZKF-923 [`#117`](https://github.com/matter-labs/zksync-wallet-vue/pull/117)
+- minor UI fixes, CI updates, CPK-fixes & more minor things [`#114`](https://github.com/matter-labs/zksync-wallet-vue/pull/114)
+- fill-available rule fixed (scss);
+- Optimized icons list
+- refactored Web3 connection login procedure
+- force balance update fix
+- Assured the error is cleared when approval operation is started (while approving the allowance)
+- Logic: synced all processes during the onboard (sync & async accordingly)
+- Updated onboard config; — added Web3.js as a universal wrapper (supporting bigger number of the providers); 
+- Packages update:
+  - updated implementation that effects as a closed #ZKF-946 task
+  - ```blockie``` was replaced with new and typed ```blockies-ts```
+  - `@walletconnect/*` switch with v.1.4.0;
+  - `ethers` switched with v.5.0.32;
+- UI: viewport was changed to non-scalable on mobile;
+- Network badge removed from the logginIn block
+- Token acceptance for the fee payment fix
+- Refactored token search & isRestricted methods in the ```wallet-provider```
+- UI: Dropdown fixes
+- Global directive added `v-click-outside`
+- loader.vue renamed as wrong named component
+- styleint rule `font-weight-notation` ignored
+- static/sw.js ignored from eslint
+- **BREAKING CHANGE:** Multiple extra processing added, event handling changed, account methods changed
+
+- Closes ZKF-870 Closes ZKF-864 Closes ZKF-866 Closes ZKF-869 Closes ZKF-676 Closes ZKF-691 Closes ZKF-685 Closes ZKF-602 Closes ZKF-589 Closes ZKF-553 Closes ZKF-865 Closes 
+  ZKF-914 Closes ZKF-891 (and all subtasks) Closes ZKF-933 Closes ZKF-914 Closes ZKF-954 Closes ZKF-958 Closes ZKF-959, Closes ZKF-952, Closes ZKF-953, Closes ZKF-956 Closes
+  ZKF-953, Closes ZKF-946
+
+## [2.5.0](https://github.com/matter-labs/zksync-wallet-vue/compare/v2.4.1...2.5.0)
+
 > 20 August 2021
 
 ### PR's included
@@ -10,9 +61,11 @@
 - Make onboard buttons use same style [`#106`](https://github.com/matter-labs/zksync-wallet-vue/pull/106)
 - add call of wallet.yml from matter-labs/zksync-test-ui [`#89`](https://github.com/matter-labs/zksync-wallet-vue/pull/89)
 - Nuxt config cache policy [`#105`](https://github.com/matter-labs/zksync-wallet-vue/pull/105)
-- Data-cy added across the UI as a requirement of the [**zkSync QA automation**]( https://githyb.com/matter-labs/zksync-test-ui) [`#108`](https://github.com/matter-labs/zksync-wallet-vue/pull/108)
+- Data-cy added across the UI as a requirement of the [**zkSync QA
+  automation**]( https://githyb.com/matter-labs/zksync-test-ui) [`#108`](https://github.com/matter-labs/zksync-wallet-vue/pull/108)
 - Fix logged in logo disappearing [`#107`](https://github.com/matter-labs/zksync-wallet-vue/pull/107)
-- Update Onboard [`#101`](https://github.com/matter-labs/zksync-wallet-vue/pull/101),  [`#102`](https://github.com/matter-labs/zksync-wallet-vue/pull/102) &  [`#98`](https://github.com/matter-labs/zksync-wallet-vue/pull/98)
+- Update Onboard [`#101`](https://github.com/matter-labs/zksync-wallet-vue/pull/101),  [`#102`](https://github.com/matter-labs/zksync-wallet-vue/pull/102)
+  &  [`#98`](https://github.com/matter-labs/zksync-wallet-vue/pull/98)
 - Fee recalculation [`#96`](https://github.com/matter-labs/zksync-wallet-vue/pull/96)
 - Fee and transactions fixes [`#87`](https://github.com/matter-labs/zksync-wallet-vue/pull/87)
 - Dev [`#94`](https://github.com/matter-labs/zksync-wallet-vue/pull/94)
@@ -45,27 +98,24 @@
 
 ### Commits
 
-- ci(Firebase): CI flows fully updated, deps upgraded, lint reconfigured [`4213351`](https://github.com/matter-labs/zksync-wallet-vue/commit/4213351139b81deaa40285e3eacee998cf618fdb)
+- ci(Firebase): CI flows fully updated, deps upgraded, lint
+  reconfigured [`4213351`](https://github.com/matter-labs/zksync-wallet-vue/commit/4213351139b81deaa40285e3eacee998cf618fdb)
 - Balances and UI fix [`4761b19`](https://github.com/matter-labs/zksync-wallet-vue/commit/4761b1995f306a9d43ae3e9fd43709b6d45ec2ab)
 - More UI fixes [`c570014`](https://github.com/matter-labs/zksync-wallet-vue/commit/c570014ac318dd628a7902cfca57d9c16c1d1f2e)
 
 ## [2.4.0-prerelease](https://github.com/matter-labs/zksync-wallet-vue/compare/2.4.0-alpha...2.4.0-prerelease)
+> 2021-05-25
 
- > 2021-05-25
 
-## [2.4.0-alpha](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.5...2.4.0-alpha)
-
- > 2021-05-25
-
-### Commits
-
-- refactor(SCSS): unification and dedupe for the styles + icons adoption [`3c83b49`](https://github.com/matter-labs/zksync-wallet-vue/commit/3c83b49020187749a7874102aa42aa7f7b937450)
+- inc. alpha-version [**2.4.0-alpha**](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.5...2.4.0-alpha)
+- refactor(SCSS): unification and dedupe for the styles + icons
+  adoption [`3c83b49`](https://github.com/matter-labs/zksync-wallet-vue/commit/3c83b49020187749a7874102aa42aa7f7b937450)
 - optimization(performance) [`5358afe`](https://github.com/matter-labs/zksync-wallet-vue/commit/5358afe5f7d0b4386819618ced7ceda3057e50ea)
 - refactor(Merging): done [`e81e45a`](https://github.com/matter-labs/zksync-wallet-vue/commit/e81e45ae820a75d0be26bd7bfff77c0edd6aade8)
 
 ## [2.3.5](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.4...2.3.5)
 
- > 2021-05-20
+> 2021-05-20
 
 ### Merged
 
@@ -79,7 +129,7 @@
 
 ## [2.3.4](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.3...2.3.4)
 
- > 2021-05-06
+> 2021-05-06
 
 ### Merged
 
@@ -90,11 +140,12 @@
 
 - feature(Interface): huge update/refactoring of the UI/UX [`44ad942`](https://github.com/matter-labs/zksync-wallet-vue/commit/44ad9425f7ce6e0ed4555a0fd6f304d89ac212d0)
 - Huge loading optimization and fixes [`1629662`](https://github.com/matter-labs/zksync-wallet-vue/commit/16296620a284dd57472ea7f599bd1900f79960ba)
-- refactor(Stylelint): Config of stylint moved from package.json to .stylelintrc [`cb443fb`](https://github.com/matter-labs/zksync-wallet-vue/commit/cb443fb20728cd996aceff0567f4445674790f64)
+- refactor(Stylelint): Config of stylint moved from package.json to
+  .stylelintrc [`cb443fb`](https://github.com/matter-labs/zksync-wallet-vue/commit/cb443fb20728cd996aceff0567f4445674790f64)
 
 ## [2.3.3](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.2...2.3.3)
 
- > 2021-04-26
+> 2021-04-26
 
 ### Merged
 
@@ -108,7 +159,7 @@
 
 ## [2.3.2](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.1...2.3.2)
 
- > 2021-04-26
+> 2021-04-26
 
 ### Commits
 
@@ -118,17 +169,18 @@
 
 ## [2.3.1](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.0...2.3.1)
 
- > 2021-04-26
+> 2021-04-26
 
 ### Commits
 
-- style(UI): zkWallet Logo replaced w/t zkSync, zkSync ecosystem in footer hidden [`08cbe38`](https://github.com/matter-labs/zksync-wallet-vue/commit/08cbe38c4082050c6d65713f14bdc813d3ecc644)
+- style(UI): zkWallet Logo replaced w/t zkSync, zkSync ecosystem in footer
+  hidden [`08cbe38`](https://github.com/matter-labs/zksync-wallet-vue/commit/08cbe38c4082050c6d65713f14bdc813d3ecc644)
 - build(OGG tags): zkWallet ogg-tags changed [`806acc2`](https://github.com/matter-labs/zksync-wallet-vue/commit/806acc28c0ea934663ba3a05e2e29a586b679229)
 - build(Version bump): Version bumped up to 2.3.1 [`3de523a`](https://github.com/matter-labs/zksync-wallet-vue/commit/3de523a4e7282cef19bb9c2ad9c27a0d43dde37a)
 
 ## [2.3.0](https://github.com/matter-labs/zksync-wallet-vue/compare/2.1.0...2.3.0)
 
- > 2021-04-20
+> 2021-04-20
 
 ### Merged
 
@@ -155,7 +207,7 @@
 - HTTP -&gt; WS provider [`#29`](https://github.com/matter-labs/zksync-wallet-vue/pull/29)
 - Dev [`#28`](https://github.com/matter-labs/zksync-wallet-vue/pull/28)
 - Add packing error [`#27`](https://github.com/matter-labs/zksync-wallet-vue/pull/27)
-- Introduce `digitsError` and plans for future  refactoring [`#26`](https://github.com/matter-labs/zksync-wallet-vue/pull/26)
+- Introduce `digitsError` and plans for future refactoring [`#26`](https://github.com/matter-labs/zksync-wallet-vue/pull/26)
 - Fix some bugs [`#25`](https://github.com/matter-labs/zksync-wallet-vue/pull/25)
 - update: balance sorting & amount validation [`#24`](https://github.com/matter-labs/zksync-wallet-vue/pull/24)
 - huge fix: custom text in onboard-js changeable, changed the way of handling big number across the dapp [`#23`](https://github.com/matter-labs/zksync-wallet-vue/pull/23)
@@ -172,11 +224,11 @@
 
 ## [2.1.0](https://github.com/matter-labs/zksync-wallet-vue/compare/2.1.0-beta2...2.1.0)
 
- > 2021-01-07
+> 2021-01-07
 
 ## [2.1.0-beta2](https://github.com/matter-labs/zksync-wallet-vue/compare/2.1.0-beta...2.1.0-beta2)
 
- > 2021-02-26
+> 2021-02-26
 
 ### Merged
 
@@ -191,7 +243,7 @@
 
 ## [2.1.0-beta](https://github.com/matter-labs/zksync-wallet-vue/compare/2.0.4...2.1.0-beta)
 
- > 2021-02-25
+> 2021-02-25
 
 ### Merged
 
@@ -205,7 +257,7 @@
 
 ## [2.0.4](https://github.com/matter-labs/zksync-wallet-vue/compare/2.0.3...2.0.4)
 
- > 2021-02-11
+> 2021-02-11
 
 ### Merged
 
@@ -220,7 +272,7 @@
 - HTTP -&gt; WS provider [`#29`](https://github.com/matter-labs/zksync-wallet-vue/pull/29)
 - Dev [`#28`](https://github.com/matter-labs/zksync-wallet-vue/pull/28)
 - Add packing error [`#27`](https://github.com/matter-labs/zksync-wallet-vue/pull/27)
-- Introduce `digitsError` and plans for future  refactoring [`#26`](https://github.com/matter-labs/zksync-wallet-vue/pull/26)
+- Introduce `digitsError` and plans for future refactoring [`#26`](https://github.com/matter-labs/zksync-wallet-vue/pull/26)
 - Fix some bugs [`#25`](https://github.com/matter-labs/zksync-wallet-vue/pull/25)
 - update: balance sorting & amount validation [`#24`](https://github.com/matter-labs/zksync-wallet-vue/pull/24)
 - huge fix: custom text in onboard-js changeable, changed the way of handling big number across the dapp [`#23`](https://github.com/matter-labs/zksync-wallet-vue/pull/23)
@@ -233,11 +285,11 @@
 
 ## [2.0.3](https://github.com/matter-labs/zksync-wallet-vue/compare/2.0.0-beta6...2.0.3)
 
- > 2021-01-06
+> 2021-01-06
 
 ### Merged
 
-- Fixes made for the withdrawal, wallet connect dark mode and  minor changes [`#22`](https://github.com/matter-labs/zksync-wallet-vue/pull/22)
+- Fixes made for the withdrawal, wallet connect dark mode and minor changes [`#22`](https://github.com/matter-labs/zksync-wallet-vue/pull/22)
 - Dev [`#21`](https://github.com/matter-labs/zksync-wallet-vue/pull/21)
 - hotfix: footer fix for logged-in-state [`#20`](https://github.com/matter-labs/zksync-wallet-vue/pull/20)
 - update: multiple updates [`#18`](https://github.com/matter-labs/zksync-wallet-vue/pull/18)
@@ -268,7 +320,7 @@
 
 ## [2.0.0-beta6](https://github.com/matter-labs/zksync-wallet-vue/compare/2.0.0-beta1...2.0.0-beta6)
 
- > 2020-12-25
+> 2020-12-25
 
 ### Merged
 
@@ -301,17 +353,19 @@
 
 ## [2.0.0-beta1](https://github.com/matter-labs/zksync-wallet-vue/compare/1.6.0...2.0.0-beta1)
 
- > 2020-12-24
+> 2020-12-24
 
 ### Commits
 
-- * First VERY raw release of the zkWallet, well known as a dAPP of the zkSync. [`31934f6`](https://github.com/matter-labs/zksync-wallet-vue/commit/31934f60875af1f106bbbf6238788bbf7b427ebf)
+-
+  * First VERY raw release of the zkWallet, well known as a dAPP of the
+    zkSync. [`31934f6`](https://github.com/matter-labs/zksync-wallet-vue/commit/31934f60875af1f106bbbf6238788bbf7b427ebf)
 - update: huge pack of updates (from 03.12) [`3f8bf0c`](https://github.com/matter-labs/zksync-wallet-vue/commit/3f8bf0cbeced31ad7a51b1bbf443b7e065617928)
 - Update: massive update [`6cb6f2d`](https://github.com/matter-labs/zksync-wallet-vue/commit/6cb6f2d7d785c079e584a587454a914b94841d5f)
 
 ## [1.6.0](https://github.com/matter-labs/zksync-wallet-vue/compare/1.5.4...1.6.0)
 
- > 2020-12-18
+> 2020-12-18
 
 ### Merged
 
@@ -339,7 +393,7 @@
 
 ## 1.5.4
 
- > 2020-12-07
+> 2020-12-07
 
 ### Merged
 
