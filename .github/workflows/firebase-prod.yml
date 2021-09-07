@@ -22,6 +22,7 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
           target: mainnet
           projectId: zksync-vue-mainnet
+          channelID: live
 
       - name: "Build ropsten [prod]"
         run: yarn run ci:build:ropsten
@@ -31,6 +32,7 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: prod-ropsten
           projectId: zksync-vue
+          channelID: live
 
       - name: "Build rinkeby [prod]"
         run: yarn run ci:build:rinkeby
@@ -40,3 +42,4 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: prod-rinkeby
           projectId: zksync-vue
+          channelID: live
