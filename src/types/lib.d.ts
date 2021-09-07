@@ -1,4 +1,4 @@
-import { API } from "@matterlabs/zk-wallet-onboarding/dist/src/interfaces";
+import { API } from "bnc-onboard/dist/src/interfaces";
 import { BigNumber, BigNumberish, ContractTransaction } from "ethers";
 import { Route } from "vue-router/types";
 import { Provider } from "zksync";
@@ -18,7 +18,6 @@ import {
   TransactionReceipt,
 } from "zksync/build/types";
 import { ETHOperation, Transaction, Wallet, ZKSyncTxError } from "zksync/build/wallet";
-import { accessorType } from "~/store";
 
 export interface ZkInFeesInterface {
   [symbol: string]: {
@@ -32,9 +31,6 @@ export interface ZkInFeesInterface {
     };
   };
 }
-
-export declare type ZKTypeFeeOption = "fast" | "normal";
-
 export declare type ZKTypeOperations =
   | "Deposit"
   | "Withdraw"
@@ -299,7 +295,6 @@ export declare interface ZkInWithdrawParams {
   amount: GweiBalance;
   fastWithdraw: boolean;
   fees: GweiBalance;
-  store: typeof accessorType;
 }
 
 export declare interface ZkInSyncTransfer {

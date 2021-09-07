@@ -5,12 +5,12 @@ name: "Deploy testnets"
 "on":
   push:
     branches:
-      - master
+      - dev
   workflow_dispatch:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    environment: prod
+    environment: test
     steps:
       - uses: actions/checkout@v2
       - run: bash cli-dev.sh ci

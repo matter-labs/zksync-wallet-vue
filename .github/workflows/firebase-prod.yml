@@ -22,4 +22,21 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
           target: mainnet
           projectId: zksync-vue-mainnet
-          channelID: live
+
+      - name: "Build ropsten [prod]"
+        run: yarn run ci:build:ropsten
+      - uses: matter-labs/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+          target: prod-ropsten
+          projectId: zksync-vue
+
+      - name: "Build rinkeby [prod]"
+        run: yarn run ci:build:rinkeby
+      - uses: matter-labs/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+          target: prod-rinkeby
+          projectId: zksync-vue

@@ -49,7 +49,7 @@ export const walletData: iWalletWrapper = {
     },
     async get() {
       if (!internalWalletData.syncProvider || typeof providerPromise === "undefined") {
-        walletData.syncProvider.load();
+        await walletData.syncProvider.load();
       }
       return await providerPromise;
     },

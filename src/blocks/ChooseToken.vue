@@ -120,7 +120,7 @@ export default Vue.extend({
     async getTokenList(force = false): Promise<void> {
       this.spinnerLoading = true;
       if (this.tokensType === "L2" || this.tokensType === "NFT") {
-        await this.$accessor.wallet.requestZkBalances({ accountState: undefined, force });
+        await this.$accessor.wallet.requestZkBalances({ force: true });
       } else {
         await this.$accessor.wallet.requestInitialBalances(force);
       }

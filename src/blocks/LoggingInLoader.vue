@@ -30,22 +30,22 @@ export default Vue.extend({
   },
   computed: {
     loggedIn() {
-      return this.$accessor.account.loggedIn;
+      return this.$accessor.provider.loggedIn;
     },
     loggingIn() {
-      return this.$accessor.account.loader;
+      return this.$accessor.provider.loader;
     },
     hintText(): string {
-      if (this.$accessor.account.loadingHint === "followInstructions") {
+      if (this.$accessor.provider.loadingHint === "followInstructions") {
         return "Follow the instructions in your wallet";
       }
-      if (this.$accessor.account.loadingHint === "loadingData") {
+      if (this.$accessor.provider.loadingHint === "loadingData") {
         return "Getting wallet information";
       }
-      return this.$accessor.account.loadingHint;
+      return this.$accessor.provider.loadingHint;
     },
     selectedWallet() {
-      return this.$accessor.account.selectedWallet;
+      return this.$accessor.provider.selectedWallet;
     },
   },
   watch: {
@@ -62,9 +62,11 @@ export default Vue.extend({
   methods: {
     cancelLogin(): void {
       this.$accessor.wallet.logout();
-      this.$router.push("/");
       this.loggedInAnimation = false;
       clearTimeout(loggedInAnimationTimeout);
+      if (this.$route.path !== "/") {
+        this.$router.push("/");
+      }
     },
   },
 });

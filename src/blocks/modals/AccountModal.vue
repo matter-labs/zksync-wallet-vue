@@ -41,18 +41,18 @@ export default Vue.extend({
   data() {
     return {
       renameWalletModal: false,
-      walletName: this.$accessor.account.name,
+      walletName: this.$accessor.provider.name,
     };
   },
   computed: {
     accountName(): string {
-      return this.$accessor.account.name as string;
+      return this.$accessor.provider.name as string;
     },
     accountAddress(): string {
-      return this.$accessor.account.address ?? "";
+      return this.$accessor.provider.address ?? "";
     },
     accountZkScanUrl(): string {
-      return this.$accessor.account.zkScanUrl as string;
+      return this.$accessor.provider.zkScanUrl as string;
     },
     accountModal: {
       get(): boolean {
@@ -86,9 +86,8 @@ export default Vue.extend({
   methods: {
     logout(): void {
       this.accountModal = false;
-      this.$nextTick(async () => {
-        await this.$accessor.wallet.logout();
-        await this.$router.push("/");
+      this.$nextTick(() => {
+        this.$accessor.wallet.logout();
       });
     },
     renameWalletOpen(): void {
@@ -96,7 +95,7 @@ export default Vue.extend({
       this.renameWalletModal = true;
     },
     renameWallet(): void {
-      this.$accessor.account.setName(this.walletName);
+      this.$accessor.provider.setName(this.walletName);
       this.renameWalletModal = false;
       this.walletName = this.accountName;
     },

@@ -54,7 +54,7 @@
 
       <div class="_padding-top-1 inputLabel _display-flex _align-items-center">
         <div>Content Hash</div>
-        <div class="icon-container _display-flex" @click="$accessor.openModal('ContentHash')">
+        <div class="icon-container _display-flex" @click="openContentHashModal">
           <v-icon name="ri-question-mark" class="iconInfo" scale="0.9" />
         </div>
       </div>
@@ -89,7 +89,9 @@
           </span>
         </span>
       </div>
-      <span class="linkText _width-100 _display-block _text-center _margin-top-05" @click="chooseFeeTokenModal = true" data-cy="fee_block_change_fee_token_button">Change fee token</span>
+      <span class="linkText _width-100 _display-block _text-center _margin-top-05" data-cy="fee_block_change_fee_token_button" @click="chooseFeeTokenModal = true"
+        >Change fee token</span
+      >
     </div>
   </div>
 </template>
@@ -119,8 +121,7 @@ export default Vue.extend({
   },
   asyncData({ from, app }: Context.Context): { fromRoute: Route } {
     if (from) {
-      // @ts-ignore
-      app.$accessor.setPreviousRoute({ path: from.path, query: from.query, params: from.params });
+      app.$accessor.setPreviousRoute({ path: from.path, query: from.query, params: from.params } as Route);
     }
     return {
       fromRoute: from,
@@ -149,10 +150,10 @@ export default Vue.extend({
       },
 
       /* Main Block */
-      inputtedAddress: <Address>this.$accessor.account.address!,
+      inputtedAddress: <Address>this.$accessor.provider.address!,
       chosenContact: <ZkInContact | false>false,
       inputtedHash: <Hash>"",
-      fee: <GweiBalance | false>false,
+      fee: <GweiBalance | string>"",
       chosenFeeToken: <ZkInBalance | false>false,
       feeChangedModal: {
         opened: false,
@@ -220,7 +221,7 @@ export default Vue.extend({
     try {
       if (!this.ownAccountUnlocked) {
         try {
-          getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
+          getCPKTx(this.$accessor.provider.address!); /* will throw an error if no cpk tx found */
         } catch (error) {
           const accountID = await walletData.get().syncWallet!.getAccountId();
           if (typeof accountID === "number") {
@@ -352,14 +353,14 @@ export default Vue.extend({
       this.tip = "Waiting for the transaction to be mined...";
       const receipt = await transferTransactions.transaction!.awaitReceipt();
       this.transactionInfo.success = !!receipt.success;
-      this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+      await this.$accessor.wallet.requestZkBalances({ force: true });
       if (receipt.failReason) {
         throw new Error(receipt.failReason);
       }
     },
     async requestFees(force?: boolean): Promise<void> {
       if (!this.chosenFeeToken || !this.inputtedAddress || this.chosenFeeToken?.restricted) {
-        this.fee = false;
+        this.fee = "";
         return;
       }
       this.feesLoading = true;
@@ -416,7 +417,7 @@ export default Vue.extend({
         }
       });
       this.chosenFeeToken = false;
-      this.fee = false;
+      this.fee = "";
       this.activateAccountFee = undefined;
     },
     checkUnlock(transferTransactions: { cpkTransaction: Transaction | null; transaction: Transaction | null; feeTransaction: Transaction | null }): void {
@@ -425,9 +426,12 @@ export default Vue.extend({
         transferTransactions.cpkTransaction.awaitReceipt().then(async () => {
           const newAccountState = await walletData.get().syncWallet!.getAccountState();
           walletData.set({ accountState: newAccountState });
-          this.$accessor.wallet.checkLockedState();
+          await this.$accessor.wallet.checkLockedState();
         });
       }
+    },
+    openContentHashModal() {
+      return this.$accessor.openModal("ContentHash");
     },
   },
 });

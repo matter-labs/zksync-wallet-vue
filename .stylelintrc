@@ -14,7 +14,7 @@
     "declaration-block-semicolon-newline-after": "always",
     "declaration-block-trailing-semicolon": false,
     "font-family-name-quotes": "always-where-recommended",
-    "font-weight-notation": "numeric",
+    "font-weight-notation": null,
     "function-url-quotes": "always",
     "indentation": [
       2,

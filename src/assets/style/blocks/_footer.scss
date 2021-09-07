@@ -23,7 +23,7 @@ footer.layout-footer {
   @media screen and (max-width: $mobile) {
     position: fixed;
     bottom: 0;
-    height: 4.5rem;
+    height: auto;
     width: 100%;
     margin-bottom: 0.5rem;
 
@@ -44,7 +44,7 @@ footer.layout-footer {
 
     & > div {
       @media (max-width: $mobile) {
-        flex-direction: column-reverse !important;
+        flex-direction: column-reverse;
       }
     }
   }
