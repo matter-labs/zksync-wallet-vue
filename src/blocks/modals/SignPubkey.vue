@@ -70,7 +70,6 @@ export default Vue.extend({
         this.step = "loading";
         const syncWallet = walletData.get().syncWallet!;
         const nonce = await syncWallet.getNonce("committed");
-        console.log("syncWallet.ethSignerType?.verificationMethod", syncWallet.ethSignerType?.verificationMethod);
         if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
           const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
           if (!isOnchainAuthSigningKeySet) {
@@ -101,7 +100,7 @@ export default Vue.extend({
         this.success = true;
         this.close();
       } catch (error) {
-        console.log("signActivation error", error);
+        console.warn("signActivation error", error);
         this.error = zkUtils.filterError(error) || "Signing error";
       }
       this.loading = false;

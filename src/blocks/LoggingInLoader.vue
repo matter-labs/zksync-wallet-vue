@@ -25,14 +25,18 @@ export default Vue.extend({
   },
   data() {
     return {
+      eventSet: false,
       loggedInAnimation: false,
     };
   },
   computed: {
-    loggedIn() {
+    isChecking(): boolean {
+      return this.$accessor.provider.authStep === "isChecking";
+    },
+    loggedIn(): boolean {
       return this.$accessor.provider.loggedIn;
     },
-    loggingIn() {
+    loggingIn(): boolean {
       return this.$accessor.provider.loader;
     },
     hintText(): string {
@@ -44,22 +48,43 @@ export default Vue.extend({
       }
       return this.$accessor.provider.loadingHint;
     },
-    selectedWallet() {
+    selectedWallet(): string | undefined {
       return this.$accessor.provider.selectedWallet;
     },
   },
   watch: {
-    loggedIn(val) {
+    loggedIn(val): void {
       clearTimeout(loggedInAnimationTimeout);
       this.loggedInAnimation = val;
       if (val === true) {
         loggedInAnimationTimeout = setTimeout(() => {
           this.loggedInAnimation = false;
+          this.removeEventListener();
         }, 550);
+      }
+    },
+    isChecking(val): void {
+      if (this.loggingIn && val === true && !this.eventSet) {
+        document.addEventListener("click", this.isCheckingClickHandler);
+        this.eventSet = true;
       }
     },
   },
   methods: {
+    isCheckingClickHandler(event: Event | undefined) {
+      const targetHtmlElement: Element | null = event!.target as Element | null;
+      if (this.$accessor.provider.authStep === "isChecking" && targetHtmlElement!.tagName.toLowerCase() === "aside" && targetHtmlElement!.classList!.contains("bn-onboard-modal")) {
+        // @todo: improve this check
+        if (confirm("Cancel wallet check?")) {
+          this.$accessor.wallet.logout();
+          this.removeEventListener();
+        }
+      }
+    },
+    removeEventListener() {
+      document.removeEventListener("click", this.isCheckingClickHandler);
+      this.eventSet = false;
+    },
     cancelLogin(): void {
       this.$accessor.wallet.logout();
       this.loggedInAnimation = false;

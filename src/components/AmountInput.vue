@@ -162,7 +162,7 @@ export default Vue.extend({
       try {
         this.inputtedAmount = utils.handleFormatToken(this.token.symbol, this.maxAmount);
       } catch (error) {
-        console.log("Error choose max amount", error);
+        console.warn("Error choose max amount", error);
       }
     },
   },

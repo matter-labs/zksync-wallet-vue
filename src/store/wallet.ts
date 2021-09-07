@@ -270,7 +270,7 @@ export const actions = actionTree(
         try {
           balance = await syncWallet.getEthereumBalance(key.toLocaleString());
         } catch (error) {
-          console.log(`Can't get L1 balance of ${key.toLocaleString()}`, error);
+          console.warn(`Can't get L1 balance of ${key.toLocaleString()}`, error);
           balance = BigNumber.from(0);
         }
         return {
@@ -286,7 +286,7 @@ export const actions = actionTree(
       });
       const balancesResults: (void | ZkInBalance)[] = await Promise.all(loadInitialBalancesPromises).catch((error) => {
         this.app.$sentry?.captureException(error);
-        console.log("balancesResults error", error);
+        console.warn("balancesResults error", error);
         return [];
       });
       const balances = (balancesResults.filter((token) => token && token.rawBalance.gt(0)) as ZkInBalance[]).sort(utils.compareTokensById);
@@ -448,7 +448,7 @@ export const actions = actionTree(
         this.app.$accessor.closeActiveModal();
         commit("clearDataStorage");
       } catch (error) {
-        console.log("ERROR ON DISCONNECTION", error);
+        console.warn("ERROR ON DISCONNECTION", error);
       }
       this.$router!.push("/");
     },

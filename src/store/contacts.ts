@@ -95,7 +95,6 @@ export const actions = actionTree(
       }
     },
     deleteContact({ commit }, address: Address): void {
-      console.log("delete contact", address);
       const contact = this.app.$accessor.contacts.getByAddress(address);
       if (contact) {
         commit("deleteLocal", contact);

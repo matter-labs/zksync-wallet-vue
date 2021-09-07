@@ -534,7 +534,7 @@ export default Vue.extend({
         this.$toast.global.zkException({
           message: error.message,
         });
-        console.log("Get fee error", error);
+        console.warn("Get fee error", error);
         this.handleFeeError();
       }
       this.feesLoading = false;
@@ -605,7 +605,7 @@ export default Vue.extend({
           await this.nftWithdraw();
         }
       } catch (error) {
-        console.log("commitTransaction error", error);
+        console.warn("commitTransaction error", error);
         const errorMsg = utils.filterError(error);
         if (typeof errorMsg === "string") {
           this.error = errorMsg;
@@ -835,7 +835,7 @@ export default Vue.extend({
         this.$toast.global.zkException({
           message: error.message,
         });
-        console.log("Get account activation fee error", error);
+        console.warn("Get account activation fee error", error);
         this.handleFeeError();
       }
       this.activateAccountFeeLoading = false;

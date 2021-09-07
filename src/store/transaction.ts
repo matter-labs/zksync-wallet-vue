@@ -111,7 +111,7 @@ export const actions = actionTree(
         commit("updateTransactionStatus", { hash: transactionHash, status: "Committed" });
         await dispatch("requestBalancesUpdate");
       } catch (error) {
-        console.log("watchTransaction error", error);
+        console.warn("watchTransaction error", error);
       }
       commit("updateTransactionStatus", { hash: transactionHash, status: "Verified" });
     },

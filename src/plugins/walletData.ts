@@ -44,7 +44,7 @@ export const walletData: iWalletWrapper = {
       try {
         internalWalletData.syncProvider = await providerPromise;
       } catch (error) {
-        console.log("Failed to load provider", error);
+        console.warn("Failed to load provider", error);
       }
     },
     async get() {

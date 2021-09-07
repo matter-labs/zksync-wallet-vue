@@ -139,7 +139,6 @@ export const actions = actionTree(
          */
         providerWalletConnect.onConnect((connection: unknown) => {
           commit("setAuthStage", "walletChecked");
-          console.log(connection);
         });
 
         providerWalletConnect.on("session_request", (error: Error, payload: unknown): void => {
@@ -148,14 +147,6 @@ export const actions = actionTree(
           }
           commit("setAuthStage", "isChecking");
           commit("setLoadingHint", "Follow the instructions in your wallet");
-          console.log(payload, "session_request");
-        });
-
-        providerWalletConnect.on("session_update", (error: Error, payload: unknown): void => {
-          if (error) {
-            console.error(error);
-          }
-          console.log("session_update", payload);
         });
 
         providerWalletConnect.on("disconnect", (error: Error, payload: unknown): void => {
@@ -163,7 +154,6 @@ export const actions = actionTree(
             console.error(error);
           }
           this.app.$accessor.wallet.logout();
-          console.log("disconnect", payload);
         });
 
         if (providerWalletConnect.connected || providerWalletConnect.isConnecting) {
@@ -181,7 +171,7 @@ export const actions = actionTree(
         const web3Provider: Web3 = new Web3(providerWalletConnect);
         return await this.app.$accessor.provider.__internalLogin(web3Provider);
       } catch (error) {
-        console.log(error);
+        console.warn(error);
         if ((providerWalletConnect!.isConnecting || providerWalletConnect!.connected) && providerWalletConnect.disconnect) {
           await providerWalletConnect.disconnect();
         }
@@ -217,12 +207,8 @@ export const actions = actionTree(
           if (!accountSelection) {
             throw new Error("Failed to choose the account");
           }
-          //          commit("setAddress", state.onboard.getState().address);
-        } else {
-          //          commit("setAddress", authState.address);
         }
 
-        console.log("authorisation started");
         const incomingProvider = state.onboard.getState().wallet.provider;
 
         if (!incomingProvider) {
@@ -232,7 +218,7 @@ export const actions = actionTree(
         const web3Provider: Web3 = new Web3(incomingProvider);
         return await this.app.$accessor.provider.__internalLogin(web3Provider);
       } catch (error) {
-        console.log(error);
+        console.warn(error);
         this.app.$accessor.wallet.logout();
         return false;
       }
@@ -247,13 +233,10 @@ export const actions = actionTree(
         return;
       }
       try {
-        console.log("internal login called");
-
         /**
          * If no syncWallet or syncProvider fetched (supposed to be called once
          **/
         if (!walletData.get().syncWallet) {
-          console.log("provider:", web3Provider);
           if (!web3Provider.eth!.currentProvider) {
             throw new Error("Web3 Provider has no Eth-network connection unavailable");
           }
@@ -262,44 +245,25 @@ export const actions = actionTree(
           /**
            * Step #2: requesting an access to the accounts
            **/
-
-          console.log(web3Provider.eth);
-
           const fetchedAccounts = await web3Provider.eth.getAccounts();
-          console.log(fetchedAccounts);
           if (!fetchedAccounts) {
             throw new Error("No account found");
           }
 
           const walletAccount = fetchedAccounts.shift();
 
-          console.log("requested accounts", fetchedAccounts, walletAccount);
-
           /**
            * Step #3: request access to the account
            **/
-
-          console.log("fetched accounts: ", fetchedAccounts);
-
           const ethWallet: providers.Web3Provider = new providers.Web3Provider(web3Provider.eth!.currentProvider as ExternalProvider, ETHER_NETWORK_ID);
-
-          console.log(ethWallet);
-
           const syncProvider = await walletData.syncProvider.get();
           if (!syncProvider) {
             throw new Error("Connection to L2 SyncProvider failed");
           }
-
-          console.log("Provider", syncProvider);
-
           const syncWallet = await Wallet.fromEthSigner(ethWallet.getSigner(walletAccount), syncProvider);
-
-          console.log("newSyncWallet", syncWallet);
-
           walletData.set({
             syncWallet,
           });
-
           commit("setLoadingHint", "Follow the instructions in your wallet");
         }
 
@@ -316,7 +280,6 @@ export const actions = actionTree(
           throw new Error("Failed to get L2 wallet state");
         }
 
-        console.log("accountState", accountState);
 
         commit("setAddress", accountState.address);
 
@@ -326,11 +289,7 @@ export const actions = actionTree(
 
         commit("setAuthStage", "authorized");
 
-        console.log("login hint sent");
-
         await this.app.$accessor.wallet.preloadWallet();
-
-        console.log(getters.loggedIn);
 
         if (!getters.loggedIn) {
           throw new Error("Account disconnected");
@@ -356,22 +315,18 @@ export const actions = actionTree(
       }
     },
     onEventWallet({ state, commit }, wallet: OnboardWallet): void {
-      console.log("subscription watcher (wallet): ", wallet);
-      console.log(wallet.provider);
       if (wallet.provider && wallet.name) {
-        console.log(wallet.provider);
         wallet.provider.autoRefreshOnNetworkChange = false;
 
         if (wallet.name) {
           commit("storeSelectedWallet", wallet.name);
         }
-        console.log("wallet: ", wallet);
 
         try {
           const web3Provider: Web3 = new Web3(wallet.provider);
           this.app.$accessor.provider.__internalLogin(web3Provider).then(
             (value) => {
-              console.log(value);
+              // do nothing
             },
             (error) => {
               console.warn(error);
@@ -384,12 +339,10 @@ export const actions = actionTree(
       }
     },
     onEventNetwork({ getters, state }, networkId: number): void {
-      console.log("subscription watcher (network): ", networkId);
       if (getters.loggedIn && networkId !== ETHER_NETWORK_ID && networkId !== undefined) {
         this.app.$toast.global?.zkException({
           message: "ETH Network change spotted",
         });
-        console.log("before wallet check", state);
         this.app.$accessor.provider.onboard
           .walletCheck()
           .then((checkState: boolean) => {
@@ -401,7 +354,7 @@ export const actions = actionTree(
             }
           })
           .catch((reason: unknown) => {
-            console.log(reason);
+            console.warn(reason);
             this.app.$accessor.wallet.logout();
           });
       }

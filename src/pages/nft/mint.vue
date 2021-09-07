@@ -230,7 +230,7 @@ export default Vue.extend({
         }
       }
     } catch (error) {
-      console.log("Mounted error", error);
+      console.warn("Mounted error", error);
       this.$sentry?.captureException(error);
     }
     this.loading = false;
@@ -380,7 +380,7 @@ export default Vue.extend({
         this.$toast.global.zkException({
           message: error.message,
         });
-        console.log("Get fee error", error);
+        console.warn("Get fee error", error);
         this.handleFeeError();
       }
       this.feesLoading = false;
@@ -405,7 +405,7 @@ export default Vue.extend({
         this.$toast.global.zkException({
           message: error.message,
         });
-        console.log("Get account activation fee error", error);
+        console.warn("Get account activation fee error", error);
         this.handleFeeError();
       }
       this.activateAccountFeeLoading = false;

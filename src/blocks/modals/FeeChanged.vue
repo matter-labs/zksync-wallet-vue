@@ -80,9 +80,6 @@ export default Vue.extend({
       required: true,
     } as PropOptions<ZkInFeeChange[]>,
   },
-  mounted() {
-    console.log(this.changedFees);
-  },
   methods: {
     close() {
       this.$emit("input", false);

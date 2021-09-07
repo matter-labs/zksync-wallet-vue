@@ -143,7 +143,7 @@ export const actions = actionTree(
         });
         return tokenPrice || 0;
       } catch (error) {
-        console.log(`Failed to get ${symbol} price at requestZkBalances`, error);
+        console.warn(`Failed to get ${symbol} price at requestZkBalances`, error);
       }
       return 0;
     },

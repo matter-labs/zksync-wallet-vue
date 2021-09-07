@@ -4,11 +4,9 @@ import { Context, Middleware } from "@nuxt/types";
 const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) => {
   if (route.fullPath !== "/") {
     if (!walletData.get().syncWallet || !$accessor.provider.loggedIn) {
-      console.log("Redirect", "/");
       redirect("/");
     }
   } else if (walletData.get().syncWallet && $accessor.provider.loggedIn) {
-    console.log("Redirect", "/account");
     redirect("/account");
   }
 };

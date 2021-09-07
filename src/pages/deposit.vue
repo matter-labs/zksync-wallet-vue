@@ -309,7 +309,7 @@ export default Vue.extend({
       this.loading = false;
       this.error = "";
     } catch (error) {
-      console.log(error);
+      console.warn(error);
       this.loading = false;
     }
   },
@@ -320,7 +320,7 @@ export default Vue.extend({
           throw error;
         });
       } catch (error) {
-        console.log(`Error getting ${token.symbol} price`, error);
+        console.warn(`Error getting ${token.symbol} price`, error);
         this.$accessor.tokens.addRestrictedToken(token.symbol);
       }
       this.loading = true;
