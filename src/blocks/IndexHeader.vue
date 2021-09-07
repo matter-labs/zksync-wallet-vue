@@ -1,5 +1,5 @@
 <template>
-  <i-layout-header ref="indexHeader" class="indexHeader" :class="{ opened: opened }">
+  <i-layout-header ref="indexHeader" v-click-outside="handleClose" class="indexHeader" :class="{ opened: opened }">
     <div class="mobileIndexHeader">
       <i-container class="mobileOnly">
         <i-row class="_display-flex _justify-content-between _flex-nowrap">
@@ -41,11 +41,10 @@
                 size="sm"
                 variation="dark"
                 placement="bottom"
-                trigger="manual"
-                :hide-on-click="true"
+                trigger="click"
                 :class="{ opened: dropdownOpened }"
               >
-                <a class="dropDownHandler linkItem _position-top-0" @click.prevent="processDropdown">
+                <a class="dropDownHandler linkItem _position-top-0" @click.prevent="handleDropdown">
                   zkTools
                   <v-icon v-show="dropdownOpened" class="fal" name="ri-arrow-up-s-line" />
                   <v-icon v-show="!dropdownOpened" class="fal" name="ri-arrow-down-s-line" />
@@ -142,20 +141,24 @@ export default Vue.extend({
     };
   },
   methods: {
-    menuClick() {
+    menuClick(): void {
       if (this.opened) {
         this.dropdownOpened = false;
       }
       this.opened = !this.opened;
     },
-    processDropdown(event: Event) {
-      const elem: HTMLElement | undefined = event.target as HTMLElement | undefined;
+    handleDropdown(event: Event | undefined): boolean {
+      const elem = event!.target as HTMLElement | undefined;
       if (elem!.classList.contains("dropDownHandler")) {
-        event.stopPropagation();
+        event!.stopPropagation();
         this.dropdownOpened = !this.dropdownOpened;
         return false;
       }
       return true;
+    },
+    handleClose(): void {
+      this.dropdownOpened = false;
+      this.opened = false;
     },
   },
 });

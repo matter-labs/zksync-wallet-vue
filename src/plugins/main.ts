@@ -1,5 +1,6 @@
 import utils from "@/plugins/utils";
 import { GweiBalance } from "@/types/lib";
+import IClickOutside from "@inkline/inkline/src/directives/click-outside";
 import { Context, Plugin } from "@nuxt/types";
 import { BigNumber } from "ethers";
 import moment from "moment-timezone";
@@ -17,6 +18,8 @@ const mainPlugin: Plugin = (_ctx: Context): void => {
   Vue.use(VueScrollTo);
 
   Vue.component("VueQrcode", VueQrcode);
+
+  Vue.directive("clickOutside", IClickOutside);
 
   /**
    * Implementation of the tokenFormatter as a global filter
