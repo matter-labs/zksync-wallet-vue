@@ -182,7 +182,7 @@ export const actions = actionTree(
         return await this.app.$accessor.provider.__internalLogin(web3Provider);
       } catch (error) {
         console.log(error);
-        if (providerWalletConnect!.isConnecting || providerWalletConnect!.connected) {
+        if ((providerWalletConnect!.isConnecting || providerWalletConnect!.connected) && providerWalletConnect.disconnect) {
           await providerWalletConnect.disconnect();
         }
         this.app.$accessor.wallet.logout();
@@ -231,10 +231,6 @@ export const actions = actionTree(
         return await this.app.$accessor.provider.__internalLogin(web3Provider);
       } catch (error) {
         console.log(error);
-        if (state.onboard.getState().wallet!.provider!.disconnect) {
-          state.onboard.getState().wallet!.provider!.disconnect();
-        }
-
         this.app.$accessor.wallet.logout();
         return false;
       }
