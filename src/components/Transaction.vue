@@ -313,7 +313,7 @@ export default Vue.extend({
     showTimeEstimationHint(): boolean {
       return ETHER_NETWORK_NAME === "mainnet" && this.chosenToken !== false && this.inputtedAddress !== "" && this.type === "withdraw";
     },
-    chosenFeeObj(): BigNumberish | false {
+    chosenFeeObj(): BigNumberish | string {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
         const selectedFeeTypeAmount: string | BigNumber | ArrayLike<number> | bigint | number | undefined =
           this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal;
@@ -322,7 +322,7 @@ export default Vue.extend({
         }
         return BigNumber.from(selectedFeeTypeAmount);
       }
-      return false;
+      return "";
     },
     transactionTypeName(): string {
       switch (this.type) {
@@ -669,7 +669,7 @@ export default Vue.extend({
 
       const calculatedFee = this.chosenFeeObj;
 
-      if (calculatedFee === undefined) {
+      if (!calculatedFee) {
         throw new Error("Fee calculation failed");
       }
 
@@ -723,7 +723,7 @@ export default Vue.extend({
 
       const calculatedFee = this.chosenFeeObj;
 
-      if (calculatedFee === undefined) {
+      if (!calculatedFee) {
         throw new Error("Fee calculation failed");
       }
       const transferTransactions = await transferNFT(

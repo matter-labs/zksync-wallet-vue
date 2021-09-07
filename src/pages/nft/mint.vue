@@ -54,7 +54,7 @@
 
       <div class="_padding-top-1 inputLabel _display-flex _align-items-center">
         <div>Content Hash</div>
-        <div class="icon-container _display-flex" @click="$accessor.openModal('ContentHash')">
+        <div class="icon-container _display-flex" @click="openContentHashModal">
           <v-icon name="ri-question-mark" class="iconInfo" scale="0.9" />
         </div>
       </div>
@@ -121,8 +121,7 @@ export default Vue.extend({
   },
   asyncData({ from, app }: Context.Context): { fromRoute: Route } {
     if (from) {
-      // @ts-ignore
-      app.$accessor.setPreviousRoute({ path: from.path, query: from.query, params: from.params });
+      app.$accessor.setPreviousRoute({ path: from.path, query: from.query, params: from.params } as Route);
     }
     return {
       fromRoute: from,
@@ -154,7 +153,7 @@ export default Vue.extend({
       inputtedAddress: <Address>this.$accessor.provider.address!,
       chosenContact: <ZkInContact | false>false,
       inputtedHash: <Hash>"",
-      fee: <GweiBalance | false>false,
+      fee: <GweiBalance | string>"",
       chosenFeeToken: <ZkInBalance | false>false,
       feeChangedModal: {
         opened: false,
@@ -361,7 +360,7 @@ export default Vue.extend({
     },
     async requestFees(force?: boolean): Promise<void> {
       if (!this.chosenFeeToken || !this.inputtedAddress || this.chosenFeeToken?.restricted) {
-        this.fee = false;
+        this.fee = "";
         return;
       }
       this.feesLoading = true;
@@ -418,7 +417,7 @@ export default Vue.extend({
         }
       });
       this.chosenFeeToken = false;
-      this.fee = false;
+      this.fee = "";
       this.activateAccountFee = undefined;
     },
     checkUnlock(transferTransactions: { cpkTransaction: Transaction | null; transaction: Transaction | null; feeTransaction: Transaction | null }): void {
@@ -430,6 +429,9 @@ export default Vue.extend({
           await this.$accessor.wallet.checkLockedState();
         });
       }
+    },
+    openContentHashModal() {
+      return this.$accessor.openModal("ContentHash");
     },
   },
 });
