@@ -25,7 +25,8 @@
     width: max-content;
     padding-top: 0 !important;
 
-    .zkwallet-logo, .projectLogo {
+    .zkwallet-logo,
+    .projectLogo {
       height: 55px;
 
       @media screen and (max-width: $mobile) {
