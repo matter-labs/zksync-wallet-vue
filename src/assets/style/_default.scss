@@ -40,10 +40,8 @@ main.layout.defaultLayout {
     justify-content: stretch;
     height: 100vh;
 
-    /* autoprefixer: off */
     @supports (-webkit-touch-callout: none) {
-      //noinspection CssInvalidPropertyValue
-      min-height: -webkit-fill-available;
+      min-height: stretch;
     }
 
     section.layout-content.layoutContent {
@@ -562,6 +560,7 @@ button.-lg.-circle {
     grid-template-columns: 100%;
     grid-template-rows: repeat(2, 1fr);
   }
+
   @media screen and (max-width: $mobile) {
     grid-gap: 10px;
     grid-template-columns: 100%;

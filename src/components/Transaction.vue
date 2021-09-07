@@ -313,7 +313,7 @@ export default Vue.extend({
     showTimeEstimationHint(): boolean {
       return ETHER_NETWORK_NAME === "mainnet" && this.chosenToken !== false && this.inputtedAddress !== "" && this.type === "withdraw";
     },
-    chosenFeeObj(): BigNumberish | false {
+    chosenFeeObj(): BigNumberish | string {
       if (this.feesObj && this.transactionMode && !this.feesLoading) {
         const selectedFeeTypeAmount: string | BigNumber | ArrayLike<number> | bigint | number | undefined =
           this.transactionMode === "fast" ? this.feesObj.fast : this.feesObj.normal;
@@ -322,7 +322,7 @@ export default Vue.extend({
         }
         return BigNumber.from(selectedFeeTypeAmount);
       }
-      return false;
+      return "";
     },
     transactionTypeName(): string {
       switch (this.type) {
@@ -432,7 +432,7 @@ export default Vue.extend({
       if (this.$route.query.w) {
         this.inputtedAddress = this.$route.query.w.toString();
       } else if (this.type === "withdraw" || this.type === "nft-withdraw") {
-        this.inputtedAddress = this.$accessor.account.address!;
+        this.inputtedAddress = this.$accessor.provider.address!;
       }
       if (this.$route.query.token) {
         if (this.type === "transfer" || this.type === "withdraw") {
@@ -459,7 +459,7 @@ export default Vue.extend({
       }
       if (!this.ownAccountUnlocked) {
         try {
-          getCPKTx(this.$accessor.account.address!); /* will throw an error if no cpk tx found */
+          getCPKTx(this.$accessor.provider.address!); /* will throw an error if no cpk tx found */
         } catch (error) {
           const accountID = await walletData.get().syncWallet!.getAccountId();
           if (typeof accountID !== "number") {
@@ -641,7 +641,7 @@ export default Vue.extend({
       this.checkUnlock(withdrawTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash);
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = withdrawTransactions.feeTransaction!.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: withdrawTransactions.transaction!.txData.tx.to,
@@ -669,7 +669,7 @@ export default Vue.extend({
 
       const calculatedFee = this.chosenFeeObj;
 
-      if (calculatedFee === undefined) {
+      if (!calculatedFee) {
         throw new Error("Fee calculation failed");
       }
 
@@ -695,7 +695,7 @@ export default Vue.extend({
       this.checkUnlock(transferTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash);
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
@@ -723,7 +723,7 @@ export default Vue.extend({
 
       const calculatedFee = this.chosenFeeObj;
 
-      if (calculatedFee === undefined) {
+      if (!calculatedFee) {
         throw new Error("Fee calculation failed");
       }
       const transferTransactions = await transferNFT(
@@ -745,7 +745,7 @@ export default Vue.extend({
       this.checkUnlock(transferTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash);
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
@@ -754,7 +754,7 @@ export default Vue.extend({
       this.tip = "Waiting for the transaction to be mined...";
       const receipt = await transferTransactions.transaction!.awaitReceipt();
       this.transactionInfo.success = !!receipt.success;
-      this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+      await this.$accessor.wallet.requestZkBalances({ force: true });
       if (receipt.failReason) {
         throw new Error(receipt.failReason);
       }
@@ -780,7 +780,7 @@ export default Vue.extend({
       this.checkUnlock(withdrawTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash);
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = withdrawTransactions.feeTransaction!.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: withdrawTransactions.transaction!.txData.tx.to,
@@ -789,7 +789,7 @@ export default Vue.extend({
       this.tip = "Waiting for the transaction to be mined...";
       const receipt = await withdrawTransactions.transaction?.awaitReceipt();
       this.transactionInfo.success = !!receipt!.success;
-      this.$accessor.wallet.requestZkBalances({ accountState: undefined, force: true });
+      await this.$accessor.wallet.requestZkBalances({ force: true });
       if (receipt!.failReason) {
         throw new Error(receipt!.failReason);
       }
@@ -875,8 +875,8 @@ export default Vue.extend({
     setTransactionInfo(transaction: Transaction, continueAfter = false, btnText = "") {
       this.transactionInfo.continueBtnFunction = continueAfter;
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transaction.txHash) as string;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
       this.transactionInfo.continueBtnText = btnText;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.$options.filters!.formatTxHash(transaction.txHash);
       this.transactionInfo.fee!.token = this.feeToken;
       this.transactionInfo.fee!.amount = transaction.txData.tx.fee;
       this.transactionInfo.amount = undefined;

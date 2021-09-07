@@ -69,10 +69,10 @@ export default Vue.extend({
   },
   computed: {
     walletName(): string {
-      return this.$accessor.account.name || "";
+      return this.$accessor.provider.name || "";
     },
     walletAddressFull(): string {
-      return this.$accessor.account.address || "";
+      return this.$accessor.provider.address || "";
     },
     accountModal: {
       get(): boolean {
@@ -87,9 +87,8 @@ export default Vue.extend({
   methods: {
     logout(): void {
       this.accountModal = false;
-      this.$nextTick(async () => {
-        await this.$accessor.wallet.logout();
-        await this.$router.push("/");
+      this.$nextTick(() => {
+        this.$accessor.wallet.logout();
       });
     },
     togglePopup(): void {

@@ -94,7 +94,7 @@ export default Vue.extend({
       if (!this.token) {
         return false;
       }
-      return this.token.creatorAddress.toLowerCase() === String(this.$accessor.account.address).toLowerCase();
+      return this.token.creatorAddress.toLowerCase() === String(this.$accessor.provider.address).toLowerCase();
     },
   },
   mounted() {

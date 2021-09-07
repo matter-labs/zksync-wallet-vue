@@ -1,7 +1,9 @@
 /**
  * zkSync Types
  */
-import { ExternalProvider, JsonRpcFetchFunc } from "@ethersproject/providers/lib/web3-provider";
+import { providers } from "ethers";
+import { WalletLinkProvider } from "walletlink";
+import { Provider } from "zksync";
 import { accessorType } from "~/store";
 
 // All interfaces, mappings and specific types
@@ -26,6 +28,8 @@ declare module "@nuxt/types" {
  */
 declare global {
   interface Window {
-    ethereum?: ExternalProvider | JsonRpcFetchFunc;
+    // @ts-ignore
+    ethereum: providers.BaseProvider | providers.ExternalProvider | providers.JsonRpcFetchFunc | WalletLinkProvider | undefined;
+    syncProvider?: Provider;
   }
 }

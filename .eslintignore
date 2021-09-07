@@ -25,5 +25,5 @@ src/static/sw.js
 *.woff
 *.woff2
 successCheckmark.json
-sw.js
-./src/static/sw.js
+**sw.js
+src/static/sw.js

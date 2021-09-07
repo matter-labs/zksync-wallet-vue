@@ -2,11 +2,28 @@
   <div class="indexPage">
     <i-container>
       <h1>Connect your L1 ETH Wallet to start</h1>
-      <div data-cy="core_connect_wallet_button" class="tileContainer _margin-top-1" @click="customWallet">
-        <div class="tile">
-          <img src="@/assets/imgs/wallets/external.png" alt="External" />
+      <div class="container-fluid _flex-direction-row _display-flex connections">
+        <div
+          data-cy="core_connect_wallet_button"
+          class="tileContainer _margin-top-1 _margin-right-05 _margin-md-right-2 _text-center"
+          @click="$accessor.provider.connectWithOnboard"
+        >
+          <div class="tile">
+            <img src="@/assets/imgs/wallets/external.png" alt="External" />
+          </div>
+          <div class="tileName">ETH connect</div>
         </div>
-        <div class="tileName">Connect your wallet</div>
+
+        <div
+          data-cy="core_connect_wallet_button"
+          class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center"
+          @click="$accessor.provider.connectWithWalletConnect"
+        >
+          <div class="tile">
+            <img src="@/assets/imgs/wallets/wc.png" alt="Wallet Connect" />
+          </div>
+          <div class="tileName">Wallet Connect</div>
+        </div>
       </div>
     </i-container>
   </div>
@@ -16,25 +33,18 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  layout: "index",
+  layout: "guest",
   data() {
     return {
       lockVisible: false,
       contactInfoShown: false,
     };
   },
-  methods: {
-    async customWallet() {
-      this.$accessor.wallet.onboard?.config({
-        darkMode: this.$inkline.config.variant !== "light",
-      });
-      const refreshWalletTry = await this.$accessor.wallet.walletRefresh(true);
-      if (!refreshWalletTry) {
-        this.$accessor.wallet.logout();
-      } else {
-        await this.$router.push("/account");
-      }
-    },
+  mounted() {
+    /**
+     * @todo: fix stored in localStorage WalletConnect session somehow more elegant
+     */
+    localStorage.removeItem("walletconnect");
   },
 });
 </script>

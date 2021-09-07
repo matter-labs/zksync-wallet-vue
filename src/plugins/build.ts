@@ -36,7 +36,7 @@ export const ETHER_PREFIX: string = ETHER_PRODUCTION ? "" : ETHER_NETWORK_NAME;
 export const ETHER_PREFIX_DOT: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : ".");
 export const ETHER_PREFIX_MINUS: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : "-");
 
-export const ETHER_NETWORK_ID: number | undefined = _ETHER_NETWORK_ID_DICTIONARY.find((value: networkEthId): boolean => value?.name === (ETHER_NETWORK_NAME as string))?.id;
+export const ETHER_NETWORK_ID: number = _ETHER_NETWORK_ID_DICTIONARY.find((value: networkEthId): boolean => value?.name === (ETHER_NETWORK_NAME as string))?.id as number;
 
 /**
  * The right way of strict-typing for the web3provider
@@ -56,8 +56,15 @@ export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
 /**
  * Onboard-only params
  */
-export const ONBOARD_FORCED_EXIT_LINK: string | undefined = `https://withdraw${ETHER_PRODUCTION ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
+export const ONBOARD_FORCED_EXIT_LINK = `https://withdraw${ETHER_PRODUCTION ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
 export const ONBOARD_FORTMATIC_KEY: string | undefined = process.env.APP_FORTMATIC;
 export const ONBOARD_PORTIS_KEY: string | undefined = process.env.APP_PORTIS;
-export const ONBOARD_INFURA_KEY: string | undefined = process.env.APP_WALLET_CONNECT;
-export const ONBOARD_RPC_URL: string | undefined = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
+export const ONBOARD_INFURA_KEY: string = process.env.APP_WALLET_CONNECT as string;
+export const ONBOARD_RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
+export const ONBOARD_WALLET_CONNECT_RPC = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WALLET_CONNECT}`;
+
+export const rpc = {};
+for (const item in _ETHER_NETWORK_ID_DICTIONARY) {
+  const netCnf = _ETHER_NETWORK_ID_DICTIONARY[item];
+  rpc[netCnf.id] = netCnf.id === ETHER_NETWORK_ID ? ONBOARD_WALLET_CONNECT_RPC : `wss://${netCnf.name}.infura.io/ws/v3/${process.env.APP_WALLET_CONNECT_UNIVERSAL}`;
+}

@@ -4,7 +4,9 @@
       <slot v-if="$slots.header" name="header" />
       <span v-else>Can't find a token</span>
     </template>
-    <p>Minted tokens are available for transactions only after the Mint transaction gets verified.</p>
+    <p>
+      An NFT can only be transferred/withdrawn after the block with its mint transaction is verified. This means the newly minted NFT may need to wait a few hours before it can
+    </p>
   </i-modal>
 </template>
 

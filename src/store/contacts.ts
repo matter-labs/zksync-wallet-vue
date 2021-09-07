@@ -63,7 +63,7 @@ export const actions = actionTree(
   {
     requestStorageKey({ state, commit }): string {
       if (state.storageKey === undefined) {
-        const walletAddress = this.app.$accessor.account.address;
+        const walletAddress = this.app.$accessor.provider.address;
         if (walletAddress === undefined) {
           throw new Error("Wallet address can't be undefined");
         }
@@ -76,7 +76,7 @@ export const actions = actionTree(
     },
     getContactsFromStorage({ commit }): void {
       try {
-        const walletAddress = this.app.$accessor.account.address;
+        const walletAddress = this.app.$accessor.provider.address;
         if (walletAddress === undefined || !process.client) {
           commit("initContactsList");
           return;

@@ -40,20 +40,15 @@
     font-family: $firaSans;
 
     @media (max-width: $mobile) {
-      height: 100vh !important;
+      height: fit-content !important;
       //height: calc(100vh - 1rem) !important;
       max-height: 100vh !important;
       border-radius: 0 !important;
 
-
-      /* autoprefixer: off */
       @supports (-webkit-touch-callout: none) {
-        //noinspection CssInvalidPropertyValue
-        max-height: fill-available;
-        //noinspection CssInvalidPropertyValue
-        height: fill-available;
+        max-height: stretch;
+        height: stretch;
       }
-
 
       //flex-flow: column;
       //display: flex;
@@ -96,6 +91,7 @@
 
   ul.bn-onboard-modal-select-wallets {
     max-height: 50vh !important;
+    overflow-y: auto;
   }
 
   .bn-onboard-custom.bn-onboard-select-wallet-definition {
@@ -222,7 +218,7 @@
         border-top: 0.5px solid $lightViolet;
 
         span.bn-onboard-select-wallet-info {
-          margin-top: .4rem;
+          margin-top: 0.4rem;
         }
       }
 
@@ -252,12 +248,10 @@
 }
 
 #walletconnect-wrapper .walletconnect-modal__base {
-
   @media (max-height: $mobile) {
     max-width: 300px;
   }
 }
-
 
 section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
   display: flex;
@@ -289,24 +283,21 @@ footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
     height: 20px;
   }
 }
+
 /* autoprefixer: off */
 aside.bn-onboard-custom.bn-onboard-modal {
   max-height: 100vh;
   padding: 2vh 2vw;
 
-  /* Avoid Chrome to see Safari hack */
   @supports (-webkit-touch-callout: none) {
-    //noinspection CssInvalidPropertyValue
-    max-height: fill-available;
+    max-height: stretch;
   }
 
   .bn-onboard-custom.bn-onboard-modal-content {
     max-height: 90vh !important;
 
-    /* Avoid Chrome to see Safari hack */
     @supports (-webkit-touch-callout: none) {
-      //noinspection CssInvalidPropertyValue
-      min-height: fill-available;
+      min-height: stretch;
     }
   }
 
@@ -334,8 +325,17 @@ aside.bn-onboard-custom.bn-onboard-modal {
     }
 
     button.bn-onboard-custom.bn-onboard-icon-button {
-      margin: 0 0 .25rem !important;
+      margin: 0 0 0.25rem !important;
       padding: 0.5rem !important;
+    }
+  }
+}
+
+body.-dark {
+  .walletconnect-modal__mobile__toggle,
+  .walletconnect-modal__footer {
+    a {
+      color: #1d2039 !important;
     }
   }
 }

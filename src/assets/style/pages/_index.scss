@@ -21,6 +21,17 @@
       max-width: 480px;
       margin: 0 auto;
     }
+
+    .connections {
+      justify-content: space-evenly;
+      min-width: 40%;
+      max-width: 100%;
+
+      .tileContainer {
+        margin-left: 1rem;
+        margin-right: 1rem;
+      }
+    }
   }
 
   @media (max-width: $mobile) {
