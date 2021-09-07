@@ -10,8 +10,8 @@
 
     <!-- Main Block -->
     <div v-if="activeTransaction && activeTransaction.step !== 'initial'">
-      <block-loading-block v-if="activeTransaction.step !== 'finished'" :headline="type" />
-      <block-success-block v-else :headline="type" />
+      <block-loading-block v-if="activeTransaction.step !== 'finished'" />
+      <block-success-block v-else />
     </div>
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
@@ -28,7 +28,7 @@
         :max-amount="maxAmount.toString()"
         :token="chosenToken ? chosenToken : undefined"
         autofocus
-        type="deposit"
+        :type="type"
         @chooseToken="chooseTokenModal = true"
         @enter="commitTransaction()"
       />
@@ -44,13 +44,13 @@
         </div>
         <div class="grid-cols-2-layout">
           <!-- :class="{ 'single-col': singleColumnButtons }" -->
-          <i-button data-cy="deposit_approve_unlimited_button" block size="md" variant="secondary" @click="unlockToken(true)">
+          <i-button data-cy="approve_unlimited_button" block size="md" variant="secondary" @click="unlockToken(true)">
             Approve unlimited <span class="tokenSymbol">{{ chosenToken }}</span>
           </i-button>
           <i-button
             v-if="inputtedAmount && amountBigNumber"
             key="approveAmount"
-            data-cy="deposit_approve_button"
+            data-cy="approve_button"
             block
             class="_margin-top-0"
             size="md"
@@ -73,6 +73,12 @@
             <span class="tokenSymbol">{{ chosenToken }}</span>
             .<br class="desktopOnly" />
             Set higher allowance to proceed to deposit.
+            <span v-if="allowance">
+              <br class="desktopOnly" />Your current allowance is
+              <span class="linkText" @click="setAllowanceMax()">
+                {{ allowance | parseBigNumberish(chosenToken) }} <span class="tokenSymbol">{{ chosenToken }}</span>
+              </span>
+            </span>
           </span>
         </p>
       </div>
@@ -83,12 +89,15 @@
         :disabled="!commitAllowed"
         block
         class="_margin-top-1 _display-flex flex-row"
-        data-cy="deposit_deposit_button"
+        data-cy="commit_transaction_button"
         size="lg"
         variant="secondary"
         @click="commitTransaction()"
       >
-        {{ type }}
+        <div class="_display-flex _justify-content-center _align-items-center">
+          <div>{{ type }}</div>
+          <loader v-if="allowanceLoading" class="_margin-left-1" size="xs" />
+        </div>
       </i-button>
     </div>
   </div>
@@ -145,6 +154,7 @@ export default Vue.extend({
       if (!this.chosenToken) {
         return false;
       }
+      this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
       const tokenAllowance: BigNumber | undefined = this.$store.getters["zk-balances/tokenAllowance"](this.chosenToken);
       if (!tokenAllowance) {
         return false;
@@ -161,11 +171,22 @@ export default Vue.extend({
       }
       return tokenEthereumBalance;
     },
+    allowance(): BigNumber | undefined {
+      this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
+      return this.$store.getters["zk-balances/tokenAllowance"](this.chosenToken);
+    },
     enoughAllowance(): boolean {
       return this.$store.getters["zk-transaction/enoughAllowance"];
     },
+    allowanceLoading(): boolean {
+      this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
+      if (this.type === "Deposit" && this.chosenToken !== undefined) {
+        return !!this.$store.getters["zk-balances/tokensAllowanceLoading"][this.chosenToken];
+      }
+      return false;
+    },
     displayTokenUnlock(): boolean {
-      return this.mainToken === "L1-Tokens" && this.chosenToken !== undefined && !this.enoughAllowance;
+      return this.type === "Deposit" && this.chosenToken !== undefined && (!this.enoughAllowance || this.zeroAllowance) && (!this.allowanceLoading || this.zeroAllowance);
     },
     activeTransaction(): ZkActiveTransaction {
       return this.$store.getters["zk-transaction/activeTransaction"];
@@ -186,6 +207,12 @@ export default Vue.extend({
         return;
       }
       await this.$store.dispatch("zk-transaction/commitTransaction");
+    },
+    async unlockToken(unlimited = false) {
+      await this.$store.dispatch("zk-transaction/setAllowance", unlimited);
+    },
+    setAllowanceMax() {
+      this.inputtedAmount = this.$options.filters!.parseBigNumberish(this.allowance, this.chosenToken);
     },
   },
 });

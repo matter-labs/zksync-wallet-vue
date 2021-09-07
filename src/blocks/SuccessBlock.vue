@@ -1,9 +1,23 @@
 <template>
   <div class="successBlock tileBlock">
     <div class="tileHeadline h3">
-      <span>{{ headline }}</span>
+      <span>{{ activeTransaction.type }}</span>
     </div>
     <checkmark />
+    <p class="_text-center _margin-top-0">
+      <template v-if="activeTransaction.type === 'Deposit'">
+        Your deposit transaction has been mined and will be processed after required number of confirmations.<br />Use the transaction link to track the progress.
+      </template>
+      <template v-else-if="activeTransaction.type === 'Allowance' && activeTransaction.data">
+        Token <span class="tokenSymbol">{{ activeTransaction.data.token }}</span> was successfully approved
+        <span v-if="activeTransaction.data.allowance.lt(unlimitedUnlockAmount)">
+          for {{ activeTransaction.data.allowance.toString() | parseBigNumberish(activeTransaction.data.token) }}
+          <span class="tokenSymbol">{{ activeTransaction.data.token }}</span>
+        </span>
+        <br />
+        Now you can proceed to deposit.
+      </template>
+    </p>
     <a v-if="txLink" :href="txLink" class="_display-block _text-center _margin-top-1" target="_blank">Link to the transaction <v-icon name="ri-external-link-line"></v-icon></a>
     <div v-if="activeTransaction.address" class="infoBlockItem smaller _margin-top-2">
       <div class="amount">
@@ -36,29 +50,60 @@
         </span>
       </div>
     </div>
-    <i-button data-cy="success_block_ok_button" block size="lg" variant="secondary" class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
+    <div v-if="activeTransaction.type === 'Allowance' && type === 'Deposit' && commitAllowed" slot="custom">
+      <div class="border-line _margin-top-1"></div>
+      <div class="infoBlockItem smaller _margin-top-1">
+        <div class="headline">Amount to deposit:</div>
+        <div class="amount">
+          <span class="tokenSymbol">{{ chosenToken }}</span>
+          {{ amountBigNumber.toString() | parseBigNumberish(chosenToken) }}
+          <span class="secondaryText">
+            <token-price :symbol="chosenToken" :amount="amountBigNumber.toString()" />
+          </span>
+        </div>
+      </div>
+      <div class="goBackContinueBtns _margin-top-1">
+        <i-button data-cy="deposit_arrow_back_button" size="lg" variant="secondary" circle @click="clearActiveTransaction()">
+          <v-icon name="ri-arrow-left-line" />
+        </i-button>
+        <i-button data-cy="deposit_proceed_to_deposit_button" block size="lg" variant="secondary" @click="commitTransaction()">Proceed to deposit</i-button>
+      </div>
+    </div>
+    <i-button
+      v-else-if="activeTransaction.type === 'Allowance' && type === 'Deposit'"
+      data-cy="success_unlock_ok_button"
+      block
+      size="lg"
+      variant="secondary"
+      class="_margin-top-2"
+      @click="clearActiveTransaction()"
+    >
+      Ok
+    </i-button>
+    <i-button v-else data-cy="success_block_ok_button" block size="lg" variant="secondary" class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { BigNumber } from "ethers";
 import { getAddress } from "ethers/lib/utils";
-import { ZkActiveTransaction, ZkContact, ZkConfig } from "matter-dapp-ui/types";
+import { ZkActiveTransaction, ZkContact, ZkConfig, ZkTransactionType } from "matter-dapp-ui/types";
+import { TokenLike } from "zksync/build/types";
+import { ERC20_APPROVE_TRESHOLD } from "zksync/build/utils";
 
 export default Vue.extend({
-  props: {
-    headline: {
-      type: String,
-      default: "",
-      required: false,
-    },
+  data() {
+    return {
+      displayAllowanceDeposit: false,
+    };
   },
   computed: {
-    activeTransaction(): ZkActiveTransaction {
-      return this.$store.getters["zk-transaction/activeTransaction"];
-    },
     config(): ZkConfig {
       return this.$store.getters["zk-onboard/config"];
+    },
+    activeTransaction(): ZkActiveTransaction {
+      return this.$store.getters["zk-transaction/activeTransaction"];
     },
     txLink(): string | undefined {
       if (!this.activeTransaction.txHash) {
@@ -90,6 +135,32 @@ export default Vue.extend({
         default:
           return "/account";
       }
+    },
+    amountBigNumber(): BigNumber | undefined {
+      return this.$store.getters["zk-transaction/amountBigNumber"];
+    },
+    type(): ZkTransactionType {
+      return this.$store.getters["zk-transaction/type"];
+    },
+    chosenToken(): TokenLike {
+      return this.$store.getters["zk-transaction/symbol"];
+    },
+    commitAllowed(): boolean {
+      return this.$store.getters["zk-transaction/commitAllowed"];
+    },
+    unlimitedUnlockAmount(): BigNumber {
+      return ERC20_APPROVE_TRESHOLD;
+    },
+  },
+  methods: {
+    async commitTransaction() {
+      if (!this.commitAllowed) {
+        return;
+      }
+      await this.$store.dispatch("zk-transaction/commitTransaction");
+    },
+    async clearActiveTransaction() {
+      await this.$store.commit("zk-transaction/clearActiveTransaction");
     },
   },
 });

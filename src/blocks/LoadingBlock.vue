@@ -1,6 +1,6 @@
 <template>
   <div class="loadingBlock tileBlock">
-    <div class="tileHeadline h3">{{ headline }}</div>
+    <div class="tileHeadline h3">{{ activeTransaction.type }}</div>
     <div class="loadingBlockContent">
       <a v-if="txLink" :href="txLink" class="_display-block _text-center" target="_blank">
         Link to the transaction <i><v-icon name="ri-external-link-line" scale="0.8" /></i>
@@ -19,13 +19,6 @@ import { ZkActiveTransaction, ZkConfig } from "matter-dapp-ui/types";
 
 export default Vue.extend({
   name: "LoadingBlock",
-  props: {
-    headline: {
-      type: String,
-      default: "",
-      required: false,
-    },
-  },
   data() {
     return {
       forceUpdateVal: Number.MIN_SAFE_INTEGER,

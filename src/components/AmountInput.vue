@@ -24,7 +24,7 @@ import Vue, { PropOptions } from "vue";
 import { BigNumber, BigNumberish } from "ethers";
 import { TokenSymbol } from "zksync/build/types";
 import { isTransactionAmountPackable } from "zksync/build/utils";
-import { DecimalBalance } from "matter-dapp-ui/types";
+import { DecimalBalance, ZkTransactionType } from "matter-dapp-ui/types";
 
 export default Vue.extend({
   props: {
@@ -35,9 +35,9 @@ export default Vue.extend({
     } as PropOptions<DecimalBalance>,
     type: {
       type: String,
-      default: "",
+      default: "Transfer",
       required: false,
-    },
+    } as PropOptions<ZkTransactionType>,
     maxAmount: {
       type: String,
       default: "",
@@ -151,7 +151,7 @@ export default Vue.extend({
         }
       }
 
-      if (this.type === "transfer" && !isTransactionAmountPackable(inputAmount.toString())) {
+      if (this.type === "Transfer" && !isTransactionAmountPackable(inputAmount.toString())) {
         this.error = "Max supported precision for transfers exceeded";
         return;
       }
