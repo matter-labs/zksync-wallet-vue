@@ -56,11 +56,16 @@ export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
 /**
  * Onboard-only params
  */
+export const ONBOARD_APP_URL = process.browser && ethWindow!.location ? `https://${ethWindow!.location!.host}` : "";
+export const ONBOARD_APP_NAME = `${CURRENT_APP_NAME}:${ETHER_NETWORK_NAME}` + (process.browser && ethWindow!.location ? `@${ethWindow!.location!.host}` : "");
+export const ONBOARD_APP_LOGO = `${ONBOARD_APP_URL}/favicon-dark.png`;
+export const ONBOARD_APP_EMAIL = "support@zksync.io";
 export const ONBOARD_FORCED_EXIT_LINK = `https://withdraw${ETHER_PRODUCTION ? ".zksync.io" : "-" + ETHER_NETWORK_NAME + ".zksync.dev"}`;
 export const ONBOARD_FORTMATIC_KEY: string | undefined = process.env.APP_FORTMATIC;
+export const ONBOARD_FORTMATIC_SITE_VERIFICATION_META: string | undefined = process.env.APP_FORTMATIC_SITE_VERIFICATION_META!;
 export const ONBOARD_PORTIS_KEY: string | undefined = process.env.APP_PORTIS;
 export const ONBOARD_INFURA_KEY: string = process.env.APP_WALLET_CONNECT as string;
-export const ONBOARD_RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
+export const ONBOARD_RPC_URL = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WALLET_CONNECT_UNIVERSAL}`;
 export const ONBOARD_WALLET_CONNECT_RPC = `https://${ETHER_NETWORK_NAME}.infura.io/v3/${process.env.APP_WALLET_CONNECT}`;
 
 export const rpc = {};

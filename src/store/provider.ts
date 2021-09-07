@@ -203,6 +203,8 @@ export const actions = actionTree(
           throw new Error("No wallet selected");
         }
         commit("setAuthStage", "walletSelected");
+
+        commit("setAuthStage", "isChecking");
         const checkResult: boolean = await state.onboard.walletCheck();
         if (!checkResult) {
           throw new Error("Wallet check failed");

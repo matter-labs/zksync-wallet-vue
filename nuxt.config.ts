@@ -2,10 +2,11 @@
 
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import { MetaPropertyName } from "vue-meta/types/vue-meta";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 import { Configuration } from "webpack";
 
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
+import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION, ONBOARD_APP_LOGO, ONBOARD_FORTMATIC_SITE_VERIFICATION_META } from "./src/plugins/build";
 
 const srcDir = "./src/";
 
@@ -19,6 +20,14 @@ const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
 crypto payments, zkWallet, cryptowallet`;
+
+const fortmaticMeta: MetaPropertyName[] = [];
+if (isProduction && ONBOARD_FORTMATIC_SITE_VERIFICATION_META) {
+  fortmaticMeta.push({
+    name: "fortmatic-site-verification",
+    content: ONBOARD_FORTMATIC_SITE_VERIFICATION_META,
+  });
+}
 
 const config: NuxtConfig = {
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
@@ -48,7 +57,13 @@ const config: NuxtConfig = {
     },
     meta: [
       /**
-       * Cache-control
+       * Fortmatic
+       */
+      ...fortmaticMeta,
+      /**
+
+
+      * Cache-control
        */
       {
         property: "cache-control",
@@ -66,9 +81,9 @@ const config: NuxtConfig = {
         content: "no-cache , no-store, must-revalidate",
       },
       {
+        property: "expires",
         httpEquiv: "expires",
         content: "0",
-        property: "expires",
       },
 
       /**
@@ -156,7 +171,7 @@ const config: NuxtConfig = {
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
-        content: "/favicon-dark.png",
+        content: ONBOARD_APP_LOGO,
       },
       { hid: "theme-color", name: "theme-color", content: "#4e529a" },
       {
