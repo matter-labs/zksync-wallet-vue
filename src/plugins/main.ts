@@ -1,4 +1,5 @@
 import utils from "@/plugins/utils";
+import { GweiBalance } from "@/types/lib";
 import { Context, Plugin } from "@nuxt/types";
 import { BigNumber } from "ethers";
 import moment from "moment-timezone";
@@ -20,7 +21,7 @@ const mainPlugin: Plugin = (_ctx: Context): void => {
   /**
    * Implementation of the tokenFormatter as a global filter
    */
-  Vue.filter("formatToken", (value: string | BigNumber | ArrayLike<number> | bigint | number, symbol: TokenSymbol) => {
+  Vue.filter("formatToken", (value: string | BigNumber | GweiBalance | ArrayLike<number> | bigint | number, symbol: TokenSymbol) => {
     return utils.handleFormatToken(symbol, value?.toString());
   });
 
