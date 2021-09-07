@@ -196,7 +196,7 @@ const config: NuxtConfig = {
    * Nuxt.js dev-modules
    */
   buildModules: [
-    //    "nuxt-build-optimisations",
+    "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
@@ -257,7 +257,7 @@ const config: NuxtConfig = {
     disableServerSide: true,
     config: {
       tracesSampleRate: 1.0,
-      environment: env === "prod" ? "production" : env === "dev" ? "development" : env,
+      environment: isProduction ? "production" : env === "dev" ? "development" : env,
     },
   },
   "google-gtag": {
@@ -266,7 +266,7 @@ const config: NuxtConfig = {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload
     },
-    debug: env !== "prod", // enable to track in dev mode
+    debug: !isProduction, // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
 
@@ -277,7 +277,7 @@ const config: NuxtConfig = {
     babel: {
       compact: true,
     },
-    transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
+    transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
     hardSource: isProduction,
     ssr: false,
     extend: (config: Configuration) => {
