@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import utils from "@/plugins/utils";
+import utils, { capitalize } from "@/plugins/utils";
 
 import { GIT_REVISION_SHORT } from "@/plugins/build";
 import Vue from "vue";
@@ -21,6 +21,12 @@ export default Vue.extend({
     return {
       version: GIT_REVISION_SHORT,
     };
+  },
+  head: {
+    titleTemplate(titleChunk: string): string {
+      const networkName = capitalize(this.$accessor.config.network.ethNetworkName);
+      return titleChunk?.length ? `${titleChunk} | ${networkName}` : networkName;
+    },
   },
   mounted() {
     utils.defineTheme(this.$inkline, false);

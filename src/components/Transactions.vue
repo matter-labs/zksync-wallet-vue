@@ -2,7 +2,7 @@
   <div class="transactionsPage dappPageWrapper">
     <account-activation-modal />
     <div class="tileBlock transactionsTile">
-      <div class="tileHeadline h3">Transactions</div>
+      <div class="tileHeadline h3">Transactions1</div>
       <div class="transactionsListContainer genericListContainer">
         <div v-if="loading === true" class="nothingFound">
           <loader class="_display-block" />

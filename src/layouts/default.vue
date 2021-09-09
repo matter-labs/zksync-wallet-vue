@@ -14,12 +14,18 @@
 </template>
 
 <script lang="ts">
-import utils from "@/plugins/utils";
+import utils, { capitalize } from "@/plugins/utils";
 import Vue from "vue";
 import SignPubkeyModal from "@/blocks/modals/SignPubkey.vue";
 export default Vue.extend({
   components: {
     SignPubkeyModal,
+  },
+  head: {
+    titleTemplate(titleChunk: string): string {
+      const networkName = capitalize(this.$accessor.config.network.ethNetworkName);
+      return titleChunk?.length ? `${titleChunk} | ${networkName}` : networkName;
+    },
   },
   computed: {
     loggingIn() {

@@ -66,8 +66,10 @@
 </template>
 
 <script lang="ts">
-import { ETHER_NETWORK_NAME } from "@/plugins/build";
+import { getCurrentNetworkConfig } from "@/plugins/config";
 import Vue from "vue";
+
+const networkConfig = getCurrentNetworkConfig();
 
 interface DropdownOption {
   name: string;
@@ -103,8 +105,8 @@ const dropdownLinks = {
 };
 
 function getLinkItem(type: string): string {
-  if (dropdownLinks[type][ETHER_NETWORK_NAME]) {
-    return dropdownLinks[type][ETHER_NETWORK_NAME];
+  if (dropdownLinks[type][networkConfig.ethNetworkName]) {
+    return dropdownLinks[type][networkConfig.ethNetworkName];
   } else {
     return dropdownLinks[type].mainnet;
   }

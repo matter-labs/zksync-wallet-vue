@@ -1,7 +1,6 @@
 import { iWalletData, iWalletWrapper } from "@/types/lib";
 import { getDefaultProvider, Provider } from "zksync";
-import { Network } from "zksync/build/types";
-import { ZK_NETWORK } from "@/plugins/build";
+import { getCurrentNetworkConfig } from "@/plugins/config";
 
 const internalWalletData: iWalletData = {
   syncProvider: undefined,
@@ -40,7 +39,10 @@ export const walletData: iWalletWrapper = {
       if (internalWalletData.syncProvider) {
         return;
       }
-      providerPromise = getDefaultProvider(ZK_NETWORK as Network, "HTTP");
+
+      const networkConfig = getCurrentNetworkConfig();
+
+      providerPromise = getDefaultProvider(networkConfig.name, "HTTP");
       try {
         internalWalletData.syncProvider = await providerPromise;
       } catch (error) {

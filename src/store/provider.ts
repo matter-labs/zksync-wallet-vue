@@ -1,5 +1,5 @@
-import onboardConfig from "@/configs/onboard";
-import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_ID, ONBOARD_INFURA_KEY } from "@/plugins/build";
+import onboardConfig, { ONBOARD_INFURA_KEY } from "@/configs/onboard";
+import { getCurrentNetworkConfig } from "@/plugins/config";
 import { walletData } from "@/plugins/walletData";
 import { ExternalProvider } from "@ethersproject/providers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -14,6 +14,8 @@ import { AccountState, Address } from "zksync/build/types";
 import { Wallet } from "zksync/build/wallet";
 
 export declare type tProviderState = "ready" | "isSelecting" | "walletSelected" | "isChecking" | "walletChecked" | "isSelectingAccount" | "accountSelected" | "authorized";
+
+const networkConfig = getCurrentNetworkConfig();
 
 const onboard: API = Onboard({
   ...onboardConfig,
@@ -87,7 +89,7 @@ export const getters = getterTree(state, {
   address: (state: ProviderModuleState): Address | undefined =>
     state.authStep === "authorized" && state.onboard.getState().address ? (state.onboard.getState().address as Address) : state.address,
   loadingHint: (state: ProviderModuleState): string => state.loadingHint,
-  zkScanUrl: (state: ProviderModuleState): string | undefined => (state.address ? `${APP_ZKSYNC_BLOCK_EXPLORER}/accounts/${state.address}` : undefined),
+  zkScanUrl: (state: ProviderModuleState): string | undefined => (state.address ? `${networkConfig.zkSyncBlockExplorerUrl}/accounts/${state.address}` : undefined),
 });
 
 export const actions = actionTree(
@@ -126,7 +128,7 @@ export const actions = actionTree(
         infuraId: ONBOARD_INFURA_KEY,
         pollingInterval: 6500,
         qrcode: true,
-        chainId: ETHER_NETWORK_ID,
+        chainId: networkConfig.ethNetworkId,
       });
 
       try {
@@ -279,7 +281,7 @@ export const actions = actionTree(
 
           console.log("fetched accounts: ", fetchedAccounts);
 
-          const ethWallet: providers.Web3Provider = new providers.Web3Provider(web3Provider.eth!.currentProvider as ExternalProvider, ETHER_NETWORK_ID);
+          const ethWallet: providers.Web3Provider = new providers.Web3Provider(web3Provider.eth!.currentProvider as ExternalProvider, networkConfig.ethNetworkId);
 
           console.log(ethWallet);
 
@@ -383,7 +385,7 @@ export const actions = actionTree(
     },
     onEventNetwork({ getters, state }, networkId: number): void {
       console.log("subscription watcher (network): ", networkId);
-      if (getters.loggedIn && networkId !== ETHER_NETWORK_ID && networkId !== undefined) {
+      if (getters.loggedIn && networkId !== networkConfig.ethNetworkId && networkId !== undefined) {
         this.app.$toast.global?.zkException({
           message: "ETH Network change spotted",
         });

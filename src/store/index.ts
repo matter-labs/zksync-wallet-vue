@@ -3,6 +3,7 @@ import * as contacts from "@/store/contacts";
 import * as tokens from "@/store/tokens";
 import * as transaction from "@/store/transaction";
 import * as wallet from "@/store/wallet";
+import * as config from "@/store/config";
 import { ZKIRootState } from "@/types/lib";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import { Route } from "vue-router/types";
@@ -60,5 +61,6 @@ export const accessorType = getAccessorType({
     tokens,
     transaction,
     wallet,
+    config,
   },
 });

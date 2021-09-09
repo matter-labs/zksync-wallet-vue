@@ -1,4 +1,4 @@
-import { CURRENT_APP_NAME, ETHER_NETWORK_ID, ONBOARD_FORCED_EXIT_LINK, ONBOARD_FORTMATIC_KEY, ONBOARD_PORTIS_KEY, ONBOARD_RPC_URL } from "@/plugins/build";
+import { CURRENT_APP_NAME } from "@/plugins/build";
 
 import {
   AllWalletInitOptions,
@@ -9,6 +9,18 @@ import {
   WalletInitOptions,
   WalletSelectModuleOptions,
 } from "bnc-onboard/dist/src/interfaces";
+
+import { getCurrentNetworkConfig } from "@/plugins/config";
+
+const networkConfig = getCurrentNetworkConfig();
+
+export const ONBOARD_FORCED_EXIT_LINK = `https://withdraw${networkConfig.name === "mainnet" ? ".zksync.io" : "-" + networkConfig.ethNetworkName + ".zksync.dev"}`;
+export const ONBOARD_FORTMATIC_KEY = process.env.APP_FORTMATIC;
+export const ONBOARD_PORTIS_KEY = process.env.APP_PORTIS;
+export const ONBOARD_INFURA_KEY = process.env.APP_WALLET_CONNECT;
+export const ONBOARD_RPC_URL = `https://${networkConfig.ethNetworkName}.infura.io/v3/${process.env.APP_WS_API_ETHERSCAN_TOKEN}`;
+
+const ETHER_NETWORK_ID = networkConfig.ethNetworkId;
 
 const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOptions[] = [
   { walletName: "detectedwallet", preferred: true },

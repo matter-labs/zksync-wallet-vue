@@ -12,7 +12,6 @@
 </template>
 
 <script lang="ts">
-import { ETHER_NETWORK_NAME } from "@/plugins/build";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -31,7 +30,7 @@ export default Vue.extend({
   },
   computed: {
     networkName(): string {
-      return ETHER_NETWORK_NAME;
+      return this.$accessor.config.network.ethNetworkName;
     },
     mintLink(): string {
       const links = {
@@ -39,8 +38,8 @@ export default Vue.extend({
         rinkeby: "https://mint.zksync.dev",
         ropsten: "https://mint-ropsten.zksync.dev",
       };
-      if (links[ETHER_NETWORK_NAME]) {
-        return links[ETHER_NETWORK_NAME];
+      if (links[this.$accessor.config.network.ethNetworkName]) {
+        return links[this.$accessor.config.network.ethNetworkName];
       } else {
         return links.mainnet;
       }

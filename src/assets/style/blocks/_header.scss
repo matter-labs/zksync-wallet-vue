@@ -109,8 +109,11 @@ header {
         }
       }
 
-      .badge {
+      .badge-wrapper {
         margin-top: -30px;
+      }
+
+      .badge {
         padding: 0;
         color: $lightViolet !important;
         font-weight: 400;
@@ -118,6 +121,14 @@ header {
         letter-spacing: 1px;
         text-transform: uppercase;
         background: transparent !important;
+      }
+
+      .version {
+        display: inline-flex;
+        align-items: center;
+        &:hover {
+          cursor: pointer;
+        }
       }
 
       @media (max-width: $mobile) {

@@ -39,7 +39,6 @@
 </template>
 
 <script lang="ts">
-import { ZK_NETWORK, ETHER_PRODUCTION } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import Vue from "vue";
 
@@ -58,10 +57,10 @@ export default Vue.extend({
       return require(`@/assets/imgs/logos/logo${prefix}.svg`);
     },
     isMainnet(): boolean {
-      return ETHER_PRODUCTION;
+      return this.$accessor.config.isMainnet;
     },
     network(): string {
-      return ZK_NETWORK;
+      return this.$accessor.config.network.name;
     },
   },
 });

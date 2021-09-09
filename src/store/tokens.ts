@@ -2,8 +2,8 @@ import { walletData } from "@/plugins/walletData";
 import { BigNumberish } from "ethers";
 import { TokenSymbol, Tokens } from "zksync/build/types";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
+import { ConfigModuleState } from "./config";
 import { BalanceToReturn, TokenInfo, ZkInTokenPrices } from "~/types/lib";
-import { ZK_API_BASE } from "~/plugins/build";
 
 /**
  * Operations with the tokens (assets)
@@ -87,8 +87,8 @@ export const actions = actionTree(
       }
       return getters.getAllTokens;
     },
-    async loadAcceptableTokens({ commit }): Promise<void> {
-      const acceptableTokens: TokenInfo[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/tokens_acceptable_for_fees`);
+    async loadAcceptableTokens({ commit, rootState }): Promise<void> {
+      const acceptableTokens: TokenInfo[] = await this.app.$http.$get(`https://${(rootState.config as ConfigModuleState).network.apiHost}/api/v0.1/tokens_acceptable_for_fees`);
       commit("storeAcceptableTokens", acceptableTokens);
     },
 

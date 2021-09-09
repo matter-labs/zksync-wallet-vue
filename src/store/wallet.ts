@@ -1,4 +1,3 @@
-import { ZK_API_BASE } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 
@@ -21,6 +20,7 @@ import { BigNumber, BigNumberish } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { closestPackableTransactionFee, Provider } from "zksync";
 import { AccountState, Address, Fee, NFT, TokenSymbol } from "zksync/build/types";
+import { ConfigModuleState } from "./config";
 
 let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
 
@@ -310,7 +310,7 @@ export const actions = actionTree(
      * @param options
      * @return {Promise<any>}
      */
-    async requestTransactionsHistory({ commit, getters }, { force = false, offset = 0 }: ZKStoreRequestBalancesParams): Promise<ZkInTx[]> {
+    async requestTransactionsHistory({ commit, getters, rootState }, { force = false, offset = 0 }: ZKStoreRequestBalancesParams): Promise<ZkInTx[]> {
       clearTimeout(getTransactionHistoryAgain);
       const localList = getters.getTransactionsList;
       const savedAddress = this.app.$accessor.provider.address;
@@ -325,7 +325,13 @@ export const actions = actionTree(
         if (!syncWallet || !syncWallet.address() || !String(syncWallet.address()).includes("0x")) {
           return localList.list;
         }
-        const fetchTransactionHistory: ZkInTx[] = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`);
+
+        // TODO
+        // rootState
+
+        const fetchTransactionHistory: ZkInTx[] = await this.app.$http.$get(
+          `https://${(rootState.config as ConfigModuleState).network.apiHost}/api/v0.1/account/${syncWallet?.address()}/history/${offset}/25`,
+        );
         if (savedAddress !== this.app.$accessor.provider.address) {
           return localList.list;
         }
@@ -420,11 +426,12 @@ export const actions = actionTree(
       return feesObj;
     },
 
-    async requestWithdrawalProcessingTime({ getters, commit }): Promise<ZkInWithdrawalTime> {
+    async requestWithdrawalProcessingTime({ getters, commit, rootState }): Promise<ZkInWithdrawalTime> {
       if (getters.getWithdrawalProcessingTime) {
         return getters.getWithdrawalProcessingTime;
       }
-      const withdrawTime: ZkInWithdrawalTime = await this.app.$http.$get(`https://${ZK_API_BASE}/api/v0.1/withdrawal_processing_time`);
+
+      const withdrawTime: ZkInWithdrawalTime = await this.app.$http.$get(`https://${(rootState.config as ConfigModuleState).network.apiHost}/api/v0.1/withdrawal_processing_time`);
       // @ts-ignore
       commit("setWithdrawalProcessingTime", withdrawTime);
       return withdrawTime;

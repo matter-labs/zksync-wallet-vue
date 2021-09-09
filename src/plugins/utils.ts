@@ -16,6 +16,13 @@ function parseToken(symbol: TokenSymbol, amount: DecimalBalance) {
   return walletData.get().syncProvider?.tokenSet?.parseToken(symbol, amount.toString()) || BigNumber.from("0");
 }
 
+export function capitalize(s: string): string {
+  if (s?.length) {
+    return s.charAt(0).toLocaleUpperCase() + s.slice(1);
+  }
+  return "";
+}
+
 /**
  * Formatting token amount output to human readable string
  *

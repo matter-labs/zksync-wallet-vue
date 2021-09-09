@@ -5,7 +5,7 @@ import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 import { Configuration } from "webpack";
 
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
+import { CURRENT_APP_NAME, ETHER_PRODUCTION } from "./src/plugins/build";
 
 const srcDir = "./src/";
 
@@ -14,7 +14,6 @@ const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
 const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED}`;
 const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
@@ -41,7 +40,7 @@ const config: NuxtConfig = {
    */
   head: {
     title: pageTitle as string | undefined,
-    titleTemplate: `%s | ${pageTitleTemplate}`,
+    titleTemplate: "%s",
     htmlAttrs: {
       lang: "en",
       amp: "true",

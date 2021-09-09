@@ -99,7 +99,6 @@
 <script lang="ts">
 import { Address } from "zksync/build/types";
 import { Transaction } from "zksync/build/wallet";
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import ContentHashModal from "@/blocks/modals/ContentHashModal.vue";
@@ -344,7 +343,7 @@ export default Vue.extend({
       this.checkUnlock(transferTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
+      this.transactionInfo.explorerLink = this.$accessor.config.network.zkSyncBlockExplorerUrl + "/transactions/" + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
