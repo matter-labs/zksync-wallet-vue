@@ -42,11 +42,11 @@
         </div>
       </div>
       <template v-if="tokensType !== 'NFT'">
-        <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find a token?</i-button>
+        <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoTokenFound')"> Can't find your token?</i-button>
         <no-token-found />
       </template>
       <template v-else>
-        <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoNftTokenFound')"> Can't find a token?</i-button>
+        <i-button block class="_margin-top-1" link size="lg" variant="secondary" @click="$accessor.openModal('NoNftTokenFound')"> Can't find your token?</i-button>
         <no-nft-token-found />
       </template>
     </template>
