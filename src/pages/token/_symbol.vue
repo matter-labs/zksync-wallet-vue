@@ -43,9 +43,9 @@
               <token-price :symbol="symbol" :amount="balanceToken.balance" />
             </div>
           </div>
-          <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/withdraw?token=${symbol}`">- Withdraw</i-button>
+          <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/transaction/withdraw?token=${symbol}`">- Withdraw</i-button>
         </div>
-        <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transfer?token=${symbol}`">
+        <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transaction/transfer?token=${symbol}`">
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
         </i-button>
       </div>

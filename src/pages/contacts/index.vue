@@ -145,10 +145,9 @@ export default Vue.extend({
         return;
       }
       if (this.contactModal.openedAddress && getAddress(this.contactModal.openedAddress) !== getAddress(this.contactModal.address)) {
-        console.log("Remove");
         await this.$store.dispatch("zk-contacts/removeContact", this.contactModal.openedAddress);
       }
-      this.$store.dispatch("zk-contacts/setContact", { address: this.contactModal.address, name: this.contactModal.name });
+      this.$store.dispatch("zk-contacts/setContact", { address: this.contactModal.address, name: this.contactModal.name.trim() });
       this.contactModal.enabled = false;
     },
     deleteContact() {

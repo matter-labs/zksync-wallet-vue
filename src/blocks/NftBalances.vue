@@ -6,15 +6,15 @@
     <slot />
     <div v-if="!isSearching && !hasDisplayedBalances && (accountStateLoading === false || accountStateRequested)" class="centerBlock">
       <p class="tileText">No NFT tokens yet. You can either mint or request them from someone!</p>
-      <i-button data-cy="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/nft/mint">+ Mint NFT</i-button>
+      <i-button data-cy="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/transaction/nft/mint">+ Mint NFT</i-button>
     </div>
     <div v-else class="balances">
       <div v-if="!accountStateLoading || accountStateRequested">
         <div class="_display-flex _justify-content-space-between">
-          <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/nft/mint">+ Mint NFT</i-button>
-          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/nft/withdraw">- Withdraw NFT</i-button>
+          <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/nft/mint">+ Mint NFT</i-button>
+          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/nft/withdraw">- Withdraw NFT</i-button>
         </div>
-        <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/nft/transfer">
+        <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transaction/nft/transfer">
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer NFT
         </i-button>
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
@@ -68,6 +68,9 @@ export default Vue.extend({
   computed: {
     accountStateLoading(): boolean {
       return this.$store.getters["zk-account/accountStateLoading"];
+    },
+    accountStateRequested(): boolean {
+      return this.$store.getters["zk-account/accountStateRequested"];
     },
     zkBalances(): ZkNFTBalances {
       return this.$store.getters["zk-balances/nfts"];

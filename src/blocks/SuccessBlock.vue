@@ -116,7 +116,7 @@ export default Vue.extend({
           return this.config.ethereumNetwork.explorer + "tx/" + this.activeTransaction.txHash;
 
         default:
-          return this.config.zkSyncNetwork.explorer + "tx/" + this.activeTransaction.txHash;
+          return this.config.zkSyncNetwork.explorer + "explorer/transactions/" + this.activeTransaction.txHash;
       }
     },
     isOwnAddress(): boolean {
@@ -151,6 +151,9 @@ export default Vue.extend({
     unlimitedUnlockAmount(): BigNumber {
       return ERC20_APPROVE_TRESHOLD;
     },
+  },
+  mounted() {
+    console.log(this.activeTransaction);
   },
   methods: {
     async commitTransaction() {

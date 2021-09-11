@@ -116,19 +116,9 @@ export default Vue.extend({
     },
     withdraw(): void {
       this.$router.push(`/nft/withdraw?token=${this.tokenID}`);
-      /* if (this.token.status === "Verified") {
-        this.$router.push(`/nft/withdraw?token=${this.tokenID}`);
-      } else {
-        this.$accessor.openModal("NoNftTokenFound");
-      } */
     },
     transfer(): void {
-      this.$router.push(`/nft/transfer?token=${this.tokenID}`);
-      /* if (this.token.status === "Verified") {
-        this.$router.push(`/nft/transfer?token=${this.tokenID}`);
-      } else {
-        this.$accessor.openModal("NoNftTokenFound");
-      } */
+      this.$router.push(`/transaction/nft/transfer?token=${this.tokenID}`);
     },
   },
 });

@@ -3,9 +3,14 @@
     <block-modals-allowance />
 
     <!-- Choose token -->
-    <i-modal v-model="chooseTokenModal" size="md">
+    <i-modal v-model="chooseTokenModalOpened" :value="chooseTokenModalOpened" size="md">
       <template slot="header">Choose token</template>
-      <choose-token :tokens-type="mainToken" @chosen="chooseToken($event)" />
+      <choose-token
+        v-if="mainToken || chooseTokenModal === 'feeToken'"
+        :fee-acceptable="chooseTokenModal === 'feeToken'"
+        :tokens-type="mainToken ? mainToken : 'L2-Tokens'"
+        @chosen="chooseToken($event)"
+      />
     </i-modal>
 
     <!-- Main Block -->
@@ -21,18 +26,40 @@
         <div>{{ type }}</div>
       </div>
 
-      <div class="_padding-top-1 inputLabel">Amount</div>
-      <amount-input
-        ref="amountInput"
-        v-model="inputtedAmount"
-        :max-amount="maxAmount.toString()"
-        :token="chosenToken ? chosenToken : undefined"
-        autofocus
-        :type="type"
-        @chooseToken="chooseTokenModal = true"
-        @enter="commitTransaction()"
-      />
+      <div class="_padding-top-1 inputLabel">Address</div>
+      <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" />
+      <block-choose-contact class="_margin-top-05" :address="inputtedAddress" :display-own-address="displayOwnAddress" @chosen="chooseAddress($event)" />
 
+      <template v-if="displayAmountInput">
+        <div class="_padding-top-1 inputLabel">Amount</div>
+        <amount-input
+          ref="amountInput"
+          v-model="inputtedAmount"
+          :max-amount="maxAmount.toString()"
+          :token="chosenToken ? chosenToken : undefined"
+          autofocus
+          :type="type"
+          @chooseToken="chooseTokenModal = 'mainToken'"
+          @enter="commitTransaction()"
+        />
+      </template>
+      <template v-if="displayContentHashInput">
+        <div class="_padding-top-1 inputLabel _display-flex _align-items-center">
+          <div>Content Hash</div>
+          <div class="icon-container _display-flex" @click="$accessor.openModal('ContentHash')">
+            <v-icon name="ri-question-mark" class="iconInfo" scale="0.9" />
+          </div>
+        </div>
+        <hash-input ref="hashInput" v-model="contentHash" class="_margin-bottom-2" autofocus @enter="commitTransaction()" />
+      </template>
+      <template v-if="displayNFTTokenSelect">
+        <div class="_padding-top-1 inputLabel">Token</div>
+        <i-input :value="chosenToken ? `NFT-${chosenToken}` : ''" disabled size="lg" type="text">
+          <i-button slot="append" block link variant="secondary" @click="chooseTokenModal = 'mainToken'">Select NFT</i-button>
+        </i-input>
+      </template>
+
+      <!-- Allowance -->
       <div v-if="chosenToken && displayTokenUnlock">
         <div class="_padding-top-1 _display-flex _align-items-center inputLabel" @click="$accessor.openModal('Allowance')">
           <span>
@@ -85,6 +112,7 @@
 
       <div v-if="error" class="errorText _text-center _margin-top-1">{{ error }}</div>
 
+      <!-- Commit button -->
       <i-button
         :disabled="!commitAllowed"
         block
@@ -99,16 +127,47 @@
           <loader v-if="allowanceLoading" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
+
+      <!-- Fees -->
+      <div v-if="feeSymbol && !enoughBalanceToPayFee" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">
+        Not enough <span class="tokenSymbol">{{ feeSymbol }}</span> to pay the fee
+      </div>
+      <div v-if="feeLoading" class="_text-center _margin-top-1" data-cy="fee_block_fee_message_loading">
+        {{ getFeeName("txFee") }}:
+        <span>
+          <span class="secondaryText">Loading...</span>
+        </span>
+      </div>
+      <template v-for="item in fees">
+        <div :key="item.key" class="_text-center _margin-top-1" data-cy="fee_block_fee_message">
+          {{ getFeeName(item.key) }}:
+          <span v-if="(item.key === 'txFee' && !feeLoading) || (item.key === 'accountActivation' && !activationFeeLoading)">
+            {{ item.amount.toString() | parseBigNumberish(feeSymbol) }} <span class="tokenSymbol">{{ feeSymbol }}</span>
+            <span class="secondaryText">
+              <token-price :symbol="feeSymbol" :amount="item.amount.toString()" />
+            </span>
+          </span>
+        </div>
+      </template>
+      <div v-if="activationFeeLoading" class="_text-center _margin-top-1" data-cy="fee_block_fee_message_loading">
+        {{ getFeeName("accountActivation") }}:
+        <span>
+          <span class="secondaryText">Loading...</span>
+        </span>
+      </div>
+      <span class="linkText _width-100 _display-block _text-center _margin-top-1" data-cy="fee_block_change_fee_token_button" @click="chooseTokenModal = 'feeToken'">
+        Change fee token
+      </span>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction } from "matter-dapp-ui/types";
-import { TokenLike } from "zksync/build/types";
 import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
+import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
+import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFee } from "matter-dapp-ui/types";
 export default Vue.extend({
   props: {
     fromRoute: {
@@ -120,7 +179,9 @@ export default Vue.extend({
   data() {
     return {
       inputtedAmount: this.$store.getters["zk-transaction/amount"],
-      chooseTokenModal: false,
+      inputtedAddress: this.$store.getters["zk-transaction/address"],
+      chooseTokenModal: <false | "mainToken" | "feeToken">false,
+      contentHash: this.$store.getters["zk-transaction/contentHash"],
     };
   },
   computed: {
@@ -138,8 +199,38 @@ export default Vue.extend({
     mainToken(): ZkTransactionMainToken {
       return this.$store.getters["zk-transaction/mainToken"];
     },
-    chosenToken(): TokenLike {
+    chosenToken(): TokenLike | undefined {
       return this.$store.getters["zk-transaction/symbol"];
+    },
+    feeSymbol(): TokenSymbol | undefined {
+      return this.$store.getters["zk-transaction/feeSymbol"];
+    },
+    enoughBalanceToPayFee(): boolean {
+      return this.$store.getters["zk-transaction/enoughBalanceToPayFee"];
+    },
+    displayAmountInput(): boolean {
+      switch (this.type) {
+        case "Deposit":
+        case "Transfer":
+        case "Withdraw":
+          return true;
+
+        default:
+          return false;
+      }
+    },
+    displayContentHashInput(): boolean {
+      return this.type === "MintNFT";
+    },
+    displayNFTTokenSelect(): boolean {
+      switch (this.type) {
+        case "TransferNFT":
+        case "WithdrawNFT":
+          return true;
+
+        default:
+          return false;
+      }
     },
     commitAllowed(): boolean {
       return this.$store.getters["zk-transaction/commitAllowed"];
@@ -162,14 +253,7 @@ export default Vue.extend({
       return tokenAllowance.eq("0");
     },
     maxAmount(): BigNumber {
-      if (!this.chosenToken) {
-        return BigNumber.from("0");
-      }
-      const tokenEthereumBalance: BigNumber | undefined = this.$store.getters["zk-balances/ethereumBalance"](this.chosenToken);
-      if (!tokenEthereumBalance) {
-        return BigNumber.from("0");
-      }
-      return tokenEthereumBalance;
+      return this.$store.getters["zk-transaction/maxAmount"];
     },
     allowance(): BigNumber | undefined {
       this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
@@ -188,19 +272,61 @@ export default Vue.extend({
     displayTokenUnlock(): boolean {
       return this.type === "Deposit" && this.chosenToken !== undefined && (!this.enoughAllowance || this.zeroAllowance) && (!this.allowanceLoading || this.zeroAllowance);
     },
+    displayOwnAddress(): boolean {
+      return ["Deposit", "Withdraw", "WithdrawNFT", "MintNFT"].includes(this.type);
+    },
     activeTransaction(): ZkActiveTransaction {
       return this.$store.getters["zk-transaction/activeTransaction"];
+    },
+    fees(): ZkFee[] {
+      return this.$store.getters["zk-transaction/fees"];
+    },
+    feeLoading(): boolean {
+      return this.$store.getters["zk-transaction/feeLoading"];
+    },
+    activationFeeLoading(): boolean {
+      return this.$store.getters["zk-transaction/activationFeeLoading"];
+    },
+    chooseTokenModalOpened: {
+      get(): boolean {
+        return this.chooseTokenModal !== false;
+      },
+      set(value) {
+        if (!value) {
+          this.chooseTokenModal = false;
+        }
+      },
     },
   },
   watch: {
     inputtedAmount(val) {
       this.$store.commit("zk-transaction/setAmount", val);
     },
+    inputtedAddress(val) {
+      this.$store.dispatch("zk-transaction/setAddress", val);
+    },
+    contentHash(val) {
+      this.$store.commit("zk-transaction/setContentHash", val);
+    },
+  },
+  mounted() {
+    if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] === false) {
+      this.$accessor.openModal("SignPubkey");
+    }
+  },
+  beforeDestroy() {
+    this.$store.commit("zk-transaction/setAmount", undefined);
+    this.$store.commit("zk-transaction/setContentHash", undefined);
   },
   methods: {
-    async chooseToken(token: TokenLike) {
+    chooseToken(token: TokenLike) {
+      console.log("Choosing token", token);
+      if (this.chooseTokenModal === "mainToken") {
+        this.$store.dispatch("zk-transaction/setSymbol", token);
+      } else if (this.chooseTokenModal === "feeToken") {
+        this.$store.dispatch("zk-transaction/setFeeSymbol", token);
+      }
       this.chooseTokenModal = false;
-      await this.$store.dispatch("zk-transaction/setSymbol", token);
     },
     async commitTransaction() {
       if (!this.commitAllowed) {
@@ -211,8 +337,22 @@ export default Vue.extend({
     async unlockToken(unlimited = false) {
       await this.$store.dispatch("zk-transaction/setAllowance", unlimited);
     },
+    chooseAddress(address: Address) {
+      this.inputtedAddress = address;
+    },
     setAllowanceMax() {
       this.inputtedAmount = this.$options.filters!.parseBigNumberish(this.allowance, this.chosenToken);
+    },
+    getFeeName(key: string): string {
+      switch (key) {
+        case "txFee":
+          return "Fee";
+        case "accountActivation":
+          return "Account Activation single-time fee";
+
+        default:
+          return "";
+      }
     },
   },
 });

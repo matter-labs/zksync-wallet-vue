@@ -43,11 +43,13 @@ export default Vue.extend({
           return this.config.ethereumNetwork.explorer + "tx/" + this.activeTransaction.txHash;
 
         default:
-          return this.config.zkSyncNetwork.explorer + "tx/" + this.activeTransaction.txHash;
+          return this.config.zkSyncNetwork.explorer + "explorer/transactions/" + this.activeTransaction.txHash;
       }
     },
     tip(): string {
       switch (this.activeTransaction.step) {
+        case "processing":
+          return "Processing...";
         case "requestingLatestFees":
           return "Requesting fees...";
         case "waitingForUserConfirmation":

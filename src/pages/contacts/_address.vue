@@ -30,7 +30,7 @@
         <v-icon name="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
       </i-button>
       <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"><v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact</i-button>
-      <i-button block size="lg" variant="secondary" :to="`/transfer?w=${address}`">
+      <i-button block size="lg" variant="secondary" :to="`/transaction/transfer?w=${address}`">
         <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to address
       </i-button>
     </div>
@@ -70,7 +70,7 @@ export default Vue.extend({
   },
   computed: {
     computedReturnLink(): Route | string {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transfer" ? this.fromRoute : "/contacts";
+      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transaction/transfer" ? this.fromRoute : "/contacts";
     },
     openedContact(): ZkContact {
       this.forceUpdateVal;
