@@ -27,10 +27,20 @@
       <template slot="header">Transfer warning</template>
       <div>
         <div class="_padding-bottom-1">
-          You are about to transfer money to an address that doesn't have a zkSync balance yet. The transfer will happen inside zkSync L2. If you want to move money from zkSync to
-          the mainnet, please use the
-          <nuxt-link :to="`/withdraw?w=${inputtedAddress}`">Withdraw</nuxt-link>
-          function instead.
+          You are about to transfer money to an address that does not have a zkSync balance yet. Please be aware of the common pitfalls and loss of funds!
+          <ol class="_padding-left-1">
+            <li>
+              Withdraw your zkSync L2 funds to an exchange. <br />
+              <strong>THIS IS NOT THE RIGHT METHOD.</strong><br />
+              To withdraw funds to an exchange, you must first <nuxt-link :to="`/withdraw?w=${inputtedAddress}`">Withdraw</nuxt-link> the funds to your own ethereum address on L1
+              and send it from your ethereum address to the exchange address on L1. Alternatively, you can take a risk and enter the exchange address when you withdraw, but smart
+              contract transfers is not observed by most exchanges and you must contact their customer support to see your funds on the exchange.
+            </li>
+            <li>
+              Transfer funds to an Ethereum user that has never used zkSync.<br />
+              Keep in mind that these funds are in the zkSync L2. The recipient will have to withdraw these funds from the zkSync L2 if they wish to use it on L1.
+            </li>
+          </ol>
         </div>
         <i-checkbox v-model="transferWithdrawWarningCheckmark">Do not show this again</i-checkbox>
         <i-button block class="_margin-top-1" size="lg" variant="secondary" @click="warningDialogProceedTransfer()">Transfer inside zkSync</i-button>
@@ -327,7 +337,7 @@ export default Vue.extend({
     transactionTypeName(): string {
       switch (this.type) {
         case "withdraw":
-          return "Withdraw";
+          return "Withdraw to L1";
         case "transfer":
           return "Transfer";
         case "nft-withdraw":
