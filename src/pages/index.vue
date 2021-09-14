@@ -25,7 +25,7 @@ export default Vue.extend({
   },
   methods: {
     async customWallet() {
-      const refreshWalletTry = await this.$store.dispatch("zk-onboard/login");
+      const refreshWalletTry = await this.$store.dispatch("zk-onboard/loginWithOnboard");
       if (!refreshWalletTry) {
         await this.$store.dispatch("zk-account/logout");
       } else {

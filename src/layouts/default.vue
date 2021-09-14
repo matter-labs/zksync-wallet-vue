@@ -1,16 +1,18 @@
 <template>
   <i-layout class="defaultLayout">
     <block-logging-in-loader />
-    <block-header ref="header" />
-    <i-layout-content v-if="!loggingIn && loggedIn" class="layoutContent">
-      <sign-pubkey-modal />
-      <div class="routerContainer">
-        <transition name="fade" mode="out-in">
-          <nuxt />
-        </transition>
-      </div>
-    </i-layout-content>
-    <block-footer class="desktopOnly" />
+    <template v-if="!loggingIn && loggedIn">
+      <block-header ref="header" />
+      <i-layout-content class="layoutContent">
+        <sign-pubkey-modal />
+        <div class="routerContainer">
+          <transition name="fade" mode="out-in">
+            <nuxt />
+          </transition>
+        </div>
+      </i-layout-content>
+      <block-footer class="desktopOnly" />
+    </template>
   </i-layout>
 </template>
 
@@ -23,7 +25,7 @@ export default Vue.extend({
   },
   computed: {
     loggingIn() {
-      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting";
+      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
     loggedIn() {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";

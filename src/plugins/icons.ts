@@ -11,13 +11,11 @@
  * @link https://oh-vue-icons.netlify.app
  */
 import { Context, Plugin } from "@nuxt/types";
-import { Route } from "@nuxt/vue-app";
 import OhVueIcon from "oh-vue-icons/dist/v2/icon.es";
 import {
-  BiDownload,
   RiGalleryLine,
-  IoWalletOutline,
   RiAddCircleFill,
+  RiErrorWarningLine,
   RiAddFill,
   RiAddLine,
   RiArrowDownSLine,
@@ -73,8 +71,7 @@ const iconsPlugin: Plugin = ({ route }: Context) => {
     RiInformationFill,
     RiArrowUpSLine,
     RiArrowDownSLine,
-    BiDownload,
-    IoWalletOutline,
+    RiErrorWarningLine,
     RiCloseCircleFill,
     RiAddCircleFill,
     RiAtLine,

@@ -320,7 +320,6 @@ export default Vue.extend({
   },
   methods: {
     chooseToken(token: TokenLike) {
-      console.log("Choosing token", token);
       if (this.chooseTokenModal === "mainToken") {
         this.$store.dispatch("zk-transaction/setSymbol", token);
       } else if (this.chooseTokenModal === "feeToken") {

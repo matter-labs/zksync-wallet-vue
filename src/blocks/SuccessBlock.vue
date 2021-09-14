@@ -152,9 +152,6 @@ export default Vue.extend({
       return ERC20_APPROVE_TRESHOLD;
     },
   },
-  mounted() {
-    console.log(this.activeTransaction);
-  },
   methods: {
     async commitTransaction() {
       if (!this.commitAllowed) {

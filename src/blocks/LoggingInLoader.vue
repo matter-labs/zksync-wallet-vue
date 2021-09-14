@@ -30,7 +30,7 @@ export default Vue.extend({
   },
   computed: {
     loggingIn() {
-      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting";
+      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
     loggedIn() {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";

@@ -1,5 +1,5 @@
 <template>
-  <div class="singleTransaction">
+  <div class="transaction">
     <div class="status">
       <i-tooltip placement="right">
         <v-icon :name="transactionStatus.icon" :class="transactionStatus.class" />
@@ -9,14 +9,14 @@
     <div class="mainInfo" :class="{ noInfo: isNFT }">
       <i-tooltip>
         <div class="createdAt">{{ timeAgo }}</div>
-        <template slot="body">{{ singleTransaction.createdAt | formatDateTime }}</template>
+        <template slot="body">{{ transaction.createdAt | formatDateTime }}</template>
       </i-tooltip>
-      <div v-if="!isNFT" :class="{ small: amount.length > 10 }" class="amount">{{ amount | parseBigNumberish(tokenSymbol) }}</div>
+      <div v-if="!isNFT" :class="{ small: $options.filters.parseBigNumberish(amount, tokenSymbol).length > 10 }" class="amount">{{ amount | parseBigNumberish(tokenSymbol) }}</div>
       <div v-if="!isMintNFT" class="tokenSymbol">
         <span v-if="isNFT && tokenSymbol">NFT-</span>
-        <div v-else-if="isNFT && singleTransaction.tx.contentHash" class="nft">
-          <span class="contentHash">{{ singleTransaction.tx.contentHash }}</span>
-          <i-tooltip placement="left" trigger="click" class="copyContentHash" @click.native="copy(singleTransaction.tx.contentHash)">
+        <div v-else-if="isNFT && transaction.tx.contentHash" class="nft">
+          <span class="contentHash">{{ transaction.tx.contentHash }}</span>
+          <i-tooltip placement="left" trigger="click" class="copyContentHash" @click.native="copy(transaction.tx.contentHash)">
             <div class="iconContainer">
               <v-icon name="ri-clipboard-line" />
               <span>Copy hash</span>
@@ -66,7 +66,7 @@ import { copyToClipboard } from "matter-dapp-ui/utils";
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
   props: {
-    singleTransaction: {
+    transaction: {
       type: Object,
       default: () => {},
       required: true,
@@ -82,17 +82,17 @@ export default Vue.extend({
   computed: {
     isFeeTransaction(): boolean {
       return (
-        this.singleTransaction.op.type === "ChangePubKey" ||
-        this.singleTransaction.op.type === "FullExit" ||
-        this.singleTransaction.op.type === "Close" ||
-        (this.singleTransaction.op.type === "Transfer" && this.singleTransaction.op.amount === "0" && this.singleTransaction.op.from === this.singleTransaction.op.to)
+        this.transaction.op.type === "ChangePubKey" ||
+        this.transaction.op.type === "FullExit" ||
+        this.transaction.op.type === "Close" ||
+        (this.transaction.op.type === "Transfer" && this.transaction.op.amount === "0" && this.transaction.op.from === this.transaction.op.to)
       );
     },
     walletAddressFull(): Address {
       return this.$store.getters["zk-account/address"];
     },
     displayedAddress(): Address {
-      const op = this.singleTransaction.op;
+      const op = this.transaction.op;
       if (op.type === "Transfer") {
         if (this.isSameAddress(op.to)) {
           return op.from;
@@ -117,20 +117,20 @@ export default Vue.extend({
       return "";
     },
     transactionStatus(): { text: string; icon: string; class: string } {
-      if (this.singleTransaction.failReason) {
+      if (this.transaction.failReason) {
         return {
-          text: this.singleTransaction.failReason ? this.singleTransaction.failReason : "Rejected",
+          text: this.transaction.failReason ? this.transaction.failReason : "Rejected",
           icon: "ri-close-circle-fill",
           class: "rejected",
         };
       }
-      if (this.singleTransaction.status === "finalized") {
+      if (this.transaction.status === "finalized") {
         return {
           text: "Finalized",
           icon: "ri-check-double-line",
           class: "verified",
         };
-      } else if (this.singleTransaction.status === "committed") {
+      } else if (this.transaction.status === "committed") {
         return {
           text: "Committed",
           icon: "ri-check-line",
@@ -145,7 +145,7 @@ export default Vue.extend({
       }
     },
     transactionTypeData(): { type: string; showAddress: boolean; modal: false | { icon: string; key: string } } {
-      switch (this.singleTransaction.op.type) {
+      switch (this.transaction.op.type) {
         case "Withdraw":
         case "WithdrawNFT":
           return {
@@ -206,7 +206,7 @@ export default Vue.extend({
               modal: false,
             };
           } else {
-            if (this.isSameAddress(this.singleTransaction.op.to)) {
+            if (this.isSameAddress(this.transaction.op.to)) {
               return {
                 type: "Received from:",
                 showAddress: true,
@@ -222,7 +222,7 @@ export default Vue.extend({
         default:
           return {
             // @ts-ignore
-            type: this.singleTransaction.op.type.toString(),
+            type: this.transaction.op.type.toString(),
             showAddress: true,
             modal: false,
           };
@@ -230,23 +230,23 @@ export default Vue.extend({
     },
     tokenSymbol(): TokenSymbol | number {
       let tokenID = 0;
-      switch (this.singleTransaction.op.type) {
+      switch (this.transaction.op.type) {
         case "Withdraw":
         case "WithdrawNFT":
         case "ForcedExit":
         case "Transfer":
-          tokenID = this.singleTransaction.op.token;
+          tokenID = this.transaction.op.token;
           break;
         case "Deposit":
         case "FullExit":
-          tokenID = this.singleTransaction.op.tokenId;
+          tokenID = this.transaction.op.tokenId;
           break;
         case "Close":
         case "Swap":
           return "";
         case "ChangePubKey":
         case "MintNFT":
-          tokenID = this.singleTransaction.op.feeToken;
+          tokenID = this.transaction.op.feeToken;
           break;
       }
       const token: Token = this.$store.getters["zk-tokens/zkTokenByID"](tokenID);
@@ -256,7 +256,7 @@ export default Vue.extend({
       return tokenID;
     },
     isMintNFT(): boolean {
-      return this.singleTransaction.op.type === "MintNFT";
+      return this.transaction.op.type === "MintNFT";
     },
     isNFT(): boolean {
       if (this.isMintNFT) {
@@ -265,12 +265,12 @@ export default Vue.extend({
       return utils.isNFT(this.tokenSymbol);
     },
     amount(): BigNumberish | undefined {
-      switch (this.singleTransaction.op.type) {
+      switch (this.transaction.op.type) {
         case "Withdraw":
         case "Transfer":
         case "Deposit":
           if (!this.isNFT) {
-            return this.singleTransaction.op.amount;
+            return this.transaction.op.amount;
           } else {
             return undefined;
           }
@@ -282,21 +282,21 @@ export default Vue.extend({
         case "ForcedExit":
         case "ChangePubKey":
         case "MintNFT":
-          return this.singleTransaction.op.fee;
+          return this.transaction.op.fee;
       }
       return undefined;
     },
     transactionExplorerLink(): string {
-      return `${this.config.zkSyncNetwork.explorer}explorer/transactions/${this.singleTransaction.txHash}`;
+      return `${this.config.zkSyncNetwork.explorer}explorer/transactions/${this.transaction.txHash}`;
     },
   },
   mounted() {
-    this.timeAgo = this.getTimeAgo(this.singleTransaction.createdAt);
+    this.timeAgo = this.getTimeAgo(this.transaction.createdAt);
     getTimeAgoInterval = setInterval(() => {
-      if (!this.singleTransaction) {
+      if (!this.transaction) {
         return clearInterval(getTimeAgoInterval);
       }
-      this.timeAgo = this.getTimeAgo(this.singleTransaction.createdAt);
+      this.timeAgo = this.getTimeAgo(this.transaction.createdAt);
     }, 30000);
     this.getWithdrawalTx();
   },
@@ -318,7 +318,7 @@ export default Vue.extend({
       return contactFromStore && !contactFromStore.deleted ? contactFromStore.name : address.replace(address.slice(6, address.length - 3), "...");
     },
     async getWithdrawalTx() {
-      const tx = this.singleTransaction;
+      const tx = this.transaction;
       if (tx.op.type === "Withdraw" || tx.op.type === "WithdrawNFT" || tx.op.type === "ForcedExit") {
         const withdrawalEthTxHash = await this.$store.dispatch("zk-history/getWithdrawalEthTxHash", tx.txHash);
         if (withdrawalEthTxHash) {

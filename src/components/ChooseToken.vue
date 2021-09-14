@@ -26,7 +26,13 @@
       </div>
       <div class="tokenListContainer genericListContainer _margin-top-05">
         <div v-for="(balance, symbolOrID) in displayedList" :key="symbolOrID" class="tokenItem" :data-cy="`token_item_${symbolOrID}`" @click="chooseToken(symbolOrID)">
-          <div class="tokenSymbol">{{ tokensType === "L2-NFT" ? "NFT-" : "" }}{{ symbolOrID }}</div>
+          <div class="tokenSymbol">
+            <span>{{ tokensType === "L2-NFT" ? "NFT-" : "" }}{{ symbolOrID }}</span>
+            <i-tooltip v-if="tokensType === 'L2-Tokens' && !feeAcceptableTokensLoading && !feeAcceptableTokens.has(symbolOrID)" placement="bottom">
+              <v-icon class="iconInfo" name="ri-error-warning-line" />
+              <template slot="body">Not acceptable for paying fees</template>
+            </i-tooltip>
+          </div>
           <div v-if="tokensType === 'L1-Tokens' || tokensType === 'L2-Tokens'" class="rightSide">
             <div class="balance">{{ balance | parseBigNumberish(symbolOrID) }}</div>
           </div>
@@ -126,6 +132,9 @@ export default Vue.extend({
     },
     hasDisplayedBalances(): boolean {
       return Object.keys(this.displayedList).length !== 0;
+    },
+    feeAcceptableTokens(): string {
+      return this.$store.getters["zk-tokens/feeAcceptableTokens"];
     },
     feeAcceptableTokensLoading(): boolean {
       return this.$store.getters["zk-tokens/feeAcceptableTokensLoading"];

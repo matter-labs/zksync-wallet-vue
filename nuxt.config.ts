@@ -166,7 +166,7 @@ const config: NuxtConfig = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/icons", "@/plugins/filters"],
+  plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession"],
 
   router: {
     middleware: ["auth"],
@@ -175,7 +175,6 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     "nuxt-typed-vuex",
@@ -262,14 +261,6 @@ const config: NuxtConfig = {
         fs: "empty",
       };
     },
-  },
-  buildOptimisations: {
-    profile: env !== "prod" ? "risky" : "experimental",
-    features: {
-      postcssNoPolyfills: isProduction,
-      hardSourcePlugin: isProduction,
-    },
-    esbuildLoaderOptions: "esnext",
   },
   googleFonts: {
     prefetch: true,

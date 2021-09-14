@@ -5,7 +5,7 @@ export default ({ redirect, store, route }: Context) => {
     if (route.path === "/") {
       return redirect("/account");
     }
-  } else if (route.path !== "/") {
+  } else if (route.path !== "/" && !store.getters["zk-onboard/restoringSession"]) {
     return redirect("/");
   }
 };

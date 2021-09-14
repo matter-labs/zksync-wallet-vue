@@ -10,7 +10,7 @@
         <div v-else-if="transactions.length === 0 && !loadingStatus" class="nothingFound" :class="{ loadMoreAvailable: !transactionHistoryAllLoaded }">
           <span>History is empty</span>
         </div>
-        <single-transaction v-for="item in transactions" v-else :key="item.txHash" class="transactionItem" :single-transaction="item" />
+        <transaction-history-item v-for="item in transactions" v-else :key="item.txHash" class="transactionItem" :transaction="item" />
         <i-button v-if="!loadingStatus && !transactionHistoryAllLoaded" block link size="lg" variant="secondary" @click="loadMore()">Load more</i-button>
         <div v-else-if="loadingStatus === 'previous'">
           <loader class="_display-block _margin-x-auto _margin-y-2" />
@@ -21,19 +21,12 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
+import Vue from "vue";
 import { ApiTransaction } from "zksync/build/types";
 import { ZkTransactionHistoryLoadingState } from "matter-dapp-ui/types";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
-  props: {
-    /* transactions: {
-      type: Array,
-      default: () => [],
-      required: false,
-    } as PropOptions<ApiTransaction[]>, */
-  },
   computed: {
     transactions(): ApiTransaction {
       return this.$store.getters["zk-history/transactionHistory"];
