@@ -33,10 +33,16 @@
       <template slot="footer">
         <div class="_display-flex _justify-content-space-between">
           <block-system-info />
-          <i-button block size="md" circle @click="toggleDarkMode">
-            <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
-            <v-icon v-else name="ri-moon-fill" />
-          </i-button>
+          <network-switch />
+          <div class="_display-flex">
+            <i-button v-if="!isProduction" size="md" circle class="_margin-right-1 _margin-0" block @click="openNetworkSwitchModal">
+              <v-icon name="co-ethereum" scale="1" />
+            </i-button>
+            <i-button block size="md" circle class="_margin-0" @click="toggleDarkMode">
+              <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
+              <v-icon v-else name="ri-moon-fill" />
+            </i-button>
+          </div>
         </div>
       </template>
     </i-modal>
@@ -44,11 +50,15 @@
 </template>
 
 <script lang="ts">
+import { ETHER_PRODUCTION } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import Vue from "vue";
+import NetworkSwitch from "@/blocks/modals/NetworkSwitch.vue";
 
 export default Vue.extend({
-  components: {},
+  components: {
+    NetworkSwitch,
+  },
   props: {
     value: {
       type: Boolean,
@@ -71,10 +81,16 @@ export default Vue.extend({
     isDarkTheme(): boolean {
       return utils.defineTheme(this.$inkline) === "dark";
     },
+    isProduction(): boolean {
+      return ETHER_PRODUCTION;
+    },
   },
   methods: {
     toggleDarkMode(): void {
       utils.defineTheme(this.$inkline, true);
+    },
+    openNetworkSwitchModal() {
+      return this.$accessor.openModal("NetworkSwitch");
     },
   },
 });

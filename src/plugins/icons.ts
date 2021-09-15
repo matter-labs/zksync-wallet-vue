@@ -52,6 +52,7 @@ import {
   RiSunFill,
   RiWalletLine,
   RiWifiLine,
+  CoEthereum,
 } from "oh-vue-icons/icons";
 import Vue from "vue";
 
@@ -99,6 +100,7 @@ const iconsPlugin: Plugin = (): void => {
     RiSunFill,
     RiWalletLine,
     RiWifiLine,
+    CoEthereum,
   );
 
   Vue.component("VIcon", OhVueIcon);
