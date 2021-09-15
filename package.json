@@ -150,7 +150,7 @@
     "yarn spell-check"
   ],
   "scripts": {
-    "local": "sh ./cli-process-env.sh 'ropsten-beta' 'dev' 1 1",
+    "local": "sh ./cli-process-env.sh 'localhost' 'dev' 1 1",
     "dev": "yarn ci:build:rinkeby && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
