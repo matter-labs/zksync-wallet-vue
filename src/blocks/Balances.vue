@@ -110,6 +110,20 @@ export default Vue.extend({
     zkBalances(): ZkTokenBalances {
       return this.$store.getters["zk-balances/balances"];
     },
+    zkBalancesWithDeposits(): ZkTokenBalances {
+      const tokensAvailableForFee = this.$store.getters["zk-tokens/feeAcceptableTokens"];
+      const zkBalancesWithDeposits = this.zkBalances;
+      for (const symbol of this.activeDeposits) {
+        if (!zkBalancesWithDeposits[symbol]) {
+          zkBalancesWithDeposits[symbol] = {
+            balance: "0",
+            verified: false,
+            feeAvailable: !!tokensAvailableForFee.get(symbol),
+          };
+        }
+      }
+      return zkBalancesWithDeposits;
+    },
     displayedList(): ZkTokenBalances {
       return searchByKey(this.zkBalances, this.search);
     },
@@ -117,7 +131,7 @@ export default Vue.extend({
       return this.$store.getters["zk-balances/depositingBalances"];
     },
     hasDisplayedBalances(): boolean {
-      return Object.keys(this.displayedList).length !== 0;
+      return Object.keys(this.displayedList).length !== 0 || Object.keys(this.activeDeposits).length !== 0;
     },
     isSearching(): boolean {
       return !!this.search.trim();

@@ -8,7 +8,7 @@
           <v-icon slot="prefix" name="ri-search-line" />
         </i-input>
         <div class="contactsListContainer genericListContainer">
-          <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
+          <div v-if="!isSearching && !hasDisplayedContacts && !displayOwnAddress" class="nothingFound">
             <span>The contact list is empty</span>
           </div>
           <div v-else-if="isSearching && !hasDisplayedContacts" class="nothingFound _padding-top-2 _padding-bottom-1">
@@ -24,7 +24,7 @@
                 <div class="contactAddress walletAddress">{{ ownAddress }}</div>
               </div>
             </div>
-            <div v-for="(item, address) in displayedContactsList" :key="address" class="contactItem" @click.self="chooseContact(item)">
+            <div v-for="(item, contactAddress) in displayedContactsList" :key="contactAddress" class="contactItem" @click.self="chooseContact(item)">
               <user-img :wallet="item.address" />
               <div class="contactInfo">
                 <div class="contactName">{{ item.name }}</div>

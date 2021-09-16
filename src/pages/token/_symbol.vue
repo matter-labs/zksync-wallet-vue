@@ -36,11 +36,16 @@
         </div>
         <div class="_display-flex _justify-content-space-between balanceWithdraw">
           <div class="infoBlock">
-            <div v-if="accountStateLoading && !balanceToken" class="secondaryText">Loading...</div>
-            <div v-else class="balance">
+            <div v-if="accountStateLoading && !accountStateRequested && !balanceToken" class="secondaryText">Loading...</div>
+            <div v-else-if="balanceToken" class="balance">
               <span class="tokenSymbol">{{ symbol }}</span>
               &nbsp;{{ balanceToken.balance | parseBigNumberish(symbol) }}&nbsp;&nbsp;
               <token-price :symbol="symbol" :amount="balanceToken.balance" />
+            </div>
+            <div v-else class="balance">
+              <span class="tokenSymbol">{{ symbol }}</span>
+              &nbsp;0&nbsp;&nbsp;
+              <token-price :symbol="symbol" amount="0" />
             </div>
           </div>
           <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/transaction/withdraw?token=${symbol}`">- Withdraw</i-button>
@@ -92,6 +97,9 @@ export default Vue.extend({
     },
     tokenNotFound(): boolean {
       return !this.zkTokensLoading && !this.token;
+    },
+    accountStateRequested(): boolean {
+      return this.$store.getters["zk-account/accountStateRequested"];
     },
     feeAcceptable(): string {
       return this.$store.getters["zk-tokens/feeAcceptableTokens"].has(this.symbol) ? "Allowed" : "Not allowed";

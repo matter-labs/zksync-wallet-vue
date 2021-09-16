@@ -7,9 +7,8 @@
 <script lang="ts">
 import Vue from "vue";
 export default Vue.extend({
-  async asyncData({ store }) {
-    await store.dispatch("zk-transaction/setType", "TransferNFT");
-    return {};
+  created() {
+    this.$store.dispatch("zk-transaction/setType", "TransferNFT");
   },
 });
 </script>

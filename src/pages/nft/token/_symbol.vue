@@ -115,7 +115,7 @@ export default Vue.extend({
       copyToClipboard(value);
     },
     withdraw(): void {
-      this.$router.push(`/nft/withdraw?token=${this.tokenID}`);
+      this.$router.push(`/transaction/nft/withdraw?token=${this.tokenID}`);
     },
     transfer(): void {
       this.$router.push(`/transaction/nft/transfer?token=${this.tokenID}`);

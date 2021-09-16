@@ -148,7 +148,7 @@ export default Vue.extend({
       if (this.tokensType === "L1-Tokens") {
         this.$store.dispatch("zk-balances/requestEthereumBalances", true);
       } else {
-        this.$store.dispatch("zk-account/updateAccountState");
+        this.$store.dispatch("zk-account/updateAccountState", true);
       }
     },
     chooseToken(symbolOrID: string) {

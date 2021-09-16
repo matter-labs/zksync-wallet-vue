@@ -55,7 +55,7 @@
       <template v-if="displayNFTTokenSelect">
         <div class="_padding-top-1 inputLabel">Token</div>
         <i-input :value="chosenToken ? `NFT-${chosenToken}` : ''" disabled size="lg" type="text">
-          <i-button slot="append" block link variant="secondary" @click="chooseTokenModal = 'mainToken'">Select NFT</i-button>
+          <i-button slot="append" block link variant="secondary" @click="chooseTokenModal = 'mainToken'">Select{{ chosenToken ? " another " : " " }}NFT</i-button>
         </i-input>
       </template>
 
@@ -96,9 +96,8 @@
             <span class="tokenSymbol">{{ chosenToken }}</span>
           </span>
           <span v-else>
-            You do not have enough allowance for
-            <span class="tokenSymbol">{{ chosenToken }}</span>
-            .<br class="desktopOnly" />
+            You do not have enough allowance for <span class="tokenSymbol">{{ chosenToken }}.</span>
+            <br class="desktopOnly" />
             Set higher allowance to proceed to deposit.
             <span v-if="allowance">
               <br class="desktopOnly" />Your current allowance is
@@ -114,7 +113,7 @@
 
       <!-- Commit button -->
       <i-button
-        :disabled="!commitAllowed"
+        :disabled="!commitAllowed || initialDataLoading"
         block
         class="_margin-top-1 _display-flex flex-row"
         data-cy="commit_transaction_button"
@@ -124,7 +123,7 @@
       >
         <div class="_display-flex _justify-content-center _align-items-center">
           <div>{{ type }}</div>
-          <loader v-if="allowanceLoading" class="_margin-left-1" size="xs" />
+          <loader v-if="allowanceLoading || initialDataLoading" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
 
@@ -155,7 +154,12 @@
           <span class="secondaryText">Loading...</span>
         </span>
       </div>
-      <span class="linkText _width-100 _display-block _text-center _margin-top-1" data-cy="fee_block_change_fee_token_button" @click="chooseTokenModal = 'feeToken'">
+      <span
+        v-if="fees.length > 0"
+        class="linkText _width-100 _display-block _text-center _margin-top-1"
+        data-cy="fee_block_change_fee_token_button"
+        @click="chooseTokenModal = 'feeToken'"
+      >
         Change fee token
       </span>
     </div>
@@ -182,6 +186,7 @@ export default Vue.extend({
       inputtedAddress: this.$store.getters["zk-transaction/address"],
       chooseTokenModal: <false | "mainToken" | "feeToken">false,
       contentHash: this.$store.getters["zk-transaction/contentHash"],
+      initialDataLoading: true,
     };
   },
   computed: {
@@ -309,10 +314,21 @@ export default Vue.extend({
       this.$store.commit("zk-transaction/setContentHash", val);
     },
   },
-  mounted() {
+  async mounted() {
+    if (!this.$store.getters["zk-account/accountStateRequested"]) {
+      await this.$store.dispatch("zk-account/updateAccountState");
+    }
     if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] === false) {
       this.$accessor.openModal("SignPubkey");
     }
+    if (this.$route.query.token) {
+      if (this.mainToken === "L2-NFT") {
+        this.chooseToken(parseInt(<string>this.$route.query.token));
+      } else {
+        this.chooseToken(<string>this.$route.query.token);
+      }
+    }
+    this.initialDataLoading = false;
   },
   beforeDestroy() {
     this.$store.commit("zk-transaction/setAmount", undefined);
@@ -320,7 +336,7 @@ export default Vue.extend({
   },
   methods: {
     chooseToken(token: TokenLike) {
-      if (this.chooseTokenModal === "mainToken") {
+      if (!this.chooseTokenModal || this.chooseTokenModal === "mainToken") {
         this.$store.dispatch("zk-transaction/setSymbol", token);
       } else if (this.chooseTokenModal === "feeToken") {
         this.$store.dispatch("zk-transaction/setFeeSymbol", token);

@@ -3,7 +3,7 @@
     <template slot="header">Account Activation</template>
     <div class="_text-center">
       <p v-if="state === false">Sign a message once to activate your zkSync account.</p>
-      <p v-else-if="state === 'processing'" class="_text-center">Processing</p>
+      <p v-else-if="state === 'processing'" class="_text-center">Processing...</p>
       <p v-else-if="state === 'waitingForUserConfirmation'" class="_text-center">Sign the message in your wallet to continue</p>
       <p v-else-if="state === 'updating'" class="_text-center">Loading account data...</p>
       <i-button :disabled="loading" class="_margin-top-2" block size="lg" variant="secondary" data-cy="account_activation_sign_button" @click="signActivation()">
