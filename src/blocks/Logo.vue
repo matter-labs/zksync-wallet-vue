@@ -32,7 +32,7 @@
       />
     </svg>
     <template v-else>
-      <img :src="zkWalletLogoSrc" alt="zkWallet" class="zkwallet-logo" />
+      <img src="@/assets/imgs/logos/logo-alt.svg" alt="zkWallet" class="zkwallet-logo" />
     </template>
     <block-network-badge />
   </div>
@@ -51,10 +51,6 @@ export default Vue.extend({
     },
   },
   computed: {
-    zkWalletLogoSrc(): string {
-      // const prefix = utils.defineTheme(this.$inkline, false) === "light" ? "" : "-alt";
-      return require("@/assets/imgs/logos/logo.svg");
-    },
     isMainnet(): boolean {
       return process.env.network === "mainnet";
     },

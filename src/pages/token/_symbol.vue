@@ -5,9 +5,9 @@
         <nuxt-link :to="returnLink" class="returnBtn">
           <v-icon name="ri-arrow-left-line" />
         </nuxt-link>
-        <div v-if="token" class="_display-flex _align-items-center _justify-content-center">
+        <div class="_display-flex _align-items-center _justify-content-center">
           <span class="tokenSymbol">{{ symbol }}</span>
-          <i-tooltip>
+          <i-tooltip v-if="!zkTokensLoading && token">
             <a :href="blockExplorerLink + '/token/' + token.address" target="_blank" class="icon-container _display-flex">
               <v-icon name="ri-external-link-line" class="iconInfo" />
             </a>
@@ -15,7 +15,8 @@
           </i-tooltip>
         </div>
       </div>
-      <div v-if="!tokenNotFound">
+      <div v-if="tokenNotFound" class="tokenNotFound errorText">Token not found</div>
+      <div v-else>
         <div class="infoBlock">
           <div class="headline">Token price:</div>
           <div v-if="zkTokensLoading" class="secondaryText">Loading...</div>
@@ -38,9 +39,9 @@
           <div class="infoBlock">
             <div v-if="accountStateLoading && !accountStateRequested && !balanceToken" class="secondaryText">Loading...</div>
             <div v-else-if="balanceToken" class="balance">
-              <span class="tokenSymbol">{{ symbol }}</span>
-              &nbsp;{{ balanceToken.balance | parseBigNumberish(symbol) }}&nbsp;&nbsp;
-              <token-price :symbol="symbol" :amount="balanceToken.balance" />
+              {{ balanceToken.balance | parseBigNumberish(symbol) }}&nbsp;
+              <span class="tokenSymbol">{{ symbol }}&nbsp;&nbsp;</span>
+              <token-price class="secondaryText" :symbol="symbol" :amount="balanceToken.balance" />
             </div>
             <div v-else class="balance">
               <span class="tokenSymbol">{{ symbol }}</span>
@@ -54,7 +55,6 @@
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
         </i-button>
       </div>
-      <div v-else class="tokenNotFound">Token not found</div>
     </div>
     <!-- <transactions class="_margin-top-0" :filter="symbol" /> -->
   </div>

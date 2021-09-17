@@ -45,6 +45,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import theme from "matter-dapp-ui/utils/theme";
 
 export default Vue.extend({
   components: {},
@@ -54,6 +55,11 @@ export default Vue.extend({
       default: false,
       required: false,
     },
+  },
+  data() {
+    return {
+      theme: theme.getUserTheme(),
+    };
   },
   computed: {
     modal: {
@@ -68,13 +74,13 @@ export default Vue.extend({
       return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;
     },
     isDarkTheme(): boolean {
-      return true;
-      // return utils.defineTheme(this.$inkline) === "dark";
+      return this.theme === "dark";
     },
   },
   methods: {
     toggleDarkMode(): void {
-      // utils.defineTheme(this.$inkline, true);
+      this.theme = theme.toggleTheme();
+      this.$inkline.config.variant = this.theme;
     },
   },
 });

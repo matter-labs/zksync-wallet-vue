@@ -1,11 +1,10 @@
 <template>
   <transition name="fade">
-    <div v-if="loggingIn || loggedInAnimation" class="loggingInLoader">
+    <div v-if="loggingIn && !loggingInScreenDelay" class="loggingInLoader">
       <logo class="_margin-bottom-3" :is-zk-sync-logo="true" />
       <h1>Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
       <transition-group v-if="hintText" tag="div" name="slide-vertical-fade" class="hint">
-        <div v-if="!loggedInAnimation" :key="hintText">{{ hintText }}</div>
-        <div v-else key="success" class="green">Wallet successfully connected!</div>
+        <div :key="hintText">{{ hintText }}</div>
       </transition-group>
       <loader size="lg" class="_margin-y-2" />
       <i-button class="cancelButton _padding-x-2" size="sm" variant="secondary" @click="cancelLogin()">Cancel</i-button>
@@ -25,7 +24,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      loggedInAnimation: false,
+      loggingInScreenDelay: false,
     };
   },
   computed: {
@@ -43,13 +42,15 @@ export default Vue.extend({
     },
   },
   watch: {
-    loggedIn(val) {
+    loggingIn(val) {
       clearTimeout(loggedInAnimationTimeout);
-      this.loggedInAnimation = val;
       if (val === true) {
+        this.loggingInScreenDelay = true;
         loggedInAnimationTimeout = setTimeout(() => {
-          this.loggedInAnimation = false;
-        }, 550);
+          this.loggingInScreenDelay = false;
+        }, 150);
+      } else {
+        this.loggingInScreenDelay = false;
       }
     },
   },
@@ -57,8 +58,6 @@ export default Vue.extend({
     async cancelLogin() {
       await this.$store.dispatch("zk-account/logout");
       this.$router.push("/");
-      this.loggedInAnimation = false;
-      clearTimeout(loggedInAnimationTimeout);
     },
   },
 });

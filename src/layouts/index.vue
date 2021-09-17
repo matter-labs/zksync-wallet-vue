@@ -18,6 +18,7 @@ import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 
 import { GIT_REVISION_SHORT } from "@/utils/config";
 import Vue from "vue";
+import theme from "matter-dapp-ui/utils/theme";
 
 export default Vue.extend({
   components: {
@@ -31,7 +32,7 @@ export default Vue.extend({
     };
   },
   mounted() {
-    // utils.defineTheme(this.$inkline, false);
+    this.$inkline.config.variant = theme.getUserTheme();
   },
 });
 </script>

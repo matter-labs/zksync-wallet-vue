@@ -328,6 +328,9 @@ export default Vue.extend({
         this.chooseToken(<string>this.$route.query.token);
       }
     }
+    if (this.$route.query.address) {
+      this.inputtedAddress = this.$route.query.address;
+    }
     this.initialDataLoading = false;
   },
   beforeDestroy() {

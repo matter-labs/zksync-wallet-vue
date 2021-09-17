@@ -35,24 +35,30 @@
 
 <script lang="ts">
 import Vue from "vue";
+import theme from "matter-dapp-ui/utils/theme";
 
 export default Vue.extend({
   name: "Footer",
+  data() {
+    return {
+      theme: theme.getUserTheme(),
+    };
+  },
   computed: {
     blockExplorerLink(): string {
-      return "";
+      return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;
     },
     version(): string {
       return "";
     },
     isDarkTheme(): boolean {
-      return false;
-      // return utils.defineTheme(this.$inkline) === "dark";
+      return this.theme === "dark";
     },
   },
   methods: {
-    toggleDarkMode(): void {
-      // utils.defineTheme(this.$inkline, true);
+    toggleDarkMode() {
+      this.theme = theme.toggleTheme();
+      this.$inkline.config.variant = this.theme;
     },
   },
 });

@@ -54,7 +54,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/address"];
     },
     accountZkScanUrl(): string {
-      return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer + "account/" + this.accountAddress;
+      return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer + "explorer/accounts/" + this.accountAddress;
     },
     accountModal: {
       get(): boolean {
