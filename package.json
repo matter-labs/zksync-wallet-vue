@@ -68,6 +68,7 @@
     "ethers": "5.0.32",
     "lottie-web": "^5.7.8",
     "moment-timezone": "^0.5.33",
+    "multiformats": "^9.4.7",
     "nuxt": "latest",
     "nuxt-build-optimisations": "latest",
     "nuxt-typed-vuex": "latest",

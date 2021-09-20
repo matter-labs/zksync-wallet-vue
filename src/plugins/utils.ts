@@ -5,6 +5,8 @@ import { IPrototype } from "@inkline/inkline/src/plugin.d";
 import { BigNumber, BigNumberish, utils } from "ethers";
 import { utils as zkUtils } from "zksync";
 import { Address, TokenSymbol } from "zksync/build/types";
+import { CID } from "multiformats/cid";
+import { base58btc } from "multiformats/bases/base58";
 
 /**
  *
@@ -32,9 +34,47 @@ function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance): string {
   return result && result.endsWith(".0") ? result.substr(0, result.length - 2) : result;
 }
 
+export function contendAddressToHex(address: string): string {
+  if (address?.startsWith("Qm")) {
+    try {
+      const cid = CID.parse(address, base58btc.decoder);
+      return utils.hexlify(cid.bytes.slice(2));
+    } catch (e) {
+      throw new Error("Invalid CIDv0");
+    }
+  } else {
+    let cid;
+    try {
+      cid = CID.parse(address);
+    } catch (e) {}
+
+    if (cid) {
+      try {
+        return utils.hexlify(cid.bytes.slice(2));
+      } catch (e) {
+        throw new Error("Invalid CIDv1");
+      }
+    }
+
+    let bytes;
+    try {
+      utils.hexlify(address);
+      bytes = utils.arrayify(address);
+    } catch (e) {
+      throw new Error("Invalid content hash");
+    }
+
+    if (bytes.length !== 32) {
+      throw new Error("Content hash must be 32 bytes long");
+    }
+  }
+
+  return address;
+}
+
 export default {
   parseToken,
-
+  contendAddressToHex,
   timeCalc: (timeInSec: number) => {
     const hours = Math.floor(timeInSec / 60 / 60);
     const minutes = Math.floor(timeInSec / 60) - hours * 60;
