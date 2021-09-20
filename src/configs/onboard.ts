@@ -78,12 +78,6 @@ const wallets: WalletInitOptions[] | CommonWalletOptions[] | AllWalletInitOption
     display: { desktop: true, mobile: false },
     label: "Portis",
   },
-  {
-    walletName: "authereum",
-    disableNotifications: false,
-    rpcUrl: ONBOARD_RPC_URL,
-    blockedPopupRedirect: true,
-  } as AuthereumOptions,
   { ...basicWallet, walletName: "atoken" },
   { ...basicWallet, walletName: "opera", display: { desktop: true, mobile: false } },
   { ...basicWallet, walletName: "operaTouch", display: { desktop: false, mobile: true } },
