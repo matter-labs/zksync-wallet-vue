@@ -337,7 +337,7 @@ export default Vue.extend({
     transactionTypeName(): string {
       switch (this.type) {
         case "withdraw":
-          return "Withdraw to L1";
+          return "Withdraw";
         case "transfer":
           return "Transfer";
         case "nft-withdraw":

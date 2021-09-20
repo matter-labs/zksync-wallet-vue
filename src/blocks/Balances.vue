@@ -26,7 +26,7 @@
       <div v-if="!loading">
         <div class="_display-flex _justify-content-space-between">
           <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
-          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw to L1</i-button>
+          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
         </div>
         <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transfer">
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
