@@ -270,6 +270,9 @@ export default Vue.extend({
         case "Transfer":
         case "Deposit":
           if (!this.isNFT) {
+            if (this.transaction.op.type === "Transfer" && this.isFeeTransaction) {
+              return this.transaction.op.fee;
+            }
             return this.transaction.op.amount;
           } else {
             return undefined;

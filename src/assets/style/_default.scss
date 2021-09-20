@@ -80,9 +80,17 @@ main.layout.defaultLayout {
   display: flex;
 }
 
+a {
+  color: $lightViolet;
+}
+
 .secondaryText {
   color: $gray;
   font-size: 16px;
+}
+
+._text-decoration-underline {
+  text-decoration: underline;
 }
 
 .linkText {

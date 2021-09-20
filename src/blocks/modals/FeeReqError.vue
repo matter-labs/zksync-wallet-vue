@@ -1,7 +1,7 @@
 <template>
   <i-modal v-model="opened" size="md" data-cy="fee_calculation_error_modal">
-    <template slot="header">Fee calculation error</template>
-    <p>There was an error while calculating the fee. Try to choose different token for paying the fee or try again later.</p>
+    <template slot="header">Requesting fee error</template>
+    <p>There was an error while requesting the fee. Try to choose different fee token or try again later.</p>
   </i-modal>
 </template>
 
@@ -18,7 +18,7 @@ export default Vue.extend({
         }
       },
       get(): boolean {
-        return this.$accessor.currentModal !== null && this.$accessor.currentModal === "FeeCalcError";
+        return this.$accessor.currentModal !== null && this.$accessor.currentModal === "FeeReqError";
       },
     },
   },

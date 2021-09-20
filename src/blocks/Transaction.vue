@@ -1,6 +1,7 @@
 <template>
   <div class="transactionBlock">
     <block-modals-allowance />
+    <block-modals-fee-req-error />
 
     <!-- Choose token -->
     <i-modal v-model="chooseTokenModalOpened" :value="chooseTokenModalOpened" size="md">
@@ -154,8 +155,15 @@
           <span class="secondaryText">Loading...</span>
         </span>
       </div>
+      <div v-if="feeError" class="_display-flex _justify-content-center _align-items-center _padding-left-2 _margin-top-1">
+        <div class="errorText _text-center">
+          <span>{{ feeError }}</span>
+          <div class="_text-decoration-underline _cursor-pointer" @click="requestFees()">Try again</div>
+        </div>
+        <v-icon id="questionMark" name="ri-question-mark" class="iconInfo _margin-left-1" scale="0.9" @click.native="$accessor.openModal('FeeReqError')" />
+      </div>
       <span
-        v-if="fees.length > 0"
+        v-if="requiredFees.length > 0"
         class="linkText _width-100 _display-block _text-center _margin-top-1"
         data-cy="fee_block_change_fee_token_button"
         @click="chooseTokenModal = 'feeToken'"
@@ -171,7 +179,7 @@ import Vue, { PropOptions } from "vue";
 import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
-import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFee } from "matter-dapp-ui/types";
+import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee } from "matter-dapp-ui/types";
 export default Vue.extend({
   props: {
     fromRoute: {
@@ -243,6 +251,9 @@ export default Vue.extend({
     error(): Error {
       return this.$store.getters["zk-transaction/error"];
     },
+    feeError(): Error {
+      return this.$store.getters["zk-transaction/feeError"];
+    },
     amountBigNumber(): BigNumber | undefined {
       return this.$store.getters["zk-transaction/amountBigNumber"];
     },
@@ -285,6 +296,9 @@ export default Vue.extend({
     },
     fees(): ZkFee[] {
       return this.$store.getters["zk-transaction/fees"];
+    },
+    requiredFees(): ZkFeeType[] {
+      return this.$store.getters["zk-transaction/requiredFees"];
     },
     feeLoading(): boolean {
       return this.$store.getters["zk-transaction/feeLoading"];
@@ -371,6 +385,9 @@ export default Vue.extend({
         default:
           return "";
       }
+    },
+    async requestFees() {
+      await this.$store.dispatch("zk-transaction/requestAllFees", true);
     },
   },
 });

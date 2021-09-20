@@ -51,6 +51,7 @@ footer.layout-footer {
 
   a {
     font-size: $fontSizeRegular;
+    color: $violet;
 
     @media (max-width: $mobile) {
       font-size: $fontSizeRegular;

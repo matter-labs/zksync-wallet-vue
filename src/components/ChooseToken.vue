@@ -25,18 +25,26 @@
         </div>
       </div>
       <div class="tokenListContainer genericListContainer _margin-top-05">
-        <div v-for="(balance, symbolOrID) in displayedList" :key="symbolOrID" class="tokenItem" :data-cy="`token_item_${symbolOrID}`" @click="chooseToken(symbolOrID)">
-          <div class="tokenSymbol">
-            <span>{{ tokensType === "L2-NFT" ? "NFT-" : "" }}{{ symbolOrID }}</span>
-            <i-tooltip v-if="tokensType === 'L2-Tokens' && !feeAcceptableTokensLoading && !feeAcceptableTokens.has(symbolOrID)" placement="bottom">
-              <v-icon class="iconInfo" name="ri-error-warning-line" />
-              <template slot="body">Not acceptable for paying fees</template>
-            </i-tooltip>
+        <template v-for="(balance, symbolOrID) in displayedList">
+          <div
+            v-if="!feeAcceptable || (feeAcceptable && feeAcceptableTokens.has(symbolOrID))"
+            :key="symbolOrID"
+            class="tokenItem"
+            :data-cy="`token_item_${symbolOrID}`"
+            @click="chooseToken(symbolOrID)"
+          >
+            <div class="tokenSymbol">
+              <span>{{ tokensType === "L2-NFT" ? "NFT-" : "" }}{{ symbolOrID }}</span>
+              <i-tooltip v-if="tokensType === 'L2-Tokens' && !feeAcceptableTokensLoading && !feeAcceptableTokens.has(symbolOrID)" placement="bottom">
+                <v-icon class="iconInfo" name="ri-error-warning-line" />
+                <template slot="body">Not acceptable for paying fees</template>
+              </i-tooltip>
+            </div>
+            <div v-if="tokensType === 'L1-Tokens' || tokensType === 'L2-Tokens'" class="rightSide">
+              <div class="balance">{{ balance | parseBigNumberish(symbolOrID) }}</div>
+            </div>
           </div>
-          <div v-if="tokensType === 'L1-Tokens' || tokensType === 'L2-Tokens'" class="rightSide">
-            <div class="balance">{{ balance | parseBigNumberish(symbolOrID) }}</div>
-          </div>
-        </div>
+        </template>
         <div v-if="isSearching && !hasDisplayedBalances" class="centerBlock">
           <span>
             Your search <b>"{{ search }}"</b> did not match any tokens
