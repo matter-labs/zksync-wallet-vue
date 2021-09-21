@@ -27,7 +27,9 @@
       <template slot="header">Transfer warning</template>
       <div>
         <div class="_padding-bottom-1">
-          You are about to transfer money to an address that does not have a zkSync balance yet. Please be aware of the common pitfalls and loss of funds!
+          <div class="_margin-bottom-1">
+            You are about to transfer money to an address that does not have a zkSync balance yet. Please be aware of the common pitfalls and loss of funds!
+          </div>
           <ol class="_padding-left-1">
             <li>
               Withdraw your zkSync L2 funds to an exchange. <br />
