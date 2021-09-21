@@ -327,7 +327,7 @@ export default Vue.extend({
       this.transactionInfo.type = "deposit";
       const transferTransactions = await mintNFT(
         this.inputtedAddress,
-        utils.contendAddressToHex(this.inputtedHash),
+        utils.contendAddressToRawContentHash(this.inputtedHash),
         (this.chosenFeeToken as ZkInBalance).symbol,
         this.fee as GweiBalance,
         this.$accessor,

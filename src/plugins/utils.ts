@@ -34,7 +34,8 @@ function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance): string {
   return result && result.endsWith(".0") ? result.substr(0, result.length - 2) : result;
 }
 
-export function contendAddressToHex(address: string): string {
+export function contendAddressToRawContentHash(address: string): string {
+  // CIDv0
   if (address?.startsWith("Qm")) {
     try {
       const cid = CID.parse(address, base58btc.decoder);
@@ -42,31 +43,33 @@ export function contendAddressToHex(address: string): string {
     } catch (e) {
       throw new Error("Invalid CIDv0");
     }
-  } else {
-    let cid;
-    try {
-      cid = CID.parse(address);
-    } catch (e) {}
+  }
 
-    if (cid) {
-      try {
-        return utils.hexlify(cid.bytes.slice(2));
-      } catch (e) {
-        throw new Error("Invalid CIDv1");
-      }
-    }
+  let cid;
+  try {
+    cid = CID.parse(address);
+  } catch (e) {}
 
-    let bytes;
+  // CIDv1
+  if (cid) {
     try {
-      utils.hexlify(address);
-      bytes = utils.arrayify(address);
+      return utils.hexlify(cid.bytes.slice(2));
     } catch (e) {
-      throw new Error("Invalid content hash");
+      throw new Error("Invalid CIDv1");
     }
+  }
 
-    if (bytes.length !== 32) {
-      throw new Error("Content hash must be 32 bytes long");
-    }
+  // Raw Content Hash
+  let bytes;
+  try {
+    utils.hexlify(address);
+    bytes = utils.arrayify(address);
+  } catch (e) {
+    throw new Error("Invalid content hash");
+  }
+
+  if (bytes.length !== 32) {
+    throw new Error("Content hash must be 32 bytes long");
   }
 
   return address;
@@ -74,7 +77,7 @@ export function contendAddressToHex(address: string): string {
 
 export default {
   parseToken,
-  contendAddressToHex,
+  contendAddressToRawContentHash,
   timeCalc: (timeInSec: number) => {
     const hours = Math.floor(timeInSec / 60 / 60);
     const minutes = Math.floor(timeInSec / 60) - hours * 60;

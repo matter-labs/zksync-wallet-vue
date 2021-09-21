@@ -48,7 +48,7 @@ export default Vue.extend({
     error(): string {
       try {
         if (this.inputtedHash.length) {
-          utils.contendAddressToHex(this.inputtedHash);
+          utils.contendAddressToRawContentHash(this.inputtedHash);
         }
         return "";
       } catch (e) {
