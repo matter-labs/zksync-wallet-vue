@@ -12,7 +12,9 @@
       <div v-if="!accountStateLoading || accountStateRequested">
         <div class="_display-flex _justify-content-space-between">
           <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/nft/mint">+ Mint NFT</i-button>
-          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/nft/withdraw">- Withdraw NFT</i-button>
+          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/nft/withdraw">
+            - Withdraw NFT <span class="desktopOnly">&nbsp;to L1</span>
+          </i-button>
         </div>
         <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transaction/nft/transfer">
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer NFT

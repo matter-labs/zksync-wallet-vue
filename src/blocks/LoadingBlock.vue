@@ -52,6 +52,8 @@ export default Vue.extend({
           return "Processing...";
         case "requestingLatestFees":
           return "Requesting fees...";
+        case "awaitingUserAction":
+          return "Waiting for your action...";
         case "waitingForUserConfirmation":
           return "Follow the instructions in your Ethereum wallet";
         case "committing":

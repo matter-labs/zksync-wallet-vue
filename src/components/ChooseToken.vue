@@ -27,9 +27,9 @@
       <div class="tokenListContainer genericListContainer _margin-top-05">
         <template v-for="(balance, symbolOrID) in displayedList">
           <div
-            v-if="!feeAcceptable || (feeAcceptable && feeAcceptableTokens.has(symbolOrID))"
             :key="symbolOrID"
             class="tokenItem"
+            :class="{ disabled: feeAcceptable && !feeAcceptableTokensLoading && !feeAcceptableTokens.has(symbolOrID) }"
             :data-cy="`token_item_${symbolOrID}`"
             @click="chooseToken(symbolOrID)"
           >
@@ -72,7 +72,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { searchByKey, searchInObject } from "matter-dapp-ui/utils";
-import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances } from "matter-dapp-ui/types";
+import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances, ZkAcceptableTokensMap } from "matter-dapp-ui/types";
 import { BigNumberish } from "ethers";
 
 export default Vue.extend({
@@ -141,7 +141,7 @@ export default Vue.extend({
     hasDisplayedBalances(): boolean {
       return Object.keys(this.displayedList).length !== 0;
     },
-    feeAcceptableTokens(): string {
+    feeAcceptableTokens(): ZkAcceptableTokensMap {
       return this.$store.getters["zk-tokens/feeAcceptableTokens"];
     },
     feeAcceptableTokensLoading(): boolean {
@@ -160,6 +160,9 @@ export default Vue.extend({
       }
     },
     chooseToken(symbolOrID: string) {
+      if (this.feeAcceptable && !this.feeAcceptableTokensLoading && !this.feeAcceptableTokens.has(symbolOrID)) {
+        return;
+      }
       if (this.tokensType === "L2-NFT") {
         return this.$emit("chosen", parseInt(symbolOrID));
       }

@@ -157,7 +157,7 @@ export default Vue.extend({
       if (!this.commitAllowed) {
         return;
       }
-      await this.$store.dispatch("zk-transaction/commitTransaction");
+      await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: false });
     },
     async clearActiveTransaction() {
       await this.$store.commit("zk-transaction/clearActiveTransaction");

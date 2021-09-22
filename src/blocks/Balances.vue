@@ -8,8 +8,8 @@
         Nevertheless, balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
         <a href="https://zksync.io/faq/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
       </p>
-      <p>You can move your balances from L1 into zkSync by making a Deposit</p>
-      <p>To move them back from zkSync to L1 you can make a Withdraw</p>
+      <p>You can move your balances <b>from L1</b> into zkSync by making a <nuxt-link class="logoLinkContainer" to="/transaction/deposit">Deposit</nuxt-link></p>
+      <p>To move them back from zkSync <b>to L1</b> you can make a <nuxt-link class="logoLinkContainer" to="/transaction/withdraw">Withdraw</nuxt-link></p>
     </i-modal>
     <div class="tileHeadline h3">
       <span>Balances in L2</span>
@@ -20,13 +20,17 @@
     <slot />
     <div v-if="!isSearching && !hasDisplayedBalances && (accountStateLoading === false || accountStateRequested)" class="centerBlock">
       <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
-      <i-button data-cy="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/transaction/deposit">+ Deposit</i-button>
+      <i-button data-cy="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/transaction/deposit">+ Deposit from L1</i-button>
     </div>
     <div v-else class="balances">
       <div v-if="!accountStateLoading || accountStateRequested">
         <div class="_display-flex _justify-content-space-between">
-          <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/deposit">+ Deposit</i-button>
-          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/withdraw">- Withdraw</i-button>
+          <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/deposit">
+            + Deposit <span class="desktopOnly">&nbsp;from L1</span>
+          </i-button>
+          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/withdraw">
+            - Withdraw <span class="desktopOnly">&nbsp;to L1</span>
+          </i-button>
         </div>
         <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transaction/transfer">
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
@@ -113,7 +117,7 @@ export default Vue.extend({
     zkBalancesWithDeposits(): ZkTokenBalances {
       const tokensAvailableForFee = this.$store.getters["zk-tokens/feeAcceptableTokens"];
       const zkBalancesWithDeposits = this.zkBalances;
-      for (const symbol of this.activeDeposits) {
+      for (const symbol in this.activeDeposits) {
         if (!zkBalancesWithDeposits[symbol]) {
           zkBalancesWithDeposits[symbol] = {
             balance: "0",
@@ -125,7 +129,7 @@ export default Vue.extend({
       return zkBalancesWithDeposits;
     },
     displayedList(): ZkTokenBalances {
-      return searchByKey(this.zkBalances, this.search);
+      return searchByKey(this.zkBalancesWithDeposits, this.search);
     },
     activeDeposits() {
       return this.$store.getters["zk-balances/depositingBalances"];

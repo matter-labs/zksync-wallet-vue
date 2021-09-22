@@ -2,6 +2,7 @@
   <div class="transactionBlock">
     <block-modals-allowance />
     <block-modals-fee-req-error />
+    <block-modals-fee-changed :type-name="transactionActionName" />
 
     <!-- Choose token -->
     <i-modal v-model="chooseTokenModalOpened" :value="chooseTokenModalOpened" size="md">
@@ -24,7 +25,7 @@
         <nuxt-link class="_icon-wrapped -rounded -sm returnBtn _display-flex" :to="routeBack">
           <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
-        <div>{{ type }}</div>
+        <div>{{ transactionActionName }}</div>
       </div>
 
       <div class="_padding-top-1 inputLabel">Address</div>
@@ -39,7 +40,7 @@
           :max-amount="maxAmount.toString()"
           :token="chosenToken ? chosenToken : undefined"
           autofocus
-          :type="type"
+          :type="transactionActionName"
           @chooseToken="chooseTokenModal = 'mainToken'"
           @enter="commitTransaction()"
         />
@@ -123,7 +124,7 @@
         @click="commitTransaction()"
       >
         <div class="_display-flex _justify-content-center _align-items-center">
-          <div>{{ type }}</div>
+          <div>{{ transactionActionName }}</div>
           <loader v-if="allowanceLoading || initialDataLoading" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
@@ -201,13 +202,16 @@ export default Vue.extend({
     routeBack(): Route | string {
       if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
         return this.fromRoute;
-      } else if (this.mainToken === "L2-NFT") {
+      } else if (this.mainToken === "L2-NFT" || this.type === "MintNFT") {
         return "/account/nft";
       }
       return "/account";
     },
     type(): ZkTransactionType {
       return this.$store.getters["zk-transaction/type"];
+    },
+    transactionActionName(): string | undefined {
+      return this.$store.getters["zk-transaction/transactionActionName"];
     },
     mainToken(): ZkTransactionMainToken {
       return this.$store.getters["zk-transaction/mainToken"];
@@ -364,7 +368,7 @@ export default Vue.extend({
       if (!this.commitAllowed) {
         return;
       }
-      await this.$store.dispatch("zk-transaction/commitTransaction");
+      await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
     },
     async unlockToken(unlimited = false) {
       await this.$store.dispatch("zk-transaction/setAllowance", unlimited);

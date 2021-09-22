@@ -9,12 +9,6 @@ export interface ZKIRootState {
   previousRoute?: Route;
 }
 
-export declare interface ZkInFeeChange {
-  headline: string;
-  symbol: TokenSymbol;
-  amount: BigNumberish;
-}
-
 export declare interface SingleIcon {
   name: string;
   img: string;
