@@ -336,6 +336,7 @@ export default Vue.extend({
     if (!this.$store.getters["zk-account/accountStateRequested"]) {
       await this.$store.dispatch("zk-account/updateAccountState");
     }
+    await this.$store.dispatch("zk-wallet/checkCPK");
     if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] === false) {
       this.$accessor.openModal("SignPubkey");
     }
