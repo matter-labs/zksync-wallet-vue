@@ -34,6 +34,15 @@ function handleFormatToken(symbol: TokenSymbol, amount: GweiBalance): string {
   return result && result.endsWith(".0") ? result.substr(0, result.length - 2) : result;
 }
 
+export function isCID(address: string): boolean {
+  try {
+    CID.parse(address, address?.startsWith("Qm") ? base58btc.decoder : undefined);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function contendAddressToRawContentHash(address: string): string {
   // CIDv0
   if (address?.startsWith("Qm")) {
@@ -78,6 +87,7 @@ export function contendAddressToRawContentHash(address: string): string {
 export default {
   parseToken,
   contendAddressToRawContentHash,
+  isCID,
   timeCalc: (timeInSec: number) => {
     const hours = Math.floor(timeInSec / 60 / 60);
     const minutes = Math.floor(timeInSec / 60) - hours * 60;
