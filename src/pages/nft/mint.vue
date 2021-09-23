@@ -53,7 +53,7 @@
       <block-choose-contact v-model="chosenContact" class="_margin-top-05" :address.sync="inputtedAddress" display-own-address />
 
       <div class="_padding-top-1 inputLabel _display-flex _align-items-center">
-        <div>Content Hash</div>
+        <div>Content Address</div>
         <div class="icon-container _display-flex" @click="openContentHashModal">
           <v-icon name="ri-question-mark" class="iconInfo" scale="0.9" />
         </div>
@@ -327,7 +327,7 @@ export default Vue.extend({
       this.transactionInfo.type = "deposit";
       const transferTransactions = await mintNFT(
         this.inputtedAddress,
-        this.inputtedHash,
+        utils.contendAddressToRawContentHash(this.inputtedHash),
         (this.chosenFeeToken as ZkInBalance).symbol,
         this.fee as GweiBalance,
         this.$accessor,
