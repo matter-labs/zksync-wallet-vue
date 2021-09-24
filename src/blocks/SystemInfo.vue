@@ -26,13 +26,17 @@
   </i-badge>
 </template>
 <script lang="ts">
-import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_LIB_VERSION, ZK_NETWORK } from "@/utils/config";
 import Vue from "vue";
+import { ZkConfig } from "matter-dapp-ui/types";
+import { GIT_REVISION_SHORT, VERSION, ZK_LIB_VERSION } from "@/utils/config";
 
 export default Vue.extend({
   computed: {
+    config(): ZkConfig {
+      return this.$store.getters["zk-onboard/config"];
+    },
     netName(): string {
-      return ZK_NETWORK;
+      return this.config.ethereumNetwork.name;
     },
     zkLibVersion(): string {
       return ZK_LIB_VERSION;
@@ -47,7 +51,7 @@ export default Vue.extend({
       return GIT_REVISION_SHORT;
     },
     zkApiBase(): string {
-      return ZK_API_BASE;
+      return this.config.zkSyncNetwork.api;
     },
   },
 });

@@ -5,7 +5,7 @@
       <div v-if="!loggingIn && loggedIn">
         <block-header ref="header" />
         <i-layout-content class="layoutContent">
-          <sign-pubkey-modal />
+          <block-modals-sign-pubkey />
           <div class="routerContainer">
             <transition name="fade" mode="out-in">
               <nuxt />
@@ -20,13 +20,9 @@
 
 <script lang="ts">
 import Vue from "vue";
-import SignPubkeyModal from "@/blocks/modals/SignPubkey.vue";
 import theme from "matter-dapp-ui/utils/theme";
 
 export default Vue.extend({
-  components: {
-    SignPubkeyModal,
-  },
   computed: {
     loggingIn() {
       return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];

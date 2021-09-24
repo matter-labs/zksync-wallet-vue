@@ -198,14 +198,14 @@ const config: NuxtConfig = {
       "matter-dapp-ui",
       <ModuleOptions>{
         network: process.env.ZK_NETWORK,
+        apiKeys: {
+          FORTMATIC_KEY: process.env.APP_FORTMATIC,
+          PORTIS_KEY: process.env.APP_PORTIS,
+          INFURA_KEY: process.env.APP_INFURA_API_KEY,
+        },
         onboardConfig: {
           APP_NAME: pageTitle,
           APP_ID: process.env.APP_ONBOARDING_APP_ID,
-          WALLET_CONNECT_KEY: process.env.APP_WALLET_CONNECT,
-          FORTMATIC_KEY: process.env.APP_FORTMATIC,
-          PORTIS_KEY: process.env.APP_PORTIS,
-          INFURA_KEY: process.env.APP_ALCHEMY_API_KEY,
-          WS_API_ETHERSCAN_TOKEN: process.env.APP_WS_API_ETHERSCAN_TOKEN,
         },
       },
     ],
