@@ -14,7 +14,7 @@
       <div v-if="!isNFT" :class="{ small: $options.filters.parseBigNumberish(amount, tokenSymbol).length > 10 }" class="amount">{{ amount | parseBigNumberish(tokenSymbol) }}</div>
       <div v-if="!isMintNFT" class="tokenSymbol">
         <span v-if="isNFT && tokenSymbol">NFT-</span>
-        <div v-else-if="isNFT && transaction.tx.contentHash" class="nft">
+        <div v-else-if="isNFT && transaction.tx && transaction.tx.contentHash" class="nft">
           <span class="contentHash">{{ transaction.tx.contentHash }}</span>
           <i-tooltip placement="left" trigger="click" class="copyContentHash" @click.native="copy(transaction.tx.contentHash)">
             <div class="iconContainer">
@@ -259,7 +259,7 @@ export default Vue.extend({
       return this.transaction.op.type === "MintNFT";
     },
     isNFT(): boolean {
-      if (this.isMintNFT) {
+      if (this.isMintNFT || typeof this.tokenSymbol === "number") {
         return true;
       }
       return utils.isNFT(this.tokenSymbol);

@@ -24,13 +24,12 @@
             <token-price :symbol="symbol" :amount="'1'.padEnd(token.decimals + 1, '0')" />
           </div>
         </div>
-        <div v-if="feeAcceptableTokensLoading" class="infoBlock _display-flex _margin-top-1">
+        <div v-if="zkTokensLoading" class="infoBlock _display-flex _margin-top-1">
           <div class="headline">Allowed for paying fees:</div>
           <div class="secondaryText _margin-left-05">Loading...</div>
-          <div class="balancePrice">{{ feeAcceptable }}</div>
         </div>
         <div v-else class="infoBlock _display-flex _margin-top-1">
-          <div class="headline">Token is allowed for paying fees</div>
+          <div class="balancePrice">{{ feeAcceptable }} for paying fees</div>
         </div>
         <div class="infoBlock _margin-top-1">
           <div class="headline">Your balance:</div>
@@ -102,10 +101,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/accountStateRequested"];
     },
     feeAcceptable(): string {
-      return this.$store.getters["zk-tokens/feeAcceptableTokens"].has(this.symbol) ? "Allowed" : "Not allowed";
-    },
-    feeAcceptableTokensLoading(): boolean {
-      return this.$store.getters["zk-tokens/feeAcceptableTokensLoading"];
+      return this.token && this.token.enabledForFees ? "Available" : "Not available";
     },
     balanceToken(): ZkTokenBalance {
       return this.$store.getters["zk-balances/balances"][this.symbol];

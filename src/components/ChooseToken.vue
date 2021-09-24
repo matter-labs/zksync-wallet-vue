@@ -29,15 +29,15 @@
           <div
             :key="symbolOrID"
             class="tokenItem"
-            :class="{ disabled: feeAcceptable && !feeAcceptableTokensLoading && !feeAcceptableTokens.has(symbolOrID) }"
+            :class="{ disabled: feeAcceptable && !balance.feeAvailable }"
             :data-cy="`token_item_${symbolOrID}`"
-            @click="chooseToken(symbolOrID)"
+            @click="chooseToken(symbolOrID, balance)"
           >
             <div class="tokenSymbol">
               <span>{{ tokensType === "L2-NFT" ? "NFT-" : "" }}{{ symbolOrID }}</span>
-              <i-tooltip v-if="tokensType === 'L2-Tokens' && !feeAcceptableTokensLoading && !feeAcceptableTokens.has(symbolOrID)" placement="bottom">
+              <i-tooltip v-if="tokensType === 'L2-Tokens' && !balance.feeAvailable" placement="bottom">
                 <v-icon class="iconInfo" name="ri-error-warning-line" />
-                <template slot="body">Not acceptable for paying fees</template>
+                <template slot="body">Not available for paying fees</template>
               </i-tooltip>
             </div>
             <div v-if="tokensType === 'L1-Tokens' || tokensType === 'L2-Tokens'" class="rightSide">
@@ -72,7 +72,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { searchByKey, searchInObject } from "matter-dapp-ui/utils";
-import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances, ZkAcceptableTokensMap } from "matter-dapp-ui/types";
+import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances, ZkTokenBalance } from "matter-dapp-ui/types";
 import { BigNumberish } from "ethers";
 
 export default Vue.extend({
@@ -106,6 +106,9 @@ export default Vue.extend({
     ethereumBalancesRequested(): boolean {
       return this.$store.getters["zk-balances/ethereumBalancesRequested"];
     },
+    zkTokens(): ZkTokenBalances {
+      return this.$store.getters["zk-tokens/zkTokens"];
+    },
     zkBalances(): ZkTokenBalances {
       return this.$store.getters["zk-balances/balances"];
     },
@@ -120,7 +123,7 @@ export default Vue.extend({
       if (this.tokensType === "L1-Tokens") {
         return this.ethereumBalanceLoadingAll && !this.ethereumBalancesRequested;
       }
-      return this.accountStateLoading && !this.accountStateRequested && (!this.feeAcceptable || (this.feeAcceptable && this.feeAcceptableTokensLoading));
+      return this.accountStateLoading && !this.accountStateRequested;
     },
     secondaryLoading(): boolean {
       if (this.tokensType === "L1-Tokens") {
@@ -141,12 +144,6 @@ export default Vue.extend({
     hasDisplayedBalances(): boolean {
       return Object.keys(this.displayedList).length !== 0;
     },
-    feeAcceptableTokens(): ZkAcceptableTokensMap {
-      return this.$store.getters["zk-tokens/feeAcceptableTokens"];
-    },
-    feeAcceptableTokensLoading(): boolean {
-      return this.$store.getters["zk-tokens/feeAcceptableTokensLoading"];
-    },
     isSearching(): boolean {
       return !!this.search.trim();
     },
@@ -159,8 +156,8 @@ export default Vue.extend({
         this.$store.dispatch("zk-account/updateAccountState", true);
       }
     },
-    chooseToken(symbolOrID: string) {
-      if (this.feeAcceptable && !this.feeAcceptableTokensLoading && !this.feeAcceptableTokens.has(symbolOrID)) {
+    chooseToken(symbolOrID: string, balance: ZkTokenBalance) {
+      if (this.feeAcceptable && !balance.feeAvailable) {
         return;
       }
       if (this.tokensType === "L2-NFT") {

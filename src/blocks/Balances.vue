@@ -115,14 +115,14 @@ export default Vue.extend({
       return this.$store.getters["zk-balances/balances"];
     },
     zkBalancesWithDeposits(): ZkTokenBalances {
-      const tokensAvailableForFee = this.$store.getters["zk-tokens/feeAcceptableTokens"];
+      const tokens = this.$store.getters["zk-tokens/zkTokens"];
       const zkBalancesWithDeposits = this.zkBalances;
       for (const symbol in this.activeDeposits) {
         if (!zkBalancesWithDeposits[symbol]) {
           zkBalancesWithDeposits[symbol] = {
             balance: "0",
             verified: false,
-            feeAvailable: !!tokensAvailableForFee.get(symbol),
+            feeAvailable: tokens[symbol] ? tokens[symbol].enabledForFees : false,
           };
         }
       }

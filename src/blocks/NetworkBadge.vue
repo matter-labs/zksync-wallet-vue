@@ -12,7 +12,7 @@ export default Vue.extend({
     isMainnet(): boolean {
       return this.$store.getters["zk-provider/network"] === "mainnet";
     },
-    network() {
+    network(): string {
       return this.$store.getters["zk-provider/network"];
     },
   },

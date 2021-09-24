@@ -52,10 +52,10 @@ export default Vue.extend({
   },
   computed: {
     isMainnet(): boolean {
-      return process.env.network === "mainnet";
+      return this.$store.getters["zk-provider/network"] === "mainnet";
     },
-    network() {
-      return process.env.network;
+    network(): string {
+      return this.$store.getters["zk-provider/network"];
     },
   },
 });
