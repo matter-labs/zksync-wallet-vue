@@ -68,6 +68,7 @@
     "ethers": "5.0.32",
     "lottie-web": "^5.7.8",
     "moment-timezone": "^0.5.33",
+    "multiformats": "^9.4.7",
     "nuxt": "latest",
     "nuxt-build-optimisations": "latest",
     "nuxt-typed-vuex": "latest",
@@ -150,8 +151,8 @@
     "yarn spell-check"
   ],
   "scripts": {
-    "local": "sh ./cli-process-env.sh 'ropsten-beta' 'dev' 1 1",
-    "dev": "yarn ci:build:rinkeby && nuxt",
+    "local": "sh ./cli-process-env.sh 'mainnet' 'dev' 1 1",
+    "dev": "yarn local && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",

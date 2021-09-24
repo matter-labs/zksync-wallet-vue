@@ -6,7 +6,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 
 import Onboard from "bnc-onboard";
 import { API, UserState, Wallet as OnboardWallet } from "bnc-onboard/dist/src/interfaces";
-import { providers } from "ethers";
+import { providers, utils } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import Web3 from "web3";
@@ -86,8 +86,10 @@ export const getters = getterTree(state, {
       : "";
   },
   loader: (state: ProviderModuleState): boolean => ["walletSelected", "isChecking", "walletChecked", "isSelectingAccount", "accountSelected"].includes(state.authStep),
-  address: (state: ProviderModuleState): Address | undefined =>
-    state.authStep === "authorized" && state.onboard.getState().address ? (state.onboard.getState().address as Address) : state.address,
+  address: (state: ProviderModuleState): Address | undefined => {
+    const address = state.authStep === "authorized" && state.onboard.getState().address ? (state.onboard.getState().address as Address) : state.address;
+    return address && utils.getAddress(address);
+  },
   loadingHint: (state: ProviderModuleState): string => state.loadingHint,
   zkScanUrl: (state: ProviderModuleState): string | undefined => (state.address ? `${networkConfig.zkSyncBlockExplorerUrl}/accounts/${state.address}` : undefined),
 });
