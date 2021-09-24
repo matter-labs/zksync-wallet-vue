@@ -3642,6 +3642,7 @@ __metadata:
     lottie-web: ^5.7.8
     matter-dapp-ui: "link:../nuxt-ui"
     moment-timezone: ^0.5.33
+    multiformats: ^9.4.7
     node-sass: 4.14.0
     nuxt: latest
     nuxt-typed-vuex: latest
@@ -16972,6 +16973,13 @@ fsevents@^1.2.7:
     buffer: ^5.6.0
     varint: ^5.0.0
   checksum: aedec568e5dc662d3d02eb938207e08e1c69eaddf683efc902f15d1910e7acf1c349edc2f6b1edc995ecf777f7a9a30245ef9ab1b05e05f4f83268760eca060c
+  languageName: node
+  linkType: hard
+
+"multiformats@npm:^9.4.7":
+  version: 9.4.7
+  resolution: "multiformats@npm:9.4.7"
+  checksum: 370ed783ca023708b095c73aa77194c3304a839aabc7d4a923dbba715088766c9ebac8d92dec2119ac303679428a0ad0fff01d686106bd55dae433d1fbc17c9d
   languageName: node
   linkType: hard
 

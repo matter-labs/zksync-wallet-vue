@@ -68,6 +68,7 @@
     "lottie-web": "^5.7.8",
     "matter-dapp-ui": "link:../nuxt-ui",
     "moment-timezone": "^0.5.33",
+    "multiformats": "^9.4.7",
     "nuxt": "latest",
     "nuxt-typed-vuex": "latest",
     "oh-vue-icons": "^0.4.3",

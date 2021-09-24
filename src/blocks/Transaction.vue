@@ -47,7 +47,7 @@
       </template>
       <template v-if="displayContentHashInput">
         <div class="_padding-top-1 inputLabel _display-flex _align-items-center">
-          <div>Content Hash</div>
+          <div>Content Address</div>
           <div class="icon-container _display-flex" @click="$accessor.openModal('ContentHash')">
             <v-icon name="ri-question-mark" class="iconInfo" scale="0.9" />
           </div>
