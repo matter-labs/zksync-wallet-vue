@@ -39,7 +39,7 @@ export function contendAddressToRawContentHash(address: string): string {
   if (address?.startsWith("Qm")) {
     try {
       const cid = CID.parse(address, base58btc.decoder);
-      return utils.hexlify(cid.bytes.slice(2));
+      return utils.hexlify(cid.toV1().bytes.slice(4));
     } catch (e) {
       throw new Error("Invalid CIDv0");
     }
@@ -53,7 +53,7 @@ export function contendAddressToRawContentHash(address: string): string {
   // CIDv1
   if (cid) {
     try {
-      return utils.hexlify(cid.bytes.slice(2));
+      return utils.hexlify(cid.bytes.slice(4));
     } catch (e) {
       throw new Error("Invalid CIDv1");
     }

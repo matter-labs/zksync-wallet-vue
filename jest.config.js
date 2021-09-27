@@ -10,8 +10,8 @@ module.exports = {
     ".*\\.(vue)$": "vue-jest",
     "^.+\\.(js|ts|jsx)?$": "babel-jest",
   },
-  transformIgnorePatterns: ["<rootDir>/node_modules/"],
+  transformIgnorePatterns: ["<rootDir>/node_modules/(?!(@nuxtjs)/)"],
   moduleFileExtensions: ["ts", "js", "vue", "json"],
-
+  testRegex: ".spec.ts",
   collectCoverageFrom: ["components/**/*.vue", "blocks/**/*.vue", "layouts/**/*.vue", "pages/**/*.vue", "plugins/**/*.ts", "store/**/*.ts"],
 };
