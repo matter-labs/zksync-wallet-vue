@@ -62,8 +62,8 @@ export const mutations = mutationTree(state, {
       if (state.address?.length) {
         window.localStorage.setItem(state.address.toLowerCase(), name);
       }
+      state.accountName = name;
     }
-    state.accountName = name;
   },
 });
 
