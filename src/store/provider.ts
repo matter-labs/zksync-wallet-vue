@@ -57,8 +57,11 @@ export const mutations = mutationTree(state, {
   setLoadingHint(state: ProviderModuleState, text: string) {
     state.loadingHint = text;
   },
-  setName(state: ProviderModuleState, name?: string) {
+  setName(state: ProviderModuleState, name: string) {
     if (name !== undefined) {
+      if (state.address?.length) {
+        window.localStorage.setItem(state.address.toLowerCase(), name);
+      }
       state.accountName = name;
     }
   },
@@ -71,17 +74,18 @@ export const getters = getterTree(state, {
   getSelectedWallet: (state: ProviderModuleState): string | undefined => {
     return state.authStep !== "ready" && state.authStep !== "isSelecting" ? state.selectedWallet : undefined;
   },
-  name: (state: ProviderModuleState): string => {
-    const currentAddress: string | undefined = state.onboard.getState().address || state.address;
-    if (state.authStep !== "authorized" || currentAddress!.length < 2) {
+  name: (state: ProviderModuleState, getters: { address: Address | undefined }): string => {
+    const currentAddress = getters.address;
+
+    if (state.authStep !== "authorized" || !currentAddress || currentAddress.length < 2) {
       return "";
     }
+
     if (state.accountName) {
-      return state.accountName as string;
+      return state.accountName;
     }
-    return currentAddress
-      ? window.localStorage.getItem(currentAddress) || `${currentAddress.substr(0, 5)}...${currentAddress.substr(currentAddress!.length - 4, currentAddress!.length - 1)}`
-      : "";
+
+    return localStorage.getItem(currentAddress.toLowerCase()) || `${currentAddress.substr(0, 5)}...${currentAddress.substr(currentAddress!.length - 4, currentAddress.length - 1)}`;
   },
   loader: (state: ProviderModuleState): boolean => ["walletSelected", "isChecking", "walletChecked", "isSelectingAccount", "accountSelected"].includes(state.authStep),
   address: (state: ProviderModuleState): Address | undefined => {
@@ -112,6 +116,7 @@ export const actions = actionTree(
       localStorage.removeItem("walletconnect");
       state.onboard.walletReset();
       commit("setAddress", undefined);
+      commit("setName", "");
       commit("storeSelectedWallet", undefined);
       commit("setAuthStage", "ready");
     },
