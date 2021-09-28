@@ -57,13 +57,13 @@ export const mutations = mutationTree(state, {
   setLoadingHint(state: ProviderModuleState, text: string) {
     state.loadingHint = text;
   },
-  setName(state: ProviderModuleState, name?: string) {
-    if (name?.length) {
+  setName(state: ProviderModuleState, name: string) {
+    if (name !== undefined) {
       if (state.address?.length) {
         window.localStorage.setItem(state.address.toLowerCase(), name);
       }
-      state.accountName = name;
     }
+    state.accountName = name;
   },
 });
 
@@ -116,6 +116,7 @@ export const actions = actionTree(
       localStorage.removeItem("walletconnect");
       state.onboard.walletReset();
       commit("setAddress", undefined);
+      commit("setName", "");
       commit("storeSelectedWallet", undefined);
       commit("setAuthStage", "ready");
     },
