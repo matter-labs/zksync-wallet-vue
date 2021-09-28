@@ -1,10 +1,10 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template slot="header">What is a content hash?</template>
+    <template slot="header">How to address content?</template>
     <p>
-      A content hash is a cryptographic hash of raw content. Different systems have different ways of turning this hash (called a digest) into an identifier that their system uses
-      to locate content. The most popular decentralized data storage services are IPFS and Arweave.
-      <br /><br />No experience with content hashes? Use <a href="https://ipfs.io/#install" target="_blank">IPFS tools</a>
+      To mint an NFT, you should import a file into an InterPlanetary File System. There are plenty of <a href="https://ipfs.io/#install" target="_blank">services</a> you can
+      choose from that provide IPFS-protocol support. After the import, your file will get a unique Content Identifier (CID). With its help, anyone can retrieve its content on IPFS
+      Network and assure your file remains decentralized, resilient and, persistently available.
     </p>
   </i-modal>
 </template>

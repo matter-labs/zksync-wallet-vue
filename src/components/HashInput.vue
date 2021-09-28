@@ -10,7 +10,7 @@
         autocomplete="none"
         class="walletAddress"
         maxlength="80"
-        placeholder="0x hash"
+        placeholder="0x hash | CID"
         spellcheck="false"
         type="text"
         @keyup.enter="$emit('enter')"
@@ -25,8 +25,8 @@
 <script lang="ts">
 import { DecimalBalance } from "@/types/lib";
 
-import { ethers } from "ethers";
 import Vue, { PropOptions } from "vue";
+import utils from "@/plugins/utils";
 
 export default Vue.extend({
   props: {
@@ -43,28 +43,16 @@ export default Vue.extend({
   },
   computed: {
     isValid(): boolean {
-      try {
-        ethers.utils.hexlify(this.inputtedHash);
-        const contentHashBytes = ethers.utils.arrayify(this.inputtedHash);
-        if (contentHashBytes.length !== 32) {
-          return false;
-        }
-        return true;
-      } catch (err) {
-        return false;
-      }
+      return this.inputtedHash.length > 0 && this.error === "";
     },
     error(): string {
-      if (this.inputtedHash && !this.isValid) {
-        try {
-          const contentHashBytes = ethers.utils.arrayify(this.inputtedHash);
-          if (contentHashBytes.length !== 32) {
-            return "Content hash must be 32 bytes long";
-          }
-        } catch (error) {}
-        return "Invalid hash";
-      } else {
+      try {
+        if (this.inputtedHash.length) {
+          utils.contendAddressToRawContentHash(this.inputtedHash);
+        }
         return "";
+      } catch (e) {
+        return e?.message || "Unknown error";
       }
     },
   },
