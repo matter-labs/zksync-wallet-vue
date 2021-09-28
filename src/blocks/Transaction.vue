@@ -115,7 +115,7 @@
 
       <!-- Commit button -->
       <i-button
-        :disabled="(!commitAllowed && hasSigner) || requestingSigner || initialDataLoading"
+        :disabled="(!commitAllowed && (hasSigner || !requireSigner)) || requestingSigner || initialDataLoading"
         block
         class="_margin-top-1 _display-flex flex-row"
         data-cy="commit_transaction_button"
@@ -124,8 +124,8 @@
         @click="commitTransaction()"
       >
         <div class="_display-flex _justify-content-center _align-items-center">
-          <v-icon v-if="!hasSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
-          <div>{{ hasSigner ? "" : "Authorize to " }}{{ transactionActionName }}</div>
+          <v-icon v-if="!hasSigner && requireSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
+          <div>{{ hasSigner || !requireSigner ? "" : "Authorize to " }}{{ transactionActionName }}</div>
           <loader v-if="allowanceLoading || initialDataLoading || requestingSigner" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
@@ -312,6 +312,9 @@ export default Vue.extend({
     hasSigner(): boolean {
       return this.$store.getters["zk-wallet/hasSigner"];
     },
+    requireSigner(): boolean {
+      return this.mainToken === "L2-Tokens" || this.mainToken === "L2-NFT";
+    },
     feeLoading(): boolean {
       return this.$store.getters["zk-transaction/feeLoading"];
     },
@@ -374,7 +377,7 @@ export default Vue.extend({
       this.chooseTokenModal = false;
     },
     async commitTransaction() {
-      if (!this.hasSigner) {
+      if (!this.hasSigner && this.requireSigner) {
         try {
           this.requestingSigner = true;
           await this.$store.dispatch("zk-wallet/requestSigner");
