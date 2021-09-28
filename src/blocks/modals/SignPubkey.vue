@@ -2,16 +2,29 @@
   <i-modal :value="opened" class="prevent-close" size="md" data-cy="account_activation_modal" @hide="close()">
     <template slot="header">Account Activation</template>
     <div class="_text-center">
-      <p v-if="state === false">Sign a message once to activate your zkSync account.</p>
+      <p v-if="state === false">Sign a message to activate your zkSync account.</p>
       <p v-else-if="state === 'processing'" class="_text-center">Processing...</p>
       <p v-else-if="state === 'waitingForUserConfirmation'" class="_text-center">Sign the message in your wallet to continue</p>
       <p v-else-if="state === 'updating'" class="_text-center">Loading account data...</p>
-      <i-button :disabled="loading" class="_margin-top-2" block size="lg" variant="secondary" data-cy="account_activation_sign_button" @click="signActivation()">
+      <i-button
+        :disabled="loading || requestingSigner"
+        class="_margin-top-2"
+        block
+        size="lg"
+        variant="secondary"
+        data-cy="account_activation_sign_button"
+        @click="signActivation()"
+      >
         <div class="_display-flex _justify-content-center _align-items-center">
-          <div>{{ hasSigner ? "" : "Authorize and " }}Sign account activation</div>
-          <loader v-if="loading" class="_margin-left-1" size="xs" />
+          <v-icon v-if="!hasSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
+          <div>{{ hasSigner ? "" : "Authorize to " }}Sign account activation</div>
+          <loader v-if="loading || requestingSigner" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
+
+      <!-- Requesting signer -->
+      <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">Follow the instructions in your Ethereum wallet</div>
+
       <div v-if="error" class="errorText _text-center _margin-top-1">
         {{ error }}
       </div>
@@ -28,6 +41,7 @@ export default Vue.extend({
   data() {
     return {
       loading: false,
+      requestingSigner: false,
     };
   },
   computed: {
@@ -67,9 +81,19 @@ export default Vue.extend({
       }
     },
     async signActivation() {
-      await this.$store.dispatch("zk-wallet/signCPK");
-      if (this.$store.getters["zk-wallet/cpk"] !== false) {
-        this.close();
+      if (!this.hasSigner) {
+        try {
+          this.requestingSigner = true;
+          await this.$store.dispatch("zk-wallet/requestSigner");
+        } catch (err) {
+          console.warn("Request signer error\n", err);
+        }
+        this.requestingSigner = false;
+      } else {
+        await this.$store.dispatch("zk-wallet/signCPK");
+        if (this.$store.getters["zk-wallet/cpk"] !== false) {
+          this.close();
+        }
       }
     },
   },

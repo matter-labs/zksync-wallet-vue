@@ -382,7 +382,7 @@ export default Vue.extend({
           this.requestingSigner = true;
           await this.$store.dispatch("zk-wallet/requestSigner");
         } catch (err) {
-          console.warn("Request signer error");
+          console.warn("Request signer error\n", err);
         }
         this.requestingSigner = false;
       } else {

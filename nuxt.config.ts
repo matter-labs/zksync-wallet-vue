@@ -12,7 +12,7 @@ const isProduction: boolean = env === "prod";
 const pageTitle = "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
 
-const pageTitleTemplate = process.env.APP_CURRENT_NETWORK!.substr(0, 1).toUpperCase() + process.env.APP_CURRENT_NETWORK!.substr(1, process.env.APP_CURRENT_NETWORK!.length);
+const pageTitleTemplate = process.env.APP_CURRENT_NETWORK !== "mainnet" ? "Testnet" : "Mainnet";
 const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
