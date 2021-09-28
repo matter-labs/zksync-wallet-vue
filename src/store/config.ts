@@ -24,6 +24,7 @@ export const actions = actionTree(
   { state, getters, mutations },
   {
     changeNetworkConfig(_, option: NetworkConfigOption): void {
+      this.app.$accessor.wallet.logout();
       localStorage.setItem(LOCAL_STORAGE_NETWORK_CONFIG, option.name);
       window.location.reload();
     },
