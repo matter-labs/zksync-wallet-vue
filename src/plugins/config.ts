@@ -47,7 +47,7 @@ export const networkOptions: NetworkConfigOption[] = [
     ethNetworkName: "rinkeby",
     ethNetworkId: 4,
 
-    apiHost: "rinkeby-beta-api.zksync.io",
+    apiHost: "rinkeby-api.zksync.io",
 
     zkScanUrl: "https://rinkeby.zkscan.io",
     zkSyncBlockExplorerUrl: "https://rinkeby.zkscan.io/explorer",
@@ -59,7 +59,7 @@ export const networkOptions: NetworkConfigOption[] = [
     ethNetworkName: "ropsten",
     ethNetworkId: 3,
 
-    apiHost: "ropsten-beta-api.zksync.io",
+    apiHost: "ropsten-api.zksync.io",
 
     zkScanUrl: "https://ropsten.zkscan.io",
     zkSyncBlockExplorerUrl: "https://ropsten.zkscan.io/explorer",
