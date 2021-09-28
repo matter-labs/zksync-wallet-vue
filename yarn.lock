@@ -3514,6 +3514,7 @@ __metadata:
     node-sass: 4.14.0
     nuxt: latest
     nuxt-build-optimisations: latest
+    nuxt-helmet: ^2.0.1
     nuxt-typed-vuex: latest
     oh-vue-icons: ^0.4.7
     prettier: ^2.2.1
@@ -9103,7 +9104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"consola@npm:^2.10.0, consola@npm:^2.10.1, consola@npm:^2.15.0, consola@npm:^2.15.3, consola@npm:^2.4.0, consola@npm:^2.6.0, consola@npm:^2.7.1, consola@npm:^2.9.0":
+"consola@npm:^2.10.0, consola@npm:^2.10.1, consola@npm:^2.11.3, consola@npm:^2.15.0, consola@npm:^2.15.3, consola@npm:^2.4.0, consola@npm:^2.6.0, consola@npm:^2.7.1, consola@npm:^2.9.0":
   version: 2.15.3
   resolution: "consola@npm:2.15.3"
   checksum: 914e2b0b24605a41f1a83ae29a0238558d01a01c40ada5817db81b2dd1543a540d59e38e81e736d05360246379a18013e6930b32231650898dfc4adb52a93523
@@ -13710,6 +13711,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"helmet@npm:^4.6.0":
+  version: 4.6.0
+  resolution: "helmet@npm:4.6.0"
+  checksum: 5018633703ac6933b35c581d878f279b3be642c7ce68dcccbaf31be059aefb723a08ed86831df657b82fd2994b4163404b51c76a0dc3ea9cdd67794bf1b0466d
+  languageName: node
+  linkType: hard
+
 "hex-color-regex@npm:^1.1.0":
   version: 1.1.0
   resolution: "hex-color-regex@npm:1.1.0"
@@ -17947,6 +17955,16 @@ fsevents@^1.2.7:
     speed-measure-webpack-plugin: ^1.5.0
     upath: ^2.0.1
   checksum: 5694e45a45a4fc4816bd3227b6ca93a539176e76cf9c94d44c7556e0ad0b61d1e78009aec815face114ee0479fd88510074e4dac177bc263a5829240e236901f
+  languageName: node
+  linkType: hard
+
+"nuxt-helmet@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "nuxt-helmet@npm:2.0.1"
+  dependencies:
+    consola: ^2.11.3
+    helmet: ^4.6.0
+  checksum: a33c7853f99690bc8827b3beb1e5c0a1ef1057c1860a7d1a657a3aa0e0d592a56485deb6ce8c6b31634f886b6dcdd65c3bcb481ed5d0f8d2f5b1aed32d5f5aaf
   languageName: node
   linkType: hard
 

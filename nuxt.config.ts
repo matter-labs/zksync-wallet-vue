@@ -225,7 +225,9 @@ const config: NuxtConfig = {
   /**
    * Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
+  modules: ["nuxt-helmet", "@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
+
+  helmet: {},
 
   toast: <ToastOptions>{
     singleton: true,

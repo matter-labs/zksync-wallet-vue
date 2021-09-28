@@ -71,6 +71,7 @@
     "multiformats": "^9.4.7",
     "nuxt": "latest",
     "nuxt-build-optimisations": "latest",
+    "nuxt-helmet": "^2.0.1",
     "nuxt-typed-vuex": "latest",
     "oh-vue-icons": "^0.4.7",
     "typed-vuex": "latest",
