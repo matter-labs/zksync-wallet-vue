@@ -313,7 +313,7 @@ export default Vue.extend({
       return this.$store.getters["zk-wallet/hasSigner"];
     },
     requireSigner(): boolean {
-      return this.mainToken === "L2-Tokens" || this.mainToken === "L2-NFT";
+      return this.mainToken === "L2-Tokens" || this.mainToken === "L2-NFT" || this.type === "MintNFT";
     },
     feeLoading(): boolean {
       return this.$store.getters["zk-transaction/feeLoading"];
