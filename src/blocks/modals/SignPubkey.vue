@@ -8,7 +8,7 @@
       <p v-else-if="state === 'updating'" class="_text-center">Loading account data...</p>
       <i-button :disabled="loading" class="_margin-top-2" block size="lg" variant="secondary" data-cy="account_activation_sign_button" @click="signActivation()">
         <div class="_display-flex _justify-content-center _align-items-center">
-          <div>Sign account activation</div>
+          <div>{{ hasSigner ? "" : "Authorize and " }}Sign account activation</div>
           <loader v-if="loading" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkSignCPKState } from "matter-dapp-ui/types";
+import { ZkSignCPKState } from "matter-dapp-module/types";
 
 export default Vue.extend({
   name: "SignPubkey",
@@ -36,6 +36,9 @@ export default Vue.extend({
     },
     state(): ZkSignCPKState {
       return this.$store.getters["zk-wallet/cpkSignState"];
+    },
+    hasSigner(): boolean {
+      return this.$store.getters["zk-wallet/hasSigner"];
     },
     error(): string | undefined {
       return this.$store.getters["zk-wallet/cpkSignError"];

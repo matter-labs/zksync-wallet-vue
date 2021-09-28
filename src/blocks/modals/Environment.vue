@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkConfig } from "matter-dapp-ui/types";
+import { ZkConfig } from "matter-dapp-module/types";
 import { GIT_REVISION_SHORT, VERSION, ZK_LIB_VERSION } from "@/utils/config";
 
 export default Vue.extend({

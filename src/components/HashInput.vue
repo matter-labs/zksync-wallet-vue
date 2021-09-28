@@ -24,8 +24,8 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { DecimalBalance } from "matter-dapp-ui/types";
-import { contendAddressToRawContentHash } from "matter-dapp-ui/utils";
+import { DecimalBalance } from "matter-dapp-module/types";
+import { contendAddressToRawContentHash } from "matter-dapp-module/utils";
 
 export default Vue.extend({
   props: {

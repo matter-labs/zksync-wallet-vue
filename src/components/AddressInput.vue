@@ -26,7 +26,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { Address } from "zksync/build/types";
-import { validateAddress } from "matter-dapp-ui/utils";
+import { validateAddress } from "matter-dapp-module/utils";
 
 export default Vue.extend({
   props: {

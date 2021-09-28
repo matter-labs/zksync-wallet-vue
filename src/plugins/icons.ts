@@ -13,6 +13,7 @@
 import { Context, Plugin } from "@nuxt/types";
 import OhVueIcon from "oh-vue-icons/dist/v2/icon.es";
 import {
+  MdVpnkeyRound,
   RiGalleryLine,
   RiAddCircleFill,
   RiErrorWarningLine,
@@ -68,6 +69,7 @@ import Vue from "vue";
  */
 const iconsPlugin: Plugin = ({ route }: Context) => {
   OhVueIcon.add(
+    MdVpnkeyRound,
     RiGalleryLine,
     RiInformationFill,
     RiArrowUpSLine,

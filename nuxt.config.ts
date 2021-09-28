@@ -3,7 +3,7 @@
 import { Configuration, NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
-import { ModuleOptions } from "matter-dapp-ui/types";
+import { ModuleOptions } from "matter-dapp-module/types";
 
 const srcDir = "./src/";
 
@@ -195,7 +195,7 @@ const config: NuxtConfig = {
       },
     ],
     [
-      "matter-dapp-ui",
+      "matter-dapp-module",
       <ModuleOptions>{
         network: process.env.ZK_NETWORK,
         apiKeys: {

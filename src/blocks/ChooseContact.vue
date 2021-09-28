@@ -68,8 +68,8 @@
 import Vue, { PropOptions } from "vue";
 import { getAddress } from "ethers/lib/utils";
 import { Address } from "zksync/build/types";
-import { ZkContact, ZkContacts } from "matter-dapp-ui/types";
-import { searchInObject } from "matter-dapp-ui/utils";
+import { ZkContact, ZkContacts } from "matter-dapp-module/types";
+import { searchInObject } from "matter-dapp-module/utils";
 
 export default Vue.extend({
   props: {

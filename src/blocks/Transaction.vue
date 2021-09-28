@@ -115,7 +115,7 @@
 
       <!-- Commit button -->
       <i-button
-        :disabled="!commitAllowed || initialDataLoading"
+        :disabled="(!commitAllowed && hasSigner) || requestingSigner || initialDataLoading"
         block
         class="_margin-top-1 _display-flex flex-row"
         data-cy="commit_transaction_button"
@@ -124,10 +124,14 @@
         @click="commitTransaction()"
       >
         <div class="_display-flex _justify-content-center _align-items-center">
-          <div>{{ transactionActionName }}</div>
-          <loader v-if="allowanceLoading || initialDataLoading" class="_margin-left-1" size="xs" />
+          <v-icon v-if="!hasSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
+          <div>{{ hasSigner ? "" : "Authorize to " }}{{ transactionActionName }}</div>
+          <loader v-if="allowanceLoading || initialDataLoading || requestingSigner" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
+
+      <!-- Requesting signer -->
+      <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">Follow the instructions in your Ethereum wallet</div>
 
       <!-- Fees -->
       <div v-if="feeSymbol && !enoughBalanceToPayFee" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">
@@ -180,7 +184,7 @@ import Vue, { PropOptions } from "vue";
 import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
-import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee } from "matter-dapp-ui/types";
+import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee } from "matter-dapp-module/types";
 export default Vue.extend({
   props: {
     fromRoute: {
@@ -196,6 +200,7 @@ export default Vue.extend({
       chooseTokenModal: <false | "mainToken" | "feeToken">false,
       contentHash: this.$store.getters["zk-transaction/contentHash"],
       initialDataLoading: true,
+      requestingSigner: false,
     };
   },
   computed: {
@@ -304,6 +309,9 @@ export default Vue.extend({
     requiredFees(): ZkFeeType[] {
       return this.$store.getters["zk-transaction/requiredFees"];
     },
+    hasSigner(): boolean {
+      return this.$store.getters["zk-wallet/hasSigner"];
+    },
     feeLoading(): boolean {
       return this.$store.getters["zk-transaction/feeLoading"];
     },
@@ -366,10 +374,20 @@ export default Vue.extend({
       this.chooseTokenModal = false;
     },
     async commitTransaction() {
-      if (!this.commitAllowed) {
-        return;
+      if (!this.hasSigner) {
+        try {
+          this.requestingSigner = true;
+          await this.$store.dispatch("zk-wallet/requestSigner");
+        } catch (err) {
+          console.warn("Request signer error");
+        }
+        this.requestingSigner = false;
+      } else {
+        if (!this.commitAllowed) {
+          return;
+        }
+        await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
       }
-      await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
     },
     async unlockToken(unlimited = false) {
       await this.$store.dispatch("zk-transaction/setAllowance", unlimited);

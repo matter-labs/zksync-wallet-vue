@@ -29,13 +29,13 @@
           <div
             :key="symbolOrID"
             class="tokenItem"
-            :class="{ disabled: feeAcceptable && !balance.feeAvailable }"
+            :class="{ disabled: feeAcceptable && !allowedFeeTokens[symbolOrID] }"
             :data-cy="`token_item_${symbolOrID}`"
-            @click="chooseToken(symbolOrID, balance)"
+            @click="chooseToken(symbolOrID)"
           >
             <div class="tokenSymbol">
               <span>{{ tokensType === "L2-NFT" ? "NFT-" : "" }}{{ symbolOrID }}</span>
-              <i-tooltip v-if="tokensType === 'L2-Tokens' && !balance.feeAvailable" placement="bottom">
+              <i-tooltip v-if="tokensType === 'L2-Tokens' && !allowedFeeTokens[symbolOrID]" placement="bottom">
                 <v-icon class="iconInfo" name="ri-error-warning-line" />
                 <template slot="body">Not available for paying fees</template>
               </i-tooltip>
@@ -71,8 +71,8 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { searchByKey, searchInObject } from "matter-dapp-ui/utils";
-import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances, ZkTokenBalance } from "matter-dapp-ui/types";
+import { searchByKey, searchInObject } from "matter-dapp-module/utils";
+import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances, ZkTokenBalance } from "matter-dapp-module/types";
 import { BigNumberish } from "ethers";
 
 export default Vue.extend({
@@ -141,6 +141,9 @@ export default Vue.extend({
       }
       return {};
     },
+    allowedFeeTokens(): { [symbol: string]: boolean } {
+      return Object.fromEntries(Object.entries(this.zkBalances).map(([symbol, token]) => [symbol, token.feeAvailable]));
+    },
     hasDisplayedBalances(): boolean {
       return Object.keys(this.displayedList).length !== 0;
     },
@@ -156,8 +159,8 @@ export default Vue.extend({
         this.$store.dispatch("zk-account/updateAccountState", true);
       }
     },
-    chooseToken(symbolOrID: string, balance: ZkTokenBalance) {
-      if (this.feeAcceptable && !balance.feeAvailable) {
+    chooseToken(symbolOrID: string) {
+      if (this.feeAcceptable && !this.allowedFeeTokens[symbolOrID]) {
         return;
       }
       if (this.tokensType === "L2-NFT") {

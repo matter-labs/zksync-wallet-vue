@@ -23,7 +23,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ApiTransaction } from "zksync/build/types";
-import { ZkTransactionHistoryLoadingState } from "matter-dapp-ui/types";
+import { ZkTransactionHistoryLoadingState } from "matter-dapp-module/types";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({

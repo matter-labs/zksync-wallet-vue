@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkActiveTransaction, ZkConfig } from "matter-dapp-ui/types";
+import { ZkActiveTransaction, ZkConfig } from "matter-dapp-module/types";
 
 export default Vue.extend({
   name: "LoadingBlock",

@@ -42,7 +42,7 @@ import Vue from "vue";
 import { Route } from "vue-router/types";
 import { Address } from "zksync/build/types";
 import { getAddress } from "ethers/lib/utils";
-import { ZkContact } from "matter-dapp-ui/types";
+import { ZkContact } from "matter-dapp-module/types";
 
 export default Vue.extend({
   asyncData({ from, params }) {

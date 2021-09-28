@@ -69,8 +69,8 @@
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { NFT } from "zksync/build/types";
-import { copyToClipboard } from "matter-dapp-ui/utils";
-import { ZkContact } from "matter-dapp-ui/types";
+import { copyToClipboard } from "matter-dapp-module/utils";
+import { ZkContact } from "matter-dapp-module/types";
 import { getAddress } from "ethers/lib/utils";
 
 export default Vue.extend({
