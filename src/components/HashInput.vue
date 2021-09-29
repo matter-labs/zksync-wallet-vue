@@ -1,8 +1,12 @@
 <template>
   <div class="addressInput">
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
-      <lazy-user-img v-if="isValid" :wallet="inputtedHash" />
-      <div v-else class="userImgPlaceholder userImg"></div>
+      <i-button v-if="isCID" class="-open-in-new-window" size="sm" variant="secondary" circle @click="openInNewWindow">
+        <v-icon name="ri-external-link-line" />
+      </i-button>
+      <i-button v-else class="-open-in-new-window" size="sm" variant="secondary" circle disabled>
+        <v-icon name="ri-file-line" />
+      </i-button>
       <!--suppress HtmlFormInputWithoutLabel -->
       <input
         ref="input"
@@ -24,7 +28,7 @@
 
 <script lang="ts">
 import { DecimalBalance } from "@/types/lib";
-
+import { IPFS_GATEWAY } from "@/plugins/build";
 import Vue, { PropOptions } from "vue";
 import utils from "@/plugins/utils";
 
@@ -44,6 +48,9 @@ export default Vue.extend({
   computed: {
     isValid(): boolean {
       return this.inputtedHash.length > 0 && this.error === "";
+    },
+    isCID(): boolean {
+      return utils.isCID(this.inputtedHash);
     },
     error(): string {
       try {
@@ -77,6 +84,21 @@ export default Vue.extend({
         (this.$refs.input as HTMLElement).focus();
       }
     },
+    openInNewWindow(): void {
+      if (!this.isCID) {
+        return;
+      }
+
+      const url = `${IPFS_GATEWAY}/ipfs/${this.inputtedHash}`;
+      window.open(url, "_blank");
+    },
   },
 });
 </script>
+
+<style lang="scss" scoped>
+button.-open-in-new-window {
+  width: 27px !important;
+  height: 27px !important;
+}
+</style>

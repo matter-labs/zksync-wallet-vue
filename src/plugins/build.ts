@@ -68,3 +68,5 @@ for (const item in _ETHER_NETWORK_ID_DICTIONARY) {
   const netCnf = _ETHER_NETWORK_ID_DICTIONARY[item];
   rpc[netCnf.id] = netCnf.id === ETHER_NETWORK_ID ? ONBOARD_WALLET_CONNECT_RPC : `wss://${netCnf.name}.infura.io/ws/v3/${process.env.APP_WALLET_CONNECT_UNIVERSAL}`;
 }
+
+export const IPFS_GATEWAY = process.env.IPFS_GATEWAY || "https://ipfs.io";
