@@ -25,7 +25,7 @@ zkWallet was created to unleash the power of zkSync L2 operations and give every
      * **mainnet** → [zksync-vue-mainnet](https://wallet.zksync.io)
      * **prod-rinkeby** → [zksync-vue-rinkeby-2](https://rinkeby.zksync.io)
   2) Beta version (w/t partial NFT-support & upcoming NFT+Swap support)
-     * **rinkeby-beta** → [beta-rinkeby-zksync-vue](https://rinkeby-beta-wallet.zksync.dev/)
+     * **beta-rinkeby** → [beta-rinkeby-zksync-vue](https://wallet-rinkeby-beta.zksync.dev)
      * **prod-ropsten** → [zksync-vue-ropsten](https://ropsten.zksync.io)
   3) Dev-only hosts: 
      * **stage-mainnet** → [zksync-vue](https://stage.zksync.io)
@@ -53,7 +53,6 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 - [prettier.js](https://prettier.io)
 - [eslint.js](https://eslint.org/)
 - [Vue.js](https://vuejs.org)
-- [Sentry.io](https://sentry.io)
 - [Onboarding.js](https://github.com/matter-labs-forks/onboard)
 - [Typed Vuex](https://typed-vuex.roe.dev/)
 - [Remix Icon](https://remixicon.com/)

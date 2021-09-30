@@ -50,8 +50,10 @@
       border-bottom: 1px solid;
       cursor: pointer;
       transition: background-color $transition1;
-
-      &:hover {
+      &.disabled {
+        cursor: default;
+      }
+      &:not(.disabled):hover {
         background-color: transparentize($color: $gray, $amount: 0.9);
       }
 

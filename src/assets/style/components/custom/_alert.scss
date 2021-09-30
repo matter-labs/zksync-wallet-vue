@@ -21,7 +21,7 @@
     color: $tempLightGray;
     font-size: $tempFontSizeMedium;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color.2s ease;
     will-change: color;
 
     &:hover {

@@ -1,20 +1,18 @@
 // noinspection ES6PreferShortImport
 
-import { NuxtConfig } from "@nuxt/types";
+import { Configuration, NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
-import { Configuration } from "webpack";
-
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
+import { ModuleOptions } from "matter-dapp-module/types";
 
 const srcDir = "./src/";
 
 const env = process.env.APP_ENV ?? "dev";
-const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
-const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
+const isProduction: boolean = env === "prod";
+const pageTitle = "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED}`;
+const pageTitleTemplate = process.env.APP_CURRENT_NETWORK !== "mainnet" ? "Testnet" : "Mainnet";
 const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
@@ -36,8 +34,8 @@ const config: NuxtConfig = {
     ...process.env,
   },
 
-  /**
-   * Head-placed HTML-tags / configuration of the `<meta>`
+  /*
+   ** Headers of the page
    */
   head: {
     title: pageTitle as string | undefined,
@@ -47,9 +45,6 @@ const config: NuxtConfig = {
       amp: "true",
     },
     meta: [
-      /**
-       * Cache-control
-       */
       {
         property: "cache-control",
         httpEquiv: "cache-control",
@@ -70,18 +65,6 @@ const config: NuxtConfig = {
         content: "0",
         property: "expires",
       },
-
-      /**
-       * UX / UI settings
-       */
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" },
-
-      /**
-       * Page meta:
-       * - SEO tags (keywords, description, author)
-       * - OpenGraph tags (thumbnail,
-       */
       {
         hid: "keywords",
         name: "keywords",
@@ -147,12 +130,14 @@ const config: NuxtConfig = {
         property: "og:image:secure_url",
         content: pageImg,
       },
-
       {
         hid: "og:image:alt",
         property: "og:image:alt",
         content: pageTitle,
       },
+
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
@@ -174,31 +159,25 @@ const config: NuxtConfig = {
     color: "#8c8dfc",
     continuous: true,
   },
-
-  /**
-   * Single-entry global-scope scss
+  /*
+   ** Global CSS
    */
   css: ["@/assets/style/main.scss"],
-
-  styleResources: {
-    scss: ["@/assets/style/vars/*.scss"],
-  },
-
-  /**
-   * Plugins that should be loaded before the mounting
+  /*
+   ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/icons", "@/plugins/main"],
+  plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession"],
 
   router: {
-    middleware: ["wallet"],
+    middleware: ["auth"],
   },
-  /**
-   * Nuxt.js dev-modules
+  /*
+   ** Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
+    "nuxt-typed-vuex",
     ["@nuxtjs/dotenv", { path: __dirname }],
     [
       "@nuxt/typescript-build",
@@ -206,27 +185,36 @@ const config: NuxtConfig = {
         typescript: {
           typeCheck: {
             async: true,
-            stylelint: {
-              config: [".stylelintrc"],
-              files: "src/**/*.scss",
-            },
             eslint: {
               config: ["tsconfig-eslint.json", ".eslintrc.js"],
-              files: "src/**/*.{ts,vue,js}",
+              files: "@/**/*.{ts,vue,js}",
             },
-            files: "src/**/*.{ts,vue,js}",
+            files: "@/**/*.{ts,vue,js}",
           },
         },
       },
     ],
-    "nuxt-typed-vuex",
+    [
+      "matter-dapp-module",
+      <ModuleOptions>{
+        network: process.env.ZK_NETWORK,
+        apiKeys: {
+          FORTMATIC_KEY: process.env.APP_FORTMATIC,
+          PORTIS_KEY: process.env.APP_PORTIS,
+          INFURA_KEY: process.env.APP_INFURA_API_KEY,
+        },
+        onboardConfig: {
+          APP_NAME: pageTitle,
+          APP_ID: process.env.APP_ONBOARDING_APP_ID,
+        },
+      },
+    ],
   ],
 
-  /**
-   * Nuxt.js modules
+  /*
+   ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
-
+  modules: ["@nuxtjs/dotenv", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt"],
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
@@ -243,21 +231,9 @@ const config: NuxtConfig = {
       },
     },
   },
-
-  /**
-   * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
-   */
   inkline: {
     config: {
       autodetectVariant: true,
-    },
-  },
-  sentry: {
-    dsn: process.env.SENTRY_DSN,
-    disableServerSide: true,
-    config: {
-      tracesSampleRate: 1.0,
-      environment: isProduction ? "production" : env === "dev" ? "development" : env,
     },
   },
   "google-gtag": {
@@ -266,18 +242,17 @@ const config: NuxtConfig = {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload
     },
-    debug: !isProduction, // enable to track in dev mode
+    debug: env !== "prod", // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
-
-  /**
-   * Build configuration
+  /*
+   ** Build configuration
    */
   build: {
     babel: {
       compact: true,
     },
-    transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
+    transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
     hardSource: isProduction,
     ssr: false,
     extend: (config: Configuration) => {
@@ -285,15 +260,6 @@ const config: NuxtConfig = {
         fs: "empty",
       };
     },
-  },
-
-  buildOptimisations: {
-    profile: env !== "prod" ? "risky" : "experimental",
-    features: {
-      postcssNoPolyfills: isProduction,
-      hardSourcePlugin: isProduction,
-    },
-    esbuildLoaderOptions: "esnext",
   },
   googleFonts: {
     prefetch: true,

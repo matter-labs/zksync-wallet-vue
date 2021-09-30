@@ -1,12 +1,10 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template slot="header">Can't find your token?</template>
-
+    <template slot="header">Can't find a token</template>
     <p>
-      Your token may be listed as ERC20-XX. Search for your token by mainnet address on the
-      <a href="https://zkscan.io/explorer/tokens/" target="_blank" rel="noopener noreferrer">tokens page</a> to see if this may be the case.
+      zkSync currently supports the most popular tokens, we will be adding more over time.
+      <a href="https://zksync.io/contact.html" target="_blank" rel="noopener noreferrer">Let us know what tokens you need</a>!
     </p>
-    <p>If you still cannot find it, you can add support for any token via the "Add new token" button on the top right.</p>
   </i-modal>
 </template>
 

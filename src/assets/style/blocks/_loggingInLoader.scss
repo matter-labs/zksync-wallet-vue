@@ -12,10 +12,9 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: $white;
+  background: white;
   animation-fill-mode: forwards;
   transition-delay: 0.35s;
-
   &.fade-leave-active {
     transition-delay: 0.5s;
   }
@@ -25,13 +24,11 @@
     width: max-content;
     padding-top: 0 !important;
 
-    .zkwallet-logo,
-    .projectLogo {
+    .zkwallet-logo, .projectLogo {
       height: 55px;
 
       @media screen and (max-width: $mobile) {
         height: 35px;
-        max-width: 45vw;
       }
     }
 
@@ -39,10 +36,6 @@
       position: absolute;
       bottom: 100%;
       left: 100%;
-
-      @media screen and (max-width: $mobile) {
-        display: none;
-      }
     }
   }
 

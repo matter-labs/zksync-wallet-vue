@@ -8,14 +8,7 @@
     ".eslintrc.js"
   ],
   "exclude": [
-    "**sw.js",
-    "node_modules**",
-    ".nuxt**",
-    ".idea**",
-    ".ide-setup**",
-    ".firebase**",
-    ".github**",
-    "tests**"
+    "tests/*",
   ],
   "compilerOptions": {
     "lib": [

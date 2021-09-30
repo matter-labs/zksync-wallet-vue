@@ -1,0 +1,59 @@
+.networkSwitchModal {
+    .network-list {
+        width: 100%;
+        overflow-x: hidden;
+        height: 100%;
+        overflow-y: auto !important;
+        background-color: $bgSecondary;
+        border-radius: $borderRadius;
+        box-shadow: $shadowInset;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .network-list-item {
+        display: grid;
+        grid-gap: 0.4rem;
+        grid-template-columns: 25px minmax(0, 1fr);
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        height: 60px;
+        padding: 0 20px;
+        text-decoration: none;
+        border-bottom: 1px solid;
+        cursor: pointer;
+        transition: $transition1;
+        transition-property: background-color, color;
+        text-transform: capitalize;
+        margin: 0;
+        &:last-child {
+            border-bottom: none;
+        }
+        &:hover {
+            background-color: transparentize($color: $gray, $amount: 0.9);
+        }
+        .selected {
+            color: $green;
+        }
+    }
+}
+
+body.inkline {
+    &.-light {
+        .networkSwitchModal .network-list {
+            .network-list-item {
+                color: $black;
+                border-color: $input-border-color-light;
+            }
+        }
+    }
+    &.-dark {
+        .networkSwitchModal .network-list {
+            .network-list-item {
+                color: $white;
+                border-color: $input-border-color-dark;
+            }
+        }
+    }
+}

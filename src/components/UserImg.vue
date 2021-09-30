@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { Address } from "zksync/build/types";
-import * as blockies from "blockies-ts";
+import blockie from "ethereum-blockies-base64";
 import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
@@ -18,7 +18,7 @@ export default Vue.extend({
   },
   computed: {
     walletImg(): string {
-      return blockies.create({ seed: (this.wallet as string).toLowerCase() }).toDataURL();
+      return !this.wallet ? "" : blockie(this.wallet);
     },
   },
 });

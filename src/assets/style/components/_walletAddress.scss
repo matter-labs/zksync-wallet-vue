@@ -10,7 +10,6 @@
   border-radius: $borderRadiusMd;
   box-shadow: $shadowInset;
   transition: background-color $transition1, box-shadow $transition1;
-
   &.inputWallet {
     position: relative;
 
@@ -28,6 +27,7 @@
     .userImg {
       cursor: pointer;
     }
+
   }
 
   &.error {
@@ -43,6 +43,7 @@
   input {
     display: block;
     width: 100%;
+    height: 100%;
     font-size: 12px;
     height: 27px;
     text-align: center;

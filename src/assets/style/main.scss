@@ -1,8 +1,7 @@
 // Core
-
-@import "./components/custom/input";
-@import "./components/custom/button";
-@import "./components/custom/alert";
+@import "./vars/variables";
+@import "./vars/custom";
+@import "./vars/transitions";
 @import "./default";
 
 //Layouts
@@ -19,8 +18,12 @@
 @import "./blocks/mint";
 @import "./blocks/loggingInLoader";
 @import "./blocks/chooseToken";
+@import "./blocks/networkSwitch";
 
 //Components
+@import "./components/custom/input";
+@import "./components/custom/button";
+@import "./components/custom/alert";
 @import "./components/loader";
 @import "./components/userImg";
 @import "./components/walletAddress";
@@ -30,7 +33,7 @@
 @import "./components/amountInput";
 @import "./components/successBlock";
 @import "./components/note";
-@import "./components/singleTransaction";
+@import "./components/transactionHistoryItem";
 
 //Pages
 @import "./pages/index";

@@ -92,6 +92,7 @@ body {
           font: normal normal 16px/2rem $firaSans;
           transition: color $transition1;
 
+
           &:hover {
             color: $lightViolet;
             background-color: lighten($darkViolet, 5) !important;
@@ -160,11 +161,9 @@ body {
 
     @media (max-width: $mobile) {
       padding: 0 !important;
-
       .column {
         padding: 0 !important;
       }
-
       .mobileIndexHeader {
         padding: 1rem;
         margin: 0 auto !important;
@@ -350,11 +349,13 @@ body {
       }
 
       .dropdown {
-        min-height: 52px;
-        height: fit-content;
-        max-height: 312px;
+        height: 52px;
         overflow: hidden;
         transition: height $transition1;
+
+        &.opened {
+          height: 254px;
+        }
       }
     }
   }

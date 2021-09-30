@@ -12,7 +12,7 @@
     background: $white;
     border-radius: $borderRadiusMd;
     box-shadow: $inputContainerShadow;
-    transition: background-color 0.2s ease;
+    transition: background-color.2s ease;
 
     .pre {
       display: flex;
@@ -48,7 +48,7 @@
       background-color: $tempTransparent;
       border: none;
       outline: none !important;
-      transition: color 0.2s ease;
+      transition: color.2s ease;
 
       &::placeholder {
         color: $gray;
@@ -65,7 +65,7 @@
       color: $violet;
       font-size: $fontSizeRegular;
       border-left: 2px solid $purple;
-      transition: color 0.2s ease, border-color 0.2s ease;
+      transition: color.2s ease, border-color.2s ease;
     }
   }
 
@@ -116,8 +116,7 @@
   }
 }
 
-.spin-animation,
-.ri-loader-5-line {
+.spin-animation, .ri-loader-5-line {
   display: inline-block;
   animation: spin 0.5s linear 0s infinite;
 }

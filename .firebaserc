@@ -11,6 +11,9 @@
         "prod-ropsten": [
           "zksync-vue-ropsten"
         ],
+        "dev-rinkeby": [
+          "rinkeby-wallet-zksync"
+        ],
         "stage-mainnet": [
           "zksync-vue"
         ],

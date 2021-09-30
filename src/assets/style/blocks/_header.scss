@@ -9,7 +9,6 @@ header {
     position: fixed;
     top: 0;
     z-index: 3;
-
     @media screen and (max-width: $mobile) {
       position: fixed;
       top: 0;
@@ -17,7 +16,6 @@ header {
       z-index: 9;
       box-shadow: $shadowBottom;
     }
-
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: rgb(239, 241, 244);
@@ -28,7 +26,9 @@ header {
     min-height: 60px;
   }
 
+
   &.loggedInHeader {
+
     @media screen and (min-width: $tablet) and (max-width: $desktop) {
       .pagesContainer.linksContainer {
         grid-gap: 3px;
@@ -99,11 +99,11 @@ header {
         }
       }
 
+
       .zkwallet-logo {
         width: auto !important;
         height: 100% !important;
         object-fit: contain;
-
         @media (max-width: $mobile) {
           height: 25px !important;
         }
@@ -158,8 +158,7 @@ header {
       text-decoration: none;
       transition: color $transition1;
 
-      em,
-      i {
+      em, i {
         padding-left: 2px;
         color: $gray;
         font-size: 12px;
@@ -197,7 +196,6 @@ header {
       background-color: $darkViolet;
       box-shadow: $shadowTop;
     }
-
     .pagesContainer {
       position: fixed;
       bottom: -1px;
@@ -225,7 +223,6 @@ header {
           display: block;
           margin: 0 auto;
         }
-
         span {
           margin-top: 2px;
         }
@@ -365,6 +362,7 @@ body.inkline.-light header {
 
   .pagesContainer,
   .mobileFooter {
+
     @media screen and (max-width: $mobile) {
       background-color: $white;
     }

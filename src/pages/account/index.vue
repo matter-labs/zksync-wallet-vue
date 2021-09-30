@@ -16,8 +16,8 @@ export default Vue.extend({
     };
   },
   computed: {
-    walletAddress(): Address | undefined {
-      return this.$accessor.provider.address;
+    walletAddress(): Address {
+      return this.$store.getters["zk-account/address"];
     },
   },
   methods: {

@@ -30,31 +30,26 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "strict": true,
-    "target": "esnext",
+    "target": "ESNext",
     "types": [
-      "@nuxtjs/toast/index",
       "@types/node",
       "@nuxt/types",
-      "@nuxtjs/sentry",
-      "@nuxt/http",
       "@types/jest",
       "@nuxtjs/toast",
       "web3-core/types",
       "@inkline/inkline/types",
-      "btn-onboard",
       "nuxt-typed-vuex",
-      "typed-vuex",
-      "@walletconnect/types"
+      "typed-vuex"
     ]
   },
   "exclude": [
-    "node_modules",
-    "dist",
-    ".yarn",
-    "public",
-    ".nuxt",
-    ".github",
-    "environments",
-    "tests"
+    "node_modules/*",
+    "dist/*",
+    ".yarn/*",
+    "public/*",
+    ".nuxt/*",
+    ".github/*",
+    "environments/*",
+    "tests/*"
   ]
 }

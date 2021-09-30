@@ -1,38 +1,32 @@
-import * as provider from "@/store/provider";
-import * as contacts from "@/store/contacts";
-import * as tokens from "@/store/tokens";
-import * as transaction from "@/store/transaction";
-import * as wallet from "@/store/wallet";
-import { ZKIRootState } from "@/types/lib";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import { Route } from "vue-router/types";
+import { ZKIRootState } from "@/types/lib";
 
-export const state = () =>
-  <ZKIRootState>{
-    accountModalOpened: false,
-    currentModal: <string | undefined>undefined,
-    previousRoute: <Route | undefined>undefined,
-  };
+export const state = (): ZKIRootState => ({
+  accountModalOpened: false,
+  currentModal: undefined,
+  previousRoute: undefined,
+});
 
 export type RootState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
-  getAccountModalState: (state) => state.accountModalOpened,
-  getPreviousRoute: (state) => state.previousRoute,
-  currentModal: (state) => state.currentModal,
+  getAccountModalState: (state: RootState) => state.accountModalOpened,
+  getPreviousRoute: (state: RootState) => state.previousRoute,
+  currentModal: (state: RootState) => state.currentModal,
 });
 
 export const mutations = mutationTree(state, {
-  setAccountModalState(state, modalState: boolean) {
+  setAccountModalState(state: RootState, modalState: boolean): void {
     state.accountModalOpened = modalState;
   },
-  setCurrentModal(state, modalName: string) {
+  setCurrentModal(state: RootState, modalName: string): void {
     state.currentModal = modalName;
   },
-  setPreviousRoute(state, route: Route) {
+  setPreviousRoute(state: RootState, route: Route): void {
     state.previousRoute = route;
   },
-  removeCurrentModal(state) {
+  removeCurrentModal(state: RootState): void {
     state.currentModal = undefined;
   },
 });
@@ -54,11 +48,5 @@ export const accessorType = getAccessorType({
   getters,
   mutations,
   actions,
-  modules: {
-    provider,
-    contacts,
-    tokens,
-    transaction,
-    wallet,
-  },
+  modules: {},
 });
