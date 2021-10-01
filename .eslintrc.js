@@ -13,7 +13,7 @@ module.exports = {
     sourceType: "module",
     project: ["tsconfig.json", "tsconfig.eslint.json"],
     tsconfigRootDir: __dirname,
-    extraFileExtensions: [".vue"],
+    extraFileExtensions: [".vue", ".scss"],
   },
   ignorePatterns: ["node_modules"],
   plugins: ["vue", "@typescript-eslint", "prettier"],

@@ -47,7 +47,7 @@
                 <i-tooltip placement="left">
                   <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
                   <v-icon v-else class="committed" name="ri-check-line" />
-                  <template slot="body">{{ item.status }}</template>
+                  <template slot="body">{{ item.verified ? "Verified" : "Pending" }}</template>
                 </i-tooltip>
               </div>
             </div>
