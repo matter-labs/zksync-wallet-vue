@@ -1,8 +1,13 @@
 <template>
   <div class="addressInput">
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
-      <user-img v-if="isValid" :wallet="inputtedHash" />
-      <div v-else class="userImgPlaceholder userImg"></div>
+      <i-button v-if="isCID" class="-open-in-new-window" size="sm" variant="secondary" :to="`${ipfsGateway}/ipfs/${inputtedHash}`" target="_blank" circle>
+        <v-icon name="ri-external-link-line" />
+      </i-button>
+      <user-img v-else-if="isValid" :wallet="inputtedHash" />
+      <i-button v-else class="-open-in-new-window" size="sm" variant="secondary" circle disabled>
+        <v-icon name="ri-file-line" />
+      </i-button>
       <!--suppress HtmlFormInputWithoutLabel -->
       <input
         ref="input"
@@ -24,8 +29,8 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { DecimalBalance } from "matter-dapp-module/types";
-import { contendAddressToRawContentHash } from "matter-dapp-module/utils";
+import { DecimalBalance, ModuleOptions } from "matter-dapp-module/types";
+import { contendAddressToRawContentHash, isCID } from "matter-dapp-module/utils";
 
 export default Vue.extend({
   props: {
@@ -41,8 +46,14 @@ export default Vue.extend({
     };
   },
   computed: {
+    ipfsGateway(): string {
+      return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway;
+    },
     isValid(): boolean {
       return this.inputtedHash.length > 0 && this.error === "";
+    },
+    isCID(): boolean {
+      return isCID(this.inputtedHash);
     },
     error(): string {
       try {
@@ -79,3 +90,10 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+button.-open-in-new-window {
+  width: 27px !important;
+  height: 27px !important;
+}
+</style>
