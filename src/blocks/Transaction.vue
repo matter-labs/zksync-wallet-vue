@@ -1,6 +1,7 @@
 <template>
   <div class="transactionBlock">
     <block-modals-allowance />
+    <block-modals-content-hash />
     <block-modals-fee-req-error />
     <block-modals-fee-changed :type-name="transactionActionName" />
 
