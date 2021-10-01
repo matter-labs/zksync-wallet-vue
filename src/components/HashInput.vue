@@ -1,10 +1,9 @@
 <template>
   <div class="addressInput">
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
-      <i-button v-if="isCID" class="-open-in-new-window" size="sm" variant="secondary" :to="`${ipfsGateway}/ipfs/${inputtedHash}`" target="_blank" circle>
+      <i-button v-if="isCID" class="-open-in-new-window" size="sm" variant="secondary" target="_blank" circle @click="openInNewWindow()">
         <v-icon name="ri-external-link-line" />
       </i-button>
-      <user-img v-else-if="isValid" :wallet="inputtedHash" />
       <i-button v-else class="-open-in-new-window" size="sm" variant="secondary" circle disabled>
         <v-icon name="ri-file-line" />
       </i-button>
@@ -86,6 +85,13 @@ export default Vue.extend({
       if (this.$refs.input) {
         (this.$refs.input as HTMLElement).focus();
       }
+    },
+    openInNewWindow(): void {
+      if (!this.isCID) {
+        return;
+      }
+      const url = `${this.ipfsGateway}/ipfs/${this.inputtedHash}`;
+      window.open(url, "_blank");
     },
   },
 });
