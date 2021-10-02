@@ -4,7 +4,7 @@
       <template slot="header">Rename wallet</template>
       <div>
         <i-input ref="nameInput" v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()" />
-        <i-button block size="lg" variant="secondary" class="_margin-top-1" @click="renameWallet()">Save</i-button>
+        <i-button block size="lg" variant="secondary" class="_margin-top-1" :disabled="!isNameValid" @click="renameWallet()">Save</i-button>
       </div>
     </i-modal>
 
@@ -48,13 +48,13 @@ export default Vue.extend({
   },
   computed: {
     accountName(): string {
-      return this.$store.getters["zk-account/name"];
+      return this.$store.getters["zk-account/name"] as string;
     },
     accountAddress(): string {
       return this.$store.getters["zk-account/address"];
     },
     accountZkScanUrl(): string {
-      return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer + "explorer/accounts/" + this.accountAddress;
+      return (this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer + "explorer/accounts/" + this.accountAddress) as string;
     },
     accountModal: {
       get(): boolean {
@@ -64,6 +64,9 @@ export default Vue.extend({
         this.$accessor.setAccountModalState(val);
         return val;
       },
+    },
+    isNameValid(): boolean {
+      return this.walletName?.length > 0;
     },
   },
   watch: {
@@ -98,6 +101,9 @@ export default Vue.extend({
       this.renameWalletModal = true;
     },
     renameWallet(): void {
+      if (!this.isNameValid) {
+        return;
+      }
       this.$store.dispatch("zk-account/saveAccountName", this.walletName);
       this.renameWalletModal = false;
       this.walletName = this.accountName;
