@@ -1,8 +1,10 @@
 // noinspection ES6PreferShortImport
 
-import { Configuration, NuxtConfig } from "@nuxt/types";
+import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
+import { Configuration } from "webpack";
+
 import { ModuleOptions } from "matter-dapp-module/types";
 
 const srcDir = "./src/";
@@ -34,8 +36,8 @@ const config: NuxtConfig = {
     ...process.env,
   },
 
-  /*
-   ** Headers of the page
+  /**
+   * Head-placed HTML-tags / configuration of the `<meta>`
    */
   head: {
     title: pageTitle as string | undefined,
@@ -45,6 +47,9 @@ const config: NuxtConfig = {
       amp: "true",
     },
     meta: [
+      /**
+       * Cache-control
+       */
       {
         property: "cache-control",
         httpEquiv: "cache-control",
@@ -65,6 +70,18 @@ const config: NuxtConfig = {
         content: "0",
         property: "expires",
       },
+
+      /**
+       * UX / UI settings
+       */
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" },
+
+      /**
+       * Page meta:
+       * - SEO tags (keywords, description, author)
+       * - OpenGraph tags (thumbnail,
+       */
       {
         hid: "keywords",
         name: "keywords",
@@ -135,9 +152,6 @@ const config: NuxtConfig = {
         property: "og:image:alt",
         content: pageTitle,
       },
-
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
@@ -159,12 +173,13 @@ const config: NuxtConfig = {
     color: "#8c8dfc",
     continuous: true,
   },
-  /*
-   ** Global CSS
+
+  /**
+   * Single-entry global-scope scss
    */
   css: ["@/assets/style/main.scss"],
-  /*
-   ** Plugins to load before mounting the App
+  /**
+   * Plugins that should be loaded before the mounting
    */
   plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession"],
 
@@ -177,7 +192,6 @@ const config: NuxtConfig = {
   buildModules: [
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
-    "nuxt-typed-vuex",
     ["@nuxtjs/dotenv", { path: __dirname }],
     [
       "@nuxt/typescript-build",
@@ -185,6 +199,10 @@ const config: NuxtConfig = {
         typescript: {
           typeCheck: {
             async: true,
+            stylelint: {
+              config: [".stylelintrc"],
+              files: "src/**/*.scss",
+            },
             eslint: {
               config: ["tsconfig-eslint.json", ".eslintrc.js"],
               files: "@/**/*.{ts,vue,js}",
@@ -194,6 +212,7 @@ const config: NuxtConfig = {
         },
       },
     ],
+    "nuxt-typed-vuex",
     [
       "matter-dapp-module",
       <ModuleOptions>{
@@ -214,7 +233,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt"],
+  modules: ["@nuxtjs/dotenv", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
@@ -231,9 +250,21 @@ const config: NuxtConfig = {
       },
     },
   },
+
+  /**
+   * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
+   */
   inkline: {
     config: {
       autodetectVariant: true,
+    },
+  },
+  sentry: {
+    dsn: process.env.SENTRY_DSN,
+    disableServerSide: true,
+    config: {
+      tracesSampleRate: 1.0,
+      environment: isProduction ? "production" : env === "dev" ? "development" : env,
     },
   },
   "google-gtag": {
@@ -242,7 +273,7 @@ const config: NuxtConfig = {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload
     },
-    debug: env !== "prod", // enable to track in dev mode
+    debug: !isProduction, // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
   /*
@@ -252,7 +283,7 @@ const config: NuxtConfig = {
     babel: {
       compact: true,
     },
-    transpile: ["oh-vue-icons"], // [v.2.4.0]: oh-vue-icons package
+    transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
     hardSource: isProduction,
     ssr: false,
     extend: (config: Configuration) => {

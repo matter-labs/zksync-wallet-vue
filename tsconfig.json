@@ -34,6 +34,9 @@
     "types": [
       "@types/node",
       "@nuxt/types",
+      "@nuxtjs/sentry",
+      "matter-dapp-module",
+      "vue-router",
       "@types/jest",
       "@nuxtjs/toast",
       "web3-core/types",
