@@ -1,5 +1,3 @@
-// noinspection ES6PreferShortImport
-
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
@@ -7,9 +5,7 @@ import { Configuration } from "webpack";
 
 import { ModuleOptions } from "matter-dapp-module/types";
 
-const srcDir = "./src/";
-
-const env = process.env.APP_ENV ?? "dev";
+const env: string = process.env.APP_ENV ?? "dev";
 const isProduction: boolean = env === "prod";
 const pageTitle = "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
@@ -25,7 +21,7 @@ const config: NuxtConfig = {
   telemetry: false,
   ssr: false,
   target: "static",
-  srcDir: `${srcDir}`,
+  srcDir: "./src/",
   vue: {
     config: {
       productionTip: isProduction,

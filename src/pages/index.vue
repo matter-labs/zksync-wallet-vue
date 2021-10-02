@@ -9,7 +9,7 @@
           </div>
           <div class="tileName">Ethereum Wallet</div>
         </div>
-        <div data-cy="core_connect_wallet_wc_button" class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center" @click="wallectConnect()">
+        <div data-cy="core_connect_wallet_wc_button" class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center" @click="walletConnect()">
           <div class="tile">
             <img src="@/assets/imgs/wallets/wc.png" alt="Wallet Connect" />
           </div>
@@ -40,7 +40,7 @@ export default Vue.extend({
         await this.$router.push("/account");
       }
     },
-    async wallectConnect() {
+    async walletConnect() {
       const refreshWalletTry = await this.$store.dispatch("zk-onboard/loginWithWalletConnect");
       if (!refreshWalletTry) {
         await this.$store.dispatch("zk-account/logout");

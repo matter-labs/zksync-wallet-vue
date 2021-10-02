@@ -10,7 +10,7 @@
  * @uses remixicon,oh-vue-icons
  * @link https://oh-vue-icons.netlify.app
  */
-import { Context, Plugin } from "@nuxt/types";
+import { Plugin } from "@nuxt/types";
 import OhVueIcon from "oh-vue-icons/dist/v2/icon.es";
 import {
   MdVpnkeyRound,
@@ -65,10 +65,8 @@ import Vue from "vue";
 
 /**
  * Special plugin to implement oh-awesome-icons into zkDapp
- * @param {{(status: number, path: string, query?: Route["query"]): void, (path: string, query?: Route["query"]): void, (location: Location): void, (status: number, location: Location): void}} redirect
- * @param {Route} route
  */
-const iconsPlugin: Plugin = ({ route }: Context) => {
+const iconsPlugin: Plugin = () => {
   OhVueIcon.add(
     MdVpnkeyRound,
     RiGalleryLine,
