@@ -18,7 +18,6 @@
         </span>
       </template>
     </i-popover>
-    <div class="beta-tag errorText">BETA</div>
     <a :href="githubLink" class="revision _background-gray-40" target="_blank">
       <v-icon name="ri-github-fill" />
       {{ revision }}
