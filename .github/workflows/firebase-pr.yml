@@ -53,7 +53,7 @@ jobs:
         uses: mujo-code/puppeteer-headful@8baa091f83c74d2eda8603b7f9990b20535e7a9c
         env:
           CI: 'true'
-          TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.rinkeby_urls)[0]}}"
+          TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.output_urls)[0]}}"
         with:
           args: yarn test --runInBand
 

@@ -61,7 +61,7 @@ export default Vue.extend({
         if (!this.transactionHistoryAllLoaded) {
           await this.$store.dispatch("zk-history/getNewTransactionHistory");
         }
-      }, 120000);
+      }, 30000);
     },
   },
 });

@@ -29,9 +29,11 @@
         <div>{{ transactionActionName }}</div>
       </div>
 
-      <div class="_padding-top-1 inputLabel">Address</div>
-      <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" />
-      <block-choose-contact class="_margin-top-05" :address="inputtedAddress" :display-own-address="displayOwnAddress" @chosen="chooseAddress($event)" />
+      <template v-if="displayAddressInput">
+        <div class="_padding-top-1 inputLabel">Address</div>
+        <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" />
+        <block-choose-contact class="_margin-top-05" :address="inputtedAddress" :display-own-address="displayOwnAddress" @chosen="chooseAddress($event)" />
+      </template>
 
       <template v-if="displayAmountInput">
         <div class="_padding-top-1 inputLabel">Amount</div>
@@ -112,6 +114,8 @@
         </p>
       </div>
 
+      <div v-if="type === 'CPK' && cpkStatus === true" class="_text-center _margin-top-1">Your account is already activated</div>
+
       <div v-if="error" class="errorText _text-center _margin-top-1">{{ error }}</div>
 
       <!-- Commit button -->
@@ -185,7 +189,7 @@ import Vue, { PropOptions } from "vue";
 import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
-import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee } from "matter-dapp-module/types";
+import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee, ZkCPKStatus } from "matter-dapp-module/types";
 export default Vue.extend({
   props: {
     fromRoute: {
@@ -230,6 +234,9 @@ export default Vue.extend({
     },
     enoughBalanceToPayFee(): boolean {
       return this.$store.getters["zk-transaction/enoughBalanceToPayFee"];
+    },
+    displayAddressInput(): boolean {
+      return this.type !== "CPK";
     },
     displayAmountInput(): boolean {
       switch (this.type) {
@@ -332,6 +339,9 @@ export default Vue.extend({
         }
       },
     },
+    cpkStatus(): ZkCPKStatus {
+      return this.$store.getters["zk-wallet/cpk"];
+    },
   },
   watch: {
     inputtedAmount(val) {
@@ -349,7 +359,7 @@ export default Vue.extend({
       await this.$store.dispatch("zk-account/updateAccountState");
     }
     // await this.$store.dispatch("zk-wallet/checkCPK");
-    if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] === false) {
+    if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] === false && this.type !== "CPK") {
       this.$accessor.openModal("SignPubkey");
     }
     if (this.$route.query.token) {
