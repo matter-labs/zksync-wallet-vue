@@ -1,8 +1,8 @@
 <template>
-  <i-modal v-model="opened" size="md" class="networkSwitchModal">
+  <i-modal v-model="opened" size="md" class="networkSwitchModal" data-cy="network_switch_modal">
     <template slot="header">Network Configuration</template>
     <ul class="network-list">
-      <li v-for="zkNetworkName in options" :key="zkNetworkName" class="network-list-item" @click="changeNetworkConfig(zkNetworkName)">
+      <li v-for="zkNetworkName in options" :key="zkNetworkName" :data-cy="`network_switch_${zkNetworkName}_button`" class="network-list-item" @click="changeNetworkConfig(zkNetworkName)">
         <span>
           <v-icon v-if="zkNetworkName === network" class="selected" name="ri-check-line" />
         </span>
