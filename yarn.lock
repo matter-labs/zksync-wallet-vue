@@ -3352,7 +3352,7 @@ __metadata:
     fsevents: ^2.3.2
     jest: ^26.6.3
     lottie-web: ^5.7.8
-    matter-dapp-module: ^1.0.10
+    matter-dapp-module: ^1.0.11
     moment-timezone: ^0.5.33
     multiformats: ^9.4.7
     node-sass: 4.14.0
@@ -17103,9 +17103,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"matter-dapp-module@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "matter-dapp-module@npm:1.0.10"
+"matter-dapp-module@npm:^1.0.11":
+  version: 1.0.11
+  resolution: "matter-dapp-module@npm:1.0.11"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@nuxtjs/style-resources": ^1.0.0
@@ -17122,7 +17122,7 @@ fsevents@^1.2.7:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.11.5
-  checksum: b94213b1c1b241784d45123d5f2f01c1c5fbc55aae7fe50239d0308de8984d43597be6fcde1c8875ad3523ac935e403dbd827421d5d632d4af81eaeb7ac0d1f5
+  checksum: 6ba3f438a63f418cdf14a399185911fa853f83b5d58145d57efd1b176f40c866dd2bc9c31e6ed00a3e3e29147bd59f83bfe86af22690f4cb1751aefe26ed5225
   languageName: node
   linkType: hard
 
