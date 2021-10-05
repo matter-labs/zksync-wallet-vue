@@ -1,5 +1,5 @@
 <template>
-  <i-badge v-if="!isMainnet" variant="primary">
+  <i-badge v-if="!isMainnet" variant="primary" data-cy="network_switch_icon">
     <small class="version">{{ network }}</small>
   </i-badge>
 </template>
