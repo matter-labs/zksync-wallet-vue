@@ -10,11 +10,11 @@
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
-          zkSync API <code class="_padding-y-0">{{ zkApiBase }}</code>
+          zkSync API <code class="_padding-y-0" data-cy="environment_details_api">{{ zkApiBase }}</code>
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
-          Ethereum env <code class="_padding-y-0">{{ netName }}</code>
+          Ethereum env <code class="_padding-y-0" data-cy="environment_details_network">{{ netName }}</code>
         </span>
       </template>
     </i-popover>

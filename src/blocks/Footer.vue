@@ -27,7 +27,7 @@
           <span class="_padding-x-1 dividerLine">|</span>
           <a href="https://uptime.com/s/zksync" class="uptime-link" target="_blank">uptime</a>
         </div>
-        <i-button v-if="!isMainnet" size="md" circle class="_margin-right-1 _hidden-sm-and-down" outline variant="dark" @click="openNetworkSwitchModal">
+        <i-button v-if="!isMainnet" size="md" circle class="_margin-right-1 _hidden-sm-and-down" data-cy="network_switch_icon" outline variant="dark" @click="openNetworkSwitchModal">
           <v-icon name="co-ethereum" scale="1" />
         </i-button>
         <i-button size="md" circle class="floating-on-mobile _hidden-sm-and-down" outline variant="dark" @click="toggleDarkMode">

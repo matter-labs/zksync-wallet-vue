@@ -5,7 +5,7 @@
       <li
         v-for="zkNetworkName in options"
         :key="zkNetworkName"
-        :data-cy="`network_switch_${zkNetworkName}_button`"
+        :data-cy="`network_switch_${zkNetworkName}`"
         class="network-list-item"
         @click="changeNetworkConfig(zkNetworkName)"
       >
