@@ -144,6 +144,10 @@ export default Vue.extend({
         this.contactModal.error = "Invalid address";
         return;
       }
+      if (getAddress(this.contactModal.address) === this.$store.getters["zk-account/address"]) {
+        this.contactModal.error = "Can't add own address";
+        return;
+      }
       if (this.contactModal.openedAddress && getAddress(this.contactModal.openedAddress) !== getAddress(this.contactModal.address)) {
         await this.$store.dispatch("zk-contacts/removeContact", this.contactModal.openedAddress);
       }
