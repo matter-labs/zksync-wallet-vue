@@ -34,7 +34,7 @@
         <div class="infoBlock _margin-top-1">
           <div class="headline">Your balance:</div>
         </div>
-        <div class="_display-flex _justify-content-space-between balanceWithdraw">
+        <div class="_display-flex _justify-content-space-between _flex-wrap balanceWithdraw">
           <div class="infoBlock">
             <div v-if="accountStateLoading && !accountStateRequested && !balanceToken" class="secondaryText">Loading...</div>
             <div v-else-if="balanceToken" class="balance">
@@ -48,7 +48,7 @@
               <token-price :symbol="symbol" amount="0" />
             </div>
           </div>
-          <i-button class="_padding-y-0" link size="lg" variant="secondary" :to="`/transaction/withdraw?token=${symbol}`">- Withdraw to L1</i-button>
+          <i-button class="_padding-y-0" link size="sm" variant="secondary" :to="`/transaction/withdraw?token=${symbol}`">- Withdraw to L1</i-button>
         </div>
         <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transaction/transfer?token=${symbol}`">
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer

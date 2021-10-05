@@ -517,12 +517,19 @@ button.-lg.-circle {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 100%;
   grid-gap: 15px;
+  max-width: 100%;
+  overflow: hidden;
+
+  & > * {
+    overflow: hidden;
+  }
 
   &.single-col {
     grid-gap: 10px;
     grid-template-columns: 100%;
     grid-template-rows: repeat(2, 1fr);
   }
+
   @media screen and (max-width: $mobile) {
     grid-gap: 10px;
     grid-template-columns: 100%;

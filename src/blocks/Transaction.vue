@@ -89,7 +89,7 @@
             variant="secondary"
             @click="unlockToken(false)"
           >
-            Approve {{ amountBigNumber | parseBigNumberish(chosenToken) }} <span class="tokenSymbol">{{ chosenToken }}</span>
+            Approve {{ amountBigNumber | formatBigNumLimited(chosenToken, 7) }} <span class="tokenSymbol">{{ chosenToken }}</span>
           </i-button>
           <i-button v-else key="noApproveAmount" block class="_margin-top-0" size="md" disabled>
             Introduce <span class="tokenSymbol">{{ chosenToken }}</span> amount
@@ -107,7 +107,7 @@
             <span v-if="allowance">
               <br class="desktopOnly" />Your current allowance is
               <span class="linkText" @click="setAllowanceMax()">
-                {{ allowance | parseBigNumberish(chosenToken) }} <span class="tokenSymbol">{{ chosenToken }}</span>
+                {{ allowance | formatBigNumLimited(chosenToken, 7) }} <span class="tokenSymbol">{{ chosenToken }}</span>
               </span>
             </span>
           </span>
@@ -120,7 +120,7 @@
 
       <!-- Commit button -->
       <i-button
-        :disabled="(!commitAllowed && (hasSigner || !requireSigner)) || requestingSigner || initialDataLoading"
+        :disabled="isSubmitDisabled"
         block
         class="_margin-top-1 _display-flex flex-row"
         data-cy="commit_transaction_button"
@@ -190,6 +190,12 @@ import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
 import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee, ZkCPKStatus } from "matter-dapp-module/types";
+
+const feeNameDict = new Map([
+  ["txFee", "Fee"],
+  ["accountActivation", "Account Activation single-time fee"],
+]);
+
 export default Vue.extend({
   props: {
     fromRoute: {
@@ -209,10 +215,14 @@ export default Vue.extend({
     };
   },
   computed: {
+    isSubmitDisabled(): boolean {
+      return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.initialDataLoading;
+    },
     routeBack(): Route | string {
       if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
         return this.fromRoute;
-      } else if (this.mainToken === "L2-NFT" || this.type === "MintNFT") {
+      }
+      if (this.mainToken === "L2-NFT" || this.type === "MintNFT") {
         return "/account/nft";
       }
       return "/account";
@@ -412,16 +422,8 @@ export default Vue.extend({
     setAllowanceMax() {
       this.inputtedAmount = this.$options.filters!.parseBigNumberish(this.allowance, this.chosenToken);
     },
-    getFeeName(key: string): string {
-      switch (key) {
-        case "txFee":
-          return "Fee";
-        case "accountActivation":
-          return "Account Activation single-time fee";
-
-        default:
-          return "";
-      }
+    getFeeName(key: string): string | undefined {
+      return feeNameDict!.has(key) ? feeNameDict.get(key) : "";
     },
     async requestFees() {
       await this.$store.dispatch("zk-transaction/requestAllFees", true);
