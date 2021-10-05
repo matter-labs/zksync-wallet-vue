@@ -42,12 +42,12 @@
       <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts/${displayedAddress}`">
         {{ getAddressName(displayedAddress) }}
       </nuxt-link>
-      <a v-if="ethTx" :href="ethTx" target="_blank" class="linkText">
+      <a v-if="ethTxHash" :href="config.ethereumNetwork.explorer + 'tx/' + ethTxHash" target="_blank" class="linkText">
         Ethereum Transaction
         <v-icon name="ri-external-link-line" scale="0.8" />
       </a>
     </div>
-    <a class="button -md -secondary -link externalLink" target="_blank" :href="transactionExplorerLink">
+    <a v-if="transactionExplorerLink" class="button -md -secondary -link externalLink" target="_blank" :href="transactionExplorerLink">
       <v-icon name="ri-external-link-line" scale="0.8" />
     </a>
   </div>
@@ -75,7 +75,7 @@ export default Vue.extend({
   data() {
     return {
       timeAgo: "",
-      ethTx: "",
+      ethTxHash: "",
       config: <ZkConfig>this.$store.getters["zk-onboard/config"],
     };
   },
@@ -290,6 +290,12 @@ export default Vue.extend({
       return undefined;
     },
     transactionExplorerLink(): string {
+      if (this.transaction.op.type === "Deposit") {
+        if (this.ethTxHash) {
+          return `${this.config.zkSyncNetwork.explorer}explorer/transactions/${this.ethTxHash}`;
+        }
+        return "";
+      }
       return `${this.config.zkSyncNetwork.explorer}explorer/transactions/${this.transaction.txHash}`;
     },
   },
@@ -325,10 +331,10 @@ export default Vue.extend({
       if (tx.op.type === "Withdraw" || tx.op.type === "WithdrawNFT" || tx.op.type === "ForcedExit") {
         const withdrawalEthTxHash = await this.$store.dispatch("zk-history/getWithdrawalEthTxHash", tx.txHash);
         if (withdrawalEthTxHash) {
-          this.ethTx = `${this.config.ethereumNetwork.explorer}tx/${withdrawalEthTxHash}`;
+          this.ethTxHash = withdrawalEthTxHash;
         }
       } else if (tx.op.type === "Deposit" || tx.op.type === "FullExit") {
-        this.ethTx = `${this.config.ethereumNetwork.explorer}tx/${tx.op.ethHash}`;
+        this.ethTxHash = tx.op.ethHash;
       }
     },
     copy(value: string) {
