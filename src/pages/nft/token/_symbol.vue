@@ -35,7 +35,7 @@
           </div>
           <div class="infoBlock">
             <div class="balance">
-              <nuxt-link v-if="!isOwnAddress" :to="`/contacts?address=${token.creatorAddress}`" class="tokenSymbol address">{{ getAddressName(token.creatorAddress) }}</nuxt-link>
+              <nuxt-link v-if="!isOwnAddress" :to="`/contacts/${token.creatorAddress}`" class="tokenSymbol address">{{ getAddressName(token.creatorAddress) }}</nuxt-link>
               <div v-else>Own account</div>
             </div>
           </div>
