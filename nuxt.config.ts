@@ -6,9 +6,13 @@ import { Configuration } from "webpack";
 import { ModuleOptions } from "matter-dapp-module/types";
 
 const env: string = process.env.APP_ENV ?? "dev";
+const isDebugEnabled: boolean = env === "dev";
 const isProduction: boolean = env === "prod";
 const pageTitle = "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
+
+const sentryDsn = "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800";
+const gtagId = "GTM-ML2QDNV";
 
 const pageTitleTemplate = process.env.APP_CURRENT_NETWORK !== "mainnet" ? "Testnet" : "Mainnet";
 const pageDescription =
@@ -186,6 +190,7 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
@@ -256,20 +261,21 @@ const config: NuxtConfig = {
     },
   },
   sentry: {
-    dsn: process.env.SENTRY_DSN,
+    dsn: sentryDsn,
     disableServerSide: true,
     config: {
+      debug: isDebugEnabled,
       tracesSampleRate: 1.0,
       environment: isProduction ? "production" : env === "dev" ? "development" : env,
     },
   },
   "google-gtag": {
-    id: process.env.GTAG_ID,
+    id: gtagId,
     config: {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload
     },
-    debug: !isProduction, // enable to track in dev mode
+    debug: isDebugEnabled, // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
   /*
@@ -287,6 +293,14 @@ const config: NuxtConfig = {
         fs: "empty",
       };
     },
+  },
+  buildOptimisations: {
+    profile: "risky",
+    features: {
+      postcssNoPolyfills: isProduction,
+      hardSourcePlugin: isProduction,
+    },
+    esbuildLoaderOptions: "esnext",
   },
   googleFonts: {
     prefetch: true,
