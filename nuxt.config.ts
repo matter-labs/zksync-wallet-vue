@@ -190,7 +190,6 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
@@ -293,14 +292,6 @@ const config: NuxtConfig = {
         fs: "empty",
       };
     },
-  },
-  buildOptimisations: {
-    profile: "risky",
-    features: {
-      postcssNoPolyfills: isProduction,
-      hardSourcePlugin: isProduction,
-    },
-    esbuildLoaderOptions: "esnext",
   },
   googleFonts: {
     prefetch: true,
