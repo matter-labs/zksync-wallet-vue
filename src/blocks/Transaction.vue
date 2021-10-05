@@ -11,7 +11,7 @@
       <choose-token
         v-if="mainToken || chooseTokenModal === 'feeToken'"
         :fee-acceptable="chooseTokenModal === 'feeToken'"
-        :tokens-type="mainToken ? mainToken : 'L2-Tokens'"
+        :tokens-type="mainToken && chooseTokenModal !== 'feeToken' ? mainToken : 'L2-Tokens'"
         @chosen="chooseToken($event)"
       />
     </i-modal>
