@@ -35,7 +35,7 @@
           <block-system-info />
           <block-modals-network-switch />
           <div class="_display-flex">
-            <i-button v-if="!isMainnet" size="md" circle class="_margin-right-1 _margin-0" block @click="openNetworkSwitchModal">
+            <i-button size="md" circle class="_margin-right-1 _margin-0" block @click="openNetworkSwitchModal">
               <v-icon name="co-ethereum" scale="1" />
             </i-button>
             <i-button block size="md" circle class="_margin-0" @click="toggleDarkMode">
@@ -77,9 +77,6 @@ export default Vue.extend({
     },
     blockExplorerLink(): string {
       return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;
-    },
-    isMainnet(): boolean {
-      return this.$store.getters["zk-provider/network"] === "mainnet";
     },
     isDarkTheme(): boolean {
       return this.theme === "dark";

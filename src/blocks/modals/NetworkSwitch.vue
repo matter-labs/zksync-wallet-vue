@@ -2,13 +2,7 @@
   <i-modal v-model="opened" size="md" class="networkSwitchModal" data-cy="network_switch_modal">
     <template slot="header">Network Configuration</template>
     <ul class="network-list">
-      <li
-        v-for="zkNetworkName in options"
-        :key="zkNetworkName"
-        :data-cy="`network_switch_${zkNetworkName}`"
-        class="network-list-item"
-        @click="changeNetworkConfig(zkNetworkName)"
-      >
+      <li v-for="zkNetworkName in options" :key="zkNetworkName" :data-cy="`network_switch_${zkNetworkName}`" class="network-list-item" @click="changeNetworkConfig(zkNetworkName)">
         <span>
           <v-icon v-if="zkNetworkName === network" class="selected" name="ri-check-line" />
         </span>
@@ -27,7 +21,7 @@ export default Vue.extend({
   name: "NetworkSwitch",
   computed: {
     options() {
-      return Object.keys(zkSyncNetworkConfig).filter((zkNetworkName) => zkNetworkName !== "mainnet" && zkNetworkName !== "localhost");
+      return Object.keys(zkSyncNetworkConfig).filter((zkNetworkName) => zkNetworkName !== "localhost");
     },
     network() {
       return this.$store.getters["zk-provider/network"];
