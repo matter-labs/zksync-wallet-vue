@@ -49,6 +49,8 @@ jobs:
         with:
           args: install
 
+      - run: mkdir -p artifacts
+
       - name: Launch tests
         uses: mujo-code/puppeteer-headful@8baa091f83c74d2eda8603b7f9990b20535e7a9c
         env:
