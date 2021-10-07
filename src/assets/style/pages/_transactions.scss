@@ -29,13 +29,11 @@
       border-bottom: 1px solid;
       transition: $transition1;
       transition-property: background-color, border-color;
-
       &:last-child {
         border-bottom: none;
       }
 
-      .amount,
-      .tokenSymbol {
+      .amount, .tokenSymbol {
         display: inline-flex;
       }
 
@@ -80,6 +78,12 @@
 
       .mainInfo {
         text-align: left;
+        &.noInfo {
+          @media screen and (min-width: $mobile) {
+            position: relative;
+            top: 4px;
+          }
+        }
 
         .createdAt {
           color: $gray;
@@ -106,23 +110,21 @@
             white-space: nowrap;
             text-overflow: ellipsis;
           }
-
           .copyContentHash {
             display: flex;
             align-items: center;
             color: $gray;
             cursor: pointer;
             transition: color $transition1;
-
             &:active {
               transition-duration: 0.0001s;
               color: $green !important;
             }
-
+            
             .iconContainer {
               display: flex;
               align-items: center;
-
+              
               svg {
                 position: relative;
                 top: -0.5px;
@@ -131,13 +133,13 @@
                 overflow: visible;
                 margin-right: 4px;
               }
-
               span {
                 font-size: 12px;
               }
             }
           }
         }
+
 
         .tokenSymbol {
           font-size: $tempFontSizeMedium;
@@ -167,10 +169,7 @@
 
           svg {
             margin-left: 5px;
-
             &.modalOpenIcon {
-              position: relative;
-              top: 2px;
               transition: filter $transition1;
               cursor: pointer;
 
@@ -253,7 +252,7 @@
           .tooltip-wrapper {
             height: 100%;
             width: 100%;
-
+            
             svg {
               display: block;
               width: 100%;
@@ -282,10 +281,10 @@
             white-space: normal
           }
 
-          .amount,
-          .tokenSymbol {
+          .amount, .tokenSymbol {
             font-size: 12px !important;
             font-family: $firaCode;
+
           }
 
           .tokenSymbol {
@@ -320,8 +319,7 @@
             font-size: 14px;
           }
 
-          .actionType,
-          .actionType > span {
+          .actionType, .actionType > span {
             text-align: left !important;
             white-space: nowrap;
             font-size: 10px !important;

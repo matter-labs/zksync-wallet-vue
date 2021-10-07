@@ -29,58 +29,21 @@ main.layout.defaultLayout {
   padding: 40px 0 70px;
 }
 
-/**
- * Only for the desktops
- */
-@media (min-width: $tablet) {
-  main.layout.defaultLayout {
-    max-height: 100%;
-    display: flex;
-    padding: 60px 0 60px;
-    justify-content: stretch;
-    height: 100vh;
-
-    @supports (-webkit-touch-callout: none) {
-      min-height: stretch;
-    }
-
-    section.layout-content.layoutContent {
-      display: flex;
-      overflow: hidden;
-
-      .routerContainer {
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-
-        .dappPageWrapper {
-          overflow-y: auto !important;
-          height: max-content;
-        }
-      }
-    }
-
-    .tileBlock {
-      margin: 0 auto;
-    }
-
-    .balancesList {
-      margin: 0 !important;
-    }
-  }
-
-  .bn-onboard-custom.bn-onboard-modal-content {
-    align-self: center;
-  }
-}
-
 #__layout {
   display: flex;
+}
+
+a {
+  color: $lightViolet;
 }
 
 .secondaryText {
   color: $gray;
   font-size: 16px;
+}
+
+._text-decoration-underline {
+  text-decoration: underline;
 }
 
 .linkText {
@@ -554,6 +517,12 @@ button.-lg.-circle {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 100%;
   grid-gap: 15px;
+  max-width: 100%;
+  overflow: hidden;
+
+  & > * {
+    overflow: hidden;
+  }
 
   &.single-col {
     grid-gap: 10px;

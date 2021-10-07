@@ -18,9 +18,8 @@ body.inkline.-light .defaultLayout {
   .tileBlock {
     background: $white;
 
-    .tileHeadline .returnBtn {
-      i,
-      .ov-icon {
+    .tileHeadline {
+      i, .ov-icon {
         color: $black;
       }
     }
@@ -36,9 +35,8 @@ body.inkline.-dark .defaultLayout {
   .tileBlock {
     background: $darkViolet;
 
-    .tileHeadline .returnBtn {
-      i,
-      .ov-icon {
+    .tileHeadline {
+      i, .ov-icon {
         color: $white;
       }
     }
@@ -74,7 +72,8 @@ input.form-input.-prefixed:focus {
 }
 
 .iconInfo {
-  margin: 2px 0 2px 10px;
+  margin: 2px 0;
+  margin-left: 10px;
   font-size: 11px;
   line-height: 28px;
   text-align: center;
@@ -88,7 +87,6 @@ input.form-input.-prefixed:focus {
   height: 28px;
   width: 28px;
   display: inline-block;
-
   @media (max-width: $mobile) {
     height: 24px;
     width: 24px;
@@ -113,7 +111,12 @@ input.form-input.-prefixed:focus {
   .defaultLayout {
     justify-content: stretch;
     align-items: stretch;
-    height: stretch;
     max-height: 100vh;
+
+    /* The hack for Safari */
+    @supports (-webkit-touch-callout: none) {
+      //noinspection CssInvalidPropertyValue
+      max-height: -webkit-fill-available;
+    }
   }
 }

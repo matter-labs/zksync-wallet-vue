@@ -9,30 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     environment: test
     outputs:
-      rinkeby_urls: "${{ steps.rinkeby_deploy.outputs.urls }}"
+      output_urls: "${{ steps.preview_deploy.outputs.urls }}"
     steps:
       - uses: actions/checkout@v2
-      - run: bash cli-dev.sh ci
-
-      - name: "Build rinkeby"
-        run: yarn run ci:build:rinkeby
+      - run: bash cli-dev.sh ci && yarn run ci:build:rinkeby
       - uses: matter-labs/action-hosting-deploy@v0
-        id: rinkeby_deploy
+        id: preview_deploy
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: prod-rinkeby
           projectId: zksync-vue
-
-
-      - name: "Build ropsten"
-        run: yarn run ci:build:ropsten
-      - uses: matter-labs/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
-          projectId: zksync-vue
-          target: prod-ropsten
 
   testing:
     needs: build_and_preview
@@ -48,7 +35,7 @@ jobs:
           repository: matter-labs/zksync-test-ui
           ref: master
           token: ${{ secrets.TEST_ACCESS_TOKEN }}
-      
+
       - name: Install dependencies
         run: |
           bash ./cli-dev.sh clean yarn
@@ -62,11 +49,13 @@ jobs:
         with:
           args: install
 
+      - run: mkdir -p artifacts
+
       - name: Launch tests
         uses: mujo-code/puppeteer-headful@8baa091f83c74d2eda8603b7f9990b20535e7a9c
         env:
           CI: 'true'
-          TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.rinkeby_urls)[0]}}"
+          TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.output_urls)[0]}}"
         with:
           args: yarn test --runInBand
 

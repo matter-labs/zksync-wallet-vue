@@ -17,11 +17,6 @@
       text-align: center;
     }
 
-    .noteContainer {
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
     .connections {
       justify-content: space-evenly;
       min-width: 40%;
@@ -31,6 +26,11 @@
         margin-left: 1rem;
         margin-right: 1rem;
       }
+    }
+
+    .noteContainer {
+      max-width: 480px;
+      margin: 0 auto;
     }
   }
 

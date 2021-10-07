@@ -62,16 +62,26 @@
     }
 
     .balance {
-      font-size: 20px;
+      font-size: 1.1rem;
+      line-height: 1.25rem;
       display: flex;
       height: 100%;
-      align-items: flex-end;
+      align-items: center;
 
       .balancePrice {
         color: $gray;
         font-size: 16px;
       }
+
+      .secondaryText {
+        font-size: 0.9rem;
+      }
     }
+  }
+
+  .tokenNotFound {
+    font-size: 22px;
+    text-align: center;
   }
 
   .transactionsTile {

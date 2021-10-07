@@ -1,7 +1,7 @@
 <template>
   <div class="addressInput">
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
-      <i-button v-if="isCID" class="-open-in-new-window" size="sm" variant="secondary" circle @click="openInNewWindow">
+      <i-button v-if="isCID" class="-open-in-new-window" size="sm" variant="secondary" target="_blank" circle @click="openInNewWindow()">
         <v-icon name="ri-external-link-line" />
       </i-button>
       <i-button v-else class="-open-in-new-window" size="sm" variant="secondary" circle disabled>
@@ -14,7 +14,7 @@
         autocomplete="none"
         class="walletAddress"
         maxlength="80"
-        placeholder="0x hash | CID"
+        placeholder="0x hash or CID"
         spellcheck="false"
         type="text"
         @keyup.enter="$emit('enter')"
@@ -27,10 +27,9 @@
 </template>
 
 <script lang="ts">
-import { DecimalBalance } from "@/types/lib";
-import { IPFS_GATEWAY } from "@/plugins/build";
 import Vue, { PropOptions } from "vue";
-import utils from "@/plugins/utils";
+import { DecimalBalance, ModuleOptions } from "matter-dapp-module/types";
+import { contendAddressToRawContentHash, isCID } from "matter-dapp-module/utils";
 
 export default Vue.extend({
   props: {
@@ -46,16 +45,19 @@ export default Vue.extend({
     };
   },
   computed: {
+    ipfsGateway(): string {
+      return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway;
+    },
     isValid(): boolean {
       return this.inputtedHash.length > 0 && this.error === "";
     },
     isCID(): boolean {
-      return utils.isCID(this.inputtedHash);
+      return isCID(this.inputtedHash);
     },
     error(): string {
       try {
         if (this.inputtedHash.length) {
-          utils.contendAddressToRawContentHash(this.inputtedHash);
+          contendAddressToRawContentHash(this.inputtedHash);
         }
         return "";
       } catch (e) {
@@ -88,8 +90,7 @@ export default Vue.extend({
       if (!this.isCID) {
         return;
       }
-
-      const url = `${IPFS_GATEWAY}/ipfs/${this.inputtedHash}`;
+      const url = `${this.ipfsGateway}/ipfs/${this.inputtedHash}`;
       window.open(url, "_blank");
     },
   },

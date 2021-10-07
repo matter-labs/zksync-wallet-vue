@@ -24,7 +24,6 @@
       background-color: transparentize($color: $gray, $amount: 0.9);
       transition: background-color $transition1;
       cursor: pointer;
-
       &:hover:not(.disabled) {
         background-color: transparentize($color: $gray, $amount: 0.8);
       }
@@ -43,7 +42,6 @@
       }
     }
   }
-
   .tokenListContainer {
     height: 100%;
     max-height: 60vh;
@@ -78,9 +76,15 @@
       border-bottom: 1px solid;
       cursor: pointer;
       transition: background-color $transition1;
-
       &:last-child {
         border-bottom: none;
+      }
+      &.disabled {
+        cursor: default;
+
+        .tokenSymbol > span, .rightSide {
+          opacity: 0.5;
+        }
       }
 
       @media screen and (max-width: $mobile) {
@@ -88,18 +92,30 @@
         padding: 7px 20px !important;
       }
 
-      &:hover {
+      &:not(.disabled):hover {
         background-color: transparentize($color: $gray, $amount: 0.9);
       }
 
       .tokenSymbol {
         font-size: 22px;
+
+        & > span {
+          transition: opacity $transition1;
+          will-change: opacity;
+        }
+        .iconInfo {
+          position: relative;
+          top: 2px;
+          margin-left: 0;
+        }
       }
 
       .rightSide {
         display: flex;
         flex-direction: column;
         text-align: right;
+        transition: opacity $transition1;
+        will-change: opacity;
 
         .balance {
           font-size: $tempFontSizeMedium;

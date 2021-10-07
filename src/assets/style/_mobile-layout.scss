@@ -62,9 +62,12 @@
     main {
       padding: 60px 0 95px;
       min-height: 100vh;
+      //height: 0 !important;
 
+      /* autoprefixer: off */
       @supports (-webkit-touch-callout: none) {
-        min-height: stretch;
+        //noinspection CssInvalidPropertyValue
+        min-height: -webkit-fill-available;
       }
     }
   }

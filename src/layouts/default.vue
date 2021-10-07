@@ -1,36 +1,39 @@
 <template>
   <i-layout class="defaultLayout">
-    <block-header ref="header" />
-    <i-layout-content v-if="!loggingIn && loggedIn" class="layoutContent">
-      <sign-pubkey-modal />
-      <div class="routerContainer">
-        <transition name="fade" mode="out-in">
-          <nuxt />
-        </transition>
+    <block-logging-in-loader />
+    <transition name="fade">
+      <div v-if="!loggingIn && loggedIn">
+        <block-header ref="header" />
+        <i-layout-content class="layoutContent">
+          <block-modals-sign-pubkey />
+          <div class="routerContainer">
+            <transition name="fade" mode="out-in">
+              <nuxt />
+            </transition>
+          </div>
+        </i-layout-content>
+        <block-footer class="desktopOnly" />
       </div>
-    </i-layout-content>
-    <block-footer class="desktopOnly" />
+    </transition>
   </i-layout>
 </template>
 
 <script lang="ts">
-import utils from "@/plugins/utils";
 import Vue from "vue";
-import SignPubkeyModal from "@/blocks/modals/SignPubkey.vue";
+import theme from "matter-dapp-module/utils/theme";
+
 export default Vue.extend({
-  components: {
-    SignPubkeyModal,
-  },
   computed: {
     loggingIn() {
-      return this.$accessor.provider.loader;
+      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
     loggedIn() {
-      return this.$accessor.provider.loggedIn;
+      return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
     },
   },
   mounted() {
-    utils.defineTheme(this.$inkline, false);
+    this.$inkline.config.variant = theme.getUserTheme();
+    this.$store.dispatch("zk-provider/requestProvider");
   },
 });
 </script>

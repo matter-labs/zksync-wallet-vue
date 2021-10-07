@@ -1,5 +1,5 @@
 <template>
-  <i-layout-header ref="indexHeader" v-click-outside="handleClose" class="indexHeader" :class="{ opened: opened }">
+  <i-layout-header class="indexHeader" :class="{ opened: opened }">
     <div class="mobileIndexHeader">
       <i-container class="mobileOnly">
         <i-row class="_display-flex _justify-content-between _flex-nowrap">
@@ -10,7 +10,7 @@
           </i-column>
           <i-column class="_padding-right-0">
             <div class="hamContainer">
-              <svg id="ham" viewBox="0 0 100 100" width="80" @click.capture="menuClick">
+              <svg id="ham" viewBox="0 0 100 100" width="80" @click="opened = !opened">
                 <path
                   class="line top"
                   d="m 30,33 h 40 c 0,0 9.044436,-0.654587 9.044436,-8.508902 0,-7.854315 -8.024349,-11.958003 -14.89975,-10.85914 -6.875401,1.098863 -13.637059,4.171617 -13.637059,16.368042 v 40"
@@ -38,16 +38,14 @@
               <a href="https://zksync.io/dev/" target="_blank" class="linkItem">Docs</a>
               <i-dropdown
                 class="_background-transparent _border-none likeLinkItem"
+                :class="{ opened: dropdownOpened }"
                 size="sm"
                 variation="dark"
                 placement="bottom"
                 trigger="click"
-                :class="{ opened: dropdownOpened }"
               >
-                <a class="dropDownHandler linkItem _position-top-0" @click.prevent="handleDropdown">
-                  zkTools
-                  <v-icon v-show="dropdownOpened" class="fal" name="ri-arrow-up-s-line" />
-                  <v-icon v-show="!dropdownOpened" class="fal" name="ri-arrow-down-s-line" />
+                <a class="dropDownHandler linkItem _position-top-0" @click.capture="dropdownOpened = !dropdownOpened">
+                  zkTools <v-icon class="fal" :name="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'" />
                 </a>
                 <i-dropdown-menu v-model="dropdownOpened">
                   <i-dropdown-item v-for="(item, index) in dropdownOptions" :key="index" :href="item.link" target="_blank">{{ item.name }}</i-dropdown-item>
@@ -66,100 +64,40 @@
 </template>
 
 <script lang="ts">
-import { ETHER_NETWORK_NAME } from "@/plugins/build";
 import Vue from "vue";
+import { ZkConfig } from "matter-dapp-module/types";
 
 interface DropdownOption {
   name: string;
   link: string;
 }
 
-const dropdownLinks = {
-  zkLink: {
-    mainnet: "https://link.zksync.io/",
-    rinkeby: "https://link.zksync.io/",
-    ropsten: "https://link.zksync.io/",
-  },
-  zkScan: {
-    mainnet: "https://zkscan.io/",
-    rinkeby: "https://rinkeby.zkscan.io",
-    ropsten: "https://ropsten.zkscan.io",
-  },
-  withdrawal: {
-    mainnet: "https://withdraw.zksync.io",
-    rinkeby: "https://withdraw.zksync.io",
-    ropsten: "https://withdraw.zksync.io",
-  },
-  zkCheckout: {
-    mainnet: "https://checkout.zksync.io",
-    rinkeby: "https://checkout-rinkeby.zksync.io",
-    ropsten: "https://checkout-ropsten.zksync.io",
-  },
-  zkMint: {
-    mainnet: "https://mint.zksync.dev",
-    rinkeby: "https://mint.zksync.dev",
-    ropsten: "https://mint-ropsten.zksync.dev",
-  },
-};
-
-function getLinkItem(type: string): string {
-  if (dropdownLinks[type][ETHER_NETWORK_NAME]) {
-    return dropdownLinks[type][ETHER_NETWORK_NAME];
-  } else {
-    return dropdownLinks[type].mainnet;
-  }
-}
-
 export default Vue.extend({
   name: "IndexHeader",
   data() {
+    const config: ZkConfig = this.$store.getters["zk-onboard/config"];
     return {
       opened: false,
       dropdownOpened: false,
       dropdownOptions: <DropdownOption[]>[
         {
           name: "zkScan",
-          link: getLinkItem("zkScan"),
+          link: config.zkSyncNetwork.explorer,
         },
         {
           name: "zkLink",
-          link: getLinkItem("zkLink"),
+          link: config.zkSyncNetwork.tools.link,
         },
         {
           name: "Alternative Withdrawal",
-          link: getLinkItem("withdrawal"),
-        },
-        {
-          name: "zkCheckout",
-          link: getLinkItem("zkCheckout"),
+          link: config.zkSyncNetwork.tools.withdrawal,
         },
         {
           name: "zkMint",
-          link: getLinkItem("zkMint"),
+          link: config.zkSyncNetwork.tools.mint,
         },
       ],
     };
-  },
-  methods: {
-    menuClick(): void {
-      if (this.opened) {
-        this.dropdownOpened = false;
-      }
-      this.opened = !this.opened;
-    },
-    handleDropdown(event: Event | undefined): boolean {
-      const elem = event!.target as HTMLElement | undefined;
-      if (elem!.classList.contains("dropDownHandler")) {
-        event!.stopPropagation();
-        this.dropdownOpened = !this.dropdownOpened;
-        return false;
-      }
-      return true;
-    },
-    handleClose(): void {
-      this.dropdownOpened = false;
-      this.opened = false;
-    },
   },
 });
 </script>

@@ -12,7 +12,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { Address } from "zksync/build/types";
-import utils from "@/plugins/utils";
+import { copyToClipboard } from "matter-dapp-module/utils";
 
 export default Vue.extend({
   name: "WalletAddress",
@@ -25,7 +25,7 @@ export default Vue.extend({
   },
   methods: {
     copyAddress() {
-      utils.copy(this.wallet);
+      copyToClipboard(this.wallet);
     },
   },
 });

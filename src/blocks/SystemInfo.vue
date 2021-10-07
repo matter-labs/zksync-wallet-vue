@@ -10,15 +10,14 @@
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
-          zkSync API <code class="_padding-y-0">{{ zkApiBase }}</code>
+          zkSync API <code class="_padding-y-0" data-cy="environment_details_api">{{ zkApiBase }}</code>
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
-          Ethereum env <code class="_padding-y-0">{{ netName }}</code>
+          Ethereum env <code class="_padding-y-0" data-cy="environment_details_network">{{ netName }}</code>
         </span>
       </template>
     </i-popover>
-    <div class="beta-tag errorText">BETA</div>
     <a :href="githubLink" class="revision _background-gray-40" target="_blank">
       <v-icon name="ri-github-fill" />
       {{ revision }}
@@ -26,13 +25,17 @@
   </i-badge>
 </template>
 <script lang="ts">
-import { GIT_REVISION_SHORT, VERSION, ZK_API_BASE, ZK_LIB_VERSION, ZK_NETWORK } from "@/plugins/build";
 import Vue from "vue";
+import { ZkConfig } from "matter-dapp-module/types";
+import { GIT_REVISION_SHORT, VERSION, ZK_LIB_VERSION } from "@/utils/config";
 
 export default Vue.extend({
   computed: {
+    config(): ZkConfig {
+      return this.$store.getters["zk-onboard/config"];
+    },
     netName(): string {
-      return ZK_NETWORK;
+      return this.config.ethereumNetwork.name;
     },
     zkLibVersion(): string {
       return ZK_LIB_VERSION;
@@ -47,7 +50,7 @@ export default Vue.extend({
       return GIT_REVISION_SHORT;
     },
     zkApiBase(): string {
-      return ZK_API_BASE;
+      return this.config.zkSyncNetwork.api;
     },
   },
 });

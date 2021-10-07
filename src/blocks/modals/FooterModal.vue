@@ -33,10 +33,16 @@
       <template slot="footer">
         <div class="_display-flex _justify-content-space-between">
           <block-system-info />
-          <i-button block size="md" circle @click="toggleDarkMode">
-            <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
-            <v-icon v-else name="ri-moon-fill" />
-          </i-button>
+          <block-modals-network-switch />
+          <div class="_display-flex">
+            <i-button size="md" circle class="_margin-right-1 _margin-0" block @click="openNetworkSwitchModal">
+              <v-icon name="co-ethereum" scale="1" />
+            </i-button>
+            <i-button block size="md" circle class="_margin-0" @click="toggleDarkMode">
+              <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
+              <v-icon v-else name="ri-moon-fill" />
+            </i-button>
+          </div>
         </div>
       </template>
     </i-modal>
@@ -44,18 +50,21 @@
 </template>
 
 <script lang="ts">
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import utils from "@/plugins/utils";
 import Vue from "vue";
+import theme from "matter-dapp-module/utils/theme";
 
 export default Vue.extend({
-  components: {},
   props: {
     value: {
       type: Boolean,
       default: false,
       required: false,
     },
+  },
+  data() {
+    return {
+      theme: theme.getUserTheme(),
+    };
   },
   computed: {
     modal: {
@@ -67,15 +76,19 @@ export default Vue.extend({
       },
     },
     blockExplorerLink(): string {
-      return APP_ZKSYNC_BLOCK_EXPLORER;
+      return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;
     },
     isDarkTheme(): boolean {
-      return utils.defineTheme(this.$inkline) === "dark";
+      return this.theme === "dark";
     },
   },
   methods: {
-    toggleDarkMode(): void {
-      utils.defineTheme(this.$inkline, true);
+    toggleDarkMode() {
+      this.theme = theme.toggleTheme();
+      this.$inkline.config.variant = this.theme;
+    },
+    openNetworkSwitchModal() {
+      return this.$accessor.openModal("NetworkSwitch");
     },
   },
 });

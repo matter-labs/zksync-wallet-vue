@@ -32,15 +32,13 @@
       />
     </svg>
     <template v-else>
-      <img :src="zkWalletLogoSrc" alt="zkWallet" class="zkwallet-logo" />
+      <img src="@/assets/imgs/logos/logo-alt.svg" alt="zkWallet" class="zkwallet-logo" />
     </template>
     <block-network-badge />
   </div>
 </template>
 
 <script lang="ts">
-import { ZK_NETWORK, ETHER_PRODUCTION } from "@/plugins/build";
-import utils from "@/plugins/utils";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -53,15 +51,8 @@ export default Vue.extend({
     },
   },
   computed: {
-    zkWalletLogoSrc(): string {
-      const prefix = utils.defineTheme(this.$inkline, false) === "light" ? "" : "-alt";
-      return require(`@/assets/imgs/logos/logo${prefix}.svg`);
-    },
-    isMainnet(): boolean {
-      return ETHER_PRODUCTION;
-    },
     network(): string {
-      return ZK_NETWORK;
+      return this.$store.getters["zk-provider/network"];
     },
   },
 });

@@ -2,16 +2,30 @@
   <i-modal :value="opened" class="prevent-close" size="md" data-cy="account_activation_modal" @hide="close()">
     <template slot="header">Account Activation</template>
     <div class="_text-center">
-      <p v-if="step === false">Sign a message once to activate your zkSync account.</p>
-      <p v-else-if="step === 'sign'" class="_text-center">Sign the message in your wallet to continue</p>
-      <p v-else-if="step === 'loading'" class="_text-center">Loading account data...</p>
-      <i-button :disabled="loading" class="_margin-top-2" block size="lg" variant="secondary" data-cy="account_activation_sign_button" @click="signActivation()">
+      <p v-if="state === false">Sign a message to activate your zkSync account.</p>
+      <p v-else-if="state === 'processing'" class="_text-center">Processing...</p>
+      <p v-else-if="state === 'waitingForUserConfirmation'" class="_text-center">Sign the message in your wallet to continue</p>
+      <p v-else-if="state === 'updating'" class="_text-center">Loading account data...</p>
+      <i-button
+        :disabled="loading || requestingSigner"
+        class="_margin-top-2"
+        block
+        size="lg"
+        variant="secondary"
+        data-cy="account_activation_sign_button"
+        @click="signActivation()"
+      >
         <div class="_display-flex _justify-content-center _align-items-center">
-          <div>Sign account activation</div>
-          <loader v-if="loading" class="_margin-left-1" size="xs" />
+          <v-icon v-if="!hasSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
+          <div>{{ hasSigner ? "" : "Authorize to " }}Sign account activation</div>
+          <loader v-if="loading || requestingSigner" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
-      <div class="errorText _text-center _margin-top-1">
+
+      <!-- Requesting signer -->
+      <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">Follow the instructions in your Ethereum wallet</div>
+
+      <div v-if="error" class="errorText _text-center _margin-top-1">
         {{ error }}
       </div>
     </div>
@@ -20,35 +34,38 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { walletData } from "@/plugins/walletData";
-import { utils } from "zksync";
-import { saveCPKTx } from "@/plugins/walletActions/cpk";
-import { CPKLocal } from "@/types/lib";
-import zkUtils from "@/plugins/utils";
+import { ZkSignCPKState } from "matter-dapp-module/types";
 
 export default Vue.extend({
   name: "SignPubkey",
   data() {
     return {
-      error: "",
-      success: false,
       loading: false,
-      step: false as false | "sign" | "loading",
+      requestingSigner: false,
     };
   },
   computed: {
     opened(): boolean {
       return this.$accessor.currentModal === "SignPubkey";
     },
+    state(): ZkSignCPKState {
+      return this.$store.getters["zk-wallet/cpkSignState"];
+    },
+    hasSigner(): boolean {
+      return this.$store.getters["zk-wallet/hasSigner"];
+    },
+    error(): string | undefined {
+      return this.$store.getters["zk-wallet/cpkSignError"];
+    },
   },
   methods: {
     close() {
       this.$accessor.closeActiveModal();
-      if (this.success) {
+      if (this.$store.getters["zk-wallet/cpk"] !== false) {
         return;
       }
       const isForbiddenRoute = () => {
-        const forbiddenRoutes = ["/transfer", "/withdraw", "/nft/transfer", "/nft/withdraw"];
+        const forbiddenRoutes = ["/transaction/transfer", "/transaction/withdraw", "/transaction/nft/transfer", "/transaction/nft/withdraw"];
         for (const route of forbiddenRoutes) {
           if (this.$accessor.getPreviousRoute?.path === route || this.$accessor.getPreviousRoute?.path === route + "/") {
             return true;
@@ -64,48 +81,20 @@ export default Vue.extend({
       }
     },
     async signActivation() {
-      try {
-        this.error = "";
-        this.loading = true;
-        this.step = "loading";
-        const syncWallet = walletData.get().syncWallet!;
-        const nonce = await syncWallet.getNonce("committed");
-        console.log("syncWallet.ethSignerType?.verificationMethod", syncWallet.ethSignerType?.verificationMethod);
-        if (syncWallet.ethSignerType?.verificationMethod === "ERC-1271") {
-          const isOnchainAuthSigningKeySet = await syncWallet.isOnchainAuthSigningKeySet();
-          if (!isOnchainAuthSigningKeySet) {
-            const onchainAuthTransaction = await syncWallet.onchainAuthSigningKey();
-            await onchainAuthTransaction?.wait();
-          }
+      if (!this.hasSigner) {
+        try {
+          this.requestingSigner = true;
+          await this.$store.dispatch("zk-wallet/requestSigner");
+        } catch (err) {
+          console.warn("Request signer error\n", err);
         }
-
-        const newPubKeyHash = await syncWallet.signer!.pubKeyHash();
-        const accountID = await syncWallet.getAccountId();
-        if (typeof accountID !== "number") {
-          throw new TypeError("It is required to have a history of balances on the account to activate it.");
+        this.requestingSigner = false;
+      } else {
+        await this.$store.dispatch("zk-wallet/signCPK");
+        if (this.$store.getters["zk-wallet/cpk"] !== false) {
+          this.close();
         }
-        const changePubKeyMessage = utils.getChangePubkeyLegacyMessage(newPubKeyHash, nonce, accountID!);
-        this.step = "sign";
-        const ethSignature = (await syncWallet.getEthMessageSignature(changePubKeyMessage)).signature;
-        this.step = "loading";
-        const changePubkeyTx: CPKLocal = {
-          accountId: accountID!,
-          account: syncWallet.address(),
-          newPkHash: newPubKeyHash,
-          nonce,
-          ethSignature,
-          validFrom: 0,
-          validUntil: utils.MAX_TIMESTAMP,
-        };
-        saveCPKTx(this.$accessor.provider.address!, changePubkeyTx);
-        this.success = true;
-        this.close();
-      } catch (error) {
-        console.log("signActivation error", error);
-        this.error = zkUtils.filterError(error) || "Signing error";
       }
-      this.loading = false;
-      this.step = false;
     },
   },
 });

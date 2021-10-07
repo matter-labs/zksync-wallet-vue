@@ -1,20 +1,20 @@
-// noinspection ES6PreferShortImport
-
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 import { Configuration } from "webpack";
 
-import { CURRENT_APP_NAME, ETHER_NETWORK_CAPITALIZED, ETHER_PRODUCTION } from "./src/plugins/build";
+import { ModuleOptions } from "matter-dapp-module/types";
 
-const srcDir = "./src/";
-
-const env = process.env.APP_ENV ?? "dev";
-const isProduction: boolean = ETHER_PRODUCTION && env === "prod";
-const pageTitle: string = CURRENT_APP_NAME.toString() ?? "zkSync Wallet";
+const env: string = process.env.APP_ENV ?? "dev";
+const isDebugEnabled: boolean = env === "dev";
+const isProduction: boolean = env === "prod";
+const pageTitle = "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
 
-const pageTitleTemplate = `${ETHER_NETWORK_CAPITALIZED}`;
+const sentryDsn = "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800";
+const gtagId = "GTM-ML2QDNV";
+
+const pageTitleTemplate = process.env.APP_CURRENT_NETWORK !== "mainnet" ? "Testnet" : "Mainnet";
 const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
@@ -25,7 +25,7 @@ const config: NuxtConfig = {
   telemetry: false,
   ssr: false,
   target: "static",
-  srcDir: `${srcDir}`,
+  srcDir: "./src/",
   vue: {
     config: {
       productionTip: isProduction,
@@ -147,7 +147,6 @@ const config: NuxtConfig = {
         property: "og:image:secure_url",
         content: pageImg,
       },
-
       {
         hid: "og:image:alt",
         property: "og:image:alt",
@@ -179,24 +178,18 @@ const config: NuxtConfig = {
    * Single-entry global-scope scss
    */
   css: ["@/assets/style/main.scss"],
-
-  styleResources: {
-    scss: ["@/assets/style/vars/*.scss"],
-  },
-
   /**
    * Plugins that should be loaded before the mounting
    */
-  plugins: ["@/plugins/icons", "@/plugins/main"],
+  plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession"],
 
   router: {
-    middleware: ["wallet"],
+    middleware: ["auth"],
   },
-  /**
-   * Nuxt.js dev-modules
+  /*
+   ** Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-build-optimisations",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
@@ -212,21 +205,35 @@ const config: NuxtConfig = {
             },
             eslint: {
               config: ["tsconfig-eslint.json", ".eslintrc.js"],
-              files: "src/**/*.{ts,vue,js}",
+              files: "@/**/*.{ts,vue,js}",
             },
-            files: "src/**/*.{ts,vue,js}",
+            files: "@/**/*.{ts,vue,js}",
           },
         },
       },
     ],
     "nuxt-typed-vuex",
+    [
+      "matter-dapp-module",
+      <ModuleOptions>{
+        network: process.env.ZK_NETWORK,
+        apiKeys: {
+          FORTMATIC_KEY: process.env.APP_FORTMATIC,
+          PORTIS_KEY: process.env.APP_PORTIS,
+          INFURA_KEY: process.env.APP_INFURA_API_KEY,
+        },
+        onboardConfig: {
+          APP_NAME: pageTitle,
+          APP_ID: process.env.APP_ONBOARDING_APP_ID,
+        },
+      },
+    ],
   ],
 
-  /**
-   * Nuxt.js modules
+  /*
+   ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxt/http", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
-
+  modules: ["@nuxtjs/dotenv", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
   toast: <ToastOptions>{
     singleton: true,
     keepOnHover: true,
@@ -253,25 +260,25 @@ const config: NuxtConfig = {
     },
   },
   sentry: {
-    dsn: process.env.SENTRY_DSN,
+    dsn: sentryDsn,
     disableServerSide: true,
     config: {
+      debug: isDebugEnabled,
       tracesSampleRate: 1.0,
       environment: isProduction ? "production" : env === "dev" ? "development" : env,
     },
   },
   "google-gtag": {
-    id: process.env.GTAG_ID,
+    id: gtagId,
     config: {
       anonymize_ip: true, // anonymize IP
       send_page_view: true, // might be necessary to avoid duplicated page track on page reload
     },
-    debug: !isProduction, // enable to track in dev mode
+    debug: isDebugEnabled, // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
-
-  /**
-   * Build configuration
+  /*
+   ** Build configuration
    */
   build: {
     babel: {
@@ -285,15 +292,6 @@ const config: NuxtConfig = {
         fs: "empty",
       };
     },
-  },
-
-  buildOptimisations: {
-    profile: env !== "prod" ? "risky" : "experimental",
-    features: {
-      postcssNoPolyfills: isProduction,
-      hardSourcePlugin: isProduction,
-    },
-    esbuildLoaderOptions: "esnext",
   },
   googleFonts: {
     prefetch: true,

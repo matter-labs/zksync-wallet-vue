@@ -36,23 +36,25 @@
 
 <script lang="ts">
 import Vue from "vue";
+import VueQrcode from "vue-qrcode";
 
 export default Vue.extend({
+  components: { VueQrcode },
   data() {
     return {
       renameWalletModal: false,
-      walletName: this.$accessor.provider.name,
+      walletName: this.$store.getters["zk-account/name"],
     };
   },
   computed: {
     accountName(): string {
-      return this.$accessor.provider.name as string;
+      return this.$store.getters["zk-account/name"] as string;
     },
     accountAddress(): string {
-      return this.$accessor.provider.address ?? "";
+      return this.$store.getters["zk-account/address"];
     },
     accountZkScanUrl(): string {
-      return this.$accessor.provider.zkScanUrl as string;
+      return (this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer + "explorer/accounts/" + this.accountAddress) as string;
     },
     accountModal: {
       get(): boolean {
@@ -89,8 +91,9 @@ export default Vue.extend({
   methods: {
     logout(): void {
       this.accountModal = false;
-      this.$nextTick(() => {
-        this.$accessor.wallet.logout();
+      this.$nextTick(async () => {
+        await this.$store.dispatch("zk-account/logout");
+        await this.$router.push("/");
       });
     },
     renameWalletOpen(): void {
@@ -101,7 +104,7 @@ export default Vue.extend({
       if (!this.isNameValid) {
         return;
       }
-      this.$accessor.provider.setName(this.walletName);
+      this.$store.dispatch("zk-account/saveAccountName", this.walletName);
       this.renameWalletModal = false;
       this.walletName = this.accountName;
     },
