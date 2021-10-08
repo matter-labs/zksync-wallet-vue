@@ -34,6 +34,7 @@
         <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to address
       </i-button>
     </div>
+    <transactions class="_margin-top-0" :address="address" />
   </div>
 </template>
 

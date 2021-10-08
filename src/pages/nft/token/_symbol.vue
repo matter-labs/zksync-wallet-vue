@@ -61,7 +61,7 @@
       </div>
       <div v-else class="tokenNotFound">Token not found</div>
     </div>
-    <!-- <transactions class="_margin-top-0" :filter="symbol" /> -->
+    <transactions class="_margin-top-0" :token="tokenID" />
   </div>
 </template>
 

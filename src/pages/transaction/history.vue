@@ -1,5 +1,5 @@
 <template>
-  <transactions />
+  <block-transactions />
 </template>
 
 <script lang="ts">
