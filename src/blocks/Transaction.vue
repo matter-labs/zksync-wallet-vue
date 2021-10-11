@@ -3,6 +3,7 @@
     <block-modals-allowance />
     <block-modals-content-hash />
     <block-modals-fee-req-error />
+    <block-modals-transfer-warning />
     <block-modals-fee-changed :type-name="transactionActionName" />
 
     <!-- Choose token -->
@@ -131,7 +132,7 @@
         <div class="_display-flex _justify-content-center _align-items-center">
           <v-icon v-if="!hasSigner && requireSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
           <div>{{ hasSigner || !requireSigner ? "" : "Authorize to " }}{{ transactionActionName }}</div>
-          <loader v-if="allowanceLoading || initialDataLoading || requestingSigner" class="_margin-left-1" size="xs" />
+          <loader v-if="allowanceLoading || buttonLoader || requestingSigner" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
 
@@ -190,6 +191,9 @@ import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
 import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee, ZkCPKStatus } from "matter-dapp-module/types";
+import { getAddress } from "@ethersproject/address";
+import { RestProvider } from "zksync";
+import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
 
 const feeNameDict = new Map([
   ["txFee", "Fee"],
@@ -210,13 +214,13 @@ export default Vue.extend({
       inputtedAddress: this.$store.getters["zk-transaction/address"],
       chooseTokenModal: <false | "mainToken" | "feeToken">false,
       contentHash: this.$store.getters["zk-transaction/contentHash"],
-      initialDataLoading: true,
+      buttonLoader: true,
       requestingSigner: false,
     };
   },
   computed: {
     isSubmitDisabled(): boolean {
-      return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.initialDataLoading;
+      return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.buttonLoader;
     },
     routeBack(): Route | string {
       if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
@@ -382,7 +386,7 @@ export default Vue.extend({
     if (this.$route.query.address) {
       this.inputtedAddress = this.$route.query.address;
     }
-    this.initialDataLoading = false;
+    this.buttonLoader = false;
   },
   beforeDestroy() {
     this.$store.commit("zk-transaction/setAmount", undefined);
@@ -407,11 +411,39 @@ export default Vue.extend({
         }
         this.requestingSigner = false;
       } else {
-        if (!this.commitAllowed) {
+        if (!this.commitAllowed || this.buttonLoader) {
+          return;
+        }
+        /* Transfer != Withdraw warning */
+        try {
+          if (this.type === "Transfer") {
+            const transferWithdrawWarning = localStorage.getItem(warningCanceledKey);
+            if (!transferWithdrawWarning && getAddress(this.inputtedAddress) !== this.$store.getters["zk-account/address"]) {
+              this.buttonLoader = true;
+              const accountUnlocked = await this.checkInputtedAccountUnlocked();
+              if (!accountUnlocked) {
+                const result = await this.$accessor.openDialog("TransferWarning");
+                if (!result) {
+                  this.buttonLoader = false;
+                  return;
+                }
+              }
+            }
+          }
+        } catch (error) {
+          console.warn("Transfer != Withdraw warning error", error);
+          this.$store.commit("zk-transaction/setError", error);
+          this.buttonLoader = false;
           return;
         }
         await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
+        this.buttonLoader = false;
       }
+    },
+    async checkInputtedAccountUnlocked(): Promise<boolean> {
+      const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider");
+      const state = await syncProvider.getState(this.inputtedAddress);
+      return state.id != null;
     },
     async unlockToken(unlimited = false) {
       await this.$store.dispatch("zk-transaction/setAllowance", unlimited);
