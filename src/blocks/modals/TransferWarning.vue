@@ -29,7 +29,7 @@ export default Vue.extend({
     opened: {
       set(val): void {
         if (val === false) {
-          this.$accessor.returnTransferWarningResult(false);
+          this.$accessor.resolveOpenedModal(false);
         }
       },
       get(): boolean {
@@ -42,7 +42,7 @@ export default Vue.extend({
       if (this.transferWithdrawWarningCheckmark) {
         localStorage.setItem(warningCanceledKey, "true");
       }
-      this.$accessor.returnTransferWarningResult(true);
+      this.$accessor.resolveOpenedModal(true);
     },
   },
 });
