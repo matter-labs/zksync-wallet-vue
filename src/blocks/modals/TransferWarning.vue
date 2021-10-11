@@ -17,6 +17,7 @@
 <script lang="ts">
 import Vue from "vue";
 
+export const warningCanceledKey = "canceledTransferWithdrawWarning";
 export default Vue.extend({
   name: "TransferWarning",
   data() {
@@ -28,8 +29,7 @@ export default Vue.extend({
     opened: {
       set(val): void {
         if (val === false) {
-          this.$accessor.closeActiveModal();
-          this.$emit("close");
+          this.$accessor.returnTransferWarningResult(false);
         }
       },
       get(): boolean {
@@ -40,10 +40,9 @@ export default Vue.extend({
   methods: {
     proceed() {
       if (this.transferWithdrawWarningCheckmark) {
-        localStorage.setItem("canceledTransferWithdrawWarning", "true");
+        localStorage.setItem(warningCanceledKey, "true");
       }
-      this.$emit("proceed");
-      this.$accessor.closeActiveModal();
+      this.$accessor.returnTransferWarningResult(true);
     },
   },
 });

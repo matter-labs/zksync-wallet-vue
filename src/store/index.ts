@@ -2,6 +2,8 @@ import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vue
 import { Route } from "vue-router/types";
 import { ZKIRootState } from "@/types/lib";
 
+let resolveTransferWarning: ((result: boolean) => void) | undefined;
+
 export const state = (): ZKIRootState => ({
   accountModalOpened: false,
   currentModal: undefined,
@@ -39,6 +41,18 @@ export const actions = actionTree(
     },
     closeActiveModal({ commit }): void {
       commit("removeCurrentModal");
+    },
+    async transferWarning({ commit }) {
+      commit("setCurrentModal", "TransferWarning");
+      return await new Promise((resolve) => {
+        resolveTransferWarning = resolve;
+      });
+    },
+    returnTransferWarningResult({ commit }, result: boolean): void {
+      commit("removeCurrentModal");
+      if (resolveTransferWarning) {
+        resolveTransferWarning(result);
+      }
     },
   },
 );

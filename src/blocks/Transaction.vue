@@ -3,7 +3,7 @@
     <block-modals-allowance />
     <block-modals-content-hash />
     <block-modals-fee-req-error />
-    <block-modals-transfer-warning @proceed="commitTransaction(false)" />
+    <block-modals-transfer-warning />
     <block-modals-fee-changed :type-name="transactionActionName" />
 
     <!-- Choose token -->
@@ -193,6 +193,7 @@ import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
 import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee, ZkCPKStatus } from "matter-dapp-module/types";
 import { getAddress } from "@ethersproject/address";
 import { RestProvider } from "zksync";
+import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
 
 const feeNameDict = new Map([
   ["txFee", "Fee"],
@@ -400,7 +401,7 @@ export default Vue.extend({
       }
       this.chooseTokenModal = false;
     },
-    async commitTransaction(checkWarning = true) {
+    async commitTransaction() {
       if (!this.hasSigner && this.requireSigner) {
         try {
           this.requestingSigner = true;
@@ -415,24 +416,28 @@ export default Vue.extend({
         }
         /* Transfer != Withdraw warning */
         try {
-          if (checkWarning && this.type === "Transfer") {
-            const transferWithdrawWarning = localStorage.getItem("canceledTransferWithdrawWarning");
+          if (this.type === "Transfer") {
+            const transferWithdrawWarning = localStorage.getItem(warningCanceledKey);
             if (!transferWithdrawWarning && getAddress(this.inputtedAddress) !== this.$store.getters["zk-account/address"]) {
               this.buttonLoader = true;
               const accountUnlocked = await this.checkInputtedAccountUnlocked();
-              this.buttonLoader = false;
               if (!accountUnlocked) {
-                this.$accessor.openModal("TransferWarning");
-                return;
+                const result = await this.$accessor.transferWarning();
+                if (!result) {
+                  this.buttonLoader = false;
+                  return;
+                }
               }
             }
           }
         } catch (error) {
           console.warn("Transfer != Withdraw warning error", error);
           this.$store.commit("zk-transaction/setError", error);
+          this.buttonLoader = false;
           return;
         }
         await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
+        this.buttonLoader = false;
       }
     },
     async checkInputtedAccountUnlocked(): Promise<boolean> {
