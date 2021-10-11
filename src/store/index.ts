@@ -39,20 +39,17 @@ export const actions = actionTree(
     openModal({ commit }, modalName: string): void {
       commit("setCurrentModal", modalName);
     },
-    closeActiveModal({ commit }): void {
+    closeActiveModal({ commit }, result?: boolean): void {
       commit("removeCurrentModal");
+      if (resolveModal) {
+        resolveModal(!!result);
+      }
     },
     async openDialog({ dispatch }, modalName: string) {
       dispatch("openModal", modalName);
       return await new Promise((resolve) => {
         resolveModal = resolve;
       });
-    },
-    resolveOpenedModal({ commit }, result: boolean): void {
-      commit("removeCurrentModal");
-      if (resolveModal) {
-        resolveModal(result);
-      }
     },
   },
 );
