@@ -42,7 +42,8 @@ export const actions = actionTree(
     closeActiveModal({ commit }): void {
       commit("removeCurrentModal");
     },
-    async openDialog() {
+    async openDialog({ dispatch }, modalName: string) {
+      dispatch("openModal", modalName);
       return await new Promise((resolve) => {
         resolveModal = resolve;
       });

@@ -422,8 +422,7 @@ export default Vue.extend({
               this.buttonLoader = true;
               const accountUnlocked = await this.checkInputtedAccountUnlocked();
               if (!accountUnlocked) {
-                this.$accessor.openModal("TransferWarning");
-                const result = await this.$accessor.openDialog();
+                const result = await this.$accessor.openDialog("TransferWarning");
                 if (!result) {
                   this.buttonLoader = false;
                   return;
