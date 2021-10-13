@@ -2,6 +2,8 @@ import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vue
 import { Route } from "vue-router/types";
 import { ZKIRootState } from "@/types/lib";
 
+let resolveModal: ((result: boolean) => void) | undefined;
+
 export const state = (): ZKIRootState => ({
   accountModalOpened: false,
   currentModal: undefined,
@@ -37,8 +39,17 @@ export const actions = actionTree(
     openModal({ commit }, modalName: string): void {
       commit("setCurrentModal", modalName);
     },
-    closeActiveModal({ commit }): void {
+    closeActiveModal({ commit }, result?: boolean): void {
       commit("removeCurrentModal");
+      if (resolveModal) {
+        resolveModal(!!result);
+      }
+    },
+    async openDialog({ dispatch }, modalName: string) {
+      dispatch("openModal", modalName);
+      return await new Promise((resolve) => {
+        resolveModal = resolve;
+      });
     },
   },
 );
