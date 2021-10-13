@@ -3352,7 +3352,7 @@ __metadata:
     fsevents: ^2.3.2
     jest: ^26.6.3
     lottie-web: ^5.7.8
-    matter-dapp-module: ^1.0.19
+    matter-dapp-module: ^1.0.20
     moment-timezone: ^0.5.33
     multiformats: ^9.4.7
     node-sass: 4.14.0
@@ -3376,7 +3376,7 @@ __metadata:
     vue-scrollto: ^2.20.0
     vuex: ^3.6.2
     webpack: ^4.46.0
-    zksync: beta
+    zksync: latest
   peerDependencies:
     "@babel/core": "*"
     "@babel/runtime": "*"
@@ -17103,9 +17103,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"matter-dapp-module@npm:^1.0.19":
-  version: 1.0.19
-  resolution: "matter-dapp-module@npm:1.0.19"
+"matter-dapp-module@npm:^1.0.20":
+  version: 1.0.20
+  resolution: "matter-dapp-module@npm:1.0.20"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@nuxtjs/style-resources": ^1.0.0
@@ -17122,7 +17122,7 @@ fsevents@^1.2.7:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.11.5-beta.0
-  checksum: 091f4aeda9c1df2a8f710c9e4b68ed37b4ed83618d9862063e68b401994e665ded693e960029b07da48b34213941c52f07e8b0f46132eec2752ac402c20b6e46
+  checksum: 925dc3596c9fc187605852575c2668e106d0549458ee481f284147d8f1d4397d181dbb9128b0cd724c415d9c3ae9f1ba0c2327bc8ed6ad4f0730ce73ed577147
   languageName: node
   linkType: hard
 
@@ -27132,9 +27132,9 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"zksync@npm:beta":
-  version: 0.11.5-beta.0
-  resolution: "zksync@npm:0.11.5-beta.0"
+"zksync@npm:latest":
+  version: 0.11.6
+  resolution: "zksync@npm:0.11.6"
   dependencies:
     axios: ^0.21.2
     websocket: ^1.0.30
@@ -27143,7 +27143,7 @@ typescript@^3.5.1:
   peerDependencies:
     "@ethersproject/logger": ^5.4.0
     ethers: ^5.4.4
-  checksum: afaf063fd7c723cd944ab002f4edf9a607f98830bf783a7fc870ac379997d1b52a04205ded381f7fc98a6314933e1c5917bba7fd0320eed2cdd4a66e8b24aee0
+  checksum: 8eb7e7fa6bd906c9dd67351c94e2a0f0ae30be0e6211420023e57df1fd73ae13ad720a19a0eaf075774f51ea6ce44fb9f77c18a94125a8bb160365cde658d3ea
   languageName: node
   linkType: hard
 
