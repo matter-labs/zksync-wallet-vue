@@ -173,3 +173,4 @@
     "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md"
   }
 }
+
