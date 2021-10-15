@@ -60,6 +60,7 @@ import {
   RiWifiLine,
   RiFileLine,
   CoEthereum,
+  RiArrowRightUpLine,
 } from "oh-vue-icons/icons";
 import Vue from "vue";
 
@@ -117,6 +118,7 @@ const iconsPlugin: Plugin = () => {
     RiMoonFill,
     RiSunFill,
     CoEthereum,
+    RiArrowRightUpLine,
   ); // Used icons (to reduce bundle-size)
 
   Vue.component("VIcon", OhVueIcon);

@@ -3352,7 +3352,7 @@ __metadata:
     fsevents: ^2.3.2
     jest: ^26.6.3
     lottie-web: ^5.7.8
-    matter-dapp-module: ^1.0.18
+    matter-dapp-module: ^1.0.21
     moment-timezone: ^0.5.33
     multiformats: ^9.4.7
     node-sass: 4.14.0
@@ -3367,7 +3367,7 @@ __metadata:
     stylelint-config-standard: latest
     stylelint-scss: latest
     typed-vuex: latest
-    typescript: ^4.2.4
+    typescript: 4.2.4
     vue: 2.*
     vue-class-component: latest
     vue-property-decorator: latest
@@ -7356,7 +7356,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.21.1":
+"axios@npm:^0.21.1, axios@npm:^0.21.2":
   version: 0.21.4
   resolution: "axios@npm:0.21.4"
   dependencies:
@@ -17103,9 +17103,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"matter-dapp-module@npm:^1.0.18":
-  version: 1.0.18
-  resolution: "matter-dapp-module@npm:1.0.18"
+"matter-dapp-module@npm:^1.0.21":
+  version: 1.0.21
+  resolution: "matter-dapp-module@npm:1.0.21"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@nuxtjs/style-resources": ^1.0.0
@@ -17121,8 +17121,8 @@ fsevents@^1.2.7:
     nuxt-webfontloader: ^1.1.0
     ts-node: ^9.1.1
     web3: ^1.5.3
-    zksync: ^0.11.5
-  checksum: 7cba10900a9c6e64fda05001c7bb156c7a238ae7cb6fa728067e0cbec8e06186af819bb7d5505fc6c503945c8dbf9bda5afc2cf2a0d4b8fcc1d495f362361c5b
+    zksync: ^0.11.5-beta.0
+  checksum: ed5d7e2c0d805405b52339019026922c38a74215f5771008f5763c44e0971b20075bcdfe6a8a6d65307f855aeaed9ed6d26f166a7b2a58d122c896f5713c4d82
   languageName: node
   linkType: hard
 
@@ -24436,6 +24436,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"typescript@4.2.4, typescript@~4.2":
+  version: 4.2.4
+  resolution: "typescript@npm:4.2.4"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: edaede2fa77f56b7fba80ee624a2368ab1216e75b0434d968ccb47ab0a5e2f6d94f848b3b111c1237dd71e988cd376af26370dcdad3b94355c76e759f0dd0a1e
+  languageName: node
+  linkType: hard
+
 typescript@^3.5.1:
   version: 3.9.9
   resolution: "typescript@npm:3.9.9"
@@ -24446,13 +24456,13 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"typescript@^4.2.4, typescript@~4.2":
+"typescript@patch:typescript@4.2.4#builtin<compat/typescript>, typescript@patch:typescript@~4.2#builtin<compat/typescript>":
   version: 4.2.4
-  resolution: "typescript@npm:4.2.4"
+  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=ddfc1b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: edaede2fa77f56b7fba80ee624a2368ab1216e75b0434d968ccb47ab0a5e2f6d94f848b3b111c1237dd71e988cd376af26370dcdad3b94355c76e759f0dd0a1e
+  checksum: 64658fdf27872904641dcaacf925e6b5a52fb4aa4881a5a726fc78a11b76748423ce9e996dac42313729321061c4dd38a06108014f8d07b222dcff2687037186
   languageName: node
   linkType: hard
 
@@ -24463,16 +24473,6 @@ typescript@^3.5.1:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 05a113f2ec0d0fc3263335c230d2eb7b94d851e51b5766f63b88b611127d08782ce41132eb32b9d3d434de8340f698f7ec2f72ebb4d33c3b2976b27de1f47ace
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@^4.2.4#builtin<compat/typescript>, typescript@patch:typescript@~4.2#builtin<compat/typescript>":
-  version: 4.2.4
-  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=ddfc1b"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 64658fdf27872904641dcaacf925e6b5a52fb4aa4881a5a726fc78a11b76748423ce9e996dac42313729321061c4dd38a06108014f8d07b222dcff2687037186
   languageName: node
   linkType: hard
 
@@ -27110,14 +27110,29 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"zksync-crypto@npm:^0.6.2":
+"zksync-crypto@npm:^0.6.1, zksync-crypto@npm:^0.6.2":
   version: 0.6.2
   resolution: "zksync-crypto@npm:0.6.2"
   checksum: ca3c8954186988fd5eaed61d01ee01ce6e3f05ed7b2f037e2ecd39f5ed3389ce5b8140e8761f1811d52f8ec55a7b1cf6a30596deec4f0dac5ac891707abe216d
   languageName: node
   linkType: hard
 
-"zksync@npm:^0.11.5, zksync@npm:latest":
+"zksync@npm:^0.11.5-beta.0":
+  version: 0.11.6
+  resolution: "zksync@npm:0.11.6"
+  dependencies:
+    axios: ^0.21.2
+    websocket: ^1.0.30
+    websocket-as-promised: ^1.1.0
+    zksync-crypto: ^0.6.1
+  peerDependencies:
+    "@ethersproject/logger": ^5.4.0
+    ethers: ^5.4.4
+  checksum: 8eb7e7fa6bd906c9dd67351c94e2a0f0ae30be0e6211420023e57df1fd73ae13ad720a19a0eaf075774f51ea6ce44fb9f77c18a94125a8bb160365cde658d3ea
+  languageName: node
+  linkType: hard
+
+"zksync@npm:latest":
   version: 0.11.5
   resolution: "zksync@npm:0.11.5"
   dependencies:

@@ -4,6 +4,7 @@
     <block-modals-content-hash />
     <block-modals-fee-req-error />
     <block-modals-transfer-warning />
+    <block-modals-withdraw-warning />
     <block-modals-fee-changed :type-name="transactionActionName" />
 
     <!-- Choose token -->
@@ -30,9 +31,17 @@
         <div>{{ transactionActionName }}</div>
       </div>
 
+      <template v-if="type === 'Transfer'">
+        <div class="_padding-0 _display-flex _justify-content-end">
+          <i-button data-cy="account_withdraw_button" class="_padding-y-0 send-link" link variant="" to="/transaction/withdraw">
+            Send to Ethereum (L1) <v-icon class="" name="ri-arrow-right-up-line" scale="0.75" />
+          </i-button>
+        </div>
+      </template>
+
       <template v-if="displayAddressInput">
         <div class="_padding-top-1 inputLabel">Address</div>
-        <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" />
+        <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" @change="validateAsync" />
         <block-choose-contact class="_margin-top-05" :address="inputtedAddress" :display-own-address="displayOwnAddress" @chosen="chooseAddress($event)" />
       </template>
 
@@ -194,6 +203,8 @@ import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeTy
 import { getAddress } from "@ethersproject/address";
 import { RestProvider } from "zksync";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
+import { DO_NOT_SHOW_WITHDRAW_WARNING_KEY } from "@/blocks/modals/WithdrawWarning.vue";
+import { ethers } from "ethers";
 
 const feeNameDict = new Map([
   ["txFee", "Fee"],
@@ -401,6 +412,48 @@ export default Vue.extend({
       }
       this.chooseTokenModal = false;
     },
+    validateAsync(): void {
+      this.$nextTick(() => {
+        if (this.type === "Withdraw") {
+          if (this.buttonLoader || this.requestingSigner) {
+            return;
+          }
+
+          this.checkWithdraw();
+        }
+      });
+    },
+    async checkWithdraw(): Promise<boolean> {
+      const doNotShowWarning = localStorage.getItem(DO_NOT_SHOW_WITHDRAW_WARNING_KEY);
+
+      if (doNotShowWarning) {
+        return true;
+      }
+
+      const isContract = await this.isContract(this.inputtedAddress);
+
+      if (isContract) {
+        const result = await this.$accessor.openDialog("WithdrawWarning");
+
+        return !!result;
+      }
+      return true;
+    },
+    async checkTransfer(): Promise<boolean> {
+      const transferWithdrawWarning = localStorage.getItem(warningCanceledKey);
+
+      if (!transferWithdrawWarning && getAddress(this.inputtedAddress) !== this.$store.getters["zk-account/address"]) {
+        const accountUnlocked = await this.checkInputtedAccountUnlocked();
+        if (!accountUnlocked) {
+          const result = await this.$accessor.openDialog("TransferWarning");
+          if (result) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    },
     async commitTransaction() {
       if (!this.hasSigner && this.requireSigner) {
         try {
@@ -414,36 +467,43 @@ export default Vue.extend({
         if (!this.commitAllowed || this.buttonLoader) {
           return;
         }
+
         /* Transfer != Withdraw warning */
         try {
-          if (this.type === "Transfer") {
-            const transferWithdrawWarning = localStorage.getItem(warningCanceledKey);
-            if (!transferWithdrawWarning && getAddress(this.inputtedAddress) !== this.$store.getters["zk-account/address"]) {
-              this.buttonLoader = true;
-              const accountUnlocked = await this.checkInputtedAccountUnlocked();
-              if (!accountUnlocked) {
-                const result = await this.$accessor.openDialog("TransferWarning");
-                if (!result) {
-                  this.buttonLoader = false;
-                  return;
-                }
-              }
+          this.buttonLoader = true;
+
+          if (this.type === "Withdraw") {
+            if (!(await this.checkWithdraw())) {
+              return;
             }
           }
+          if (this.type === "Transfer") {
+            if (!(await this.checkTransfer())) {
+              return;
+            }
+          }
+          await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
         } catch (error) {
-          console.warn("Transfer != Withdraw warning error", error);
           this.$store.commit("zk-transaction/setError", error);
+        } finally {
           this.buttonLoader = false;
-          return;
         }
-        await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
-        this.buttonLoader = false;
       }
     },
     async checkInputtedAccountUnlocked(): Promise<boolean> {
       const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider");
       const state = await syncProvider.getState(this.inputtedAddress);
       return state.id != null;
+    },
+    async isContract(address: string): Promise<boolean> {
+      try {
+        const ethProvider = this.$store.getters["zk-onboard/ethereumProvider"];
+        const code = await new ethers.providers.Web3Provider(ethProvider).getCode(address);
+
+        return code !== "0x";
+      } catch (e) {
+        return false;
+      }
     },
     async unlockToken(unlimited = false) {
       await this.$store.dispatch("zk-transaction/setAllowance", unlimited);
