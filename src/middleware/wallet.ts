@@ -31,4 +31,3 @@ const wallet: Middleware = ({ redirect, app: { $accessor }, route }: Context) =>
 };
 
 export default wallet;
-

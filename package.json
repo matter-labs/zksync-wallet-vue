@@ -1,11 +1,13 @@
 {
-  "name": "@matterlabs/zksync-dapp-checkout",
-  "title": "zkCheckout — simple permissionless DeFi payment gateway",
+  "name": "@matterlabs/zksync-zkwallet-vue",
+  "title": "zkSync.io Wallet | Try solution for the Ethereum scalability\n with zero security compromises",
   "main": "nuxt.config.ts",
-  "types": "src/types/index.d.ts",
+  "types": [
+    "src/types/index.d.ts"
+  ],
   "files": [
-    "src/**/*",
-    "tests/*"
+    "src/types",
+    "src"
   ],
   "keywords": [
     "zksync",
@@ -21,7 +23,6 @@
     "dapp",
     "ethers"
   ],
-  "private": true,
   "license": "MIT",
   "licenses": [
     {
@@ -33,7 +34,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "2.4.1",
+  "version": "3.0.0",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
@@ -51,40 +52,35 @@
     ]
   },
   "bugs": {
-    "url": "https://linear.app/matterlabs/project/zkcheckout-eae8f3c3e539/ZKF"
+    "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
   "dependencies": {
-    "@ethersproject/logger": "^5.0.9",
-    "@matterlabs/zk-wallet-onboarding": "1.18.6",
-    "@nuxt/http": "latest",
     "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/google-gtag": "latest",
     "@nuxtjs/sentry": "latest",
     "@nuxtjs/toast": "latest",
-    "@walletconnect/web3-provider": "^1.3.6",
-    "ethereum-blockies-base64": "latest",
-    "ethers": "^5.0.31",
+    "blockies-ts": "1.0.0",
+    "ethers": "^5.1.3",
     "lottie-web": "^5.7.8",
+    "matter-dapp-module": "^1.0.18",
     "moment-timezone": "^0.5.33",
+    "multiformats": "^9.4.7",
     "nuxt": "latest",
     "nuxt-build-optimisations": "latest",
     "nuxt-typed-vuex": "latest",
-    "oh-vue-icons": "^0.4.3",
+    "oh-vue-icons": "^0.4.7",
     "typed-vuex": "latest",
     "vue": "2.*",
     "vue-class-component": "latest",
     "vue-qrcode": "latest",
+    "vue-router": "^3.5.2",
     "vue-scrollto": "^2.20.0",
-    "vuex": "^3.6.2",
-    "web3": "^1.3.4",
     "zksync": "latest"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
     "@babel/preset-env": "^7.13.9",
     "@babel/runtime": "^7.13.10",
-    "@ethersproject/logger": "^5.1.0",
-    "@ethersproject/providers": "^5.1.0",
     "@inkline/nuxt": "^2.3.6",
     "@nuxt/types": "latest",
     "@nuxt/typescript": "latest",
@@ -116,7 +112,7 @@
     "stylelint-scss": "latest",
     "typescript": "^4.2.4",
     "vue-property-decorator": "latest",
-    "web3-core": "^1.3.5",
+    "vuex": "^3.6.2",
     "webpack": "^4.46.0"
   },
   "peerDependencies": {
@@ -126,7 +122,8 @@
     "vuex": "3.5.1"
   },
   "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
+    "babel-core": "7.0.0-bridge.0",
+    "@matterlabs/zksync-zkwallet-vue": "portal:/Users/jackhamer/Documents/Projects/matterlabs/wallet"
   },
   "fork-ts-checker": {
     "typescript": true
@@ -149,7 +146,7 @@
     "yarn spell-check"
   ],
   "scripts": {
-    "local": "sh ./cli-process-env.sh 'ropsten' 'dev' 1 1",
+    "local": "sh ./cli-process-env.sh 'rinkeby-beta' 'dev' 1 1",
     "dev": "yarn local && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
@@ -157,10 +154,12 @@
     "ci:build:dev-rinkeby": "sh cli-process-env.sh 'rinkeby' dev 1 && yarn generate --fail-on-error",
     "ci:build:dev-mainnet": "sh cli-process-env.sh 'mainnet' dev 1 && yarn generate --fail-on-error",
     "ci:build:rinkeby-beta": "yarn ci:prepare:rinkeby-beta && yarn generate --fail-on-error",
+    "ci:build:ropsten-beta": "yarn ci:prepare:ropsten-beta && yarn generate --fail-on-error",
     "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
     "ci:build:rinkeby": "yarn ci:prepare:rinkeby && yarn generate --fail-on-error",
     "ci:build:ropsten": "yarn ci:prepare:ropsten && yarn generate --fail-on-error",
     "ci:prepare:rinkeby-beta": "sh cli-process-env.sh 'rinkeby-beta' dev 1",
+    "ci:prepare:ropsten-beta": "sh cli-process-env.sh 'ropsten-beta' dev 1",
     "ci:prepare:rinkeby": "sh cli-process-env.sh 'rinkeby' prod 1",
     "ci:prepare:ropsten": "sh cli-process-env.sh 'ropsten' prod 1",
     "ci:prepare:mainnet": "sh cli-process-env.sh 'mainnet' prod 1",
@@ -171,6 +170,6 @@
     "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore --quiet",
     "lint-style:fix": "stylelint src/**/*.scss --config '.stylelintrc' --fix -f verbose",
     "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md"
-  }
+  },
+  "packageManager": "yarn@2.4.2"
 }
-
