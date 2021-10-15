@@ -431,12 +431,11 @@ export default Vue.extend({
       }
 
       const isContract = await this.isContract(this.inputtedAddress);
-
       if (isContract) {
         const result = await this.$accessor.openDialog("WithdrawWarning");
-
         return !!result;
       }
+
       return true;
     },
     async checkTransfer(): Promise<boolean> {
