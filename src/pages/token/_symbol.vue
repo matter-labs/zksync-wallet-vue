@@ -55,7 +55,7 @@
         </i-button>
       </div>
     </div>
-    <!-- <transactions class="_margin-top-0" :filter="symbol" /> -->
+    <transactions class="_margin-top-0" :token="symbol" />
   </div>
 </template>
 
