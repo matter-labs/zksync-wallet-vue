@@ -411,6 +411,7 @@ export default Vue.extend({
         }
         this.requestingSigner = false;
       } else {
+        throw new Error("Test");
         if (!this.commitAllowed || this.buttonLoader) {
           return;
         }
