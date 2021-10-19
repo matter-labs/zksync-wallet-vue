@@ -31,7 +31,7 @@ export default Vue.extend({
     },
     selectedOnboardType: {
       handler(value) {
-        this.$sentry.setTags({ onboard_type: value });
+        this.$sentry.setTags({ "onboard.type": value });
       },
       immediate: true,
     },
@@ -39,7 +39,7 @@ export default Vue.extend({
     "ethereumState.address": {
       handler(value) {
         if (value) {
-          this.$sentry.setUser({ address: value });
+          this.$sentry.setUser({ id: value });
         } else {
           this.$sentry.setUser(null);
         }
