@@ -2903,7 +2903,7 @@ __metadata:
     vue: 2.*
     vue-class-component: latest
     vue-property-decorator: latest
-    vue-qrcode: latest
+    vue-qrcode: 0.4.0
     vue-router: ^3.5.2
     vue-scrollto: ^2.20.0
     vuex: ^3.6.2
@@ -23582,22 +23582,6 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"vue-demi@npm:^0.11.3":
-  version: 0.11.4
-  resolution: "vue-demi@npm:0.11.4"
-  peerDependencies:
-    "@vue/composition-api": ^1.0.0-rc.1
-    vue: ^3.0.0-0 || ^2.6.0
-  peerDependenciesMeta:
-    "@vue/composition-api":
-      optional: true
-  bin:
-    vue-demi-fix: bin/vue-demi-fix.js
-    vue-demi-switch: bin/vue-demi-switch.js
-  checksum: b1ff9894d51caac2427b05eb88e72f612746261a936888998c9ea0c55a052aafb4a22839b55586e57d1e750d19dc40a32ee647b11669b75cac7e572981f4038d
-  languageName: node
-  linkType: hard
-
 "vue-eslint-parser@npm:^7.10.0":
   version: 7.11.0
   resolution: "vue-eslint-parser@npm:7.11.0"
@@ -23669,20 +23653,15 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"vue-qrcode@npm:latest":
-  version: 1.0.0
-  resolution: "vue-qrcode@npm:1.0.0"
+"vue-qrcode@npm:0.4.0":
+  version: 0.4.0
+  resolution: "vue-qrcode@npm:0.4.0"
   dependencies:
     tslib: ^2.2.0
-    vue-demi: ^0.11.3
   peerDependencies:
-    "@vue/composition-api": ^1.0.0
     qrcode: ^1.0.0
-    vue: ^2.0.0 || ^3.0.0
-  peerDependenciesMeta:
-    "@vue/composition-api":
-      optional: true
-  checksum: dede8653cf3133612d47191d2933004b3480dd87964306bdfcf4270695cf441d314cddfbc23932befe889c0443abbbb24fc8c65d92d1357db8e9b9baa917f38e
+    vue: ^2.0.0
+  checksum: aeebbcde62713d7ff15b95d20c5b71bf69fc071d9e6ed9057c1b474f0eb545d009beb81e27a46419a614d1ab90726a7c9eee267edf688a5a61adf1384aa47bd8
   languageName: node
   linkType: hard
 
