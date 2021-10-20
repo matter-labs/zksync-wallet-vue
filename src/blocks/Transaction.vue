@@ -41,7 +41,7 @@
 
       <template v-if="displayAddressInput">
         <div class="_padding-top-1 inputLabel">Address</div>
-        <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" @change="validateAsync" />
+        <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" />
         <block-choose-contact class="_margin-top-05" :address="inputtedAddress" :display-own-address="displayOwnAddress" @chosen="chooseAddress($event)" />
       </template>
 
@@ -204,7 +204,6 @@ import { getAddress } from "@ethersproject/address";
 import { RestProvider } from "zksync";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
 import { DO_NOT_SHOW_WITHDRAW_WARNING_KEY } from "@/blocks/modals/WithdrawWarning.vue";
-import { ethers } from "ethers";
 
 const feeNameDict = new Map([
   ["txFee", "Fee"],
@@ -412,17 +411,6 @@ export default Vue.extend({
       }
       this.chooseTokenModal = false;
     },
-    validateAsync(): void {
-      this.$nextTick(() => {
-        if (this.type === "Withdraw") {
-          if (this.buttonLoader || this.requestingSigner) {
-            return;
-          }
-
-          this.checkWithdraw();
-        }
-      });
-    },
     async checkWithdraw(): Promise<boolean> {
       const doNotShowWarning = localStorage.getItem(DO_NOT_SHOW_WITHDRAW_WARNING_KEY);
 
@@ -430,13 +418,8 @@ export default Vue.extend({
         return true;
       }
 
-      const isContract = await this.isContract(this.inputtedAddress);
-      if (isContract) {
-        const result = await this.$accessor.openDialog("WithdrawWarning");
-        return !!result;
-      }
-
-      return true;
+      const result = await this.$accessor.openDialog("WithdrawWarning");
+      return !!result;
     },
     async checkTransfer(): Promise<boolean> {
       const transferWithdrawWarning = localStorage.getItem(warningCanceledKey);
@@ -493,16 +476,6 @@ export default Vue.extend({
       const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider");
       const state = await syncProvider.getState(this.inputtedAddress);
       return state.id != null;
-    },
-    async isContract(address: string): Promise<boolean> {
-      try {
-        const ethProvider = this.$store.getters["zk-onboard/ethereumProvider"];
-        const code = await new ethers.providers.Web3Provider(ethProvider).getCode(address);
-
-        return code !== "0x";
-      } catch (e) {
-        return false;
-      }
     },
     async unlockToken(unlimited = false) {
       await this.$store.dispatch("zk-transaction/setAllowance", unlimited);
