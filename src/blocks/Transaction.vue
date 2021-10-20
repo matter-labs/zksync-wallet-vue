@@ -33,7 +33,7 @@
 
       <template v-if="type === 'Transfer'">
         <div class="_padding-0 _display-flex _justify-content-end">
-          <i-button data-cy="account_withdraw_button" class="_padding-y-0 send-link" link variant="" to="/transaction/withdraw">
+          <i-button data-cy="send_send_l1_button" class="_padding-y-0 send-link" link variant="" to="/transaction/withdraw">
             Send to Ethereum (L1) <v-icon class="" name="ri-arrow-right-up-line" scale="0.75" />
           </i-button>
         </div>

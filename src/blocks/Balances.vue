@@ -30,7 +30,7 @@
           <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="lg" variant="secondary" to="/transaction/deposit">
             <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;&nbsp;Add Funds
           </i-button>
-          <i-button data-cy="account_transfer_button" block class="_margin-y-0 _padding-right-2" size="lg" variant="secondary" to="/transaction/transfer">
+          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-2" size="lg" variant="secondary" to="/transaction/transfer">
             <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Send
           </i-button>
         </div>
