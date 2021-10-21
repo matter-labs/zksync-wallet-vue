@@ -4,7 +4,7 @@
     <div>
       <div class="_padding-bottom-1">
         <div class="_padding-bottom-1">You are about to send funds to Ethereum L1.</div>
-        <ul>
+        <ul class="_padding-left-1">
           <li>To prevent loss of funds, please verify that the recipient supports smart contract transactions.</li>
           <li>Once sent, you will see your funds on L1 between 30 min and 7 hours.</li>
           <li>If you are trying to send to an exchange, the best method is to first send to your own address and then to the exchange.</li>
