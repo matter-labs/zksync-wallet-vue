@@ -1,13 +1,13 @@
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+
+import { ModuleOptions } from "matter-dapp-module/types";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 import { Configuration } from "webpack";
 
-import { ModuleOptions } from "matter-dapp-module/types";
-
-const env: string = process.env.APP_ENV ?? "dev";
-const isDebugEnabled: boolean = env === "dev";
-const isProduction: boolean = env === "prod";
+const appEnv: string = process.env.APP_ENV ?? "dev";
+const isDebugEnabled: boolean = appEnv === "dev";
+const isProduction: boolean = appEnv === "prod";
 const pageTitle = "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
 
@@ -191,6 +191,7 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    "nuxt-purgecss",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
@@ -266,7 +267,7 @@ const config: NuxtConfig = {
     config: {
       debug: isDebugEnabled,
       tracesSampleRate: 1.0,
-      environment: isProduction ? "production" : env === "dev" ? "development" : env,
+      environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv,
     },
   },
   "google-gtag": {
@@ -285,13 +286,42 @@ const config: NuxtConfig = {
     babel: {
       compact: true,
     },
+    corejs: 3,
+    ssr: false,
+    extractCSS: {
+      ignoreOrder: true,
+    },
+    splitChunks: {
+      layouts: true,
+      pages: true,
+      commons: true,
+    },
+    optimization: {
+      removeAvailableModules: true,
+      flagIncludedChunks: true,
+      mergeDuplicateChunks: true,
+      splitChunks: {
+        chunks: "all",
+        name: isProduction ? undefined : "chunk",
+        maxSize: 900 * 1024,
+      },
+      nodeEnv: isProduction ? "16" : false,
+      minimize: isProduction,
+    },
     transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
     hardSource: false,
-    ssr: false,
     extend: (config: Configuration) => {
+      config.mode = isProduction ? "production" : "development";
       config.node = {
         fs: "empty",
       };
+      if (!config.output) {
+        config.output = {
+          crossOriginLoading: isProduction ? "anonymous" : false,
+        };
+      } else {
+        config.output.crossOriginLoading = isProduction ? "anonymous" : false;
+      }
     },
   },
   googleFonts: {
@@ -306,7 +336,7 @@ const config: NuxtConfig = {
   },
   generate: {
     dir: "public",
-    devtools: env !== "prod",
+    devtools: !isProduction,
   },
 };
 export default config;

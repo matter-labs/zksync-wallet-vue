@@ -2908,6 +2908,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fullhuman/postcss-purgecss@npm:^2.0.5":
+  version: 2.3.0
+  resolution: "@fullhuman/postcss-purgecss@npm:2.3.0"
+  dependencies:
+    postcss: 7.0.32
+    purgecss: ^2.3.0
+  checksum: 18c6b2896a683174832ca4922dfa7cc6daa916240bb2662588bc83ffd792ccf9cf743d3809d86bc616d566815608d7a9e9c1896cca5835d11bd0e63cc6f24a41
+  languageName: node
+  linkType: hard
+
 "@gnosis.pm/safe-apps-provider@npm:^0.5.0":
   version: 0.5.0
   resolution: "@gnosis.pm/safe-apps-provider@npm:0.5.0"
@@ -3358,6 +3368,7 @@ __metadata:
     node-sass: 4.14.0
     nuxt: latest
     nuxt-build-optimisations: latest
+    nuxt-purgecss: ^1.0.0
     nuxt-typed-vuex: latest
     oh-vue-icons: ^0.4.7
     prettier: ^2.2.1
@@ -8806,6 +8817,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ci-info@npm:^1.5.0":
+  version: 1.6.0
+  resolution: "ci-info@npm:1.6.0"
+  checksum: c53d8ead84b00b44a26099b9afbe25d07d1cf02a0b2e354f97e4765ab965525d5d831d264b045737ac03076be3c34e87b64dee0d94cfd87cfc227299cb1c0137
+  languageName: node
+  linkType: hard
+
 "ci-info@npm:^2.0.0":
   version: 2.0.0
   resolution: "ci-info@npm:2.0.0"
@@ -9133,6 +9151,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^5.0.0":
+  version: 5.1.0
+  resolution: "commander@npm:5.1.0"
+  checksum: d16141ea7f580945156fb8a06de2834c4647c7d9d3732ebd4534ab8e0b7c64747db301e18f2b840f28ea8fef51f7a8d6178e674b45a21931f0b65ff1c7f476b3
+  languageName: node
+  linkType: hard
+
 "commander@npm:^6.2.0":
   version: 6.2.1
   resolution: "commander@npm:6.2.1"
@@ -9275,6 +9300,18 @@ __metadata:
     parseurl: ~1.3.3
     utils-merge: 1.0.1
   checksum: 25b827ceb48e6355f6395b44b1ad09ac46002b89e3789952ca0372fd3ef04b81ad40fdc5896ecc21577a0583304731d86c050331575fbde398b2a6fd27c4a643
+  languageName: node
+  linkType: hard
+
+"consola@npm:^1.4.5":
+  version: 1.4.5
+  resolution: "consola@npm:1.4.5"
+  dependencies:
+    chalk: ^2.3.2
+    figures: ^2.0.0
+    lodash: ^4.17.5
+    std-env: ^1.1.0
+  checksum: 10e039f8ede7571ad219c0b27ff11e72ad12d04533eab5bf6989b9440bcc0dacf14ee3dc8628941697b44f5c7b74a388b25e1f773b01879096c11b82c3e903c8
   languageName: node
   linkType: hard
 
@@ -12757,6 +12794,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"figures@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "figures@npm:2.0.0"
+  dependencies:
+    escape-string-regexp: ^1.0.5
+  checksum: de1145903784bd0b8bca1716426825d0a608fa81f370e0779047ef3f8d4509896f81435093e62a887717aeed0b8c8a92da7953f7f506ca57e62cf95d12b6c65a
+  languageName: node
+  linkType: hard
+
 "figures@npm:^3.0.0":
   version: 3.2.0
   resolution: "figures@npm:3.2.0"
@@ -14845,6 +14891,17 @@ fsevents@^1.2.7:
   version: 1.2.4
   resolution: "is-callable@npm:1.2.4"
   checksum: 57680330ce65115efc87e82e1b85238e1abaef5c385e98742449a57205e9693be7371f29b41439ded26d790f864e9bde82367371eac4d98edca82413c1489c0a
+  languageName: node
+  linkType: hard
+
+"is-ci@npm:^1.1.0":
+  version: 1.2.1
+  resolution: "is-ci@npm:1.2.1"
+  dependencies:
+    ci-info: ^1.5.0
+  bin:
+    is-ci: bin.js
+  checksum: cdcdeba94278edf4e6a305aba93ecffd58cb35a08ebf879a7f715e5538be55ad23a841f48a796b71beae36e0c6e2290eca38cf8a8feed563fb62090879ead93b
   languageName: node
   linkType: hard
 
@@ -18590,6 +18647,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"nuxt-purgecss@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "nuxt-purgecss@npm:1.0.0"
+  dependencies:
+    "@fullhuman/postcss-purgecss": ^2.0.5
+    consola: ^1.4.5
+    glob-all: ^3.1.0
+    purgecss: ^2.0.5
+    purgecss-webpack-plugin: ^2.0.5
+  checksum: 954e949badc663eb1de793bed3568eb58413e26c0087ebc9090394d279ab3e2a4f03b1f891b56b37bb8417094b426774cf8b851d54faccf3ed5e3747a6e07a65
+  languageName: node
+  linkType: hard
+
 "nuxt-typed-vuex@npm:latest":
   version: 0.2.0
   resolution: "nuxt-typed-vuex@npm:0.2.0"
@@ -20435,6 +20505,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"postcss@npm:7.0.32":
+  version: 7.0.32
+  resolution: "postcss@npm:7.0.32"
+  dependencies:
+    chalk: ^2.4.2
+    source-map: ^0.6.1
+    supports-color: ^6.1.0
+  checksum: 340f4f6ca6bd37961927f68bf7e38d071a7cba0468240cbba64ccf78012b2acbec974491284cb200e438dd3e655314e6d9508562523cbf9a49d5b00fd7e769fa
+  languageName: node
+  linkType: hard
+
 "postcss@npm:7.x.x, postcss@npm:^7.0.0, postcss@npm:^7.0.1, postcss@npm:^7.0.14, postcss@npm:^7.0.17, postcss@npm:^7.0.2, postcss@npm:^7.0.21, postcss@npm:^7.0.26, postcss@npm:^7.0.27, postcss@npm:^7.0.32, postcss@npm:^7.0.35, postcss@npm:^7.0.5, postcss@npm:^7.0.6":
   version: 7.0.35
   resolution: "postcss@npm:7.0.35"
@@ -20845,6 +20926,33 @@ fsevents@^1.2.7:
   version: 2.1.1
   resolution: "punycode@npm:2.1.1"
   checksum: 0202dc191cb35bfd88870ac99a1e824b03486d4cee20b543ef337a6dee8d8b11017da32a3e4c40b69b19976e982c030b62bd72bba42884acb691bc5ef91354c8
+  languageName: node
+  linkType: hard
+
+"purgecss-webpack-plugin@npm:^2.0.5":
+  version: 2.3.0
+  resolution: "purgecss-webpack-plugin@npm:2.3.0"
+  dependencies:
+    purgecss: ^2.3.0
+    webpack: ^4.42.1
+    webpack-sources: ^1.4.3
+  peerDependencies:
+    webpack: "*"
+  checksum: dc4260da371ada2c10e50a0eac6db0832ca0083fa86a6781aa4c46c462ff19ecc59fc5c197265b67f94680414a9409e5bb0f914ec9e400845da7f5fdc3011c95
+  languageName: node
+  linkType: hard
+
+"purgecss@npm:^2.0.5, purgecss@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "purgecss@npm:2.3.0"
+  dependencies:
+    commander: ^5.0.0
+    glob: ^7.0.0
+    postcss: 7.0.32
+    postcss-selector-parser: ^6.0.2
+  bin:
+    purgecss: bin/purgecss
+  checksum: 903351123a904d80b5377434148fdff5edf59187c32b9961297a18ce4ab4ef3033344684f9a90e3b02983aca0d6713092591ce22d5fb2a92b33226428882cd9b
   languageName: node
   linkType: hard
 
@@ -23038,6 +23146,15 @@ fsevents@^1.2.7:
   version: 1.5.0
   resolution: "statuses@npm:1.5.0"
   checksum: 57735269bf231176a60deb80f6d60214cb4a87663b0937e79497afe9aebe2597f8377fd28893f4d1776205f18dd0b927774a26b72051411ac5108e9e2dfc77d2
+  languageName: node
+  linkType: hard
+
+"std-env@npm:^1.1.0":
+  version: 1.3.1
+  resolution: "std-env@npm:1.3.1"
+  dependencies:
+    is-ci: ^1.1.0
+  checksum: ffd2334acf1ee36d112ef1422aa38b5d6e831107b22d308b0c85a4cdb2f482e12d99951b7ab464ba696dc18c7a385da723a3411ca36646763b5a60ecc6d711eb
   languageName: node
   linkType: hard
 
@@ -26193,7 +26310,7 @@ typescript@^3.5.1:
   languageName: node
   linkType: hard
 
-"webpack@npm:^4.46.0":
+"webpack@npm:^4.42.1, webpack@npm:^4.46.0":
   version: 4.46.0
   resolution: "webpack@npm:4.46.0"
   dependencies:
