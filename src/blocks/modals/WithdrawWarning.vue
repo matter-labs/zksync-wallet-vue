@@ -1,5 +1,5 @@
 <template>
-  <i-modal v-model="opened" size="md">
+  <i-modal v-model="opened" data-cy="send_l1_understand_modal" size="md">
     <template slot="header">Sending to Ethereum L1</template>
     <div>
       <div class="_padding-bottom-1">
@@ -11,7 +11,7 @@
         </ul>
       </div>
       <i-checkbox v-model="transferWithdrawWarningCheckmark">Do not show this again</i-checkbox>
-      <i-button block class="_margin-top-1" size="lg" variant="secondary" @click="proceed()">I Understand</i-button>
+      <i-button block class="_margin-top-1" size="lg" variant="secondary" data-cy="send_l1_understand_button" @click="proceed()">I Understand</i-button>
     </div>
   </i-modal>
 </template>
