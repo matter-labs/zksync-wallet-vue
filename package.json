@@ -104,7 +104,6 @@
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "jest": "^26.6.3",
     "node-sass": "4.14.0",
-    "nuxt-purgecss": "^1.0.0",
     "prettier": "^2.2.1",
     "qrcode": "^1.0.0",
     "sass-loader": "^10.1.1",

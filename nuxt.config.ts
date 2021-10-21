@@ -191,7 +191,6 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
-    "nuxt-purgecss",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
