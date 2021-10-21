@@ -424,17 +424,17 @@ export default Vue.extend({
     async checkTransfer(): Promise<boolean> {
       const transferWithdrawWarning = localStorage.getItem(warningCanceledKey);
 
-      if (!transferWithdrawWarning && getAddress(this.inputtedAddress) !== this.$store.getters["zk-account/address"]) {
-        const accountUnlocked = await this.checkInputtedAccountUnlocked();
-        if (!accountUnlocked) {
-          const result = await this.$accessor.openDialog("TransferWarning");
-          if (result) {
-            return true;
-          }
-        }
+      if (transferWithdrawWarning || getAddress(this.inputtedAddress) === this.$store.getters["zk-account/address"]) {
+        return true;
       }
 
-      return false;
+      const accountUnlocked = await this.checkInputtedAccountUnlocked();
+      if (accountUnlocked) {
+        return true;
+      }
+
+      const result = await this.$accessor.openDialog("TransferWarning");
+      return !!result;
     },
     async commitTransaction() {
       if (!this.hasSigner && this.requireSigner) {
