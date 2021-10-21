@@ -35,8 +35,9 @@ jobs:
           repository: matter-labs/zksync-test-ui
           token: ${{ secrets.TEST_ACCESS_TOKEN }}
 
-      - name: Install dependencies
+      - name: Preparing to launch of tests
         run: |
+          chmod +x ./tests_launcher.sh
           bash ./cli-dev.sh clean yarn
           yarn install --immutable || true
 
@@ -56,7 +57,7 @@ jobs:
           CI: 'true'
           TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.output_urls)[0]}}"
         with:
-          args: yarn test --runInBand
+          args: ./tests_launcher.sh wallet
 
       - name: Save artifacts
         uses: actions/upload-artifact@v2
