@@ -36,6 +36,9 @@
       position: absolute;
       bottom: 100%;
       left: 100%;
+      @media screen and (max-width: 390px) {
+        left: 80%;
+      }
     }
   }
 
