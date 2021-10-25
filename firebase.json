@@ -16,21 +16,6 @@
       ]
     },
     {
-      "target": "dev-mainnet",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    {
       "target": "prod-ropsten",
       "public": "public",
       "ignore": [

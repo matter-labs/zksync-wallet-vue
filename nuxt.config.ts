@@ -1,20 +1,20 @@
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+
+import { ModuleOptions } from "matter-dapp-module/types";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 import { Configuration } from "webpack";
 
-import { ModuleOptions } from "matter-dapp-module/types";
-
-const env: string = process.env.APP_ENV ?? "dev";
-const isDebugEnabled: boolean = env === "dev";
-const isProduction: boolean = env === "prod";
+const appEnv: string = process.env.APP_ENV ?? "dev";
+const isDebugEnabled: boolean = appEnv === "dev";
+const isProduction: boolean = appEnv === "prod";
 const pageTitle = "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
 
 const sentryDsn = "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800";
 const gtagId = "GTM-ML2QDNV";
 
-const pageTitleTemplate = process.env.APP_CURRENT_NETWORK !== "mainnet" ? "Testnet" : "Mainnet";
+const pageTitleTemplate = "%s | zkSync: secure, scalable crypto payments";
 const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
@@ -25,6 +25,7 @@ const config: NuxtConfig = {
   telemetry: false,
   ssr: false,
   target: "static",
+  static: true,
   srcDir: "./src/",
   vue: {
     config: {
@@ -41,7 +42,7 @@ const config: NuxtConfig = {
    */
   head: {
     title: pageTitle as string | undefined,
-    titleTemplate: `%s | ${pageTitleTemplate}`,
+    titleTemplate: pageTitleTemplate,
     htmlAttrs: {
       lang: "en",
       amp: "true",
@@ -226,6 +227,7 @@ const config: NuxtConfig = {
           APP_NAME: pageTitle,
           APP_ID: process.env.APP_ONBOARDING_APP_ID,
         },
+        restoreNetwork: true,
       },
     ],
   ],
@@ -265,7 +267,7 @@ const config: NuxtConfig = {
     config: {
       debug: isDebugEnabled,
       tracesSampleRate: 1.0,
-      environment: isProduction ? "production" : env === "dev" ? "development" : env,
+      environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv,
     },
   },
   "google-gtag": {
@@ -284,13 +286,42 @@ const config: NuxtConfig = {
     babel: {
       compact: true,
     },
-    transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
-    hardSource: isProduction,
+    corejs: 3,
     ssr: false,
+    extractCSS: {
+      ignoreOrder: true,
+    },
+    splitChunks: {
+      layouts: true,
+      pages: true,
+      commons: true,
+    },
+    optimization: {
+      removeAvailableModules: true,
+      flagIncludedChunks: true,
+      mergeDuplicateChunks: true,
+      splitChunks: {
+        chunks: "all",
+        name: isProduction ? undefined : "chunk",
+        maxSize: 900 * 1024,
+      },
+      nodeEnv: isProduction ? "16" : false,
+      minimize: isProduction,
+    },
+    transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
+    hardSource: false,
     extend: (config: Configuration) => {
+      config.mode = isProduction ? "production" : "development";
       config.node = {
         fs: "empty",
       };
+      if (!config.output) {
+        config.output = {
+          crossOriginLoading: isProduction ? "anonymous" : false,
+        };
+      } else {
+        config.output.crossOriginLoading = isProduction ? "anonymous" : false;
+      }
     },
   },
   googleFonts: {
@@ -305,7 +336,7 @@ const config: NuxtConfig = {
   },
   generate: {
     dir: "public",
-    devtools: env !== "prod",
+    devtools: !isProduction,
   },
 };
 export default config;

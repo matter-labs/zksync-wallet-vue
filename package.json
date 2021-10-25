@@ -62,7 +62,7 @@
     "blockies-ts": "1.0.0",
     "ethers": "^5.1.3",
     "lottie-web": "^5.7.8",
-    "matter-dapp-module": "1.0.21",
+    "matter-dapp-module": "^1.0.26",
     "moment-timezone": "^0.5.33",
     "multiformats": "^9.4.7",
     "nuxt": "latest",
@@ -145,7 +145,7 @@
     "yarn spell-check"
   ],
   "scripts": {
-    "local": "sh ./cli-process-env.sh 'rinkeby-beta' 'dev' 1 1",
+    "local": "sh ./cli-process-env.sh 'rinkeby-beta' 'prod' 1 1",
     "dev": "yarn local && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",

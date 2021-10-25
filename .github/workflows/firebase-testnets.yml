@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
       - run: bash cli-dev.sh ci
 
-      - name: "Build ropsten [prod]"
+      - name: "Building ropsten [prod]"
         run: yarn run ci:build:ropsten
       - uses: matter-labs/action-hosting-deploy@v0
         with:
@@ -25,8 +25,8 @@ jobs:
           projectId: zksync-vue
           channelID: live
 
-      - name: "Build rinkeby [prod]"
-        run: yarn run ci:build:rinkeby
+      - name: "Re-building rinkeby [prod]"
+        run: bash cli-dev.sh clean nuxt && yarn run ci:build:rinkeby
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
