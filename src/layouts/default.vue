@@ -21,8 +21,10 @@
 <script lang="ts">
 import Vue from "vue";
 import theme from "matter-dapp-module/utils/theme";
+import SentyMixin from "./sentry.mixin";
 
 export default Vue.extend({
+  mixins: [SentyMixin],
   computed: {
     loggingIn() {
       return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];

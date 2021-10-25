@@ -12,8 +12,9 @@
  */
 import { Plugin } from "@nuxt/types";
 import OhVueIcon from "oh-vue-icons/dist/v2/icon.es";
+import { MdVpnkeyRound } from "oh-vue-icons/icons/md";
+import { CoEthereum } from "oh-vue-icons/icons/co";
 import {
-  MdVpnkeyRound,
   RiGalleryLine,
   RiAddCircleFill,
   RiErrorWarningLine,
@@ -59,8 +60,8 @@ import {
   RiWalletLine,
   RiWifiLine,
   RiFileLine,
-  CoEthereum,
-} from "oh-vue-icons/icons";
+  RiArrowRightUpLine,
+} from "oh-vue-icons/icons/ri";
 import Vue from "vue";
 
 /**
@@ -117,6 +118,7 @@ const iconsPlugin: Plugin = () => {
     RiMoonFill,
     RiSunFill,
     CoEthereum,
+    RiArrowRightUpLine,
   ); // Used icons (to reduce bundle-size)
 
   Vue.component("VIcon", OhVueIcon);

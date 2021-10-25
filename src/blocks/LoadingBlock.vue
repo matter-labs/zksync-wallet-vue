@@ -1,6 +1,6 @@
 <template>
   <div class="loadingBlock tileBlock">
-    <div class="tileHeadline h3">{{ activeTransaction.type }}</div>
+    <div class="tileHeadline h3">{{ transactionActionName }}</div>
     <div class="loadingBlockContent">
       <a v-if="txLink" :href="txLink" class="_display-block _text-center" target="_blank">
         Link to the transaction <i><v-icon name="ri-external-link-line" scale="0.8" /></i>
@@ -30,6 +30,9 @@ export default Vue.extend({
     },
     activeTransaction(): ZkActiveTransaction {
       return this.$store.getters["zk-transaction/activeTransaction"];
+    },
+    transactionActionName(): string | undefined {
+      return this.$store.getters["zk-transaction/transactionActionName"];
     },
     txLink(): string | undefined {
       this.forceUpdateVal;

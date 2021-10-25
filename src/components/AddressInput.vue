@@ -15,6 +15,7 @@
         spellcheck="false"
         type="text"
         @keyup.enter="$emit('enter')"
+        @change="($event) => $emit('change', $event)"
       />
       <transition name="fadeFast">
         <div v-if="error" class="errorText" data-cy="address_block_error_message">{{ error }}</div>
