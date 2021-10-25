@@ -2884,7 +2884,7 @@ __metadata:
     fsevents: ^2.3.2
     jest: ^26.6.3
     lottie-web: ^5.7.8
-    matter-dapp-module: ^1.0.26
+    matter-dapp-module: ^1.0.27
     moment-timezone: ^0.5.33
     multiformats: ^9.4.7
     node-sass: 4.14.0
@@ -5128,7 +5128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/client@npm:^1.4.0, @walletconnect/client@npm:^1.6.6":
+"@walletconnect/client@npm:^1.6.6":
   version: 1.6.6
   resolution: "@walletconnect/client@npm:1.6.6"
   dependencies:
@@ -5181,7 +5181,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/http-connection@npm:^1.4.0, @walletconnect/http-connection@npm:^1.6.6":
+"@walletconnect/http-connection@npm:^1.6.6":
   version: 1.6.6
   resolution: "@walletconnect/http-connection@npm:1.6.6"
   dependencies:
@@ -5230,7 +5230,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/qrcode-modal@npm:^1.4.0, @walletconnect/qrcode-modal@npm:^1.6.6":
+"@walletconnect/qrcode-modal@npm:^1.6.6":
   version: 1.6.6
   resolution: "@walletconnect/qrcode-modal@npm:1.6.6"
   dependencies:
@@ -5273,14 +5273,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/types@npm:^1.4.0, @walletconnect/types@npm:^1.6.6":
+"@walletconnect/types@npm:^1.6.6":
   version: 1.6.6
   resolution: "@walletconnect/types@npm:1.6.6"
   checksum: 098401634577280641916e1ee39fdb3e5054c46a040930e284dec7302cd9b923336dd14e0f5cbb13290fad9b46327f993090dd9170e83a84654bb381b5388661
   languageName: node
   linkType: hard
 
-"@walletconnect/utils@npm:^1.4.0, @walletconnect/utils@npm:^1.6.6":
+"@walletconnect/utils@npm:^1.6.6":
   version: 1.6.6
   resolution: "@walletconnect/utils@npm:1.6.6"
   dependencies:
@@ -5295,21 +5295,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@walletconnect/web3-provider@npm:1.4.0":
-  version: 1.4.0
-  resolution: "@walletconnect/web3-provider@npm:1.4.0"
-  dependencies:
-    "@walletconnect/client": ^1.4.0
-    "@walletconnect/http-connection": ^1.4.0
-    "@walletconnect/qrcode-modal": ^1.4.0
-    "@walletconnect/types": ^1.4.0
-    "@walletconnect/utils": ^1.4.0
-    web3-provider-engine: 16.0.1
-  checksum: 79c774f8cb1789b1c59e52d8caabef903faf6343e779fc51e1d0420b680caaa1e476ed39b2a51c0a26ef18578ba36e5660089dc6d9b8e3af35fa94dbe9b49276
-  languageName: node
-  linkType: hard
-
-"@walletconnect/web3-provider@npm:^1.6.2":
+"@walletconnect/web3-provider@npm:^1.6.2, @walletconnect/web3-provider@npm:^1.6.6":
   version: 1.6.6
   resolution: "@walletconnect/web3-provider@npm:1.6.6"
   dependencies:
@@ -6904,7 +6890,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bnc-onboard@npm:^1.33.0":
+"bnc-onboard@npm:^1.35.2":
   version: 1.35.2
   resolution: "bnc-onboard@npm:1.35.2"
   dependencies:
@@ -15978,14 +15964,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"matter-dapp-module@npm:^1.0.26":
-  version: 1.0.26
-  resolution: "matter-dapp-module@npm:1.0.26"
+"matter-dapp-module@npm:^1.0.27":
+  version: 1.0.27
+  resolution: "matter-dapp-module@npm:1.0.27"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@nuxtjs/style-resources": ^1.0.0
-    "@walletconnect/web3-provider": 1.4.0
-    bnc-onboard: ^1.33.0
+    "@walletconnect/web3-provider": ^1.6.6
+    bnc-onboard: ^1.35.2
     core-js: ^3.9.1
     eslint-plugin-prettier-vue: ^3.0.0
     ethers: ^5.4.1
@@ -15997,7 +15983,7 @@ fsevents@^1.2.7:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.11.5-beta.0
-  checksum: a1bbb872cbd75e81be08585f7cd7a0f87791b248ad28bc3913ed45403f4cf1843136a7e9906b45981183ded763b8523bf6a3c524bf7d3c49f1b4b1ff58276d12
+  checksum: 7d8b6ccd3f98cde44d6b4f669c88b3499b9ed81a9e6ecc3baf17063a6b00bf98e724affef971d2da173e5010fd49f2f73cedddc253550d34f2718355f42379b6
   languageName: node
   linkType: hard
 
