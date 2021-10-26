@@ -443,7 +443,6 @@ export default Vue.extend({
           await this.$store.dispatch("zk-wallet/requestSigner");
         } catch (err) {
           this.$sentry.captureException(err, { tags: { "operation.type": "requestSigner" } });
-          console.warn("Request signer error\n", err);
         }
         this.requestingSigner = false;
       } else {
