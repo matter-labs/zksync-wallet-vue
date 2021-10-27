@@ -12,11 +12,12 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: white;
+  background: $white;
   animation-fill-mode: forwards;
   transition-delay: 0.35s;
+
   &.fade-leave-active {
-    transition-delay: 0.5s;
+    transition-delay: 0.5s
   }
 
   .headerWrapper {
@@ -24,24 +25,25 @@
     width: max-content;
     padding-top: 0 !important;
 
-    .zkwallet-logo, .projectLogo {
+    .zkwallet-logo,
+    .projectLogo {
       height: 55px;
 
       @media screen and (max-width: $mobile) {
-        height: 35px;
+        height: 35px
       }
     }
 
     .badge {
       position: absolute;
       bottom: 100%;
-      left: 100%;
+      left: 100%
     }
   }
 
   h1 {
     margin: 0;
-    font-size: 36px;
+    font-size: 36px
   }
 
   .hint {
@@ -58,21 +60,21 @@
       left: 0;
       top: 0;
       width: 100%;
-      height: auto;
+      height: auto
     }
 
     .green {
-      color: $green;
+      color: $green
     }
   }
 
   @keyframes nuxtLoadingCustom {
     0% {
-      transform: rotate(0deg);
+      transform: rotate(0deg)
     }
 
     100% {
-      transform: rotate(360deg);
+      transform: rotate(360deg)
     }
   }
 
@@ -82,22 +84,22 @@
     h1 {
       font-size: 24px;
       text-align: center;
-      line-height: 35px;
+      line-height: 35px
     }
 
     .hint {
       font-size: 16px;
-      text-align: center;
+      text-align: center
     }
   }
 }
 
 body.inkline {
   &.-light .loggingInLoader {
-    background-color: $mediumGrey;
+    background-color: $mediumGrey
   }
 
   &.-dark .loggingInLoader {
-    background-color: #1d2039;
+    background-color: #1d2039
   }
 }

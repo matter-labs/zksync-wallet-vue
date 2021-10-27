@@ -3,21 +3,19 @@ module.exports = {
     browser: true,
     node: true,
   },
-  extends: ["@nuxtjs/eslint-config-typescript", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier", "plugin:vue/base"],
+  root: true,
+  extends: ["@nuxtjs/eslint-config-typescript", "plugin:prettier/recommended", "prettier"],
   parserOptions: {
     ecmaVersion: 12,
     ecmaFeatures: {
       experimentalObjectRestSpread: true,
     },
-    parser: "@typescript-eslint/parser",
     sourceType: "module",
     project: ["tsconfig.json", "tsconfig.eslint.json"],
     tsconfigRootDir: __dirname,
-    extraFileExtensions: [".vue", ".scss"],
+    extraFileExtensions: [".vue", ".ts", ".js"],
   },
-  ignorePatterns: ["node_modules"],
-  plugins: ["vue", "@typescript-eslint", "prettier"],
-  root: true,
+  plugins: ["prettier"],
   rules: {
     indent: "off",
     semi: ["error", "always"],
@@ -56,7 +54,7 @@ module.exports = {
       fileInfoOptions: {
         // Path to ignore file (default: `'.prettierignore'`)
         // Notice that the ignore file is only used for this plugin
-        ignorePath: "..prettierignore",
+        ignorePath: ".prettierignore",
 
         // Process the files in `node_modules` or not (default: `false`)
         withNodeModules: false,

@@ -11,7 +11,7 @@
  * @link https://oh-vue-icons.netlify.app
  */
 import { Plugin } from "@nuxt/types";
-import OhVueIcon from "oh-vue-icons/dist/v2/icon.es";
+import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { MdVpnkeyRound } from "oh-vue-icons/icons/md";
 import { CoEthereum } from "oh-vue-icons/icons/co";
 import {
@@ -68,7 +68,7 @@ import Vue from "vue";
  * Special plugin to implement oh-awesome-icons into zkDapp
  */
 const iconsPlugin: Plugin = () => {
-  OhVueIcon.add(
+  addIcons(
     MdVpnkeyRound,
     RiGalleryLine,
     RiInformationFill,
@@ -121,7 +121,7 @@ const iconsPlugin: Plugin = () => {
     RiArrowRightUpLine,
   ); // Used icons (to reduce bundle-size)
 
-  Vue.component("VIcon", OhVueIcon);
+  Vue.component("v-icon", OhVueIcon);
 };
 
 export default iconsPlugin;

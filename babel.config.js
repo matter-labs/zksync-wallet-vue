@@ -1,12 +1,3 @@
 module.exports = {
-  presets: [
-    [
-      "@babel/preset-env",
-      {
-        targets: {
-          node: "current",
-        },
-      },
-    ],
-  ],
+  presets: ["@nuxt/babel-preset-app"],
 };

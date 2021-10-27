@@ -91,3 +91,16 @@ getzk
 Vuex
 zsync
 Syncjs
+
+blockies
+Npmjs
+ipfs
+keriat
+vuejs
+Fira
+stylelintrc
+mltt
+qrcode
+QDNV
+nuxtjs
+corejs

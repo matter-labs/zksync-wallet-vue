@@ -13,5 +13,5 @@ src/assets/imgs
 .github/workflows
 .github/ISSUE_TEMPLATE
 src/locales
-**/sw.js
+*sw.*
 **/*.svg

@@ -20,23 +20,24 @@
   &.outline {
     color: $darkerGray;
     background-color: $white;
-    border-color: $darkerGray;
+    border-color: $darkerGray
   }
 
   &.red {
     color: $red;
     background-color: $redBg;
-    border-color: $redBg;
+    border-color: $redBg
   }
 
   &:disabled {
     color: $tempLightGray;
     background-color: $lighterGray;
     border-color: $tempLightGray;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06)
   }
 
-  em, i {
-    margin-right: 8px;
+  em,
+  i {
+    margin-right: 8px
   }
 }

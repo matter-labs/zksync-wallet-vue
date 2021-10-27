@@ -1,8 +1,5 @@
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
-
-import { ModuleOptions } from "matter-dapp-module/types";
-import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 import { Configuration } from "webpack";
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
@@ -22,7 +19,7 @@ crypto payments, zkWallet, cryptowallet`;
 
 const config: NuxtConfig = {
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
-  telemetry: false,
+  telemetry: isDebugEnabled,
   ssr: false,
   target: "static",
   static: true,
@@ -191,6 +188,7 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    "@nuxtjs/composition-api/module",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
@@ -205,7 +203,7 @@ const config: NuxtConfig = {
               files: "src/**/*.scss",
             },
             eslint: {
-              config: ["tsconfig-eslint.json", ".eslintrc.js"],
+              config: [".eslintrc.js"],
               files: "@/**/*.{ts,vue,js}",
             },
             files: "@/**/*.{ts,vue,js}",
@@ -216,7 +214,8 @@ const config: NuxtConfig = {
     "nuxt-typed-vuex",
     [
       "matter-dapp-module",
-      <ModuleOptions>{
+      {
+        ipfsGateway: "https://ipfs.io",
         network: process.env.ZK_NETWORK,
         apiKeys: {
           FORTMATIC_KEY: process.env.APP_FORTMATIC,
@@ -227,6 +226,8 @@ const config: NuxtConfig = {
           APP_NAME: pageTitle,
           APP_ID: process.env.APP_ONBOARDING_APP_ID,
         },
+        restoreNetwork: true,
+        logoutRedirect: true,
       },
     ],
   ],
@@ -234,23 +235,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
-  toast: <ToastOptions>{
-    singleton: true,
-    keepOnHover: true,
-    position: "bottom-right" as ToastPosition,
-    duration: 4000,
-    className: "zkToastMain",
-    iconPack: "fontawesome" as ToastIconPack,
-    action: <ToastAction>{
-      text: "Close",
-      class: "zkToastActionClose",
-      icon: "fa-times-circle",
-      onClick: (_e: Event, toastObject: ToastObject): void => {
-        toastObject.goAway(100);
-      },
-    },
-  },
+  modules: ["@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
 
   /**
    * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
@@ -273,7 +258,10 @@ const config: NuxtConfig = {
     id: gtagId,
     config: {
       anonymize_ip: true, // anonymize IP
-      send_page_view: true, // might be necessary to avoid duplicated page track on page reload
+      send_page_view: false, // might be necessary to avoid duplicated page track on page reload
+      linker: {
+        domains: ["wallet.zksync.io", "rinkeby.zksync.io", "ropsten.zksync.io", "rinkeby-beta-wallet.zksync.dev", "ropsten-beta-wallet.zksync.dev", "stage.zksync.io"],
+      },
     },
     debug: isDebugEnabled, // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
@@ -282,6 +270,7 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
+    postcss: false,
     babel: {
       compact: true,
     },
@@ -304,7 +293,6 @@ const config: NuxtConfig = {
         name: isProduction ? undefined : "chunk",
         maxSize: 900 * 1024,
       },
-      nodeEnv: isProduction ? "16" : false,
       minimize: isProduction,
     },
     transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package

@@ -13,7 +13,6 @@
 </template>
 
 <script lang="ts">
-import logo from "@/blocks/Logo.vue";
 import Vue from "vue";
 
 let loggedInAnimationTimeout: ReturnType<typeof setTimeout>;
@@ -54,7 +53,7 @@ export default Vue.extend({
   methods: {
     async cancelLogin() {
       await this.$store.dispatch("zk-account/logout");
-      this.$router.push("/");
+      await this.$router.push("/");
     },
   },
 });

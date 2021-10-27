@@ -2,28 +2,7 @@
   // extend your base config so you don't have to redefine your compilerOptions
   "extends": "./tsconfig.json",
   "include": [
-    "**/*.ts",
-    "**/*.vue",
-    "**/*.js",
-    ".eslintrc.js"
+    "**/*.{ts,vue,js}",
+    "nuxt.config.ts",
   ],
-  "exclude": [
-    "**sw.js",
-    "node_modules**",
-    ".nuxt**",
-    ".idea**",
-    ".ide-setup**",
-    ".firebase**",
-    ".github**",
-    "tests**"
-  ],
-  "compilerOptions": {
-    "lib": [
-      "es2019",
-      "es2019.object",
-      "esnext",
-      "esnext.asynciterable",
-      "dom"
-    ]
-  }
 }

@@ -10,13 +10,13 @@ footer.layout-footer {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
-    user-select: none;
+    user-select: none
   }
 
   @media screen and (min-width: $desktop) {
     .container {
       width: calc(100vw - 34px);
-      max-width: $biggestWidth;
+      max-width: $biggestWidth
     }
   }
 
@@ -29,7 +29,7 @@ footer.layout-footer {
 
     &.mobileFooter {
       background-color: $darkViolet;
-      box-shadow: $shadowTop;
+      box-shadow: $shadowTop
     }
   }
 
@@ -39,12 +39,12 @@ footer.layout-footer {
     position: fixed;
 
     .row {
-      font-size: $fontSizeRegular !important;
+      font-size: $fontSizeRegular !important
     }
 
     & > div {
       @media (max-width: $mobile) {
-        flex-direction: column-reverse !important;
+        flex-direction: column-reverse !important
       }
     }
   }
@@ -54,21 +54,21 @@ footer.layout-footer {
     color: $violet;
 
     @media (max-width: $mobile) {
-      font-size: $fontSizeRegular;
+      font-size: $fontSizeRegular
     }
 
     &:hover {
-      text-decoration: none !important;
+      text-decoration: none !important
     }
   }
 
   .versionBadge {
     grid-gap: 5px;
-    margin-top: 0.5rem;
+    margin-top: 0.5rem
   }
 
   .dividerLine {
-    transition: color $transition2;
+    transition: color $transition2
   }
 }
 
@@ -83,13 +83,13 @@ button.floating-on-mobile {
     box-shadow: $tileShadow;
 
     &:hover {
-      box-shadow: $hoverShadow;
+      box-shadow: $hoverShadow
     }
 
     @media (max-width: $mobile) {
       bottom: 2.5rem;
       right: 1.2rem;
-      filter: opacity(0.95);
+      filter: opacity(0.95)
     }
   }
 }
@@ -110,7 +110,7 @@ button.floating-on-mobile {
 
   a {
     font-weight: 400;
-    text-transform: lowercase;
+    text-transform: lowercase
   }
 
   a.revision {
@@ -128,7 +128,7 @@ button.floating-on-mobile {
     &:hover {
       background-color: lighten($grayBG, 15);
       transition: $transition2;
-      color: $blackViolet !important;
+      color: $blackViolet !important
     }
   }
 
@@ -143,16 +143,16 @@ button.floating-on-mobile {
       text-decoration-skip: objects spaces;
 
       sup.beta {
-        text-decoration: none !important;
+        text-decoration: none !important
       }
     }
 
     sup.beta {
-      margin-left: 0.3rem;
+      margin-left: 0.3rem
     }
 
     a.uptime-link {
-      line-height: 1.2rem !important;
+      line-height: 1.2rem !important
     }
   }
 
@@ -163,7 +163,7 @@ button.floating-on-mobile {
 
       .header {
         padding: 0.33rem;
-        font-size: $fontSizeXs;
+        font-size: $fontSizeXs
       }
 
       .body {
@@ -180,13 +180,13 @@ button.floating-on-mobile {
 
           em,
           i {
-            font-size: 14px;
+            font-size: 14px
           }
 
           code {
             font-size: $fontSizeXs;
             line-height: 20px;
-            height: 20px;
+            height: 20px
           }
         }
       }
@@ -207,7 +207,7 @@ button.floating-on-mobile {
     text-align: center;
     white-space: nowrap;
     align-self: center;
-    cursor: default;
+    cursor: default
   }
 }
 
@@ -216,12 +216,12 @@ button.floating-on-mobile {
     background-color: $mediumGrey !important;
 
     .dividerLine {
-      color: #343a40;
+      color: #343a40
     }
   }
 
   .badge.system-info {
-    color: #343a40;
+    color: #343a40
   }
 }
 
@@ -230,7 +230,7 @@ button.floating-on-mobile {
     background-color: $tempDarkBlue !important;
 
     .dividerLine {
-      color: $darkerGray;
+      color: $darkerGray
     }
   }
 
@@ -244,7 +244,7 @@ button.floating-on-mobile {
 
       &:hover {
         background-color: $mediumViolet !important;
-        color: $lightViolet !important;
+        color: $lightViolet !important
       }
     }
   }
@@ -255,7 +255,7 @@ button.floating-on-mobile {
     .badge.system-info {
       a.revision {
         font-size: 12px;
-        background: none !important;
+        background: none !important
       }
     }
   }

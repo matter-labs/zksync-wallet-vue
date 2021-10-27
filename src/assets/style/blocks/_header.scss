@@ -9,33 +9,33 @@ header {
     position: fixed;
     top: 0;
     z-index: 3;
+
     @media screen and (max-width: $mobile) {
       position: fixed;
       top: 0;
       left: 0;
       z-index: 9;
-      box-shadow: $shadowBottom;
+      box-shadow: $shadowBottom
     }
+
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: rgb(239, 241, 244);
-    box-shadow: 0 1px 0.5px #0000001a;
+    box-shadow: 0 1px 0.5px #0000001a
   }
 
   &.indexHeader {
-    min-height: 60px;
+    min-height: 60px
   }
 
-
   &.loggedInHeader {
-
     @media screen and (min-width: $tablet) and (max-width: $desktop) {
       .pagesContainer.linksContainer {
         grid-gap: 3px;
 
         .headerLink {
           padding: 10px 10px;
-          font-size: $fontSizeRegular;
+          font-size: $fontSizeRegular
         }
       }
     }
@@ -49,11 +49,11 @@ header {
           font-size: 20px;
 
           span {
-            display: none;
+            display: none
           }
 
           svg {
-            display: block !important;
+            display: block !important
           }
         }
       }
@@ -70,12 +70,12 @@ header {
       width: 100%;
 
       @media screen and (max-width: $mobile) {
-        margin: 0 auto;
+        margin: 0 auto
       }
     }
 
     a {
-      text-decoration: none;
+      text-decoration: none
     }
 
     .logoLinkContainer {
@@ -84,7 +84,7 @@ header {
       height: 100%;
 
       svg {
-        height: 100%;
+        height: 100%
       }
     }
 
@@ -95,17 +95,17 @@ header {
         height: 25px !important;
 
         .badge small {
-          font-size: 10px !important;
+          font-size: 10px !important
         }
       }
-
 
       .zkwallet-logo {
         width: auto !important;
         height: 100% !important;
         object-fit: contain;
+
         @media (max-width: $mobile) {
-          height: 25px !important;
+          height: 25px !important
         }
       }
 
@@ -117,7 +117,7 @@ header {
         font-size: 12px !important;
         letter-spacing: 1px;
         text-transform: uppercase;
-        background: transparent !important;
+        background: transparent !important
       }
 
       @media (max-width: $mobile) {
@@ -125,13 +125,13 @@ header {
 
         .projectLogo {
           max-width: 130px !important;
-          object-fit: contain !important;
+          object-fit: contain !important
         }
       }
     }
 
     @media screen and (min-width: $desktop) {
-      max-width: $biggestWidth;
+      max-width: $biggestWidth
     }
   }
 
@@ -149,7 +149,7 @@ header {
       grid-gap: 15px;
 
       .mainLink {
-        font-size: 16px !important;
+        font-size: 16px !important
       }
     }
 
@@ -158,10 +158,11 @@ header {
       text-decoration: none;
       transition: color $transition1;
 
-      em, i {
+      em,
+      i {
         padding-left: 2px;
         color: $gray;
-        font-size: 12px;
+        font-size: 12px
       }
     }
 
@@ -173,7 +174,7 @@ header {
       will-change: background-color, color;
 
       @media screen and (min-width: $mobile) {
-        transition: $transition1;
+        transition: $transition1
       }
 
       &.nuxt-link-exact-active {
@@ -189,13 +190,14 @@ header {
     .pagesContainerRow {
       position: absolute;
       top: 0;
-      left: 0;
+      left: 0
     }
 
     .pagesContainer {
       background-color: $darkViolet;
-      box-shadow: $shadowTop;
+      box-shadow: $shadowTop
     }
+
     .pagesContainer {
       position: fixed;
       bottom: -1px;
@@ -216,15 +218,16 @@ header {
         font-size: $fontSizeRegular;
 
         &.nuxt-link-exact-active {
-          font-weight: 400;
+          font-weight: 400
         }
 
         svg {
           display: block;
-          margin: 0 auto;
+          margin: 0 auto
         }
+
         span {
-          margin-top: 2px;
+          margin-top: 2px
         }
       }
 
@@ -233,7 +236,7 @@ header {
         top: -5px;
         padding: 5px 10px;
         font-size: 20px;
-        margin-left: 10px;
+        margin-left: 10px
       }
     }
   }
@@ -260,13 +263,13 @@ header {
         color: darken($tempLightGray, 20);
         font-size: $fontSizeRegular;
         line-height: 20px;
-        text-align: left;
+        text-align: left
       }
 
       .address {
         font-size: $fontSizeRegular;
         line-height: 20px;
-        white-space: nowrap;
+        white-space: nowrap
       }
     }
 
@@ -277,21 +280,21 @@ header {
       img {
         width: 100%;
         height: 100%;
-        border-radius: 40%;
+        border-radius: 40%
       }
     }
 
     .dropdownArrow {
       color: $lightViolet;
       font-size: 20px;
-      text-align: right;
+      text-align: right
     }
 
     @media screen and (max-width: $mobile) {
       grid-template-columns: 32px 30px;
 
       .userDropdownAddress {
-        display: none;
+        display: none
       }
     }
   }
@@ -308,7 +311,7 @@ header {
       grid-gap: 20px;
 
       a {
-        font-size: $fontSizeRegular !important;
+        font-size: $fontSizeRegular !important
       }
     }
 
@@ -323,19 +326,19 @@ header {
 
       &.nuxt-link-exact-active,
       &:hover {
-        &::after {
-          background: $lightViolet;
+        &:after {
+          background: $lightViolet
         }
       }
 
-      &::after {
+      &:after {
         position: absolute;
         bottom: -2px;
         left: 0;
         width: 100%;
         height: 4px;
         background: $tempTransparent;
-        content: "";
+        content: ""
       }
     }
   }
@@ -348,7 +351,7 @@ header {
 
     @media (max-width: $mobile) {
       width: 160px;
-      height: 160px;
+      height: 160px
     }
   }
 }
@@ -357,14 +360,13 @@ body.inkline.-light header {
   background: $bgLight;
 
   .linksContainer .mainLink {
-    color: $black;
+    color: $black
   }
 
   .pagesContainer,
   .mobileFooter {
-
     @media screen and (max-width: $mobile) {
-      background-color: $white;
+      background-color: $white
     }
   }
 }
@@ -374,11 +376,11 @@ body.inkline.-dark header.layout-header {
   border-bottom-color: rgba(3, 5, 17, 0.98) !important;
 
   .userDropdown .userDropdownAddress .walletLabel {
-    color: $gray;
+    color: $gray
   }
 
   .linksContainer .mainLink {
-    color: $white;
+    color: $white
   }
 
   .linksContainer .headerLink {
@@ -386,7 +388,7 @@ body.inkline.-dark header.layout-header {
 
     &.nuxt-link-exact-active {
       color: darken($color: $white, $amount: 15);
-      background-color: darken($color: $darkViolet, $amount: 5);
+      background-color: darken($color: $darkViolet, $amount: 5)
     }
   }
 }

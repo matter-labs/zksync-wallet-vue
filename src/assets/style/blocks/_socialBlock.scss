@@ -16,19 +16,20 @@
     transition: color $transition1;
 
     &:hover {
-      color: $lightViolet !important;
+      color: $lightViolet !important
     }
 
-    em, i {
+    em,
+    i {
       font-size: 18px;
-      line-height: 20px;
+      line-height: 20px
     }
 
     svg {
       display: block;
       width: 19px;
       height: 19px;
-      object-fit: contain;
+      object-fit: contain
     }
   }
 }
@@ -36,7 +37,7 @@
 body.inkline {
   &.-dark .socialIcons {
     .socialItem {
-      color: $white;
+      color: $white
     }
   }
 }
