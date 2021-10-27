@@ -176,5 +176,5 @@
     "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js,md}",
     "prepare": "husky install"
   },
-  "packageManager": "yarn@3.1.0"
+  "packageManager": "yarn@2.4.1"
 }
