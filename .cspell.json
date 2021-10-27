@@ -11,7 +11,7 @@
   "dictionaryDefinitions": [
     {
       "name": "zksync",
-      "path": "./cspell-zksync.txt"
+      "path": "./cspell-zksync.dic"
     }
   ]
 }

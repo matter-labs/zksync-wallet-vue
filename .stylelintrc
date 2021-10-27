@@ -17,7 +17,7 @@
     "color-named": "never",
     "custom-property-empty-line-before": "never",
     "declaration-block-semicolon-newline-after": "always",
-    "declaration-block-trailing-semicolon": "never",
+    "declaration-block-trailing-semicolon": "always",
     "font-family-name-quotes": "always-where-recommended",
     "font-weight-notation": null,
     "function-url-quotes": "always",

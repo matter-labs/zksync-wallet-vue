@@ -167,11 +167,11 @@
     "ci:prepare:rinkeby": "sh cli-process-env.sh 'rinkeby' prod 1",
     "ci:prepare:ropsten": "sh cli-process-env.sh 'ropsten' prod 1",
     "ci:prepare:mainnet": "sh cli-process-env.sh 'mainnet' prod 1",
-    "test": "jest",
+    "ci:check": "yarn lint-ts:check && yarn lint-style:check && yarn spell-check",
     "format": "prettier --config .prettierrc.js --ignore-path .prettierignore --write src/**/*.{ts,vue,js,scss}",
     "lint-ts:check": "eslint --quiet --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js}",
     "lint-ts:fix": "yarn lint-ts:check --fix",
-    "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore --quiet src/**/*.scss",
+    "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore src/**/*.scss --quiet",
     "lint-style:fix": "stylelint --config '.stylelintrc' --ignore-path .stylelintignore --fix src/**/*.scss",
     "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js,md}",
     "prepare": "husky install"
