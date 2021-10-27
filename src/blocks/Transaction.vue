@@ -53,7 +53,8 @@
           :max-amount="maxAmount.toString()"
           :token="chosenToken ? chosenToken : undefined"
           autofocus
-          :type="transactionActionName"
+          :type="type"
+          :type-name="transactionActionName"
           @chooseToken="chooseTokenModal = 'mainToken'"
           @enter="commitTransaction()"
         />

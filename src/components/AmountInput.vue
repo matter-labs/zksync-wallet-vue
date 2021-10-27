@@ -14,7 +14,9 @@
       <div class="secondaryText">
         <token-price :symbol="token" :amount="inputtedAmountBigNumber.toString()" />
       </div>
-      <div class="linkText" data-cy="amount_block_token_max_amount" @click="chooseMaxAmount()">Max: {{ maxAmount | parseBigNumberish(token) }}</div>
+      <div class="linkText" data-cy="amount_block_token_max_amount" @click="chooseMaxAmount()">
+        {{ type === "Deposit" && token === "ETH" ? "ETH balance" : "Max" }}: {{ maxAmount | parseBigNumberish(token) }}
+      </div>
     </div>
   </div>
 </template>
@@ -38,6 +40,11 @@ export default Vue.extend({
       default: "Transfer",
       required: false,
     } as PropOptions<ZkTransactionType>,
+    typeName: {
+      type: String,
+      default: "Transfer",
+      required: false,
+    },
     maxAmount: {
       type: String,
       default: "",
@@ -146,7 +153,7 @@ export default Vue.extend({
 
       if (this.maxAmount) {
         if (inputAmount.gt(this.maxAmount)) {
-          this.error = `Not enough ${this.token} to ${this.type} requested amount`;
+          this.error = `Not enough ${this.token} to ${this.typeName} requested amount`;
           return;
         }
       }
