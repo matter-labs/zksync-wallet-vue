@@ -72,7 +72,7 @@
       </div>
       <div v-else class="tokenNotFound">Token not found</div>
     </div>
-    <transactions class="_margin-top-0" :token="tokenID" />
+    <transactions class="_margin-top-0" :token="tokenID" :token-exists="!!nftTokenInfo" />
   </div>
 </template>
 
@@ -85,6 +85,7 @@ import { ZkContact } from "matter-dapp-module/types";
 import { getAddress } from "ethers/lib/utils";
 import { RestProvider } from "zksync";
 
+let updateTokenStatusInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
   asyncData({ from, redirect, params }) {
     if (!params.symbol) {
@@ -127,6 +128,10 @@ export default Vue.extend({
   },
   mounted() {
     this.requestNFTTokenInfo();
+    this.updateTokenStatus();
+  },
+  beforeDestroy() {
+    clearInterval(updateTokenStatusInterval);
   },
   methods: {
     getAddressName(address: string): string {
@@ -141,8 +146,13 @@ export default Vue.extend({
       try {
         const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider");
         this.nftTokenInfo = await syncProvider.getNFT(this.tokenID);
+        if (this.nftTokenInfo) {
+          clearInterval(updateTokenStatusInterval);
+        }
       } catch (error) {
-        console.warn(`Error loading NFT token with ID ${this.tokenID}`, error);
+        if (error && (error as Error).message && !(error as Error).message.includes("operation is not verified yet")) {
+          console.warn(`Error loading NFT token with ID ${this.tokenID}`, error);
+        }
         this.nftTokenInfo = undefined;
       }
       this.loadingToken = false;
@@ -158,6 +168,14 @@ export default Vue.extend({
         return (this.tokenUnavailableModal = true);
       }
       this.$router.push(`/transaction/nft/transfer?token=${this.tokenID}`);
+    },
+    updateTokenStatus() {
+      clearInterval(updateTokenStatusInterval);
+      updateTokenStatusInterval = setInterval(async () => {
+        if (!this.nftTokenInfo) {
+          await this.requestNFTTokenInfo();
+        }
+      }, 30000);
     },
   },
 });
