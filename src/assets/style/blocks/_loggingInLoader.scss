@@ -4,6 +4,7 @@
   right: 0;
   bottom: 0;
   left: 0;
+  opacity: 1;
   z-index: 11;
   display: flex;
   flex-direction: column;
@@ -14,10 +15,6 @@
   overflow: hidden;
   background: white;
   animation-fill-mode: forwards;
-  transition-delay: 0.35s;
-  &.fade-leave-active {
-    transition-delay: 0.5s;
-  }
 
   .headerWrapper {
     position: relative;
@@ -26,6 +23,7 @@
 
     .zkwallet-logo, .projectLogo {
       height: 55px;
+      width: max-content;
 
       @media screen and (max-width: $mobile) {
         height: 35px;
@@ -36,6 +34,9 @@
       position: absolute;
       bottom: 100%;
       left: 100%;
+      @media screen and (max-width: 390px) {
+        left: 80%;
+      }
     }
   }
 

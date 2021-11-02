@@ -90,12 +90,17 @@ export default Vue.extend({
           this.requestingSigner = true;
           await this.$store.dispatch("zk-wallet/requestSigner");
         } catch (err) {
-          console.warn("Request signer error\n", err);
+          this.$sentry.captureException(err, { tags: { "operation.type": "requestSigner" } });
         }
         this.requestingSigner = false;
       } else {
         this.loading = true;
-        await this.$store.dispatch("zk-wallet/signCPK");
+        try {
+          await this.$store.dispatch("zk-wallet/signCPK");
+        } catch (e) {
+          this.$sentry.captureException(e, { tags: { "operation.type": "signCPK" } });
+          throw e;
+        }
         if (this.$store.getters["zk-wallet/cpk"] !== false) {
           this.close();
         }
