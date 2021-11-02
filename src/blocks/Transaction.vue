@@ -442,7 +442,7 @@ export default Vue.extend({
           this.requestingSigner = true;
           await this.$store.dispatch("zk-wallet/requestSigner");
         } catch (err) {
-          console.warn("Request signer error\n", err);
+          this.$sentry.captureException(err, { tags: { "operation.type": "requestSigner" } });
         }
         this.requestingSigner = false;
       } else {
@@ -466,6 +466,7 @@ export default Vue.extend({
           }
           await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
         } catch (error) {
+          this.$sentry.captureException(error, { tags: { "operation.type": this.type } });
           this.$store.commit("zk-transaction/setError", error);
         } finally {
           this.buttonLoader = false;
