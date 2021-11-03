@@ -14,9 +14,7 @@
       <div class="secondaryText">
         <token-price :symbol="token" :amount="inputtedAmountBigNumber.toString()" />
       </div>
-      <div class="linkText" data-cy="amount_block_token_max_amount" @click="chooseMaxAmount()">
-        {{ type === "Deposit" && token === "ETH" ? "ETH balance" : "Max" }}: {{ maxAmount | parseBigNumberish(token) }}
-      </div>
+      <div class="linkText" data-cy="amount_block_token_max_amount" @click="chooseMaxAmount()">{{ amountInputMaxText }}: {{ maxAmount | parseBigNumberish(token) }}</div>
     </div>
   </div>
 </template>
@@ -75,6 +73,13 @@ export default Vue.extend({
         } catch (error) {}
       }
       return BigNumber.from("0");
+    },
+    amountInputMaxText(): string {
+      if (this.type === "Deposit" && this.token === "ETH") {
+        return "ETH balance";
+      } else {
+        return "Max";
+      }
     },
   },
   watch: {
