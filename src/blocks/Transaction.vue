@@ -31,6 +31,12 @@
         <div>{{ transactionActionName }}</div>
       </div>
 
+      <template v-if="type === 'Deposit'">
+        <div class="_padding-0 _display-flex _justify-content-end">
+          <buy-with-ramp-instant class="_padding-y-0 send-link" />
+        </div>
+      </template>
+
       <template v-if="type === 'Transfer'">
         <div class="_padding-0 _display-flex _justify-content-end">
           <i-button data-cy="send_send_l1_button" class="_padding-y-0 send-link" link variant="" to="/transaction/withdraw">
@@ -205,12 +211,15 @@ import { RestProvider } from "zksync";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
 import { DO_NOT_SHOW_WITHDRAW_WARNING_KEY } from "@/blocks/modals/WithdrawWarning.vue";
 
+import BuyWithRampInstant from "@/components/BuyWithRamp.vue";
+
 const feeNameDict = new Map([
   ["txFee", "Fee"],
   ["accountActivation", "Account Activation single-time fee"],
 ]);
 
 export default Vue.extend({
+  components: { BuyWithRampInstant },
   props: {
     fromRoute: {
       required: false,
