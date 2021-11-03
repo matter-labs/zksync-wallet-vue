@@ -132,7 +132,7 @@ export default Vue.extend({
         };
       } else if (this.transaction.status === "committed") {
         return {
-          text: "Committed",
+          text: "Pending",
           icon: "ri-check-line",
           class: "committed",
         };

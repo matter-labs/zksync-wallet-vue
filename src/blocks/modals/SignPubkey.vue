@@ -61,6 +61,10 @@ export default Vue.extend({
   methods: {
     close() {
       this.$accessor.closeActiveModal();
+      this.$store.commit("zk-wallet/setCPKSignError", undefined);
+      this.$store.commit("zk-wallet/setCPKSignState", false);
+      this.loading = false;
+      this.requestingSigner = false;
       if (this.$store.getters["zk-wallet/cpk"] !== false) {
         return;
       }
@@ -86,14 +90,21 @@ export default Vue.extend({
           this.requestingSigner = true;
           await this.$store.dispatch("zk-wallet/requestSigner");
         } catch (err) {
-          console.warn("Request signer error\n", err);
+          this.$sentry.captureException(err, { tags: { "operation.type": "requestSigner" } });
         }
         this.requestingSigner = false;
       } else {
-        await this.$store.dispatch("zk-wallet/signCPK");
+        this.loading = true;
+        try {
+          await this.$store.dispatch("zk-wallet/signCPK");
+        } catch (e) {
+          this.$sentry.captureException(e, { tags: { "operation.type": "signCPK" } });
+          throw e;
+        }
         if (this.$store.getters["zk-wallet/cpk"] !== false) {
           this.close();
         }
+        this.loading = false;
       }
     },
   },

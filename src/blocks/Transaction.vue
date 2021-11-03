@@ -126,7 +126,7 @@
 
       <div v-if="type === 'CPK' && cpkStatus === true" class="_text-center _margin-top-1">Your account is already activated</div>
 
-      <div v-if="error" class="errorText _text-center _margin-top-1">{{ error }}</div>
+      <div v-if="error" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">{{ error }}</div>
 
       <!-- Commit button -->
       <i-button
@@ -149,7 +149,7 @@
       <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">Follow the instructions in your Ethereum wallet</div>
 
       <!-- Fees -->
-      <div v-if="feeSymbol && !enoughBalanceToPayFee" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">
+      <div v-if="feeSymbol && !enoughBalanceToPayFee" class="errorText _text-center _margin-top-1">
         Not enough <span class="tokenSymbol">{{ feeSymbol }}</span> to pay the fee
       </div>
       <div v-if="feeLoading" class="_text-center _margin-top-1" data-cy="fee_block_fee_message_loading">
@@ -442,7 +442,7 @@ export default Vue.extend({
           this.requestingSigner = true;
           await this.$store.dispatch("zk-wallet/requestSigner");
         } catch (err) {
-          console.warn("Request signer error\n", err);
+          this.$sentry.captureException(err, { tags: { "operation.type": "requestSigner" } });
         }
         this.requestingSigner = false;
       } else {
@@ -466,6 +466,7 @@ export default Vue.extend({
           }
           await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
         } catch (error) {
+          this.$sentry.captureException(error, { tags: { "operation.type": this.type } });
           this.$store.commit("zk-transaction/setError", error);
         } finally {
           this.buttonLoader = false;
