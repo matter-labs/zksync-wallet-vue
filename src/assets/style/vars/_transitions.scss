@@ -1,12 +1,12 @@
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity.5s ease;
+  transition: opacity .5s ease;
   will-change: opacity;
 }
 
 .fade-enter,
 .fade-leave-to {
-  opacity: 0;
+  opacity: 0 !important;
 }
 
 .fadeFast-enter-active,
@@ -16,7 +16,7 @@
 
 .fadeFast-enter,
 .fadeFast-leave-to {
-  opacity: 0;
+  opacity: 0 !important;
 }
 
 
