@@ -17,6 +17,6 @@ export const rampConfig = {
   },
   ropsten: {
     url: "https://ri-widget-staging-ropsten.firebaseapp.com/",
-    hostApiKey: "",
+    hostApiKey: "85quy9gjwceh3rnca2nffo6wq67q776u6rjkyajf",
   },
 };
