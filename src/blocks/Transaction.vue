@@ -33,7 +33,7 @@
 
       <template v-if="type === 'Deposit'">
         <div class="_padding-0 _display-flex _justify-content-end">
-          <buy-with-ramp-instant class="_padding-y-0 send-link" />
+          <buy-with-ramp-instant class="_padding-y-0" />
         </div>
       </template>
 

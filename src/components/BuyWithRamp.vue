@@ -15,6 +15,9 @@ export default Vue.extend({
     } | null {
       return rampConfig[this.$store.getters["zk-provider/network"]];
     },
+    address(): string {
+      return this.$store.getters["zk-account/address"];
+    },
     isRampSupported(): boolean {
       return !!this.config;
     },
@@ -29,6 +32,7 @@ export default Vue.extend({
         hostLogoUrl: window.location.origin + "/favicon-dark.png",
         variant: "hosted-auto",
         swapAsset: "ZKSYNC_ETH,ZKSYNC_DAI,ZKSYNC_USDT,ZKSYNC_USDC",
+        userAddress: this.address,
         ...this.config,
       }).show();
     },
