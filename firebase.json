@@ -49,7 +49,7 @@
           "headers": [
             {
               "key": "Content-Security-Policy",
-              "value": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'; connect-src 'self' https://*.web.com;"
+              "value": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; img-src 'self' www.googletagmanager.com data:; font-src 'self' fonts.gstatic.com data:; frame-ancestors 'none'; connect-src 'self' https://*.sentry.io ;"
             },
             {
               "key": "Referrer-Policy",
@@ -91,7 +91,7 @@
           "headers": [
             {
               "key": "Content-Security-Policy",
-              "value": "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'; connect-src 'self' https://*.web.com;"
+              "value": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' fonts.googleapis.com; img-src 'self' www.googletagmanager.com data:; font-src 'self' fonts.gstatic.com data:; frame-ancestors 'none'; connect-src 'self' https://*.sentry.io ;"
             },
             {
               "key": "Referrer-Policy",
