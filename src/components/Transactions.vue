@@ -38,17 +38,33 @@ export default Vue.extend({
       required: false,
       default: undefined,
     },
+    tokenExists: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   data() {
     return {
       transactions: <ApiTransaction[]>[],
       loadingStatus: <ZkTransactionHistoryLoadingState>false,
-      allLoaded: false,
+      allLoaded: !this.tokenExists,
     };
   },
+  watch: {
+    tokenExists(val, oldVal) {
+      if (!oldVal && val) {
+        this.requestTransactions("main");
+        this.updateLatest();
+      }
+    },
+  },
   mounted() {
-    this.requestTransactions("main");
-    this.updateLatest();
+    if (this.tokenExists) {
+      this.allLoaded = false;
+      this.requestTransactions("main");
+      this.updateLatest();
+    }
   },
   beforeDestroy() {
     clearInterval(updateListInterval);
