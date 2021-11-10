@@ -2566,7 +2566,9 @@ __metadata:
     "@nuxtjs/google-gtag": latest
     "@nuxtjs/sentry": latest
     "@nuxtjs/style-resources": latest
-    "@sentry/webpack-plugin": ^1.18.3
+    "@ramp-network/ramp-instant-sdk": ^2.5.0
+    "@sentry/webpack-plugin": ^1.14.0
+    "@types/jest": ^26.0.23
     "@typescript-eslint/eslint-plugin": ^4.21.0
     "@typescript-eslint/parser": ^4.21.0
     "@vue/composition-api": ^1.2.4
@@ -3367,6 +3369,15 @@ __metadata:
     pocket-js-core: 0.0.3
     web3-provider-engine: 16.0.1
   checksum: e62a9ddbcfeafa15c801f202553c1ed80627e446e6b579f9702151a3776652140c5315f73fa8d3c57f9937b73a94a84ab93a3696bbbd312a862ea260dde67787
+  languageName: node
+  linkType: hard
+
+"@ramp-network/ramp-instant-sdk@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "@ramp-network/ramp-instant-sdk@npm:2.5.0"
+  dependencies:
+    body-scroll-lock: ^2.6.4
+  checksum: 6f2f789e1fe8f51befb97635bcf8d8f84eb1c9f3eeba8278ca52a6be9668e8c75e8d65719877d746a14a1d6f90cb78e7d4c0f49686775b7d01c3a8a486562ad1
   languageName: node
   linkType: hard
 
@@ -6778,6 +6789,13 @@ __metadata:
     raw-body: 2.4.0
     type-is: ~1.6.17
   checksum: 18c2a81df5eabc7e3541bc9ace394b88e6fbd390989b5e764ff34c3f9dbd097e19986c31baa9b855ec5c2cff2b79157449afb0cdfb97bb99c11d6239b2c47a34
+  languageName: node
+  linkType: hard
+
+"body-scroll-lock@npm:^2.6.4":
+  version: 2.7.1
+  resolution: "body-scroll-lock@npm:2.7.1"
+  checksum: d8ca7825c768850abbe28afef9ebffc7d10fa4a7f2ba601db3b3dd0881514b3eaba1d145e5e3716407117870b73dc2700e893ad9b2f199e85796d2abe85d4061
   languageName: node
   linkType: hard
 
