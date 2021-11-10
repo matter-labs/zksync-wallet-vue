@@ -33,7 +33,7 @@
 
       <template v-if="type === 'Deposit'">
         <div class="_padding-0 _display-flex _justify-content-end">
-          <buy-with-ramp-instant class="_padding-y-0" />
+          <buy-with-ramp class="_padding-y-0" />
         </div>
       </template>
 
@@ -212,15 +212,12 @@ import { RestProvider } from "zksync";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
 import { DO_NOT_SHOW_WITHDRAW_WARNING_KEY } from "@/blocks/modals/WithdrawWarning.vue";
 
-import BuyWithRampInstant from "@/components/BuyWithRamp.vue";
-
 const feeNameDict = new Map([
   ["txFee", "Fee"],
   ["accountActivation", "Account Activation single-time fee"],
 ]);
 
 export default Vue.extend({
-  components: { BuyWithRampInstant },
   props: {
     fromRoute: {
       required: false,
