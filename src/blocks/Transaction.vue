@@ -31,6 +31,12 @@
         <div>{{ transactionActionName }}</div>
       </div>
 
+      <template v-if="type === 'Deposit'">
+        <div class="_padding-0 _display-flex _justify-content-end">
+          <buy-with-ramp class="_padding-y-0" />
+        </div>
+      </template>
+
       <template v-if="type === 'Transfer'">
         <div class="_padding-0 _display-flex _justify-content-end">
           <i-button data-cy="send_send_l1_button" class="_padding-y-0 send-link" link variant="" to="/transaction/withdraw">
@@ -53,7 +59,8 @@
           :max-amount="maxAmount.toString()"
           :token="chosenToken ? chosenToken : undefined"
           autofocus
-          :type="transactionActionName"
+          :type="type"
+          :type-name="transactionActionName"
           @chooseToken="chooseTokenModal = 'mainToken'"
           @enter="commitTransaction()"
         />
