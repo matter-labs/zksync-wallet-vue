@@ -77,8 +77,6 @@ export default Vue.extend({
   data() {
     return {
       fromRoute: <undefined | Route>undefined,
-      loadingToken: false,
-      loadingBalance: false,
     };
   },
   computed: {
