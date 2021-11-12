@@ -134,6 +134,10 @@
       <div v-if="type === 'CPK' && cpkStatus === true" class="_text-center _margin-top-1">Your account is already activated</div>
 
       <div v-if="error" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">{{ error }}</div>
+      <div v-if="chosenToken && mainToken === 'L2-NFT' && !nftExists && !nftExistsLoading" class="errorText _text-center _margin-top-1">
+        Mint transaction for <span class="tokenSymbol">NFT-{{ chosenToken }}</span> isn't verified yet. <br />Try again once
+        <span class="tokenSymbol">NFT-{{ chosenToken }}</span> gets verified.
+      </div>
 
       <!-- Commit button -->
       <i-button
@@ -148,7 +152,7 @@
         <div class="_display-flex _justify-content-center _align-items-center">
           <v-icon v-if="!hasSigner && requireSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
           <div>{{ hasSigner || !requireSigner ? "" : "Authorize to " }}{{ transactionActionName }}</div>
-          <loader v-if="allowanceLoading || buttonLoader || requestingSigner" class="_margin-left-1" size="xs" />
+          <loader v-if="allowanceLoading || (!nftExists && nftExistsLoading) || buttonLoader || requestingSigner" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
 
@@ -293,6 +297,12 @@ export default Vue.extend({
           return false;
       }
     },
+    nftExists(): boolean {
+      return this.$store.getters["zk-transaction/nftExists"];
+    },
+    nftExistsLoading(): boolean {
+      return this.$store.getters["zk-transaction/nftExistsLoading"];
+    },
     commitAllowed(): boolean {
       return this.$store.getters["zk-transaction/commitAllowed"];
     },
@@ -386,10 +396,12 @@ export default Vue.extend({
     },
   },
   async mounted() {
+    if (!this.$store.getters["zk-account/loggedIn"]) {
+      return;
+    }
     if (!this.$store.getters["zk-account/accountStateRequested"]) {
       await this.$store.dispatch("zk-account/updateAccountState");
     }
-    // await this.$store.dispatch("zk-wallet/checkCPK");
     if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] === false && this.type !== "CPK") {
       this.$accessor.openModal("SignPubkey");
     }
