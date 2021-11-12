@@ -71,8 +71,8 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { searchByKey, searchInObject } from "matter-dapp-module/utils";
-import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances, ZkTokenBalance } from "matter-dapp-module/types";
+import { searchByKey, searchInObject } from "@matterlabs/zksync-nuxt-core/utils";
+import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
 import { BigNumberish } from "ethers";
 
 export default Vue.extend({

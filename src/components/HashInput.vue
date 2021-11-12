@@ -28,8 +28,8 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { DecimalBalance, ModuleOptions } from "matter-dapp-module/types";
-import { contendAddressToRawContentHash, isCID } from "matter-dapp-module/utils";
+import { DecimalBalance, ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import { contendAddressToRawContentHash, isCID } from "@matterlabs/zksync-nuxt-core/utils";
 
 export default Vue.extend({
   props: {

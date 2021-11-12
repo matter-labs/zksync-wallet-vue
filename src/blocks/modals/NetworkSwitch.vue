@@ -14,8 +14,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkNetwork } from "matter-dapp-module/types";
-import { zkSyncNetworkConfig } from "matter-dapp-module/utils/config";
+import { ZkNetwork } from "@matterlabs/zksync-nuxt-core/types";
+import { zkSyncNetworkConfig } from "@matterlabs/zksync-nuxt-core/utils/config";
 
 export default Vue.extend({
   name: "NetworkSwitch",
