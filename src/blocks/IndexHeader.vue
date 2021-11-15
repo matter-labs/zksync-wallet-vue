@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkConfig } from "matter-dapp-module/types";
+import { ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
 
 interface DropdownOption {
   name: string;

@@ -95,8 +95,8 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { searchByKey } from "matter-dapp-module/utils";
-import { ZkTokenBalances } from "matter-dapp-module/types";
+import { searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
+import { ZkTokenBalances } from "@matterlabs/zksync-nuxt-core/types";
 export default Vue.extend({
   data() {
     return {

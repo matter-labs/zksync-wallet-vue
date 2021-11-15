@@ -1,7 +1,7 @@
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 
-import { ModuleOptions } from "matter-dapp-module/types";
+import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
 import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 import { Configuration } from "webpack";
 
@@ -215,7 +215,7 @@ const config: NuxtConfig = {
     ],
     "nuxt-typed-vuex",
     [
-      "matter-dapp-module",
+      "@matterlabs/zksync-nuxt-core",
       <ModuleOptions>{
         network: process.env.ZK_NETWORK,
         apiKeys: {
