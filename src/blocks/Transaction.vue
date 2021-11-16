@@ -152,7 +152,7 @@
         <div class="_display-flex _justify-content-center _align-items-center">
           <v-icon v-if="!hasSigner && requireSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
           <div>{{ hasSigner || !requireSigner ? "" : "Authorize to " }}{{ transactionActionName }}</div>
-          <loader v-if="allowanceLoading || (!nftExists && nftExistsLoading) || buttonLoader || requestingSigner" class="_margin-left-1" size="xs" />
+          <loader v-if="buttonLoader" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
 
@@ -235,13 +235,16 @@ export default Vue.extend({
       inputtedAddress: this.$store.getters["zk-transaction/address"],
       chooseTokenModal: <false | "mainToken" | "feeToken">false,
       contentHash: this.$store.getters["zk-transaction/contentHash"],
-      buttonLoader: true,
+      loading: true,
       requestingSigner: false,
     };
   },
   computed: {
     isSubmitDisabled(): boolean {
-      return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.buttonLoader;
+      return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.loading;
+    },
+    buttonLoader(): boolean {
+      return this.allowanceLoading || (!this.nftExists && this.nftExistsLoading) || this.loading || this.requestingSigner;
     },
     routeBack(): Route | string {
       if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
@@ -415,7 +418,7 @@ export default Vue.extend({
     if (this.$route.query.address) {
       this.inputtedAddress = this.$route.query.address;
     }
-    this.buttonLoader = false;
+    this.loading = false;
   },
   beforeDestroy() {
     this.$store.commit("zk-transaction/setAmount", undefined);
@@ -465,13 +468,13 @@ export default Vue.extend({
         }
         this.requestingSigner = false;
       } else {
-        if (!this.commitAllowed || this.buttonLoader) {
+        if (!this.commitAllowed || this.loading) {
           return;
         }
 
         /* Transfer != Withdraw warning */
         try {
-          this.buttonLoader = true;
+          this.loading = true;
 
           if (this.type === "Withdraw") {
             if (!(await this.checkWithdraw())) {
@@ -488,7 +491,7 @@ export default Vue.extend({
           this.$sentry.captureException(error, { tags: { "operation.type": this.type } });
           this.$store.commit("zk-transaction/setError", error);
         } finally {
-          this.buttonLoader = false;
+          this.loading = false;
         }
       }
     },
