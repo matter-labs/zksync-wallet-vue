@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import theme from "matter-dapp-module/utils/theme";
+import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
 import SentyMixin from "./sentry.mixin";
 
 export default Vue.extend({

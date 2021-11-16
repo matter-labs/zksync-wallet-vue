@@ -35,7 +35,7 @@
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
-      "matter-dapp-module",
+      "@matterlabs/zksync-nuxt-core",
       "vue-router",
       "@types/jest",
       "@nuxtjs/toast",

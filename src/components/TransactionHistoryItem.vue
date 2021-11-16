@@ -60,8 +60,8 @@ import moment from "moment-timezone";
 import Vue, { PropOptions } from "vue";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { Address, TokenSymbol, ApiTransaction } from "zksync/build/types";
-import { Token, ZkContact, ZkConfig } from "matter-dapp-module/types";
-import { copyToClipboard } from "matter-dapp-module/utils";
+import { Token, ZkContact, ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({

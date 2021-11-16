@@ -80,8 +80,8 @@
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { NFT, NFTInfo } from "zksync/build/types";
-import { copyToClipboard } from "matter-dapp-module/utils";
-import { ZkContact } from "matter-dapp-module/types";
+import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
+import { ZkContact } from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "ethers/lib/utils";
 import { RestProvider } from "zksync";
 
