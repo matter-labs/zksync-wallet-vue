@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { Token, ZkTokenBalance } from "matter-dapp-module/types";
+import { Token, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { TokenSymbol } from "zksync/build/types";
@@ -77,8 +77,6 @@ export default Vue.extend({
   data() {
     return {
       fromRoute: <undefined | Route>undefined,
-      loadingToken: false,
-      loadingBalance: false,
     };
   },
   computed: {

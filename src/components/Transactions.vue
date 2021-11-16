@@ -23,7 +23,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ApiTransaction } from "zksync/build/types";
-import { ZkTransactionHistoryLoadingState, ZkFilteredTransactionHistory } from "matter-dapp-module/types";
+import { ZkTransactionHistoryLoadingState, ZkFilteredTransactionHistory } from "@matterlabs/zksync-nuxt-core/types";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -38,17 +38,33 @@ export default Vue.extend({
       required: false,
       default: undefined,
     },
+    tokenExists: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   data() {
     return {
       transactions: <ApiTransaction[]>[],
       loadingStatus: <ZkTransactionHistoryLoadingState>false,
-      allLoaded: false,
+      allLoaded: !this.tokenExists,
     };
   },
+  watch: {
+    tokenExists(val, oldVal) {
+      if (!oldVal && val) {
+        this.requestTransactions("main");
+        this.updateLatest();
+      }
+    },
+  },
   mounted() {
-    this.requestTransactions("main");
-    this.updateLatest();
+    if (this.tokenExists) {
+      this.allLoaded = false;
+      this.requestTransactions("main");
+      this.updateLatest();
+    }
   },
   beforeDestroy() {
     clearInterval(updateListInterval);
