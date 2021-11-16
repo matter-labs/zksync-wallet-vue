@@ -82,8 +82,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { getAddress } from "ethers/lib/utils";
-import { ZkContact, ZkContacts } from "matter-dapp-module/types";
-import { searchInObject, copyToClipboard } from "matter-dapp-module/utils";
+import { ZkContact, ZkContacts } from "@matterlabs/zksync-nuxt-core/types";
+import { searchInObject, copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 import { Address } from "zksync/build/types";
 
 export default Vue.extend({

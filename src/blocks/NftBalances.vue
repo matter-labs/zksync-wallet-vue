@@ -59,8 +59,8 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { searchByKey } from "matter-dapp-module/utils";
-import { ZkNFTBalances } from "matter-dapp-module/types";
+import { searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
+import { ZkNFTBalances } from "@matterlabs/zksync-nuxt-core/types";
 export default Vue.extend({
   data() {
     return {

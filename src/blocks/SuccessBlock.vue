@@ -88,7 +88,7 @@
 import Vue from "vue";
 import { BigNumber } from "ethers";
 import { getAddress } from "ethers/lib/utils";
-import { ZkActiveTransaction, ZkContact, ZkConfig, ZkTransactionType } from "matter-dapp-module/types";
+import { ZkActiveTransaction, ZkContact, ZkConfig, ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
 import { TokenLike } from "zksync/build/types";
 import { ERC20_APPROVE_TRESHOLD } from "zksync/build/utils";
 

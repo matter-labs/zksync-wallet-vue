@@ -24,7 +24,7 @@ import Vue, { PropOptions } from "vue";
 import { BigNumber, BigNumberish } from "ethers";
 import { TokenSymbol } from "zksync/build/types";
 import { isTransactionAmountPackable } from "zksync/build/utils";
-import { DecimalBalance, ZkTransactionType } from "matter-dapp-module/types";
+import { DecimalBalance, ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
 
 export default Vue.extend({
   props: {

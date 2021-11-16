@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-import successCheckmark from "matter-dapp-module/utils/lottie/SuccessCheckMark.json";
+import successCheckmark from "@matterlabs/zksync-nuxt-core/utils/lottie/SuccessCheckMark.json";
 import lottie, { AnimationConfigWithData, AnimationItem } from "lottie-web";
 import Vue from "vue";
 
