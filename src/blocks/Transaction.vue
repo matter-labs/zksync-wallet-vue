@@ -134,7 +134,7 @@
       <div v-if="type === 'CPK' && cpkStatus === true" class="_text-center _margin-top-1">Your account is already activated</div>
 
       <div v-if="error" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">{{ error }}</div>
-      <div v-if="chosenToken && mainToken === 'L2-NFT' && !nftExists && !nftExistsLoading" class="errorText _text-center _margin-top-1">
+      <div v-if="nftTokenIsntVerified" class="errorText _text-center _margin-top-1">
         Mint transaction for <span class="tokenSymbol">NFT-{{ chosenToken }}</span> isn't verified yet. <br />Try again once
         <span class="tokenSymbol">NFT-{{ chosenToken }}</span> gets verified.
       </div>
@@ -245,6 +245,9 @@ export default Vue.extend({
     },
     buttonLoader(): boolean {
       return this.allowanceLoading || (!this.nftExists && this.nftExistsLoading) || this.loading || this.requestingSigner;
+    },
+    nftTokenIsntVerified(): boolean {
+      return Boolean(this.chosenToken && this.mainToken === "L2-NFT" && !this.nftExists && !this.nftExistsLoading);
     },
     routeBack(): Route | string {
       if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
