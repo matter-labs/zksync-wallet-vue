@@ -7,7 +7,7 @@
         </nuxt-link>
         <div class="_display-flex _align-items-center _justify-content-center">
           <span class="tokenSymbol">{{ symbol }}</span>
-          <i-tooltip v-if="!zkTokensLoading && token">
+          <i-tooltip v-if="displayTokenTooltip">
             <a :href="blockExplorerLink + '/token/' + token.address" target="_blank" class="icon-container _display-flex">
               <v-icon name="ri-external-link-line" class="iconInfo" />
             </a>
@@ -106,6 +106,9 @@ export default Vue.extend({
     },
     accountStateLoading(): boolean {
       return this.$store.getters["zk-account/accountStateLoading"];
+    },
+    displayTokenTooltip(): boolean {
+      return !this.zkTokensLoading && this.token && this.symbol !== "ETH";
     },
     blockExplorerLink(): string {
       return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;
