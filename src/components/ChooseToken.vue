@@ -40,7 +40,7 @@
                 <template slot="body">Not available for paying fees</template>
               </i-tooltip>
             </div>
-            <div v-if="tokensType === 'L1-Tokens' || tokensType === 'L2-Tokens'" class="rightSide">
+            <div v-if="!onlyMintTokens && (tokensType === 'L1-Tokens' || tokensType === 'L2-Tokens')" class="rightSide">
               <div class="balance">{{ balance | parseBigNumberish(symbolOrID) }}</div>
             </div>
           </div>
@@ -72,11 +72,17 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { searchByKey, searchInObject } from "@matterlabs/zksync-nuxt-core/utils";
-import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkTransactionMainToken, ZkTokenBalances, ZkEthereumBalances, ZkNFTBalances } from "@matterlabs/zksync-nuxt-core/types";
 import { BigNumberish } from "ethers";
+import { Tokens } from "zksync/build/types";
 
 export default Vue.extend({
   props: {
+    onlyMintTokens: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
     feeAcceptable: {
       type: Boolean,
       default: false,
@@ -106,8 +112,17 @@ export default Vue.extend({
     ethereumBalancesRequested(): boolean {
       return this.$store.getters["zk-balances/ethereumBalancesRequested"];
     },
-    zkTokens(): ZkTokenBalances {
+    zkTokens(): Tokens {
       return this.$store.getters["zk-tokens/zkTokens"];
+    },
+    zkTokensLoading(): boolean {
+      return this.$store.getters["zk-tokens/zkTokensLoading"];
+    },
+    mintTokens(): Tokens {
+      if (this.zkTokensLoading) {
+        return {};
+      }
+      return Object.fromEntries(Object.entries(this.zkTokens ? this.zkTokens : {}).filter(([symbol]) => symbol !== "ETH"));
     },
     zkBalances(): ZkTokenBalances {
       return this.$store.getters["zk-balances/balances"];
@@ -120,6 +135,9 @@ export default Vue.extend({
       return this.$store.getters["zk-balances/ethereumBalances"];
     },
     mainLoading(): boolean {
+      if (this.onlyMintTokens) {
+        return this.zkTokensLoading;
+      }
       if (this.tokensType === "L1-Tokens") {
         return this.ethereumBalanceLoadingAll && !this.ethereumBalancesRequested;
       }
@@ -132,7 +150,9 @@ export default Vue.extend({
       return this.accountStateLoading;
     },
     displayedList(): { [symbolOrID: string]: BigNumberish } {
-      if (this.tokensType === "L1-Tokens") {
+      if (this.onlyMintTokens) {
+        return searchByKey(Object.fromEntries(Object.entries(this.mintTokens).map(([symbol]) => [symbol, "0"])), this.search);
+      } else if (this.tokensType === "L1-Tokens") {
         return searchByKey(Object.fromEntries(Object.entries(this.ethereumBalances).map(([symbol, balance]) => [symbol, balance.toString()])), this.search);
       } else if (this.tokensType === "L2-Tokens") {
         return searchByKey(Object.fromEntries(Object.entries(this.zkBalances).map(([symbol, token]) => [symbol, token.balance.toString()])), this.search);
@@ -160,6 +180,7 @@ export default Vue.extend({
       }
     },
     chooseToken(symbolOrID: string) {
+      console.log(this.zkTokens[symbolOrID]);
       if (this.feeAcceptable && !this.allowedFeeTokens[symbolOrID]) {
         return;
       }
