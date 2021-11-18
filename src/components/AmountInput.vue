@@ -114,6 +114,9 @@ export default Vue.extend({
     if (this.autofocus && !this.$accessor.currentModal) {
       (this.$refs.amountInput as Vue)?.$el?.querySelector("input")?.focus();
     }
+    if (!this.token) {
+      this.$store.dispatch("zk-transaction/fillEmptySymbol");
+    }
   },
   methods: {
     emitValue(val: string): void {
