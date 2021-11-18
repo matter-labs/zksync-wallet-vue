@@ -180,7 +180,6 @@ export default Vue.extend({
       }
     },
     chooseToken(symbolOrID: string) {
-      console.log(this.zkTokens[symbolOrID]);
       if (this.feeAcceptable && !this.allowedFeeTokens[symbolOrID]) {
         return;
       }
