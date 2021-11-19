@@ -146,7 +146,7 @@
     "yarn spell-check"
   ],
   "scripts": {
-    "local": "sh ./cli-process-env.sh 'rinkeby-beta' 'prod' 1 1",
+    "local": "sh ./cli-process-env.sh 'rinkeby' 'prod' 1 1",
     "dev": "yarn local && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
