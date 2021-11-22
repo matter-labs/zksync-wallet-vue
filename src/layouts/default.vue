@@ -1,6 +1,7 @@
 <template>
   <i-layout class="defaultLayout">
     <block-logging-in-loader />
+    <block-modals-wrong-network />
     <transition name="fade">
       <div v-if="!loggingIn && loggedIn">
         <block-header ref="header" />
