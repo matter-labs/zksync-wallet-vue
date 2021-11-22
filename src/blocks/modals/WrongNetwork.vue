@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { ZkConfig } from "matter-dapp-module/types";
+import { ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
 import Vue from "vue";
 
 export default Vue.extend({
