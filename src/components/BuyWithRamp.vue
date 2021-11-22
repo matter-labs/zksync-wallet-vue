@@ -31,7 +31,7 @@ export default Vue.extend({
         hostAppName: "zkSync Wallet",
         hostLogoUrl: window.location.origin + "/favicon-dark.png",
         variant: "hosted-auto",
-        swapAsset: "ZKSYNC_ETH,ZKSYNC_DAI,ZKSYNC_USDT,ZKSYNC_USDC",
+        swapAsset: "ZKSYNC_*",
         userAddress: this.address,
         ...this.config,
       }).show();
