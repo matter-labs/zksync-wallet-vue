@@ -8,9 +8,15 @@
 <script lang="ts">
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
+import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
 import { rampConfig } from "@/utils/config";
 
 export default Vue.extend({
+  data() {
+    return {
+      theme: theme.getUserTheme(),
+    };
+  },
   computed: {
     config(): {
       url: string | undefined;
@@ -23,6 +29,9 @@ export default Vue.extend({
     },
     isRampSupported(): boolean {
       return !!this.config;
+    },
+    isDarkTheme(): boolean {
+      return this.theme === "dark";
     },
   },
   methods: {
@@ -50,9 +59,17 @@ export default Vue.extend({
     margin: 0 0 0 3px;
     display: inline-flex;
     align-items: center;
-
+    color: #22272f;
     &:hover {
       cursor: pointer;
+    }
+  }
+}
+
+body.-dark {
+  .buy-with-ramp-button {
+    label {
+      color: #f8f9fa;
     }
   }
 }
