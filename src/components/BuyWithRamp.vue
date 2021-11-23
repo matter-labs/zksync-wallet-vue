@@ -1,7 +1,7 @@
 <template>
   <i-button :disabled="!isRampSupported" link class="buy-with-ramp-button" @click="buyWithRamp">
     Buy Crypto with
-    <label><img class="mr-2" src="/RampLogo.svg" alt="Ramp" />Ramp</label>
+    <label><img class="ramp-logo" src="/RampLogo.svg" alt="Ramp" />Ramp</label>
   </i-button>
 </template>
 
@@ -63,6 +63,10 @@ export default Vue.extend({
     &:hover {
       cursor: pointer;
     }
+  }
+
+  .ramp-logo {
+    margin-right: 2px;
   }
 }
 
