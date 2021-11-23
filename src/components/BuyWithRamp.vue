@@ -1,5 +1,8 @@
 <template>
-  <i-button :disabled="!isRampSupported" link @click="buyWithRamp"> Buy with Ramp Instant<v-icon class="" name="ri-arrow-right-up-line" scale="0.75" /> </i-button>
+  <i-button :disabled="!isRampSupported" link class="buy-with-ramp-button" @click="buyWithRamp">
+    Buy Crypto with
+    <label><img class="mr-2" src="/RampLogo.svg" alt="Ramp" />Ramp</label>
+  </i-button>
 </template>
 
 <script lang="ts">
@@ -39,3 +42,18 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.buy-with-ramp-button {
+  label {
+    font-weight: bold;
+    margin: 0 0 0 3px;
+    display: inline-flex;
+    align-items: center;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+</style>
