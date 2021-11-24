@@ -8,10 +8,10 @@
 import Vue from "vue";
 export default Vue.extend({
   created() {
+    this.$store.dispatch("zk-transaction/setType", "Mint");
     if (this.$store.getters["zk-provider/network"] === "mainnet") {
       return this.$router.push("/account");
     }
-    this.$store.dispatch("zk-transaction/setType", "Mint");
   },
 });
 </script>
