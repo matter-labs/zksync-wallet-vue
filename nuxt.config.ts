@@ -221,13 +221,19 @@ const config: NuxtConfig = {
         apiKeys: {
           FORTMATIC_KEY: process.env.APP_FORTMATIC,
           PORTIS_KEY: process.env.APP_PORTIS,
-          INFURA_KEY: process.env.APP_INFURA_API_KEY,
+          /**
+           * Added for all environments to reduce complexity
+           */
+          INFURA_KEY: "560464419d33486ab1713d61ac9f1d82"
         },
         onboardConfig: {
           APP_NAME: pageTitle,
-          APP_ID: process.env.APP_ONBOARDING_APP_ID,
+          /**
+           * Added for all environments to reduce complexity
+           */
+          APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
-        restoreNetwork: true,
+        restoreNetwork: true
       },
     ],
   ],
