@@ -12,7 +12,15 @@ jobs:
       output_urls: "${{ steps.preview_deploy.outputs.urls }}"
     steps:
       - uses: actions/checkout@v2
-      - run: bash cli-dev.sh ci && yarn run ci:build:rinkeby
+
+
+      - uses: c-hive/gha-yarn-cache@v2 # using cache
+
+      - name: "Install dependencies"
+        run: yarn install
+
+      - name: "Deploy preview"
+        run: yarn run ci:build:rinkeby
       - uses: matter-labs/action-hosting-deploy@v0
         id: preview_deploy
         with:

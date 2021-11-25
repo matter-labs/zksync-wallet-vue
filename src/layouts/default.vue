@@ -38,5 +38,8 @@ export default Vue.extend({
     this.$inkline.config.variant = theme.getUserTheme();
     this.$store.dispatch("zk-provider/requestProvider");
   },
+  beforeDestroy() {
+    this.$store.dispatch("zk-account/walletConnectDisconnect");
+  },
 });
 </script>

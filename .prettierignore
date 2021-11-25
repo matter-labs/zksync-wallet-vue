@@ -7,7 +7,6 @@ src/static
 *yarn*
 environments
 _nuxt
-src/static/sw.js
 tests/*
 *.example
 node_modules/*
