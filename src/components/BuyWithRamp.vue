@@ -1,5 +1,8 @@
 <template>
-  <i-button :disabled="!isRampSupported" link @click="buyWithRamp"> Buy with Ramp Instant<v-icon class="" name="ri-arrow-right-up-line" scale="0.75" /> </i-button>
+  <i-button :disabled="!isRampSupported" link class="buy-with-ramp-button" @click="buyWithRamp">
+    Buy Crypto with
+    <label><img class="ramp-logo" src="/RampLogo.svg" alt="Ramp" />Ramp</label>
+  </i-button>
 </template>
 
 <script lang="ts">
@@ -31,7 +34,7 @@ export default Vue.extend({
         hostAppName: "zkSync Wallet",
         hostLogoUrl: window.location.origin + "/favicon-dark.png",
         variant: "hosted-auto",
-        swapAsset: "ZKSYNC_ETH,ZKSYNC_DAI,ZKSYNC_USDT,ZKSYNC_USDC",
+        swapAsset: "ZKSYNC_*",
         userAddress: this.address,
         ...this.config,
       }).show();
@@ -39,3 +42,30 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.buy-with-ramp-button {
+  label {
+    font-weight: bold;
+    margin: 0 0 0 3px;
+    display: inline-flex;
+    align-items: center;
+    color: #22272f;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .ramp-logo {
+    margin-right: 2px;
+  }
+}
+
+body.-dark {
+  .buy-with-ramp-button {
+    label {
+      color: #f8f9fa;
+    }
+  }
+}
+</style>
