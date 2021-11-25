@@ -45,49 +45,16 @@
       max-height: 100vh !important;
       border-radius: 0 !important;
 
-
       /* autoprefixer: off */
       @supports (-webkit-touch-callout: none) {
         //noinspection CssInvalidPropertyValue
-        max-height: fill-available;
+        max-height: -webkit-fill-available;
+        max-height: stretch;
         //noinspection CssInvalidPropertyValue
-        height: fill-available;
+        height: -webkit-fill-available;
+        height: stretch;
       }
 
-
-      //flex-flow: column;
-      //display: flex;
-      //justify-content: space-between;
-      //padding-bottom: 1rem !important;
-      //
-      //header.bn-onboard-modal-content-header {
-      //  margin: 1rem.25rem;
-      //}
-      //
-      //.bn-onboard-select-info-container {
-      //  margin: 0.25rem 0 !important;
-      //  padding: 0.75rem.25rem !important;
-      //  display: flex;
-      //  align-items: center;
-      //
-      //  span.bn-onboard-select-wallet-info {
-      //    margin-top: 0 !important;
-      //  }
-      //}
-      //
-      //p.bn-onboard-select-description {
-      //  padding: 0 0 1rem;
-      //  border-bottom: 0.5px solid $lightViolet;
-      //  margin: 0.5rem;
-      //  display: block;
-      //}
-      //
-      //p.bn-onboard-select-wallet-definition {
-      //  display: block;
-      //  margin: 0;
-      //  padding: 0.25rem;
-      //  transition: all $transition2;
-      //}
       .bn-onboard-modal-content-header {
         margin: 1rem 0 !important;
       }
@@ -223,7 +190,7 @@
         border-top: 0.5px solid $lightViolet;
 
         span.bn-onboard-select-wallet-info {
-          margin-top: .4rem;
+          margin-top: 0.4rem;
         }
       }
 
@@ -253,12 +220,10 @@
 }
 
 #walletconnect-wrapper .walletconnect-modal__base {
-
   @media (max-height: $mobile) {
     max-width: 300px;
   }
 }
-
 
 section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
   display: flex;
@@ -290,6 +255,7 @@ footer.bn-onboard-custom.bn-onboard-modal-selected-wallet-footer {
     height: 20px;
   }
 }
+
 /* autoprefixer: off */
 aside.bn-onboard-custom.bn-onboard-modal {
   max-height: 100vh;
@@ -298,7 +264,8 @@ aside.bn-onboard-custom.bn-onboard-modal {
   /* Avoid Chrome to see Safari hack */
   @supports (-webkit-touch-callout: none) {
     //noinspection CssInvalidPropertyValue
-    max-height: fill-available;
+    max-height: -webkit-fill-available;
+    max-height: stretch;
   }
 
   .bn-onboard-custom.bn-onboard-modal-content {
@@ -307,7 +274,8 @@ aside.bn-onboard-custom.bn-onboard-modal {
     /* Avoid Chrome to see Safari hack */
     @supports (-webkit-touch-callout: none) {
       //noinspection CssInvalidPropertyValue
-      min-height: fill-available;
+      min-height: -webkit-fill-available;
+      min-height: stretch;
     }
   }
 
@@ -335,7 +303,7 @@ aside.bn-onboard-custom.bn-onboard-modal {
     }
 
     button.bn-onboard-custom.bn-onboard-icon-button {
-      margin: 0 0 .25rem !important;
+      margin: 0 0 0.25rem !important;
       padding: 0.5rem !important;
     }
   }
