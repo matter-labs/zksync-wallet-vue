@@ -205,7 +205,7 @@ const config: NuxtConfig = {
           /**
            * Added for all environments to reduce complexity
            */
-          APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0"
+          APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
         restoreNetwork: true
       }
