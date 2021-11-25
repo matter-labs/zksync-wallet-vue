@@ -13,4 +13,3 @@ src/assets/imgs
 .github/workflows
 .github/ISSUE_TEMPLATE
 src/locales
-**/*.svg
