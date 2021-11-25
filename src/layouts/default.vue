@@ -38,19 +38,7 @@ export default Vue.extend({
     this.$inkline.config.variant = theme.getUserTheme();
     this.$store.dispatch("zk-provider/requestProvider");
   },
-  created() {
-    try {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (const registration of registrations) {
-          registration.unregister();
-        }
-      });
-      console.log("SW cleanup done");
-    } catch (e) {
-      console.error(e);
-    }
-  },
-  beforeDestroy () {
+  beforeDestroy() {
     this.$store.dispatch("zk-account/walletConnectDisconnect");
   },
 });

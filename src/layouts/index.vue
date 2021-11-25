@@ -28,17 +28,5 @@ export default Vue.extend({
   mounted() {
     this.$inkline.config.variant = theme.getUserTheme();
   },
-  created() {
-    try {
-      navigator.serviceWorker.getRegistrations().then(function (registrations) {
-        for (const registration of registrations) {
-          registration.unregister();
-        }
-      });
-      console.log("SW cleanup done");
-    } catch (e) {
-      console.error(e);
-    }
-  },
 });
 </script>

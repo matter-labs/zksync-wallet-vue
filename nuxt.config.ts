@@ -1,9 +1,9 @@
-import {NuxtConfig} from "@nuxt/types";
-import {NuxtOptionsLoaders, NuxtWebpackEnv} from "@nuxt/types/config/build";
-import {NuxtOptionsEnv} from "@nuxt/types/config/env";
+import { NuxtConfig } from "@nuxt/types";
+import { NuxtOptionsLoaders, NuxtWebpackEnv } from "@nuxt/types/config/build";
+import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 
-import {ModuleOptions} from "@matterlabs/zksync-nuxt-core/types";
-import {Configuration} from "webpack";
+import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import { Configuration } from "webpack";
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
 const isDebugEnabled: boolean = appEnv === "dev";
@@ -16,12 +16,12 @@ const gtagId = "GTM-ML2QDNV";
 
 const pageTitleTemplate = "%s | zkSync: secure, scalable crypto payments";
 const pageDescription =
-          "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
+  "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
 crypto payments, zkWallet, cryptowallet`;
 
 const config: NuxtConfig = {
-  components: ["@/components/", {path: "@/blocks/", prefix: "block"}],
+  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
   ssr: false,
   target: "static",
@@ -30,11 +30,11 @@ const config: NuxtConfig = {
   vue: {
     config: {
       productionTip: isProduction,
-      devtools: !isProduction
-    }
+      devtools: !isProduction,
+    },
   },
   env: <NuxtOptionsEnv>{
-    ...process.env
+    ...process.env,
   },
 
   /**
@@ -45,24 +45,24 @@ const config: NuxtConfig = {
     titleTemplate: pageTitleTemplate,
     htmlAttrs: {
       lang: "en",
-      amp: "true"
+      amp: "true",
     },
     meta: [
       {
         httpEquiv: "cache-control",
         property: "cache-control",
-        content: "no-cache , no-store, must-revalidate"
+        content: "no-cache , no-store, must-revalidate",
       },
       {
         httpEquiv: "expires",
         content: "0",
-        property: "expires"
+        property: "expires",
       },
       /**
        * UX / UI settings
        */
-      {charset: "utf-8"},
-      {name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0"},
+      { charset: "utf-8" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" },
 
       /**
        * Page meta:
@@ -72,93 +72,93 @@ const config: NuxtConfig = {
       {
         hid: "keywords",
         name: "keywords",
-        content: pageKeywords
+        content: pageKeywords,
       },
       {
         hid: "description",
         name: "description",
-        content: pageDescription
+        content: pageDescription,
       },
       {
         hid: "author",
         name: "author",
-        content: "https://matter-labs.io"
+        content: "https://matter-labs.io",
       },
       {
         hid: "twitter:title",
         name: "twitter:title",
-        content: pageTitle
+        content: pageTitle,
       },
       {
         hid: "twitter:description",
         name: "twitter:description",
-        content: pageDescription
+        content: pageDescription,
       },
       {
         hid: "twitter:image",
         name: "twitter:image",
-        content: pageImg
+        content: pageImg,
       },
       {
         hid: "twitter:site",
         name: "twitter:site",
-        content: "@zksync"
+        content: "@zksync",
       },
       {
         hid: "twitter:creator",
         name: "twitter:creator",
-        content: "@the_matter_labs"
+        content: "@the_matter_labs",
       },
       {
         hid: "twitter:image:alt",
         name: "twitter:image:alt",
-        content: pageTitle
+        content: pageTitle,
       },
       {
         hid: "og:title",
         property: "og:title",
-        content: pageTitle
+        content: pageTitle,
       },
       {
         hid: "og:description",
         property: "og:description",
-        content: pageDescription
+        content: pageDescription,
       },
       {
         hid: "og:image",
         property: "og:image",
-        content: pageImg
+        content: pageImg,
       },
       {
         hid: "og:image:secure_url",
         property: "og:image:secure_url",
-        content: pageImg
+        content: pageImg,
       },
       {
         hid: "og:image:alt",
         property: "og:image:alt",
-        content: pageTitle
+        content: pageTitle,
       },
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
-        content: "/favicon-dark.png"
+        content: "/favicon-dark.png",
       },
-      {hid: "theme-color", name: "theme-color", content: "#4e529a"},
+      { hid: "theme-color", name: "theme-color", content: "#4e529a" },
       {
         hid: "msapplication-TileColor",
         property: "msapplication-TileColor",
-        content: "#4e529a"
-      }
+        content: "#4e529a",
+      },
     ],
-    link: [{rel: "icon", type: "image/x-icon", href: "/favicon-dark.png"}]
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
   },
   /*
    ** Customize the progress-bar color
    */
   loading: {
     color: "#8c8dfc",
-    continuous: true
+    continuous: true,
   },
 
   /**
@@ -171,11 +171,11 @@ const config: NuxtConfig = {
   plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession"],
 
   styleResources: {
-    scss: ["@/assets/style/vars/_variables.scss"]
+    scss: ["@/assets/style/vars/_variables.scss"],
   },
 
   router: {
-    middleware: ["auth"]
+    middleware: ["auth"],
   },
   /*
    ** Nuxt.js dev-modules
@@ -185,7 +185,7 @@ const config: NuxtConfig = {
     "@nuxt/typescript-build",
     // https://go.nuxtjs.dev/stylelint
     "@nuxtjs/style-resources",
-    ["@nuxtjs/dotenv", {path: __dirname}],
+    ["@nuxtjs/dotenv", { path: __dirname }],
     "@nuxtjs/google-fonts",
     "nuxt-typed-vuex",
     [
@@ -198,7 +198,7 @@ const config: NuxtConfig = {
           /**
            * Added for all environments to reduce complexity
            */
-          INFURA_KEY: "560464419d33486ab1713d61ac9f1d82"
+          INFURA_KEY: "560464419d33486ab1713d61ac9f1d82",
         },
         onboardConfig: {
           APP_NAME: pageTitle,
@@ -207,9 +207,9 @@ const config: NuxtConfig = {
            */
           APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
-        restoreNetwork: true
-      }
-    ]
+        restoreNetwork: true,
+      },
+    ],
   ],
 
   /*
@@ -222,8 +222,8 @@ const config: NuxtConfig = {
    */
   inkline: {
     config: {
-      autodetectVariant: true
-    }
+      autodetectVariant: true,
+    },
   },
   sentry: {
     dsn: sentryDsn,
@@ -231,36 +231,37 @@ const config: NuxtConfig = {
     config: {
       debug: isDebugEnabled,
       tracesSampleRate: 1.0,
-      environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv
-    }
+      environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv,
+    },
   },
   "google-gtag": {
     id: gtagId,
     config: {
       anonymize_ip: true, // anonymize IP
-      send_page_view: true // might be necessary to avoid duplicated page track on page reload
+      send_page_view: true, // might be necessary to avoid duplicated page track on page reload
     },
     debug: isDebugEnabled, // enable to track in dev mode
-    disableAutoPageTrack: false // disable if you don't want to track each page route with router.afterEach(...).
+    disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
   /*
    ** Build configuration
    */
   build: {
+    filenames: { chunk: () => "[name]_Y2ZjItY_[contenthash].js" },
     cache: false,
     cssSourceMap: true,
     babel: {
-      compact: true
+      compact: true,
     },
     corejs: 3,
     ssr: false,
     extractCSS: {
-      ignoreOrder: true
+      ignoreOrder: true,
     },
     splitChunks: {
       layouts: true,
       pages: true,
-      commons: true
+      commons: true,
     },
     optimization: {
       removeAvailableModules: true,
@@ -268,16 +269,16 @@ const config: NuxtConfig = {
       mergeDuplicateChunks: true,
       splitChunks: {
         chunks: "async",
-        maxSize: 200000
-      }
+        maxSize: 200000,
+      },
     },
     transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
     extend: (config: Configuration, _ctx: { loaders: NuxtOptionsLoaders } & NuxtWebpackEnv) => {
       config.mode = isProduction ? "production" : "development";
       config.node = {
-        fs: "empty"
+        fs: "empty",
       };
-    }
+    },
   },
   googleFonts: {
     prefetch: true,
@@ -286,13 +287,13 @@ const config: NuxtConfig = {
     display: "swap",
     families: {
       "Fira+Sans": [400, 600],
-      "Fira+Code": [400]
-    }
+      "Fira+Code": [400],
+    },
   },
   generate: {
     dir: "public",
     cache: false,
-    devtools: !isProduction
-  }
+    devtools: !isProduction,
+  },
 };
 export default config;
