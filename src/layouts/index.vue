@@ -15,8 +15,8 @@
 <script lang="ts">
 import Vue from "vue";
 import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
-import { GIT_REVISION_SHORT } from "@/utils/config";
 import SentyMixin from "./sentry.mixin";
+import { GIT_REVISION_SHORT } from "@/utils/config";
 
 export default Vue.extend({
   mixins: [SentyMixin],
@@ -27,6 +27,18 @@ export default Vue.extend({
   },
   mounted() {
     this.$inkline.config.variant = theme.getUserTheme();
+  },
+  created() {
+    try {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (const registration of registrations) {
+          registration.unregister();
+        }
+      });
+      console.log("SW cleanup done");
+    } catch (e) {
+      console.error(e);
+    }
   },
 });
 </script>

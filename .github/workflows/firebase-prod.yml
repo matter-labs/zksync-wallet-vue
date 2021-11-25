@@ -12,7 +12,11 @@ jobs:
     environment: prod
     steps:
       - uses: actions/checkout@v2
-      - run: bash cli-dev.sh ci
+
+      - uses: c-hive/gha-yarn-cache@v2 # using cache
+
+      - name: "Installing deps"
+        run: yarn install
 
       - name: "Build mainnet [prod]"
         run: yarn run ci:build:prod
