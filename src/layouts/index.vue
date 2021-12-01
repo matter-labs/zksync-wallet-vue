@@ -3,6 +3,7 @@
     <block-logging-in-loader />
     <block-index-header />
     <block-modals-wrong-network />
+    <block-modals-requesting-provider-error />
     <i-layout-content class="routerContainer">
       <transition name="fade" mode="out-in">
         <nuxt />

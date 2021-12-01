@@ -2,6 +2,7 @@
   <i-layout class="defaultLayout">
     <block-logging-in-loader />
     <block-modals-wrong-network />
+    <block-modals-requesting-provider-error />
     <transition name="fade">
       <div v-if="!loggingIn && loggedIn">
         <block-header ref="header" />
@@ -37,9 +38,6 @@ export default Vue.extend({
   mounted() {
     this.$inkline.config.variant = theme.getUserTheme();
     this.$store.dispatch("zk-provider/requestProvider");
-  },
-  beforeDestroy() {
-    this.$store.dispatch("zk-account/walletConnectDisconnect");
   },
 });
 </script>
