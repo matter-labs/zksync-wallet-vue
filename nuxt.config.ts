@@ -258,11 +258,6 @@ const config: NuxtConfig = {
     extractCSS: {
       ignoreOrder: true,
     },
-    splitChunks: {
-      layouts: true,
-      pages: true,
-      commons: true,
-    },
     optimization: {
       removeAvailableModules: true,
       flagIncludedChunks: true,
@@ -274,7 +269,6 @@ const config: NuxtConfig = {
     },
     transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
     extend: (config: Configuration, _ctx: { loaders: NuxtOptionsLoaders } & NuxtWebpackEnv) => {
-      config.mode = isProduction ? "production" : "development";
       config.node = {
         fs: "empty",
       };
