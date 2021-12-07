@@ -3,6 +3,7 @@
     <block-logging-in-loader />
     <block-index-header />
     <block-modals-wrong-network />
+    <block-modals-requesting-provider-error />
     <i-layout-content class="routerContainer">
       <transition name="fade" mode="out-in">
         <nuxt />
@@ -15,8 +16,8 @@
 <script lang="ts">
 import Vue from "vue";
 import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
-import { GIT_REVISION_SHORT } from "@/utils/config";
 import SentyMixin from "./sentry.mixin";
+import { GIT_REVISION_SHORT } from "@/utils/config";
 
 export default Vue.extend({
   mixins: [SentyMixin],

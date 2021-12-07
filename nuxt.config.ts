@@ -1,8 +1,8 @@
 import { NuxtConfig } from "@nuxt/types";
+import { NuxtOptionsLoaders, NuxtWebpackEnv } from "@nuxt/types/config/build";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
-import { ToastAction, ToastIconPack, ToastObject, ToastOptions, ToastPosition } from "vue-toasted";
 import { Configuration } from "webpack";
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
@@ -48,19 +48,6 @@ const config: NuxtConfig = {
       amp: "true",
     },
     meta: [
-      /**
-       * Cache-control
-       */
-      {
-        property: "cache-control",
-        httpEquiv: "cache-control",
-        content: "no-cache , no-store, must-revalidate",
-      },
-      {
-        httpEquiv: "pragma",
-        content: "no-cache",
-        property: "pragma",
-      },
       {
         httpEquiv: "cache-control",
         property: "cache-control",
@@ -71,7 +58,6 @@ const config: NuxtConfig = {
         content: "0",
         property: "expires",
       },
-
       /**
        * UX / UI settings
        */
@@ -184,6 +170,10 @@ const config: NuxtConfig = {
    */
   plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession"],
 
+  styleResources: {
+    scss: ["@/assets/style/vars/_variables.scss"],
+  },
+
   router: {
     middleware: ["auth"],
   },
@@ -191,28 +181,12 @@ const config: NuxtConfig = {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    // https://go.nuxtjs.dev/typescript
+    "@nuxt/typescript-build",
+    // https://go.nuxtjs.dev/stylelint
     "@nuxtjs/style-resources",
-    "@nuxtjs/google-fonts",
     ["@nuxtjs/dotenv", { path: __dirname }],
-    [
-      "@nuxt/typescript-build",
-      {
-        typescript: {
-          typeCheck: {
-            async: true,
-            stylelint: {
-              config: [".stylelintrc"],
-              files: "src/**/*.scss",
-            },
-            eslint: {
-              config: ["tsconfig-eslint.json", ".eslintrc.js"],
-              files: "@/**/*.{ts,vue,js}",
-            },
-            files: "@/**/*.{ts,vue,js}",
-          },
-        },
-      },
-    ],
+    "@nuxtjs/google-fonts",
     "nuxt-typed-vuex",
     [
       "@matterlabs/zksync-nuxt-core",
@@ -221,11 +195,17 @@ const config: NuxtConfig = {
         apiKeys: {
           FORTMATIC_KEY: process.env.APP_FORTMATIC,
           PORTIS_KEY: process.env.APP_PORTIS,
-          INFURA_KEY: process.env.APP_INFURA_API_KEY,
+          /**
+           * Added for all environments to reduce complexity
+           */
+          INFURA_KEY: "560464419d33486ab1713d61ac9f1d82",
         },
         onboardConfig: {
           APP_NAME: pageTitle,
-          APP_ID: process.env.APP_ONBOARDING_APP_ID,
+          /**
+           * Added for all environments to reduce complexity
+           */
+          APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
         restoreNetwork: true,
       },
@@ -235,23 +215,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/dotenv", "@nuxtjs/toast", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
-  toast: <ToastOptions>{
-    singleton: true,
-    keepOnHover: true,
-    position: "bottom-right" as ToastPosition,
-    duration: 4000,
-    className: "zkToastMain",
-    iconPack: "fontawesome" as ToastIconPack,
-    action: <ToastAction>{
-      text: "Close",
-      class: "zkToastActionClose",
-      icon: "fa-times-circle",
-      onClick: (_e: Event, toastObject: ToastObject): void => {
-        toastObject.goAway(100);
-      },
-    },
-  },
+  modules: ["@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
 
   /**
    * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
@@ -283,6 +247,9 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
+    filenames: { chunk: () => "[name]_Y2ZjItY_[contenthash].js" },
+    cache: false,
+    cssSourceMap: true,
     babel: {
       compact: true,
     },
@@ -291,37 +258,20 @@ const config: NuxtConfig = {
     extractCSS: {
       ignoreOrder: true,
     },
-    splitChunks: {
-      layouts: true,
-      pages: true,
-      commons: true,
-    },
     optimization: {
       removeAvailableModules: true,
       flagIncludedChunks: true,
       mergeDuplicateChunks: true,
       splitChunks: {
-        chunks: "all",
-        name: isProduction ? undefined : "chunk",
-        maxSize: 900 * 1024,
+        chunks: "async",
+        maxSize: 200000,
       },
-      nodeEnv: isProduction ? "16" : false,
-      minimize: isProduction,
     },
     transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
-    hardSource: false,
-    extend: (config: Configuration) => {
-      config.mode = isProduction ? "production" : "development";
+    extend: (config: Configuration, _ctx: { loaders: NuxtOptionsLoaders } & NuxtWebpackEnv) => {
       config.node = {
         fs: "empty",
       };
-      if (!config.output) {
-        config.output = {
-          crossOriginLoading: isProduction ? "anonymous" : false,
-        };
-      } else {
-        config.output.crossOriginLoading = isProduction ? "anonymous" : false;
-      }
     },
   },
   googleFonts: {
@@ -336,6 +286,7 @@ const config: NuxtConfig = {
   },
   generate: {
     dir: "public",
+    cache: false,
     devtools: !isProduction,
   },
 };

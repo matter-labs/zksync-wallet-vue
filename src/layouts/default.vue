@@ -2,6 +2,7 @@
   <i-layout class="defaultLayout">
     <block-logging-in-loader />
     <block-modals-wrong-network />
+    <block-modals-requesting-provider-error />
     <transition name="fade">
       <div v-if="!loggingIn && loggedIn">
         <block-header ref="header" />
