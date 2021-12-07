@@ -31,6 +31,9 @@ export default Vue.extend({
       contactInfoShown: false,
     };
   },
+  mounted() {
+    console.log("Mounted index");
+  },
   methods: {
     async customWallet() {
       const refreshWalletTry = await this.$store.dispatch("zk-onboard/loginWithOnboard");
