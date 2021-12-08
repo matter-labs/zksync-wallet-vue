@@ -40,7 +40,7 @@
                 <template slot="body">Not available for paying fees</template>
               </i-tooltip>
             </div>
-            <div v-if="!onlyMintTokens && (tokensType === 'L1-Tokens' || tokensType === 'L2-Tokens')" class="rightSide">
+            <div v-if="displayTokenBalance" class="rightSide">
               <div class="balance">{{ balance | parseBigNumberish(symbolOrID) }}</div>
             </div>
           </div>
@@ -169,6 +169,9 @@ export default Vue.extend({
     },
     isSearching(): boolean {
       return !!this.search.trim();
+    },
+    displayTokenBalance(): boolean {
+      return !this.onlyMintTokens && (this.tokensType === "L1-Tokens" || this.tokensType === "L2-Tokens");
     },
   },
   methods: {
