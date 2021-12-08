@@ -102,6 +102,10 @@ export default Vue.extend({
       },
     },
     inputtedAmount(val) {
+      if (val?.includes(",")) {
+        this.inputtedAmount = val.replace(",", ".");
+        return;
+      }
       this.emitValue(val);
     },
     value(val) {
