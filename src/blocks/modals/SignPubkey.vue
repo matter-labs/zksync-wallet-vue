@@ -34,7 +34,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkSignCPKState } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkSignCPKState, ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
 
 export default Vue.extend({
   name: "SignPubkey",
@@ -45,6 +45,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    cpkStatus(): ZkCPKStatus {
+      return this.$store.getters["zk-wallet/cpk"];
+    },
     opened(): boolean {
       return this.$accessor.currentModal === "SignPubkey";
     },
@@ -56,6 +59,13 @@ export default Vue.extend({
     },
     error(): string | undefined {
       return this.$store.getters["zk-wallet/cpkSignError"];
+    },
+  },
+  watch: {
+    cpkStatus(val) {
+      if (val !== false && this.opened) {
+        this.$accessor.closeActiveModal();
+      }
     },
   },
   methods: {

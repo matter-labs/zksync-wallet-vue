@@ -31,7 +31,6 @@
 .gzip_cache/
 .assets_cache/
 .reports/
-/src/static/sw.js
 public
 .nuxt
 *debug.log*
