@@ -10,7 +10,7 @@
     <div class="error" data-cy="amount_block_token_error_message">
       {{ error }}
     </div>
-    <div v-if="token" class="_display-flex _justify-content-space-between">
+    <div v-if="token && maxAmount" class="_display-flex _justify-content-space-between">
       <div class="secondaryText">
         <token-price :symbol="token" :amount="inputtedAmountBigNumber.toString()" />
       </div>
@@ -102,6 +102,10 @@ export default Vue.extend({
       },
     },
     inputtedAmount(val) {
+      if (val?.includes(",")) {
+        this.inputtedAmount = val.replace(",", ".");
+        return;
+      }
       this.emitValue(val);
     },
     value(val) {
