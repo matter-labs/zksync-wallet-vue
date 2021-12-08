@@ -13,6 +13,7 @@
       <choose-token
         v-if="mainToken || chooseTokenModal === 'feeToken'"
         :fee-acceptable="chooseTokenModal === 'feeToken'"
+        :only-mint-tokens="type === 'Mint'"
         :tokens-type="mainToken && chooseTokenModal !== 'feeToken' ? mainToken : 'L2-Tokens'"
         @chosen="chooseToken($event)"
       />
@@ -35,6 +36,9 @@
         <div class="_padding-0 _display-flex _justify-content-end">
           <buy-with-ramp class="_padding-y-0" />
         </div>
+        <div v-if="!isMainnet" class="_padding-0 _display-flex _justify-content-end">
+          <i-button class="_padding-y-0 _margin-top-05" link to="/transaction/mint"> Mint tokens<v-icon name="ri-add-fill" scale="0.75" /></i-button>
+        </div>
       </template>
 
       <template v-if="type === 'Transfer'">
@@ -56,7 +60,7 @@
         <amount-input
           ref="amountInput"
           v-model="inputtedAmount"
-          :max-amount="maxAmount.toString()"
+          :max-amount="type !== 'Mint' ? maxAmount.toString() : undefined"
           :token="chosenToken ? chosenToken : undefined"
           autofocus
           :type="type"
@@ -240,6 +244,9 @@ export default Vue.extend({
     };
   },
   computed: {
+    isMainnet(): boolean {
+      return this.$store.getters["zk-provider/network"] === "mainnet";
+    },
     isSubmitDisabled(): boolean {
       return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.loading;
     },
@@ -282,6 +289,7 @@ export default Vue.extend({
     displayAmountInput(): boolean {
       switch (this.type) {
         case "Deposit":
+        case "Mint":
         case "Transfer":
         case "Withdraw":
           return true;
@@ -353,7 +361,7 @@ export default Vue.extend({
       return this.type === "Deposit" && this.chosenToken !== undefined && (!this.enoughAllowance || this.zeroAllowance) && (!this.allowanceLoading || this.zeroAllowance);
     },
     displayOwnAddress(): boolean {
-      return ["Deposit", "Withdraw", "WithdrawNFT", "MintNFT"].includes(this.type);
+      return ["Deposit", "Withdraw", "Mint", "WithdrawNFT", "MintNFT"].includes(this.type);
     },
     activeTransaction(): ZkActiveTransaction {
       return this.$store.getters["zk-transaction/activeTransaction"];
