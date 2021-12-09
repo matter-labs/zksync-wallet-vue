@@ -126,19 +126,19 @@ export default Vue.extend({
       }
       if (this.transaction.status === "finalized") {
         return {
-          text: "Finalized",
+          text: "Verified",
           icon: "ri-check-double-line",
           class: "verified",
         };
       } else if (this.transaction.status === "committed") {
         return {
-          text: "Pending",
+          text: "Committed",
           icon: "ri-check-line",
           class: "committed",
         };
       } else {
         return {
-          text: "In progress",
+          text: "Initiated",
           icon: "ri-loader-5-line",
           class: "inProgress",
         };
