@@ -1,5 +1,5 @@
 <template>
-  <i-modal :value="opened" class="account_activation_modal prevent-close" size="md" data-cy="account_activation_modal" @hide="close()">
+  <i-modal :value="opened" class="accountActivationModal prevent-close" size="md" data-cy="account_activation_modal" @hide="close()">
     <template slot="header">Account Activation</template>
     <div class="_text-center">
       <p v-if="state === false">
@@ -128,7 +128,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.account_activation_modal .text-sm {
+.accountActivationModal .text-sm {
   font-size: 13px;
 }
 </style>
