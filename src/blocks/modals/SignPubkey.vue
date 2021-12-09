@@ -1,8 +1,11 @@
 <template>
-  <i-modal :value="opened" class="prevent-close" size="md" data-cy="account_activation_modal" @hide="close()">
+  <i-modal :value="opened" class="account_activation_modal prevent-close" size="md" data-cy="account_activation_modal" @hide="close()">
     <template slot="header">Account Activation</template>
     <div class="_text-center">
-      <p v-if="state === false">Sign a message to activate your zkSync account.</p>
+      <p v-if="state === false">
+        <span>Sign a message to activate your zkSync account.</span>
+        <span class="_display-block _margin-top-05 secondaryText text-sm">{{ transactionError }}</span>
+      </p>
       <p v-else-if="state === 'processing'" class="_text-center">Processing...</p>
       <p v-else-if="state === 'waitingForUserConfirmation'" class="_text-center">Sign the message in your wallet to continue</p>
       <p v-else-if="state === 'updating'" class="_text-center">Loading account data...</p>
@@ -59,6 +62,9 @@ export default Vue.extend({
     },
     error(): string | undefined {
       return this.$store.getters["zk-wallet/cpkSignError"];
+    },
+    transactionError(): Error {
+      return this.$store.getters["zk-transaction/error"];
     },
   },
   watch: {
@@ -120,3 +126,9 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss">
+.account_activation_modal .text-sm {
+  font-size: 13px;
+}
+</style>

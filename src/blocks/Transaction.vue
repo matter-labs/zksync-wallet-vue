@@ -497,14 +497,15 @@ export default Vue.extend({
             }
           }
           await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
-          if (this.$store.getters["zk-transaction/error"]) {
-            this.checkCPK();
-          }
         } catch (error) {
           this.$sentry.captureException(error, { tags: { "operation.type": this.type } });
           this.$store.commit("zk-transaction/setError", error);
         } finally {
           this.loading = false;
+          console.log("error", this.$store.getters["zk-transaction/error"]);
+          if (this.$store.getters["zk-transaction/error"]) {
+            this.checkCPK();
+          }
         }
       }
     },
