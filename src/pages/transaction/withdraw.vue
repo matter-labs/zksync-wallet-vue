@@ -10,5 +10,8 @@ export default Vue.extend({
   created() {
     this.$store.dispatch("zk-transaction/setType", "Withdraw");
   },
+  mounted() {
+    this.$analytics.track("visit_withdraw");
+  },
 });
 </script>

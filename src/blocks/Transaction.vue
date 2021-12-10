@@ -147,7 +147,7 @@
       <i-button
         :disabled="isSubmitDisabled"
         block
-        class="_margin-top-1 _display-flex flex-row"
+        class="flex-row _margin-top-1 _display-flex"
         data-cy="commit_transaction_button"
         size="lg"
         variant="secondary"
@@ -201,7 +201,7 @@
         v-if="requiredFees.length > 0"
         class="linkText _width-100 _display-block _text-center _margin-top-1"
         data-cy="fee_block_change_fee_token_button"
-        @click="chooseTokenModal = 'feeToken'"
+        @click="showChangeFeeTokenModal"
       >
         Change fee token
       </span>
@@ -416,9 +416,7 @@ export default Vue.extend({
     if (!this.$store.getters["zk-account/accountStateRequested"]) {
       await this.$store.dispatch("zk-account/updateAccountState");
     }
-    if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] === false && this.type !== "CPK") {
-      this.$accessor.openModal("SignPubkey");
-    }
+    this.checkCPK();
     if (this.$route.query.token) {
       if (this.mainToken === "L2-NFT") {
         this.chooseToken(parseInt(<string>this.$route.query.token));
@@ -441,6 +439,7 @@ export default Vue.extend({
         this.$store.dispatch("zk-transaction/setSymbol", token);
       } else if (this.chooseTokenModal === "feeToken") {
         this.$store.dispatch("zk-transaction/setFeeSymbol", token);
+        this.$analytics.track("change_fee_token");
       }
       this.chooseTokenModal = false;
     },
@@ -474,6 +473,7 @@ export default Vue.extend({
         try {
           this.requestingSigner = true;
           await this.$store.dispatch("zk-wallet/requestSigner");
+          this.checkCPK();
         } catch (err) {
           this.$sentry.captureException(err, { tags: { "operation.type": "requestSigner" } });
         }
@@ -497,15 +497,63 @@ export default Vue.extend({
               return;
             }
           }
+
           await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
+          this.trackTransaction();
         } catch (error) {
           this.$sentry.captureException(error, { tags: { "operation.type": this.type } });
           this.$store.commit("zk-transaction/setError", error);
+          this.trackTransaction(true);
         } finally {
           this.loading = false;
+          console.log("error", this.$store.getters["zk-transaction/error"]);
+          if (this.$store.getters["zk-transaction/error"]) {
+            this.checkCPK();
+          }
         }
       }
     },
+    trackTransaction(failed = false): void {
+      const status = failed ? "_fail" : "";
+      switch (this.type) {
+        case "Deposit":
+          this.$analytics.track("deposit" + status, {
+            amount: this.inputtedAmount,
+            opToken: this.chosenToken,
+          });
+          break;
+        case "Mint":
+          this.$analytics.track("mint_nft" + status, {
+            feeToken: this.feeSymbol,
+          });
+          break;
+        case "TransferNFT":
+          this.$analytics.track("transfer_nft" + status, {
+            feeToken: this.feeSymbol,
+          });
+          break;
+        case "WithdrawNFT":
+          this.$analytics.track("withdraw_nft" + status, {
+            feeToken: this.feeSymbol,
+          });
+          break;
+        case "Transfer":
+          this.$analytics.track("transfer" + status, {
+            amount: this.inputtedAmount,
+            opToken: this.chosenToken,
+            feeToken: this.feeSymbol,
+          });
+          break;
+        case "Withdraw":
+          this.$analytics.track((getAddress(this.inputtedAddress) === this.$store.getters["zk-account/address"] ? "l1_withdraw" : "l1_transfer") + status, {
+            amount: this.inputtedAmount,
+            opToken: this.chosenToken,
+            feeToken: this.feeSymbol,
+          });
+          break;
+      }
+    },
+
     async checkInputtedAccountUnlocked(): Promise<boolean> {
       const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider");
       const state = await syncProvider.getState(this.inputtedAddress);
@@ -525,6 +573,20 @@ export default Vue.extend({
     },
     async requestFees() {
       await this.$store.dispatch("zk-transaction/requestAllFees", true);
+    },
+    checkCPK() {
+      if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] !== true && this.type !== "CPK") {
+        if (this.$store.getters["zk-wallet/cpk"] === false) {
+          this.$accessor.openModal("SignPubkey");
+        }
+        if (!this.$store.getters["zk-transaction/accountActivationFee"]) {
+          this.$store.dispatch("zk-transaction/requestAccountActivationFee");
+        }
+      }
+    },
+    showChangeFeeTokenModal() {
+      this.chooseTokenModal = "feeToken";
+      this.$analytics.track("visit_change_fee_token");
     },
   },
 });

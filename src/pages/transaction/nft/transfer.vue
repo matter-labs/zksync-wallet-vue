@@ -10,5 +10,8 @@ export default Vue.extend({
   created() {
     this.$store.dispatch("zk-transaction/setType", "TransferNFT");
   },
+  mounted() {
+    this.$analytics.track("visit_transfer_nft");
+  },
 });
 </script>
