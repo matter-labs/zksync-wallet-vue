@@ -416,9 +416,7 @@ export default Vue.extend({
     if (!this.$store.getters["zk-account/accountStateRequested"]) {
       await this.$store.dispatch("zk-account/updateAccountState");
     }
-    if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] === false && this.type !== "CPK") {
-      this.$accessor.openModal("SignPubkey");
-    }
+    this.checkCPK();
     if (this.$route.query.token) {
       if (this.mainToken === "L2-NFT") {
         this.chooseToken(parseInt(<string>this.$route.query.token));
@@ -474,6 +472,7 @@ export default Vue.extend({
         try {
           this.requestingSigner = true;
           await this.$store.dispatch("zk-wallet/requestSigner");
+          this.checkCPK();
         } catch (err) {
           this.$sentry.captureException(err, { tags: { "operation.type": "requestSigner" } });
         }
@@ -503,6 +502,10 @@ export default Vue.extend({
           this.$store.commit("zk-transaction/setError", error);
         } finally {
           this.loading = false;
+          console.log("error", this.$store.getters["zk-transaction/error"]);
+          if (this.$store.getters["zk-transaction/error"]) {
+            this.checkCPK();
+          }
         }
       }
     },
@@ -525,6 +528,16 @@ export default Vue.extend({
     },
     async requestFees() {
       await this.$store.dispatch("zk-transaction/requestAllFees", true);
+    },
+    checkCPK() {
+      if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] !== true && this.type !== "CPK") {
+        if (this.$store.getters["zk-wallet/cpk"] === false) {
+          this.$accessor.openModal("SignPubkey");
+        }
+        if (!this.$store.getters["zk-transaction/accountActivationFee"]) {
+          this.$store.dispatch("zk-transaction/requestAccountActivationFee");
+        }
+      }
     },
   },
 });
