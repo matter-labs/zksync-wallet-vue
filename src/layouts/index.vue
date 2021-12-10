@@ -16,7 +16,7 @@
 <script lang="ts">
 import Vue from "vue";
 import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
-import SentyMixin from "./sentry.mixin";
+import SentryMixin from "./sentry.mixin";
 import { GIT_REVISION_SHORT } from "@/utils/config";
 
 export default Vue.extend({
