@@ -10,14 +10,10 @@
         navigator.serviceWorker
           .getRegistrations()
           .then(function (registrations) {
-            console.log(registrations);
             for (const registration of registrations) {
               registration.unregister();
             }
           })
-          .then(() => {
-            console.log("SW cleanup done");
-          });
       } catch (e) {
         console.error(e);
       }
