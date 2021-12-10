@@ -47,7 +47,7 @@
                 <i-tooltip placement="left">
                   <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
                   <v-icon v-else class="committed" name="ri-check-line" />
-                  <template slot="body">{{ item.verified ? "Verified" : "Pending" }}</template>
+                  <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
                 </i-tooltip>
               </div>
             </div>
@@ -59,8 +59,8 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { searchByKey } from "matter-dapp-module/utils";
-import { ZkNFTBalances } from "matter-dapp-module/types";
+import { searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
+import { ZkNFTBalances } from "@matterlabs/zksync-nuxt-core/types";
 export default Vue.extend({
   data() {
     return {

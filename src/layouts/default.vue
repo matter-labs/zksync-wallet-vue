@@ -1,6 +1,8 @@
 <template>
   <i-layout class="defaultLayout">
     <block-logging-in-loader />
+    <block-modals-wrong-network />
+    <block-modals-requesting-provider-error />
     <transition name="fade">
       <div v-if="!loggingIn && loggedIn">
         <block-header ref="header" />
@@ -20,7 +22,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import theme from "matter-dapp-module/utils/theme";
+import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
 import SentryMixin from "./sentry.mixin";
 
 export default Vue.extend({

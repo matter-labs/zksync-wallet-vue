@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkFeesChange } from "matter-dapp-module/types";
+import { ZkFeesChange } from "@matterlabs/zksync-nuxt-core/types";
 
 export default Vue.extend({
   props: {

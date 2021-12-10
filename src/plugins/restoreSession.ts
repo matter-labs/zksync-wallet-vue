@@ -1,5 +1,5 @@
 import { Context } from "@nuxt/types";
-import { zkSyncNetworkConfig } from "matter-dapp-module/utils/config";
+import { zkSyncNetworkConfig } from "@matterlabs/zksync-nuxt-core/utils/config";
 
 export default async ({ app, store, route }: Context) => {
   if (typeof route.query.network === "string" && Object.prototype.hasOwnProperty.call(zkSyncNetworkConfig, route.query.network)) {

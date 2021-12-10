@@ -60,8 +60,8 @@ import moment from "moment-timezone";
 import Vue, { PropOptions } from "vue";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { Address, TokenSymbol, ApiTransaction } from "zksync/build/types";
-import { Token, ZkContact, ZkConfig } from "matter-dapp-module/types";
-import { copyToClipboard } from "matter-dapp-module/utils";
+import { Token, ZkContact, ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -126,19 +126,19 @@ export default Vue.extend({
       }
       if (this.transaction.status === "finalized") {
         return {
-          text: "Finalized",
+          text: "Verified",
           icon: "ri-check-double-line",
           class: "verified",
         };
       } else if (this.transaction.status === "committed") {
         return {
-          text: "Pending",
+          text: "Committed",
           icon: "ri-check-line",
           class: "committed",
         };
       } else {
         return {
-          text: "In progress",
+          text: "Initiated",
           icon: "ri-loader-5-line",
           class: "inProgress",
         };

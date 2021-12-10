@@ -35,7 +35,7 @@
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
-      "matter-dapp-module",
+      "@matterlabs/zksync-nuxt-core",
       "vue-router",
       "web3-core/types",
       "@inkline/inkline/types",

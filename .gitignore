@@ -31,7 +31,6 @@
 .gzip_cache/
 .assets_cache/
 .reports/
-/src/static/sw.js
 public
 .nuxt
 *debug.log*
@@ -49,4 +48,3 @@ public
 /cypress/screenshots/examples/misc.spec.js/
 /cypress/videos/examples/
 /.eslintcache
-*.patch

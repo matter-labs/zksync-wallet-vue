@@ -9,7 +9,7 @@
         v-model="inputtedWallet"
         autocomplete="none"
         class="walletAddress"
-        maxlength="45"
+        maxlength="100"
         data-cy="address_block_wallet_address_input"
         placeholder="0x address"
         spellcheck="false"
@@ -27,7 +27,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { Address } from "zksync/build/types";
-import { validateAddress } from "matter-dapp-module/utils";
+import { validateAddress } from "@matterlabs/zksync-nuxt-core/utils";
 
 export default Vue.extend({
   props: {
@@ -56,7 +56,7 @@ export default Vue.extend({
   },
   watch: {
     inputtedWallet(val) {
-      const trimmed = val.trim();
+      const trimmed = val.trim().replace("zksync:", "");
       this.inputtedWallet = trimmed;
       if (val !== trimmed) {
         return;

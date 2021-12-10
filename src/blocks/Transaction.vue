@@ -13,6 +13,7 @@
       <choose-token
         v-if="mainToken || chooseTokenModal === 'feeToken'"
         :fee-acceptable="chooseTokenModal === 'feeToken'"
+        :only-mint-tokens="type === 'Mint'"
         :tokens-type="mainToken && chooseTokenModal !== 'feeToken' ? mainToken : 'L2-Tokens'"
         @chosen="chooseToken($event)"
       />
@@ -35,6 +36,9 @@
         <div class="_padding-0 _display-flex _justify-content-end">
           <buy-with-ramp class="_padding-y-0" />
         </div>
+        <div v-if="!isMainnet" class="_padding-0 _display-flex _justify-content-end">
+          <i-button class="_padding-y-0 _margin-top-05" link to="/transaction/mint"> Mint tokens<v-icon name="ri-add-fill" scale="0.75" /></i-button>
+        </div>
       </template>
 
       <template v-if="type === 'Transfer'">
@@ -56,7 +60,7 @@
         <amount-input
           ref="amountInput"
           v-model="inputtedAmount"
-          :max-amount="maxAmount.toString()"
+          :max-amount="type !== 'Mint' ? maxAmount.toString() : undefined"
           :token="chosenToken ? chosenToken : undefined"
           autofocus
           :type="type"
@@ -134,6 +138,10 @@
       <div v-if="type === 'CPK' && cpkStatus === true" class="_text-center _margin-top-1">Your account is already activated</div>
 
       <div v-if="error" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">{{ error }}</div>
+      <div v-if="nftTokenIsntVerified" class="errorText _text-center _margin-top-1">
+        Mint transaction for <span class="tokenSymbol">NFT-{{ chosenToken }}</span> isn't verified yet. <br />Try again once
+        <span class="tokenSymbol">NFT-{{ chosenToken }}</span> gets verified.
+      </div>
 
       <!-- Commit button -->
       <i-button
@@ -148,7 +156,7 @@
         <div class="_display-flex _justify-content-center _align-items-center">
           <v-icon v-if="!hasSigner && requireSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
           <div>{{ hasSigner || !requireSigner ? "" : "Authorize to " }}{{ transactionActionName }}</div>
-          <loader v-if="allowanceLoading || buttonLoader || requestingSigner" class="_margin-left-1" size="xs" />
+          <loader v-if="buttonLoader" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
 
@@ -206,7 +214,7 @@ import Vue, { PropOptions } from "vue";
 import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
-import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee, ZkCPKStatus } from "matter-dapp-module/types";
+import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee, ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "@ethersproject/address";
 import { RestProvider } from "zksync";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
@@ -231,13 +239,22 @@ export default Vue.extend({
       inputtedAddress: this.$store.getters["zk-transaction/address"],
       chooseTokenModal: <false | "mainToken" | "feeToken">false,
       contentHash: this.$store.getters["zk-transaction/contentHash"],
-      buttonLoader: true,
+      loading: true,
       requestingSigner: false,
     };
   },
   computed: {
+    isMainnet(): boolean {
+      return this.$store.getters["zk-provider/network"] === "mainnet";
+    },
     isSubmitDisabled(): boolean {
-      return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.buttonLoader;
+      return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.loading;
+    },
+    buttonLoader(): boolean {
+      return this.allowanceLoading || (!this.nftExists && this.nftExistsLoading) || this.loading || this.requestingSigner;
+    },
+    nftTokenIsntVerified(): boolean {
+      return Boolean(this.chosenToken && this.mainToken === "L2-NFT" && !this.nftExists && !this.nftExistsLoading);
     },
     routeBack(): Route | string {
       if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
@@ -272,6 +289,7 @@ export default Vue.extend({
     displayAmountInput(): boolean {
       switch (this.type) {
         case "Deposit":
+        case "Mint":
         case "Transfer":
         case "Withdraw":
           return true;
@@ -292,6 +310,12 @@ export default Vue.extend({
         default:
           return false;
       }
+    },
+    nftExists(): boolean {
+      return this.$store.getters["zk-transaction/nftExists"];
+    },
+    nftExistsLoading(): boolean {
+      return this.$store.getters["zk-transaction/nftExistsLoading"];
     },
     commitAllowed(): boolean {
       return this.$store.getters["zk-transaction/commitAllowed"];
@@ -337,7 +361,7 @@ export default Vue.extend({
       return this.type === "Deposit" && this.chosenToken !== undefined && (!this.enoughAllowance || this.zeroAllowance) && (!this.allowanceLoading || this.zeroAllowance);
     },
     displayOwnAddress(): boolean {
-      return ["Deposit", "Withdraw", "WithdrawNFT", "MintNFT"].includes(this.type);
+      return ["Deposit", "Withdraw", "Mint", "WithdrawNFT", "MintNFT"].includes(this.type);
     },
     activeTransaction(): ZkActiveTransaction {
       return this.$store.getters["zk-transaction/activeTransaction"];
@@ -386,10 +410,12 @@ export default Vue.extend({
     },
   },
   async mounted() {
+    if (!this.$store.getters["zk-account/loggedIn"]) {
+      return;
+    }
     if (!this.$store.getters["zk-account/accountStateRequested"]) {
       await this.$store.dispatch("zk-account/updateAccountState");
     }
-    // await this.$store.dispatch("zk-wallet/checkCPK");
     if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] === false && this.type !== "CPK") {
       this.$accessor.openModal("SignPubkey");
     }
@@ -403,7 +429,7 @@ export default Vue.extend({
     if (this.$route.query.address) {
       this.inputtedAddress = this.$route.query.address;
     }
-    this.buttonLoader = false;
+    this.loading = false;
   },
   beforeDestroy() {
     this.$store.commit("zk-transaction/setAmount", undefined);
@@ -453,13 +479,13 @@ export default Vue.extend({
         }
         this.requestingSigner = false;
       } else {
-        if (!this.commitAllowed || this.buttonLoader) {
+        if (!this.commitAllowed || this.loading) {
           return;
         }
 
         /* Transfer != Withdraw warning */
         try {
-          this.buttonLoader = true;
+          this.loading = true;
 
           if (this.type === "Withdraw") {
             if (!(await this.checkWithdraw())) {
@@ -476,7 +502,7 @@ export default Vue.extend({
           this.$sentry.captureException(error, { tags: { "operation.type": this.type } });
           this.$store.commit("zk-transaction/setError", error);
         } finally {
-          this.buttonLoader = false;
+          this.loading = false;
         }
       }
     },
