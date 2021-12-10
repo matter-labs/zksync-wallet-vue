@@ -11,6 +11,8 @@ export default Vue.extend({
     this.$store.dispatch("zk-transaction/setType", "Deposit");
   },
   mounted() {
+    this.$analytics.track("visit_deposit");
+
     this.$store.dispatch("zk-balances/requestEthereumBalances");
   },
 });
