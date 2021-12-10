@@ -42,24 +42,12 @@
       <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts/${displayedAddress}`">
         {{ getAddressName(displayedAddress) }}
       </nuxt-link>
-      <a
-        v-if="ethTxHash"
-        :href="config.ethereumNetwork.explorer + 'tx/' + ethTxHash"
-        target="_blank"
-        class="linkText"
-        @click.passive="$analytics.track('view_transaction_in_blockexplorer')"
-      >
+      <a v-if="ethTxHash" :href="config.ethereumNetwork.explorer + 'tx/' + ethTxHash" target="_blank" class="linkText">
         Ethereum Transaction
         <v-icon name="ri-external-link-line" scale="0.8" />
       </a>
     </div>
-    <a
-      v-if="transactionExplorerLink"
-      class="button -md -secondary -link externalLink"
-      target="_blank"
-      :href="transactionExplorerLink"
-      @click.passive="$analytics.track('view_transaction_in_zkscan')"
-    >
+    <a v-if="transactionExplorerLink" class="button -md -secondary -link externalLink" target="_blank" :href="transactionExplorerLink">
       <v-icon name="ri-external-link-line" scale="0.8" />
     </a>
   </div>

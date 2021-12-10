@@ -88,7 +88,6 @@ export default Vue.extend({
       this.$inkline.config.variant = this.theme;
     },
     openNetworkSwitchModal() {
-      this.$analytics.track("visit_change_network");
       return this.$accessor.openModal("NetworkSwitch");
     },
   },
