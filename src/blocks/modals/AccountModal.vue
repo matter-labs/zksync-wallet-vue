@@ -17,7 +17,7 @@
         <vue-qrcode v-if="accountAddress" class="addressQR" :value="accountAddress" :margin="1" :scale="6" />
       </div>
       <template slot="footer">
-        <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank" @click="$analytics.track('view_in_blockexplorer')">
+        <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank" @click.passive="$analytics.track('view_in_blockexplorer')">
           <v-icon name="ri-external-link-line" />
           <span>View in block explorer</span>
         </a>

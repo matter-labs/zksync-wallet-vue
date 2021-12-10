@@ -47,7 +47,7 @@
         :href="config.ethereumNetwork.explorer + 'tx/' + ethTxHash"
         target="_blank"
         class="linkText"
-        @click="$analytics.track('view_transaction_in_blockexplorer')"
+        @click.passive="$analytics.track('view_transaction_in_blockexplorer')"
       >
         Ethereum Transaction
         <v-icon name="ri-external-link-line" scale="0.8" />
@@ -58,7 +58,7 @@
       class="button -md -secondary -link externalLink"
       target="_blank"
       :href="transactionExplorerLink"
-      @click="$analytics.track('view_transaction_in_zkscan')"
+      @click.passive="$analytics.track('view_transaction_in_zkscan')"
     >
       <v-icon name="ri-external-link-line" scale="0.8" />
     </a>

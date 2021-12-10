@@ -133,7 +133,7 @@ export default Vue.extend({
     },
   },
   watch: {
-    contactsListModal(value) {
+    contactsListModal(value: boolean): void {
       setTimeout(() => {
         (this.$refs.contactNameInput as Vue)?.$el?.querySelector("input")?.focus();
       }, 0);
@@ -142,7 +142,7 @@ export default Vue.extend({
         this.$analytics.track("visit_select_contact");
       }
     },
-    saveContactModal(value) {
+    saveContactModal(value: boolean): void {
       this.saveContactModalError = "";
       setTimeout(() => {
         (this.$refs.contactNameInput as Vue)?.$el?.querySelector("input")?.focus();
