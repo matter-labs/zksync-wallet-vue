@@ -93,6 +93,8 @@ export default Vue.extend({
       };
     },
     editContact() {
+      this.$analytics.track("visit_edit_contact");
+
       this.contactModal = {
         enabled: true,
         error: "",
@@ -104,6 +106,9 @@ export default Vue.extend({
         this.contactModal.error = "Invalid name";
         return;
       }
+
+      this.$analytics.track("edit_contact");
+
       this.$store.dispatch("zk-contacts/setContact", { address: this.address, name: this.contactModal.name });
       this.contactModal.enabled = false;
       this.forceUpdateVal++;
