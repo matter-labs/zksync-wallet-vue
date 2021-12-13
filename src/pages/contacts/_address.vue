@@ -57,6 +57,7 @@ export default Vue.extend({
       fromRoute: <Route | undefined>undefined,
       address: <Address>"",
       contactModal: {
+        type: <"add" | "edit">"add",
         enabled: false,
         error: "",
         name: "",
@@ -86,8 +87,11 @@ export default Vue.extend({
   },
   methods: {
     addToContacts() {
+      this.$analytics.track("visit_add_contact");
+
       this.contactModal = {
         enabled: true,
+        type: "add",
         error: "",
         name: "",
       };
@@ -97,6 +101,7 @@ export default Vue.extend({
 
       this.contactModal = {
         enabled: true,
+        type: "edit",
         error: "",
         name: this.openedContact.name,
       };
@@ -107,7 +112,7 @@ export default Vue.extend({
         return;
       }
 
-      this.$analytics.track("edit_contact");
+      this.$analytics.track(this.contactModal.type === "add" ? "add_contact" : "edit_contact");
 
       this.$store.dispatch("zk-contacts/setContact", { address: this.address, name: this.contactModal.name });
       this.contactModal.enabled = false;
