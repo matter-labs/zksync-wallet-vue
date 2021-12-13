@@ -39,8 +39,6 @@ export default Vue.extend({
   },
   methods: {
     changeNetworkConfig(networkName: ZkNetwork) {
-      this.$analytics.track("change_network", { networkName });
-
       this.$store.dispatch("zk-provider/changeNetwork", networkName);
       this.$accessor.closeActiveModal();
     },

@@ -17,7 +17,7 @@
         <vue-qrcode v-if="accountAddress" class="addressQR" :value="accountAddress" :margin="1" :scale="6" />
       </div>
       <template slot="footer">
-        <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank" @click.passive="$analytics.track('view_in_blockexplorer')">
+        <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank">
           <v-icon name="ri-external-link-line" />
           <span>View in block explorer</span>
         </a>
@@ -90,8 +90,6 @@ export default Vue.extend({
   },
   methods: {
     logout(): void {
-      this.$analytics.track("disconnect");
-
       this.accountModal = false;
       this.$nextTick(async () => {
         await this.$store.dispatch("zk-account/logout");
@@ -99,8 +97,6 @@ export default Vue.extend({
       });
     },
     renameWalletOpen(): void {
-      this.$analytics.track("visit_rename_wallet");
-
       this.accountModal = false;
       this.renameWalletModal = true;
     },
@@ -108,7 +104,6 @@ export default Vue.extend({
       if (!this.isNameValid) {
         return;
       }
-      this.$analytics.track("rename_wallet");
       this.$store.dispatch("zk-account/saveAccountName", this.walletName);
       this.renameWalletModal = false;
       this.walletName = this.accountName;
