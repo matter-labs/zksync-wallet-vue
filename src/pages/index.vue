@@ -40,7 +40,6 @@ export default Vue.extend({
       if (!refreshWalletTry) {
         await this.$store.dispatch("zk-account/logout");
       } else {
-        this.$analytics.identify(this.$store.getters["zk-account/address"]);
         this.$analytics.track("login", { connectionType: "Ethereum Wallet", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
         await this.$router.push("/account");
       }
@@ -50,7 +49,6 @@ export default Vue.extend({
       if (!refreshWalletTry) {
         await this.$store.dispatch("zk-account/logout");
       } else {
-        this.$analytics.identify(this.$store.getters["zk-account/address"]);
         this.$analytics.track("login", { connectionType: "WalletConnect", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
         await this.$router.push("/account");
       }
