@@ -498,8 +498,9 @@ export default Vue.extend({
             }
           }
 
-          await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
-          this.trackTransaction();
+          const result = await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
+
+          this.trackTransaction(!result);
         } catch (error) {
           this.$sentry.captureException(error, { tags: { "operation.type": this.type } });
           this.$store.commit("zk-transaction/setError", error);
@@ -523,6 +524,12 @@ export default Vue.extend({
           });
           break;
         case "Mint":
+          this.$analytics.track("mint" + status, {
+            amount: this.inputtedAmount,
+            opToken: this.chosenToken,
+          });
+          break;
+        case "MintNFT":
           this.$analytics.track("mint_nft" + status, {
             feeToken: this.feeSymbol,
           });
@@ -550,6 +557,9 @@ export default Vue.extend({
             opToken: this.chosenToken,
             feeToken: this.feeSymbol,
           });
+          break;
+        default:
+          this.$analytics.track(this.type + status);
           break;
       }
     },
