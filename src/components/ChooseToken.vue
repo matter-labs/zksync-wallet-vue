@@ -78,7 +78,7 @@ import { Tokens } from "zksync/build/types";
 
 export default Vue.extend({
   props: {
-    onlyMintTokens: {
+    allZkTokens: {
       type: Boolean,
       default: false,
       required: false,
@@ -135,7 +135,7 @@ export default Vue.extend({
       return this.$store.getters["zk-balances/ethereumBalances"];
     },
     mainLoading(): boolean {
-      if (this.onlyMintTokens) {
+      if (this.allZkTokens) {
         return this.zkTokensLoading;
       }
       if (this.tokensType === "L1-Tokens") {
@@ -150,7 +150,7 @@ export default Vue.extend({
       return this.accountStateLoading;
     },
     displayedList(): { [symbolOrID: string]: BigNumberish } {
-      if (this.onlyMintTokens) {
+      if (this.allZkTokens) {
         return searchByKey(Object.fromEntries(Object.entries(this.mintTokens).map(([symbol]) => [symbol, "0"])), this.search);
       } else if (this.tokensType === "L1-Tokens") {
         return searchByKey(Object.fromEntries(Object.entries(this.ethereumBalances).map(([symbol, balance]) => [symbol, balance.toString()])), this.search);
@@ -171,7 +171,7 @@ export default Vue.extend({
       return !!this.search.trim();
     },
     displayTokenBalance(): boolean {
-      return !this.onlyMintTokens && (this.tokensType === "L1-Tokens" || this.tokensType === "L2-Tokens");
+      return !this.allZkTokens && (this.tokensType === "L1-Tokens" || this.tokensType === "L2-Tokens");
     },
   },
   methods: {

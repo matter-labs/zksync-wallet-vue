@@ -43,6 +43,7 @@ export default Vue.extend({
         case "Mint":
         case "Allowance":
         case "Deposit":
+        case "WithdrawPending":
           return this.config.ethereumNetwork.explorer + "tx/" + this.activeTransaction.txHash;
 
         default:

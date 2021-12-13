@@ -8,6 +8,9 @@
       <template v-if="activeTransaction.type === 'Deposit'">
         Your deposit transaction has been mined and will be processed after required number of confirmations.<br />Use the transaction link to track the progress.
       </template>
+      <template v-else-if="activeTransaction.type === 'WithdrawPending'">
+        Pending balance withdraw transaction has been mined and will be processed after required number of confirmations.<br />Use the transaction link to track the progress.
+      </template>
       <template v-else-if="activeTransaction.type === 'Allowance' && activeTransaction.data">
         Token <span class="tokenSymbol">{{ activeTransaction.data.token }}</span> was successfully approved
         <span v-if="activeTransaction.data.allowance.lt(unlimitedUnlockAmount)">
@@ -113,6 +116,7 @@ export default Vue.extend({
         case "Mint":
         case "Allowance":
         case "Deposit":
+        case "WithdrawPending":
           return this.config.ethereumNetwork.explorer + "tx/" + this.activeTransaction.txHash;
 
         default:

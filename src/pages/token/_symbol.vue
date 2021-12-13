@@ -31,6 +31,22 @@
         <div v-else class="infoBlock _display-flex _margin-top-1">
           <div class="balancePrice">{{ feeAcceptable }} for paying fees</div>
         </div>
+        <!--  v-if="!pendingBalanceLoading && String(pendingBalance) !== '0'" -->
+        <div class="infoBlock _margin-top-1">
+          <div class="headline">Pending balance:</div>
+        </div>
+        <div class="_display-flex _justify-content-space-between _flex-wrap balanceWithdraw">
+          <div class="infoBlock">
+            <div v-if="pendingBalanceLoading" class="secondaryText _margin-left-05">Loading...</div>
+            <div v-else-if="!pendingBalance" class="balancePrice errorText _margin-left-05">Error</div>
+            <div v-else class="balance _display-flex _align-items-center">
+              {{ pendingBalance | parseBigNumberish(symbol) }}&nbsp;
+              <span class="tokenSymbol">{{ symbol }}&nbsp;&nbsp;</span>
+              <token-price class="secondaryText" :symbol="symbol" amount="0" />
+            </div>
+          </div>
+          <i-button class="_padding-y-0" link size="sm" variant="secondary" :to="`/transaction/withdrawpending?token=${symbol}`">Withdraw pending balance</i-button>
+        </div>
         <div class="infoBlock _margin-top-1">
           <div class="headline">Your balance:</div>
         </div>
@@ -60,13 +76,14 @@
 </template>
 
 <script lang="ts">
-import { Token, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
 import Vue from "vue";
+import { Token, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
+import { BigNumberish } from "ethers";
 import { Route } from "vue-router/types";
 import { TokenSymbol } from "zksync/build/types";
 
 export default Vue.extend({
-  asyncData({ from, redirect, params }) {
+  asyncData({ from, store, params, redirect }) {
     if (!params.symbol) {
       return redirect("/account");
     }
@@ -107,12 +124,21 @@ export default Vue.extend({
     accountStateLoading(): boolean {
       return this.$store.getters["zk-account/accountStateLoading"];
     },
+    pendingBalance(): BigNumberish {
+      return this.$store.getters["zk-balances/pendingBalances"][this.symbol];
+    },
+    pendingBalanceLoading(): boolean {
+      return this.$store.getters["zk-balances/pendingBalancesLoading"][this.symbol];
+    },
     displayTokenTooltip(): boolean {
       return !this.zkTokensLoading && this.token && this.symbol !== "ETH";
     },
     blockExplorerLink(): string {
       return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;
     },
+  },
+  created() {
+    this.$store.dispatch("zk-balances/requestPendingBalance", { symbol: this.symbol });
   },
 });
 </script>

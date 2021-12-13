@@ -13,7 +13,7 @@
       <choose-token
         v-if="mainToken || chooseTokenModal === 'feeToken'"
         :fee-acceptable="chooseTokenModal === 'feeToken'"
-        :only-mint-tokens="type === 'Mint'"
+        :all-zk-tokens="type === 'Mint' || type === 'WithdrawPending'"
         :tokens-type="mainToken && chooseTokenModal !== 'feeToken' ? mainToken : 'L2-Tokens'"
         @chosen="chooseToken($event)"
       />
@@ -251,7 +251,7 @@ export default Vue.extend({
       return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.loading;
     },
     buttonLoader(): boolean {
-      return this.allowanceLoading || (!this.nftExists && this.nftExistsLoading) || this.loading || this.requestingSigner;
+      return this.allowanceLoading || this.pendingBalanceLoading || (!this.nftExists && this.nftExistsLoading) || this.loading || this.requestingSigner;
     },
     nftTokenIsntVerified(): boolean {
       return Boolean(this.chosenToken && this.mainToken === "L2-NFT" && !this.nftExists && !this.nftExistsLoading);
@@ -284,12 +284,13 @@ export default Vue.extend({
       return this.$store.getters["zk-transaction/enoughBalanceToPayFee"];
     },
     displayAddressInput(): boolean {
-      return this.type !== "CPK";
+      return this.type !== "CPK" && this.type !== "WithdrawPending";
     },
     displayAmountInput(): boolean {
       switch (this.type) {
         case "Deposit":
         case "Mint":
+        case "WithdrawPending":
         case "Transfer":
         case "Withdraw":
           return true;
@@ -354,6 +355,12 @@ export default Vue.extend({
       this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
       if (this.type === "Deposit" && this.chosenToken !== undefined) {
         return !!this.$store.getters["zk-balances/tokensAllowanceLoading"][this.chosenToken];
+      }
+      return false;
+    },
+    pendingBalanceLoading(): boolean {
+      if (this.type === "WithdrawPending" && this.chosenToken !== undefined) {
+        return !!this.$store.getters["zk-balances/pendingBalancesLoading"][this.chosenToken];
       }
       return false;
     },
@@ -502,7 +509,6 @@ export default Vue.extend({
           this.$store.commit("zk-transaction/setError", error);
         } finally {
           this.loading = false;
-          console.log("error", this.$store.getters["zk-transaction/error"]);
           if (this.$store.getters["zk-transaction/error"]) {
             this.checkCPK();
           }
@@ -530,7 +536,7 @@ export default Vue.extend({
       await this.$store.dispatch("zk-transaction/requestAllFees", true);
     },
     checkCPK() {
-      if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] !== true && this.type !== "CPK") {
+      if (this.mainToken !== "L1-Tokens" && this.mainToken !== "PendingTokens" && this.$store.getters["zk-wallet/cpk"] !== true && this.type !== "CPK") {
         if (this.$store.getters["zk-wallet/cpk"] === false) {
           this.$accessor.openModal("SignPubkey");
         }
