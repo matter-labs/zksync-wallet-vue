@@ -20,6 +20,9 @@ export default Vue.extend({
       return this.$store.getters["zk-account/address"];
     },
   },
+  mounted() {
+    this.$analytics.track("visit_home");
+  },
   methods: {
     openAccountModal(): void {
       this.$accessor.setAccountModalState(true);
