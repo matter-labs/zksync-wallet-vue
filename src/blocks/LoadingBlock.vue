@@ -1,6 +1,6 @@
 <template>
   <div class="loadingBlock tileBlock">
-    <div class="tileHeadline h3">{{ transactionActionName }}</div>
+    <div class="tileHeadline h3">{{ activeTransaction.type === "Allowance" ? "Allowance" : transactionActionName }}</div>
     <div class="loadingBlockContent">
       <a v-if="txLink" :href="txLink" class="_display-block _text-center" target="_blank">
         Link to the transaction <i><v-icon name="ri-external-link-line" scale="0.8" /></i>
