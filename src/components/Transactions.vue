@@ -74,6 +74,9 @@ export default Vue.extend({
       if (this.loadingStatus !== false) {
         return;
       }
+
+      this.$analytics.track("transaction_history_load_more");
+
       this.loadingStatus = part;
       const res: ZkFilteredTransactionHistory = await this.$store.dispatch("zk-history/getFilteredTransactionHistory", {
         lastTxHash: part === "previous" ? this.transactions[this.transactions.length - 1].txHash : undefined,
