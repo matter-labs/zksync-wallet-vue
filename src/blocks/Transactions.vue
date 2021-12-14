@@ -51,6 +51,7 @@ export default Vue.extend({
   },
   methods: {
     loadMore() {
+      this.$analytics.track("transaction_history_load_more");
       this.$store.dispatch("zk-history/getPreviousTransactionHistory");
     },
     async updateLatest() {
