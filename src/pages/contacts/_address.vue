@@ -85,6 +85,9 @@ export default Vue.extend({
       return this.address.substr(0, 5) + "..." + this.address.substr(this.address.length - 5, this.address.length - 1);
     },
   },
+  mounted() {
+    this.$analytics.track("visit_contact_history");
+  },
   methods: {
     addToContacts() {
       this.$analytics.track("visit_add_contact");

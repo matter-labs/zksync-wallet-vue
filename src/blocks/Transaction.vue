@@ -474,7 +474,9 @@ export default Vue.extend({
           this.requestingSigner = true;
           await this.$store.dispatch("zk-wallet/requestSigner");
           this.checkCPK();
+          this.$analytics.track("request_signer");
         } catch (err) {
+          this.$analytics.track("request_signer_fail");
           this.$sentry.captureException(err, { tags: { "operation.type": "requestSigner" } });
         }
         this.requestingSigner = false;
