@@ -7,9 +7,9 @@
 ## Actual Release v.2.4.1 [`changelog`](https://github.com:matter-labs/zksync-wallet-vue/CHANGELOG.MD)
 
 Complete new version of zkWallet, built with nuxt+vuejs.
-Better architecture based on moder open source tech. Tight roadmap with many awesome features will guide developers into the amazing world of dApps and introduce true reactive 
+Better architecture based on moder open source tech. Tight roadmap with many awesome features will guide developers into the amazing world of dApps and introduce true reactive
 interaction, dialog-based UX.
- 
+
 It's working perfectly on [**mainnet**](https://wallet.zksync.io) | [rinkeby](https://rinkeby.zksync.io) and [ropsten](https://ropsten.zksync.io), published and ready for mass adoption.
 
 zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features on mainnet. [Learn more](https://zksync.io/)
@@ -26,7 +26,7 @@ zkWallet was created to unleash the power of zkSync L2 operations and give every
   2) Beta version (w/t partial NFT-support & upcoming NFT+Swap support)
      * **rinkeby-beta** → [beta-rinkeby-zksync-vue](https://rinkeby-beta-wallet.zksync.dev/)
      * **prod-ropsten** → [zksync-vue-ropsten](https://ropsten.zksync.io)
-  3) Dev-only hosts: 
+  3) Dev-only hosts:
      * **stage-mainnet** → [zksync-vue](https://stage.zksync.io)
      * **dev-rinkeby** → [rinkeby-wallet-zksync](https://rinkeby-wallet-zksync.web.app/)
 
@@ -88,3 +88,4 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 zkWallet is distributed under the terms of both the MIT license, and the Apache License (v.2.0).
 
 See [LICENSE-APACHE](LICENSE-APACHE), [LICENSE-MIT](LICENSE-MIT) for details.
+
