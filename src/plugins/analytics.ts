@@ -17,7 +17,7 @@ class MixpanelAnalytics implements Analytics {
 
 class ConsoleAnalytics implements Analytics {
   track(eventName: string, props?: any): void {
-    console.log("Track:", eventName, props);
+    // console.log("Track:", eventName, props);
   }
 }
 
