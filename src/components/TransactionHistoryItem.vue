@@ -6,13 +6,13 @@
         <template slot="body">{{ transactionStatus.text }}</template>
       </i-tooltip>
     </div>
-    <div class="mainInfo" :class="{ noInfo: isNFT }">
+    <div class="mainInfo" :class="{ noInfo: isNFT || isSwap }">
       <i-tooltip>
         <div class="createdAt">{{ timeAgo }}</div>
         <template slot="body">{{ transaction.createdAt | formatDateTime }}</template>
       </i-tooltip>
-      <div v-if="!isNFT" :class="{ small: $options.filters.parseBigNumberish(amount, tokenSymbol).length > 10 }" class="amount">{{ amount | parseBigNumberish(tokenSymbol) }}</div>
-      <div v-if="!isMintNFT" class="tokenSymbol">
+      <div v-if="!isNFT && !isSwap" :class="{ small: smallAmountText }" class="amount">{{ amount | parseBigNumberish(tokenSymbol) }}</div>
+      <div v-if="!isMintNFT && !isSwap" class="tokenSymbol">
         <span v-if="isNFT && tokenSymbol">NFT-</span>
         <div v-else-if="isNFT && transaction.tx && transaction.tx.contentHash" class="nft">
           <span class="contentHash">{{ transaction.tx.contentHash }}</span>
@@ -74,6 +74,7 @@ import { BigNumberish } from "@ethersproject/bignumber";
 import { Address, TokenSymbol, ApiTransaction } from "zksync/build/types";
 import { Token, ZkContact, ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
 import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
+import { getAddress } from "ethers/lib/utils";
 
 let getTimeAgoInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -270,6 +271,9 @@ export default Vue.extend({
     isMintNFT(): boolean {
       return this.transaction.op.type === "MintNFT";
     },
+    isSwap(): boolean {
+      return this.transaction.op.type === "Swap";
+    },
     isNFT(): boolean {
       if (this.isMintNFT || typeof this.tokenSymbol === "number") {
         return true;
@@ -310,6 +314,19 @@ export default Vue.extend({
       }
       return `${this.config.zkSyncNetwork.explorer}explorer/transactions/${this.transaction.txHash}`;
     },
+    smallAmountText(): boolean {
+      if (this.isNFT || !this.amount || !this.tokenSymbol) {
+        return false;
+      }
+      const amount = this.$options.filters?.parseBigNumberish(this.amount, this.tokenSymbol);
+      if (!amount) {
+        return false;
+      }
+      if (`${amount} ${this.tokenSymbol}`.length > 15) {
+        return true;
+      }
+      return false;
+    },
   },
   mounted() {
     this.timeAgo = this.getTimeAgo(this.transaction.createdAt);
@@ -326,7 +343,7 @@ export default Vue.extend({
   },
   methods: {
     isSameAddress(address: Address): boolean {
-      return String(address).toLowerCase() === this.walletAddressFull.toLowerCase();
+      return getAddress(address) === getAddress(this.walletAddressFull);
     },
     getTimeAgo(time?: string): string {
       if (!time) {
