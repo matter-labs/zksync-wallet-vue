@@ -27,6 +27,8 @@ export default Vue.extend({
   },
   methods: {
     buyWithRamp() {
+      this.$analytics.track("click_on_buy_with_ramp");
+
       if (!this.isRampSupported) {
         throw new Error("Ramp is not supported on this environment.");
       }

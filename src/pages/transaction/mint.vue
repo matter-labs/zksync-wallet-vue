@@ -13,5 +13,8 @@ export default Vue.extend({
       return this.$router.push("/account");
     }
   },
+  mounted() {
+    this.$analytics.track("visit_mint");
+  },
 });
 </script>

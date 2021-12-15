@@ -114,8 +114,13 @@ export default Vue.extend({
       return Object.keys(this.displayedContactsList).length !== 0;
     },
   },
+  mounted() {
+    this.$analytics.track("visit_contacts");
+  },
   methods: {
     addNewContact() {
+      this.$analytics.track("visit_add_contact");
+
       this.contactModal = {
         enabled: true,
         type: "add",
@@ -126,6 +131,8 @@ export default Vue.extend({
       };
     },
     editContact(contact: ZkContact) {
+      this.$analytics.track("visit_edit_contact");
+
       this.contactModal = {
         enabled: true,
         type: "edit",
@@ -151,10 +158,15 @@ export default Vue.extend({
       if (this.contactModal.openedAddress && getAddress(this.contactModal.openedAddress) !== getAddress(this.contactModal.address)) {
         await this.$store.dispatch("zk-contacts/removeContact", this.contactModal.openedAddress);
       }
+
+      this.$analytics.track(this.contactModal.type === "add" ? "add_contact" : "edit_contact");
+
       this.$store.dispatch("zk-contacts/setContact", { address: this.contactModal.address, name: this.contactModal.name.trim() });
       this.contactModal.enabled = false;
     },
     deleteContact() {
+      this.$analytics.track("delete_contact");
+
       this.$store.dispatch("zk-contacts/removeContact", this.contactModal.openedAddress);
       this.contactModal.enabled = false;
     },

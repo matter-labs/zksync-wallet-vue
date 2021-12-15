@@ -140,5 +140,8 @@ export default Vue.extend({
   created() {
     this.$store.dispatch("zk-balances/requestPendingBalance", { symbol: this.symbol });
   },
+  mounted() {
+    this.$analytics.track("visit_token_history");
+  },
 });
 </script>
