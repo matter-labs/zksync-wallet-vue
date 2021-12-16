@@ -3,7 +3,7 @@
     <block-modals-allowance />
     <block-modals-content-hash />
     <block-modals-fee-req-error />
-    <block-modals-transfer-warning />
+    <block-modals-transfer-warning :type="type" />
     <block-modals-withdraw-warning />
     <block-modals-fee-changed :type-name="transactionActionName" />
 
@@ -494,7 +494,7 @@ export default Vue.extend({
               return;
             }
           }
-          if (this.type === "Transfer") {
+          if (this.type === "Transfer" || this.type === "TransferNFT") {
             if (!(await this.checkTransfer())) {
               return;
             }
