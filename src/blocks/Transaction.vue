@@ -399,8 +399,17 @@ export default Vue.extend({
     },
   },
   watch: {
-    inputtedAmount(val) {
-      this.$store.commit("zk-transaction/setAmount", val);
+    inputtedAmount: {
+      immediate: true,
+      handler(val, oldVal) {
+        if (oldVal === undefined) {
+          this.$nextTick(() => {
+            this.$store.commit("zk-transaction/setAmount", val);
+          });
+        } else {
+          this.$store.commit("zk-transaction/setAmount", val);
+        }
+      },
     },
     inputtedAddress(val) {
       this.$store.dispatch("zk-transaction/setAddress", val);
