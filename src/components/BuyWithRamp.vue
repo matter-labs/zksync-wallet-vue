@@ -22,7 +22,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/address"];
     },
     isRampSupported(): boolean {
-      return !!this.config;
+      return this.$store.getters["zk-provider/network"] === "mainnet" && !!this.config;
     },
   },
   methods: {
