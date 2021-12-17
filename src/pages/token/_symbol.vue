@@ -114,5 +114,8 @@ export default Vue.extend({
       return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;
     },
   },
+  mounted() {
+    this.$analytics.track("visit_token_history");
+  },
 });
 </script>

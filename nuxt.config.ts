@@ -168,7 +168,7 @@ const config: NuxtConfig = {
   /**
    * Plugins that should be loaded before the mounting
    */
-  plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession"],
+  plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession", { src: "@/plugins/analytics", mode: "client" }],
 
   styleResources: {
     scss: ["@/assets/style/vars/_variables.scss"],

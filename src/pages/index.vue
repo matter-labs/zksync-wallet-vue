@@ -31,12 +31,16 @@ export default Vue.extend({
       contactInfoShown: false,
     };
   },
+  mounted() {
+    this.$analytics.track("visit_login");
+  },
   methods: {
     async customWallet() {
       const refreshWalletTry = await this.$store.dispatch("zk-onboard/loginWithOnboard");
       if (!refreshWalletTry) {
         await this.$store.dispatch("zk-account/logout");
       } else {
+        this.$analytics.track("login", { connectionType: "Ethereum Wallet", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
         await this.$router.push("/account");
       }
     },
@@ -45,6 +49,7 @@ export default Vue.extend({
       if (!refreshWalletTry) {
         await this.$store.dispatch("zk-account/logout");
       } else {
+        this.$analytics.track("login", { connectionType: "WalletConnect", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
         await this.$router.push("/account");
       }
     },

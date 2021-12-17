@@ -76,7 +76,7 @@ export default Vue.extend({
       },
     },
     blockExplorerLink(): string {
-      return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;
+      return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
     },
     isDarkTheme(): boolean {
       return this.theme === "dark";
@@ -88,6 +88,7 @@ export default Vue.extend({
       this.$inkline.config.variant = this.theme;
     },
     openNetworkSwitchModal() {
+      this.$analytics.track("visit_change_network");
       return this.$accessor.openModal("NetworkSwitch");
     },
   },
