@@ -11,10 +11,10 @@ export const rampConfig = {
     url: undefined, // default
     hostApiKey: process.env.RAMP_MAINNET_HOST_API_KEY,
   },
-  rinkeby: {
-    url: "https://ri-widget-staging.firebaseapp.com/",
-    hostApiKey: process.env.RAMP_RINKEBY_HOST_API_KEY,
-  },
+  // rinkeby: {
+  //  url: "https://ri-widget-staging.firebaseapp.com/",
+  //  hostApiKey: process.env.RAMP_RINKEBY_HOST_API_KEY,
+  // },
   // ropsten: {
   //   url: "https://ri-widget-staging-ropsten.firebaseapp.com/",
   //   hostApiKey: process.env.RAMP_ROPSTEN_HOST_API_KEY,
