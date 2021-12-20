@@ -32,14 +32,36 @@
         <div>{{ transactionActionName }}</div>
       </div>
 
-      <template v-if="type === 'Deposit'">
-        <div class="_padding-0 _display-flex _justify-content-end">
-          <buy-with-ramp class="_padding-y-0" />
+      <div v-if="isDeposit">
+        <div class="tileSmallHeadline">Buy Crypto with Credit Card</div>
+        <div class="secondaryText estimatedFee"><b>Fee:</b> ~3-5%</div>
+        <div class="secondaryText small">You can buy crypto directly on zkSync with your credit card</div>
+
+        <block-card-deposit class="_margin-top-05" />
+
+        <div class="orDivider">
+          <div class="line"></div>
+          <div class="orText">or</div>
+          <div class="line"></div>
         </div>
-        <div v-if="!isMainnet" class="_padding-0 _display-flex _justify-content-end">
-          <i-button class="_padding-y-0 _margin-top-05" link to="/transaction/mint"> Mint tokens<v-icon name="ri-add-fill" scale="0.75" /></i-button>
+
+        <div class="tileSmallHeadline">Deposit tokens from Ethereum Wallet</div>
+        <div class="secondaryText estimatedFee">
+          <b>Fee:</b>
+          <span v-if="depositFeeLoading">Loading...</span>
+          <span v-else-if="depositFee && !depositFeeLoading">
+            <token-price symbol="ETH" :amount="depositFee" />
+          </span>
+          <span v-else class="errorText">Calculating fee error. <u class="_cursor-pointer" @click="getEstimatedDepositFee()">Try Again</u></span>
         </div>
-      </template>
+        <div class="secondaryText small">You can deposit tokens from your Ethereum Wallet to zkSync via form below</div>
+
+        <template v-if="isDeposit">
+          <div v-if="!isMainnet" class="_padding-0 _display-flex _justify-content-end">
+            <i-button class="_padding-y-0 _margin-top-05" link to="/transaction/mint"> Mint tokens<v-icon name="ri-add-fill" scale="0.75" /></i-button>
+          </div>
+        </template>
+      </div>
 
       <template v-if="type === 'Transfer'">
         <div class="_padding-0 _display-flex _justify-content-end">
@@ -50,7 +72,7 @@
       </template>
 
       <template v-if="displayAddressInput">
-        <div class="_padding-top-1 inputLabel">Address</div>
+        <div :class="[isDeposit ? '_margin-top-05' : '_margin-top-1']" class="inputLabel">Address</div>
         <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" />
         <block-choose-contact class="_margin-top-05" :address="inputtedAddress" :display-own-address="displayOwnAddress" @chosen="chooseAddress($event)" />
       </template>
@@ -214,9 +236,11 @@ import Vue, { PropOptions } from "vue";
 import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
+import { ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT } from "zksync/build/utils";
 import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee, ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "@ethersproject/address";
 import { RestProvider } from "zksync";
+import { BigNumberish, Wallet } from "ethers";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
 import { DO_NOT_SHOW_WITHDRAW_WARNING_KEY } from "@/blocks/modals/WithdrawWarning.vue";
 
@@ -241,6 +265,8 @@ export default Vue.extend({
       contentHash: this.$store.getters["zk-transaction/contentHash"],
       loading: true,
       requestingSigner: false,
+      depositFee: <BigNumberish | undefined>undefined,
+      depositFeeLoading: true,
     };
   },
   computed: {
@@ -384,6 +410,9 @@ export default Vue.extend({
     activationFeeLoading(): boolean {
       return this.$store.getters["zk-transaction/activationFeeLoading"];
     },
+    isDeposit(): boolean {
+      return this.type === "Deposit";
+    },
     chooseTokenModalOpened: {
       get(): boolean {
         return this.chooseTokenModal !== false;
@@ -421,6 +450,9 @@ export default Vue.extend({
   async mounted() {
     if (!this.$store.getters["zk-account/loggedIn"]) {
       return;
+    }
+    if (this.isDeposit) {
+      this.getEstimatedDepositFee();
     }
     if (!this.$store.getters["zk-account/accountStateRequested"]) {
       await this.$store.dispatch("zk-account/updateAccountState");
@@ -574,7 +606,19 @@ export default Vue.extend({
           break;
       }
     },
-
+    async getEstimatedDepositFee(): Promise<void> {
+      this.depositFeeLoading = true;
+      try {
+        const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
+        // @ts-ignore
+        const gasPrice = await syncWallet.ethSigner.provider.getGasPrice();
+        const total = BigNumber.from(ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT);
+        this.depositFee = gasPrice.mul(total).toString();
+      } catch (error) {
+        console.warn("Error calculating estimated deposit fee\n", error);
+      }
+      this.depositFeeLoading = false;
+    },
     async checkInputtedAccountUnlocked(): Promise<boolean> {
       const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider");
       const state = await syncProvider.getState(this.inputtedAddress);
@@ -612,3 +656,52 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss">
+.dappPageWrapper {
+  .estimatedFee {
+    margin: 3px 0;
+  }
+  .orDivider {
+    width: 100%;
+    height: max-content;
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-template-rows: 100%;
+    grid-gap: 17px;
+    align-items: center;
+    padding: 23px 0;
+
+    .line {
+      width: 100%;
+      height: 1px;
+      background-color: #eeeeee;
+      transition: background-color $transition1;
+      will-change: background-color;
+    }
+    .orText {
+      font-size: 18px;
+      font-weight: 700;
+      color: #eeeeee;
+      text-align: center;
+      transition: color $transition1;
+      will-change: color;
+    }
+  }
+}
+.inkline.-dark {
+  .dappPageWrapper {
+    .tileSmallHeadline {
+      color: $white;
+    }
+    .orDivider {
+      .line {
+        background-color: transparentize($color: $gray, $amount: 0.5);
+      }
+      .orText {
+        color: transparentize($color: $gray, $amount: 0.3);
+      }
+    }
+  }
+}
+</style>
