@@ -215,7 +215,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
+  modules: ["@nuxtjs/axios", "@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
 
   /**
    * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```

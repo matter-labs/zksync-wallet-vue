@@ -3,7 +3,7 @@
     <div :class="{ disabled: !isRampSupported }" class="providerOption rampProvider" @click="buyWithRamp">
       <label><img class="ramp-logo" src="/RampLogo.svg" alt="Ramp" />Ramp</label>
     </div>
-    <div class="providerOption banxaProvider">
+    <div class="providerOption banxaProvider" @click="buyWithBanxa">
       <svg xmlns="http://www.w3.org/2000/svg" width="153" height="25" viewBox="0 0 153 25" fill="none">
         <path
           class="banxaLetter"
@@ -46,6 +46,8 @@
 </template>
 
 <script lang="ts">
+import crypto from "crypto";
+import cryptoJS from "crypto-js";
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
 import { rampConfig } from "@/utils/config";
@@ -84,11 +86,65 @@ export default Vue.extend({
         ...this.rampConfig,
       }).show();
     },
-    buyWithBanxa() {
+    async buyWithBanxa() {
       if (!this.isBanxaSupported) {
         return;
       }
       this.$analytics.track("click_on_buy_with_banxa");
+
+      try {
+        const data = {
+          blockchain: "ZKSYNC",
+          account_reference: this.address,
+          source: "USD",
+          target: "USDT",
+          wallet_address: this.address,
+          return_url_on_success: "https://wallet.zksync.io/account",
+          return_url_on_failure: "https://wallet.zksync.io/account",
+        };
+        const reqURL = "https://zksync.banxa-sandbox.com/api/orders";
+        const createOrder = await this.$axios.post(reqURL, data, {
+          headers: {
+            Authorization: this.getRequestAuthorization(JSON.stringify(data), reqURL),
+          },
+        });
+        console.log("createOrder", createOrder);
+        if (createOrder.data?.data?.order?.checkout_url) {
+          window.open(createOrder.data.data.order.checkout_url, "_blank");
+        }
+      } catch (error) {
+        console.warn("Error requesting Banaxa checkout link\n", error);
+      }
+    },
+    getRequestAuthorization(requestBody: string, reqURL: string) {
+      const CLIENT_KEY = "ZKTEST01";
+      const SECRET_KEY = "kKKMmVZdlWcOQWZsjrHMoSFUIzJfvmNi";
+
+      function epochTime() {
+        const d = new Date();
+        const t = d.getTime();
+        const o = t + "";
+        return o.substring(0, 10);
+      }
+
+      const timestamp = epochTime();
+
+      function getAuthHeader(httpMethod: string) {
+        const url = new URL(reqURL);
+
+        let requestPath = url.pathname;
+        let requestData = [httpMethod, requestPath, timestamp, requestBody].join("\n");
+
+        if (httpMethod === "GET") {
+          requestPath = url.pathname + url.search;
+          requestData = [httpMethod, requestPath, timestamp].join("\n");
+        }
+
+        return cryptoJS.enc.Hex.stringify(cryptoJS.HmacSHA256(requestData, SECRET_KEY));
+      }
+
+      const signature = getAuthHeader("post");
+      return `Bearer ${CLIENT_KEY + ":" + signature + ":" + timestamp}`;
     },
   },
 });

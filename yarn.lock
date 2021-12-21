@@ -3289,6 +3289,7 @@ __metadata:
     "@nuxt/types": latest
     "@nuxt/typescript-build": latest
     "@nuxt/typescript-runtime": latest
+    "@nuxtjs/axios": ^5.13.6
     "@nuxtjs/dotenv": latest
     "@nuxtjs/eslint-config-typescript": latest
     "@nuxtjs/google-fonts": latest
@@ -3298,6 +3299,7 @@ __metadata:
     "@nuxtjs/stylelint-module": ^4.0.0
     "@ramp-network/ramp-instant-sdk": ^2.5.0
     "@sentry/webpack-plugin": ^1.14.0
+    "@types/crypto-js": ^4.0.2
     "@types/jest": ^26.0.23
     "@types/mixpanel-browser": ^2.35.8
     "@typescript-eslint/eslint-plugin": ^4.21.0
@@ -3305,6 +3307,7 @@ __metadata:
     babel-core: ^7.0.0-bridge.0
     blockies-ts: 1.0.0
     commitlint: ^11.0.0
+    crypto-js: ^4.1.1
     cspell: latest
     dotenv: 8.2.0
     eslint: ^7.21.0
@@ -3915,7 +3918,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxtjs/axios@npm:^5.13.1":
+"@nuxtjs/axios@npm:^5.13.1, @nuxtjs/axios@npm:^5.13.6":
   version: 5.13.6
   resolution: "@nuxtjs/axios@npm:5.13.6"
   dependencies:
@@ -4681,6 +4684,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: c6e2aa299cf3979c00602f48ce9163700f0cbfec6ba2a8e1506d08f51da0279805a478ea094252fad7c369a563ee033b359c708ab34b1763397c58d7e2df07ad
+  languageName: node
+  linkType: hard
+
+"@types/crypto-js@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "@types/crypto-js@npm:4.0.2"
+  checksum: b9d03b6cc1152f0c817b3555e0638d87b62dcc4edfd886d409b50aa68dbe3017727f8fed634b8b4b10b0796e0cdd35379c50abfb28d3226666fdc908844e5934
   languageName: node
   linkType: hard
 
@@ -9133,7 +9143,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto-js@npm:^4.0.0":
+"crypto-js@npm:^4.0.0, crypto-js@npm:^4.1.1":
   version: 4.1.1
   resolution: "crypto-js@npm:4.1.1"
   checksum: b3747c12ee3a7632fab3b3e171ea50f78b182545f0714f6d3e7e2858385f0f4101a15f2517e033802ce9d12ba50a391575ff4638c9de3dd9b2c4bc47768d5425
