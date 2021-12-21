@@ -3256,9 +3256,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-nuxt-core@npm:^1.4.4":
-  version: 1.4.4
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.4.4"
+"@matterlabs/zksync-nuxt-core@npm:^1.5.3":
+  version: 1.5.3
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.5.3"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.6.6
@@ -3273,7 +3273,7 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.11.5-beta.0
-  checksum: a28b3bba3c835d1d192cda25aa1b9a656f6a3fa9804bb3eeecf8eede0450f1bd53efac1f07d192c86ac247eaf90b6bc94af0d51907771ff5e299539b29685a08
+  checksum: cfb538a5ba67feccf85e61bfe6c2a7413845b4216c382096d61e71df4e8439cb5c5b01c2a765607ca53bc492b97b2dc2373bbcdafdfa45960c723fc42c057089
   languageName: node
   linkType: hard
 
@@ -3285,7 +3285,7 @@ __metadata:
     "@babel/preset-env": ^7.13.9
     "@babel/runtime": ^7.13.10
     "@inkline/nuxt": ^2.3.6
-    "@matterlabs/zksync-nuxt-core": ^1.4.4
+    "@matterlabs/zksync-nuxt-core": ^1.5.3
     "@nuxt/types": latest
     "@nuxt/typescript-build": latest
     "@nuxt/typescript-runtime": latest
