@@ -133,20 +133,30 @@ export default Vue.extend({
     },
   },
   watch: {
-    contactsListModal() {
+    contactsListModal(value: boolean): void {
       setTimeout(() => {
         (this.$refs.contactNameInput as Vue)?.$el?.querySelector("input")?.focus();
       }, 0);
+
+      if (value) {
+        this.$analytics.track("visit_select_contact");
+      }
     },
-    saveContactModal() {
+    saveContactModal(value: boolean): void {
       this.saveContactModalError = "";
       setTimeout(() => {
         (this.$refs.contactNameInput as Vue)?.$el?.querySelector("input")?.focus();
       }, 0);
+
+      if (value) {
+        this.$analytics.track("visit_save_contact");
+      }
     },
   },
+  mounted() {},
   methods: {
     chooseContact(contact: ZkContact) {
+      this.$analytics.track("select_contact");
       this.$emit("chosen", contact.address);
       this.contactsListModal = false;
     },
@@ -159,6 +169,7 @@ export default Vue.extend({
         this.saveContactModalError = "Invalid address";
         return;
       }
+      this.$analytics.track("save_contact");
       this.$store.dispatch("zk-contacts/setContact", { address: this.address, name: this.saveContactInput.trim() });
       this.saveContactInput = "";
       this.saveContactModal = false;

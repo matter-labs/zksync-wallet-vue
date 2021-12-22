@@ -3216,9 +3216,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-nuxt-core@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.4.0"
+"@matterlabs/zksync-nuxt-core@npm:^1.5.3":
+  version: 1.5.3
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.5.3"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.6.6
@@ -3233,7 +3233,7 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.11.5-beta.0
-  checksum: 00f3403d49df73e94323844a3e44707f6ce9c61110d95c506865efe47ff1e51f07b514f49e951838b9855eb7b7223af53c46b7109872a2b548d1b2efe2ae8b05
+  checksum: cfb538a5ba67feccf85e61bfe6c2a7413845b4216c382096d61e71df4e8439cb5c5b01c2a765607ca53bc492b97b2dc2373bbcdafdfa45960c723fc42c057089
   languageName: node
   linkType: hard
 
@@ -3246,7 +3246,7 @@ __metadata:
     "@babel/runtime": ^7.13.10
     "@ethersproject/logger": ^5.5.0
     "@inkline/nuxt": ^2.3.6
-    "@matterlabs/zksync-nuxt-core": ^1.4.0
+    "@matterlabs/zksync-nuxt-core": ^1.5.3
     "@nuxt/types": latest
     "@nuxt/typescript-build": latest
     "@nuxt/typescript-runtime": latest
@@ -3260,6 +3260,8 @@ __metadata:
     "@nuxtjs/stylelint-module": ^4.0.0
     "@ramp-network/ramp-instant-sdk": ^2.5.0
     "@sentry/webpack-plugin": ^1.18.3
+    "@types/jest": ^26.0.23
+    "@types/mixpanel-browser": ^2.35.8
     "@typescript-eslint/eslint-plugin": ^4.21.0
     "@typescript-eslint/parser": ^4.21.0
     "@vue/composition-api": ^1.2.4
@@ -3279,6 +3281,7 @@ __metadata:
     fsevents: ^2.3.2
     husky: ^7.0.0
     lottie-web: ^5.7.8
+    mixpanel-browser: ^2.42.0
     moment-timezone: ^0.5.33
     node-sass: 4.14.0
     nuxt: latest
@@ -4804,6 +4807,13 @@ __metadata:
   version: 1.2.2
   resolution: "@types/minimist@npm:1.2.2"
   checksum: b8da83c66eb4aac0440e64674b19564d9d86c80ae273144db9681e5eeff66f238ade9515f5006ffbfa955ceff8b89ad2bd8ec577d7caee74ba101431fb07045d
+  languageName: node
+  linkType: hard
+
+"@types/mixpanel-browser@npm:^2.35.8":
+  version: 2.35.8
+  resolution: "@types/mixpanel-browser@npm:2.35.8"
+  checksum: 4d0b6c93d1236181cd925cf557a4e56594d8b655619992004a3a785d1da8bf8d4fba7e5a3433f4c2c8d4bb0b17367f0c1c6a7db116bc02f751f790abf2d7fa85
   languageName: node
   linkType: hard
 
@@ -16086,6 +16096,13 @@ fsevents@^1.2.7:
     for-in: ^1.0.2
     is-extendable: ^1.0.1
   checksum: 820d5a51fcb7479f2926b97f2c3bb223546bc915e6b3a3eb5d906dda871bba569863595424a76682f2b15718252954644f3891437cb7e3f220949bed54b1750d
+  languageName: node
+  linkType: hard
+
+"mixpanel-browser@npm:^2.42.0":
+  version: 2.42.0
+  resolution: "mixpanel-browser@npm:2.42.0"
+  checksum: 608ff813deed18bf8c68e0ca839dd41eb5211b0f99c108361820d15ab77fea830bd4a85c472fbb0997f4a19fb1441c066e74f0ab8fd38c5fa38899f8203387c6
   languageName: node
   linkType: hard
 
