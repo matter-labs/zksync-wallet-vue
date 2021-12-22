@@ -31,21 +31,22 @@
         <div v-else class="infoBlock _display-flex _margin-top-1">
           <div class="balancePrice">{{ feeAcceptable }} for paying fees</div>
         </div>
-        <!--  v-if="!pendingBalanceLoading && String(pendingBalance) !== '0'" -->
-        <div class="infoBlock _margin-top-1">
-          <div class="headline">Pending balance:</div>
-        </div>
-        <div class="_display-flex _justify-content-space-between _flex-wrap balanceWithdraw">
-          <div class="infoBlock">
-            <div v-if="pendingBalanceLoading" class="secondaryText _margin-left-05">Loading...</div>
-            <div v-else-if="!pendingBalance" class="balancePrice errorText _margin-left-05">Error</div>
-            <div v-else class="balance _display-flex _align-items-center">
-              {{ pendingBalance | parseBigNumberish(symbol) }}&nbsp;
-              <span class="tokenSymbol">{{ symbol }}&nbsp;&nbsp;</span>
-              <token-price class="secondaryText" :symbol="symbol" amount="0" />
-            </div>
+        <div v-if="!pendingBalanceLoading && String(pendingBalance) !== '0'">
+          <div class="infoBlock _margin-top-1">
+            <div class="headline">Pending balance:</div>
           </div>
-          <i-button class="_padding-y-0" link size="sm" variant="secondary" :to="`/transaction/withdrawpending?token=${symbol}`">Withdraw pending balance</i-button>
+          <div class="_display-flex _justify-content-space-between _flex-wrap balanceWithdraw">
+            <div class="infoBlock">
+              <div v-if="pendingBalanceLoading" class="secondaryText _margin-left-05">Loading...</div>
+              <div v-else-if="!pendingBalance" class="balancePrice errorText _margin-left-05">Error</div>
+              <div v-else class="balance _display-flex _align-items-center">
+                {{ pendingBalance | parseBigNumberish(symbol) }}&nbsp;
+                <span class="tokenSymbol">{{ symbol }}&nbsp;&nbsp;</span>
+                <token-price class="secondaryText" :symbol="symbol" amount="0" />
+              </div>
+            </div>
+            <i-button class="_padding-y-0" link size="sm" variant="secondary" :to="`/transaction/withdrawpending?token=${symbol}`">Withdraw pending balance</i-button>
+          </div>
         </div>
         <div class="infoBlock _margin-top-1">
           <div class="headline">Your balance:</div>
