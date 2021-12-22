@@ -26,6 +26,19 @@ export default Vue.extend({
       version: GIT_REVISION_SHORT,
     };
   },
+  computed: {
+    network() {
+      return this.$store.getters["zk-provider/network"];
+    },
+  },
+  watch: {
+    network: {
+      handler(network) {
+        this.$analytics.set({ network });
+      },
+      immediate: true,
+    },
+  },
   mounted() {
     this.$inkline.config.variant = theme.getUserTheme();
   },
