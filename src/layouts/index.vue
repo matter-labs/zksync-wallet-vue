@@ -27,13 +27,13 @@ export default Vue.extend({
     };
   },
   computed: {
-    network() {
+    network(): string {
       return this.$store.getters["zk-provider/network"];
     },
   },
   watch: {
     network: {
-      handler(network) {
+      handler(network: string): void {
         this.$analytics.set({ network });
       },
       immediate: true,
