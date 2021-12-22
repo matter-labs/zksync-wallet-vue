@@ -3,7 +3,12 @@
     <div :class="{ disabled: !isRampSupported }" class="providerOption rampProvider" @click="buyWithRamp">
       <label><img class="ramp-logo" src="/RampLogo.svg" alt="Ramp" />Ramp</label>
     </div>
-    <div class="providerOption banxaProvider" @click="buyWithBanxa">
+    <div :class="{ disabled: !isBanxaSupported || banxaLoading }" class="providerOption banxaProvider" @click="buyWithBanxa">
+      <transition v-if="banxaLoading" name="fade">
+        <div class="loaderContainer">
+          <loader size="xs" />
+        </div>
+      </transition>
       <svg xmlns="http://www.w3.org/2000/svg" width="153" height="25" viewBox="0 0 153 25" fill="none">
         <path
           class="banxaLetter"
@@ -46,19 +51,30 @@
 </template>
 
 <script lang="ts">
-import crypto from "crypto";
 import cryptoJS from "crypto-js";
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { rampConfig } from "@/utils/config";
+import { rampConfig, banxaConfig } from "@/utils/config";
 
 export default Vue.extend({
+  data() {
+    return {
+      banxaLoading: false,
+    };
+  },
   computed: {
     rampConfig(): {
       url: string | undefined;
       hostApiKey: string | undefined;
     } | null {
       return rampConfig[this.$store.getters["zk-provider/network"]];
+    },
+    banxaConfig(): {
+      url: string;
+      hostApiKey: string;
+      secretKey: string;
+    } | null {
+      return banxaConfig[this.$store.getters["zk-provider/network"]];
     },
     address(): string {
       return this.$store.getters["zk-account/address"];
@@ -87,11 +103,12 @@ export default Vue.extend({
       }).show();
     },
     async buyWithBanxa() {
-      if (!this.isBanxaSupported) {
+      if (!this.isBanxaSupported || this.banxaLoading) {
         return;
       }
       this.$analytics.track("click_on_buy_with_banxa");
 
+      this.banxaLoading = true;
       try {
         const data = {
           blockchain: "ZKSYNC",
@@ -102,7 +119,7 @@ export default Vue.extend({
           return_url_on_success: "https://wallet.zksync.io/account",
           return_url_on_failure: "https://wallet.zksync.io/account",
         };
-        const reqURL = "https://zksync.banxa-sandbox.com/api/orders";
+        const reqURL = this.banxaConfig!.url + "/api/orders";
         const createOrder = await this.$axios.post(reqURL, data, {
           headers: {
             Authorization: this.getRequestAuthorization(JSON.stringify(data), reqURL),
@@ -115,10 +132,11 @@ export default Vue.extend({
       } catch (error) {
         console.warn("Error requesting Banaxa checkout link\n", error);
       }
+      this.banxaLoading = false;
     },
     getRequestAuthorization(requestBody: string, reqURL: string) {
-      const CLIENT_KEY = "ZKTEST01";
-      const SECRET_KEY = "kKKMmVZdlWcOQWZsjrHMoSFUIzJfvmNi";
+      const CLIENT_KEY = this.banxaConfig!.hostApiKey;
+      const SECRET_KEY = this.banxaConfig!.secretKey;
 
       function epochTime() {
         const d = new Date();
@@ -143,7 +161,7 @@ export default Vue.extend({
         return cryptoJS.enc.Hex.stringify(cryptoJS.HmacSHA256(requestData, SECRET_KEY));
       }
 
-      const signature = getAuthHeader("post");
+      const signature = getAuthHeader("POST");
       return `Bearer ${CLIENT_KEY + ":" + signature + ":" + timestamp}`;
     },
   },
@@ -161,6 +179,7 @@ export default Vue.extend({
   grid-gap: 11px;
 
   .providerOption {
+    position: relative;
     width: 100%;
     height: 100%;
     border: 1px solid #eeeeee;
@@ -170,15 +189,27 @@ export default Vue.extend({
     transition-property: border-color, opacity;
     will-change: border-color, opacity;
     &.disabled {
-      opacity: 0.3;
+      border-color: transparentize($color: #eeeeee, $amount: 0.7);
+
+      & > *:not(.loaderContainer) {
+        opacity: 0.3;
+      }
     }
     &:not(.disabled):hover {
       border-color: #5d65b9 !important;
       cursor: pointer;
     }
 
-    * {
+    & > * {
       pointer-events: none;
+    }
+    .loaderContainer {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 }
@@ -192,8 +223,9 @@ export default Vue.extend({
     font-weight: bold;
     margin: 0 0 0 3px;
     color: #22272f;
-    transition: color $transition1;
-    will-change: color;
+    transition: $transition1;
+    transition-property: opacity, color;
+    will-change: opacity, color;
   }
 
   .ramp-logo {
@@ -208,6 +240,9 @@ export default Vue.extend({
     height: 16px;
     width: auto;
     margin: 0 auto;
+    transition: $transition1;
+    transition-property: opacity;
+    will-change: opacity;
 
     .banxaLetter {
       transition: fill $transition1;
@@ -221,6 +256,9 @@ export default Vue.extend({
     .cryptoProviders {
       .providerOption {
         border-color: transparentize($color: $gray, $amount: 0.65);
+        &.disabled {
+          border-color: transparentize($color: $gray, $amount: 0.85) !important;
+        }
       }
     }
   }
