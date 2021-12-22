@@ -12,6 +12,9 @@ class MixpanelAnalytics implements Analytics {
   }
 
   set(props: { [key: string]: string }): void {
+    if (!props) {
+      return;
+    }
     mixpanel.register(props);
   }
 
@@ -23,6 +26,9 @@ class MixpanelAnalytics implements Analytics {
 class ConsoleAnalytics implements Analytics {
   props = {};
   set(props: { [key: string]: string }): void {
+    if (!props) {
+      return;
+    }
     for (const key of Object.keys(props)) {
       this.props[key] = props[key];
     }
