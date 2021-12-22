@@ -3,11 +3,16 @@ import mixpanel from "mixpanel-browser";
 
 export type Analytics = {
   track(eventName: string, props?: any): void;
+  set(props: { [key: string]: string }): void;
 };
 
 class MixpanelAnalytics implements Analytics {
   constructor(token: string) {
-    mixpanel.init(token, { debug: false });
+    mixpanel.init(token, { debug: true });
+  }
+
+  set(props: { [key: string]: string }): void {
+    mixpanel.register(props);
   }
 
   track(eventName: string, props?: any): void {
@@ -16,8 +21,15 @@ class MixpanelAnalytics implements Analytics {
 }
 
 class ConsoleAnalytics implements Analytics {
+  props = {};
+  set(props: { [key: string]: string }): void {
+    for (const key of Object.keys(props)) {
+      this.props[key] = props[key];
+    }
+  }
+
   track(eventName: string, props?: any): void {
-    console.log("Track:", eventName, props);
+    console.log("Track:", eventName, { ...this.props, ...props });
   }
 }
 

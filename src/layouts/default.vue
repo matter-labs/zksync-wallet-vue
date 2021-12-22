@@ -34,6 +34,17 @@ export default Vue.extend({
     loggedIn() {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
     },
+    network() {
+      return this.$store.getters["zk-provider/network"];
+    },
+  },
+  watch: {
+    network: {
+      handler(network) {
+        this.$analytics.set({ network });
+      },
+      immediate: true,
+    },
   },
   mounted() {
     this.$inkline.config.variant = theme.getUserTheme();
