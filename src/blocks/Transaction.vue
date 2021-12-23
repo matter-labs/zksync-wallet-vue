@@ -47,12 +47,7 @@
 
         <div class="tileSmallHeadline">Deposit tokens from Ethereum Wallet</div>
         <div class="secondaryText estimatedFee">
-          <b>Fee:</b>
-          <span v-if="depositFeeLoading">Loading...</span>
-          <span v-else-if="depositFee && !depositFeeLoading">
-            <token-price symbol="ETH" :amount="depositFee" />
-          </span>
-          <span v-else class="errorText">Calculating fee error. <u class="_cursor-pointer" @click="getEstimatedDepositFee()">Try Again</u></span>
+          <deposit-usd-fee />
         </div>
         <div class="secondaryText small">You can deposit tokens from your Ethereum Wallet to zkSync via form below</div>
 
@@ -236,11 +231,10 @@ import Vue, { PropOptions } from "vue";
 import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
-import { ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT } from "zksync/build/utils";
 import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee, ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "@ethersproject/address";
 import { RestProvider } from "zksync";
-import { BigNumberish, Wallet } from "ethers";
+import { BigNumberish } from "ethers";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
 import { DO_NOT_SHOW_WITHDRAW_WARNING_KEY } from "@/blocks/modals/WithdrawWarning.vue";
 
@@ -265,8 +259,6 @@ export default Vue.extend({
       contentHash: this.$store.getters["zk-transaction/contentHash"],
       loading: true,
       requestingSigner: false,
-      depositFee: <BigNumberish | undefined>undefined,
-      depositFeeLoading: true,
     };
   },
   computed: {
@@ -451,9 +443,6 @@ export default Vue.extend({
     if (!this.$store.getters["zk-account/loggedIn"]) {
       return;
     }
-    if (this.isDeposit) {
-      this.getEstimatedDepositFee();
-    }
     if (!this.$store.getters["zk-account/accountStateRequested"]) {
       await this.$store.dispatch("zk-account/updateAccountState");
     }
@@ -605,19 +594,6 @@ export default Vue.extend({
           this.$analytics.track(this.type + status);
           break;
       }
-    },
-    async getEstimatedDepositFee(): Promise<void> {
-      this.depositFeeLoading = true;
-      try {
-        const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
-        // @ts-ignore
-        const gasPrice = await syncWallet.ethSigner.provider.getGasPrice();
-        const total = BigNumber.from(ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT);
-        this.depositFee = gasPrice.mul(total).toString();
-      } catch (error) {
-        console.warn("Error calculating estimated deposit fee\n", error);
-      }
-      this.depositFeeLoading = false;
     },
     async checkInputtedAccountUnlocked(): Promise<boolean> {
       const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider");
