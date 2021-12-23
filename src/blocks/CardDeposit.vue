@@ -85,8 +85,11 @@ export default Vue.extend({
         return;
       }
       this.$analytics.track("click_on_moonpay");
+      const availableZksyncCurrencies = ["usdc", "usdt", "dai"].map((e) => `${e}_zksync`);
       window.open(
-        `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${this.address}&redirectURL=${encodeURIComponent(this.redirectURL)}`,
+        `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${this.address}&showOnlyCurrencies=${availableZksyncCurrencies.join(
+          ",",
+        )}&redirectURL=${encodeURIComponent(this.redirectURL)}`,
         "_blank",
       );
     },
@@ -187,11 +190,6 @@ export default Vue.extend({
   .rampProvider {
     label {
       color: #f8f9fa;
-    }
-  }
-  .banxaProvider {
-    .banxaLetter {
-      fill: $white !important;
     }
   }
 }
