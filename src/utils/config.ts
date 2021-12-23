@@ -36,14 +36,14 @@ export const banxaConfig = {
 export const moonpayConfig = {
   mainnet: {
     url: "https://buy.moonpay.com",
-    apiPublicKey: "pk_test_zHgHHYPTcKqAGfiCsiMOTRR6VuhSyV",
+    apiPublicKey: process.env.MOONPAY_API_PUBLIC_KEY,
   },
   rinkeby: {
     url: "https://buy-staging.moonpay.com",
-    apiPublicKey: "pk_test_zHgHHYPTcKqAGfiCsiMOTRR6VuhSyV",
+    apiPublicKey: process.env.MOONPAY_API_PUBLIC_KEY,
   },
   ropsten: {
     url: "https://buy-staging.moonpay.com",
-    apiPublicKey: "pk_test_zHgHHYPTcKqAGfiCsiMOTRR6VuhSyV",
+    apiPublicKey: process.env.MOONPAY_API_PUBLIC_KEY,
   },
 };
