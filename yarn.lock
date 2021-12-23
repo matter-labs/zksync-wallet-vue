@@ -3289,7 +3289,6 @@ __metadata:
     "@nuxt/types": latest
     "@nuxt/typescript-build": latest
     "@nuxt/typescript-runtime": latest
-    "@nuxtjs/axios": ^5.13.6
     "@nuxtjs/dotenv": latest
     "@nuxtjs/eslint-config-typescript": latest
     "@nuxtjs/google-fonts": latest
@@ -3917,7 +3916,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nuxtjs/axios@npm:^5.13.1, @nuxtjs/axios@npm:^5.13.6":
+"@nuxtjs/axios@npm:^5.13.1":
   version: 5.13.6
   resolution: "@nuxtjs/axios@npm:5.13.6"
   dependencies:

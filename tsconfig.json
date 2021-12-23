@@ -34,7 +34,6 @@
     "types": [
       "@types/node",
       "@nuxt/types",
-      "@nuxtjs/axios",
       "@nuxtjs/sentry",
       "@matterlabs/zksync-nuxt-core",
       "vue-router",
