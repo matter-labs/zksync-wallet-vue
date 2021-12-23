@@ -22,18 +22,12 @@ export const rampConfig = {
 };
 export const banxaConfig = {
   mainnet: {
-    url: "https://zksync.banxa.com", // default
-    hostApiKey: process.env.BANXA_MAINNET_HOST_API_KEY,
-    secretKey: process.env.BANXA_MAINNET_SECRET_KEY,
+    url: "https://zksync.banxa.com",
   },
   rinkeby: {
     url: "https://zksync.banxa-sandbox.com",
-    hostApiKey: process.env.BANXA_RINKEBY_HOST_API_KEY,
-    secretKey: process.env.BANXA_RINKEBY_SECRET_KEY,
   },
   ropsten: {
     url: "https://zksync.banxa-sandbox.com",
-    hostApiKey: process.env.BANXA_ROPSTEN_HOST_API_KEY,
-    secretKey: process.env.BANXA_ROPSTEN_SECRET_KEY,
   },
 };

@@ -51,7 +51,6 @@
 </template>
 
 <script lang="ts">
-import cryptoJS from "crypto-js";
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
 import { rampConfig, banxaConfig } from "@/utils/config";
@@ -102,67 +101,18 @@ export default Vue.extend({
         ...this.rampConfig,
       }).show();
     },
-    async buyWithBanxa() {
+    buyWithBanxa() {
       if (!this.isBanxaSupported || this.banxaLoading) {
         return;
       }
       this.$analytics.track("click_on_buy_with_banxa");
-
-      this.banxaLoading = true;
-      try {
-        const data = {
-          blockchain: "ZKSYNC",
-          account_reference: this.address,
-          source: "USD",
-          target: "USDT",
-          wallet_address: this.address,
-          return_url_on_success: "https://wallet.zksync.io/account",
-          return_url_on_failure: "https://wallet.zksync.io/account",
-        };
-        const reqURL = this.banxaConfig!.url + "/api/orders";
-        const createOrder = await this.$axios.post(reqURL, data, {
-          headers: {
-            Authorization: this.getRequestAuthorization(JSON.stringify(data), reqURL),
-          },
-        });
-        console.log("createOrder", createOrder);
-        if (createOrder.data?.data?.order?.checkout_url) {
-          window.open(createOrder.data.data.order.checkout_url, "_blank");
-        }
-      } catch (error) {
-        console.warn("Error requesting Banaxa checkout link\n", error);
-      }
-      this.banxaLoading = false;
-    },
-    getRequestAuthorization(requestBody: string, reqURL: string) {
-      const CLIENT_KEY = this.banxaConfig!.hostApiKey;
-      const SECRET_KEY = this.banxaConfig!.secretKey;
-
-      function epochTime() {
-        const d = new Date();
-        const t = d.getTime();
-        const o = t + "";
-        return o.substring(0, 10);
-      }
-
-      const timestamp = epochTime();
-
-      function getAuthHeader(httpMethod: string) {
-        const url = new URL(reqURL);
-
-        let requestPath = url.pathname;
-        let requestData = [httpMethod, requestPath, timestamp, requestBody].join("\n");
-
-        if (httpMethod === "GET") {
-          requestPath = url.pathname + url.search;
-          requestData = [httpMethod, requestPath, timestamp].join("\n");
-        }
-
-        return cryptoJS.enc.Hex.stringify(cryptoJS.HmacSHA256(requestData, SECRET_KEY));
-      }
-
-      const signature = getAuthHeader("POST");
-      return `Bearer ${CLIENT_KEY + ":" + signature + ":" + timestamp}`;
+      const redirect = "https://wallet.zksync.io/account";
+      window.open(
+        `${this.banxaConfig!.url}?walletAddress=${this.address}&accountReference=${this.address}&returnUrlOnSuccess=${encodeURIComponent(
+          redirect,
+        )}&returnUrlOnFailure=${encodeURIComponent(redirect)}`,
+        "_blank",
+      );
     },
   },
 });
