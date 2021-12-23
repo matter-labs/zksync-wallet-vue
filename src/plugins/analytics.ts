@@ -8,7 +8,7 @@ export type Analytics = {
 
 class MixpanelAnalytics implements Analytics {
   constructor(token: string) {
-    mixpanel.init(token, { debug: true });
+    mixpanel.init(token, { debug: false });
   }
 
   set(props: { [key: string]: string }): void {
