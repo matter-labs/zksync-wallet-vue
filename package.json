@@ -132,8 +132,7 @@
     "typescript": true
   },
   "optionalDependencies": {
-    "@
-   /webpack-plugin": "^1.18.3",
+    "@webpack-plugin": "^1.18.3",
     "fs-extra": "^10.0.0",
     "fsevents": "^2.3.2"
   },
