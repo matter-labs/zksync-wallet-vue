@@ -20,6 +20,7 @@ export const rampConfig = {
   //   hostApiKey: process.env.RAMP_ROPSTEN_HOST_API_KEY,
   // },
 };
+
 export const banxaConfig = {
   mainnet: {
     url: "https://zksync.banxa.com",
@@ -29,5 +30,20 @@ export const banxaConfig = {
   },
   ropsten: {
     url: "https://zksync.banxa-sandbox.com",
+  },
+};
+
+export const moonpayConfig = {
+  mainnet: {
+    url: "https://buy.moonpay.com",
+    apiPublicKey: "pk_test_zHgHHYPTcKqAGfiCsiMOTRR6VuhSyV",
+  },
+  rinkeby: {
+    url: "https://buy-staging.moonpay.com",
+    apiPublicKey: "pk_test_zHgHHYPTcKqAGfiCsiMOTRR6VuhSyV",
+  },
+  ropsten: {
+    url: "https://buy-staging.moonpay.com",
+    apiPublicKey: "pk_test_zHgHHYPTcKqAGfiCsiMOTRR6VuhSyV",
   },
 };
