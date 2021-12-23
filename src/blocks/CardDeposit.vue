@@ -89,7 +89,7 @@ export default Vue.extend({
       window.open(
         `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${this.address}&showOnlyCurrencies=${availableZksyncCurrencies.join(
           ",",
-        )}&redirectURL=${encodeURIComponent(this.redirectURL)}`,
+        )}&walletAddresses=${encodeURIComponent(JSON.stringify(Object.fromEntries(availableZksyncCurrencies.map((e) => [e, this.address]))))}&redirectURL=${encodeURIComponent(this.redirectURL)}`,
         "_blank",
       );
     },
