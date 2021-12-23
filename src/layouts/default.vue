@@ -24,9 +24,10 @@
 import Vue from "vue";
 import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
 import SentyMixin from "./sentry.mixin";
+import AnalyticsMixin from "./analytics.mixin";
 
 export default Vue.extend({
-  mixins: [SentyMixin],
+  mixins: [SentyMixin, AnalyticsMixin],
   computed: {
     loggingIn() {
       return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
@@ -34,18 +35,8 @@ export default Vue.extend({
     loggedIn() {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
     },
-    network(): string {
-      return this.$store.getters["zk-provider/network"];
-    },
   },
-  watch: {
-    network: {
-      handler(network: string): void {
-        this.$analytics.set({ network });
-      },
-      immediate: true,
-    },
-  },
+
   mounted() {
     this.$inkline.config.variant = theme.getUserTheme();
     this.$store.dispatch("zk-provider/requestProvider");

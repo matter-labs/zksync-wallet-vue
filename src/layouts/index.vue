@@ -17,27 +17,16 @@
 import Vue from "vue";
 import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
 import SentyMixin from "./sentry.mixin";
+import AnalyticsMixin from "./analytics.mixin";
+
 import { GIT_REVISION_SHORT } from "@/utils/config";
 
 export default Vue.extend({
-  mixins: [SentyMixin],
+  mixins: [SentyMixin, AnalyticsMixin],
   data() {
     return {
       version: GIT_REVISION_SHORT,
     };
-  },
-  computed: {
-    network(): string {
-      return this.$store.getters["zk-provider/network"];
-    },
-  },
-  watch: {
-    network: {
-      handler(network: string): void {
-        this.$analytics.set({ network });
-      },
-      immediate: true,
-    },
   },
   mounted() {
     this.$inkline.config.variant = theme.getUserTheme();
