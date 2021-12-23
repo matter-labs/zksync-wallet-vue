@@ -40,7 +40,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/address"];
     },
     redirectURL(): string {
-      return "https://wallet.zksync.io/account";
+      return window.location.origin + "/account";
     },
     isRampSupported(): boolean {
       return !!this.rampConfig;
