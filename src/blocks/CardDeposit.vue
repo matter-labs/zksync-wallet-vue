@@ -6,9 +6,9 @@
     <div :class="{ disabled: !isBanxaSupported }" class="providerOption banxaProvider" @click="buyWithBanxa">
       <block-svg-banxa />
     </div>
-    <div :class="{ disabled: !isMoonpaySupported }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
+    <!-- <div :class="{ disabled: !isMoonpaySupported }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
       <block-svg-moonpay />
-    </div>
+    </div> -->
   </div>
 </template>
 

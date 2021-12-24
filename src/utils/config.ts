@@ -25,9 +25,9 @@ export const banxaConfig = {
   mainnet: {
     url: "https://zksync.banxa.com",
   },
-  rinkeby: {
-    url: "https://zksync.banxa-sandbox.com",
-  },
+  // rinkeby: {
+  //   url: "https://zksync.banxa-sandbox.com",
+  // },
   // ropsten: {
   //   url: "https://zksync.banxa-sandbox.com",
   // },
