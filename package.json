@@ -89,6 +89,7 @@
     "@nuxtjs/eslint-config-typescript": "latest",
     "@nuxtjs/google-fonts": "latest",
     "@nuxtjs/style-resources": "latest",
+    "@types/crypto-js": "^4.0.2",
     "@types/jest": "^26.0.23",
     "@types/mixpanel-browser": "^2.35.8",
     "@typescript-eslint/eslint-plugin": "^4.21.0",

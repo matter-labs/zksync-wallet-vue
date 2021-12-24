@@ -20,3 +20,30 @@ export const rampConfig = {
   //   hostApiKey: process.env.RAMP_ROPSTEN_HOST_API_KEY,
   // },
 };
+
+export const banxaConfig = {
+  mainnet: {
+    url: "https://zksync.banxa.com",
+  },
+  // rinkeby: {
+  //   url: "https://zksync.banxa-sandbox.com",
+  // },
+  // ropsten: {
+  //   url: "https://zksync.banxa-sandbox.com",
+  // },
+};
+
+export const moonpayConfig = {
+  mainnet: {
+    url: "https://buy.moonpay.com",
+    apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
+  },
+  rinkeby: {
+    url: "https://buy-staging.moonpay.com",
+    apiPublicKey: process.env.MOONPAY_RINKEBY_API_PUBLIC_KEY,
+  },
+  // ropsten: {
+  //   url: "https://buy-staging.moonpay.com",
+  //   apiPublicKey: process.env.MOONPAY_API_PUBLIC_KEY,
+  // },
+};

@@ -40,6 +40,9 @@ a {
 .secondaryText {
   color: $gray;
   font-size: 16px;
+  &.small {
+    font-size: 14px;
+  }
 }
 
 ._text-decoration-underline {
