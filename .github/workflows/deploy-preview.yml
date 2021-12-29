@@ -1,0 +1,86 @@
+name: "Deploy preview"
+"on":
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      network:
+        type: string
+        required: true
+        default: "rinkeby"
+        description: "target/env: mainnet, rinkeby, ropsten, rinkeby-beta, ropsten-beta, rinkeby-stage"
+jobs:
+  build_and_preview:
+    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+    runs-on: ubuntu-latest
+    outputs:
+      results: "${{ steps.deploy_preview.outputs.urls }}"
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Enable yarn cache"
+        uses: c-hive/gha-yarn-cache@v2  # using cache
+
+      - name: "Setup node@14"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: "Install dependencies"
+        run: |
+          yarn set version 3.1.1
+          yarn install
+
+      - name: "Generate rinkeby dist"
+        run: yarn run ci:build:rinkeby
+
+      - name: "Deploy preview: ${{ github.event.inputs.network || 'rinkeby' }}"
+        uses: matter-labs/action-hosting-deploy@v0
+        id: deploy_preview
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_SCAN }}"
+          target: ${{ github.event.inputs.network || 'rinkeby' }}
+          projectId: zksync-dapp-scan
+        env:
+          FIREBASE_CLI_PREVIEWS: hostingchannels
+
+  testing:
+    needs: build_and_preview
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        containers: [ 1, 2, 3 ]
+    steps:
+      - name: "Get current date"
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: "Checkout zksync-test-ui repository"
+        uses: actions/checkout@v2
+        with:
+          repository: matter-labs/zksync-test-ui
+          ref: main
+          token: ${{ secrets.QA_CI_ACCESS_TOKEN }}
+
+      - name: "Install dependencies"
+        run: |
+         bash ./cli-dev.sh clean yarn
+         yarn install --immutable || true
+
+      - name: "Run cypress"
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
+          CI: "true"
+          TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.results)[0]}}"
+        with:
+          parallel: true
+          group: "nft tests"
+          install: false
+          browser: chrome
+          headless: true
+          record: true
+          config-file: ./cypress.json

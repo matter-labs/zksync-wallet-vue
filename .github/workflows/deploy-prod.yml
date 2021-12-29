@@ -1,0 +1,64 @@
+name: "Deploy production"
+"on":
+  workflow_dispatch:
+    inputs:
+      ref:
+        type: string
+        description: "The branch, tag or SHA to checkout"
+        required: true
+        default: "HEAD"
+jobs:
+  build_and_deploy:
+    if: ${{ github.event.repository.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: "${{ github.event.inputs.ref }}"
+          fetch-depth: 0
+          # Whether to configure the token or SSH key with the local git config
+          # Default: true
+          persist-credentials: false # <--- checking this in commit context
+
+      - name: "Enable yarn cache"
+        uses: c-hive/gha-yarn-cache@v2  # using cache
+
+      - name: "Setup node@14"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: "Install dependencies"
+        run: |
+          yarn set version 3.1.1
+          yarn install
+
+      - name: "Deploy target: prod-mainnet"
+        run: yarn run ci:build:mainnet
+      - uses: matter-labs/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_SCAN }}"
+          target: mainnet
+          projectId: zksync-dapp-scan
+          channelID: live
+
+      - name: "Deploy target: prod-rinkeby"
+        run: yarn run ci:build:rinkeby
+      - uses: matter-labs/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_SCAN }}"
+          target: rinkeby
+          projectId: zksync-dapp-scan
+          channelID: live
+
+      - name: "Deploy target: prod-ropsten"
+        run: yarn run ci:build:ropsten
+      - uses: matter-labs/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_SCAN }}"
+          target: ropsten
+          projectId: zksync-dapp-scan
+          channelID: live
