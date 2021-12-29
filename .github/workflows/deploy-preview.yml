@@ -46,40 +46,44 @@ jobs:
   testing:
     needs: build_and_preview
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        containers: [ 1, 2, 3 ]
     steps:
-      - name: "Get current date"
+      - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-      - name: "Checkout zksync-test-ui repository"
+      - name: Checkout zksync-test-ui repository
         uses: actions/checkout@v2
         with:
           repository: matter-labs/zksync-test-ui
-          ref: main
-          token: ${{ secrets.QA_CI_ACCESS_TOKEN }}
+          token: ${{ secrets.TEST_ACCESS_TOKEN }}
 
-      - name: "Install dependencies"
+      - name: Preparing to launch of tests
         run: |
-         bash ./cli-dev.sh clean yarn
-         yarn install --immutable || true
+          chmod +x ./tests_launcher.sh
+          bash ./cli-dev.sh clean yarn
+          yarn install --immutable || true
 
-      - name: "Run cypress"
-        uses: cypress-io/github-action@v2
+      # this is needed to run chromium (puppeteer / dappeteer) with metamask extension.
+      - name: Install setup-node
+        uses: actions/setup-node@v1
         env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CYPRESS_PROJECT_ID: ${{ secrets.CYPRESS_PROJECT_ID }}
-          CI: "true"
-          TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.results)[0]}}"
+          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
         with:
-          parallel: true
-          group: "nft tests"
-          install: false
-          browser: chrome
-          headless: true
-          record: true
-          config-file: ./cypress.json
+          args: install
+
+      - run: mkdir -p artifacts
+
+      - name: Launch tests
+        uses: mujo-code/puppeteer-headful@8baa091f83c74d2eda8603b7f9990b20535e7a9c
+        env:
+          CI: 'true'
+          TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.output_urls)[0]}}"
+        with:
+          args: ./tests_launcher.sh wallet
+
+      - name: Save artifacts
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: wallet-artifacts_${{ github.run_number }}_${{ steps.date.outputs.date }}
+          path: artifacts/*
