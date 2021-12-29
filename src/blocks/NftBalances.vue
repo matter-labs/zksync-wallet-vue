@@ -32,35 +32,31 @@
           Your search <strong>"{{ search }}"</strong> did not match any NFT tokens
         </span>
       </div>
-      <div v-else class="balancesList">
-        <nuxt-link v-for="(item, tokenID) in displayedList" :key="tokenID" :to="`/nft/token/${tokenID}`" class="balanceItem">
-          <div class="leftSide _display-flex _align-items-center">
-            <div class="tokenSymbol">NFT-{{ tokenID }}</div>
-            <div class="status _margin-left-05 _hidden-md-and-up">
-              <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
-              <v-icon v-else class="committed" name="ri-check-line" />
-            </div>
+      <div v-else class="contactsListContainer genericListContainer">
+        <div v-for="(item, tokenID) in displayedList" :key="tokenID" class="contactItem" @click.self="$router.push(`/nft/token/${tokenID}`)">
+          <user-img :wallet="item.contentHash" />
+          <div class="contactInfo _pointer-events-none">
+            <div class="contactName">{{ item.symbol }}</div>
+            <div class="contactAddress walletAddress">{{ item.contentHash }}</div>
           </div>
-          <div class="rightSide">
-            <div class="rowItem">
-              <div class="status _hidden-sm-and-down">
-                <i-tooltip placement="left">
-                  <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
-                  <v-icon v-else class="committed" name="ri-check-line" />
-                  <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
-                </i-tooltip>
-              </div>
-            </div>
+          <div class="iconsBlock _pointer-events-none">
+            <i-tooltip placement="left" trigger="click">
+              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyHash(item.contentHash)">
+                <v-icon name="ri-clipboard-line" />
+              </i-button>
+              <template slot="body">Copied!</template>
+            </i-tooltip>
           </div>
-        </nuxt-link>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
+import { copyToClipboard, searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
 import { ZkNFTBalances } from "@matterlabs/zksync-nuxt-core/types";
+import { Address } from "zksync/build/types";
 export default Vue.extend({
   data() {
     return {
@@ -85,6 +81,11 @@ export default Vue.extend({
     },
     isSearching(): boolean {
       return !!this.search.trim();
+    },
+  },
+  methods: {
+    copyHash(address: Address) {
+      copyToClipboard(address);
     },
   },
 });
