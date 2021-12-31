@@ -3298,6 +3298,7 @@ __metadata:
     "@nuxtjs/stylelint-module": ^4.0.0
     "@ramp-network/ramp-instant-sdk": ^2.5.0
     "@sentry/webpack-plugin": ^1.14.0
+    "@types/crypto-js": ^4.0.2
     "@types/jest": ^26.0.23
     "@types/mixpanel-browser": ^2.35.8
     "@typescript-eslint/eslint-plugin": ^4.21.0
@@ -4681,6 +4682,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: c6e2aa299cf3979c00602f48ce9163700f0cbfec6ba2a8e1506d08f51da0279805a478ea094252fad7c369a563ee033b359c708ab34b1763397c58d7e2df07ad
+  languageName: node
+  linkType: hard
+
+"@types/crypto-js@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "@types/crypto-js@npm:4.0.2"
+  checksum: b9d03b6cc1152f0c817b3555e0638d87b62dcc4edfd886d409b50aa68dbe3017727f8fed634b8b4b10b0796e0cdd35379c50abfb28d3226666fdc908844e5934
   languageName: node
   linkType: hard
 
