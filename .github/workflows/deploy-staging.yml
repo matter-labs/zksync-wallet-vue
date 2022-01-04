@@ -23,7 +23,7 @@ jobs:
           yarn install
 
       - name: "Deploy target: rinkeby-staging"
-        run: yarn run ci:build:mainnet
+        run: yarn run ci:build:prod
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
