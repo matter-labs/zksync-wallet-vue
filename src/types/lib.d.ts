@@ -1,4 +1,14 @@
+import { BigNumberish } from "ethers";
 import { Route } from "vue-router/types";
+
+export interface ZkFeeState {
+  withdrawFees: {
+    [symbol: string]: BigNumberish;
+  };
+  withdrawFeesLoading: {
+    [symbol: string]: boolean;
+  };
+}
 
 export interface ZKIRootState {
   accountModalOpened: boolean;

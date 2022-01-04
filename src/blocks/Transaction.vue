@@ -152,6 +152,13 @@
         </p>
       </div>
 
+      <div v-if="withdrawWarning" class="_text-center _margin-top-1">
+        <v-icon class="errorText" name="ri-error-warning-line" />
+        Your are trying to withdraw <b>{{ chosenToken }}</b
+        >. The estimated fee for withdrawing this token is above our limit of <b>100000 WEI</b>. Therefore you will have to use our
+        <nuxt-link :to="`/transaction/withdrawpending?token=${chosenToken}`">Out-of-Gas</nuxt-link>
+        tool to complete the withdrawal after this transaction.
+      </div>
       <div v-if="type === 'CPK' && cpkStatus === true" class="_text-center _margin-top-1">Your account is already activated</div>
 
       <div v-if="error" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">{{ error }}</div>
@@ -257,6 +264,7 @@ export default Vue.extend({
       inputtedAddress: this.$store.getters["zk-transaction/address"],
       chooseTokenModal: <false | "mainToken" | "feeToken">false,
       contentHash: this.$store.getters["zk-transaction/contentHash"],
+      withdrawWarning: false,
       loading: true,
       requestingSigner: false,
     };
@@ -269,7 +277,14 @@ export default Vue.extend({
       return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.loading;
     },
     buttonLoader(): boolean {
-      return this.allowanceLoading || this.pendingBalanceLoading || (!this.nftExists && this.nftExistsLoading) || this.loading || this.requestingSigner;
+      return (
+        this.allowanceLoading ||
+        this.pendingBalanceLoading ||
+        (!this.nftExists && this.nftExistsLoading) ||
+        (this.hasSigner && this.type === "Withdraw" && this.withdrawFeeLoading) ||
+        this.loading ||
+        this.requestingSigner
+      );
     },
     nftTokenIsntVerified(): boolean {
       return Boolean(this.chosenToken && this.mainToken === "L2-NFT" && !this.nftExists && !this.nftExistsLoading);
@@ -406,6 +421,9 @@ export default Vue.extend({
     feeLoading(): boolean {
       return this.$store.getters["zk-transaction/feeLoading"];
     },
+    withdrawFeeLoading(): boolean {
+      return this.$store.getters["fee/getWithdrawFeeLoading"](this.chosenToken);
+    },
     activationFeeLoading(): boolean {
       return this.$store.getters["zk-transaction/activationFeeLoading"];
     },
@@ -437,6 +455,12 @@ export default Vue.extend({
         } else {
           this.$store.commit("zk-transaction/setAmount", val);
         }
+      },
+    },
+    chosenToken: {
+      immediate: true,
+      handler() {
+        this.checkWithdrawTokenFee();
       },
     },
     inputtedAddress(val) {
@@ -634,6 +658,21 @@ export default Vue.extend({
     showChangeFeeTokenModal() {
       this.chooseTokenModal = "feeToken";
       this.$analytics.track("visit_change_fee_token");
+    },
+    async checkWithdrawTokenFee() {
+      this.withdrawWarning = false;
+      if (this.type !== "Withdraw" || !this.chosenToken) {
+        return;
+      }
+      await this.$store.dispatch("fee/requestWithdrawFee", { symbol: this.chosenToken });
+      const withdrawFee: BigNumberish = this.$store.getters["fee/getWithdrawFee"](this.chosenToken);
+      if (!withdrawFee) {
+        return;
+      }
+      if (BigNumber.from(withdrawFee).gt("100000")) {
+        this.withdrawWarning = true;
+      }
+      this.withdrawWarning = true;
     },
   },
 });
