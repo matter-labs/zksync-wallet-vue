@@ -1,3 +1,71 @@
+# [2.7.0](https://github.com/matter-labs/zksync-wallet-vue/compare/2.6.1...2.7.0) (2022-01-04)
+
+
+### Bug Fixes
+
+* add new mixpanel events ([#192](https://github.com/matter-labs/zksync-wallet-vue/issues/192)) ([636ad0f](https://github.com/matter-labs/zksync-wallet-vue/commit/636ad0fe110cb0dde465ade0ba016c37e783ef74))
+* add ramp logo to button ([#169](https://github.com/matter-labs/zksync-wallet-vue/issues/169)) ([eb91433](https://github.com/matter-labs/zksync-wallet-vue/commit/eb914332942f8bb4e5ef2e164a1a1253bf23c767))
+* better cpk check (core-module) ([#175](https://github.com/matter-labs/zksync-wallet-vue/issues/175)) ([afb954f](https://github.com/matter-labs/zksync-wallet-vue/commit/afb954f4f7fc04bfc98725bf27f330773a57e7a6))
+* better CPK checks ([#186](https://github.com/matter-labs/zksync-wallet-vue/issues/186)) ([1b13b27](https://github.com/matter-labs/zksync-wallet-vue/commit/1b13b278ee8759cee78dc4aa5206ed264928a421))
+* better handle failed provider requests ([#181](https://github.com/matter-labs/zksync-wallet-vue/issues/181)) ([d59f3bf](https://github.com/matter-labs/zksync-wallet-vue/commit/d59f3bf90c8c8838538a29b36d7320f0511e7c59))
+* better handle swap in tx history ([#195](https://github.com/matter-labs/zksync-wallet-vue/issues/195)) ([6458252](https://github.com/matter-labs/zksync-wallet-vue/commit/6458252d76d62703c966c43d617586fe87919846))
+* build config ([#185](https://github.com/matter-labs/zksync-wallet-vue/issues/185)) ([3627349](https://github.com/matter-labs/zksync-wallet-vue/commit/3627349b05d7a7e4bb240fcfe19944924ddd52b6))
+* can't find token text changes ([124e3dd](https://github.com/matter-labs/zksync-wallet-vue/commit/124e3ddaf035bf8a450abe6a148ff5b2f02be130))
+* capture handled exceptions ([#149](https://github.com/matter-labs/zksync-wallet-vue/issues/149)) ([2cdd5c5](https://github.com/matter-labs/zksync-wallet-vue/commit/2cdd5c5d7d02ddb412abd5757f2430c4cf2f67ed))
+* change withdraw button text ([2d57be9](https://github.com/matter-labs/zksync-wallet-vue/commit/2d57be9e7e8aaa0c98eabafc49a0d395039b221e))
+* check if enough balance to pay the fee ([#161](https://github.com/matter-labs/zksync-wallet-vue/issues/161)) ([d79b22e](https://github.com/matter-labs/zksync-wallet-vue/commit/d79b22e9a0786ea106b307e5f0397d52c553a774))
+* correct name when switching accounts ([c0566ec](https://github.com/matter-labs/zksync-wallet-vue/commit/c0566ecccfa4c29af4c69e3f92f73314bf345ba0))
+* correct name when switching accounts ([d423200](https://github.com/matter-labs/zksync-wallet-vue/commit/d42320029dbf4d4bf8c4ab22e1b04c3f98bc98a0))
+* **dApp:** CI hotfix, SEO-title change & scss minor improvements ([#148](https://github.com/matter-labs/zksync-wallet-vue/issues/148)) ([6a1a371](https://github.com/matter-labs/zksync-wallet-vue/commit/6a1a371619334a42ff7b2bc995ff5269eff6a848))
+* disable cache and sw ([#173](https://github.com/matter-labs/zksync-wallet-vue/issues/173)) ([1fc2205](https://github.com/matter-labs/zksync-wallet-vue/commit/1fc22052451400ad1f1d8ce689c789493158bc2e))
+* drop cpk states after modal was closed #ZKF-676 ([#155](https://github.com/matter-labs/zksync-wallet-vue/issues/155)) ([4f978e1](https://github.com/matter-labs/zksync-wallet-vue/commit/4f978e12c7e0bbe80e013728493bf5b26815fdea)), closes [#ZKF-676](https://github.com/matter-labs/zksync-wallet-vue/issues/ZKF-676)
+* improve transfer/withdraw screens ([#143](https://github.com/matter-labs/zksync-wallet-vue/issues/143)) ([bf71c49](https://github.com/matter-labs/zksync-wallet-vue/commit/bf71c4969fe1af20a04f186344fe976357f47417))
+* increase polling timeout ([#176](https://github.com/matter-labs/zksync-wallet-vue/issues/176)) ([ac05df6](https://github.com/matter-labs/zksync-wallet-vue/commit/ac05df601bff8a9927fc383b9fe8aad1a3965407))
+* **infura-onboard:** new keys for the wallet ([#172](https://github.com/matter-labs/zksync-wallet-vue/issues/172)) ([254f680](https://github.com/matter-labs/zksync-wallet-vue/commit/254f680d4b0d1f574aebfce7f9cfd381a606c126))
+* mainnet infura rpc url ([#198](https://github.com/matter-labs/zksync-wallet-vue/issues/198)) ([4ae7d40](https://github.com/matter-labs/zksync-wallet-vue/commit/4ae7d4053d01ad51467a862dd539aa5a2d687644))
+* modal close icon color ([#177](https://github.com/matter-labs/zksync-wallet-vue/issues/177)) ([9d060f2](https://github.com/matter-labs/zksync-wallet-vue/commit/9d060f2e3e2e59a218c70f83a202b033fe6905bb))
+* persist wallet name ([e3bb249](https://github.com/matter-labs/zksync-wallet-vue/commit/e3bb2497acd9d0d19eeaac5fe75f564d0995a1e3))
+* preserve account address text case ([c8d4641](https://github.com/matter-labs/zksync-wallet-vue/commit/c8d4641812e0d48fbccf4f7a97bf1507f92dec3e))
+* provider not updating on network switch ([#163](https://github.com/matter-labs/zksync-wallet-vue/issues/163)) ([b4991a1](https://github.com/matter-labs/zksync-wallet-vue/commit/b4991a1224ff37aa72035bc9d78243b51300d349))
+* replace zksync: in inputted address ([#170](https://github.com/matter-labs/zksync-wallet-vue/issues/170)) ([a6f2e42](https://github.com/matter-labs/zksync-wallet-vue/commit/a6f2e42f792339e0e40eb68e743d3f927d1666f9))
+* setup headers for firebase deployment ([#162](https://github.com/matter-labs/zksync-wallet-vue/issues/162)) ([5e73828](https://github.com/matter-labs/zksync-wallet-vue/commit/5e73828b201dc953f240fe107cad6e94e77861fd))
+* show transfer warning for transferNFT ([#196](https://github.com/matter-labs/zksync-wallet-vue/issues/196)) ([765d3a3](https://github.com/matter-labs/zksync-wallet-vue/commit/765d3a3637cce46ff12191061a5cc067e6b8662a))
+* transaction button stuck disabled, allowance headline ([#194](https://github.com/matter-labs/zksync-wallet-vue/issues/194)) ([55304c7](https://github.com/matter-labs/zksync-wallet-vue/commit/55304c77c889383bbb11b1de83c7a7268b588c47))
+* turn off mixpanel debug ([69cf7fc](https://github.com/matter-labs/zksync-wallet-vue/commit/69cf7fc978fcc882d02b6eaa1a0a08c528b52182))
+* unregister sw from index.html ([#174](https://github.com/matter-labs/zksync-wallet-vue/issues/174)) ([a855ac5](https://github.com/matter-labs/zksync-wallet-vue/commit/a855ac52df900b50947522f8ec970463539d1fa7))
+* update account state and tx history ([#160](https://github.com/matter-labs/zksync-wallet-vue/issues/160)) ([42877a6](https://github.com/matter-labs/zksync-wallet-vue/commit/42877a6b5379e7f80f498aa9f65f9a8a4a6a3506))
+* update firebase.json config ([6857dc9](https://github.com/matter-labs/zksync-wallet-vue/commit/6857dc9945d3ece658c2485c71fee75083ae4216))
+* use node 14 for ci/cd ([#180](https://github.com/matter-labs/zksync-wallet-vue/issues/180)) ([75857a0](https://github.com/matter-labs/zksync-wallet-vue/commit/75857a0e075a7777caf85e5239d470fc33c54ffc))
+* use wildcard to filter Ramp tokens ([#168](https://github.com/matter-labs/zksync-wallet-vue/issues/168)) ([3634ca9](https://github.com/matter-labs/zksync-wallet-vue/commit/3634ca93abfb8d5b817217efa52afb141012e126))
+* WalletConnect network checks ([#150](https://github.com/matter-labs/zksync-wallet-vue/issues/150)) ([cda1262](https://github.com/matter-labs/zksync-wallet-vue/commit/cda1262b5fa68b75b9daa7e4cf4578fb6e3ca731))
+* zkScan mobile modal link ([#184](https://github.com/matter-labs/zksync-wallet-vue/issues/184)) ([a76e8c8](https://github.com/matter-labs/zksync-wallet-vue/commit/a76e8c8bb51ac44fc6b709e838eb3971ad922075))
+
+
+### Features
+
+* add env property to mixpanel ([#200](https://github.com/matter-labs/zksync-wallet-vue/issues/200)) ([e4c3be3](https://github.com/matter-labs/zksync-wallet-vue/commit/e4c3be3c6f99e9eb674e7399adeb89fff8f83320))
+* add mixpanel ([#189](https://github.com/matter-labs/zksync-wallet-vue/issues/189)) ([a0fb972](https://github.com/matter-labs/zksync-wallet-vue/commit/a0fb972d2f993d2a7c923b61cc6b5a37e949cc4b))
+* add mixpanel analytics ([#187](https://github.com/matter-labs/zksync-wallet-vue/issues/187)) ([9733011](https://github.com/matter-labs/zksync-wallet-vue/commit/9733011b7e30ffb0199555940c569c8945b269a7))
+* add wallet to all analytics events ([#202](https://github.com/matter-labs/zksync-wallet-vue/issues/202)) ([1c38635](https://github.com/matter-labs/zksync-wallet-vue/commit/1c386353d50e92befe167d260e24286fae7ef64d))
+* check if NFT exists ([#157](https://github.com/matter-labs/zksync-wallet-vue/issues/157)) ([fec2530](https://github.com/matter-labs/zksync-wallet-vue/commit/fec253023c59a8d49dea6daa3e2173b015a9f155))
+* check if nft exists once selected for transfer ([#164](https://github.com/matter-labs/zksync-wallet-vue/issues/164)) ([4966991](https://github.com/matter-labs/zksync-wallet-vue/commit/4966991b3d18cce7c250b772964004f727ed118b))
+* mint ([#165](https://github.com/matter-labs/zksync-wallet-vue/issues/165)) ([d00a3ac](https://github.com/matter-labs/zksync-wallet-vue/commit/d00a3ac3adf338d6f08633778252e4e49f5741f8))
+* mint nft using ipfs cid ([712a455](https://github.com/matter-labs/zksync-wallet-vue/commit/712a455a86722abe789f2f370ce9c77f4f720ff0))
+* more fiat to crypto providers ([#199](https://github.com/matter-labs/zksync-wallet-vue/issues/199)) ([e379198](https://github.com/matter-labs/zksync-wallet-vue/commit/e379198d4dbd22888b391bdbad4e14093b48b721))
+* predefined network in query param ([#156](https://github.com/matter-labs/zksync-wallet-vue/issues/156)) ([a1b6770](https://github.com/matter-labs/zksync-wallet-vue/commit/a1b677016e424895c7c0ca5f2ed96ed440555e43))
+* preview nft in a new window during minting ([70d62ed](https://github.com/matter-labs/zksync-wallet-vue/commit/70d62edec39a4f4967ddbf9e5081da688a3a280d))
+* recheck cpk status ([#182](https://github.com/matter-labs/zksync-wallet-vue/issues/182)) ([894c63d](https://github.com/matter-labs/zksync-wallet-vue/commit/894c63d4ff98b78b04477b950826af24d7ac0a93))
+* replace comma with dot ([#178](https://github.com/matter-labs/zksync-wallet-vue/issues/178)) ([794bf73](https://github.com/matter-labs/zksync-wallet-vue/commit/794bf73b96c62c6dff54d2bff803da80f1255acc))
+* semantic release CI ([328074d](https://github.com/matter-labs/zksync-wallet-vue/commit/328074dd5426c82e312ecd63683e5e25915a8084))
+* **service:** deposit ramp integration ([1bf2784](https://github.com/matter-labs/zksync-wallet-vue/commit/1bf278496602cea9b0c0995f8c17c546cf920629))
+* set default transaction token ([#166](https://github.com/matter-labs/zksync-wallet-vue/issues/166)) ([93d4ae2](https://github.com/matter-labs/zksync-wallet-vue/commit/93d4ae2544f855800b51c84ee31714ff18862f9c))
+* setup sentry ([#145](https://github.com/matter-labs/zksync-wallet-vue/issues/145)) ([f0098f4](https://github.com/matter-labs/zksync-wallet-vue/commit/f0098f402781812ec54836195c8435752e79a531))
+
+
+### Reverts
+
+* Revert "feat: add mixpanel analytics (#187)" (#188) ([f62f687](https://github.com/matter-labs/zksync-wallet-vue/commit/f62f6871a4d68ef2ae6e08958ce9a0a9677822d8)), closes [#187](https://github.com/matter-labs/zksync-wallet-vue/issues/187) [#188](https://github.com/matter-labs/zksync-wallet-vue/issues/188)
+
 # Changelog
 
 ## [2.5.0](https://github.com/matter-labs/zksync-wallet-vue/compare/v2.4.1...2.5.0) 
