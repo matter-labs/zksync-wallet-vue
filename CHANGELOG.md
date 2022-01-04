@@ -1,3 +1,10 @@
+## [3.0.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.0.0...3.0.1) (2022-01-04)
+
+
+### Bug Fixes
+
+* workflow build script changed to the existing one ([5bb2696](https://github.com/matter-labs/zksync-wallet-vue/commit/5bb269611ede4ba6c942e376846d182fc48b95cf))
+
 # [2.7.0](https://github.com/matter-labs/zksync-wallet-vue/compare/2.6.1...2.7.0) (2022-01-04)
 
 
