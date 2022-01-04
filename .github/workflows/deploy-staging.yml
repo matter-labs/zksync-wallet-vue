@@ -1,11 +1,12 @@
 name: "Deploy staging"
 "on":
   push:
-    branches: [ main ]
+    branches: [ master ]
 jobs:
   build_and_deploy:
     if: ${{ github.event.repository.full_name == github.repository }}
     runs-on: ubuntu-latest
+    environment: test
     steps:
       - uses: actions/checkout@v2
       - name: "Enable yarn cache"
@@ -22,11 +23,11 @@ jobs:
           yarn install
 
       - name: "Deploy target: rinkeby-staging"
-        run: yarn run ci:build:rinkeby
+        run: yarn run ci:build:mainnet
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_SCAN }}"
-          target: rinkeby-stage
-          projectId: zksync-dapp-scan
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+          target: stage-mainnet
+          projectId: zksync-vue
           channelID: live

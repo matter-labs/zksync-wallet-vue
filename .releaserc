@@ -1,6 +1,6 @@
 {
   "branches": "master",
-  "debug": true,
+  "debug": false,
   "tagFormat": "${version}",
   "addReleases": "top",
   "npmPublish": false,

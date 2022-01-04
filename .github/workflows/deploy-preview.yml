@@ -34,14 +34,14 @@ jobs:
       - name: "Generate rinkeby dist"
         run: yarn run ci:build:rinkeby
 
-      - name: "Deploy preview: ${{ github.event.inputs.network || 'rinkeby' }}"
+      - name: "Deploy preview"
         uses: matter-labs/action-hosting-deploy@v0
         id: deploy_preview
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: ${{ github.event.inputs.network || 'prod-rinkeby' }}
-          projectId: zksync-dapp-scan
+          target: prod-rinkeby
+          projectId: zksync-vue
 
   testing:
     needs: build_and_preview

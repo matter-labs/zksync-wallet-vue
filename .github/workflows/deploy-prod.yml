@@ -11,6 +11,7 @@ jobs:
   build_and_deploy:
     if: ${{ github.event.repository.full_name == github.repository }}
     runs-on: ubuntu-latest
+    environment: prod
     steps:
       - uses: actions/checkout@v2
         with:
@@ -38,9 +39,9 @@ jobs:
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_SCAN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
           target: mainnet
-          projectId: zksync-dapp-scan
+          projectId: zksync-vue-mainnet
           channelID: live
 
       - name: "Deploy target: prod-rinkeby"
@@ -48,9 +49,9 @@ jobs:
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_SCAN }}"
-          target: rinkeby
-          projectId: zksync-dapp-scan
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+          target: prod-rinkeby
+          projectId: zksync-vue
           channelID: live
 
       - name: "Deploy target: prod-ropsten"
@@ -58,7 +59,7 @@ jobs:
       - uses: matter-labs/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_DAPP_SCAN }}"
-          target: ropsten
-          projectId: zksync-dapp-scan
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+          target: prod-ropsten
+          projectId: zksync-vue
           channelID: live
