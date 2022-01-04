@@ -34,4 +34,4 @@ jobs:
           HUSKY: 0
           CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_GITHUB_TOKEN }}
