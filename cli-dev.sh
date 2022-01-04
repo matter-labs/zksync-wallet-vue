@@ -4,8 +4,8 @@ CATEGORY="$1"
 
 ACTION="$2"
 
-if [ $CATEGORY == "clean" ]; then
-  if [ $ACTION == "yarn" ]; then
+if [ "$CATEGORY" == "clean" ]; then
+  if [ "$ACTION" == "yarn" ]; then
     echo "Yarn garbage collection started"
     echo ""
     echo "  - dropping node_modules folder..."
@@ -18,7 +18,7 @@ if [ $CATEGORY == "clean" ]; then
     yarn cache clean --all
     printf "  Done\n\n"
     echo "All done!"
-  elif [ $ACTION == "nuxt" ]; then
+  elif [ "$ACTION" == "nuxt" ]; then
     echo "Nuxtjs garbage collection started"
     echo ""
     echo "  - dropping .nuxt folder..."
@@ -31,8 +31,8 @@ if [ $CATEGORY == "clean" ]; then
   fi
 fi
 
-if [ $CATEGORY == "ci" ]; then
-  if [ $ACTION == "force" ]; then
+if [ "$CATEGORY" == "ci" ]; then
+  if [ "$ACTION" == "force" ]; then
       echo "Running forced ci garbage collection..."
       echo ""
       bash cli-dev.sh clean nuxt
@@ -40,12 +40,12 @@ if [ $CATEGORY == "ci" ]; then
       bash cli-dev.sh clean yarn
       echo ""
     fi
-#  echo "Yarn pre-deploy garbage collection started"
-#  echo ""
-#  bash cli-dev.sh clean nuxt
-#  echo ""
-#  bash cli-dev.sh clean yarn
-#  echo ""
+  echo "Yarn pre-deploy garbage collection started"
+  echo ""
+  bash cli-dev.sh clean nuxt
+  echo ""
+  bash cli-dev.sh clean yarn
+  echo ""
   echo "Running yarn install..."
   echo ""
   yarn install --check-cache
@@ -53,8 +53,8 @@ if [ $CATEGORY == "ci" ]; then
   echo "Done"
 fi
 
-if [ $CATEGORY == "dev" ]; then
-  if [ $ACTION == "force" ]; then
+if [ "$CATEGORY" == "dev" ]; then
+  if [ "$ACTION" == "force" ]; then
     echo "Rebuilding..."
     echo ""
     bash cli-dev.sh ci

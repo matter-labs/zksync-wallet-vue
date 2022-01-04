@@ -1,13 +1,14 @@
-import { NuxtConfig } from "@nuxt/types";
-import { NuxtOptionsLoaders, NuxtWebpackEnv } from "@nuxt/types/config/build";
-import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import {NuxtConfig} from "@nuxt/types";
+import {NuxtOptionsEnv} from "@nuxt/types/config/env";
 
-import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
-import { Configuration } from "webpack";
+import {ModuleOptions} from "@matterlabs/zksync-nuxt-core/types";
+import {Configuration} from "webpack";
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
+const isLocalhost: boolean = process.env.IS_LOCALHOST !== undefined;
 const isDebugEnabled: boolean = appEnv === "dev";
 const isProduction: boolean = appEnv === "prod";
+
 const pageTitle = "zkSync Wallet";
 const pageImg = "/screenshot.jpg";
 
@@ -21,8 +22,8 @@ const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation,
 crypto payments, zkWallet, cryptowallet`;
 
 const config: NuxtConfig = {
-  components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
-  telemetry: isDebugEnabled,
+  components: ["@/components/", {path: "@/blocks/", prefix: "block"}],
+  telemetry: false,
   ssr: false,
   target: "static",
   static: true,
@@ -61,8 +62,8 @@ const config: NuxtConfig = {
       /**
        * UX / UI settings
        */
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" },
+      {charset: "utf-8"},
+      {name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0"},
 
       /**
        * Page meta:
@@ -144,14 +145,14 @@ const config: NuxtConfig = {
         name: "msapplication-TileImage",
         content: "/favicon-dark.png",
       },
-      { hid: "theme-color", name: "theme-color", content: "#4e529a" },
+      {hid: "theme-color", name: "theme-color", content: "#4e529a"},
       {
         hid: "msapplication-TileColor",
         property: "msapplication-TileColor",
         content: "#4e529a",
       },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
+    link: [{rel: "icon", type: "image/x-icon", href: "/favicon-dark.png"}],
   },
   /*
    ** Customize the progress-bar color
@@ -168,7 +169,7 @@ const config: NuxtConfig = {
   /**
    * Plugins that should be loaded before the mounting
    */
-  plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession", { src: "@/plugins/analytics", mode: "client" }],
+  plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession", {src: "@/plugins/analytics", mode: "client"}],
 
   styleResources: {
     scss: ["@/assets/style/vars/_variables.scss"],
@@ -186,7 +187,7 @@ const config: NuxtConfig = {
     "@nuxt/typescript-build",
     // https://go.nuxtjs.dev/stylelint
     "@nuxtjs/style-resources",
-    ["@nuxtjs/dotenv", { path: __dirname }],
+    ["@nuxtjs/dotenv", {path: __dirname}],
     "@nuxtjs/google-fonts",
     "nuxt-typed-vuex",
     [
@@ -210,8 +211,8 @@ const config: NuxtConfig = {
           APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
         restoreNetwork: true,
-        logoutRedirect: true,
-      },
+        logoutRedirect: "/",
+      } as ModuleOptions,
     ],
   ],
 
@@ -231,6 +232,7 @@ const config: NuxtConfig = {
   sentry: {
     dsn: sentryDsn,
     disableServerSide: true,
+    disabled: isLocalhost,
     config: {
       debug: isDebugEnabled,
       tracesSampleRate: 1.0,
@@ -253,7 +255,7 @@ const config: NuxtConfig = {
    ** Build configuration
    */
   build: {
-    filenames: { chunk: () => "[name]_Y2ZjItY_[contenthash].js" },
+    filenames: {chunk: () => "[name]_Y2ZjItY_[contenthash].js"},
     cache: false,
     cssSourceMap: true,
     babel: {
@@ -275,7 +277,7 @@ const config: NuxtConfig = {
       minimize: isProduction,
     },
     transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
-    extend: (config: Configuration, _ctx: { loaders: NuxtOptionsLoaders } & NuxtWebpackEnv) => {
+    extend: (config: Configuration) => {
       config.node = {
         fs: "empty",
       };

@@ -12,5 +12,5 @@ tests
 src/assets/imgs
 .github/workflows
 .github/ISSUE_TEMPLATE
+babel.config.js
 src/locales
-*sw.*

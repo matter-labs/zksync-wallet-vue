@@ -23,9 +23,6 @@
     "dapp",
     "ethers"
   ],
-  "engines": {
-    "node": "16"
-  },
   "license": "MIT",
   "licenses": [
     {
@@ -70,14 +67,13 @@
     "mixpanel-browser": "^2.42.0",
     "moment-timezone": "^0.5.33",
     "nuxt": "latest",
-    "nuxt-typed-vuex": "latest",
-    "oh-vue-icons": "latest",
-    "typed-vuex": "latest",
-    "vue": "2.*",
+    "nuxt-typed-vuex": "^0.2.0",
+    "oh-vue-icons": "^1.0.0-rc1",
+    "vue": "^2.6.14",
     "vue-qrcode": "^0.4.0",
     "vue-router": "^3.5.3",
     "vue-scrollto": "^2.20.0",
-    "zksync": "latest"
+    "zksync": "^0.11.6"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
@@ -85,6 +81,7 @@
     "@babel/runtime": "^7.13.10",
     "@commitlint/cli": "^12.1.4",
     "@commitlint/config-conventional": "^16.0.0",
+    "@ethersproject/logger": "^5.4.0",
     "@inkline/nuxt": "^2.3.6",
     "@nuxt/types": "latest",
     "@nuxt/typescript-build": "latest",
@@ -102,10 +99,8 @@
     "@types/mixpanel-browser": "^2.35.8",
     "@typescript-eslint/eslint-plugin": "^4.21.0",
     "@typescript-eslint/parser": "^4.21.0",
-    "@vue/composition-api": "^1.2.4",
     "babel-core": "^7.0.0-bridge.0",
     "commitlint": "^11.0.0",
-    "consola": "^2.15.3",
     "cspell": "latest",
     "dotenv": "8.2.0",
     "eslint": "^7.21.0",
@@ -115,6 +110,7 @@
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "husky": "^7.0.0",
     "jest": "^26.6.3",
+    "lint-staged": "^12.1.5",
     "node-sass": "4.14.0",
     "prettier": "^2.2.1",
     "sass-loader": "^10.1.1",
@@ -124,16 +120,15 @@
     "stylelint-scss": "^3.19.0",
     "typescript": "4.2.4",
     "vue-property-decorator": "latest",
-    "vuex": "^3.6.2",
     "webpack": "^4.46.0"
   },
   "peerDependencies": {
     "@babel/core": "*",
     "@babel/runtime": "*",
-    "@ethersproject/logger": "*",
-    "typed-vuex": "*"
+    "typescript": "*"
   },
   "resolutions": {
+    "@ethersproject/logger": "5.4.0",
     "babel-core": "7.0.0-bridge.0"
   },
   "fork-ts-checker": {
@@ -150,14 +145,20 @@
       "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
     }
   },
+  "lint-fix": [
+    "yarn lint-style:fix",
+    "yarn lint-ts:fix",
+    "yarn format",
+    "yarn spell-check"
+  ],
   "lint-staged": {
-    "*.{scss}": [
-      "yarn format",
-      "yarn lint-style:fix"
+    "*.scss": [
+      "yarn lint-style:check --fix",
+      "yarn format"
     ],
     "*.{ts,tsx,vue}": [
+      "yarn lint-ts:check --fix",
       "yarn format",
-      "yarn lint-ts:fix",
       "yarn spell-check"
     ]
   },
@@ -180,13 +181,12 @@
     "ci:prepare:ropsten": "sh cli-process-env.sh 'ropsten' prod 1",
     "ci:prepare:mainnet": "sh cli-process-env.sh 'mainnet' prod 1",
     "ci:check": "yarn lint-ts:check && yarn lint-style:check && yarn spell-check",
-    "format": "prettier --config .prettierrc.js --ignore-path .prettierignore --write src/**/*.{ts,vue,js,scss}",
-    "lint-ts:check": "eslint --quiet --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js}",
-    "lint-ts:fix": "yarn lint-ts:check --fix",
-    "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore src/**/*.scss --quiet",
-    "lint-style:fix": "stylelint --config '.stylelintrc' --ignore-path .stylelintignore --fix src/**/*.scss",
-    "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js,md}",
-    "prepare": "husky install",
+    "format": "prettier --config .prettierrc.js --ignore-path .prettierignore",
+    "lint-ts:check": "eslint --config .eslintrc.js --ignore-path .eslintignore",
+    "lint-ts:fix": "yarn lint-ts:check --fix src/**/*.{ts,vue,js}",
+    "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore",
+    "lint-style:fix": "yarn lint-style:check --fix src/**/*.scss",
+    "spell-check": "cspell -c cspell.json src/**/*.{ts,vue,js} *.md",
     "semantic-release": "semantic-release",
     "postinstall": "husky install"
   },
