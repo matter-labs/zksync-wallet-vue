@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: test
     outputs:
-      output_urls: "${{ steps.preview_deploy.outputs.urls }}"
+      output_urls: "${{ steps.deploy_preview.outputs.urls }}"
     steps:
       - uses: actions/checkout@v2
 
