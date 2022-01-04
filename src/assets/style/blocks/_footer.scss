@@ -216,12 +216,12 @@ button.floating-on-mobile {
     background-color: $mediumGrey !important;
 
     .dividerLine {
-      color: #343a40
+      color: $blackLighter;
     }
   }
 
   .badge.system-info {
-    color: #343a40
+    color: $blackLighter;
   }
 }
 
