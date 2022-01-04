@@ -69,6 +69,7 @@
     "nuxt": "latest",
     "nuxt-typed-vuex": "^0.2.0",
     "oh-vue-icons": "^1.0.0-rc1",
+    "typed-vuex": "^0.2.0",
     "vue": "^2.6.14",
     "vue-qrcode": "^0.4.0",
     "vue-router": "^3.5.3",
@@ -124,11 +125,9 @@
   },
   "peerDependencies": {
     "@babel/core": "*",
-    "@babel/runtime": "*",
-    "typescript": "*"
+    "@babel/runtime": "*"
   },
   "resolutions": {
-    "@ethersproject/logger": "5.4.0",
     "babel-core": "7.0.0-bridge.0"
   },
   "fork-ts-checker": {
