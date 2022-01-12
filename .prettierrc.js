@@ -6,7 +6,5 @@ module.exports = {
   printWidth: 180,
   tabWidth: 2,
   vueIndentScriptAndStyle: false,
-  endOfLine: "lf",
-  bracketSpacing: false,
-  bracketSameLine: true,
+  endOfLine: "auto"
 };

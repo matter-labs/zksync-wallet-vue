@@ -8,9 +8,9 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
 import socialIcons from "@/utils/socialIcons";
 import { SingleIcon } from "@/types/lib";
+import Vue, { PropOptions } from "vue";
 
 type Location = "header" | "footer";
 

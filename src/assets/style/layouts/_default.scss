@@ -5,12 +5,12 @@
   .routerContainer {
     min-height: $minRouteHeightMain;
     //margin: 1rem auto;
-    width: 100%
+    width: 100%;
   }
 
   .headerSpace {
     width: 100%;
-    height: $headerHeight
+    height: $headerHeight;
   }
 }
 
@@ -19,16 +19,15 @@ body.inkline.-light .defaultLayout {
     background: $white;
 
     .tileHeadline {
-      i,
-      .ov-icon {
-        color: $black
+      i, .ov-icon {
+        color: $black;
       }
     }
   }
 
   .tileTextBg {
     background-color: #fff8de1f;
-    border-color: #180d0d14
+    border-color: #180d0d14;
   }
 }
 
@@ -37,23 +36,22 @@ body.inkline.-dark .defaultLayout {
     background: $darkViolet;
 
     .tileHeadline {
-      i,
-      .ov-icon {
-        color: $white
+      i, .ov-icon {
+        color: $white;
       }
     }
   }
 
   .tileTextBg {
     background-color: #fff8de1a;
-    border-color: #ffffff14
+    border-color: #ffffff14;
   }
 }
 
 body.inkline.-dark {
   .form-input-group.-dark .form-input input,
   input.form-input.-prefixed {
-    background-color: #ffffff30 !important
+    background-color: #ffffff30 !important;
   }
 }
 
@@ -61,16 +59,16 @@ body.inkline.-dark {
 input.form-input.-prefixed {
   background-color: $input-border-color-light !important;
   border-radius: $borderRadiusSm;
-  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.035) !important
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.035) !important;
 }
 
 .form-input-group.-light .form-input input:focus,
 input.form-input.-prefixed:focus {
-  border-color: rgba(30, 30, 30, 0.15) !important
+  border-color: rgba(30, 30, 30, 0.15) !important;
 }
 
 .tooltip-wrapper {
-  display: flex
+  display: flex;
 }
 
 .iconInfo {
@@ -88,15 +86,14 @@ input.form-input.-prefixed:focus {
   height: 28px;
   width: 28px;
   display: inline-block;
-
   @media (max-width: $mobile) {
     height: 24px;
     width: 24px;
-    margin-left: 6px
+    margin-left: 6px;
   }
 
   &:hover {
-    background: transparentize($color: $gray, $amount: 0.5)
+    background: transparentize($color: $gray, $amount: 0.5);
   }
 
   svg {
@@ -105,7 +102,7 @@ input.form-input.-prefixed:focus {
     top: 1px;
     width: 100%;
     height: 100%;
-    object-fit: contain
+    object-fit: contain;
   }
 }
 
@@ -118,7 +115,7 @@ input.form-input.-prefixed:focus {
     /* The hack for Safari */
     @supports (-webkit-touch-callout: none) {
       //noinspection CssInvalidPropertyValue
-      max-height: -webkit-fill-available
+      max-height: -webkit-fill-available;
     }
   }
 }

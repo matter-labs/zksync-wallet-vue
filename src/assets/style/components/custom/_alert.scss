@@ -13,7 +13,7 @@
 
   .alertIcon {
     color: $darkerGray;
-    font-size: $tempFontSizeMedium
+    font-size: $tempFontSizeMedium;
   }
 
   .alertCloseIcon {
@@ -21,11 +21,11 @@
     color: $tempLightGray;
     font-size: $tempFontSizeMedium;
     cursor: pointer;
-    transition: color0.2s ease;
+    transition: color.2s ease;
     will-change: color;
 
     &:hover {
-      color: $darkerGray
+      color: $darkerGray;
     }
   }
 
@@ -33,6 +33,6 @@
     box-sizing: border-box;
     padding: 0 15px;
     color: $darkerGray;
-    text-align: left
+    text-align: left;
   }
 }

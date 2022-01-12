@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": "./src/",
+    "baseUrl": "./src",
     "checkJs": false,
     "declaration": true,
     "esModuleInterop": true,
@@ -37,15 +37,12 @@
       "@nuxtjs/sentry",
       "@matterlabs/zksync-nuxt-core",
       "vue-router",
+      "@types/jest",
+      "@nuxtjs/toast",
       "web3-core/types",
       "@inkline/inkline/types",
       "nuxt-typed-vuex",
       "vue-qrcode"
-    ],
-    "typeRoots": [
-      "./node_modules/@types",
-      "./node_modules/@nuxt/types",
-      "./src/types"
     ]
   },
   "exclude": [

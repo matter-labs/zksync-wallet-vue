@@ -1,24 +1,24 @@
 @media (max-width: $mobile) {
   html {
-    box-sizing: border-box
+    box-sizing: border-box;
   }
 
   body.inkline {
     overscroll-behavior-y: none;
-    overscroll-behavior-x: none
+    overscroll-behavior-x: none;
   }
 
   aside.bn-onboard-custom.bn-onboard-modal {
     max-height: 100%;
-    padding-bottom: 5rem
+    padding-bottom: 5rem;
   }
 
   *,
-  *:before,
-  *:after {
+  *::before,
+  *::after {
     box-sizing: inherit;
     padding: 0;
-    margin: 0
+    margin: 0;
   }
 
   header {
@@ -26,11 +26,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 60px !important
+    height: 60px !important;
   }
 
   .content {
-    overflow-y: auto
+    overflow-y: auto;
   }
 
   aside.bn-onboard-custom.bn-onboard-modal {
@@ -45,16 +45,16 @@
       padding: 1rem;
       border-radius: 8px !important;
       height: fit-content !important;
-      max-height: 70vh !important
+      max-height: 70vh !important;
     }
 
     header.bn-onboard-custom.bn-onboard-modal-content-header {
-      margin: 0 !important
+      margin: 0 !important;
     }
 
     button.bn-onboard-custom.bn-onboard-icon-button {
       padding: 0.4rem 1.1rem !important;
-      margin: 0 0 0.25rem !important
+      margin: 0 0 0.25rem !important;
     }
   }
 
@@ -67,7 +67,7 @@
       /* autoprefixer: off */
       @supports (-webkit-touch-callout: none) {
         //noinspection CssInvalidPropertyValue
-        min-height: -webkit-fill-available
+        min-height: -webkit-fill-available;
       }
     }
   }
@@ -75,31 +75,31 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-  line-height: 1.4
+  line-height: 1.4;
 }
 
 main > div.mobileOnly {
-  display: none
+  display: none;
 }
 
 section.layoutContent {
   .mobileOnly {
-    display: none !important
+    display: none !important;
   }
 }
 
 @media (max-width: $mobile) {
   ._mobile-no-margin {
-    margin: 0.25rem 0 0 !important
+    margin: 0.25rem 0 0 !important;
   }
 
   .successBlock .infoBlockItem {
     &.smaller .amount {
-      font-size: 14px
+      font-size: 14px;
     }
 
     .amount {
-      font-size: 18px
+      font-size: 18px;
     }
   }
 
@@ -110,23 +110,23 @@ section.layoutContent {
 
     .walletAddress {
       letter-spacing: -0.02rem;
-      font-size: 12px
+      font-size: 12px;
     }
 
     .userImg {
-      display: none
+      display: none;
     }
 
     .tooltip-wrapper {
       i.copy {
-        padding: 0.25rem
+        padding: 0.25rem;
       }
     }
   }
 
   .transactionsPage .transactionsListContainer {
     max-height: none !important;
-    padding-top: 0 !important
+    padding-top: 0 !important;
   }
 
   .footerModalContainer {
@@ -139,7 +139,7 @@ section.layoutContent {
         bottom: 0.5rem;
         width: 2.5rem !important;
         height: 2.5rem !important;
-        box-shadow: $tileShadow
+        box-shadow: $tileShadow;
       }
     }
   }
@@ -148,7 +148,7 @@ section.layoutContent {
     .leftSide {
       .status {
         position: relative;
-        top: 1.5px
+        top: 1.5px;
       }
     }
 
@@ -159,7 +159,7 @@ section.layoutContent {
         .total {
           font-family: $firaSans;
           letter-spacing: 0;
-          font-size: 10px
+          font-size: 10px;
         }
 
         .status {
@@ -171,7 +171,7 @@ section.layoutContent {
           .loaderContainer,
           .loaderContainer .loaderSpinner {
             width: 1rem;
-            height: 1rem
+            height: 1rem;
           }
         }
       }
@@ -189,22 +189,22 @@ section.layoutContent {
 
       .form-input.-prefixed > .form-input.-prefixed > input {
         font-size: 16px !important;
-        padding: 0.5rem 1rem 0.5rem 2.5rem !important
+        padding: 0.5rem 1rem 0.5rem 2.5rem !important;
       }
 
       &::-webkit-scrollbar {
         width: 10px;
-        background-color: $tempTransparent
+        background-color: $tempTransparent;
       }
 
       &::-webkit-scrollbar-thumb {
         border-radius: $borderRadius;
-        cursor: pointer
+        cursor: pointer;
       }
 
       &::-webkit-scrollbar-track {
         background-color: $tempTransparent;
-        border-radius: $borderRadius
+        border-radius: $borderRadius;
       }
 
       .tokenItem {
@@ -214,7 +214,7 @@ section.layoutContent {
 
         .tokenSymbol,
         .balance {
-          font-size: 16px
+          font-size: 16px;
         }
       }
     }
@@ -225,12 +225,12 @@ section.layoutContent {
       .header,
       .footer,
       .body {
-        padding: 1rem !important
+        padding: 1rem !important;
       }
     }
 
     .modalFooterBtn {
-      gap: 0.5rem
+      gap: 0.5rem;
     }
   }
 }

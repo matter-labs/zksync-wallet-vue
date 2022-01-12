@@ -11,18 +11,18 @@
     transition: border-color $transition1;
 
     .noteIcon {
-      font-size: 18px
+      font-size: 18px;
     }
 
     .noteText {
       font-weight: 300;
-      font-size: 12px
+      font-size: 12px;
     }
 
     .noteIcon,
     .noteText {
       color: $black;
-      transition: color $transition1
+      transition: color $transition1;
     }
   }
 }
@@ -30,12 +30,12 @@
 body.inkline {
   &.-dark {
     .noteMain {
-      border-color: darken($color: $gray, $amount: 15)
+      border-color: darken($color: $gray, $amount: 15);
     }
 
     .noteIcon,
     .noteText {
-      color: darken($color: $gray, $amount: 15)
+      color: darken($color: $gray, $amount: 15);
     }
   }
 }

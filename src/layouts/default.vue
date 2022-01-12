@@ -29,10 +29,10 @@ import AnalyticsMixin from "./analytics.mixin";
 export default Vue.extend({
   mixins: [SentryMixin, AnalyticsMixin],
   computed: {
-    loggingIn() {
+    loggingIn(): boolean {
       return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
-    loggedIn() {
+    loggedIn(): boolean {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
     },
   },

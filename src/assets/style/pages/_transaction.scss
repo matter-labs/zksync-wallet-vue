@@ -1,18 +1,18 @@
 .transactionPage {
   .inputLabel {
-    padding-bottom: 5px
+    padding-bottom: 5px;
   }
 
   .totalPrice {
     text-align: center;
     margin: 1rem auto 0;
     font-size: 16px;
-    color: $gray
+    color: $gray;
   }
 
   @media screen and (max-width: $mobile) {
     .feeAmount {
-      display: block
+      display: block;
     }
   }
 
@@ -22,22 +22,22 @@
     overflow: auto;
 
     @media (max-width: $mobile) {
-      max-height: 55vh
+      max-height: 55vh;
     }
 
     &::-webkit-scrollbar {
       width: 10px;
-      background-color: transparent
+      background-color: transparent;
     }
 
     &::-webkit-scrollbar-thumb {
       border-radius: $borderRadius;
-      cursor: pointer
+      cursor: pointer;
     }
 
     &::-webkit-scrollbar-track {
       background-color: transparent;
-      border-radius: $borderRadius
+      border-radius: $borderRadius;
     }
 
     .tokenItem {
@@ -50,17 +50,15 @@
       border-bottom: 1px solid;
       cursor: pointer;
       transition: background-color $transition1;
-
       &.disabled {
-        cursor: default
+        cursor: default;
       }
-
       &:not(.disabled):hover {
-        background-color: transparentize($color: $gray, $amount: 0.9)
+        background-color: transparentize($color: $gray, $amount: 0.9);
       }
 
       .tokenSymbol {
-        font-size: 22px
+        font-size: 22px;
       }
 
       .rightSide {
@@ -69,7 +67,7 @@
         text-align: right;
 
         .balance {
-          font-size: 18px
+          font-size: 18px;
         }
       }
     }
@@ -84,7 +82,7 @@
     height: 100%;
     min-height: 10vh;
     overflow: hidden;
-    text-align: center
+    text-align: center;
   }
 }
 
@@ -93,11 +91,11 @@ body.inkline {
     .transactionPage {
       .tokenListContainer {
         &::-webkit-scrollbar-thumb {
-          background-color: $input-border-color-focus-light
+          background-color: $input-border-color-focus-light;
         }
 
         .tokenItem {
-          border-color: $input-border-color-light
+          border-color: $input-border-color-light;
         }
       }
     }
@@ -106,11 +104,11 @@ body.inkline {
   &.-dark {
     .transactionPage .tokenListContainer {
       &::-webkit-scrollbar-thumb {
-        background-color: $input-border-color-focus-dark
+        background-color: $input-border-color-focus-dark;
       }
 
       .tokenItem {
-        border-color: $input-border-color-dark
+        border-color: $input-border-color-dark;
       }
     }
   }

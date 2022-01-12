@@ -1,17 +1,17 @@
 .desktopOnly {
   @media screen and (max-width: $mobile+1) {
-    display: none !important
+    display: none !important;
   }
 }
 
 .mobileOnly {
   @media screen and (min-width: $mobile) {
-    display: none !important
+    display: none !important;
   }
 }
 
 .errorText {
-  color: $red
+  color: $red;
 }
 
 .goBackContinueBtns {
@@ -20,21 +20,21 @@
   height: max-content;
   grid-template-columns: max-content 1fr;
   grid-template-rows: 100%;
-  grid-gap: 0.8rem
+  grid-gap: 0.8rem;
 }
 
 main.layout.defaultLayout {
   max-height: 100%;
   overflow: hidden;
-  padding: 40px 0 70px
+  padding: 40px 0 70px;
 }
 
 #__layout {
-  display: flex
+  display: flex;
 }
 
 a {
-  color: $lightViolet
+  color: $lightViolet;
 }
 
 .secondaryText {
@@ -46,7 +46,7 @@ a {
 }
 
 ._text-decoration-underline {
-  text-decoration: underline
+  text-decoration: underline;
 }
 
 .linkText {
@@ -57,14 +57,14 @@ a {
 
   &:hover {
     filter: brightness(125%);
-    text-decoration: none !important
+    text-decoration: none !important;
   }
 }
 
 .border-line {
   background-color: transparentize($color: $gray, $amount: 0.8);
   width: 100%;
-  height: 1px
+  height: 1px;
 }
 
 body.inkline {
@@ -74,25 +74,25 @@ body.inkline {
       color: $lightViolet !important;
       text-decoration: none !important;
       border-radius: $borderRadiusSm;
-      transition: background-color $transition1
+      transition: background-color $transition1;
     }
 
     &.-secondary {
       &:disabled {
-        opacity: 0.3
+        opacity: 0.3;
       }
     }
 
     &.-dark {
       &:disabled {
         background-color: $violet;
-        opacity: 0.4 !important
+        opacity: 0.4 !important;
       }
     }
 
     .planeIcon {
       position: relative;
-      top: -2px
+      top: -2px;
     }
   }
 
@@ -101,14 +101,14 @@ body.inkline {
 
     .projectLogo {
       .logoLetter {
-        fill: $tempDarkBlue
+        fill: $tempDarkBlue;
       }
     }
 
     .button {
       &.-link {
         &:hover {
-          background-color: transparentize($color: $gray, $amount: 0.8) !important
+          background-color: transparentize($color: $gray, $amount: 0.8) !important;
         }
       }
     }
@@ -118,19 +118,19 @@ body.inkline {
     background-color: $tempDarkBlue;
 
     .linkText {
-      color: $lightViolet
+      color: $lightViolet;
     }
 
     .projectLogo {
       .logoLetter {
-        fill: $mediumGrey
+        fill: $mediumGrey;
       }
     }
 
     .button {
       &.-link {
         &:hover {
-          background-color: #ffffff14 !important
+          background-color: #ffffff14 !important;
         }
       }
     }
@@ -139,7 +139,7 @@ body.inkline {
 
 button.-lg.-circle {
   .inkline-icon {
-    line-height: 1.9
+    line-height: 1.9;
   }
 }
 
@@ -154,29 +154,29 @@ button.-lg.-circle {
 
     &[data-popper-placement^="right"] {
       .arrow,
-      .arrow:after {
-        border-right-color: $darkViolet !important
+      .arrow::after {
+        border-right-color: $darkViolet !important;
       }
     }
 
     &[data-popper-placement^="left"] {
       .arrow,
-      .arrow:after {
-        border-left-color: $darkViolet !important
+      .arrow::after {
+        border-left-color: $darkViolet !important;
       }
     }
 
     &[data-popper-placement^="bottom"] {
       .arrow,
-      .arrow:after {
-        border-bottom-color: $darkViolet !important
+      .arrow::after {
+        border-bottom-color: $darkViolet !important;
       }
     }
 
     &[data-popper-placement^="top"] {
       .arrow,
-      .arrow:after {
-        border-top-color: $darkViolet !important
+      .arrow::after {
+        border-top-color: $darkViolet !important;
       }
     }
   }
@@ -186,29 +186,29 @@ button.-lg.-circle {
 
     &[data-popper-placement^="right"] {
       .arrow,
-      .arrow:after {
-        border-right-color: $white !important
+      .arrow::after {
+        border-right-color: $white !important;
       }
     }
 
     &[data-popper-placement^="left"] {
       .arrow,
-      .arrow:after {
-        border-left-color: $white !important
+      .arrow::after {
+        border-left-color: $white !important;
       }
     }
 
     &[data-popper-placement^="bottom"] {
       .arrow,
-      .arrow:after {
-        border-bottom-color: $white !important
+      .arrow::after {
+        border-bottom-color: $white !important;
       }
     }
 
     &[data-popper-placement^="top"] {
       .arrow,
-      .arrow:after {
-        border-top-color: $white !important
+      .arrow::after {
+        border-top-color: $white !important;
       }
     }
   }
@@ -219,14 +219,14 @@ button.-lg.-circle {
 
   &.prevent-close {
     .modal {
-      &:before {
+      &::before {
         position: absolute;
         top: 0;
         left: 0;
         z-index: -1;
         width: 100%;
         height: 100%;
-        content: ""
+        content: "";
       }
     }
   }
@@ -242,14 +242,14 @@ button.-lg.-circle {
       & > .close {
         width: 2.2rem !important;
         height: 2.2rem !important;
-        line-height: 2rem !important
+        line-height: 2rem !important;
       }
 
       @media (max-width: $mobile) {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 1rem
+        font-size: 1rem;
       }
     }
 
@@ -257,33 +257,33 @@ button.-lg.-circle {
     .footer,
     .body {
       padding-right: 28px !important;
-      padding-left: 28px !important
+      padding-left: 28px !important;
     }
 
     & > div:last-child {
-      border-radius: 0 0 $borderRadius $borderRadius
+      border-radius: 0 0 $borderRadius $borderRadius;
     }
   }
 
   &.-light {
-    &.-md > .header > .close:before {
-      color: $gray !important
+    &.-md > .header > .close::before {
+      color: $gray !important;
     }
 
     .header,
     .footer,
     .body {
-      border-color: $light !important
+      border-color: $light !important;
     }
 
     .footer,
     .body {
       background: $modal-background-light !important;
-      border-color: $light !important
+      border-color: $light !important;
     }
 
     .modalFooterBtn {
-      color: $black
+      color: $black;
     }
 
     .close .icon {
@@ -297,28 +297,28 @@ button.-lg.-circle {
     .header,
     .footer,
     .body {
-      border-color: $modal-border-color-dark !important
+      border-color: $modal-border-color-dark !important;
     }
 
     .footer,
     .body {
       background: $modal-background-dark !important;
-      border-color: $modal-border-color-dark !important
+      border-color: $modal-border-color-dark !important;
     }
 
     .header {
-      background: $modal-background-dark !important
+      background: $modal-background-dark !important;
     }
 
     .close .icon {
       line-height: 18px;
       font-size: 18px;
-      color: $white
+      color: $white;
     }
   }
 
   .header {
-    border-bottom: none !important
+    border-bottom: none !important;
   }
 
   .modalFooterBtn {
@@ -336,28 +336,28 @@ button.-lg.-circle {
 
     &.big {
       i {
-        font-size: 20px
+        font-size: 20px;
       }
 
       span {
-        font-size: 18px
+        font-size: 18px;
       }
     }
 
     &:hover {
-      background-color: transparentize($color: $gray, $amount: 0.8)
+      background-color: transparentize($color: $gray, $amount: 0.8);
     }
 
     svg {
       display: block;
       width: 20px;
       height: 20px;
-      margin-right: 10px
+      margin-right: 10px;
     }
 
     span {
       font-size: $fontSizeRegular;
-      text-align: left
+      text-align: left;
     }
   }
 
@@ -366,7 +366,7 @@ button.-lg.-circle {
 
     p {
       margin: 0 0 15px;
-      line-height: 1.4
+      line-height: 1.4;
     }
   }
 }
@@ -374,7 +374,7 @@ button.-lg.-circle {
 .form-input-group {
   .form-input {
     input {
-      font-size: 1.15rem !important
+      font-size: 1.15rem !important;
     }
   }
 
@@ -386,7 +386,7 @@ button.-lg.-circle {
         box-shadow: none !important;
 
         &:focus {
-          border-color: $input-border-color-focus-light !important
+          border-color: $input-border-color-focus-light !important;
         }
       }
     }
@@ -395,7 +395,7 @@ button.-lg.-circle {
       background-color: transparent !important;
 
       &:hover {
-        background-color: rgba(0, 0, 0, 0.01961) !important
+        background-color: rgba(0, 0, 0, 0.01961) !important;
       }
     }
   }
@@ -407,7 +407,7 @@ button.-lg.-circle {
         border-color: $input-border-color-dark !important;
 
         &:focus {
-          border-color: $input-border-color-focus-dark !important
+          border-color: $input-border-color-focus-dark !important;
         }
       }
     }
@@ -416,13 +416,13 @@ button.-lg.-circle {
       background-color: transparent !important;
 
       &:hover {
-        background-color: $mediumViolet !important
+        background-color: $mediumViolet !important;
       }
     }
   }
 
   .form-input.-prefixed input {
-    padding-left: 3rem !important
+    padding-left: 3rem !important;
   }
 }
 
@@ -442,77 +442,77 @@ button.-lg.-circle {
 .form-check.-radio {
   //white-space: pre-line !important;
   &:not(:last-child) {
-    margin-bottom: 15px
+    margin-bottom: 15px;
   }
 
   .form-input-label {
     padding-left: 35px !important;
     cursor: pointer;
 
-    &:before {
+    &::before {
       width: 20px !important;
       height: 20px !important;
       background-color: transparent !important;
-      border: 1px solid $input-border-color-focus-dark
+      border: 1px solid $input-border-color-focus-dark;
     }
 
-    &:before,
-    &:after {
-      top: 2.5px !important
+    &::before,
+    &::after {
+      top: 2.5px !important;
     }
   }
 
   input:checked ~ .form-input-label {
-    &:before {
-      background-color: $green !important
+    &::before {
+      background-color: $green !important;
     }
 
-    &:after {
+    &::after {
       width: 10px !important;
       height: 10px !important;
       background-color: $white !important;
       transform: translateX(5px) translateY(5px) !important;
-      content: "" !important
+      content: "" !important;
     }
   }
 
   .form-input-label {
-    outline: none
+    outline: none;
   }
 }
 
 .form-check.-checkbox {
   label {
-    outline: none
+    outline: none;
   }
 
-  input:checked ~ .form-input-label:before {
-    background-color: $lightViolet !important
+  input:checked ~ .form-input-label::before {
+    background-color: $lightViolet !important;
   }
 }
 
 .tokenSymbol,
 .walletAddress {
   font-weight: 400;
-  font-family: $firaCode
+  font-family: $firaCode;
 }
 
 .h1 {
   font-weight: 400 !important;
-  font-family: $firaSans
+  font-family: $firaSans;
 }
 
 .h2 {
   font-weight: 600 !important;
-  font-family: $firaSans
+  font-family: $firaSans;
 }
 
 ._margin-top-05 {
-  margin-top: 0.5em
+  margin-top: 0.5em;
 }
 
 ._margin-left-05 {
-  margin-left: 0.4em
+  margin-left: 0.4em;
 }
 
 .grid-cols-2-layout {
@@ -525,18 +525,18 @@ button.-lg.-circle {
   overflow: hidden;
 
   & > * {
-    overflow: hidden
+    overflow: hidden;
   }
 
   &.single-col {
     grid-gap: 10px;
     grid-template-columns: 100%;
-    grid-template-rows: repeat(2, 1fr)
+    grid-template-rows: repeat(2, 1fr);
   }
 
   @media screen and (max-width: $mobile) {
     grid-gap: 10px;
     grid-template-columns: 100%;
-    grid-template-rows: repeat(2, 1fr)
+    grid-template-rows: repeat(2, 1fr);
   }
 }

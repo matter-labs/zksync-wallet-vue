@@ -1,23 +1,24 @@
 module.exports = {
   env: {
     browser: true,
-    node: true
+    node: true,
   },
-  root: true,
-  extends: [
-    "@nuxtjs/eslint-config-typescript",
-    "plugin:prettier-vue/recommended",
-    "prettier",
-  ],
-  "parserOptions": {
-    parser: "@typescript-eslint/parser",
-    extraFileExtensions: ['.vue'],
+  extends: ["@nuxtjs/eslint-config-typescript", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier", "plugin:vue/base"],
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    ecmaVersion: 12,
     ecmaFeatures: {
-      experimentalObjectRestSpread: true
+      experimentalObjectRestSpread: true,
     },
+    parser: "@typescript-eslint/parser",
+    sourceType: "module",
+    project: ["tsconfig.json", "tsconfig.eslint.json"],
     tsconfigRootDir: __dirname,
+    extraFileExtensions: [".vue"],
   },
-  plugins: ["prettier"],
+  ignorePatterns: ["node_modules"],
+  plugins: ["vue", "@typescript-eslint", "prettier"],
+  root: true,
   rules: {
     indent: "off",
     semi: ["error", "always"],
@@ -29,6 +30,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     camelcase: "off",
     "no-console": "off",
+    "prettier/prettier": "error",
     quotes: ["error", "double"],
     "sort-imports": "off",
     "vue/no-v-for-template-key-on-child": "off",
@@ -43,65 +45,20 @@ module.exports = {
     "vue/max-attribute": "off",
     "vue/require-prop-types": "off",
     "import/no-named-as-default-member": "off",
-    "vue/multi-word-component-names": "off",
-    "prettier-vue/prettier": [
-      'error',
-      {
-        // Override all options of `prettier` here
-        // @see https://prettier.io/docs/en/options.html
-        semi: true,
-        trailingComma: "es5",
-        singleQuote: false,
-        jsxSingleQuote: false,
-        printWidth: 180,
-        tabWidth: 2,
-        vueIndentScriptAndStyle: false,
-        endOfLine: "lf",
-        bracketSpacing: false,
-        bracketSameLine: true,
-      },
-    ],
+    "vue/multi-word-component-names": "off"
   },
   settings: {
     "prettier-vue": {
       SFCBlocks: {
-        /**
-         * Use prettier to process `<template>` blocks or not
-         *
-         * If set to `false`, you may need to enable those vue rules that are disabled by `eslint-config-prettier`,
-         * because you need them to lint `<template>` blocks
-         *
-         * @default true
-         */
         template: true,
-
-        /**
-         * Use prettier to process `<script>` blocks or not
-         *
-         * If set to `false`, you may need to enable those rules that are disabled by `eslint-config-prettier`,
-         * because you need them to lint `<script>` blocks
-         *
-         * @default true
-         */
-        script: true,
-
-        /**
-         * Use prettier to process `<style>` blocks or not
-         *
-         * @default true
-         */
-        style: true
+        script: true
       },
-      // Use prettierrc for prettier options or not (default: `true`)
       usePrettierrc: true,
-
       // Set the options for `prettier.getFileInfo`.
       // @see https://prettier.io/docs/en/api.html#prettiergetfileinfofilepath-options
       fileInfoOptions: {
         // Path to ignore file (default: `'.prettierignore'`)
         // Notice that the ignore file is only used for this plugin
-        ignorePath: ".prettierignore",
-
         // Process the files in `node_modules` or not (default: `false`)
         withNodeModules: false
       }

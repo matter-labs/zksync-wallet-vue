@@ -10,7 +10,6 @@
   border-radius: $borderRadiusMd;
   box-shadow: $shadowInset;
   transition: background-color $transition1, box-shadow $transition1;
-
   &.inputWallet {
     position: relative;
 
@@ -20,29 +19,31 @@
       top: calc(100% + 3px);
       width: 100%;
       color: $red;
-      font-size: 12px
+      font-size: 12px;
     }
   }
 
   &.clickablePicture {
     .userImg {
-      cursor: pointer
+      cursor: pointer;
     }
+
   }
 
   &.error {
-    box-shadow: 0 0 0 1px $red
+    box-shadow: 0 0 0 1px $red;
   }
 
   .walletValue {
     font-size: 12px;
     text-align: center;
-    word-break: break-all
+    word-break: break-all;
   }
 
   input {
     display: block;
     width: 100%;
+    height: 100%;
     font-size: 12px;
     height: 27px;
     text-align: center;
@@ -52,12 +53,12 @@
     transition: $transition1 color;
 
     &::placeholder {
-      font-size: 18px
+      font-size: 18px;
     }
   }
 
   .userImgPlaceholder {
-    transition: $transition1 background-color
+    transition: $transition1 background-color;
   }
 
   .copy {
@@ -72,7 +73,7 @@
     display: inline-flex;
 
     &:active {
-      transition: 0.001s
+      transition: 0.001s;
     }
   }
 }
@@ -83,7 +84,7 @@
     font-size: 10px !important;
     letter-spacing: -0.04rem;
     width: 100%;
-    overflow: hidden
+    overflow: hidden;
   }
 }
 
@@ -92,21 +93,21 @@ body.inkline.-light .defaultLayout {
     background-color: #0000000a;
 
     input {
-      color: $black
+      color: $black;
     }
 
     .userImgPlaceholder {
-      background-color: $white
+      background-color: $white;
     }
 
     .copy {
       &:hover {
-        background-color: transparentize($color: $gray, $amount: 0.85)
+        background-color: transparentize($color: $gray, $amount: 0.85);
       }
 
       &:active {
         color: $green;
-        background-color: transparentize($color: $gray, $amount: 0.7)
+        background-color: transparentize($color: $gray, $amount: 0.7);
       }
     }
   }
@@ -117,21 +118,21 @@ body.inkline.-dark .defaultLayout {
     background-color: #ffffff14;
 
     input {
-      color: $white
+      color: $white;
     }
 
     .userImgPlaceholder {
-      background-color: $darkViolet
+      background-color: $darkViolet;
     }
 
     .copy {
       &:hover {
-        background-color: transparentize($color: $white, $amount: 0.9)
+        background-color: transparentize($color: $white, $amount: 0.9);
       }
 
       &:active {
         color: $green;
-        background-color: transparentize($color: $white, $amount: 0.8)
+        background-color: transparentize($color: $white, $amount: 0.8);
       }
     }
   }

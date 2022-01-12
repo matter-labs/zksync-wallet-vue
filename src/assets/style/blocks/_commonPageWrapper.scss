@@ -2,7 +2,7 @@
 .dappModalWindowWrapper,
 .indexLayout .routerContainer .dappPageWrapper {
   & > * {
-    margin: 1rem 0
+    margin: 1rem 0;
   }
 
   .tileBlock {
@@ -18,7 +18,7 @@
     transition: background-color $transition1;
 
     &.accountBlock {
-      min-height: 0
+      min-height: 0;
     }
 
     .tileHeadline {
@@ -38,7 +38,7 @@
         grid-template-rows: 100%;
         grid-template-columns: 40px 1fr;
         align-items: center;
-        padding-right: 40px
+        padding-right: 40px;
       }
 
       @media (max-width: $mobile) {
@@ -54,7 +54,7 @@
               width: 25px;
               height: 25px;
               font-size: 16px;
-              line-height: 25px
+              line-height: 25px;
             }
           }
         }
@@ -67,7 +67,7 @@
         margin-left: 10px;
         cursor: pointer;
         opacity: 0.9;
-        transition: background-color $transition1
+        transition: background-color $transition1;
       }
 
       .returnBtn {
@@ -81,7 +81,7 @@
           margin-left: 0;
           font-size: 20px;
           line-height: 40px;
-          transition: color $transition1
+          transition: color $transition1;
         }
       }
     }
@@ -96,7 +96,7 @@
     .tileText {
       margin: 5px 0;
       font-size: 16px;
-      text-align: center
+      text-align: center;
     }
   }
 
@@ -106,7 +106,7 @@
     font-size: 15px;
     text-align: center;
     border: 1px solid;
-    border-radius: $borderRadiusMd
+    border-radius: $borderRadiusMd;
   }
 
   ._icon-wrapped {
@@ -119,24 +119,24 @@
     transition: $tempTransparent;
 
     &:hover {
-      box-shadow: $tileShadow
+      box-shadow: $tileShadow;
     }
 
     & > svg.ov-icon {
       margin: 0 !important;
       padding: 0;
       height: 2rem;
-      width: 2rem
+      width: 2rem;
     }
 
     &.-rounded {
       border-radius: 1rem !important;
-      overflow: hidden !important
+      overflow: hidden !important;
     }
 
     &.-sm {
       width: 2rem;
-      height: 2rem
+      height: 2rem;
     }
   }
 }
@@ -157,17 +157,17 @@
 
     &::-webkit-scrollbar {
       width: 10px;
-      background-color: $tempTransparent
+      background-color: $tempTransparent;
     }
 
     &::-webkit-scrollbar-thumb {
       border-radius: $borderRadius;
-      cursor: pointer
+      cursor: pointer;
     }
 
     &::-webkit-scrollbar-track {
       background-color: $tempTransparent;
-      border-radius: $borderRadius
+      border-radius: $borderRadius;
     }
   }
 
@@ -180,12 +180,12 @@
     height: 100%;
     overflow: hidden;
     text-align: center;
-    margin: 2rem 0
+    margin: 2rem 0;
   }
 }
 
 .dappPageWrapper {
-  padding: 1rem 0 0
+  padding: 1rem 0 0;
 }
 
 @media (max-width: $mobile) {
@@ -203,14 +203,14 @@
 
       .dappPageWrapper {
         padding: 1rem 0;
-        overflow-x: hidden
+        overflow-x: hidden;
       }
     }
   }
 
   ._icon-wrapped {
     &.rounded {
-      border-radius: 50%
+      border-radius: 50%;
     }
   }
 
@@ -223,23 +223,23 @@
 
         &.-secondary {
           padding: 0.3rem 0 !important;
-          font-size: 16px !important
+          font-size: 16px !important;
         }
       }
 
       &.-link {
-        margin: 0.2rem !important
+        margin: 0.2rem !important;
       }
     }
 
     &.-circle {
-      display: inline-flex
+      display: inline-flex;
     }
   }
 
   .form-input-group {
     .form-input input {
-      font-size: 12px !important
+      font-size: 12px !important;
     }
   }
 
@@ -259,7 +259,7 @@
           padding: 0.3rem 0.5rem !important;
 
           &:last-child {
-            border-bottom: none !important
+            border-bottom: none !important;
           }
         }
       }
@@ -289,12 +289,12 @@
             .contactInfo {
               .contactName {
                 font-size: 16px;
-                line-height: 150%
+                line-height: 150%;
               }
 
               .contactAddress {
                 font-size: 10px;
-                font-family: $firaSans
+                font-family: $firaSans;
               }
             }
           }
@@ -302,7 +302,7 @@
       }
 
       .transactionsListContainer {
-        overflow-x: hidden
+        overflow-x: hidden;
       }
 
       .animatedCheckmark {
@@ -319,7 +319,7 @@
         i {
           height: min-content;
           width: min-content;
-          line-height: 100%
+          line-height: 100%;
         }
       }
     }
@@ -328,11 +328,11 @@
       margin: 1rem auto;
 
       &:first-child {
-        margin-top: 0
+        margin-top: 0;
       }
 
       &:last-child {
-        margin-bottom: 0
+        margin-bottom: 0;
       }
     }
   }

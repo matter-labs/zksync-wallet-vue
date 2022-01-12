@@ -16,24 +16,24 @@ body {
         will-change: color;
 
         &:hover {
-          color: $lightViolet !important
+          color: $lightViolet !important;
         }
       }
     }
 
     .container,
     .row {
-      height: 100%
+      height: 100%;
     }
 
     .container {
-      padding: 0 16px
+      padding: 0 16px;
     }
 
     .column {
       display: flex;
       align-items: center;
-      height: 100%
+      height: 100%;
     }
 
     .headerWrapper {
@@ -44,7 +44,7 @@ body {
         width: auto;
         min-width: 90px;
         max-width: none;
-        height: 30px
+        height: 30px;
       }
     }
 
@@ -53,13 +53,13 @@ body {
 
       &.-dark {
         & > .menu[data-popper-placement="bottom"] {
-          .arrow:after {
-            border-bottom-color: $mediumViolet !important
+          .arrow::after {
+            border-bottom-color: $mediumViolet !important;
           }
 
           &.firstElementHovered {
-            .arrow:after {
-              border-bottom-color: $darkViolet !important
+            .arrow::after {
+              border-bottom-color: $darkViolet !important;
             }
           }
         }
@@ -67,7 +67,7 @@ body {
 
       @media screen and (min-width: $mobile+1) and (max-width: $tablet) {
         padding: 0 5px;
-        font-size: $fontSizeRegular
+        font-size: $fontSizeRegular;
       }
 
       & > .menu[data-popper-placement="bottom"] {
@@ -81,9 +81,9 @@ body {
         .arrow {
           transition: $transition1;
 
-          &:after {
+          &::after {
             border-bottom-width: 5px !important;
-            transition: $transition1
+            transition: $transition1;
           }
         }
 
@@ -92,21 +92,22 @@ body {
           font: normal normal 16px/2rem $firaSans;
           transition: color $transition1;
 
+
           &:hover {
             color: $lightViolet;
             background-color: lighten($darkViolet, 5) !important;
             transition: color, background-color $transition1 !important;
-            will-change: color, backgroud
+            will-change: color, backgroud;
           }
 
           &:first-of-type {
             overflow: hidden;
-            border-radius: $borderRadius $borderRadius 0 0 !important
+            border-radius: $borderRadius $borderRadius 0 0 !important;
           }
 
           &:last-of-type {
             overflow: hidden;
-            border-radius: 0 0 $borderRadius $borderRadius !important
+            border-radius: 0 0 $borderRadius $borderRadius !important;
           }
         }
       }
@@ -115,7 +116,7 @@ body {
         .dropdown {
           .dropDownHandler {
             display: inline-flex;
-            flex-wrap: nowrap
+            flex-wrap: nowrap;
           }
 
           & > .menu {
@@ -123,7 +124,7 @@ body {
             left: -35px;
             z-index: 1004;
             width: 100vw;
-            margin: 120px
+            margin: 120px;
           }
         }
       }
@@ -137,34 +138,32 @@ body {
       cursor: pointer;
       transition: color $transition1;
 
-      &:before {
+      &::before {
         top: 0;
         left: 0;
-        content: ""
+        content: "";
       }
 
       i.fal {
         padding-left: 5px;
-        font-size: 15px
+        font-size: 15px;
       }
 
       &:hover {
-        color: $lightViolet
+        color: $lightViolet;
       }
     }
 
     .mainIndexHeader {
       width: 100%;
-      height: 100%
+      height: 100%;
     }
 
     @media (max-width: $mobile) {
       padding: 0 !important;
-
       .column {
-        padding: 0 !important
+        padding: 0 !important;
       }
-
       .mobileIndexHeader {
         padding: 1rem;
         margin: 0 auto !important;
@@ -172,7 +171,7 @@ body {
         .container.mobileOnly {
           margin: 0 auto !important;
           padding-left: 0;
-          padding-right: 0
+          padding-right: 0;
         }
 
         .headerWrapper {
@@ -181,13 +180,13 @@ body {
           padding-top: 0 !important;
 
           .zkwallet-logo {
-            height: 22px !important
+            height: 22px !important;
           }
 
           .badge {
             position: absolute;
             bottom: 85%;
-            left: 100%
+            left: 100%;
           }
         }
       }
@@ -200,11 +199,11 @@ body {
             transform: rotate(45deg);
 
             .top {
-              stroke-dashoffset: -98px
+              stroke-dashoffset: -98px;
             }
 
             .bottom {
-              stroke-dashoffset: -138px
+              stroke-dashoffset: -138px;
             }
           }
         }
@@ -212,7 +211,7 @@ body {
         .mainIndexHeader {
           height: auto;
           min-height: 220px;
-          transform: translateY(60px)
+          transform: translateY(60px);
         }
       }
 
@@ -228,7 +227,7 @@ body {
         .column:last-child {
           display: flex;
           align-items: center;
-          justify-content: flex-end
+          justify-content: flex-end;
         }
 
         .hamContainer {
@@ -250,15 +249,15 @@ body {
               fill: none;
               stroke: $white;
               stroke-width: 5.5;
-              stroke-linecap: round
+              stroke-linecap: round;
             }
 
             .top {
-              stroke-dasharray: 40 139
+              stroke-dasharray: 40 139;
             }
 
             .bottom {
-              stroke-dasharray: 40 180
+              stroke-dasharray: 40 180;
             }
           }
         }
@@ -284,7 +283,7 @@ body {
           &:last-child {
             flex-direction: column !important;
             align-items: initial;
-            justify-content: flex-start !important
+            justify-content: flex-start !important;
           }
         }
 
@@ -294,7 +293,7 @@ body {
           justify-content: space-between;
           width: 100%;
           margin: 27px 0;
-          text-align: center
+          text-align: center;
         }
 
         .linksContainer {
@@ -314,11 +313,11 @@ body {
             text-align: left;
 
             &:first-child {
-              padding-top: 0
+              padding-top: 0;
             }
 
             &:last-child {
-              padding-bottom: 0
+              padding-bottom: 0;
             }
           }
 
@@ -328,7 +327,7 @@ body {
             & > .dropDownHandler {
               padding: 10px 0;
               font-size: 18px;
-              text-align: left
+              text-align: left;
             }
 
             & > .menu[data-popper-placement="bottom"] {
@@ -337,12 +336,12 @@ body {
               width: 100% !important;
 
               & > span.arrow {
-                display: none
+                display: none;
               }
 
               & > a.item {
                 padding: 9px 15px;
-                font-size: 18px
+                font-size: 18px;
               }
             }
           }
@@ -355,7 +354,7 @@ body {
         transition: height $transition1;
 
         &.opened {
-          height: 254px
+          height: 254px;
         }
       }
     }
@@ -380,7 +379,7 @@ body {
 
       @media screen and (min-width: $mobile+1) and (max-width: $tablet) {
         padding: 0 5px;
-        font-size: 14px
+        font-size: 14px;
       }
     }
   }
@@ -394,7 +393,7 @@ body.inkline.-light {
       background-color: $white;
 
       .hamContainer #ham .line {
-        stroke: $black
+        stroke: $black;
       }
     }
 
@@ -406,7 +405,7 @@ body.inkline.-light {
           color: $violet !important;
 
           &:hover {
-            color: $lightViolet !important
+            color: $lightViolet !important;
           }
         }
       }
@@ -422,7 +421,7 @@ body.inkline.-light {
           &:hover {
             color: $lightViolet !important;
             background-color: darken($white, 5) !important;
-            border-color: darken($bgLight, 5) !important
+            border-color: darken($bgLight, 5) !important;
           }
         }
       }

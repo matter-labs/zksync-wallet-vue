@@ -5,7 +5,7 @@
     display: block;
 
     .logoLetter {
-      transition: $transition1
+      transition: $transition1;
     }
   }
 
@@ -20,11 +20,11 @@
     background: transparent !important;
     border-radius: 27px;
     transform: translateY(3.5px);
-    cursor: default
+    cursor: default;
   }
 
   @media (max-width: $mobile) {
     width: 85%;
-    padding-top: 50px
+    padding-top: 50px;
   }
 }

@@ -1,16 +1,16 @@
 .tokenAccount {
   .infoBlock {
     .headline {
-      font-size: 16px
+      font-size: 16px;
     }
 
     .hash {
-      font-size: 12px
+      font-size: 12px;
     }
 
     .address {
       font-size: 14px;
-      padding-bottom: 4px
+      padding-bottom: 4px;
     }
 
     .copyGrid {
@@ -22,7 +22,7 @@
 
       &.addressCopy {
         padding-bottom: 4.5px;
-        width: 95%
+        width: 95%;
       }
 
       .copyIcon {
@@ -34,7 +34,7 @@
 
         &:active {
           transition-duration: 0.0001s;
-          color: $green !important
+          color: $green !important;
         }
 
         .iconContainer {
@@ -47,7 +47,7 @@
             height: 20px;
             width: auto;
             overflow: visible;
-            margin-right: 4px
+            margin-right: 4px;
           }
         }
       }
@@ -58,7 +58,7 @@
       display: block;
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap
+      white-space: nowrap;
     }
 
     .balance {
@@ -70,22 +70,22 @@
 
       .balancePrice {
         color: $gray;
-        font-size: 16px
+        font-size: 16px;
       }
 
       .secondaryText {
-        font-size: 0.9rem
+        font-size: 0.9rem;
       }
     }
   }
 
   .tokenNotFound {
     font-size: 22px;
-    text-align: center
+    text-align: center;
   }
 
   .transactionsTile {
-    min-height: 250px !important
+    min-height: 250px !important;
   }
 }
 
@@ -99,15 +99,15 @@
       .headline {
         margin-top: 0 !important;
         font-size: 12px;
-        color: $gray
+        color: $gray;
       }
 
       .balancePrice {
-        font-size: $mobileNormal
+        font-size: $mobileNormal;
       }
 
       .balance {
-        font-size: $mobileHeader
+        font-size: $mobileHeader;
       }
     }
   }
@@ -117,7 +117,7 @@ body.inkline {
   &.-light {
     .tokenAccount .infoBlock {
       .copyIcon:hover {
-        color: $black
+        color: $black;
       }
     }
   }
@@ -125,12 +125,12 @@ body.inkline {
   &.-dark {
     .tokenAccount .infoBlock {
       .copyIcon:hover {
-        color: $white
+        color: $white;
       }
     }
   }
 
   .nftButtonGroup {
-    gap: 0.2rem
+    gap: 0.2rem;
   }
 }
