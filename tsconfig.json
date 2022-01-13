@@ -20,10 +20,10 @@
     "noImplicitAny": true,
     "paths": {
       "@/*": [
-        "*"
+        "./*"
       ],
       "~/*": [
-        "*"
+        "./*"
       ]
     },
     "suppressImplicitAnyIndexErrors": true,
@@ -42,7 +42,7 @@
       "web3-core/types",
       "@inkline/inkline/types",
       "nuxt-typed-vuex",
-      "typed-vuex"
+      "vue-qrcode"
     ]
   },
   "exclude": [

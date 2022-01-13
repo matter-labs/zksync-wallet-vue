@@ -34,7 +34,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "3.0.1",
+  "version": "3.1.0",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
@@ -112,13 +112,15 @@
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "husky": "^7.0.0",
     "jest": "^26.6.3",
+    "lint-staged": "^12.1.5",
     "node-sass": "4.14.0",
+    "postcss-scss": "^4.0.3",
     "prettier": "^2.2.1",
     "qrcode": "^1.0.0",
     "sass-loader": "^10.1.1",
     "semantic-release": "^18.0.1",
     "stylelint": "latest",
-    "stylelint-config-standard": "latest",
+    "stylelint-config-standard-scss": "^3.0.0",
     "stylelint-scss": "latest",
     "typescript": "4.2.4",
     "vue-property-decorator": "latest",
@@ -127,9 +129,7 @@
   },
   "peerDependencies": {
     "@babel/core": "*",
-    "@babel/runtime": "*",
-    "typed-vuex": "*",
-    "vuex": "3.5.1"
+    "@babel/runtime": "*"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
@@ -138,22 +138,29 @@
     "typescript": true
   },
   "optionalDependencies": {
-    "@sentry/webpack-plugin": "^1.14.0",
-    "fs-extra": "^9.1.0",
+    "@sentry/webpack-plugin": "^1.18.3",
+    "fs-extra": "^10.0.0",
     "fsevents": "^2.3.2"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-fix",
+      "pre-commit": "lint-staged",
       "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
     }
   },
   "lint-fix": [
     "yarn lint-style:fix",
     "yarn lint-ts:fix",
-    "yarn format:prettier",
+    "yarn format:prettier --write",
     "yarn spell-check"
   ],
+  "lint-staged": {
+    "*.{ts,tsx,vue}": [
+      "yarn lint-ts:check --fix",
+      "yarn format",
+      "yarn spell-check"
+    ]
+  },
   "scripts": {
     "local": "sh ./cli-process-env.sh 'rinkeby-beta' 'prod' 1 1",
     "dev": "yarn local && nuxt",
@@ -173,12 +180,13 @@
     "ci:prepare:ropsten": "sh cli-process-env.sh 'ropsten' prod 1",
     "ci:prepare:mainnet": "sh cli-process-env.sh 'mainnet' prod 1",
     "test": "jest",
-    "format:prettier": "prettier --config .prettierrc.js --ignore-path .prettierignore --write src/**/*.{ts,vue,js}",
-    "lint-ts:check": "eslint --quiet --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
-    "lint-ts:fix": "eslint --fix --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
-    "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore --quiet",
-    "lint-style:fix": "stylelint src/**/*.scss --config '.stylelintrc' --fix -f verbose",
-    "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md",
+    "format:prettier": "prettier --config .prettierrc.js --ignore-path .prettierignore",
+    "lint-ts:check": "eslint --config .eslintrc.js --ignore-path .eslintignore",
+    "lint-ts:fix": "yarn lint-ts:check --fix ./src/**/*.{ts,vue,js}",
+    "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore",
+    "lint-style:fix": "yarn lint-style:check --fix ./src/**/*.scss",
+    "spell-check": "cspell -c cspell.json src/**/*.{ts,vue,js} *.md",
+    "ci:check": "yarn lint-ts:check && yarn lint-style:check && yarn spell-check",
     "semantic-release": "semantic-release",
     "postinstall": "husky install"
   },
