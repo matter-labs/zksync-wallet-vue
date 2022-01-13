@@ -11,7 +11,8 @@
  * @link https://oh-vue-icons.netlify.app
  */
 import { Plugin } from "@nuxt/types";
-import OhVueIcon from "oh-vue-icons/dist/v2/icon.es";
+// @ts-ignore
+import OhVueIcon from "oh-vue-icons/dist/v2/icon.umd";
 import { MdVpnkeyRound } from "oh-vue-icons/icons/md";
 import { CoEthereum } from "oh-vue-icons/icons/co";
 import {
@@ -121,7 +122,7 @@ const iconsPlugin: Plugin = () => {
     RiArrowRightUpLine,
   ); // Used icons (to reduce bundle-size)
 
-  Vue.component("VIcon", OhVueIcon);
+  Vue.component("v-icon", OhVueIcon);
 };
 
 export default iconsPlugin;

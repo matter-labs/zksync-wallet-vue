@@ -1,11 +1,11 @@
 import { NuxtConfig } from "@nuxt/types";
-import { NuxtOptionsLoaders, NuxtWebpackEnv } from "@nuxt/types/config/build";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
 import { Configuration } from "webpack";
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
+const isLocalhost: boolean = process.env.IS_LOCALHOST !== undefined;
 const isDebugEnabled: boolean = appEnv === "dev";
 const isProduction: boolean = appEnv === "prod";
 const pageTitle = "zkSync Wallet";
@@ -190,7 +190,8 @@ const config: NuxtConfig = {
     "nuxt-typed-vuex",
     [
       "@matterlabs/zksync-nuxt-core",
-      <ModuleOptions>{
+      {
+        ipfsGateway: "https://ipfs.io",
         network: process.env.ZK_NETWORK,
         apiKeys: {
           FORTMATIC_KEY: process.env.APP_FORTMATIC,
@@ -208,7 +209,8 @@ const config: NuxtConfig = {
           APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
         restoreNetwork: true,
-      },
+        logoutRedirect: "/",
+      } as ModuleOptions,
     ],
   ],
 
@@ -228,6 +230,7 @@ const config: NuxtConfig = {
   sentry: {
     dsn: sentryDsn,
     disableServerSide: true,
+    disabled: isLocalhost,
     config: {
       debug: isDebugEnabled,
       tracesSampleRate: 1.0,
@@ -238,7 +241,10 @@ const config: NuxtConfig = {
     id: gtagId,
     config: {
       anonymize_ip: true, // anonymize IP
-      send_page_view: true, // might be necessary to avoid duplicated page track on page reload
+      send_page_view: false, // might be necessary to avoid duplicated page track on page reload
+      linker: {
+        domains: ["wallet.zksync.io", "rinkeby.zksync.io", "ropsten.zksync.io", "rinkeby-beta-wallet.zksync.dev", "ropsten-beta-wallet.zksync.dev", "stage.zksync.io"],
+      },
     },
     debug: isDebugEnabled, // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
@@ -266,9 +272,10 @@ const config: NuxtConfig = {
         chunks: "async",
         maxSize: 200000,
       },
+      minimize: isProduction,
     },
     transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
-    extend: (config: Configuration, _ctx: { loaders: NuxtOptionsLoaders } & NuxtWebpackEnv) => {
+    extend: (config: Configuration) => {
       config.node = {
         fs: "empty",
       };

@@ -354,7 +354,7 @@ body {
         transition: height $transition1;
 
         &.opened {
-          height: 254px;
+          height: 370px;
         }
       }
     }
@@ -411,20 +411,21 @@ body.inkline.-light {
       }
 
       .dropdown .menu {
-        background-color: $bgLight;
-        border: none;
-        box-shadow: $layerShadow;
+          background-color: $bgLight;
+          border: none;
+          box-shadow: $layerShadow;
 
-        .item {
-          color: $violet !important;
+          .item {
+            color: $violet !important;
 
-          &:hover {
-            color: $lightViolet !important;
-            background-color: darken($white, 5) !important;
-            border-color: darken($bgLight, 5) !important;
+            &:hover {
+              color: $lightViolet !important;
+              background-color: darken($white, 5) !important;
+              border-color: darken($bgLight, 5) !important;
+            }
           }
+
         }
       }
     }
   }
-}
