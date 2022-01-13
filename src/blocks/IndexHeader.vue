@@ -113,13 +113,17 @@ export default Vue.extend({
           name: "Alternative Withdrawal",
           link: config.zkSyncNetwork.tools.withdrawal,
           isDividerAfter: true
-        },
-        {
-          name: "Preview zkSync v.2",
-          link: "https://portal.zksync.io"
         }
       ]
     };
+  },
+  watch: {
+    dropdownOpened(val): void {
+      if (val === false)
+      {
+        this.opened = false;
+      }
+    }
   }
 });
 </script>
