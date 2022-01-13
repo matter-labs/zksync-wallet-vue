@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.1.0...3.2.0) (2022-01-13)
+
+
+### Features
+
+* mobile IU fixed & menu linked with actual tools ([#205](https://github.com/matter-labs/zksync-wallet-vue/issues/205)) ([dc7547a](https://github.com/matter-labs/zksync-wallet-vue/commit/dc7547a0066eff608a42a903b74e83b1b003b5a4))
+
 # [3.1.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.0.1...3.1.0) (2022-01-13)
 
 
