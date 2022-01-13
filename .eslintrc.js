@@ -4,6 +4,7 @@ module.exports = {
     node: true,
   },
   extends: ["@nuxtjs/eslint-config-typescript", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier", "plugin:vue/base"],
+  parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaVersion: 12,
     ecmaFeatures: {
@@ -13,7 +14,7 @@ module.exports = {
     sourceType: "module",
     project: ["tsconfig.json", "tsconfig.eslint.json"],
     tsconfigRootDir: __dirname,
-    extraFileExtensions: [".vue", ".scss"],
+    extraFileExtensions: [".vue"],
   },
   ignorePatterns: ["node_modules"],
   plugins: ["vue", "@typescript-eslint", "prettier"],
@@ -43,12 +44,14 @@ module.exports = {
     "@typescript-eslint/no-empty-function": ["off"],
     "vue/max-attribute": "off",
     "vue/require-prop-types": "off",
+    "import/no-named-as-default-member": "off",
+    "vue/multi-word-component-names": "off"
   },
   settings: {
     "prettier-vue": {
       SFCBlocks: {
         template: true,
-        script: true,
+        script: true
       },
       usePrettierrc: true,
       // Set the options for `prettier.getFileInfo`.
@@ -56,11 +59,9 @@ module.exports = {
       fileInfoOptions: {
         // Path to ignore file (default: `'.prettierignore'`)
         // Notice that the ignore file is only used for this plugin
-        ignorePath: "..prettierignore",
-
         // Process the files in `node_modules` or not (default: `false`)
-        withNodeModules: false,
-      },
-    },
-  },
+        withNodeModules: false
+      }
+    }
+  }
 };

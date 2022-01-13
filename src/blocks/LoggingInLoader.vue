@@ -13,7 +13,6 @@
 </template>
 
 <script lang="ts">
-import logo from "@/blocks/Logo.vue";
 import Vue from "vue";
 
 let loggedInAnimationTimeout: ReturnType<typeof setTimeout>;
@@ -25,21 +24,21 @@ export default Vue.extend({
     };
   },
   computed: {
-    loggingIn() {
+    loggingIn(): boolean {
       return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
-    loggedIn() {
+    loggedIn(): boolean {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
     },
     hintText(): string {
       return this.$store.getters["zk-onboard/loadingHint"];
     },
-    selectedWallet() {
+    selectedWallet(): unknown {
       return this.$store.getters["zk-onboard/selectedWallet"];
     },
   },
   watch: {
-    loggingIn(val) {
+    loggingIn(val: unknown) {
       clearTimeout(loggedInAnimationTimeout);
       if (val === true) {
         this.loggingInScreenDelay = true;

@@ -8,5 +8,6 @@ module.exports = {
         },
       },
     ],
+    "@nuxt/babel-preset-app"
   ],
 };
