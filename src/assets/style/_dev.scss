@@ -8,3 +8,15 @@
   align-items: center !important;
   display: inline-flex !important;
 }
+
+.bottomDivider {
+  border-bottom: .5px solid darken($white, 5) !important;
+}
+
+.dropdown {
+  &.firstElementHovered {
+    span.arrow:after {
+      border-bottom-color: darken($white, 5) !important;
+    }
+  }
+}
