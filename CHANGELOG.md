@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.0.1...3.1.0) (2022-01-13)
+
+
+### Features
+
+* refactoring and slight changes ([8773440](https://github.com/matter-labs/zksync-wallet-vue/commit/87734401d87921d46b742f203b5a1b54f3f8aaa7))
+
 ## [3.0.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.0.0...3.0.1) (2022-01-04)
 
 
