@@ -18,6 +18,7 @@ import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
 import { rampConfig, banxaConfig, moonpayConfig } from "@/utils/config";
 import { TokenSymbol } from "zksync/build/types";
 
+const availableMoonpayZkSyncCurrencies = ["DAI","USDT","USDC"];
 export default Vue.extend({
   computed: {
     rampConfig(): {
@@ -57,7 +58,7 @@ export default Vue.extend({
       if (!symbol) {
         symbol = "DAI";
       }
-      if (!["DAI","USDT","USDC"].includes(symbol)) {
+      if (!availableMoonpayZkSyncCurrencies.includes(symbol)) {
         return "DAI";
       } else {
         return symbol;
@@ -97,11 +98,8 @@ export default Vue.extend({
         return;
       }
       this.$analytics.track("click_on_moonpay");
-      const availableZksyncCurrencies = ["usdc", "usdt", "dai"].map((e) => `${e}_zksync`);
       window.open(
-        `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&defaultCurrencyCode=${this.moonpayDefaultToken.toLowerCase()}_zksync&walletAddress=${this.address}&showOnlyCurrencies=${availableZksyncCurrencies.join(
-          ",",
-        )}&walletAddresses=${encodeURIComponent(JSON.stringify(Object.fromEntries(availableZksyncCurrencies.map((e) => [e, this.address]))))}&redirectURL=${encodeURIComponent(this.redirectURL)}`,
+        `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&defaultCurrencyCode=${this.moonpayDefaultToken.toLowerCase()}_zksync&showOnlyCurrencies=${availableMoonpayZkSyncCurrencies.map((e) => `${e.toLowerCase()}_zksync`).join(",")}&redirectURL=${encodeURIComponent(this.redirectURL)}`,
         "_blank",
       );
     },
