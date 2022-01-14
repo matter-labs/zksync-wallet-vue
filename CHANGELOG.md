@@ -1,3 +1,17 @@
+# [3.2.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.1.0...3.2.0) (2022-01-13)
+
+
+### Features
+
+* mobile IU fixed & menu linked with actual tools ([#205](https://github.com/matter-labs/zksync-wallet-vue/issues/205)) ([dc7547a](https://github.com/matter-labs/zksync-wallet-vue/commit/dc7547a0066eff608a42a903b74e83b1b003b5a4))
+
+# [3.1.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.0.1...3.1.0) (2022-01-13)
+
+
+### Features
+
+* refactoring and slight changes ([8773440](https://github.com/matter-labs/zksync-wallet-vue/commit/87734401d87921d46b742f203b5a1b54f3f8aaa7))
+
 ## [3.0.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.0.0...3.0.1) (2022-01-04)
 
 
@@ -75,7 +89,7 @@
 
 # Changelog
 
-## [2.5.0](https://github.com/matter-labs/zksync-wallet-vue/compare/v2.4.1...2.5.0) 
+## [2.5.0](https://github.com/matter-labs/zksync-wallet-vue/compare/v2.4.1...2.5.0)
 > 20 August 2021
 
 ### PR's included
@@ -106,7 +120,7 @@
 - Final fixes [`#78`](https://github.com/matter-labs/zksync-wallet-vue/pull/78)
 - NFT release bugfixes [`#77`](https://github.com/matter-labs/zksync-wallet-vue/pull/77)
 - Added uniq elements ID. Puppeteer will use ID for click on elements. [`#73`](https://github.com/matter-labs/zksync-wallet-vue/pull/73)
-- Changepubkey onchain fix [`#70`](https://github.com/matter-labs/zksync-wallet-vue/pull/70)
+- ChangePubKey onchain fix [`#70`](https://github.com/matter-labs/zksync-wallet-vue/pull/70)
 - update readme [`#67`](https://github.com/matter-labs/zksync-wallet-vue/pull/67)
 - Fix: NFT Mint Fee Token is always ETH [`#69`](https://github.com/matter-labs/zksync-wallet-vue/pull/69)
 - Handle no account id CPK tx [`#66`](https://github.com/matter-labs/zksync-wallet-vue/pull/66)
@@ -158,14 +172,14 @@
 
 ### Merged
 
-- keriat zkf 476 mainnet doesnt return eth when [`#54`](https://github.com/matter-labs/zksync-wallet-vue/pull/54)
+- keriat zkf 476 mainnet doesn't return eth when [`#54`](https://github.com/matter-labs/zksync-wallet-vue/pull/54)
 - hotfix(Operations): Fixed issue with unrecognizable accepted fee token [`#53`](https://github.com/matter-labs/zksync-wallet-vue/pull/53)
 
 ### Commits
 
 - feature(Interface): huge update/refactoring of the UI/UX [`44ad942`](https://github.com/matter-labs/zksync-wallet-vue/commit/44ad9425f7ce6e0ed4555a0fd6f304d89ac212d0)
 - Huge loading optimization and fixes [`1629662`](https://github.com/matter-labs/zksync-wallet-vue/commit/16296620a284dd57472ea7f599bd1900f79960ba)
-- refactor(Stylelint): Config of stylint moved from package.json to .stylelintrc [`cb443fb`](https://github.com/matter-labs/zksync-wallet-vue/commit/cb443fb20728cd996aceff0567f4445674790f64)
+- refactor(Stylelint): Config of stylelint moved from package.json to .stylelintrc [cb443fb`](https://github.com/matter-labs/zksync-wallet-vue/commit/cb443fb20728cd996aceff0567f4445674790f64)
 
 ## [2.3.3](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.2...2.3.3)
 
@@ -218,8 +232,8 @@
 - Dev [`#40`](https://github.com/matter-labs/zksync-wallet-vue/pull/40)
 - Tiny update [`#41`](https://github.com/matter-labs/zksync-wallet-vue/pull/41)
 - Features/keriat wallet release mostly version bump — v.2.1.0 [`#39`](https://github.com/matter-labs/zksync-wallet-vue/pull/39)
-- Hot-fix & bunch of optimisations [`#38`](https://github.com/matter-labs/zksync-wallet-vue/pull/38)
-- Fast Withdrawal disactivated [`#37`](https://github.com/matter-labs/zksync-wallet-vue/pull/37)
+- Hot-fix & bunch of optimizations [`#38`](https://github.com/matter-labs/zksync-wallet-vue/pull/38)
+- Fast Withdrawal deactivated [`#37`](https://github.com/matter-labs/zksync-wallet-vue/pull/37)
 - Hotfix: compare numbers instead of strings [`#36`](https://github.com/matter-labs/zksync-wallet-vue/pull/36)
 - Update issue templates [`#35`](https://github.com/matter-labs/zksync-wallet-vue/pull/35)
 - return normal withdrawal time indicator [`#34`](https://github.com/matter-labs/zksync-wallet-vue/pull/34)
@@ -270,7 +284,7 @@
 
 ### Merged
 
-- Hot-fix & bunch of optimisations [`#38`](https://github.com/matter-labs/zksync-wallet-vue/pull/38)
+- Hot-fix & bunch of optimizations [`#38`](https://github.com/matter-labs/zksync-wallet-vue/pull/38)
 
 ### Commits
 
@@ -284,7 +298,7 @@
 
 ### Merged
 
-- Fast Withdrawal disactivated [`#37`](https://github.com/matter-labs/zksync-wallet-vue/pull/37)
+- Fast Withdrawal deactivated [`#37`](https://github.com/matter-labs/zksync-wallet-vue/pull/37)
 - Hotfix: compare numbers instead of strings [`#36`](https://github.com/matter-labs/zksync-wallet-vue/pull/36)
 - Update issue templates [`#35`](https://github.com/matter-labs/zksync-wallet-vue/pull/35)
 - return normal withdrawal time indicator [`#34`](https://github.com/matter-labs/zksync-wallet-vue/pull/34)
@@ -420,7 +434,7 @@
 
 - Hotfix/1.5.3.2 [`#257`](https://github.com/matter-labs/zksync-wallet-vue/pull/257)
 - update: event change to onClick [`#253`](https://github.com/matter-labs/zksync-wallet-vue/pull/253)
-- fix: apply keriat's patch for external wallet [`#252`](https://github.com/matter-labs/zksync-wallet-vue/pull/252)
+- fix: apply Serge's patch for external wallet [`#252`](https://github.com/matter-labs/zksync-wallet-vue/pull/252)
 - fix: fee exceed [`#230`](https://github.com/matter-labs/zksync-wallet-vue/pull/230)
 - fix: token transfer props [`#229`](https://github.com/matter-labs/zksync-wallet-vue/pull/229)
 - fix: zeros, decimals exceed, wc unlink [`#228`](https://github.com/matter-labs/zksync-wallet-vue/pull/228)
@@ -468,7 +482,7 @@
 - fix: saved wallet [`#185`](https://github.com/matter-labs/zksync-wallet-vue/pull/185)
 - fix: fortmatic, portis, coinbase [`#183`](https://github.com/matter-labs/zksync-wallet-vue/pull/183)
 - Closes ZKF-149 fix: 'enter' keyup event added [`#167`](https://github.com/matter-labs/zksync-wallet-vue/pull/167)
-- fix: bigint uncorrect transformation [`#171`](https://github.com/matter-labs/zksync-wallet-vue/pull/171)
+- fix: bigint incorrect transformation [`#171`](https://github.com/matter-labs/zksync-wallet-vue/pull/171)
 - fix: walletconnect unlink, address cut [`#170`](https://github.com/matter-labs/zksync-wallet-vue/pull/170)
 - Closes #121 fix: links color fixed [`#165`](https://github.com/matter-labs/zksync-wallet-vue/pull/165)
 - fix: blink, change-acc bugs [`#150`](https://github.com/matter-labs/zksync-wallet-vue/pull/150)
@@ -486,8 +500,8 @@
 - fix: overflow [`#122`](https://github.com/matter-labs/zksync-wallet-vue/pull/122)
 - changePubKey [`#90`](https://github.com/matter-labs/zksync-wallet-vue/pull/90)
 - fix: verification method [`#114`](https://github.com/matter-labs/zksync-wallet-vue/pull/114)
-- fix: infura bumplimit [`#109`](https://github.com/matter-labs/zksync-wallet-vue/pull/109)
-- fix: exponential numbers appearence [`#104`](https://github.com/matter-labs/zksync-wallet-vue/pull/104)
+- fix: infura bump limit [`#109`](https://github.com/matter-labs/zksync-wallet-vue/pull/109)
+- fix: exponential numbers appearance [`#104`](https://github.com/matter-labs/zksync-wallet-vue/pull/104)
 - fix: reduce gas request [`#98`](https://github.com/matter-labs/zksync-wallet-vue/pull/98)
 - fix: set signing key args [`#95`](https://github.com/matter-labs/zksync-wallet-vue/pull/95)
 - feat: update zksync up to 0.7.2 [`#93`](https://github.com/matter-labs/zksync-wallet-vue/pull/93)
@@ -512,7 +526,7 @@
 - External wallet styles [`#64`](https://github.com/matter-labs/zksync-wallet-vue/pull/64)
 - External wallet [`#63`](https://github.com/matter-labs/zksync-wallet-vue/pull/63)
 - fix: coinbase interrupt [`#59`](https://github.com/matter-labs/zksync-wallet-vue/pull/59)
-- fix: temporarly disable coinbase [`#55`](https://github.com/matter-labs/zksync-wallet-vue/pull/55)
+- fix: temporarily disable coinbase [`#55`](https://github.com/matter-labs/zksync-wallet-vue/pull/55)
 - feat: add GA [`#54`](https://github.com/matter-labs/zksync-wallet-vue/pull/54)
 - fix: account unlock for erc1271 wallets [`#51`](https://github.com/matter-labs/zksync-wallet-vue/pull/51)
 - Coinbase turn on [`#37`](https://github.com/matter-labs/zksync-wallet-vue/pull/37)
@@ -543,4 +557,4 @@
 
 - feat: fast withdrawal api [`963505b`](https://github.com/matter-labs/zksync-wallet-vue/commit/963505be156d3fe710688acebb52b379eb77c9b9)
 - feat: withdraw page [`ea30607`](https://github.com/matter-labs/zksync-wallet-vue/commit/ea306078184279a80a86928c3dfa83a8496e1c3a)
-- fix: styles, scrollebar, prelaoder [`7d1a247`](https://github.com/matter-labs/zksync-wallet-vue/commit/7d1a2471c69512cf9e17e7993beebe0ea2628e56)
+- fix: styles, scrollbar, preloader [`7d1a247`](https://github.com/matter-labs/zksync-wallet-vue/commit/7d1a2471c69512cf9e17e7993beebe0ea2628e56)

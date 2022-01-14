@@ -1,18 +1,24 @@
 {
   "extends": [
-    "stylelint-config-standard"
+    "stylelint-config-standard-scss"
   ],
   "plugins": [
     "stylelint-scss"
   ],
   "rules": {
-    "at-rule-no-unknown": false,
+    "at-rule-no-unknown": [
+      true,
+      {
+        "severity": "notice"
+      }
+    ],
+    "scss/double-slash-comment-whitespace-inside": null,
     "block-no-empty": null,
     "block-opening-brace-newline-after": "always",
     "color-named": "never",
-    "custom-property-empty-line-before": false,
+    "custom-property-empty-line-before": "never",
     "declaration-block-semicolon-newline-after": "always",
-    "declaration-block-trailing-semicolon": false,
+    "declaration-block-trailing-semicolon": "always",
     "font-family-name-quotes": "always-where-recommended",
     "font-weight-notation": null,
     "function-url-quotes": "always",
@@ -23,7 +29,7 @@
       }
     ],
     "no-descending-specificity": null,
-    "no-duplicate-selectors": "never",
+    "no-duplicate-selectors": null,
     "no-empty-source": [
       true,
       {
@@ -42,7 +48,7 @@
     ],
     "scss/at-rule-no-unknown": true,
     "selector-attribute-quotes": "always",
-    "selector-max-specificity": false,
+    "selector-max-specificity": null,
     "selector-pseudo-class-no-unknown": [
       true,
       {
@@ -52,7 +58,7 @@
         ]
       }
     ],
-    "selector-pseudo-element-colon-notation": "",
+    "selector-pseudo-element-colon-notation": null,
     "selector-type-no-unknown": [
       true,
       {
@@ -63,6 +69,6 @@
     ],
     "string-quotes": "double",
     "value-list-comma-newline-before": "never-multi-line",
-    "value-no-vendor-prefix": false
+    "value-no-vendor-prefix": null
   }
 }

@@ -4,11 +4,11 @@
 @import "./vars/transitions";
 @import "./default";
 
-//Layouts
+// Layouts
 @import "./layouts/default";
 @import "./layouts/index";
 
-//Blocks
+// Blocks
 @import "./blocks/header";
 @import "./blocks/indexHeader";
 @import "./blocks/footer";
@@ -19,8 +19,9 @@
 @import "./blocks/loggingInLoader";
 @import "./blocks/chooseToken";
 @import "./blocks/networkSwitch";
+@import "./blocks/commonPageWrapper";
 
-//Components
+// Components
 @import "./components/custom/input";
 @import "./components/custom/button";
 @import "./components/custom/alert";
@@ -43,4 +44,3 @@
 @import "./pages/tokenAccount";
 @import "./dev";
 @import "./mobile-layout";
-@import "./blocks/commonPageWrapper";
