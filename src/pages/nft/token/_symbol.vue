@@ -273,5 +273,6 @@ export default Vue.extend({
   max-height: 250px;
   object-fit: contain;
   object-position: center;
+  border-radius: 4px;
 }
 </style>
