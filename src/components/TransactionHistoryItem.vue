@@ -160,9 +160,14 @@ export default Vue.extend({
     transactionTypeData(): { type: string; showAddress: boolean; modal: false | { icon: string; key: string } } {
       switch (this.transaction.op.type) {
         case "Withdraw":
-        case "WithdrawNFT":
           return {
             type: "Withdrawn to:",
+            showAddress: true,
+            modal: false,
+          };
+        case "WithdrawNFT":
+          return {
+            type: "Withdraw NFT to:",
             showAddress: true,
             modal: false,
           };
@@ -207,7 +212,7 @@ export default Vue.extend({
           };
         case "MintNFT":
           return {
-            type: "Mint NFT",
+            type: "Mint NFT to:",
             showAddress: true,
             modal: false,
           };

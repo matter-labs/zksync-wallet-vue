@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.2.0...3.2.1) (2022-01-14)
+
+
+### Bug Fixes
+
+* transactions naming ([#207](https://github.com/matter-labs/zksync-wallet-vue/issues/207)) ([1c29f3e](https://github.com/matter-labs/zksync-wallet-vue/commit/1c29f3e4a4a81b06d60f0d3fc1ccf4a81b641ac3))
+
 # [3.2.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.1.0...3.2.0) (2022-01-13)
 
 
