@@ -42,10 +42,11 @@
       "target": "prod-ropsten",
       "public": "public",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
+      "redirects": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=ropsten"
         }
       ],
       "headers": [
@@ -80,10 +81,11 @@
       "target": "ropsten-beta",
       "public": "public",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
+      "redirects": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=ropsten-beta"
         }
       ],
       "headers": [
@@ -118,10 +120,11 @@
       "target": "prod-rinkeby",
       "public": "public",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
+      "redirects": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=rinkeby"
         }
       ],
       "headers": [
@@ -153,13 +156,14 @@
       ]
     },
     {
-      "target": "beta-rinkeby",
+      "target": "rinkeby-beta",
       "public": "public",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
+      "redirects": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=rinkeby-beta"
         }
       ],
       "headers": [
