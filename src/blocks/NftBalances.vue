@@ -36,8 +36,9 @@
         <div v-for="(item, tokenID) in displayedList" :key="tokenID" class="contactItem nftItem" @click.self="$router.push(`/nft/token/${tokenID}`)">
           <div class="nftImageSide">
             <img v-if="getImageFromNFT(item.contentHash)" class="userImg" :src="getImageFromNFT(item.contentHash)" :alt="`NFT-${tokenID}`" />
-            <loader v-else-if="nftLoading[tokenID]" size="xs" />
-            <v-icon v-else class="_margin-x-auto" name="ri-file-line" />
+            <div v-else class="userImg">
+              <v-icon class="_margin-x-auto" name="ri-file-line" />
+            </div>
             <i-tooltip class="nftStatus" placement="left">
               <v-icon v-if="item.verified" class="nftStatusIcon verified" name="ri-check-double-line" />
               <v-icon v-else class="nftStatusIcon committed" name="ri-check-line" />
@@ -154,8 +155,17 @@ export default Vue.extend({
 
     &,
     .userImg {
+      display: flex;
       height: 62px;
       width: 62px;
+      justify-content: center;
+      align-items: center;
+      background-color: #E2E2E2;
+      border-radius: 50%;
+
+      &.userImg .ov-icon {
+        fill: #828282;
+      }
     }
     .nftStatus {
       position: absolute;
