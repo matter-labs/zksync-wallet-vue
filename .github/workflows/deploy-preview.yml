@@ -10,7 +10,7 @@ name: "Deploy preview"
         description: "target/env: mainnet, rinkeby, ropsten, rinkeby-beta, ropsten-beta, rinkeby-stage"
 jobs:
   build_and_preview:
-    if: "${{ github.event.pull_request.head.repo.full_name == github.repository }}"
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} || ${{ github.event.repository.full_name == github.repository }}
     runs-on: ubuntu-latest
     environment: test
     outputs:
@@ -42,6 +42,7 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
           target: prod-rinkeby
           projectId: zksync-vue
+          channelId: 'version-${{ github.ref }}'
 
   testing:
     needs: build_and_preview
