@@ -162,9 +162,11 @@ export default Vue.extend({
       align-items: center;
       background-color: #E2E2E2;
       border-radius: 50%;
+      transition: background-color $transition1;
 
       &.userImg .ov-icon {
         fill: #828282;
+        transition: fill $transition1;
       }
     }
     .nftStatus {
@@ -191,6 +193,17 @@ export default Vue.extend({
         &.inProgress {
           color: $gray;
         }
+      }
+    }
+  }
+}
+body.inkline.-dark {
+  .nftItem .nftImageSide {
+    &, .userImg {
+      background-color: rgba(159,166,178,.2);
+
+      &.userImg .ov-icon {
+        fill: #fff;
       }
     }
   }
