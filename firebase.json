@@ -45,7 +45,8 @@
       "rewrites": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=ropsten"
         }
       ],
       "headers": [
@@ -83,7 +84,8 @@
       "rewrites": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=ropsten-beta"
         }
       ],
       "headers": [
@@ -121,7 +123,8 @@
       "rewrites": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=rinkeby"
         }
       ],
       "headers": [
@@ -159,7 +162,8 @@
       "rewrites": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=rinkeby-beta"
         }
       ],
       "headers": [
