@@ -19,7 +19,7 @@
       <div v-else-if="!tokenNotFound">
         <div v-if="nftData && nftData.exists" class="twoColumnBlock _margin-top-1">
           <div v-if="nftData.image" class="infoBlock">
-            <img class="nftImage" :src="nftData.image" :alt="`NFT-${tokenID}`" />
+            <img-with-loader loader-size="sm" :src="nftData.image" :alt="`NFT-${tokenID}`" class="nftImage" />
           </div>
           <div>
             <div v-if="nftData.name" class="infoBlock">
@@ -271,8 +271,8 @@ export default Vue.extend({
 .nftImage {
   width: 100%;
   max-height: 250px;
-  object-fit: contain;
-  object-position: center;
-  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
