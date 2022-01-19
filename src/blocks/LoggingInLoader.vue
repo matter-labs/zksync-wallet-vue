@@ -1,45 +1,60 @@
 <template>
   <transition name="fade">
-    <div v-if="loggingIn" class="loggingInLoader">
-      <logo class="_margin-bottom-3" />
-      <h1>Logging in{{ titlePostfix }}</h1>
-      <div class="_margin-top-2 _margin-bottom-1" v-if="loadingHint">
-        <p class="hint">
-          <span>{{ loadingHint }}</span>
-        </p>
-      </div>
-      <loader size="lg" />
-      <i-button class="cancelButton" block variant="secondary" size="lg" @click="cancelLogin()">Cancel</i-button>
+    <div v-if="loggingIn && !loggingInScreenDelay" class="loggingInLoader">
+      <block-logo class="_margin-bottom-3" :is-zk-sync-logo="true" />
+      <h1>Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
+      <transition-group v-if="hintText" tag="div" name="slide-vertical-fade" class="hint">
+        <div :key="hintText">{{ hintText }}</div>
+      </transition-group>
+      <loader size="lg" class="_margin-y-2" />
+      <i-button class="cancelButton _padding-x-2" size="sm" variant="secondary" @click="cancelLogin()">Cancel</i-button>
     </div>
   </transition>
 </template>
 
-<script>
-import logo from "@/blocks/Logo.vue";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
-  components: {
-    logo,
+let loggedInAnimationTimeout: ReturnType<typeof setTimeout>;
+export default Vue.extend({
+  name: "LoggingInLoader",
+  data() {
+    return {
+      loggingInScreenDelay: false,
+    };
   },
   computed: {
-    titlePostfix() {
-      return this.selectedWallet ? ` with ${this.selectedWallet}` : "..";
+    loggingIn(): boolean {
+      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
-    loggingIn() {
-      return this.$store.getters["account/loader"];
+    loggedIn(): boolean {
+      return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
     },
-    selectedWallet() {
-      return this.$store.getters["account/selectedWallet"];
+    hintText(): string {
+      return this.$store.getters["zk-onboard/loadingHint"];
     },
-    loadingHint() {
-      return this.$store.getters["account/loadingHint"];
+    selectedWallet(): unknown {
+      return this.$store.getters["zk-onboard/selectedWallet"];
+    },
+  },
+  watch: {
+    loggingIn(val: unknown) {
+      clearTimeout(loggedInAnimationTimeout);
+      if (val === true) {
+        this.loggingInScreenDelay = true;
+        loggedInAnimationTimeout = setTimeout(() => {
+          this.loggingInScreenDelay = false;
+        }, 150);
+      } else {
+        this.loggingInScreenDelay = false;
+      }
     },
   },
   methods: {
-    cancelLogin() {
-      this.$store.dispatch("wallet/logout");
+    async cancelLogin() {
+      await this.$store.dispatch("zk-account/logout");
       this.$router.push("/");
     },
   },
-};
+});
 </script>

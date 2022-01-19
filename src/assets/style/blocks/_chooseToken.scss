@@ -1,0 +1,163 @@
+.chooseTokenBlock {
+  .centerBlock {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 15px;
+    text-align: center;
+  }
+
+  .searchContainer {
+    display: grid;
+    height: max-content;
+    grid-template-columns: 1fr max-content;
+    grid-template-rows: 100%;
+    grid-gap: 10px;
+
+    .updateBtn {
+      position: relative;
+      top: 0.2rem;
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      background-color: transparentize($color: $gray, $amount: 0.9);
+      transition: background-color $transition1;
+      cursor: pointer;
+      &:hover:not(.disabled) {
+        background-color: transparentize($color: $gray, $amount: 0.8);
+      }
+
+      .tooltip-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        em,
+        i {
+          font-size: 1.2rem;
+        }
+      }
+    }
+  }
+  .tokenListContainer {
+    height: 100%;
+    max-height: 60vh;
+    overflow: auto;
+
+    @media (max-width: $mobile) {
+      max-height: 55vh;
+    }
+
+    &::-webkit-scrollbar {
+      width: 10px;
+      background-color: $tempTransparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: $borderRadius;
+      cursor: pointer;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: $tempTransparent;
+      border-radius: $borderRadius;
+    }
+
+    .tokenItem {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 60px;
+      padding: 0 20px;
+      border-bottom: 1px solid;
+      cursor: pointer;
+      transition: background-color $transition1;
+      &:last-child {
+        border-bottom: none;
+      }
+      &.disabled {
+        cursor: default;
+
+        .tokenSymbol > span, .rightSide {
+          opacity: 0.5;
+        }
+      }
+
+      @media screen and (max-width: $mobile) {
+        height: 74px !important;
+        padding: 7px 20px !important;
+      }
+
+      &:not(.disabled):hover {
+        background-color: transparentize($color: $gray, $amount: 0.9);
+      }
+
+      .tokenSymbol {
+        font-size: 22px;
+
+        & > span {
+          transition: opacity $transition1;
+          will-change: opacity;
+        }
+        .iconInfo {
+          position: relative;
+          top: 2px;
+          margin-left: 0;
+        }
+      }
+
+      .rightSide {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+        transition: opacity $transition1;
+        will-change: opacity;
+
+        .balance {
+          font-size: $tempFontSizeMedium;
+        }
+      }
+
+      @media (max-width: 400px) {
+        flex-direction: column;
+        justify-content: center;
+        height: 70px;
+        text-align: left;
+
+        .rightSide .balance {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+body.inkline {
+  &.-light {
+    .chooseTokenBlock .tokenListContainer {
+      &::-webkit-scrollbar-thumb {
+        background-color: $input-border-color-focus-light;
+      }
+
+      .tokenItem {
+        border-color: $input-border-color-light;
+      }
+    }
+  }
+
+  &.-dark {
+    .chooseTokenBlock .tokenListContainer {
+      &::-webkit-scrollbar-thumb {
+        background-color: $input-border-color-focus-dark;
+      }
+
+      .tokenItem {
+        border-color: $input-border-color-dark;
+      }
+    }
+  }
+}

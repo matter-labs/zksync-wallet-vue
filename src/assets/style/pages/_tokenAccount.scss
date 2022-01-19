@@ -1,14 +1,136 @@
 .tokenAccount {
-    .infoBlock {
-        .headline {
-            font-size: 16px;
-        }
-        .balance {
-            font-size: 20px;
-            .balancePrice {
-                font-size: 16px;
-                color: $gray;
-            }
-        }
+  .infoBlock {
+    .headline {
+      font-size: 16px;
     }
+
+    .hash {
+      font-size: 12px;
+    }
+
+    .address {
+      font-size: 14px;
+      padding-bottom: 4px;
+    }
+
+    .copyGrid {
+      display: grid;
+      grid-template-columns: 1fr max-content;
+      grid-template-rows: 100%;
+      grid-gap: 10px;
+      align-items: center;
+
+      &.addressCopy {
+        padding-bottom: 4.5px;
+        width: 95%;
+      }
+
+      .copyIcon {
+        display: flex;
+        align-items: center;
+        color: $gray;
+        cursor: pointer;
+        transition: color $transition1;
+
+        &:active {
+          transition-duration: 0.0001s;
+          color: $green !important;
+        }
+
+        .iconContainer {
+          display: flex;
+          align-items: center;
+
+          svg {
+            position: relative;
+            top: -0.5px;
+            height: 20px;
+            width: auto;
+            overflow: visible;
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+
+    .hash,
+    .address {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .balance {
+      font-size: 1.1rem;
+      line-height: 1.25rem;
+      display: flex;
+      height: 100%;
+      align-items: center;
+
+      .balancePrice {
+        color: $gray;
+        font-size: 16px;
+      }
+
+      .secondaryText {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .tokenNotFound {
+    font-size: 22px;
+    text-align: center;
+  }
+
+  .transactionsTile {
+    min-height: 250px !important;
+  }
+}
+
+.balanceWithdraw {
+  @media (max-width: $mobile) {
+    flex-direction: column;
+
+    & > .infoBlock {
+      margin-bottom: 10px;
+
+      .headline {
+        margin-top: 0 !important;
+        font-size: 12px;
+        color: $gray;
+      }
+
+      .balancePrice {
+        font-size: $mobileNormal;
+      }
+
+      .balance {
+        font-size: $mobileHeader;
+      }
+    }
+  }
+}
+
+body.inkline {
+  &.-light {
+    .tokenAccount .infoBlock {
+      .copyIcon:hover {
+        color: $black;
+      }
+    }
+  }
+
+  &.-dark {
+    .tokenAccount .infoBlock {
+      .copyIcon:hover {
+        color: $white;
+      }
+    }
+  }
+
+  .nftButtonGroup {
+    gap: 0.2rem;
+  }
 }

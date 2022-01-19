@@ -1,11 +1,16 @@
-# don't ever lint node_modules
-/node_modules/*
-/src/static/sw.js
-# don't ever lint public
-/.nuxt/*
-/src/assets/fonts/*
-/src/assets/imgs/*
-/.github/*
-/.idea/*
-/environments/*
-/public/*
+.husky
+.ide-setup
+.idea
+.nuxt
+.yarn
+environments
+node_modules
+public
+tests
+
+## src-exceptions
+src/assets/imgs
+.github/workflows
+.github/ISSUE_TEMPLATE
+babel.config.js
+src/locales

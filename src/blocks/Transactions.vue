@@ -1,136 +1,68 @@
 <template>
-  <div class="transactionsPage">
+  <div class="transactionsPage dappPageWrapper">
+    <block-modals-account-activation />
     <div class="tileBlock transactionsTile">
       <div class="tileHeadline h3">Transactions</div>
-      <div class="transactionsListContainer">
-        <div v-if="loading === true" class="nothingFound">
+      <div class="transactionsListContainer genericListContainer">
+        <div v-if="loadingStatus === 'main'" class="nothingFound">
           <loader class="_display-block" />
         </div>
-        <div v-else-if="transactionsList.length === 0" class="nothingFound">
+        <div v-else-if="transactions.length === 0 && !loadingStatus" class="nothingFound" :class="{ loadMoreAvailable: !transactionHistoryAllLoaded }">
           <span>History is empty</span>
         </div>
-        <SingleTransaction v-for="(item, index) in transactionsList" v-else :key="index" class="transactionItem" :single-transaction="item" />
-        <i-button v-if="loadingMore === false && loadMoreAvailable === true" block link size="lg" variant="secondary" @click="loadMore()">Load more</i-button>
-        <loader v-else-if="loadingMore === true" class="_display-block _margin-x-auto _margin-y-2" />
+        <transaction-history-item v-for="item in transactions" v-else :key="item.txHash" class="transactionItem" :transaction="item" />
+        <i-button v-if="!loadingStatus && !transactionHistoryAllLoaded" block link size="lg" variant="secondary" @click="loadMore()">Load more</i-button>
+        <div v-else-if="loadingStatus === 'previous'">
+          <loader class="_display-block _margin-x-auto _margin-y-2" />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { walletData } from "@/plugins/walletData";
-import SingleTransaction from "@/blocks/SingleTransaction";
-
-export default {
-  components: {
-    SingleTransaction,
-  },
-  props: {
-    filter: {
-      type: String,
-      default: "",
-      required: false,
-    },
-    address: {
-      type: String,
-      default: "",
-      required: false,
-    },
-  },
-  data() {
-    return {
-      transactionsList: [],
-      loading: true,
-      addressToNameMap: new Map(),
-      loadMoreAvailable: false,
-      totalLoadedItem: 0,
-      loadingMore: false,
-    };
-  },
+<script lang="ts">
+import Vue from "vue";
+import { ApiTransaction } from "zksync/build/types";
+import { ZkTransactionHistoryLoadingState } from "@matterlabs/zksync-nuxt-core/types";
+let updateListInterval: ReturnType<typeof setInterval>;
+export default Vue.extend({
   computed: {
-    walletAddressFull() {
-      return walletData.get().syncWallet.address();
+    transactions(): ApiTransaction[] {
+      return this.$store.getters["zk-history/transactionHistory"];
+    },
+    loadingStatus(): ZkTransactionHistoryLoadingState {
+      return this.$store.getters["zk-history/transactionHistoryLoading"];
+    },
+    transactionHistoryRequested(): boolean {
+      return this.$store.getters["zk-history/transactionHistoryRequested"];
+    },
+    transactionHistoryAllLoaded(): boolean {
+      return this.$store.getters["zk-history/transactionHistoryAllLoaded"];
     },
   },
-  mounted() {
-    this.getTransactions();
-    try {
-      if (!process.client || !window.localStorage.getItem("contacts-" + this.walletAddressFull)) {
-        return;
-      }
-      const contactsList = JSON.parse(window.localStorage.getItem("contacts-" + this.walletAddressFull));
-      if (!contactsList || !Array.isArray(contactsList)) {
-        return;
-      }
-      for (const item of contactsList) {
-        this.addressToNameMap.set(item.address.toLowerCase(), item.name);
-      }
-    } catch (error) {
-      this.$store.dispatch("toaster/error", error.message ? error.message : "Error while loading transaction list");
+  async mounted() {
+    if (!this.transactionHistoryRequested) {
+      await this.$store.dispatch("zk-history/getTransactionHistory");
     }
+    this.updateLatest();
+  },
+  beforeDestroy() {
+    clearInterval(updateListInterval);
   },
   methods: {
-    async loadTransactions(offset = 0) {
-      const list = await this.$store.dispatch("wallet/getTransactionsHistory", { force: false, offset });
-      this.totalLoadedItem += list.length;
-      this.loadMoreAvailable = list.length >= 25;
-      let filteredList = list.map((e) => {
-        if ((e.tx.type === "Transfer" && e.tx.amount === "0" && e.tx.from === e.tx.to) || e.tx.type === "ChangePubKey") {
-          e.tx.feePayment = true;
+    loadMore() {
+      this.$analytics.track("transaction_history_load_more");
+      this.$store.dispatch("zk-history/getPreviousTransactionHistory");
+    },
+    async updateLatest() {
+      await this.$store.dispatch("zk-history/getNewTransactionHistory");
+      clearInterval(updateListInterval);
+      updateListInterval = setInterval(async () => {
+        if (!this.transactionHistoryAllLoaded) {
+          await this.$store.dispatch("zk-history/getNewTransactionHistory");
         }
-        return e;
-      });
-      if (this.filter) {
-        filteredList = filteredList.filter((item) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === this.filter);
-      }
-      if (this.address) {
-        const addressLowerCase = this.address.toLowerCase();
-        const myAddressLowerCase = this.walletAddressFull.toLowerCase();
-        filteredList = filteredList.filter((item) => {
-          if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
-            const addressToLowerCase = item.tx.to.toLowerCase();
-            const addressFromLowerCase = item.tx.from.toLowerCase();
-            if (
-              (item.tx.type === "Withdraw" && addressToLowerCase === addressLowerCase) ||
-              (item.tx.type === "Transfer" &&
-                ((addressToLowerCase === myAddressLowerCase && addressFromLowerCase === addressLowerCase) ||
-                  (addressFromLowerCase === myAddressLowerCase && addressToLowerCase === addressLowerCase)))
-            ) {
-              return true;
-            }
-          }
-          return false;
-        });
-      }
-      return filteredList.map((e) => ({ ...e, transactionStatus: this.getTransactionStatus(e) }));
-    },
-    async getTransactions() {
-      this.loading = true;
-      try {
-        this.transactionsList = await this.loadTransactions();
-      } catch (error) {
-        await this.$store.dispatch("toaster/error", error.message ? error.message : "Error while fetching the transactions");
-      }
-      this.loading = false;
-    },
-    getTransactionStatus(transaction) {
-      if (transaction.fail_reason) {
-        return transaction.fail_reason;
-      }
-      if (transaction.verified) {
-        return "Finalized";
-      } else if (transaction.commited) {
-        return "Committed";
-      } else {
-        return "In progress";
-      }
-    },
-    async loadMore() {
-      this.loadingMore = true;
-      const list = await this.loadTransactions(this.totalLoadedItem);
-      this.transactionsList.push(...list);
-      this.loadingMore = false;
+      }, 30000);
     },
   },
-};
+});
 </script>

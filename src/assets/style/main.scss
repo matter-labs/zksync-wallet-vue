@@ -1,35 +1,46 @@
 // Core
-@import "./variables.scss";
-@import "./default.scss";
-@import "./transitions.scss";
-@import "./fonts.scss";
+@import "./vars/variables";
+@import "./vars/custom";
+@import "./vars/transitions";
+@import "./default";
 
+// Layouts
+@import "./layouts/default";
+@import "./layouts/index";
 
-//Layouts
-@import "./layouts/default.scss";
-@import "./layouts/index.scss";
+// Blocks
+@import "./blocks/header";
+@import "./blocks/indexHeader";
+@import "./blocks/footer";
+@import "./blocks/socialBlock";
+@import "./blocks/logo";
+@import "./blocks/onboard";
+@import "./blocks/mint";
+@import "./blocks/loggingInLoader";
+@import "./blocks/chooseToken";
+@import "./blocks/networkSwitch";
+@import "./blocks/commonPageWrapper";
 
-
-//Blocks
-@import "./blocks/header.scss";
-@import "./blocks/footer.scss";
-@import "./blocks/logo.scss";
-@import "./blocks/onboard.scss";
-@import "./blocks/cookie.scss";
-@import "./blocks/loggingInLoader.scss";
-
-
-//Components
-@import "./components/loader.scss";
-@import "./components/userImg.scss";
-@import "./components/walletAddress.scss";
-@import "./components/checkmark.scss";
-@import "./components/toaster.scss";
+// Components
+@import "./components/custom/input";
+@import "./components/custom/button";
+@import "./components/custom/alert";
+@import "./components/loader";
+@import "./components/userImg";
+@import "./components/walletAddress";
+@import "./components/checkmark";
+@import "./components/loadingBlock";
+@import "./components/amountInput";
+@import "./components/successBlock";
+@import "./components/note";
+@import "./components/transactionHistoryItem";
 
 //Pages
-@import "./pages/index.scss";
-@import "./pages/contacts.scss";
-@import "./pages/transactions.scss";
-@import "./pages/transaction.scss";
-@import "./pages/account.scss";
-@import "./pages/tokenAccount.scss";
+@import "./pages/index";
+@import "./pages/contacts";
+@import "./pages/transactions";
+@import "./pages/transaction";
+@import "./pages/account";
+@import "./pages/tokenAccount";
+@import "./dev";
+@import "./mobile-layout";

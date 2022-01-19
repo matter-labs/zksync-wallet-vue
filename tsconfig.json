@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": "./src",
+    "checkJs": false,
+    "declaration": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es2019",
+      "dom",
+      "es2019.object",
+      "esnext",
+      "esnext.asynciterable"
+    ],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitAny": true,
+    "paths": {
+      "@/*": [
+        "./*"
+      ],
+      "~/*": [
+        "./*"
+      ]
+    },
+    "suppressImplicitAnyIndexErrors": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ESNext",
+    "types": [
+      "@types/node",
+      "@nuxt/types",
+      "@nuxtjs/sentry",
+      "@matterlabs/zksync-nuxt-core",
+      "vue-router",
+      "@types/jest",
+      "@nuxtjs/toast",
+      "web3-core/types",
+      "@inkline/inkline/types",
+      "nuxt-typed-vuex",
+      "vue-qrcode"
+    ]
+  },
+  "exclude": [
+    "node_modules/*",
+    "dist/*",
+    ".yarn/*",
+    "public/*",
+    ".nuxt/*",
+    ".github/*",
+    "environments/*",
+    "tests/*"
+  ]
+}

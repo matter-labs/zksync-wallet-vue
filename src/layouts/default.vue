@@ -1,66 +1,45 @@
 <template>
-  <div class="defaultLayout">
-    <logging-in-loader />
-    <cookie-component />
-    <div v-if="!loggingIn && loggedIn">
-      <header-component ref="header" />
-      <div class="routerContainer">
-        <transition name="fade" mode="out-in">
-          <nuxt />
-        </transition>
+  <i-layout class="defaultLayout">
+    <block-logging-in-loader />
+    <block-modals-wrong-network />
+    <block-modals-requesting-provider-error />
+    <transition name="fade">
+      <div v-if="!loggingIn && loggedIn">
+        <block-header ref="header" />
+        <i-layout-content class="layoutContent">
+          <block-modals-sign-pubkey />
+          <div class="routerContainer">
+            <transition name="fade" mode="out-in">
+              <nuxt />
+            </transition>
+          </div>
+        </i-layout-content>
+        <block-footer class="desktopOnly" />
       </div>
-      <footer-component />
-    </div>
-  </div>
+    </transition>
+  </i-layout>
 </template>
-<script>
-import headerComponent from "@/blocks/Header.vue";
-import footerComponent from "@/blocks/Footer.vue";
-import cookieComponent from "@/blocks/Cookie.vue";
-import loggingInLoader from "@/blocks/LoggingInLoader.vue";
 
-export default {
-  components: {
-    headerComponent,
-    footerComponent,
-    cookieComponent,
-    loggingInLoader,
-  },
+<script lang="ts">
+import Vue from "vue";
+import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
+import SentryMixin from "./sentry.mixin";
+import AnalyticsMixin from "./analytics.mixin";
+
+export default Vue.extend({
+  mixins: [SentryMixin, AnalyticsMixin],
   computed: {
-    loggingIn() {
-      return this.$store.getters["account/loader"];
+    loggingIn(): boolean {
+      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
     },
-    loggedIn() {
-      return this.$store.getters["account/loggedIn"];
-    },
-  },
-  watch: {
-    $route: {
-      immediate: true,
-      handler(val, oldVal) {
-        if (!oldVal) {
-          return this.$nextTick(() => {
-            document.documentElement.scrollTop = 0;
-          });
-        }
-        if (val.path !== oldVal.path) {
-          this.$nextTick(() => {
-            const lastScroll = this.$store.getters["scroll/getLastScroll"];
-            document.documentElement.scrollTop = lastScroll !== false ? lastScroll.y : 0;
-          });
-        }
-      },
+    loggedIn(): boolean {
+      return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
     },
   },
+
   mounted() {
-    if (process.client) {
-      window.history.scrollRestoration = "manual";
-    }
-    if (localStorage.getItem("colorTheme")) {
-      this.$inkline.config.variant = localStorage.getItem("colorTheme");
-    } else {
-      localStorage.setItem("colorTheme", this.$inkline.config.variant);
-    }
+    this.$inkline.config.variant = theme.getUserTheme();
+    this.$store.dispatch("zk-provider/requestProvider");
   },
-};
+});
 </script>

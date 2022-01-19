@@ -1,0 +1,31 @@
+.amountInput {
+  transition: box-shadow $transition1;
+  will-change: box-shadow;
+
+  &.allowance {
+    .minAmount {
+      min-height: 24px;
+    }
+  }
+
+  input {
+    border-radius: $borderRadiusSm 0 0 $borderRadiusSm !important;
+  }
+
+  button {
+    border-radius: 0 $borderRadiusSm $borderRadiusSm 0 !important;
+  }
+
+  &.error .form-input-group input {
+    box-shadow: 0 0 0 1px $red !important;
+  }
+
+  .error {
+    width: 100%;
+    min-height: 18px;
+    padding-top: 5px;
+    color: $red;
+    font-size: 12px;
+    line-height: $fontSizeRegular;
+  }
+}

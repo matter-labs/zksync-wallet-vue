@@ -1,116 +1,145 @@
 <template>
-  <div>
+  <div class="balancesBlock tileBlock">
     <i-modal v-model="balanceInfoModal" size="md">
-      <template slot="header">Balances in L2</template>
-      <div>
-        <div>
-          <b>zkSync is a Layer-2 protocol</b>
-        </div>
-        <p>
-          Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
-          <a href="//etherscan.io" target="_blank" rel="noopener noreferrer">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer. Nevertheless,
-          balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
-          <a href="//zksync.io/faq/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
-        </p>
-        <p>You can move your balances from L1 into zkSync by making a Deposit</p>
-        <p>To move them back from zkSync to L1 you can make a Withdraw</p>
-      </div>
+      <template slot="header">zkSync is a Layer-2 protocol</template>
+      <p>
+        Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
+        <a href="https://etherscan.io" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer.
+        Nevertheless, balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
+        <a href="https://zksync.io/faq/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
+      </p>
+      <p>You can move your balances <b>from L1</b> into zkSync by making a <nuxt-link class="logoLinkContainer" to="/transaction/deposit">Deposit</nuxt-link></p>
+      <p>To move them back from zkSync <b>to L1</b> you can make a <nuxt-link class="logoLinkContainer" to="/transaction/withdraw">Withdraw</nuxt-link></p>
     </i-modal>
-    <div class="balancesBlock tileBlock">
-      <div class="tileHeadline h3">
-        <span>Balances in L2</span>
-        <i class="fas fa-question" @click="balanceInfoModal = true"></i>
-      </div>
-      <div v-if="balances.length === 0 && loading === false" class="centerBlock">
-        <p class="tileText">No balances yet, please make a deposit or request money from someone!</p>
-        <i-button block link size="lg" variant="secondary" class="_margin-top-1" to="/deposit">+ Deposit</i-button>
-      </div>
-      <div v-else class="balances">
-        <div v-if="!loading">
-          <div class="_display-flex _justify-content-space-between">
-            <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/deposit">+ Deposit</i-button>
-            <i-button class="_padding-y-0" link size="lg" variant="secondary" to="/withdraw">- Withdraw</i-button>
-          </div>
-          <i-button block class="_margin-y-1" size="lg" variant="secondary" to="/transfer"><i class="fas fa-paper-plane"></i>&nbsp;&nbsp;Transfer</i-button>
-          <i-input v-model="search" placeholder="Filter tokens" maxlength="6">
-            <i slot="prefix" class="far fa-search"></i>
-          </i-input>
+    <div class="tileHeadline h3">
+      <span>Balances in L2</span>
+      <span class="icon-container _display-flex" @click="balanceInfoModal = true">
+        <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" scale="0.9" />
+      </span>
+    </div>
+    <slot />
+    <div v-if="!isSearching && !hasDisplayedBalances && (accountStateLoading === false || accountStateRequested)" class="centerBlock">
+      <p class="tileText">No balances yet, please add funds or request money from someone!</p>
+      <i-button data-cy="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/transaction/deposit">
+        <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;&nbsp;Add Funds
+      </i-button>
+    </div>
+    <div v-else class="balances">
+      <div v-if="!accountStateLoading || accountStateRequested">
+        <div class="_display-flex _justify-content-space-between _margin-y-1">
+          <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="lg" variant="secondary" to="/transaction/deposit">
+            <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;&nbsp;Add Funds
+          </i-button>
+          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-2" size="lg" variant="secondary" to="/transaction/transfer">
+            <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Send
+          </i-button>
         </div>
 
-        <div v-if="loading" class="centerBlock">
-          <loader />
-        </div>
-        <div v-else-if="search && displayedList.length === 0" class="centerBlock">
-          <span
-            >Your search <b>"{{ search }}"</b> did not match any tokens</span
-          >
-        </div>
-        <div v-else class="balancesList">
-          <nuxt-link v-for="(item, index) in displayedList" :key="index" :to="`/account/${item.symbol}`" class="balanceItem">
-            <div class="tokenSymbol">{{ item.symbol }}</div>
-            <div class="rightSide">
+        <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
+          <v-icon slot="prefix" name="ri-search-line" />
+        </i-input>
+      </div>
+
+      <div v-if="accountStateLoading && !accountStateRequested" class="centerBlock">
+        <loader />
+      </div>
+      <div v-else-if="isSearching && !hasDisplayedBalances" class="centerBlock">
+        <span>
+          Your search <strong>"{{ search }}"</strong> did not match any tokens
+        </span>
+      </div>
+      <div v-else class="balancesList">
+        <nuxt-link v-for="(item, symbol) in displayedList" :key="symbol" :to="`/token/${symbol}`" class="balanceItem">
+          <div class="leftSide _display-flex _align-items-center">
+            <div class="tokenSymbol">
+              {{ symbol }}
+            </div>
+            <div class="status _margin-left-05 _hidden-md-and-up">
+              <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
+              <v-icon v-else class="committed" name="ri-check-line" />
+            </div>
+          </div>
+          <div class="rightSide">
+            <div class="rowItem">
               <div class="total">
-                <span class="balancePrice">{{ item.formattedTotalPrice }}</span
-                >&nbsp;&nbsp;{{ item.balance }}
+                <span class="balancePrice">
+                  <token-price :symbol="symbol" :amount="item.balance" />
+                </span>
+                &nbsp;&nbsp;{{ item.balance | parseBigNumberish(symbol) }}
               </div>
-              <div class="status">
-                <i-tooltip>
-                  <i v-if="item.status === 'Finalized'" class="verified far fa-check-double"></i>
-                  <i v-else class="committed far fa-check"></i>
-                  <template slot="body">{{ item.status }}</template>
+              <div class="status _hidden-sm-and-down">
+                <i-tooltip placement="left">
+                  <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
+                  <v-icon v-else class="committed" name="ri-check-line" />
+                  <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
                 </i-tooltip>
               </div>
             </div>
-          </nuxt-link>
-        </div>
+            <div v-if="activeDeposits[symbol]" class="rowItem">
+              <div class="total small">
+                <span class="balancePrice">
+                  Depositing:
+                  <token-price :symbol="symbol" :amount="activeDeposits[symbol].amount" />
+                </span>
+                &nbsp;&nbsp;+{{ activeDeposits[symbol].amount | parseBigNumberish(symbol) }}
+              </div>
+              <div class="status">
+                <loader size="xs" />
+              </div>
+            </div>
+          </div>
+        </nuxt-link>
       </div>
-      <mint :display="balances.length === 0 && loading === false" class="_margin-top-2" @received="getBalances()" />
     </div>
   </div>
 </template>
-
-<script>
-import Mint from "@/blocks/Mint.vue";
-import utils from "@/plugins/utils";
-
-export default {
-  components: {
-    Mint,
-  },
+<script lang="ts">
+import Vue from "vue";
+import { searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
+import { ZkTokenBalances } from "@matterlabs/zksync-nuxt-core/types";
+export default Vue.extend({
   data() {
     return {
-      balances: [],
       search: "",
-      loading: true,
       balanceInfoModal: false,
     };
   },
   computed: {
-    displayedList() {
-      if (!this.search.trim()) {
-        return this.balances;
+    accountStateLoading(): boolean {
+      return this.$store.getters["zk-account/accountStateLoading"];
+    },
+    accountStateRequested(): boolean {
+      return this.$store.getters["zk-account/accountStateRequested"];
+    },
+    zkBalances(): ZkTokenBalances {
+      return this.$store.getters["zk-balances/balances"];
+    },
+    zkBalancesWithDeposits(): ZkTokenBalances {
+      const tokens = this.$store.getters["zk-tokens/zkTokens"];
+      const zkBalancesWithDeposits = this.zkBalances;
+      for (const symbol in this.activeDeposits) {
+        if (!zkBalancesWithDeposits[symbol]) {
+          zkBalancesWithDeposits[symbol] = {
+            balance: "0",
+            verified: false,
+            feeAvailable: tokens[symbol] ? tokens[symbol].enabledForFees : false,
+          };
+        }
       }
-      return this.balances.filter((e) => e.symbol.toLowerCase().includes(this.search.trim().toLowerCase()));
+      return zkBalancesWithDeposits;
+    },
+    displayedList(): ZkTokenBalances {
+      return searchByKey(this.zkBalancesWithDeposits, this.search);
+    },
+    activeDeposits() {
+      return this.$store.getters["zk-balances/depositingBalances"];
+    },
+    hasDisplayedBalances(): boolean {
+      return Object.keys(this.displayedList).length !== 0 || Object.keys(this.activeDeposits).length !== 0;
+    },
+    isSearching(): boolean {
+      return !!this.search.trim();
     },
   },
-  mounted() {
-    this.getBalances();
-  },
-  methods: {
-    async getBalances() {
-      this.loading = true;
-      /**
-       * @type {Array}
-       */
-      const balances = await this.$store.dispatch("wallet/getzkBalances");
-      this.balances = balances
-        .slice()
-        .sort(utils.sortBalancesById)
-        .filter((e) => {
-          return e.balance > 0;
-        });
-      this.loading = false;
-    },
-  },
-};
+});
 </script>

@@ -1,29 +1,29 @@
 <template>
   <div class="indexPage">
     <i-container>
-      <i-row center>
-        <logo />
-      </i-row>
-      <i-row center>
-        <span class="h1 _font-weight-normal">Trustless, scalable crypto payments</span>
-      </i-row>
-      <i-row center class="_padding-top-3">
-        <div class="connectWallet" @click="customWallet()">
-          <img src="@/assets/imgs/wallets/external.png" alt="External">
-          <div class="text">Connect your wallet</div>
+      <h1>Connect your L1 ETH Wallet to start</h1>
+      <div class="container-fluid _flex-direction-row _display-flex connections">
+        <div data-cy="core_connect_wallet_button" class="tileContainer _margin-top-1 _margin-right-05 _margin-md-right-2 _text-center" @click="customWallet()">
+          <div class="tile">
+            <img src="@/assets/imgs/wallets/external.png" alt="External" />
+          </div>
+          <div class="tileName">Ethereum Wallet</div>
         </div>
-      </i-row>
+        <div data-cy="core_connect_wallet_wc_button" class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center" @click="walletConnect()">
+          <div class="tile">
+            <img src="@/assets/imgs/wallets/wc.png" alt="Wallet Connect" />
+          </div>
+          <div class="tileName">Wallet Connect</div>
+        </div>
+      </div>
     </i-container>
   </div>
 </template>
 
-<script>
-import logo from "@/blocks/Logo.vue";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
-  components: {
-    logo,
-  },
+export default Vue.extend({
   layout: "index",
   data() {
     return {
@@ -31,23 +31,28 @@ export default {
       contactInfoShown: false,
     };
   },
+  mounted() {
+    this.$analytics.track("visit_login");
+  },
   methods: {
-    burnerWallet() {
-      this.$router.push("/account");
-    },
     async customWallet() {
-      const onboard = this.$store.getters["wallet/getOnboard"];
-      onboard.config({
-        darkMode: this.$inkline.config.variant !== "light",
-      });
-
-      const refreshWalletTry = await this.$store.dispatch("wallet/walletRefresh");
-      if (refreshWalletTry !== true) {
-        await this.$store.dispatch("wallet/logout");
+      const refreshWalletTry = await this.$store.dispatch("zk-onboard/loginWithOnboard");
+      if (!refreshWalletTry) {
+        await this.$store.dispatch("zk-account/logout");
       } else {
+        this.$analytics.track("login", { connectionType: "Ethereum Wallet", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
+        await this.$router.push("/account");
+      }
+    },
+    async walletConnect() {
+      const refreshWalletTry = await this.$store.dispatch("zk-onboard/loginWithWalletConnect");
+      if (!refreshWalletTry) {
+        await this.$store.dispatch("zk-account/logout");
+      } else {
+        this.$analytics.track("login", { connectionType: "WalletConnect", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
         await this.$router.push("/account");
       }
     },
   },
-};
+});
 </script>
