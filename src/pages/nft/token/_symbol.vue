@@ -259,7 +259,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .twoColumnBlock {
   width: 100%;
   height: max-content;
@@ -274,5 +274,9 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
+
+  img {
+    border-radius: 4px;
+  }
 }
 </style>

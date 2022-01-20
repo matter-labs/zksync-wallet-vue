@@ -50,7 +50,6 @@ export default Vue.extend({
             filter: brightness(0.5);
             object-fit: cover;
             object-position: center;
-            border-radius: 50%;
             transition: $transition1;
             transition-property: opacity, filter;
             will-change: opacity, filter;

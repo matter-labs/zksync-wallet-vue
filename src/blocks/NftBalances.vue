@@ -142,8 +142,8 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-.nftItem {
+<style lang="scss">
+.contactsListContainer .nftItem {
   height: 80px;
   grid-template-columns: 65px 1fr max-content;
 
@@ -167,6 +167,10 @@ export default Vue.extend({
       &.userImg .ov-icon {
         fill: #828282;
         transition: fill $transition1;
+      }
+      
+      img {
+        border-radius: 50%;
       }
     }
     .nftStatus {
@@ -198,7 +202,7 @@ export default Vue.extend({
   }
 }
 body.inkline.-dark {
-  .nftItem .nftImageSide {
+  .contactsListContainer .nftItem .nftImageSide {
     &, .userImg {
       background-color: rgba(159,166,178,.2);
 
