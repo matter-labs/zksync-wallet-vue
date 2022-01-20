@@ -17,6 +17,41 @@
         <div class="secondaryText">Loading...</div>
       </div>
       <div v-else-if="!tokenNotFound">
+        <div v-if="nftData && nftData.exists" class="twoColumnBlock _margin-top-1">
+          <div v-if="nftData.image" class="infoBlock">
+            <img-with-loader loader-size="sm" :src="nftData.image" :alt="`NFT-${tokenID}`" class="nftImage" />
+          </div>
+          <div>
+            <div v-if="nftData.name" class="infoBlock">
+              <div class="headline">Name:</div>
+              <div class="infoBlock">
+                <div class="balance">{{ nftData.name }}</div>
+              </div>
+            </div>
+            <div v-if="nftData.description" class="infoBlock" :class="{ '_margin-top-1': nftData.name }">
+              <div class="headline">Description:</div>
+              <div class="infoBlock">
+                <div class="balance">{{ nftData.description }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="twoColumnBlock _margin-top-1">
+          <div class="infoBlock">
+            <div class="headline">Creator:</div>
+            <div class="balance">
+              <nuxt-link v-if="!isOwnAddress" :to="`/contacts/${token.creatorAddress}`" class="tokenSymbol address">{{ getAddressName(token.creatorAddress) }}</nuxt-link>
+              <div v-else>Own account</div>
+            </div>
+          </div>
+          <div class="infoBlock">
+            <div class="headline">Status:</div>
+            <div v-if="!loadingToken" class="balance">
+              <div>{{ nftTokenInfo ? "Verified" : "Not verified" }}</div>
+            </div>
+            <div v-else class="secondaryText">Loading...</div>
+          </div>
+        </div>
         <div class="infoBlock _margin-top-1">
           <div class="headline">Content hash:</div>
           <div class="infoBlock">
@@ -33,24 +68,33 @@
             </div>
           </div>
         </div>
-        <div>
-          <div class="infoBlock _margin-top-1">
-            <div class="headline">Creator:</div>
-          </div>
+        <div v-if="tokenCID" class="infoBlock _margin-top-1">
+          <div class="headline">Content ID:</div>
           <div class="infoBlock">
             <div class="balance">
-              <nuxt-link v-if="!isOwnAddress" :to="`/contacts/${token.creatorAddress}`" class="tokenSymbol address">{{ getAddressName(token.creatorAddress) }}</nuxt-link>
-              <div v-else>Own account</div>
+              <div class="copyGrid">
+                <span class="tokenSymbol hash">{{ tokenCID }}</span>
+                <i-tooltip placement="right" trigger="click" class="copyIcon" @click.native="copy(tokenCID)">
+                  <div class="iconContainer">
+                    <v-icon name="ri-clipboard-line" />
+                  </div>
+                  <template slot="body">Copied!</template>
+                </i-tooltip>
+              </div>
             </div>
           </div>
         </div>
-        <div>
+        <div v-if="tokenCID">
           <div class="infoBlock _margin-top-1">
-            <div class="headline">Status:</div>
+            <div class="headline">NFT Metadata:</div>
           </div>
           <div class="infoBlock">
-            <div v-if="!loadingToken" class="balance">
-              <div>{{ nftTokenInfo ? "Verified" : "Not verified" }}</div>
+            <div v-if="!nftDataLoading" class="balance">
+              <a v-if="nftData && nftData.exists" target="_blank" :href="`${ipfsGateway}/ipfs/${tokenCID}/metadata.json`">
+                <span>Link to metadata</span>
+                <v-icon name="ri-external-link-line" />
+              </a>
+              <div v-else class="errorText">Metadata not found</div>
             </div>
             <div v-else class="secondaryText">Loading...</div>
           </div>
@@ -70,7 +114,7 @@
           </i-button>
         </i-button-group>
       </div>
-      <div v-else class="tokenNotFound">Token not found</div>
+      <div v-else class="tokenNotFound">Token wasn't found in your balances</div>
     </div>
     <transactions class="_margin-top-0" :token="tokenID" :token-exists="!!nftTokenInfo" />
   </div>
@@ -81,8 +125,10 @@ import Vue from "vue";
 import { Route } from "vue-router/types";
 import { NFT, NFTInfo } from "zksync/build/types";
 import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
-import { ZkContact } from "@matterlabs/zksync-nuxt-core/types";
+import { ModuleOptions, ZkContact } from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "ethers/lib/utils";
+import { NFTItem } from "@/types/lib";
+import { getCIDFromContentHash } from "@/utils/nft";
 
 let updateTokenStatusInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -106,6 +152,9 @@ export default Vue.extend({
     returnLink(): string | Route {
       return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/withdraw" ? this.fromRoute : "/account/nft";
     },
+    ipfsGateway(): string {
+      return (<ModuleOptions>this.$store.getters["zk-onboard/options"]).ipfsGateway;
+    },
     tokenID(): number {
       return parseInt(this.$route.params.symbol);
     },
@@ -124,10 +173,41 @@ export default Vue.extend({
     isOwnAddress(): boolean {
       return getAddress(this.$store.getters["zk-account/address"]) === getAddress(this.token.creatorAddress);
     },
+    nftDataLoading(): boolean {
+      if (!this.tokenCID) {
+        return false;
+      }
+      return this.$store.getters["nfts/getNFTLoading"](this.tokenCID);
+    },
+    nftData(): NFTItem | undefined {
+      if (!this.tokenCID) {
+        return undefined;
+      }
+      return this.$store.getters["nfts/getNFT"](this.tokenCID);
+    },
+    tokenCID(): string | undefined {
+      if (!this.token) {
+        return undefined;
+      }
+      return getCIDFromContentHash(this.token.contentHash);
+    },
+  },
+  watch: {
+    tokenCID: {
+      immediate: true,
+      handler(val) {
+        if (val) {
+          this.$store.dispatch("nfts/requestNFT", { cid: val });
+        }
+      },
+    },
   },
   mounted() {
     this.requestNFTTokenInfo();
     this.updateTokenStatus();
+    if (this.tokenCID) {
+      this.$store.dispatch("nfts/requestNFT", { cid: this.tokenCID });
+    }
   },
   beforeDestroy() {
     clearInterval(updateTokenStatusInterval);
@@ -178,3 +258,25 @@ export default Vue.extend({
   },
 });
 </script>
+
+<style lang="scss">
+.twoColumnBlock {
+  width: 100%;
+  height: max-content;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 100%;
+  grid-gap: 20px;
+}
+.nftImage {
+  width: 100%;
+  max-height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    border-radius: 4px;
+  }
+}
+</style>

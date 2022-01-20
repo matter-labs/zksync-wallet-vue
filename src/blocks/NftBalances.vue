@@ -32,35 +32,44 @@
           Your search <strong>"{{ search }}"</strong> did not match any NFT tokens
         </span>
       </div>
-      <div v-else class="balancesList">
-        <nuxt-link v-for="(item, tokenID) in displayedList" :key="tokenID" :to="`/nft/token/${tokenID}`" class="balanceItem">
-          <div class="leftSide _display-flex _align-items-center">
-            <div class="tokenSymbol">NFT-{{ tokenID }}</div>
-            <div class="status _margin-left-05 _hidden-md-and-up">
-              <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
-              <v-icon v-else class="committed" name="ri-check-line" />
+      <div v-else class="contactsListContainer genericListContainer">
+        <div v-for="(item, tokenID) in displayedList" :key="tokenID" class="contactItem nftItem" @click.self="$router.push(`/nft/token/${tokenID}`)">
+          <div class="nftImageSide">
+            <img-with-loader v-if="getImageFromNFT(item.contentHash)"  :src="getImageFromNFT(item.contentHash)" :alt="`NFT-${tokenID}`" class="userImg" />
+            <div v-else class="userImg">
+              <v-icon class="_margin-x-auto" name="ri-file-line" />
             </div>
+            <i-tooltip class="nftStatus" placement="left">
+              <v-icon v-if="item.verified" class="nftStatusIcon verified" name="ri-check-double-line" />
+              <v-icon v-else class="nftStatusIcon committed" name="ri-check-line" />
+              <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
+            </i-tooltip>
           </div>
-          <div class="rightSide">
-            <div class="rowItem">
-              <div class="status _hidden-sm-and-down">
-                <i-tooltip placement="left">
-                  <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
-                  <v-icon v-else class="committed" name="ri-check-line" />
-                  <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
-                </i-tooltip>
-              </div>
-            </div>
+          <div class="contactInfo _pointer-events-none">
+            <div class="contactName">{{ item.symbol }}</div>
+            <div class="contactAddress walletAddress">{{ item.contentHash }}</div>
           </div>
-        </nuxt-link>
+          <div class="iconsBlock _pointer-events-none">
+            <i-tooltip placement="left" trigger="click">
+              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyHash(item.contentHash)">
+                <v-icon name="ri-clipboard-line" />
+              </i-button>
+              <template slot="body">Copied!</template>
+            </i-tooltip>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
+import { copyToClipboard, searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
 import { ZkNFTBalances } from "@matterlabs/zksync-nuxt-core/types";
+import { Address } from "zksync/build/types";
+import { getCIDFromContentHash } from "@/utils/nft";
+import { NFTItem } from "@/types/lib";
+
 export default Vue.extend({
   data() {
     return {
@@ -86,6 +95,121 @@ export default Vue.extend({
     isSearching(): boolean {
       return !!this.search.trim();
     },
+    nftDataLoading(): { [key: string]: boolean } {
+      return this.$store.getters["nfts/getNFTsLoading"];
+    },
+    nftData(): { [key: string]: NFTItem } {
+      return this.$store.getters["nfts/getNFTs"];
+    },
+    nftLoading(): { [tokenID: number]: boolean } {
+      return Object.fromEntries(
+        Object.entries(this.zkBalances).map((e) => {
+          const nftCID = getCIDFromContentHash(e[1].contentHash);
+          if (!nftCID) {
+            return [e[0], false];
+          }
+          return [e[0], !!this.nftDataLoading[nftCID]];
+        }),
+      );
+    },
+  },
+  watch: {
+    zkBalances: {
+      immediate: true,
+      handler(val: ZkNFTBalances | undefined) {
+        if (val) {
+          for (const nft in val) {
+            const CID = getCIDFromContentHash(val[nft].contentHash);
+            if (CID) {
+              this.$store.dispatch("nfts/requestNFT", { cid: CID });
+            }
+          }
+        }
+      },
+    },
+  },
+  methods: {
+    copyHash(address: Address) {
+      copyToClipboard(address);
+    },
+    getImageFromNFT(contentHash: string) {
+      const nftCID = getCIDFromContentHash(contentHash);
+      if (nftCID && this.nftData[nftCID] && this.nftData[nftCID].exists) {
+        return this.nftData[nftCID].image;
+      }
+    },
   },
 });
 </script>
+
+<style lang="scss">
+.contactsListContainer .nftItem {
+  height: 80px;
+  grid-template-columns: 65px 1fr max-content;
+
+  .nftImageSide {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &,
+    .userImg {
+      display: flex;
+      height: 62px;
+      width: 62px;
+      justify-content: center;
+      align-items: center;
+      background-color: #E2E2E2;
+      border-radius: 50%;
+      transition: background-color $transition1;
+
+      &.userImg .ov-icon {
+        fill: #828282;
+        transition: fill $transition1;
+      }
+      
+      img {
+        border-radius: 50%;
+      }
+    }
+    .nftStatus {
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $white;
+      border-radius: 50%;
+      right: 0;
+      bottom: 0;
+      box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.25);
+
+      .nftStatusIcon {
+        transform: scale(0.9);
+        &.verified {
+          color: $green;
+        }
+        &.committed {
+          color: #aa935d;
+        }
+        &.inProgress {
+          color: $gray;
+        }
+      }
+    }
+  }
+}
+body.inkline.-dark {
+  .contactsListContainer .nftItem .nftImageSide {
+    &, .userImg {
+      background-color: rgba(159,166,178,.2);
+
+      &.userImg .ov-icon {
+        fill: #fff;
+      }
+    }
+  }
+}
+</style>
