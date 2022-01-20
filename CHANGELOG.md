@@ -1,3 +1,10 @@
+# [3.4.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.3.0...3.4.0) (2022-01-20)
+
+
+### Features
+
+* nft image previews and use of metadata ([#203](https://github.com/matter-labs/zksync-wallet-vue/issues/203)) ([5d5af05](https://github.com/matter-labs/zksync-wallet-vue/commit/5d5af052830995aa5003a2f1106bcced692b7208))
+
 # [3.3.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.2.1...3.3.0) (2022-01-18)
 
 
