@@ -34,7 +34,7 @@
       </div>
       <div v-else class="contactsListContainer genericListContainer">
         <div v-for="(item, tokenID) in displayedList" :key="tokenID" class="contactItem nftItem" @click.self="$router.push(`/nft/token/${tokenID}`)">
-          <div class="nftImageSide" @click="$router.push(`/nft/token/${tokenID}`)">
+          <nuxt-link class="nftImageSide" :to="`/nft/token/${tokenID}`">
             <img-with-loader v-if="getImageFromNFT(item.contentHash)"  :src="getImageFromNFT(item.contentHash)" :alt="`NFT-${tokenID}`" class="userImg" />
             <div v-else class="userImg">
               <v-icon class="_margin-x-auto" name="ri-file-line" />
@@ -44,7 +44,7 @@
               <v-icon v-else class="nftStatusIcon committed" name="ri-check-line" />
               <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
             </i-tooltip>
-          </div>
+          </nuxt-link>
           <div class="contactInfo _pointer-events-none">
             <div class="contactName">{{ item.symbol }}</div>
             <div class="contactAddress walletAddress">{{ item.contentHash }}</div>
