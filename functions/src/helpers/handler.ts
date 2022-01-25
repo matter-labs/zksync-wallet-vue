@@ -2,12 +2,6 @@ import * as functions from "firebase-functions";
 import cors from "cors";
 import {functionsConfig} from "../functions-config.js";
 
-// CORS configuration (common for the RAMP lambdas)
-const options: cors.CorsOptions = {
-  origin: functionsConfig.whitelist,
-  methods: functionsConfig.allowedMethod,
-};
-
 /**
  * Common wrapper for the lambda-function with the logger & HttpsError processing
  *
@@ -20,7 +14,6 @@ const handlerHelper: (handler, configCheck?: string) => functions.TriggerAnnotat
     response.statusMessage = `${handler.name} is currently disabled`;
     response.sendStatus(404);
   }
-  cors(options)(request, response, () => {
     try {
       handler(request, response);
     } catch (error) {
@@ -35,7 +28,6 @@ const handlerHelper: (handler, configCheck?: string) => functions.TriggerAnnotat
       });
       response.header(500).send(error).end();
     }
-  });
 });
 
 export default handlerHelper;
