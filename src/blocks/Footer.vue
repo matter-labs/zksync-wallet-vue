@@ -6,7 +6,7 @@
     <div class="container _display-flex _flex-direction-row _align-items-center _justify-content-space-between _justify-content_mobile-space-around">
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
         <div class="_padding-1-2 _padding-md-x-1 _padding-left-0">
-          <a target="_blank" class="footer-link" href="https://zksync.io/faq/intro.html">Docs</a>
+          <a target="_blank" class="footer-link" href="https://zksync.io/userdocs/intro.html">Docs</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
           <a target="_blank" class="footer-link" href="https://zksync.io/legal/terms.html">Terms</a>
