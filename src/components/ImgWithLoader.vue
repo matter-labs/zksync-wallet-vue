@@ -1,5 +1,5 @@
 <template>
-    <div class="imgWithLoader">
+    <div class="imgWithLoader" @click="$emit('click')">
         <transition name="fadeFast">
             <loader v-if="!imgLoaded" :size="loaderSize" />
         </transition>

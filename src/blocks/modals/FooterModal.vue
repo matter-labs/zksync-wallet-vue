@@ -5,7 +5,7 @@
         <b>Information</b>
       </template>
       <template slot="default">
-        <a class="modalFooterBtn big" href="https://zksync.io/faq/intro.html" target="_blank">
+        <a class="modalFooterBtn big" href="https://zksync.io/userdocs/intro.html" target="_blank">
           <v-icon name="ri-book-2-line" />
           <span>Docs</span>
         </a>
