@@ -95,7 +95,7 @@ export default Vue.extend({
         pubKey: this.moonpayConfig?.apiPublicKey,
         originalUrl: url
       });
-      fetch("https://us-central1-zksync-vue.cloudfunctions.net/moonpaySign", {
+      fetch("api/moonpaySign", {
         method: "POST",
         // mode: "same-origin", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
