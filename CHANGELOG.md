@@ -1,3 +1,10 @@
+## [3.4.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.1...3.4.2) (2022-01-25)
+
+
+### Bug Fixes
+
+* click on nft image not redirecting to nft page ([#211](https://github.com/matter-labs/zksync-wallet-vue/issues/211)) ([4e97b17](https://github.com/matter-labs/zksync-wallet-vue/commit/4e97b174e14d974b3031d14aa69af20746e2741d))
+
 ## [3.4.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.0...3.4.1) (2022-01-25)
 
 
