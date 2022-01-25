@@ -60,9 +60,9 @@ jobs:
 
       - name: Preparing to launch of tests
         run: |
-          chmod +x ./tests_launcher.sh
+          chmod +x ./wallet_tests_launcher.sh
           bash ./cli-dev.sh clean yarn
-          yarn install --immutable || true
+          yarn install --immutable
 
       # this is needed to run chromium (puppeteer / dappeteer) with metamask extension.
       - name: Install setup-node
@@ -78,9 +78,10 @@ jobs:
         uses: mujo-code/puppeteer-headful@8baa091f83c74d2eda8603b7f9990b20535e7a9c
         env:
           CI: 'true'
-          TEST_HOST: "${{fromJson(needs.build_and_preview.outputs.output_urls)[0]}}"
+          DAPP_HOST: "${{fromJson(needs.build_and_preview.outputs.output_urls)[0]}}"
+          ZKSYNC_NETWORK: 'rinkeby'
         with:
-          args: ./tests_launcher.sh wallet
+          args: ./wallet_tests_launcher.sh v1 sanity
 
       - name: Save artifacts
         uses: actions/upload-artifact@v2
