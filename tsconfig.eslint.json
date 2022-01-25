@@ -14,7 +14,8 @@
     ".ide-setup**",
     ".firebase**",
     ".github**",
-    "tests**"
+    "tests**",
+    "functions**"
   ],
   "compilerOptions": {
     "lib": [

@@ -14,7 +14,7 @@ const pageImg = "/screenshot.jpg";
 const sentryDsn = "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800";
 const gtagId = "GTM-ML2QDNV";
 
-const pageTitleTemplate = "%s | zkSync: secure, scalable crypto payments";
+const pageTitleTemplate = "%s | zkSync: secure, scala ble crypto payments";
 const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable

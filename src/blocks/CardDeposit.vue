@@ -6,9 +6,9 @@
     <div :class="{ disabled: !isBanxaSupported }" class="providerOption banxaProvider" @click="buyWithBanxa">
       <block-svg-banxa />
     </div>
-    <!-- <div :class="{ disabled: !isMoonpaySupported }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
+    <div :class="{ disabled: !isMoonpaySupported }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
       <block-svg-moonpay />
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -19,41 +19,41 @@ import { rampConfig, banxaConfig, moonpayConfig } from "@/utils/config";
 
 export default Vue.extend({
   computed: {
-    rampConfig(): {
+    rampConfig (): {
       url: string | undefined;
       hostApiKey: string | undefined;
     } | null {
       return rampConfig[this.$store.getters["zk-provider/network"]];
     },
-    banxaConfig(): {
+    banxaConfig (): {
       url: string;
     } | null {
       return banxaConfig[this.$store.getters["zk-provider/network"]];
     },
-    moonpayConfig(): {
+    moonpayConfig (): {
       url: string;
       apiPublicKey: string;
     } | null {
       return moonpayConfig[this.$store.getters["zk-provider/network"]];
     },
-    address(): string {
+    address (): string {
       return this.$store.getters["zk-account/address"];
     },
-    redirectURL(): string {
-      return window.location.origin + "/account";
+    redirectURL (): string {
+      return window.location.origin+"/account";
     },
-    isRampSupported(): boolean {
+    isRampSupported (): boolean {
       return !!this.rampConfig;
     },
-    isBanxaSupported(): boolean {
+    isBanxaSupported (): boolean {
       return !!this.banxaConfig;
     },
-    isMoonpaySupported(): boolean {
+    isMoonpaySupported (): boolean {
       return !!this.moonpayConfig;
-    },
+    }
   },
   methods: {
-    buyWithRamp() {
+    buyWithRamp () {
       if (!this.isRampSupported) {
         return;
       }
@@ -65,35 +65,62 @@ export default Vue.extend({
         variant: "hosted-auto",
         swapAsset: "ZKSYNC_*",
         userAddress: this.address,
-        ...this.rampConfig,
+        ...this.rampConfig
       }).show();
     },
-    buyWithBanxa() {
+    buyWithBanxa () {
       if (!this.isBanxaSupported) {
         return;
       }
       this.$analytics.track("click_on_buy_with_banxa");
       window.open(
         `${this.banxaConfig!.url}?walletAddress=${this.address}&accountReference=${this.address}&returnUrlOnSuccess=${encodeURIComponent(
-          this.redirectURL,
+          this.redirectURL
         )}&returnUrlOnFailure=${encodeURIComponent(this.redirectURL)}`,
-        "_blank",
+        "_blank"
       );
     },
-    buyWithMoonpay() {
+    buyWithMoonpay () {
       if (!this.isMoonpaySupported) {
         return;
       }
       this.$analytics.track("click_on_moonpay");
-      const availableZksyncCurrencies = ["usdc", "usdt", "dai"].map((e) => `${e}_zksync`);
-      window.open(
-        `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${this.address}&showOnlyCurrencies=${availableZksyncCurrencies.join(
-          ",",
-        )}&walletAddresses=${encodeURIComponent(JSON.stringify(Object.fromEntries(availableZksyncCurrencies.map((e) => [e, this.address]))))}&redirectURL=${encodeURIComponent(this.redirectURL)}`,
-        "_blank",
-      );
-    },
-  },
+      const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC","USDT_ZKSYNC"];
+      console.log(availableZksyncCurrencies);
+      const url =
+              `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${encodeURIComponent(this.address)}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(",")}&showAllCurrencies=0&redirectURL=${encodeURIComponent(this.redirectURL)}`;
+
+      console.log(url);
+      const body = JSON.stringify({
+        pubKey: this.moonpayConfig?.apiPublicKey,
+        originalUrl: url
+      });
+      fetch("https://us-central1-zksync-vue.cloudfunctions.net/moonpaySign", {
+        method: "POST",
+        // mode: "same-origin", // no-cors, *cors, same-origin
+        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+        // credentials: "same-origin", // include, *same-origin, omit
+        headers: {
+          "Content-Type": "application/json"
+        },
+        redirect: "follow", // manual, *follow, error
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body
+      })
+        .then((response) => response.json()).then((data) => {
+        /**
+         * Success processing
+         */
+        if (!data.signedUrl) {
+          throw new Error("signedUrl is missing");
+        }
+        window.open(data!.signedUrl, "_blank");
+      }).catch((error) => {
+        alert(`Error: ${error.message}`);
+        return this.$router.push(this.redirectURL)
+      });
+    }
+  }
 });
 </script>
 
@@ -117,6 +144,7 @@ export default Vue.extend({
     transition: $transition1;
     transition-property: border-color, opacity;
     will-change: border-color, opacity;
+
     &.disabled {
       border-color: transparentize($color: #eeeeee, $amount: 0.7);
 
@@ -124,6 +152,7 @@ export default Vue.extend({
         opacity: 0.3;
       }
     }
+
     &:not(.disabled):hover {
       border-color: #5d65b9 !important;
       cursor: pointer;
@@ -132,6 +161,7 @@ export default Vue.extend({
     & > * {
       pointer-events: none;
     }
+
     .loaderContainer {
       position: absolute;
       width: 20px;
@@ -142,6 +172,7 @@ export default Vue.extend({
     }
   }
 }
+
 .rampProvider {
   label {
     display: flex;
@@ -161,6 +192,7 @@ export default Vue.extend({
     margin-right: 5px;
   }
 }
+
 .banxaProvider,
 .moonpayProvider {
   display: flex;
@@ -181,12 +213,14 @@ export default Vue.extend({
     .cryptoProviders {
       .providerOption {
         border-color: transparentize($color: $gray, $amount: 0.65);
+
         &.disabled {
           border-color: transparentize($color: $gray, $amount: 0.85) !important;
         }
       }
     }
   }
+
   .rampProvider {
     label {
       color: #f8f9fa;
