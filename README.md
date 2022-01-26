@@ -28,7 +28,6 @@ zkWallet was created to unleash the power of zkSync L2 operations and give every
      * **stage-mainnet** → [zksync-vue](https://stage.zksync.io)
      * **dev-rinkeby** → [rinkeby-wallet-zksync](https://rinkeby-wallet-zksync.web.app/)
 
-
 ## Build Setup
 
 ``` bash
