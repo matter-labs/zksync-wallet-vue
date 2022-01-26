@@ -5,7 +5,7 @@ export const functionsConfig = {
   whitelist: [
     "http://localhost:5001",
     "http://localhost:3000",
-    "https://zksync-vue--version-refs-pull-213-merge-d8dwearx.web.app",
+    "https://zksync-vue--version-refs-pull-218-merge-15r9pbf9.web.app",
     "https://wallet.zksync.io"
   ],
   allowedMethod: "post",
