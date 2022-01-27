@@ -71,7 +71,6 @@ corejs
 
 
 // ETC
-gitter
 signup
 signups
 precompiled
