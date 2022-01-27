@@ -8,7 +8,7 @@ export type Analytics = {
 
 class MixpanelAnalytics implements Analytics {
   constructor(token: string) {
-    mixpanel.init(token, { debug: false, api_host: "https://zksync-vue--version-refs-pull-218-merge-15r9pbf9.web.app/tunnel" });
+    mixpanel.init(token, { debug: false, api_host: "http://localhost:5001/zksync-vue/us-central1/mixpanelProxy" });
   }
 
   set(props: { [key: string]: string }): void {
@@ -40,7 +40,7 @@ class ConsoleAnalytics implements Analytics {
 }
 
 const plugin: Plugin = (_, inject) => {
-  inject("analytics", process.env.NODE_ENV === "production" ? new MixpanelAnalytics(process.env.MIXPANEL_TOKEN!) : new ConsoleAnalytics());
+  inject("analytics", process.env.NODE_ENV !== "production" ? new MixpanelAnalytics(process.env.MIXPANEL_TOKEN!) : new ConsoleAnalytics());
 };
 
 export default plugin;

@@ -19,4 +19,9 @@ export const functionsConfig = {
     pubKey: "",
     secret: "",
   },
+  mixpanel: {
+    enabled: true,
+    pubKey: "",
+    secret: "",
+  },
 };
