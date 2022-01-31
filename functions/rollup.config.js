@@ -7,8 +7,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 const externals = [
   "firebase-functions",
   "firebase-admin",
-  "node-fetch",
-  "cors"
+  "node-fetch"
 ];
 
 export default {

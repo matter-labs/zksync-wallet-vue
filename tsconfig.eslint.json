@@ -8,7 +8,8 @@
     "./.eslintrc.js"
   ],
   "exclude": [
-    "functions",
+    "functions/.eslintrc.json",
+    "functions/**",
     "node_modules**",
     ".nuxt**",
     ".idea**",

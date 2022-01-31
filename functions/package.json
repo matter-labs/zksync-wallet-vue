@@ -16,7 +16,6 @@
   "version": "0.0.1",
   "main": "lib/index.js",
   "dependencies": {
-    "cors": "latest",
     "@sentry/node": "^6.17.2",
     "firebase": "^8.10.1",
     "firebase-admin": "^10.0.2",
