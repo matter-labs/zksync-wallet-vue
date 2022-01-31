@@ -1,26 +1,26 @@
-import typescript from '@rollup/plugin-typescript';
-import nodeResolve from '@rollup/plugin-node-resolve';
+import typescript from "@rollup/plugin-typescript";
+import nodeResolve from "@rollup/plugin-node-resolve";
 
 /**
  * Add here external dependencies that actually you use.
  */
 const externals = [
-  'cors',
-  'firebase-functions',
-  'firebase-admin',
+  "firebase-functions",
+  "firebase-admin",
+  "node-fetch"
 ];
 
 export default {
-  input: 'src/index.ts',
+  input: "src/index.ts",
   external: externals,
   plugins: [
     typescript(),
     nodeResolve()
   ],
-  onwarn: () => { return  },
+  onwarn: () => {return},
   output: {
-    file: 'lib/index.js',
-    format: 'es',
+    file: "lib/index.js",
+    format: "es",
     sourcemap: false
   }
-}
+};

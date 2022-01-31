@@ -230,8 +230,9 @@ const config: NuxtConfig = {
   sentry: {
     dsn: sentryDsn,
     disableServerSide: true,
-    disabled: isLocalhost,
+    //    disabled: isLocalhost,
     config: {
+      tunnel: process.env.IS_LOCALHOST ? "http://localhost:5001/zksync-vue/us-central1/sentryTunnel" : "/tunnel/sentry",
       debug: isDebugEnabled,
       tracesSampleRate: 1.0,
       environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv,

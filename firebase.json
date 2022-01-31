@@ -1,7 +1,6 @@
 {
   "functions": {
     "predeploy": "npm --prefix functions run build",
-
     "source": "functions"
   },
   "emulators": {
@@ -31,8 +30,12 @@
           "function": "moonpaySign"
         },
         {
-          "source": "/tunnel/:path*",
-          "function": "mixpanelProxy"
+          "source": "/tunnel/sentry",
+          "function": "sentryTunnel"
+        },
+        {
+          "source": "/tunnel/mixpanel",
+          "function": "mixpanelTunnel"
         },
         {
           "source": "**",
@@ -72,7 +75,7 @@
       "public": "public",
       "ignore": [
         "firebase.json",
-        "**/.*",
+        "**/**",
         "**/node_modules/**"
       ],
       "redirects": [
@@ -80,33 +83,6 @@
           "source": "**",
           "type": 301,
           "destination": "https://wallet.zksync.io?network=ropsten"
-        }
-      ],
-      "headers": [
-        {
-          "source": "**",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, must-revalidate"
-            },
-            {
-              "key": "Referrer-Policy",
-              "value": "no-referrer, strict-origin-when-cross-origin"
-            },
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "1; mode=block"
-            }
-          ]
         }
       ]
     },
@@ -124,33 +100,6 @@
           "type": 301,
           "destination": "https://wallet.zksync.io?network=ropsten-beta"
         }
-      ],
-      "headers": [
-        {
-          "source": "**",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, must-revalidate"
-            },
-            {
-              "key": "Referrer-Policy",
-              "value": "no-referrer, strict-origin-when-cross-origin"
-            },
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "1; mode=block"
-            }
-          ]
-        }
       ]
     },
     {
@@ -167,33 +116,6 @@
           "type": 301,
           "destination": "https://wallet.zksync.io?network=rinkeby"
         }
-      ],
-      "headers": [
-        {
-          "source": "**",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, must-revalidate"
-            },
-            {
-              "key": "Referrer-Policy",
-              "value": "no-referrer, strict-origin-when-cross-origin"
-            },
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "1; mode=block"
-            }
-          ]
-        }
       ]
     },
     {
@@ -209,33 +131,6 @@
           "source": "**",
           "type": 301,
           "destination": "https://wallet.zksync.io?network=rinkeby-beta"
-        }
-      ],
-      "headers": [
-        {
-          "source": "**",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, must-revalidate"
-            },
-            {
-              "key": "Referrer-Policy",
-              "value": "no-referrer, strict-origin-when-cross-origin"
-            },
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "1; mode=block"
-            }
-          ]
         }
       ]
     },
@@ -257,8 +152,12 @@
           "function": "moonpaySign"
         },
         {
-          "source": "/tunnel/:path*",
-          "function": "mixpanelProxy"
+          "source": "/tunnel/sentry",
+          "function": "sentryTunnel"
+        },
+        {
+          "source": "/tunnel/mixpanel",
+          "function": "mixpanelTunnel"
         },
         {
           "source": "**",

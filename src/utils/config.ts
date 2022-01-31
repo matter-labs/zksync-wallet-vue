@@ -35,10 +35,12 @@ export const banxaConfig = {
 
 export const moonpayConfig = {
   mainnet: {
+    signUrl: process.env!.IS_LOCALHOST ? "http://localhost:5001/zksync-vue/us-central1/moonpaySign" : "/api/moonpaySign",
     url: "https://buy.moonpay.com",
     apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
   },
   rinkeby: {
+    signUrl: process.env!.IS_LOCALHOST ? "http://localhost:5001/zksync-vue/us-central1/moonpaySign" : "/api/moonpaySign",
     url: "https://buy-sandbox.moonpay.com",
     apiPublicKey: process.env.MOONPAY_RINKEBY_API_PUBLIC_KEY,
   },

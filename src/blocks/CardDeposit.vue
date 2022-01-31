@@ -23,24 +23,25 @@ export default Vue.extend({
       url: string | undefined;
       hostApiKey: string | undefined;
     } | null {
-      return rampConfig[this.$store.getters["zk-provider/network"]];
+      return rampConfig[this.ethNetwork];
+    },
+    ethNetwork(): string {
+      return this.$store.getters["zk-provider/network"];
     },
     banxaConfig (): {
       url: string;
     } | null {
-      return banxaConfig[this.$store.getters["zk-provider/network"]];
+      return banxaConfig[this.ethNetwork];
     },
     moonpayConfig (): {
       url: string;
+      signUrl: string;
       apiPublicKey: string;
     } | null {
-      return moonpayConfig[this.$store.getters["zk-provider/network"]];
+      return moonpayConfig[this.ethNetwork];
     },
     address (): string {
       return this.$store.getters["zk-account/address"];
-    },
-    redirectURL (): string {
-      return window.location.origin+"/account";
     },
     isRampSupported (): boolean {
       return !!this.rampConfig;
@@ -53,6 +54,9 @@ export default Vue.extend({
     }
   },
   methods: {
+    redirectURL(full:boolean = true): string {
+      return full ? `${window.location.origin}/account` : '/account';
+    },
     buyWithRamp () {
       if (!this.isRampSupported) {
         return;
@@ -75,8 +79,8 @@ export default Vue.extend({
       this.$analytics.track("click_on_buy_with_banxa");
       window.open(
         `${this.banxaConfig!.url}?walletAddress=${this.address}&accountReference=${this.address}&returnUrlOnSuccess=${encodeURIComponent(
-          this.redirectURL
-        )}&returnUrlOnFailure=${encodeURIComponent(this.redirectURL)}`,
+          this.redirectURL()
+        )}&returnUrlOnFailure=${encodeURIComponent(this.redirectURL())}`,
         "_blank"
       );
     },
@@ -86,28 +90,23 @@ export default Vue.extend({
       }
       this.$analytics.track("click_on_moonpay");
       const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC","USDT_ZKSYNC"];
-      console.log(availableZksyncCurrencies);
       const url =
-              `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${encodeURIComponent(this.address)}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(",")}&showAllCurrencies=0&redirectURL=${encodeURIComponent(this.redirectURL)}`;
+              `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${encodeURIComponent(this.address)}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(",")}&showAllCurrencies=0&redirectURL=${encodeURIComponent(this.redirectURL())}`;
 
-      console.log(url);
       const body = JSON.stringify({
         pubKey: this.moonpayConfig?.apiPublicKey,
-        originalUrl: url
+        originalUrl: url,
+        ethNetwork: this.ethNetwork
       });
-      fetch("https://us-central1-zksync-vue.cloudfunctions.net/moonpaySign", {
+      fetch(this.moonpayConfig!.signUrl, {
         method: "POST",
-        // mode: "same-origin", // no-cors, *cors, same-origin
         cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        // credentials: "same-origin", // include, *same-origin, omit
+        mode: "no-cors",
         headers: {
           "Content-Type": "application/json"
         },
-        redirect: "follow", // manual, *follow, error
-        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
         body
-      })
-        .then((response) => response.json()).then((data) => {
+      }).then((response) => response.json()).then((data) => {
         /**
          * Success processing
          */
@@ -116,8 +115,9 @@ export default Vue.extend({
         }
         window.open(data!.signedUrl, "_blank");
       }).catch((error) => {
+
         alert(`Error: ${error.message}`);
-        return this.$router.push(this.redirectURL)
+        return this.$router.push(this.redirectURL(false))
       });
     }
   }

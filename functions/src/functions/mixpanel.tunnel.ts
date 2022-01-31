@@ -7,8 +7,8 @@ import * as functions from "firebase-functions";
  * @param obj
  */
 function serialize(obj: Object) {
-  var str = [];
-  for (var p in obj)
+  const str = [];
+  for (const p in obj)
     if (obj.hasOwnProperty(p)) {
       str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
     }
@@ -21,9 +21,9 @@ function serialize(obj: Object) {
  * @param request
  * @param response
  */
-export function mixpanelProxyFunction(request: functions.Request, response: functions.Response): void {
+export function mixpanelTunnelFunction(request: functions.Request, response: functions.Response): void {
   const mixpanelHost = "api.mixpanel.com";
-  
+
   let ip = request.ip;
   if(request.headers['HTTP_X_FORWARDED_FOR']) {
     ip = <string>request.headers['HTTP_X_FORWARDED_FOR'];
@@ -39,7 +39,7 @@ export function mixpanelProxyFunction(request: functions.Request, response: func
       headers: ip ? { 'X-REAL-IP': ip } : undefined,
     }, (mixpanelResponse => {
       let mixpanelResponseBodyStr = '';
-      
+
       //another chunk of data has been received, so append it to `mixpanelResponseBodyStr`
       mixpanelResponse.on('data', (chunk) => {
         mixpanelResponseBodyStr += chunk;
