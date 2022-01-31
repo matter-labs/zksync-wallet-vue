@@ -157,7 +157,6 @@
   "lint-staged": {
     "*.{ts,tsx,vue}": [
       "yarn lint-ts:check --fix",
-      "yarn format",
       "yarn spell-check"
     ]
   },
