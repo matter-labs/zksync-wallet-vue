@@ -35,7 +35,7 @@ export function mixpanelTunnelFunction(request: functions.Request, response: fun
     functions.logger.debug(`New Mixpanel tunnel request: ${request.method} ${request.url}`);
     const mixpanelRequest = http.request({
       host: mixpanelHost,
-      path: request.url,
+      path: request.url.replace("/tunnel/mixpanel", ""),
       method: request.method,
       headers: ip ? { 'X-REAL-IP': ip } : undefined,
     }, (mixpanelResponse => {
