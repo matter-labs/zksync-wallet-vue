@@ -1,6 +1,6 @@
-import {handlerHelper} from "./helpers/handlerHelper.js";
-import {moonpaySignFunction} from "./functions/moonpay.sign.js";
-import {banxaAuthFunction} from "./functions/banxa.auth.js";
+import { handlerHelper } from "./helpers/handlerHelper.js";
+import { moonpaySignFunction } from "./functions/moonpay.sign.js";
+import { banxaAuthFunction } from "./functions/banxa.auth.js";
 
 /**
  * Banxa Authentication server-side lambda

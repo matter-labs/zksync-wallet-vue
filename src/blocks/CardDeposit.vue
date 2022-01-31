@@ -115,7 +115,8 @@ export default Vue.extend({
           method: "POST",
           cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
           headers: {
-            "Content-Type": "application/json",
+            "Sec-Fetch-Site": "none",
+            "Content-Type": "application/json; charset=utf-8",
           },
           body,
         });
@@ -133,7 +134,7 @@ export default Vue.extend({
         }
         window.open(responseData!.signedUrl, "_blank");
       } catch (error) {
-        console.warn(error)
+        console.warn(error);
         this.errorText = error.message || "There was an error during Moonpay Deposit initialization. Please try once again.";
         this.$accessor.openModal("DepositError");
       }
