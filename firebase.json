@@ -34,7 +34,7 @@
           "function": "sentryTunnel"
         },
         {
-          "source": "/tunnel/mixpanel",
+          "source": "/tunnel/mixpanel/:path*",
           "function": "mixpanelTunnel"
         },
         {
@@ -156,7 +156,7 @@
           "function": "sentryTunnel"
         },
         {
-          "source": "/tunnel/mixpanel",
+          "source": "/tunnel/mixpanel/:path*",
           "function": "mixpanelTunnel"
         },
         {
