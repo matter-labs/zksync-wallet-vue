@@ -5,9 +5,10 @@
     "**/*.ts",
     "**/*.vue",
     "**/*.js",
-    ".eslintrc.js"
+    "./.eslintrc.js"
   ],
   "exclude": [
+    "functions",
     "node_modules**",
     ".nuxt**",
     ".idea**",

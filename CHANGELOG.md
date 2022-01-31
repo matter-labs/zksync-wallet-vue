@@ -1,3 +1,10 @@
+## [3.4.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.2...3.4.3) (2022-01-27)
+
+
+### Bug Fixes
+
+* remove gitter ([#215](https://github.com/matter-labs/zksync-wallet-vue/issues/215)) ([3f0e99b](https://github.com/matter-labs/zksync-wallet-vue/commit/3f0e99b9d64e2f565d3810ba9d672b064a96b756))
+
 ## [3.4.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.1...3.4.2) (2022-01-25)
 
 

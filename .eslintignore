@@ -6,8 +6,8 @@
 environments
 node_modules
 public
-tests
 functions
+functions/.eslintrc.json
 
 ## src-exceptions
 src/assets/imgs
