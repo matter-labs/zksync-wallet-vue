@@ -10,13 +10,13 @@
 }
 
 .bottomDivider {
-  border-bottom: .5px solid darken($white, 5) !important;
+  border-bottom: 1px solid $gray !important;
 }
 
 .dropdown {
   &.firstElementHovered {
     span.arrow:after {
-      border-bottom-color: darken($white, 5) !important;
+      border-bottom-color: $light !important;
     }
   }
 }
