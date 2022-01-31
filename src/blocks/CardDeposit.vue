@@ -123,7 +123,7 @@ export default Vue.extend({
   }
 });
 </script>
-2
+
 <style lang="scss" scoped>
 .cryptoProviders {
   display: grid;
