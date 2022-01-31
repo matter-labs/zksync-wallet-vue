@@ -46,7 +46,8 @@
     ]
   },
   "exclude": [
-    "/functions/",
+    "functions",
+    "functions/.eslintrc.json",
     "node_modules/*",
     "dist/*",
     ".yarn/*",

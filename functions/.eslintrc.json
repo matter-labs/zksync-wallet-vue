@@ -7,13 +7,17 @@
   },
   "parserOptions": {
     "ecmaVersion": 2021,
-    "sourceType": "module",
-    "project": [
-      "tsconfig.json",
-      "tsconfig.dev.json"
-    ]
+    "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
-  "rules": {}
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "ignorePatterns": [
+    "tests/**/*.ts",
+    "node_modules"
+  ],
 }
