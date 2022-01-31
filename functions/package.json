@@ -2,7 +2,7 @@
   "name": "@matterlabs/zksync-tools-cloudfunctions",
   "scripts": {
     "build:dev": "rimraf ./lib/**/* && tsc --watch",
-    "build": "npm run lint && rimraf ./lib/**/* && node --experimental-json-modules ./node_modules/.bin/rollup --config rollup.config.js",
+    "build": "npm run lint && rimraf ./lib/**/* && rollup -c rollup.config.js",
     "serve:dev": "firebase functions:config:get > .runtimeconfig.json && firebase emulators:start --only functions",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "firebase functions:config:get > .runtimeconfig.json && firebase functions:shell",
