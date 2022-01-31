@@ -40,7 +40,7 @@ class ConsoleAnalytics implements Analytics {
 }
 
 const plugin: Plugin = (_, inject) => {
-  inject("analytics", process.env.NODE_ENV !== "production" ? new MixpanelAnalytics(process.env.MIXPANEL_TOKEN!) : new ConsoleAnalytics());
+  inject("analytics", process.env.NODE_ENV === "production" ? new MixpanelAnalytics(process.env.MIXPANEL_TOKEN!) : new ConsoleAnalytics());
 };
 
 export default plugin;
