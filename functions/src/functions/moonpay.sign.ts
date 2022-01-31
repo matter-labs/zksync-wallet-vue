@@ -13,8 +13,6 @@ export function moonpaySignFunction(request: functions.Request, response: functi
 
   const data: { originalUrl?: string, pubKey?: string, ethNetwork?: "rinkeby" | "mainnet" | string } = typeof request.body === "string" ? JSON.parse(request.body) : request.body;
 
-  functions.logger.debug("requested data", data)
-
   // Valid URL expected:
   //  `https://buy-sandbox.moonpay.com?apiKey=pk_test_key&currencyCode=eth&walletAddress=0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae`
   if (!data?.originalUrl) {
@@ -47,7 +45,6 @@ export function moonpaySignFunction(request: functions.Request, response: functi
   const responseData = {
     message: "OK", signedUrl: `${data.originalUrl}&signature=${encodeURIComponent(signature)}`,
   };
-  functions.logger.debug("response", responseData)
   response.statusCode = 200;
   return response.json(responseData);
 }

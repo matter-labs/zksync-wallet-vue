@@ -32,7 +32,6 @@ export function mixpanelTunnelFunction(request: functions.Request, response: fun
   }
 
   try {
-    functions.logger.debug(`New Mixpanel tunnel request: ${request.method} ${request.url}`);
     const mixpanelRequest = http.request({
       host: mixpanelHost,
       path: request.url.replace("/tunnel/mixpanel", ""),
@@ -48,8 +47,6 @@ export function mixpanelTunnelFunction(request: functions.Request, response: fun
 
       //the whole response has been received
       mixpanelResponse.on('end', () => {
-        functions.logger.debug("Mixpanel response code: ", mixpanelResponse.statusCode);
-        functions.logger.debug("Mixpanel response body: ", mixpanelResponseBodyStr);
         for (const headerName in mixpanelResponse.headers) {
           const excludedHeaders = ['content-encoding', 'content-length', 'transfer-encoding', 'connection', 'access-control-allow-credentials', 'access-control-allow-origin'];
           if (excludedHeaders.includes(headerName)) {continue}
@@ -61,7 +58,7 @@ export function mixpanelTunnelFunction(request: functions.Request, response: fun
     mixpanelRequest.write(typeof request.body === "object" ? serialize(request.body) : request.body);
     mixpanelRequest.end();
   } catch (error) {
-    functions.logger.debug("Error while tunneling mixpanel", error);
+    functions.logger.error(error);
     throw new functions.https.HttpsError("invalid-argument", `processing error2: ${error}`);
   }
 }
