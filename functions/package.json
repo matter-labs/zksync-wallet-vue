@@ -1,5 +1,5 @@
 {
-  "name": "@matterlabs/zksync-tools-cloudfunctions",
+  "name": "@matterlabs/zksync-api-wallet",
   "scripts": {
     "build:dev": "rimraf ./lib/**/* && tsc --watch",
     "build": "npm run lint && rimraf ./lib/**/* && node --experimental-json-modules ./node_modules/.bin/rollup --config rollup.config.js",
