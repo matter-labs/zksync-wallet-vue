@@ -46,7 +46,8 @@
     ]
   },
   "exclude": [
-    "functions/*",
+    "/functions/",
+    "functions",
     "node_modules/*",
     "dist/*",
     ".yarn/*",
