@@ -6,7 +6,7 @@ import * as functions from "firebase-functions";
  *
  * @param obj
  */
-function serialize(obj: { [key: string | number]: any }) {
+function serialize(obj: { [key: string | number]: string | number | boolean }) {
   const str = [];
   for (const p in obj)
     if (Object.prototype.hasOwnProperty.call(obj, p)) {
