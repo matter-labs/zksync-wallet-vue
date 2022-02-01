@@ -10,8 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "types": [
-      "firebase-functions",
-      "cors"
+      "firebase-functions"
     ]
   },
   "include": ["./src"]
