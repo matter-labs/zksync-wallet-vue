@@ -9,7 +9,7 @@
   ],
   "exclude": [
     "functions/.eslintrc.json",
-    "functions/**",
+    "functions",
     "node_modules**",
     ".nuxt**",
     ".idea**",
