@@ -40,4 +40,4 @@ jobs:
         with:
           args: deploy --only functions
         env:
-          FIREBASE_TOKEN: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
