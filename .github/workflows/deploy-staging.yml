@@ -31,3 +31,19 @@ jobs:
           target: stage-mainnet
           projectId: zksync-vue
           channelId: live
+
+      - name: "Deploy functions to firebase: zksync-vue"
+        uses: w9jds/firebase-action@master
+        env:
+          PROJECT_ID: zksync-vue
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+        with:
+          args: deploy --only functions
+
+      - name: "Deploy functions to firebase: zksync-vue"
+        uses: w9jds/firebase-action@master
+        env:
+          PROJECT_ID: zksync-vue
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}'
+        with:
+          args: deploy --only functions
