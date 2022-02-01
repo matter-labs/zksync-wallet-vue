@@ -39,7 +39,7 @@ export const moonpayConfig = {
     apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
   },
   rinkeby: {
-    url: "https://buy-staging.moonpay.com",
+    url: "https://buy-sandbox.moonpay.com",
     apiPublicKey: process.env.MOONPAY_RINKEBY_API_PUBLIC_KEY,
   },
   // ropsten: {
