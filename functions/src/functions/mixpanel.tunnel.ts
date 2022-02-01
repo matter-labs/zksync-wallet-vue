@@ -6,10 +6,10 @@ import * as functions from "firebase-functions";
  *
  * @param obj
  */
-function serialize(obj: Object) {
+function serialize(obj: { [key: string | number]: any }) {
   const str = [];
   for (const p in obj)
-    if (obj.hasOwnProperty(p)) {
+    if (Object.prototype.hasOwnProperty.call(obj, p)) {
       str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
     }
   return str.join("&");
