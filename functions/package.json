@@ -1,5 +1,29 @@
 {
   "name": "@matterlabs/zksync-api-wallet",
+  "keywords": [
+    "zksync",
+    "firebase",
+    "moonpay",
+    "banxa",
+    "defi",
+    "payment gateway",
+    "cryptopayments",
+    "ramp",
+    "fiat",
+    "firebase-functions",
+    "google-cloud-functions"
+  ],
+  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://www.opensource.org/licenses/mit-license.php"
+    },
+    {
+      "type": "Apache-2.0",
+      "url": "https://opensource.org/licenses/apache2.0.php"
+    }
+  ],
   "scripts": {
     "build:dev": "rimraf ./lib/**/* && tsc --watch",
     "build": "npm run lint && rimraf ./lib/**/* && node --experimental-json-modules ./node_modules/.bin/rollup --config rollup.config.js",

@@ -6,14 +6,12 @@ import * as functions from "firebase-functions";
  * @param handler
  * @return functions.TriggerAnnotated & ((req: functions.Request, resp: functions.Response) => (void | Promise<void>))
  */
-export function handlerHelper(handler: CallableFunction) {
-  functions.https.onRequest((request: functions.Request, response: functions.Response): void => {
-    try {
-      handler(request, response);
-    } catch (error) {
-      functions.logger.error("handlerHelper Error captured:", error);
-      response.status(500);
-      response.send(error);
-    }
-  });
-}
+export const handlerHelper = (handler: CallableFunction) => functions.https.onRequest((request: functions.Request, response: functions.Response) => {
+  try {
+    handler(request, response);
+  } catch (error) {
+    functions.logger.error("handlerHelper Error captured:", error);
+    response.status(500);
+    response.send(error);
+  }
+});
