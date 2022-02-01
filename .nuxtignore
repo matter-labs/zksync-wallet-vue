@@ -1,4 +1,4 @@
 .github/*
 .idea/*
 environments/*
-functions/**
+/functions/
