@@ -4,7 +4,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 /**
  * Add here external dependencies that actually you use.
  */
-const externals = ["firebase-functions", "firebase-admin", "node-fetch", "cors"];
+const externals = ["firebase-functions", "firebase-admin", "node-fetch"];
 
 export default {
   input: "src/index.ts",
