@@ -4,7 +4,7 @@
     "build:dev": "rimraf ./lib/**/* && tsc --watch",
     "build": "npm run lint && rimraf ./lib/**/* && node --experimental-json-modules ./node_modules/.bin/rollup --config rollup.config.js",
     "serve:dev": "firebase functions:config:get > .runtimeconfig.json && firebase emulators:start --only functions",
-    "serve": "firebase functions:config:get > .runtimeconfig.json npm run build && firebase emulators:start --only functions",
+    "serve": "firebase functions:config:get > .runtimeconfig.json && npm run build && firebase emulators:start --only functions",
     "shell": "firebase functions:config:get > .runtimeconfig.json && firebase functions:shell",
     "start": "npm run build && npm run shell",
     "deploy": "firebase deploy --only functions",
