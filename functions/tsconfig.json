@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "lib": ["ES2021", "dom"],
-    "module": "ES2020",
+    "lib": ["esnext", "dom"],
+    "module": "esnext",
     "moduleResolution": "node",
-    "target": "ES2021",
+    "target": "esnext",
     "outDir": "lib",
     "sourceMap": true,
     "typeRoots": ["node_modules/@types"],

@@ -1,6 +1,5 @@
 <template>
-  <i-modal v-model="opened" size="md">
-    <template slot="header">Depositing failed due to an error</template>
+  <i-modal v-model="opened" size="md" :title="'Depositing failed due to an error'">
     <p>{{ errorText }}</p>
     <i-button class="_margin-top-1" block size="lg" variant="secondary" @click="processButton">Back to the Deposit</i-button>
   </i-modal>
@@ -16,7 +15,7 @@ export default Vue.extend({
   },
   computed: {
     opened: {
-      set(val): void {
+      set(val: false | string): void {
         if (val === false) {
           this.$accessor.closeActiveModal();
         }
@@ -27,11 +26,9 @@ export default Vue.extend({
     },
   },
   methods: {
-    processButton(): void {
+    processButton() {
       this.$accessor.closeActiveModal();
-      this.$nextTick(() => {
-        this.$router.push("/transaction/deposit");
-      });
+      this.$nextTick(() => this.$router.push("/transaction/deposit"));
     },
   },
 });

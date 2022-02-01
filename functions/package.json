@@ -10,7 +10,7 @@
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "lint": "eslint --ext .ts --config .eslintrc.json  --ignore-path .gitignore .",
-    "lint:fix": "eslint --fix --ext .ts --config .eslintrc.js  --ignore-path .gitignore ."
+    "lint:fix": "eslint --fix --ext .ts --config .eslintrc.json  --ignore-path .gitignore ."
   },
   "packageManager": "npm",
   "version": "0.0.1",

@@ -1,3 +1,5 @@
 {
-  "include": [".eslintrc.js"]
+  "include": [
+    ".eslintrc.json"
+  ]
 }

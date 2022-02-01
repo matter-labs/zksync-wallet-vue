@@ -10,7 +10,7 @@ import cors from "cors";
  * @return functions.TriggerAnnotated & ((req: functions.Request, resp: functions.Response) => (void | Promise<void>))
  */
 export const handlerHelper = process.env.FUNCTIONS_EMULATOR
-  ? (handler) =>
+  ? (handler: CallableFunction) =>
       functions.https.onRequest((request: functions.Request, response: functions.Response) => {
         cors({ origin: ["http://localhost:3000"] })(request, response, () => {
           try {
@@ -22,7 +22,7 @@ export const handlerHelper = process.env.FUNCTIONS_EMULATOR
           }
         });
       })
-  : (handler) =>
+  : (handler: CallableFunction) =>
       functions.https.onRequest((request: functions.Request, response: functions.Response) => {
         try {
           handler(request, response);
