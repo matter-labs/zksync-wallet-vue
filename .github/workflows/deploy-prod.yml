@@ -46,8 +46,8 @@ jobs:
 
       - name: "Deploy functions to firebase: zksync-vue-mainnet"
         uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
         env:
           PROJECT_ID: zksync-vue-mainnet
           FIREBASE_TOKEN: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}'
-        with:
-          args: deploy --only functions
