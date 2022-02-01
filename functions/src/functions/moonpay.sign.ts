@@ -9,7 +9,7 @@ import { createHmac } from "crypto";
  * @param {functions.Response} response
  * @return void
  */
-export function moonpaySignFunction(request: functions.Request, response: functions.Response) {
+export function moonpaySignFunction(request: functions.Request, response: functions.Response): void {
   const data: { originalUrl?: string; pubKey?: string; ethNetwork?: "rinkeby" | "mainnet" | string } = typeof request.body === "string" ? JSON.parse(request.body) : request.body;
 
   functions.logger.debug("requested data", data, typeof data);

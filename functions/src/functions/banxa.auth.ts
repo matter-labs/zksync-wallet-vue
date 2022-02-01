@@ -11,7 +11,7 @@ import { createHmac, BinaryLike } from "crypto";
  * @param {functions.Response} response
  * @return void
  */
-export function banxaAuthFunction(request: functions.Request, response: functions.Response) {
+export function banxaAuthFunction(request: functions.Request, response: functions.Response): void {
   const data: { nonce?: string; dataToSign?: BinaryLike; ethNetwork?: "rinkeby" | "mainnet" } = typeof request.body === "string" ? JSON.parse(request.body) : request.body;
 
   functions.logger.debug("requested data", data, typeof data);

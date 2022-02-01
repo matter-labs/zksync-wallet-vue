@@ -8,7 +8,11 @@
     "sourceMap": true,
     "typeRoots": ["node_modules/@types"],
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": [
+      "firebase-functions",
+      "cors"
+    ]
   },
   "include": ["./src"]
 }

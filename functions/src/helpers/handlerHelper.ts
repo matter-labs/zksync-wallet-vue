@@ -11,7 +11,7 @@ import cors from "cors";
  */
 export const handlerHelper = process.env.FUNCTIONS_EMULATOR
   ? (handler: CallableFunction) =>
-      functions.https.onRequest((request: functions.Request, response: functions.Response) => {
+      functions.https.onRequest((request: functions.Request, response: functions.Response): void => {
         cors({ origin: ["http://localhost:3000"] })(request, response, () => {
           try {
             handler(request, response);
@@ -23,7 +23,7 @@ export const handlerHelper = process.env.FUNCTIONS_EMULATOR
         });
       })
   : (handler: CallableFunction) =>
-      functions.https.onRequest((request: functions.Request, response: functions.Response) => {
+      functions.https.onRequest((request: functions.Request, response: functions.Response): void => {
         try {
           handler(request, response);
         } catch (error) {
