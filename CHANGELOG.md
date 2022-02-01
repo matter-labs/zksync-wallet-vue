@@ -1,3 +1,10 @@
+# [3.5.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.3...3.5.0) (2022-02-01)
+
+
+### Features
+
+* banxa & moonpay functions added ([#213](https://github.com/matter-labs/zksync-wallet-vue/issues/213)) ([720b68c](https://github.com/matter-labs/zksync-wallet-vue/commit/720b68c4082e2059acbabf39d58bec6611603b74))
+
 ## [3.4.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.2...3.4.3) (2022-01-27)
 
 
