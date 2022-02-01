@@ -20,7 +20,19 @@ const pageDescription =
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
 crypto payments, zkWallet, cryptowallet`;
 
-const modules = isLocalhost ? ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/proxy"] : ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/google-gtag"];
+/**
+ * Cloud-functions mapping
+ *
+ * @uses @nuxtjs/proxy
+ * @type {string}
+ */
+const functionsBaseUrl = process.env.FIREBASE_FUNCTIONS_BASE_URL || "http://localhost:5001/zksync-vue/us-central1/";
+const localhostProxy = isLocalhost
+  ? {
+      "/api/moonpaySign": `${functionsBaseUrl}moonpaySign`,
+      "/api/banxaAuth": `${functionsBaseUrl}banxaAuth`,
+    }
+  : {};
 
 const config: NuxtConfig = {
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
@@ -212,11 +224,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules,
-
-  proxy: {
-    "/api/moonpaySign": "http://localhost:5001/zksync-vue/us-central1/moonpaySign",
-  },
+  modules: ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
 
   /**
    * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
@@ -235,6 +243,9 @@ const config: NuxtConfig = {
       tracesSampleRate: 1.0,
       environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv,
     },
+  },
+  proxy: {
+    ...localhostProxy,
   },
   "google-gtag": {
     id: gtagId,
