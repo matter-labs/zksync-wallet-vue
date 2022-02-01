@@ -3115,7 +3115,7 @@ __metadata:
     vue-scrollto: ^2.20.0
     vuex: ^3.6.2
     webpack: ^4.46.0
-    zksync: latest
+    zksync: 0.12.0-alpha.1
   peerDependencies:
     "@babel/core": "*"
     "@babel/runtime": "*"
@@ -28423,7 +28423,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zksync@npm:^0.11.5-beta.0, zksync@npm:latest":
+"zksync@npm:0.12.0-alpha.1":
+  version: 0.12.0-alpha.1
+  resolution: "zksync@npm:0.12.0-alpha.1"
+  dependencies:
+    axios: ^0.21.2
+    websocket: ^1.0.30
+    websocket-as-promised: ^1.1.0
+    zksync-crypto: ^0.6.1
+  peerDependencies:
+    "@ethersproject/logger": ^5.4.0
+    ethers: ^5.4.4
+  checksum: 6c771f426d309a32f0624b5acd29277a7549a3c3de110985a26634d280590714a3cc0a228626398e03524b887653a3c5e498897fa05a369a5e90a6d8d1ee170a
+  languageName: node
+  linkType: hard
+
+"zksync@npm:^0.11.5-beta.0":
   version: 0.11.6
   resolution: "zksync@npm:0.11.6"
   dependencies:

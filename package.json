@@ -76,7 +76,7 @@
     "vue-qrcode": "0.4.0",
     "vue-router": "^3.5.2",
     "vue-scrollto": "^2.20.0",
-    "zksync": "latest"
+    "zksync": "0.12.0-alpha.1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",

@@ -15,6 +15,12 @@
           </div>
           <div class="tileName">Wallet Connect</div>
         </div>
+        <div data-cy="core_connect_wallet_argent_button" class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center" @click="argent()">
+          <div class="tile">
+            <img src="@/assets/imgs/wallets/argent.svg" alt="Argent" />
+          </div>
+          <div class="tileName">Argent</div>
+        </div>
       </div>
     </i-container>
   </div>
@@ -50,6 +56,15 @@ export default Vue.extend({
         await this.$store.dispatch("zk-account/logout");
       } else {
         this.$analytics.track("login", { connectionType: "WalletConnect", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
+        await this.$router.push("/account");
+      }
+    },
+    async argent() {
+      const refreshWalletTry = await this.$store.dispatch("zk-onboard/loginWithArgent");
+      if (!refreshWalletTry) {
+        await this.$store.dispatch("zk-account/logout");
+      } else {
+        this.$analytics.track("login", { connectionType: "Argent", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
         await this.$router.push("/account");
       }
     },
