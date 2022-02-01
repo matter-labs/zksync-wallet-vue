@@ -9,6 +9,7 @@
     <div :class="{ disabled: !isMoonpaySupported }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
       <block-svg-moonpay />
     </div>
+    <block-modals-deposit-error :errorText="errorText"/>
   </div>
 </template>
 
@@ -19,7 +20,7 @@ import { rampConfig, banxaConfig, moonpayConfig } from "@/utils/config";
 
 export default Vue.extend({
   computed: {
-    rampConfig (): {
+    rampConfig(): {
       url: string | undefined;
       hostApiKey: string | undefined;
     } | null {
@@ -28,36 +29,45 @@ export default Vue.extend({
     ethNetwork(): string {
       return this.$store.getters["zk-provider/network"];
     },
-    banxaConfig (): {
+    banxaConfig(): {
       url: string;
     } | null {
       return banxaConfig[this.ethNetwork];
     },
-    moonpayConfig (): {
+    moonpayConfig(): {
       url: string;
       signUrl: string;
       apiPublicKey: string;
     } | null {
       return moonpayConfig[this.ethNetwork];
     },
-    address (): string {
+    address(): string {
       return this.$store.getters["zk-account/address"];
     },
-    isRampSupported (): boolean {
+    isRampSupported(): boolean {
       return !!this.rampConfig;
     },
-    isBanxaSupported (): boolean {
+    isBanxaSupported(): boolean {
       return !!this.banxaConfig;
     },
-    isMoonpaySupported (): boolean {
+    isMoonpaySupported(): boolean {
       return !!this.moonpayConfig;
-    }
+    },
+  },
+  mounted() {
+    this.errorText = "";
+    this.$accessor.closeActiveModal();
+  },
+  data() {
+    return {
+      errorText: "",
+    };
   },
   methods: {
-    redirectURL(full:boolean = true): string {
-      return full ? `${window.location.origin}/account` : '/account';
+    redirectURL(full: boolean = true): string {
+      return full ? `${window.location.origin}/account` : "/account";
     },
-    buyWithRamp () {
+    buyWithRamp() {
       if (!this.isRampSupported) {
         return;
       }
@@ -69,10 +79,10 @@ export default Vue.extend({
         variant: "hosted-auto",
         swapAsset: "ZKSYNC_*",
         userAddress: this.address,
-        ...this.rampConfig
+        ...this.rampConfig,
       }).show();
     },
-    buyWithBanxa () {
+    buyWithBanxa() {
       if (!this.isBanxaSupported) {
         return;
       }
@@ -84,46 +94,54 @@ export default Vue.extend({
         "_blank"
       );
     },
-    buyWithMoonpay () {
+    async buyWithMoonpay(): Promise<void> {
       if (!this.isMoonpaySupported) {
         return;
       }
-      this.$analytics.track("click_on_moonpay");
-      const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC","USDT_ZKSYNC"];
-      const url =
-              `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${encodeURIComponent(this.address)}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(",")}&showAllCurrencies=0&redirectURL=${encodeURIComponent(this.redirectURL())}`;
 
-      const body = JSON.stringify({
-        pubKey: this.moonpayConfig?.apiPublicKey,
-        originalUrl: url,
-        ethNetwork: this.ethNetwork
-      });
-      fetch(this.moonpayConfig!.signUrl, {
-        method: "POST",
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body
-      }).then((response) => response.json()).then((data) => {
+      try {
+        this.$analytics.track("click_on_moonpay");
+        const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC", "USDT_ZKSYNC"];
+        const url = `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${encodeURIComponent(
+          this.address
+        )}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(",")}&showAllCurrencies=0&redirectURL=${encodeURIComponent(this.redirectURL())}`;
+
+        const body = JSON.stringify({
+          pubKey: this.moonpayConfig?.apiPublicKey,
+          originalUrl: url,
+          ethNetwork: this.ethNetwork,
+        });
+        const response = await fetch(this.moonpayConfig!.signUrl, {
+          method: "POST",
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          headers: {
+            "Sec-Fetch-Site": "none",
+            "Content-Type": "application/json; charset=utf-8",
+          },
+          body,
+        });
+        console.warn(response);
+        if (!response.ok) {
+          console.warn(response);
+          throw new Error(response.statusText);
+        }
+        const responseData = await response.json();
         /**
          * Success processing
          */
-        if (!data.signedUrl) {
+        if (!responseData?.signedUrl) {
           throw new Error("signedUrl is missing");
         }
-        window.open(data!.signedUrl, "_blank");
-      }).catch((error) => {
-
-        alert(`Error: ${error.message}`);
-        return this.$router.push(this.redirectURL(false))
-      });
-    }
-  }
+        window.open(responseData!.signedUrl, "_blank");
+      } catch (error) {
+        console.warn(error);
+        this.errorText = error.message || "There was an error during Moonpay Deposit initialization. Please try once again.";
+        this.$accessor.openModal("DepositError");
+      }
+    },
+  },
 });
 </script>
-2
 <style lang="scss" scoped>
 .cryptoProviders {
   display: grid;

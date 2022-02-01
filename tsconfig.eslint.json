@@ -1,5 +1,5 @@
 {
-  // extend your base config so you don't have to redefine your compilerOptions
+  // extend your base config, so you don't have to redefine your compilerOptions
   "extends": "./tsconfig.json",
   "include": [
     "**/*.ts",
@@ -8,9 +8,9 @@
     "./.eslintrc.js"
   ],
   "exclude": [
+    "functions",
     "functions/.eslintrc.json",
-    "functions/**",
-    "node_modules**",
+    "node_modules",
     ".nuxt**",
     ".idea**",
     ".ide-setup**",

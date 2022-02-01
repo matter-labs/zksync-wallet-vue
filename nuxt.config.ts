@@ -5,7 +5,6 @@ import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
 import { Configuration } from "webpack";
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
-const isLocalhost: boolean = process.env.IS_LOCALHOST !== undefined;
 const isDebugEnabled: boolean = appEnv === "dev";
 const isProduction: boolean = appEnv === "prod";
 const pageTitle = "zkSync Wallet";
@@ -229,8 +228,6 @@ const config: NuxtConfig = {
   },
   sentry: {
     dsn: sentryDsn,
-    disableServerSide: true,
-    //    disabled: isLocalhost,
     config: {
       tunnel: process.env.IS_LOCALHOST ? "http://localhost:5001/zksync-vue/us-central1/sentryTunnel" : "/tunnel/sentry",
       debug: isDebugEnabled,

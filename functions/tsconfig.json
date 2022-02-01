@@ -1,20 +1,18 @@
 {
   "compilerOptions": {
-    "lib": [
-      "ES2021"
-    ],
-    "module": "ES2020",
+    "lib": ["esnext", "dom"],
+    "module": "esnext",
     "moduleResolution": "node",
-    "target": "ES2021",
+    "target": "esnext",
     "outDir": "lib",
     "sourceMap": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "typeRoots": ["node_modules/@types"],
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": [
+      "firebase-functions",
+      "cors"
+    ]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["./src"]
 }

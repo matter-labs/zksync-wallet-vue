@@ -1,23 +1,22 @@
 {
-  "name": "@matterlabs/zksync-tools-cloudfunctions",
+  "name": "@matterlabs/zksync-api-wallet",
   "scripts": {
     "build:dev": "rimraf ./lib/**/* && tsc --watch",
-    "build": "rimraf ./lib/**/* && npm run lint && rollup -c rollup.config.js",
+    "build": "npm run lint && rimraf ./lib/**/* && node --experimental-json-modules ./node_modules/.bin/rollup --config rollup.config.js",
     "serve:dev": "firebase functions:config:get > .runtimeconfig.json && firebase emulators:start --only functions",
-    "serve": "npm run build && firebase emulators:start --only functions",
+    "serve": "firebase functions:config:get > .runtimeconfig.json npm run build && firebase emulators:start --only functions",
     "shell": "firebase functions:config:get > .runtimeconfig.json && firebase functions:shell",
     "start": "npm run build && npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "lint": "eslint --ext .ts --config .eslintrc.json  --ignore-path .gitignore .",
-    "lint:fix": "eslint --fix --ext .ts --config .eslintrc.js  --ignore-path .gitignore ."
+    "lint:fix": "eslint --fix --ext .ts --config .eslintrc.json  --ignore-path .gitignore ."
   },
   "packageManager": "npm",
   "version": "0.0.1",
   "main": "lib/index.js",
   "dependencies": {
-    "@sentry/node": "^6.17.2",
-    "firebase": "^8.10.1",
+    "cors": "^2.8.5",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.16.0",
     "node-fetch": "^3.2.0",
@@ -26,6 +25,7 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.6",
     "@rollup/plugin-typescript": "^8.3.0",
+    "@types/cors": "^2.8.12",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "eslint": "^8.4.1",
