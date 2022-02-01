@@ -44,6 +44,9 @@ jobs:
           projectId: zksync-vue-mainnet
           channelId: live
 
+      - name: "Prepare /functions/"
+        run: npm --prefix functions i
+
       - name: "Deploy functions to firebase: zksync-vue-mainnet"
         uses: w9jds/firebase-action@master
         with:
