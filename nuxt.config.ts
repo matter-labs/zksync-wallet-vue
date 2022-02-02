@@ -31,6 +31,7 @@ const localhostProxy = isLocalhost
   ? {
       "/api/moonpaySign": `${functionsBaseUrl}moonpaySign`,
       "/api/banxaAuth": `${functionsBaseUrl}banxaAuth`,
+      "/tunnel/mixpanel": `${functionsBaseUrl}mixpanelTunnel`,
     }
   : {};
 
