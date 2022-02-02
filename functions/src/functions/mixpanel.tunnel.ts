@@ -31,6 +31,7 @@ function serialize(obj: QueryEntry, prefix?: string) {
  */
 export function mixpanelTunnelFunction(request: functions.Request, response: functions.Response): void {
   const mixpanelHost = "api.mixpanel.com";
+  console.log("req.socket.remoteAddress", request.socket.remoteAddress);
 
   let ip = request.ip;
   if(request.get["HTTP_X_FORWARDED_FOR"]) {
@@ -66,7 +67,8 @@ export function mixpanelTunnelFunction(request: functions.Request, response: fun
       });
     }))
     .on("error", (error) => {
-      throw new functions.https.HttpsError("aborted", error.message);
+      functions.logger.error(error);
+      response.status(500).send(error?.message);
     });
     mixpanelRequest.write(typeof request.body === "object" ? serialize(request.body) : request.body);
     mixpanelRequest.end();
