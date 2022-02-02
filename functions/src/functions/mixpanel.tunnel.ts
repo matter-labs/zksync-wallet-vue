@@ -31,7 +31,6 @@ function serialize(obj: QueryEntry, prefix?: string) {
  */
 export function mixpanelTunnelFunction(request: functions.Request, response: functions.Response): void {
   const mixpanelHost = "api.mixpanel.com";
-  console.log("req.socket.remoteAddress", request.socket.remoteAddress);
 
   let ip = request.ip;
   if(request.get["HTTP_X_FORWARDED_FOR"]) {
