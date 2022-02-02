@@ -64,11 +64,14 @@ export function mixpanelTunnelFunction(request: functions.Request, response: fun
         }
         response.status(mixpanelResponse.statusCode).send(mixpanelResponseBodyStr);
       });
-    }));
+    }))
+    .on("error", (error) => {
+      throw new functions.https.HttpsError("aborted", error.message);
+    });
     mixpanelRequest.write(typeof request.body === "object" ? serialize(request.body) : request.body);
     mixpanelRequest.end();
   } catch (error) {
     functions.logger.error(error);
-    throw new functions.https.HttpsError("invalid-argument", error);
+    throw new functions.https.HttpsError("aborted", error);
   }
 }
