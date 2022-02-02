@@ -228,6 +228,9 @@ export default Vue.extend({
 .orbiterProvider {
   display: flex;
   align-items: center;
+  &.orbiterProvider svg {
+    height: 21px;
+  }
 
   svg {
     height: 16px;
