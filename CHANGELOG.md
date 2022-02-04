@@ -1,3 +1,10 @@
+# [3.6.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.5.0...3.6.0) (2022-02-04)
+
+
+### Features
+
+* mixpanel proxy ([#223](https://github.com/matter-labs/zksync-wallet-vue/issues/223)) ([9962ef1](https://github.com/matter-labs/zksync-wallet-vue/commit/9962ef15f5b3dc653c384bf702d34eb4fa5a2ce3))
+
 # [3.5.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.3...3.5.0) (2022-02-01)
 
 
