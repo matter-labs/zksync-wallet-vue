@@ -30,6 +30,10 @@
           "function": "moonpaySign"
         },
         {
+          "source": "/tunnel/mixpanel/:path*",
+          "function": "mixpanelTunnel"
+        },
+        {
           "source": "**",
           "destination": "/index.html"
         }
@@ -142,6 +146,10 @@
         {
           "source": "/api/moonpaySign",
           "function": "moonpaySign"
+        },
+        {
+          "source": "/tunnel/mixpanel/:path*",
+          "function": "mixpanelTunnel"
         },
         {
           "source": "**",
