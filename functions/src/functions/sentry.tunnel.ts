@@ -23,8 +23,6 @@ export const sentryTunnelFunction = (request: functions.Request, response: funct
 
   const header = JSON.parse(rawHeader);
 
-  // omitted: check DSN, host, project ID
-
   const bodyEncoded = [
     // HACK: Attempt to communicate the real client IP address to Sentry.
     //       The `forwarded_for` field was deduced from a test in Sentry's
@@ -41,7 +39,7 @@ export const sentryTunnelFunction = (request: functions.Request, response: funct
   .then((sentryResponse) => {
     // functions.logger.debug("sentry response", sentryResponse);
 
-    if (sentryResponse.status !== 200) {
+    if (!sentryResponse.ok) {
       throw new functions.https.HttpsError("internal", `Looks like there was a problem. Status Code: ${sentryResponse.status}`);
     }
     return sentryResponse.json();
@@ -50,9 +48,5 @@ export const sentryTunnelFunction = (request: functions.Request, response: funct
     // functions.logger.debug("sentry json data", data);
     response.status(200);
     response.send(data);
-  })
-  .catch((err) => {
-    functions.logger.error("sentry error", err);
-    throw new functions.https.HttpsError("internal", err.toString());
   });
 };

@@ -18,13 +18,13 @@ export const moonpaySign = handlerHelper(moonpaySignFunction);
 
 /**
  * Proxy requests to mixpanel with lambda
- * @function mixpanelProxy
+ * @function mixpanel_proxy
  */
 export const mixpanelTunnel = handlerHelper(mixpanelTunnelFunction);
 
 
 /**
  * Sentry tunneling to deal with cross-site-blockers
- * @function moonpay_sing
+ * @function sentry_tunnel
  */
 export const sentryTunnel = handlerHelper(sentryTunnelFunction);

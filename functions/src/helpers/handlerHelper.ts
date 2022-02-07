@@ -10,7 +10,7 @@ export const handlerHelper = (handler: CallableFunction) => functions.https.onRe
   try {
     handler(request, response);
   } catch (error) {
-    // functions.logger.error("handlerHelper Error captured:", error);
+    functions.logger.error("handlerHelper Error captured:", error);
     response.status(500);
     response.send(error);
   }
