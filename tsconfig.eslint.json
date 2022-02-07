@@ -8,9 +8,9 @@
     "./.eslintrc.js"
   ],
   "exclude": [
-    "functions",
     "functions/.eslintrc.json",
-    "node_modules",
+    "functions",
+    "node_modules**",
     ".nuxt**",
     ".idea**",
     ".ide-setup**",

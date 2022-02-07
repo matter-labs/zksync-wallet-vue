@@ -12,9 +12,12 @@ import { createHmac, BinaryLike } from "crypto";
  * @return void
  */
 export function banxaAuthFunction(request: functions.Request, response: functions.Response): void {
-  const data: { nonce?: string; dataToSign?: BinaryLike; ethNetwork?: "rinkeby" | "mainnet" } = typeof request.body === "string" ? JSON.parse(request.body) : request.body;
+  if (!request.headers["content-type"].includes("application/json")) {
+    throw new functions.https.HttpsError("unavailable", "Expected application/json");
+  }
+  const data: { nonce?: string; dataToSign?: BinaryLike; ethNetwork?: "rinkeby" | "mainnet" } = request.body;
 
-  functions.logger.debug("requested data", data, typeof data);
+  // functions.logger.debug("requested data", data, typeof data);
 
   // Valid URL expected:
   // `https://buy-sandbox.moonpay.com?apiKey=pk_test_key&currencyCode=eth&walletAddress=0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae`
@@ -64,7 +67,7 @@ export function banxaAuthFunction(request: functions.Request, response: function
     nonce: data.nonce,
   };
 
-  functions.logger.debug("successful response", responseData);
+  // functions.logger.debug("successful response", responseData);
 
   response.status(200);
   response.send(responseData);

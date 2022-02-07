@@ -31,3 +31,13 @@ jobs:
           target: stage-mainnet
           projectId: zksync-vue
           channelId: live
+
+      - name: "Prepare /functions/"
+        run: npm --prefix functions i
+
+      - name: "Deploy functions to firebase: zksync-vue"
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'

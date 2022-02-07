@@ -36,7 +36,6 @@ export default Vue.extend({
     },
     moonpayConfig(): {
       url: string;
-      signUrl: string;
       apiPublicKey: string;
     } | null {
       return moonpayConfig[this.ethNetwork];
@@ -111,7 +110,7 @@ export default Vue.extend({
           originalUrl: url,
           ethNetwork: this.ethNetwork,
         });
-        const response = await fetch(this.moonpayConfig!.signUrl, {
+        const response = await fetch("/api/moonpaySign", {
           method: "POST",
           cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
           headers: {

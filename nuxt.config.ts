@@ -5,6 +5,7 @@ import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
 import { Configuration } from "webpack";
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
+const isLocalhost: boolean = process.env.IS_LOCALHOST !== undefined;
 const isDebugEnabled: boolean = appEnv === "dev";
 const isProduction: boolean = appEnv === "prod";
 const pageTitle = "zkSync Wallet";
@@ -18,6 +19,21 @@ const pageDescription =
   "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
 const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
 crypto payments, zkWallet, cryptowallet`;
+
+/**
+ * Cloud-functions mapping
+ *
+ * @uses @nuxtjs/proxy
+ * @type {string}
+ */
+const functionsBaseUrl = process.env.FIREBASE_FUNCTIONS_BASE_URL || "http://localhost:5001/zksync-vue/us-central1/";
+const localhostProxy = isLocalhost
+  ? {
+      "/api/moonpaySign": `${functionsBaseUrl}moonpaySign`,
+      "/api/banxaAuth": `${functionsBaseUrl}banxaAuth`,
+      "/tunnel/mixpanel": `${functionsBaseUrl}mixpanelTunnel`,
+    }
+  : {};
 
 const config: NuxtConfig = {
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
@@ -59,8 +75,7 @@ const config: NuxtConfig = {
       },
       /**
        * UX / UI settings
-       */
-      { charset: "utf-8" },
+       */ { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" },
 
       /**
@@ -154,8 +169,7 @@ const config: NuxtConfig = {
   },
   /*
    ** Customize the progress-bar color
-   */
-  loading: {
+   */ loading: {
     color: "#8c8dfc",
     continuous: true,
   },
@@ -166,8 +180,7 @@ const config: NuxtConfig = {
   css: ["@/assets/style/main.scss"],
   /**
    * Plugins that should be loaded before the mounting
-   */
-  plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession", { src: "@/plugins/analytics", mode: "client" }],
+   */ plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession", { src: "@/plugins/analytics", mode: "client" }],
 
   styleResources: {
     scss: ["@/assets/style/vars/_variables.scss"],
@@ -178,11 +191,9 @@ const config: NuxtConfig = {
   },
   /*
    ** Nuxt.js dev-modules
-   */
-  buildModules: [
+   */ buildModules: [
     // https://go.nuxtjs.dev/typescript
-    "@nuxt/typescript-build",
-    // https://go.nuxtjs.dev/stylelint
+    "@nuxt/typescript-build", // https://go.nuxtjs.dev/stylelint
     "@nuxtjs/style-resources",
     ["@nuxtjs/dotenv", { path: __dirname }],
     "@nuxtjs/google-fonts",
@@ -197,15 +208,13 @@ const config: NuxtConfig = {
           PORTIS_KEY: process.env.APP_PORTIS,
           /**
            * Added for all environments to reduce complexity
-           */
-          INFURA_KEY: "560464419d33486ab1713d61ac9f1d82",
+           */ INFURA_KEY: "560464419d33486ab1713d61ac9f1d82",
         },
         onboardConfig: {
           APP_NAME: pageTitle,
           /**
            * Added for all environments to reduce complexity
-           */
-          APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
+           */ APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
         restoreNetwork: true,
         logoutRedirect: "/",
@@ -216,7 +225,7 @@ const config: NuxtConfig = {
   /*
    ** Nuxt.js modules
    */
-  modules: ["@nuxtjs/google-gtag", "@inkline/nuxt", "@nuxtjs/sentry"],
+  modules: ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
 
   /**
    * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
@@ -229,11 +238,15 @@ const config: NuxtConfig = {
   sentry: {
     dsn: sentryDsn,
     config: {
-      tunnel: process.env.IS_LOCALHOST ? "http://localhost:5001/zksync-vue/us-central1/sentryTunnel" : "/tunnel/sentry",
+      tunnel: "/tunnel/sentry",
       debug: isDebugEnabled,
+      enabled: isLocalhost,
       tracesSampleRate: 1.0,
       environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv,
     },
+  },
+  proxy: {
+    ...localhostProxy,
   },
   "google-gtag": {
     id: gtagId,
@@ -249,8 +262,7 @@ const config: NuxtConfig = {
   },
   /*
    ** Build configuration
-   */
-  build: {
+   */ build: {
     filenames: { chunk: () => "[name]_Y2ZjItY_[contenthash].js" },
     cache: false,
     cssSourceMap: true,

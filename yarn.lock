@@ -3058,6 +3058,7 @@ __metadata:
     "@nuxtjs/eslint-config-typescript": latest
     "@nuxtjs/google-fonts": latest
     "@nuxtjs/google-gtag": latest
+    "@nuxtjs/proxy": ^2.1.0
     "@nuxtjs/sentry": latest
     "@nuxtjs/style-resources": latest
     "@nuxtjs/stylelint-module": ^4.0.0
