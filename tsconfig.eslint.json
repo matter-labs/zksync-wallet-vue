@@ -5,16 +5,19 @@
     "**/*.ts",
     "**/*.vue",
     "**/*.js",
-    ".eslintrc.js"
+    "./.eslintrc.js"
   ],
   "exclude": [
+    "functions/.eslintrc.json",
+    "functions",
     "node_modules**",
     ".nuxt**",
     ".idea**",
     ".ide-setup**",
     ".firebase**",
     ".github**",
-    "tests**"
+    "tests**",
+    "functions**"
   ],
   "compilerOptions": {
     "lib": [

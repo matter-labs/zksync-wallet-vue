@@ -44,6 +44,16 @@ jobs:
           projectId: zksync-vue
           channelId: 'version-${{ github.ref }}'
 
+      - name: "Prepare /functions/"
+        run: npm --prefix functions i
+
+      - name: "Deploy functions to firebase (staging)"
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
+
   testing:
     needs: build_and_preview
     runs-on: ubuntu-latest
