@@ -2,8 +2,8 @@ import * as functions from "firebase-functions";
 import fetch from "node-fetch";
 
 /**
- * Signing Moonpay urls on server-side
- * @link https://www.moonpay.com/dashboard/getting_started/#step_3
+ * Tunneling sentry
+ * @link https://docs.sentry.io/platforms/javascript/troubleshooting/#using-the-tunnel-option
  *
  * @param {functions.Request} request
  * @param {functions.Response} response
