@@ -240,7 +240,7 @@ const config: NuxtConfig = {
     config: {
       tunnel: "/tunnel/sentry",
       debug: isDebugEnabled,
-      enabled: isLocalhost,
+      enabled: !isLocalhost,
       tracesSampleRate: 1.0,
       environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv,
     },
