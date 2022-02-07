@@ -9,7 +9,7 @@ import fetch from "node-fetch";
  * @param {functions.Response} response
  * @return Promise<void>
  */
-export const sentryTunnelFunction = (request: functions.Request, response: functions.Response): void => {
+export function sentryTunnelFunction(request: functions.Request, response: functions.Response) {
   const envelope = request.body;
 
   // functions.logger.debug("envelope", envelope);
@@ -29,24 +29,29 @@ export const sentryTunnelFunction = (request: functions.Request, response: funct
     //       Relay (server) handling of the Envelope format,
     //       cf. https://git.io/JPwWP
     JSON.stringify({
-                     ...header, forwarded_for: typeof request.headers["x-forwarded-for"] === "string" ? request.headers["x-forwarded-for"] : request.socket.remoteAddress
-                   }), ...restPieces
+      ...header,
+      forwarded_for: typeof request.headers["x-forwarded-for"] === "string" ? request.headers["x-forwarded-for"] : request.socket.remoteAddress,
+    }),
+    ...restPieces,
   ].join("\n");
 
   fetch(`https://${host}/api/${projectId}/envelope/`, {
-    method: "POST", body: bodyEncoded
+    method: "POST",
+    body: bodyEncoded,
   })
-  .then((sentryResponse) => {
-    // functions.logger.debug("sentry response", sentryResponse);
-
-    if (!sentryResponse.ok) {
-      throw new functions.https.HttpsError("internal", `Looks like there was a problem. Status Code: ${sentryResponse.status}`);
-    }
-    return sentryResponse.json();
-  })
-  .then((data) => {
-    // functions.logger.debug("sentry json data", data);
-    response.status(200);
-    response.send(data);
-  });
-};
+    .then((sentryResponse) => {
+      // functions.logger.debug("sentry response", sentryResponse);
+      if (!sentryResponse.ok) {
+        throw new functions.https.HttpsError("internal", `Looks like there was a problem. Status Code: ${sentryResponse.status}`);
+      }
+      return sentryResponse.json();
+    })
+    .then((data) => {
+      // functions.logger.debug("sentry json data", data);
+      response.status(200);
+      response.send(data);
+    })
+    .catch((e) => {
+      response.status(500).send(e);
+    });
+}
