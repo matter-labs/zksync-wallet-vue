@@ -38,7 +38,6 @@
       "@matterlabs/zksync-nuxt-core",
       "vue-router",
       "@types/jest",
-      "@nuxtjs/toast",
       "web3-core/types",
       "@inkline/inkline/types",
       "nuxt-typed-vuex",
@@ -46,6 +45,7 @@
     ]
   },
   "exclude": [
+    "functions",
     "node_modules/*",
     "dist/*",
     ".yarn/*",

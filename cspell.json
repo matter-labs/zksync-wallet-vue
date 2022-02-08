@@ -1,6 +1,7 @@
 {
   "language": "en",
   "ignorePaths": [
+    "functions/**",
     "node_modules/**",
     ".github/**",
     ".firebase/**",
