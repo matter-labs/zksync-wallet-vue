@@ -1,3 +1,10 @@
+# [3.7.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.6.0...3.7.0) (2022-02-09)
+
+
+### Features
+
+* sentry tunnel lambda function ([#220](https://github.com/matter-labs/zksync-wallet-vue/issues/220)) ([1ac8cdd](https://github.com/matter-labs/zksync-wallet-vue/commit/1ac8cdd34946dce370f6eb2c73e9983a07a9a468))
+
 # [3.6.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.5.0...3.6.0) (2022-02-04)
 
 
