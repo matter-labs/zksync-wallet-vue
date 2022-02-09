@@ -34,7 +34,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "3.6.0",
+  "version": "3.7.0",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
@@ -130,7 +130,8 @@
   },
   "peerDependencies": {
     "@babel/core": "*",
-    "@babel/runtime": "*"
+    "@babel/runtime": "*",
+    "postcss": "8"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0",
@@ -159,7 +160,6 @@
   "lint-staged": {
     "*.{ts,tsx,vue}": [
       "yarn lint-ts:check --fix",
-      "yarn format",
       "yarn spell-check"
     ]
   },

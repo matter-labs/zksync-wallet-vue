@@ -32,6 +32,7 @@ const localhostProxy = isLocalhost
       "/api/moonpaySign": `${functionsBaseUrl}moonpaySign`,
       "/api/banxaAuth": `${functionsBaseUrl}banxaAuth`,
       "/tunnel/mixpanel": `${functionsBaseUrl}mixpanelTunnel`,
+      "/tunnel/sentry": `${functionsBaseUrl}sentryTunnel`,
     }
   : {};
 
@@ -241,6 +242,7 @@ const config: NuxtConfig = {
     disableServerSide: true,
     disabled: isLocalhost,
     config: {
+      tunnel: "/tunnel/sentry",
       debug: isDebugEnabled,
       tracesSampleRate: 1.0,
       environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv,

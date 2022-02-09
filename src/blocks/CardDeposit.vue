@@ -6,8 +6,11 @@
     <div :class="{ disabled: !isBanxaSupported }" class="providerOption banxaProvider" @click="buyWithBanxa">
       <block-svg-banxa />
     </div>
-    <div :class="{ disabled: !isMoonpaySupported }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
+    <!-- <div :class="{ disabled: !isMoonpaySupported }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
       <block-svg-moonpay />
+    </div> -->
+    <div :class="{ disabled: !isOrbiterSupported }" class="providerOption orbiterProvider" @click="buyWithOrbiter">
+      <block-svg-orbiter />
     </div>
     <block-modals-deposit-error :errorText="errorText"/>
   </div>
@@ -52,6 +55,9 @@ export default Vue.extend({
     isMoonpaySupported(): boolean {
       return !!this.moonpayConfig;
     },
+    isOrbiterSupported(): boolean {
+      return this.ethNetwork === "mainnet";
+    },
   },
   mounted() {
     this.errorText = "";
@@ -92,6 +98,13 @@ export default Vue.extend({
         )}&returnUrlOnFailure=${encodeURIComponent(this.redirectURL())}`,
         "_blank"
       );
+    },
+    buyWithOrbiter() {
+      if (!this.isOrbiterSupported) {
+        return;
+      }
+      this.$analytics.track("click_on_buy_with_orbiter");
+      window.open(`https://www.orbiter.finance/?referer=zksync&dests=zksync&fixed=1`);
     },
     async buyWithMoonpay(): Promise<void> {
       if (!this.isMoonpaySupported) {
@@ -211,9 +224,13 @@ export default Vue.extend({
 }
 
 .banxaProvider,
-.moonpayProvider {
+.moonpayProvider,
+.orbiterProvider {
   display: flex;
   align-items: center;
+  &.orbiterProvider svg {
+    height: 21px;
+  }
 
   svg {
     height: 16px;

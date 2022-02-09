@@ -68,6 +68,7 @@ nuxt
 Isnt
 nuxtjs
 corejs
+predeploy
 
 
 // ETC

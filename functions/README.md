@@ -1,4 +1,4 @@
-# zkSync Tools CloudFunctions
+# zkSync API for the Wallet dApp (Firebase Cloud Functions)
 
 >Process server-side REST API with the Firebase Cloud Functions. Written in TypeScript
 
