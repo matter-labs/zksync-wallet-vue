@@ -1,3 +1,10 @@
+# [3.8.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.7.0...3.8.0) (2022-02-09)
+
+
+### Features
+
+* deposit with orbiter ([#224](https://github.com/matter-labs/zksync-wallet-vue/issues/224)) ([b769466](https://github.com/matter-labs/zksync-wallet-vue/commit/b769466dc954e189171d00e9ce39edbbb3488553))
+
 # [3.7.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.6.0...3.7.0) (2022-02-09)
 
 
