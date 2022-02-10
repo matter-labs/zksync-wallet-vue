@@ -18,6 +18,7 @@
     }
 
     .connections {
+      flex-wrap: wrap;
       justify-content: space-evenly;
       min-width: 40%;
       max-width: 100%;

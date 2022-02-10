@@ -56,6 +56,11 @@
       box-shadow: $tileShadow;
       transition: $transition1;
 
+      @media screen and (min-width: $mobile) {
+        width: 110px;
+        height: 110px;
+      }
+
       img {
         width: 100%;
         height: 100%;
