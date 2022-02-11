@@ -22,11 +22,6 @@
           <div class="tileName">Argent</div>
         </div>
       </div>
-      <div>
-        <a href="argent-rinkeby:">argent</a>
-        <a href="rinkeby:">rinkeby</a>
-        <a href="RINKEBY:">RINKEBY</a>
-      </div>
     </i-container>
   </div>
 </template>
