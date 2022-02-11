@@ -23,9 +23,9 @@
         </div>
       </div>
       <div>
-        <a href="argent:">argent</a>
-        <a href="argent:rinkeby">argent rinkeby</a>
-        <a href="argent:4">argent rinkeby 4</a>
+        <a href="argent-rinkeby:">argent</a>
+        <a href="rinkeby:">rinkeby</a>
+        <a href="RINKEBY:">RINKEBY</a>
       </div>
     </i-container>
   </div>
