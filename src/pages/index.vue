@@ -22,15 +22,6 @@
           <div class="tileName">Argent</div>
         </div>
       </div>
-      <div>
-        <a href="dapp:1@peepeth.com/brunobar79?utm_source=zksync">dapp 1</a>
-        <a href="dapp:1">dapp 2</a>
-        <a href="argent:">argent</a>
-        <a href="argent:dapp">argent dapp</a>
-        <a href="ethereum:">ethereum</a>
-        <a href="ethereum:dapp">ethereum dapp</a>
-        <a href="ethereum:dapp-https/peepeth.com/brunobar79?utm_source=zksync">ethereum dapp 2</a>
-      </div>
     </i-container>
   </div>
 </template>
