@@ -22,6 +22,11 @@
           <div class="tileName">Argent</div>
         </div>
       </div>
+      <div>
+        <a href="argent:">argent</a>
+        <a href="argent:rinkeby">argent rinkeby</a>
+        <a href="argent:4">argent rinkeby 4</a>
+      </div>
     </i-container>
   </div>
 </template>
