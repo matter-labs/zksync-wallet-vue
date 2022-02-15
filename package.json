@@ -55,7 +55,7 @@
     "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
   "dependencies": {
-    "@matterlabs/zksync-nuxt-core": "1.7.0-alpha.8",
+    "@matterlabs/zksync-nuxt-core": "1.7.0-alpha.9",
     "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/google-gtag": "latest",
     "@nuxtjs/sentry": "latest",
