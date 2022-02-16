@@ -12,6 +12,9 @@
     <div :class="{ disabled: !isOrbiterSupported }" class="providerOption orbiterProvider" @click="buyWithOrbiter">
       <block-svg-orbiter />
     </div>
+    <div :class="{ disabled: !isUtorgSupported }" class="providerOption utorgProvider" @click="buyWithUtorg">
+      <block-svg-utorg />
+    </div>
     <block-modals-deposit-error :errorText="errorText"/>
   </div>
 </template>
@@ -46,6 +49,9 @@ export default Vue.extend({
     address(): string {
       return this.$store.getters["zk-account/address"];
     },
+    isMainnet(): boolean {
+      return this.ethNetwork === "mainnet";
+    },
     isRampSupported(): boolean {
       return !!this.rampConfig;
     },
@@ -56,7 +62,11 @@ export default Vue.extend({
       return !!this.moonpayConfig;
     },
     isOrbiterSupported(): boolean {
-      return this.ethNetwork === "mainnet";
+      return this.isMainnet;
+    },
+    isUtorgSupported(): boolean {
+      return true;
+      return this.isMainnet;
     },
   },
   mounted() {
@@ -105,6 +115,13 @@ export default Vue.extend({
       }
       this.$analytics.track("click_on_buy_with_orbiter");
       window.open(`https://www.orbiter.finance/?referer=zksync&dests=zksync&fixed=1`);
+    },
+    buyWithUtorg() {
+      if (!this.isUtorgSupported) {
+        return;
+      }
+      this.$analytics.track("click_on_buy_with_utorg");
+      window.open(`https://app-stage.utorg.pro/direct/testSID?&timestamp=${(new Date()).getTime()}&alg=WEB3&publicKey=${this.address}&signature=0xc09c84830633985b4bbf5964a93ed3142b3e3aa936892d8eb158d289f50ef68119639c5fa4284fe2cea52ccef665a628b75666d04cce5a2c13bea659695d97851c`);
     },
     async buyWithMoonpay(): Promise<void> {
       if (!this.isMoonpaySupported) {
