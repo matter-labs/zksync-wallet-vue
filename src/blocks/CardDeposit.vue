@@ -242,7 +242,8 @@ export default Vue.extend({
 
 .banxaProvider,
 .moonpayProvider,
-.orbiterProvider {
+.orbiterProvider,
+.utorgProvider {
   display: flex;
   align-items: center;
   &.orbiterProvider svg {
