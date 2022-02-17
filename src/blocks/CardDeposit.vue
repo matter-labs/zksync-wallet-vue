@@ -121,7 +121,7 @@ export default Vue.extend({
         return;
       }
       this.$analytics.track("click_on_buy_with_utorg");
-      window.open(`https://app-stage.utorg.pro/direct/testSID?&timestamp=${(new Date()).getTime()}&alg=WEB3&publicKey=${this.address}&signature=0xc09c84830633985b4bbf5964a93ed3142b3e3aa936892d8eb158d289f50ef68119639c5fa4284fe2cea52ccef665a628b75666d04cce5a2c13bea659695d97851c`);
+      window.open(`https://app-stage.utorg.pro/direct/3_prO23xXW/${this.address}/?&currency=ETH`);
     },
     async buyWithMoonpay(): Promise<void> {
       if (!this.isMoonpaySupported) {
