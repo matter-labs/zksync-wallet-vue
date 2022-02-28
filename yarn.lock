@@ -3019,9 +3019,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-nuxt-core@npm:1.7.0-alpha.10":
-  version: 1.7.0-alpha.10
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.7.0-alpha.10"
+"@matterlabs/zksync-nuxt-core@npm:1.7.0-alpha.11":
+  version: 1.7.0-alpha.11
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.7.0-alpha.11"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/client": ^1.7.1
@@ -3037,8 +3037,8 @@ __metadata:
     nuxt: ^2.15.3
     ts-node: ^9.1.1
     web3: ^1.5.3
-    zksync: 0.12.0-alpha.5
-  checksum: 44aad407d75afde07837d5d793c3a4888ecffd16199fba48095e513082434b08b3b2727299312a17b71ceba188a6db7c668e3740bdacb930a4e58d41bf22b154
+    zksync: 0.12.0-alpha.6
+  checksum: f330671d2b6effd60189d6ad2019cb52c432456eac9954556e1b2f5e5ffed7d3238f08702d744d18b2dce65d135934dc7fb235f4e72c94bdb8079371534ab110
   languageName: node
   linkType: hard
 
@@ -3052,7 +3052,7 @@ __metadata:
     "@commitlint/cli": ^12.1.4
     "@commitlint/config-conventional": ^16.0.0
     "@inkline/nuxt": ^2.3.6
-    "@matterlabs/zksync-nuxt-core": 1.7.0-alpha.10
+    "@matterlabs/zksync-nuxt-core": 1.7.0-alpha.11
     "@nuxt/types": latest
     "@nuxt/typescript-build": latest
     "@nuxt/typescript-runtime": latest
@@ -3118,7 +3118,7 @@ __metadata:
     vue-scrollto: ^2.20.0
     vuex: ^3.6.2
     webpack: ^4.46.0
-    zksync: 0.12.0-alpha.5
+    zksync: 0.12.0-alpha.6
   peerDependencies:
     "@babel/core": "*"
     "@babel/runtime": "*"
@@ -28455,9 +28455,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zksync@npm:0.12.0-alpha.5":
-  version: 0.12.0-alpha.5
-  resolution: "zksync@npm:0.12.0-alpha.5"
+"zksync@npm:0.12.0-alpha.6":
+  version: 0.12.0-alpha.6
+  resolution: "zksync@npm:0.12.0-alpha.6"
   dependencies:
     axios: ^0.21.2
     websocket: ^1.0.30
@@ -28466,6 +28466,6 @@ __metadata:
   peerDependencies:
     "@ethersproject/logger": ^5.4.0
     ethers: ^5.4.4
-  checksum: c96978aeca876de5ccc4d51a455b131ae49a55f1c5dce0dbc48394da940a9b7361c7347cc87c258627ed7cdb826fae6a888641b793ea9c080a7ec9707dee76af
+  checksum: b672f3bc775b4d062fd0752bd5b18fcf2b03dba88e63482ebd470021093857ea8c4a7b7be03e93b8d8fef36951bb6aa6a9e49329fcaf9e5e51a8501b28c58bbd
   languageName: node
   linkType: hard
