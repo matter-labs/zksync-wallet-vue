@@ -3097,8 +3097,8 @@ __metadata:
     moment-timezone: ^0.5.33
     multiformats: ^9.4.7
     node-sass: 4.14.0
-    nuxt: latest
-    nuxt-typed-vuex: latest
+    nuxt: ^2.15.7
+    nuxt-typed-vuex: ^0.2.0
     oh-vue-icons: ^0.4.7
     postcss-scss: ^4.0.3
     prettier: ^2.2.1
@@ -3108,10 +3108,10 @@ __metadata:
     stylelint: latest
     stylelint-config-standard-scss: ^3.0.0
     stylelint-scss: latest
-    typed-vuex: latest
+    typed-vuex: ^0.2.0
     typescript: 4.2.4
     vue: 2.*
-    vue-class-component: latest
+    vue-class-component: ^7.2.6
     vue-property-decorator: latest
     vue-qrcode: 0.4.0
     vue-router: ^3.5.2
@@ -19496,7 +19496,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nuxt-typed-vuex@npm:latest":
+"nuxt-typed-vuex@npm:^0.2.0":
   version: 0.2.0
   resolution: "nuxt-typed-vuex@npm:0.2.0"
   dependencies:
@@ -19508,7 +19508,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nuxt@npm:^2.15.3, nuxt@npm:latest":
+"nuxt@npm:^2.15.3, nuxt@npm:^2.15.7":
   version: 2.15.8
   resolution: "nuxt@npm:2.15.8"
   dependencies:
@@ -25842,7 +25842,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typed-vuex@npm:0.2.0, typed-vuex@npm:latest":
+"typed-vuex@npm:0.2.0, typed-vuex@npm:^0.2.0":
   version: 0.2.0
   resolution: "typed-vuex@npm:0.2.0"
   peerDependencies:
@@ -26482,7 +26482,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-class-component@npm:latest":
+"vue-class-component@npm:^7.2.6":
   version: 7.2.6
   resolution: "vue-class-component@npm:7.2.6"
   peerDependencies:
