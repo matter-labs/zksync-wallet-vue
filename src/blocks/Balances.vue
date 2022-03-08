@@ -4,7 +4,7 @@
       <template slot="header">zkSync is a Layer-2 protocol</template>
       <p>
         Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
-        <a href="https://etherscan.io" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer.
+        <a href="https://rinkeby.etherscan.io/" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer.
         Nevertheless, balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
         <a href="https://zksync.io/userdocs/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
       </p>
