@@ -106,7 +106,7 @@ export default Vue.extend({
   },
   computed: {
     isRinkeby(): boolean {
-      return this.$store.getters["zk-provider/network"] === "rinkeby-beta";
+      return this.$store.getters["zk-provider/network"] === "rinkeby";
     },
     etherscanLink(): string {
       return this.isRinkeby ? "https://rinkeby.etherscan.io" : "https://etherscan.io";
