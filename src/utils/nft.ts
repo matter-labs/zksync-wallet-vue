@@ -3,7 +3,9 @@ import { CID } from "multiformats/cid";
 
 export function getCIDFromContentHash(contentHash: string) {
   try {
-    return CID.decode(new Uint8Array([1, 113, 18, 32, /* CIDv2 PrefixB */ ...arrayify(contentHash)])).toString();
+    const decoded = CID.decode(new Uint8Array([18, 32, ...arrayify(contentHash)]));
+    const cid = new CID(0, 112, decoded.multihash, decoded.bytes);
+    return cid.toString();
   } catch (error) {
     return undefined;
   }
