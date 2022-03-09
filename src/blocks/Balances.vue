@@ -105,11 +105,15 @@ export default Vue.extend({
     };
   },
   computed: {
-    isRinkeby(): boolean {
-      return this.$store.getters["zk-provider/network"] === "rinkeby";
-    },
     etherscanLink(): string {
-      return this.isRinkeby ? "https://rinkeby.etherscan.io" : "https://etherscan.io";
+      const tokenAddress = this.$store.getters["zk-account/address"];
+      if (this.$store.getters["zk-provider/network"] === "rinkeby") {
+        return `https://rinkeby.etherscan.io/address/${tokenAddress}`;
+      } else if (this.$store.getters["zk-provider/network"] === "robsten") {
+        return `https://ropsten.etherscan.io/address/${tokenAddress}`;
+      } else {
+        return `https://etherscan.io/address/${tokenAddress}`;
+      }
     },
     accountStateLoading(): boolean {
       return this.$store.getters["zk-account/accountStateLoading"];
