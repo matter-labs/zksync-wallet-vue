@@ -107,9 +107,9 @@ export default Vue.extend({
   computed: {
     etherscanLink(): string {
       const tokenAddress = this.$store.getters["zk-account/address"];
-      if (this.$store.getters["zk-provider/network"] === "rinkeby") {
+      if (this.$store.getters["zk-provider/network"] === ("rinkeby" || "rinkeby-beta")) {
         return `https://rinkeby.etherscan.io/address/${tokenAddress}`;
-      } else if (this.$store.getters["zk-provider/network"] === "robsten") {
+      } else if (this.$store.getters["zk-provider/network"] === ("ropsten" || "ropsten-beta")) {
         return `https://ropsten.etherscan.io/address/${tokenAddress}`;
       } else {
         return `https://etherscan.io/address/${tokenAddress}`;
