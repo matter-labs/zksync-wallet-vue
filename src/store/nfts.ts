@@ -48,7 +48,7 @@ export const actions = actionTree(
       try {
         const ipfsGateway = <ModuleOptions>rootGetters["zk-onboard/options"].ipfsGateway;
         if (!nftCIDPromise[cid] || force) {
-          nftCIDPromise[cid] = fetch(`${ipfsGateway}/ipfs/${cid}/metadata.json`);
+          nftCIDPromise[cid] = fetch(`${ipfsGateway}/ipfs/${cid}`);
         }
         const res = await nftCIDPromise[cid];
         if (res && res.ok !== true) {
