@@ -34,7 +34,7 @@
             <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
           </i-button>
           <i-button data-cy="account_send_zksync_button" block v-if="zigZagLink !== null" class="_margin-y-0 _margin-left-1 _padding-right-2" size="md" variant="secondary" :tag="a"
-                    :href="zigZagLink">
+                    @click.prevent="window.location.href=zigZagLink">
             <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;&nbsp;Swap
           </i-button>
         </div>
