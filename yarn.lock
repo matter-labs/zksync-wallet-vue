@@ -3019,7 +3019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-nuxt-core@npm:^1.5.3":
+"@matterlabs/zksync-nuxt-core@npm:^1.6.0":
   version: 1.6.0
   resolution: "@matterlabs/zksync-nuxt-core@npm:1.6.0"
   dependencies:
@@ -3050,7 +3050,7 @@ __metadata:
     "@commitlint/cli": ^12.1.4
     "@commitlint/config-conventional": ^16.0.0
     "@inkline/nuxt": ^2.3.6
-    "@matterlabs/zksync-nuxt-core": ^1.5.3
+    "@matterlabs/zksync-nuxt-core": ^1.6.0
     "@nuxt/types": latest
     "@nuxt/typescript-build": latest
     "@nuxt/typescript-runtime": latest

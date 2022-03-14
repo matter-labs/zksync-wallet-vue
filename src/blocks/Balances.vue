@@ -30,7 +30,8 @@
           <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="md" variant="secondary" to="/transaction/deposit">
             <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top up
           </i-button>
-          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-1" size="md" variant="secondary" to="/transaction/transfer">
+          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-1" size="md" variant="secondary" to="/transaction/transfer"
+                    :class="{'_margin-right-1': zigZagLink !== null}">
             <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
           </i-button>
           <i-button tag="a" target="_blank" data-cy="account_swap_zksync_button" block v-if="zigZagLink !== null" size="md" variant="secondary" class="_margin-y-0 _padding-right-1"
@@ -40,7 +41,7 @@
         </div>
 
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
-          <v-icon v-slot="prefix" name="ri-search-line" />
+          <v-icon slot="prefix" name="ri-search-line" />
         </i-input>
       </div>
 
@@ -75,7 +76,7 @@
                 <i-tooltip placement="left">
                   <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
                   <v-icon v-else class="committed" name="ri-check-line" />
-                  <template v-slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
+                  <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
                 </i-tooltip>
               </div>
             </div>
@@ -98,14 +99,22 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
 import { searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
-import { ZkTokenBalances } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkTokenBalances, ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { AccountState as WalletAccountState, TokenInfo } from "zksync/build/types";
+
 export default Vue.extend({
+  props: {
+    config: {
+      required: true,
+      type: Object as PropType<ZkConfig>
+    }
+  },
   data() {
     return {
-      search: "",
-      balanceInfoModal: false,
+      search: "" as string,
+      balanceInfoModal: false as boolean,
     };
   },
   computed: {
@@ -119,10 +128,10 @@ export default Vue.extend({
       return this.$store.getters["zk-balances/balances"];
     },
     zkBalancesWithDeposits(): ZkTokenBalances {
-      const tokens = this.$store.getters["zk-tokens/zkTokens"];
+      const tokens = this.$store.getters["zk-tokens/zkTokens"] as TokenInfo[];
       const zkBalancesWithDeposits = this.zkBalances;
       for (const symbol in this.activeDeposits) {
-        if (!zkBalancesWithDeposits[symbol]) {
+        if (this.activeDeposits.hasOwnProperty(symbol) && !zkBalancesWithDeposits[symbol]) {
           zkBalancesWithDeposits[symbol] = {
             balance: "0",
             verified: false,
@@ -135,14 +144,14 @@ export default Vue.extend({
     displayedList(): ZkTokenBalances {
       return searchByKey(this.zkBalancesWithDeposits, this.search);
     },
-    activeDeposits() {
+    activeDeposits(): WalletAccountState {
       return this.$store.getters["zk-balances/depositingBalances"];
     },
     hasDisplayedBalances(): boolean {
       return Object.keys(this.displayedList).length !== 0 || Object.keys(this.activeDeposits).length !== 0;
     },
     zigZagLink(): string | null {
-      switch(this.$store.getters["zk-provider/network"]) {
+      switch(this.config.ethereumNetwork.name) {
         case "mainnet":
           return "https://trade.zigzag.exchange/";
         case "rinkeby":
@@ -152,7 +161,7 @@ export default Vue.extend({
       }
     },
     isSearching(): boolean {
-      return !!this.search.trim();
+      return this.search.trim().length > 0;
     },
   },
 });

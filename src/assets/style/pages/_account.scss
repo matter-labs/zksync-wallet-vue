@@ -153,9 +153,9 @@
       height: max-content;
 
       .balances {
-        .buttonGroup {
+        .balancesButtonGroup {
           .button {
-            width: 30%;
+            width: 31%;
             display: inline-flex !important;
             align-items: center;
             margin: 0 !important;
@@ -165,7 +165,8 @@
             min-height: 40px !important;
 
             svg {
-              max-width: 16px !important;
+              top: initial !important;
+              max-width: 12px !important;
               width: auto !important;
               height: auto !important;
             }
