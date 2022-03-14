@@ -1,7 +1,7 @@
 <template>
   <div class="balancesBlock tileBlock">
     <i-modal v-model="balanceInfoModal" size="md">
-      <template slot="header">zkSync is a Layer-2 protocol</template>
+      <template v-slot="header">zkSync is a Layer-2 protocol</template>
       <p>
         Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
         <a href="https://etherscan.io" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer.
@@ -27,16 +27,20 @@
     <div v-else class="balances">
       <div v-if="!accountStateLoading || accountStateRequested">
         <div class="_display-flex _justify-content-space-between _margin-y-1">
-          <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="lg" variant="secondary" to="/transaction/deposit">
-            <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;&nbsp;Add Funds
+          <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="md" variant="secondary" to="/transaction/deposit">
+            <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;&nbsp;Top up
           </i-button>
-          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-2" size="lg" variant="secondary" to="/transaction/transfer">
-            <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Send
+          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-2" size="md" variant="secondary" to="/transaction/transfer">
+            <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
+          </i-button>
+          <i-button data-cy="account_send_zksync_button" block v-if="zigZagLink !== null" class="_margin-y-0 _margin-left-1 _padding-right-2" size="md" variant="secondary"
+                    :href="zigZagLink">
+            <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;&nbsp;Swap
           </i-button>
         </div>
 
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
-          <v-icon slot="prefix" name="ri-search-line" />
+          <v-icon v-slot="prefix" name="ri-search-line" />
         </i-input>
       </div>
 
@@ -71,7 +75,7 @@
                 <i-tooltip placement="left">
                   <v-icon v-if="item.verified" class="verified" name="ri-check-double-line" />
                   <v-icon v-else class="committed" name="ri-check-line" />
-                  <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
+                  <template v-slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
                 </i-tooltip>
               </div>
             </div>
@@ -136,6 +140,16 @@ export default Vue.extend({
     },
     hasDisplayedBalances(): boolean {
       return Object.keys(this.displayedList).length !== 0 || Object.keys(this.activeDeposits).length !== 0;
+    },
+    zigZagLink(): string | null {
+      switch(this.$store.getters["zk-provider/network"]) {
+        case "mainnet":
+          return "https ://trade.zigzag.exchange/";
+        case "rinkeby":
+          return "https ://trade.zigzag.exchange/?network=zksync-rinkeby";
+        default:
+          return null;
+      }
     },
     isSearching(): boolean {
       return !!this.search.trim();
