@@ -1,10 +1,42 @@
 {
+  "functions": {
+    "predeploy": "npm --prefix functions run build",
+    "source": "functions"
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true
+    }
+  },
   "hosting": [
     {
       "target": "stage-mainnet",
       "public": "public",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "rewrites": [
+        {
+          "source": "/api/banxaAuth",
+          "function": "banxaAuth"
+        },
+        {
+          "source": "/api/moonpaySign",
+          "function": "moonpaySign"
+        },
+        {
+          "source": "/tunnel/mixpanel/:path*",
+          "function": "mixpanelTunnel"
+        },
+        {
+          "source": "/tunnel/sentry",
+          "function": "sentryTunnel"
+        },
         {
           "source": "**",
           "destination": "/index.html"
@@ -41,164 +73,92 @@
     {
       "target": "prod-ropsten",
       "public": "public",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/**",
+        "**/node_modules/**"
+      ],
       "redirects": [
         {
           "source": "**",
           "type": 301,
           "destination": "https://wallet.zksync.io?network=ropsten"
         }
-      ],
-      "headers": [
-        {
-          "source": "**",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, must-revalidate"
-            },
-            {
-              "key": "Referrer-Policy",
-              "value": "no-referrer, strict-origin-when-cross-origin"
-            },
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "1; mode=block"
-            }
-          ]
-        }
       ]
     },
     {
       "target": "ropsten-beta",
       "public": "public",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "redirects": [
         {
           "source": "**",
           "type": 301,
           "destination": "https://wallet.zksync.io?network=ropsten-beta"
         }
-      ],
-      "headers": [
-        {
-          "source": "**",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, must-revalidate"
-            },
-            {
-              "key": "Referrer-Policy",
-              "value": "no-referrer, strict-origin-when-cross-origin"
-            },
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "1; mode=block"
-            }
-          ]
-        }
       ]
     },
     {
       "target": "prod-rinkeby",
       "public": "public",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "redirects": [
         {
           "source": "**",
           "type": 301,
           "destination": "https://wallet.zksync.io?network=rinkeby"
         }
-      ],
-      "headers": [
-        {
-          "source": "**",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, must-revalidate"
-            },
-            {
-              "key": "Referrer-Policy",
-              "value": "no-referrer, strict-origin-when-cross-origin"
-            },
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "1; mode=block"
-            }
-          ]
-        }
       ]
     },
     {
       "target": "rinkeby-beta",
       "public": "public",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "redirects": [
         {
           "source": "**",
           "type": 301,
           "destination": "https://wallet.zksync.io?network=rinkeby-beta"
         }
-      ],
-      "headers": [
-        {
-          "source": "**",
-          "headers": [
-            {
-              "key": "Cache-Control",
-              "value": "no-cache, no-store, must-revalidate"
-            },
-            {
-              "key": "Referrer-Policy",
-              "value": "no-referrer, strict-origin-when-cross-origin"
-            },
-            {
-              "key": "X-Content-Type-Options",
-              "value": "nosniff"
-            },
-            {
-              "key": "X-Frame-Options",
-              "value": "DENY"
-            },
-            {
-              "key": "X-XSS-Protection",
-              "value": "1; mode=block"
-            }
-          ]
-        }
       ]
     },
     {
       "target": "mainnet",
       "public": "public",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "rewrites": [
+        {
+          "source": "/api/banxaAuth",
+          "function": "banxaAuth"
+        },
+        {
+          "source": "/api/moonpaySign",
+          "function": "moonpaySign"
+        },
+        {
+          "source": "/tunnel/mixpanel/:path*",
+          "function": "mixpanelTunnel"
+        },
+        {
+          "source": "/tunnel/sentry",
+          "function": "sentryTunnel"
+        },
         {
           "source": "**",
           "destination": "/index.html"

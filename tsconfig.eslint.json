@@ -1,20 +1,23 @@
 {
-  // extend your base config so you don't have to redefine your compilerOptions
+  // extend your base config, so you don't have to redefine your compilerOptions
   "extends": "./tsconfig.json",
   "include": [
     "**/*.ts",
     "**/*.vue",
     "**/*.js",
-    ".eslintrc.js"
+    "./.eslintrc.js"
   ],
   "exclude": [
+    "functions/.eslintrc.json",
+    "functions",
     "node_modules**",
     ".nuxt**",
     ".idea**",
     ".ide-setup**",
     ".firebase**",
     ".github**",
-    "tests**"
+    "tests**",
+    "functions**"
   ],
   "compilerOptions": {
     "lib": [

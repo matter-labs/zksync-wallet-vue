@@ -1,3 +1,45 @@
+# [3.9.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.8.1...3.9.0) (2022-03-14)
+
+
+### Features
+
+* redirect to testnet etherscan if used etherscan hypelink ([#230](https://github.com/matter-labs/zksync-wallet-vue/issues/230)) ([cf1aced](https://github.com/matter-labs/zksync-wallet-vue/commit/cf1aced051cd668433427c024faedf263a1204c1))
+
+## [3.8.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.8.0...3.8.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* expect CIDv0 for NFTs ([#229](https://github.com/matter-labs/zksync-wallet-vue/issues/229)) ([d4f601b](https://github.com/matter-labs/zksync-wallet-vue/commit/d4f601b7fb6975488874bc24b6fefe8329cbd986))
+
+# [3.8.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.7.0...3.8.0) (2022-02-09)
+
+
+### Features
+
+* deposit with orbiter ([#224](https://github.com/matter-labs/zksync-wallet-vue/issues/224)) ([b769466](https://github.com/matter-labs/zksync-wallet-vue/commit/b769466dc954e189171d00e9ce39edbbb3488553))
+
+# [3.7.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.6.0...3.7.0) (2022-02-09)
+
+
+### Features
+
+* sentry tunnel lambda function ([#220](https://github.com/matter-labs/zksync-wallet-vue/issues/220)) ([1ac8cdd](https://github.com/matter-labs/zksync-wallet-vue/commit/1ac8cdd34946dce370f6eb2c73e9983a07a9a468))
+
+# [3.6.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.5.0...3.6.0) (2022-02-04)
+
+
+### Features
+
+* mixpanel proxy ([#223](https://github.com/matter-labs/zksync-wallet-vue/issues/223)) ([9962ef1](https://github.com/matter-labs/zksync-wallet-vue/commit/9962ef15f5b3dc653c384bf702d34eb4fa5a2ce3))
+
+# [3.5.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.3...3.5.0) (2022-02-01)
+
+
+### Features
+
+* banxa & moonpay functions added ([#213](https://github.com/matter-labs/zksync-wallet-vue/issues/213)) ([720b68c](https://github.com/matter-labs/zksync-wallet-vue/commit/720b68c4082e2059acbabf39d58bec6611603b74))
+
 ## [3.4.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.2...3.4.3) (2022-01-27)
 
 
