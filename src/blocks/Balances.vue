@@ -26,7 +26,7 @@
     </div>
     <div v-else class="balances">
       <div v-if="!accountStateLoading || accountStateRequested">
-        <div class="_display-flex _justify-content-space-between _margin-y-1 buttonGroup">
+        <div class="_display-flex _justify-content-space-between _margin-y-1" :class="{'balancesButtonGroup': zigZagLink !== null}">
           <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="md" variant="secondary" to="/transaction/deposit">
             <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top up
           </i-button>

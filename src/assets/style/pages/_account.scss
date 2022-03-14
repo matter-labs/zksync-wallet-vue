@@ -147,32 +147,31 @@
           }
         }
       }
-
-      .buttonGroup
-      {
-        .button {
-          display: inline-flex !important;
-          align-items: center;
-          margin: 0 !important;
-          padding: 0 15px 0 10px !important;
-          min-width: 0 !important;
-          line-height: 100% !important;
-          width: max-content !important;
-          min-height: 40px !important;
-
-          svg {
-            max-width: 16px !important;
-            width: auto !important;
-            height: auto !important;
-          }
-        }
-      }
     }
 
     @media (max-width: $mobile) {
       height: max-content;
 
       .balances {
+        .buttonGroup {
+          .button {
+            width: 30%;
+            display: inline-flex !important;
+            align-items: center;
+            margin: 0 !important;
+            padding: 0 15px 0 10px !important;
+            line-height: 100% !important;
+            min-width: fit-content !important;
+            min-height: 40px !important;
+
+            svg {
+              max-width: 16px !important;
+              width: auto !important;
+              height: auto !important;
+            }
+          }
+        }
+
         .balancesList .balanceItem {
           display: flex;
           height: max-content;
