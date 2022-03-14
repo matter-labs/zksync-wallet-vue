@@ -54,3 +54,5 @@ public
 /functions/lib
 /functions/*.log
 /functions/.runtimeconfig.json
+/.ide-setup/.runtimeconfig.json
+/.ide-setup/functions.md
