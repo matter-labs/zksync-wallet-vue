@@ -36,7 +36,7 @@
           <i-button tag="a" target="_blank" data-cy="account_swap_zksync_button" block v-if="zigZagLink !== null" size="md" variant="secondary" class="_margin-y-0 _padding-right-1"
              :href="zigZagLink">
             <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;Swap
-          </a>
+          </i-button>
         </div>
 
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
