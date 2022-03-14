@@ -113,8 +113,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      search: "" as string,
-      balanceInfoModal: false as boolean,
+      search: "",
+      balanceInfoModal: false,
     };
   },
   computed: {
