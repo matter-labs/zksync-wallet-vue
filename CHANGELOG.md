@@ -1,3 +1,17 @@
+# [3.9.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.8.1...3.9.0) (2022-03-14)
+
+
+### Features
+
+* redirect to testnet etherscan if used etherscan hypelink ([#230](https://github.com/matter-labs/zksync-wallet-vue/issues/230)) ([cf1aced](https://github.com/matter-labs/zksync-wallet-vue/commit/cf1aced051cd668433427c024faedf263a1204c1))
+
+## [3.8.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.8.0...3.8.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* expect CIDv0 for NFTs ([#229](https://github.com/matter-labs/zksync-wallet-vue/issues/229)) ([d4f601b](https://github.com/matter-labs/zksync-wallet-vue/commit/d4f601b7fb6975488874bc24b6fefe8329cbd986))
+
 # [3.8.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.7.0...3.8.0) (2022-02-09)
 
 
