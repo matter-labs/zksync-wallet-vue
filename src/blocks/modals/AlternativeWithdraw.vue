@@ -2,9 +2,7 @@
   <i-modal v-model="opened" size="md">
     <template slot="header">How does this all work?</template>
     <p><strong>zkSync Alternative Withdrawal</strong> is way to get funds to Layer 1 without interacting directly with the protocol. zkSync supports most of web3-compatible
-      wallets, so we highly recommend you to use the
-      <nuxt-link class="logoLinkContainer" to="/transaction/withdraw">funds withdrawal</nuxt-link>
-      if that is possible as it is cheaper and more convenient.
+      wallets, so we highly recommend you to use the so the official client to withdraw funds if that is possible as it is cheaper and more convenient.
     </p>
     <div class="_margin-top-1">In order for the account to be eligible for an alternative withdrawal all of the following must be true:
       <ul>
