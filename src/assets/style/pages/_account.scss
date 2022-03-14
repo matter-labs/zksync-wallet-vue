@@ -147,6 +147,25 @@
           }
         }
       }
+
+      .buttonGroup
+      {
+        .button {
+          display: inline-flex !important;
+          align-items: center;
+          margin: 0 !important;
+          padding: 0 15px 0 10px !important;
+          min-width: 0 !important;
+          line-height: 100% !important;
+          width: max-content !important;
+
+          svg {
+            max-width: 16px !important;
+            width: auto !important;
+            height: auto !important;
+          }
+        }
+      }
     }
 
     @media (max-width: $mobile) {

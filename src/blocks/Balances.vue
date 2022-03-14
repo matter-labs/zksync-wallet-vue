@@ -26,17 +26,17 @@
     </div>
     <div v-else class="balances">
       <div v-if="!accountStateLoading || accountStateRequested">
-        <div class="_display-flex _justify-content-space-between _margin-y-1">
+        <div class="_display-flex _justify-content-space-between _margin-y-1 buttonGroup">
           <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="md" variant="secondary" to="/transaction/deposit">
-            <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;&nbsp;Top up
+            <v-icon class="planeIcon" name="ri-add-fill" />nbsp;Top up
           </i-button>
-          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-2" size="md" variant="secondary" to="/transaction/transfer">
-            <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
+          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-1" size="md" variant="secondary" to="/transaction/transfer">
+            <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
           </i-button>
-          <i-button data-cy="account_send_zksync_button" block v-if="zigZagLink !== null" class="_margin-y-0 _margin-left-1 _padding-right-2" size="md" variant="secondary" :tag="a"
-                    @click.prevent="window.location.href=zigZagLink">
-            <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;&nbsp;Swap
-          </i-button>
+          <a data-cy="account_swap_zksync_button" v-if="zigZagLink !== null" class="_margin-y-0 _padding-right-1 button -md -secondary -block"
+             :href="zigZagLink">
+            <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;Swap
+          </a>
         </div>
 
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
