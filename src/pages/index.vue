@@ -17,35 +17,21 @@
         </div>
       </div>
       <div class="container-fluid _display-flex alternativeWithdrawContainer">
-        <h2 class="_display-flex _margin-y-0 _align-items-center ">
+        <h2 class="_display-flex _margin-y-0 _align-items-center">
           Can't find your wallet?
-          <span class="icon-container _display-flex" @click="alternativeWithdrawPopup = true">
-            <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" scale="0.9" />
-          </span>
+          <span class="icon-container _display-flex" @click="$accessor.openModal('AlternativeWithdrawal')">
+                <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" scale="0.9" />
+              </span>
         </h2>
         <h3>Or you’ve receive funds on your exchange address such as Binance?</h3>
-        <a data-cy="core_connect_wallet_button" class="tileContainer _margin-top-1 _margin-right-05 _margin-md-right-2 _text-center" href="https://withdraw.zksync.io">
+        <a data-cy="core_connect_wallet_button" class="tileContainer _margin-top-1 _margin-right-05 _margin-md-right-2 _text-center" href="https://withdraw.zksync.io" target="_blank">
           <div class="tile">
             <img src="@/assets/imgs/logos/symbol.svg" alt="Alternative withdraw" />
           </div>
           <div class="tileName">Alternative Withdraw</div>
         </a>
       </div>
-      <i-modal v-model="alternativeWithdrawPopup" size="md">
-        <template slot="header">How does this all work?</template>
-        <p>
-          Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
-          <a :href="etherscanLink" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer. Nevertheless,
-          balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
-          <a href="https://zksync.io/userdocs/security.html" target="_blank" rel="noopener noreferrer">Learn more.</a>
-        </p>
-        <p>You can move your balances <b>from L1</b> into zkSync by making a
-          <nuxt-link class="logoLinkContainer" to="/transaction/deposit">Deposit</nuxt-link>
-        </p>
-        <p>To move them back from zkSync <b>to L1</b> you can make a
-          <nuxt-link class="logoLinkContainer" to="/transaction/withdraw">Withdraw</nuxt-link>
-        </p>
-      </i-modal>
+      <block-modals-alternative-withdraw/>
     </i-container>
   </div>
 </template>
@@ -56,7 +42,8 @@ import Vue from "vue";
 export default Vue.extend({
   layout: "index", data() {
     return {
-      alternativeWithdrawPopup: false, lockVisible: false, contactInfoShown: false
+      lockVisible: false,
+      contactInfoShown: false
     };
   }, mounted() {
     this.$analytics.track("visit_login");
@@ -90,34 +77,39 @@ export default Vue.extend({
     display: flex;
     flex-direction: row !important;
     justify-content: center;
-    font-family: $font-family-primary-base;
-    font-style: normal;
     font-weight: 400;
-    font-size: 24px;
-    line-height: 26px;
+    font-size: 20px !important;
+    line-height: 24px;
     text-align: center;
-    color: #343A40;
 
-    .icon-container
-    {
+    .icon-container {
       display: inline-flex !important;
-      margin-right: 0.25rem;
+      margin-left: 0.5rem;
     }
   }
 
-  h3
-  {
+  h3 {
     font-family: $font-family-primary-base;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
     text-align: center;
-    color: #343A40;
     opacity: 0.44;
     max-width: 350px;
-    display: inline-flex;
-    margin: 0.5rem auto !important;
+    display: flex;
+    margin: 1rem auto !important;
+  }
+
+  a.tileContainer {
+    text-decoration: none !important;
+    color: $black !important;
+  }
+}
+
+.-dark {
+  .alternativeWithdrawContainer a.tileContainer {
+    color: $white !important;
   }
 }
 </style>
