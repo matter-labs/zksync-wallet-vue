@@ -33,7 +33,7 @@
           <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-1" size="md" variant="secondary" to="/transaction/transfer">
             <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
           </i-button>
-          <a data-cy="account_swap_zksync_button" v-if="zigZagLink !== null" class="_margin-y-0 _padding-right-1 button -md -secondary -block"
+          <i-button tag="a" target="_blank" data-cy="account_swap_zksync_button" block v-if="zigZagLink !== null" size="md" variant="secondary" class="_margin-y-0 _padding-right-1"
              :href="zigZagLink">
             <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;Swap
           </a>
@@ -144,9 +144,9 @@ export default Vue.extend({
     zigZagLink(): string | null {
       switch(this.$store.getters["zk-provider/network"]) {
         case "mainnet":
-          return "https ://trade.zigzag.exchange/";
+          return "https://trade.zigzag.exchange/";
         case "rinkeby":
-          return "https ://trade.zigzag.exchange/?network=zksync-rinkeby";
+          return "https://trade.zigzag.exchange/?network=zksync-rinkeby";
         default:
           return null;
       }
