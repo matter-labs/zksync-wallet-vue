@@ -68,10 +68,10 @@ nuxt
 Isnt
 nuxtjs
 corejs
+predeploy
 
 
 // ETC
-gitter
 signup
 signups
 precompiled

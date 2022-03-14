@@ -6,6 +6,23 @@ export interface ZKIRootState {
   previousRoute?: Route;
 }
 
+export interface NFTItem {
+  cid: string;
+  exists: boolean;
+  name?: string;
+  description?: string;
+  image?: `https://${string}`;
+}
+
+export interface ZkNFTState {
+  nfts: {
+    [cid: string]: undefined | NFTItem;
+  };
+  nftsLoading: {
+    [cid: string]: boolean;
+  };
+}
+
 export declare interface SingleIcon {
   name: string;
   img: string;

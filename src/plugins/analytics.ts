@@ -8,7 +8,7 @@ export type Analytics = {
 
 class MixpanelAnalytics implements Analytics {
   constructor(token: string) {
-    mixpanel.init(token, { debug: false });
+    mixpanel.init(token, { debug: false, api_host: "/tunnel/mixpanel" });
   }
 
   set(props: { [key: string]: string }): void {

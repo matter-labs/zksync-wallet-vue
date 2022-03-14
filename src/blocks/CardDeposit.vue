@@ -9,6 +9,10 @@
     <!-- <div :class="{ disabled: !isMoonpaySupported }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
       <block-svg-moonpay />
     </div> -->
+    <div :class="{ disabled: !isOrbiterSupported }" class="providerOption orbiterProvider" @click="buyWithOrbiter">
+      <block-svg-orbiter />
+    </div>
+    <block-modals-deposit-error :errorText="errorText"/>
   </div>
 </template>
 
@@ -23,24 +27,24 @@ export default Vue.extend({
       url: string | undefined;
       hostApiKey: string | undefined;
     } | null {
-      return rampConfig[this.$store.getters["zk-provider/network"]];
+      return rampConfig[this.ethNetwork];
+    },
+    ethNetwork(): string {
+      return this.$store.getters["zk-provider/network"];
     },
     banxaConfig(): {
       url: string;
     } | null {
-      return banxaConfig[this.$store.getters["zk-provider/network"]];
+      return banxaConfig[this.ethNetwork];
     },
     moonpayConfig(): {
       url: string;
       apiPublicKey: string;
     } | null {
-      return moonpayConfig[this.$store.getters["zk-provider/network"]];
+      return moonpayConfig[this.ethNetwork];
     },
     address(): string {
       return this.$store.getters["zk-account/address"];
-    },
-    redirectURL(): string {
-      return window.location.origin + "/account";
     },
     isRampSupported(): boolean {
       return !!this.rampConfig;
@@ -51,8 +55,23 @@ export default Vue.extend({
     isMoonpaySupported(): boolean {
       return !!this.moonpayConfig;
     },
+    isOrbiterSupported(): boolean {
+      return this.ethNetwork === "mainnet";
+    },
+  },
+  mounted() {
+    this.errorText = "";
+    this.$accessor.closeActiveModal();
+  },
+  data() {
+    return {
+      errorText: "",
+    };
   },
   methods: {
+    redirectURL(full: boolean = true): string {
+      return full ? `${window.location.origin}/account` : "/account";
+    },
     buyWithRamp() {
       if (!this.isRampSupported) {
         return;
@@ -75,28 +94,66 @@ export default Vue.extend({
       this.$analytics.track("click_on_buy_with_banxa");
       window.open(
         `${this.banxaConfig!.url}?walletAddress=${this.address}&accountReference=${this.address}&returnUrlOnSuccess=${encodeURIComponent(
-          this.redirectURL,
-        )}&returnUrlOnFailure=${encodeURIComponent(this.redirectURL)}`,
-        "_blank",
+          this.redirectURL()
+        )}&returnUrlOnFailure=${encodeURIComponent(this.redirectURL())}`,
+        "_blank"
       );
     },
-    buyWithMoonpay() {
+    buyWithOrbiter() {
+      if (!this.isOrbiterSupported) {
+        return;
+      }
+      this.$analytics.track("click_on_buy_with_orbiter");
+      window.open(`https://www.orbiter.finance/?referer=zksync&dests=zksync&fixed=1`);
+    },
+    async buyWithMoonpay(): Promise<void> {
       if (!this.isMoonpaySupported) {
         return;
       }
-      this.$analytics.track("click_on_moonpay");
-      const availableZksyncCurrencies = ["usdc", "usdt", "dai"].map((e) => `${e}_zksync`);
-      window.open(
-        `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${this.address}&showOnlyCurrencies=${availableZksyncCurrencies.join(
-          ",",
-        )}&walletAddresses=${encodeURIComponent(JSON.stringify(Object.fromEntries(availableZksyncCurrencies.map((e) => [e, this.address]))))}&redirectURL=${encodeURIComponent(this.redirectURL)}`,
-        "_blank",
-      );
+
+      try {
+        this.$analytics.track("click_on_moonpay");
+        const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC", "USDT_ZKSYNC"];
+        const url = `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${encodeURIComponent(
+          this.address
+        )}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(",")}&showAllCurrencies=0&redirectURL=${encodeURIComponent(this.redirectURL())}`;
+
+        const body = JSON.stringify({
+          pubKey: this.moonpayConfig?.apiPublicKey,
+          originalUrl: url,
+          ethNetwork: this.ethNetwork,
+        });
+        const response = await fetch("/api/moonpaySign", {
+          method: "POST",
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          headers: {
+            "Sec-Fetch-Site": "none",
+            "Content-Type": "application/json; charset=utf-8",
+          },
+          body,
+        });
+        console.warn(response);
+        if (!response.ok) {
+          console.warn(response);
+          throw new Error(response.statusText);
+        }
+        const responseData = await response.json();
+        /**
+         * Success processing
+         */
+        if (!responseData?.signedUrl) {
+          throw new Error("signedUrl is missing");
+        }
+        window.open(responseData!.signedUrl, "_blank");
+      } catch (error) {
+        console.warn(error);
+        this.errorText = error.message || "There was an error during Moonpay Deposit initialization. Please try once again.";
+        this.$accessor.openModal("DepositError");
+      }
     },
   },
 });
 </script>
-
 <style lang="scss" scoped>
 .cryptoProviders {
   display: grid;
@@ -117,6 +174,7 @@ export default Vue.extend({
     transition: $transition1;
     transition-property: border-color, opacity;
     will-change: border-color, opacity;
+
     &.disabled {
       border-color: transparentize($color: #eeeeee, $amount: 0.7);
 
@@ -124,6 +182,7 @@ export default Vue.extend({
         opacity: 0.3;
       }
     }
+
     &:not(.disabled):hover {
       border-color: #5d65b9 !important;
       cursor: pointer;
@@ -132,6 +191,7 @@ export default Vue.extend({
     & > * {
       pointer-events: none;
     }
+
     .loaderContainer {
       position: absolute;
       width: 20px;
@@ -142,6 +202,7 @@ export default Vue.extend({
     }
   }
 }
+
 .rampProvider {
   label {
     display: flex;
@@ -161,10 +222,15 @@ export default Vue.extend({
     margin-right: 5px;
   }
 }
+
 .banxaProvider,
-.moonpayProvider {
+.moonpayProvider,
+.orbiterProvider {
   display: flex;
   align-items: center;
+  &.orbiterProvider svg {
+    height: 21px;
+  }
 
   svg {
     height: 16px;
@@ -181,12 +247,14 @@ export default Vue.extend({
     .cryptoProviders {
       .providerOption {
         border-color: transparentize($color: $gray, $amount: 0.65);
+
         &.disabled {
           border-color: transparentize($color: $gray, $amount: 0.85) !important;
         }
       }
     }
   }
+
   .rampProvider {
     label {
       color: #f8f9fa;
