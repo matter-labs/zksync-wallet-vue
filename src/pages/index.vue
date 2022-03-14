@@ -52,7 +52,7 @@ export default Vue.extend({
     }
   },
   mounted() {
-    this.$analytics.track("visit_login")
+    this.$analytics.track("visit_login");
   },
   methods: {
     async customWallet() {
