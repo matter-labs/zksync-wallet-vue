@@ -26,15 +26,14 @@
     </div>
     <div v-else class="balances">
       <div v-if="!accountStateLoading || accountStateRequested">
-        <div class="_display-flex _justify-content-space-between _margin-y-1" :class="{'balancesButtonGroup': zigZagLink !== null}">
+        <div class="_display-flex _justify-content-space-between balancesButtonGroup _margin-y-1">
           <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="md" variant="secondary" to="/transaction/deposit">
             <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top up
           </i-button>
-          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-1" size="md" variant="secondary" to="/transaction/transfer"
-                    :class="{'_margin-right-1': zigZagLink !== null}">
+          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-1 _margin-right-1" size="md" variant="secondary" to="/transaction/transfer">
             <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
           </i-button>
-          <i-button tag="a" target="_blank" data-cy="account_swap_zksync_button" block v-if="zigZagLink !== null" size="md" variant="secondary" class="_margin-y-0 _padding-right-1"
+          <i-button :disabled="!zigZagLink" tag="a" target="_blank" data-cy="account_swap_zksync_button" block size="md" variant="secondary" class="_margin-y-0 _padding-right-1"
              :href="zigZagLink">
             <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;Swap
           </i-button>
