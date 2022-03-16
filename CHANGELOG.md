@@ -1,3 +1,10 @@
+# [3.10.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.9.2...3.10.0) (2022-03-16)
+
+
+### Features
+
+* zigzag link added ([#232](https://github.com/matter-labs/zksync-wallet-vue/issues/232)) ([ac27dd1](https://github.com/matter-labs/zksync-wallet-vue/commit/ac27dd150b59d3f834099d8bb8ce8724f2c8f287))
+
 ## [3.9.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.9.1...3.9.2) (2022-03-16)
 
 
