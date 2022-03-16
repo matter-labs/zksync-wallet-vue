@@ -1,3 +1,10 @@
+# [3.11.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.10.0...3.11.0) (2022-03-16)
+
+
+### Features
+
+* Alternative withdraw integration ([#234](https://github.com/matter-labs/zksync-wallet-vue/issues/234)) ([436624a](https://github.com/matter-labs/zksync-wallet-vue/commit/436624ac500bf46faac2494d96b439b5a24843f3))
+
 # [3.10.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.9.2...3.10.0) (2022-03-16)
 
 
