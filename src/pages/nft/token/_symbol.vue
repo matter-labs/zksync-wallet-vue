@@ -90,7 +90,7 @@
           </div>
           <div class="infoBlock">
             <div v-if="!nftDataLoading" class="balance">
-              <a v-if="nftData && nftData.exists" target="_blank" :href="`${ipfsGateway}/ipfs/${tokenCID}/metadata.json`">
+              <a v-if="nftData && nftData.exists" target="_blank" :href="`${ipfsGateway}/ipfs/${tokenCID}`">
                 <span>Link to metadata</span>
                 <v-icon name="ri-external-link-line" />
               </a>
