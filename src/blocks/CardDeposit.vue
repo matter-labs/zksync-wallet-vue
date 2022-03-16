@@ -120,7 +120,7 @@ export default Vue.extend({
         return;
       }
       this.$analytics.track("click_on_buy_with_utorg");
-      window.open(`https://app-stage.utorg.pro/direct/3_prO23xXW/${this.address}/`);
+      window.open(`https://app.utorg.pro/direct/3_prO23xXW/${this.address}/`);
     },
     async buyWithMoonpay(): Promise<void> {
       if (!this.isMoonpaySupported) {
