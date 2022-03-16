@@ -215,6 +215,8 @@ export default Vue.extend({
       }
 
       .alternativeWithdrawContainer {
+        margin-top: 1.5rem !important;
+
         h3 {
           margin: 0.3rem auto 0.5rem !important;
           font-size: 14px;
