@@ -161,7 +161,7 @@ export default Vue.extend({
       return Object.keys(this.displayedList).length !== 0 || Object.keys(this.activeDeposits).length !== 0;
     },
     zigZagLink(): string | null {
-      switch(this.config.ethereumNetwork.name) {
+      switch(this.$store.getters["zk-provider/network"]) {
         case "mainnet":
           return "https://trade.zigzag.exchange/";
         case "rinkeby":
