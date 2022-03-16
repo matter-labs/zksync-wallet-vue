@@ -68,6 +68,8 @@ a {
 }
 
 body.inkline {
+  overflow: auto;
+
   .button {
     &.-link {
       padding: 7px 12px;
@@ -135,6 +137,11 @@ body.inkline {
       }
     }
   }
+}
+
+#__nuxt, #__layout {
+  width: 100%;
+  height: 100%;
 }
 
 button.-lg.-circle {
