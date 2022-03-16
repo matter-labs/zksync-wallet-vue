@@ -1,3 +1,10 @@
+## [3.9.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.9.0...3.9.1) (2022-03-16)
+
+
+### Bug Fixes
+
+* body and container size and overflow styles ([#231](https://github.com/matter-labs/zksync-wallet-vue/issues/231)) ([e1106f0](https://github.com/matter-labs/zksync-wallet-vue/commit/e1106f03274af4c9b8cbc871a3a10216412abb88))
+
 # [3.9.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.8.1...3.9.0) (2022-03-14)
 
 

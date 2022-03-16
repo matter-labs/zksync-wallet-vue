@@ -190,17 +190,7 @@
 
 @media (max-width: $mobile) {
   section.layout-content.layoutContent {
-    display: flex;
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
-
     .routerContainer {
-      display: flex;
-      flex-direction: column;
-      margin: 0;
-      padding: 0;
-
       .dappPageWrapper {
         padding: 1rem 0;
         overflow-x: hidden;
@@ -246,8 +236,8 @@
   .dappPageWrapper {
     .tileBlock {
       padding: 0.75rem 1rem 1rem !important;
-      //min-height: 40vh;
       width: 90vw;
+      margin-top: 0;
 
       .balancesList,
       .transactionsListContainer,
