@@ -65,7 +65,6 @@ export default Vue.extend({
       return this.isMainnet;
     },
     isUtorgSupported(): boolean {
-      return true;
       return this.isMainnet;
     },
   },
