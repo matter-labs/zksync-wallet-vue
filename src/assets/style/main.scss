@@ -1,5 +1,4 @@
 // Core
-@import "./vars/variables";
 @import "./vars/custom";
 @import "./vars/transitions";
 @import "./default";
@@ -36,7 +35,6 @@
 @import "./components/transactionHistoryItem";
 
 //Pages
-@import "./pages/index";
 @import "./pages/contacts";
 @import "./pages/transactions";
 @import "./pages/transaction";
