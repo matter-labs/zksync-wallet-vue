@@ -3,18 +3,18 @@
     <i-container>
       <h1>Connect your L1 ETH Wallet to start</h1>
       <div class="container-fluid _flex-direction-row _display-flex connections">
-        <div data-cy="core_connect_wallet_button" class="tileContainer _margin-right-05 _margin-md-right-2 _text-center" @click="customWallet()">
+        <button data-cy="core_connect_wallet_button" class="tileContainer _margin-right-05 _margin-md-right-2 _text-center" @click="customWallet()">
           <div class="tile">
             <img src="@/assets/imgs/wallets/external.png" alt="External" />
           </div>
           <div class="tileName">Ethereum Wallet</div>
-        </div>
-        <div data-cy="core_connect_wallet_wc_button" class="tileContainer _margin-left-05 _margin-md-left-2 _text-center" @click="walletConnect()">
+        </button>
+        <button data-cy="core_connect_wallet_wc_button" class="tileContainer _margin-left-05 _margin-md-left-2 _text-center" @click="walletConnect()">
           <div class="tile">
             <img src="@/assets/imgs/wallets/wc.png" alt="Wallet Connect" />
           </div>
           <div class="tileName">Wallet Connect</div>
-        </div>
+        </button>
       </div>
       <div class="container-fluid _display-flex alternativeWithdrawContainer">
         <h2 class="_display-flex _margin-y-0 _align-items-center">
@@ -158,6 +158,9 @@ export default Vue.extend({
         margin-left: 1rem;
         margin-right: 1rem;
         padding-bottom: 0;
+        border: none;
+        color: unset;
+        background: unset;
       }
     }
 
