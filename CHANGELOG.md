@@ -1,3 +1,10 @@
+# [3.12.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.11.0...3.12.0) (2022-03-17)
+
+
+### Features
+
+* connect buttons keyboard accessible ([#236](https://github.com/matter-labs/zksync-wallet-vue/issues/236)) ([d95d83b](https://github.com/matter-labs/zksync-wallet-vue/commit/d95d83bfb8093b63a0700a0e012d0301df9844d4))
+
 # [3.11.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.10.0...3.11.0) (2022-03-16)
 
 
