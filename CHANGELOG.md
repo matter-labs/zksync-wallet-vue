@@ -1,3 +1,10 @@
+## [3.12.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.0...3.12.1) (2022-03-18)
+
+
+### Bug Fixes
+
+* nft image to fit into the container ([#235](https://github.com/matter-labs/zksync-wallet-vue/issues/235)) ([6c0cc95](https://github.com/matter-labs/zksync-wallet-vue/commit/6c0cc9544f3bfe8e06667889a3ec10616d501c05))
+
 # [3.12.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.11.0...3.12.0) (2022-03-17)
 
 
