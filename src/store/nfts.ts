@@ -37,7 +37,7 @@ export const actions = actionTree(
   {
     async requestNFT({ commit, getters, rootGetters }, { cid, force }: { cid: string; force: boolean }): Promise<void> {
       /* ..aaaa is empty cid */
-      if (cid === "bafyreiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa") {
+      if (cid === "QmNLei78zWmzUdbeRB3CiUfAizWUrbeeZh5K1rhAQKCh51") {
         return;
       }
       const savedNFT = getters.getNFT(cid);

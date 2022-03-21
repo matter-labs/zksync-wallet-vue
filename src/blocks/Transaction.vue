@@ -234,7 +234,6 @@ import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
 import { ZkTransactionMainToken, ZkTransactionType, ZkActiveTransaction, ZkFeeType, ZkFee, ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "@ethersproject/address";
 import { RestProvider } from "zksync";
-import { BigNumberish } from "ethers";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
 import { DO_NOT_SHOW_WITHDRAW_WARNING_KEY } from "@/blocks/modals/WithdrawWarning.vue";
 

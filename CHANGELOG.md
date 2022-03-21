@@ -1,3 +1,17 @@
+## [3.12.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.1...3.12.2) (2022-03-21)
+
+
+### Bug Fixes
+
+* make all transaction symbol checks when filling empty symbol ([#237](https://github.com/matter-labs/zksync-wallet-vue/issues/237)) ([744d854](https://github.com/matter-labs/zksync-wallet-vue/commit/744d854eac26c861f350f34a78f88167232b183d))
+
+## [3.12.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.0...3.12.1) (2022-03-18)
+
+
+### Bug Fixes
+
+* nft image to fit into the container ([#235](https://github.com/matter-labs/zksync-wallet-vue/issues/235)) ([6c0cc95](https://github.com/matter-labs/zksync-wallet-vue/commit/6c0cc9544f3bfe8e06667889a3ec10616d501c05))
+
 # [3.12.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.11.0...3.12.0) (2022-03-17)
 
 
