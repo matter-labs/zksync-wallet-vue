@@ -1,3 +1,10 @@
+## [3.12.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.1...3.12.2) (2022-03-21)
+
+
+### Bug Fixes
+
+* make all transaction symbol checks when filling empty symbol ([#237](https://github.com/matter-labs/zksync-wallet-vue/issues/237)) ([744d854](https://github.com/matter-labs/zksync-wallet-vue/commit/744d854eac26c861f350f34a78f88167232b183d))
+
 ## [3.12.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.0...3.12.1) (2022-03-18)
 
 
