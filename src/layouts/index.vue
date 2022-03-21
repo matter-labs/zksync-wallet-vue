@@ -19,15 +19,8 @@ import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
 import SentryMixin from "./sentry.mixin";
 import AnalyticsMixin from "./analytics.mixin";
 
-import { GIT_REVISION_SHORT } from "@/utils/config";
-
 export default Vue.extend({
   mixins: [SentryMixin, AnalyticsMixin],
-  data() {
-    return {
-      version: GIT_REVISION_SHORT,
-    };
-  },
   mounted() {
     this.$inkline.config.variant = theme.getUserTheme();
   },
