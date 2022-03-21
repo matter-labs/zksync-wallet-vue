@@ -15,15 +15,16 @@ import { Plugin } from "@nuxt/types";
 import OhVueIcon from "oh-vue-icons/dist/v2/icon.umd";
 import { MdVpnkeyRound } from "oh-vue-icons/icons/md";
 import { CoEthereum } from "oh-vue-icons/icons/co";
+import { LaChargingStationSolid } from "oh-vue-icons/icons/la";
 import {
-  RiGalleryLine,
   RiAddCircleFill,
-  RiErrorWarningLine,
   RiAddFill,
   RiAddLine,
   RiArrowDownSLine,
   RiArrowGoBackLine,
   RiArrowLeftLine,
+  RiArrowLeftRightLine,
+  RiArrowRightUpLine,
   RiArrowUpSLine,
   RiAtLine,
   RiBook2Line,
@@ -35,7 +36,10 @@ import {
   RiContactsBookLine,
   RiContactsLine,
   RiDeleteBinLine,
+  RiErrorWarningLine,
   RiExternalLinkLine,
+  RiFileLine,
+  RiGalleryLine,
   RiGithubFill,
   RiHandCoinFill,
   RiHistoryLine,
@@ -59,10 +63,7 @@ import {
   RiSendPlaneFill,
   RiSunFill,
   RiWalletLine,
-  RiWifiLine,
-  RiFileLine,
-  RiArrowRightUpLine,
-  RiArrowLeftRightLine
+  RiWifiLine
 } from "oh-vue-icons/icons/ri";
 import Vue from "vue";
 
@@ -71,6 +72,7 @@ import Vue from "vue";
  */
 const iconsPlugin: Plugin = () => {
   OhVueIcon.add(
+    LaChargingStationSolid,
     MdVpnkeyRound,
     RiGalleryLine,
     RiInformationFill,

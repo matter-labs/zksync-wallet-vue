@@ -10,20 +10,20 @@
 
       <div v-if="emptyBalances" class="centerBlock">
         <p class="tileText">No balances yet, please
-          <nuxt-link to="/transaction/deposit">top your wallet up</nuxt-link>
+          <nuxt-link to="/account/top-up">top your wallet up</nuxt-link>
           or <a href="#" @click.prevent="openAccountModal">share your
             zk-address</a> to receive a
           transfer from
           someone!
         </p>
-        <i-button block class="_margin-top-1" data-cy="account_deposit_button" size="lg" to="/transaction/deposit" variant="secondary">
+        <i-button block class="_margin-top-1" data-cy="account_deposit_button" size="lg" to="/account/top-up" variant="secondary">
           <v-icon class="planeIcon" name="ri-add-fill"/>&nbsp;Top&nbsp;up
         </i-button>
       </div>
       <div v-else class="balances">
         <template v-if="!showLoader">
           <div class="_display-flex _justify-content-space-between balancesButtonGroup _margin-y-1">
-            <i-button block class="_margin-y-0 _margin-right-1 _padding-right-2" data-cy="account_deposit_button" size="md" to="/transaction/deposit" variant="secondary">
+            <i-button block class="_margin-y-0 _margin-right-1 _padding-right-2" data-cy="account_deposit_button" size="md" to="/account/top-up" variant="secondary">
               <v-icon class="planeIcon" name="ri-add-fill"/>&nbsp;Top&nbsp;up
             </i-button>
             <i-button block class="_margin-y-0 _padding-right-1 _margin-right-1" data-cy="account_send_zksync_button" size="md" to="/transaction/transfer" variant="secondary">
