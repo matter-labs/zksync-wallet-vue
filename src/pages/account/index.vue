@@ -1,6 +1,6 @@
 <template>
   <div class="walletPage dappPageWrapper">
-    <block-balances>
+    <block-balances :config="$store.getters['zk-onboard/config']">
       <wallet-address class="clickablePicture _margin-bottom-1" :wallet="walletAddress" @clickPicture="openAccountModal()" />
     </block-balances>
   </div>

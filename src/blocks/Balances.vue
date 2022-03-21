@@ -1,7 +1,7 @@
 <template>
   <div class="balancesBlock tileBlock">
     <i-modal v-model="balanceInfoModal" size="md">
-      <template slot="header">zkSync is a Layer-2 protocol</template>
+      <template v-slot="header">zkSync is a Layer-2 protocol</template>
       <p>
         Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
         <a :href="etherscanLink" rel="noopener noreferrer" target="_blank">etherscan.io</a> or in your Ethereum wallet, only in zkSync wallet and block explorer. Nevertheless,
@@ -26,12 +26,16 @@
     </div>
     <div v-else class="balances">
       <div v-if="!accountStateLoading || accountStateRequested">
-        <div class="_display-flex _justify-content-space-between _margin-y-1">
-          <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="lg" variant="secondary" to="/transaction/deposit">
-            <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;&nbsp;Add Funds
+        <div class="_display-flex _justify-content-space-between balancesButtonGroup _margin-y-1">
+          <i-button data-cy="account_deposit_button" block class="_margin-y-0 _margin-right-1 _padding-right-2" size="md" variant="secondary" to="/transaction/deposit">
+            <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top up
           </i-button>
-          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-2" size="lg" variant="secondary" to="/transaction/transfer">
-            <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Send
+          <i-button data-cy="account_send_zksync_button" block class="_margin-y-0 _padding-right-1 _margin-right-1" size="md" variant="secondary" to="/transaction/transfer">
+            <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
+          </i-button>
+          <i-button :disabled="!zigZagLink" tag="a" target="_blank" data-cy="account_swap_zksync_button" block size="md" variant="secondary" class="_margin-y-0 _padding-right-1"
+             :href="zigZagLink">
+            <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;Swap
           </i-button>
         </div>
 
@@ -94,10 +98,18 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
 import { searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
-import { ZkTokenBalances } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkTokenBalances, ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { AccountState as WalletAccountState, TokenInfo } from "zksync/build/types";
+
 export default Vue.extend({
+  props: {
+    config: {
+      required: true,
+      type: Object as PropType<ZkConfig>
+    }
+  },
   data() {
     return {
       search: "",
@@ -126,10 +138,10 @@ export default Vue.extend({
       return this.$store.getters["zk-balances/balances"];
     },
     zkBalancesWithDeposits(): ZkTokenBalances {
-      const tokens = this.$store.getters["zk-tokens/zkTokens"];
+      const tokens = this.$store.getters["zk-tokens/zkTokens"] as TokenInfo[];
       const zkBalancesWithDeposits = this.zkBalances;
       for (const symbol in this.activeDeposits) {
-        if (!zkBalancesWithDeposits[symbol]) {
+        if (this.activeDeposits.hasOwnProperty(symbol) && !zkBalancesWithDeposits[symbol]) {
           zkBalancesWithDeposits[symbol] = {
             balance: "0",
             verified: false,
@@ -142,14 +154,24 @@ export default Vue.extend({
     displayedList(): ZkTokenBalances {
       return searchByKey(this.zkBalancesWithDeposits, this.search);
     },
-    activeDeposits() {
+    activeDeposits(): WalletAccountState {
       return this.$store.getters["zk-balances/depositingBalances"];
     },
     hasDisplayedBalances(): boolean {
       return Object.keys(this.displayedList).length !== 0 || Object.keys(this.activeDeposits).length !== 0;
     },
+    zigZagLink(): string | null {
+      switch(this.$store.getters["zk-provider/network"]) {
+        case "mainnet":
+          return "https://trade.zigzag.exchange/";
+        case "rinkeby":
+          return "https://trade.zigzag.exchange/?network=zksync-rinkeby";
+        default:
+          return null;
+      }
+    },
     isSearching(): boolean {
-      return !!this.search.trim();
+      return this.search.trim().length > 0;
     },
   },
 });
