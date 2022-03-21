@@ -2,20 +2,17 @@
   min-height: 100vh;
 
   .routerContainer {
-    //min-height: $minRouteHeight;
-    //min-height: calc(100vh - 70px - 105px);
-
     .dappPageWrapper {
       & > * {
         margin: 1rem 0;
       }
     }
   }
-  
+
   footer a {
     color: $purple;
     transition: color $transition2;
-    
+
     &:hover {
       color: $lightViolet;
     }
@@ -35,60 +32,7 @@
     height: auto;
   }
 
-  .tileContainer {
-    cursor: pointer;
 
-    @media screen and (min-width: $mobile) {
-      padding-bottom: $footerHeight;
-    }
-
-    &:hover .tile {
-      box-shadow: $hoverShadow;
-    }
-
-    .tile {
-      width: 130px;
-      height: 130px;
-      margin: 20px auto 5px;
-      padding: 20px;
-      background-color: $white;
-      border-radius: 27px;
-      box-shadow: $tileShadow;
-      transition: $transition1;
-
-      @media screen and (max-width: $mobile) {
-        width: 110px;
-        height: 110px;
-      }
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        transition: $transition1;
-      }
-
-      .tileIcon {
-        position: absolute;
-        top: -24px;
-        right: -24px;
-        width: 48px;
-        height: 48px;
-        color: $violet;
-        font-size: 20px;
-        line-height: 48px;
-        background-color: $white;
-        border-radius: 50%;
-        opacity: 0;
-        transition: $transition2;
-      }
-    }
-
-    .tileName {
-      padding-top: 7px;
-      font-size: 18px;
-    }
-  }
 
   .externalWalletPopover .popover {
     width: 330px;

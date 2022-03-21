@@ -38,6 +38,8 @@ export default Vue.extend({
 <style lang="scss" scoped>
     .imgWithLoader {
         position: relative;
+        width: 100%;
+        height: 100%;
         
         .loaderContainer {
             z-index: 1;
@@ -48,7 +50,7 @@ export default Vue.extend({
             height: 100%;
             opacity: 0.8;
             filter: brightness(0.5);
-            object-fit: cover;
+            object-fit: contain;
             object-position: center;
             transition: $transition1;
             transition-property: opacity, filter;
