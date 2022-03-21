@@ -22,7 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { rampConfig, banxaConfig, moonpayConfig } from "@/utils/config";
+import { rampConfig, banxaConfig, utorgConfig, moonpayConfig } from "@/utils/config";
 
 export default Vue.extend({
   computed: {
@@ -39,6 +39,12 @@ export default Vue.extend({
       url: string;
     } | null {
       return banxaConfig[this.ethNetwork];
+    },
+    utorgConfig(): {
+      url: string;
+      sid: string;
+    } | null {
+      return utorgConfig[this.ethNetwork];
     },
     moonpayConfig(): {
       url: string;
@@ -58,13 +64,13 @@ export default Vue.extend({
     isBanxaSupported(): boolean {
       return !!this.banxaConfig;
     },
+    isUtorgSupported(): boolean {
+      return !!this.utorgConfig;
+    },
     isMoonpaySupported(): boolean {
       return !!this.moonpayConfig;
     },
     isOrbiterSupported(): boolean {
-      return this.isMainnet;
-    },
-    isUtorgSupported(): boolean {
       return this.isMainnet;
     },
   },
@@ -120,7 +126,7 @@ export default Vue.extend({
         return;
       }
       this.$analytics.track("click_on_buy_with_utorg");
-      window.open(`https://app-stage.utorg.pro/direct/3_prO23xXW/${this.address}/`);
+      window.open(`${this.utorgConfig!.url}/direct/${this.utorgConfig!.sid}/${this.address}/`);
     },
     async buyWithMoonpay(): Promise<void> {
       if (!this.isMoonpaySupported) {
