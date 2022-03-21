@@ -3,9 +3,9 @@
   height: 100%;
 
   .routerContainer {
-    min-height: $minRouteHeightMain;
-    //margin: 1rem auto;
     width: 100%;
+    height: max-content;
+    min-height: $minRouteHeightMain;
   }
 
   .headerSpace {

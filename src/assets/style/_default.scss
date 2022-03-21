@@ -68,6 +68,8 @@ a {
 }
 
 body.inkline {
+  overflow: auto;
+
   .button {
     &.-link {
       padding: 7px 12px;
@@ -135,6 +137,11 @@ body.inkline {
       }
     }
   }
+}
+
+#__nuxt, #__layout {
+  width: 100%;
+  height: 100%;
 }
 
 button.-lg.-circle {
@@ -239,11 +246,28 @@ button.-lg.-circle {
       font-size: 1.5rem;
       font-family: $firaSans;
 
+      @media screen and (max-width: $mobile) {
+        line-height: 100% !important;
+        padding: 0.5rem 1rem !important;
+      }
+
       & > .close {
         width: 2.2rem !important;
         height: 2.2rem !important;
         line-height: 2rem !important;
+
+        @media screen and (max-width: $mobile) {
+          width: 1.5rem !important;
+          height: 1.5rem !important;
+          line-height: 1rem !important;
+
+          i {
+            font-size: 1rem !important;
+          }
+        }
       }
+
+
 
       @media (max-width: $mobile) {
         display: flex;
@@ -258,6 +282,12 @@ button.-lg.-circle {
     .body {
       padding-right: 28px !important;
       padding-left: 28px !important;
+
+      ul {
+        padding-left: 0.5rem;
+        margin-left: 0.5rem;
+        margin-top: 1rem;
+      }
     }
 
     & > div:last-child {
