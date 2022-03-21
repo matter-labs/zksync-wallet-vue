@@ -1,29 +1,29 @@
 <template>
-  <div :class="{ 'disabled': !enabled}" @click="proceed" class="providerOption">
-    <block-logo class="ProviderZkLogo" :hide-network="true"/>
+  <div :class="{ disabled: !enabled }" @click="proceed" class="providerOption">
+    <block-logo class="ProviderZkLogo" :hide-network="true" />
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "ProviderLayerSwap",
+  name: "ProviderZkSync",
   props: {
     enabled: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
-    proceed () {
+    proceed() {
       if (!this.enabled) {
         this.$emit("providerError", "zkSync deposit is not supported");
         return;
       }
       this.$analytics.track("click_on_buy_with_zksync");
       return this.$router.push("/transaction/deposit");
-    }
-  }
+    },
+  },
 });
 </script>
 <style lang="scss" scoped>

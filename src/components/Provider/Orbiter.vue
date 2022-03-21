@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ 'disabled': disabled }" class="providerOption" @click="proceed">
-    <block-svg-orbiter class="svgClass"/>
+  <div :class="{ disabled: disabled }" class="providerOption" @click="proceed">
+    <block-svg-orbiter class="svgClass" />
   </div>
 </template>
 <script lang="ts">
@@ -11,30 +11,30 @@ export default Vue.extend({
   props: {
     enabled: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
-    ethNetwork (): string {
+    ethNetwork(): string {
       return this.$store.getters["zk-provider/network"];
     },
-    disabled (): boolean {
+    disabled(): boolean {
       return !this.enabled || !this.isSupported;
     },
-    isSupported (): boolean {
+    isSupported(): boolean {
       return this.ethNetwork === "mainnet";
-    }
+    },
   },
   methods: {
-    proceed (): void {
+    proceed(): void {
       if (this.disabled) {
         this.$emit("providerError", `Provider Orbiter is not supported for the “${this.ethNetwork}” network`);
         return;
       }
       this.$analytics.track("click_on_buy_with_orbiter");
       window.open(`https://www.orbiter.finance/?referer=zksync&dests=zksync&fixed=1`, "_blank");
-    }
-  }
+    },
+  },
 });
 </script>
 <style lang="scss" scoped>
@@ -61,5 +61,4 @@ export default Vue.extend({
     will-change: opacity;
   }
 }
-
 </style>

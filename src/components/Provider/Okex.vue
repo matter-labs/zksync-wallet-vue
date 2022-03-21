@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ 'disabled': !enabled }" @click="proceed">
-    <img src="@/static/images/providers/okex.png" alt="Okex" width="69">
+  <div :class="{ disabled: !enabled }" @click="proceed">
+    <img src="@/static/images/providers/okex.png" alt="Okex" width="69" />
   </div>
 </template>
 <script lang="ts">
@@ -11,18 +11,18 @@ export default Vue.extend({
   props: {
     enabled: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
-    proceed (): void {
+    proceed(): void {
       if (!this.enabled) {
         this.$emit("providerError", "Provider Okex will be available soon");
         return;
       }
       this.$analytics.track("click_on_buy_with_okex");
-    }
-  }
+    },
+  },
 });
 </script>
 <style lang="scss" scoped>

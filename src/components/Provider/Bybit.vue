@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ 'disabled': !enabled }" @click="proceed">
-    <img src="@/static/images/providers/bybit.png" alt="Bybit" width="61">
+  <div :class="{ disabled: !enabled }" @click="proceed">
+    <img src="@/static/images/providers/bybit.png" alt="Bybit" width="61" />
   </div>
 </template>
 <script lang="ts">
@@ -11,18 +11,18 @@ export default Vue.extend({
   props: {
     enabled: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
-    proceed (): void {
+    proceed(): void {
       if (!this.enabled) {
         this.$emit("providerError", "Provider Bybit will be available soon");
         return;
       }
       this.$analytics.track("click_on_buy_with_bybit");
-    }
-  }
+    },
+  },
 });
 </script>
 <style lang="scss" scoped>
