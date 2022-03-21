@@ -148,4 +148,57 @@ export default Vue.extend({
     align-items: center;
   }
 }
+
+.dappPageWrapper {
+  .estimatedFee {
+    margin: 3px 0;
+  }
+
+  .orDivider {
+    width: 100%;
+    height: max-content;
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-template-rows: 100%;
+    grid-gap: 17px;
+    align-items: center;
+    padding: 23px 0;
+
+    .line {
+      width: 100%;
+      height: 1px;
+      background-color: #eeeeee;
+      transition: background-color $transition1;
+      will-change: background-color;
+    }
+
+    .orText {
+      font-size: 18px;
+      font-weight: 700;
+      color: #eeeeee;
+      text-align: center;
+      transition: color $transition1;
+      will-change: color;
+    }
+  }
+}
+
+.inkline.-dark {
+  .dappPageWrapper {
+    .tileSmallHeadline {
+      color: $white;
+    }
+
+    .orDivider {
+      .line {
+        background-color: transparentize($color: $gray, $amount: 0.5);
+      }
+
+      .orText {
+        color: transparentize($color: $gray, $amount: 0.3);
+      }
+    }
+  }
+}
+
 </style>
