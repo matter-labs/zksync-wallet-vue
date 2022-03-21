@@ -15,7 +15,7 @@
     <provider-okex v-if="showProviders.okex" :enabled="okex" class="providerOption" @providerError="setError"/>
     <provider-bybit v-if="showProviders.bybit" :enabled="bybit" class="providerOption" @providerError="setError"/>
 
-    <provider-layer-swap v-if="showProviders.layerSwap" :enabled="orbiter" class="providerOption" @providerError="setError"/>
+    <provider-layer-swap v-if="showProviders.layerSwap" :enabled="layerSwap" class="providerOption" @providerError="setError"/>
     <provider-orbiter v-if="showProviders.orbiter" :enabled="orbiter" class="providerOption orbiterProvider" @providerError="setError"/>
     <provider-zk-sync v-if="showProviders.zksync" :enabled="true" class="providerOption zkSync"/>
     <block-modals-deposit-error :errorText="errorText"/>
@@ -63,6 +63,11 @@ export default Vue.extend({
     utorg: {
       type: Boolean,
       default: false,
+      required: false
+    },
+    layerSwap: {
+      type: Boolean,
+      default: true,
       required: false
     },
     showProviders: {

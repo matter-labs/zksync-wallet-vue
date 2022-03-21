@@ -19,7 +19,7 @@ export default Vue.extend({
       return this.$store.getters["zk-provider/network"];
     },
     disabled (): boolean {
-      return this.enabled && this.isSupported;
+      return !this.enabled || !this.isSupported;
     },
     isSupported (): boolean {
       return this.ethNetwork === "mainnet";
@@ -27,8 +27,8 @@ export default Vue.extend({
   },
   methods: {
     proceed (): void {
-      if (!this.isSupported) {
-        this.$emit("providerError", "Provider is not supported");
+      if (this.disabled) {
+        this.$emit("providerError", `Provider Orbiter is not supported for the “${this.ethNetwork}” network`);
         return;
       }
       this.$analytics.track("click_on_buy_with_orbiter");
