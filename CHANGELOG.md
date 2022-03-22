@@ -1,19 +1,18 @@
 # [3.13.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.2...3.13.0) (2022-03-22)
 
-
 ### Features
 
-* buy with utorg ([#227](https://github.com/matter-labs/zksync-wallet-vue/issues/227)) ([0c75094](https://github.com/matter-labs/zksync-wallet-vue/commit/0c75094c1a14d5a1c6013567e822cd5e18a10287))
+* buy with
+  utorg ([#227](https://github.com/matter-labs/zksync-wallet-vue/issues/227)) ([0c75094](https://github.com/matter-labs/zksync-wallet-vue/commit/0c75094c1a14d5a1c6013567e822cd5e18a10287))
 
 ## [3.12.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.1...3.12.2) (2022-03-21)
 
-
 ### Bug Fixes
 
-* make all transaction symbol checks when filling empty symbol ([#237](https://github.com/matter-labs/zksync-wallet-vue/issues/237)) ([744d854](https://github.com/matter-labs/zksync-wallet-vue/commit/744d854eac26c861f350f34a78f88167232b183d))
+* make all transaction symbol checks when filling empty
+  symbol ([#237](https://github.com/matter-labs/zksync-wallet-vue/issues/237)) ([744d854](https://github.com/matter-labs/zksync-wallet-vue/commit/744d854eac26c861f350f34a78f88167232b183d))
 
 ## [3.12.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.0...3.12.1) (2022-03-18)
-
 
 ### Bug Fixes
 
@@ -21,13 +20,11 @@
 
 # [3.12.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.11.0...3.12.0) (2022-03-17)
 
-
 ### Features
 
 * connect buttons keyboard accessible ([#236](https://github.com/matter-labs/zksync-wallet-vue/issues/236)) ([d95d83b](https://github.com/matter-labs/zksync-wallet-vue/commit/d95d83bfb8093b63a0700a0e012d0301df9844d4))
 
 # [3.11.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.10.0...3.11.0) (2022-03-16)
-
 
 ### Features
 
@@ -35,13 +32,11 @@
 
 # [3.10.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.9.2...3.10.0) (2022-03-16)
 
-
 ### Features
 
 * zigzag link added ([#232](https://github.com/matter-labs/zksync-wallet-vue/issues/232)) ([ac27dd1](https://github.com/matter-labs/zksync-wallet-vue/commit/ac27dd150b59d3f834099d8bb8ce8724f2c8f287))
 
 ## [3.9.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.9.1...3.9.2) (2022-03-16)
-
 
 ### Bug Fixes
 
@@ -49,13 +44,11 @@
 
 ## [3.9.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.9.0...3.9.1) (2022-03-16)
 
-
 ### Bug Fixes
 
 * body and container size and overflow styles ([#231](https://github.com/matter-labs/zksync-wallet-vue/issues/231)) ([e1106f0](https://github.com/matter-labs/zksync-wallet-vue/commit/e1106f03274af4c9b8cbc871a3a10216412abb88))
 
 # [3.9.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.8.1...3.9.0) (2022-03-14)
-
 
 ### Features
 
@@ -63,13 +56,11 @@
 
 ## [3.8.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.8.0...3.8.1) (2022-02-28)
 
-
 ### Bug Fixes
 
 * expect CIDv0 for NFTs ([#229](https://github.com/matter-labs/zksync-wallet-vue/issues/229)) ([d4f601b](https://github.com/matter-labs/zksync-wallet-vue/commit/d4f601b7fb6975488874bc24b6fefe8329cbd986))
 
 # [3.8.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.7.0...3.8.0) (2022-02-09)
-
 
 ### Features
 
@@ -77,13 +68,11 @@
 
 # [3.7.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.6.0...3.7.0) (2022-02-09)
 
-
 ### Features
 
 * sentry tunnel lambda function ([#220](https://github.com/matter-labs/zksync-wallet-vue/issues/220)) ([1ac8cdd](https://github.com/matter-labs/zksync-wallet-vue/commit/1ac8cdd34946dce370f6eb2c73e9983a07a9a468))
 
 # [3.6.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.5.0...3.6.0) (2022-02-04)
-
 
 ### Features
 
@@ -91,13 +80,11 @@
 
 # [3.5.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.3...3.5.0) (2022-02-01)
 
-
 ### Features
 
 * banxa & moonpay functions added ([#213](https://github.com/matter-labs/zksync-wallet-vue/issues/213)) ([720b68c](https://github.com/matter-labs/zksync-wallet-vue/commit/720b68c4082e2059acbabf39d58bec6611603b74))
 
 ## [3.4.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.2...3.4.3) (2022-01-27)
-
 
 ### Bug Fixes
 
@@ -105,13 +92,11 @@
 
 ## [3.4.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.1...3.4.2) (2022-01-25)
 
-
 ### Bug Fixes
 
 * click on nft image not redirecting to nft page ([#211](https://github.com/matter-labs/zksync-wallet-vue/issues/211)) ([4e97b17](https://github.com/matter-labs/zksync-wallet-vue/commit/4e97b174e14d974b3031d14aa69af20746e2741d))
 
 ## [3.4.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.4.0...3.4.1) (2022-01-25)
-
 
 ### Bug Fixes
 
@@ -119,13 +104,11 @@
 
 # [3.4.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.3.0...3.4.0) (2022-01-20)
 
-
 ### Features
 
 * nft image previews and use of metadata ([#203](https://github.com/matter-labs/zksync-wallet-vue/issues/203)) ([5d5af05](https://github.com/matter-labs/zksync-wallet-vue/commit/5d5af052830995aa5003a2f1106bcced692b7208))
 
 # [3.3.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.2.1...3.3.0) (2022-01-18)
-
 
 ### Features
 
@@ -133,13 +116,11 @@
 
 ## [3.2.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.2.0...3.2.1) (2022-01-14)
 
-
 ### Bug Fixes
 
 * transactions naming ([#207](https://github.com/matter-labs/zksync-wallet-vue/issues/207)) ([1c29f3e](https://github.com/matter-labs/zksync-wallet-vue/commit/1c29f3e4a4a81b06d60f0d3fc1ccf4a81b641ac3))
 
 # [3.2.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.1.0...3.2.0) (2022-01-13)
-
 
 ### Features
 
@@ -147,20 +128,17 @@
 
 # [3.1.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.0.1...3.1.0) (2022-01-13)
 
-
 ### Features
 
 * refactoring and slight changes ([8773440](https://github.com/matter-labs/zksync-wallet-vue/commit/87734401d87921d46b742f203b5a1b54f3f8aaa7))
 
 ## [3.0.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.0.0...3.0.1) (2022-01-04)
 
-
 ### Bug Fixes
 
 * workflow build script changed to the existing one ([5bb2696](https://github.com/matter-labs/zksync-wallet-vue/commit/5bb269611ede4ba6c942e376846d182fc48b95cf))
 
 # [2.7.0](https://github.com/matter-labs/zksync-wallet-vue/compare/2.6.1...2.7.0) (2022-01-04)
-
 
 ### Bug Fixes
 
@@ -201,7 +179,6 @@
 * WalletConnect network checks ([#150](https://github.com/matter-labs/zksync-wallet-vue/issues/150)) ([cda1262](https://github.com/matter-labs/zksync-wallet-vue/commit/cda1262b5fa68b75b9daa7e4cf4578fb6e3ca731))
 * zkScan mobile modal link ([#184](https://github.com/matter-labs/zksync-wallet-vue/issues/184)) ([a76e8c8](https://github.com/matter-labs/zksync-wallet-vue/commit/a76e8c8bb51ac44fc6b709e838eb3971ad922075))
 
-
 ### Features
 
 * add env property to mixpanel ([#200](https://github.com/matter-labs/zksync-wallet-vue/issues/200)) ([e4c3be3](https://github.com/matter-labs/zksync-wallet-vue/commit/e4c3be3c6f99e9eb674e7399adeb89fff8f83320))
@@ -221,7 +198,6 @@
 * **service:** deposit ramp integration ([1bf2784](https://github.com/matter-labs/zksync-wallet-vue/commit/1bf278496602cea9b0c0995f8c17c546cf920629))
 * set default transaction token ([#166](https://github.com/matter-labs/zksync-wallet-vue/issues/166)) ([93d4ae2](https://github.com/matter-labs/zksync-wallet-vue/commit/93d4ae2544f855800b51c84ee31714ff18862f9c))
 * setup sentry ([#145](https://github.com/matter-labs/zksync-wallet-vue/issues/145)) ([f0098f4](https://github.com/matter-labs/zksync-wallet-vue/commit/f0098f402781812ec54836195c8435752e79a531))
-
 
 ### Reverts
 
@@ -280,11 +256,11 @@
 
 ## [2.4.0-prerelease](https://github.com/matter-labs/zksync-wallet-vue/compare/2.4.0-alpha...2.4.0-prerelease)
 
- > 2021-05-25
+> 2021-05-25
 
 ## [2.4.0-alpha](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.5...2.4.0-alpha)
 
- > 2021-05-25
+> 2021-05-25
 
 ### Commits
 
@@ -294,7 +270,7 @@
 
 ## [2.3.5](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.4...2.3.5)
 
- > 2021-05-20
+> 2021-05-20
 
 ### Merged
 
@@ -308,7 +284,7 @@
 
 ## [2.3.4](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.3...2.3.4)
 
- > 2021-05-06
+> 2021-05-06
 
 ### Merged
 
@@ -323,7 +299,7 @@
 
 ## [2.3.3](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.2...2.3.3)
 
- > 2021-04-26
+> 2021-04-26
 
 ### Merged
 
@@ -337,7 +313,7 @@
 
 ## [2.3.2](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.1...2.3.2)
 
- > 2021-04-26
+> 2021-04-26
 
 ### Commits
 
@@ -347,7 +323,7 @@
 
 ## [2.3.1](https://github.com/matter-labs/zksync-wallet-vue/compare/2.3.0...2.3.1)
 
- > 2021-04-26
+> 2021-04-26
 
 ### Commits
 
@@ -357,7 +333,7 @@
 
 ## [2.3.0](https://github.com/matter-labs/zksync-wallet-vue/compare/2.1.0...2.3.0)
 
- > 2021-04-20
+> 2021-04-20
 
 ### Merged
 
@@ -401,11 +377,11 @@
 
 ## [2.1.0](https://github.com/matter-labs/zksync-wallet-vue/compare/2.1.0-beta2...2.1.0)
 
- > 2021-01-07
+> 2021-01-07
 
 ## [2.1.0-beta2](https://github.com/matter-labs/zksync-wallet-vue/compare/2.1.0-beta...2.1.0-beta2)
 
- > 2021-02-26
+> 2021-02-26
 
 ### Merged
 
@@ -420,7 +396,7 @@
 
 ## [2.1.0-beta](https://github.com/matter-labs/zksync-wallet-vue/compare/2.0.4...2.1.0-beta)
 
- > 2021-02-25
+> 2021-02-25
 
 ### Merged
 
@@ -434,7 +410,7 @@
 
 ## [2.0.4](https://github.com/matter-labs/zksync-wallet-vue/compare/2.0.3...2.0.4)
 
- > 2021-02-11
+> 2021-02-11
 
 ### Merged
 
@@ -462,7 +438,7 @@
 
 ## [2.0.3](https://github.com/matter-labs/zksync-wallet-vue/compare/2.0.0-beta6...2.0.3)
 
- > 2021-01-06
+> 2021-01-06
 
 ### Merged
 
@@ -497,7 +473,7 @@
 
 ## [2.0.0-beta6](https://github.com/matter-labs/zksync-wallet-vue/compare/2.0.0-beta1...2.0.0-beta6)
 
- > 2020-12-25
+> 2020-12-25
 
 ### Merged
 
@@ -530,7 +506,7 @@
 
 ## [2.0.0-beta1](https://github.com/matter-labs/zksync-wallet-vue/compare/1.6.0...2.0.0-beta1)
 
- > 2020-12-24
+> 2020-12-24
 
 ### Commits
 
@@ -540,7 +516,7 @@
 
 ## [1.6.0](https://github.com/matter-labs/zksync-wallet-vue/compare/1.5.4...1.6.0)
 
- > 2020-12-18
+> 2020-12-18
 
 ### Merged
 
@@ -568,7 +544,7 @@
 
 ## 1.5.4
 
- > 2020-12-07
+> 2020-12-07
 
 ### Merged
 
