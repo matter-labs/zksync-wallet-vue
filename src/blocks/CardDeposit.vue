@@ -12,6 +12,9 @@
     <div :class="{ disabled: !isOrbiterSupported }" class="providerOption orbiterProvider" @click="buyWithOrbiter">
       <block-svg-orbiter />
     </div>
+    <div :class="{ disabled: !isUtorgSupported }" class="providerOption utorgProvider" @click="buyWithUtorg">
+      <block-svg-utorg />
+    </div>
     <block-modals-deposit-error :errorText="errorText"/>
   </div>
 </template>
@@ -19,7 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { rampConfig, banxaConfig, moonpayConfig } from "@/utils/config";
+import { rampConfig, banxaConfig, utorgConfig, moonpayConfig } from "@/utils/config";
 
 export default Vue.extend({
   computed: {
@@ -37,6 +40,12 @@ export default Vue.extend({
     } | null {
       return banxaConfig[this.ethNetwork];
     },
+    utorgConfig(): {
+      url: string;
+      sid: string;
+    } | null {
+      return utorgConfig[this.ethNetwork];
+    },
     moonpayConfig(): {
       url: string;
       apiPublicKey: string;
@@ -46,17 +55,23 @@ export default Vue.extend({
     address(): string {
       return this.$store.getters["zk-account/address"];
     },
+    isMainnet(): boolean {
+      return this.ethNetwork === "mainnet";
+    },
     isRampSupported(): boolean {
       return !!this.rampConfig;
     },
     isBanxaSupported(): boolean {
       return !!this.banxaConfig;
     },
+    isUtorgSupported(): boolean {
+      return !!this.utorgConfig;
+    },
     isMoonpaySupported(): boolean {
       return !!this.moonpayConfig;
     },
     isOrbiterSupported(): boolean {
-      return this.ethNetwork === "mainnet";
+      return this.isMainnet;
     },
   },
   mounted() {
@@ -105,6 +120,13 @@ export default Vue.extend({
       }
       this.$analytics.track("click_on_buy_with_orbiter");
       window.open(`https://www.orbiter.finance/?referer=zksync&dests=zksync&fixed=1`);
+    },
+    buyWithUtorg() {
+      if (!this.isUtorgSupported) {
+        return;
+      }
+      this.$analytics.track("click_on_buy_with_utorg");
+      window.open(`${this.utorgConfig!.url}/direct/${this.utorgConfig!.sid}/${this.address}/`);
     },
     async buyWithMoonpay(): Promise<void> {
       if (!this.isMoonpaySupported) {
@@ -225,7 +247,8 @@ export default Vue.extend({
 
 .banxaProvider,
 .moonpayProvider,
-.orbiterProvider {
+.orbiterProvider,
+.utorgProvider {
   display: flex;
   align-items: center;
   &.orbiterProvider svg {
