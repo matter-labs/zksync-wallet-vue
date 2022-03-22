@@ -92,9 +92,11 @@ body.inkline {
       }
     }
 
-    .planeIcon {
-      position: relative;
-      top: -2px;
+    &.-lg {
+      .planeIcon {
+        position: relative;
+        top: -2px;
+      }
     }
   }
 

@@ -1,30 +1,94 @@
 <template>
   <div class="cryptoProviders">
-    <div :class="{ disabled: !isRampSupported }" class="providerOption rampProvider" @click="buyWithRamp">
+    <div v-if="showProviders.ramp" :class="{ disabled: !isRampSupported }" class="providerOption rampProvider" @click="buyWithRamp">
       <label><img class="ramp-logo" src="/RampLogo.svg" alt="Ramp" />Ramp</label>
     </div>
-    <div :class="{ disabled: !isBanxaSupported }" class="providerOption banxaProvider" @click="buyWithBanxa">
+    <div v-if="showProviders.banxa" :class="{ disabled: !isBanxaSupported }" class="providerOption banxaProvider" @click="buyWithBanxa">
       <block-svg-banxa />
     </div>
-    <!-- <div :class="{ disabled: !isMoonpaySupported }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
+    <div v-if="showProviders.moonpay" :class="{ disabled: !isMoonpaySupported || !moonpay }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
       <block-svg-moonpay />
-    </div> -->
-    <div :class="{ disabled: !isOrbiterSupported }" class="providerOption orbiterProvider" @click="buyWithOrbiter">
-      <block-svg-orbiter />
     </div>
-    <div :class="{ disabled: !isUtorgSupported }" class="providerOption utorgProvider" @click="buyWithUtorg">
-      <block-svg-utorg />
-    </div>
-    <block-modals-deposit-error :errorText="errorText"/>
+
+    <provider-utorg v-if="showProviders.utorg" :enabled="utorg" class="providerOption utorgProvider" @providerError="setError"/>
+
+    <provider-okex v-if="showProviders.okex" :enabled="okex" class="providerOption" @providerError="setError" />
+    <provider-bybit v-if="showProviders.bybit" :enabled="bybit" class="providerOption" @providerError="setError" />
+
+    <provider-layer-swap v-if="showProviders.layerSwap" :enabled="layerSwap" class="providerOption" @providerError="setError" />
+    <provider-orbiter v-if="showProviders.orbiter" :enabled="orbiter" class="providerOption orbiterProvider" @providerError="setError" />
+    <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync"/>
+    <block-modals-deposit-error :errorText="errorText" />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue, { PropType } from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { rampConfig, banxaConfig, utorgConfig, moonpayConfig } from "@/utils/config";
+import { banxaConfig, moonpayConfig, rampConfig } from "@/utils/config";
 
 export default Vue.extend({
+  name: "Providers",
+  props: {
+    ramp: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
+    okex: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    bybit: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    banxa: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
+    moonpay: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    orbiter: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
+    utorg: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    layerSwap: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
+    showProviders: {
+      type: Object as PropType<{
+        banxa?: boolean;
+        ramp?: boolean;
+        orbiter?: boolean;
+        moonpay?: boolean;
+        zksync?: boolean;
+        layerSwap?: boolean;
+        okex?: boolean;
+        bybit?: boolean;
+        utorg?: boolean;
+      }>,
+      default: () => ({
+        ramp: true,
+        banxa: true,
+      }),
+      required: false,
+    },
+  },
   computed: {
     rampConfig(): {
       url: string | undefined;
@@ -40,12 +104,6 @@ export default Vue.extend({
     } | null {
       return banxaConfig[this.ethNetwork];
     },
-    utorgConfig(): {
-      url: string;
-      sid: string;
-    } | null {
-      return utorgConfig[this.ethNetwork];
-    },
     moonpayConfig(): {
       url: string;
       apiPublicKey: string;
@@ -55,23 +113,14 @@ export default Vue.extend({
     address(): string {
       return this.$store.getters["zk-account/address"];
     },
-    isMainnet(): boolean {
-      return this.ethNetwork === "mainnet";
-    },
     isRampSupported(): boolean {
       return !!this.rampConfig;
     },
     isBanxaSupported(): boolean {
       return !!this.banxaConfig;
     },
-    isUtorgSupported(): boolean {
-      return !!this.utorgConfig;
-    },
     isMoonpaySupported(): boolean {
       return !!this.moonpayConfig;
-    },
-    isOrbiterSupported(): boolean {
-      return this.isMainnet;
     },
   },
   mounted() {
@@ -84,6 +133,9 @@ export default Vue.extend({
     };
   },
   methods: {
+    setError(errorText: string): void {
+      this.errorText = errorText;
+    },
     redirectURL(full: boolean = true): string {
       return full ? `${window.location.origin}/account` : "/account";
     },
@@ -114,22 +166,8 @@ export default Vue.extend({
         "_blank"
       );
     },
-    buyWithOrbiter() {
-      if (!this.isOrbiterSupported) {
-        return;
-      }
-      this.$analytics.track("click_on_buy_with_orbiter");
-      window.open(`https://www.orbiter.finance/?referer=zksync&dests=zksync&fixed=1`);
-    },
-    buyWithUtorg() {
-      if (!this.isUtorgSupported) {
-        return;
-      }
-      this.$analytics.track("click_on_buy_with_utorg");
-      window.open(`${this.utorgConfig!.url}/direct/${this.utorgConfig!.sid}/${this.address}/`);
-    },
     async buyWithMoonpay(): Promise<void> {
-      if (!this.isMoonpaySupported) {
+      if (!this.isMoonpaySupported || !this.moonpay) {
         return;
       }
 
@@ -176,8 +214,9 @@ export default Vue.extend({
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .cryptoProviders {
+  margin-top: 1rem;
   display: grid;
   width: 100%;
   height: max-content;
@@ -187,6 +226,9 @@ export default Vue.extend({
   grid-gap: 11px;
 
   .providerOption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
     width: 100%;
     height: 100%;
@@ -199,9 +241,10 @@ export default Vue.extend({
 
     &.disabled {
       border-color: transparentize($color: #eeeeee, $amount: 0.7);
+      background-color: transparentize($color: #eeeeee, $amount: 0.7);
 
       & > *:not(.loaderContainer) {
-        opacity: 0.3;
+        opacity: 0.5;
       }
     }
 
@@ -251,9 +294,6 @@ export default Vue.extend({
 .utorgProvider {
   display: flex;
   align-items: center;
-  &.orbiterProvider svg {
-    height: 21px;
-  }
 
   svg {
     height: 16px;
@@ -273,6 +313,7 @@ export default Vue.extend({
 
         &.disabled {
           border-color: transparentize($color: $gray, $amount: 0.85) !important;
+          background-color: transparentize($color: $gray, $amount: 0.9) !important;
         }
       }
     }
@@ -282,6 +323,17 @@ export default Vue.extend({
     label {
       color: #f8f9fa;
     }
+  }
+}
+
+@media screen and (max-width: $mobile) {
+  .cryptoProviders {
+    grid-auto-rows: 40px;
+    grid-gap: 15px;
+  }
+
+  .orDivider {
+    padding: 10px 0 !important;
   }
 }
 </style>
