@@ -1,3 +1,10 @@
+# [3.13.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.2...3.13.0) (2022-03-22)
+
+
+### Features
+
+* buy with utorg ([#227](https://github.com/matter-labs/zksync-wallet-vue/issues/227)) ([0c75094](https://github.com/matter-labs/zksync-wallet-vue/commit/0c75094c1a14d5a1c6013567e822cd5e18a10287))
+
 ## [3.12.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.1...3.12.2) (2022-03-21)
 
 
