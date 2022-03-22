@@ -1,9 +1,10 @@
 <template>
-  <div :class="{ disabled: !enabled }" @click="proceed">
-    <img src="@/static/images/providers/utorg.svg" alt="Utorg" width="90" />
+  <div :class="{ disabled: disabled }" class="providerOption" @click="proceed">
+    <block-svg-utorg/>
   </div>
 </template>
 <script lang="ts">
+import { utorgConfig } from "@/utils/config";
 import Vue from "vue";
 
 export default Vue.extend({
@@ -11,8 +12,22 @@ export default Vue.extend({
   props: {
     enabled: {
       type: Boolean,
-      required: true,
+      required: true
+    }
+  },
+  computed: {
+    utorgConfig(): {
+      url: string;
+      sid: string;
+    } | null {
+      return utorgConfig[this.$store.getters["zk-provider/network"]];
     },
+    disabled(): boolean {
+      return !this.enabled || !this.isSupported;
+    },
+    isSupported(): boolean {
+      return !!this.utorgConfig;
+    }
   },
   methods: {
     proceed(): void {
@@ -21,17 +36,15 @@ export default Vue.extend({
         return;
       }
       this.$analytics.track("click_on_buy_with_utorg");
-    },
-  },
+      window.open(`${this.utorgConfig!.url}/direct/${this.utorgConfig!.sid}/${this.$store.getters["zk-account/address"]}/`);
+    }
+  }
 });
 </script>
 <style lang="scss" scoped>
 .providerOption {
   &.disabled {
-    border-color: transparentize($color: #eeeeee, $amount: 0.7);
-
     img {
-      opacity: 0.3;
       filter: contrast(0.1);
     }
   }

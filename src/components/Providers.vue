@@ -10,14 +10,14 @@
       <block-svg-moonpay />
     </div>
 
-    <provider-utorg v-if="showProviders.utorg" :enabled="utorg" class="providerOption" @providerError="setError" />
+    <provider-utorg v-if="showProviders.utorg" :enabled="utorg" class="providerOption utorgProvider" @providerError="setError"/>
 
     <provider-okex v-if="showProviders.okex" :enabled="okex" class="providerOption" @providerError="setError" />
     <provider-bybit v-if="showProviders.bybit" :enabled="bybit" class="providerOption" @providerError="setError" />
 
     <provider-layer-swap v-if="showProviders.layerSwap" :enabled="layerSwap" class="providerOption" @providerError="setError" />
     <provider-orbiter v-if="showProviders.orbiter" :enabled="orbiter" class="providerOption orbiterProvider" @providerError="setError" />
-    <provider-zk-sync v-if="showProviders.zksync" :enabled="true" class="providerOption zkSync" />
+    <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync"/>
     <block-modals-deposit-error :errorText="errorText" />
   </div>
 </template>
@@ -166,7 +166,6 @@ export default Vue.extend({
         "_blank"
       );
     },
-
     async buyWithMoonpay(): Promise<void> {
       if (!this.isMoonpaySupported || !this.moonpay) {
         return;
@@ -215,7 +214,7 @@ export default Vue.extend({
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .cryptoProviders {
   margin-top: 1rem;
   display: grid;
@@ -242,9 +241,10 @@ export default Vue.extend({
 
     &.disabled {
       border-color: transparentize($color: #eeeeee, $amount: 0.7);
+      background-color: transparentize($color: #eeeeee, $amount: 0.7);
 
       & > *:not(.loaderContainer) {
-        opacity: 0.3;
+        opacity: 0.5;
       }
     }
 
@@ -290,13 +290,10 @@ export default Vue.extend({
 
 .banxaProvider,
 .moonpayProvider,
-.orbiterProvider {
+.orbiterProvider,
+.utorgProvider {
   display: flex;
   align-items: center;
-
-  &.orbiterProvider svg {
-    height: 21px;
-  }
 
   svg {
     height: 16px;
@@ -316,6 +313,7 @@ export default Vue.extend({
 
         &.disabled {
           border-color: transparentize($color: $gray, $amount: 0.85) !important;
+          background-color: transparentize($color: $gray, $amount: 0.9) !important;
         }
       }
     }
@@ -325,6 +323,17 @@ export default Vue.extend({
     label {
       color: #f8f9fa;
     }
+  }
+}
+
+@media screen and (max-width: $mobile) {
+  .cryptoProviders {
+    grid-auto-rows: 40px;
+    grid-gap: 15px;
+  }
+
+  .orDivider {
+    padding: 10px 0 !important;
   }
 }
 </style>

@@ -21,10 +21,25 @@ export const rampConfig = {
   // },
 };
 
+export const utorgConfig = {
+  mainnet: {
+    url: "https://app.utorg.pro",
+    sid: process.env.UTORG_MAINNET_SID
+  },
+  rinkeby: {
+    url: "https://app-stage.utorg.pro",
+    sid: process.env.UTORG_RINKEBY_SID
+  },
+  ropsten: {
+    url: "https://app-stage.utorg.pro",
+    sid: process.env.UTORG_ROPSTEN_SID
+  }
+};
+
 export const banxaConfig = {
   mainnet: {
-    url: "https://zksync.banxa.com",
-  },
+    url: "https://zksync.banxa.com"
+  }
   // rinkeby: {
   //   url: "https://zksync.banxa-sandbox.com",
   // },

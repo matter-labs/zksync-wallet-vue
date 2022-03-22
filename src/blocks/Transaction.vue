@@ -9,7 +9,7 @@
 
     <!-- Choose token -->
     <i-modal v-model="chooseTokenModalOpened" :value="chooseTokenModalOpened" size="md">
-      <template slot="header">Choose token</template>
+      <template #header>Choose token</template>
       <choose-token
         v-if="mainToken || chooseTokenModal === 'feeToken'"
         :fee-acceptable="chooseTokenModal === 'feeToken'"
@@ -274,7 +274,7 @@ export default Vue.extend({
       if (this.mainToken === "L2-NFT" || this.type === "MintNFT") {
         return "/account/nft";
       }
-      return "/account";
+      return "/account/top-up";
     },
     type (): ZkTransactionType {
       return this.$store.getters["zk-transaction/type"];

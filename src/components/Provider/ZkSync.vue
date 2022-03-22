@@ -11,7 +11,8 @@ export default Vue.extend({
   props: {
     enabled: {
       type: Boolean,
-      required: true,
+      required: false,
+      default: true
     },
   },
   methods: {
@@ -32,6 +33,7 @@ export default Vue.extend({
     width: 118px !important;
     height: auto !important;
     margin: 0 auto !important;
+    padding: 0 !important;
   }
 }
 </style>
