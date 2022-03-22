@@ -1,3 +1,10 @@
+# [3.14.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.13.0...3.14.0) (2022-03-22)
+
+
+### Features
+
+* new top-up UO for the zkSync Wallet v1.x ([#238](https://github.com/matter-labs/zksync-wallet-vue/issues/238)) ([f4dfbc7](https://github.com/matter-labs/zksync-wallet-vue/commit/f4dfbc7250b8117e5bb8db425a67e0f83cad75c5))
+
 # [3.13.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.12.2...3.13.0) (2022-03-22)
 
 ### Features
