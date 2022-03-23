@@ -28,11 +28,11 @@
           <a href="https://uptime.com/s/zksync" class="uptime-link" target="_blank">uptime</a>
         </div>
         <i-button size="md" circle class="_margin-right-1 _hidden-sm-and-down" data-cy="network_switch_icon" outline variant="dark" @click="openNetworkSwitchModal">
-          <v-icon name="co-ethereum" scale="1" />
+          <v-icon name="co-ethereum" />
         </i-button>
         <i-button size="md" circle class="floating-on-mobile _hidden-sm-and-down" outline variant="dark" @click="toggleDarkMode">
-          <v-icon v-if="isDarkTheme" name="ri-sun-fill" scale="1" />
-          <v-icon v-else name="ri-moon-fill" scale="1" />
+          <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
+          <v-icon v-else name="ri-moon-fill" />
         </i-button>
         <i-button class="_hidden-md-and-up floating-on-mobile" size="md" circle outline variant="dark" @click="footerModal = !footerModal">
           <v-icon name="ri-more-2-fill" />
@@ -57,9 +57,6 @@ export default Vue.extend({
   computed: {
     blockExplorerLink(): string {
       return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
-    },
-    version(): string {
-      return "";
     },
     isDarkTheme(): boolean {
       return this.theme === "dark";

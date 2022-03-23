@@ -34,7 +34,7 @@
     <template v-else>
       <img src="@/assets/imgs/logos/logo-alt.svg" alt="zkWallet" class="zkwallet-logo" />
     </template>
-    <block-network-badge />
+    <block-network-badge v-if="!hideNetwork" />
   </div>
 </template>
 
@@ -42,17 +42,17 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  name: "Logo",
+  name: "BlockLogo",
   props: {
+    hideNetwork: {
+      default: false,
+      type: Boolean,
+      required: false,
+    },
     isZkSyncLogo: {
       default: true,
       required: false,
       type: Boolean,
-    },
-  },
-  computed: {
-    network(): string {
-      return this.$store.getters["zk-provider/network"];
     },
   },
 });
