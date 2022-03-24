@@ -92,14 +92,14 @@ export default Vue.extend({
 
     .tileContainer {
       cursor: pointer;
+      &:hover .tile {
+        box-shadow: $hoverShadow;
+      }
 
       @media screen and (min-width: $mobile) {
         padding-bottom: $footerHeight;
       }
 
-      &:hover .tile {
-        box-shadow: $hoverShadow;
-      }
 
       .tile {
         max-width: 8rem;
