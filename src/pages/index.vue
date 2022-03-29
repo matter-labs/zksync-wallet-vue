@@ -15,7 +15,7 @@
           </div>
           <div class="tileName">Wallet Connect</div>
         </button>
-        <button data-cy="core_connect_wallet_argent_button" class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center" @click="walletConnect(true)" v-if="isMainnet">
+        <button data-cy="core_connect_wallet_argent_button" class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center" @click="walletConnect(true)">
           <div class="tile">
             <img src="@/assets/imgs/wallets/argent.svg" alt="Argent" />
           </div>
