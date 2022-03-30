@@ -17,7 +17,7 @@
 
     <provider-layer-swap v-if="showProviders.layerSwap" :enabled="layerSwap" class="providerOption" @providerError="setError" />
     <provider-orbiter v-if="showProviders.orbiter" :enabled="orbiter" class="providerOption orbiterProvider" @providerError="setError" />
-    <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync"/>
+    <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync" data-cy="deposit_provider_zksync"/>
     <block-modals-deposit-error :errorText="errorText" />
   </div>
 </template>
