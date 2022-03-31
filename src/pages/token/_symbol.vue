@@ -13,7 +13,7 @@
               target="_blank"
               class="icon-container _display-flex"
             >
-              <v-icon name="ri-external-link-line" class="iconInfo"/>
+              <v-icon name="ri-external-link-line" class="iconInfo" />
             </a>
             <template slot="body">Token contract</template>
           </i-tooltip>
@@ -46,12 +46,12 @@
             <div v-else-if="balanceToken" class="balance">
               {{ balanceToken.balance | parseBigNumberish(symbol) }}&nbsp;
               <span class="tokenSymbol">{{ symbol }}&nbsp;&nbsp;</span>
-              <token-price class="secondaryText" :symbol="symbol" :amount="balanceToken.balance"/>
+              <token-price class="secondaryText" :symbol="symbol" :amount="balanceToken.balance" />
             </div>
             <div v-else class="balance">
               <span class="tokenSymbol">{{ symbol }}</span>
               &nbsp;0&nbsp;&nbsp;
-              <token-price :symbol="symbol" amount="0"/>
+              <token-price :symbol="symbol" amount="0" />
             </div>
           </div>
           <i-button
@@ -60,9 +60,8 @@
             size="sm"
             variant="secondary"
             :to="`/transaction/withdraw?token=${symbol}`"
-          >Send to Ethereum (L1)
-          </i-button
-          >
+            >Send to Ethereum (L1)
+          </i-button>
         </div>
         <i-button
           block
@@ -71,7 +70,7 @@
           variant="secondary"
           :to="`/transaction/transfer?token=${symbol}`"
         >
-          <v-icon class="planeIcon" name="ri-send-plane-fill"/>&nbsp;&nbsp;Transfer
+          <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
         </i-button>
       </div>
     </div>
@@ -96,7 +95,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      fromRoute: undefined as undefined | Route
+      fromRoute: undefined as undefined | Route,
     };
   },
   computed: {

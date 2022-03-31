@@ -52,7 +52,7 @@
         </div>
         <div v-else-if="!hasDisplayedBalances" class="centerBlock">
           <span v-if="tokensType === 'L2-NFT'"
-          >No available NFT tokens yet. You can either <nuxt-link to="/transaction/nft/mint">mint</nuxt-link> or
+            >No available NFT tokens yet. You can either <nuxt-link to="/transaction/nft/mint">mint</nuxt-link> or
             request them from someone!</span
           >
           <span v-else>No balances yet. Please make a deposit or request money from someone!</span>
@@ -68,9 +68,8 @@
           @click="$accessor.openModal('NoTokenFound')"
         >
           Can't find a token?
-        </i-button
-        >
-        <block-modals-no-token-found/>
+        </i-button>
+        <block-modals-no-token-found />
       </template>
       <template v-else>
         <i-button
@@ -82,9 +81,8 @@
           @click="$accessor.openModal('NoNftTokenFound')"
         >
           Can't find a token?
-        </i-button
-        >
-        <block-modals-no-nft-token-found/>
+        </i-button>
+        <block-modals-no-nft-token-found />
       </template>
     </template>
   </div>
@@ -93,7 +91,12 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { searchByKey, searchInObject } from "@matterlabs/zksync-nuxt-core/utils";
-import { ZkEthereumBalances, ZkNFTBalances, ZkTokenBalances, ZkTransactionMainToken } from "@matterlabs/zksync-nuxt-core/types";
+import {
+  ZkEthereumBalances,
+  ZkNFTBalances,
+  ZkTokenBalances,
+  ZkTransactionMainToken,
+} from "@matterlabs/zksync-nuxt-core/types";
 import { BigNumberish } from "ethers";
 import { Tokens } from "zksync/build/types";
 

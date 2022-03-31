@@ -9,16 +9,14 @@
         <nuxt-link
           :to="isNFT ? '/transaction/nft/withdraw' : '/transaction/withdraw'"
           @click.native="$accessor.closeActiveModal()"
-        >Withdraw{{ isNFT ? " NFT" : "" }}
-        </nuxt-link
-        >
+          >Withdraw{{ isNFT ? " NFT" : "" }}
+        </nuxt-link>
         function instead.
       </div>
       <i-checkbox v-model="transferWithdrawWarningCheckmark">Do not show this again</i-checkbox>
       <i-button block class="_margin-top-1" size="lg" variant="secondary" @click="proceed()"
-      >Transfer{{ isNFT ? " NFT" : "" }} inside zkSync
-      </i-button
-      >
+        >Transfer{{ isNFT ? " NFT" : "" }} inside zkSync
+      </i-button>
     </div>
   </i-modal>
 </template>

@@ -19,9 +19,8 @@
           class="_margin-top-1"
           :disabled="!isNameValid"
           @click="renameWallet()"
-        >Save
-        </i-button
-        >
+          >Save
+        </i-button>
       </div>
     </i-modal>
 
@@ -40,15 +39,15 @@
           target="_blank"
           @click.passive="$analytics.track('view_in_blockexplorer')"
         >
-          <v-icon name="ri-external-link-line"/>
+          <v-icon name="ri-external-link-line" />
           <span>View in block explorer</span>
         </a>
         <div class="modalFooterBtn" @click="renameWalletOpen">
-          <v-icon name="ri-pencil-line"/>
+          <v-icon name="ri-pencil-line" />
           <span>Rename wallet</span>
         </div>
         <div class="modalFooterBtn" @click="logout()">
-          <v-icon name="ri-link-unlink-m"/>
+          <v-icon name="ri-link-unlink-m" />
           <span>Disconnect wallet</span>
         </div>
       </template>

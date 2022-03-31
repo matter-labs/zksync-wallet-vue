@@ -17,19 +17,18 @@
           <span class="tokenSymbol">{{ item.symbol }}</span>
           {{ item.amount.toString() | parseBigNumberish(item.symbol) }}
           <span class="secondaryText">
-            <token-price :symbol="item.symbol" :amount="item.amount.toString()"/>
+            <token-price :symbol="item.symbol" :amount="item.amount.toString()" />
           </span>
         </div>
       </div>
     </div>
     <div v-if="canProceed" class="goBackContinueBtns _margin-top-1">
       <i-button size="lg" variant="secondary" circle @click="proceed(false)">
-        <v-icon name="ri-arrow-left-line"/>
+        <v-icon name="ri-arrow-left-line" />
       </i-button>
       <i-button data-cy="fee_changed_proceed_button" block size="lg" variant="secondary" @click="proceed(true)"
-      >Proceed to {{ typeName }}
-      </i-button
-      >
+        >Proceed to {{ typeName }}
+      </i-button>
     </div>
     <i-button v-else class="_margin-top-1" block size="lg" variant="secondary" @click="proceed(false)">Ok</i-button>
   </i-modal>

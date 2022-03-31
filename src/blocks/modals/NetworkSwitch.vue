@@ -10,7 +10,7 @@
         @click="changeNetworkConfig(zkNetworkName)"
       >
         <span>
-          <v-icon v-if="zkNetworkName === network" class="selected" name="ri-check-line"/>
+          <v-icon v-if="zkNetworkName === network" class="selected" name="ri-check-line" />
         </span>
         <span>{{ zkNetworkName }} </span>
       </li>

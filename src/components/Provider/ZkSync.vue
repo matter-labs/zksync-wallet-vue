@@ -1,6 +1,6 @@
 <template>
   <div :class="{ disabled: !enabled }" class="providerOption" @click="proceed">
-    <block-logo class="ProviderZkLogo" :hide-network="true"/>
+    <block-logo class="ProviderZkLogo" :hide-network="true" />
   </div>
 </template>
 <script lang="ts">
@@ -12,7 +12,7 @@ export default Vue.extend({
     enabled: {
       type: Boolean,
       required: false,
-      default: true
+      default: true,
     },
   },
   methods: {

@@ -6,7 +6,7 @@
       class="providerOption rampProvider"
       @click="buyWithRamp"
     >
-      <label><img class="ramp-logo" src="/RampLogo.svg" alt="Ramp"/>Ramp</label>
+      <label><img class="ramp-logo" src="/RampLogo.svg" alt="Ramp" />Ramp</label>
     </div>
     <div
       v-if="showProviders.banxa"
@@ -14,7 +14,7 @@
       class="providerOption banxaProvider"
       @click="buyWithBanxa"
     >
-      <block-svg-banxa/>
+      <block-svg-banxa />
     </div>
     <div
       v-if="showProviders.moonpay"
@@ -22,7 +22,7 @@
       class="providerOption moonpayProvider"
       @click="buyWithMoonpay"
     >
-      <block-svg-moonpay/>
+      <block-svg-moonpay />
     </div>
 
     <provider-utorg
@@ -32,8 +32,8 @@
       @providerError="setError"
     />
 
-    <provider-okex v-if="showProviders.okex" :enabled="okex" class="providerOption" @providerError="setError"/>
-    <provider-bybit v-if="showProviders.bybit" :enabled="bybit" class="providerOption" @providerError="setError"/>
+    <provider-okex v-if="showProviders.okex" :enabled="okex" class="providerOption" @providerError="setError" />
+    <provider-bybit v-if="showProviders.bybit" :enabled="bybit" class="providerOption" @providerError="setError" />
 
     <provider-layer-swap
       v-if="showProviders.layerSwap"
@@ -47,8 +47,8 @@
       class="providerOption orbiterProvider"
       @providerError="setError"
     />
-    <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync"/>
-    <block-modals-deposit-error :error-text="errorText"/>
+    <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync" />
+    <block-modals-deposit-error :error-text="errorText" />
   </div>
 </template>
 
@@ -114,14 +114,14 @@ export default Vue.extend({
       }>,
       default: () => ({
         ramp: true,
-        banxa: true
+        banxa: true,
       }),
-      required: false
+      required: false,
     },
   },
   data() {
     return {
-      errorText: ""
+      errorText: "",
     };
   },
   computed: {
@@ -217,7 +217,7 @@ export default Vue.extend({
         const body = JSON.stringify({
           pubKey: this.moonpayConfig?.apiPublicKey,
           originalUrl: url,
-          ethNetwork: this.ethNetwork
+          ethNetwork: this.ethNetwork,
         });
         const response = await fetch("/api/moonpaySign", {
           method: "POST",

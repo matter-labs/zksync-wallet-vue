@@ -27,9 +27,9 @@
         @click="signActivation()"
       >
         <div class="_display-flex _justify-content-center _align-items-center">
-          <v-icon v-if="!hasSigner" name="md-vpnkey-round"/>&nbsp;&nbsp;
+          <v-icon v-if="!hasSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
           <div>{{ hasSigner ? "" : "Authorize to " }}Sign account activation</div>
-          <loader v-if="loading || requestingSigner" class="_margin-left-1" size="xs"/>
+          <loader v-if="loading || requestingSigner" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
 
@@ -99,7 +99,7 @@ export default Vue.extend({
           "/transaction/transfer",
           "/transaction/withdraw",
           "/transaction/nft/transfer",
-          "/transaction/nft/withdraw"
+          "/transaction/nft/withdraw",
         ];
         for (const route of forbiddenRoutes) {
           if (

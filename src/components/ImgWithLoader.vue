@@ -1,9 +1,9 @@
 <template>
   <div class="imgWithLoader" @click="$emit('click')">
     <transition name="fadeFast">
-      <loader v-if="!imgLoaded" :size="loaderSize"/>
+      <loader v-if="!imgLoaded" :size="loaderSize" />
     </transition>
-    <img :class="{ loaded: imgLoaded }" :src="src" :alt="alt" @load="imgLoaded = true" @loadstart="imgLoaded = false"/>
+    <img :class="{ loaded: imgLoaded }" :src="src" :alt="alt" @load="imgLoaded = true" @loadstart="imgLoaded = false" />
   </div>
 </template>
 
@@ -15,24 +15,24 @@ export default Vue.extend({
     loaderSize: {
       type: String,
       default: "xs",
-      required: false
+      required: false,
     },
     src: {
       type: String,
       default: "",
-      required: true
+      required: true,
     },
     alt: {
       type: String,
       default: "",
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      imgLoaded: false
+      imgLoaded: false,
     };
-  }
+  },
 });
 </script>
 

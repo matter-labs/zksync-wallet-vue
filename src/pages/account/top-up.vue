@@ -3,7 +3,7 @@
     <div class="top-up-tile tileBlock">
       <h3 class="tileHeadline withBtn h3">
         <nuxt-link :to="`/account`" class="_icon-wrapped -rounded -sm returnBtn _display-flex">
-          <v-icon name="ri-arrow-left-line" scale="1"/>
+          <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
         Top&nbsp;up
       </h3>
@@ -11,7 +11,7 @@
         <h4 class="tileSmallHeadline">
           Buy Crypto with Credit Card
           <div class="secondaryText estimatedFee">
-            <v-icon name="la-charging-station-solid"/>
+            <v-icon name="la-charging-station-solid" />
             <span><b>Fee:</b>&nbsp;~3-5%</span>
           </div>
         </h4>
@@ -19,7 +19,7 @@
           You can buy crypto directly on zkSync with your credit card, just go through KYC process of our partners and
           enter your wallet address
         </div>
-        <providers :show-providers="{ ramp: true, banxa: true, moonpay: true, utorg: true }"/>
+        <providers :show-providers="{ ramp: true, banxa: true, moonpay: true, utorg: true }" />
       </section>
       <div class="orDivider">
         <div class="line"></div>
@@ -30,7 +30,7 @@
         <h4 class="tileSmallHeadline">
           Exchanges
           <div class="secondaryText estimatedFee">
-            <v-icon name="la-charging-station-solid"/>
+            <v-icon name="la-charging-station-solid" />
             <span><b>Fee:</b>&nbsp;~0.5%</span>
           </div>
         </h4>
@@ -38,7 +38,7 @@
           zkSync v1 is integrated with exchanges, so you can withdraw funds from your favorite exchanges directly inside
           the zkSync network using the benefits of the low fees
         </div>
-        <providers :show-providers="{ okex: true, bybit: true }"/>
+        <providers :show-providers="{ okex: true, bybit: true }" />
       </section>
       <div v-if="false" class="orDivider">
         <div class="line"></div>
@@ -49,14 +49,14 @@
         <h4 class="tileSmallHeadline">
           Bridges
           <div class="secondaryText estimatedFee">
-            <v-icon name="la-charging-station-solid"/>
+            <v-icon name="la-charging-station-solid" />
             <span><b>Fee:</b>&nbsp;~1-90$</span>
           </div>
         </h4>
         <div class="secondaryText small _margin-bottom-05">
           You can bridge your assets from other networks & exchanges using one of our supported bridges
         </div>
-        <providers :show-providers="{ layerSwap: true, zksync: true, orbiter: true }"/>
+        <providers :show-providers="{ layerSwap: true, zksync: true, orbiter: true }" />
       </section>
     </div>
   </div>
@@ -76,7 +76,7 @@ export default Vue.extend({
         default:
           return null;
       }
-    }
+    },
   },
   mounted() {
     this.$analytics.track("visit_top-up");
@@ -87,8 +87,8 @@ export default Vue.extend({
     },
     openBalanceInfoModal(): void {
       this.$accessor.openModal("BalanceInfo");
-    }
-  }
+    },
+  },
 });
 </script>
 <style lang="scss">

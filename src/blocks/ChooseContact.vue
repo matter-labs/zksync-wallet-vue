@@ -12,7 +12,7 @@
           maxlength="20"
         >
           <template #prefix>
-            <v-icon name="ri-search-line"/>
+            <v-icon name="ri-search-line" />
           </template>
         </i-input>
         <div class="contactsListContainer genericListContainer">
@@ -30,7 +30,7 @@
               class="contactItem"
               @click.self="chooseContact({ name: 'Own account', address: ownAddress })"
             >
-              <user-img :wallet="ownAddress"/>
+              <user-img :wallet="ownAddress" />
               <div class="contactInfo">
                 <div class="contactName">Own account</div>
                 <div class="contactAddress walletAddress">{{ ownAddress }}</div>
@@ -42,7 +42,7 @@
               class="contactItem"
               @click.self="chooseContact(item)"
             >
-              <user-img :wallet="item.address"/>
+              <user-img :wallet="item.address" />
               <div class="contactInfo">
                 <div class="contactName">{{ item.name }}</div>
                 <div class="contactAddress walletAddress">{{ item.address }}</div>
@@ -80,9 +80,8 @@
           link
           variant="secondary"
           @click="contactsListModal = true"
-        >Select from contacts
-        </i-button
-        >
+          >Select from contacts
+        </i-button>
       </i-column>
       <i-column v-else xs="12" :md="canSaveContact ? 7 : 12">
         <i-button
@@ -92,14 +91,13 @@
           variant="secondary"
           @click="contactsListModal = true"
         >
-          {{ isOwnAddress ? "Own account" : contact.name }}&nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line"/>
+          {{ isOwnAddress ? "Own account" : contact.name }}&nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
         </i-button>
       </i-column>
       <i-column xs="12" md="5">
         <i-button v-if="canSaveContact" block link variant="secondary" @click="saveContactModal = true">
           Save to contacts
-        </i-button
-        >
+        </i-button>
       </i-column>
     </i-row>
   </div>

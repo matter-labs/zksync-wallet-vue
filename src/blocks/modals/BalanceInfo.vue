@@ -7,7 +7,7 @@
         :href="`https://${etherscanDomain}/address/${$store.getters['zk-account/address']}`"
         rel="noopener noreferrer"
         target="_blank"
-      >{{ etherscanDomain }}</a
+        >{{ etherscanDomain }}</a
       >
       or in your Ethereum wallet, only in zkSync wallet and block explorer. Nevertheless, balances in zkSync are as
       secure as if though they were in L1 (the Ethereum mainnet).

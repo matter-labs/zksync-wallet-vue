@@ -25,7 +25,7 @@
             @click.native="copy(transaction.tx.contentHash)"
           >
             <div class="iconContainer">
-              <v-icon name="ri-clipboard-line"/>
+              <v-icon name="ri-clipboard-line" />
               <span>Copy hash</span>
             </div>
             <template slot="body">Copied!</template>
@@ -95,14 +95,14 @@ export default Vue.extend({
     transaction: {
       type: Object,
       default: () => {},
-      required: true
+      required: true,
     } as PropOptions<ApiTransaction>,
   },
   data() {
     return {
       timeAgo: "",
       ethTxHash: "",
-      config: this.$store.getters["zk-onboard/config"] as ZkConfig
+      config: this.$store.getters["zk-onboard/config"] as ZkConfig,
     };
   },
   computed: {

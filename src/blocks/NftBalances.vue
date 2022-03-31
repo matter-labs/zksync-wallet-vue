@@ -3,7 +3,7 @@
     <div class="tileHeadline h3">
       <span>NFT Tokens</span>
     </div>
-    <slot/>
+    <slot />
     <div
       v-if="!isSearching && !hasDisplayedBalances && (accountStateLoading === false || accountStateRequested)"
       class="centerBlock"
@@ -17,9 +17,8 @@
         variant="secondary"
         class="_margin-top-1"
         to="/transaction/nft/mint"
-      >+ Mint NFT
-      </i-button
-      >
+        >+ Mint NFT
+      </i-button>
     </div>
     <div v-else class="balances">
       <div v-if="!accountStateLoading || accountStateRequested">
@@ -31,9 +30,8 @@
             size="lg"
             variant="secondary"
             to="/transaction/nft/mint"
-          >+ Mint NFT
-          </i-button
-          >
+            >+ Mint NFT
+          </i-button>
           <i-button
             data-cy="account_withdraw_button"
             class="_padding-y-0"
@@ -53,10 +51,10 @@
           variant="secondary"
           to="/transaction/nft/transfer"
         >
-          <v-icon class="planeIcon" name="ri-send-plane-fill"/>&nbsp;&nbsp;Transfer NFT
+          <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer NFT
         </i-button>
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
-          <v-icon slot="prefix" name="ri-search-line"/>
+          <v-icon slot="prefix" name="ri-search-line" />
         </i-input>
       </div>
 
@@ -83,11 +81,11 @@
               class="userImg"
             />
             <div v-else class="userImg">
-              <v-icon class="_margin-x-auto" name="ri-file-line"/>
+              <v-icon class="_margin-x-auto" name="ri-file-line" />
             </div>
             <i-tooltip class="nftStatus" placement="left">
-              <v-icon v-if="item.verified" class="nftStatusIcon verified" name="ri-check-double-line"/>
-              <v-icon v-else class="nftStatusIcon committed" name="ri-check-line"/>
+              <v-icon v-if="item.verified" class="nftStatusIcon verified" name="ri-check-double-line" />
+              <v-icon v-else class="nftStatusIcon committed" name="ri-check-line" />
               <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
             </i-tooltip>
           </nuxt-link>
@@ -105,7 +103,7 @@
                 variant="secondary"
                 @click="copyHash(item.contentHash)"
               >
-                <v-icon name="ri-clipboard-line"/>
+                <v-icon name="ri-clipboard-line" />
               </i-button>
               <template slot="body">Copied!</template>
             </i-tooltip>

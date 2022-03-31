@@ -16,13 +16,13 @@
           size="lg"
           @keyup.enter="saveContact()"
         />
-        <br/>
+        <br />
         <div class="_padding-bottom-1">Address</div>
-        <address-input ref="addressInput" v-model="contactModal.address" @enter="saveContact()"/>
-        <br/>
+        <address-input ref="addressInput" v-model="contactModal.address" @enter="saveContact()" />
+        <br />
         <div v-if="contactModal.error" class="modalError _padding-bottom-2">{{ contactModal.error }}</div>
         <i-button v-if="contactModal.type === 'edit'" block link size="md" variant="secondary" @click="deleteContact()">
-          <v-icon name="ri-delete-bin-line"/>&nbsp;&nbsp;Delete contact
+          <v-icon name="ri-delete-bin-line" />&nbsp;&nbsp;Delete contact
         </i-button>
         <i-button block variant="secondary" size="lg" @click="saveContact()">Save</i-button>
       </div>
@@ -32,7 +32,7 @@
         <span>Contacts</span>
         <i-tooltip>
           <span class="icon-container _display-flex" @click="addNewContact()">
-            <v-icon name="ri-add-fill" class="iconInfo"/>
+            <v-icon name="ri-add-fill" class="iconInfo" />
           </span>
           <template #body>Add contact</template>
         </i-tooltip>
@@ -46,16 +46,15 @@
         maxlength="20"
       >
         <i slot="prefix">
-          <v-icon name="ri-search-line"/>
+          <v-icon name="ri-search-line" />
         </i>
       </i-input>
       <div class="contactsListContainer genericListContainer">
         <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound _margin-bottom-0 _margin-top-1">
           <div>The contact list is empty</div>
           <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="addNewContact()"
-          >Add contact
-          </i-button
-          >
+            >Add contact
+          </i-button>
         </div>
         <div v-else-if="!hasDisplayedContacts" class="nothingFound">
           <span>
@@ -86,12 +85,12 @@
                   variant="secondary"
                   @click="copyAddress(contact.address)"
                 >
-                  <v-icon name="ri-clipboard-line"/>
+                  <v-icon name="ri-clipboard-line" />
                 </i-button>
                 <template #body>Copied!</template>
               </i-tooltip>
               <i-button block link size="md" cla variant="secondary" @click="editContact(contact)">
-                <v-icon name="ri-pencil-fill"/>
+                <v-icon name="ri-pencil-fill" />
               </i-button>
             </template>
             <i-button
@@ -103,7 +102,7 @@
               variant="secondary"
               @click="restoreDeleted(contact)"
             >
-              <v-icon name="ri-arrow-go-back-line"/>
+              <v-icon name="ri-arrow-go-back-line" />
             </i-button>
           </div>
         </div>
@@ -129,7 +128,7 @@ export default Vue.extend({
         error: "",
         name: "",
         address: "" as Address,
-        openedAddress: undefined as Address | undefined
+        openedAddress: undefined as Address | undefined,
       },
     };
   },
@@ -203,7 +202,7 @@ export default Vue.extend({
 
       await this.$store.dispatch("zk-contacts/setContact", {
         address: this.contactModal.address,
-        name: this.contactModal.name.trim()
+        name: this.contactModal.name.trim(),
       });
       this.contactModal.enabled = false;
     },

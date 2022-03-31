@@ -9,7 +9,7 @@
           @click="customWallet()"
         >
           <div class="tile">
-            <img src="@/assets/imgs/wallets/external.png" alt="External"/>
+            <img src="@/assets/imgs/wallets/external.png" alt="External" />
           </div>
           <div class="tileName">Ethereum Wallet</div>
         </button>
@@ -19,7 +19,7 @@
           @click="walletConnect()"
         >
           <div class="tile">
-            <img src="@/assets/imgs/wallets/wc.png" alt="Wallet Connect"/>
+            <img src="@/assets/imgs/wallets/wc.png" alt="Wallet Connect" />
           </div>
           <div class="tileName">Wallet Connect</div>
         </button>
@@ -28,7 +28,7 @@
         <h2 class="_display-flex _margin-y-0 _align-items-center">
           Can't find your wallet?
           <span class="icon-container _display-flex" @click="$accessor.openModal('AlternativeWithdrawal')">
-            <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" :scale="0.9"/>
+            <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" :scale="0.9" />
           </span>
         </h2>
         <h3 class="noteContainer">Or you’ve receive funds on your exchange address such as Binance?</h3>
@@ -39,7 +39,7 @@
           target="_blank"
         >
           <div class="tile">
-            <img src="@/assets/imgs/logos/symbol.svg" alt="Alternative withdraw"/>
+            <img src="@/assets/imgs/logos/symbol.svg" alt="Alternative withdraw" />
           </div>
           <div class="tileName">Alternative Withdraw</div>
         </a>
@@ -65,7 +65,7 @@ export default Vue.extend({
       } else {
         this.$analytics.track("login", {
           connectionType: "Ethereum Wallet",
-          wallet: this.$store.getters["zk-onboard/selectedWallet"]
+          wallet: this.$store.getters["zk-onboard/selectedWallet"],
         });
         return this.$router.push("/account");
       }
@@ -77,7 +77,7 @@ export default Vue.extend({
       } else {
         this.$analytics.track("login", {
           connectionType: "WalletConnect",
-          wallet: this.$store.getters["zk-onboard/selectedWallet"]
+          wallet: this.$store.getters["zk-onboard/selectedWallet"],
         });
         return this.$router.push("/account");
       }

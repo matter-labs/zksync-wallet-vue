@@ -62,9 +62,8 @@
                     target="_blank"
                     @mouseover.native="index > 0 ? (firstHovered = false) : (firstHovered = true)"
                     @mouseout.native="index === 0 ? (firstHovered = false) : (firstHovered = true)"
-                  >{{ item.name }}
-                  </i-dropdown-item
-                  >
+                    >{{ item.name }}
+                  </i-dropdown-item>
                 </i-dropdown-menu>
               </i-dropdown>
               <a href="https://matter-labs.io/#jobs" target="_blank" class="linkItem">We're hiring</a>
@@ -101,26 +100,26 @@ export default Vue.extend({
         {
           name: "Explore zkSync",
           link: "https://hub.zksync.io",
-          isDividerAfter: true
+          isDividerAfter: true,
         },
         {
           name: "Block Explorer",
-          link: config.zkSyncNetwork.explorer
+          link: config.zkSyncNetwork.explorer,
         },
         {
           name: "zkCheckout",
-          link: "https://checkout.zksync.io"
+          link: "https://checkout.zksync.io",
         },
         {
           name: "Out-of-gas helper",
-          link: config.zkSyncNetwork.tools.withdrawal
+          link: config.zkSyncNetwork.tools.withdrawal,
         },
         {
           name: "Alternative Withdrawal",
           link: config.zkSyncNetwork.tools.withdrawal,
-          isDividerAfter: true
-        }
-      ] as DropdownOption[]
+          isDividerAfter: true,
+        },
+      ] as DropdownOption[],
     };
   },
   watch: {
@@ -128,7 +127,7 @@ export default Vue.extend({
       if (val === false) {
         this.opened = false;
       }
-    }
-  }
+    },
+  },
 });
 </script>

@@ -21,9 +21,8 @@
         variant="secondary"
         data-cy="send_l1_understand_button"
         @click="proceed()"
-      >I Understand
-      </i-button
-      >
+        >I Understand
+      </i-button>
     </div>
   </i-modal>
 </template>

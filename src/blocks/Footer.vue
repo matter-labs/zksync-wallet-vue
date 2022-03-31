@@ -1,8 +1,8 @@
 <template>
   <i-layout-footer class="mainFooter">
-    <block-modals-footer-modal v-model="footerModal"/>
-    <block-modals-environment/>
-    <block-modals-network-switch/>
+    <block-modals-footer-modal v-model="footerModal" />
+    <block-modals-environment />
+    <block-modals-network-switch />
     <div
       class="container _display-flex _flex-direction-row _align-items-center _justify-content-space-between _justify-content_mobile-space-around"
     >
@@ -27,7 +27,7 @@
         <div
           class="_display-flex _align-items-center _padding-1-2 _padding-md-top-2 _padding-md-bottom-1 _padding-right-1 _hidden-sm-and-down"
         >
-          <block-system-info/>
+          <block-system-info />
           <span class="_padding-x-1 dividerLine">|</span>
           <a href="https://uptime.com/s/zksync" class="uptime-link" target="_blank">uptime</a>
         </div>
@@ -40,7 +40,7 @@
           variant="dark"
           @click="openNetworkSwitchModal"
         >
-          <v-icon name="co-ethereum"/>
+          <v-icon name="co-ethereum" />
         </i-button>
         <i-button
           size="md"
@@ -50,8 +50,8 @@
           variant="dark"
           @click="toggleDarkMode"
         >
-          <v-icon v-if="isDarkTheme" name="ri-sun-fill"/>
-          <v-icon v-else name="ri-moon-fill"/>
+          <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
+          <v-icon v-else name="ri-moon-fill" />
         </i-button>
         <i-button
           class="_hidden-md-and-up floating-on-mobile"
@@ -61,7 +61,7 @@
           variant="dark"
           @click="footerModal = !footerModal"
         >
-          <v-icon name="ri-more-2-fill"/>
+          <v-icon name="ri-more-2-fill" />
         </i-button>
       </i-row>
     </div>

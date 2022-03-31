@@ -5,7 +5,7 @@
       <div class="tileHeadline h3">Transactions</div>
       <div class="transactionsListContainer genericListContainer">
         <div v-if="loadingStatus === 'main'" class="nothingFound">
-          <loader class="_display-block"/>
+          <loader class="_display-block" />
         </div>
         <div
           v-else-if="transactions.length === 0 && !loadingStatus"
@@ -28,11 +28,10 @@
           size="lg"
           variant="secondary"
           @click="loadMore()"
-        >Load more
-        </i-button
-        >
+          >Load more
+        </i-button>
         <div v-else-if="loadingStatus === 'previous'">
-          <loader class="_display-block _margin-x-auto _margin-y-2"/>
+          <loader class="_display-block _margin-x-auto _margin-y-2" />
         </div>
       </div>
     </div>

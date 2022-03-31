@@ -32,7 +32,7 @@
           to="/account/top-up"
           variant="secondary"
         >
-          <v-icon class="planeIcon" name="ri-add-fill"/>&nbsp;Top&nbsp;up
+          <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top&nbsp;up
         </i-button>
       </div>
       <div v-else class="balances">
@@ -46,7 +46,7 @@
               to="/account/top-up"
               variant="secondary"
             >
-              <v-icon class="planeIcon" name="ri-add-fill"/>&nbsp;Top&nbsp;up
+              <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top&nbsp;up
             </i-button>
             <i-button
               block
@@ -56,7 +56,7 @@
               to="/transaction/transfer"
               variant="secondary"
             >
-              <v-icon class="planeIcon" name="ri-send-plane-fill"/>&nbsp;Transfer
+              <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
             </i-button>
             <i-button
               :disabled="!zigZagLink"
@@ -75,7 +75,7 @@
 
           <i-input ref="searchInput" v-model="search" autofocus maxlength="6" placeholder="Filter tokens">
             <template #prefix>
-              <v-icon name="ri-search-line"/>
+              <v-icon name="ri-search-line" />
             </template>
           </i-input>
         </template>
@@ -186,7 +186,7 @@ export default Vue.extend({
           zkBalancesWithDeposits[symbol] = {
             balance: "0",
             verified: false,
-            feeAvailable: tokens[symbol] ? tokens[symbol].enabledForFees : false
+            feeAvailable: tokens[symbol] ? tokens[symbol].enabledForFees : false,
           };
         }
       }

@@ -10,10 +10,10 @@
         circle
         @click="openInNewWindow()"
       >
-        <v-icon name="ri-external-link-line"/>
+        <v-icon name="ri-external-link-line" />
       </i-button>
       <i-button v-else class="-open-in-new-window" size="sm" variant="secondary" circle disabled>
-        <v-icon name="ri-file-line"/>
+        <v-icon name="ri-file-line" />
       </i-button>
       <!--suppress HtmlFormInputWithoutLabel -->
       <input

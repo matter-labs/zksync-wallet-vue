@@ -19,8 +19,7 @@
         @click="$emit('chooseToken')"
       >
         Select token
-      </i-button
-      >
+      </i-button>
       <i-button
         v-else
         slot="append"
@@ -32,7 +31,7 @@
         @click="$emit('chooseToken')"
       >
         <span class="tokenSymbol">{{ token }}</span>
-        &nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line"/>
+        &nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
       </i-button>
     </i-input>
     <div class="error" data-cy="amount_block_token_error_message">
@@ -40,7 +39,7 @@
     </div>
     <div v-if="token && maxAmount" class="_display-flex _justify-content-space-between">
       <div class="secondaryText">
-        <token-price :symbol="token" :amount="inputtedAmountBigNumber.toString()"/>
+        <token-price :symbol="token" :amount="inputtedAmountBigNumber.toString()" />
       </div>
       <div class="linkText" data-cy="amount_block_token_max_amount" @click="chooseMaxAmount()">
         {{ amountInputMaxText }}: {{ maxAmount | parseBigNumberish(token) }}
@@ -181,7 +180,7 @@ export default Vue.extend({
         inputAmount = this.$options.filters!.parseDecimal(val, this.token);
       } catch (error) {
         let errorInfo =
-              "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
+          "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
         if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
           errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }

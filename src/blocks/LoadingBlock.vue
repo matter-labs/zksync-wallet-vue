@@ -5,14 +5,15 @@
     </div>
     <div class="loadingBlockContent">
       <a v-if="txLink" :href="txLink" class="_display-block _text-center" target="_blank">
-        Link to the transaction <i>
-        <v-icon name="ri-external-link-line" scale="0.8"/>
-      </i>
+        Link to the transaction
+        <i>
+          <v-icon name="ri-external-link-line" scale="0.8" />
+        </i>
       </a>
       <p class="_display-block _text-center">{{ tip }}</p>
     </div>
     <div class="spinnerContainer _padding-y-2">
-      <loader/>
+      <loader />
     </div>
   </div>
 </template>

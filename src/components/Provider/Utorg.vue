@@ -1,6 +1,6 @@
 <template>
   <div :class="{ disabled: disabled }" class="providerOption" @click="proceed">
-    <block-svg-utorg/>
+    <block-svg-utorg />
   </div>
 </template>
 <script lang="ts">
@@ -12,8 +12,8 @@ export default Vue.extend({
   props: {
     enabled: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
     utorgConfig(): {
@@ -27,7 +27,7 @@ export default Vue.extend({
     },
     isSupported(): boolean {
       return !!this.utorgConfig;
-    }
+    },
   },
   methods: {
     proceed(): void {
@@ -39,8 +39,8 @@ export default Vue.extend({
       window.open(
         `${this.utorgConfig!.url}/direct/${this.utorgConfig!.sid}/${this.$store.getters["zk-account/address"]}/`
       );
-    }
-  }
+    },
+  },
 });
 </script>
 <style lang="scss" scoped>

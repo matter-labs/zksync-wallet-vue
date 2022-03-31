@@ -6,7 +6,7 @@
     <checkmark />
     <p class="_text-center _margin-top-0">
       <template v-if="activeTransaction.type === 'Deposit'">
-        Your deposit transaction has been mined and will be processed after required number of confirmations.<br/>Use
+        Your deposit transaction has been mined and will be processed after required number of confirmations.<br />Use
         the transaction link to track the progress.
       </template>
       <template v-else-if="activeTransaction.type === 'Allowance' && activeTransaction.data">
@@ -15,14 +15,13 @@
           for {{ activeTransaction.data.allowance.toString() | parseBigNumberish(activeTransaction.data.token) }}
           <span class="tokenSymbol">{{ activeTransaction.data.token }}</span>
         </span>
-        <br/>
+        <br />
         Now you can proceed to deposit.
       </template>
     </p>
     <a v-if="txLink" :href="txLink" class="_display-block _text-center _margin-top-1" target="_blank"
-    >Link to the transaction
-      <v-icon name="ri-external-link-line"></v-icon
-      >
+      >Link to the transaction
+      <v-icon name="ri-external-link-line"></v-icon>
     </a>
     <div v-if="activeTransaction.address" class="infoBlockItem smaller _margin-top-2">
       <div class="amount">
@@ -30,7 +29,7 @@
         <span v-if="isOwnAddress" class="secondaryText">Own account</span>
         <span v-else-if="openedContact" class="secondaryText">{{ openedContact.name }}</span>
       </div>
-      <wallet-address :wallet="activeTransaction.address"/>
+      <wallet-address :wallet="activeTransaction.address" />
     </div>
     <div v-if="activeTransaction.amount" class="infoBlockItem _margin-top-1">
       <div class="headline">Amount:</div>
@@ -75,7 +74,7 @@
           circle
           @click="clearActiveTransaction()"
         >
-          <v-icon name="ri-arrow-left-line"/>
+          <v-icon name="ri-arrow-left-line" />
         </i-button>
         <i-button
           data-cy="deposit_proceed_to_deposit_button"
@@ -83,9 +82,8 @@
           size="lg"
           variant="secondary"
           @click="commitTransaction()"
-        >Proceed to deposit
-        </i-button
-        >
+          >Proceed to deposit
+        </i-button>
       </div>
     </div>
     <i-button
@@ -107,9 +105,8 @@
       variant="secondary"
       class="_margin-top-2"
       :to="continueBtnLink"
-    >Ok
-    </i-button
-    >
+      >Ok
+    </i-button>
   </div>
 </template>
 

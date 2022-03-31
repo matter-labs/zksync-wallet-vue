@@ -5,7 +5,7 @@
       <div class="tileHeadline h3">Transactions</div>
       <div class="transactionsListContainer genericListContainer">
         <div v-if="loadingStatus === 'main'" class="nothingFound">
-          <loader class="_display-block"/>
+          <loader class="_display-block" />
         </div>
         <div
           v-else-if="transactions.length === 0 && !loadingStatus"
@@ -28,11 +28,10 @@
           size="lg"
           variant="secondary"
           @click="requestTransactions('previous')"
-        >Load more
-        </i-button
-        >
+          >Load more
+        </i-button>
         <div v-else-if="loadingStatus === 'previous'">
-          <loader class="_display-block _margin-x-auto _margin-y-2"/>
+          <loader class="_display-block _margin-x-auto _margin-y-2" />
         </div>
       </div>
     </div>
@@ -42,7 +41,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ApiTransaction } from "zksync/build/types";
-import { ZkFilteredTransactionHistory } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkFilteredTransactionHistory, ZkTransactionHistoryLoadingState } from "@matterlabs/zksync-nuxt-core/types";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -66,8 +65,8 @@ export default Vue.extend({
   data() {
     return {
       transactions: [] as ApiTransaction[],
-      loadingStatus: false as zkTransactionHistoryLoadingState,
-      allLoaded: !this.tokenExists
+      loadingStatus: false as ZkTransactionHistoryLoadingState,
+      allLoaded: !this.tokenExists,
     };
   },
   watch: {
@@ -96,7 +95,7 @@ export default Vue.extend({
 
       this.$analytics.track("transaction_history_load_more");
 
-      this.loadingStatus = part;
+      this.loadingStatus = part as ZkTransactionHistoryLoadingState;
       const res: ZkFilteredTransactionHistory = await this.$store.dispatch("zk-history/getFilteredTransactionHistory", {
         lastTxHash: part === "previous" ? this.transactions[this.transactions.length - 1].txHash : undefined,
         token: this.token,

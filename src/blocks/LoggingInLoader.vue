@@ -58,7 +58,7 @@ export default Vue.extend({
     async cancelLogin(): Promise<Route> {
       await this.$store.dispatch("zk-account/logout");
       return this.$router.push("/");
-    }
+    },
   },
 });
 </script>

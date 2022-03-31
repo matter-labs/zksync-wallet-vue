@@ -40,9 +40,8 @@
           <div class="infoBlock">
             <div class="headline">Creator:</div>
             <div class="balance">
-              <nuxt-link v-if="!isOwnAddress" :to="`/contacts/${token.creatorAddress}`" class="tokenSymbol address">{{
-                  getAddressName(token.creatorAddress)
-                }}
+              <nuxt-link v-if="!isOwnAddress" :to="`/contacts/${token.creatorAddress}`" class="tokenSymbol address"
+                >{{ getAddressName(token.creatorAddress) }}
               </nuxt-link>
               <div v-else>Own account</div>
             </div>
@@ -113,8 +112,8 @@
             @click="withdraw()"
           >
             <div class="_display-flex _justify-content-center _align-items-center">
-              <v-icon class="planeIcon" name="ri-hand-coin-fill"/>&nbsp;&nbsp;Withdraw
-              <loader v-if="loadingToken" class="_margin-left-1" size="xs"/>
+              <v-icon class="planeIcon" name="ri-hand-coin-fill" />&nbsp;&nbsp;Withdraw
+              <loader v-if="loadingToken" class="_margin-left-1" size="xs" />
             </div>
           </i-button>
           <i-button
@@ -127,8 +126,8 @@
             @click="transfer()"
           >
             <div class="_display-flex _justify-content-center _align-items-center">
-              <v-icon class="planeIcon" name="ri-send-plane-fill"/>&nbsp;&nbsp;Transfer
-              <loader v-if="loadingToken" class="_margin-left-1" size="xs"/>
+              <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
+              <loader v-if="loadingToken" class="_margin-left-1" size="xs" />
             </div>
           </i-button>
         </i-button-group>
@@ -164,7 +163,7 @@ export default Vue.extend({
       fromRoute: undefined as undefined | Route,
       loadingToken: false,
       tokenUnavailableModal: false,
-      nftTokenInfo: undefined as undefined | NFTInfo
+      nftTokenInfo: undefined as undefined | NFTInfo,
     };
   },
   computed: {

@@ -1,11 +1,11 @@
 <template>
   <div class="transactionBlock">
-    <block-modals-allowance/>
-    <block-modals-content-hash/>
-    <block-modals-fee-req-error/>
-    <block-modals-transfer-warning :type="type"/>
-    <block-modals-withdraw-warning/>
-    <block-modals-fee-changed :type-name="transactionActionName"/>
+    <block-modals-allowance />
+    <block-modals-content-hash />
+    <block-modals-fee-req-error />
+    <block-modals-transfer-warning :type="type" />
+    <block-modals-withdraw-warning />
+    <block-modals-fee-changed :type-name="transactionActionName" />
 
     <!-- Choose token -->
     <i-modal v-model="chooseTokenModalOpened" :value="chooseTokenModalOpened" size="md">
@@ -21,13 +21,13 @@
 
     <!-- Main Block -->
     <div v-if="activeTransaction && activeTransaction.step !== 'initial'">
-      <block-loading-block v-if="activeTransaction.step !== 'finished'"/>
-      <block-success-block v-else/>
+      <block-loading-block v-if="activeTransaction.step !== 'finished'" />
+      <block-success-block v-else />
     </div>
     <div v-else class="transactionTile tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="routeBack" class="_icon-wrapped -rounded -sm returnBtn _display-flex">
-          <v-icon name="ri-arrow-left-line" scale="1"/>
+          <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
         <div>{{ transactionActionName }}</div>
       </div>
@@ -36,8 +36,8 @@
         <h4 class="tileSmallHeadline">
           Deposit tokens from Ethereum Wallet
           <div class="secondaryText estimatedFee _text-nowrap _displayFlex">
-            <v-icon name="la-charging-station-solid"/>
-            <deposit-usd-fee/>
+            <v-icon name="la-charging-station-solid" />
+            <deposit-usd-fee />
           </div>
         </h4>
         <div class="secondaryText small">You can deposit tokens from your Ethereum Wallet to zkSync via form below</div>
@@ -46,7 +46,7 @@
           <div v-if="!isMainnet" class="_padding-0 _display-flex _justify-content-end">
             <i-button class="_padding-y-0 _margin-top-05" link to="/transaction/mint">
               Mint tokens
-              <v-icon name="ri-add-fill" scale="0.75"/>
+              <v-icon name="ri-add-fill" scale="0.75" />
             </i-button>
           </div>
         </template>
@@ -62,14 +62,14 @@
             variant=""
           >
             Send to Ethereum (L1)
-            <v-icon class="" name="ri-arrow-right-up-line" scale="0.75"/>
+            <v-icon class="" name="ri-arrow-right-up-line" scale="0.75" />
           </i-button>
         </div>
       </template>
 
       <template v-if="displayAddressInput">
         <div :class="[isDeposit ? '_margin-top-05' : '_margin-top-1']" class="inputLabel">Address</div>
-        <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()"/>
+        <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" />
         <block-choose-contact
           :address="inputtedAddress"
           :display-own-address="displayOwnAddress"
@@ -96,7 +96,7 @@
         <div class="_padding-top-1 inputLabel _display-flex _align-items-center">
           <div>Content Address</div>
           <div class="icon-container _display-flex" @click="$accessor.openModal('ContentHash')">
-            <v-icon class="iconInfo" name="ri-question-mark" scale="0.9"/>
+            <v-icon class="iconInfo" name="ri-question-mark" scale="0.9" />
           </div>
         </div>
         <hash-input
@@ -111,9 +111,8 @@
         <div class="_padding-top-1 inputLabel">Token</div>
         <i-input :value="chosenToken ? `NFT-${chosenToken}` : ''" disabled size="lg" type="text">
           <i-button slot="append" block link variant="secondary" @click="chooseTokenModal = 'mainToken'"
-          >Select{{ chosenToken ? " another " : " " }}NFT
-          </i-button
-          >
+            >Select{{ chosenToken ? " another " : " " }}NFT
+          </i-button>
         </i-input>
       </template>
 
@@ -127,7 +126,7 @@
             <span class="tokenSymbol">{{ chosenToken }}</span> Allowance
           </span>
           <div class="iconInfo">
-            <v-icon name="ri-question-mark"/>
+            <v-icon name="ri-question-mark" />
           </div>
         </div>
         <div class="grid-cols-2-layout">
@@ -159,10 +158,10 @@
           </span>
           <span v-else>
             You do not have enough allowance for <span class="tokenSymbol">{{ chosenToken }}.</span>
-            <br class="desktopOnly"/>
+            <br class="desktopOnly" />
             Set higher allowance to proceed to deposit.
             <span v-if="allowance">
-              <br class="desktopOnly"/>Your current allowance is
+              <br class="desktopOnly" />Your current allowance is
               <span class="linkText" @click="setAllowanceMax()">
                 {{ allowance | formatBigNumLimited(chosenToken, 7) }} <span class="tokenSymbol">{{ chosenToken }}</span>
               </span>
@@ -177,7 +176,7 @@
 
       <div v-if="error" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">{{ error }}</div>
       <div v-if="nftTokenIsntVerified" class="errorText _text-center _margin-top-1">
-        Mint transaction for <span class="tokenSymbol">NFT-{{ chosenToken }}</span> isn't verified yet. <br/>Try again
+        Mint transaction for <span class="tokenSymbol">NFT-{{ chosenToken }}</span> isn't verified yet. <br />Try again
         once <span class="tokenSymbol">NFT-{{ chosenToken }}</span> gets verified.
       </div>
 
@@ -192,9 +191,9 @@
         @click="commitTransaction()"
       >
         <div class="_display-flex _justify-content-center _align-items-center">
-          <v-icon v-if="!hasSigner && requireSigner" name="md-vpnkey-round"/>&nbsp;&nbsp;
+          <v-icon v-if="!hasSigner && requireSigner" name="md-vpnkey-round" />&nbsp;&nbsp;
           <div>{{ hasSigner || !requireSigner ? "" : "Authorize to " }}{{ transactionActionName }}</div>
-          <loader v-if="buttonLoader" class="_margin-left-1" size="xs"/>
+          <loader v-if="buttonLoader" class="_margin-left-1" size="xs" />
         </div>
       </i-button>
 
@@ -221,7 +220,7 @@
           >
             {{ item.amount.toString() | parseBigNumberish(feeSymbol) }} <span class="tokenSymbol">{{ feeSymbol }}</span>
             <span class="secondaryText">
-              <token-price :amount="item.amount.toString()" :symbol="feeSymbol"/>
+              <token-price :amount="item.amount.toString()" :symbol="feeSymbol" />
             </span>
           </span>
         </div>
@@ -265,7 +264,14 @@ import Vue, { PropOptions } from "vue";
 import { Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
-import { ZkActiveTransaction, ZkCPKStatus, ZkFee, ZkFeeType, ZkTransactionMainToken, ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
+import {
+  ZkActiveTransaction,
+  ZkCPKStatus,
+  ZkFee,
+  ZkFeeType,
+  ZkTransactionMainToken,
+  ZkTransactionType,
+} from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "@ethersproject/address";
 import { RestProvider } from "zksync";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
@@ -273,7 +279,7 @@ import { DO_NOT_SHOW_WITHDRAW_WARNING_KEY } from "@/blocks/modals/WithdrawWarnin
 
 const feeNameDict = new Map([
   ["txFee", "Fee"],
-  ["accountActivation", "Account Activation single-time fee"]
+  ["accountActivation", "Account Activation single-time fee"],
 ]);
 
 export default Vue.extend({
@@ -281,8 +287,8 @@ export default Vue.extend({
     fromRoute: {
       required: false,
       type: Object,
-      default: () => {}
-    } as PropOptions<Route>
+      default: () => {},
+    } as PropOptions<Route>,
   },
   data() {
     return {
@@ -291,7 +297,7 @@ export default Vue.extend({
       chooseTokenModal: false as false | "mainToken" | "feeToken",
       contentHash: this.$store.getters["zk-transaction/contentHash"],
       loading: true,
-      requestingSigner: false
+      requestingSigner: false,
     };
   },
   computed: {
@@ -453,11 +459,11 @@ export default Vue.extend({
         if (!value) {
           this.chooseTokenModal = false;
         }
-      }
+      },
     },
     cpkStatus(): ZkCPKStatus {
       return this.$store.getters["zk-wallet/cpk"];
-    }
+    },
   },
   watch: {
     inputtedAmount: {
@@ -470,14 +476,14 @@ export default Vue.extend({
         } else {
           this.$store.commit("zk-transaction/setAmount", val);
         }
-      }
+      },
     },
     inputtedAddress(val) {
       this.$store.dispatch("zk-transaction/setAddress", val);
     },
     contentHash(val) {
       this.$store.commit("zk-transaction/setContentHash", val);
-    }
+    },
   },
   async mounted() {
     if (!this.$store.getters["zk-account/loggedIn"]) {
@@ -592,35 +598,35 @@ export default Vue.extend({
         case "Deposit":
           this.$analytics.track("deposit" + status, {
             amount: this.inputtedAmount,
-            opToken: this.chosenToken
+            opToken: this.chosenToken,
           });
           break;
         case "Mint":
           this.$analytics.track("mint" + status, {
             amount: this.inputtedAmount,
-            opToken: this.chosenToken
+            opToken: this.chosenToken,
           });
           break;
         case "MintNFT":
           this.$analytics.track("mint_nft" + status, {
-            feeToken: this.feeSymbol
+            feeToken: this.feeSymbol,
           });
           break;
         case "TransferNFT":
           this.$analytics.track("transfer_nft" + status, {
-            feeToken: this.feeSymbol
+            feeToken: this.feeSymbol,
           });
           break;
         case "WithdrawNFT":
           this.$analytics.track("withdraw_nft" + status, {
-            feeToken: this.feeSymbol
+            feeToken: this.feeSymbol,
           });
           break;
         case "Transfer":
           this.$analytics.track("transfer" + status, {
             amount: this.inputtedAmount,
             opToken: this.chosenToken,
-            feeToken: this.feeSymbol
+            feeToken: this.feeSymbol,
           });
           break;
         case "Withdraw":
@@ -631,7 +637,7 @@ export default Vue.extend({
             {
               amount: this.inputtedAmount,
               opToken: this.chosenToken,
-              feeToken: this.feeSymbol
+              feeToken: this.feeSymbol,
             }
           );
           break;
@@ -673,7 +679,7 @@ export default Vue.extend({
     showChangeFeeTokenModal() {
       this.chooseTokenModal = "feeToken";
       this.$analytics.track("visit_change_fee_token");
-    }
+    },
   },
 });
 </script>
