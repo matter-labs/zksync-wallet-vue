@@ -29,22 +29,22 @@ export default Vue.extend({
       socialProfiles: [
         {
           name: "Medium Blog",
-          icon: "ri-medium-line",
+          icon: "fa-medium-m",
           url: "https://medium.com/matter-labs",
         },
         {
           name: "Discord Community",
-          icon: "ri-discord-line",
+          icon: "ri-discord-fill",
           url: "https://discord.com/invite/px2aR7w",
         },
         {
           name: "Telegram Community",
-          icon: "ri-telegram-line",
+          icon: "fa-telegram-plane",
           url: "https://t.me/zksync",
         },
         {
           name: "Twitter Community",
-          icon: "ri-twitter-line",
+          icon: "bi-twitter",
           url: "https://twitter.com/zksync",
         },
         {

@@ -55,6 +55,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
+  layout: "index",
   computed: {
     isMainnet(): boolean {
       return this.$store.getters["zk-provider/network"] === "mainnet";
@@ -91,7 +92,6 @@ export default Vue.extend({
       }
     },
   },
-  layout: "index",
 });
 </script>
 <style lang="scss" scoped>
@@ -137,6 +137,10 @@ export default Vue.extend({
         outline-offset: 0.25rem;
         outline-width: thin;
         border-radius: 0.5rem;
+      }
+
+      @media screen and (min-width: $mobile) {
+        padding-bottom: $footerHeight;
       }
 
       .tile {

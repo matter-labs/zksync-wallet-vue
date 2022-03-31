@@ -10,15 +10,21 @@
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
-          zkSync API <code class="_padding-y-0" data-cy="environment_details_api">{{ zkApiBase }}</code>
+          zkSync API
+          <code class="_padding-y-0" data-cy="environment_details_api">{{ config.zkSyncNetwork.api }}</code>
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
-          Ethereum env <code class="_padding-y-0" data-cy="environment_details_network">{{ netName }}</code>
+          Ethereum env
+          <code class="_padding-y-0" data-cy="environment_details_network">{{ config.ethereumNetwork.name }}</code>
         </span>
       </template>
     </i-popover>
-    <a :href="githubLink" class="revision _background-gray-40" target="_blank">
+    <a
+      :href="`https://github.com/matter-labs/zksync-wallet-vue/commit/${$config.git.revision}`"
+      class="revision _background-gray-40"
+      target="_blank"
+    >
       <v-icon name="ri-github-fill" />
       {{ $config.git.revision }}
     </a>
@@ -32,15 +38,6 @@ export default Vue.extend({
   computed: {
     config(): ZkConfig {
       return this.$store.getters["zk-onboard/config"];
-    },
-    netName(): string {
-      return this.config.ethereumNetwork.name;
-    },
-    githubLink(): string | undefined {
-      return `https://github.com/matter-labs/zksync-wallet-vue/commit/${this.$config.git.revision}`;
-    },
-    zkApiBase(): string {
-      return this.config.zkSyncNetwork.api;
     },
   },
 });

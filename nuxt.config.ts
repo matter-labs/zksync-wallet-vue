@@ -1,9 +1,10 @@
 import { NuxtConfig } from "@nuxt/types";
+import { NuxtOptionsBuild } from "@nuxt/types/config/build";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { version as zkSyncVersion } from "zksync/package.json";
 
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
-import { Configuration } from "webpack";
+import { Configuration, DefinePlugin } from "webpack";
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
 const isLocalhost: boolean = process.env.IS_LOCALHOST !== undefined;
@@ -42,7 +43,7 @@ const localhostProxy = isLocalhost
     }
   : {};
 
-const config: NuxtConfig = {
+const config = {
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
   ssr: false,
@@ -125,7 +126,7 @@ const config: NuxtConfig = {
 
   /**
    * Head-placed HTML-tags / configuration of the `<meta>`
-   */
+   **/
   head: {
     title: pageTitle as string | undefined,
     titleTemplate: pageTitleTemplate,
@@ -146,7 +147,7 @@ const config: NuxtConfig = {
       },
       /**
        * UX / UI settings
-       */
+       **/
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" },
 
@@ -154,7 +155,7 @@ const config: NuxtConfig = {
        * Page meta:
        * - SEO tags (keywords, description, author)
        * - OpenGraph tags (thumbnail,
-       */
+       **/
       {
         hid: "keywords",
         name: "keywords",
@@ -239,20 +240,21 @@ const config: NuxtConfig = {
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
   },
-  /*
-   ** Customize the progress-bar color
-   */ loading: {
+  /**
+   * Customize the progress-bar color
+   **/ loading: {
     color: "#8c8dfc",
     continuous: true,
   },
 
   /**
    * Single-entry global-scope scss
-   */
+   **/
   css: ["@/assets/style/main.scss"],
   /**
    * Plugins that should be loaded before the mounting
-   */ plugins: [
+   **/
+  plugins: [
     "@/plugins/icons",
     "@/plugins/filters",
     "@/plugins/restoreSession",
@@ -266,13 +268,14 @@ const config: NuxtConfig = {
   router: {
     middleware: ["auth"],
   },
-  /*
-   ** Nuxt.js dev-modules
-   */ buildModules: [
+  /**
+   * Nuxt.js dev-modules
+   **/
+
+  buildModules: [
     // https://go.nuxtjs.dev/typescript
     "@nuxt/typescript-build", // https://go.nuxtjs.dev/stylelint
     "@nuxtjs/style-resources",
-    ["@nuxtjs/dotenv", { path: __dirname }],
     "@nuxtjs/google-fonts",
     "nuxt-typed-vuex",
     [
@@ -285,14 +288,14 @@ const config: NuxtConfig = {
           PORTIS_KEY: process.env.APP_PORTIS,
           /**
            * Added for all environments to reduce complexity
-           */
+           **/
           INFURA_KEY: "c3f5636451af461fafaee653cbd9ef2a",
         },
         onboardConfig: {
           APP_NAME: pageTitle,
           /**
            * Added for all environments to reduce complexity
-           */ APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
+           **/ APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
         restoreNetwork: true,
         logoutRedirect: "/",
@@ -300,14 +303,10 @@ const config: NuxtConfig = {
     ],
   ],
 
-  /*
-   ** Nuxt.js modules
-   */
-  modules: ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
-
   /**
-   * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
-   */
+   * Nuxt.js modules
+   **/
+  modules: ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
   inkline: {
     config: {
       autodetectVariant: true,
@@ -339,13 +338,36 @@ const config: NuxtConfig = {
     debug: isDebugEnabled, // enable to track in dev mode
     disableAutoPageTrack: false, // disable if you don't want to track each page route with router.afterEach(...).
   },
-  /*
-   ** Build configuration
-   */
+  render: {
+    injectScripts: true,
+    ssr: false,
+    crossorigin: "anonymous",
+    resourceHints: false,
+    static: {
+      immutable: true,
+      maxAge: "1d",
+      prefix: true,
+    },
+    dist: {
+      lastModified: true,
+      immutable: true,
+      // Serve index.html template
+      index: true,
+      // 1 year in production
+      maxAge: "1m",
+    },
+  },
+
+  /**
+   * Build configuration
+   **/
+
   build: {
     filenames: { chunk: () => `[name]_Y2ZjItY_${isProduction ? "[contenthash]" : ""}.js` },
-    cache: false,
-    cssSourceMap: true,
+    cache: true,
+    cssSourceMap: !isProduction,
+    hardSource: isProduction,
+    parallel: isProduction,
     babel: {
       compact: true,
     },
@@ -369,14 +391,27 @@ const config: NuxtConfig = {
       },
       minimize: isProduction,
     },
-    transpile: ["oh-vue-icons", "@inkline/inkline", "iconsPlugin", "filtersPlugin", "restoreSessionPlugin"], // [v.2.4.0]: oh-vue-icons package
+    plugins: [
+      new DefinePlugin({
+        "process.VERSION": process.env.APP_GIT_VERSION,
+      }),
+    ],
+    transpile: ["oh-vue-icons", "@inkline/inkline", "iconsPlugin", "filtersPlugin", "restoreSessionPlugin"],
     extend: (config: Configuration) => {
       config.node = {
         fs: "empty",
       };
+      if (!config.output) {
+        config.output = {
+          crossOriginLoading: isProduction ? "anonymous" : false,
+        };
+      } else {
+        config.output.crossOriginLoading = isProduction ? "anonymous" : false;
+      }
     },
-  },
+  } as NuxtOptionsBuild,
   googleFonts: {
+    overwriting: true,
     prefetch: true,
     preconnect: true,
     preload: true,
@@ -391,5 +426,5 @@ const config: NuxtConfig = {
     cache: false,
     devtools: !isProduction,
   },
-};
+} as NuxtConfig;
 export default config;
