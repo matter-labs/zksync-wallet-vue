@@ -1,24 +1,54 @@
 <template>
   <div class="cryptoProviders">
-    <div v-if="showProviders.ramp" :class="{ disabled: !isRampSupported }" class="providerOption rampProvider" @click="buyWithRamp">
-      <label><img class="ramp-logo" src="/RampLogo.svg" alt="Ramp" />Ramp</label>
+    <div
+      v-if="showProviders.ramp"
+      :class="{ disabled: !isRampSupported }"
+      class="providerOption rampProvider"
+      @click="buyWithRamp"
+    >
+      <label><img class="ramp-logo" src="/RampLogo.svg" alt="Ramp"/>Ramp</label>
     </div>
-    <div v-if="showProviders.banxa" :class="{ disabled: !isBanxaSupported }" class="providerOption banxaProvider" @click="buyWithBanxa">
-      <block-svg-banxa />
+    <div
+      v-if="showProviders.banxa"
+      :class="{ disabled: !isBanxaSupported }"
+      class="providerOption banxaProvider"
+      @click="buyWithBanxa"
+    >
+      <block-svg-banxa/>
     </div>
-    <div v-if="showProviders.moonpay" :class="{ disabled: !isMoonpaySupported || !moonpay }" class="providerOption moonpayProvider" @click="buyWithMoonpay">
-      <block-svg-moonpay />
+    <div
+      v-if="showProviders.moonpay"
+      :class="{ disabled: !isMoonpaySupported || !moonpay }"
+      class="providerOption moonpayProvider"
+      @click="buyWithMoonpay"
+    >
+      <block-svg-moonpay/>
     </div>
 
-    <provider-utorg v-if="showProviders.utorg" :enabled="utorg" class="providerOption utorgProvider" @providerError="setError"/>
+    <provider-utorg
+      v-if="showProviders.utorg"
+      :enabled="utorg"
+      class="providerOption utorgProvider"
+      @providerError="setError"
+    />
 
-    <provider-okex v-if="showProviders.okex" :enabled="okex" class="providerOption" @providerError="setError" />
-    <provider-bybit v-if="showProviders.bybit" :enabled="bybit" class="providerOption" @providerError="setError" />
+    <provider-okex v-if="showProviders.okex" :enabled="okex" class="providerOption" @providerError="setError"/>
+    <provider-bybit v-if="showProviders.bybit" :enabled="bybit" class="providerOption" @providerError="setError"/>
 
-    <provider-layer-swap v-if="showProviders.layerSwap" :enabled="layerSwap" class="providerOption" @providerError="setError" />
-    <provider-orbiter v-if="showProviders.orbiter" :enabled="orbiter" class="providerOption orbiterProvider" @providerError="setError" />
+    <provider-layer-swap
+      v-if="showProviders.layerSwap"
+      :enabled="layerSwap"
+      class="providerOption"
+      @providerError="setError"
+    />
+    <provider-orbiter
+      v-if="showProviders.orbiter"
+      :enabled="orbiter"
+      class="providerOption orbiterProvider"
+      @providerError="setError"
+    />
     <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync"/>
-    <block-modals-deposit-error :errorText="errorText" />
+    <block-modals-deposit-error :error-text="errorText"/>
   </div>
 </template>
 
@@ -84,10 +114,15 @@ export default Vue.extend({
       }>,
       default: () => ({
         ramp: true,
-        banxa: true,
+        banxa: true
       }),
-      required: false,
+      required: false
     },
+  },
+  data() {
+    return {
+      errorText: ""
+    };
   },
   computed: {
     rampConfig(): {
@@ -127,11 +162,6 @@ export default Vue.extend({
     this.errorText = "";
     this.$accessor.closeActiveModal();
   },
-  data() {
-    return {
-      errorText: "",
-    };
-  },
   methods: {
     setError(errorText: string): void {
       this.errorText = errorText;
@@ -160,9 +190,11 @@ export default Vue.extend({
       }
       this.$analytics.track("click_on_buy_with_banxa");
       window.open(
-        `${this.banxaConfig!.url}?walletAddress=${this.address}&accountReference=${this.address}&returnUrlOnSuccess=${encodeURIComponent(
+        `${this.banxaConfig!.url}?walletAddress=${this.address}&accountReference=${
+          this.address
+        }&returnUrlOnSuccess=${encodeURIComponent(this.redirectURL())}&returnUrlOnFailure=${encodeURIComponent(
           this.redirectURL()
-        )}&returnUrlOnFailure=${encodeURIComponent(this.redirectURL())}`,
+        )}`,
         "_blank"
       );
     },
@@ -174,14 +206,18 @@ export default Vue.extend({
       try {
         this.$analytics.track("click_on_moonpay");
         const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC", "USDT_ZKSYNC"];
-        const url = `${this.moonpayConfig!.url}?apiKey=${this.moonpayConfig!.apiPublicKey}&walletAddress=${encodeURIComponent(
+        const url = `${this.moonpayConfig!.url}?apiKey=${
+          this.moonpayConfig!.apiPublicKey
+        }&walletAddress=${encodeURIComponent(
           this.address
-        )}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(",")}&showAllCurrencies=0&redirectURL=${encodeURIComponent(this.redirectURL())}`;
+        )}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(
+          ","
+        )}&showAllCurrencies=0&redirectURL=${encodeURIComponent(this.redirectURL())}`;
 
         const body = JSON.stringify({
           pubKey: this.moonpayConfig?.apiPublicKey,
           originalUrl: url,
-          ethNetwork: this.ethNetwork,
+          ethNetwork: this.ethNetwork
         });
         const response = await fetch("/api/moonpaySign", {
           method: "POST",
@@ -207,7 +243,8 @@ export default Vue.extend({
         window.open(responseData!.signedUrl, "_blank");
       } catch (error) {
         console.warn(error);
-        this.errorText = error.message || "There was an error during Moonpay Deposit initialization. Please try once again.";
+        this.errorText =
+          error.message || "There was an error during Moonpay Deposit initialization. Please try once again.";
         this.$accessor.openModal("DepositError");
       }
     },

@@ -3,8 +3,14 @@
     <template #header>zkSync is a Layer-2 protocol</template>
     <p>
       Your zkSync balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
-      <a :href="`https://${etherscanDomain}/address/${$store.getters['zk-account/address']}`" rel="noopener noreferrer" target="_blank">{{ etherscanDomain }}</a> or in your
-      Ethereum wallet, only in zkSync wallet and block explorer. Nevertheless, balances in zkSync are as secure as if though they were in L1 (the Ethereum mainnet).
+      <a
+        :href="`https://${etherscanDomain}/address/${$store.getters['zk-account/address']}`"
+        rel="noopener noreferrer"
+        target="_blank"
+      >{{ etherscanDomain }}</a
+      >
+      or in your Ethereum wallet, only in zkSync wallet and block explorer. Nevertheless, balances in zkSync are as
+      secure as if though they were in L1 (the Ethereum mainnet).
       <a href="https://zksync.io/userdocs/security.html" rel="noopener noreferrer" target="_blank">Learn more.</a>
     </p>
     <p>
@@ -36,7 +42,9 @@ export default Vue.extend({
     },
     etherscanDomain(): string {
       const network = this.$store.getters["zk-provider/network"];
-      return `${network.search("rinkeby") !== -1 ? "rinkeby." : network.search("ropsten") === -1 ? "ropsten." : ""}etherscan.io`;
+      return `${
+        network.search("rinkeby") !== -1 ? "rinkeby." : network.search("ropsten") === -1 ? "ropsten." : ""
+      }etherscan.io`;
     },
   },
 });

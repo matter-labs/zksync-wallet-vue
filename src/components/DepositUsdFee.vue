@@ -3,9 +3,11 @@
     <b>Fee:</b>
     <span v-if="depositFeeLoading">Loading...</span>
     <span v-else-if="depositFee && !depositFeeLoading">
-      <token-price symbol="ETH" :amount="depositFee" />
+      <token-price symbol="ETH" :amount="depositFee"/>
     </span>
-    <span v-else class="errorText">Calculating fee error. <u class="_cursor-pointer" @click="getEstimatedDepositFee()">Try Again</u></span>
+    <span v-else class="errorText"
+    >Calculating fee error. <u class="_cursor-pointer" @click="getEstimatedDepositFee()">Try Again</u></span
+    >
   </div>
 </template>
 
@@ -18,8 +20,8 @@ import { BigNumberish, Wallet } from "ethers";
 export default Vue.extend({
   data() {
     return {
-      depositFee: <BigNumberish | undefined>undefined,
-      depositFeeLoading: true,
+      depositFee: undefined as BigNumberish | undefined,
+      depositFeeLoading: true
     };
   },
   mounted() {

@@ -1,11 +1,19 @@
 <template>
   <div class="addressInput">
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
-      <i-button v-if="isCID" class="-open-in-new-window" size="sm" variant="secondary" target="_blank" circle @click="openInNewWindow()">
-        <v-icon name="ri-external-link-line" />
+      <i-button
+        v-if="isCID"
+        class="-open-in-new-window"
+        size="sm"
+        variant="secondary"
+        target="_blank"
+        circle
+        @click="openInNewWindow()"
+      >
+        <v-icon name="ri-external-link-line"/>
       </i-button>
       <i-button v-else class="-open-in-new-window" size="sm" variant="secondary" circle disabled>
-        <v-icon name="ri-file-line" />
+        <v-icon name="ri-file-line"/>
       </i-button>
       <!--suppress HtmlFormInputWithoutLabel -->
       <input

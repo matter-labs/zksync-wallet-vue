@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ disabled: !enabled }" @click="proceed" class="providerOption">
-    <block-logo class="ProviderZkLogo" :hide-network="true" />
+  <div :class="{ disabled: !enabled }" class="providerOption" @click="proceed">
+    <block-logo class="ProviderZkLogo" :hide-network="true"/>
   </div>
 </template>
 <script lang="ts">

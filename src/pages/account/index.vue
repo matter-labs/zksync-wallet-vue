@@ -3,10 +3,20 @@
     <div class="balancesBlock tileBlock">
       <h3 class="tileHeadline h3">
         Balances in L2
-        <v-icon id="questionMark" class="icon-container _display-flex iconInfo" name="ri-question-mark" scale="0.9" @click.native="openBalanceInfoModal" />
+        <v-icon
+          id="questionMark"
+          class="icon-container _display-flex iconInfo"
+          name="ri-question-mark"
+          scale="0.9"
+          @click.native="openBalanceInfoModal"
+        />
       </h3>
 
-      <wallet-address :wallet="$store.getters['zk-account/address']" class="clickablePicture _margin-bottom-1" @clickPicture="openAccountModal" />
+      <wallet-address
+        :wallet="$store.getters['zk-account/address']"
+        class="clickablePicture _margin-bottom-1"
+        @clickPicture="openAccountModal"
+      />
 
       <div v-if="emptyBalances" class="centerBlock">
         <p class="tileText">
@@ -14,18 +24,39 @@
           <nuxt-link to="/account/top-up">top your wallet up</nuxt-link>
           or <a href="#" @click.prevent="openAccountModal">share your zk-address</a> to receive a transfer from someone!
         </p>
-        <i-button block class="_margin-top-1" data-cy="account_deposit_button" size="lg" to="/account/top-up" variant="secondary">
-          <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top&nbsp;up
+        <i-button
+          block
+          class="_margin-top-1"
+          data-cy="account_deposit_button"
+          size="lg"
+          to="/account/top-up"
+          variant="secondary"
+        >
+          <v-icon class="planeIcon" name="ri-add-fill"/>&nbsp;Top&nbsp;up
         </i-button>
       </div>
       <div v-else class="balances">
         <template v-if="!showLoader">
           <div class="_display-flex _justify-content-space-between balancesButtonGroup _margin-y-1">
-            <i-button block class="_margin-y-0 _margin-right-1 _padding-right-2" data-cy="account_deposit_button" size="md" to="/account/top-up" variant="secondary">
-              <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top&nbsp;up
+            <i-button
+              block
+              class="_margin-y-0 _margin-right-1 _padding-right-2"
+              data-cy="account_deposit_button"
+              size="md"
+              to="/account/top-up"
+              variant="secondary"
+            >
+              <v-icon class="planeIcon" name="ri-add-fill"/>&nbsp;Top&nbsp;up
             </i-button>
-            <i-button block class="_margin-y-0 _padding-right-1 _margin-right-1" data-cy="account_send_zksync_button" size="md" to="/transaction/transfer" variant="secondary">
-              <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
+            <i-button
+              block
+              class="_margin-y-0 _padding-right-1 _margin-right-1"
+              data-cy="account_send_zksync_button"
+              size="md"
+              to="/transaction/transfer"
+              variant="secondary"
+            >
+              <v-icon class="planeIcon" name="ri-send-plane-fill"/>&nbsp;Transfer
             </i-button>
             <i-button
               :disabled="!zigZagLink"
@@ -43,7 +74,9 @@
           </div>
 
           <i-input ref="searchInput" v-model="search" autofocus maxlength="6" placeholder="Filter tokens">
-            <v-icon #prefix name="ri-search-line" />
+            <template #prefix>
+              <v-icon name="ri-search-line"/>
+            </template>
           </i-input>
         </template>
 
@@ -62,7 +95,10 @@
                 {{ symbol }}
               </div>
               <div class="status _margin-left-05 _hidden-md-and-up">
-                <v-icon :class="{ committed: !item.verified, verified: item.verified }" :name="item.verified ? 'ri-check-double-line' : 'ri-check-line'" />
+                <v-icon
+                  :class="{ committed: !item.verified, verified: item.verified }"
+                  :name="item.verified ? 'ri-check-double-line' : 'ri-check-line'"
+                />
               </div>
             </div>
             <div class="rightSide">
@@ -75,7 +111,10 @@
                 </div>
                 <div class="status _hidden-sm-and-down">
                   <i-tooltip placement="left">
-                    <v-icon :class="{ committed: !item.verified, verified: item.verified }" :name="item.verified ? 'ri-check-double-line' : 'ri-check-line'" />
+                    <v-icon
+                      :class="{ committed: !item.verified, verified: item.verified }"
+                      :name="item.verified ? 'ri-check-double-line' : 'ri-check-line'"
+                    />
                     <template #body>{{ item.verified ? "Verified" : "Committed" }}</template>
                   </i-tooltip>
                 </div>
@@ -120,10 +159,18 @@ export default Vue.extend({
       return this.isSearching && !this.hasDisplayedBalances;
     },
     showLoader(): boolean {
-      return this.$store.getters["zk-account/accountStateLoading"] && !this.$store.getters["zk-account/accountStateRequested"];
+      return (
+        this.$store.getters["zk-account/accountStateLoading"] &&
+        !this.$store.getters["zk-account/accountStateRequested"]
+      );
     },
     emptyBalances(): boolean {
-      return !this.isSearching && !this.hasDisplayedBalances && (!this.$store.getters["zk-account/accountStateLoading"] || this.$store.getters["zk-account/accountStateRequested"]);
+      return (
+        !this.isSearching &&
+        !this.hasDisplayedBalances &&
+        (!this.$store.getters["zk-account/accountStateLoading"] ||
+          this.$store.getters["zk-account/accountStateRequested"])
+      );
     },
     accountStateLoading(): boolean {
       return this.$store.getters["zk-account/accountStateLoading"];
@@ -135,11 +182,11 @@ export default Vue.extend({
       const tokens = this.$store.getters["zk-tokens/zkTokens"] as TokenInfo[];
       const zkBalancesWithDeposits = this.zkBalances;
       for (const symbol in this.activeDeposits) {
-        if (this.activeDeposits.hasOwnProperty(symbol) && !zkBalancesWithDeposits[symbol]) {
+        if (!zkBalancesWithDeposits[symbol]) {
           zkBalancesWithDeposits[symbol] = {
             balance: "0",
             verified: false,
-            feeAvailable: tokens[symbol] ? tokens[symbol].enabledForFees : false,
+            feeAvailable: tokens[symbol] ? tokens[symbol].enabledForFees : false
           };
         }
       }

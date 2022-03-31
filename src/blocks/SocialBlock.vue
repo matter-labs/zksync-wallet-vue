@@ -1,16 +1,22 @@
 <template>
   <div class="socialIcons">
-    <a v-for="(socialProfile, numIndex) in socialNetworks" :key="numIndex" :href="socialProfile.url" class="socialItem" target="_blank">
-      <i v-if="socialProfile.icon" :class="socialProfile.icon" />
+    <a
+      v-for="(socialProfile, numIndex) in socialNetworks"
+      :key="numIndex"
+      :href="socialProfile.url"
+      class="socialItem"
+      target="_blank"
+    >
+      <i v-if="socialProfile.icon" :class="socialProfile.icon"/>
       <div v-else-if="socialProfile.img" class="svgContainer" v-html="socialIcons[socialProfile.img]"></div>
     </a>
   </div>
 </template>
 
 <script lang="ts">
+import Vue, { PropOptions } from "vue";
 import socialIcons from "@/utils/socialIcons";
 import { SingleIcon } from "@/types/lib";
-import Vue, { PropOptions } from "vue";
 
 type Location = "header" | "footer";
 
@@ -29,16 +35,16 @@ export default Vue.extend({
   },
   computed: {
     socialNetworks(): SingleIcon[] {
-      const socialIcons = <SingleIcon[]>[
+      const socialIcons = [
         {
           name: "Medium Blog",
           img: "medium",
-          url: "https://medium.com/matter-labs",
+          url: "https://medium.com/matter-labs"
         },
         {
           name: "Discord Community",
           img: "discord",
-          url: "https://discord.com/invite/px2aR7w",
+          url: "https://discord.com/invite/px2aR7w"
         },
         {
           name: "Telegram Community",
@@ -48,15 +54,15 @@ export default Vue.extend({
         {
           name: "Twitter Community",
           img: "twitter",
-          url: "https://twitter.com/zksync",
+          url: "https://twitter.com/zksync"
         },
         {
           name: "All Contacts",
           icon: "ri-at-line",
           url: "https://zksync.io/contact.html",
-          hideIn: "footer",
-        },
-      ];
+          hideIn: "footer"
+        }
+      ] as SingleIcon[];
       return socialIcons.filter((item) => !item.hideIn || item.hideIn !== this.location);
     },
   },

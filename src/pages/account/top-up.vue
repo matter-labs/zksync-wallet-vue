@@ -16,7 +16,8 @@
           </div>
         </h4>
         <div class="secondaryText small _margin-bottom-05">
-          You can buy crypto directly on zkSync with your credit card, just go through KYC process of our partners and enter your wallet address
+          You can buy crypto directly on zkSync with your credit card, just go through KYC process of our partners and
+          enter your wallet address
         </div>
         <providers :show-providers="{ ramp: true, banxa: true, moonpay: true, utorg: true }"/>
       </section>
@@ -25,7 +26,7 @@
         <div class="orText">or</div>
         <div class="line"></div>
       </div>
-      <section class="tileSubContainer" v-if="false">
+      <section v-if="false" class="tileSubContainer">
         <h4 class="tileSmallHeadline">
           Exchanges
           <div class="secondaryText estimatedFee">
@@ -34,11 +35,12 @@
           </div>
         </h4>
         <div class="secondaryText small _margin-bottom-05">
-          zkSync v1 is integrated with exchanges, so you can withdraw funds from your favorite exchanges directly inside the zkSync network using the benefits of the low fees
+          zkSync v1 is integrated with exchanges, so you can withdraw funds from your favorite exchanges directly inside
+          the zkSync network using the benefits of the low fees
         </div>
         <providers :show-providers="{ okex: true, bybit: true }"/>
       </section>
-      <div class="orDivider" v-if="false">
+      <div v-if="false" class="orDivider">
         <div class="line"></div>
         <div class="orText">or</div>
         <div class="line"></div>
@@ -51,7 +53,9 @@
             <span><b>Fee:</b>&nbsp;~1-90$</span>
           </div>
         </h4>
-        <div class="secondaryText small _margin-bottom-05">You can bridge your assets from other networks & exchanges using one of our supported bridges</div>
+        <div class="secondaryText small _margin-bottom-05">
+          You can bridge your assets from other networks & exchanges using one of our supported bridges
+        </div>
         <providers :show-providers="{ layerSwap: true, zksync: true, orbiter: true }"/>
       </section>
     </div>
@@ -172,7 +176,6 @@ export default Vue.extend({
     }
   }
 }
-
 
 .inkline.-dark {
   .dappPageWrapper {

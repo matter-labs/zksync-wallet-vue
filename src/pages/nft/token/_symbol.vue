@@ -40,7 +40,10 @@
           <div class="infoBlock">
             <div class="headline">Creator:</div>
             <div class="balance">
-              <nuxt-link v-if="!isOwnAddress" :to="`/contacts/${token.creatorAddress}`" class="tokenSymbol address">{{ getAddressName(token.creatorAddress) }}</nuxt-link>
+              <nuxt-link v-if="!isOwnAddress" :to="`/contacts/${token.creatorAddress}`" class="tokenSymbol address">{{
+                  getAddressName(token.creatorAddress)
+                }}
+              </nuxt-link>
               <div v-else>Own account</div>
             </div>
           </div>
@@ -100,16 +103,32 @@
           </div>
         </div>
         <i-button-group size="lg" class="_width-100 _margin-top-1 _display-flex nftButtonGroup">
-          <i-button :disabled="loadingToken" :class="{ '-disabled': !actionsAllowed }" class="_flex-fill _margin-0" size="lg" block variant="secondary" @click="withdraw()">
+          <i-button
+            :disabled="loadingToken"
+            :class="{ '-disabled': !actionsAllowed }"
+            class="_flex-fill _margin-0"
+            size="lg"
+            block
+            variant="secondary"
+            @click="withdraw()"
+          >
             <div class="_display-flex _justify-content-center _align-items-center">
-              <v-icon class="planeIcon" name="ri-hand-coin-fill" />&nbsp;&nbsp;Withdraw
-              <loader v-if="loadingToken" class="_margin-left-1" size="xs" />
+              <v-icon class="planeIcon" name="ri-hand-coin-fill"/>&nbsp;&nbsp;Withdraw
+              <loader v-if="loadingToken" class="_margin-left-1" size="xs"/>
             </div>
           </i-button>
-          <i-button :disabled="loadingToken" :class="{ '-disabled': !actionsAllowed }" class="_flex-fill _margin-0" block size="lg" variant="secondary" @click="transfer()">
+          <i-button
+            :disabled="loadingToken"
+            :class="{ '-disabled': !actionsAllowed }"
+            class="_flex-fill _margin-0"
+            block
+            size="lg"
+            variant="secondary"
+            @click="transfer()"
+          >
             <div class="_display-flex _justify-content-center _align-items-center">
-              <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
-              <loader v-if="loadingToken" class="_margin-left-1" size="xs" />
+              <v-icon class="planeIcon" name="ri-send-plane-fill"/>&nbsp;&nbsp;Transfer
+              <loader v-if="loadingToken" class="_margin-left-1" size="xs"/>
             </div>
           </i-button>
         </i-button-group>
@@ -142,18 +161,20 @@ export default Vue.extend({
   },
   data() {
     return {
-      fromRoute: <undefined | Route>undefined,
+      fromRoute: undefined as undefined | Route,
       loadingToken: false,
       tokenUnavailableModal: false,
-      nftTokenInfo: <undefined | NFTInfo>undefined,
+      nftTokenInfo: undefined as undefined | NFTInfo
     };
   },
   computed: {
     returnLink(): string | Route {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/withdraw" ? this.fromRoute : "/account/nft";
+      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/withdraw"
+        ? this.fromRoute
+        : "/account/nft";
     },
     ipfsGateway(): string {
-      return (<ModuleOptions>this.$store.getters["zk-onboard/options"]).ipfsGateway;
+      return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway;
     },
     tokenID(): number {
       return parseInt(this.$route.params.symbol);
@@ -215,7 +236,9 @@ export default Vue.extend({
   methods: {
     getAddressName(address: string): string {
       const contactFromStore: ZkContact = this.$store.getters["zk-contacts/contactByAddress"](address);
-      return contactFromStore && !contactFromStore.deleted ? contactFromStore.name : address.replace(address.slice(6, address.length - 3), "...");
+      return contactFromStore && !contactFromStore.deleted
+        ? contactFromStore.name
+        : address.replace(address.slice(6, address.length - 3), "...");
     },
     copy(value: string): void {
       copyToClipboard(value);

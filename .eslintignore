@@ -6,7 +6,7 @@
 environments
 node_modules
 public
-/functions/
+functions
 
 ## src-exceptions
 src/assets/imgs

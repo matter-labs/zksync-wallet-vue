@@ -2,16 +2,12 @@
 root = true
 
 [*]
-charset = utf-8
-end_of_line = lf
-indent_size = 2
-tab_width = 2
-ij_continuation_indent_size = 2
 indent_style = space
-insert_final_newline = false
+indent_size = 2
+end_of_line = lf
+charset = utf-8
 trim_trailing_whitespace = true
-max_line_length = 180
-ij_formatter_tags_enabled = false
-ij_smart_tabs = false
-ij_visual_guides = 160
-ij_wrap_on_typing = true
+insert_final_newline = true
+
+[*.md]
+trim_trailing_whitespace = false

@@ -14,6 +14,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Route } from "vue-router";
 
 let loggedInAnimationTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({
@@ -25,7 +26,10 @@ export default Vue.extend({
   },
   computed: {
     loggingIn(): boolean {
-      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
+      return (
+        this.$store.getters["zk-onboard/onboardStatus"] === "connecting" ||
+        this.$store.getters["zk-onboard/restoringSession"]
+      );
     },
     loggedIn(): boolean {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";
@@ -51,10 +55,10 @@ export default Vue.extend({
     },
   },
   methods: {
-    async cancelLogin() {
+    async cancelLogin(): Promise<Route> {
       await this.$store.dispatch("zk-account/logout");
-      this.$router.push("/");
-    },
+      return this.$router.push("/");
+    }
   },
 });
 </script>

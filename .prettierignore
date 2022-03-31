@@ -6,7 +6,5 @@
 /.idea
 *yarn*
 /environments
-/_nuxt
-/tests
 /public
 *.sh

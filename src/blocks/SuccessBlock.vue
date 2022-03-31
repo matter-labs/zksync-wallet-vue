@@ -6,7 +6,8 @@
     <checkmark />
     <p class="_text-center _margin-top-0">
       <template v-if="activeTransaction.type === 'Deposit'">
-        Your deposit transaction has been mined and will be processed after required number of confirmations.<br />Use the transaction link to track the progress.
+        Your deposit transaction has been mined and will be processed after required number of confirmations.<br/>Use
+        the transaction link to track the progress.
       </template>
       <template v-else-if="activeTransaction.type === 'Allowance' && activeTransaction.data">
         Token <span class="tokenSymbol">{{ activeTransaction.data.token }}</span> was successfully approved
@@ -14,18 +15,22 @@
           for {{ activeTransaction.data.allowance.toString() | parseBigNumberish(activeTransaction.data.token) }}
           <span class="tokenSymbol">{{ activeTransaction.data.token }}</span>
         </span>
-        <br />
+        <br/>
         Now you can proceed to deposit.
       </template>
     </p>
-    <a v-if="txLink" :href="txLink" class="_display-block _text-center _margin-top-1" target="_blank">Link to the transaction <v-icon name="ri-external-link-line"></v-icon></a>
+    <a v-if="txLink" :href="txLink" class="_display-block _text-center _margin-top-1" target="_blank"
+    >Link to the transaction
+      <v-icon name="ri-external-link-line"></v-icon
+      >
+    </a>
     <div v-if="activeTransaction.address" class="infoBlockItem smaller _margin-top-2">
       <div class="amount">
         <span>Recipient:</span>
         <span v-if="isOwnAddress" class="secondaryText">Own account</span>
         <span v-else-if="openedContact" class="secondaryText">{{ openedContact.name }}</span>
       </div>
-      <wallet-address :wallet="activeTransaction.address" />
+      <wallet-address :wallet="activeTransaction.address"/>
     </div>
     <div v-if="activeTransaction.amount" class="infoBlockItem _margin-top-1">
       <div class="headline">Amount:</div>
@@ -63,10 +68,24 @@
         </div>
       </div>
       <div class="goBackContinueBtns _margin-top-1">
-        <i-button data-cy="deposit_arrow_back_button" size="lg" variant="secondary" circle @click="clearActiveTransaction()">
-          <v-icon name="ri-arrow-left-line" />
+        <i-button
+          data-cy="deposit_arrow_back_button"
+          size="lg"
+          variant="secondary"
+          circle
+          @click="clearActiveTransaction()"
+        >
+          <v-icon name="ri-arrow-left-line"/>
         </i-button>
-        <i-button data-cy="deposit_proceed_to_deposit_button" block size="lg" variant="secondary" @click="commitTransaction()">Proceed to deposit</i-button>
+        <i-button
+          data-cy="deposit_proceed_to_deposit_button"
+          block
+          size="lg"
+          variant="secondary"
+          @click="commitTransaction()"
+        >Proceed to deposit
+        </i-button
+        >
       </div>
     </div>
     <i-button
@@ -80,7 +99,17 @@
     >
       Ok
     </i-button>
-    <i-button v-else data-cy="success_block_ok_button" block size="lg" variant="secondary" class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
+    <i-button
+      v-else
+      data-cy="success_block_ok_button"
+      block
+      size="lg"
+      variant="secondary"
+      class="_margin-top-2"
+      :to="continueBtnLink"
+    >Ok
+    </i-button
+    >
   </div>
 </template>
 
@@ -88,7 +117,7 @@
 import Vue from "vue";
 import { BigNumber } from "ethers";
 import { getAddress } from "ethers/lib/utils";
-import { ZkActiveTransaction, ZkContact, ZkConfig, ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkActiveTransaction, ZkConfig, ZkContact, ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
 import { TokenLike } from "zksync/build/types";
 import { ERC20_APPROVE_TRESHOLD } from "zksync/build/utils";
 

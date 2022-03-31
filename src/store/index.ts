@@ -51,7 +51,7 @@ export const actions = actionTree(
         resolveModal = resolve;
       });
     },
-  },
+  }
 );
 
 export const accessorType = getAccessorType({

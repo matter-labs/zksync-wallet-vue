@@ -4,8 +4,8 @@
   </div>
 </template>
 <script lang="ts">
-import { utorgConfig } from "@/utils/config";
 import Vue from "vue";
+import { utorgConfig } from "@/utils/config";
 
 export default Vue.extend({
   name: "ProviderUtorg",
@@ -36,7 +36,9 @@ export default Vue.extend({
         return;
       }
       this.$analytics.track("click_on_buy_with_utorg");
-      window.open(`${this.utorgConfig!.url}/direct/${this.utorgConfig!.sid}/${this.$store.getters["zk-account/address"]}/`);
+      window.open(
+        `${this.utorgConfig!.url}/direct/${this.utorgConfig!.sid}/${this.$store.getters["zk-account/address"]}/`
+      );
     }
   }
 });

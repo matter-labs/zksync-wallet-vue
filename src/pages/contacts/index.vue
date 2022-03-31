@@ -1,20 +1,28 @@
 <template>
   <div class="contactsPage dappPageWrapper">
     <i-modal v-model="contactModal.enabled" class="prevent-close" size="md">
-      <template slot="header">
+      <template #header>
         <span v-if="contactModal.type === 'add'">Add contact</span>
         <span v-else-if="contactModal.type === 'edit'">Edit contact</span>
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
-        <i-input ref="nameInput" v-model="contactModal.name" autofocus maxlength="20" placeholder="Name" size="lg" @keyup.enter="saveContact()" />
-        <br />
+        <i-input
+          ref="nameInput"
+          v-model="contactModal.name"
+          autofocus
+          maxlength="20"
+          placeholder="Name"
+          size="lg"
+          @keyup.enter="saveContact()"
+        />
+        <br/>
         <div class="_padding-bottom-1">Address</div>
-        <address-input ref="addressInput" v-model="contactModal.address" @enter="saveContact()" />
-        <br />
+        <address-input ref="addressInput" v-model="contactModal.address" @enter="saveContact()"/>
+        <br/>
         <div v-if="contactModal.error" class="modalError _padding-bottom-2">{{ contactModal.error }}</div>
         <i-button v-if="contactModal.type === 'edit'" block link size="md" variant="secondary" @click="deleteContact()">
-          <v-icon name="ri-delete-bin-line" />&nbsp;&nbsp;Delete contact
+          <v-icon name="ri-delete-bin-line"/>&nbsp;&nbsp;Delete contact
         </i-button>
         <i-button block variant="secondary" size="lg" @click="saveContact()">Save</i-button>
       </div>
@@ -24,20 +32,30 @@
         <span>Contacts</span>
         <i-tooltip>
           <span class="icon-container _display-flex" @click="addNewContact()">
-            <v-icon name="ri-add-fill" class="iconInfo" />
+            <v-icon name="ri-add-fill" class="iconInfo"/>
           </span>
-          <template slot="body">Add contact</template>
+          <template #body>Add contact</template>
         </i-tooltip>
       </div>
-      <i-input v-if="isSearching || hasDisplayedContacts" ref="searchInput" v-model="search" placeholder="Filter contacts" autofocus maxlength="20">
+      <i-input
+        v-if="isSearching || hasDisplayedContacts"
+        ref="searchInput"
+        v-model="search"
+        placeholder="Filter contacts"
+        autofocus
+        maxlength="20"
+      >
         <i slot="prefix">
-          <v-icon name="ri-search-line" />
+          <v-icon name="ri-search-line"/>
         </i>
       </i-input>
       <div class="contactsListContainer genericListContainer">
         <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound _margin-bottom-0 _margin-top-1">
           <div>The contact list is empty</div>
-          <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="addNewContact()">Add contact</i-button>
+          <i-button block link size="lg" variant="secondary" class="_margin-top-1" @click="addNewContact()"
+          >Add contact
+          </i-button
+          >
         </div>
         <div v-else-if="!hasDisplayedContacts" class="nothingFound">
           <span>
@@ -60,17 +78,32 @@
           <div class="iconsBlock">
             <template v-if="!contact.deleted">
               <i-tooltip placement="left" trigger="click">
-                <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyAddress(contact.address)">
-                  <v-icon name="ri-clipboard-line" />
+                <i-button
+                  class="copyAddress"
+                  block
+                  link
+                  size="md"
+                  variant="secondary"
+                  @click="copyAddress(contact.address)"
+                >
+                  <v-icon name="ri-clipboard-line"/>
                 </i-button>
-                <template slot="body">Copied!</template>
+                <template #body>Copied!</template>
               </i-tooltip>
               <i-button block link size="md" cla variant="secondary" @click="editContact(contact)">
-                <v-icon name="ri-pencil-fill" />
+                <v-icon name="ri-pencil-fill"/>
               </i-button>
             </template>
-            <i-button v-else class="iconsBlock" block link size="md" variant="secondary" @click="restoreDeleted(contact)">
-              <v-icon name="ri-arrow-go-back-line" />
+            <i-button
+              v-else
+              class="iconsBlock"
+              block
+              link
+              size="md"
+              variant="secondary"
+              @click="restoreDeleted(contact)"
+            >
+              <v-icon name="ri-arrow-go-back-line"/>
             </i-button>
           </div>
         </div>
@@ -83,7 +116,7 @@
 import Vue from "vue";
 import { getAddress } from "ethers/lib/utils";
 import { ZkContact, ZkContacts } from "@matterlabs/zksync-nuxt-core/types";
-import { searchInObject, copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
+import { copyToClipboard, searchInObject } from "@matterlabs/zksync-nuxt-core/utils";
 import { Address } from "zksync/build/types";
 
 export default Vue.extend({
@@ -92,11 +125,11 @@ export default Vue.extend({
       search: "",
       contactModal: {
         enabled: false,
-        type: <"add" | "edit">"add",
+        type: "add" as "add" | "edit",
         error: "",
         name: "",
-        address: <Address>"",
-        openedAddress: <Address | undefined>undefined,
+        address: "" as Address,
+        openedAddress: undefined as Address | undefined
       },
     };
   },
@@ -108,7 +141,11 @@ export default Vue.extend({
       return this.$store.getters["zk-contacts/contacts"];
     },
     displayedContactsList(): ZkContacts {
-      return <ZkContacts>searchInObject(this.contactsList, this.search, ([_, contact]: [string, ZkContact]) => `${contact.name} - ${contact.address}`);
+      return searchInObject(
+        this.contactsList,
+        this.search,
+        ([_, contact]: [string, ZkContact]) => `${contact.name} - ${contact.address}`
+      ) as ZkContacts;
     },
     hasDisplayedContacts(): boolean {
       return Object.keys(this.displayedContactsList).length !== 0;
@@ -155,13 +192,19 @@ export default Vue.extend({
         this.contactModal.error = "Can't add own address";
         return;
       }
-      if (this.contactModal.openedAddress && getAddress(this.contactModal.openedAddress) !== getAddress(this.contactModal.address)) {
+      if (
+        this.contactModal.openedAddress &&
+        getAddress(this.contactModal.openedAddress) !== getAddress(this.contactModal.address)
+      ) {
         await this.$store.dispatch("zk-contacts/removeContact", this.contactModal.openedAddress);
       }
 
       this.$analytics.track(this.contactModal.type === "add" ? "add_contact" : "edit_contact");
 
-      this.$store.dispatch("zk-contacts/setContact", { address: this.contactModal.address, name: this.contactModal.name.trim() });
+      await this.$store.dispatch("zk-contacts/setContact", {
+        address: this.contactModal.address,
+        name: this.contactModal.name.trim()
+      });
       this.contactModal.enabled = false;
     },
     deleteContact() {

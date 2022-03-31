@@ -44,7 +44,8 @@
 
         <template v-if="isDeposit">
           <div v-if="!isMainnet" class="_padding-0 _display-flex _justify-content-end">
-            <i-button class="_padding-y-0 _margin-top-05" link to="/transaction/mint"> Mint tokens
+            <i-button class="_padding-y-0 _margin-top-05" link to="/transaction/mint">
+              Mint tokens
               <v-icon name="ri-add-fill" scale="0.75"/>
             </i-button>
           </div>
@@ -53,7 +54,13 @@
 
       <template v-if="type === 'Transfer'">
         <div class="_padding-0 _display-flex _justify-content-end">
-          <i-button class="_padding-y-0 send-link" data-cy="send_send_l1_button" link to="/transaction/withdraw" variant="">
+          <i-button
+            class="_padding-y-0 send-link"
+            data-cy="send_send_l1_button"
+            link
+            to="/transaction/withdraw"
+            variant=""
+          >
             Send to Ethereum (L1)
             <v-icon class="" name="ri-arrow-right-up-line" scale="0.75"/>
           </i-button>
@@ -63,7 +70,12 @@
       <template v-if="displayAddressInput">
         <div :class="[isDeposit ? '_margin-top-05' : '_margin-top-1']" class="inputLabel">Address</div>
         <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()"/>
-        <block-choose-contact :address="inputtedAddress" :display-own-address="displayOwnAddress" class="_margin-top-05" @chosen="chooseAddress($event)"/>
+        <block-choose-contact
+          :address="inputtedAddress"
+          :display-own-address="displayOwnAddress"
+          class="_margin-top-05"
+          @chosen="chooseAddress($event)"
+        />
       </template>
 
       <template v-if="displayAmountInput">
@@ -87,18 +99,30 @@
             <v-icon class="iconInfo" name="ri-question-mark" scale="0.9"/>
           </div>
         </div>
-        <hash-input ref="hashInput" v-model="contentHash" autofocus class="_margin-bottom-2" @enter="commitTransaction()"/>
+        <hash-input
+          ref="hashInput"
+          v-model="contentHash"
+          autofocus
+          class="_margin-bottom-2"
+          @enter="commitTransaction()"
+        />
       </template>
       <template v-if="displayNFTTokenSelect">
         <div class="_padding-top-1 inputLabel">Token</div>
         <i-input :value="chosenToken ? `NFT-${chosenToken}` : ''" disabled size="lg" type="text">
-          <i-button slot="append" block link variant="secondary" @click="chooseTokenModal = 'mainToken'">Select{{ chosenToken ? " another " : " " }}NFT</i-button>
+          <i-button slot="append" block link variant="secondary" @click="chooseTokenModal = 'mainToken'"
+          >Select{{ chosenToken ? " another " : " " }}NFT
+          </i-button
+          >
         </i-input>
       </template>
 
       <!-- Allowance -->
       <div v-if="chosenToken && displayTokenUnlock">
-        <div class="_padding-top-1 _display-flex _align-items-center inputLabel" @click="$accessor.openModal('Allowance')">
+        <div
+          class="_padding-top-1 _display-flex _align-items-center inputLabel"
+          @click="$accessor.openModal('Allowance')"
+        >
           <span>
             <span class="tokenSymbol">{{ chosenToken }}</span> Allowance
           </span>
@@ -121,7 +145,8 @@
             variant="secondary"
             @click="unlockToken(false)"
           >
-            Approve {{ amountBigNumber | formatBigNumLimited(chosenToken, 7) }} <span class="tokenSymbol">{{ chosenToken }}</span>
+            Approve {{ amountBigNumber | formatBigNumLimited(chosenToken, 7) }}
+            <span class="tokenSymbol">{{ chosenToken }}</span>
           </i-button>
           <i-button v-else key="noApproveAmount" block class="_margin-top-0" disabled size="md">
             Introduce <span class="tokenSymbol">{{ chosenToken }}</span> amount
@@ -146,12 +171,14 @@
         </p>
       </div>
 
-      <div v-if="type === 'CPK' && cpkStatus === true" class="_text-center _margin-top-1">Your account is already activated</div>
+      <div v-if="type === 'CPK' && cpkStatus === true" class="_text-center _margin-top-1">
+        Your account is already activated
+      </div>
 
       <div v-if="error" class="errorText _text-center _margin-top-1" data-cy="transaction_error_text">{{ error }}</div>
       <div v-if="nftTokenIsntVerified" class="errorText _text-center _margin-top-1">
-        Mint transaction for <span class="tokenSymbol">NFT-{{ chosenToken }}</span> isn't verified yet. <br/>Try again once
-        <span class="tokenSymbol">NFT-{{ chosenToken }}</span> gets verified.
+        Mint transaction for <span class="tokenSymbol">NFT-{{ chosenToken }}</span> isn't verified yet. <br/>Try again
+        once <span class="tokenSymbol">NFT-{{ chosenToken }}</span> gets verified.
       </div>
 
       <!-- Commit button -->
@@ -172,7 +199,9 @@
       </i-button>
 
       <!-- Requesting signer -->
-      <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">Follow the instructions in your Ethereum wallet</div>
+      <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">
+        Follow the instructions in your Ethereum wallet
+      </div>
 
       <!-- Fees -->
       <div v-if="feeSymbol && !enoughBalanceToPayFee" class="errorText _text-center _margin-top-1">
@@ -187,7 +216,9 @@
       <template v-for="item in fees">
         <div :key="item.key" class="_text-center _margin-top-1" data-cy="fee_block_fee_message">
           {{ getFeeName(item.key) }}:
-          <span v-if="(item.key === 'txFee' && !feeLoading) || (item.key === 'accountActivation' && !activationFeeLoading)">
+          <span
+            v-if="(item.key === 'txFee' && !feeLoading) || (item.key === 'accountActivation' && !activationFeeLoading)"
+          >
             {{ item.amount.toString() | parseBigNumberish(feeSymbol) }} <span class="tokenSymbol">{{ feeSymbol }}</span>
             <span class="secondaryText">
               <token-price :amount="item.amount.toString()" :symbol="feeSymbol"/>
@@ -201,12 +232,21 @@
           <span class="secondaryText">Loading...</span>
         </span>
       </div>
-      <div v-if="feeError" class="_display-flex _justify-content-center _align-items-center _padding-left-2 _margin-top-1">
+      <div
+        v-if="feeError"
+        class="_display-flex _justify-content-center _align-items-center _padding-left-2 _margin-top-1"
+      >
         <div class="errorText _text-center">
           <span>{{ feeError }}</span>
           <div class="_text-decoration-underline _cursor-pointer" @click="requestFees()">Try again</div>
         </div>
-        <v-icon id="questionMark" class="iconInfo _margin-left-1" name="ri-question-mark" scale="0.9" @click.native="$accessor.openModal('FeeReqError')"/>
+        <v-icon
+          id="questionMark"
+          class="iconInfo _margin-left-1"
+          name="ri-question-mark"
+          scale="0.9"
+          @click.native="$accessor.openModal('FeeReqError')"
+        />
       </div>
       <span
         v-if="requiredFees.length > 0"
@@ -244,30 +284,32 @@ export default Vue.extend({
       default: () => {}
     } as PropOptions<Route>
   },
-  data () {
+  data() {
     return {
       inputtedAmount: this.$store.getters["zk-transaction/amount"],
       inputtedAddress: this.$store.getters["zk-transaction/address"],
-      chooseTokenModal: <false | "mainToken" | "feeToken">false,
+      chooseTokenModal: false as false | "mainToken" | "feeToken",
       contentHash: this.$store.getters["zk-transaction/contentHash"],
       loading: true,
       requestingSigner: false
     };
   },
   computed: {
-    isMainnet (): boolean {
+    isMainnet(): boolean {
       return this.$store.getters["zk-provider/network"] === "mainnet";
     },
-    isSubmitDisabled (): boolean {
+    isSubmitDisabled(): boolean {
       return (!this.commitAllowed && (this.hasSigner || !this.requireSigner)) || this.requestingSigner || this.loading;
     },
-    buttonLoader (): boolean {
-      return this.allowanceLoading || (!this.nftExists && this.nftExistsLoading) || this.loading || this.requestingSigner;
+    buttonLoader(): boolean {
+      return (
+        this.allowanceLoading || (!this.nftExists && this.nftExistsLoading) || this.loading || this.requestingSigner
+      );
     },
-    nftTokenIsntVerified (): boolean {
+    nftTokenIsntVerified(): boolean {
       return Boolean(this.chosenToken && this.mainToken === "L2-NFT" && !this.nftExists && !this.nftExistsLoading);
     },
-    routeBack (): Route | string {
+    routeBack(): Route | string {
       if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
         return this.fromRoute;
       }
@@ -276,28 +318,28 @@ export default Vue.extend({
       }
       return "/account/top-up";
     },
-    type (): ZkTransactionType {
+    type(): ZkTransactionType {
       return this.$store.getters["zk-transaction/type"];
     },
-    transactionActionName (): string | undefined {
+    transactionActionName(): string | undefined {
       return this.$store.getters["zk-transaction/transactionActionName"];
     },
-    mainToken (): ZkTransactionMainToken {
+    mainToken(): ZkTransactionMainToken {
       return this.$store.getters["zk-transaction/mainToken"];
     },
-    chosenToken (): TokenLike | undefined {
+    chosenToken(): TokenLike | undefined {
       return this.$store.getters["zk-transaction/symbol"];
     },
-    feeSymbol (): TokenSymbol | undefined {
+    feeSymbol(): TokenSymbol | undefined {
       return this.$store.getters["zk-transaction/feeSymbol"];
     },
-    enoughBalanceToPayFee (): boolean {
+    enoughBalanceToPayFee(): boolean {
       return this.$store.getters["zk-transaction/enoughBalanceToPayFee"];
     },
-    displayAddressInput (): boolean {
+    displayAddressInput(): boolean {
       return this.type !== "CPK";
     },
-    displayAmountInput (): boolean {
+    displayAmountInput(): boolean {
       switch (this.type) {
         case "Deposit":
         case "Mint":
@@ -309,10 +351,10 @@ export default Vue.extend({
           return false;
       }
     },
-    displayContentHashInput (): boolean {
+    displayContentHashInput(): boolean {
       return this.type === "MintNFT";
     },
-    displayNFTTokenSelect (): boolean {
+    displayNFTTokenSelect(): boolean {
       switch (this.type) {
         case "TransferNFT":
         case "WithdrawNFT":
@@ -322,25 +364,25 @@ export default Vue.extend({
           return false;
       }
     },
-    nftExists (): boolean {
+    nftExists(): boolean {
       return this.$store.getters["zk-transaction/nftExists"];
     },
-    nftExistsLoading (): boolean {
+    nftExistsLoading(): boolean {
       return this.$store.getters["zk-transaction/nftExistsLoading"];
     },
-    commitAllowed (): boolean {
+    commitAllowed(): boolean {
       return this.$store.getters["zk-transaction/commitAllowed"];
     },
-    error (): Error {
+    error(): Error {
       return this.$store.getters["zk-transaction/error"];
     },
-    feeError (): Error {
+    feeError(): Error {
       return this.$store.getters["zk-transaction/feeError"];
     },
-    amountBigNumber (): BigNumber | undefined {
+    amountBigNumber(): BigNumber | undefined {
       return this.$store.getters["zk-transaction/amountBigNumber"];
     },
-    zeroAllowance (): boolean {
+    zeroAllowance(): boolean {
       if (!this.chosenToken) {
         return false;
       }
@@ -351,71 +393,76 @@ export default Vue.extend({
       }
       return tokenAllowance.eq("0");
     },
-    maxAmount (): BigNumber {
+    maxAmount(): BigNumber {
       return this.$store.getters["zk-transaction/maxAmount"];
     },
-    allowance (): BigNumber | undefined {
+    allowance(): BigNumber | undefined {
       this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
       return this.$store.getters["zk-balances/tokenAllowance"](this.chosenToken);
     },
-    enoughAllowance (): boolean {
+    enoughAllowance(): boolean {
       return this.$store.getters["zk-transaction/enoughAllowance"];
     },
-    allowanceLoading (): boolean {
+    allowanceLoading(): boolean {
       this.$store.getters["zk-balances/tokensAllowanceForceUpdate"];
       if (this.type === "Deposit" && this.chosenToken !== undefined) {
         return !!this.$store.getters["zk-balances/tokensAllowanceLoading"][this.chosenToken];
       }
       return false;
     },
-    displayTokenUnlock (): boolean {
-      return this.type === "Deposit" && this.chosenToken !== undefined && (!this.enoughAllowance || this.zeroAllowance) && (!this.allowanceLoading || this.zeroAllowance);
+    displayTokenUnlock(): boolean {
+      return (
+        this.type === "Deposit" &&
+        this.chosenToken !== undefined &&
+        (!this.enoughAllowance || this.zeroAllowance) &&
+        (!this.allowanceLoading || this.zeroAllowance)
+      );
     },
-    displayOwnAddress (): boolean {
+    displayOwnAddress(): boolean {
       return ["Deposit", "Withdraw", "Mint", "WithdrawNFT", "MintNFT"].includes(this.type);
     },
-    activeTransaction (): ZkActiveTransaction {
+    activeTransaction(): ZkActiveTransaction {
       return this.$store.getters["zk-transaction/activeTransaction"];
     },
-    fees (): ZkFee[] {
+    fees(): ZkFee[] {
       return this.$store.getters["zk-transaction/fees"];
     },
-    requiredFees (): ZkFeeType[] {
+    requiredFees(): ZkFeeType[] {
       return this.$store.getters["zk-transaction/requiredFees"];
     },
-    hasSigner (): boolean {
+    hasSigner(): boolean {
       return this.$store.getters["zk-wallet/hasSigner"];
     },
-    requireSigner (): boolean {
+    requireSigner(): boolean {
       return this.mainToken === "L2-Tokens" || this.mainToken === "L2-NFT" || this.type === "MintNFT";
     },
-    feeLoading (): boolean {
+    feeLoading(): boolean {
       return this.$store.getters["zk-transaction/feeLoading"];
     },
-    activationFeeLoading (): boolean {
+    activationFeeLoading(): boolean {
       return this.$store.getters["zk-transaction/activationFeeLoading"];
     },
-    isDeposit (): boolean {
+    isDeposit(): boolean {
       return this.type === "Deposit";
     },
     chooseTokenModalOpened: {
-      get (): boolean {
+      get(): boolean {
         return this.chooseTokenModal !== false;
       },
-      set (value) {
+      set(value) {
         if (!value) {
           this.chooseTokenModal = false;
         }
       }
     },
-    cpkStatus (): ZkCPKStatus {
+    cpkStatus(): ZkCPKStatus {
       return this.$store.getters["zk-wallet/cpk"];
     }
   },
   watch: {
     inputtedAmount: {
       immediate: true,
-      handler (val, oldVal) {
+      handler(val, oldVal) {
         if (oldVal === undefined) {
           this.$nextTick(() => {
             this.$store.commit("zk-transaction/setAmount", val);
@@ -425,14 +472,14 @@ export default Vue.extend({
         }
       }
     },
-    inputtedAddress (val) {
+    inputtedAddress(val) {
       this.$store.dispatch("zk-transaction/setAddress", val);
     },
-    contentHash (val) {
+    contentHash(val) {
       this.$store.commit("zk-transaction/setContentHash", val);
     }
   },
-  async mounted () {
+  async mounted() {
     if (!this.$store.getters["zk-account/loggedIn"]) {
       return;
     }
@@ -442,9 +489,9 @@ export default Vue.extend({
     this.checkCPK();
     if (this.$route.query.token) {
       if (this.mainToken === "L2-NFT") {
-        this.chooseToken(parseInt(<string>this.$route.query.token));
+        this.chooseToken(parseInt(this.$route.query.token.toString()));
       } else {
-        this.chooseToken(<string>this.$route.query.token);
+        this.chooseToken(this.$route.query.token.toString());
       }
     }
     if (this.$route.query.address) {
@@ -452,12 +499,12 @@ export default Vue.extend({
     }
     this.loading = false;
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.$store.commit("zk-transaction/setAmount", undefined);
     this.$store.commit("zk-transaction/setContentHash", undefined);
   },
   methods: {
-    chooseToken (token: TokenLike) {
+    chooseToken(token: TokenLike) {
       if (!this.chooseTokenModal || this.chooseTokenModal === "mainToken") {
         this.$store.dispatch("zk-transaction/setSymbol", token);
       } else if (this.chooseTokenModal === "feeToken") {
@@ -466,7 +513,7 @@ export default Vue.extend({
       }
       this.chooseTokenModal = false;
     },
-    async checkWithdraw (): Promise<boolean> {
+    async checkWithdraw(): Promise<boolean> {
       const doNotShowWarning = localStorage.getItem(DO_NOT_SHOW_WITHDRAW_WARNING_KEY);
 
       if (doNotShowWarning) {
@@ -476,7 +523,7 @@ export default Vue.extend({
       const result = await this.$accessor.openDialog("WithdrawWarning");
       return !!result;
     },
-    async checkTransfer (): Promise<boolean> {
+    async checkTransfer(): Promise<boolean> {
       const transferWithdrawWarning = localStorage.getItem(warningCanceledKey);
 
       if (transferWithdrawWarning || getAddress(this.inputtedAddress) === this.$store.getters["zk-account/address"]) {
@@ -491,7 +538,7 @@ export default Vue.extend({
       const result = await this.$accessor.openDialog("TransferWarning");
       return !!result;
     },
-    async commitTransaction () {
+    async commitTransaction() {
       if (!this.hasSigner && this.requireSigner) {
         try {
           this.requestingSigner = true;
@@ -539,7 +586,7 @@ export default Vue.extend({
         }
       }
     },
-    trackTransaction (failed = false): void {
+    trackTransaction(failed = false): void {
       const status = failed ? "_fail" : "";
       switch (this.type) {
         case "Deposit":
@@ -577,38 +624,43 @@ export default Vue.extend({
           });
           break;
         case "Withdraw":
-          this.$analytics.track((getAddress(this.inputtedAddress) === this.$store.getters["zk-account/address"] ? "l1_withdraw" : "l1_transfer") + status, {
-            amount: this.inputtedAmount,
-            opToken: this.chosenToken,
-            feeToken: this.feeSymbol
-          });
+          this.$analytics.track(
+            (getAddress(this.inputtedAddress) === this.$store.getters["zk-account/address"]
+              ? "l1_withdraw"
+              : "l1_transfer") + status,
+            {
+              amount: this.inputtedAmount,
+              opToken: this.chosenToken,
+              feeToken: this.feeSymbol
+            }
+          );
           break;
         default:
           this.$analytics.track(this.type + status);
           break;
       }
     },
-    async checkInputtedAccountUnlocked (): Promise<boolean> {
+    async checkInputtedAccountUnlocked(): Promise<boolean> {
       const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider");
       const state = await syncProvider.getState(this.inputtedAddress);
       return state.id != null;
     },
-    async unlockToken (unlimited = false) {
+    async unlockToken(unlimited = false) {
       await this.$store.dispatch("zk-transaction/setAllowance", unlimited);
     },
-    chooseAddress (address: Address) {
+    chooseAddress(address: Address) {
       this.inputtedAddress = address;
     },
-    setAllowanceMax () {
+    setAllowanceMax() {
       this.inputtedAmount = this.$options.filters!.parseBigNumberish(this.allowance, this.chosenToken);
     },
-    getFeeName (key: string): string | undefined {
+    getFeeName(key: string): string | undefined {
       return feeNameDict!.has(key) ? feeNameDict.get(key) : "";
     },
-    async requestFees () {
+    async requestFees() {
       await this.$store.dispatch("zk-transaction/requestAllFees", true);
     },
-    checkCPK () {
+    checkCPK() {
       if (this.mainToken !== "L1-Tokens" && this.$store.getters["zk-wallet/cpk"] !== true && this.type !== "CPK") {
         if (this.$store.getters["zk-wallet/cpk"] === false) {
           this.$accessor.openModal("SignPubkey");
@@ -618,11 +670,11 @@ export default Vue.extend({
         }
       }
     },
-    showChangeFeeTokenModal () {
+    showChangeFeeTokenModal() {
       this.chooseTokenModal = "feeToken";
       this.$analytics.track("visit_change_fee_token");
     }
-  }
+  },
 });
 </script>
 
@@ -694,7 +746,6 @@ h4.tileSmallHeadline {
     flex-flow: nowrap row;
     justify-content: space-between;
     align-items: flex-start;
-
   }
 }
 </style>

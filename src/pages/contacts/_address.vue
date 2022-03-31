@@ -1,37 +1,57 @@
 <template>
   <div class="contactsPage dappPageWrapper">
     <i-modal v-model="contactModal.enabled" class="prevent-close" size="md">
-      <template slot="header">
+      <template #header>
         <span v-if="!openedContact">Add contact</span>
         <span v-else>Edit contact</span>
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
-        <i-input ref="nameInput" v-model="contactModal.name" autofocus maxlength="20" placeholder="Name" size="lg" @keyup.enter="saveContact()" />
-        <br />
+        <i-input
+          ref="nameInput"
+          v-model="contactModal.name"
+          autofocus
+          maxlength="20"
+          placeholder="Name"
+          size="lg"
+          @keyup.enter="saveContact()"
+        />
+        <br/>
         <div v-if="contactModal.error" class="modalError _padding-bottom-2">{{ contactModal.error }}</div>
-        <i-button v-if="openedContact" block link size="md" variant="secondary" @click="deleteContact()"><v-icon name="ri-delete-bin-line" />&nbsp;&nbsp;Delete contact</i-button>
+        <i-button v-if="openedContact" block link size="md" variant="secondary" @click="deleteContact()"
+        >
+          <v-icon name="ri-delete-bin-line"/>&nbsp;&nbsp;Delete contact
+        </i-button
+        >
         <i-button block variant="secondary" size="lg" @click="saveContact()">Save</i-button>
       </div>
     </i-modal>
     <div class="tileBlock">
       <div class="tileHeadline withBtn h3">
         <nuxt-link :to="computedReturnLink" class="returnBtn">
-          <v-icon name="ri-arrow-left-line" />
+          <v-icon name="ri-arrow-left-line"/>
         </nuxt-link>
         <div>
           <span>{{ computedName }}</span>
         </div>
       </div>
       <div v-if="openedContact && openedContact.deleted === true" class="isDeleted">Contact is deleted</div>
-      <wallet-address :wallet="address" class="_margin-y-1" />
-      <i-button v-if="!openedContact" block link size="md" variant="secondary" @click="addToContacts()"><v-icon name="ri-add-circle-fill" />&nbsp;&nbsp;Add to contacts</i-button>
+      <wallet-address :wallet="address" class="_margin-y-1"/>
+      <i-button v-if="!openedContact" block link size="md" variant="secondary" @click="addToContacts()"
+      >
+        <v-icon name="ri-add-circle-fill"/>&nbsp;&nbsp;Add to contacts
+      </i-button
+      >
       <i-button v-else-if="!openedContact.deleted" block link size="md" variant="secondary" @click="editContact()">
-        <v-icon name="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
+        <v-icon name="ri-pencil-fill"/>&nbsp;&nbsp;Edit contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"><v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"
+      >
+        <v-icon name="ri-arrow-go-back-line"/>&nbsp;&nbsp;Restore contact
+      </i-button
+      >
       <i-button block size="lg" variant="secondary" :to="`/transaction/transfer?address=${address}`">
-        <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to address
+        <v-icon class="planeIcon" name="ri-send-plane-fill"/>&nbsp;&nbsp;Transfer to address
       </i-button>
     </div>
     <transactions class="_margin-top-0" :address="address" />
@@ -54,15 +74,15 @@ export default Vue.extend({
   },
   data() {
     return {
-      fromRoute: <Route | undefined>undefined,
-      address: <Address>"",
+      fromRoute: undefined as Route | undefined,
+      address: "" as Address,
       contactModal: {
-        type: <"add" | "edit">"add",
+        type: "add" as "add" | "edit",
         enabled: false,
         error: "",
-        name: "",
+        name: ""
       },
-      forceUpdateVal: Number.MIN_SAFE_INTEGER,
+      forceUpdateVal: Number.MIN_SAFE_INTEGER
     };
   },
   fetch({ params, redirect }) {
@@ -72,7 +92,11 @@ export default Vue.extend({
   },
   computed: {
     computedReturnLink(): Route | string {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transaction/transfer" ? this.fromRoute : "/contacts";
+      return this.fromRoute &&
+      this.fromRoute.fullPath !== this.$route.fullPath &&
+      this.fromRoute.path !== "/transaction/transfer"
+        ? this.fromRoute
+        : "/contacts";
     },
     openedContact(): ZkContact {
       this.forceUpdateVal;
@@ -127,7 +151,10 @@ export default Vue.extend({
       this.forceUpdateVal++;
     },
     restoreDeleted() {
-      this.$store.dispatch("zk-contacts/setContact", { address: this.openedContact.address, name: this.openedContact.name });
+      this.$store.dispatch("zk-contacts/setContact", {
+        address: this.openedContact.address,
+        name: this.openedContact.name
+      });
       this.contactModal.enabled = false;
       this.forceUpdateVal++;
     },
