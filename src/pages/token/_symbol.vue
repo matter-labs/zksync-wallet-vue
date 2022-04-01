@@ -15,7 +15,7 @@
             >
               <v-icon name="ri-external-link-line" class="iconInfo" />
             </a>
-            <template slot="body">Token contract</template>
+            <template #body>Token contract</template>
           </i-tooltip>
         </div>
       </div>

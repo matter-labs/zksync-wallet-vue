@@ -1,59 +1,50 @@
 <template>
   <div class="socialIcons">
     <a
-      v-for="(socialProfile, numIndex) in socialNetworks"
-      :key="numIndex"
+      v-for="socialProfile in socialNetworks"
+      :key="socialProfile.name"
       :href="socialProfile.url"
       class="socialItem"
       target="_blank"
     >
-      <i v-if="socialProfile.icon" :class="socialProfile.icon" />
-      <div v-else-if="socialProfile.img" class="svgContainer" v-html="socialIcons[socialProfile.img]"></div>
+      <v-icon :name="socialProfile.icon" :class="[socialProfile.icon]" />
     </a>
   </div>
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import socialIcons from "@/utils/socialIcons";
-import { SingleIcon } from "@/types/lib";
-
-type Location = "header" | "footer";
+import Vue, { PropType } from "vue";
+import { SingleIcon, Location } from "@/types/lib";
 
 export default Vue.extend({
   props: {
     location: {
       required: false,
-      type: String,
+      type: String as PropType<Location>,
       default: "header",
-    } as PropOptions<Location>,
+    },
   },
   data() {
     return {
-      socialIcons,
-    };
-  },
-  computed: {
-    socialNetworks(): SingleIcon[] {
-      const socialIcons = [
+      socialProfiles: [
         {
           name: "Medium Blog",
-          img: "medium",
+          icon: "ri-medium-line",
           url: "https://medium.com/matter-labs",
         },
         {
           name: "Discord Community",
-          img: "discord",
+          icon: "ri-discord-line",
           url: "https://discord.com/invite/px2aR7w",
         },
         {
           name: "Telegram Community",
-          img: "telegram",
+          icon: "ri-telegram-line",
           url: "https://t.me/zksync",
         },
         {
           name: "Twitter Community",
-          img: "twitter",
+          icon: "ri-twitter-line",
           url: "https://twitter.com/zksync",
         },
         {
@@ -62,8 +53,12 @@ export default Vue.extend({
           url: "https://zksync.io/contact.html",
           hideIn: "footer",
         },
-      ] as SingleIcon[];
-      return socialIcons.filter((item) => !item.hideIn || item.hideIn !== this.location);
+      ] as SingleIcon[],
+    };
+  },
+  computed: {
+    socialNetworks(): SingleIcon[] {
+      return this.socialProfiles.filter((item: SingleIcon) => item?.hideIn !== this.location);
     },
   },
 });

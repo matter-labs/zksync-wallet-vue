@@ -1,7 +1,6 @@
 <template>
   <i-layout-footer class="mainFooter">
     <block-modals-footer-modal v-model="footerModal" />
-    <block-modals-environment />
     <block-modals-network-switch />
     <div
       class="container _display-flex _flex-direction-row _align-items-center _justify-content-space-between _justify-content_mobile-space-around"

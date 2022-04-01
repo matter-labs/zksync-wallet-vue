@@ -54,7 +54,7 @@
         </span>
       </div>
     </div>
-    <div v-if="activeTransaction.type === 'Allowance' && type === 'Deposit' && commitAllowed" slot="custom">
+    <div v-if="activeTransaction.type === 'Allowance' && type === 'Deposit' && commitAllowed">
       <div class="border-line _margin-top-1"></div>
       <div class="infoBlockItem smaller _margin-top-1">
         <div class="headline">Amount to deposit:</div>
@@ -112,11 +112,11 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { BigNumber } from "ethers";
-import { getAddress } from "ethers/lib/utils";
+import { BigNumber } from "@ethersproject/bignumber";
 import { ZkActiveTransaction, ZkConfig, ZkContact, ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
 import { TokenLike } from "zksync/build/types";
 import { ERC20_APPROVE_TRESHOLD } from "zksync/build/utils";
+import { getAddress } from "@ethersproject/address";
 
 export default Vue.extend({
   data() {

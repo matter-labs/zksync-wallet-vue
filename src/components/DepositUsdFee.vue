@@ -13,9 +13,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT } from "zksync/build/utils";
-import { BigNumberish, Wallet } from "ethers";
 
 export default Vue.extend({
   data() {
@@ -31,9 +30,7 @@ export default Vue.extend({
     async getEstimatedDepositFee(): Promise<void> {
       this.depositFeeLoading = true;
       try {
-        const syncWallet: Wallet = this.$store.getters["zk-wallet/syncWallet"];
-        // @ts-ignore
-        const gasPrice = await syncWallet.ethSigner.provider.getGasPrice();
+        const gasPrice = await this.$store.getters["zk-wallet/syncWallet"]?.ethSigner.provider.getGasPrice();
         const total = BigNumber.from(ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT);
         this.depositFee = gasPrice.mul(total).toString();
       } catch (error) {

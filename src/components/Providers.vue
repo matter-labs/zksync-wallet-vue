@@ -48,14 +48,15 @@
       @providerError="setError"
     />
     <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync" />
-    <block-modals-deposit-error :error-text="errorText" />
+    <block-modals-deposit-error v-if="errorText" :error-text="errorText" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { banxaConfig, moonpayConfig, rampConfig } from "@/utils/config";
+import { Address } from "zksync/build/types";
+import { ProvidersBanxaCfg, ProvidersMoonpayCfg, ProvidersRampCfg } from "@/types/lib";
 
 export default Vue.extend({
   name: "Providers",
@@ -121,31 +122,23 @@ export default Vue.extend({
   },
   data() {
     return {
-      errorText: "",
+      errorText: undefined as string | undefined,
     };
   },
   computed: {
-    rampConfig(): {
-      url: string | undefined;
-      hostApiKey: string | undefined;
-    } | null {
-      return rampConfig[this.ethNetwork];
+    rampConfig(): ProvidersRampCfg {
+      return this.$config.rampConfig![this.ethNetwork] as ProvidersRampCfg;
     },
     ethNetwork(): string {
       return this.$store.getters["zk-provider/network"];
     },
-    banxaConfig(): {
-      url: string;
-    } | null {
-      return banxaConfig[this.ethNetwork];
+    banxaConfig(): ProvidersBanxaCfg {
+      return this.$config.banxaConfig![this.ethNetwork] as ProvidersBanxaCfg;
     },
-    moonpayConfig(): {
-      url: string;
-      apiPublicKey: string;
-    } | null {
-      return moonpayConfig[this.ethNetwork];
+    moonpayConfig(): ProvidersMoonpayCfg {
+      return this.$config.moonpayConfig![this.ethNetwork] as ProvidersMoonpayCfg;
     },
-    address(): string {
+    address(): Address {
       return this.$store.getters["zk-account/address"];
     },
     isRampSupported(): boolean {
@@ -159,11 +152,11 @@ export default Vue.extend({
     },
   },
   mounted() {
-    this.errorText = "";
+    this.errorText = undefined;
     this.$accessor.closeActiveModal();
   },
   methods: {
-    setError(errorText: string): void {
+    setError(errorText: string) {
       this.errorText = errorText;
     },
     redirectURL(full: boolean = true): string {
@@ -241,10 +234,10 @@ export default Vue.extend({
           throw new Error("signedUrl is missing");
         }
         window.open(responseData!.signedUrl, "_blank");
-      } catch (error) {
-        console.warn(error);
+      } catch ({ message }) {
         this.errorText =
-          error.message || "There was an error during Moonpay Deposit initialization. Please try once again.";
+          (message as string) || "There was an error during Moonpay Deposit initialization. Please try once again.";
+        console.warn(this.errorText);
         this.$accessor.openModal("DepositError");
       }
     },

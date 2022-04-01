@@ -1,25 +1,23 @@
 module.exports = {
-  extends: [
-    "@matterlabs/eslint-config-nuxt"
-  ],
+  extends: ["@matterlabs/eslint-config-nuxt"],
   overrides: [
     {
-      files: ["**icons.ts"],
+      files: ["analytics.ts"],
       rules: {
-        "import/default": "off"
-      }
+        "import/no-named-as-default-member": "off",
+      },
     },
     {
-      files: ["SocialBlock.vue"],
+      files: ["**icons.ts", "analytics.ts"],
       rules: {
-        "vue/no-v-html": "off"
-      }
+        "import/default": "off",
+      },
     },
     {
       files: ["Transaction.vue", "_address.vue"],
       rules: {
-        "no-unused-expressions": "off"
-      }
-    }
-  ]
+        "no-unused-expressions": "off",
+      },
+    },
+  ],
 };

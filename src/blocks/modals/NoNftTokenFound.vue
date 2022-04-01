@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template slot="header">
+    <template #header>
       <slot v-if="$slots.header" name="header" />
       <span v-else>Can't find your token?</span>
     </template>

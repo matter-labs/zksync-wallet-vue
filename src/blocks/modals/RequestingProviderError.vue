@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" class="wrongNetworkModal" size="md">
-    <template slot="header">Error requesting zkSync provider</template>
+    <template #header>Error requesting zkSync provider</template>
     <div>
       <div class="_padding-bottom-1">
         Error requesting zkSync <b>{{ network }}</b> provider. Please check your internet connection and try again

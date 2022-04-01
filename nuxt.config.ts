@@ -1,5 +1,6 @@
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
+import { version as zkSyncVersion } from "zksync/package.json";
 
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
 import { Configuration } from "webpack";
@@ -13,6 +14,11 @@ const pageImg = "/screenshot.jpg";
 
 const sentryDsn = "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800";
 const gtagId = "GTM-ML2QDNV";
+
+const gitRevision =
+  `${process.env.APP_GIT_REVISION}`.length > 8
+    ? `${process.env.APP_GIT_REVISION}`.slice(0, 7)
+    : `${process.env.APP_GIT_REVISION}`;
 
 const pageTitleTemplate = "%s | zkSync: secure, scalable crypto payments";
 const pageDescription =
@@ -41,7 +47,6 @@ const config: NuxtConfig = {
   telemetry: false,
   ssr: false,
   target: "static",
-  static: true,
   srcDir: "./src/",
   vue: {
     config: {
@@ -49,8 +54,73 @@ const config: NuxtConfig = {
       devtools: !isProduction,
     },
   },
-  env: <NuxtOptionsEnv>{
+  env: {
     ...process.env,
+  } as NuxtOptionsEnv,
+
+  publicRuntimeConfig: {
+    mixpanel: {
+      isProduction: isProduction as boolean,
+      token: `${process.env.MIXPANEL_TOKEN}`,
+    },
+    git: {
+      version: `${process.env.APP_GIT_VERSION}`,
+      revision: gitRevision as string,
+    },
+    zksyncVersion: zkSyncVersion,
+    rampConfig: {
+      mainnet: {
+        url: undefined, // default
+        hostApiKey: process.env.RAMP_MAINNET_HOST_API_KEY,
+      },
+      // rinkeby: {
+      //  url: "https://ri-widget-staging.firebaseapp.com/",
+      //  hostApiKey: process.env.RAMP_RINKEBY_HOST_API_KEY,
+      // },
+      // ropsten: {
+      //   url: "https://ri-widget-staging-ropsten.firebaseapp.com/",
+      //   hostApiKey: process.env.RAMP_ROPSTEN_HOST_API_KEY,
+      // },
+    },
+    utorgConfig: {
+      mainnet: {
+        url: "https://app.utorg.pro",
+        sid: process.env.UTORG_MAINNET_SID,
+      },
+      rinkeby: {
+        url: "https://app-stage.utorg.pro",
+        sid: process.env.UTORG_RINKEBY_SID,
+      },
+      ropsten: {
+        url: "https://app-stage.utorg.pro",
+        sid: process.env.UTORG_ROPSTEN_SID,
+      },
+    },
+    banxaConfig: {
+      mainnet: {
+        url: "https://zksync.banxa.com",
+      },
+      // rinkeby: {
+      //   url: "https://zksync.banxa-sandbox.com",
+      // },
+      // ropsten: {
+      //   url: "https://zksync.banxa-sandbox.com",
+      // },
+    },
+    moonpayConfig: {
+      mainnet: {
+        url: "https://buy.moonpay.com",
+        apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
+      },
+      rinkeby: {
+        url: "https://buy-sandbox.moonpay.com",
+        apiPublicKey: process.env.MOONPAY_RINKEBY_API_PUBLIC_KEY,
+      },
+      // ropsten: {
+      //   url: "https://buy-staging.moonpay.com",
+      //   apiPublicKey: process.env.MOONPAY_API_PUBLIC_KEY,
+      // },
+    },
   },
 
   /**
@@ -181,7 +251,12 @@ const config: NuxtConfig = {
   css: ["@/assets/style/main.scss"],
   /**
    * Plugins that should be loaded before the mounting
-   */ plugins: ["@/plugins/icons", "@/plugins/filters", "@/plugins/restoreSession", { src: "@/plugins/analytics", mode: "client" }],
+   */ plugins: [
+    "@/plugins/icons",
+    "@/plugins/filters",
+    "@/plugins/restoreSession",
+    { src: "@/plugins/analytics", mode: "client" },
+  ],
 
   styleResources: {
     scss: ["@/assets/style/vars/_variables.scss"],
@@ -256,7 +331,7 @@ const config: NuxtConfig = {
       anonymize_ip: true, // anonymize IP
       send_page_view: false, // might be necessary to avoid duplicated page track on page reload
       linker: {
-        domains: ["wallet.zksync.io", "rinkeby.zksync.io", "ropsten.zksync.io", "rinkeby-beta-wallet.zksync.dev", "ropsten-beta-wallet.zksync.dev", "stage.zksync.io"],
+        domains: ["wallet.zksync.io"],
       },
     },
     debug: isDebugEnabled, // enable to track in dev mode
@@ -264,12 +339,18 @@ const config: NuxtConfig = {
   },
   /*
    ** Build configuration
-   */ build: {
-    filenames: { chunk: () => "[name]_Y2ZjItY_[contenthash].js" },
+   */
+  build: {
+    filenames: { chunk: () => `[name]_Y2ZjItY_${isProduction ? "[contenthash]" : ""}.js` },
     cache: false,
     cssSourceMap: true,
     babel: {
       compact: true,
+    },
+    postcss: {
+      plugins: {
+        autoprefixer: {},
+      },
     },
     corejs: 3,
     ssr: false,
@@ -286,7 +367,7 @@ const config: NuxtConfig = {
       },
       minimize: isProduction,
     },
-    transpile: ["oh-vue-icons", "@inkline/inkline"], // [v.2.4.0]: oh-vue-icons package
+    transpile: ["oh-vue-icons", "@inkline/inkline", "iconsPlugin", "filtersPlugin", "restoreSessionPlugin"], // [v.2.4.0]: oh-vue-icons package
     extend: (config: Configuration) => {
       config.node = {
         fs: "empty",

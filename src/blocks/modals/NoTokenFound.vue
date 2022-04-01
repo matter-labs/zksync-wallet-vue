@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template slot="header">Can't find your token?</template>
+    <template #header>Can't find your token?</template>
     <p>
       Your token may be listed as ERC20-XX. Search for your token by {{ network }} address on the
       <a :href="`${blockExplorerLink}explorer/tokens/`" target="_blank" rel="noopener noreferrer">tokens page</a> to see

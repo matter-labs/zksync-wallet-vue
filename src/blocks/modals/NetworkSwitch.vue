@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" size="md" class="networkSwitchModal" data-cy="network_switch_modal">
-    <template slot="header">Network Configuration</template>
+    <template #header>Network Configuration</template>
     <ul class="network-list">
       <li
         v-for="zkNetworkName in options"

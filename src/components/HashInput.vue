@@ -62,14 +62,14 @@ export default Vue.extend({
     isCID(): boolean {
       return isCID(this.inputtedHash);
     },
-    error(): string {
+    error(): string | undefined {
       try {
         if (this.inputtedHash.length) {
           contendAddressToRawContentHash(this.inputtedHash);
         }
-        return "";
-      } catch (e) {
-        return e?.message || "Unknown error";
+        return undefined;
+      } catch ({ message }) {
+        return (message as string) || "Unknown error";
       }
     },
   },

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
+    "rootDir": "src",
     "baseUrl": "./src",
     "checkJs": false,
     "declaration": true,
@@ -40,18 +41,19 @@
       "@nuxt/types",
       "@nuxtjs/sentry",
       "@matterlabs/zksync-nuxt-core",
-      "vue-router",
       "@types/jest",
       "web3-core/types",
       "@inkline/inkline/types",
       "nuxt-typed-vuex",
-      "vue-qrcode"
+      "vue-qrcode",
+      "vue-router/types"
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+    "./src/**/*.vue",
+    "nuxt.config.ts"
   ],
   "exclude": [
     "functions",

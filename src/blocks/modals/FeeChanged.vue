@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="chooseTokenModalOpened" size="md" data-cy="fee_changed_modal">
-    <template slot="header">Fee changed</template>
+    <template #header>Fee changed</template>
     <p>
       The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to
       break-even costs.

@@ -110,9 +110,11 @@
       <template v-if="displayNFTTokenSelect">
         <div class="_padding-top-1 inputLabel">Token</div>
         <i-input :value="chosenToken ? `NFT-${chosenToken}` : ''" disabled size="lg" type="text">
-          <i-button slot="append" block link variant="secondary" @click="chooseTokenModal = 'mainToken'"
-            >Select{{ chosenToken ? " another " : " " }}NFT
-          </i-button>
+          <template #append>
+            <i-button block link variant="secondary" @click="chooseTokenModal = 'mainToken'"
+              >Select{{ chosenToken ? " another " : " " }}NFT
+            </i-button>
+          </template>
         </i-input>
       </template>
 

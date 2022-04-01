@@ -5,7 +5,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { utorgConfig } from "@/utils/config";
+import { ProvidersUtorgCfg } from "@/types/lib";
 
 export default Vue.extend({
   name: "ProviderUtorg",
@@ -16,11 +16,8 @@ export default Vue.extend({
     },
   },
   computed: {
-    utorgConfig(): {
-      url: string;
-      sid: string;
-    } | null {
-      return utorgConfig[this.$store.getters["zk-provider/network"]];
+    utorgConfig(): ProvidersUtorgCfg {
+      return this.$config.moonpayConfig![this.$store.getters["zk-provider/network"]] as ProvidersUtorgCfg;
     },
     disabled(): boolean {
       return !this.enabled || !this.isSupported;

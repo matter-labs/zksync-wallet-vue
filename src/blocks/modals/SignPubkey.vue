@@ -6,7 +6,7 @@
     data-cy="account_activation_modal"
     @hide="close()"
   >
-    <template slot="header">Account Activation</template>
+    <template #header>Account Activation</template>
     <div class="_text-center">
       <p v-if="state === false">
         <span>Sign a message to activate your zkSync account.</span>

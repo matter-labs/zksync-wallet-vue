@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" class="wrongNetworkModal" size="md">
-    <template slot="header">Wrong network</template>
+    <template #header>Wrong network</template>
     <div>
       <div class="_padding-bottom-1">
         You are on the wrong network. Please switch your wallet to <b>{{ network }}</b> to continue.

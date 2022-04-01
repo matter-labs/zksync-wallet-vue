@@ -1,12 +1,12 @@
 <template>
-  <i-badge v-if="version" variant="secondary" class="system-info">
+  <i-badge v-if="$config.git.version" variant="secondary" class="system-info">
     <i-popover size="sm" class="system-env-popover" :trigger="['hover']">
-      <span class="version">v.{{ version }}</span>
-      <template slot="header">Environment details</template>
-      <template slot="body">
+      <span class="version">v.{{ $config.git.version }}</span>
+      <template #header>Environment details</template>
+      <template #body>
         <span class="env-details">
           <v-icon name="ri-npmjs-fill" />
-          zkSync v.{{ zkLibVersion }}
+          zkSync v.{{ $config.zksyncVersion }}
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
@@ -20,14 +20,13 @@
     </i-popover>
     <a :href="githubLink" class="revision _background-gray-40" target="_blank">
       <v-icon name="ri-github-fill" />
-      {{ revision }}
+      {{ $config.git.revision }}
     </a>
   </i-badge>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import { ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
-import { GIT_REVISION_SHORT, VERSION, ZK_LIB_VERSION } from "@/utils/config";
 
 export default Vue.extend({
   computed: {
@@ -37,17 +36,8 @@ export default Vue.extend({
     netName(): string {
       return this.config.ethereumNetwork.name;
     },
-    zkLibVersion(): string {
-      return ZK_LIB_VERSION;
-    },
-    version(): string {
-      return VERSION;
-    },
     githubLink(): string | undefined {
-      return `https://github.com/matter-labs/zksync-wallet-vue/commit/${this.revision}`;
-    },
-    revision(): string {
-      return GIT_REVISION_SHORT;
+      return `https://github.com/matter-labs/zksync-wallet-vue/commit/${this.$config.git.revision}`;
     },
     zkApiBase(): string {
       return this.config.zkSyncNetwork.api;

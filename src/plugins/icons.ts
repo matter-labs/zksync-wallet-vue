@@ -11,8 +11,7 @@
  * @link https://oh-vue-icons.netlify.app
  */
 import { Plugin } from "@nuxt/types";
-// @ts-ignore
-import OhVueIcon from "oh-vue-icons/dist/v2/icon.umd";
+import OhVueIcon from "oh-vue-icons";
 import { MdVpnkeyRound } from "oh-vue-icons/icons/md";
 import { CoEthereum } from "oh-vue-icons/icons/co";
 import { LaChargingStationSolid } from "oh-vue-icons/icons/la";
@@ -36,6 +35,7 @@ import {
   RiContactsBookLine,
   RiContactsLine,
   RiDeleteBinLine,
+  RiDiscordLine,
   RiErrorWarningLine,
   RiExternalLinkLine,
   RiFileLine,
@@ -47,6 +47,7 @@ import {
   RiLightbulbLine,
   RiLinkUnlinkM,
   RiLoader5Line,
+  RiMediumLine,
   RiMoonFill,
   RiMore2Fill,
   RiMore2Line,
@@ -62,6 +63,8 @@ import {
   RiSearchLine,
   RiSendPlaneFill,
   RiSunFill,
+  RiTelegramLine,
+  RiTwitterLine,
   RiWalletLine,
   RiWifiLine,
 } from "oh-vue-icons/icons/ri";
@@ -123,7 +126,11 @@ const iconsPlugin: Plugin = () => {
     RiSunFill,
     CoEthereum,
     RiArrowRightUpLine,
-    RiArrowLeftRightLine
+    RiArrowLeftRightLine,
+    RiMediumLine,
+    RiTwitterLine,
+    RiDiscordLine,
+    RiTelegramLine
   ); // Used icons (to reduce bundle-size)
 
   Vue.component("VIcon", OhVueIcon);

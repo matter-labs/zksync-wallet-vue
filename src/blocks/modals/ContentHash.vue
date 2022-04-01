@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template slot="header">How to address content?</template>
+    <template #header>How to address content?</template>
     <p>
       To mint an NFT, you should import a file into an InterPlanetary File System. There are plenty of
       <a href="https://ipfs.io/#install" target="_blank">services</a> you can choose from that provide IPFS-protocol

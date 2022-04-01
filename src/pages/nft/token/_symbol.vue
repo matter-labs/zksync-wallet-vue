@@ -1,7 +1,7 @@
 <template>
   <div class="tokenAccount dappPageWrapper">
     <i-modal v-model="tokenUnavailableModal" size="md">
-      <template slot="header">Token unavailable</template>
+      <template #header>Token unavailable</template>
       <p>Minted tokens are available for transactions only after the Mint transaction gets verified.</p>
     </i-modal>
     <div class="tileBlock _margin-bottom-0">
@@ -64,7 +64,7 @@
                   <div class="iconContainer">
                     <v-icon name="ri-clipboard-line" />
                   </div>
-                  <template slot="body">Copied!</template>
+                  <template #body>Copied!</template>
                 </i-tooltip>
               </div>
             </div>
@@ -80,7 +80,7 @@
                   <div class="iconContainer">
                     <v-icon name="ri-clipboard-line" />
                   </div>
-                  <template slot="body">Copied!</template>
+                  <template #body>Copied!</template>
                 </i-tooltip>
               </div>
             </div>

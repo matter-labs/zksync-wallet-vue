@@ -12,15 +12,17 @@
           :placeholder="tokensType === 'L2-NFT' ? 'Filter NFT tokens' : `Filter balances in ${tokensType}`"
           maxlength="10"
         >
-          <i>
-            <v-icon slot="prefix" name="ri-search-line" />
-          </i>
+          <template #prefix>
+            <i>
+              <v-icon name="ri-search-line" />
+            </i>
+          </template>
         </i-input>
         <div class="updateBtn" :class="{ disabled: secondaryLoading }" @click="updateBalances()">
           <i-tooltip placement="left">
             <v-icon v-if="secondaryLoading" name="ri-loader-5-line" class="spin-animation" />
             <v-icon v-else name="ri-restart-line" />
-            <template slot="body">Update {{ tokensType }} balances</template>
+            <template #body>Update {{ tokensType }} balances</template>
           </i-tooltip>
         </div>
       </div>
@@ -37,7 +39,7 @@
               <span>{{ tokensType === "L2-NFT" ? "NFT-" : "" }}{{ symbolOrID }}</span>
               <i-tooltip v-if="tokensType === 'L2-Tokens' && !allowedFeeTokens[symbolOrID]" placement="bottom">
                 <v-icon class="iconInfo" name="ri-error-warning-line" />
-                <template slot="body">Not available for paying fees</template>
+                <template #body>Not available for paying fees</template>
               </i-tooltip>
             </div>
             <div v-if="displayTokenBalance" class="rightSide">
@@ -97,7 +99,7 @@ import {
   ZkTokenBalances,
   ZkTransactionMainToken,
 } from "@matterlabs/zksync-nuxt-core/types";
-import { BigNumberish } from "ethers";
+import { BigNumberish } from "@ethersproject/bignumber";
 import { Tokens } from "zksync/build/types";
 
 export default Vue.extend({

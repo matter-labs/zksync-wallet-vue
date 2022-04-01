@@ -3,13 +3,13 @@
     <div class="status">
       <i-tooltip placement="right">
         <v-icon :name="transactionStatus.icon" :class="transactionStatus.class" />
-        <template slot="body">{{ transactionStatus.text }}</template>
+        <template #body>{{ transactionStatus.text }}</template>
       </i-tooltip>
     </div>
     <div class="mainInfo" :class="{ noInfo: isNFT || isSwap }">
       <i-tooltip>
         <div class="createdAt">{{ timeAgo }}</div>
-        <template slot="body">{{ transaction.createdAt | formatDateTime }}</template>
+        <template #body>{{ transaction.createdAt | formatDateTime }}</template>
       </i-tooltip>
       <div v-if="!isNFT && !isSwap" :class="{ small: smallAmountText }" class="amount">
         {{ amount | parseBigNumberish(tokenSymbol) }}
@@ -28,7 +28,7 @@
               <v-icon name="ri-clipboard-line" />
               <span>Copy hash</span>
             </div>
-            <template slot="body">Copied!</template>
+            <template #body>Copied!</template>
           </i-tooltip>
         </div>
         {{ tokenSymbol }}

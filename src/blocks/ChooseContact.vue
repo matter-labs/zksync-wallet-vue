@@ -2,7 +2,7 @@
   <div class="chooseContactBlock">
     <!-- Contacts list -->
     <i-modal v-model="contactsListModal" size="md">
-      <template slot="header">Contacts</template>
+      <template #header>Contacts</template>
       <div>
         <i-input
           v-if="isSearching || hasDisplayedContacts"

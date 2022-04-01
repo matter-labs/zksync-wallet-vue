@@ -1,5 +1,6 @@
-import { Plugin } from "@nuxt/types";
-import { init, register, track } from "mixpanel-browser";
+import { Context, Plugin } from "@nuxt/types";
+import mixpanel from "mixpanel-browser";
+import { Inject } from "@nuxt/types/app";
 
 export type Analytics = {
   track(eventName: string, props?: any): void;
@@ -8,23 +9,24 @@ export type Analytics = {
 
 class MixpanelAnalytics implements Analytics {
   constructor(token: string) {
-    init(token, { debug: false, api_host: "/tunnel/mixpanel" });
+    mixpanel.init(token, { debug: false, api_host: "/tunnel/mixpanel" });
   }
 
   set(props: { [key: string]: string }): void {
     if (!props) {
       return;
     }
-    register(props);
+    mixpanel.register(props);
   }
 
   track(eventName: string, props?: any): void {
-    track(eventName, props);
+    mixpanel.track(eventName, props);
   }
 }
 
 class ConsoleAnalytics implements Analytics {
   props = {};
+
   set(props: { [key: string]: string }): void {
     if (!props) {
       return;
@@ -39,11 +41,12 @@ class ConsoleAnalytics implements Analytics {
   }
 }
 
-const plugin: Plugin = (_, inject) => {
+const pluginAnalytics: Plugin = ({ $config }: Context, inject: Inject) => {
+  console.log("analytics injected", $config);
   inject(
     "analytics",
-    process.env.NODE_ENV === "production" ? new MixpanelAnalytics(process.env.MIXPANEL_TOKEN!) : new ConsoleAnalytics()
+    $config.mixpanel.isProduction ? new MixpanelAnalytics($config.mixpanel.token) : new ConsoleAnalytics()
   );
 };
 
-export default plugin;
+export default pluginAnalytics;

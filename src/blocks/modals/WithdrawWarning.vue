@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" data-cy="send_l1_understand_modal" size="md">
-    <template slot="header">Sending to Ethereum L1</template>
+    <template #header>Sending to Ethereum L1</template>
     <div>
       <div class="_padding-bottom-1">
         <div class="_padding-bottom-1">You are about to send funds to Ethereum L1.</div>

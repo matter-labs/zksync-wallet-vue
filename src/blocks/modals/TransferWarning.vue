@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template slot="header">Transfer warning</template>
+    <template #header>Transfer warning</template>
     <div>
       <div class="_padding-bottom-1">
         You are about to transfer {{ isNFT ? "NFT" : "money" }} to an address that doesn't have a zkSync balance yet.

@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template slot="header">How does this all work?</template>
+    <template #header>How does this all work?</template>
     <p>
       <strong>zkSync Alternative Withdrawal</strong> is way to get funds to Layer 1 without interacting directly with
       the protocol. zkSync supports most of web3-compatible wallets, so we highly recommend you to use the so the

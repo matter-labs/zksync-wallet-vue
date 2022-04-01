@@ -1,7 +1,7 @@
 <template>
   <div class="accountModalContainer">
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
-      <template slot="header">Rename wallet</template>
+      <template #header>Rename wallet</template>
       <div>
         <i-input
           ref="nameInput"
@@ -25,14 +25,14 @@
     </i-modal>
 
     <i-modal v-model="accountModal" size="md">
-      <template slot="header">
+      <template #header>
         <b>{{ accountName }}</b>
       </template>
       <div>
         <wallet-address :wallet="accountAddress" />
         <vue-qrcode v-if="accountAddress" class="addressQR" :value="accountAddress" :margin="1" :scale="6" />
       </div>
-      <template slot="footer">
+      <template #footer>
         <a
           class="modalFooterBtn"
           :href="accountZkScanUrl"

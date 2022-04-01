@@ -45,9 +45,9 @@
         autofocus
         maxlength="20"
       >
-        <i slot="prefix">
+        <template #prefix>
           <v-icon name="ri-search-line" />
-        </i>
+        </template>
       </i-input>
       <div class="contactsListContainer genericListContainer">
         <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound _margin-bottom-0 _margin-top-1">

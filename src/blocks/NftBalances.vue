@@ -54,7 +54,9 @@
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer NFT
         </i-button>
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
-          <v-icon slot="prefix" name="ri-search-line" />
+          <template #prefix>
+            <v-icon name="ri-search-line" />
+          </template>
         </i-input>
       </div>
 
@@ -86,7 +88,7 @@
             <i-tooltip class="nftStatus" placement="left">
               <v-icon v-if="item.verified" class="nftStatusIcon verified" name="ri-check-double-line" />
               <v-icon v-else class="nftStatusIcon committed" name="ri-check-line" />
-              <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
+              <template #body>{{ item.verified ? "Verified" : "Committed" }}</template>
             </i-tooltip>
           </nuxt-link>
           <div class="contactInfo _pointer-events-none">
@@ -105,7 +107,7 @@
               >
                 <v-icon name="ri-clipboard-line" />
               </i-button>
-              <template slot="body">Copied!</template>
+              <template #body>Copied!</template>
             </i-tooltip>
           </div>
         </div>
@@ -224,6 +226,7 @@ export default Vue.extend({
         border-radius: 50%;
       }
     }
+
     .nftStatus {
       position: absolute;
       width: 25px;
@@ -239,12 +242,15 @@ export default Vue.extend({
 
       .nftStatusIcon {
         transform: scale(0.9);
+
         &.verified {
           color: $green;
         }
+
         &.committed {
           color: #aa935d;
         }
+
         &.inProgress {
           color: $gray;
         }
@@ -252,6 +258,7 @@ export default Vue.extend({
     }
   }
 }
+
 body.inkline.-dark {
   .contactsListContainer .nftItem .nftImageSide {
     &,
