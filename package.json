@@ -55,7 +55,7 @@
     "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
   "dependencies": {
-    "@matterlabs/zksync-nuxt-core": "1.6.2",
+    "@matterlabs/zksync-nuxt-core": "1.7.0",
     "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/google-gtag": "latest",
     "@nuxtjs/sentry": "latest",
@@ -67,16 +67,16 @@
     "mixpanel-browser": "^2.42.0",
     "moment-timezone": "^0.5.33",
     "multiformats": "^9.4.7",
-    "nuxt": "latest",
-    "nuxt-typed-vuex": "latest",
+    "nuxt": "^2.15.7",
+    "nuxt-typed-vuex": "^0.2.0",
     "oh-vue-icons": "^0.4.7",
-    "typed-vuex": "latest",
+    "typed-vuex": "^0.2.0",
     "vue": "2.*",
-    "vue-class-component": "latest",
+    "vue-class-component": "^7.2.6",
     "vue-qrcode": "0.4.0",
     "vue-router": "^3.5.2",
     "vue-scrollto": "^2.20.0",
-    "zksync": "latest"
+    "zksync": "0.12.0-alpha.6"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
