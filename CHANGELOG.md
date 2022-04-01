@@ -1,3 +1,10 @@
+# [3.15.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.14.1...3.15.0) (2022-04-01)
+
+
+### Features
+
+* Argent remote wallet support ([#225](https://github.com/matter-labs/zksync-wallet-vue/issues/225)) ([5d6937a](https://github.com/matter-labs/zksync-wallet-vue/commit/5d6937aae745470e2bfb0934c8458b43ad698f10))
+
 ## [3.14.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.14.0...3.14.1) (2022-04-01)
 
 
