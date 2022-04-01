@@ -40,7 +40,7 @@
             <deposit-usd-fee />
           </div>
         </h4>
-        <div class="secondaryText small">You can deposit tokens from your Ethereum Wallet to zkSync via form below</div>
+        <div class="secondaryText small">You can deposit tokens from your Ethereum wallet to zkSync</div>
 
         <template v-if="isDeposit">
           <div v-if="!isMainnet" class="_padding-0 _display-flex _justify-content-end">
