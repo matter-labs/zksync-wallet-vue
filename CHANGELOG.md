@@ -1,3 +1,10 @@
+## [3.14.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.14.0...3.14.1) (2022-04-01)
+
+
+### Bug Fixes
+
+* copyright typo ([b037731](https://github.com/matter-labs/zksync-wallet-vue/commit/b0377316f976d5028ee92f009d5e793d5f02d13d))
+
 # [3.14.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.13.0...3.14.0) (2022-03-22)
 
 
