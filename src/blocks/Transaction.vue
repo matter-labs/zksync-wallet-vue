@@ -268,13 +268,14 @@ export default Vue.extend({
       return Boolean(this.chosenToken && this.mainToken === "L2-NFT" && !this.nftExists && !this.nftExistsLoading);
     },
     routeBack(): RawLocation {
+      console.log("this.fromRoute", this.fromRoute);
       if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
         return { path: this.fromRoute.path, query: this.fromRoute.query, params: this.fromRoute.params };
       }
       if (this.mainToken === "L2-NFT" || this.type === "MintNFT") {
         return "/account/nft";
       }
-      return "/account/top-up";
+      return "/account";
     },
     type (): ZkTransactionType {
       return this.$store.getters["zk-transaction/type"];

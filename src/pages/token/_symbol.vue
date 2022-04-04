@@ -81,7 +81,7 @@ export default Vue.extend({
   },
   computed: {
     returnLink(): string | Route {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/withdraw" ? this.fromRoute : "/account";
+      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && !this.fromRoute.path.includes("/transaction/") ? this.fromRoute : "/account";
     },
     symbol(): TokenSymbol {
       return this.$route.params.symbol;
