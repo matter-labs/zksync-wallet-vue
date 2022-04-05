@@ -34,6 +34,11 @@ export default Vue.extend({
     height: auto !important;
     margin: 0 auto !important;
     padding: 0 !important;
+
+    svg {
+      width: 100%;
+      height: auto;
+    }
   }
 }
 </style>
