@@ -5,7 +5,7 @@
       <div class="container-fluid _flex-direction-row _display-flex connections">
         <button
           data-cy="core_connect_wallet_button"
-          class="tileContainer _margin-right-05 _margin-md-right-2 _text-center"
+          class="tileContainer _margin-top-1 _margin-right-05 _margin-md-right-2 _text-center"
           @click="customWallet()"
         >
           <div class="tile">
@@ -15,13 +15,23 @@
         </button>
         <button
           data-cy="core_connect_wallet_wc_button"
-          class="tileContainer _margin-left-05 _margin-md-left-2 _text-center"
+          class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center"
           @click="walletConnect()"
         >
           <div class="tile">
             <img src="@/assets/imgs/wallets/wc.png" alt="Wallet Connect" />
           </div>
           <div class="tileName">Wallet Connect</div>
+        </button>
+        <button
+          data-cy="core_connect_wallet_argent_button"
+          class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center"
+          @click="walletConnect(true)"
+        >
+          <div class="tile">
+            <img src="@/assets/imgs/wallets/argent.svg" alt="Argent" />
+          </div>
+          <div class="tileName">Argent</div>
         </button>
       </div>
       <div class="container-fluid _display-flex alternativeWithdrawContainer">
@@ -70,8 +80,10 @@ export default Vue.extend({
         return this.$router.push("/account");
       }
     },
-    async walletConnect() {
-      const refreshWalletTry = await this.$store.dispatch("zk-onboard/loginWithWalletConnect");
+    async walletConnect(argent: boolean = false) {
+      const refreshWalletTry = await this.$store.dispatch(
+        `zk-onboard/${argent ? "loginWithArgent" : "loginWithWalletConnect"}`
+      );
       if (!refreshWalletTry) {
         return this.$store.dispatch("zk-account/logout");
       } else {
@@ -81,6 +93,11 @@ export default Vue.extend({
         });
         return this.$router.push("/account");
       }
+    },
+  },
+  computed: {
+    isMainnet(): boolean {
+      return this.$store.getters["zk-provider/network"] === "mainnet";
     },
   },
 });
@@ -105,13 +122,12 @@ export default Vue.extend({
 
     .tileContainer {
       cursor: pointer;
+      &:hover .tile {
+        box-shadow: $hoverShadow;
+      }
 
       @media screen and (min-width: $mobile) {
         padding-bottom: $footerHeight;
-      }
-
-      &:hover .tile {
-        box-shadow: $hoverShadow;
       }
 
       .tile {
@@ -131,7 +147,7 @@ export default Vue.extend({
         img {
           width: 100%;
           height: 100%;
-          object-fit: cover;
+          object-fit: contain;
           transition: $transition1;
         }
 
@@ -170,6 +186,8 @@ export default Vue.extend({
 
     .connections {
       justify-content: space-evenly;
+      align-items: flex-start;
+      flex-wrap: wrap;
       min-width: 40%;
       max-width: 100%;
 

@@ -263,7 +263,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { Route } from "vue-router/types";
+import { RawLocation, Route } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
 import {
@@ -317,9 +317,9 @@ export default Vue.extend({
     nftTokenIsntVerified(): boolean {
       return Boolean(this.chosenToken && this.mainToken === "L2-NFT" && !this.nftExists && !this.nftExistsLoading);
     },
-    routeBack(): Route | string {
+    routeBack(): RawLocation {
       if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
-        return this.fromRoute;
+        return { path: this.fromRoute.path, query: this.fromRoute.query, params: this.fromRoute.params };
       }
       if (this.mainToken === "L2-NFT" || this.type === "MintNFT") {
         return "/account/nft";
@@ -489,6 +489,14 @@ export default Vue.extend({
   },
   async mounted() {
     if (!this.$store.getters["zk-account/loggedIn"]) {
+      return;
+    }
+    if (
+      (this.mainToken === "L2-NFT" || this.type === "MintNFT") &&
+      this.$store.getters["zk-onboard/selectedWallet"] === "Argent"
+    ) {
+      this.$accessor.openModal("ArgentNftWarning");
+      this.$router.push(this.routeBack);
       return;
     }
     if (!this.$store.getters["zk-account/accountStateRequested"]) {

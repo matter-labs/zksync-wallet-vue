@@ -1,3 +1,17 @@
+## [3.15.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.0...3.15.1) (2022-04-05)
+
+
+### Bug Fixes
+
+* open meta mask wallet if meta mask wc was selected, session auto relogin, open wallet app only when logged in with wc ([#245](https://github.com/matter-labs/zksync-wallet-vue/issues/245)) ([71b3115](https://github.com/matter-labs/zksync-wallet-vue/commit/71b3115a0be93ba16f489cbd6976f42612757db9))
+
+# [3.15.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.14.1...3.15.0) (2022-04-01)
+
+
+### Features
+
+* Argent remote wallet support ([#225](https://github.com/matter-labs/zksync-wallet-vue/issues/225)) ([5d6937a](https://github.com/matter-labs/zksync-wallet-vue/commit/5d6937aae745470e2bfb0934c8458b43ad698f10))
+
 ## [3.14.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.14.0...3.14.1) (2022-04-01)
 
 
