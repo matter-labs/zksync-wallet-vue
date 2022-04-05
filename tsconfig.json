@@ -1,15 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
     "allowJs": true,
-    "rootDir": "src",
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
     "checkJs": false,
     "declaration": true,
     "esModuleInterop": true,
-    "importHelpers": true,
     "experimentalDecorators": true,
+    "importHelpers": true,
     "lib": [
       "es2019",
       "dom",
@@ -30,11 +29,12 @@
         "./*"
       ]
     },
-    "suppressImplicitAnyIndexErrors": true,
     "resolveJsonModule": true,
+    "rootDir": "src",
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
+    "suppressImplicitAnyIndexErrors": true,
     "target": "ESNext",
     "types": [
       "@types/node",
@@ -45,13 +45,12 @@
       "web3-core/types",
       "@inkline/inkline/types",
       "nuxt-typed-vuex",
-      "vue-qrcode",
       "vue-router/types"
     ]
   },
   "include": [
     "./src/**/*.ts",
-    "./src/**/*.tsx",
+    "./src/**/*.d.ts",
     "./src/**/*.vue",
     "nuxt.config.ts"
   ],

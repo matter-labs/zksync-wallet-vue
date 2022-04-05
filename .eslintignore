@@ -1,16 +1,23 @@
+## env directories
+.firebase
+.github
 .husky
-.ide-setup
 .idea
+.ide-setup
 .nuxt
+.vscode
 .yarn
 environments
+functions
 node_modules
 public
-functions
 
-## src-exceptions
+## files & patterns
+*yarn*
+*.config.js
+*.sh
+
+## untouchable sources
 src/assets/imgs
-.github/workflows
-.github/ISSUE_TEMPLATE
-babel.config.js
 src/locales
+src/static

@@ -19,5 +19,11 @@ module.exports = {
         "no-unused-expressions": "off",
       },
     },
+    {
+      files: ["AccountModal.vue"],
+      rules: {
+        "no-implicit-any": "off",
+      },
+    },
   ],
 };
