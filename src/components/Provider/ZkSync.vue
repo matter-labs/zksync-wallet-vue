@@ -27,7 +27,7 @@ export default Vue.extend({
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .providerOption {
   .ProviderZkLogo {
     width: 118px !important;
