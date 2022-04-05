@@ -44,7 +44,7 @@
         <h3 class="noteContainer">Or you’ve receive funds on your exchange address such as Binance?</h3>
         <a
           data-cy="core_connect_wallet_button"
-          class="tileContainer _margin-right-05 _margin-md-right-2 _text-center"
+          class="tileContainer _margin-right-05 _margin-md-right-2 _text-center _margin-top-1"
           href="https://withdraw.zksync.io"
           target="_blank"
         >
@@ -63,7 +63,11 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  layout: "index",
+  computed: {
+    isMainnet(): boolean {
+      return this.$store.getters["zk-provider/network"] === "mainnet";
+    },
+  },
   mounted() {
     this.$analytics.track("visit_login");
   },
@@ -95,11 +99,7 @@ export default Vue.extend({
       }
     },
   },
-  computed: {
-    isMainnet(): boolean {
-      return this.$store.getters["zk-provider/network"] === "mainnet";
-    },
-  },
+  layout: "index",
 });
 </script>
 <style lang="scss" scoped>
@@ -119,15 +119,25 @@ export default Vue.extend({
     width: 100%;
     height: 100%;
     //min-height: $minRouteHeightWithExtra;
+    @media screen and (min-width: $mobile) {
+      padding-bottom: $footerHeight;
+    }
 
     .tileContainer {
       cursor: pointer;
+      width: fit-content;
+      height: fit-content;
+
       &:hover .tile {
         box-shadow: $hoverShadow;
       }
 
-      @media screen and (min-width: $mobile) {
-        padding-bottom: $footerHeight;
+      &:focus {
+        outline-color: $lightViolet;
+        border: none !important;
+        outline-offset: 0.25rem;
+        outline-width: thin;
+        border-radius: 0.5rem;
       }
 
       .tile {
@@ -297,6 +307,10 @@ export default Vue.extend({
 
 .-dark {
   .tileContainer {
+    &:focus {
+      outline-color: $accentBg !important;
+    }
+
     .tileName {
       color: $white !important;
     }
