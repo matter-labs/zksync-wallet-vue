@@ -151,7 +151,7 @@ export default Vue.extend({
   },
   computed: {
     returnLink(): string | Route {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && !this.fromRoute.path.includes("/transaction/") ? this.fromRoute : "/account/nft";
+      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/withdraw" ? this.fromRoute : "/account/nft";
     },
     ipfsGateway(): string {
       return (<ModuleOptions>this.$store.getters["zk-onboard/options"]).ipfsGateway;

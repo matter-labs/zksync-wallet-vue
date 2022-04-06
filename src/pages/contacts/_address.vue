@@ -72,7 +72,7 @@ export default Vue.extend({
   },
   computed: {
     computedReturnLink(): Route | string {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && !this.fromRoute.path.includes("/transaction/") ? this.fromRoute : "/contacts";
+      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transaction/transfer" ? this.fromRoute : "/contacts";
     },
     openedContact(): ZkContact {
       this.forceUpdateVal;
