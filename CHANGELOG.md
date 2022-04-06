@@ -1,3 +1,10 @@
+## [3.15.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.1...3.15.2) (2022-04-05)
+
+
+### Bug Fixes
+
+* enable utorg ([#247](https://github.com/matter-labs/zksync-wallet-vue/issues/247)) ([09a360c](https://github.com/matter-labs/zksync-wallet-vue/commit/09a360c7274a4b789fb14c6507aed3a37d3b9df0))
+
 ## [3.15.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.0...3.15.1) (2022-04-05)
 
 
