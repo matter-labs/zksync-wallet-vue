@@ -1,3 +1,10 @@
+## [3.15.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.2...3.15.3) (2022-04-06)
+
+
+### Bug Fixes
+
+* convert tx receipt fee and amount to type string ([#249](https://github.com/matter-labs/zksync-wallet-vue/issues/249)) ([841d458](https://github.com/matter-labs/zksync-wallet-vue/commit/841d458ff3ba8f66625f3378bbe47eb0c1956b15))
+
 ## [3.15.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.1...3.15.2) (2022-04-05)
 
 
