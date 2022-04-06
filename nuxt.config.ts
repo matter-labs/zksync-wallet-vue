@@ -260,7 +260,7 @@ const config: NuxtConfig = {
   ],
 
   styleResources: {
-    scss: ["@/assets/style/vars/_variables.scss"],
+    scss: ["@/assets/style/vars/*.scss"],
   },
 
   router: {
