@@ -1,9 +1,8 @@
 import { version as zkSyncVersion } from "zksync/package.json";
-import { version as walletVersion } from "../../package.json";
 
 export const GIT_REVISION: string = process.env.APP_GIT_REVISION ? process.env.APP_GIT_REVISION.toString() : "";
 export const GIT_REVISION_SHORT: string = GIT_REVISION.length > 8 ? GIT_REVISION.slice(0, 7) : GIT_REVISION;
-export const VERSION: string = walletVersion;
+export const VERSION: string = `${process.env.APP_GIT_VERSION}`;
 export const ZK_LIB_VERSION: string = zkSyncVersion as string;
 
 export const rampConfig = {
