@@ -115,9 +115,6 @@ export default Vue.extend({
     height: 100%;
     max-width: 100vw;
     //min-height: $minRouteHeightWithExtra;
-    @media screen and (min-width: $mobile) {
-      padding-bottom: $footerHeight;
-    }
 
     .tileContainer {
       flex-basis: 30%;
