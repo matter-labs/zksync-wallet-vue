@@ -37,9 +37,6 @@ const localhostProxy = isLocalhost
   : {};
 
 const config: NuxtConfig = {
-  server: {
-    port: 8080,
-  },
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
   ssr: false,
