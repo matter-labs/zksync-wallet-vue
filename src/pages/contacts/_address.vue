@@ -44,17 +44,16 @@ import { Route } from "vue-router/types";
 import { Address } from "zksync/build/types";
 import { getAddress } from "ethers/lib/utils";
 import { ZkContact } from "@matterlabs/zksync-nuxt-core/types";
+import computeReturnLink from "@/utils/computeReturnLink";
 
 export default Vue.extend({
-  asyncData({ from, params }) {
+  asyncData({ params }) {
     return {
-      fromRoute: from,
       address: params.address,
     };
   },
   data() {
     return {
-      fromRoute: <Route | undefined>undefined,
       address: <Address>"",
       contactModal: {
         type: <"add" | "edit">"add",
@@ -72,7 +71,7 @@ export default Vue.extend({
   },
   computed: {
     computedReturnLink(): Route | string {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transaction/transfer" ? this.fromRoute : "/contacts";
+      return computeReturnLink(this, "/contacts");
     },
     openedContact(): ZkContact {
       this.forceUpdateVal;

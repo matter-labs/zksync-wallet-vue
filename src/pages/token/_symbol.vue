@@ -60,28 +60,21 @@
 </template>
 
 <script lang="ts">
-import { Token, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { TokenSymbol } from "zksync/build/types";
+import { Token, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
+import computeReturnLink from "@/utils/computeReturnLink";
 
 export default Vue.extend({
-  asyncData({ from, redirect, params }) {
+  asyncData({ redirect, params }) {
     if (!params.symbol) {
       return redirect("/account");
     }
-    return {
-      fromRoute: from,
-    };
-  },
-  data() {
-    return {
-      fromRoute: <undefined | Route>undefined,
-    };
   },
   computed: {
     returnLink(): string | Route {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/withdraw" ? this.fromRoute : "/account";
+      return computeReturnLink(this, "/account");
     },
     symbol(): TokenSymbol {
       return this.$route.params.symbol;

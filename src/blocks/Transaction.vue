@@ -237,13 +237,6 @@ const feeNameDict = new Map([
 ]);
 
 export default Vue.extend({
-  props: {
-    fromRoute: {
-      required: false,
-      type: Object,
-      default: () => {}
-    } as PropOptions<Route>
-  },
   data () {
     return {
       inputtedAmount: this.$store.getters["zk-transaction/amount"],
@@ -273,8 +266,10 @@ export default Vue.extend({
       }
       if (this.mainToken === "L2-NFT" || this.type === "MintNFT") {
         return "/account/nft";
+      } else if (this.type === "Deposit") {
+        return "/account/top-up";
       }
-      return "/account/top-up";
+      return "/account";
     },
     type (): ZkTransactionType {
       return this.$store.getters["zk-transaction/type"];
@@ -537,7 +532,6 @@ export default Vue.extend({
           this.trackTransaction(true);
         } finally {
           this.loading = false;
-          console.log("error", this.$store.getters["zk-transaction/error"]);
           if (this.$store.getters["zk-transaction/error"]) {
             this.checkCPK();
           }
@@ -627,7 +621,7 @@ export default Vue.extend({
       this.chooseTokenModal = "feeToken";
       this.$analytics.track("visit_change_fee_token");
     }
-  }
+  },
 });
 </script>
 

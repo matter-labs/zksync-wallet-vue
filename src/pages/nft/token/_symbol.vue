@@ -130,20 +130,17 @@ import { ModuleOptions, ZkContact } from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "ethers/lib/utils";
 import { NFTItem } from "@/types/lib";
 import { getCIDFromContentHash } from "@/utils/nft";
+import computeReturnLink from "@/utils/computeReturnLink";
 
 let updateTokenStatusInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
-  asyncData({ from, redirect, params }) {
+  asyncData({ redirect, params }) {
     if (!params.symbol) {
       return redirect("/account");
     }
-    return {
-      fromRoute: from,
-    };
   },
   data() {
     return {
-      fromRoute: <undefined | Route>undefined,
       loadingToken: false,
       tokenUnavailableModal: false,
       nftTokenInfo: <undefined | NFTInfo>undefined,
@@ -151,7 +148,7 @@ export default Vue.extend({
   },
   computed: {
     returnLink(): string | Route {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/withdraw" ? this.fromRoute : "/account/nft";
+      return computeReturnLink(this, "/account/nft");
     },
     ipfsGateway(): string {
       return (<ModuleOptions>this.$store.getters["zk-onboard/options"]).ipfsGateway;
