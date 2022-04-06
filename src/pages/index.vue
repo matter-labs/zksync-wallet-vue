@@ -44,7 +44,7 @@
         <h3 class="noteContainer">Or you’ve receive funds on your exchange address such as Binance?</h3>
         <a
           data-cy="core_connect_wallet_button"
-          class="tileContainer _margin-right-05 _margin-md-right-2 _text-center _margin-top-1"
+          class="tileContainer _text-center _margin-top-1"
           href="https://withdraw.zksync.io"
           target="_blank"
         >
@@ -185,6 +185,11 @@ export default Vue.extend({
           font-size: 16px !important;
         }
       }
+    }
+
+    a.tileContainer {
+      margin-left: auto;
+      margin-right: auto;
     }
 
     h1 {
