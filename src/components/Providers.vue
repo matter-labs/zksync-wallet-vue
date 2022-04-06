@@ -93,7 +93,7 @@ export default Vue.extend({
     },
     utorg: {
       type: Boolean,
-      default: false,
+      default: true,
       required: false,
     },
     layerSwap: {
