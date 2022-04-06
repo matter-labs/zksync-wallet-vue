@@ -1,3 +1,10 @@
+## [3.15.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.3...3.15.4) (2022-04-06)
+
+
+### Bug Fixes
+
+* disappearing zksync img top up option on safari ([#246](https://github.com/matter-labs/zksync-wallet-vue/issues/246)) ([b3ec49a](https://github.com/matter-labs/zksync-wallet-vue/commit/b3ec49a4910576d2dd880069f1f440d884d43dcb))
+
 ## [3.15.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.2...3.15.3) (2022-04-06)
 
 
