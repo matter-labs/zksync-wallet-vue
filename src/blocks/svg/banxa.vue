@@ -25,7 +25,14 @@
       fill="#111730"
     ></path>
     <defs>
-      <linearGradient id="paint0_linear" x1="123.533" y1="12.4933" x2="152.543" y2="12.4933" gradientUnits="userSpaceOnUse">
+      <linearGradient
+        id="paint0_linear"
+        x1="123.533"
+        y1="12.4933"
+        x2="152.543"
+        y2="12.4933"
+        gradientUnits="userSpaceOnUse"
+      >
         <stop stop-color="#0172D0"></stop>
         <stop offset="0.0644" stop-color="#0181CD"></stop>
         <stop offset="0.2231" stop-color="#019FC8"></stop>

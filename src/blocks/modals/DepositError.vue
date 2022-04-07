@@ -1,7 +1,9 @@
 <template>
   <i-modal v-model="opened" size="md" :title="'Depositing failed due to an error'">
     <p>{{ errorText }}</p>
-    <i-button class="_margin-top-1" block size="lg" variant="secondary" @click="processButton">Back to the Deposit</i-button>
+    <i-button class="_margin-top-1" block size="lg" variant="secondary" @click="processButton"
+      >Back to the Deposit
+    </i-button>
   </i-modal>
 </template>
 

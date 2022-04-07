@@ -1,7 +1,10 @@
 <template>
   <i-modal v-model="opened" size="md">
     <template slot="header">Argent NFTs not supported</template>
-    <p>Argent Wallet does not support NFT operations yet. You can still receive NFTs but you won't be able to transfer or withdraw it.</p>
+    <p>
+      Argent Wallet does not support NFT operations yet. You can still receive NFTs but you won't be able to transfer or
+      withdraw it.
+    </p>
     <template v-if="checkmarkDisplayed">
       <i-checkbox v-model="argentNftWarningCheckmark">Do not show this warning again</i-checkbox>
       <i-button block class="_margin-top-1" size="lg" variant="secondary" @click="proceed()">Ok</i-button>

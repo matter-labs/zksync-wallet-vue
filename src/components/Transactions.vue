@@ -7,11 +7,29 @@
         <div v-if="loadingStatus === 'main'" class="nothingFound">
           <loader class="_display-block" />
         </div>
-        <div v-else-if="transactions.length === 0 && !loadingStatus" class="nothingFound" :class="{ loadMoreAvailable: !allLoaded }">
+        <div
+          v-else-if="transactions.length === 0 && !loadingStatus"
+          class="nothingFound"
+          :class="{ loadMoreAvailable: !allLoaded }"
+        >
           <span>History is empty</span>
         </div>
-        <transaction-history-item v-for="item in transactions" v-else :key="item.txHash" class="transactionItem" :transaction="item" />
-        <i-button v-if="!loadingStatus && !allLoaded" block link size="lg" variant="secondary" @click="requestTransactions('previous')">Load more</i-button>
+        <transaction-history-item
+          v-for="item in transactions"
+          v-else
+          :key="item.txHash"
+          class="transactionItem"
+          :transaction="item"
+        />
+        <i-button
+          v-if="!loadingStatus && !allLoaded"
+          block
+          link
+          size="lg"
+          variant="secondary"
+          @click="requestTransactions('previous')"
+          >Load more
+        </i-button>
         <div v-else-if="loadingStatus === 'previous'">
           <loader class="_display-block _margin-x-auto _margin-y-2" />
         </div>
@@ -23,7 +41,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ApiTransaction } from "zksync/build/types";
-import { ZkTransactionHistoryLoadingState, ZkFilteredTransactionHistory } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkFilteredTransactionHistory, ZkTransactionHistoryLoadingState } from "@matterlabs/zksync-nuxt-core/types";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
@@ -46,8 +64,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      transactions: <ApiTransaction[]>[],
-      loadingStatus: <ZkTransactionHistoryLoadingState>false,
+      transactions: [] as ApiTransaction[],
+      loadingStatus: false as ZkTransactionHistoryLoadingState,
       allLoaded: !this.tokenExists,
     };
   },
@@ -77,7 +95,7 @@ export default Vue.extend({
 
       this.$analytics.track("transaction_history_load_more");
 
-      this.loadingStatus = part;
+      this.loadingStatus = part as ZkTransactionHistoryLoadingState;
       const res: ZkFilteredTransactionHistory = await this.$store.dispatch("zk-history/getFilteredTransactionHistory", {
         lastTxHash: part === "previous" ? this.transactions[this.transactions.length - 1].txHash : undefined,
         token: this.token,

@@ -2,10 +2,18 @@
   <div class="chooseContactBlock">
     <!-- Contacts list -->
     <i-modal v-model="contactsListModal" size="md">
-      <template slot="header">Contacts</template>
+      <template #header>Contacts</template>
       <div>
-        <i-input v-if="isSearching || hasDisplayedContacts" ref="contactNameInput" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
-          <v-icon slot="prefix" name="ri-search-line" />
+        <i-input
+          v-if="isSearching || hasDisplayedContacts"
+          ref="contactNameInput"
+          v-model="contactSearch"
+          placeholder="Filter contacts"
+          maxlength="20"
+        >
+          <template #prefix>
+            <v-icon name="ri-search-line" />
+          </template>
         </i-input>
         <div class="contactsListContainer genericListContainer">
           <div v-if="!isSearching && !hasDisplayedContacts && !displayOwnAddress" class="nothingFound">
@@ -17,14 +25,23 @@
             </span>
           </div>
           <template v-else>
-            <div v-if="!isSearching && displayOwnAddress" class="contactItem" @click.self="chooseContact({ name: 'Own account', address: ownAddress })">
+            <div
+              v-if="!isSearching && displayOwnAddress"
+              class="contactItem"
+              @click.self="chooseContact({ name: 'Own account', address: ownAddress })"
+            >
               <user-img :wallet="ownAddress" />
               <div class="contactInfo">
                 <div class="contactName">Own account</div>
                 <div class="contactAddress walletAddress">{{ ownAddress }}</div>
               </div>
             </div>
-            <div v-for="(item, contactAddress) in displayedContactsList" :key="contactAddress" class="contactItem" @click.self="chooseContact(item)">
+            <div
+              v-for="(item, contactAddress) in displayedContactsList"
+              :key="contactAddress"
+              class="contactItem"
+              @click.self="chooseContact(item)"
+            >
               <user-img :wallet="item.address" />
               <div class="contactInfo">
                 <div class="contactName">{{ item.name }}</div>
@@ -38,10 +55,17 @@
 
     <!-- Save contact -->
     <i-modal v-model="saveContactModal" class="prevent-close" size="md">
-      <template slot="header">Save contact</template>
+      <template #header>Save contact</template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
-        <i-input ref="saveContactNameInput" v-model="saveContactInput" size="lg" placeholder="Name" maxlength="20" @keyup.enter="saveContact()" />
+        <i-input
+          ref="saveContactNameInput"
+          v-model="saveContactInput"
+          size="lg"
+          placeholder="Name"
+          maxlength="20"
+          @keyup.enter="saveContact()"
+        />
         <div v-if="saveContactModalError" class="modalError _margin-top-1">{{ saveContactModalError }}</div>
         <i-button class="_margin-top-1" block variant="secondary" size="lg" @click="saveContact()">Save</i-button>
       </div>
@@ -50,15 +74,30 @@
     <!-- Main -->
     <i-row class="_margin-top-md-1">
       <i-column v-if="!contact && !isOwnAddress" :md="canSaveContact ? 7 : 12" xs="12">
-        <i-button data-cy="address_block_select_from_contacts_button" block link variant="secondary" @click="contactsListModal = true">Select from contacts</i-button>
+        <i-button
+          data-cy="address_block_select_from_contacts_button"
+          block
+          link
+          variant="secondary"
+          @click="contactsListModal = true"
+          >Select from contacts
+        </i-button>
       </i-column>
       <i-column v-else xs="12" :md="canSaveContact ? 7 : 12">
-        <i-button data-cy="address_block_select_from_contacts_button" block link variant="secondary" @click="contactsListModal = true">
+        <i-button
+          data-cy="address_block_select_from_contacts_button"
+          block
+          link
+          variant="secondary"
+          @click="contactsListModal = true"
+        >
           {{ isOwnAddress ? "Own account" : contact.name }}&nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
         </i-button>
       </i-column>
       <i-column xs="12" md="5">
-        <i-button v-if="canSaveContact" block link variant="secondary" @click="saveContactModal = true"> Save to contacts</i-button>
+        <i-button v-if="canSaveContact" block link variant="secondary" @click="saveContactModal = true">
+          Save to contacts
+        </i-button>
       </i-column>
     </i-row>
   </div>
@@ -108,6 +147,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/address"] === getAddress(this.address);
     },
     contact(): ZkContact | undefined {
+      /* eslint-disable no-unused-expressions */
       this.forceUpdateVal;
       if (!this.address) {
         return undefined;
@@ -121,12 +161,18 @@ export default Vue.extend({
       return !!this.contactSearch.trim();
     },
     contactsList(): ZkContacts {
+      /* eslint-disable no-unused-expressions */
       this.forceUpdateVal;
       return this.$store.getters["zk-contacts/contactsNotDeleted"];
     },
     displayedContactsList(): ZkContacts {
+      /* eslint-disable no-unused-expressions */
       this.forceUpdateVal;
-      return <ZkContacts>searchInObject(this.contactsList, this.contactSearch, ([_, contact]: [string, ZkContact]) => `${contact.name} - ${contact.address}`);
+      return searchInObject(
+        this.contactsList,
+        this.contactSearch,
+        ([_, contact]: [string, ZkContact]) => `${contact.name} - ${contact.address}`
+      ) as ZkContacts;
     },
     hasDisplayedContacts(): boolean {
       return Object.keys(this.displayedContactsList).length !== 0;

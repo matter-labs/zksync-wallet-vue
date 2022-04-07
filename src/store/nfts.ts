@@ -1,7 +1,7 @@
 import Vue from "vue";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
-import { ZkNFTState, NFTItem } from "@/types/lib";
+import { NFTItem, ZkNFTState } from "@/types/lib";
 
 const nftCIDPromise: {
   [cid: string]: Promise<any>;
@@ -80,7 +80,7 @@ export const actions = actionTree(
         commit("setNFTLoading", { cid, status: false });
       }
     },
-  },
+  }
 );
 
 export const accessorType = getAccessorType({

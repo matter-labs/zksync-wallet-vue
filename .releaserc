@@ -1,29 +1,47 @@
 {
-  "branches": "master",
   "debug": false,
   "tagFormat": "${version}",
   "addReleases": "top",
   "npmPublish": false,
+  "branches": [
+    "+([0-9])?(.{+([0-9]),x}).x",
+    "main",
+    "next",
+    {
+      "name": "beta",
+      "prerelease": true
+    },
+    {
+      "name": "testnet",
+      "prerelease": true
+    }
+  ],
   "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [ "@semantic-release/changelog", {
+      "changelogFile": "CHANGELOG.md"
+    } ],
     [
-        "@semantic-release/npm",
+      "@semantic-release/npm",
       {
         "npmPublish": false
       }
     ],
-      "@semantic-release/github",
     [
-        "@semantic-release/changelog",
+      "@semantic-release/exec",
       {
-        "changelogFile": "CHANGELOG.md"
+        "prepareCmd": "APP_GIT_VERSION=${nextRelease.version} yarn ci:generate",
+        "publishCmd": "zip -r dist.zip dist"
       }
     ],
     [
-        "@semantic-release/git",
+      "@semantic-release/github",
       {
-        "assets": [ "package.json", "yarn.lock", "CHANGELOG.md" ],
+        "assets": [ "package.json", "yarn.lock", "CHANGELOG.md", {
+          "path": "dist.zip",
+          "label": "Dist package"
+        } ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ]
