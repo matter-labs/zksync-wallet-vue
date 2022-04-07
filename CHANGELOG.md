@@ -1,3 +1,10 @@
+## [3.15.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.4...3.15.5) (2022-04-07)
+
+
+### Bug Fixes
+
+* eslint reconfigured & all the deps are updated (functions) ([#252](https://github.com/matter-labs/zksync-wallet-vue/issues/252)) ([ccc7d19](https://github.com/matter-labs/zksync-wallet-vue/commit/ccc7d1906bebe9e31403c77d2483fd9f3e8b5cc2))
+
 ## [3.15.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.3...3.15.4) (2022-04-06)
 
 
