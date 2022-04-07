@@ -361,7 +361,6 @@ const config = {
   /**
    * Build configuration
    **/
-
   build: {
     filenames: { chunk: () => `[name]_Y2ZjItY_${isProduction ? "[contenthash]" : ""}.js` },
     cache: true,

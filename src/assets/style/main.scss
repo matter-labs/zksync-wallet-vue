@@ -5,7 +5,6 @@
 
 // Layouts
 @import "./layouts/default";
-@import "./layouts/index";
 
 // Blocks
 @import "./blocks/header";
@@ -25,10 +24,7 @@
 @import "./components/custom/button";
 @import "./components/custom/alert";
 @import "./components/loader";
-@import "./components/userImg";
 @import "./components/walletAddress";
-@import "./components/checkmark";
-@import "./components/loadingBlock";
 @import "./components/amountInput";
 @import "./components/successBlock";
 @import "./components/note";
