@@ -35,7 +35,7 @@ jobs:
 
       - name: "Lint check"
         run: |
-          eslint --config .eslintrc.js --ignore-path .eslintignore "src/**/*.{ts,vue,js}" --max-warnings 0
+          yarn dlx eslint --config .eslintrc.js --ignore-path .eslintignore "src/**/*.{ts,vue,js}" --max-warnings 0
 
       - name: "Semantic release"
         run: yarn semantic-release
