@@ -81,7 +81,7 @@
 <script lang="ts">
 import { utils } from "zksync";
 
-import moment from "moment-timezone";
+import moment from "moment";
 import Vue, { PropOptions } from "vue";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { Address, ApiTransaction, TokenSymbol } from "zksync/build/types";
@@ -366,7 +366,7 @@ export default Vue.extend({
       if (!time) {
         return "";
       }
-      return moment(time).tz("UTC").fromNow();
+      return moment(time).utc(true).fromNow();
     },
     getAddressName(address: string): string {
       const contactFromStore: ZkContact = this.$store.getters["zk-contacts/contactByAddress"](address);

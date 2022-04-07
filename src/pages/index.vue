@@ -64,6 +64,11 @@ import Vue from "vue";
 
 export default Vue.extend({
   layout: "index",
+  computed: {
+    isMainnet(): boolean {
+      return this.$store.getters["zk-provider/network"] === "mainnet";
+    },
+  },
   mounted() {
     this.$analytics.track("visit_login");
   },
@@ -95,11 +100,6 @@ export default Vue.extend({
       }
     },
   },
-  computed: {
-    isMainnet(): boolean {
-      return this.$store.getters["zk-provider/network"] === "mainnet";
-    },
-  },
 });
 </script>
 <style lang="scss" scoped>
@@ -122,8 +122,15 @@ export default Vue.extend({
 
     .tileContainer {
       cursor: pointer;
+
       &:hover .tile {
         box-shadow: $hoverShadow;
+      }
+
+      &:focus {
+        outline-offset: 0.5rem;
+        border-radius: 0.5rem;
+        outline-width: 0.2rem;
       }
 
       @media screen and (min-width: $mobile) {

@@ -61,14 +61,9 @@ import { ProvidersBanxaCfg, ProvidersMoonpayCfg, ProvidersRampCfg } from "@/type
 export default Vue.extend({
   name: "Providers",
   props: {
-    ramp: {
+    banxa: {
       type: Boolean,
       default: true,
-      required: false,
-    },
-    okex: {
-      type: Boolean,
-      default: false,
       required: false,
     },
     bybit: {
@@ -76,7 +71,7 @@ export default Vue.extend({
       default: false,
       required: false,
     },
-    banxa: {
+    layerSwap: {
       type: Boolean,
       default: true,
       required: false,
@@ -86,17 +81,17 @@ export default Vue.extend({
       default: false,
       required: false,
     },
+    okex: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
     orbiter: {
       type: Boolean,
       default: true,
       required: false,
     },
-    utorg: {
-      type: Boolean,
-      default: true,
-      required: false,
-    },
-    layerSwap: {
+    ramp: {
       type: Boolean,
       default: true,
       required: false,
@@ -119,6 +114,11 @@ export default Vue.extend({
       }),
       required: false,
     },
+    utorg: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
   },
   data() {
     return {
@@ -126,23 +126,14 @@ export default Vue.extend({
     };
   },
   computed: {
-    rampConfig(): ProvidersRampCfg {
-      return this.$config.rampConfig![this.ethNetwork] as ProvidersRampCfg;
-    },
-    ethNetwork(): string {
-      return this.$store.getters["zk-provider/network"];
+    address(): Address {
+      return this.$store.getters["zk-account/address"];
     },
     banxaConfig(): ProvidersBanxaCfg {
       return this.$config.banxaConfig![this.ethNetwork] as ProvidersBanxaCfg;
     },
-    moonpayConfig(): ProvidersMoonpayCfg {
-      return this.$config.moonpayConfig![this.ethNetwork] as ProvidersMoonpayCfg;
-    },
-    address(): Address {
-      return this.$store.getters["zk-account/address"];
-    },
-    isRampSupported(): boolean {
-      return !!this.rampConfig;
+    ethNetwork(): string {
+      return this.$store.getters["zk-provider/network"];
     },
     isBanxaSupported(): boolean {
       return !!this.banxaConfig;
@@ -150,33 +141,21 @@ export default Vue.extend({
     isMoonpaySupported(): boolean {
       return !!this.moonpayConfig;
     },
+    isRampSupported(): boolean {
+      return !!this.rampConfig;
+    },
+    moonpayConfig(): ProvidersMoonpayCfg {
+      return this.$config.moonpayConfig![this.ethNetwork] as ProvidersMoonpayCfg;
+    },
+    rampConfig(): ProvidersRampCfg {
+      return this.$config.rampConfig![this.ethNetwork] as ProvidersRampCfg;
+    },
   },
   mounted() {
     this.errorText = undefined;
     this.$accessor.closeActiveModal();
   },
   methods: {
-    setError(errorText: string) {
-      this.errorText = errorText;
-    },
-    redirectURL(full: boolean = true): string {
-      return full ? `${window.location.origin}/account` : "/account";
-    },
-    buyWithRamp() {
-      if (!this.isRampSupported) {
-        return;
-      }
-      this.$analytics.track("click_on_buy_with_ramp");
-
-      new RampInstantSDK({
-        hostAppName: "zkSync Wallet",
-        hostLogoUrl: window.location.origin + "/favicon-dark.png",
-        variant: "hosted-auto",
-        swapAsset: "ZKSYNC_*",
-        userAddress: this.address,
-        ...this.rampConfig,
-      }).show();
-    },
     buyWithBanxa() {
       if (!this.isBanxaSupported) {
         return;
@@ -230,7 +209,7 @@ export default Vue.extend({
         /**
          * Success processing
          */
-        if (!responseData?.signedUrl) {
+        if (!responseData!.signedUrl) {
           throw new Error("signedUrl is missing");
         }
         window.open(responseData!.signedUrl, "_blank");
@@ -240,6 +219,27 @@ export default Vue.extend({
         console.warn(this.errorText);
         this.$accessor.openModal("DepositError");
       }
+    },
+    buyWithRamp() {
+      if (!this.isRampSupported) {
+        return;
+      }
+      this.$analytics.track("click_on_buy_with_ramp");
+
+      new RampInstantSDK({
+        hostAppName: "zkSync Wallet",
+        hostLogoUrl: window.location.origin + "/favicon-dark.png",
+        variant: "hosted-auto",
+        swapAsset: "ZKSYNC_*",
+        userAddress: this.address,
+        ...this.rampConfig,
+      }).show();
+    },
+    redirectURL(full: boolean = true): string {
+      return full ? `${window.location.origin}/account` : "/account";
+    },
+    setError(errorText: string) {
+      this.errorText = errorText;
     },
   },
 });
