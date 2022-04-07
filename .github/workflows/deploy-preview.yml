@@ -65,6 +65,7 @@ jobs:
       - name: Checkout zksync-test-ui repository
         uses: actions/checkout@v2
         with:
+          ref: "0b7ea4749c33e289afdd523f3cd0d26294ca1085"
           repository: matter-labs/zksync-test-ui
           token: ${{ secrets.TEST_ACCESS_TOKEN }}
 
