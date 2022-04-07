@@ -18,6 +18,6 @@ public
 *.sh
 
 ## untouchable sources
-src/assets/imgs
+src/assets
 src/locales
 src/static
