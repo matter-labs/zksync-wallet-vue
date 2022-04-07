@@ -4,6 +4,7 @@
     "module": "esnext",
     "moduleResolution": "node",
     "target": "esnext",
+    "rootDir": "./src",
     "outDir": "lib",
     "sourceMap": true,
     "typeRoots": ["node_modules/@types"],
@@ -13,5 +14,5 @@
       "firebase-functions"
     ]
   },
-  "include": ["./src"]
+  "include": ["**/*.ts"]
 }
