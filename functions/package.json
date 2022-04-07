@@ -34,10 +34,10 @@
     "start": "npm run build && npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "lint": "eslint --ext .ts --config .eslintrc.json  --ignore-path .gitignore .",
-    "lint:fix": "eslint --fix --ext .ts --config .eslintrc.json  --ignore-path .gitignore ."
+    "lint": "eslint --ext .ts --config .eslintrc.cjs  --ignore-path .gitignore .",
+    "lint:fix": "eslint --fix --ext .ts --config .eslintrc.cjs  --ignore-path .gitignore ."
   },
-  "packageManager": "npm",
+  "packageManager": "npm@8.5.5",
   "version": "0.0.1",
   "main": "lib/index.js",
   "dependencies": {
