@@ -1,5 +1,6 @@
 <template>
   <div class="tokenAccount dappPageWrapper">
+    <block-modals-argent-nft-warning />
     <i-modal v-model="tokenUnavailableModal" size="md">
       <template slot="header">Token unavailable</template>
       <p>Minted tokens are available for transactions only after the Mint transaction gets verified.</p>
@@ -168,7 +169,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/accountStateLoading"];
     },
     actionsAllowed(): boolean {
-      return Boolean(!this.loadingToken && this.nftTokenInfo);
+      return Boolean(!this.loadingToken && this.nftTokenInfo && this.$store.getters["zk-onboard/selectedWallet"] !== "Argent");
     },
     isOwnAddress(): boolean {
       return getAddress(this.$store.getters["zk-account/address"]) === getAddress(this.token.creatorAddress);
@@ -236,12 +237,18 @@ export default Vue.extend({
       this.loadingToken = false;
     },
     withdraw() {
+      if (this.$store.getters["zk-onboard/selectedWallet"] === "Argent") {
+        return this.$accessor.openModal("ArgentNftWarning");
+      }
       if (!this.actionsAllowed) {
         return (this.tokenUnavailableModal = true);
       }
       this.$router.push(`/transaction/nft/withdraw?token=${this.tokenID}`);
     },
     transfer() {
+      if (this.$store.getters["zk-onboard/selectedWallet"] === "Argent") {
+        return this.$accessor.openModal("ArgentNftWarning");
+      }
       if (!this.actionsAllowed) {
         return (this.tokenUnavailableModal = true);
       }

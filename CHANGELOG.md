@@ -1,3 +1,52 @@
+## [3.15.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.4...3.15.5) (2022-04-07)
+
+
+### Bug Fixes
+
+* eslint reconfigured & all the deps are updated (functions) ([#252](https://github.com/matter-labs/zksync-wallet-vue/issues/252)) ([ccc7d19](https://github.com/matter-labs/zksync-wallet-vue/commit/ccc7d1906bebe9e31403c77d2483fd9f3e8b5cc2))
+
+## [3.15.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.3...3.15.4) (2022-04-06)
+
+
+### Bug Fixes
+
+* disappearing zksync img top up option on safari ([#246](https://github.com/matter-labs/zksync-wallet-vue/issues/246)) ([b3ec49a](https://github.com/matter-labs/zksync-wallet-vue/commit/b3ec49a4910576d2dd880069f1f440d884d43dcb))
+
+## [3.15.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.2...3.15.3) (2022-04-06)
+
+
+### Bug Fixes
+
+* convert tx receipt fee and amount to type string ([#249](https://github.com/matter-labs/zksync-wallet-vue/issues/249)) ([841d458](https://github.com/matter-labs/zksync-wallet-vue/commit/841d458ff3ba8f66625f3378bbe47eb0c1956b15))
+
+## [3.15.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.1...3.15.2) (2022-04-05)
+
+
+### Bug Fixes
+
+* enable utorg ([#247](https://github.com/matter-labs/zksync-wallet-vue/issues/247)) ([09a360c](https://github.com/matter-labs/zksync-wallet-vue/commit/09a360c7274a4b789fb14c6507aed3a37d3b9df0))
+
+## [3.15.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.0...3.15.1) (2022-04-05)
+
+
+### Bug Fixes
+
+* open meta mask wallet if meta mask wc was selected, session auto relogin, open wallet app only when logged in with wc ([#245](https://github.com/matter-labs/zksync-wallet-vue/issues/245)) ([71b3115](https://github.com/matter-labs/zksync-wallet-vue/commit/71b3115a0be93ba16f489cbd6976f42612757db9))
+
+# [3.15.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.14.1...3.15.0) (2022-04-01)
+
+
+### Features
+
+* Argent remote wallet support ([#225](https://github.com/matter-labs/zksync-wallet-vue/issues/225)) ([5d6937a](https://github.com/matter-labs/zksync-wallet-vue/commit/5d6937aae745470e2bfb0934c8458b43ad698f10))
+
+## [3.14.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.14.0...3.14.1) (2022-04-01)
+
+
+### Bug Fixes
+
+* copyright typo ([b037731](https://github.com/matter-labs/zksync-wallet-vue/commit/b0377316f976d5028ee92f009d5e793d5f02d13d))
+
 # [3.14.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.13.0...3.14.0) (2022-03-22)
 
 

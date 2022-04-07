@@ -209,7 +209,8 @@ const config: NuxtConfig = {
           PORTIS_KEY: process.env.APP_PORTIS,
           /**
            * Added for all environments to reduce complexity
-           */ INFURA_KEY: "560464419d33486ab1713d61ac9f1d82",
+           */
+          INFURA_KEY: "c3f5636451af461fafaee653cbd9ef2a",
         },
         onboardConfig: {
           APP_NAME: pageTitle,
