@@ -1,6 +1,7 @@
 import Vue from "vue";
 
 import { mapGetters } from "vuex";
+
 export default Vue.extend({
   computed: {
     ...mapGetters({
@@ -15,9 +16,11 @@ export default Vue.extend({
   watch: {
     config: {
       handler(value) {
-        this.$sentry.setTags({ network: value?.ethereumNetwork?.name });
-        this.$sentry.setTags({ zkSyncLibVersion: value?.zkSyncLibVersion });
-        this.$sentry.setTags({ zkUIVersion: value?.zkUIVersion });
+        if (this.$sentry) {
+          this.$sentry.setTags({ network: value?.ethereumNetwork?.name });
+          this.$sentry.setTags({ zkSyncLibVersion: value?.zkSyncLibVersion });
+          this.$sentry.setTags({ zkUIVersion: value?.zkUIVersion });
+        }
       },
       deep: true,
       immediate: true,
@@ -25,23 +28,25 @@ export default Vue.extend({
 
     selectedWallet: {
       handler(wallet) {
-        this.$sentry.setTags({ wallet });
+        if (this.$sentry) {
+          this.$sentry.setTags({ wallet });
+        }
       },
       immediate: true,
     },
     selectedOnboardType: {
       handler(value) {
-        this.$sentry.setTags({ "onboard.type": value });
+        if (this.$sentry) {
+          this.$sentry.setTags({ "onboard.type": value });
+        }
       },
       immediate: true,
     },
 
     "ethereumState.address": {
       handler(value) {
-        if (value) {
-          this.$sentry.setUser({ id: value });
-        } else {
-          this.$sentry.setUser(null);
+        if (this.$sentry) {
+          this.$sentry.setUser(value ? { id: value } : null);
         }
       },
       immediate: true,

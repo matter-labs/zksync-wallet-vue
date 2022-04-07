@@ -29,11 +29,13 @@
       border-bottom: 1px solid;
       transition: $transition1;
       transition-property: background-color, border-color;
+
       &:last-child {
         border-bottom: none;
       }
 
-      .amount, .tokenSymbol {
+      .amount,
+      .tokenSymbol {
         display: inline-flex;
       }
 
@@ -120,11 +122,11 @@
               transition-duration: 0.0001s;
               color: $green !important;
             }
-            
+
             .iconContainer {
               display: flex;
               align-items: center;
-              
+
               svg {
                 position: relative;
                 top: -0.5px;
@@ -139,7 +141,6 @@
             }
           }
         }
-
 
         .tokenSymbol {
           font-size: $tempFontSizeMedium;
@@ -252,7 +253,7 @@
           .tooltip-wrapper {
             height: 100%;
             width: 100%;
-            
+
             svg {
               display: block;
               width: 100%;
@@ -278,13 +279,13 @@
 
           .amount {
             word-break: break-all;
-            white-space: normal
+            white-space: normal;
           }
 
-          .amount, .tokenSymbol {
+          .amount,
+          .tokenSymbol {
             font-size: 12px !important;
             font-family: $firaCode;
-
           }
 
           .tokenSymbol {
@@ -319,7 +320,8 @@
             font-size: 14px;
           }
 
-          .actionType, .actionType > span {
+          .actionType,
+          .actionType > span {
             text-align: left !important;
             white-space: nowrap;
             font-size: 10px !important;

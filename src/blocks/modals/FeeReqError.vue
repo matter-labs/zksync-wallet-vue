@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" size="md" data-cy="fee_calculation_error_modal">
-    <template slot="header">Requesting fee error</template>
+    <template #header>Requesting fee error</template>
     <p>There was an error while requesting the fee. Try to choose different fee token or try again later.</p>
   </i-modal>
 </template>

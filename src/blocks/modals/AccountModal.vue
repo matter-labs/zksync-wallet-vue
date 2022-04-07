@@ -1,23 +1,44 @@
 <template>
   <div class="accountModalContainer">
     <i-modal v-model="renameWalletModal" class="prevent-close" size="md">
-      <template slot="header">Rename wallet</template>
+      <template #header>Rename wallet</template>
       <div>
-        <i-input ref="nameInput" v-model="walletName" size="lg" placeholder="Name" type="name" maxlength="18" @keyup.enter="renameWallet()" />
-        <i-button block size="lg" variant="secondary" class="_margin-top-1" :disabled="!isNameValid" @click="renameWallet()">Save</i-button>
+        <i-input
+          ref="nameInput"
+          v-model="walletName"
+          size="lg"
+          placeholder="Name"
+          type="name"
+          maxlength="18"
+          @keyup.enter="renameWallet()"
+        />
+        <i-button
+          block
+          size="lg"
+          variant="secondary"
+          class="_margin-top-1"
+          :disabled="!isNameValid"
+          @click="renameWallet()"
+          >Save
+        </i-button>
       </div>
     </i-modal>
 
     <i-modal v-model="accountModal" size="md">
-      <template slot="header">
+      <template #header>
         <b>{{ accountName }}</b>
       </template>
       <div>
         <wallet-address :wallet="accountAddress" />
         <vue-qrcode v-if="accountAddress" class="addressQR" :value="accountAddress" :margin="1" :scale="6" />
       </div>
-      <template slot="footer">
-        <a class="modalFooterBtn" :href="accountZkScanUrl" target="_blank" @click.passive="$analytics.track('view_in_blockexplorer')">
+      <template #footer>
+        <a
+          class="modalFooterBtn"
+          :href="accountZkScanUrl"
+          target="_blank"
+          @click.passive="$analytics.track('view_in_blockexplorer')"
+        >
           <v-icon name="ri-external-link-line" />
           <span>View in block explorer</span>
         </a>
@@ -54,7 +75,9 @@ export default Vue.extend({
       return this.$store.getters["zk-account/address"];
     },
     accountZkScanUrl(): string {
-      return (this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer + "explorer/accounts/" + this.accountAddress) as string;
+      return (this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer +
+        "explorer/accounts/" +
+        this.accountAddress) as string;
     },
     accountModal: {
       get(): boolean {

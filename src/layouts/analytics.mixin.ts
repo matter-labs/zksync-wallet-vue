@@ -11,14 +11,18 @@ export default Vue.extend({
   watch: {
     network: {
       handler(network: string): void {
-        this.$analytics.set({ network });
+        if (this.$analytics) {
+          this.$analytics.set({ network });
+        }
       },
       immediate: true,
     },
 
     selectedWallet: {
       handler(wallet: string): void {
-        this.$analytics.set({ wallet });
+        if (this.$analytics) {
+          this.$analytics.set({ wallet });
+        }
       },
       immediate: true,
     },

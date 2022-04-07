@@ -1,13 +1,3 @@
 module.exports = {
-  presets: [
-    [
-      "@babel/preset-env",
-      {
-        targets: {
-          node: "current",
-        },
-      },
-    ],
-    "@nuxt/babel-preset-app"
-  ],
+  presets: ["@vue/cli-plugin-babel/preset", ["@babel/preset-typescript", { allowNamespaces: true }]],
 };
