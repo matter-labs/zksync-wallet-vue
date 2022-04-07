@@ -1,33 +1,30 @@
 <template>
   <div :class="{ disabled: disabled }" class="providerOption" @click="proceed">
-    <block-svg-utorg/>
+    <block-svg-utorg />
   </div>
 </template>
 <script lang="ts">
-import { utorgConfig } from "@/utils/config";
 import Vue from "vue";
+import { ProvidersUtorgCfg } from "@/types/lib";
 
 export default Vue.extend({
   name: "ProviderUtorg",
   props: {
     enabled: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   computed: {
-    utorgConfig(): {
-      url: string;
-      sid: string;
-    } | null {
-      return utorgConfig[this.$store.getters["zk-provider/network"]];
+    utorgConfig(): ProvidersUtorgCfg {
+      return this.$config.moonpayConfig![this.$store.getters["zk-provider/network"]] as ProvidersUtorgCfg;
     },
     disabled(): boolean {
       return !this.enabled || !this.isSupported;
     },
     isSupported(): boolean {
       return !!this.utorgConfig;
-    }
+    },
   },
   methods: {
     proceed(): void {
@@ -36,9 +33,11 @@ export default Vue.extend({
         return;
       }
       this.$analytics.track("click_on_buy_with_utorg");
-      window.open(`${this.utorgConfig!.url}/direct/${this.utorgConfig!.sid}/${this.$store.getters["zk-account/address"]}/`);
-    }
-  }
+      window.open(
+        `${this.utorgConfig!.url}/direct/${this.utorgConfig!.sid}/${this.$store.getters["zk-account/address"]}/`
+      );
+    },
+  },
 });
 </script>
 <style lang="scss" scoped>

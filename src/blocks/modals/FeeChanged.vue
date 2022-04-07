@@ -1,9 +1,17 @@
 <template>
   <i-modal v-model="chooseTokenModalOpened" size="md" data-cy="fee_changed_modal">
-    <template slot="header">Fee changed</template>
-    <p>The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to break-even costs.</p>
+    <template #header>Fee changed</template>
+    <p>
+      The price for zkSync transactions fluctuates a little bit to make sure that zkSync runs as close as possible to
+      break-even costs.
+    </p>
     <div class="successBlock _margin-top-1">
-      <div v-for="(item, key, index) in changedFees" :key="key" class="infoBlockItem smaller" :class="{ '_margin-top-1': index > 1 }">
+      <div
+        v-for="(item, key, index) in changedFees"
+        :key="key"
+        class="infoBlockItem smaller"
+        :class="{ '_margin-top-1': index > 1 }"
+      >
         <div class="headline">{{ getFeeName(key) }}:</div>
         <div class="amount">
           <span class="tokenSymbol">{{ item.symbol }}</span>
@@ -18,7 +26,9 @@
       <i-button size="lg" variant="secondary" circle @click="proceed(false)">
         <v-icon name="ri-arrow-left-line" />
       </i-button>
-      <i-button data-cy="fee_changed_proceed_button" block size="lg" variant="secondary" @click="proceed(true)">Proceed to {{ typeName }}</i-button>
+      <i-button data-cy="fee_changed_proceed_button" block size="lg" variant="secondary" @click="proceed(true)"
+        >Proceed to {{ typeName }}
+      </i-button>
     </div>
     <i-button v-else class="_margin-top-1" block size="lg" variant="secondary" @click="proceed(false)">Ok</i-button>
   </i-modal>

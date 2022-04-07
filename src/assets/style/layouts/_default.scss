@@ -19,7 +19,8 @@ body.inkline.-light .defaultLayout {
     background: $white;
 
     .tileHeadline {
-      i, .ov-icon {
+      i,
+      .ov-icon {
         color: $black;
       }
     }
@@ -36,7 +37,8 @@ body.inkline.-dark .defaultLayout {
     background: $darkViolet;
 
     .tileHeadline {
-      i, .ov-icon {
+      i,
+      .ov-icon {
         color: $white;
       }
     }

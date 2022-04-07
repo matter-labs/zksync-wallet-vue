@@ -4,23 +4,59 @@
       <span>NFT Tokens</span>
     </div>
     <slot />
-    <div v-if="!isSearching && !hasDisplayedBalances && (accountStateLoading === false || accountStateRequested)" class="centerBlock">
+    <div
+      v-if="!isSearching && !hasDisplayedBalances && (accountStateLoading === false || accountStateRequested)"
+      class="centerBlock"
+    >
       <p class="tileText">No NFT tokens yet. You can either mint or request them from someone!</p>
-      <i-button data-cy="account_deposit_button" block link size="lg" variant="secondary" class="_margin-top-1" to="/transaction/nft/mint">+ Mint NFT</i-button>
+      <i-button
+        data-cy="account_deposit_button"
+        block
+        link
+        size="lg"
+        variant="secondary"
+        class="_margin-top-1"
+        to="/transaction/nft/mint"
+        >+ Mint NFT
+      </i-button>
     </div>
     <div v-else class="balances">
       <div v-if="!accountStateLoading || accountStateRequested">
         <div class="_display-flex _justify-content-space-between">
-          <i-button data-cy="account_deposit_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/nft/mint">+ Mint NFT</i-button>
-          <i-button data-cy="account_withdraw_button" class="_padding-y-0" link size="lg" variant="secondary" to="/transaction/nft/withdraw">
+          <i-button
+            data-cy="account_deposit_button"
+            class="_padding-y-0"
+            link
+            size="lg"
+            variant="secondary"
+            to="/transaction/nft/mint"
+            >+ Mint NFT
+          </i-button>
+          <i-button
+            data-cy="account_withdraw_button"
+            class="_padding-y-0"
+            link
+            size="lg"
+            variant="secondary"
+            to="/transaction/nft/withdraw"
+          >
             - Withdraw NFT <span class="desktopOnly">&nbsp;to L1</span>
           </i-button>
         </div>
-        <i-button data-cy="account_transfer_button" block class="_margin-y-1" size="lg" variant="secondary" to="/transaction/nft/transfer">
+        <i-button
+          data-cy="account_transfer_button"
+          block
+          class="_margin-y-1"
+          size="lg"
+          variant="secondary"
+          to="/transaction/nft/transfer"
+        >
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer NFT
         </i-button>
         <i-input ref="searchInput" v-model="search" placeholder="Filter tokens" maxlength="6" autofocus>
-          <v-icon slot="prefix" name="ri-search-line" />
+          <template #prefix>
+            <v-icon name="ri-search-line" />
+          </template>
         </i-input>
       </div>
 
@@ -33,16 +69,26 @@
         </span>
       </div>
       <div v-else class="contactsListContainer genericListContainer">
-        <div v-for="(item, tokenID) in displayedList" :key="tokenID" class="contactItem nftItem" @click.self="$router.push(`/nft/token/${tokenID}`)">
+        <div
+          v-for="(item, tokenID) in displayedList"
+          :key="tokenID"
+          class="contactItem nftItem"
+          @click.self="$router.push(`/nft/token/${tokenID}`)"
+        >
           <nuxt-link class="nftImageSide" :to="`/nft/token/${tokenID}`">
-            <img-with-loader v-if="getImageFromNFT(item.contentHash)"  :src="getImageFromNFT(item.contentHash)" :alt="`NFT-${tokenID}`" class="userImg" />
+            <img-with-loader
+              v-if="getImageFromNFT(item.contentHash)"
+              :src="getImageFromNFT(item.contentHash)"
+              :alt="`NFT-${tokenID}`"
+              class="userImg"
+            />
             <div v-else class="userImg">
               <v-icon class="_margin-x-auto" name="ri-file-line" />
             </div>
             <i-tooltip class="nftStatus" placement="left">
               <v-icon v-if="item.verified" class="nftStatusIcon verified" name="ri-check-double-line" />
               <v-icon v-else class="nftStatusIcon committed" name="ri-check-line" />
-              <template slot="body">{{ item.verified ? "Verified" : "Committed" }}</template>
+              <template #body>{{ item.verified ? "Verified" : "Committed" }}</template>
             </i-tooltip>
           </nuxt-link>
           <div class="contactInfo _pointer-events-none">
@@ -51,10 +97,17 @@
           </div>
           <div class="iconsBlock _pointer-events-none">
             <i-tooltip placement="left" trigger="click">
-              <i-button class="copyAddress" block link size="md" variant="secondary" @click="copyHash(item.contentHash)">
+              <i-button
+                class="copyAddress"
+                block
+                link
+                size="md"
+                variant="secondary"
+                @click="copyHash(item.contentHash)"
+              >
                 <v-icon name="ri-clipboard-line" />
               </i-button>
-              <template slot="body">Copied!</template>
+              <template #body>Copied!</template>
             </i-tooltip>
           </div>
         </div>
@@ -108,8 +161,8 @@ export default Vue.extend({
           if (!nftCID) {
             return [e[0], false];
           }
-          return [e[0], !!this.nftDataLoading[nftCID]];
-        }),
+          return [e[0], this.nftDataLoading[nftCID]];
+        })
       );
     },
   },
@@ -160,7 +213,7 @@ export default Vue.extend({
       width: 62px;
       justify-content: center;
       align-items: center;
-      background-color: #E2E2E2;
+      background-color: #e2e2e2;
       border-radius: 50%;
       transition: background-color $transition1;
 
@@ -168,11 +221,12 @@ export default Vue.extend({
         fill: #828282;
         transition: fill $transition1;
       }
-      
+
       img {
         border-radius: 50%;
       }
     }
+
     .nftStatus {
       position: absolute;
       width: 25px;
@@ -188,12 +242,15 @@ export default Vue.extend({
 
       .nftStatusIcon {
         transform: scale(0.9);
+
         &.verified {
           color: $green;
         }
+
         &.committed {
           color: #aa935d;
         }
+
         &.inProgress {
           color: $gray;
         }
@@ -201,10 +258,12 @@ export default Vue.extend({
     }
   }
 }
+
 body.inkline.-dark {
   .contactsListContainer .nftItem .nftImageSide {
-    &, .userImg {
-      background-color: rgba(159,166,178,.2);
+    &,
+    .userImg {
+      background-color: rgba(159, 166, 178, 0.2);
 
       &.userImg .ov-icon {
         fill: #fff;

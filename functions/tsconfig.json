@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": "functions/src",
     "lib": ["esnext", "dom"],
     "module": "esnext",
     "moduleResolution": "node",
@@ -13,5 +14,12 @@
       "firebase-functions"
     ]
   },
-  "include": ["./src"]
+  "include": [
+    "functions/src/**/*.ts"
+  ],
+  "exclude": [
+    "nuxt.config.ts",
+    "functions/node_modules",
+    "functions/lib"
+  ]
 }

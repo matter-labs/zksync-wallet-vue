@@ -1,11 +1,38 @@
 <template>
   <div class="amountInput" :class="{ error: error }">
-    <i-input ref="amountInput" v-model="inputtedAmount" data-cy="amount_block_token_input" maxlength="35" size="lg" type="text" @keyup.enter="$emit('enter')">
-      <i-button v-if="!token" slot="append" data-cy="amount_block_token_select_button" block link variant="secondary" @click="$emit('chooseToken')"> Select token</i-button>
-      <i-button v-else slot="append" data-cy="amount_block_token_select_button" block class="selectedTokenBtn" link variant="secondary" @click="$emit('chooseToken')">
-        <span class="tokenSymbol">{{ token }}</span>
-        &nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
-      </i-button>
+    <i-input
+      ref="amountInput"
+      v-model="inputtedAmount"
+      data-cy="amount_block_token_input"
+      maxlength="35"
+      size="lg"
+      type="text"
+      @keyup.enter="$emit('enter')"
+    >
+      <template #append>
+        <i-button
+          v-if="!token"
+          data-cy="amount_block_token_select_button"
+          block
+          link
+          variant="secondary"
+          @click="$emit('chooseToken')"
+        >
+          Select token
+        </i-button>
+        <i-button
+          v-else
+          data-cy="amount_block_token_select_button"
+          block
+          class="selectedTokenBtn"
+          link
+          variant="secondary"
+          @click="$emit('chooseToken')"
+        >
+          <span class="tokenSymbol">{{ token }}</span>
+          &nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
+        </i-button>
+      </template>
     </i-input>
     <div class="error" data-cy="amount_block_token_error_message">
       {{ error }}
@@ -14,14 +41,16 @@
       <div class="secondaryText">
         <token-price :symbol="token" :amount="inputtedAmountBigNumber.toString()" />
       </div>
-      <div class="linkText" data-cy="amount_block_token_max_amount" @click="chooseMaxAmount()">{{ amountInputMaxText }}: {{ maxAmount | parseBigNumberish(token) }}</div>
+      <div class="linkText" data-cy="amount_block_token_max_amount" @click="chooseMaxAmount()">
+        {{ amountInputMaxText }}: {{ maxAmount | parseBigNumberish(token) }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TokenSymbol } from "zksync/build/types";
 import { isTransactionAmountPackable } from "zksync/build/utils";
 import { DecimalBalance, ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
@@ -136,7 +165,7 @@ export default Vue.extend({
         this.$emit("input", "");
       }
     },
-    validateAmount(val: string): void {
+    validateAmount(val: string) {
       if (!val || !parseFloat(val)) {
         this.error = "Wrong amount inputted";
         return;
@@ -149,9 +178,10 @@ export default Vue.extend({
       let inputAmount = null;
       try {
         inputAmount = this.$options.filters!.parseDecimal(val, this.token);
-      } catch (error) {
-        let errorInfo = "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
-        if (error.message && error.message.search("fractional component exceeds decimals") !== -1) {
+      } catch ({ message }) {
+        let errorInfo =
+          "Amount processing error. Common reason behind it — inaccurate amount. Try again paying attention to the decimal amount number format — it should help";
+        if ((message as string).search("fractional component exceeds decimals") !== -1) {
           errorInfo = `Precision exceeded: ${this.token} doesn't support that many decimal digits`;
         }
         this.error = errorInfo;

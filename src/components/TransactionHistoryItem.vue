@@ -3,25 +3,32 @@
     <div class="status">
       <i-tooltip placement="right">
         <v-icon :name="transactionStatus.icon" :class="transactionStatus.class" />
-        <template slot="body">{{ transactionStatus.text }}</template>
+        <template #body>{{ transactionStatus.text }}</template>
       </i-tooltip>
     </div>
     <div class="mainInfo" :class="{ noInfo: isNFT || isSwap }">
       <i-tooltip>
         <div class="createdAt">{{ timeAgo }}</div>
-        <template slot="body">{{ transaction.createdAt | formatDateTime }}</template>
+        <template #body>{{ transaction.createdAt | formatDateTime }}</template>
       </i-tooltip>
-      <div v-if="!isNFT && !isSwap" :class="{ small: smallAmountText }" class="amount">{{ amount | parseBigNumberish(tokenSymbol) }}</div>
+      <div v-if="!isNFT && !isSwap" :class="{ small: smallAmountText }" class="amount">
+        {{ amount | parseBigNumberish(tokenSymbol) }}
+      </div>
       <div v-if="!isMintNFT && !isSwap" class="tokenSymbol">
         <span v-if="isNFT && tokenSymbol">NFT-</span>
         <div v-else-if="isNFT && transaction.tx && transaction.tx.contentHash" class="nft">
           <span class="contentHash">{{ transaction.tx.contentHash }}</span>
-          <i-tooltip placement="left" trigger="click" class="copyContentHash" @click.native="copy(transaction.tx.contentHash)">
+          <i-tooltip
+            placement="left"
+            trigger="click"
+            class="copyContentHash"
+            @click.native="copy(transaction.tx.contentHash)"
+          >
             <div class="iconContainer">
               <v-icon name="ri-clipboard-line" />
               <span>Copy hash</span>
             </div>
-            <template slot="body">Copied!</template>
+            <template #body>Copied!</template>
           </i-tooltip>
         </div>
         {{ tokenSymbol }}
@@ -38,8 +45,14 @@
           @click.native="$accessor.openModal(transactionTypeData.modal.key)"
         />
       </div>
-      <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">Your own account</div>
-      <nuxt-link v-else-if="transactionTypeData.showAddress && displayedAddress" class="actionValue" :to="`/contacts/${displayedAddress}`">
+      <div v-if="transactionTypeData.showAddress && isSameAddress(displayedAddress)" class="actionValue">
+        Your own account
+      </div>
+      <nuxt-link
+        v-else-if="transactionTypeData.showAddress && displayedAddress"
+        class="actionValue"
+        :to="`/contacts/${displayedAddress}`"
+      >
         {{ getAddressName(displayedAddress) }}
       </nuxt-link>
       <a
@@ -68,11 +81,11 @@
 <script lang="ts">
 import { utils } from "zksync";
 
-import moment from "moment-timezone";
+import moment from "moment";
 import Vue, { PropOptions } from "vue";
 import { BigNumberish } from "@ethersproject/bignumber";
-import { Address, TokenSymbol, ApiTransaction } from "zksync/build/types";
-import { Token, ZkContact, ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { Address, ApiTransaction, TokenSymbol } from "zksync/build/types";
+import { Token, ZkConfig, ZkContact } from "@matterlabs/zksync-nuxt-core/types";
 import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 import { getAddress } from "ethers/lib/utils";
 
@@ -89,7 +102,7 @@ export default Vue.extend({
     return {
       timeAgo: "",
       ethTxHash: "",
-      config: <ZkConfig>this.$store.getters["zk-onboard/config"],
+      config: this.$store.getters["zk-onboard/config"] as ZkConfig,
     };
   },
   computed: {
@@ -98,7 +111,9 @@ export default Vue.extend({
         this.transaction.op.type === "ChangePubKey" ||
         this.transaction.op.type === "FullExit" ||
         this.transaction.op.type === "Close" ||
-        (this.transaction.op.type === "Transfer" && this.transaction.op.amount === "0" && this.transaction.op.from === this.transaction.op.to)
+        (this.transaction.op.type === "Transfer" &&
+          this.transaction.op.amount === "0" &&
+          this.transaction.op.from === this.transaction.op.to)
       );
     },
     walletAddressFull(): Address {
@@ -327,10 +342,7 @@ export default Vue.extend({
       if (!amount) {
         return false;
       }
-      if (`${amount} ${this.tokenSymbol}`.length > 15) {
-        return true;
-      }
-      return false;
+      return `${amount} ${this.tokenSymbol}`.length > 15;
     },
   },
   mounted() {
@@ -354,11 +366,13 @@ export default Vue.extend({
       if (!time) {
         return "";
       }
-      return moment(time).tz("UTC").fromNow();
+      return moment(time).utc(true).fromNow();
     },
     getAddressName(address: string): string {
       const contactFromStore: ZkContact = this.$store.getters["zk-contacts/contactByAddress"](address);
-      return contactFromStore && !contactFromStore.deleted ? contactFromStore.name : address.replace(address.slice(6, address.length - 3), "...");
+      return contactFromStore && !contactFromStore.deleted
+        ? contactFromStore.name
+        : address.replace(address.slice(6, address.length - 3), "...");
     },
     async getWithdrawalTx() {
       const tx = this.transaction;

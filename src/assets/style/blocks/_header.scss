@@ -25,9 +25,7 @@ header {
     min-height: 60px;
   }
 
-
   &.loggedInHeader {
-
     @media screen and (min-width: $tablet) and (max-width: $desktop) {
       .pagesContainer.linksContainer {
         grid-gap: 3px;
@@ -98,7 +96,6 @@ header {
         }
       }
 
-
       .zkwallet-logo {
         width: auto !important;
         height: 100% !important;
@@ -157,7 +154,8 @@ header {
       text-decoration: none;
       transition: color $transition1;
 
-      em, i {
+      em,
+      i {
         padding-left: 2px;
         color: $gray;
         font-size: 12px;
@@ -361,7 +359,6 @@ body.inkline.-light header {
 
   .pagesContainer,
   .mobileFooter {
-
     @media screen and (max-width: $mobile) {
       background-color: $white;
     }

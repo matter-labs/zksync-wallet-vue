@@ -1,7 +1,7 @@
 <template>
   <div :class="{ disabled: !enabled }" @click="proceed">
-    <img src="@/static/images/providers/layer-swap-light.svg" v-if="isDarkTheme" alt="LayerSwap" />
-    <img src="@/static/images/providers/layer-swap.svg" v-else alt="LayerSwap" />
+    <img v-if="isDarkTheme" src="@/static/images/providers/layer-swap-light.svg" alt="LayerSwap" />
+    <img v-else src="@/static/images/providers/layer-swap.svg" alt="LayerSwap" />
   </div>
 </template>
 <script lang="ts">

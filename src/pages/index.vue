@@ -3,19 +3,31 @@
     <i-container>
       <h1>Connect your L1 ETH Wallet to start</h1>
       <div class="container-fluid _flex-direction-row _display-flex connections">
-        <button data-cy="core_connect_wallet_button" class="tileContainer _margin-top-1 _margin-right-05 _margin-md-right-2 _text-center" @click="customWallet()">
+        <button
+          data-cy="core_connect_wallet_button"
+          class="tileContainer _margin-top-1 _margin-right-05 _margin-md-right-2 _text-center"
+          @click="customWallet()"
+        >
           <div class="tile">
             <img src="@/assets/imgs/wallets/external.png" alt="External" />
           </div>
           <div class="tileName">Ethereum Wallet</div>
         </button>
-        <button data-cy="core_connect_wallet_wc_button" class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center" @click="walletConnect()">
+        <button
+          data-cy="core_connect_wallet_wc_button"
+          class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center"
+          @click="walletConnect()"
+        >
           <div class="tile">
             <img src="@/assets/imgs/wallets/wc.png" alt="Wallet Connect" />
           </div>
           <div class="tileName">Wallet Connect</div>
         </button>
-        <button data-cy="core_connect_wallet_argent_button" class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center" @click="walletConnect(true)">
+        <button
+          data-cy="core_connect_wallet_argent_button"
+          class="tileContainer _margin-top-1 _margin-left-05 _margin-md-left-2 _text-center"
+          @click="walletConnect(true)"
+        >
           <div class="tile">
             <img src="@/assets/imgs/wallets/argent.svg" alt="Argent" />
           </div>
@@ -30,7 +42,12 @@
           </span>
         </h2>
         <h3 class="noteContainer">Or you’ve receive funds on your exchange address such as Binance?</h3>
-        <a data-cy="core_connect_wallet_button" class="tileContainer _margin-right-05 _margin-md-right-2 _text-center" href="https://withdraw.zksync.io" target="_blank">
+        <a
+          data-cy="core_connect_wallet_button"
+          class="tileContainer _margin-right-05 _margin-md-right-2 _text-center"
+          href="https://withdraw.zksync.io"
+          target="_blank"
+        >
           <div class="tile">
             <img src="@/assets/imgs/logos/symbol.svg" alt="Alternative withdraw" />
           </div>
@@ -47,6 +64,11 @@ import Vue from "vue";
 
 export default Vue.extend({
   layout: "index",
+  computed: {
+    isMainnet(): boolean {
+      return this.$store.getters["zk-provider/network"] === "mainnet";
+    },
+  },
   mounted() {
     this.$analytics.track("visit_login");
   },
@@ -56,25 +78,28 @@ export default Vue.extend({
       if (!refreshWalletTry) {
         return this.$store.dispatch("zk-account/logout");
       } else {
-        this.$analytics.track("login", { connectionType: "Ethereum Wallet", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
+        this.$analytics.track("login", {
+          connectionType: "Ethereum Wallet",
+          wallet: this.$store.getters["zk-onboard/selectedWallet"],
+        });
         return this.$router.push("/account");
       }
     },
     async walletConnect(argent: boolean = false) {
-      const refreshWalletTry = await this.$store.dispatch(`zk-onboard/${argent ? 'loginWithArgent' : 'loginWithWalletConnect'}`);
+      const refreshWalletTry = await this.$store.dispatch(
+        `zk-onboard/${argent ? "loginWithArgent" : "loginWithWalletConnect"}`
+      );
       if (!refreshWalletTry) {
         return this.$store.dispatch("zk-account/logout");
       } else {
-        this.$analytics.track("login", { connectionType: "WalletConnect", wallet: this.$store.getters["zk-onboard/selectedWallet"] });
+        this.$analytics.track("login", {
+          connectionType: "WalletConnect",
+          wallet: this.$store.getters["zk-onboard/selectedWallet"],
+        });
         return this.$router.push("/account");
       }
     },
   },
-  computed: {
-    isMainnet (): boolean {
-      return this.$store.getters["zk-provider/network"] === "mainnet";
-    },
-  }
 });
 </script>
 <style lang="scss" scoped>
@@ -97,14 +122,20 @@ export default Vue.extend({
 
     .tileContainer {
       cursor: pointer;
+
       &:hover .tile {
         box-shadow: $hoverShadow;
+      }
+
+      &:focus {
+        outline-offset: 0.5rem;
+        border-radius: 0.5rem;
+        outline-width: 0.2rem;
       }
 
       @media screen and (min-width: $mobile) {
         padding-bottom: $footerHeight;
       }
-
 
       .tile {
         max-width: 8rem;
