@@ -1,53 +1,50 @@
 <template>
   <div class="socialIcons">
-    <a v-for="(socialProfile, numIndex) in socialNetworks" :key="numIndex" :href="socialProfile.url" class="socialItem" target="_blank">
-      <i v-if="socialProfile.icon" :class="socialProfile.icon" />
-      <div v-else-if="socialProfile.img" class="svgContainer" v-html="socialIcons[socialProfile.img]"></div>
+    <a
+      v-for="socialProfile in socialNetworks"
+      :key="socialProfile.name"
+      :href="socialProfile.url"
+      class="socialItem"
+      target="_blank"
+    >
+      <v-icon :name="socialProfile.icon" :class="[socialProfile.icon]" />
     </a>
   </div>
 </template>
 
 <script lang="ts">
-import socialIcons from "@/utils/socialIcons";
-import { SingleIcon } from "@/types/lib";
-import Vue, { PropOptions } from "vue";
-
-type Location = "header" | "footer";
+import Vue, { PropType } from "vue";
+import { SingleIcon, Location } from "@/types/lib";
 
 export default Vue.extend({
   props: {
     location: {
       required: false,
-      type: String,
+      type: String as PropType<Location>,
       default: "header",
-    } as PropOptions<Location>,
+    },
   },
   data() {
     return {
-      socialIcons,
-    };
-  },
-  computed: {
-    socialNetworks(): SingleIcon[] {
-      const socialIcons = <SingleIcon[]>[
+      socialProfiles: [
         {
           name: "Medium Blog",
-          img: "medium",
+          icon: "fa-medium-m",
           url: "https://medium.com/matter-labs",
         },
         {
           name: "Discord Community",
-          img: "discord",
+          icon: "ri-discord-fill",
           url: "https://discord.com/invite/px2aR7w",
         },
         {
           name: "Telegram Community",
-          img: "telegram",
+          icon: "fa-telegram-plane",
           url: "https://t.me/zksync",
         },
         {
           name: "Twitter Community",
-          img: "twitter",
+          icon: "bi-twitter",
           url: "https://twitter.com/zksync",
         },
         {
@@ -56,8 +53,12 @@ export default Vue.extend({
           url: "https://zksync.io/contact.html",
           hideIn: "footer",
         },
-      ];
-      return socialIcons.filter((item) => !item.hideIn || item.hideIn !== this.location);
+      ] as SingleIcon[],
+    };
+  },
+  computed: {
+    socialNetworks(): SingleIcon[] {
+      return this.socialProfiles.filter((item: SingleIcon) => item?.hideIn !== this.location);
     },
   },
 });

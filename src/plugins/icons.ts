@@ -11,8 +11,9 @@
  * @link https://oh-vue-icons.netlify.app
  */
 import { Plugin } from "@nuxt/types";
-// @ts-ignore
-import OhVueIcon from "oh-vue-icons/dist/v2/icon.umd";
+import OhVueIcon from "oh-vue-icons";
+import { FaMediumM, FaTelegramPlane } from "oh-vue-icons/icons/fa";
+import { BiGithub, BiTwitter } from "oh-vue-icons/icons/bi";
 import { MdVpnkeyRound } from "oh-vue-icons/icons/md";
 import { CoEthereum } from "oh-vue-icons/icons/co";
 import { LaChargingStationSolid } from "oh-vue-icons/icons/la";
@@ -63,6 +64,7 @@ import {
   RiSendPlaneFill,
   RiSunFill,
   RiWalletLine,
+  RiDiscordFill,
   RiWifiLine,
 } from "oh-vue-icons/icons/ri";
 import Vue from "vue";
@@ -72,6 +74,11 @@ import Vue from "vue";
  */
 const iconsPlugin: Plugin = () => {
   OhVueIcon.add(
+    BiGithub,
+    RiDiscordFill,
+    BiTwitter,
+    FaMediumM,
+    FaTelegramPlane,
     LaChargingStationSolid,
     MdVpnkeyRound,
     RiGalleryLine,

@@ -3,8 +3,10 @@
     <user-img :wallet="wallet" @click="$emit('clickPicture')" />
     <span class="walletValue walletAddress">{{ wallet }}</span>
     <i-tooltip placement="left" trigger="click">
-      <i class="copy" @click="copyAddress()"><v-icon name="ri-clipboard-line" /></i>
-      <template slot="body">Copied!</template>
+      <i class="copy" @click="copyAddress()">
+        <v-icon name="ri-clipboard-line" />
+      </i>
+      <template #body>Copied!</template>
     </i-tooltip>
   </div>
 </template>

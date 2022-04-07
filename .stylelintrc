@@ -9,7 +9,7 @@
     "at-rule-no-unknown": [
       true,
       {
-        "severity": "notice"
+        "severity": "warning"
       }
     ],
     "scss/double-slash-comment-whitespace-inside": null,

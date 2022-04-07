@@ -1,10 +1,10 @@
 <template>
   <div class="footerModalContainer">
     <i-modal v-model="modal" size="md">
-      <template slot="header">
+      <template #header>
         <b>Information</b>
       </template>
-      <template slot="default">
+      <template #default>
         <a class="modalFooterBtn big" href="https://zksync.io/userdocs/intro.html" target="_blank">
           <v-icon name="ri-book-2-line" />
           <span>Docs</span>
@@ -30,7 +30,7 @@
           <span>Environment</span>
         </div>
       </template>
-      <template slot="footer">
+      <template #footer>
         <div class="_display-flex _justify-content-space-between">
           <block-system-info />
           <block-modals-network-switch />

@@ -1,6 +1,6 @@
-import { Context } from "@nuxt/types";
+import { Context, Middleware } from "@nuxt/types";
 
-export default ({ redirect, store, route }: Context) => {
+const AuthMiddleware: Middleware = ({ redirect, store, route }: Context) => {
   if (store.getters["zk-account/loggedIn"]) {
     if (route.path === "/") {
       return redirect("/account");
@@ -9,3 +9,5 @@ export default ({ redirect, store, route }: Context) => {
     return redirect("/");
   }
 };
+
+export default AuthMiddleware;

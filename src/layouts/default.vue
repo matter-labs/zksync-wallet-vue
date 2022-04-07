@@ -30,7 +30,10 @@ export default Vue.extend({
   mixins: [SentryMixin, AnalyticsMixin],
   computed: {
     loggingIn(): boolean {
-      return this.$store.getters["zk-onboard/onboardStatus"] === "connecting" || this.$store.getters["zk-onboard/restoringSession"];
+      return (
+        this.$store.getters["zk-onboard/onboardStatus"] === "connecting" ||
+        this.$store.getters["zk-onboard/restoringSession"]
+      );
     },
     loggedIn(): boolean {
       return this.$store.getters["zk-onboard/onboardStatus"] === "authorized";

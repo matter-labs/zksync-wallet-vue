@@ -82,7 +82,8 @@
       &.disabled {
         cursor: default;
 
-        .tokenSymbol > span, .rightSide {
+        .tokenSymbol > span,
+        .rightSide {
           opacity: 0.5;
         }
       }
