@@ -13,8 +13,6 @@ jobs:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} || ${{ github.event.repository.full_name == github.repository }}
     runs-on: ubuntu-latest
     environment: test
-    outputs:
-      output_urls: "${{ steps.deploy_preview.outputs.urls }}"
     steps:
       - uses: actions/checkout@v2
 
@@ -53,49 +51,3 @@ jobs:
           args: deploy --only functions
         env:
           FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
-
-  testing:
-    needs: build_and_preview
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-
-      - name: Checkout zksync-test-ui repository
-        uses: actions/checkout@v2
-        with:
-          repository: matter-labs/zksync-test-ui
-          token: ${{ secrets.TEST_ACCESS_TOKEN }}
-
-      - name: Preparing to launch of tests
-        run: |
-          chmod +x ./wallet_tests_launcher.sh
-          bash ./cli-dev.sh clean yarn
-          yarn install --immutable
-
-      # this is needed to run chromium (puppeteer / dappeteer) with metamask extension.
-      - name: Install setup-node
-        uses: actions/setup-node@v1
-        env:
-          PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
-        with:
-          args: install
-
-      - run: mkdir -p artifacts
-
-      - name: Launch tests
-        uses: mujo-code/puppeteer-headful@8baa091f83c74d2eda8603b7f9990b20535e7a9c
-        env:
-          CI: 'true'
-          DAPP_HOST: "${{fromJson(needs.build_and_preview.outputs.output_urls)[0]}}"
-          ZKSYNC_NETWORK: 'rinkeby'
-        with:
-          args: ./wallet_tests_launcher.sh v1 sanity
-
-      - name: Save artifacts
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: wallet-artifacts_${{ github.run_number }}_${{ steps.date.outputs.date }}
-          path: artifacts/*
