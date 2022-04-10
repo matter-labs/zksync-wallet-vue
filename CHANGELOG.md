@@ -1,3 +1,19 @@
+# [3.16.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.5...3.16.0) (2022-04-10)
+
+
+### Bug Fixes
+
+* add missing @semantic-release/git ([c8fbb0f](https://github.com/matter-labs/zksync-wallet-vue/commit/c8fbb0f63037b057e860dd2e02f9b57fd34e491e))
+* change default branch name in release config ([ece3494](https://github.com/matter-labs/zksync-wallet-vue/commit/ece34940c8fa37cd71493855b64d9b45cc56d41b))
+* functions build issue ([#257](https://github.com/matter-labs/zksync-wallet-vue/issues/257)) ([e7d6fc5](https://github.com/matter-labs/zksync-wallet-vue/commit/e7d6fc5e0f8934dceb9cffaa7925103e1095fcb0))
+* rollback release config plugins ([eb37d37](https://github.com/matter-labs/zksync-wallet-vue/commit/eb37d373c27168d4a67c9eb197100eedc6c33252))
+* update yarn.lock ([12c2f5b](https://github.com/matter-labs/zksync-wallet-vue/commit/12c2f5ba2fc112b2a4518e0bc19fc862c1c1d5ab))
+
+
+### Features
+
+* shared configs applied and code refactored accordingly ([#243](https://github.com/matter-labs/zksync-wallet-vue/issues/243)) ([1e7230c](https://github.com/matter-labs/zksync-wallet-vue/commit/1e7230c2b0c92e8ab69f10b35de9cb54560daa55))
+
 ## [3.15.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.4...3.15.5) (2022-04-07)
 
 
