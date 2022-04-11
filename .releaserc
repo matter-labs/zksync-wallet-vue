@@ -5,7 +5,7 @@
   "npmPublish": false,
   "branches": [
     "+([0-9])?(.{+([0-9]),x}).x",
-    "main",
+    "master",
     "next",
     {
       "name": "beta",
@@ -19,29 +19,27 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     "@semantic-release/release-notes-generator",
-    [ "@semantic-release/changelog", {
-      "changelogFile": "CHANGELOG.md"
-    } ],
     [
       "@semantic-release/npm",
       {
         "npmPublish": false
       }
     ],
+    "@semantic-release/github",
     [
-      "@semantic-release/exec",
+      "@semantic-release/changelog",
       {
-        "prepareCmd": "APP_GIT_VERSION=${nextRelease.version} yarn ci:generate",
-        "publishCmd": "zip -r dist.zip dist"
+        "changelogFile": "CHANGELOG.md"
       }
     ],
     [
-      "@semantic-release/github",
+      "@semantic-release/git",
       {
-        "assets": [ "package.json", "yarn.lock", "CHANGELOG.md", {
-          "path": "dist.zip",
-          "label": "Dist package"
-        } ],
+        "assets": [
+          "package.json",
+          "yarn.lock",
+          "CHANGELOG.md"
+        ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ]
