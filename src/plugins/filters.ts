@@ -1,5 +1,5 @@
 import Vue from "vue";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Plugin } from "@nuxt/types";
 
 const filtersPlugin: Plugin = () => {
