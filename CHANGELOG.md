@@ -1,3 +1,10 @@
+## [3.16.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.2...3.16.3) (2022-04-11)
+
+
+### Bug Fixes
+
+* arrow back button ([#244](https://github.com/matter-labs/zksync-wallet-vue/issues/244)) ([6227681](https://github.com/matter-labs/zksync-wallet-vue/commit/6227681a7bcd0d084eb1afe64564ff12cf83c4a8))
+
 ## [3.16.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.1...3.16.2) (2022-04-11)
 
 
