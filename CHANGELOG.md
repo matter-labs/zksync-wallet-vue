@@ -1,3 +1,10 @@
+## [3.16.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.3...3.16.4) (2022-04-11)
+
+
+### Bug Fixes
+
+* revert replacing moment-timezone with moment ([#260](https://github.com/matter-labs/zksync-wallet-vue/issues/260)) ([470c179](https://github.com/matter-labs/zksync-wallet-vue/commit/470c179026b2cb25ce6f7190f945fece56a9df9a))
+
 ## [3.16.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.2...3.16.3) (2022-04-11)
 
 
