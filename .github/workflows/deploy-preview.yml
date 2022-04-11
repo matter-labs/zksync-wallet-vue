@@ -36,7 +36,7 @@ jobs:
 
       - name: "Lint check"
         run: |
-          yarn dlx eslint --config .eslintrc.js --ignore-path .eslintignore "src/**/*.{ts,vue,js}" --max-warnings 0
+          yarn lint --max-warnings 0
 
       - name: "Generate rinkeby dist"
         run: yarn run ci:build:rinkeby
