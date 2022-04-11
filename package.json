@@ -34,7 +34,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "3.16.0",
+  "version": "3.16.3",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
@@ -55,7 +55,7 @@
     "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
   },
   "dependencies": {
-    "@matterlabs/zksync-nuxt-core": "1.7.4",
+    "@matterlabs/zksync-nuxt-core": "1.7.6",
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.1.7",
@@ -151,7 +151,7 @@
     "generate": "nuxt generate --fail-on-error",
     "lint": "eslint --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js}",
     "lint:fix": "eslint --fix --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js} --fix",
-    "local": "sh ./cli-process-env.sh 'rinkeby' 'prod' 1 1",
+    "local": "sh ./cli-process-env.sh 'rinkeby' 'dev' 1 1",
     "postinstall": "husky install",
     "semantic-release": "semantic-release",
     "spell-check": "cspell -c cspell.json src/**/*.{ts,vue,js} *.md",
