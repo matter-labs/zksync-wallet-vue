@@ -30,7 +30,7 @@ export default Vue.extend({
     async getEstimatedDepositFee(): Promise<void> {
       this.depositFeeLoading = true;
       try {
-        const gasPrice = await this.$store.getters["zk-wallet/syncWallet"]?.ethSigner.provider.getGasPrice();
+        const gasPrice = await this.$store.getters["zk-onboard/web3Provider"].getGasPrice();
         const total = BigNumber.from(ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT);
         this.depositFee = gasPrice.mul(total).toString();
       } catch (error) {
