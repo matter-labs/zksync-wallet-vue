@@ -46,7 +46,7 @@ export const actions = actionTree(
       }
       commit("setNFTLoading", { cid, status: true });
       try {
-        const ipfsGateway = <ModuleOptions>rootGetters["zk-onboard/options"].ipfsGateway;
+        const ipfsGateway = (<ModuleOptions>rootGetters["zk-onboard/options"]).ipfsGateway;
         if (!nftCIDPromise[cid] || force) {
           nftCIDPromise[cid] = fetch(`${ipfsGateway}/ipfs/${cid}`);
         }
@@ -58,19 +58,30 @@ export const actions = actionTree(
           });
           return;
         }
-        const data = await res.json();
-        if (typeof data === "object" && (data.image || data.name || data.description)) {
-          if (typeof data.image === "string") {
-            if (data.image.startsWith("ipfs://")) {
-              data.image = data.image.replace("ipfs://", ipfsGateway + "/ipfs/");
+        const contentType: string | undefined = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await res.clone().json();
+          if (typeof data === "object" && (data.image || data.name || data.description)) {
+            if (typeof data.image === "string") {
+              if (data.image.startsWith("ipfs://")) {
+                data.image = data.image.replace("ipfs://", ipfsGateway + "/ipfs/");
+              }
             }
+            commit("setNFT", {
+              cid,
+              exists: true,
+              image: data.image,
+              name: data.name,
+              description: data.description,
+            });
           }
+        } else if (contentType && contentType.includes("image/")) {
           commit("setNFT", {
             cid,
             exists: true,
-            image: data.image,
-            name: data.name,
-            description: data.description,
+            image: `${ipfsGateway}/ipfs/${cid}`,
+            name: "",
+            description: "",
           });
         }
       } catch (error) {

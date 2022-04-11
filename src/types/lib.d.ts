@@ -11,7 +11,7 @@ export interface NFTItem {
   exists: boolean;
   name?: string;
   description?: string;
-  image?: `https://${string}`;
+  image?: string;
 }
 
 export interface ZkNFTState {

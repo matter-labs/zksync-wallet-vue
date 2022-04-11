@@ -358,34 +358,6 @@ const config = {
    * Build configuration
    **/
   build: {
-    filenames: { chunk: () => `[name]_Y2ZjItY_${isProduction ? "[contenthash]" : ""}.js` },
-    cache: true,
-    cssSourceMap: !isProduction,
-    hardSource: isProduction,
-    parallel: isProduction,
-    babel: {
-      compact: true,
-    },
-    postcss: {
-      plugins: {
-        autoprefixer: {},
-      },
-    },
-    corejs: 3,
-    ssr: false,
-    extractCSS: {
-      ignoreOrder: true,
-    },
-    optimization: {
-      removeAvailableModules: true,
-      flagIncludedChunks: true,
-      mergeDuplicateChunks: true,
-      splitChunks: {
-        chunks: "async",
-        maxSize: 200000,
-      },
-      minimize: isProduction,
-    },
     plugins: [
       new DefinePlugin({
         "process.VERSION": process.env.APP_GIT_VERSION,
