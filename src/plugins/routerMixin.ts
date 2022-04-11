@@ -7,7 +7,7 @@ const routerMixin = {
       fromRoute: null,
     };
   },
-  beforeRouteEnter(to: Route, from: Route, next: NavigationGuardNext<Vue>) {
+  beforeRouteEnter(_to: Route, from: Route, next: NavigationGuardNext<Vue>) {
     next((vm) => {
       vm.fromRoute = from;
       for (const children of vm.$children) {

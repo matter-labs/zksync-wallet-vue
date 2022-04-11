@@ -262,8 +262,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
-import { RawLocation, Route } from "vue-router/types";
+import Vue from "vue";
+import { RawLocation } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
 import {
@@ -285,7 +285,7 @@ const feeNameDict = new Map([
 ]);
 
 export default Vue.extend({
-  data () {
+  data() {
     return {
       inputtedAmount: this.$store.getters["zk-transaction/amount"],
       inputtedAddress: this.$store.getters["zk-transaction/address"],
@@ -311,7 +311,11 @@ export default Vue.extend({
       return Boolean(this.chosenToken && this.mainToken === "L2-NFT" && !this.nftExists && !this.nftExistsLoading);
     },
     routeBack(): RawLocation {
-      if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transaction/withdraw") {
+      if (
+        this.fromRoute &&
+        this.fromRoute.fullPath !== this.$route.fullPath &&
+        this.fromRoute.path !== "/transaction/withdraw"
+      ) {
         return { path: this.fromRoute.path, query: this.fromRoute.query, params: this.fromRoute.params };
       }
       if (this.mainToken === "L2-NFT" || this.type === "MintNFT") {
@@ -683,7 +687,7 @@ export default Vue.extend({
     showChangeFeeTokenModal() {
       this.chooseTokenModal = "feeToken";
       this.$analytics.track("visit_change_fee_token");
-    }
+    },
   },
 });
 </script>

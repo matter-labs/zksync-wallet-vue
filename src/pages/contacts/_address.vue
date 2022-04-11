@@ -68,7 +68,7 @@ export default Vue.extend({
   },
   data() {
     return {
-      address: <Address>"",
+      address: "" as Address,
       contactModal: {
         type: "add" as "add" | "edit",
         enabled: false,
