@@ -285,14 +285,7 @@ const feeNameDict = new Map([
 ]);
 
 export default Vue.extend({
-  props: {
-    fromRoute: {
-      required: false,
-      type: Object,
-      default: () => {},
-    } as PropOptions<Route>,
-  },
-  data() {
+  data () {
     return {
       inputtedAmount: this.$store.getters["zk-transaction/amount"],
       inputtedAddress: this.$store.getters["zk-transaction/address"],
@@ -318,13 +311,15 @@ export default Vue.extend({
       return Boolean(this.chosenToken && this.mainToken === "L2-NFT" && !this.nftExists && !this.nftExistsLoading);
     },
     routeBack(): RawLocation {
-      if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath) {
+      if (this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transaction/withdraw") {
         return { path: this.fromRoute.path, query: this.fromRoute.query, params: this.fromRoute.params };
       }
       if (this.mainToken === "L2-NFT" || this.type === "MintNFT") {
         return "/account/nft";
+      } else if (this.type === "Deposit") {
+        return "/account/top-up";
       }
-      return "/account/top-up";
+      return "/account";
     },
     type(): ZkTransactionType {
       return this.$store.getters["zk-transaction/type"];
@@ -595,7 +590,6 @@ export default Vue.extend({
           this.trackTransaction(true);
         } finally {
           this.loading = false;
-          console.log("error", this.$store.getters["zk-transaction/error"]);
           if (this.$store.getters["zk-transaction/error"]) {
             this.checkCPK();
           }
@@ -689,7 +683,7 @@ export default Vue.extend({
     showChangeFeeTokenModal() {
       this.chooseTokenModal = "feeToken";
       this.$analytics.track("visit_change_fee_token");
-    },
+    }
   },
 });
 </script>
