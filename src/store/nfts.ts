@@ -60,7 +60,7 @@ export const actions = actionTree(
         }
         const contentType: string | undefined = res.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
-          const data = await res.clone().json();
+          const data = res.bodyUsed ? res : await res.json();
           if (typeof data === "object" && (data.image || data.name || data.description)) {
             if (typeof data.image === "string") {
               if (data.image.startsWith("ipfs://")) {
