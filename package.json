@@ -34,7 +34,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "3.16.3",
+  "version": "3.16.4",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
@@ -63,6 +63,7 @@
     "blockies-ts": "1.0.0",
     "lottie-web": "^5.7.8",
     "mixpanel-browser": "^2.42.0",
+    "moment-timezone": "^0.5.34",
     "multiformats": "^9.4.7",
     "nuxt": "^2.15.8",
     "nuxt-typed-vuex": "^0.3.0",
@@ -98,7 +99,6 @@
     "husky": "^7.0.0",
     "jest": "^26.6.3",
     "lint-staged": "^12.1.5",
-    "moment": "^2.29.2",
     "node-sass": "^4.14.0",
     "qrcode": "^1.0.0",
     "sass-loader": "^10.1.1",
