@@ -89,38 +89,56 @@ interface DropdownOption {
 }
 
 export default Vue.extend({
-  name: "IndexHeader",
   data() {
-    const config: ZkConfig = this.$store.getters["zk-onboard/config"];
     return {
       firstHovered: false,
       opened: false,
       dropdownOpened: false,
-      dropdownOptions: [
+    };
+  },
+  computed: {
+    dropdownOptions(): DropdownOption[] {
+      return [
         {
           name: "Explore zkSync",
-          link: "https://hub.zksync.io",
+          link: "https://ecosystem.zksync.io",
           isDividerAfter: true,
+        },
+
+        {
+          name: "zkSync v2.0",
+          link: "https://portal.zksync.io",
+        },
+        {
+          name: "Docs v2.0",
+          link: "https://v2-docs.zksync.io",
         },
         {
           name: "Block Explorer",
-          link: config.zkSyncNetwork.explorer,
+          link: this.config.zkSyncNetwork.explorer,
         },
         {
           name: "zkCheckout",
-          link: "https://checkout.zksync.io",
+          link: this.checkoutLink,
         },
         {
-          name: "Out-of-gas helper",
-          link: config.zkSyncNetwork.tools.withdrawal,
+          name: "Out-of-gas utility",
+          link: this.config.zkSyncNetwork.tools.withdrawal,
         },
         {
           name: "Alternative Withdrawal",
-          link: config.zkSyncNetwork.tools.withdrawal,
-          isDividerAfter: true,
+          link: this.config.zkSyncNetwork.tools.forcedExit,
         },
-      ] as DropdownOption[],
-    };
+      ];
+    },
+    config(): ZkConfig {
+      return this.$store.getters["zk-onboard/config"];
+    },
+    checkoutLink(): string {
+      const postfix =
+        this.config.zkSyncNetwork.ethereumNetwork === "mainnet" ? "" : `-${this.config.zkSyncNetwork.ethereumNetwork}`;
+      return `https://checkout${postfix}.zksync.io`;
+    },
   },
   watch: {
     dropdownOpened(val): void {
