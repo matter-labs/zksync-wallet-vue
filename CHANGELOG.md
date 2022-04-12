@@ -1,3 +1,12 @@
+## [3.16.8](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.7...3.16.8) (2022-04-12)
+
+
+### Bug Fixes
+
+* checkout link fixed, menu items updated, fixed dropdown arrow coloring ([#262](https://github.com/matter-labs/zksync-wallet-vue/issues/262)) ([ab71ba0](https://github.com/matter-labs/zksync-wallet-vue/commit/ab71ba05186452276f68e0e42cb75bf946296260))
+* dark-theme-specific UI fix for the Wallet Connect popup ([#248](https://github.com/matter-labs/zksync-wallet-vue/issues/248)) ([aef058f](https://github.com/matter-labs/zksync-wallet-vue/commit/aef058f493a3bafd976f72dc45ff29291eaf873f))
+* handle image only nft, handle json data stream warning ([#261](https://github.com/matter-labs/zksync-wallet-vue/issues/261)) ([9fbfe09](https://github.com/matter-labs/zksync-wallet-vue/commit/9fbfe095b87127d5f154709ef8e45952496dc8d1))
+
 ## [3.16.7](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.6...3.16.7) (2022-04-12)
 
 
