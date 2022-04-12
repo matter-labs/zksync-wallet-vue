@@ -1,3 +1,10 @@
+## [3.16.9](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.8...3.16.9) (2022-04-12)
+
+
+### Bug Fixes
+
+* remove concurrency settings from deploy-prod ([e68081d](https://github.com/matter-labs/zksync-wallet-vue/commit/e68081d8f08daef924d868fb9a53a1041536c610))
+
 ## [3.16.8](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.7...3.16.8) (2022-04-12)
 
 
