@@ -4,10 +4,13 @@ import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { version as zkSyncVersion } from "zksync/package.json";
 
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
-import { Configuration, DefinePlugin } from "webpack";
+import { Configuration } from "webpack";
+
+const packageData = require("./package.json");
+const gitVersion = packageData.version;
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
-const isLocalhost: boolean = process.env.IS_LOCALHOST !== undefined;
+const isLocalhost: boolean = process.env.IS_LOCALHOST ?? false;
 const isDebugEnabled: boolean = appEnv === "dev";
 const isProduction: boolean = appEnv === "prod";
 const pageTitle = "zkSync Wallet";
@@ -65,7 +68,7 @@ const config = {
       token: `${process.env.MIXPANEL_TOKEN}`,
     },
     git: {
-      version: `${process.env.APP_GIT_VERSION}`,
+      version: gitVersion,
       revision: gitRevision as string,
     },
     zksyncVersion: zkSyncVersion,
@@ -253,7 +256,13 @@ const config = {
   css: ["@/assets/style/main.scss"],
   /**
    * Plugins that should be loaded before the mounting
-   */ plugins: ["@/plugins/icons", "@/plugins/routerMixin", "@/plugins/filters", "@/plugins/restoreSession", { src: "@/plugins/analytics", mode: "client" }],
+   */ plugins: [
+    "@/plugins/icons",
+    "@/plugins/routerMixin",
+    "@/plugins/filters",
+    "@/plugins/restoreSession",
+    { src: "@/plugins/analytics", mode: "client" },
+  ],
 
   styleResources: {
     scss: ["@/assets/style/vars/_variables.scss"],
@@ -386,11 +395,6 @@ const config = {
       },
       minimize: isProduction,
     },
-    plugins: [
-      new DefinePlugin({
-        "process.VERSION": process.env.APP_GIT_VERSION,
-      }),
-    ],
     transpile: ["oh-vue-icons", "@inkline/inkline", "iconsPlugin", "filtersPlugin", "restoreSessionPlugin"],
     extend: (config: Configuration) => {
       config.node = {

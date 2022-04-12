@@ -3,7 +3,7 @@
     <div class="top-up-tile tileBlock">
       <h3 class="tileHeadline withBtn h3">
         <nuxt-link to="/account" class="_icon-wrapped -rounded -sm returnBtn _display-flex">
-          <v-icon name="ri-arrow-left-line" scale="1"/>
+          <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
         Top&nbsp;up
       </h3>

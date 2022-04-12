@@ -114,14 +114,14 @@
   },
   "lint-staged": {
     "*.{js,ts}": [
-      "eslint --config .eslintrc.js --ignore-path .eslintignore",
+      "eslint --config .eslintrc.js --fix --ignore-path .eslintignore",
       "prettier -w"
     ],
     "*.scss": [
       "prettier -w"
     ],
     "*.vue": [
-      "eslint --config .eslintrc.js --ignore-path .eslintignore",
+      "eslint --config .eslintrc.js --fix --ignore-path .eslintignore",
       "prettier -w"
     ]
   },
