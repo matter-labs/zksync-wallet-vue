@@ -17,7 +17,7 @@ export default Vue.extend({
   },
   computed: {
     utorgConfig(): ProvidersUtorgCfg {
-      return this.$config.moonpayConfig![this.$store.getters["zk-provider/network"]] as ProvidersUtorgCfg;
+      return this.$config.utorgConfig![this.$store.getters["zk-provider/network"]] as ProvidersUtorgCfg;
     },
     disabled(): boolean {
       return !this.enabled || !this.isSupported;
