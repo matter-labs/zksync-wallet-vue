@@ -1,3 +1,17 @@
+## [3.16.6](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.5...3.16.6) (2022-04-12)
+
+
+### Bug Fixes
+
+* rollback changes to fee calculation ([#259](https://github.com/matter-labs/zksync-wallet-vue/issues/259)) ([ab0f129](https://github.com/matter-labs/zksync-wallet-vue/commit/ab0f129f4591a11893a1cd7431f5dd41ad1bcfd6))
+
+## [3.16.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.4...3.16.5) (2022-04-12)
+
+
+### Bug Fixes
+
+* use utorg config in Utorg provider ([#258](https://github.com/matter-labs/zksync-wallet-vue/issues/258)) ([8507e3c](https://github.com/matter-labs/zksync-wallet-vue/commit/8507e3c941fdc9b702dda9083e5817c7e6464e1c))
+
 ## [3.16.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.3...3.16.4) (2022-04-11)
 
 
