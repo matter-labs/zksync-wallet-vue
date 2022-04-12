@@ -38,6 +38,11 @@ footer.layout-footer {
     bottom: 0 !important;
     position: fixed;
 
+    @media screen and (max-width: $mobile) {
+      padding-bottom: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
     .row {
       font-size: $fontSizeRegular !important;
     }
@@ -89,7 +94,7 @@ button.floating-on-mobile {
     @media (max-width: $mobile) {
       bottom: 2.5rem;
       right: 1.2rem;
-      filter: opacity(0.95);
+      opacity: 0.95;
     }
   }
 }
@@ -140,7 +145,8 @@ button.floating-on-mobile {
       transition: $transition1;
       text-decoration-color: $lightViolet;
       text-decoration-style: dashed;
-      text-decoration-skip: objects spaces;
+      //noinspection CssInvalidPropertyValue
+      text-decoration-skip: objects spaces leading-spaces trailing-spaces;
 
       sup.beta {
         text-decoration: none !important;

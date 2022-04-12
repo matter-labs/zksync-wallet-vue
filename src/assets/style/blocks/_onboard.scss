@@ -46,11 +46,10 @@
       border-radius: 0 !important;
 
       /* autoprefixer: off */
+      //noinspection CssInvalidPropertyValue
       @supports (-webkit-touch-callout: none) {
-        //noinspection CssInvalidPropertyValue
         max-height: -webkit-fill-available;
         max-height: stretch;
-        //noinspection CssInvalidPropertyValue
         height: -webkit-fill-available;
         height: stretch;
       }
@@ -219,12 +218,6 @@
   }
 }
 
-#walletconnect-wrapper .walletconnect-modal__base {
-  @media (max-height: $mobile) {
-    max-width: 300px;
-  }
-}
-
 section.bn-onboard-custom.bn-onboard-modal-selected-wallet {
   display: flex;
   flex-direction: column;
@@ -262,8 +255,8 @@ aside.bn-onboard-custom.bn-onboard-modal {
   padding: 2vh 2vw;
 
   /* Avoid Chrome to see Safari hack */
+  //noinspection CssInvalidPropertyValue
   @supports (-webkit-touch-callout: none) {
-    //noinspection CssInvalidPropertyValue
     max-height: -webkit-fill-available;
     max-height: stretch;
   }
@@ -272,8 +265,8 @@ aside.bn-onboard-custom.bn-onboard-modal {
     max-height: 90vh !important;
 
     /* Avoid Chrome to see Safari hack */
+    //noinspection CssInvalidPropertyValue
     @supports (-webkit-touch-callout: none) {
-      //noinspection CssInvalidPropertyValue
       min-height: -webkit-fill-available;
       min-height: stretch;
     }
@@ -281,6 +274,22 @@ aside.bn-onboard-custom.bn-onboard-modal {
 
   section.bn-onboard-custom.bn-onboard-modal-content {
     overflow: hidden;
+  }
+}
+
+#walletconnect-wrapper .walletconnect-modal__base {
+  @media (max-height: $mobile) {
+    max-width: 300px;
+  }
+}
+
+body.inkline {
+  &.-dark {
+    #walletconnect-qrcode-modal {
+      a:not([href]):not([tabindex]) {
+        color: $lightViolet;
+      }
+    }
   }
 }
 

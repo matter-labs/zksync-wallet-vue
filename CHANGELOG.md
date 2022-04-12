@@ -1,3 +1,10 @@
+## [3.16.7](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.6...3.16.7) (2022-04-12)
+
+
+### Bug Fixes
+
+* now version is taken straight from the `package.json` ([#263](https://github.com/matter-labs/zksync-wallet-vue/issues/263)) ([d0cb54e](https://github.com/matter-labs/zksync-wallet-vue/commit/d0cb54e41bdfea1bd28bbb446ed6acb8e6c08dfa))
+
 ## [3.16.6](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.5...3.16.6) (2022-04-12)
 
 
