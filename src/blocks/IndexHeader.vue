@@ -121,14 +121,6 @@ export default Vue.extend({
           name: "zkCheckout",
           link: this.checkoutLink,
         },
-        {
-          name: "Out-of-gas utility",
-          link: this.config.zkSyncNetwork.tools.withdrawal,
-        },
-        {
-          name: "Alternative Withdrawal",
-          link: this.config.zkSyncNetwork.tools.forcedExit,
-        },
       ];
     },
     config(): ZkConfig {
