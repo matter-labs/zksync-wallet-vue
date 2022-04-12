@@ -1,8 +1,8 @@
 name: "Deploy production"
 
-concurrency:
-  group: deploy-production
-  cancel-in-progress: true
+# concurrency:
+#   group: deploy-production
+#   cancel-in-progress: true
 
 "on":
   workflow_dispatch:
