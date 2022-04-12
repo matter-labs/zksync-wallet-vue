@@ -89,6 +89,13 @@ unauthorised
 Ethereum's
 SDKs
 
+// Crypto projects
+Udbe
+Urbee
+utorg
+bybit
+okex
+
 // Famous crypto people
 Vitalik's
 Buterin's
