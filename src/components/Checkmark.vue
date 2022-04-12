@@ -25,3 +25,17 @@ export default Vue.extend({
   },
 });
 </script>
+<style lang="scss">
+.animatedCheckmark {
+  display: block;
+  width: 100%;
+  height: max-content;
+  margin: 0 auto;
+  text-align: center;
+
+  svg {
+    width: 150px !important;
+    height: 150px !important;
+  }
+}
+</style>

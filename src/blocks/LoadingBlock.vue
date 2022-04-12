@@ -84,3 +84,11 @@ export default Vue.extend({
   },
 });
 </script>
+<style lang="scss">
+.loadingBlock {
+  .spinnerContainer {
+    display: flex;
+    justify-content: center;
+  }
+}
+</style>

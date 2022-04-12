@@ -126,29 +126,29 @@ export default Vue.extend({
     };
   },
   computed: {
-    address(): Address {
-      return this.$store.getters["zk-account/address"];
+    rampConfig(): ProvidersRampCfg {
+      return this.$config.rampConfig![this.ethNetwork] as ProvidersRampCfg;
+    },
+    ethNetwork(): string {
+      return this.$store.getters["zk-provider/network"];
     },
     banxaConfig(): ProvidersBanxaCfg {
       return this.$config.banxaConfig![this.ethNetwork] as ProvidersBanxaCfg;
     },
-    ethNetwork(): string {
-      return this.$store.getters["zk-provider/network"];
+    moonpayConfig(): ProvidersMoonpayCfg {
+      return this.$config.moonpayConfig![this.ethNetwork] as ProvidersMoonpayCfg;
+    },
+    address(): Address {
+      return this.$store.getters["zk-account/address"];
+    },
+    isRampSupported(): boolean {
+      return !!this.rampConfig;
     },
     isBanxaSupported(): boolean {
       return !!this.banxaConfig;
     },
     isMoonpaySupported(): boolean {
       return !!this.moonpayConfig;
-    },
-    isRampSupported(): boolean {
-      return !!this.rampConfig;
-    },
-    moonpayConfig(): ProvidersMoonpayCfg {
-      return this.$config.moonpayConfig![this.ethNetwork] as ProvidersMoonpayCfg;
-    },
-    rampConfig(): ProvidersRampCfg {
-      return this.$config.rampConfig![this.ethNetwork] as ProvidersRampCfg;
     },
   },
   mounted() {
@@ -205,7 +205,7 @@ export default Vue.extend({
           console.warn(response);
           throw new Error(response.statusText);
         }
-        const responseData = await response.json();
+        const responseData: { signedUrl: string } | undefined = await response.json();
         /**
          * Success processing
          */

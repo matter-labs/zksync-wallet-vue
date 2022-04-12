@@ -51,7 +51,6 @@ const config = {
   telemetry: false,
   ssr: false,
   target: "static",
-  static: true,
   srcDir: "./src/",
   vue: {
     config: {
@@ -59,9 +58,10 @@ const config = {
       devtools: !isProduction,
     },
   },
-  env: <NuxtOptionsEnv>{
+  env: {
     ...process.env,
-  },
+  } as NuxtOptionsEnv,
+
   publicRuntimeConfig: {
     mixpanel: {
       isProduction: isProduction as boolean,
@@ -265,7 +265,7 @@ const config = {
   ],
 
   styleResources: {
-    scss: ["@/assets/style/vars/_variables.scss"],
+    scss: ["@/assets/style/vars/*.scss"],
   },
 
   router: {
@@ -273,7 +273,9 @@ const config = {
   },
   /**
    * Nuxt.js dev-modules
-   **/ buildModules: [
+   **/
+
+  buildModules: [
     // https://go.nuxtjs.dev/typescript
     "@nuxt/typescript-build", // https://go.nuxtjs.dev/stylelint
     "@nuxtjs/style-resources",
@@ -308,10 +310,6 @@ const config = {
    * Nuxt.js modules
    **/
   modules: ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
-
-  /**
-   * @deprecated Starting from the v.3.0.0 ```inkline/nuxt``` support will be dropped in favour to ```@tailwindcss`` / ```@tailwindUI```
-   **/
   inkline: {
     config: {
       autodetectVariant: true,

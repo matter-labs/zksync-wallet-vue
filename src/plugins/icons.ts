@@ -37,6 +37,7 @@ import {
   RiContactsBookLine,
   RiContactsLine,
   RiDeleteBinLine,
+  RiDiscordLine,
   RiErrorWarningLine,
   RiExternalLinkLine,
   RiFileLine,
@@ -48,6 +49,7 @@ import {
   RiLightbulbLine,
   RiLinkUnlinkM,
   RiLoader5Line,
+  RiMediumLine,
   RiMoonFill,
   RiMore2Fill,
   RiMore2Line,
@@ -63,6 +65,8 @@ import {
   RiSearchLine,
   RiSendPlaneFill,
   RiSunFill,
+  RiTelegramLine,
+  RiTwitterLine,
   RiWalletLine,
   RiDiscordFill,
   RiWifiLine,
@@ -130,7 +134,11 @@ const iconsPlugin: Plugin = () => {
     RiSunFill,
     CoEthereum,
     RiArrowRightUpLine,
-    RiArrowLeftRightLine
+    RiArrowLeftRightLine,
+    RiMediumLine,
+    RiTwitterLine,
+    RiDiscordLine,
+    RiTelegramLine
   ); // Used icons (to reduce bundle-size)
 
   Vue.component("VIcon", OhVueIcon);
