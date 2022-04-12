@@ -1,3 +1,31 @@
+## [3.16.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.3...3.16.4) (2022-04-11)
+
+
+### Bug Fixes
+
+* revert replacing moment-timezone with moment ([#260](https://github.com/matter-labs/zksync-wallet-vue/issues/260)) ([470c179](https://github.com/matter-labs/zksync-wallet-vue/commit/470c179026b2cb25ce6f7190f945fece56a9df9a))
+
+## [3.16.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.2...3.16.3) (2022-04-11)
+
+
+### Bug Fixes
+
+* arrow back button ([#244](https://github.com/matter-labs/zksync-wallet-vue/issues/244)) ([6227681](https://github.com/matter-labs/zksync-wallet-vue/commit/6227681a7bcd0d084eb1afe64564ff12cf83c4a8))
+
+## [3.16.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.1...3.16.2) (2022-04-11)
+
+
+### Bug Fixes
+
+* hide argent for testnets ([#251](https://github.com/matter-labs/zksync-wallet-vue/issues/251)) ([5345041](https://github.com/matter-labs/zksync-wallet-vue/commit/5345041d22084f77684eed595c0e43ec0a288351))
+
+## [3.16.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.0...3.16.1) (2022-04-11)
+
+
+### Bug Fixes
+
+* session restoring, amount to string error ([#254](https://github.com/matter-labs/zksync-wallet-vue/issues/254)) ([5d23806](https://github.com/matter-labs/zksync-wallet-vue/commit/5d2380628c8a160bb6b4fa6b97cea913d9a38342))
+
 # [3.16.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.5...3.16.0) (2022-04-10)
 
 

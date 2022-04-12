@@ -57,7 +57,7 @@ export default Vue.extend({
       return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway;
     },
     isValid(): boolean {
-      return this.inputtedHash.length > 0 && this.error === "";
+      return this.inputtedHash.length > 0 && !this.error;
     },
     isCID(): boolean {
       return isCID(this.inputtedHash);
