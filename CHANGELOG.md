@@ -1,3 +1,10 @@
+## [3.16.7](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.6...3.16.7) (2022-04-12)
+
+
+### Bug Fixes
+
+* now version is taken straight from the `package.json` ([#263](https://github.com/matter-labs/zksync-wallet-vue/issues/263)) ([d0cb54e](https://github.com/matter-labs/zksync-wallet-vue/commit/d0cb54e41bdfea1bd28bbb446ed6acb8e6c08dfa))
+
 ## [3.16.6](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.5...3.16.6) (2022-04-12)
 
 
@@ -89,7 +96,9 @@
 
 ### Bug Fixes
 
-* open meta mask wallet if meta mask wc was selected, session auto relogin, open wallet app only when logged in with wc ([#245](https://github.com/matter-labs/zksync-wallet-vue/issues/245)) ([71b3115](https://github.com/matter-labs/zksync-wallet-vue/commit/71b3115a0be93ba16f489cbd6976f42612757db9))
+* open meta mask wallet if meta mask wc was selected, session auto 
+* re-login, open wallet app only when logged in with wc ([#245](https://github.com/matter-labs/zksync-wallet-vue/issues/245)) ([71b3115](https://github.
+  com/matter-labs/zksync-wallet-vue/commit/71b3115a0be93ba16f489cbd6976f42612757db9))
 
 # [3.15.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.14.1...3.15.0) (2022-04-01)
 
