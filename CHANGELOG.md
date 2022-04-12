@@ -1,3 +1,10 @@
+## [3.16.6](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.5...3.16.6) (2022-04-12)
+
+
+### Bug Fixes
+
+* rollback changes to fee calculation ([#259](https://github.com/matter-labs/zksync-wallet-vue/issues/259)) ([ab0f129](https://github.com/matter-labs/zksync-wallet-vue/commit/ab0f129f4591a11893a1cd7431f5dd41ad1bcfd6))
+
 ## [3.16.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.4...3.16.5) (2022-04-12)
 
 
