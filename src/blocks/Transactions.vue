@@ -7,11 +7,29 @@
         <div v-if="loadingStatus === 'main'" class="nothingFound">
           <loader class="_display-block" />
         </div>
-        <div v-else-if="transactions.length === 0 && !loadingStatus" class="nothingFound" :class="{ loadMoreAvailable: !transactionHistoryAllLoaded }">
+        <div
+          v-else-if="transactions.length === 0 && !loadingStatus"
+          class="nothingFound"
+          :class="{ loadMoreAvailable: !transactionHistoryAllLoaded }"
+        >
           <span>History is empty</span>
         </div>
-        <transaction-history-item v-for="item in transactions" v-else :key="item.txHash" class="transactionItem" :transaction="item" />
-        <i-button v-if="!loadingStatus && !transactionHistoryAllLoaded" block link size="lg" variant="secondary" @click="loadMore()">Load more</i-button>
+        <transaction-history-item
+          v-for="item in transactions"
+          v-else
+          :key="item.txHash"
+          class="transactionItem"
+          :transaction="item"
+        />
+        <i-button
+          v-if="!loadingStatus && !transactionHistoryAllLoaded"
+          block
+          link
+          size="lg"
+          variant="secondary"
+          @click="loadMore()"
+          >Load more
+        </i-button>
         <div v-else-if="loadingStatus === 'previous'">
           <loader class="_display-block _margin-x-auto _margin-y-2" />
         </div>
@@ -24,6 +42,7 @@
 import Vue from "vue";
 import { ApiTransaction } from "zksync/build/types";
 import { ZkTransactionHistoryLoadingState } from "@matterlabs/zksync-nuxt-core/types";
+
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
   computed: {
@@ -44,7 +63,7 @@ export default Vue.extend({
     if (!this.transactionHistoryRequested) {
       await this.$store.dispatch("zk-history/getTransactionHistory");
     }
-    this.updateLatest();
+    await this.updateLatest();
   },
   beforeDestroy() {
     clearInterval(updateListInterval);

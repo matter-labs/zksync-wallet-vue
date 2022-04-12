@@ -1,7 +1,15 @@
 <template>
   <div class="addressInput">
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
-      <i-button v-if="isCID" class="-open-in-new-window" size="sm" variant="secondary" target="_blank" circle @click="openInNewWindow()">
+      <i-button
+        v-if="isCID"
+        class="-open-in-new-window"
+        size="sm"
+        variant="secondary"
+        target="_blank"
+        circle
+        @click="openInNewWindow()"
+      >
         <v-icon name="ri-external-link-line" />
       </i-button>
       <i-button v-else class="-open-in-new-window" size="sm" variant="secondary" circle disabled>
@@ -49,19 +57,19 @@ export default Vue.extend({
       return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway;
     },
     isValid(): boolean {
-      return this.inputtedHash.length > 0 && this.error === "";
+      return this.inputtedHash.length > 0 && !this.error;
     },
     isCID(): boolean {
       return isCID(this.inputtedHash);
     },
-    error(): string {
+    error(): string | undefined {
       try {
         if (this.inputtedHash.length) {
           contendAddressToRawContentHash(this.inputtedHash);
         }
-        return "";
-      } catch (e) {
-        return e?.message || "Unknown error";
+        return undefined;
+      } catch ({ message }) {
+        return (message as string) || "Unknown error";
       }
     },
   },

@@ -1,16 +1,26 @@
 <template>
   <div class="contactsPage dappPageWrapper">
     <i-modal v-model="contactModal.enabled" class="prevent-close" size="md">
-      <template slot="header">
+      <template #header>
         <span v-if="!openedContact">Add contact</span>
         <span v-else>Edit contact</span>
       </template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
-        <i-input ref="nameInput" v-model="contactModal.name" autofocus maxlength="20" placeholder="Name" size="lg" @keyup.enter="saveContact()" />
+        <i-input
+          ref="nameInput"
+          v-model="contactModal.name"
+          autofocus
+          maxlength="20"
+          placeholder="Name"
+          size="lg"
+          @keyup.enter="saveContact()"
+        />
         <br />
         <div v-if="contactModal.error" class="modalError _padding-bottom-2">{{ contactModal.error }}</div>
-        <i-button v-if="openedContact" block link size="md" variant="secondary" @click="deleteContact()"><v-icon name="ri-delete-bin-line" />&nbsp;&nbsp;Delete contact</i-button>
+        <i-button v-if="openedContact" block link size="md" variant="secondary" @click="deleteContact()">
+          <v-icon name="ri-delete-bin-line" />&nbsp;&nbsp;Delete contact
+        </i-button>
         <i-button block variant="secondary" size="lg" @click="saveContact()">Save</i-button>
       </div>
     </i-modal>
@@ -25,11 +35,15 @@
       </div>
       <div v-if="openedContact && openedContact.deleted === true" class="isDeleted">Contact is deleted</div>
       <wallet-address :wallet="address" class="_margin-y-1" />
-      <i-button v-if="!openedContact" block link size="md" variant="secondary" @click="addToContacts()"><v-icon name="ri-add-circle-fill" />&nbsp;&nbsp;Add to contacts</i-button>
+      <i-button v-if="!openedContact" block link size="md" variant="secondary" @click="addToContacts()">
+        <v-icon name="ri-add-circle-fill" />&nbsp;&nbsp;Add to contacts
+      </i-button>
       <i-button v-else-if="!openedContact.deleted" block link size="md" variant="secondary" @click="editContact()">
         <v-icon name="ri-pencil-fill" />&nbsp;&nbsp;Edit contact
       </i-button>
-      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()"><v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact</i-button>
+      <i-button v-else block link size="md" variant="secondary" @click="restoreDeleted()">
+        <v-icon name="ri-arrow-go-back-line" />&nbsp;&nbsp;Restore contact
+      </i-button>
       <i-button block size="lg" variant="secondary" :to="`/transaction/transfer?address=${address}`">
         <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer to address
       </i-button>
@@ -44,20 +58,19 @@ import { Route } from "vue-router/types";
 import { Address } from "zksync/build/types";
 import { getAddress } from "ethers/lib/utils";
 import { ZkContact } from "@matterlabs/zksync-nuxt-core/types";
+import computeReturnLink from "@/utils/computeReturnLink";
 
 export default Vue.extend({
-  asyncData({ from, params }) {
+  asyncData({ params }) {
     return {
-      fromRoute: from,
       address: params.address,
     };
   },
   data() {
     return {
-      fromRoute: <Route | undefined>undefined,
-      address: <Address>"",
+      address: "" as Address,
       contactModal: {
-        type: <"add" | "edit">"add",
+        type: "add" as "add" | "edit",
         enabled: false,
         error: "",
         name: "",
@@ -72,7 +85,7 @@ export default Vue.extend({
   },
   computed: {
     computedReturnLink(): Route | string {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/transaction/transfer" ? this.fromRoute : "/contacts";
+      return computeReturnLink(this, "/contacts");
     },
     openedContact(): ZkContact {
       this.forceUpdateVal;
@@ -127,7 +140,10 @@ export default Vue.extend({
       this.forceUpdateVal++;
     },
     restoreDeleted() {
-      this.$store.dispatch("zk-contacts/setContact", { address: this.openedContact.address, name: this.openedContact.name });
+      this.$store.dispatch("zk-contacts/setContact", {
+        address: this.openedContact.address,
+        name: this.openedContact.name,
+      });
       this.contactModal.enabled = false;
       this.forceUpdateVal++;
     },

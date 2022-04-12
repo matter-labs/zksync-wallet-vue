@@ -11,7 +11,7 @@ export interface NFTItem {
   exists: boolean;
   name?: string;
   description?: string;
-  image?: `https://${string}`;
+  image?: string;
 }
 
 export interface ZkNFTState {
@@ -25,7 +25,14 @@ export interface ZkNFTState {
 
 export declare interface SingleIcon {
   name: string;
-  img: string;
+  icon: string;
   url: string;
   hideIn?: string;
 }
+
+export declare type Location = "header" | "footer";
+
+export declare type ProvidersRampCfg = { url?: string; hostApiKey?: string } | undefined;
+export declare type ProvidersUtorgCfg = { url?: string; sid?: string } | undefined;
+export declare type ProvidersBanxaCfg = { url: string } | undefined;
+export declare type ProvidersMoonpayCfg = { url?: string; apiPublicKey?: string } | undefined;

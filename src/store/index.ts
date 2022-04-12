@@ -19,16 +19,16 @@ export const getters = getterTree(state, {
 });
 
 export const mutations = mutationTree(state, {
-  setAccountModalState(state: RootState, modalState: boolean): void {
+  setAccountModalState(state: RootState, modalState: boolean) {
     state.accountModalOpened = modalState;
   },
-  setCurrentModal(state: RootState, modalName: string): void {
+  setCurrentModal(state: RootState, modalName: string) {
     state.currentModal = modalName;
   },
-  setPreviousRoute(state: RootState, route: Route): void {
+  setPreviousRoute(state: RootState, route: Route) {
     state.previousRoute = route;
   },
-  removeCurrentModal(state: RootState): void {
+  removeCurrentModal(state: RootState) {
     state.currentModal = undefined;
   },
 });
@@ -36,10 +36,10 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    openModal({ commit }, modalName: string): void {
+    openModal({ commit }, modalName: string) {
       commit("setCurrentModal", modalName);
     },
-    closeActiveModal({ commit }, result?: boolean): void {
+    closeActiveModal({ commit }, result?: boolean) {
       commit("removeCurrentModal");
       if (resolveModal) {
         resolveModal(!!result);
@@ -51,7 +51,7 @@ export const actions = actionTree(
         resolveModal = resolve;
       });
     },
-  },
+  }
 );
 
 export const accessorType = getAccessorType({

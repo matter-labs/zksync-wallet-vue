@@ -23,3 +23,11 @@ export default Vue.extend({
   },
 });
 </script>
+<style lang="scss">
+.userImg {
+  display: block;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+}
+</style>

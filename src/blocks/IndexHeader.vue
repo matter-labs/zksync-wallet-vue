@@ -38,15 +38,15 @@
               <a href="https://zksync.io/dev/" target="_blank" class="linkItem">Docs</a>
               <i-dropdown
                 class="_background-transparent _border-none likeLinkItem"
-                @change.capture="dropdownOpened = !dropdownOpened"
                 :class="{ opened: dropdownOpened, firstElementHovered: firstHovered }"
                 size="sm"
-                :hideOnItemClick="true"
+                :hide-on-item-click="true"
                 :hide-on-click="true"
                 :click-outside="true"
                 variation="dark"
                 placement="bottom"
                 trigger="click"
+                @change.capture="dropdownOpened = !dropdownOpened"
                 @mouseout.native="firstHovered = false"
               >
                 <a class="dropDownHandler linkItem _position-top-0">
@@ -54,11 +54,16 @@
                   <v-icon class="fal" :name="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'" />
                 </a>
                 <i-dropdown-menu v-model="dropdownOpened">
-                  <i-dropdown-item v-for="(item, index) in dropdownOptions" :class="item.isDividerAfter ? 'bottomDivider':''" :href="item.link" :key="index" target="_blank"
-                                   @mouseover.native="index > 0 ? firstHovered = false : firstHovered = true"
-                                   @mouseout.native="index === 0 ? firstHovered = false : firstHovered = true">{{
-                      item.name
-                    }}</i-dropdown-item>
+                  <i-dropdown-item
+                    v-for="(item, index) in dropdownOptions"
+                    :key="index"
+                    :class="item.isDividerAfter ? 'bottomDivider' : ''"
+                    :href="item.link"
+                    target="_blank"
+                    @mouseover.native="index > 0 ? (firstHovered = false) : (firstHovered = true)"
+                    @mouseout.native="index === 0 ? (firstHovered = false) : (firstHovered = true)"
+                    >{{ item.name }}
+                  </i-dropdown-item>
                 </i-dropdown-menu>
               </i-dropdown>
               <a href="https://matter-labs.io/#jobs" target="_blank" class="linkItem">We're hiring</a>
@@ -84,46 +89,55 @@ interface DropdownOption {
 }
 
 export default Vue.extend({
-  name: "IndexHeader",
-  data () {
-    const config: ZkConfig = this.$store.getters["zk-onboard/config"];
+  data() {
     return {
       firstHovered: false,
       opened: false,
       dropdownOpened: false,
-      dropdownOptions: <DropdownOption[]>[
+    };
+  },
+  computed: {
+    dropdownOptions(): DropdownOption[] {
+      return [
         {
           name: "Explore zkSync",
-          link: "https://hub.zksync.io",
-          isDividerAfter: true
+          link: "https://ecosystem.zksync.io",
+          isDividerAfter: true,
+        },
+
+        {
+          name: "zkSync v2.0",
+          link: "https://portal.zksync.io",
+        },
+        {
+          name: "Docs v2.0",
+          link: "https://v2-docs.zksync.io",
         },
         {
           name: "Block Explorer",
-          link: config.zkSyncNetwork.explorer
+          link: this.config.zkSyncNetwork.explorer,
         },
         {
           name: "zkCheckout",
-          link: "https://checkout.zksync.io"
+          link: this.checkoutLink,
         },
-        {
-          name: "Out-of-gas helper",
-          link: config.zkSyncNetwork.tools.withdrawal
-        },
-        {
-          name: "Alternative Withdrawal",
-          link: config.zkSyncNetwork.tools.withdrawal,
-          isDividerAfter: true
-        }
-      ]
-    };
+      ];
+    },
+    config(): ZkConfig {
+      return this.$store.getters["zk-onboard/config"];
+    },
+    checkoutLink(): string {
+      const postfix =
+        this.config.zkSyncNetwork.ethereumNetwork === "mainnet" ? "" : `-${this.config.zkSyncNetwork.ethereumNetwork}`;
+      return `https://checkout${postfix}.zksync.io`;
+    },
   },
   watch: {
     dropdownOpened(val): void {
-      if (val === false)
-      {
+      if (val === false) {
         this.opened = false;
       }
-    }
-  }
+    },
+  },
 });
 </script>

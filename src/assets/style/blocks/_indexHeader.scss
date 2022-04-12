@@ -54,7 +54,6 @@ body {
       &.-dark {
         & > .menu[data-popper-placement="bottom"] {
           .arrow::after {
-            border-bottom-color: $mediumViolet !important;
           }
 
           &.firstElementHovered {
@@ -91,7 +90,6 @@ body {
           color: $white;
           font: normal normal 16px/2rem $firaSans;
           transition: color $transition1;
-
 
           &:hover {
             color: $lightViolet;
@@ -411,21 +409,19 @@ body.inkline.-light {
       }
 
       .dropdown .menu {
-          background-color: $bgLight;
-          border: none;
-          box-shadow: $layerShadow;
+        background-color: $bgLight;
+        border: none;
+        box-shadow: $layerShadow;
 
-          .item {
-            color: $violet !important;
+        .item {
+          color: $violet !important;
 
-            &:hover {
-              color: $lightViolet !important;
-              background-color: darken($white, 5) !important;
-              border-color: darken($bgLight, 5) !important;
-            }
+          &:hover {
+            color: $lightViolet !important;
+            background-color: $hoverGray !important;
           }
-
         }
       }
     }
   }
+}

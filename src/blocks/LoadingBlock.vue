@@ -1,9 +1,14 @@
 <template>
   <div class="loadingBlock tileBlock">
-    <div class="tileHeadline h3">{{ activeTransaction.type === "Allowance" ? "Allowance" : transactionActionName }}</div>
+    <div class="tileHeadline h3">
+      {{ activeTransaction.type === "Allowance" ? "Allowance" : transactionActionName }}
+    </div>
     <div class="loadingBlockContent">
       <a v-if="txLink" :href="txLink" class="_display-block _text-center" target="_blank">
-        Link to the transaction <i><v-icon name="ri-external-link-line" scale="0.8" /></i>
+        Link to the transaction
+        <i>
+          <v-icon name="ri-external-link-line" scale="0.8" />
+        </i>
       </a>
       <p class="_display-block _text-center">{{ tip }}</p>
     </div>
@@ -35,6 +40,7 @@ export default Vue.extend({
       return this.$store.getters["zk-transaction/transactionActionName"];
     },
     txLink(): string | undefined {
+      /* eslint-disable no-unused-expressions */
       this.forceUpdateVal;
       if (!this.activeTransaction.txHash) {
         return undefined;
@@ -78,3 +84,11 @@ export default Vue.extend({
   },
 });
 </script>
+<style lang="scss">
+.loadingBlock {
+  .spinnerContainer {
+    display: flex;
+    justify-content: center;
+  }
+}
+</style>

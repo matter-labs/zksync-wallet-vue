@@ -1,3 +1,77 @@
+## [3.16.8](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.7...3.16.8) (2022-04-12)
+
+
+### Bug Fixes
+
+* checkout link fixed, menu items updated, fixed dropdown arrow coloring ([#262](https://github.com/matter-labs/zksync-wallet-vue/issues/262)) ([ab71ba0](https://github.com/matter-labs/zksync-wallet-vue/commit/ab71ba05186452276f68e0e42cb75bf946296260))
+* dark-theme-specific UI fix for the Wallet Connect popup ([#248](https://github.com/matter-labs/zksync-wallet-vue/issues/248)) ([aef058f](https://github.com/matter-labs/zksync-wallet-vue/commit/aef058f493a3bafd976f72dc45ff29291eaf873f))
+* handle image only nft, handle json data stream warning ([#261](https://github.com/matter-labs/zksync-wallet-vue/issues/261)) ([9fbfe09](https://github.com/matter-labs/zksync-wallet-vue/commit/9fbfe095b87127d5f154709ef8e45952496dc8d1))
+
+## [3.16.7](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.6...3.16.7) (2022-04-12)
+
+
+### Bug Fixes
+
+* now version is taken straight from the `package.json` ([#263](https://github.com/matter-labs/zksync-wallet-vue/issues/263)) ([d0cb54e](https://github.com/matter-labs/zksync-wallet-vue/commit/d0cb54e41bdfea1bd28bbb446ed6acb8e6c08dfa))
+
+## [3.16.6](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.5...3.16.6) (2022-04-12)
+
+
+### Bug Fixes
+
+* rollback changes to fee calculation ([#259](https://github.com/matter-labs/zksync-wallet-vue/issues/259)) ([ab0f129](https://github.com/matter-labs/zksync-wallet-vue/commit/ab0f129f4591a11893a1cd7431f5dd41ad1bcfd6))
+
+## [3.16.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.4...3.16.5) (2022-04-12)
+
+
+### Bug Fixes
+
+* use utorg config in Utorg provider ([#258](https://github.com/matter-labs/zksync-wallet-vue/issues/258)) ([8507e3c](https://github.com/matter-labs/zksync-wallet-vue/commit/8507e3c941fdc9b702dda9083e5817c7e6464e1c))
+
+## [3.16.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.3...3.16.4) (2022-04-11)
+
+
+### Bug Fixes
+
+* revert replacing moment-timezone with moment ([#260](https://github.com/matter-labs/zksync-wallet-vue/issues/260)) ([470c179](https://github.com/matter-labs/zksync-wallet-vue/commit/470c179026b2cb25ce6f7190f945fece56a9df9a))
+
+## [3.16.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.2...3.16.3) (2022-04-11)
+
+
+### Bug Fixes
+
+* arrow back button ([#244](https://github.com/matter-labs/zksync-wallet-vue/issues/244)) ([6227681](https://github.com/matter-labs/zksync-wallet-vue/commit/6227681a7bcd0d084eb1afe64564ff12cf83c4a8))
+
+## [3.16.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.1...3.16.2) (2022-04-11)
+
+
+### Bug Fixes
+
+* hide argent for testnets ([#251](https://github.com/matter-labs/zksync-wallet-vue/issues/251)) ([5345041](https://github.com/matter-labs/zksync-wallet-vue/commit/5345041d22084f77684eed595c0e43ec0a288351))
+
+## [3.16.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.0...3.16.1) (2022-04-11)
+
+
+### Bug Fixes
+
+* session restoring, amount to string error ([#254](https://github.com/matter-labs/zksync-wallet-vue/issues/254)) ([5d23806](https://github.com/matter-labs/zksync-wallet-vue/commit/5d2380628c8a160bb6b4fa6b97cea913d9a38342))
+
+# [3.16.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.5...3.16.0) (2022-04-10)
+
+
+### Bug Fixes
+
+* add missing @semantic-release/git ([c8fbb0f](https://github.com/matter-labs/zksync-wallet-vue/commit/c8fbb0f63037b057e860dd2e02f9b57fd34e491e))
+* change default branch name in release config ([ece3494](https://github.com/matter-labs/zksync-wallet-vue/commit/ece34940c8fa37cd71493855b64d9b45cc56d41b))
+* functions build issue ([#257](https://github.com/matter-labs/zksync-wallet-vue/issues/257)) ([e7d6fc5](https://github.com/matter-labs/zksync-wallet-vue/commit/e7d6fc5e0f8934dceb9cffaa7925103e1095fcb0))
+* rollback release config plugins ([eb37d37](https://github.com/matter-labs/zksync-wallet-vue/commit/eb37d373c27168d4a67c9eb197100eedc6c33252))
+* update yarn.lock ([12c2f5b](https://github.com/matter-labs/zksync-wallet-vue/commit/12c2f5ba2fc112b2a4518e0bc19fc862c1c1d5ab))
+
+
+### Features
+
+* shared configs applied and code refactored accordingly ([#243](https://github.com/matter-labs/zksync-wallet-vue/issues/243)) ([1e7230c](https://github.com/matter-labs/zksync-wallet-vue/commit/1e7230c2b0c92e8ab69f10b35de9cb54560daa55))
+
 ## [3.15.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.15.4...3.15.5) (2022-04-07)
 
 
@@ -31,7 +105,9 @@
 
 ### Bug Fixes
 
-* open meta mask wallet if meta mask wc was selected, session auto relogin, open wallet app only when logged in with wc ([#245](https://github.com/matter-labs/zksync-wallet-vue/issues/245)) ([71b3115](https://github.com/matter-labs/zksync-wallet-vue/commit/71b3115a0be93ba16f489cbd6976f42612757db9))
+* open meta mask wallet if meta mask wc was selected, session auto 
+* re-login, open wallet app only when logged in with wc ([#245](https://github.com/matter-labs/zksync-wallet-vue/issues/245)) ([71b3115](https://github.
+  com/matter-labs/zksync-wallet-vue/commit/71b3115a0be93ba16f489cbd6976f42612757db9))
 
 # [3.15.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.14.1...3.15.0) (2022-04-01)
 

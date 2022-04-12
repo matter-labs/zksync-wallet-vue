@@ -1,13 +1,21 @@
 <template>
-  <i-modal :value="opened" class="accountActivationModal prevent-close" size="md" data-cy="account_activation_modal" @hide="close()">
-    <template slot="header">Account Activation</template>
+  <i-modal
+    :value="opened"
+    class="accountActivationModal prevent-close"
+    size="md"
+    data-cy="account_activation_modal"
+    @hide="close()"
+  >
+    <template #header>Account Activation</template>
     <div class="_text-center">
       <p v-if="state === false">
         <span>Sign a message to activate your zkSync account.</span>
         <span class="_display-block _margin-top-05 secondaryText text-sm">{{ transactionError }}</span>
       </p>
       <p v-else-if="state === 'processing'" class="_text-center">Processing...</p>
-      <p v-else-if="state === 'waitingForUserConfirmation'" class="_text-center">Sign the message in your wallet to continue</p>
+      <p v-else-if="state === 'waitingForUserConfirmation'" class="_text-center">
+        Sign the message in your wallet to continue
+      </p>
       <p v-else-if="state === 'updating'" class="_text-center">Loading account data...</p>
       <i-button
         :disabled="loading || requestingSigner"
@@ -26,7 +34,9 @@
       </i-button>
 
       <!-- Requesting signer -->
-      <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">Follow the instructions in your Ethereum wallet</div>
+      <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">
+        Follow the instructions in your Ethereum wallet
+      </div>
 
       <div v-if="error" class="errorText _text-center _margin-top-1">
         {{ error }}
@@ -37,7 +47,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkSignCPKState, ZkCPKStatus } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkCPKStatus, ZkSignCPKState } from "@matterlabs/zksync-nuxt-core/types";
 
 export default Vue.extend({
   name: "SignPubkey",
@@ -85,9 +95,17 @@ export default Vue.extend({
         return;
       }
       const isForbiddenRoute = () => {
-        const forbiddenRoutes = ["/transaction/transfer", "/transaction/withdraw", "/transaction/nft/transfer", "/transaction/nft/withdraw"];
+        const forbiddenRoutes = [
+          "/transaction/transfer",
+          "/transaction/withdraw",
+          "/transaction/nft/transfer",
+          "/transaction/nft/withdraw",
+        ];
         for (const route of forbiddenRoutes) {
-          if (this.$accessor.getPreviousRoute?.path === route || this.$accessor.getPreviousRoute?.path === route + "/") {
+          if (
+            this.$accessor.getPreviousRoute?.path === route ||
+            this.$accessor.getPreviousRoute?.path === route + "/"
+          ) {
             return true;
           }
         }

@@ -141,7 +141,8 @@ body.inkline {
   }
 }
 
-#__nuxt, #__layout {
+#__nuxt,
+#__layout {
   width: 100%;
   height: 100%;
 }
@@ -268,8 +269,6 @@ button.-lg.-circle {
           }
         }
       }
-
-
 
       @media (max-width: $mobile) {
         display: flex;

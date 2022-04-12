@@ -12,6 +12,7 @@
     width: 20px;
     height: 20px;
     color: $violet;
+    font-weight: 300;
     text-decoration: none;
     transition: color $transition1;
 
@@ -19,7 +20,8 @@
       color: $lightViolet !important;
     }
 
-    em, i {
+    em,
+    i {
       font-size: 18px;
       line-height: 20px;
     }

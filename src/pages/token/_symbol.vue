@@ -8,10 +8,14 @@
         <div class="_display-flex _align-items-center _justify-content-center">
           <span class="tokenSymbol">{{ symbol }}</span>
           <i-tooltip v-if="displayTokenTooltip">
-            <a :href="blockExplorerLink + '/token/' + token.address" target="_blank" class="icon-container _display-flex">
+            <a
+              :href="blockExplorerLink + '/token/' + token.address"
+              target="_blank"
+              class="icon-container _display-flex"
+            >
               <v-icon name="ri-external-link-line" class="iconInfo" />
             </a>
-            <template slot="body">Token contract</template>
+            <template #body>Token contract</template>
           </i-tooltip>
         </div>
       </div>
@@ -36,7 +40,9 @@
         </div>
         <div class="_display-flex _justify-content-space-between _flex-wrap balanceWithdraw">
           <div class="infoBlock">
-            <div v-if="accountStateLoading && !accountStateRequested && !balanceToken" class="secondaryText">Loading...</div>
+            <div v-if="accountStateLoading && !accountStateRequested && !balanceToken" class="secondaryText">
+              Loading...
+            </div>
             <div v-else-if="balanceToken" class="balance">
               {{ balanceToken.balance | parseBigNumberish(symbol) }}&nbsp;
               <span class="tokenSymbol">{{ symbol }}&nbsp;&nbsp;</span>
@@ -48,9 +54,22 @@
               <token-price :symbol="symbol" amount="0" />
             </div>
           </div>
-          <i-button class="_padding-y-0" link size="sm" variant="secondary" :to="`/transaction/withdraw?token=${symbol}`">Send to Ethereum (L1)</i-button>
+          <i-button
+            class="_padding-y-0"
+            link
+            size="sm"
+            variant="secondary"
+            :to="`/transaction/withdraw?token=${symbol}`"
+            >Send to Ethereum (L1)
+          </i-button>
         </div>
-        <i-button block class="_margin-top-1" size="lg" variant="secondary" :to="`/transaction/transfer?token=${symbol}`">
+        <i-button
+          block
+          class="_margin-top-1"
+          size="lg"
+          variant="secondary"
+          :to="`/transaction/transfer?token=${symbol}`"
+        >
           <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;&nbsp;Transfer
         </i-button>
       </div>
@@ -60,28 +79,21 @@
 </template>
 
 <script lang="ts">
-import { Token, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { TokenSymbol } from "zksync/build/types";
+import { Token, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
+import computeReturnLink from "@/utils/computeReturnLink";
 
 export default Vue.extend({
-  asyncData({ from, redirect, params }) {
+  asyncData({ redirect, params }) {
     if (!params.symbol) {
       return redirect("/account");
     }
-    return {
-      fromRoute: from,
-    };
-  },
-  data() {
-    return {
-      fromRoute: <undefined | Route>undefined,
-    };
   },
   computed: {
     returnLink(): string | Route {
-      return this.fromRoute && this.fromRoute.fullPath !== this.$route.fullPath && this.fromRoute.path !== "/withdraw" ? this.fromRoute : "/account";
+      return computeReturnLink(this, "/account");
     },
     symbol(): TokenSymbol {
       return this.$route.params.symbol;
