@@ -140,10 +140,6 @@ export default Vue.extend({
         border-radius: 0.5rem;
       }
 
-      @media screen and (min-width: $mobile) {
-        padding-bottom: $footerHeight;
-      }
-
       .tile {
         margin: 0 auto 0.25rem;
         padding: 1rem;
@@ -155,7 +151,6 @@ export default Vue.extend({
         transition: $transition1;
 
         img {
-          max-width: 100%;
           height: 76px;
           object-fit: contain;
           transition: $transition1;
