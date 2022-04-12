@@ -10,7 +10,7 @@ const packageData = require("./package.json");
 const gitVersion = packageData.version;
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
-const isLocalhost: boolean = process.env.IS_LOCALHOST ?? false;
+const isLocalhost: boolean = !!process.env.IS_LOCALHOST;
 const isDebugEnabled: boolean = appEnv === "dev";
 const isProduction: boolean = appEnv === "prod";
 const pageTitle = "zkSync Wallet";
