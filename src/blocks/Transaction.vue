@@ -490,14 +490,6 @@ export default Vue.extend({
     if (!this.$store.getters["zk-account/loggedIn"]) {
       return;
     }
-    if (
-      (this.mainToken === "L2-NFT" || this.type === "MintNFT") &&
-      this.$store.getters["zk-onboard/selectedWallet"] === "Argent"
-    ) {
-      this.$accessor.openModal("ArgentNftWarning");
-      this.$router.push(this.routeBack);
-      return;
-    }
     if (!this.$store.getters["zk-account/accountStateRequested"]) {
       await this.$store.dispatch("zk-account/updateAccountState");
     }
