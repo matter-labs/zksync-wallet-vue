@@ -26,7 +26,7 @@
         <div class="orText">or</div>
         <div class="line"></div>
       </div>
-      <section v-if="false" class="tileSubContainer">
+      <section class="tileSubContainer">
         <h4 class="tileSmallHeadline">
           Exchanges
           <div class="secondaryText estimatedFee">
@@ -35,12 +35,12 @@
           </div>
         </h4>
         <div class="secondaryText small _margin-bottom-05">
-          zkSync v1 is integrated with exchanges, so you can withdraw funds from your favorite exchanges directly inside
-          the zkSync network using the benefits of the low fees
+          zkSync v1 is integrated with exchanges, so you can deposit/withdraw funds from your favorite exchanges
+          directly inside the zkSync network using the benefits of the low fees
         </div>
-        <providers :show-providers="{ okex: true, bybit: true }" />
+        <providers :show-providers="{ okex: false, bybit: true }" />
       </section>
-      <div v-if="false" class="orDivider">
+      <div class="orDivider">
         <div class="line"></div>
         <div class="orText">or</div>
         <div class="line"></div>

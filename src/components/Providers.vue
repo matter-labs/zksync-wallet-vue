@@ -68,7 +68,7 @@ export default Vue.extend({
     },
     bybit: {
       type: Boolean,
-      default: false,
+      default: true,
       required: false,
     },
     layerSwap: {
