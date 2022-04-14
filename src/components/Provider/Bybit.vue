@@ -1,6 +1,7 @@
 <template>
   <div :class="{ disabled: !enabled }" @click="proceed">
-    <img src="@/static/images/providers/bybit.png" alt="Bybit" width="61" />
+    <img v-if="isDark" src="@/static/images/providers/bybit-white.svg" alt="ByBit" />
+    <img v-else src="@/static/images/providers/bybit-dark.svg" alt="ByBit" />
   </div>
 </template>
 <script lang="ts">
@@ -14,19 +15,29 @@ export default Vue.extend({
       required: true,
     },
   },
+  computed: {
+    isDark(): boolean {
+      return this.$inkline.config.variant === "dark";
+    },
+  },
   methods: {
-    proceed(): void {
+    proceed(): Window | null | void {
       if (!this.enabled) {
         this.$emit("providerError", "Provider Bybit will be available soon");
         return;
       }
       this.$analytics.track("click_on_buy_with_bybit");
+      return window.open(`https://www.bybit.com/en_US/fiat/purchase/crypto`, "_blank");
     },
   },
 });
 </script>
 <style lang="scss" scoped>
 .providerOption {
+  img {
+    width: 3.8rem;
+  }
+
   &.disabled {
     border-color: transparentize($color: #eeeeee, $amount: 0.7);
 
