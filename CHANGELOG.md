@@ -1,3 +1,10 @@
+# [3.18.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.17.0...3.18.0) (2022-04-14)
+
+
+### Features
+
+* add node 16 support ([#266](https://github.com/matter-labs/zksync-wallet-vue/issues/266)) ([b978b53](https://github.com/matter-labs/zksync-wallet-vue/commit/b978b536fb70ad09c80f6563053f6cc20e0b52b8))
+
 # [3.17.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.9...3.17.0) (2022-04-14)
 
 
