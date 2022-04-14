@@ -47,7 +47,7 @@
       class="providerOption orbiterProvider"
       @providerError="setError"
     />
-    <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync" />
+    <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync" data-cy="deposit_provider_zksync"/>
     <block-modals-deposit-error v-if="errorText" :error-text="errorText" />
   </div>
 </template>
