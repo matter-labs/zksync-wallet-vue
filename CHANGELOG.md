@@ -1,3 +1,10 @@
+# [3.17.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.9...3.17.0) (2022-04-14)
+
+
+### Features
+
+* activate bybit integration ([#265](https://github.com/matter-labs/zksync-wallet-vue/issues/265)) ([c94ca58](https://github.com/matter-labs/zksync-wallet-vue/commit/c94ca583d22b18efbed1bf8e794f6e5fe5ea747e))
+
 ## [3.16.9](https://github.com/matter-labs/zksync-wallet-vue/compare/3.16.8...3.16.9) (2022-04-12)
 
 
