@@ -20,7 +20,7 @@ export default Vue.extend({
         width: "200px",
         height: "200px",
         animationData: successCheckmark,
-      } as AnimationConfigWithData);
+      } as AnimationConfigWithData<"svg">);
     },
   },
 });
