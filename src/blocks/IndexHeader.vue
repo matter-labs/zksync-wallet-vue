@@ -132,12 +132,5 @@ export default Vue.extend({
       return `https://checkout${postfix}.zksync.io`;
     },
   },
-  watch: {
-    dropdownOpened(val): void {
-      if (val === false) {
-        this.opened = false;
-      }
-    },
-  },
 });
 </script>
