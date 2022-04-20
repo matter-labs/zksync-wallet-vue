@@ -1,3 +1,10 @@
+## [3.18.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.18.0...3.18.1) (2022-04-20)
+
+
+### Bug Fixes
+
+* extra space at the bottom of zkTools on phone ([#267](https://github.com/matter-labs/zksync-wallet-vue/issues/267)) ([24e90f4](https://github.com/matter-labs/zksync-wallet-vue/commit/24e90f404c99e21edf391cb3c5bbcd6780001447))
+
 # [3.18.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.17.0...3.18.0) (2022-04-14)
 
 
