@@ -1,3 +1,10 @@
+## [3.19.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.19.0...3.19.1) (2022-04-22)
+
+
+### Bug Fixes
+
+* return previous infura key ([#269](https://github.com/matter-labs/zksync-wallet-vue/issues/269)) ([91c425c](https://github.com/matter-labs/zksync-wallet-vue/commit/91c425c573fc8dc85e21c19d790611863be1fb80))
+
 # [3.19.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.18.1...3.19.0) (2022-04-22)
 
 
