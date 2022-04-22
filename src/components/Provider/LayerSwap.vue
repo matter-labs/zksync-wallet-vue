@@ -27,7 +27,7 @@ export default Vue.extend({
         return;
       }
       this.$analytics.track("click_on_buy_with_layerswap");
-      window.open(`https://www.layerswap.io/?referer=zksync`, "_blank");
+      window.open(`https://www.layerswap.io/?referer=zksync&destNetwork=ZKSYNC_MAINNET&lockNetwork=true&addressSource=zksyncweb&lockAddress=true&destAddress=${this.$store.getters["zk-account/address"]}`, "_blank");
     },
   },
 });
