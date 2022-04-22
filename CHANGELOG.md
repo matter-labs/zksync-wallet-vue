@@ -1,3 +1,10 @@
+# [3.19.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.18.1...3.19.0) (2022-04-22)
+
+
+### Features
+
+* more layerswap query params ([#268](https://github.com/matter-labs/zksync-wallet-vue/issues/268)) ([30eb57a](https://github.com/matter-labs/zksync-wallet-vue/commit/30eb57aa0e5ba34047a0aacb274bfa8cf2e57e54))
+
 ## [3.18.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.18.0...3.18.1) (2022-04-20)
 
 
