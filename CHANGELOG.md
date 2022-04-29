@@ -1,3 +1,10 @@
+## [3.19.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.19.1...3.19.2) (2022-04-29)
+
+
+### Bug Fixes
+
+* calculate deposit fee depending on selected token ([#270](https://github.com/matter-labs/zksync-wallet-vue/issues/270)) ([8a09bba](https://github.com/matter-labs/zksync-wallet-vue/commit/8a09bba181b1f234209afcca7023f77762cebc77))
+
 ## [3.19.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.19.0...3.19.1) (2022-04-22)
 
 
