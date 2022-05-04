@@ -28,7 +28,7 @@ export default Vue.extend({
   methods: {
     proceed(): void {
       if (this.disabled) {
-        this.$emit("providerError", `Provider Orbiter is not supported for the “${this.network}” network`);
+        this.$emit("providerError", `Provider ZigZag is not supported for the “${this.network}” network`);
         return;
       }
       this.$analytics.track("click_on_buy_with_zigzag");
