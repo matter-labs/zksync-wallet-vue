@@ -48,6 +48,12 @@
       @providerError="setError"
     />
     <provider-zk-sync v-if="showProviders.zksync" class="providerOption zkSync" data-cy="deposit_provider_zksync"/>
+    <provider-zig-zag
+      v-if="showProviders.zigzag"
+      :enabled="zigzag"
+      class="providerOption zigzagProvider"
+      @providerError="setError"
+    />
     <block-modals-deposit-error v-if="errorText" :error-text="errorText" />
   </div>
 </template>
@@ -91,6 +97,11 @@ export default Vue.extend({
       default: true,
       required: false,
     },
+    zigzag: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
     ramp: {
       type: Boolean,
       default: true,
@@ -107,10 +118,12 @@ export default Vue.extend({
         okex?: boolean;
         bybit?: boolean;
         utorg?: boolean;
+        zigzag?: boolean;
       }>,
       default: () => ({
         ramp: true,
         banxa: true,
+        zigzag: true,
       }),
       required: false,
     },
