@@ -42,3 +42,4 @@ jobs:
         env:
           HUSKY: 0
           CI: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
