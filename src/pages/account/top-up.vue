@@ -56,7 +56,7 @@
         <div class="secondaryText small _margin-bottom-05">
           You can bridge your assets from other networks & exchanges using one of our supported bridges
         </div>
-        <providers :show-providers="{ layerSwap: true, zksync: true, orbiter: true }" />
+        <providers :show-providers="{ layerSwap: true, zksync: true, orbiter: true, zigzag: true }" />
       </section>
     </div>
   </div>
@@ -66,18 +66,6 @@
 import Vue from "vue";
 
 export default Vue.extend({
-  computed: {
-    zigZagLink(): string | null {
-      switch (this.$store.getters["zk-provider/network"]) {
-        case "mainnet":
-          return "https://trade.zigzag.exchange/";
-        case "rinkeby":
-          return "https://trade.zigzag.exchange/?network=zksync-rinkeby";
-        default:
-          return null;
-      }
-    },
-  },
   mounted() {
     this.$analytics.track("visit_top-up");
   },

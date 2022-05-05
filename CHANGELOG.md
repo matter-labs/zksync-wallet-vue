@@ -1,3 +1,31 @@
+## [3.19.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.19.1...3.19.2) (2022-04-29)
+
+
+### Bug Fixes
+
+* calculate deposit fee depending on selected token ([#270](https://github.com/matter-labs/zksync-wallet-vue/issues/270)) ([8a09bba](https://github.com/matter-labs/zksync-wallet-vue/commit/8a09bba181b1f234209afcca7023f77762cebc77))
+
+## [3.19.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.19.0...3.19.1) (2022-04-22)
+
+
+### Bug Fixes
+
+* return previous infura key ([#269](https://github.com/matter-labs/zksync-wallet-vue/issues/269)) ([91c425c](https://github.com/matter-labs/zksync-wallet-vue/commit/91c425c573fc8dc85e21c19d790611863be1fb80))
+
+# [3.19.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.18.1...3.19.0) (2022-04-22)
+
+
+### Features
+
+* more layerswap query params ([#268](https://github.com/matter-labs/zksync-wallet-vue/issues/268)) ([30eb57a](https://github.com/matter-labs/zksync-wallet-vue/commit/30eb57aa0e5ba34047a0aacb274bfa8cf2e57e54))
+
+## [3.18.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.18.0...3.18.1) (2022-04-20)
+
+
+### Bug Fixes
+
+* extra space at the bottom of zkTools on phone ([#267](https://github.com/matter-labs/zksync-wallet-vue/issues/267)) ([24e90f4](https://github.com/matter-labs/zksync-wallet-vue/commit/24e90f404c99e21edf391cb3c5bbcd6780001447))
+
 # [3.18.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.17.0...3.18.0) (2022-04-14)
 
 
