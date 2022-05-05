@@ -25,6 +25,12 @@
       {
         "npmPublish": false
       }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": []
+      }
     ]
   ]
 }
