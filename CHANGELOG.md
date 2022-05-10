@@ -1,3 +1,10 @@
+## [3.20.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.2...3.20.3) (2022-05-10)
+
+
+### Bug Fixes
+
+* app rendering in dev mode ([#273](https://github.com/matter-labs/zksync-wallet-vue/issues/273)) ([19fe41d](https://github.com/matter-labs/zksync-wallet-vue/commit/19fe41df9690d5a505966f2133e33623057d7164))
+
 ## [3.20.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.1...3.20.2) (2022-05-05)
 
 
