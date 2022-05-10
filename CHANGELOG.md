@@ -1,3 +1,10 @@
+## [3.20.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.4...3.20.5) (2022-05-10)
+
+
+### Bug Fixes
+
+* disable all top up options on testnets except zksync ([#272](https://github.com/matter-labs/zksync-wallet-vue/issues/272)) ([eac47ab](https://github.com/matter-labs/zksync-wallet-vue/commit/eac47ab1152d064a01ce4432da2dcad18e8462fc))
+
 ## [3.20.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.3...3.20.4) (2022-05-10)
 
 
