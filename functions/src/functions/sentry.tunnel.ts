@@ -12,10 +12,6 @@ import fetch from "node-fetch";
 export function sentryTunnelFunction(request: functions.Request, response: functions.Response) {
   const envelope = request.body;
 
-  // functions.logger.debug("envelope", envelope);
-
-  // functions.logger.debug("config", functions.config().sentry);
-
   const projectId = functions.config().tunnel.sentry.project_id;
   const host = functions.config().tunnel.sentry.project_host;
 
@@ -40,14 +36,12 @@ export function sentryTunnelFunction(request: functions.Request, response: funct
     body: bodyEncoded,
   })
     .then((sentryResponse) => {
-      // functions.logger.debug("sentry response", sentryResponse);
       if (!sentryResponse.ok) {
         throw new functions.https.HttpsError("internal", `Looks like there was a problem. Status Code: ${sentryResponse.status}`);
       }
       return sentryResponse.json();
     })
     .then((data) => {
-      // functions.logger.debug("sentry json data", data);
       response.status(200);
       response.send(data);
     })

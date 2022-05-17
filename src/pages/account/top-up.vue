@@ -1,7 +1,7 @@
 <template>
-  <div class="walletPage dappPageWrapper">
+  <div class="top-up-page dappPageWrapper">
     <div class="top-up-tile tileBlock">
-      <h3 class="tileHeadline withBtn h3">
+      <h3 class="tileHeadline withBtn">
         <nuxt-link to="/account" class="_icon-wrapped -rounded -sm returnBtn _display-flex">
           <v-icon name="ri-arrow-left-line" scale="1" />
         </nuxt-link>
@@ -19,7 +19,7 @@
           You can buy crypto directly on zkSync with your credit card, just go through KYC process of our partners and
           enter your wallet address
         </div>
-        <providers :show-providers="{ ramp: true, banxa: true, moonpay: true, utorg: true }" />
+        <Providers :providers="['ramp', 'banxa', 'moonpay', 'utorg']" />
       </section>
       <div class="orDivider">
         <div class="line"></div>
@@ -38,7 +38,7 @@
           zkSync v1 is integrated with exchanges, so you can deposit/withdraw funds from your favorite exchanges
           directly inside the zkSync network using the benefits of the low fees
         </div>
-        <providers :show-providers="{ okex: false, bybit: true }" />
+        <Providers :providers="['bybit']" />
       </section>
       <div class="orDivider">
         <div class="line"></div>
@@ -56,7 +56,7 @@
         <div class="secondaryText small _margin-bottom-05">
           You can bridge your assets from other networks & exchanges using one of our supported bridges
         </div>
-        <providers :show-providers="{ layerSwap: true, zksync: true, orbiter: true, zigzag: true }" />
+        <Providers :providers="['zksync', 'layerSwap', 'orbiter', 'zigzag']" />
       </section>
     </div>
   </div>
@@ -80,13 +80,13 @@ export default Vue.extend({
 });
 </script>
 <style lang="scss">
-.dappPageWrapper.walletPage {
-  .top-up-tile h3.tileHeadline {
+.top-up-page {
+  .top-up-tile .tileHeadline {
     margin-bottom: 10px;
   }
 
   .tileSubContainer {
-    h4.tileSmallHeadline {
+    .tileSmallHeadline {
       font-weight: 700;
       font-size: 16px;
       line-height: 22px;
@@ -144,12 +144,12 @@ export default Vue.extend({
   }
 
   @media screen and (max-width: $mobile) {
-    .top-up-tile h3.tileHeadline {
+    .top-up-tile .tileHeadline {
       margin-bottom: 0;
     }
 
     .tileSubContainer {
-      h4.tileSmallHeadline {
+      .tileSmallHeadline {
         font-weight: 600 !important;
         font-size: 14px;
         margin-bottom: 0.5rem;
@@ -166,7 +166,7 @@ export default Vue.extend({
 }
 
 .inkline.-dark {
-  .dappPageWrapper {
+  .top-up-page {
     .tileSmallHeadline {
       color: $white;
     }

@@ -1,44 +1,34 @@
 <template>
-  <div :class="{ disabled: !enabled }" @click="proceed">
-    <img src="@/static/images/providers/okex.png" alt="Okex" width="69" />
+  <div :class="{ 'disabled': !isSupported }" @click="proceed">
+    <img src="/images/providers/okex.png" alt="Okex" width="69" />
   </div>
 </template>
+
 <script lang="ts">
 import Vue from "vue";
+import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";
 
 export default Vue.extend({
   name: "ProviderOkex",
-  props: {
-    enabled: {
-      type: Boolean,
-      required: true,
+  computed: {
+    network(): ZkEthereumNetworkName {
+      return this.$store.getters["zk-provider/network"];
+    },
+    isSupported(): boolean {
+      return this.network === "mainnet";
     },
   },
   methods: {
     proceed(): void {
-      if (!this.enabled) {
-        this.$emit("providerError", "Provider Okex will be available soon");
-        return;
-      }
+      this.$emit("providerError", `Provider 0kex is not yet supported`);
       this.$analytics.track("click_on_buy_with_okex");
     },
   },
 });
 </script>
+
 <style lang="scss" scoped>
-.providerOption {
-  &.disabled {
-    border-color: transparentize($color: #eeeeee, $amount: 0.7);
-
-    img {
-      opacity: 0.3;
-      filter: contrast(0.1);
-    }
-  }
-
-  &:not(.disabled):hover {
-    border-color: #5d65b9 !important;
-    cursor: pointer;
-  }
+svg {
+  width: 65%;
 }
 </style>
