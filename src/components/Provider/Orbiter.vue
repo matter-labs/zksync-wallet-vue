@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'disabled': !isSupported }" @click="proceed">
+  <div :class="{ disabled: !isSupported }" @click="proceed">
     <svg
       width="93"
       height="24"
@@ -44,7 +44,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    proceed(): void {
+    proceed() {
       if (!this.isSupported) {
         this.$emit("providerError", `Provider Orbiter is not supported for the “${this.network}” network`);
         return;

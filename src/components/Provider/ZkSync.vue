@@ -3,6 +3,7 @@
     <block-logo class="providerZkLogo" :hide-network="true" />
   </div>
 </template>
+
 <script lang="ts">
 import Vue from "vue";
 

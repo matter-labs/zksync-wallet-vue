@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'disabled': !isSupported }" @click="proceed">
+  <div :class="{ disabled: !isSupported }" @click="proceed">
     <label><img src="/images/providers/RampLogo.svg" alt="Ramp" />Ramp</label>
   </div>
 </template>
@@ -14,8 +14,8 @@ const rampConfig = {
   hostAppName: "zkSync Wallet",
   swapAsset: "ZKSYNC_*",
   url: undefined, // use default URL
-  hostApiKey: process.env.RAMP_MAINNET_HOST_API_KEY
-}
+  hostApiKey: process.env.RAMP_MAINNET_HOST_API_KEY,
+};
 
 export default Vue.extend({
   name: "ProviderRamp",
@@ -31,7 +31,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    proceed(): void {
+    proceed() {
       if (!this.isSupported) {
         this.$emit("providerError", `Provider Ramp is not supported for the “${this.network}” network`);
         return;

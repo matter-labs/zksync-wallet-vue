@@ -1,8 +1,9 @@
 <template>
-  <div :class="{ 'disabled': !isSupported }" @click="proceed">
+  <div :class="{ disabled: !isSupported }" @click="proceed">
     <label><img src="/images/providers/zigzag.png" alt="ZigZag" />ZigZag</label>
   </div>
 </template>
+
 <script lang="ts">
 import Vue from "vue";
 import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";

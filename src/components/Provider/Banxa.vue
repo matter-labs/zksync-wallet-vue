@@ -73,7 +73,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    proceed(): void {
+    proceed() {
       if (!this.isSupported) {
         this.$emit("providerError", `Provider Banxa is not supported for the “${this.network}” network`);
         return;

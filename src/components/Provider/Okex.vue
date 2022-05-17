@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'disabled': !isSupported }" @click="proceed">
+  <div :class="{ disabled: !isSupported }" @click="proceed">
     <img src="/images/providers/okex.png" alt="Okex" width="69" />
   </div>
 </template>
@@ -19,7 +19,7 @@ export default Vue.extend({
     },
   },
   methods: {
-    proceed(): void {
+    proceed() {
       this.$emit("providerError", `Provider 0kex is not yet supported`);
       this.$analytics.track("click_on_buy_with_okex");
     },
