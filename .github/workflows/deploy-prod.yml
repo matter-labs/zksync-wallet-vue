@@ -58,4 +58,4 @@ jobs:
           args: deploy --only functions
         env:
           PROJECT_ID: zksync-vue-mainnet
-          GCP_SA_KEY: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}'
+          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
