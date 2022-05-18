@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ disabled: !enabled }" @click="proceed">
+  <div :class="{ disabled }" @click="proceed">
     <img v-if="isDark" src="@/static/images/providers/bybit-white.svg" alt="ByBit" />
     <img v-else src="@/static/images/providers/bybit-dark.svg" alt="ByBit" />
   </div>
@@ -16,13 +16,22 @@ export default Vue.extend({
     },
   },
   computed: {
+    network(): string {
+      return this.$store.getters["zk-provider/network"];
+    },
+    disabled(): boolean {
+      return !this.enabled || !this.isSupported;
+    },
+    isSupported(): boolean {
+      return this.network === "mainnet";
+    },
     isDark(): boolean {
       return this.$inkline.config.variant === "dark";
     },
   },
   methods: {
     proceed(): Window | null | void {
-      if (!this.enabled) {
+      if (this.disabled) {
         this.$emit("providerError", "Provider Bybit will be available soon");
         return;
       }

@@ -91,14 +91,14 @@ const config = {
         url: "https://app.utorg.pro",
         sid: process.env.UTORG_MAINNET_SID,
       },
-      rinkeby: {
-        url: "https://app-stage.utorg.pro",
-        sid: process.env.UTORG_RINKEBY_SID,
-      },
-      ropsten: {
-        url: "https://app-stage.utorg.pro",
-        sid: process.env.UTORG_ROPSTEN_SID,
-      },
+      // rinkeby: {
+      //   url: "https://app-stage.utorg.pro",
+      //   sid: process.env.UTORG_RINKEBY_SID,
+      // },
+      // ropsten: {
+      //   url: "https://app-stage.utorg.pro",
+      //   sid: process.env.UTORG_ROPSTEN_SID,
+      // },
     },
     banxaConfig: {
       mainnet: {
@@ -366,7 +366,7 @@ const config = {
    **/
   build: {
     filenames: { chunk: () => `[name]_Y2ZjItY_${isProduction ? "[contenthash]" : ""}.js` },
-    cache: true,
+    cache: isProduction,
     cssSourceMap: !isProduction,
     hardSource: isProduction,
     parallel: isProduction,
