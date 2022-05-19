@@ -1,3 +1,10 @@
+## [3.20.8](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.7...3.20.8) (2022-05-19)
+
+
+### Bug Fixes
+
+* refactor top up providers ([#276](https://github.com/matter-labs/zksync-wallet-vue/issues/276)) ([2388b54](https://github.com/matter-labs/zksync-wallet-vue/commit/2388b5484d3d2ab4b5539539915b07c1f280c810))
+
 ## [3.20.7](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.6...3.20.7) (2022-05-18)
 
 
