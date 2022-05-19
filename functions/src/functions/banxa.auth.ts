@@ -16,11 +16,6 @@ export function banxaAuthFunction(request: functions.Request, response: function
     throw new functions.https.HttpsError("unavailable", "Expected application/json");
   }
   const data: { nonce?: string; dataToSign?: BinaryLike; ethNetwork?: "rinkeby" | "mainnet" } = request.body;
-
-  // functions.logger.debug("requested data", data, typeof data);
-
-  // Valid URL expected:
-  // `https://buy-sandbox.moonpay.com?apiKey=pk_test_key&currencyCode=eth&walletAddress=0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae`
   if (!data?.nonce || !data?.dataToSign) {
     throw new functions.https.HttpsError("invalid-argument", "Requested nonce or/and dataTo Sign are invalid");
   }
@@ -62,12 +57,9 @@ export function banxaAuthFunction(request: functions.Request, response: function
   const localSignature = createHmac("SHA256", secretKey).update(data.dataToSign).digest("hex");
 
   const responseData = {
-    // "Authorization: Bearer API Key:Signature:Nonce"
     bearer: `${apiKey}:${localSignature}:${data.nonce}`,
     nonce: data.nonce,
   };
-
-  // functions.logger.debug("successful response", responseData);
 
   response.status(200);
   response.send(responseData);

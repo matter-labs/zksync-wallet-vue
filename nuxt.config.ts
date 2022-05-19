@@ -72,59 +72,6 @@ const config = {
       revision: gitRevision as string,
     },
     zksyncVersion: zkSyncVersion,
-    rampConfig: {
-      mainnet: {
-        url: undefined, // default
-        hostApiKey: process.env.RAMP_MAINNET_HOST_API_KEY,
-      },
-      // rinkeby: {
-      //  url: "https://ri-widget-staging.firebaseapp.com/",
-      //  hostApiKey: process.env.RAMP_RINKEBY_HOST_API_KEY,
-      // },
-      // ropsten: {
-      //   url: "https://ri-widget-staging-ropsten.firebaseapp.com/",
-      //   hostApiKey: process.env.RAMP_ROPSTEN_HOST_API_KEY,
-      // },
-    },
-    utorgConfig: {
-      mainnet: {
-        url: "https://app.utorg.pro",
-        sid: process.env.UTORG_MAINNET_SID,
-      },
-      // rinkeby: {
-      //   url: "https://app-stage.utorg.pro",
-      //   sid: process.env.UTORG_RINKEBY_SID,
-      // },
-      // ropsten: {
-      //   url: "https://app-stage.utorg.pro",
-      //   sid: process.env.UTORG_ROPSTEN_SID,
-      // },
-    },
-    banxaConfig: {
-      mainnet: {
-        url: "https://zksync.banxa.com",
-      },
-      // rinkeby: {
-      //   url: "https://zksync.banxa-sandbox.com",
-      // },
-      // ropsten: {
-      //   url: "https://zksync.banxa-sandbox.com",
-      // },
-    },
-    moonpayConfig: {
-      mainnet: {
-        url: "https://buy.moonpay.com",
-        apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
-      },
-      rinkeby: {
-        url: "https://buy-sandbox.moonpay.com",
-        apiPublicKey: process.env.MOONPAY_RINKEBY_API_PUBLIC_KEY,
-      },
-      // ropsten: {
-      //   url: "https://buy-staging.moonpay.com",
-      //   apiPublicKey: process.env.MOONPAY_API_PUBLIC_KEY,
-      // },
-    },
   },
 
   /**

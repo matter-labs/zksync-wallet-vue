@@ -1,8 +1,9 @@
 <template>
-  <i-modal v-model="opened" size="md" :title="'Depositing failed due to an error'">
+  <i-modal v-model="opened" size="md">
+  <template #header>Deposit failed</template>
     <p>{{ errorText }}</p>
-    <i-button class="_margin-top-1" block size="lg" variant="secondary" @click="processButton"
-      >Back to the Deposit
+    <i-button class="_margin-top-1" block size="lg" variant="secondary" @click="opened = false">
+      Ok
     </i-button>
   </i-modal>
 </template>
@@ -13,24 +14,22 @@ import Vue from "vue";
 export default Vue.extend({
   name: "DepositError",
   props: {
-    errorText: { type: String, default: null, required: true },
+    errorText: {
+      type: String,
+      default: undefined,
+      required: false
+    },
   },
   computed: {
     opened: {
       set(val: false | string): void {
         if (val === false) {
-          this.$accessor.closeActiveModal();
+          this.$emit('close');
         }
       },
       get(): boolean {
-        return this.$accessor.currentModal !== null && this.$accessor.currentModal === "DepositError";
+        return !!this.errorText;
       },
-    },
-  },
-  methods: {
-    processButton() {
-      this.$accessor.closeActiveModal();
-      this.$nextTick(() => this.$router.push("/transaction/deposit"));
     },
   },
 });
