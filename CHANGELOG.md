@@ -1,3 +1,10 @@
+## [3.20.9](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.8...3.20.9) (2022-05-20)
+
+
+### Bug Fixes
+
+* remove argent nft warning, fix fee for argent sign batch response ([#264](https://github.com/matter-labs/zksync-wallet-vue/issues/264)) ([c0d5bf6](https://github.com/matter-labs/zksync-wallet-vue/commit/c0d5bf635f3389af1fa1cff0a61ae3b7a4709ee7))
+
 ## [3.20.8](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.7...3.20.8) (2022-05-19)
 
 
