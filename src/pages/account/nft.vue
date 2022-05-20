@@ -1,6 +1,5 @@
 <template>
   <div class="walletPage dappPageWrapper">
-    <block-modals-argent-nft-warning />
     <block-nft-balances class="_margin-top-1" />
   </div>
 </template>

@@ -1,6 +1,5 @@
 <template>
   <div class="tokenAccount dappPageWrapper">
-    <block-modals-argent-nft-warning />
     <i-modal v-model="tokenUnavailableModal" size="md">
       <template #header>Token unavailable</template>
       <p>Minted tokens are available for transactions only after the Mint transaction gets verified.</p>
