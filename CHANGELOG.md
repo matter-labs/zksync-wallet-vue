@@ -1,3 +1,10 @@
+## [3.20.10](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.9...3.20.10) (2022-05-23)
+
+
+### Bug Fixes
+
+* handle locked wallet state error ([#277](https://github.com/matter-labs/zksync-wallet-vue/issues/277)) ([c50c118](https://github.com/matter-labs/zksync-wallet-vue/commit/c50c118328bea23f97c78bc8889e88ae84b47cd4))
+
 ## [3.20.9](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.8...3.20.9) (2022-05-20)
 
 
