@@ -4,6 +4,7 @@
     <block-index-header />
     <block-modals-wrong-network />
     <block-modals-requesting-provider-error />
+    <block-modals-onboard-error />
     <i-layout-content class="routerContainer">
       <transition name="fade" mode="out-in">
         <nuxt />

@@ -247,6 +247,10 @@ const config = {
            * Added for all environments to reduce complexity
            **/ APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
+        disabledWallets: [{
+          name: "Keystone",
+          error: `Wallet Keystone is not supported`
+        }],
         restoreNetwork: true,
         logoutRedirect: "/",
       } as ModuleOptions,
