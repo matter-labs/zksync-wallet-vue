@@ -1,3 +1,10 @@
+## [3.20.11](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.10...3.20.11) (2022-05-31)
+
+
+### Bug Fixes
+
+* disable Keystone wallet ([#278](https://github.com/matter-labs/zksync-wallet-vue/issues/278)) ([0b52e42](https://github.com/matter-labs/zksync-wallet-vue/commit/0b52e4264203022856b3e6ef6be1da166a3a2371))
+
 ## [3.20.10](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.9...3.20.10) (2022-05-23)
 
 
