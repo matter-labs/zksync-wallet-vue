@@ -31,9 +31,3 @@ export default Vue.extend({
   },
 });
 </script>
-
-<style lang="scss">
-.wrongNetworkModal .text-sm {
-  font-size: 13px;
-}
-</style>
