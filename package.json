@@ -57,7 +57,7 @@
     "@inkline/nuxt": "^2.3.6",
     "@matterlabs/eslint-config-nuxt": "^1.0.6",
     "@matterlabs/prettier-config": "^1.0.2",
-    "@matterlabs/zksync-nuxt-core": "1.8.0",
+    "@matterlabs/zksync-nuxt-core": "^1.8.1",
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.1.7",
@@ -72,7 +72,7 @@
     "nuxt-typed-vuex": "^0.3.0",
     "oh-vue-icons": "^0.4.7",
     "vue-qrcode": "0.4.0",
-    "zksync": "0.12.0-alpha.6"
+    "zksync": "^0.12.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
