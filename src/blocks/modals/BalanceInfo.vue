@@ -26,6 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { Network } from "zksync/build/types";
 
 export default Vue.extend({
   name: "BlockModalsBalanceInfo",
@@ -41,10 +42,20 @@ export default Vue.extend({
       },
     },
     etherscanDomain(): string {
-      const network = this.$store.getters["zk-provider/network"];
-      return `${
-        network.search("rinkeby") !== -1 ? "rinkeby." : network.search("ropsten") === -1 ? "ropsten." : ""
-      }etherscan.io`;
+      const network: Network = this.$store.getters["zk-provider/network"];
+      switch (network) {
+        case "rinkeby":
+        case "rinkeby-beta":
+        case "localhost":
+          return "rinkeby.etherscan.io";
+        case "ropsten":
+          return "ropsten.etherscan.io";
+        case "goerli-beta":
+          return "goerli.etherscan.io";
+        case "mainnet":
+        default:
+          return "etherscan.io";
+      }
     },
   },
 });
