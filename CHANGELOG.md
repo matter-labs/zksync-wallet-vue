@@ -1,3 +1,10 @@
+## [3.20.12](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.11...3.20.12) (2022-06-21)
+
+
+### Bug Fixes
+
+* add goerli beta instead of ropsten beta ([#279](https://github.com/matter-labs/zksync-wallet-vue/issues/279)) ([2d391b5](https://github.com/matter-labs/zksync-wallet-vue/commit/2d391b5fd8595894cf1f285570a7be5d054cf739))
+
 ## [3.20.11](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.10...3.20.11) (2022-05-31)
 
 
