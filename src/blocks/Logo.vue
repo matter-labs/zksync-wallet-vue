@@ -1,11 +1,7 @@
 <template>
   <div class="_display-flex _flex-direction-row _align-items-center headerWrapper">
-    <!-- // v-if="isZkSyncLogo" class="projectLogo _margin-right-1-2" -->
-    <template v-if="isZkSyncLogo">
-      <img :src="zkWalletLogoSrc" alt="zkWallet" class="zkwallet-logo" />
-    </template>
-    <template v-else>
-      <img :src="zkWalletLogoSrc" alt="zkWallet" class="zkwallet-logo" />
+    <template >
+      <img :src="zkWalletLogoSrc" alt="RIF Aggregation Wallet" class="zkwallet-logo" />
     </template>
     <block-network-badge />
   </div>
