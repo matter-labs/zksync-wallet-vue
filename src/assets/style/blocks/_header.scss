@@ -89,7 +89,7 @@ header {
     }
 
     .headerWrapper {
-      height: 30px !important;
+      height: 50px !important;
 
       @media screen and (min-width: $mobile) and (max-width: $tablet) {
         height: 25px !important;
@@ -118,6 +118,7 @@ header {
         letter-spacing: 1px;
         text-transform: uppercase;
         background: transparent !important;
+        margin-left: 10px;
       }
 
       @media (max-width: $mobile) {

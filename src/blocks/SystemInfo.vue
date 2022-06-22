@@ -6,23 +6,19 @@
       <template slot="body">
         <span class="env-details">
           <v-icon name="ri-npmjs-fill" />
-          zkSync v.{{ zkLibVersion }}
+          Explorer v.{{ zkLibVersion }}
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
-          zkSync API <code class="_padding-y-0">{{ zkApiBase }}</code>
+          RIF Aggregation API <code class="_padding-y-0">{{ zkApiBase }}</code>
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
-          Ethereum env <code class="_padding-y-0">{{ netName }}</code>
+          RSK env <code class="_padding-y-0">{{ netName }}</code>
         </span>
       </template>
     </i-popover>
     <div class="beta-tag errorText">BETA</div>
-    <a :href="githubLink" class="revision _background-gray-40" target="_blank">
-      <v-icon name="ri-github-fill" />
-      {{ revision }}
-    </a>
   </i-badge>
 </template>
 <script lang="ts">
