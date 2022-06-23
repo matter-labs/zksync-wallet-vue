@@ -17,8 +17,8 @@
 <script lang="ts">
 import Vue from "vue";
 import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
-import SentryMixin from "./sentry.mixin";
-import AnalyticsMixin from "./analytics.mixin";
+import SentryMixin from "@/mixins/sentry.mixin";
+import AnalyticsMixin from "@/mixins/analytics.mixin";
 
 export default Vue.extend({
   mixins: [SentryMixin, AnalyticsMixin],
