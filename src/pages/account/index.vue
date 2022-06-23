@@ -53,7 +53,7 @@
               class="_margin-y-0 _padding-right-1 _margin-right-1"
               data-cy="account_send_zksync_button"
               size="md"
-              to="/transaction/transfer"
+              to="/account/transfer"
               variant="secondary"
             >
               <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer

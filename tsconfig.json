@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "jsx": "preserve",
     "lib": [
       "es2019",
       "dom",
