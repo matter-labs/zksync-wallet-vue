@@ -34,7 +34,6 @@
           </i-column>
           <i-column :xs="12" :md="4" class="_padding-y-0">
             <div class="linksContainer">
-              <a href="https://developers.rsk.co/rif/aggregation/" target="_blank" class="linkItem">FAQ</a>
               <a href="https://developers.rsk.co/rif/aggregation/learn/" target="_blank" class="linkItem">Docs</a>
               <i-dropdown
                 class="_background-transparent _border-none likeLinkItem"
@@ -106,10 +105,11 @@ export default Vue.extend({
           name: "Explorer",
           link: getLinkItem("explorer"),
         },
-        {
-          name: "zkCheckout",
-          link: getLinkItem("zkCheckout"),
-        },
+        // Removed until we delpoy it
+        // {
+        //   name: "zkCheckout",
+        //   link: getLinkItem("zkCheckout"),
+        // },
       ],
     };
   },

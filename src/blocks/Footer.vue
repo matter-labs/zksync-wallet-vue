@@ -23,8 +23,6 @@
         <i-row center class="_text-nowrap _align-items-center _margin-0">
           <div class="_display-flex _align-items-center _padding-1-2 _padding-md-top-2 _padding-md-bottom-1 _padding-right-1 _hidden-sm-and-down">
             <block-system-info />
-            <span class="_padding-x-1 dividerLine">|</span>
-            <a href="https://uptime.com/s/rif-aggregation" class="uptime-link" target="_blank">uptime</a>
           </div>
           <i-button size="md" circle class="floating-on-mobile" outline variant="dark" @click="toggleDarkMode">
             <v-icon v-if="isDarkTheme" name="ri-sun-fill" scale="1" />
