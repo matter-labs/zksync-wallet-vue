@@ -121,7 +121,7 @@ import { copyToClipboard, searchByKey } from "@matterlabs/zksync-nuxt-core/utils
 import { ZkNFTBalances } from "@matterlabs/zksync-nuxt-core/types";
 import { Address } from "zksync/build/types";
 import { getCIDFromContentHash } from "@/utils/nft";
-import { NFTItem } from "@/types/lib";
+import { NFTItem } from "@/store/nfts";
 
 export default Vue.extend({
   data() {

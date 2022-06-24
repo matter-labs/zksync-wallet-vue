@@ -17,13 +17,16 @@
     .providerOption label {
       display: flex;
       justify-content: space-between;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       padding: 16px;
-      
-      img, svg {
-        height: 24px;
+
+      img,
+      svg {
+        height: 32px;
+        min-width: 32px;
         max-height: initial;
+        margin-right: 0;
       }
     }
   }
@@ -76,7 +79,8 @@
         margin-right: 7px;
       }
     }
-    svg, img {
+    svg,
+    img {
       max-width: 70%;
       max-height: 70%;
       object-fit: contain;

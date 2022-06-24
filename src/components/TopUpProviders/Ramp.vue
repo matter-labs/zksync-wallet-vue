@@ -1,6 +1,9 @@
 <template>
   <div :class="{ disabled: !isSupported }" @click="proceed">
-    <label><img src="/images/providers/RampLogo.svg" alt="Ramp" />Ramp</label>
+    <label>
+      <img src="/images/providers/RampLogo.svg" alt="Ramp" />
+      Ramp
+    </label>
   </div>
 </template>
 
@@ -40,7 +43,7 @@ export default Vue.extend({
 
       new RampInstantSDK({
         variant: "hosted-auto",
-        hostLogoUrl: window.location.origin + "/favicon-dark.png",
+        hostLogoUrl: window.location.origin + "/favicon.png",
         userAddress: this.address,
         ...rampConfig,
       }).show();

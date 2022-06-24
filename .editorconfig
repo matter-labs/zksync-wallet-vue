@@ -417,7 +417,7 @@ ij_javascript_while_brace_force                                 = never
 ij_javascript_while_on_new_line                                 = false
 ij_javascript_wrap_comments                                     = false
 
-[{*.har,*.jsb2,*.jsb3,*.json,.babelrc,eslintrc,.prettierrc,.stylelintrc,jest.config,package.*}]
+[{*.har,*.jsb2,*.jsb3,*.json,.babelrc,eslintrc,.prettierrc,.stylelintrc,package.*}]
 ij_json_indent_size                 = 2
 ij_json_tab_width                   = 2
 ij_json_continuation_indent_size    = 2

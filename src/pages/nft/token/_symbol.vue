@@ -145,7 +145,7 @@ import { NFT, NFTInfo } from "zksync/build/types";
 import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 import { ModuleOptions, ZkContact } from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "ethers/lib/utils";
-import { NFTItem } from "@/types/lib";
+import { NFTItem } from "@/store/nfts";
 import { getCIDFromContentHash } from "@/utils/nft";
 import computeReturnLink from "@/utils/computeReturnLink";
 
@@ -183,9 +183,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/accountStateLoading"];
     },
     actionsAllowed(): boolean {
-      return Boolean(
-        !this.loadingToken && this.nftTokenInfo
-      );
+      return Boolean(!this.loadingToken && this.nftTokenInfo);
     },
     isOwnAddress(): boolean {
       return getAddress(this.$store.getters["zk-account/address"]) === getAddress(this.token.creatorAddress);

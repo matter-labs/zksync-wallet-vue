@@ -1,7 +1,7 @@
 <template>
   <transition name="fade">
     <div v-if="loggingIn && !loggingInScreenDelay" class="loggingInLoader">
-      <block-logo class="_margin-bottom-3" :is-zk-sync-logo="true" />
+      <block-logo class="_margin-bottom-3" />
       <h1>Logging in {{ selectedWallet ? `with ${selectedWallet}` : "" }}</h1>
       <transition-group v-if="hintText" tag="div" name="slide-vertical-fade" class="hint">
         <div :key="hintText">{{ hintText }}</div>

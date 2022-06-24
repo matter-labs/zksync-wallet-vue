@@ -5,13 +5,13 @@
       <div class="container-fluid _flex-direction-row _display-flex connections">
         <button data-cy="core_connect_wallet_button" class="tileContainer _text-center" @click="customWallet()">
           <div class="tile">
-            <img src="@/assets/imgs/wallets/external.png" alt="External" />
+            <img src="/images/wallets/external.png" alt="External" />
           </div>
           <div class="tileName">Ethereum Wallet</div>
         </button>
         <button data-cy="core_connect_wallet_wc_button" class="tileContainer _text-center" @click="walletConnect()">
           <div class="tile">
-            <img src="@/assets/imgs/wallets/wc.png" alt="Wallet Connect" />
+            <img src="/images/wallets/wc.png" alt="Wallet Connect" />
           </div>
           <div class="tileName">Wallet Connect</div>
         </button>
@@ -22,7 +22,7 @@
           @click="walletConnect(true)"
         >
           <div class="tile">
-            <img src="@/assets/imgs/wallets/argent.svg" alt="Argent" />
+            <img src="/images/wallets/argent.svg" alt="Argent" />
           </div>
           <div class="tileName">Argent Wallet</div>
         </button>
@@ -42,7 +42,7 @@
           target="_blank"
         >
           <div class="tile">
-            <img src="@/assets/imgs/logos/symbol.svg" alt="Alternative withdraw" />
+            <img src="/images/logo-no-letters.svg" alt="Alternative withdraw" />
           </div>
           <div class="tileName">Alternative Withdraw</div>
         </a>
