@@ -30,15 +30,9 @@ const meta = {
   image: "/screenshot.jpg",
 };
 
-/**
- * Cloud-functions mapping
- *
- * @uses @nuxtjs/proxy
- * @type {string}
- */
 const functionsBaseUrl = process.env.FIREBASE_FUNCTIONS_BASE_URL || "http://localhost:5001/zksync-vue/us-central1/";
 
-const config = {
+const config = <NuxtConfig>{
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
   ssr: false,
@@ -56,18 +50,18 @@ const config = {
 
   publicRuntimeConfig: {
     mixpanel: {
-      isProduction: isProduction as boolean,
+      isProduction,
       token: `${process.env.MIXPANEL_TOKEN}`,
     },
     git: {
       version: gitVersion,
-      revision: gitRevision as string,
+      revision: gitRevision,
     },
     zksyncVersion: zkSyncVersion,
   },
 
   head: {
-    title: meta.title as string | undefined,
+    title: meta.title,
     titleTemplate: meta.titleTemplate,
     htmlAttrs: {
       lang: "en",
@@ -212,7 +206,7 @@ const config = {
     "nuxt-typed-vuex",
     [
       "@matterlabs/zksync-nuxt-core",
-      {
+      <ModuleOptions>{
         ipfsGateway: "https://ipfs.io",
         network: process.env.ZK_NETWORK,
         apiKeys: {
@@ -232,7 +226,7 @@ const config = {
         ],
         restoreNetwork: true,
         logoutRedirect: "/",
-      } as ModuleOptions,
+      },
     ],
   ],
 
@@ -294,7 +288,7 @@ const config = {
   },
 
   // Build configuration
-  build: {
+  build: <NuxtOptionsBuild>{
     filenames: { chunk: () => `[name]_Y2ZjItY_${isProduction ? "[contenthash]" : ""}.js` },
     cache: isProduction,
     cssSourceMap: !isProduction,
@@ -336,7 +330,7 @@ const config = {
         config.output.crossOriginLoading = isProduction ? "anonymous" : false;
       }
     },
-  } as NuxtOptionsBuild,
+  },
   googleFonts: {
     overwriting: true,
     prefetch: true,
@@ -353,5 +347,5 @@ const config = {
     cache: false,
     devtools: !isProduction,
   },
-} as NuxtConfig;
+};
 export default config;
