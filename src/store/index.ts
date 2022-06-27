@@ -1,10 +1,13 @@
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import { Route } from "vue-router/types";
-import { ZKIRootState } from "@/types/lib";
 
 let resolveModal: ((result: boolean) => void) | undefined;
 
-export const state = (): ZKIRootState => ({
+export const state = (): {
+  accountModalOpened: boolean;
+  currentModal?: string;
+  previousRoute?: Route;
+} => ({
   accountModalOpened: false,
   currentModal: undefined,
   previousRoute: undefined,

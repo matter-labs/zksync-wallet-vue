@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "importHelpers": true,
+    "jsx": "preserve",
     "lib": [
       "es2019",
       "dom",
@@ -41,7 +42,6 @@
       "@nuxt/types",
       "@nuxtjs/sentry",
       "@matterlabs/zksync-nuxt-core",
-      "@types/jest",
       "@inkline/inkline/types",
       "nuxt-typed-vuex",
       "vue-router/types"

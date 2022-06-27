@@ -14,7 +14,15 @@
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
-import { SingleIcon, Location } from "@/types/lib";
+
+type SingleIcon = {
+  name: string;
+  icon: string;
+  url: string;
+  hideIn?: string;
+};
+
+type Location = "header" | "footer";
 
 export default Vue.extend({
   props: {

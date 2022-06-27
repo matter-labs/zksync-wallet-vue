@@ -92,12 +92,10 @@
     "@semantic-release/npm": "^9.0.0",
     "@semantic-release/release-notes-generator": "^10.0.3",
     "@types/crypto-js": "^4.0.2",
-    "@types/jest": "^26.0.23",
     "@types/mixpanel-browser": "^2.35.8",
     "cspell": "^5.19.3",
     "eslint": "^8.12.0",
     "husky": "^7.0.0",
-    "jest": "^26.6.3",
     "lint-staged": "^12.1.5",
     "qrcode": "^1.0.0",
     "sass-loader": "^10.2.1",
@@ -112,15 +110,11 @@
     "stylelint-config-standard-scss": "^3.0.0"
   },
   "lint-staged": {
-    "*.{js,ts}": [
+    "*.{js,ts,vue}": [
       "eslint --config .eslintrc.js --fix --ignore-path .eslintignore",
       "prettier -w"
     ],
     "*.scss": [
-      "prettier -w"
-    ],
-    "*.vue": [
-      "eslint --config .eslintrc.js --fix --ignore-path .eslintignore",
       "prettier -w"
     ]
   },
@@ -153,8 +147,7 @@
     "postinstall": "husky install",
     "semantic-release": "semantic-release",
     "spell-check": "cspell -c cspell.json src/**/*.{ts,vue,js} *.md",
-    "start": "yarn local && nuxt start",
-    "test": "jest"
+    "start": "yarn local && nuxt start"
   },
   "prettier": "@matterlabs/prettier-config",
   "commitlint": {

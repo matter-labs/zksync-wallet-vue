@@ -1,7 +1,23 @@
 import Vue from "vue";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
-import { NFTItem, ZkNFTState } from "@/types/lib";
+
+export type NFTItem = {
+  cid: string;
+  exists: boolean;
+  name?: string;
+  description?: string;
+  image?: string;
+};
+
+type ZkNFTState = {
+  nfts: {
+    [cid: string]: undefined | NFTItem;
+  };
+  nftsLoading: {
+    [cid: string]: boolean;
+  };
+};
 
 const nftCIDPromise: {
   [cid: string]: Promise<any>;

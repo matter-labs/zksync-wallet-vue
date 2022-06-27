@@ -1,10 +1,6 @@
-/**
- * zkSync Types
- */
 import { Route } from "vue-router";
 import { accessorType } from "@/store";
 import { Analytics } from "@/plugins/analytics";
-// All interfaces, mappings and specific types
 import "@/types/lib";
 
 declare module "vue/types/vue" {

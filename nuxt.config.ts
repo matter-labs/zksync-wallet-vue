@@ -5,48 +5,34 @@ import { version as zkSyncVersion } from "zksync/package.json";
 
 import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
 import { Configuration } from "webpack";
+// @ts-ignore
+import packageData from "./package.json";
 
-const packageData = require("./package.json");
 const gitVersion = packageData.version;
 
 const appEnv: string = process.env.APP_ENV ?? "dev";
 const isLocalhost: boolean = !!process.env.IS_LOCALHOST;
 const isDebugEnabled: boolean = appEnv === "dev";
 const isProduction: boolean = appEnv === "prod";
-const pageTitle = "zkSync Wallet";
-const pageImg = "/screenshot.jpg";
-
-const sentryDsn = "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800";
-const gtagId = "GTM-ML2QDNV";
 
 const gitRevision =
   `${process.env.APP_GIT_REVISION}`.length > 8
     ? `${process.env.APP_GIT_REVISION}`.slice(0, 7)
     : `${process.env.APP_GIT_REVISION}`;
 
-const pageTitleTemplate = "%s | zkSync: secure, scalable crypto payments";
-const pageDescription =
-  "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum";
-const pageKeywords = `zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable
-crypto payments, zkWallet, cryptowallet`;
+const meta = {
+  title: "zkSync Wallet",
+  titleTemplate: "%s | zkSync: secure, scalable crypto payments",
+  description:
+    "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum",
+  keywords:
+    "zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable crypto payments, zkWallet, cryptowallet",
+  image: "/screenshot.jpg",
+};
 
-/**
- * Cloud-functions mapping
- *
- * @uses @nuxtjs/proxy
- * @type {string}
- */
 const functionsBaseUrl = process.env.FIREBASE_FUNCTIONS_BASE_URL || "http://localhost:5001/zksync-vue/us-central1/";
-const localhostProxy = isLocalhost
-  ? {
-      "/api/moonpaySign": `${functionsBaseUrl}moonpaySign`,
-      "/api/banxaAuth": `${functionsBaseUrl}banxaAuth`,
-      "/tunnel/mixpanel": `${functionsBaseUrl}mixpanelTunnel`,
-      "/tunnel/sentry": `${functionsBaseUrl}sentryTunnel`,
-    }
-  : {};
 
-const config = {
+const config = <NuxtConfig>{
   components: ["@/components/", { path: "@/blocks/", prefix: "block" }],
   telemetry: false,
   ssr: false,
@@ -64,22 +50,19 @@ const config = {
 
   publicRuntimeConfig: {
     mixpanel: {
-      isProduction: isProduction as boolean,
+      isProduction,
       token: `${process.env.MIXPANEL_TOKEN}`,
     },
     git: {
       version: gitVersion,
-      revision: gitRevision as string,
+      revision: gitRevision,
     },
     zksyncVersion: zkSyncVersion,
   },
 
-  /**
-   * Head-placed HTML-tags / configuration of the `<meta>`
-   **/
   head: {
-    title: pageTitle as string | undefined,
-    titleTemplate: pageTitleTemplate,
+    title: meta.title,
+    titleTemplate: meta.titleTemplate,
     htmlAttrs: {
       lang: "en",
       amp: "true",
@@ -95,9 +78,6 @@ const config = {
         content: "0",
         property: "expires",
       },
-      /**
-       * UX / UI settings
-       **/
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0" },
 
@@ -109,12 +89,12 @@ const config = {
       {
         hid: "keywords",
         name: "keywords",
-        content: pageKeywords,
+        content: meta.keywords,
       },
       {
         hid: "description",
         name: "description",
-        content: pageDescription,
+        content: meta.description,
       },
       {
         hid: "author",
@@ -124,17 +104,17 @@ const config = {
       {
         hid: "twitter:title",
         name: "twitter:title",
-        content: pageTitle,
+        content: meta.title,
       },
       {
         hid: "twitter:description",
         name: "twitter:description",
-        content: pageDescription,
+        content: meta.description,
       },
       {
         hid: "twitter:image",
         name: "twitter:image",
-        content: pageImg,
+        content: meta.image,
       },
       {
         hid: "twitter:site",
@@ -149,37 +129,37 @@ const config = {
       {
         hid: "twitter:image:alt",
         name: "twitter:image:alt",
-        content: pageTitle,
+        content: meta.title,
       },
       {
         hid: "og:title",
         property: "og:title",
-        content: pageTitle,
+        content: meta.title,
       },
       {
         hid: "og:description",
         property: "og:description",
-        content: pageDescription,
+        content: meta.description,
       },
       {
         hid: "og:image",
         property: "og:image",
-        content: pageImg,
+        content: meta.image,
       },
       {
         hid: "og:image:secure_url",
         property: "og:image:secure_url",
-        content: pageImg,
+        content: meta.image,
       },
       {
         hid: "og:image:alt",
         property: "og:image:alt",
-        content: pageTitle,
+        content: meta.title,
       },
       {
         hid: "msapplication-TileImage",
         name: "msapplication-TileImage",
-        content: "/favicon-dark.png",
+        content: "/favicon.png",
       },
       { hid: "theme-color", name: "theme-color", content: "#4e529a" },
       {
@@ -188,22 +168,20 @@ const config = {
         content: "#4e529a",
       },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon-dark.png" }],
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.png" }],
   },
-  /**
-   * Customize the progress-bar color
-   **/ loading: {
+
+  // Customize the progress-bar color
+  loading: {
     color: "#8c8dfc",
     continuous: true,
   },
 
-  /**
-   * Single-entry global-scope scss
-   **/
+  // Single-entry global-scope scss
   css: ["@/assets/style/main.scss"],
-  /**
-   * Plugins that should be loaded before the mounting
-   */ plugins: [
+
+  // Plugins that should be loaded before the mounting
+  plugins: [
     "@/plugins/icons",
     "@/plugins/routerMixin",
     "@/plugins/filters",
@@ -218,48 +196,41 @@ const config = {
   router: {
     middleware: ["auth"],
   },
-  /**
-   * Nuxt.js dev-modules
-   **/
 
+  // Nuxt.js dev-modules
   buildModules: [
     // https://go.nuxtjs.dev/typescript
-    "@nuxt/typescript-build", // https://go.nuxtjs.dev/stylelint
+    "@nuxt/typescript-build",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
     "nuxt-typed-vuex",
     [
       "@matterlabs/zksync-nuxt-core",
-      {
+      <ModuleOptions>{
         ipfsGateway: "https://ipfs.io",
         network: process.env.ZK_NETWORK,
         apiKeys: {
           FORTMATIC_KEY: process.env.APP_FORTMATIC,
           PORTIS_KEY: process.env.APP_PORTIS,
-          /**
-           * Added for all environments to reduce complexity
-           **/
           INFURA_KEY: "560464419d33486ab1713d61ac9f1d82",
         },
         onboardConfig: {
-          APP_NAME: pageTitle,
-          /**
-           * Added for all environments to reduce complexity
-           **/ APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
+          APP_NAME: meta.title,
+          APP_ID: "764666de-bcb7-48a6-91fc-75e9dc086ea0",
         },
-        disabledWallets: [{
-          name: "Keystone",
-          error: `Wallet Keystone is not supported`
-        }],
+        disabledWallets: [
+          {
+            name: "Keystone",
+            error: `Wallet Keystone is not supported`,
+          },
+        ],
         restoreNetwork: true,
         logoutRedirect: "/",
-      } as ModuleOptions,
+      },
     ],
   ],
 
-  /**
-   * Nuxt.js modules
-   **/
+  // Nuxt.js modules
   modules: ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
   inkline: {
     config: {
@@ -267,7 +238,7 @@ const config = {
     },
   },
   sentry: {
-    dsn: sentryDsn,
+    dsn: "https://de3e0dcf0e9c4243b6bd7cfbc34f6ea1@o496053.ingest.sentry.io/5569800",
     disableServerSide: true,
     disabled: isLocalhost,
     config: {
@@ -277,11 +248,16 @@ const config = {
       environment: isProduction ? "production" : appEnv === "dev" ? "development" : appEnv,
     },
   },
-  proxy: {
-    ...localhostProxy,
-  },
+  proxy: isLocalhost
+    ? {
+        "/api/moonpaySign": `${functionsBaseUrl}moonpaySign`,
+        "/api/banxaAuth": `${functionsBaseUrl}banxaAuth`,
+        "/tunnel/mixpanel": `${functionsBaseUrl}mixpanelTunnel`,
+        "/tunnel/sentry": `${functionsBaseUrl}sentryTunnel`,
+      }
+    : {},
   "google-gtag": {
-    id: gtagId,
+    id: "GTM-ML2QDNV",
     config: {
       anonymize_ip: true, // anonymize IP
       send_page_view: false, // might be necessary to avoid duplicated page track on page reload
@@ -307,15 +283,12 @@ const config = {
       immutable: true,
       // Serve index.html template
       index: true,
-      // 1 year in production
       maxAge: "1m",
     },
   },
 
-  /**
-   * Build configuration
-   **/
-  build: {
+  // Build configuration
+  build: <NuxtOptionsBuild>{
     filenames: { chunk: () => `[name]_Y2ZjItY_${isProduction ? "[contenthash]" : ""}.js` },
     cache: isProduction,
     cssSourceMap: !isProduction,
@@ -357,7 +330,7 @@ const config = {
         config.output.crossOriginLoading = isProduction ? "anonymous" : false;
       }
     },
-  } as NuxtOptionsBuild,
+  },
   googleFonts: {
     overwriting: true,
     prefetch: true,
@@ -374,5 +347,5 @@ const config = {
     cache: false,
     devtools: !isProduction,
   },
-} as NuxtConfig;
+};
 export default config;

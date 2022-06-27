@@ -18,6 +18,7 @@
 @import "./blocks/chooseToken";
 @import "./blocks/networkSwitch";
 @import "./blocks/commonPageWrapper";
+@import "./blocks/cryptoProviders";
 
 // Components
 @import "./components/custom/input";
@@ -35,6 +36,7 @@
 @import "./pages/transactions";
 @import "./pages/transaction";
 @import "./pages/account";
+@import "./pages/providers";
 @import "./pages/tokenAccount";
 @import "./dev";
 @import "./mobile-layout";

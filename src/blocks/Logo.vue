@@ -1,12 +1,6 @@
 <template>
   <div class="_display-flex _flex-direction-row _align-items-center headerWrapper">
-    <svg
-      v-if="isZkSyncLogo"
-      class="projectLogo _margin-right-1-2"
-      fill="none"
-      viewBox="0 0 1407 276"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg class="projectLogo _margin-right-1-2" fill="none" viewBox="0 0 1407 276" xmlns="http://www.w3.org/2000/svg">
       <path
         clip-rule="evenodd"
         d="M485.481 137.772L347.819.254944V100.967L211.134 201.801L347.819 201.896V275.289L485.481 137.772Z"
@@ -50,9 +44,6 @@
         fill-opacity="0.9"
       />
     </svg>
-    <template v-else>
-      <img src="@/assets/imgs/logos/logo-alt.svg" alt="zkWallet" class="zkwallet-logo" />
-    </template>
     <block-network-badge v-if="!hideNetwork" />
   </div>
 </template>
@@ -67,11 +58,6 @@ export default Vue.extend({
       default: false,
       type: Boolean,
       required: false,
-    },
-    isZkSyncLogo: {
-      default: true,
-      required: false,
-      type: Boolean,
     },
   },
 });
