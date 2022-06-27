@@ -1,3 +1,10 @@
+# [3.21.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.12...3.21.0) (2022-06-27)
+
+
+### Features
+
+* transfer providers ([#281](https://github.com/matter-labs/zksync-wallet-vue/issues/281)) ([45e3264](https://github.com/matter-labs/zksync-wallet-vue/commit/45e3264473b73ec018933d41e9d0e492388061b6))
+
 ## [3.20.12](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.11...3.20.12) (2022-06-21)
 
 
