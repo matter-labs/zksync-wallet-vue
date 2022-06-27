@@ -52,15 +52,6 @@ import Vue from "vue";
 import { Address } from "zksync/build/types";
 import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";
 
-const banxaConfig = {
-  "mainnet": {
-    url: "https://zksync.banxa.com",
-  },
-  "rinkeby": {
-    url: "https://zksync.banxa-sandbox.com/",
-  },
-};
-
 export default Vue.extend({
   name: "ProviderRampTransferProvider",
   computed: {
@@ -68,7 +59,7 @@ export default Vue.extend({
       return this.$store.getters["zk-provider/network"];
     },
     isSupported(): boolean {
-      return Object.prototype.hasOwnProperty.call(banxaConfig, this.network);
+      return this.network === "mainnet";
     },
     address(): Address {
       return this.$store.getters["zk-account/address"];
@@ -85,7 +76,7 @@ export default Vue.extend({
       }
       this.$analytics.track("click_on_transfer_with_banxa");
 
-      window.open(banxaConfig[this.network]?.url);
+      window.open("https://zksync.banxa.com");
     },
   },
 });
