@@ -33,32 +33,32 @@ export default Vue.extend({
         {
           name: "Medium Blog",
           img: "medium",
-          url: "https://medium.com/matter-labs",
+          url: "https://medium.com/@RSKNews",
         },
         {
           name: "Gitter Rooms",
           img: "gitter",
-          url: "https://gitter.im/matter-labs/zksync",
+          url: "https://gitter.im/rsksmart",
         },
         {
           name: "Discord Community",
           img: "discord",
-          url: "https://discord.com/invite/px2aR7w",
+          url: "https://discord.com/invite/fPerbqcWGE",
         },
         {
           name: "Telegram Community",
           img: "telegram",
-          url: "https://t.me/zksync",
+          url: "https://t.me/rskofficialcommunity",
         },
         {
           name: "Twitter Community",
           img: "twitter",
-          url: "https://twitter.com/zksync",
+          url: "https://twitter.com/rsksmart",
         },
         {
           name: "All Contacts",
           icon: "ri-at-line",
-          url: "https://zksync.io/contact.html",
+          url: "https://www.iovlabs.org/contact.html",
           hideIn: "footer",
         },
       ];

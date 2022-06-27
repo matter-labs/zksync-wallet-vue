@@ -34,8 +34,7 @@
           </i-column>
           <i-column :xs="12" :md="4" class="_padding-y-0">
             <div class="linksContainer">
-              <a href="https://zksync.io/faq/" target="_blank" class="linkItem">FAQ</a>
-              <a href="https://zksync.io/dev/" target="_blank" class="linkItem">Docs</a>
+              <a href="https://developers.rsk.co/rif/aggregation/learn/" target="_blank" class="linkItem">Docs</a>
               <i-dropdown
                 class="_background-transparent _border-none likeLinkItem"
                 size="sm"
@@ -45,7 +44,7 @@
                 :class="{ opened: dropdownOpened }"
               >
                 <a class="dropDownHandler linkItem _position-top-0" @click.prevent="handleDropdown">
-                  zkTools
+                  RIF Aggregation Tools
                   <v-icon v-show="dropdownOpened" class="fal" name="ri-arrow-up-s-line" />
                   <v-icon v-show="!dropdownOpened" class="fal" name="ri-arrow-down-s-line" />
                 </a>
@@ -53,7 +52,7 @@
                   <i-dropdown-item v-for="(item, index) in dropdownOptions" :key="index" :href="item.link" target="_blank">{{ item.name }}</i-dropdown-item>
                 </i-dropdown-menu>
               </i-dropdown>
-              <a href="https://matter-labs.io/#jobs" target="_blank" class="linkItem">We're hiring</a>
+              <a href="https://www.iovlabs.org/careers.html" target="_blank" class="linkItem">We're hiring</a>
             </div>
           </i-column>
           <i-column :xs="12" :md="4" class="_margin-left-auto _padding-right-0 _justify-content-end desktopOnly">
@@ -75,30 +74,15 @@ interface DropdownOption {
 }
 
 const dropdownLinks = {
-  zkLink: {
-    mainnet: "https://link.zksync.io/",
-    rinkeby: "https://link.zksync.io/",
-    ropsten: "https://link.zksync.io/",
-  },
-  zkScan: {
-    mainnet: "https://zkscan.io/",
-    rinkeby: "https://rinkeby.zkscan.io",
-    ropsten: "https://ropsten.zkscan.io",
-  },
-  withdrawal: {
-    mainnet: "https://withdraw.zksync.io",
-    rinkeby: "https://withdraw.zksync.io",
-    ropsten: "https://withdraw.zksync.io",
+  explorer: {
+    mainnet: "https://explorer.aggregation.rifcomputing.net/",
+    regtest: "https://explorer.dev.aggregation.rifcomputing.net/",
+    localhost: "http://localhost:7001"
   },
   zkCheckout: {
-    mainnet: "https://checkout.zksync.io",
-    rinkeby: "https://checkout-rinkeby.zksync.io",
-    ropsten: "https://checkout-ropsten.zksync.io",
-  },
-  zkMint: {
-    mainnet: "https://mint.zksync.dev",
-    rinkeby: "https://mint.zksync.dev",
-    ropsten: "https://mint-ropsten.zksync.dev",
+    mainnet: "",
+    regtest: "",
+    localhost: "http://localhost:3000"
   },
 };
 
@@ -118,25 +102,14 @@ export default Vue.extend({
       dropdownOpened: false,
       dropdownOptions: <DropdownOption[]>[
         {
-          name: "zkScan",
-          link: getLinkItem("zkScan"),
+          name: "Explorer",
+          link: getLinkItem("explorer"),
         },
-        {
-          name: "zkLink",
-          link: getLinkItem("zkLink"),
-        },
-        {
-          name: "Alternative Withdrawal",
-          link: getLinkItem("withdrawal"),
-        },
-        {
-          name: "zkCheckout",
-          link: getLinkItem("zkCheckout"),
-        },
-        {
-          name: "zkMint",
-          link: getLinkItem("zkMint"),
-        },
+        // Removed until we delpoy it
+        // {
+        //   name: "zkCheckout",
+        //   link: getLinkItem("zkCheckout"),
+        // },
       ],
     };
   },
