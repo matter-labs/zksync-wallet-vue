@@ -5,7 +5,8 @@
     </div>
     <checkmark />
     <slot />
-    <a v-if="txLink" :href="txLink" class="_display-block _text-center _margin-top-1" target="_blank"> Link to the transaction <v-icon name="ri-external-link-line"></v-icon> </a>
+    <a v-if="txLink" :href="txLink" class="_display-block _text-center _margin-top-1" target="_blank"> Link to the
+      transaction <v-icon name="ri-external-link-line"></v-icon> </a>
     <div v-if="recipient" class="infoBlockItem smaller _margin-top-2">
       <div class="amount">
         <span>Recipient:</span>
@@ -35,10 +36,12 @@
       </div>
     </div>
     <slot name="custom" />
-    <i-button v-if="!noBtn && continueBtnFunction" block size="lg" variant="secondary" class="_margin-top-2" @click="$emit('continue')">
+    <i-button v-if="!noBtn && continueBtnFunction" block size="lg" variant="secondary" class="_margin-top-2"
+      @click="$emit('continue')">
       {{ continueBtnText ? continueBtnText : "Ok" }}
     </i-button>
-    <i-button v-else-if="!noBtn" data-cy="success_block_ok_button" block size="lg" variant="secondary" class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
+    <i-button v-else-if="!noBtn" data-cy="success_block_ok_button" block size="lg" variant="secondary"
+      class="_margin-top-2" :to="continueBtnLink">Ok</i-button>
   </div>
 </template>
 

@@ -38,7 +38,8 @@ export const ETHER_PREFIX_DOT: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : 
 export const ETHER_PREFIX_MINUS: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : "-");
 
 export const ETHER_NETWORK_ID: number = _ETHER_NETWORK_ID_DICTIONARY.find((value: networkEthId): boolean => value?.name === (ETHER_NETWORK_NAME as string))?.id as number;
-
+export const IS_LOCALHOST: boolean = ETHER_NETWORK_ID === 33;
+export const EXPLORER_VERSION: string = process.env.APP_EXPLORER_VERSION ?? '0.1.0';
 /**
  * The right way of strict-typing for the web3provider
  *  — thanks to the [global.window] with type NodeJS.Global operation with the typed window is generally possible
@@ -51,9 +52,9 @@ export const ethWindow: Window = global.window;
 export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
 export const APP_ZK_SCAN: string = process.env.ZK_SPECIAL_SCAN ? process.env.ZK_SPECIAL_SCAN : `https://${ETHER_PREFIX_DOT}zkscan.io`;
-export const APP_ZKSYNC_BLOCK_EXPLORER = `${APP_ZK_SCAN}/explorer`;
-export const APP_ETH_BLOCK_EXPLORER = `https://${ETHER_PREFIX_DOT}etherscan.io`;
-
+export const APP_ZKSYNC_BLOCK_EXPLORER: string = EXPLORER_VERSION === '0.1.0' ?`${APP_ZK_SCAN}` : `${APP_ZK_SCAN}/explorer`;
+export const APP_ETH_BLOCK_EXPLORER: string = IS_LOCALHOST ? `http://localhost:7001` : `https://${ETHER_PREFIX_DOT}etherscan.io`;
+export const EXPLORER_TX: string = EXPLORER_VERSION === '0.1.0' ? '/transactions/' : '/tx/';
 /**
  * Onboard-only params
  */

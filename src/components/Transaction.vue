@@ -210,7 +210,7 @@ import FeeCalcError from "@/blocks/modals/FeeCalcError.vue";
 import FeeChanged from "@/blocks/modals/FeeChanged.vue";
 import loadingBlock from "@/components/LoadingBlock.vue";
 import successBlock from "@/components/SuccessBlock.vue";
-import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME } from "@/plugins/build";
+import { APP_ZKSYNC_BLOCK_EXPLORER, ETHER_NETWORK_NAME, EXPLORER_TX } from "@/plugins/build";
 
 import { GweiBalance, ZkInBalance, ZkInContact, ZkInFeesObj, ZkInNFT, ZkInTransactionInfo, ZKTypeTransactionType, ZkInFeeChange } from "@/types/lib";
 import utils from "@/plugins/utils";
@@ -641,7 +641,7 @@ export default Vue.extend({
       this.checkUnlock(withdrawTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + EXPLORER_TX + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = withdrawTransactions.feeTransaction!.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: withdrawTransactions.transaction!.txData.tx.to,
@@ -695,7 +695,7 @@ export default Vue.extend({
       this.checkUnlock(transferTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + EXPLORER_TX + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
@@ -745,7 +745,7 @@ export default Vue.extend({
       this.checkUnlock(transferTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + EXPLORER_TX + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = transferTransactions.feeTransaction?.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: transferTransactions.transaction!.txData.tx.to,
@@ -780,7 +780,7 @@ export default Vue.extend({
       this.checkUnlock(withdrawTransactions);
 
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(withdrawTransactions.transaction!.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + EXPLORER_TX + this.transactionInfo.hash;
       this.transactionInfo.fee!.amount = withdrawTransactions.feeTransaction!.txData.tx.fee;
       this.transactionInfo.recipient = {
         address: withdrawTransactions.transaction!.txData.tx.to,
@@ -875,7 +875,7 @@ export default Vue.extend({
     setTransactionInfo(transaction: Transaction, continueAfter = false, btnText = "") {
       this.transactionInfo.continueBtnFunction = continueAfter;
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transaction.txHash) as string;
-      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + "/transactions/" + this.transactionInfo.hash;
+      this.transactionInfo.explorerLink = APP_ZKSYNC_BLOCK_EXPLORER + EXPLORER_TX + this.transactionInfo.hash;
       this.transactionInfo.continueBtnText = btnText;
       this.transactionInfo.fee!.token = this.feeToken;
       this.transactionInfo.fee!.amount = transaction.txData.tx.fee;

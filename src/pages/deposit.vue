@@ -157,7 +157,7 @@
 import chooseToken from "@/blocks/ChooseToken.vue";
 import AllowanceModal from "@/blocks/modals/Allowance.vue";
 
-import { APP_ETH_BLOCK_EXPLORER } from "@/plugins/build";
+import { APP_ETH_BLOCK_EXPLORER, EXPLORER_TX } from "@/plugins/build";
 import utils from "@/plugins/utils";
 import { deposit } from "@/plugins/walletActions/transaction";
 import { walletData } from "@/plugins/walletData";
@@ -370,7 +370,7 @@ export default Vue.extend({
         token: this.chosenToken,
       };
       this.transactionInfo.hash = this.$options.filters!.formatTxHash(transferTransaction.ethTx.hash) as string;
-      this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + this.transactionInfo.hash;
+      this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + EXPLORER_TX + this.transactionInfo.hash;
       this.tip = "Waiting for the transaction to be mined...";
       await transferTransaction.awaitEthereumTxCommit();
       this.transactionInfo.fee = undefined;
@@ -461,7 +461,7 @@ export default Vue.extend({
         }
         this.tip = "Waiting for the transaction to be mined...";
         this.transactionInfo.hash = this.$options.filters!.formatTxHash(approveDeposits.hash) as string;
-        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + "/tx/" + this.transactionInfo.hash;
+        this.transactionInfo.explorerLink = APP_ETH_BLOCK_EXPLORER + EXPLORER_TX + this.transactionInfo.hash;
         await approveDeposits.wait();
         this.transactionInfo.amount = {
           amount: "0",
