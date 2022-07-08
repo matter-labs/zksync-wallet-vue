@@ -1,6 +1,8 @@
 import * as functions from "firebase-functions";
 import { createHmac } from "crypto";
 
+type Network = "rinkeby" | "mainnet";
+
 /**
  * Signing Moonpay urls on server-side
  * @link https://www.moonpay.com/dashboard/getting_started/#step_3
@@ -13,46 +15,31 @@ export function moonpaySignFunction(request: functions.Request, response: functi
   if (!request.headers["content-type"].includes("application/json")) {
     throw new functions.https.HttpsError("unavailable", "Expected application/json");
   }
-  const data: { originalUrl?: string; pubKey?: string; ethNetwork?: "rinkeby" | "mainnet" | string } = request.body;
+  const data: { originalUrl?: string; pubKey?: string; ethNetwork?: Network | string } = request.body;
 
-  if (!data?.originalUrl) {
+  if (!data) {
+    throw new functions.https.HttpsError("invalid-argument", "No body provided");
+  }
+
+  if (!data.originalUrl) {
     throw new functions.https.HttpsError("invalid-argument", "Requested originalUrl is invalid");
   }
 
-  if (!data?.ethNetwork || !["rinkeby", "mainnet"].includes(data.ethNetwork)) {
-    throw new functions.https.HttpsError("invalid-argument", "Requested ethNetwork is invalid");
-  }
-
-  const moonpayConfig:
-    | {
-        rinkeby?: {
-          pub_key: string;
-          secret_key: string;
-        };
-        mainnet?: {
-          pub_key: string;
-          secret_key: string;
-        };
-      }
-    | undefined = functions.config().providers.moonpay;
+  const moonpayConfig: Record<Network, { pub_key: string; secret_key: string }> | undefined =
+    functions.config().providers.moonpay;
 
   if (!moonpayConfig) {
     throw new functions.https.HttpsError("failed-precondition", "Moonpay config is missing");
   }
 
-  if ((data.ethNetwork === "rinkeby" && !moonpayConfig.rinkeby) || (data.ethNetwork === "mainnet" && !moonpayConfig.mainnet)) {
-    throw new functions.https.HttpsError("failed-precondition", `Moonpay ${data.ethNetwork} config is missing`);
+  if (!data.ethNetwork || !moonpayConfig[data.ethNetwork]) {
+    throw new functions.https.HttpsError("invalid-argument", `Requested ${data.ethNetwork} is not supported`);
   }
 
-  const publishableKey = data.ethNetwork === "rinkeby" ? moonpayConfig.rinkeby?.pub_key : moonpayConfig.mainnet?.pub_key;
-  const secretKey = data.ethNetwork === "rinkeby" ? moonpayConfig.rinkeby?.secret_key : moonpayConfig.mainnet?.secret_key;
+  const secretKey = moonpayConfig[data.ethNetwork].secret_key;
 
-  if (!publishableKey || !secretKey) {
+  if (!secretKey) {
     throw new functions.https.HttpsError("failed-precondition", "Moonpay config is invalid");
-  }
-
-  if (data?.pubKey !== publishableKey) {
-    throw new functions.https.HttpsError("invalid-argument", "Requested pubKey doesn't match configured for the signing");
   }
 
   const signature = createHmac("sha256", secretKey).update(new URL(data.originalUrl).search).digest("base64");

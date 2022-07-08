@@ -14,12 +14,8 @@ module.exports = {
       "./tsconfig.eslint.json"
     ]
   },
-  plugins: [
-    "@typescript-eslint",
-  ],
   extends: [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "eslint:recommended"
   ],
   "rules": {}
 };
