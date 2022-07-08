@@ -25,8 +25,14 @@ import { Address } from "zksync/build/types";
 import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";
 
 const moonpayConfig = {
-  url: "https://buy-sandbox.moonpay.com",
-  apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
+  rinkeby: {
+    url: "https://buy-sandbox.moonpay.com",
+    apiPublicKey: process.env.MOONPAY_RINKEBY_API_PUBLIC_KEY,
+  },
+  mainnet: {
+    url: "https://buy.moonpay.com",
+    apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
+  },
 };
 
 export default Vue.extend({
@@ -40,8 +46,11 @@ export default Vue.extend({
     network(): ZkEthereumNetworkName {
       return this.$store.getters["zk-provider/network"];
     },
+    moonpayConfig(): { url: string; apiPublicKey: string } {
+      return moonpayConfig[this.network];
+    },
     isSupported(): boolean {
-      return this.network === "rinkeby";
+      return !!this.moonpayConfig;
     },
     disabled(): boolean {
       return !this.isSupported || this.loading;
@@ -66,14 +75,16 @@ export default Vue.extend({
       try {
         this.loading = true;
         const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC", "USDT_ZKSYNC"];
-        const url = `${moonpayConfig.url}?apiKey=${
-          moonpayConfig.apiPublicKey
-        }&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(
-          ","
-        )}&showAllCurrencies=0&redirectURL=${encodeURIComponent(this.redirectURL)}`;
+        const url = `${this.moonpayConfig.url}?apiKey=${
+          this.moonpayConfig.apiPublicKey
+        }&walletAddress=${encodeURIComponent(
+          this.address
+        )}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${encodeURIComponent(
+          availableZksyncCurrencies.join(",")
+        )}&colorCode=${encodeURIComponent("#4e529a")}&redirectURL=${encodeURIComponent(this.redirectURL)}`;
 
         const body = JSON.stringify({
-          pubKey: moonpayConfig.apiPublicKey,
+          pubKey: this.moonpayConfig.apiPublicKey,
           originalUrl: url,
           ethNetwork: this.network,
         });
