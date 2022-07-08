@@ -1,11 +1,6 @@
 <template>
-  <div :class="{ 'disabled': disabled }" @click="proceed">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="1920"
-      height="349.9062"
-      viewBox="0 0 1920 349.9062"
-    >
+  <div :class="{ disabled: disabled }" @click="proceed">
+    <svg xmlns="http://www.w3.org/2000/svg" width="1920" height="349.9062" viewBox="0 0 1920 349.9062">
       <g>
         <path
           class="letter"
@@ -32,21 +27,21 @@ import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";
 const moonpayConfig = {
   url: "https://buy.moonpay.com",
   apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
-}
+};
 
 export default Vue.extend({
-  name: "ProviderRamp",
+  name: "ProviderMoonpay",
   data() {
     return {
       loading: false,
-    }
+    };
   },
   computed: {
     network(): ZkEthereumNetworkName {
       return this.$store.getters["zk-provider/network"];
     },
     isSupported(): boolean {
-      return this.network === "mainnet";
+      return this.network === "rinkeby";
     },
     disabled(): boolean {
       return !this.isSupported || this.loading;
@@ -71,8 +66,7 @@ export default Vue.extend({
       try {
         this.loading = true;
         const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC", "USDT_ZKSYNC"];
-        const url = `${moonpayConfig.url}?apiKey=${moonpayConfig.apiPublicKey
-        }&walletAddress=${encodeURIComponent(
+        const url = `${moonpayConfig.url}?apiKey=${moonpayConfig.apiPublicKey}&walletAddress=${encodeURIComponent(
           this.address
         )}&defaultCurrencyCode=ETH_ZKSYNC&showOnlyCurrencies=${availableZksyncCurrencies.join(
           ","
@@ -102,7 +96,10 @@ export default Vue.extend({
         window.open(responseData!.signedUrl, "_blank");
       } catch ({ message }) {
         console.warn(`Moonpay deposit error: `, message);
-        this.$emit("providerError", message || "There was an error during Moonpay Deposit initialization. Please try once again.");
+        this.$emit(
+          "providerError",
+          message || "There was an error during Moonpay Deposit initialization. Please try once again."
+        );
       } finally {
         this.loading = false;
       }
