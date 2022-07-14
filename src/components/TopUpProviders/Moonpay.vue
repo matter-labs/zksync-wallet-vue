@@ -25,14 +25,8 @@ import { Address } from "zksync/build/types";
 import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";
 
 const moonpayConfig = {
-  rinkeby: {
-    url: "https://buy-sandbox.moonpay.com",
-    apiPublicKey: process.env.MOONPAY_RINKEBY_API_PUBLIC_KEY,
-  },
-  mainnet: {
-    url: "https://buy.moonpay.com",
-    apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
-  },
+  url: "https://buy.moonpay.com",
+  apiPublicKey: process.env.MOONPAY_MAINNET_API_PUBLIC_KEY,
 };
 
 export default Vue.extend({
@@ -46,11 +40,8 @@ export default Vue.extend({
     network(): ZkEthereumNetworkName {
       return this.$store.getters["zk-provider/network"];
     },
-    moonpayConfig(): { url: string; apiPublicKey: string } {
-      return moonpayConfig[this.network];
-    },
     isSupported(): boolean {
-      return !!this.moonpayConfig;
+      return this.network === "mainnet";
     },
     disabled(): boolean {
       return !this.isSupported || this.loading;
@@ -75,9 +66,7 @@ export default Vue.extend({
       try {
         this.loading = true;
         const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC", "USDT_ZKSYNC"];
-        const url = `${this.moonpayConfig.url}?apiKey=${
-          this.moonpayConfig.apiPublicKey
-        }&walletAddresses=${encodeURIComponent(
+        const url = `${moonpayConfig.url}?apiKey=${moonpayConfig.apiPublicKey}&walletAddresses=${encodeURIComponent(
           JSON.stringify(
             Object.fromEntries(availableZksyncCurrencies.map((currency) => [currency.toLowerCase(), this.address]))
           )
@@ -86,7 +75,7 @@ export default Vue.extend({
         )}&colorCode=${encodeURIComponent("#4e529a")}&redirectURL=${encodeURIComponent(this.redirectURL)}`;
 
         const body = JSON.stringify({
-          pubKey: this.moonpayConfig.apiPublicKey,
+          pubKey: moonpayConfig.apiPublicKey,
           originalUrl: url,
           ethNetwork: this.network,
         });
