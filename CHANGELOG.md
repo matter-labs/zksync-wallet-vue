@@ -1,3 +1,10 @@
+# [3.22.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.21.0...3.22.0) (2022-07-19)
+
+
+### Features
+
+* unblock moonpay ([#282](https://github.com/matter-labs/zksync-wallet-vue/issues/282)) ([3064f28](https://github.com/matter-labs/zksync-wallet-vue/commit/3064f28fdfee53d9d89bdee71c34fe0ecd4fbd12))
+
 # [3.21.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.20.12...3.21.0) (2022-06-27)
 
 
