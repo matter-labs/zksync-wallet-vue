@@ -73,7 +73,7 @@ export default Vue.extend({
       } else {
         this.$analytics.track("login", {
           connectionType: "Ethereum Wallet",
-          wallet: this.$store.getters["zk-onboard/selectedWallet"],
+          wallet: this.$store.getters["zk-account/address"],
         });
         return this.$router.push("/account");
       }
@@ -87,7 +87,7 @@ export default Vue.extend({
       } else {
         this.$analytics.track("login", {
           connectionType: "WalletConnect",
-          wallet: this.$store.getters["zk-onboard/selectedWallet"],
+          wallet: this.$store.getters["zk-account/address"],
         });
         return this.$router.push("/account");
       }

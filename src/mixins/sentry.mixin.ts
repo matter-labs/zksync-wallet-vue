@@ -10,7 +10,7 @@ export default Vue.extend({
       selectedWallet: "zk-onboard/selectedWallet",
       selectedOnboardType: "zk-onboard/selectedOnboardType",
 
-      ethereumState: "zk-onboard/ethereumState",
+      accountAddress: "zk-account/address",
     }),
   },
   watch: {
@@ -43,7 +43,7 @@ export default Vue.extend({
       immediate: true,
     },
 
-    "ethereumState.address": {
+    accountAddress: {
       handler(value) {
         if (this.$sentry) {
           this.$sentry.setUser(value ? { id: value } : null);
