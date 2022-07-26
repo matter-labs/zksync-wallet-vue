@@ -19,7 +19,7 @@
         </a>
         <a class="modalFooterBtn big" :href="blockExplorerLink" target="_blank">
           <v-icon name="ri-external-link-line" />
-          <span>zkScan</span>
+          <span>RIF Aggregation Explorer</span>
         </a>
         <a class="modalFooterBtn big" href="https://uptime.com/s/zksync" target="_blank">
           <v-icon name="ri-wifi-line" />

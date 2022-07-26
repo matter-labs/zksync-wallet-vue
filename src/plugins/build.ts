@@ -4,9 +4,8 @@ import { version } from "../../package.json";
 import { networkEthId } from "~/types/lib";
 
 export const _ETHER_NETWORK_ID_DICTIONARY: networkEthId[] = [
-  { name: "rinkeby", id: 4 },
-  { name: "ropsten", id: 3 },
-  { name: "mainnet", id: 1 },
+  { name: "mainnet", id: 30 },
+  { name: "testnet", id: 31 },
   { name: "localhost", id: 33}
 ];
 
@@ -34,6 +33,8 @@ export const CURRENT_APP_NAME = "RIF Aggregation Wallet";
 
 export const ETHER_PREFIX: string = ETHER_PRODUCTION ? "" : ETHER_NETWORK_NAME;
 
+export const EXPLORER_PREFIX_DOT: string = ETHER_PRODUCTION ? "" : "dev.";
+
 export const ETHER_PREFIX_DOT: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : ".");
 export const ETHER_PREFIX_MINUS: string = ETHER_PREFIX + (ETHER_PRODUCTION ? "" : "-");
 
@@ -51,10 +52,11 @@ export const ethWindow: Window = global.window;
 
 export const ZK_API_BASE: string = process.env.ZK_SPECIAL_API ? process.env.ZK_SPECIAL_API : `${ETHER_PREFIX_MINUS}api.zksync.io`;
 export const ZK_NETWORK: string = process.env.ZK_NETWORK ? process.env.ZK_NETWORK : ETHER_NETWORK_NAME;
-export const APP_ZK_SCAN: string = process.env.ZK_SPECIAL_SCAN ? process.env.ZK_SPECIAL_SCAN : `https://${ETHER_PREFIX_DOT}zkscan.io`;
+export const APP_ZK_SCAN: string = process.env.ZK_SPECIAL_SCAN ? process.env.ZK_SPECIAL_SCAN : `https://explorer.${EXPLORER_PREFIX_DOT}aggregation.rifcomputing.net`;
 export const APP_ZKSYNC_BLOCK_EXPLORER: string = EXPLORER_VERSION === '0.1.0' ?`${APP_ZK_SCAN}` : `${APP_ZK_SCAN}/explorer`;
-export const APP_ETH_BLOCK_EXPLORER: string = IS_LOCALHOST ? `http://localhost:7001` : `https://${ETHER_PREFIX_DOT}etherscan.io`;
-export const EXPLORER_TX: string = EXPLORER_VERSION === '0.1.0' ? '/transactions/' : '/tx/';
+export const APP_ETH_BLOCK_EXPLORER: string = IS_LOCALHOST ? `http://localhost:7001` : `https://explorer.${ETHER_PREFIX_DOT}rsk.co`;
+export const EXPLORER_ZK_TX: string = EXPLORER_VERSION === '0.1.0' ? '/transactions/' : '/tx/';
+export const EXPLORER_ETH_TX: string = '/tx/';
 /**
  * Onboard-only params
  */

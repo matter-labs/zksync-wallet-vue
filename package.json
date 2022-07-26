@@ -151,10 +151,13 @@
   ],
   "scripts": {
     "local": "sh ./cli-process-env.sh 'localhost' 'dev' 1 1",
+    "testnet": "sh ./cli-process-env.sh 'testnet' 'prod' 1 1",
     "dev": "yarn ci:build:rinkeby && nuxt",
     "generate": "nuxt generate ",
     "start": "yarn local && nuxt start",
+    "start:testnet": "yarn testnet && nuxt start",
     "build": "yarn local && nuxt build",
+    "build:testnet": "yarn testnet && nuxt build",
     "ci:build:dev-rinkeby": "sh cli-process-env.sh 'rinkeby' dev 1 && yarn generate --fail-on-error",
     "ci:build:dev-mainnet": "sh cli-process-env.sh 'mainnet' dev 1 && yarn generate --fail-on-error",
     "ci:build:rinkeby-beta": "yarn ci:prepare:rinkeby-beta && yarn generate --fail-on-error",

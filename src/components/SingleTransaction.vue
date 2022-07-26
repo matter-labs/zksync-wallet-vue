@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER, EXPLORER_TX } from "@/plugins/build";
+import { APP_ETH_BLOCK_EXPLORER, APP_ZKSYNC_BLOCK_EXPLORER, EXPLORER_ZK_TX, EXPLORER_ETH_TX } from "@/plugins/build";
 import zkUtils from "@/plugins/utils";
 import { walletData } from "@/plugins/walletData";
 import { ZkInTx } from "@/types/lib";
@@ -258,7 +258,7 @@ export default Vue.extend({
     },
     getTransactionExplorerLink(transaction: ZkInTx): string {
       return (
-        (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}${EXPLORER_TX}` : `${APP_ZKSYNC_BLOCK_EXPLORER}/transactions/`) +
+        (transaction.tx.type === "Deposit" ? `${APP_ETH_BLOCK_EXPLORER}${EXPLORER_ETH_TX}` : `${APP_ZKSYNC_BLOCK_EXPLORER}${EXPLORER_ZK_TX}`) +
         `${this.$options.filters!.formatTxHash(transaction.hash)}`
       );
     },
@@ -267,12 +267,12 @@ export default Vue.extend({
       if (singleTx && (singleTx.tx.type === "Withdraw" || singleTx.tx.type === "WithdrawNFT")) {
         const txFromStore = this.$accessor.transaction.getWithdrawalTx(singleTx.hash);
         if (txFromStore) {
-          this.ethTx = `${APP_ETH_BLOCK_EXPLORER}${EXPLORER_TX}${txFromStore}`;
+          this.ethTx = `${APP_ETH_BLOCK_EXPLORER}${EXPLORER_ETH_TX}${txFromStore}`;
         } else {
           const syncProvider = walletData.get().syncProvider;
           const ethTx = await syncProvider!.getEthTxForWithdrawal(singleTx.hash);
           if (ethTx) {
-            this.ethTx = `${APP_ETH_BLOCK_EXPLORER}${EXPLORER_TX}${this.$options.filters!.formatTxHash(ethTx)}`;
+            this.ethTx = `${APP_ETH_BLOCK_EXPLORER}${EXPLORER_ETH_TX}${this.$options.filters!.formatTxHash(ethTx)}`;
             this.$accessor.transaction.setWithdrawalTx({ tx: singleTx.hash, ethTx: String(this.$options.filters!.formatTxHash(ethTx)) });
           }
         }
