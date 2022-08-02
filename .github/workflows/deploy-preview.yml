@@ -38,8 +38,8 @@ jobs:
         run: |
           yarn lint --max-warnings 0
 
-      - name: "Generate rinkeby dist"
-        run: yarn run ci:build:rinkeby
+      - name: "Generate goerli dist"
+        run: yarn run ci:build:sepolia
 
       - name: "Deploy preview"
         uses: matter-labs/action-hosting-deploy@v0
