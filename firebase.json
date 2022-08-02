@@ -82,7 +82,7 @@
         {
           "source": "**",
           "type": 301,
-          "destination": "https://wallet.zksync.io?network=ropsten"
+          "destination": "https://wallet.zksync.io?network=goerli"
         }
       ]
     },
@@ -98,7 +98,7 @@
         {
           "source": "**",
           "type": 301,
-          "destination": "https://wallet.zksync.io?network=ropsten-beta"
+          "destination": "https://wallet.zksync.io?network=goerli-beta"
         }
       ]
     },
@@ -114,7 +114,7 @@
         {
           "source": "**",
           "type": 301,
-          "destination": "https://wallet.zksync.io?network=rinkeby"
+          "destination": "https://wallet.zksync.io?network=sepolia"
         }
       ]
     },

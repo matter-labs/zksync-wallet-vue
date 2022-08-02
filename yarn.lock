@@ -3799,9 +3799,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-nuxt-core@npm:1.9.0-alpha.5":
-  version: 1.9.0-alpha.5
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.9.0-alpha.5"
+"@matterlabs/zksync-nuxt-core@npm:1.9.0-alpha.6":
+  version: 1.9.0-alpha.6
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.9.0-alpha.6"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/client": ^1.7.1
@@ -3829,8 +3829,8 @@ __metadata:
     nuxt: ^2.15.3
     ts-node: ^9.1.1
     web3: ^1.5.3
-    zksync: ^0.12.3
-  checksum: c096835689766c33b7517644b1c522a798120e88d4d297d101bdd7b62b6ec535372ba731f56191fe5e8f15e946dfcd03cf2a2a4eabcc9a67fa66f6ffc20694f3
+    zksync: ^0.13.1
+  checksum: 522f69134312a3f335a8ebce0ccfc4d25cdd880a8e9dcab687db9033c2f205539f41fcb40b56d5661590adf3fc0bb17238f4f1362abc59ac44ac8f63d2dbd13c
   languageName: node
   linkType: hard
 
@@ -3846,7 +3846,7 @@ __metadata:
     "@inkline/nuxt": ^2.3.6
     "@matterlabs/eslint-config-nuxt": ^1.0.6
     "@matterlabs/prettier-config": ^1.0.2
-    "@matterlabs/zksync-nuxt-core": 1.9.0-alpha.5
+    "@matterlabs/zksync-nuxt-core": 1.9.0-alpha.6
     "@nuxt/types": ^2.15.8
     "@nuxt/typescript-build": ^2.1.0
     "@nuxt/typescript-runtime": ^2.1.0
@@ -3884,7 +3884,7 @@ __metadata:
     semantic-release: ^19.0.2
     stylelint-config-standard-scss: ^3.0.0
     vue-qrcode: 0.4.0
-    zksync: ^0.12.3
+    zksync: ^0.13.1
   peerDependencies:
     "@ethersproject/hash": ^5.5.0
   dependenciesMeta:
@@ -25733,9 +25733,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zksync@npm:^0.12.3":
-  version: 0.12.3
-  resolution: "zksync@npm:0.12.3"
+"zksync@npm:^0.13.1":
+  version: 0.13.1
+  resolution: "zksync@npm:0.13.1"
   dependencies:
     axios: ^0.21.2
     websocket: ^1.0.30
@@ -25744,6 +25744,6 @@ __metadata:
   peerDependencies:
     "@ethersproject/logger": ^5.4.0
     ethers: ^5.4.4
-  checksum: 98079aa887175fcbf267b44d9d5170d7d203286b1ec430cd189533808b83293f71ffc791e735f15a018fba2b72450eef54d21e60bbdbcdd4a4fe714a4d0aeba5
+  checksum: dee05af41b15a5c89aafa0cebc3647895baa13bb5a06f37178fa98e499229224b649b1eee3d86f60967167cad8ab49e9a6d97c96a5029734c41e645ed1e99859
   languageName: node
   linkType: hard

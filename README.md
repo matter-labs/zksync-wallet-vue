@@ -1,23 +1,23 @@
 # [zkSync Wallet](https://wallet.zksync.io/) 
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-APACHE) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Rinkeby](https://img.shields.io/badge/wallet-Live%20on%20Rinkeby-blue)](https://zksync.io?network=rinkeby) [![Live on Ropsten](https://img.shields.io/badge/wallet-Live%20on%20Ropsten-blue)](https://zksync.io?network=ropsten)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-APACHE) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Sepolia](https://img.shields.io/badge/wallet-Live%20on%20Sepolia-blue)](https://zksync.io?network=sepolia) [![Live on Goerli](https://img.shields.io/badge/wallet-Live%20on%20Goerli-blue)](https://zksync.io?network=goerli)
 
 
 ## Description
 
 zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features. [Learn more](https://zksync.io/)
 
-It's working perfectly on [**mainnet**](https://wallet.zksync.io), [rinkeby](https://zksync.io?network=rinkeby) and [ropsten](https://zksync.io?network=ropsten), published and ready for mass adoption.
+It's working perfectly on [**mainnet**](https://wallet.zksync.io), [sepolia](https://zksync.io?network=sepolia) and [goerli](https://zksync.io?network=goerli), published and ready for mass adoption.
 
 ---
 
 ## Build Setup
 
 ``` bash
-# install dependencies && populate .env file as of RINKEBY connection (clear install)
+# install dependencies && populate .env file as of SEPOLIA connection (clear install)
 $ yarn ci:clear
 
-# serve with hot reload at localhost:3000 [rinkeby]
+# serve with hot reload at localhost:3000 [sepolia]
 $ yarn dev
 ```
 

@@ -205,8 +205,6 @@ export default Vue.extend({
       switch (this.$store.getters["zk-provider/network"]) {
         case "mainnet":
           return "https://trade.zigzag.exchange/";
-        case "rinkeby":
-          return "https://trade.zigzag.exchange/?network=zksync-rinkeby";
         default:
           return null;
       }
