@@ -6,8 +6,8 @@ This directory contains your .env-files:
 `Production`
 
 * mainnet
-* sepolia
 * goerli
+* sepolia
 
 `Beta releases`
 * rinkeby-beta

@@ -143,7 +143,7 @@
     "generate": "nuxt generate --fail-on-error",
     "lint": "eslint --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js}",
     "lint:fix": "eslint --fix --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js} --fix",
-    "local": "sh ./cli-process-env.sh 'sepolia' 'dev' 1 1",
+    "local": "sh ./cli-process-env.sh 'goerli' 'dev' 1 1",
     "postinstall": "husky install",
     "semantic-release": "semantic-release",
     "spell-check": "cspell -c cspell.json src/**/*.{ts,vue,js} *.md",

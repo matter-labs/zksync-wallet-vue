@@ -14,10 +14,10 @@ It's working perfectly on [**mainnet**](https://wallet.zksync.io), [sepolia](htt
 ## Build Setup
 
 ``` bash
-# install dependencies && populate .env file as of SEPOLIA connection (clear install)
+# install dependencies && populate .env file as of GOERLI connection (clear install)
 $ yarn ci:clear
 
-# serve with hot reload at localhost:3000 [sepolia]
+# serve with hot reload at localhost:3000 [goerli]
 $ yarn dev
 ```
 
