@@ -38,7 +38,7 @@ jobs:
         run: |
           yarn lint --max-warnings 0
 
-      - name: "Generate goerli dist"
+      - name: "Generate dist (default network: sepolia)"
         run: yarn run ci:build:sepolia
 
       - name: "Deploy preview"
