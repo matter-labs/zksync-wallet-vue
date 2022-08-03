@@ -61,7 +61,7 @@ if [ "$CATEGORY" == "dev" ]; then
   fi
   echo "Generating static html"
   echo ""
-  yarn ci:build:rinkeby
+  yarn ci:build:goerli
   echo "Deploying to the firebase host for a day"
   echo ""
   firebase hosting:channel:deploy totest --only stage-mainnet --expires 1d

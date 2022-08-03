@@ -27,7 +27,9 @@ export default Vue.extend({
   name: "NetworkSwitch",
   computed: {
     options() {
-      return Object.keys(zkSyncNetworkConfig).filter((zkNetworkName) => zkNetworkName !== "localhost");
+      return Object.keys(zkSyncNetworkConfig).filter(
+        (zkNetworkName) => zkNetworkName !== "localhost" && zkNetworkName !== "sepolia"
+      );
     },
     network() {
       return this.$store.getters["zk-provider/network"];
