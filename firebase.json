@@ -71,23 +71,7 @@
       ]
     },
     {
-      "target": "prod-ropsten",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/**",
-        "**/node_modules/**"
-      ],
-      "redirects": [
-        {
-          "source": "**",
-          "type": 301,
-          "destination": "https://wallet.zksync.io?network=goerli"
-        }
-      ]
-    },
-    {
-      "target": "ropsten-beta",
+      "target": "goerli-beta",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -103,7 +87,23 @@
       ]
     },
     {
-      "target": "prod-rinkeby",
+      "target": "prod-goerli",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "redirects": [
+        {
+          "source": "**",
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=goerli"
+        }
+      ]
+    },
+    {
+      "target": "prod-sepolia",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -115,22 +115,6 @@
           "source": "**",
           "type": 301,
           "destination": "https://wallet.zksync.io?network=sepolia"
-        }
-      ]
-    },
-    {
-      "target": "rinkeby-beta",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "redirects": [
-        {
-          "source": "**",
-          "type": 301,
-          "destination": "https://wallet.zksync.io?network=rinkeby-beta"
         }
       ]
     },

@@ -5,20 +5,17 @@
   "targets": {
     "zksync-vue": {
       "hosting": {
-        "prod-rinkeby": [
-          "zksync-vue-rinkeby-2"
-        ],
-        "prod-ropsten": [
-          "zksync-vue-ropsten"
-        ],
         "stage-mainnet": [
           "zksync-vue"
         ],
-        "ropsten-beta": [
-          "ropsten-beta-wallet-zksync"
+        "prod-goerli": [
+          "goerli-wallet-zksync"
         ],
-        "rinkeby-beta": [
-          "beta-rinkeby-zksync-vue"
+        "prod-sepolia": [
+          "sepolia-wallet-zksync"
+        ],
+        "goerli-beta": [
+          "goerli-beta-wallet-zksync"
         ]
       }
     },

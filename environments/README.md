@@ -10,5 +10,4 @@ This directory contains your .env-files:
 * sepolia
 
 `Beta releases`
-* rinkeby-beta
 * goerli-beta
