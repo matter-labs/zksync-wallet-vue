@@ -12,7 +12,7 @@ on:
         type: string
         required: true
         default: "rinkeby"
-        description: "target/env: mainnet, rinkeby, ropsten, rinkeby-beta, ropsten-beta, rinkeby-stage"
+        description: "target/env: mainnet, goerli, sepolia, rinkeby-beta, goerli-beta, rinkeby-stage"
 jobs:
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} || ${{ github.event.repository.full_name == github.repository }}
@@ -38,8 +38,8 @@ jobs:
         run: |
           yarn lint --max-warnings 0
 
-      - name: "Generate rinkeby dist"
-        run: yarn run ci:build:rinkeby
+      - name: "Generate dist (default network: goerli)"
+        run: yarn run ci:build:goerli
 
       - name: "Deploy preview"
         uses: matter-labs/action-hosting-deploy@v0

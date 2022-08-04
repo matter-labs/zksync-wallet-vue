@@ -2696,9 +2696,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-nuxt-core@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.8.1"
+"@matterlabs/zksync-nuxt-core@npm:1.8.2":
+  version: 1.8.2
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.8.2"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/client": ^1.7.1
@@ -2714,8 +2714,8 @@ __metadata:
     nuxt: ^2.15.3
     ts-node: ^9.1.1
     web3: ^1.5.3
-    zksync: ^0.12.3
-  checksum: 75242576e898a873fc3312aee575764b7e5c78403a8941ce3900a187478880a2ee384de4b1cef80a958a30a61aaf88a999b07cd775593f413ecabf139593d382
+    zksync: ^0.13.1
+  checksum: be2e9cbf607df738ca61549e2c4a79c9ea8e91ab44d42797dcb65cf151be785ca868e3eb4aa2aa1ce9987e079fda22c81f20a40df4c90ba0214187829a9abb99
   languageName: node
   linkType: hard
 
@@ -2731,7 +2731,7 @@ __metadata:
     "@inkline/nuxt": ^2.3.6
     "@matterlabs/eslint-config-nuxt": ^1.0.6
     "@matterlabs/prettier-config": ^1.0.2
-    "@matterlabs/zksync-nuxt-core": ^1.8.1
+    "@matterlabs/zksync-nuxt-core": 1.8.2
     "@nuxt/types": ^2.15.8
     "@nuxt/typescript-build": ^2.1.0
     "@nuxt/typescript-runtime": ^2.1.0
@@ -2769,7 +2769,7 @@ __metadata:
     semantic-release: ^19.0.2
     stylelint-config-standard-scss: ^3.0.0
     vue-qrcode: 0.4.0
-    zksync: ^0.12.3
+    zksync: ^0.13.1
   peerDependencies:
     "@ethersproject/hash": ^5.5.0
   dependenciesMeta:
@@ -24856,9 +24856,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zksync@npm:^0.12.3":
-  version: 0.12.3
-  resolution: "zksync@npm:0.12.3"
+"zksync@npm:^0.13.1":
+  version: 0.13.1
+  resolution: "zksync@npm:0.13.1"
   dependencies:
     axios: ^0.21.2
     websocket: ^1.0.30
@@ -24867,6 +24867,6 @@ __metadata:
   peerDependencies:
     "@ethersproject/logger": ^5.4.0
     ethers: ^5.4.4
-  checksum: 98079aa887175fcbf267b44d9d5170d7d203286b1ec430cd189533808b83293f71ffc791e735f15a018fba2b72450eef54d21e60bbdbcdd4a4fe714a4d0aeba5
+  checksum: dee05af41b15a5c89aafa0cebc3647895baa13bb5a06f37178fa98e499229224b649b1eee3d86f60967167cad8ab49e9a6d97c96a5029734c41e645ed1e99859
   languageName: node
   linkType: hard

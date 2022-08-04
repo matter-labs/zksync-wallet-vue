@@ -44,12 +44,12 @@ export default Vue.extend({
     etherscanDomain(): string {
       const network: Network = this.$store.getters["zk-provider/network"];
       switch (network) {
-        case "rinkeby":
-        case "rinkeby-beta":
+        case "sepolia":
         case "localhost":
+          return "sepolia.etherscan.io";
+        case "rinkeby-beta":
           return "rinkeby.etherscan.io";
-        case "ropsten":
-          return "ropsten.etherscan.io";
+        case "goerli":
         case "goerli-beta":
           return "goerli.etherscan.io";
         case "mainnet":
