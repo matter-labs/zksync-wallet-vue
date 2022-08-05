@@ -1,3 +1,10 @@
+# [3.23.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.22.0...3.23.0) (2022-08-04)
+
+
+### Features
+
+* new networks, remove deprecated networks ([#287](https://github.com/matter-labs/zksync-wallet-vue/issues/287)) ([e1fec96](https://github.com/matter-labs/zksync-wallet-vue/commit/e1fec96b6c4f568c5c70a4f13394ea9f13a9c41b))
+
 # [3.22.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.21.0...3.22.0) (2022-07-19)
 
 
