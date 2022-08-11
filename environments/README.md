@@ -4,10 +4,10 @@ Wallet configuration is stored inside env-files, managed with help of ```@nuxtjs
 This directory contains your .env-files:
 
 `Production`
+
 * mainnet
 * goerli
 * sepolia
 
 `Beta releases`
-* rinkeby-beta
 * goerli-beta

@@ -7,7 +7,7 @@
 
 zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features. [Learn more](https://zksync.io/)
 
-It's working perfectly on [**mainnet**](https://wallet.zksync.io), [sepolia](https://zksync.io?network=sepolia) and [goerli](https://zksync.io?network=goerli), published and ready for mass adoption.
+It's working perfectly on [**mainnet**](https://wallet.zksync.io), [goerli](https://zksync.io?network=goerli) and [sepolia](https://zksync.io?network=sepolia), published and ready for mass adoption.
 
 ---
 

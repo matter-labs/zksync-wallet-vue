@@ -11,8 +11,8 @@ on:
       network:
         type: string
         required: true
-        default: "rinkeby"
-        description: "target/env: mainnet, goerli, sepolia, rinkeby-beta, goerli-beta, rinkeby-stage"
+        default: "goerli"
+        description: "target/env: mainnet, goerli, goerli-beta, sepolia"
 jobs:
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} || ${{ github.event.repository.full_name == github.repository }}

@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { createHmac } from "crypto";
 
-type Network = "rinkeby" | "mainnet";
+type Network = "mainnet";
 
 /**
  * Signing Moonpay urls on server-side
@@ -33,7 +33,7 @@ export function moonpaySignFunction(request: functions.Request, response: functi
   }
 
   if (!data.ethNetwork || !moonpayConfig[data.ethNetwork]) {
-    throw new functions.https.HttpsError("invalid-argument", `Requested ${data.ethNetwork} is not supported`);
+    throw new functions.https.HttpsError("invalid-argument", `Requested network ${data.ethNetwork} is not supported`);
   }
 
   const secretKey = moonpayConfig[data.ethNetwork].secret_key;

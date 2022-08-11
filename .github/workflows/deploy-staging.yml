@@ -27,7 +27,7 @@ jobs:
           yarn set version 3.1.1
           yarn install
 
-      - name: "Deploy target: rinkeby-staging"
+      - name: "Deploy target: stage-mainnet"
         run: yarn run ci:build:prod
       - uses: matter-labs/action-hosting-deploy@v0
         with:

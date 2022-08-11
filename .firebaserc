@@ -11,11 +11,11 @@
         "prod-goerli": [
           "goerli-wallet-zksync"
         ],
+        "prod-sepolia": [
+          "sepolia-wallet-zksync"
+        ],
         "goerli-beta": [
           "goerli-beta-wallet-zksync"
-        ],
-        "rinkeby-beta": [
-          "beta-rinkeby-zksync-vue"
         ]
       }
     },
