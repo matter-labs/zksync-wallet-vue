@@ -1,3 +1,10 @@
+# [3.24.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.23.0...3.24.0) (2022-08-11)
+
+
+### Features
+
+* onboard v2 ([#286](https://github.com/matter-labs/zksync-wallet-vue/issues/286)) ([bf6efde](https://github.com/matter-labs/zksync-wallet-vue/commit/bf6efde4262b12a1e310b95615a1c833a75414bf))
+
 # [3.23.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.22.0...3.23.0) (2022-08-04)
 
 
