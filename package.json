@@ -57,7 +57,7 @@
     "@inkline/nuxt": "^2.3.6",
     "@matterlabs/eslint-config-nuxt": "^1.0.6",
     "@matterlabs/prettier-config": "^1.0.2",
-    "@matterlabs/zksync-nuxt-core": "1.9.0-alpha.9",
+    "@matterlabs/zksync-nuxt-core": "^1.9.0",
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.1.7",

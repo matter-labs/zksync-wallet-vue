@@ -3799,9 +3799,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-nuxt-core@npm:1.9.0-alpha.9":
-  version: 1.9.0-alpha.9
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.9.0-alpha.9"
+"@matterlabs/zksync-nuxt-core@npm:^1.9.0":
+  version: 1.9.0
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.9.0"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/client": ^1.7.1
@@ -3830,7 +3830,7 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.13.1
-  checksum: f5c5767b4c7770b8b55ca415e5e0ba3a0b5633c8e077cbb6d7be938db7ac66f433080faf56bbbf74616492cb1a0916fb16d64b66a044bf5699c3e0d4eccf0424
+  checksum: 0b3b93936f2d165cac1f6d55bb1ec8cfaa1c91547454bf326f79e4f6d089adc75926b7f1399bcc71ea9fe7f93212b21795d29a2c768e678a775401f7b8d6b76d
   languageName: node
   linkType: hard
 
@@ -3846,7 +3846,7 @@ __metadata:
     "@inkline/nuxt": ^2.3.6
     "@matterlabs/eslint-config-nuxt": ^1.0.6
     "@matterlabs/prettier-config": ^1.0.2
-    "@matterlabs/zksync-nuxt-core": 1.9.0-alpha.9
+    "@matterlabs/zksync-nuxt-core": ^1.9.0
     "@nuxt/types": ^2.15.8
     "@nuxt/typescript-build": ^2.1.0
     "@nuxt/typescript-runtime": ^2.1.0
