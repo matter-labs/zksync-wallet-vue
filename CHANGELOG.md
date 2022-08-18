@@ -1,3 +1,10 @@
+## [3.24.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.0...3.24.1) (2022-08-18)
+
+
+### Bug Fixes
+
+* remove sepolia network ([#288](https://github.com/matter-labs/zksync-wallet-vue/issues/288)) ([84b47d2](https://github.com/matter-labs/zksync-wallet-vue/commit/84b47d2d6ecb4e230fccd9b59d637d367269eaf7))
+
 # [3.24.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.23.0...3.24.0) (2022-08-11)
 
 
