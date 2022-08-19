@@ -19,8 +19,8 @@ import {
 import { BigNumber, BigNumberish } from "ethers";
 
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { closestPackableTransactionFee, Provider } from "zksync";
-import { AccountState, Address, Fee, NFT, TokenSymbol } from "zksync/build/types";
+import { closestPackableTransactionFee, Provider } from "@rsksmart/rif-aggregation-sdk-js";
+import { AccountState, Address, Fee, NFT, TokenSymbol } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 
 let getTransactionHistoryAgain: ReturnType<typeof setTimeout>;
 

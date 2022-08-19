@@ -61,6 +61,7 @@
     "@nuxtjs/google-gtag": "latest",
     "@nuxtjs/sentry": "latest",
     "@nuxtjs/toast": "latest",
+    "@rsksmart/rif-aggregation-sdk-js": "0.0.2",
     "@walletconnect/utils": "1.4.0",
     "@walletconnect/web3-provider": "1.4.0",
     "blockies-ts": "1.0.0",
@@ -78,8 +79,7 @@
     "vue-qrcode": "latest",
     "vue-router": "^3.5.1",
     "vue-scrollto": "^2.20.0",
-    "web3": "^1.5.1",
-    "zksync": "latest"
+    "web3": "^1.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
@@ -118,7 +118,7 @@
     "vue-property-decorator": "latest",
     "vuex": "^3.6.2",
     "web3-core": "^1.5.1",
-    "webpack": "^4.46.0"
+    "webpack": "^5.74.0"
   },
   "peerDependencies": {
     "@babel/core": "*",

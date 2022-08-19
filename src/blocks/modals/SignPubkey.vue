@@ -21,7 +21,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { walletData } from "@/plugins/walletData";
-import { utils } from "zksync";
+import { utils } from "@rsksmart/rif-aggregation-sdk-js";
 import { saveCPKTx } from "@/plugins/walletActions/cpk";
 import { CPKLocal } from "@/types/lib";
 import zkUtils from "@/plugins/utils";

@@ -24,7 +24,7 @@
 import SingleTransaction from "@/components/SingleTransaction.vue";
 import AccountActivationModal from "@/blocks/modals/AccountActivation.vue";
 import { ZkInTx } from "@/types/lib";
-import { Address } from "zksync/build/types";
+import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 import Vue, { PropOptions } from "vue";
 
 let updateListInterval: ReturnType<typeof setInterval>;

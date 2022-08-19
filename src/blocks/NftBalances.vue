@@ -60,7 +60,7 @@
 import utils from "@/plugins/utils";
 import { ZkInNFT } from "@/types/lib";
 import Vue from "vue";
-import { NFT } from "zksync/build/types";
+import { NFT } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 export default Vue.extend({
   data() {
     return {

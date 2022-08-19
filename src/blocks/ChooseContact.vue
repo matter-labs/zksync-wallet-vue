@@ -67,7 +67,7 @@
 <script lang="ts">
 import utils from "@/plugins/utils";
 import { ZkInContact } from "@/types/lib";
-import { Address } from "zksync/build/types";
+import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({

@@ -1,6 +1,6 @@
 import { iWalletData, iWalletWrapper } from "@/types/lib";
-import { getDefaultProvider, Provider } from "zksync";
-import { Network } from "zksync/build/types";
+import { getDefaultProvider, Provider } from "@rsksmart/rif-aggregation-sdk-js";
+import { Network } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 import { ZK_NETWORK } from "@/plugins/build";
 
 const internalWalletData: iWalletData = {

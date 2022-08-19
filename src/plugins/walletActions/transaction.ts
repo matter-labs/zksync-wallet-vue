@@ -1,8 +1,8 @@
 import { GweiBalance, ZkInNFT } from "@/types/lib";
 import { walletData } from "@/plugins/walletData";
 import { accessorType } from "@/store";
-import { submitSignedTransactionsBatch, Transaction } from "zksync/build/wallet";
-import { Address, TokenSymbol } from "zksync/build/types";
+import { submitSignedTransactionsBatch, Transaction } from "@rsksmart/rif-aggregation-sdk-js/build/wallet";
+import { Address, TokenSymbol } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 import { addCPKToBatch } from "@/plugins/walletActions/cpk";
 
 /**

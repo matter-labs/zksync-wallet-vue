@@ -1,6 +1,6 @@
 import { walletData } from "@/plugins/walletData";
 import { BigNumberish } from "ethers";
-import { TokenSymbol, Tokens } from "zksync/build/types";
+import { TokenSymbol, Tokens } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { BalanceToReturn, TokenInfo, ZkInTokenPrices } from "~/types/lib";
 import { ZK_API_BASE } from "~/plugins/build";

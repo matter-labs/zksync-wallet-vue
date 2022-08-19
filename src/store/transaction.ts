@@ -2,8 +2,8 @@ import { walletData } from "@/plugins/walletData";
 import { ZkInBalancesList, GweiBalance, ZkInDeposits, ZKInDepositTx } from "@/types/lib";
 import { BigNumber } from "ethers";
 import { actionTree, getterTree, mutationTree } from "typed-vuex/lib";
-import { Address, ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "zksync/build/types";
-import { ETHOperation } from "zksync/build/wallet";
+import { Address, ChangePubKeyFee, ChangePubkeyTypes, Fee, TokenSymbol } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { ETHOperation } from "@rsksmart/rif-aggregation-sdk-js/build/wallet";
 
 interface ZKITransactionsState {
   watchedTransactions: { [p: string]: { [p: string]: string; status: string } };

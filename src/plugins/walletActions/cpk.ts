@@ -1,7 +1,7 @@
-import { Wallet } from "zksync";
-import { Address, TokenSymbol } from "zksync/build/types";
+import { Wallet } from "@rsksmart/rif-aggregation-sdk-js";
+import { Address, TokenSymbol } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 import { accessorType } from "@/store";
-import { BatchBuilder } from "zksync/build/batch-builder";
+import { BatchBuilder } from "@rsksmart/rif-aggregation-sdk-js/build/batch-builder";
 import { GweiBalance, CPKLocal } from "~/types/lib";
 
 function getCPKStorageKey(address: Address) {

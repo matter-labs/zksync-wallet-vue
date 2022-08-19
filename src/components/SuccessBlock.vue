@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { Address } from "zksync/build/types";
+import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 import Vue from "vue";
 
 export default Vue.extend({

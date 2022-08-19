@@ -220,9 +220,9 @@ import { walletData } from "@/plugins/walletData";
 
 import { BigNumber, BigNumberish } from "ethers";
 import Vue, { PropOptions } from "vue";
-import { closestPackableTransactionAmount } from "zksync";
-import { Address } from "zksync/build/types";
-import { Transaction } from "zksync/build/wallet";
+import { closestPackableTransactionAmount } from "@rsksmart/rif-aggregation-sdk-js";
+import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { Transaction } from "@rsksmart/rif-aggregation-sdk-js/build/wallet";
 
 export default Vue.extend({
   components: {

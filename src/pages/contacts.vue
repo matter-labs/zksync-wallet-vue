@@ -130,7 +130,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Route } from "vue-router/types";
-import { Address } from "zksync/build/types";
+import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 import utils from "~/plugins/utils";
 import { ZkInContact } from "~/types/lib";
 

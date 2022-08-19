@@ -95,7 +95,7 @@ import utils from "@/plugins/utils";
 import { ZkInBalance, ZkInDeposits, ZKInDepositTx, ZKDisplayToken } from "@/types/lib";
 import { BigNumber } from "ethers";
 import Vue from "vue";
-import { TokenSymbol } from "zksync/build/types";
+import { TokenSymbol } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
   data() {

@@ -165,8 +165,8 @@ import { walletData } from "@/plugins/walletData";
 import { DecimalBalance, ZkInBalance, ZkInTransactionInfo } from "@/types/lib";
 import { BigNumber, Contract, ContractInterface } from "ethers";
 import Vue from "vue";
-import { closestPackableTransactionAmount } from "zksync";
-import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "zksync/build/utils";
+import { closestPackableTransactionAmount } from "@rsksmart/rif-aggregation-sdk-js";
+import { ERC20_APPROVE_TRESHOLD, IERC20_INTERFACE } from "@rsksmart/rif-aggregation-sdk-js/build/utils";
 
 let thresholdTimeout: ReturnType<typeof setTimeout>;
 export default Vue.extend({

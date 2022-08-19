@@ -8,7 +8,7 @@ import Vue from "vue";
 import VueQrcode from "vue-qrcode";
 import VueScrollTo from "vue-scrollto";
 import { ToastAction, ToastOptions } from "vue-toasted";
-import { TokenSymbol } from "zksync/build/types";
+import { TokenSymbol } from "@rsksmart/rif-aggregation-sdk-js/build/types";
 
 /**
  * Special plugin to implement oh-awesome-icons into zkDapp
