@@ -1,3 +1,29 @@
 :root {
   --onboard-wallet-app-icon-border-color: transparent;
 }
+
+onboard-v2 {
+  img {
+    display: none;
+  }
+}
+
+:root .-dark {
+  /* CUSTOMIZE THE COLOR  PALLETTE */
+  --onboard-white: white;
+  --onboard-primary-100: #eff1fc;
+  --onboard-primary-800: #11142b;
+  --onboard-gray-150: #f0f0f0;
+
+  /* CUSTOMIZE SECTIONS OF THE CONNECT MODAL */
+  --onboard-connect-sidebar-background: var(--onboard-primary-800);
+  --onboard-connect-sidebar-color: var(--onboard-gray-150);
+  --onboard-connect-sidebar-progress-background: var(--onboard-white);
+  --onboard-connect-header-background: var(--onboard-primary-800);
+  --onboard-connect-header-color: var(--onboard-gray-150);
+  --onboard-main-scroll-container-background: var(--onboard-primary-800);
+  --onboard-main-scroll-container-color: var(--onboard-gray-150);
+  --onboard-wallet-button-background: var(--onboard-gray-150);
+  --onboard-wallet-button-background-hover: var(--onboard-primary-100);
+  --onboard-wallet-button-border-color: var(--onboard-primary-800);
+}
