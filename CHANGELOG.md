@@ -1,3 +1,10 @@
+## [3.24.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.1...3.24.2) (2022-08-29)
+
+
+### Bug Fixes
+
+* onboard v2 dark version ([#289](https://github.com/matter-labs/zksync-wallet-vue/issues/289)) ([bf0ccfb](https://github.com/matter-labs/zksync-wallet-vue/commit/bf0ccfbface6f3fc9c8f8c61966be1005bff96a0))
+
 ## [3.24.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.0...3.24.1) (2022-08-18)
 
 
