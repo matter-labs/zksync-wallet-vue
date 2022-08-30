@@ -1,3 +1,10 @@
+## [3.24.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.2...3.24.3) (2022-08-30)
+
+
+### Bug Fixes
+
+* uptime url ([#290](https://github.com/matter-labs/zksync-wallet-vue/issues/290)) ([5d42a2e](https://github.com/matter-labs/zksync-wallet-vue/commit/5d42a2e562b7a9ebd3df0051cb6dda7b6a499233))
+
 ## [3.24.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.1...3.24.2) (2022-08-29)
 
 
