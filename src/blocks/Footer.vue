@@ -28,7 +28,7 @@
         >
           <block-system-info />
           <span class="_padding-x-1 dividerLine">|</span>
-          <a href="https://uptime.com/s/zksync" class="uptime-link" target="_blank">uptime</a>
+          <a href="https://uptime.com/s/zkSync" class="uptime-link" target="_blank">uptime</a>
         </div>
         <i-button
           size="md"

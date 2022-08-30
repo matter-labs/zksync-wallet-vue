@@ -21,7 +21,7 @@
           <v-icon name="ri-external-link-line" />
           <span>zkScan</span>
         </a>
-        <a class="modalFooterBtn big" href="https://uptime.com/s/zksync" target="_blank">
+        <a class="modalFooterBtn big" href="https://uptime.com/s/zkSync" target="_blank">
           <v-icon name="ri-wifi-line" />
           <span>Uptime</span>
         </a>
