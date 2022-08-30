@@ -1,3 +1,10 @@
+## [3.24.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.3...3.24.4) (2022-08-30)
+
+
+### Bug Fixes
+
+* change social share image ([#291](https://github.com/matter-labs/zksync-wallet-vue/issues/291)) ([4784089](https://github.com/matter-labs/zksync-wallet-vue/commit/47840897bd5ba34024e235bd9e04189c5f6885ae))
+
 ## [3.24.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.2...3.24.3) (2022-08-30)
 
 
