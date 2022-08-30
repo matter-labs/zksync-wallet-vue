@@ -27,7 +27,7 @@ const meta = {
     "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum",
   keywords:
     "zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable crypto payments, zkWallet, cryptowallet",
-  image: "/screenshot.jpg",
+  image: "/social.png",
 };
 
 const functionsBaseUrl = process.env.FIREBASE_FUNCTIONS_BASE_URL || "http://localhost:5001/zksync-vue/us-central1/";
