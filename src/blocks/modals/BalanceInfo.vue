@@ -44,12 +44,9 @@ export default Vue.extend({
     etherscanDomain(): string {
       const network: Network = this.$store.getters["zk-provider/network"];
       switch (network) {
-        case "localhost":
         case "goerli":
         case "goerli-beta":
           return "goerli.etherscan.io";
-        case "sepolia":
-          return "sepolia.etherscan.io";
         case "mainnet":
         default:
           return "etherscan.io";
