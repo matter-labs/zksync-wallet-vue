@@ -7,7 +7,6 @@ This directory contains your .env-files:
 
 * mainnet
 * goerli
-* sepolia
 
 `Beta releases`
 * goerli-beta

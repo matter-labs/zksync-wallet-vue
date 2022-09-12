@@ -103,22 +103,6 @@
       ]
     },
     {
-      "target": "prod-sepolia",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "redirects": [
-        {
-          "source": "**",
-          "type": 301,
-          "destination": "https://wallet.zksync.io?network=sepolia"
-        }
-      ]
-    },
-    {
       "target": "mainnet",
       "public": "public",
       "ignore": [

@@ -1,13 +1,13 @@
 # [zkSync Wallet](https://wallet.zksync.io/) 
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-APACHE) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Sepolia](https://img.shields.io/badge/wallet-Live%20on%20Sepolia-blue)](https://zksync.io?network=sepolia) [![Live on Goerli](https://img.shields.io/badge/wallet-Live%20on%20Goerli-blue)](https://zksync.io?network=goerli)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-APACHE) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Goerli](https://img.shields.io/badge/wallet-Live%20on%20Goerli-blue)](https://zksync.io?network=goerli)
 
 
 ## Description
 
 zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features. [Learn more](https://zksync.io/)
 
-It's working perfectly on [**mainnet**](https://wallet.zksync.io), [goerli](https://zksync.io?network=goerli) and [sepolia](https://zksync.io?network=sepolia), published and ready for mass adoption.
+It's working perfectly on [**mainnet**](https://wallet.zksync.io) and [goerli](https://zksync.io?network=goerli), published and ready for mass adoption.
 
 ---
 
