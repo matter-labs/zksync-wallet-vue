@@ -22,20 +22,13 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from "vue";
+import Vue from "vue";
 
 import { ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
 
 export const warningCanceledKey = "canceledTransferWithdrawWarning";
 export default Vue.extend({
   name: "TransferWarning",
-  props: {
-    type: {
-      required: false,
-      type: String,
-      default: "Transfer",
-    } as PropOptions<ZkTransactionType>,
-  },
   data() {
     return {
       transferWithdrawWarningCheckmark: false,
@@ -54,6 +47,9 @@ export default Vue.extend({
     },
     isNFT(): boolean {
       return this.type?.includes("NFT");
+    },
+    type(): ZkTransactionType {
+      return this.$store.getters["zk-transaction/type"];
     },
   },
   methods: {

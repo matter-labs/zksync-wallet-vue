@@ -26,8 +26,8 @@
       <i-button size="lg" variant="secondary" circle @click="proceed(false)">
         <v-icon name="ri-arrow-left-line" />
       </i-button>
-      <i-button data-cy="fee_changed_proceed_button" block size="lg" variant="secondary" @click="proceed(true)"
-        >Proceed to {{ typeName }}
+      <i-button data-cy="fee_changed_proceed_button" block size="lg" variant="secondary" @click="proceed(true)">
+        Proceed to {{ actionName }}
       </i-button>
     </div>
     <i-button v-else class="_margin-top-1" block size="lg" variant="secondary" @click="proceed(false)">Ok</i-button>
@@ -39,19 +39,15 @@ import Vue from "vue";
 import { ZkFeesChange } from "@matterlabs/zksync-nuxt-core/types";
 
 export default Vue.extend({
-  props: {
-    typeName: {
-      type: String,
-      default: "Transfer",
-      required: false,
-    },
-  },
   computed: {
     changedFees(): ZkFeesChange | undefined {
       return this.$store.getters["zk-transaction/feesChange"];
     },
     canProceed(): boolean {
       return this.$store.getters["zk-transaction/commitAllowed"];
+    },
+    actionName(): string | undefined {
+      return this.$store.getters["zk-transaction/transactionActionName"];
     },
     chooseTokenModalOpened: {
       get(): boolean {
@@ -71,7 +67,7 @@ export default Vue.extend({
     getFeeName(key: string) {
       switch (key) {
         case "txFee":
-          return `New ${this.typeName} fee`;
+          return `New ${this.actionName} fee`;
         case "accountActivation":
           return "New Account Activation fee";
 
