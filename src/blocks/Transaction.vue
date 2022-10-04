@@ -547,10 +547,10 @@ export default Vue.extend({
       return !!result;
     },
     async checkIfDestinationIsERC20Address(): Promise<boolean> {
-      if (!this.inputtedAddress) {
+      const tokens: Tokens = this.$store.getters["zk-tokens/zkTokens"];
+      if (!this.inputtedAddress || !tokens) {
         return true;
       }
-      const tokens: Tokens = this.$store.getters["zk-tokens/zkTokens"];
       const tokensAddresses = Object.entries(tokens).map(([_, token]) => token.address.toLowerCase());
       if (tokensAddresses.includes(this.inputtedAddress?.toLowerCase())) {
         const result = await this.$accessor.openDialog("DestinationIsERC20Warning");
