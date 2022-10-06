@@ -3,8 +3,9 @@
     <template #header>Transaction warning</template>
     <div>
       <div class="_padding-bottom-1">
-        Provided destination address in an address of <b>{{ tokenSymbol }}</b> token smart contract. If you proceed you
-        will no longer be able to access the {{ isNFT ? "NFT" : "funds" }} you're sending!
+        Provided destination address is an address of <b>{{ tokenSymbol }}</b> token smart contract. If you proceed you
+        will no longer be able to access the {{ isNFT ? "NFT" : "funds" }} you're sending! In case you want to
+        {{ actionName }} to an actual account, please provide its address instead.
       </div>
       <i-checkbox v-model="transactionWarningCheckmark">Do not show this again</i-checkbox>
       <i-button block class="_margin-top-1" size="lg" variant="secondary" @click="proceed()">
