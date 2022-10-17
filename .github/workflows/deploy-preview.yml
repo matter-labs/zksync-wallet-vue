@@ -42,7 +42,7 @@ jobs:
         run: yarn run ci:build:goerli
 
       - name: "Deploy preview"
-        uses: matter-labs/action-hosting-deploy@v0
+        uses: matter-labs/action-hosting-deploy@main
         id: deploy_preview
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'

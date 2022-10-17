@@ -29,7 +29,7 @@ jobs:
 
       - name: "Deploy target: stage-mainnet"
         run: yarn run ci:build:prod
-      - uses: matter-labs/action-hosting-deploy@v0
+      - uses: matter-labs/action-hosting-deploy@main
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"

@@ -3,9 +3,10 @@
     <block-modals-allowance />
     <block-modals-content-hash />
     <block-modals-fee-req-error />
-    <block-modals-transfer-warning :type="type" />
+    <block-modals-transfer-warning />
+    <block-modals-destination-is-erc-20-warning :address="inputtedAddress" />
     <block-modals-withdraw-warning />
-    <block-modals-fee-changed :type-name="transactionActionName" />
+    <block-modals-fee-changed />
 
     <!-- Choose token -->
     <i-modal v-model="chooseTokenModalOpened" :value="chooseTokenModalOpened" size="md">
@@ -265,7 +266,7 @@
 import Vue from "vue";
 import { RawLocation } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
-import { Address, TokenLike, TokenSymbol } from "zksync/build/types";
+import { Address, TokenLike, Tokens, TokenSymbol } from "zksync/build/types";
 import {
   ZkActiveTransaction,
   ZkCPKStatus,
@@ -545,6 +546,18 @@ export default Vue.extend({
       const result = await this.$accessor.openDialog("TransferWarning");
       return !!result;
     },
+    async checkIfDestinationIsERC20Address(): Promise<boolean> {
+      const tokens: Tokens = this.$store.getters["zk-tokens/zkTokens"];
+      if (!this.inputtedAddress || !tokens) {
+        return true;
+      }
+      const tokensAddresses = Object.entries(tokens).map(([_, token]) => token.address.toLowerCase());
+      if (tokensAddresses.includes(this.inputtedAddress?.toLowerCase())) {
+        const result = await this.$accessor.openDialog("DestinationIsERC20Warning");
+        return !!result;
+      }
+      return true;
+    },
     async commitTransaction() {
       if (!this.hasSigner && this.requireSigner) {
         try {
@@ -575,6 +588,10 @@ export default Vue.extend({
             if (!(await this.checkTransfer())) {
               return;
             }
+          }
+
+          if (!(await this.checkIfDestinationIsERC20Address())) {
+            return;
           }
 
           const result = await this.$store.dispatch("zk-transaction/commitTransaction", { requestFees: true });
