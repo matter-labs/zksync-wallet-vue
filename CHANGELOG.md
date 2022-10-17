@@ -1,3 +1,15 @@
+# [3.25.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.4...3.25.0) (2022-10-17)
+
+
+### Bug Fixes
+
+* remove sepolia network ([#293](https://github.com/matter-labs/zksync-wallet-vue/issues/293)) ([69e0289](https://github.com/matter-labs/zksync-wallet-vue/commit/69e0289c92ea2ff19faf19f507e09f55262ae0cd))
+
+
+### Features
+
+* check if the destination address is erc20 token address ([#296](https://github.com/matter-labs/zksync-wallet-vue/issues/296)) ([cba2e9c](https://github.com/matter-labs/zksync-wallet-vue/commit/cba2e9ccc385636169d625479d949981f4700d6e))
+
 ## [3.24.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.3...3.24.4) (2022-08-30)
 
 
