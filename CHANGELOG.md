@@ -1,3 +1,10 @@
+## [3.25.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.25.0...3.25.1) (2022-12-01)
+
+
+### Bug Fixes
+
+* replace discord link ([#301](https://github.com/matter-labs/zksync-wallet-vue/issues/301)) ([aa4fc26](https://github.com/matter-labs/zksync-wallet-vue/commit/aa4fc2680455401a682ed5e40c550e3ae88ac5b0))
+
 # [3.25.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.24.4...3.25.0) (2022-10-17)
 
 
