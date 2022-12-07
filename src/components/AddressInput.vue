@@ -113,11 +113,11 @@ export default Vue.extend({
         (this.$refs.input as HTMLElement).focus();
       }
     },
-    getDomainAddress() {
+    async getDomainAddress() {
       if (!this.isValidDomain) {
         try {
           this.domainFetchingInProgress = true;
-          this.$store.dispatch("uns/lookupDomain", { address: this.inputtedWallet });
+          await this.$store.dispatch("uns/lookupDomain", { address: this.inputtedWallet });
         } catch (error) {
           console.warn("UNS lookup failed", error);
         } finally {
