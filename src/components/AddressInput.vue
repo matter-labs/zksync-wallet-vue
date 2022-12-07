@@ -51,6 +51,7 @@ export default Vue.extend({
   data() {
     return {
       inputtedWallet: this.value ?? "",
+      domainFetchingInProgress: false,
     };
   },
   computed: {
@@ -58,6 +59,9 @@ export default Vue.extend({
       return validateAddress(this.inputtedWallet) || this.isValidDomain;
     },
     error(): string {
+      if (this.domainFetchingInProgress) {
+        return "";
+      }
       if (this.inputtedWallet && !this.isValid) {
         return "Invalid address";
       } else {
@@ -65,7 +69,7 @@ export default Vue.extend({
       }
     },
     isValidDomain(): boolean {
-      return !!this.getDomain;
+      return !!this.getDomain && !this.domainFetchingInProgress;
     },
     getDomain(): string | null {
       return this.$store.getters["uns/getDomain"](this.inputtedWallet, this.token);
@@ -111,7 +115,14 @@ export default Vue.extend({
     },
     getDomainAddress() {
       if (!this.isValidDomain) {
-        this.$store.dispatch("uns/lookupDomain", { address: this.inputtedWallet });
+        try {
+          this.domainFetchingInProgress = true;
+          this.$store.dispatch("uns/lookupDomain", { address: this.inputtedWallet });
+        } catch (error) {
+          console.warn("UNS lookup failed", error);
+        } finally {
+          this.domainFetchingInProgress = false;
+        }
       }
     },
   },
