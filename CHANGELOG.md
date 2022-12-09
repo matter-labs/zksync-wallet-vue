@@ -1,3 +1,10 @@
+# [3.26.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.25.1...3.26.0) (2022-12-09)
+
+
+### Features
+
+* unstoppable domains ([#303](https://github.com/matter-labs/zksync-wallet-vue/issues/303)) ([89de2f4](https://github.com/matter-labs/zksync-wallet-vue/commit/89de2f43b57a1dd1425588454ef47f191f18356f))
+
 ## [3.25.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.25.0...3.25.1) (2022-12-01)
 
 
