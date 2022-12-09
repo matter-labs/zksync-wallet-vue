@@ -70,9 +70,14 @@
 
       <template v-if="displayAddressInput">
         <div :class="[isDeposit ? '_margin-top-05' : '_margin-top-1']" class="inputLabel">Address</div>
-        <address-input ref="addressInput" v-model="inputtedAddress" @enter="commitTransaction()" />
+        <address-input
+          ref="addressInput"
+          v-model="inputtedAddress"
+          :token="chosenToken ? chosenToken : undefined"
+          @enter="commitTransaction()"
+        />
         <block-choose-contact
-          :address="inputtedAddress"
+          :address="inputtedAddressWithDomain"
           :display-own-address="displayOwnAddress"
           class="_margin-top-05"
           @chosen="chooseAddress($event)"
@@ -466,6 +471,10 @@ export default Vue.extend({
     cpkStatus(): ZkCPKStatus {
       return this.$store.getters["zk-wallet/cpk"];
     },
+    inputtedAddressWithDomain(): string {
+      const domainAddress = this.$store.getters["uns/getDomain"](this.inputtedAddress, this.chosenToken);
+      return domainAddress || this.inputtedAddress;
+    },
   },
   watch: {
     inputtedAmount: {
@@ -480,8 +489,9 @@ export default Vue.extend({
         }
       },
     },
-    inputtedAddress(val) {
-      this.$store.dispatch("zk-transaction/setAddress", val);
+    inputtedAddressWithDomain(val) {
+      const domainAddress = this.$store.getters["uns/getDomain"](val, this.chosenToken);
+      this.$store.dispatch("zk-transaction/setAddress", domainAddress || val);
     },
     contentHash(val) {
       this.$store.commit("zk-transaction/setContentHash", val);
@@ -534,7 +544,10 @@ export default Vue.extend({
     async checkTransfer(): Promise<boolean> {
       const transferWithdrawWarning = localStorage.getItem(warningCanceledKey);
 
-      if (transferWithdrawWarning || getAddress(this.inputtedAddress) === this.$store.getters["zk-account/address"]) {
+      if (
+        transferWithdrawWarning ||
+        getAddress(this.inputtedAddressWithDomain) === this.$store.getters["zk-account/address"]
+      ) {
         return true;
       }
 
@@ -648,7 +661,7 @@ export default Vue.extend({
           break;
         case "Withdraw":
           this.$analytics.track(
-            (getAddress(this.inputtedAddress) === this.$store.getters["zk-account/address"]
+            (getAddress(this.inputtedAddressWithDomain) === this.$store.getters["zk-account/address"]
               ? "l1_withdraw"
               : "l1_transfer") + status,
             {
@@ -665,7 +678,7 @@ export default Vue.extend({
     },
     async checkInputtedAccountUnlocked(): Promise<boolean> {
       const syncProvider: RestProvider = await this.$store.dispatch("zk-provider/requestProvider");
-      const state = await syncProvider.getState(this.inputtedAddress);
+      const state = await syncProvider.getState(this.inputtedAddressWithDomain);
       return state.id != null;
     },
     async unlockToken(unlimited = false) {

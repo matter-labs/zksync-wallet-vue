@@ -21,6 +21,14 @@
       color: $red;
       font-size: 12px;
     }
+
+    .domainAddress {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 3px);
+      width: 100%;
+      font-size: 12px;
+    }
   }
 
   &.clickablePicture {
