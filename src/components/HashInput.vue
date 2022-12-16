@@ -54,7 +54,7 @@ export default Vue.extend({
   },
   computed: {
     ipfsGateway(): string {
-      return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway;
+      return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway!;
     },
     isValid(): boolean {
       return this.inputtedHash.length > 0 && !this.error;
