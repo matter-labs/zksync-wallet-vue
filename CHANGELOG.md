@@ -1,3 +1,10 @@
+## [3.26.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.26.0...3.26.1) (2022-12-17)
+
+
+### Bug Fixes
+
+* wallet connect v2 ([#306](https://github.com/matter-labs/zksync-wallet-vue/issues/306)) ([ffae437](https://github.com/matter-labs/zksync-wallet-vue/commit/ffae437b27c7e58349a3c2750ab9f4311e409732))
+
 # [3.26.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.25.1...3.26.0) (2022-12-09)
 
 
