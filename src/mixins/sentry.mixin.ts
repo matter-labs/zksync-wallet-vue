@@ -8,7 +8,6 @@ export default Vue.extend({
       config: "zk-onboard/config",
 
       selectedWallet: "zk-onboard/selectedWallet",
-      selectedOnboardType: "zk-onboard/selectedOnboardType",
 
       accountAddress: "zk-account/address",
     }),
@@ -30,14 +29,6 @@ export default Vue.extend({
       handler(wallet) {
         if (this.$sentry) {
           this.$sentry.setTags({ wallet });
-        }
-      },
-      immediate: true,
-    },
-    selectedOnboardType: {
-      handler(value) {
-        if (this.$sentry) {
-          this.$sentry.setTags({ "onboard.type": value });
         }
       },
       immediate: true,

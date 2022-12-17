@@ -168,7 +168,7 @@ export default Vue.extend({
       return computeReturnLink(this, "/account/nft");
     },
     ipfsGateway(): string {
-      return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway;
+      return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway!;
     },
     tokenID(): number {
       return parseInt(this.$route.params.symbol);
