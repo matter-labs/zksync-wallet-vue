@@ -152,6 +152,7 @@ export default Vue.extend({
       if (!this.address) {
         return undefined;
       }
+
       return this.$store.getters["zk-contacts/contactByAddressNotDeleted"](this.address);
     },
     canSaveContact(): boolean {
