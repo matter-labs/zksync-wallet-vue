@@ -15,8 +15,8 @@
           </div>
           <div class="tileName">Wallet Connect</div>
         </button>
-        <!-- v-if="isMainnet" -->
         <button
+          v-if="isMainnet"
           data-cy="core_connect_wallet_argent_button"
           class="tileContainer _text-center"
           @click="walletConnect(true)"
