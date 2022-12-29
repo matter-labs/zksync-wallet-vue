@@ -1,3 +1,10 @@
+## [3.26.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.26.2...3.26.3) (2022-12-29)
+
+
+### Bug Fixes
+
+* argent ([#310](https://github.com/matter-labs/zksync-wallet-vue/issues/310)) ([7543c75](https://github.com/matter-labs/zksync-wallet-vue/commit/7543c75f51a355b554ace12a5948cd15b6d773b5))
+
 ## [3.26.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.26.1...3.26.2) (2022-12-21)
 
 
