@@ -1,3 +1,10 @@
+## [3.26.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.26.3...3.26.4) (2023-01-03)
+
+
+### Bug Fixes
+
+* formatting error ([#312](https://github.com/matter-labs/zksync-wallet-vue/issues/312)) ([e909d55](https://github.com/matter-labs/zksync-wallet-vue/commit/e909d553b1c70fb04cc8d89c0f508d2ed7cc6103))
+
 ## [3.26.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.26.2...3.26.3) (2022-12-29)
 
 
