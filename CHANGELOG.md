@@ -1,3 +1,10 @@
+# [3.27.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.26.4...3.27.0) (2023-01-20)
+
+
+### Features
+
+* add ledger wallet module ([#314](https://github.com/matter-labs/zksync-wallet-vue/issues/314)) ([b3ed0e4](https://github.com/matter-labs/zksync-wallet-vue/commit/b3ed0e47996e7500540e79309b51208f54990dbe))
+
 ## [3.26.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.26.3...3.26.4) (2023-01-03)
 
 
