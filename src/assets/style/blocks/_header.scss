@@ -7,11 +7,10 @@ header {
 
   &.layout-header {
     position: fixed;
-    top: 0;
+    top: 32px;
     z-index: 3;
     @media screen and (max-width: $mobile) {
       position: fixed;
-      top: 0;
       left: 0;
       box-shadow: $shadowBottom;
     }

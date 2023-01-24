@@ -193,6 +193,7 @@
     .routerContainer {
       .dappPageWrapper {
         padding: 1rem 0;
+        padding-top: calc(1rem + 32px);
         overflow-x: hidden;
       }
     }
