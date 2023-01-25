@@ -1,3 +1,10 @@
+## [3.27.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.0...3.27.1) (2023-01-25)
+
+
+### Bug Fixes
+
+* change logo ([#317](https://github.com/matter-labs/zksync-wallet-vue/issues/317)) ([636fb89](https://github.com/matter-labs/zksync-wallet-vue/commit/636fb89e8b0493ef3bda2eac480c1c3241042fb2))
+
 # [3.27.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.26.4...3.27.0) (2023-01-20)
 
 
