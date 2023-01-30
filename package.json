@@ -65,7 +65,7 @@
     "blockies-ts": "1.0.0",
     "lottie-web": "^5.7.8",
     "mixpanel-browser": "^2.42.0",
-    "moment-timezone": "^0.5.34",
+    "moment-timezone": "^0.5.35",
     "multiformats": "^9.4.7",
     "nuxt": "^2.15.8",
     "nuxt-typed-vuex": "^0.3.0",
