@@ -1,3 +1,10 @@
+## [3.27.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.1...3.27.2) (2023-01-30)
+
+
+### Bug Fixes
+
+* fix build on mac m1, upgrade node-sass ([#319](https://github.com/matter-labs/zksync-wallet-vue/issues/319)) ([50ae1f9](https://github.com/matter-labs/zksync-wallet-vue/commit/50ae1f9b6d4d1589f92f317374e0e259c0682da9))
+
 ## [3.27.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.0...3.27.1) (2023-01-25)
 
 
