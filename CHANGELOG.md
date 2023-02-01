@@ -1,3 +1,10 @@
+## [3.27.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.2...3.27.3) (2023-02-01)
+
+
+### Bug Fixes
+
+* rename networks ([#320](https://github.com/matter-labs/zksync-wallet-vue/issues/320)) ([4b689fe](https://github.com/matter-labs/zksync-wallet-vue/commit/4b689fef612d4328d4be76fbcbc935dba555767d))
+
 ## [3.27.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.1...3.27.2) (2023-01-30)
 
 
