@@ -1,7 +1,7 @@
 <template>
   <div @click="proceed">
     <label>
-      <span>Transfer to zkSync</span>
+      <span>Transfer to zkSync lite</span>
       <img src="/images/logo-no-letters.svg" alt="zkSync Transfer" />
     </label>
   </div>

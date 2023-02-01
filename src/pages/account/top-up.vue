@@ -16,8 +16,8 @@
           </div>
         </h4>
         <div class="secondaryText small _margin-bottom-05">
-          You can buy crypto directly on zkSync with your credit card, just go through KYC process of our partners and
-          enter your wallet address
+          You can buy crypto directly on zkSync lite with your credit card, just go through KYC process of our partners
+          and enter your wallet address
         </div>
         <TopUpProviders :providers="['ramp', 'banxa', 'moonpay', 'utorg']" />
       </section>
@@ -35,7 +35,7 @@
           </div>
         </h4>
         <div class="secondaryText small _margin-bottom-05">
-          zkSync v1 is integrated with exchanges, so you can deposit/withdraw funds from your favorite exchanges
+          zkSync lite is integrated with exchanges, so you can deposit/withdraw funds from your favorite exchanges
           directly inside the zkSync network using the benefits of the low fees
         </div>
         <TopUpProviders :providers="['bybit']" />
