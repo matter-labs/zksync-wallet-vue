@@ -1,3 +1,10 @@
+## [3.27.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.3...3.27.4) (2023-02-01)
+
+
+### Bug Fixes
+
+* renaming text changes ([#321](https://github.com/matter-labs/zksync-wallet-vue/issues/321)) ([ac96376](https://github.com/matter-labs/zksync-wallet-vue/commit/ac96376b27e242fc3a019f8fbd59d06d5db21af3))
+
 ## [3.27.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.2...3.27.3) (2023-02-01)
 
 
