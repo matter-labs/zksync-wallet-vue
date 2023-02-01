@@ -9,8 +9,8 @@
         target="_blank"
         >{{ etherscanDomain }}</a
       >
-      or in your Ethereum wallet, only in zkSync lite wallet and block explorer. Nevertheless, balances in zkSync are as
-      secure as if though they were in L1 (the Ethereum mainnet).
+      or in your Ethereum wallet, only in zkSync lite wallet and block explorer. Nevertheless, balances in zkSync lite
+      are as secure as if though they were in L1 (the Ethereum mainnet).
       <a href="https://zksync.io/userdocs/security.html" rel="noopener noreferrer" target="_blank">Learn more.</a>
     </p>
     <p>
