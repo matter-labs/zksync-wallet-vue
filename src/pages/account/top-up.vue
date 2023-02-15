@@ -35,7 +35,7 @@
           </div>
         </h4>
         <div class="secondaryText small _margin-bottom-05">
-          zkSync v1 is integrated with exchanges, so you can deposit/withdraw funds from your favorite exchanges
+          zkSync Lite is integrated with exchanges, so you can deposit/withdraw funds from your favorite exchanges
           directly inside the zkSync network using the benefits of the low fees
         </div>
         <TopUpProviders :providers="['bybit']" />

@@ -1,7 +1,7 @@
 <template>
   <div class="announcement">
     zkSync v1 is now zkSync Lite.
-    <a href="https://zksync.io" rel="noopener nofollow noreferrer" target="_blank">Learn more</a>
+    <a href="https://google.com" rel="noopener nofollow noreferrer" target="_blank">Learn more</a>
   </div>
 </template>
 
