@@ -1,3 +1,10 @@
+# [3.28.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.4...3.28.0) (2023-02-16)
+
+
+### Features
+
+* add announcement about renaming ([#316](https://github.com/matter-labs/zksync-wallet-vue/issues/316)) ([05e30b0](https://github.com/matter-labs/zksync-wallet-vue/commit/05e30b01fa533ed170c7c34fae91bbbe69cea77d))
+
 ## [3.27.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.3...3.27.4) (2023-02-01)
 
 
