@@ -75,7 +75,7 @@ export const actions = actionTree(
           return;
         }
         const contentType: string | undefined = res.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
+        if (contentType?.includes("application/json")) {
           const data = res.bodyUsed ? res : await res.json();
           if (typeof data === "object" && (data.image || data.name || data.description)) {
             if (typeof data.image === "string") {
@@ -91,7 +91,7 @@ export const actions = actionTree(
               description: data.description,
             });
           }
-        } else if (contentType && contentType.includes("image/")) {
+        } else if (contentType?.includes("image/")) {
           commit("setNFT", {
             cid,
             exists: true,
