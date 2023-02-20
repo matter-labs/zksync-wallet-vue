@@ -106,11 +106,11 @@ export default Vue.extend({
         },
 
         {
-          name: "zkSync v2.0",
+          name: "zkSync Era Portal",
           link: "https://portal.zksync.io",
         },
         {
-          name: "Docs v2.0",
+          name: "zkSync Era Docs",
           link: "https://v2-docs.zksync.io",
         },
         {
