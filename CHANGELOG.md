@@ -1,3 +1,10 @@
+## [3.28.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.28.1...3.28.2) (2023-02-20)
+
+
+### Bug Fixes
+
+* tools rename ([598de38](https://github.com/matter-labs/zksync-wallet-vue/commit/598de388960e766c7a107257ae3e2398d4a1dda0))
+
 ## [3.28.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.28.0...3.28.1) (2023-02-20)
 
 
