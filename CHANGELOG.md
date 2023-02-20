@@ -1,3 +1,10 @@
+## [3.28.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.28.0...3.28.1) (2023-02-20)
+
+
+### Bug Fixes
+
+* text on transfer warning popup ([#323](https://github.com/matter-labs/zksync-wallet-vue/issues/323)) ([6574ffb](https://github.com/matter-labs/zksync-wallet-vue/commit/6574ffb92dab66d0a544ae698246aacfd4237aef))
+
 # [3.28.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.27.4...3.28.0) (2023-02-16)
 
 
