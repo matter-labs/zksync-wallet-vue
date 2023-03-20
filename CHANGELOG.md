@@ -1,3 +1,10 @@
+## [3.28.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.28.2...3.28.3) (2023-03-20)
+
+
+### Bug Fixes
+
+* headline text is overlapped with menu ([#326](https://github.com/matter-labs/zksync-wallet-vue/issues/326)) ([d9b26e6](https://github.com/matter-labs/zksync-wallet-vue/commit/d9b26e64498e76751eab293f548720a21b28d170))
+
 ## [3.28.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.28.1...3.28.2) (2023-02-20)
 
 
