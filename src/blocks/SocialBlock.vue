@@ -58,7 +58,7 @@ export default Vue.extend({
         {
           name: "All Contacts",
           icon: "ri-at-line",
-          url: "https://zksync.io/contact.html",
+          url: "https://docs.zksync.io/contact.html",
           hideIn: "footer",
         },
       ] as SingleIcon[],
