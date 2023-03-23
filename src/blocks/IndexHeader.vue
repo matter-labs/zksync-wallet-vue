@@ -34,8 +34,8 @@
           </i-column>
           <i-column :xs="12" :md="4" class="_padding-y-0">
             <div class="linksContainer">
-              <a href="https://zksync.io/userdocs/" target="_blank" class="linkItem">FAQ</a>
-              <a href="https://zksync.io/dev/" target="_blank" class="linkItem">Docs</a>
+              <a href="https://docs.zksync.io/userdocs/" target="_blank" class="linkItem">FAQ</a>
+              <a href="https://docs.zksync.io/dev/" target="_blank" class="linkItem">Docs</a>
               <i-dropdown
                 class="_background-transparent _border-none likeLinkItem"
                 :class="{ opened: dropdownOpened, firstElementHovered: firstHovered }"
@@ -111,7 +111,7 @@ export default Vue.extend({
         },
         {
           name: "zkSync Era Docs",
-          link: "https://v2-docs.zksync.io",
+          link: "https://era.zksync.io/docs/",
         },
         {
           name: "Block Explorer",
