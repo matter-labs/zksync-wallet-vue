@@ -205,6 +205,14 @@
         </div>
       </i-button>
 
+      <!-- Withdrawal duration note -->
+      <div
+        v-if="(type === 'Withdraw' || type === 'WithdrawNFT') && (hasSigner || !requireSigner)"
+        class="_text-center _margin-top-05"
+      >
+        from 20 minutes to 7 hours
+      </div>
+
       <!-- Requesting signer -->
       <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">
         Follow the instructions in your Ethereum wallet
