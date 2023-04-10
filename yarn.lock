@@ -3448,14 +3448,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-nuxt-core@npm:^1.10.1":
-  version: 1.10.1
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.10.1"
+"@matterlabs/zksync-nuxt-core@npm:^1.10.2":
+  version: 1.10.2
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.10.2"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.8.0
     "@web3-onboard/coinbase": ^2.2.0
-    "@web3-onboard/core": ^2.11.1
+    "@web3-onboard/core": ^2.16.2
     "@web3-onboard/dcent": ^2.2.2
     "@web3-onboard/fortmatic": ^2.0.14
     "@web3-onboard/gnosis": ^2.1.5
@@ -3477,7 +3477,7 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.13.1
-  checksum: 3e3a3784263f63be3a4c69c34430fa7afdfe46c363f7fd1b3ab0a56f025d247d43da9f0fb06259d74db8e25b1dcc199e411a1a8ba6954b76a15b31ca85933f93
+  checksum: 99c87a17c8696527f59a51aa54cea666f209609d9b7508d251eeea266e56e8a6f24c23e5c47fc0d7a5bb23e63883b87c574a36ff69b1167cf7a3fc6dd04db27b
   languageName: node
   linkType: hard
 
@@ -3493,7 +3493,7 @@ __metadata:
     "@inkline/nuxt": ^2.3.6
     "@matterlabs/eslint-config-nuxt": ^1.0.6
     "@matterlabs/prettier-config": ^1.0.2
-    "@matterlabs/zksync-nuxt-core": ^1.10.1
+    "@matterlabs/zksync-nuxt-core": ^1.10.2
     "@nuxt/types": ^2.15.8
     "@nuxt/typescript-build": ^2.1.0
     "@nuxt/typescript-runtime": ^2.1.0
@@ -6364,28 +6364,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/core@npm:^2.11.1":
-  version: 2.14.0
-  resolution: "@web3-onboard/core@npm:2.14.0"
-  dependencies:
-    "@unstoppabledomains/resolution": ^8.0
-    "@web3-onboard/common": ^2.2.3
-    bignumber.js: ^9.0.0
-    bnc-sdk: ^4.6.2
-    bowser: ^2.11.0
-    ethers: 5.5.3
-    eventemitter3: ^4.0.7
-    joi: ^17.6.1
-    lodash.merge: ^4.6.2
-    lodash.partition: ^4.6.0
-    nanoid: ^4.0.0
-    rxjs: ^7.5.5
-    svelte: ^3.49.0
-    svelte-i18n: ^3.3.13
-  checksum: ff14f51ca77b6491779926cfc3d1d81fe9d3760ea9c5de52803fd71c4d10e756948cd54f4d002957f44b8025b5f1ca3ae2bc7551447b13b52a92349a0af7e035
-  languageName: node
-  linkType: hard
-
 "@web3-onboard/core@npm:^2.16.2":
   version: 2.16.2
   resolution: "@web3-onboard/core@npm:2.16.2"
@@ -7788,18 +7766,6 @@ __metadata:
     uuid: ^3.3.2
     websocket-stream: ^5.5.0
   checksum: 21dfcc6ff54fb5caf3834b07732688b3cc77ef434bcb40e8d18a52616e549a143bf877d483ef4578eae5c5a1724f2ee9f19c73c95a474991bbb7a2b33541953e
-  languageName: node
-  linkType: hard
-
-"bnc-sdk@npm:^4.6.2":
-  version: 4.6.5
-  resolution: "bnc-sdk@npm:4.6.5"
-  dependencies:
-    crypto-es: ^1.2.2
-    nanoid: ^3.3.1
-    rxjs: ^6.6.3
-    sturdy-websocket: ^0.1.12
-  checksum: 1a524b89bc8baf38214f968fcf3a326b96be0125c14b7ef141491fe196bdeffab1a33eae0faf302f03954958829b0bf2e672b67f25d35329f1321d0b80aa83eb
   languageName: node
   linkType: hard
 
