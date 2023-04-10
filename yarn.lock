@@ -3448,14 +3448,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-nuxt-core@npm:^1.10.1":
-  version: 1.10.1
-  resolution: "@matterlabs/zksync-nuxt-core@npm:1.10.1"
+"@matterlabs/zksync-nuxt-core@npm:^1.10.2":
+  version: 1.10.2
+  resolution: "@matterlabs/zksync-nuxt-core@npm:1.10.2"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.8.0
     "@web3-onboard/coinbase": ^2.2.0
-    "@web3-onboard/core": ^2.11.1
+    "@web3-onboard/core": ^2.16.2
     "@web3-onboard/dcent": ^2.2.2
     "@web3-onboard/fortmatic": ^2.0.14
     "@web3-onboard/gnosis": ^2.1.5
@@ -3477,7 +3477,7 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.13.1
-  checksum: 3e3a3784263f63be3a4c69c34430fa7afdfe46c363f7fd1b3ab0a56f025d247d43da9f0fb06259d74db8e25b1dcc199e411a1a8ba6954b76a15b31ca85933f93
+  checksum: 99c87a17c8696527f59a51aa54cea666f209609d9b7508d251eeea266e56e8a6f24c23e5c47fc0d7a5bb23e63883b87c574a36ff69b1167cf7a3fc6dd04db27b
   languageName: node
   linkType: hard
 
@@ -3493,7 +3493,7 @@ __metadata:
     "@inkline/nuxt": ^2.3.6
     "@matterlabs/eslint-config-nuxt": ^1.0.6
     "@matterlabs/prettier-config": ^1.0.2
-    "@matterlabs/zksync-nuxt-core": ^1.10.1
+    "@matterlabs/zksync-nuxt-core": ^1.10.2
     "@nuxt/types": ^2.15.8
     "@nuxt/typescript-build": ^2.1.0
     "@nuxt/typescript-runtime": ^2.1.0
@@ -3513,6 +3513,7 @@ __metadata:
     "@sentry/webpack-plugin": ^1.18.3
     "@types/crypto-js": ^4.0.2
     "@types/mixpanel-browser": ^2.35.8
+    "@web3-onboard/core": ^2.16.2
     blockies-ts: 1.0.0
     cspell: ^5.19.3
     eslint: ^8.12.0
@@ -4877,7 +4878,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sideway/formula@npm:^3.0.0":
+"@sideway/formula@npm:^3.0.0, @sideway/formula@npm:^3.0.1":
   version: 3.0.1
   resolution: "@sideway/formula@npm:3.0.1"
   checksum: e4beeebc9dbe2ff4ef0def15cec0165e00d1612e3d7cea0bc9ce5175c3263fc2c818b679bd558957f49400ee7be9d4e5ac90487e1625b4932e15c4aa7919c57a
@@ -6352,25 +6353,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@web3-onboard/core@npm:^2.11.1":
-  version: 2.14.0
-  resolution: "@web3-onboard/core@npm:2.14.0"
+"@web3-onboard/common@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "@web3-onboard/common@npm:2.3.1"
+  dependencies:
+    bignumber.js: ^9.1.0
+    ethers: 5.5.4
+    joi: 17.9.1
+  checksum: b1bc69d51cbe3d181e58fea33cf763edbfaaa46afff7bac41f7ccf964bdb1dcc9f5c08c732a9163dea05509bc07eaf16f39c0dc52784a41b67a01b632ef11c03
+  languageName: node
+  linkType: hard
+
+"@web3-onboard/core@npm:^2.16.2":
+  version: 2.16.2
+  resolution: "@web3-onboard/core@npm:2.16.2"
   dependencies:
     "@unstoppabledomains/resolution": ^8.0
-    "@web3-onboard/common": ^2.2.3
+    "@web3-onboard/common": ^2.3.1
     bignumber.js: ^9.0.0
-    bnc-sdk: ^4.6.2
+    bnc-sdk: ^4.6.7
     bowser: ^2.11.0
     ethers: 5.5.3
     eventemitter3: ^4.0.7
-    joi: ^17.6.1
+    joi: 17.9.1
     lodash.merge: ^4.6.2
     lodash.partition: ^4.6.0
     nanoid: ^4.0.0
     rxjs: ^7.5.5
     svelte: ^3.49.0
     svelte-i18n: ^3.3.13
-  checksum: ff14f51ca77b6491779926cfc3d1d81fe9d3760ea9c5de52803fd71c4d10e756948cd54f4d002957f44b8025b5f1ca3ae2bc7551447b13b52a92349a0af7e035
+  checksum: cfb8085a92a79825feff9a2ac30feef89cceca8a2b5c749b5aa0e032d3caf2bdfc4d1b6c3b4bf84f76708706b1755f9362807bad09c916a0578d012662c39e13
   languageName: node
   linkType: hard
 
@@ -7757,15 +7769,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bnc-sdk@npm:^4.6.2":
-  version: 4.6.5
-  resolution: "bnc-sdk@npm:4.6.5"
+"bnc-sdk@npm:^4.6.7":
+  version: 4.6.7
+  resolution: "bnc-sdk@npm:4.6.7"
   dependencies:
     crypto-es: ^1.2.2
     nanoid: ^3.3.1
     rxjs: ^6.6.3
     sturdy-websocket: ^0.1.12
-  checksum: 1a524b89bc8baf38214f968fcf3a326b96be0125c14b7ef141491fe196bdeffab1a33eae0faf302f03954958829b0bf2e672b67f25d35329f1321d0b80aa83eb
+  checksum: d4606d59b1b79d26c2d7051a382ea7107b3f404dc7cf1397d59dd641685331c603204987dc4553f541f2d3548c89de97d195d93ac9b38311a663c17006635003
   languageName: node
   linkType: hard
 
@@ -14664,6 +14676,19 @@ __metadata:
   bin:
     jiti: bin/jiti.js
   checksum: 1e74d99b9a551df952057b8bce56f744caccca0044aa05021643e6ce0837ed47bc2d5b290fecb462e32988c6bf318afe77e341310c5ecf6bb63c19c80c929cb6
+  languageName: node
+  linkType: hard
+
+"joi@npm:17.9.1":
+  version: 17.9.1
+  resolution: "joi@npm:17.9.1"
+  dependencies:
+    "@hapi/hoek": ^9.0.0
+    "@hapi/topo": ^5.0.0
+    "@sideway/address": ^4.1.3
+    "@sideway/formula": ^3.0.1
+    "@sideway/pinpoint": ^2.0.0
+  checksum: 055df3841e00d7ed065ef1cc3330cf69097ab2ffec3083d8b1d6edfd2e25504bf2983f5249d6f0459bcad99fe21bb0c9f6f1cc03569713af27cd5eb00ee7bb7d
   languageName: node
   linkType: hard
 
