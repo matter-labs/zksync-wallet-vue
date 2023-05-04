@@ -1,19 +1,19 @@
 <template>
   <div class="footerModalContainer">
     <i-modal v-model="modal" size="md">
-      <template slot="header">
+      <template #header>
         <b>Information</b>
       </template>
-      <template slot="default">
-        <a class="modalFooterBtn big" href="https://zksync.io/faq/intro.html" target="_blank">
+      <template #default>
+        <a class="modalFooterBtn big" href="https://docs.zksync.io/userdocs/intro.html" target="_blank">
           <v-icon name="ri-book-2-line" />
           <span>Docs</span>
         </a>
-        <a class="modalFooterBtn big" href="https://zksync.io/legal/terms.html" target="_blank">
+        <a class="modalFooterBtn big" href="https://docs.zksync.io/legal/terms.html" target="_blank">
           <v-icon name="ri-profile-line" />
           <span>Terms</span>
         </a>
-        <a class="modalFooterBtn big" href="https://zksync.io/contact.html" target="_blank">
+        <a class="modalFooterBtn big" href="https://docs.zksync.io/contact.html" target="_blank">
           <v-icon name="ri-contacts-book-line" />
           <span>Contact</span>
         </a>
@@ -21,7 +21,7 @@
           <v-icon name="ri-external-link-line" />
           <span>RIF Aggregation Explorer</span>
         </a>
-        <a class="modalFooterBtn big" href="https://uptime.com/s/zksync" target="_blank">
+        <a class="modalFooterBtn big" href="https://uptime.com/s/zkSync" target="_blank">
           <v-icon name="ri-wifi-line" />
           <span>Uptime</span>
         </a>
@@ -30,13 +30,19 @@
           <span>Environment</span>
         </div>
       </template>
-      <template slot="footer">
+      <template #footer>
         <div class="_display-flex _justify-content-space-between">
           <block-system-info />
-          <i-button block size="md" circle @click="toggleDarkMode">
-            <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
-            <v-icon v-else name="ri-moon-fill" />
-          </i-button>
+          <block-modals-network-switch />
+          <div class="_display-flex">
+            <i-button size="md" circle class="_margin-right-1 _margin-0" block @click="openNetworkSwitchModal">
+              <v-icon name="co-ethereum" scale="1" />
+            </i-button>
+            <i-button block size="md" circle class="_margin-0" @click="toggleDarkMode">
+              <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
+              <v-icon v-else name="ri-moon-fill" />
+            </i-button>
+          </div>
         </div>
       </template>
     </i-modal>
@@ -44,18 +50,21 @@
 </template>
 
 <script lang="ts">
-import { APP_ZKSYNC_BLOCK_EXPLORER } from "@/plugins/build";
-import utils from "@/plugins/utils";
 import Vue from "vue";
+import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
 
 export default Vue.extend({
-  components: {},
   props: {
     value: {
       type: Boolean,
       default: false,
       required: false,
     },
+  },
+  data() {
+    return {
+      theme: theme.getUserTheme(),
+    };
   },
   computed: {
     modal: {
@@ -67,15 +76,20 @@ export default Vue.extend({
       },
     },
     blockExplorerLink(): string {
-      return APP_ZKSYNC_BLOCK_EXPLORER;
+      return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
     },
     isDarkTheme(): boolean {
-      return utils.defineTheme(this.$inkline) === "dark";
+      return this.theme === "dark";
     },
   },
   methods: {
-    toggleDarkMode(): void {
-      utils.defineTheme(this.$inkline, true);
+    toggleDarkMode() {
+      this.theme = theme.toggleTheme();
+      this.$inkline.config.variant = this.theme;
+    },
+    openNetworkSwitchModal() {
+      this.$analytics.track("visit_change_network");
+      return this.$accessor.openModal("NetworkSwitch");
     },
   },
 });

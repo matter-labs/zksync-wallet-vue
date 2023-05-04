@@ -31,7 +31,6 @@
 .gzip_cache/
 .assets_cache/
 .reports/
-/src/static/sw.js
 public
 .nuxt
 *debug.log*
@@ -49,3 +48,11 @@ public
 /cypress/screenshots/examples/misc.spec.js/
 /cypress/videos/examples/
 /.eslintcache
+
+# Functions
+/functions/node_modules
+/functions/lib
+/functions/*.log
+/functions/.runtimeconfig.json
+/.ide-setup/.runtimeconfig.json
+/.ide-setup/functions.md

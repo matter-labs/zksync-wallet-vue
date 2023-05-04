@@ -153,6 +153,26 @@
       height: max-content;
 
       .balances {
+        .balancesButtonGroup {
+          .button {
+            width: 31%;
+            display: inline-flex !important;
+            align-items: center;
+            margin: 0 !important;
+            padding: 0 15px 0 10px !important;
+            line-height: 100% !important;
+            min-width: fit-content !important;
+            min-height: 40px !important;
+
+            svg {
+              top: initial !important;
+              max-width: 12px !important;
+              width: auto !important;
+              height: auto !important;
+            }
+          }
+        }
+
         .balancesList .balanceItem {
           display: flex;
           height: max-content;

@@ -1,18 +1,36 @@
 <template>
   <div class="transactionsPage dappPageWrapper">
-    <account-activation-modal />
+    <block-modals-account-activation />
     <div class="tileBlock transactionsTile">
       <div class="tileHeadline h3">Transactions</div>
       <div class="transactionsListContainer genericListContainer">
-        <div v-if="loading === true" class="nothingFound">
+        <div v-if="loadingStatus === 'main'" class="nothingFound">
           <loader class="_display-block" />
         </div>
-        <div v-else-if="transactionsList.length === 0 && !loadingMore" class="nothingFound" :class="{ loadMoreAvailable: loadMoreAvailable }">
+        <div
+          v-else-if="transactions.length === 0 && !loadingStatus"
+          class="nothingFound"
+          :class="{ loadMoreAvailable: !allLoaded }"
+        >
           <span>History is empty</span>
         </div>
-        <single-transaction v-for="item in transactionsList" v-else :key="item.hash" class="transactionItem" :single-transaction="item" />
-        <i-button v-if="loadingMore === false && loadMoreAvailable === true" block link size="lg" variant="secondary" @click="loadMore()">Load more</i-button>
-        <div v-else-if="loadingMore === true">
+        <transaction-history-item
+          v-for="item in transactions"
+          v-else
+          :key="item.txHash"
+          class="transactionItem"
+          :transaction="item"
+        />
+        <i-button
+          v-if="!loadingStatus && !allLoaded"
+          block
+          link
+          size="lg"
+          variant="secondary"
+          @click="requestTransactions('previous')"
+          >Load more
+        </i-button>
+        <div v-else-if="loadingStatus === 'previous'">
           <loader class="_display-block _margin-x-auto _margin-y-2" />
         </div>
       </div>
@@ -21,118 +39,94 @@
 </template>
 
 <script lang="ts">
-import SingleTransaction from "@/components/SingleTransaction.vue";
-import AccountActivationModal from "@/blocks/modals/AccountActivation.vue";
-import { ZkInTx } from "@/types/lib";
-import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
-import Vue, { PropOptions } from "vue";
+import Vue from "vue";
+import { ApiTransaction } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { ZkFilteredTransactionHistory, ZkTransactionHistoryLoadingState } from "@matterlabs/zksync-nuxt-core/types";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({
-  components: {
-    SingleTransaction,
-    AccountActivationModal,
-  },
   props: {
-    filter: {
-      type: String,
-      default: "",
+    token: {
+      type: [String, Number],
       required: false,
+      default: undefined,
     },
     address: {
       type: String,
-      default: "",
       required: false,
-    } as PropOptions<Address>,
+      default: undefined,
+    },
+    tokenExists: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   data() {
     return {
-      loading: true,
-      addressToNameMap: new Map(),
-      loadMoreAvailable: false,
-      totalLoadedItem: 0,
-      loadingMore: false,
+      transactions: [] as ApiTransaction[],
+      loadingStatus: false as ZkTransactionHistoryLoadingState,
+      allLoaded: !this.tokenExists,
     };
   },
-  computed: {
-    ownAddress(): Address {
-      return this.$accessor.provider.address || "";
-    },
-    transactionsList(): Array<ZkInTx> {
-      let list = this.$accessor.wallet.getTransactionsHistory;
-      if (this.filter) {
-        let filter: string | number = "";
-        if (this.filter.includes("NFT-")) {
-          filter = parseInt(this.filter.substr(4, this.filter.length));
-        } else {
-          filter = this.filter;
-        }
-        if (filter) {
-          list = list.filter((item: ZkInTx) => (item.tx.priority_op ? item.tx.priority_op.token : item.tx.token) === filter);
-        }
+  watch: {
+    tokenExists(val, oldVal) {
+      if (!oldVal && val) {
+        this.requestTransactions("main");
+        this.updateLatest();
       }
-      if (this.address) {
-        const addressLowerCase = this.address.toLowerCase();
-        const myAddressLowerCase = this.ownAddress.toLowerCase();
-        list = list.filter((item: ZkInTx) => {
-          if (item.tx.type === "Withdraw" || item.tx.type === "Transfer") {
-            const addressToLowerCase = item.tx.to?.toLowerCase();
-            const addressFromLowerCase = item.tx.from.toLowerCase();
-            if (
-              (item.tx.type === "Withdraw" && addressToLowerCase === addressLowerCase) ||
-              (item.tx.type === "Transfer" &&
-                ((addressToLowerCase === myAddressLowerCase && addressFromLowerCase === addressLowerCase) ||
-                  (addressFromLowerCase === myAddressLowerCase && addressToLowerCase === addressLowerCase)))
-            ) {
-              return true;
-            }
-          }
-          return false;
-        });
-      }
-      return list;
     },
   },
   mounted() {
-    this.autoUpdateList();
-    this.getTransactions();
+    if (this.tokenExists) {
+      this.allLoaded = false;
+      this.requestTransactions("main");
+      this.updateLatest();
+    }
   },
   beforeDestroy() {
     clearInterval(updateListInterval);
   },
   methods: {
-    async loadTransactions(offset = 0): Promise<Array<ZkInTx>> {
-      const list = await this.$accessor.wallet.requestTransactionsHistory({ force: false, offset });
-      this.totalLoadedItem += list.length;
-      this.loadMoreAvailable = list.length >= 25; /* 25 transactions are loaded for each request */
-      return list;
-    },
-    async getTransactions(): Promise<void> {
-      if (this.$accessor.wallet.getTransactionsHistory.length === 0) {
-        this.loading = true;
+    async requestTransactions(part: "main" | "previous" | "new") {
+      if (this.loadingStatus !== false) {
+        return;
       }
-      try {
-        await this.loadTransactions();
-      } catch (error) {
-        this.$toast.global.zkException({
-          message: error.message ?? "Error while fetching the transactions",
-        });
-      }
-      this.loading = false;
-    },
-    async loadMore(): Promise<void> {
-      await this.autoUpdateList();
-      this.loadingMore = true;
-      await this.loadTransactions(this.totalLoadedItem);
-      this.loadingMore = false;
-    },
-    autoUpdateList(): void {
-      clearInterval(updateListInterval);
-      updateListInterval = setInterval(() => {
-        if (this.totalLoadedItem <= 25) {
-          this.loadTransactions();
+
+      this.$analytics.track("transaction_history_load_more");
+
+      this.loadingStatus = part as ZkTransactionHistoryLoadingState;
+      const res: ZkFilteredTransactionHistory = await this.$store.dispatch("zk-history/getFilteredTransactionHistory", {
+        lastTxHash: part === "previous" ? this.transactions[this.transactions.length - 1].txHash : undefined,
+        token: this.token,
+        address: this.address,
+      });
+      if (!res.error) {
+        if (part === "main") {
+          this.transactions = res.transactions;
+        } else if (part === "previous") {
+          this.transactions.push(...res.transactions);
+        } else if (part === "new") {
+          const previousTransactions = JSON.parse(JSON.stringify(this.transactions));
+          const newTransactionHashes = new Set(res.transactions.map((e) => e.txHash));
+          for (let a = previousTransactions.length - 1; a >= 0; a--) {
+            if (newTransactionHashes.has(previousTransactions[a].txHash)) {
+              previousTransactions.splice(a, 1);
+            }
+          }
+          this.transactions = [...res.transactions, ...previousTransactions];
         }
-      }, 120000);
+        this.allLoaded = res.allLoaded;
+      }
+      this.loadingStatus = false;
+    },
+    updateLatest() {
+      clearInterval(updateListInterval);
+      updateListInterval = setInterval(async () => {
+        if (!this.allLoaded) {
+          await this.requestTransactions("new");
+        }
+      }, 30000);
     },
   },
 });

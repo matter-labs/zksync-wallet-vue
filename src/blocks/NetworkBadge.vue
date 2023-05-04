@@ -1,20 +1,19 @@
 <template>
-  <i-badge v-if="!isMainnet" variant="primary">
+  <i-badge v-if="!isMainnet" variant="primary" data-cy="network_logo">
     <small class="version">{{ network }}</small>
   </i-badge>
 </template>
 <script lang="ts">
-import { ETHER_PRODUCTION, ZK_NETWORK } from "@/plugins/build";
 import Vue from "vue";
 
 export default Vue.extend({
   name: "NetworkBadge",
   computed: {
     isMainnet(): boolean {
-      return ETHER_PRODUCTION;
+      return this.$store.getters["zk-provider/network"] === "mainnet";
     },
     network(): string {
-      return ZK_NETWORK;
+      return this.$store.getters["zk-provider/network"];
     },
   },
 });

@@ -36,17 +36,24 @@ Stichting
 Kingsfordweg
 RSIN
 ABDK
+QDNV
 Alef
 Zcon
 Paypal
 Numio
+banxa
+keriat
 
 // Used libraries
 numberish
+vuejs
+npmjs
+mltt
 arrayify
 hexlify
 markdownlint
 ethersproject
+qrcode
 
 // Used programming language words
 printf
@@ -55,9 +62,16 @@ println
 fatalf
 allowfullscreen
 inttypes
+ipfs
+vuex
+nuxt
+Isnt
+nuxtjs
+corejs
+predeploy
+
 
 // ETC
-gitter
 signup
 signups
 precompiled
@@ -74,6 +88,13 @@ gemeente
 unauthorised
 Ethereum's
 SDKs
+
+// Crypto projects
+Udbe
+Urbee
+utorg
+bybit
+okex
 
 // Famous crypto people
 Vitalik's

@@ -4,7 +4,7 @@
       <i-row>
         <i-column :xs="6" :md="3" class="_padding-left-0 _display-flex _justify-content-start">
           <nuxt-link class="logoLinkContainer" to="/account">
-            <block-logo :is-zk-sync-logo="true" />
+            <block-logo />
           </nuxt-link>
         </i-column>
         <i-column :xs="0" :md="6" class="_padding-y-0 pagesContainerRow">
@@ -21,7 +21,7 @@
               <v-icon class="mobileOnly" name="ri-contacts-line" />
               <span>Contacts</span>
             </nuxt-link>
-            <nuxt-link class="headerLink" to="/transactions">
+            <nuxt-link class="headerLink" to="/account/history">
               <v-icon class="mobileOnly" name="ri-history-line" />
               <span>History</span>
             </nuxt-link>
@@ -69,10 +69,10 @@ export default Vue.extend({
   },
   computed: {
     walletName(): string {
-      return this.$accessor.provider.name || "";
+      return this.$store.getters["zk-account/name"];
     },
     walletAddressFull(): string {
-      return this.$accessor.provider.address || "";
+      return this.$store.getters["zk-account/address"];
     },
     accountModal: {
       get(): boolean {
@@ -87,8 +87,9 @@ export default Vue.extend({
   methods: {
     logout(): void {
       this.accountModal = false;
-      this.$nextTick(() => {
-        this.$accessor.wallet.logout();
+      this.$nextTick(async () => {
+        await this.$store.dispatch("zk-account/logout");
+        await this.$router.push("/");
       });
     },
     togglePopup(): void {

@@ -86,6 +86,13 @@
       }
     }
 
+    .tileSmallHeadline {
+      color: $blackLighter;
+      font-weight: 700;
+      transition: color $transition1;
+      will-change: color;
+    }
+
     .tileText {
       margin: 5px 0;
       font-size: 16px;
@@ -183,19 +190,10 @@
 
 @media (max-width: $mobile) {
   section.layout-content.layoutContent {
-    display: flex;
-    overflow: hidden;
-    padding: 0;
-    margin: 0;
-
     .routerContainer {
-      display: flex;
-      flex-direction: column;
-      margin: 0;
-      padding: 0;
-
       .dappPageWrapper {
         padding: 1rem 0;
+        padding-top: calc(1rem + 32px);
         overflow-x: hidden;
       }
     }
@@ -226,7 +224,7 @@
     }
 
     &.-circle {
-      display: inline-flex !important;
+      display: inline-flex;
     }
   }
 
@@ -239,8 +237,8 @@
   .dappPageWrapper {
     .tileBlock {
       padding: 0.75rem 1rem 1rem !important;
-      //min-height: 40vh;
       width: 90vw;
+      margin-top: 0;
 
       .balancesList,
       .transactionsListContainer,
@@ -338,20 +336,16 @@
 
 .inkline.-dark {
   .dappPageWrapper {
-    .balancesList,
-    .transactionsListContainer,
-    .contactsListContainer {
-      //background-color: $bgSecondary;
+    .tileSmallHeadline {
+      color: $white;
     }
-  }
-}
-
-.inkline.-light {
-  .dappPageWrapper {
-    .balancesList,
-    .transactionsListContainer,
-    .contactsListContainer {
-      //background-color: #f7fafc;
+    .orDivider {
+      .line {
+        background-color: transparentize($color: $gray, $amount: 0.5);
+      }
+      .orText {
+        color: transparentize($color: $gray, $amount: 0.3);
+      }
     }
   }
 }

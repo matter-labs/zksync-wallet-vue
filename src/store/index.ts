@@ -1,38 +1,37 @@
-import * as provider from "@/store/provider";
-import * as contacts from "@/store/contacts";
-import * as tokens from "@/store/tokens";
-import * as transaction from "@/store/transaction";
-import * as wallet from "@/store/wallet";
-import { ZKIRootState } from "@/types/lib";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import { Route } from "vue-router/types";
 
-export const state = () =>
-  <ZKIRootState>{
-    accountModalOpened: false,
-    currentModal: <string | undefined>undefined,
-    previousRoute: <Route | undefined>undefined,
-  };
+let resolveModal: ((result: boolean) => void) | undefined;
+
+export const state = (): {
+  accountModalOpened: boolean;
+  currentModal?: string;
+  previousRoute?: Route;
+} => ({
+  accountModalOpened: false,
+  currentModal: undefined,
+  previousRoute: undefined,
+});
 
 export type RootState = ReturnType<typeof state>;
 
 export const getters = getterTree(state, {
-  getAccountModalState: (state) => state.accountModalOpened,
-  getPreviousRoute: (state) => state.previousRoute,
-  currentModal: (state) => state.currentModal,
+  getAccountModalState: (state: RootState) => state.accountModalOpened,
+  getPreviousRoute: (state: RootState) => state.previousRoute,
+  currentModal: (state: RootState) => state.currentModal,
 });
 
 export const mutations = mutationTree(state, {
-  setAccountModalState(state, modalState: boolean) {
+  setAccountModalState(state: RootState, modalState: boolean) {
     state.accountModalOpened = modalState;
   },
-  setCurrentModal(state, modalName: string) {
+  setCurrentModal(state: RootState, modalName: string) {
     state.currentModal = modalName;
   },
-  setPreviousRoute(state, route: Route) {
+  setPreviousRoute(state: RootState, route: Route) {
     state.previousRoute = route;
   },
-  removeCurrentModal(state) {
+  removeCurrentModal(state: RootState) {
     state.currentModal = undefined;
   },
 });
@@ -40,13 +39,22 @@ export const mutations = mutationTree(state, {
 export const actions = actionTree(
   { state, getters, mutations },
   {
-    openModal({ commit }, modalName: string): void {
+    openModal({ commit }, modalName: string) {
       commit("setCurrentModal", modalName);
     },
-    closeActiveModal({ commit }): void {
+    closeActiveModal({ commit }, result?: boolean) {
       commit("removeCurrentModal");
+      if (resolveModal) {
+        resolveModal(!!result);
+      }
     },
-  },
+    async openDialog({ dispatch }, modalName: string) {
+      dispatch("openModal", modalName);
+      return await new Promise((resolve) => {
+        resolveModal = resolve;
+      });
+    },
+  }
 );
 
 export const accessorType = getAccessorType({
@@ -54,11 +62,5 @@ export const accessorType = getAccessorType({
   getters,
   mutations,
   actions,
-  modules: {
-    provider,
-    contacts,
-    tokens,
-    transaction,
-    wallet,
-  },
+  modules: {},
 });

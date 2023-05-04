@@ -7,17 +7,13 @@ header {
 
   &.layout-header {
     position: fixed;
-    top: 0;
+    top: 32px;
     z-index: 3;
-
     @media screen and (max-width: $mobile) {
       position: fixed;
-      top: 0;
       left: 0;
-      z-index: 9;
       box-shadow: $shadowBottom;
     }
-
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: rgb(239, 241, 244);
@@ -89,7 +85,7 @@ header {
     }
 
     .headerWrapper {
-      height: 50px !important;
+      height: 30px !important;
 
       @media screen and (min-width: $mobile) and (max-width: $tablet) {
         height: 25px !important;
@@ -103,7 +99,6 @@ header {
         width: auto !important;
         height: 100% !important;
         object-fit: contain;
-
         @media (max-width: $mobile) {
           height: 25px !important;
         }
@@ -118,7 +113,6 @@ header {
         letter-spacing: 1px;
         text-transform: uppercase;
         background: transparent !important;
-        margin-left: 10px;
       }
 
       @media (max-width: $mobile) {
@@ -198,7 +192,6 @@ header {
       background-color: $darkViolet;
       box-shadow: $shadowTop;
     }
-
     .pagesContainer {
       position: fixed;
       bottom: -1px;
@@ -226,7 +219,6 @@ header {
           display: block;
           margin: 0 auto;
         }
-
         span {
           margin-top: 2px;
         }

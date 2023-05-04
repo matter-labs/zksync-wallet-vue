@@ -54,7 +54,6 @@ body {
       &.-dark {
         & > .menu[data-popper-placement="bottom"] {
           .arrow::after {
-            border-bottom-color: $mediumViolet !important;
           }
 
           &.firstElementHovered {
@@ -160,11 +159,9 @@ body {
 
     @media (max-width: $mobile) {
       padding: 0 !important;
-
       .column {
         padding: 0 !important;
       }
-
       .mobileIndexHeader {
         padding: 1rem;
         margin: 0 auto !important;
@@ -350,11 +347,13 @@ body {
       }
 
       .dropdown {
-        min-height: 52px;
-        height: fit-content;
-        max-height: 312px;
+        height: 52px;
         overflow: hidden;
         transition: height $transition1;
+
+        &.opened {
+          height: auto;
+        }
       }
     }
   }
@@ -419,8 +418,7 @@ body.inkline.-light {
 
           &:hover {
             color: $lightViolet !important;
-            background-color: darken($white, 5) !important;
-            border-color: darken($bgLight, 5) !important;
+            background-color: $hoverGray !important;
           }
         }
       }
