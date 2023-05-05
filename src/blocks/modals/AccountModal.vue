@@ -75,7 +75,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/address"];
     },
     accountZkScanUrl(): string {
-      return (this.$store.getters["zk-onboard/config"].@rsksmart/rif-aggregation-sdk-jsNetwork.explorer +
+      return (this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer +
         "explorer/accounts/" +
         this.accountAddress) as string;
     },

@@ -20,8 +20,8 @@ import {
   ERC20_RECOMMENDED_DEPOSIT_GAS_LIMIT,
 } from "zksync/build/utils";
 import { Token } from "@matterlabs/zksync-nuxt-core/types";
-import { AccountState, Address, Tokens, TokenSymbol } from "@rsksmart/rif-aggregation-sdk-js/build/types";
-import { RemoteWallet, Wallet } from "@rsksmart/rif-aggregation-sdk-js";
+import { AccountState, Address, Tokens, TokenSymbol } from "zksync/build/types";
+import { RemoteWallet, Wallet } from "zksync";
 
 export default Vue.extend({
   data() {

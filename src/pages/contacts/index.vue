@@ -116,7 +116,7 @@ import Vue from "vue";
 import { getAddress } from "ethers/lib/utils";
 import { ZkContact, ZkContacts } from "@matterlabs/zksync-nuxt-core/types";
 import { copyToClipboard, searchInObject } from "@matterlabs/zksync-nuxt-core/utils";
-import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { Address } from "zksync/build/types";
 
 export default Vue.extend({
   data() {

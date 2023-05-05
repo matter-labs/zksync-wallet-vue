@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { Address } from "zksync/build/types";
 import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";
 
 const moonpayConfig = {

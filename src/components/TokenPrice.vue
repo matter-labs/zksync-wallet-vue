@@ -5,7 +5,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 
-import { TokenSymbol } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { TokenSymbol } from "zksync/build/types";
 import { BigNumberish } from "@ethersproject/bignumber";
 
 export default Vue.extend({

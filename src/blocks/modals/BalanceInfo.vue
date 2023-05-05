@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Network } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { Network } from "zksync/build/types";
 
 export default Vue.extend({
   name: "BlockModalsBalanceInfo",

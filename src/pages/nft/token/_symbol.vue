@@ -141,7 +141,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Route } from "vue-router/types";
-import { NFT, NFTInfo } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { NFT, NFTInfo } from "zksync/build/types";
 import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 import { ModuleOptions, ZkContact } from "@matterlabs/zksync-nuxt-core/types";
 import { getAddress } from "ethers/lib/utils";

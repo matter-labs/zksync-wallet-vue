@@ -142,7 +142,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { AccountState as WalletAccountState, TokenInfo } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { AccountState as WalletAccountState, TokenInfo } from "zksync/build/types";
 import { ZkTokenBalances } from "@matterlabs/zksync-nuxt-core/types";
 import { searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
 import BlockModalsBalanceInfo from "@/blocks/modals/BalanceInfo.vue";

@@ -3503,7 +3503,6 @@ __metadata:
     "@nuxtjs/sentry": ^5.1.7
     "@nuxtjs/style-resources": ^1.2.1
     "@ramp-network/ramp-instant-sdk": ^2.5.0
-    "@rsksmart/rif-aggregation-sdk-js": ^0.0.2
     "@semantic-release/changelog": ^6.0.1
     "@semantic-release/commit-analyzer": ^9.0.2
     "@semantic-release/exec": ^6.0.3
@@ -3533,6 +3532,7 @@ __metadata:
     semantic-release: ^19.0.2
     stylelint-config-standard-scss: ^3.0.0
     vue-qrcode: 0.4.0
+    zksync: ^0.13.1
   peerDependencies:
     "@ethersproject/hash": ^5.5.0
   dependenciesMeta:
@@ -4532,21 +4532,6 @@ __metadata:
   dependencies:
     body-scroll-lock: ^2.6.4
   checksum: 4c85ebdfd57d06952b856e2dbdaf186240a836e98771592d7017c86b2a7baf47d56415c905e9cf779cbb9afd46bea40bfae2a0cc21b847e0cc24740e88643843
-  languageName: node
-  linkType: hard
-
-"@rsksmart/rif-aggregation-sdk-js@npm:^0.0.2":
-  version: 0.0.2
-  resolution: "@rsksmart/rif-aggregation-sdk-js@npm:0.0.2"
-  dependencies:
-    axios: ^0.21.2
-    websocket: ^1.0.30
-    websocket-as-promised: ^1.1.0
-    zksync-crypto: ^0.6.1
-  peerDependencies:
-    "@ethersproject/logger": ^5.4.0
-    ethers: ^5.4.4
-  checksum: 3de1733e0f1194158f8d333305d480e9d45eba61f7c45a2253bbfd0e2ffc3a66c3c1b5b085ff28b2b9b9c764533cdbb82eea5c3b486732b6dc03fa8f1803b8c6
   languageName: node
   linkType: hard
 

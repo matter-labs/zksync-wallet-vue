@@ -81,7 +81,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Route } from "vue-router/types";
-import { TokenSymbol } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { TokenSymbol } from "zksync/build/types";
 import { Token, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
 import computeReturnLink from "@/utils/computeReturnLink";
 

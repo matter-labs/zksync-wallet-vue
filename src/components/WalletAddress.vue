@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { Address } from "zksync/build/types";
 import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
 
 export default Vue.extend({

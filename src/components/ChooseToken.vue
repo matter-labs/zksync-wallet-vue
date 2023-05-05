@@ -100,7 +100,7 @@ import {
   ZkTransactionMainToken,
 } from "@matterlabs/zksync-nuxt-core/types";
 import { BigNumberish } from "@ethersproject/bignumber";
-import { Tokens } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { Tokens } from "zksync/build/types";
 
 export default Vue.extend({
   props: {

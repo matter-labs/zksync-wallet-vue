@@ -106,7 +106,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { getAddress } from "ethers/lib/utils";
-import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { Address } from "zksync/build/types";
 import { ZkContact, ZkContacts } from "@matterlabs/zksync-nuxt-core/types";
 import { searchInObject } from "@matterlabs/zksync-nuxt-core/utils";
 

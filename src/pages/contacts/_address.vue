@@ -55,7 +55,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Route } from "vue-router/types";
-import { Address } from "@rsksmart/rif-aggregation-sdk-js/build/types";
+import { Address } from "zksync/build/types";
 import { getAddress } from "ethers/lib/utils";
 import { ZkContact } from "@matterlabs/zksync-nuxt-core/types";
 import computeReturnLink from "@/utils/computeReturnLink";

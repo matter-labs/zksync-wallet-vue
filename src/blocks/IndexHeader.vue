@@ -34,8 +34,8 @@
           </i-column>
           <i-column :xs="12" :md="4" class="_padding-y-0">
             <div class="linksContainer">
-              <a href="https://developers.rsk.co/rif/aggregation/" target="_blank" class="linkItem">FAQ</a>
-              <a href="https://developers.rsk.co/rif/aggregation/learn/" target="_blank" class="linkItem">Docs</a>
+              <a href="https://docs.zksync.io/userdocs/" target="_blank" class="linkItem">FAQ</a>
+              <a href="https://docs.zksync.io/dev/" target="_blank" class="linkItem">Docs</a>
               <i-dropdown
                 class="_background-transparent _border-none likeLinkItem"
                 :class="{ opened: dropdownOpened, firstElementHovered: firstHovered }"
@@ -50,7 +50,7 @@
                 @mouseout.native="firstHovered = false"
               >
                 <a class="dropDownHandler linkItem _position-top-0">
-                  RIF Aggregation Tools
+                  zkTools
                   <v-icon class="fal" :name="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'" />
                 </a>
                 <i-dropdown-menu v-model="dropdownOpened">
@@ -66,7 +66,7 @@
                   </i-dropdown-item>
                 </i-dropdown-menu>
               </i-dropdown>
-              <a href="https://www.iovlabs.org/careers.html" target="_blank" class="linkItem">We're hiring</a>
+              <a href="https://matter-labs.io/#jobs" target="_blank" class="linkItem">We're hiring</a>
             </div>
           </i-column>
           <i-column :xs="12" :md="4" class="_margin-left-auto _padding-right-0 _justify-content-end desktopOnly">

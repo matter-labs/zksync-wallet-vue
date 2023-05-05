@@ -7,19 +7,19 @@
     >
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
         <div class="_padding-1-2 _padding-md-x-1 _padding-left-0">
-          <a target="_blank" class="footer-link" href="https://developers.rsk.co/rif/aggregation/">Docs</a>
+          <a target="_blank" class="footer-link" href="https://docs.zksync.io/userdocs/intro.html">Docs</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="https://www.rsk.co/terms-conditions">Terms</a>
+          <a target="_blank" class="footer-link" href="https://docs.zksync.io/legal/terms.html">Terms</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="https://www.iovlabs.org/contact.html">Contact</a>
+          <a target="_blank" class="footer-link" href="https://docs.zksync.io/contact.html">Contact</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
           <span class="dividerLine">|</span>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" :href="blockExplorerLink">Explorer</a>
+          <a target="_blank" class="footer-link" :href="blockExplorerLink">zkScan</a>
         </div>
       </i-row>
       <i-row center class="_text-nowrap _align-items-center _margin-0">
@@ -28,7 +28,7 @@
         >
           <block-system-info />
           <span class="_padding-x-1 dividerLine">|</span>
-          <a href="https://uptime.com/s/rif-aggregation" class="uptime-link" target="_blank">uptime</a>
+          <a href="https://uptime.com/s/zkSync" class="uptime-link" target="_blank">uptime</a>
         </div>
         <i-button
           size="md"

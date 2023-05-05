@@ -62,7 +62,6 @@
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.1.7",
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
-    "@rsksmart/rif-aggregation-sdk-js": "^0.0.2",
     "@web3-onboard/core": "^2.16.2",
     "blockies-ts": "1.0.0",
     "lottie-web": "^5.7.8",
@@ -72,7 +71,8 @@
     "nuxt": "^2.15.8",
     "nuxt-typed-vuex": "^0.3.0",
     "oh-vue-icons": "^0.4.7",
-    "vue-qrcode": "0.4.0"
+    "vue-qrcode": "0.4.0",
+    "zksync": "^0.13.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
@@ -127,7 +127,6 @@
   },
   "scripts": {
     "build": "yarn local && nuxt build",
-    "build:testnet": "yarn testnet && nuxt build",
     "ci:build:dev-mainnet": "sh cli-process-env.sh 'mainnet' dev 1 && yarn generate",
     "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate",
     "ci:build:goerli": "yarn ci:prepare:goerli && yarn generate",
@@ -140,13 +139,11 @@
     "generate": "nuxt generate --fail-on-error",
     "lint": "eslint --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js}",
     "lint:fix": "eslint --fix --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js} --fix",
-    "local": "sh ./cli-process-env.sh 'localhost' 'dev' 1 1",
-    "testnet": "sh ./cli-process-env.sh 'testnet' 'prod' 1 1",
+    "local": "sh ./cli-process-env.sh 'goerli' 'dev' 1 1",
     "postinstall": "husky install",
     "semantic-release": "semantic-release",
     "spell-check": "cspell -c cspell.json src/**/*.{ts,vue,js} *.md",
-    "start": "yarn local && nuxt start",
-    "start:testnet": "yarn testnet && nuxt start"
+    "start": "yarn local && nuxt start"
   },
   "prettier": "@matterlabs/prettier-config",
   "commitlint": {
