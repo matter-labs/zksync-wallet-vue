@@ -117,8 +117,8 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { copyToClipboard, searchByKey } from "@matterlabs/zksync-nuxt-core/utils";
-import { ZkNFTBalances } from "@matterlabs/zksync-nuxt-core/types";
+import { copyToClipboard, searchByKey } from "@/utils";
+import { ZkNFTBalances } from "types/zksync";
 import { Address } from "zksync/build/types";
 import { getCIDFromContentHash } from "@/utils/nft";
 import { NFTItem } from "@/store/nfts";

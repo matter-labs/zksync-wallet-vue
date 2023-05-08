@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkFeesChange } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkFeesChange } from "types/zksync";
 
 export default Vue.extend({
   computed: {

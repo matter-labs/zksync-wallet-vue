@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkEthereumNetworkName } from "types/zksync";
 
 export default Vue.extend({
   name: "ProviderUtorg",

@@ -82,7 +82,7 @@
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { TokenSymbol } from "zksync/build/types";
-import { Token, ZkTokenBalance } from "@matterlabs/zksync-nuxt-core/types";
+import { Token, ZkTokenBalance } from "types/zksync";
 import computeReturnLink from "@/utils/computeReturnLink";
 
 export default Vue.extend({

@@ -107,8 +107,8 @@
 import Vue, { PropOptions } from "vue";
 import { getAddress } from "ethers/lib/utils";
 import { Address } from "zksync/build/types";
-import { ZkContact, ZkContacts } from "@matterlabs/zksync-nuxt-core/types";
-import { searchInObject } from "@matterlabs/zksync-nuxt-core/utils";
+import { ZkContact, ZkContacts } from "types/zksync";
+import { searchInObject } from "@/utils";
 
 export default Vue.extend({
   props: {

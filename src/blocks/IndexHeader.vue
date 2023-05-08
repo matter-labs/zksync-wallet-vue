@@ -80,7 +80,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkConfig } from "types/zksync";
 
 interface DropdownOption {
   name: string;

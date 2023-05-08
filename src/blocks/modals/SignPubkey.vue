@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkCPKStatus, ZkSignCPKState } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkCPKStatus, ZkSignCPKState } from "types/zksync";
 
 export default Vue.extend({
   name: "SignPubkey",

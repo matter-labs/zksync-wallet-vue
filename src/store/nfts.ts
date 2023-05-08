@@ -1,6 +1,6 @@
 import Vue from "vue";
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
-import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import { ModuleOptions } from "types/zksync";
 
 export type NFTItem = {
   cid: string;

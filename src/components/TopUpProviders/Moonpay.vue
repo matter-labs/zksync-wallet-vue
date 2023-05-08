@@ -22,7 +22,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Address } from "zksync/build/types";
-import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkEthereumNetworkName } from "types/zksync";
 
 const moonpayConfig = {
   url: "https://buy.moonpay.com",

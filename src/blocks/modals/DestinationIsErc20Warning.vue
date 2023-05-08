@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkTransactionType } from "types/zksync";
 import Vue, { PropOptions } from "vue";
 
 import { Address, Tokens } from "zksync/build/types";

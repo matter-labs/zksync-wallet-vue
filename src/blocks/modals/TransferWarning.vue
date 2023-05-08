@@ -24,7 +24,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { ZkTransactionType } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkTransactionType } from "types/zksync";
 
 export const warningCanceledKey = "canceledTransferWithdrawWarning";
 export default Vue.extend({

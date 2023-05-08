@@ -33,7 +33,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { Address, TokenSymbol } from "zksync/build/types";
-import { validateAddress } from "@matterlabs/zksync-nuxt-core/utils";
+import { validateAddress } from "@/utils";
 
 export default Vue.extend({
   props: {

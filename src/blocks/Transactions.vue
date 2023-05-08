@@ -41,7 +41,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ApiTransaction } from "zksync/build/types";
-import { ZkTransactionHistoryLoadingState } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkTransactionHistoryLoadingState } from "types/zksync";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({

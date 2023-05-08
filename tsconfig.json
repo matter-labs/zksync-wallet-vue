@@ -41,7 +41,6 @@
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
-      "@matterlabs/zksync-nuxt-core",
       "@inkline/inkline/types",
       "nuxt-typed-vuex",
       "vue-router/types"

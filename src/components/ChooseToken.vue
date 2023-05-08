@@ -92,13 +92,13 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { searchByKey, searchInObject } from "@matterlabs/zksync-nuxt-core/utils";
+import { searchByKey, searchInObject } from "@/utils";
 import {
   ZkEthereumBalances,
   ZkNFTBalances,
   ZkTokenBalances,
   ZkTransactionMainToken,
-} from "@matterlabs/zksync-nuxt-core/types";
+} from "types/zksync";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { Tokens } from "zksync/build/types";
 

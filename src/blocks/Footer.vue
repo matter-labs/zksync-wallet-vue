@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import theme from "@matterlabs/zksync-nuxt-core/utils/theme";
+import theme from "@/utils/theme";
 
 export default Vue.extend({
   name: "Footer",

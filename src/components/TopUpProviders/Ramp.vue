@@ -11,7 +11,7 @@
 import Vue from "vue";
 import { Address } from "zksync/build/types";
 import { RampInstantSDK } from "@ramp-network/ramp-instant-sdk";
-import { ZkEthereumNetworkName } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkEthereumNetworkName } from "types/zksync";
 
 const rampConfig = {
   hostAppName: "zkSync Wallet",

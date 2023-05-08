@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { Address } from "zksync/build/types";
-import { copyToClipboard } from "@matterlabs/zksync-nuxt-core/utils";
+import { copyToClipboard } from "@/utils";
 
 export default Vue.extend({
   name: "WalletAddress",

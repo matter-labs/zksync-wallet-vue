@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkActiveTransaction, ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkActiveTransaction, ZkConfig } from "types/zksync";
 
 export default Vue.extend({
   name: "LoadingBlock",

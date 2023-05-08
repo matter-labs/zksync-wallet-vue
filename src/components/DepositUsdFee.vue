@@ -19,7 +19,7 @@ import {
   ERC20_DEPOSIT_GAS_LIMIT,
   ERC20_RECOMMENDED_DEPOSIT_GAS_LIMIT,
 } from "zksync/build/utils";
-import { Token } from "@matterlabs/zksync-nuxt-core/types";
+import { Token } from "types/zksync";
 import { AccountState, Address, Tokens, TokenSymbol } from "zksync/build/types";
 import { RemoteWallet, Wallet } from "zksync";
 

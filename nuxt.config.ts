@@ -3,7 +3,7 @@ import { NuxtOptionsBuild } from "@nuxt/types/config/build";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { version as zkSyncVersion } from "zksync/package.json";
 
-import { ModuleOptions } from "@matterlabs/zksync-nuxt-core/types";
+import { ModuleOptions } from "types/zksync";
 import { Configuration } from "webpack";
 // @ts-ignore
 import packageData from "./package.json";
@@ -205,7 +205,6 @@ const config = <NuxtConfig>{
     "@nuxtjs/google-fonts",
     "nuxt-typed-vuex",
     [
-      "@matterlabs/zksync-nuxt-core",
       <ModuleOptions>{
         ipfsGateway: "https://ipfs.io",
         network: process.env.ZK_NETWORK,

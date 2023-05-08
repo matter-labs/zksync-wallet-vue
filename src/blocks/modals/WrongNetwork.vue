@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { ZkConfig } from "@matterlabs/zksync-nuxt-core/types";
+import { ZkConfig } from "types/zksync";
 import Vue from "vue";
 
 export default Vue.extend({
