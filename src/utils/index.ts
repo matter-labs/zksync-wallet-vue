@@ -5,7 +5,7 @@ import { CID } from "multiformats/cid";
 import { base58btc } from "multiformats/bases/base58";
 import { RestProvider } from "zksync";
 import { Address, TokenLike } from "zksync/build/types";
-import { DecimalBalance } from "../types";
+import { DecimalBalance } from "@/types/zksync";
 
 export function parseDecimal(provider: RestProvider, symbol: TokenLike, amount: DecimalBalance) {
   return provider.tokenSet.parseToken(symbol, amount.toString());

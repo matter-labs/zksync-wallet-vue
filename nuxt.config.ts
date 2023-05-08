@@ -203,6 +203,7 @@ const config = <NuxtConfig>{
     "@nuxt/typescript-build",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
+    "@nuxtjs/tailwindcss",
     "nuxt-typed-vuex",
     [
       <ModuleOptions>{
@@ -230,7 +231,7 @@ const config = <NuxtConfig>{
   ],
 
   // Nuxt.js modules
-  modules: ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
+  modules: ["@inkline/nuxt", "@nuxtjs/axios", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
   inkline: {
     config: {
       autodetectVariant: true,
