@@ -75,6 +75,9 @@
   "dependencies": {
     "@inkline/inkline": "^2.3.6",
     "@inkline/nuxt": "^2.3.6",
+    "@matterlabs/eslint-config-nuxt": "^1.0.6",
+    "@matterlabs/prettier-config": "^1.0.2",
+    "@matterlabs/zksync-nuxt-core": "^1.10.2",
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/eslint-config-typescript": "^8.0.0",
@@ -189,7 +192,7 @@
       "pre-commit": "CI=\"1\"\nnpx lint-staged"
     }
   },
-  "prettier": "prettier-config",
+  "prettier": "@matterlabs/prettier-config",
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

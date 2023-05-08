@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ["eslint-config-nuxt"],
+  extends: ["@matterlabs/eslint-config-nuxt"],
   overrides: [
     {
       files: ["analytics.ts"],

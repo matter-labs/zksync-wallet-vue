@@ -11,6 +11,9 @@ import accountModule from "./account";
 import transactionModule from "./transaction";
 import onboardModule from "./onboard";
 import contactsModule from "./contacts";
+import nftModule from "./nfts";
+import unsModule from "./uns";
+import modalModule from "./modal";
 import { ModuleOptions } from "@/types/zksync";
 
 let resolveModal: ((result: boolean) => void) | undefined;
@@ -92,6 +95,9 @@ export default ({ store }: Context) => {
     ["transaction", transactionModule],
     ["onboard", onboardModule],
     ["contacts", contactsModule],
+    ["nft", nftModule],
+    ["uns", unsModule],
+    ["modal", modalModule],
   ];
   for (const module of modules) {
     /* TODO: Figure out the issue with typing of module[1](options) */

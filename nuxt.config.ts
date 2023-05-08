@@ -3,10 +3,10 @@ import { NuxtOptionsBuild } from "@nuxt/types/config/build";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { version as zkSyncVersion } from "zksync/package.json";
 
-import { ModuleOptions } from "types/zksync";
 import { Configuration } from "webpack";
 // @ts-ignore
 import packageData from "./package.json";
+import { ModuleOptions } from "types/zksync";
 
 const gitVersion = packageData.version;
 

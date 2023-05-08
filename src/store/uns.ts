@@ -74,10 +74,10 @@ export const actions = actionTree(
 );
 
 // This compiles to nothing and only serves to return the correct type of the accessor
-export const accessorType = getAccessorType({
+export default() => ({
+  namespaced: true,
   state,
   getters,
   mutations,
-  actions,
-  modules: {},
+  actions
 });

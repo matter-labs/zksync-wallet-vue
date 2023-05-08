@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
+import { actionTree, getterTree, mutationTree } from "typed-vuex";
 import { ModuleOptions } from "types/zksync";
 
 export type NFTItem = {
@@ -110,10 +110,10 @@ export const actions = actionTree(
   }
 );
 
-export const accessorType = getAccessorType({
+export default () => ({
+  namespaced: true,
   state,
   getters,
   mutations,
-  actions,
-  modules: {},
+  actions
 });
