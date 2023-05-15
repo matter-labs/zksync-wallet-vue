@@ -142,8 +142,8 @@
 import Vue from "vue";
 import { Route } from "vue-router/types";
 import { NFT, NFTInfo } from "zksync/build/types";
-import { copyToClipboard } from "@/utils";
-import { ModuleOptions, ZkContact } from "types/zksync";
+import { copyToClipboard } from "@rsksmart/rif-rollup-nuxt-core/utils";
+import { ModuleOptions, ZkContact } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { getAddress } from "ethers/lib/utils";
 import { NFTItem } from "@/store/nfts";
 import { getCIDFromContentHash } from "@/utils/nft";

@@ -57,7 +57,7 @@ import Vue from "vue";
 import { Route } from "vue-router/types";
 import { Address } from "zksync/build/types";
 import { getAddress } from "ethers/lib/utils";
-import { ZkContact } from "types/zksync";
+import { ZkContact } from "@rsksmart/rif-rollup-nuxt-core/types";
 import computeReturnLink from "@/utils/computeReturnLink";
 
 export default Vue.extend({

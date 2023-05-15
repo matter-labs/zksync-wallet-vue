@@ -14,7 +14,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { Address } from "zksync/build/types";
-import { copyToClipboard } from "@/utils";
+import { copyToClipboard } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
 export default Vue.extend({
   name: "WalletAddress",

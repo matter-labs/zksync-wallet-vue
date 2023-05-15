@@ -279,7 +279,7 @@ import {
   ZkFeeType,
   ZkTransactionMainToken,
   ZkTransactionType,
-} from "types/zksync";
+} from "@rsksmart/rif-rollup-nuxt-core/types";
 import { getAddress } from "@ethersproject/address";
 import { RestProvider } from "zksync";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";

@@ -41,6 +41,7 @@
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/sentry",
+      "@rsksmart/rif-rollup-nuxt-core",
       "@inkline/inkline/types",
       "nuxt-typed-vuex",
       "vue-router/types"

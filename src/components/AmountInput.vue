@@ -53,7 +53,7 @@ import Vue, { PropOptions } from "vue";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { TokenSymbol } from "zksync/build/types";
 import { isTransactionAmountPackable } from "zksync/build/utils";
-import { DecimalBalance, ZkTransactionType } from "types/zksync";
+import { DecimalBalance, ZkTransactionType } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export default Vue.extend({
   props: {

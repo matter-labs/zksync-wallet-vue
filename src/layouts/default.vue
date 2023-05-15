@@ -24,7 +24,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import theme from "@/utils/theme";
+import theme from "@rsksmart/rif-rollup-nuxt-core/utils/theme";
 import SentryMixin from "@/mixins/sentry.mixin";
 import AnalyticsMixin from "@/mixins/analytics.mixin";
 

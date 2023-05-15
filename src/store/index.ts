@@ -1,20 +1,5 @@
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import { Route } from "vue-router/types";
-import { Context } from "@nuxt/types";
-import providerModule from "./provider";
-import tokensModule from "./tokens";
-import walletModule from "./wallet";
-import feesModule from "./fees";
-import balancesModule from "./balances";
-import historyModule from "./history";
-import accountModule from "./account";
-import transactionModule from "./transaction";
-import onboardModule from "./onboard";
-import contactsModule from "./contacts";
-import nftModule from "./nfts";
-import unsModule from "./uns";
-import modalModule from "./modal";
-import { ModuleOptions } from "@/types/zksync";
 
 let resolveModal: ((result: boolean) => void) | undefined;
 
@@ -79,31 +64,3 @@ export const accessorType = getAccessorType({
   actions,
   modules: {},
 });
-
-// eslint-disable-next-line quotes
-const options: ModuleOptions = JSON.parse(`<%= JSON.stringify(options) %>`);
-
-export default ({ store }: Context) => {
-  const modules = [
-    ["provider", providerModule],
-    ["tokens", tokensModule],
-    ["wallet", walletModule],
-    ["fees", feesModule],
-    ["balances", balancesModule],
-    ["history", historyModule],
-    ["account", accountModule],
-    ["transaction", transactionModule],
-    ["onboard", onboardModule],
-    ["contacts", contactsModule],
-    ["nft", nftModule],
-    ["uns", unsModule],
-    ["modal", modalModule],
-  ];
-  for (const module of modules) {
-    /* TODO: Figure out the issue with typing of module[1](options) */
-    // @ts-ignore
-    store.registerModule("zk-" + module[0], module[1](options), {
-      preserveState: Boolean(store.state["zk-" + module[0]]),
-    });
-  }
-};

@@ -20,7 +20,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkActiveTransaction, ZkConfig } from "types/zksync";
+import { ZkActiveTransaction, ZkConfig } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export default Vue.extend({
   name: "LoadingBlock",

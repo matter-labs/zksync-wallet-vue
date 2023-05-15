@@ -1,6 +1,6 @@
 import Vue from "vue";
-import { actionTree, getterTree, mutationTree } from "typed-vuex";
-import { ModuleOptions } from "types/zksync";
+import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
+import { ModuleOptions } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export type NFTItem = {
   cid: string;
@@ -110,10 +110,10 @@ export const actions = actionTree(
   }
 );
 
-export default () => ({
-  namespaced: true,
+export const accessorType = getAccessorType({
   state,
   getters,
   mutations,
-  actions
+  actions,
+  modules: {},
 });

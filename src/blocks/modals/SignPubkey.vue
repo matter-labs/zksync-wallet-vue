@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkCPKStatus, ZkSignCPKState } from "types/zksync";
+import { ZkCPKStatus, ZkSignCPKState } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export default Vue.extend({
   name: "SignPubkey",

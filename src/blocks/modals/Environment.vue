@@ -21,7 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkConfig } from "types/zksync";
+import { ZkConfig } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export default Vue.extend({
   name: "Environment",

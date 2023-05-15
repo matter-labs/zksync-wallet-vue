@@ -22,8 +22,8 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkNetwork } from "types/zksync";
-import { zkSyncNetworkConfig } from "@/utils/config";
+import { ZkNetwork } from "@rsksmart/rif-rollup-nuxt-core/types";
+import { zkSyncNetworkConfig } from "@rsksmart/rif-rollup-nuxt-core/utils/config";
 
 export default Vue.extend({
   name: "NetworkSwitch",

@@ -113,7 +113,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { BigNumber } from "@ethersproject/bignumber";
-import { ZkActiveTransaction, ZkConfig, ZkContact, ZkTransactionType } from "types/zksync";
+import { ZkActiveTransaction, ZkConfig, ZkContact, ZkTransactionType } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { TokenLike } from "zksync/build/types";
 import { ERC20_APPROVE_TRESHOLD } from "zksync/build/utils";
 import { getAddress } from "@ethersproject/address";

@@ -1,5 +1,5 @@
 import { Context, Plugin } from "@nuxt/types";
-import { zkSyncNetworkConfig } from "@/utils/config";
+import { zkSyncNetworkConfig } from "@rsksmart/rif-rollup-nuxt-core/utils/config";
 
 const restoreSessionPlugin: Plugin = async ({ app, store, route }: Context) => {
   if (

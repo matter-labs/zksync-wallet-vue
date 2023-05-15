@@ -3,10 +3,10 @@ import { NuxtOptionsBuild } from "@nuxt/types/config/build";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
 import { version as zkSyncVersion } from "zksync/package.json";
 
+import { ModuleOptions } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { Configuration } from "webpack";
 // @ts-ignore
 import packageData from "./package.json";
-import { ModuleOptions } from "types/zksync";
 
 const gitVersion = packageData.version;
 
@@ -203,9 +203,9 @@ const config = <NuxtConfig>{
     "@nuxt/typescript-build",
     "@nuxtjs/style-resources",
     "@nuxtjs/google-fonts",
-    "@nuxtjs/tailwindcss",
     "nuxt-typed-vuex",
     [
+      "@rsksmart/rif-rollup-nuxt-core",
       <ModuleOptions>{
         ipfsGateway: "https://ipfs.io",
         network: process.env.ZK_NETWORK,
@@ -231,7 +231,7 @@ const config = <NuxtConfig>{
   ],
 
   // Nuxt.js modules
-  modules: ["@inkline/nuxt", "@nuxtjs/axios", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
+  modules: ["@inkline/nuxt", "@nuxtjs/sentry", "@nuxtjs/proxy", "@nuxtjs/google-gtag"],
   inkline: {
     config: {
       autodetectVariant: true,

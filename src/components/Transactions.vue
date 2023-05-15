@@ -41,7 +41,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { ApiTransaction } from "zksync/build/types";
-import { ZkFilteredTransactionHistory, ZkTransactionHistoryLoadingState } from "types/zksync";
+import { ZkFilteredTransactionHistory, ZkTransactionHistoryLoadingState } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 let updateListInterval: ReturnType<typeof setInterval>;
 export default Vue.extend({

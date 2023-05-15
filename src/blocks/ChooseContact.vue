@@ -107,8 +107,8 @@
 import Vue, { PropOptions } from "vue";
 import { getAddress } from "ethers/lib/utils";
 import { Address } from "zksync/build/types";
-import { ZkContact, ZkContacts } from "types/zksync";
-import { searchInObject } from "@/utils";
+import { ZkContact, ZkContacts } from "@rsksmart/rif-rollup-nuxt-core/types";
+import { searchInObject } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
 export default Vue.extend({
   props: {

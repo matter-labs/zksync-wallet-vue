@@ -92,13 +92,13 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { searchByKey, searchInObject } from "@/utils";
+import { searchByKey, searchInObject } from "@rsksmart/rif-rollup-nuxt-core/utils";
 import {
   ZkEthereumBalances,
   ZkNFTBalances,
   ZkTokenBalances,
   ZkTransactionMainToken,
-} from "types/zksync";
+} from "@rsksmart/rif-rollup-nuxt-core/types";
 import { BigNumberish } from "@ethersproject/bignumber";
 import { Tokens } from "zksync/build/types";
 

@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkFeesChange } from "types/zksync";
+import { ZkFeesChange } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export default Vue.extend({
   computed: {

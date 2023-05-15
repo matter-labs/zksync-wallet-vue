@@ -51,7 +51,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import theme from "@/utils/theme";
+import theme from "@rsksmart/rif-rollup-nuxt-core/utils/theme";
 
 export default Vue.extend({
   props: {

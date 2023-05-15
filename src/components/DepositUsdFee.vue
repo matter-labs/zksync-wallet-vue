@@ -19,7 +19,7 @@ import {
   ERC20_DEPOSIT_GAS_LIMIT,
   ERC20_RECOMMENDED_DEPOSIT_GAS_LIMIT,
 } from "zksync/build/utils";
-import { Token } from "types/zksync";
+import { Token } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { AccountState, Address, Tokens, TokenSymbol } from "zksync/build/types";
 import { RemoteWallet, Wallet } from "zksync";
 

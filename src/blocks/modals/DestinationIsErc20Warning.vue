@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { ZkTransactionType } from "types/zksync";
+import { ZkTransactionType } from "@rsksmart/rif-rollup-nuxt-core/types";
 import Vue, { PropOptions } from "vue";
 
 import { Address, Tokens } from "zksync/build/types";

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ZkEthereumNetworkName } from "types/zksync";
+import { ZkEthereumNetworkName } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export default Vue.extend({
   name: "ProviderOkex",

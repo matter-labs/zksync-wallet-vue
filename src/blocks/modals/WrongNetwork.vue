@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { ZkConfig } from "types/zksync";
+import { ZkConfig } from "@rsksmart/rif-rollup-nuxt-core/types";
 import Vue from "vue";
 
 export default Vue.extend({

@@ -114,8 +114,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { getAddress } from "ethers/lib/utils";
-import { ZkContact, ZkContacts } from "types/zksync";
-import { copyToClipboard, searchInObject } from "@/utils";
+import { ZkContact, ZkContacts } from "@rsksmart/rif-rollup-nuxt-core/types";
+import { copyToClipboard, searchInObject } from "@rsksmart/rif-rollup-nuxt-core/utils";
 import { Address } from "zksync/build/types";
 
 export default Vue.extend({

@@ -36,8 +36,8 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { DecimalBalance, ModuleOptions } from "types/zksync";
-import { contendAddressToRawContentHash, isCID } from "@/utils";
+import { DecimalBalance, ModuleOptions } from "@rsksmart/rif-rollup-nuxt-core/types";
+import { contendAddressToRawContentHash, isCID } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
 export default Vue.extend({
   props: {
