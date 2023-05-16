@@ -1,21 +1,30 @@
+$darkHiperlinkBlue: #161b48;
+$mediumhiperlinkBlue: #252e78;
+$hiperlinkBlue: #4b5cf0;
+$lightHiperlinkBlue: #a5adf7;
+$lightHiperlinkBlueSemiTransparent: #c9cefa;
+$black: #000000;
+$white: #ffffff;
+$warmGrey: #e6ded6;
+$midGrey: #f0ebe6;
+$lightGrey: #faf8f7;
+
 /* Colors */
-$white: #fff;
-$light: #e1e4e8;
-$gray: #9eaebb;
-$black: #242424;
+$light: $lightGrey;
+$gray: $midGrey;
 $blackLighter: #343a40;
-$blackViolet: #121429;
-$violet: #4e529a;
+$blackViolet: $darkHiperlinkBlue;
+$violet: $hiperlinkBlue;
 $green: #1d9b4a;
-$darkViolet: #171a49; //MajorDark
-$mediumViolet: #2f3264;
-$lightViolet: #8c8dfc;
-$lightVioletSemiTransparent: #8c8dfc66;
+$darkViolet: $darkHiperlinkBlue;
+$mediumViolet: $mediumhiperlinkBlue;
+$lightViolet: $lightHiperlinkBlue;
+$lightVioletSemiTransparent: $lightHiperlinkBlueSemiTransparent;
 $red: #f25f5c;
-$link-color: $lightViolet;
-$color-secondary: $violet;
+$link-color: $lightHiperlinkBlue;
+$color-secondary: $hiperlinkBlue;
 $openSans: "Open Sans", "sans-serif";
-$colorLightGray: #e9ecef;
+$colorLightGray: $lightGrey;
 
 $hoverGray: #f2f2f2;
 
@@ -24,18 +33,18 @@ $bgDesign: #f4f5f7;
 $darkMain: #272640;
 
 /* Extracted values */
-$tempLightGray: #bababa;
-$tempLightYellow: #bababa;
-$tempDarkBlue: #11142b;
+$tempLightGray: $warmGrey;
+$tempLightYellow: $warmGrey;
+$tempDarkBlue: $darkHiperlinkBlue;
 $tempTransparent: transparent;
 $grayBG: rgba(186, 186, 186, 0.47);
 
 /* Bg */
 $accentBg: transparentize(
-  $color: $gray,
+  $color: $warmGrey,
   $amount: 0.95,
 );
-$bgLight: #fbfbfb;
+$bgLight: $lightGrey;
 $bgSecondary: #ffffff10;
 
 /* Input */

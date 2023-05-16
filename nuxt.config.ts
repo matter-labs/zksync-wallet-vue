@@ -161,11 +161,11 @@ const config = <NuxtConfig>{
         name: "msapplication-TileImage",
         content: "/favicon.png",
       },
-      { hid: "theme-color", name: "theme-color", content: "#4e529a" },
+      { hid: "theme-color", name: "theme-color", content: "#4B5CF0" },
       {
         hid: "msapplication-TileColor",
         property: "msapplication-TileColor",
-        content: "#4e529a",
+        content: "#4B5CF0",
       },
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.png" }],
@@ -173,7 +173,7 @@ const config = <NuxtConfig>{
 
   // Customize the progress-bar color
   loading: {
-    color: "#8c8dfc",
+    color: "#4B5CF0",
     continuous: true,
   },
 

@@ -10,7 +10,7 @@
   z-index: 9;
   position: fixed;
   top: 0;
-  background: linear-gradient(90deg, #8c8dfc 0%, #4e529a 100%);
+  background: linear-gradient(90deg, #000 0%, #4b5cf0 100%);
   height: 32px;
   width: 100%;
   justify-content: center;
