@@ -1,8 +1,8 @@
-$darkHiperlinkBlue: #161b48;
-$mediumhiperlinkBlue: #252e78;
-$hiperlinkBlue: #4b5cf0;
-$lightHiperlinkBlue: #a5adf7;
-$lightHiperlinkBlueSemiTransparent: #c9cefa;
+$darkHyperlinkBlue: #161b48;
+$mediumHyperlinkBlue: #252e78;
+$hyperlinkBlue: #4b5cf0;
+$lightHyperlinkBlue: #a5adf7;
+$lightHyperlinkBlueSemiTransparent: #c9cefa;
 $black: #000000;
 $white: #ffffff;
 $warmGrey: #e6ded6;
@@ -13,16 +13,16 @@ $lightGrey: #faf8f7;
 $light: $lightGrey;
 $gray: $midGrey;
 $blackLighter: #343a40;
-$blackViolet: $darkHiperlinkBlue;
-$violet: $hiperlinkBlue;
+$blackViolet: $darkHyperlinkBlue;
+$violet: $hyperlinkBlue;
 $green: #1d9b4a;
-$darkViolet: $darkHiperlinkBlue;
-$mediumViolet: $mediumhiperlinkBlue;
-$lightViolet: $lightHiperlinkBlue;
-$lightVioletSemiTransparent: $lightHiperlinkBlueSemiTransparent;
+$darkViolet: $darkHyperlinkBlue;
+$mediumViolet: $mediumHyperlinkBlue;
+$lightViolet: $lightHyperlinkBlue;
+$lightVioletSemiTransparent: $lightHyperlinkBlueSemiTransparent;
 $red: #f25f5c;
-$link-color: $lightHiperlinkBlue;
-$color-secondary: $hiperlinkBlue;
+$link-color: $lightHyperlinkBlue;
+$color-secondary: $hyperlinkBlue;
 $openSans: "Open Sans", "sans-serif";
 $colorLightGray: $lightGrey;
 
@@ -35,7 +35,7 @@ $darkMain: #272640;
 /* Extracted values */
 $tempLightGray: $warmGrey;
 $tempLightYellow: $warmGrey;
-$tempDarkBlue: $darkHiperlinkBlue;
+$tempDarkBlue: $darkHyperlinkBlue;
 $tempTransparent: transparent;
 $grayBG: rgba(186, 186, 186, 0.47);
 
