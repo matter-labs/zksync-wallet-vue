@@ -9,44 +9,44 @@
           </div>
           <div class="tileName">Ethereum Wallet</div>
         </button>
-        <button data-cy="core_connect_wallet_wc_button" class="tileContainer _text-center" @click="walletConnect()">
-          <div class="tile">
-            <img src="/images/wallets/wc.png" alt="Wallet Connect" />
-          </div>
-          <div class="tileName">Wallet Connect</div>
-        </button>
-        <button
-          v-if="isMainnet"
-          data-cy="core_connect_wallet_argent_button"
-          class="tileContainer _text-center"
-          @click="walletConnect(true)"
-        >
-          <div class="tile">
-            <img src="/images/wallets/argent.svg" alt="Argent" />
-          </div>
-          <div class="tileName">Argent Wallet</div>
-        </button>
+        <!--        <button data-cy="core_connect_wallet_wc_button" class="tileContainer _text-center" @click="walletConnect()">-->
+        <!--          <div class="tile">-->
+        <!--            <img src="/images/wallets/wc.png" alt="Wallet Connect" />-->
+        <!--          </div>-->
+        <!--          <div class="tileName">Wallet Connect</div>-->
+        <!--        </button>-->
+        <!--        <button-->
+        <!--          v-if="isMainnet"-->
+        <!--          data-cy="core_connect_wallet_argent_button"-->
+        <!--          class="tileContainer _text-center"-->
+        <!--          @click="walletConnect(true)"-->
+        <!--        >-->
+        <!--          <div class="tile">-->
+        <!--            <img src="/images/wallets/argent.svg" alt="Argent" />-->
+        <!--          </div>-->
+        <!--          <div class="tileName">Argent Wallet</div>-->
+        <!--        </button>-->
       </div>
-      <div class="container-fluid _display-flex alternativeWithdrawContainer">
-        <h2 class="_display-flex _margin-y-0 _align-items-center">
-          Can't find your wallet?
-          <span class="icon-container _display-flex" @click="$accessor.openModal('AlternativeWithdrawal')">
-            <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" :scale="0.9" />
-          </span>
-        </h2>
-        <h3 class="noteContainer">Or you’ve receive funds on your exchange address such as Binance?</h3>
-        <a
-          data-cy="core_connect_wallet_button"
-          class="tileContainer _text-center _margin-top-1"
-          href="https://withdraw.zksync.io"
-          target="_blank"
-        >
-          <div class="tile">
-            <img src="/images/logo-no-letters.svg" alt="Alternative withdraw" />
-          </div>
-          <div class="tileName">Alternative Withdraw</div>
-        </a>
-      </div>
+      <!--      <div class="container-fluid _display-flex alternativeWithdrawContainer">-->
+      <!--        <h2 class="_display-flex _margin-y-0 _align-items-center">-->
+      <!--          Can't find your wallet?-->
+      <!--          <span class="icon-container _display-flex" @click="$accessor.openModal('AlternativeWithdrawal')">-->
+      <!--            <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" :scale="0.9" />-->
+      <!--          </span>-->
+      <!--        </h2>-->
+      <!--        <h3 class="noteContainer">Or you’ve receive funds on your exchange address such as Binance?</h3>-->
+      <!--        <a-->
+      <!--          data-cy="core_connect_wallet_button"-->
+      <!--          class="tileContainer _text-center _margin-top-1"-->
+      <!--          href="https://withdraw.zksync.io"-->
+      <!--          target="_blank"-->
+      <!--        >-->
+      <!--          <div class="tile">-->
+      <!--            <img src="/images/logo-no-letters.svg" alt="Alternative withdraw" />-->
+      <!--          </div>-->
+      <!--          <div class="tileName">Alternative Withdraw</div>-->
+      <!--        </a>-->
+      <!--      </div>-->
     </i-container>
     <block-modals-alternative-withdraw />
   </div>
