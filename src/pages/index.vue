@@ -111,7 +111,7 @@ export default Vue.extend({
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    justify-content: space-between;
+    justify-content: center;
     width: 100%;
     height: 100%;
     max-width: 100vw;
