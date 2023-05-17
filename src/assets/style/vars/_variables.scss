@@ -5,6 +5,7 @@ $lightHyperlinkBlue: #a5adf7;
 $lightHyperlinkBlueSemiTransparent: #c9cefa;
 $black: #000000;
 $white: #ffffff;
+$darkGrey: #8a8580;
 $warmGrey: #e6ded6;
 $midGrey: #f0ebe6;
 $lightGrey: #faf8f7;
@@ -22,7 +23,7 @@ $lightViolet: $lightHyperlinkBlue;
 $lightVioletSemiTransparent: $lightHyperlinkBlueSemiTransparent;
 $red: #f25f5c;
 $link-color: $lightHyperlinkBlue;
-$color-secondary: $hyperlinkBlue;
+$color-secondary: $warmGrey;
 $openSans: "Open Sans", "sans-serif";
 $colorLightGray: $lightGrey;
 
@@ -45,7 +46,7 @@ $accentBg: transparentize(
   $amount: 0.95,
 );
 $bgLight: $lightGrey;
-$bgSecondary: #ffffff10;
+$bgSecondary: $black;
 
 /* Input */
 $input-prefix-border-width: 0;

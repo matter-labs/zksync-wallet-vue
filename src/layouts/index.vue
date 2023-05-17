@@ -5,7 +5,6 @@
     <block-modals-wrong-network />
     <block-modals-requesting-provider-error />
     <block-modals-onboard-error />
-    <block-announcement />
     <i-layout-content class="routerContainer">
       <transition name="fade" mode="out-in">
         <nuxt />

@@ -4,7 +4,6 @@
     <block-modals-wrong-network />
     <block-modals-requesting-provider-error />
     <block-modals-onboard-error />
-    <block-announcement />
     <transition name="fade">
       <div v-if="!loggingIn && loggedIn">
         <block-header ref="header" />

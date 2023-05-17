@@ -38,27 +38,27 @@ export default Vue.extend({
         {
           name: "Medium Blog",
           icon: "fa-medium-m",
-          url: "https://medium.com/matter-labs",
+          url: "https://medium.com/@RSKNews",
         },
         {
           name: "Discord Community",
           icon: "ri-discord-fill",
-          url: "https://join.zksync.dev/",
+          url: "https://discord.com/invite/fPerbqcWGE",
         },
         {
           name: "Telegram Community",
           icon: "fa-telegram-plane",
-          url: "https://t.me/zksync",
+          url: "https://t.me/rif_os_community",
         },
         {
           name: "Twitter Community",
           icon: "bi-twitter",
-          url: "https://twitter.com/zksync",
+          url: "https://twitter.com/rif_os",
         },
         {
           name: "All Contacts",
           icon: "ri-at-line",
-          url: "https://docs.zksync.io/contact.html",
+          url: "https://share.hsforms.com/12SzCTRAlRm61Oo2CLyBN4g1noi4",
           hideIn: "footer",
         },
       ] as SingleIcon[],

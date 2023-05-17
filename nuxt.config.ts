@@ -338,6 +338,7 @@ const config = <NuxtConfig>{
     preload: true,
     display: "swap",
     families: {
+      Sora: [400, 600],
       "Fira+Sans": [400, 600],
       "Fira+Code": [400],
     },

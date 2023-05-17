@@ -32,43 +32,6 @@
           <i-column :xs="12" :md="4" class="_padding-left-0 desktopOnly">
             <block-logo />
           </i-column>
-          <i-column :xs="12" :md="4" class="_padding-y-0">
-            <div class="linksContainer">
-              <a href="https://docs.zksync.io/userdocs/" target="_blank" class="linkItem">FAQ</a>
-              <a href="https://docs.zksync.io/dev/" target="_blank" class="linkItem">Docs</a>
-              <i-dropdown
-                class="_background-transparent _border-none likeLinkItem"
-                :class="{ opened: dropdownOpened, firstElementHovered: firstHovered }"
-                size="sm"
-                :hide-on-item-click="true"
-                :hide-on-click="true"
-                :click-outside="true"
-                variation="dark"
-                placement="bottom"
-                trigger="click"
-                @change.capture="dropdownOpened = !dropdownOpened"
-                @mouseout.native="firstHovered = false"
-              >
-                <a class="dropDownHandler linkItem _position-top-0">
-                  zkTools
-                  <v-icon class="fal" :name="dropdownOpened ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'" />
-                </a>
-                <i-dropdown-menu v-model="dropdownOpened">
-                  <i-dropdown-item
-                    v-for="(item, index) in dropdownOptions"
-                    :key="index"
-                    :class="item.isDividerAfter ? 'bottomDivider' : ''"
-                    :href="item.link"
-                    target="_blank"
-                    @mouseover.native="index > 0 ? (firstHovered = false) : (firstHovered = true)"
-                    @mouseout.native="index === 0 ? (firstHovered = false) : (firstHovered = true)"
-                    >{{ item.name }}
-                  </i-dropdown-item>
-                </i-dropdown-menu>
-              </i-dropdown>
-              <a href="https://matter-labs.io/#jobs" target="_blank" class="linkItem">We're hiring</a>
-            </div>
-          </i-column>
           <i-column :xs="12" :md="4" class="_margin-left-auto _padding-right-0 _justify-content-end desktopOnly">
             <block-social-block />
           </i-column>
