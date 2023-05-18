@@ -7,6 +7,7 @@ header {
 
   &.layout-header {
     position: fixed;
+    top: 0;
     z-index: 3;
     @media screen and (max-width: $mobile) {
       position: fixed;
@@ -364,7 +365,7 @@ body.inkline.-light header {
 }
 
 body.inkline.-dark header.layout-header {
-  background: $darkViolet;
+  background: $violet;
   border-bottom-color: rgba(3, 5, 17, 0.98) !important;
 
   .userDropdown .userDropdownAddress .walletLabel {
