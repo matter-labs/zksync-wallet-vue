@@ -6,30 +6,11 @@
       class="container _display-flex _flex-direction-row _align-items-center _justify-content-space-between _justify-content_mobile-space-around"
     >
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
-        <!--        <div class="_padding-1-2 _padding-md-x-1 _padding-left-0">-->
-        <!--          <a target="_blank" class="footer-link" href="https://docs.zksync.io/userdocs/intro.html">Docs</a>-->
-        <!--        </div>-->
-        <!--        <div class="_padding-1-2 _padding-md-x-1">-->
-        <!--          <a target="_blank" class="footer-link" href="https://docs.zksync.io/legal/terms.html">Terms</a>-->
-        <!--        </div>-->
-        <!--        <div class="_padding-1-2 _padding-md-x-1">-->
-        <!--          <a target="_blank" class="footer-link" href="https://docs.zksync.io/contact.html">Contact</a>-->
-        <!--        </div>-->
-        <!--        <div class="_padding-1-2 _padding-md-x-1">-->
-        <!--          <span class="dividerLine">|</span>-->
-        <!--        </div>-->
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" :href="blockExplorerLink">zkScan</a>
+          <a target="_blank" class="footer-link" :href="blockExplorerLink">RIFexplorer</a>
         </div>
       </i-row>
       <i-row center class="_text-nowrap _align-items-center _margin-0">
-        <!--        <div-->
-        <!--          class="_display-flex _align-items-center _padding-1-2 _padding-md-top-2 _padding-md-bottom-1 _padding-right-1 _hidden-sm-and-down"-->
-        <!--        >-->
-        <!--          <block-system-info />-->
-        <!--          <span class="_padding-x-1 dividerLine">|</span>-->
-        <!--          <a href="https://uptime.com/s/zkSync" class="uptime-link" target="_blank">uptime</a>-->
-        <!--        </div>-->
         <i-button
           size="md"
           circle
@@ -81,7 +62,8 @@ export default Vue.extend({
   },
   computed: {
     blockExplorerLink(): string {
-      return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
+      // return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
+      return "https://explorer.dev.aggregation.rifcomputing.net/";
     },
     isDarkTheme(): boolean {
       return this.theme === "dark";

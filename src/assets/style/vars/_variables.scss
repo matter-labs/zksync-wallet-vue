@@ -68,10 +68,11 @@ $modal-border-color-light: #180d0d05;
 $modal-background-light: $white;
 
 /* Fonts */
+$sora: "Sora", "sans-serif";
 $firaSans: "Fira Sans", "sans-serif";
 $firaCode: "Fira Code", "sans-serif";
 
-$font-family-primary-base: $firaSans;
+$font-family-primary-base: $sora;
 
 /* Transitions */
 $transition1: 0.2s ease;
