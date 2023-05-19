@@ -1,5 +1,5 @@
 {
-  "name": "@matterlabs/zksync-zkwallet-vue",
+  "name": "@rsksmart/rif-rollup-wallet",
   "title": "zkSync.io Wallet | Try solution for the Ethereum scalability\n with zero security compromises",
   "main": "nuxt.config.ts",
   "types": "src/types/index.d.ts",
@@ -35,7 +35,7 @@
   "version": "3.28.6",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
-  "repository": "https://github.com/matter-labs/zksync-wallet-vue",
+  "repository": "https://github.com/rsksmart/rif-rollup-wallet",
   "author": "Matter Labs",
   "browserslist": {
     "production": [
@@ -50,7 +50,7 @@
     ]
   },
   "bugs": {
-    "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
+    "url": "https://github.com/rsksmart/rif-rollup-wallet/issues"
   },
   "dependencies": {
     "@inkline/inkline": "^2.3.6",
@@ -61,7 +61,7 @@
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.1.7",
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
-    "@rsksmart/rif-rollup-nuxt-core": "git@github.com:rsksmart/rif-rollup-nuxt-core.git",
+    "@rsksmart/rif-rollup-nuxt-core": "https://github.com/rsksmart/rif-rollup-nuxt-core",
     "@web3-onboard/core": "^2.16.2",
     "blockies-ts": "1.0.0",
     "lottie-web": "^5.7.8",

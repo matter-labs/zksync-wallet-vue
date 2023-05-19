@@ -3448,68 +3448,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@matterlabs/zksync-zkwallet-vue@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@matterlabs/zksync-zkwallet-vue@workspace:."
-  dependencies:
-    "@commitlint/cli": ^16.2.3
-    "@commitlint/config-conventional": ^16.2.1
-    "@ethersproject/address": ^5.5.0
-    "@ethersproject/bignumber": ^5.5.0
-    "@inkline/inkline": ^2.3.6
-    "@inkline/nuxt": ^2.3.6
-    "@matterlabs/eslint-config-nuxt": ^1.0.6
-    "@matterlabs/prettier-config": ^1.0.2
-    "@nuxt/types": ^2.15.8
-    "@nuxt/typescript-build": ^2.1.0
-    "@nuxt/typescript-runtime": ^2.1.0
-    "@nuxtjs/google-fonts": ^1.3.0
-    "@nuxtjs/google-gtag": ^1.0.4
-    "@nuxtjs/proxy": ^2.1.0
-    "@nuxtjs/sentry": ^5.1.7
-    "@nuxtjs/style-resources": ^1.2.1
-    "@ramp-network/ramp-instant-sdk": ^2.5.0
-    "@rsksmart/rif-rollup-nuxt-core": "git@github.com:rsksmart/rif-rollup-nuxt-core.git"
-    "@semantic-release/changelog": ^6.0.1
-    "@semantic-release/commit-analyzer": ^9.0.2
-    "@semantic-release/exec": ^6.0.3
-    "@semantic-release/git": ^10.0.1
-    "@semantic-release/github": ^8.0.2
-    "@semantic-release/npm": ^9.0.0
-    "@semantic-release/release-notes-generator": ^10.0.3
-    "@sentry/webpack-plugin": ^1.18.3
-    "@types/crypto-js": ^4.0.2
-    "@types/mixpanel-browser": ^2.35.8
-    "@web3-onboard/core": ^2.16.2
-    blockies-ts: 1.0.0
-    cspell: ^5.19.3
-    eslint: ^8.12.0
-    husky: ^7.0.0
-    lint-staged: ^12.1.5
-    lottie-web: ^5.7.8
-    mixpanel-browser: ^2.42.0
-    moment-timezone: ^0.5.34
-    multiformats: ^9.4.7
-    node-sass: ^8
-    nuxt: ^2.15.8
-    nuxt-typed-vuex: ^0.3.0
-    oh-vue-icons: ^0.4.7
-    qrcode: ^1.0.0
-    sass-loader: ^10.2.1
-    semantic-release: ^19.0.2
-    stylelint-config-standard-scss: ^3.0.0
-    vue-qrcode: 0.4.0
-    zksync: ^0.13.1
-  peerDependencies:
-    "@ethersproject/hash": ^5.5.0
-  dependenciesMeta:
-    "@sentry/webpack-plugin":
-      optional: true
-    stylelint-config-standard-scss:
-      optional: true
-  languageName: unknown
-  linkType: soft
-
 "@metamask/obs-store@npm:^7.0.0":
   version: 7.0.0
   resolution: "@metamask/obs-store@npm:7.0.0"
@@ -4502,9 +4440,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rsksmart/rif-rollup-nuxt-core@git@github.com:rsksmart/rif-rollup-nuxt-core.git":
+"@rsksmart/rif-rollup-nuxt-core@https://github.com/rsksmart/rif-rollup-nuxt-core":
   version: 1.10.2
-  resolution: "@rsksmart/rif-rollup-nuxt-core@git@github.com:rsksmart/rif-rollup-nuxt-core.git#commit=180f4099383ff8a5db2bf4d1486435dfea7df7ab"
+  resolution: "@rsksmart/rif-rollup-nuxt-core@https://github.com/rsksmart/rif-rollup-nuxt-core.git#commit=e9a3d4b05507ec5089f22a1df0115dd813003aed"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.8.0
@@ -4531,9 +4469,71 @@ __metadata:
     ts-node: ^9.1.1
     web3: ^1.5.3
     zksync: ^0.13.1
-  checksum: a248eb33b537e889fb504759476fcf550fb016176a372d5b08c92f90af98a5005cdd0fd2b32b10925ad28d456f47bfc2348cb7cdae3608edc1fc74ab34dfc63f
+  checksum: c10790cf754574f5a311a73cd3e63799a6adc32963f068b3b15c945549540eedaeb5d19642d986715b24044fddd69e61bcd7bf3bfcdd9f16c87f7def1d184a3e
   languageName: node
   linkType: hard
+
+"@rsksmart/rif-rollup-wallet@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@rsksmart/rif-rollup-wallet@workspace:."
+  dependencies:
+    "@commitlint/cli": ^16.2.3
+    "@commitlint/config-conventional": ^16.2.1
+    "@ethersproject/address": ^5.5.0
+    "@ethersproject/bignumber": ^5.5.0
+    "@inkline/inkline": ^2.3.6
+    "@inkline/nuxt": ^2.3.6
+    "@matterlabs/eslint-config-nuxt": ^1.0.6
+    "@matterlabs/prettier-config": ^1.0.2
+    "@nuxt/types": ^2.15.8
+    "@nuxt/typescript-build": ^2.1.0
+    "@nuxt/typescript-runtime": ^2.1.0
+    "@nuxtjs/google-fonts": ^1.3.0
+    "@nuxtjs/google-gtag": ^1.0.4
+    "@nuxtjs/proxy": ^2.1.0
+    "@nuxtjs/sentry": ^5.1.7
+    "@nuxtjs/style-resources": ^1.2.1
+    "@ramp-network/ramp-instant-sdk": ^2.5.0
+    "@rsksmart/rif-rollup-nuxt-core": "https://github.com/rsksmart/rif-rollup-nuxt-core"
+    "@semantic-release/changelog": ^6.0.1
+    "@semantic-release/commit-analyzer": ^9.0.2
+    "@semantic-release/exec": ^6.0.3
+    "@semantic-release/git": ^10.0.1
+    "@semantic-release/github": ^8.0.2
+    "@semantic-release/npm": ^9.0.0
+    "@semantic-release/release-notes-generator": ^10.0.3
+    "@sentry/webpack-plugin": ^1.18.3
+    "@types/crypto-js": ^4.0.2
+    "@types/mixpanel-browser": ^2.35.8
+    "@web3-onboard/core": ^2.16.2
+    blockies-ts: 1.0.0
+    cspell: ^5.19.3
+    eslint: ^8.12.0
+    husky: ^7.0.0
+    lint-staged: ^12.1.5
+    lottie-web: ^5.7.8
+    mixpanel-browser: ^2.42.0
+    moment-timezone: ^0.5.34
+    multiformats: ^9.4.7
+    node-sass: ^8
+    nuxt: ^2.15.8
+    nuxt-typed-vuex: ^0.3.0
+    oh-vue-icons: ^0.4.7
+    qrcode: ^1.0.0
+    sass-loader: ^10.2.1
+    semantic-release: ^19.0.2
+    stylelint-config-standard-scss: ^3.0.0
+    vue-qrcode: 0.4.0
+    zksync: ^0.13.1
+  peerDependencies:
+    "@ethersproject/hash": ^5.5.0
+  dependenciesMeta:
+    "@sentry/webpack-plugin":
+      optional: true
+    stylelint-config-standard-scss:
+      optional: true
+  languageName: unknown
+  linkType: soft
 
 "@semantic-release/changelog@npm:^6.0.1":
   version: 6.0.1

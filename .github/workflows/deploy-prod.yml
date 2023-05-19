@@ -41,21 +41,21 @@ jobs:
 
       - name: "Deploy target: prod-mainnet"
         run: yarn run ci:build:prod
-      - uses: matter-labs/action-hosting-deploy@main
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
-          target: mainnet
-          projectId: zksync-vue-mainnet
-          channelId: live
+#      - uses: matter-labs/action-hosting-deploy@main
+#        with:
+#          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+#          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
+#          target: mainnet
+#          projectId: zksync-vue-mainnet
+#          channelId: live
 
       - name: "Prepare /functions/"
         run: npm --prefix functions i
 
-      - name: "Deploy functions to firebase: zksync-vue-mainnet"
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          PROJECT_ID: zksync-vue-mainnet
-          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
+#      - name: "Deploy functions to firebase: zksync-vue-mainnet"
+#        uses: w9jds/firebase-action@master
+#        with:
+#          args: deploy --only functions
+#        env:
+#          PROJECT_ID: zksync-vue-mainnet
+#          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'

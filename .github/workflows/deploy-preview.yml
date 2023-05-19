@@ -41,22 +41,22 @@ jobs:
       - name: "Generate dist (default network: goerli)"
         run: yarn run ci:build:goerli
 
-      - name: "Deploy preview"
-        uses: matter-labs/action-hosting-deploy@main
-        id: deploy_preview
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
-          target: stage-mainnet
-          projectId: zksync-vue
-          channelId: 'version-${{ github.ref }}'
+#      - name: "Deploy preview"
+#        uses: matter-labs/action-hosting-deploy@main
+#        id: deploy_preview
+#        with:
+#          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+#          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+#          target: stage-mainnet
+#          projectId: zksync-vue
+#          channelId: 'version-${{ github.ref }}'
 
       - name: "Prepare /functions/"
         run: npm --prefix functions i
 
-      - name: "Deploy functions to firebase (staging)"
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
-        env:
-          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
+#      - name: "Deploy functions to firebase (staging)"
+#        uses: w9jds/firebase-action@master
+#        with:
+#          args: deploy --only functions
+#        env:
+#          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
