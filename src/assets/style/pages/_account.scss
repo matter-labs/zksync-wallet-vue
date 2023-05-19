@@ -33,7 +33,7 @@
         overflow-x: hidden;
         height: 100%;
         overflow-y: auto !important;
-        background-color: $bgSecondary;
+        background-color: $violet;
         border-radius: $borderRadius;
         box-shadow: $shadowInset;
 
@@ -243,12 +243,12 @@ body.inkline {
   &.-light {
     .walletPage .balancesList {
       &::-webkit-scrollbar-thumb {
-        background-color: $input-border-color-focus-light;
+        background-color: $warmGrey;
       }
 
       .balanceItem {
-        color: $black;
-        border-color: $input-border-color-light;
+        color: $warmGrey;
+        border-color: $warmGrey;
       }
     }
   }
