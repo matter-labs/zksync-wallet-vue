@@ -23,7 +23,7 @@ $lightViolet: $lightHyperlinkBlue;
 $lightVioletSemiTransparent: $lightHyperlinkBlueSemiTransparent;
 $red: #f25f5c;
 $link-color: $lightHyperlinkBlue;
-$color-secondary: $warmGrey;
+$color-secondary: $violet;
 $openSans: "Open Sans", "sans-serif";
 $colorLightGray: $lightGrey;
 
@@ -46,7 +46,7 @@ $accentBg: transparentize(
   $amount: 0.95,
 );
 $bgLight: $midGrey;
-$bgSecondary: $black;
+$bgSecondary: $darkViolet;
 
 /* Input */
 $input-prefix-border-width: 0;

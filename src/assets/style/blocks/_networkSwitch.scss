@@ -4,7 +4,7 @@
     overflow-x: hidden;
     height: 100%;
     overflow-y: auto !important;
-    background-color: $bgSecondary;
+    background-color: $white;
     border-radius: $borderRadius;
     box-shadow: $shadowInset;
     list-style: none;
@@ -51,7 +51,7 @@ body.inkline {
     .networkSwitchModal .network-list {
       .network-list-item {
         color: $black;
-        border-color: $input-border-color-light;
+        border-color: $warmGrey;
       }
     }
   }

@@ -377,7 +377,7 @@ body.inkline.-dark header.layout-header {
   }
 
   .linksContainer .headerLink {
-    color: $darkGrey;
+    color: $midGrey;
 
     &.nuxt-link-exact-active {
       color: darken($color: $white, $amount: 15);
