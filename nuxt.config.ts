@@ -21,8 +21,8 @@ const gitRevision =
     : `${process.env.APP_GIT_REVISION}`;
 
 const meta = {
-  title: "zkSync Wallet",
-  titleTemplate: "%s | zkSync: secure, scalable crypto payments",
+  title: "RIF rollup Wallet",
+  titleTemplate: "%s: secure, scalable crypto payments",
   description:
     "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum",
   keywords:
