@@ -1,13 +1,11 @@
-# [zkSync Wallet](https://wallet.zksync.io/) 
+# RIF Rollup Wallet](https://wallet.dev.aggregation.rifcomputing.net/) 
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-MIT) [![GitHub license](https://img.shields.io/badge/license-Apache%202-blue)](https://github.com/matter-labs/zksync-wallet-vue/blob/master/LICENSE-APACHE) [![Live on Mainnet](https://img.shields.io/badge/wallet-Live%20on%20Mainnet-blue)](https://wallet.zksync.io) [![Live on Goerli](https://img.shields.io/badge/wallet-Live%20on%20Goerli-blue)](https://zksync.io?network=goerli)
 
 
 ## Description
 
-zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features. [Learn more](https://zksync.io/)
-
-It's working perfectly on [**mainnet**](https://wallet.zksync.io) and [goerli](https://zksync.io?network=goerli), published and ready for mass adoption.
+RIF Rollup Wallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features. [Learn more](https://zksync.io/)
 
 ---
 
@@ -52,26 +50,8 @@ For detailed explanation on how things work, check out [Nuxt.js docs](https://nu
 
 ---
 
-# zkSync Ecosystem
-
-- [Integration Docs](https://zksync.io/dev)
-- [Available API & protocols](https://zksync.io/api/)
-- [zkWallet](https://wallet.zksync.io/)
-- [zkCheckout](https://checkout.zksync.io/)
-- [zkScan](https://zkscan.io/)
-- [Alternative Withdrawal](https://withdraw.zksync.io/)
-- [’out-of-gas’ issue solver ](https://withdraw.zksync.io/)
-
----
-
-- [Matter Labs: creators of the zkSync](https://matter-labs.io)
-- [zkSync Homepage](https://zksync.io)
-
----
-> BTW, we're hiring: [See open positions](https://matter-labs.io/#jobs)
-
 ## License
 
-zkWallet is distributed under the terms of both the MIT license, and the Apache License (v.2.0).
+RIF Rollup Wallet is distributed under the terms of both the MIT license, and the Apache License (v.2.0).
 
 See [LICENSE-APACHE](LICENSE-APACHE), [LICENSE-MIT](LICENSE-MIT) for details.
