@@ -23,7 +23,7 @@ footer.layout-footer {
   @media screen and (max-width: $mobile) {
     position: fixed;
     bottom: 0;
-    height: auto;
+    height: 2.5rem;
     width: 100%;
     margin-bottom: 0.5rem;
 
@@ -38,19 +38,25 @@ footer.layout-footer {
     bottom: 0 !important;
     position: fixed;
 
+    @media screen and (max-width: $mobile) {
+      padding-bottom: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
     .row {
       font-size: $fontSizeRegular !important;
     }
 
     & > div {
       @media (max-width: $mobile) {
-        flex-direction: column-reverse;
+        flex-direction: column-reverse !important;
       }
     }
   }
 
   a {
     font-size: $fontSizeRegular;
+    color: $violet;
 
     @media (max-width: $mobile) {
       font-size: $fontSizeRegular;
@@ -88,7 +94,7 @@ button.floating-on-mobile {
     @media (max-width: $mobile) {
       bottom: 2.5rem;
       right: 1.2rem;
-      filter: opacity(0.95);
+      opacity: 0.95;
     }
   }
 }
@@ -139,7 +145,8 @@ button.floating-on-mobile {
       transition: $transition1;
       text-decoration-color: $lightViolet;
       text-decoration-style: dashed;
-      text-decoration-skip: objects spaces;
+      //noinspection CssInvalidPropertyValue
+      text-decoration-skip: objects spaces leading-spaces trailing-spaces;
 
       sup.beta {
         text-decoration: none !important;
@@ -215,12 +222,12 @@ button.floating-on-mobile {
     background-color: $mediumGrey !important;
 
     .dividerLine {
-      color: #343a40;
+      color: $blackLighter;
     }
   }
 
   .badge.system-info {
-    color: #343a40;
+    color: $blackLighter;
   }
 }
 

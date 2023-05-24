@@ -13,7 +13,7 @@ Blue="\033[0;34m"    # Blue
 BBlue="\033[1;34m"   # Bold Blue
 
 if [ -z $NETWORK ]; then
-  NETWORK="rinkeby"
+  NETWORK="goerli"
 fi
 
 if [ -z $ENV_VALUE ]; then
@@ -26,7 +26,7 @@ printf "\n${BBlue}Configuration:\n\n" "" "$NC"
 
 printf "${Default}   Environment:"
 if [ "$ENV_VALUE" == "prod" ]; then
-  echo "${Red} dev"
+  echo "${Red} Prod"
 else
   echo "${Green} $ENV_VALUE"
 fi
@@ -70,10 +70,10 @@ else
   printf "${Red}   Overriding found .env\n\n"
 fi
 
-GIT_VERSION="APP_GIT_VERSION=$(git tag -l | tail -n1)"
+GIT_VERSION="\nAPP_GIT_VERSION=$(git tag -l | tail -n1)"
 GIT_REVISION="APP_GIT_REVISION=$(git rev-parse --short HEAD)"
 GIT_UPDATED_AT="APP_GIT_UPDATED_AT=\"$(git log -1 --format=%cd)\""
-APP_ENV="APP_ENV=$ENV_VALUE"
+APP_ENV="APP_ENV=$ENV_VALUE\n"
 
 rm -f ./.env &&
   cp "environments/.env.$NETWORK" ".env" &&

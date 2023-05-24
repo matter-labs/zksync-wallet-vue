@@ -80,6 +80,12 @@
 
       .mainInfo {
         text-align: left;
+        &.noInfo {
+          @media screen and (min-width: $mobile) {
+            position: relative;
+            top: 4px;
+          }
+        }
 
         .createdAt {
           color: $gray;
@@ -106,14 +112,12 @@
             white-space: nowrap;
             text-overflow: ellipsis;
           }
-
           .copyContentHash {
             display: flex;
             align-items: center;
             color: $gray;
             cursor: pointer;
             transition: color $transition1;
-
             &:active {
               transition-duration: 0.0001s;
               color: $green !important;
@@ -131,7 +135,6 @@
                 overflow: visible;
                 margin-right: 4px;
               }
-
               span {
                 font-size: 12px;
               }
@@ -167,10 +170,7 @@
 
           svg {
             margin-left: 5px;
-
             &.modalOpenIcon {
-              position: relative;
-              top: 2px;
               transition: filter $transition1;
               cursor: pointer;
 
@@ -279,7 +279,7 @@
 
           .amount {
             word-break: break-all;
-            white-space: normal
+            white-space: normal;
           }
 
           .amount,

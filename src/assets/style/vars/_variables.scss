@@ -1,38 +1,52 @@
+$darkHyperlinkBlue: #161b48;
+$midHyperlinkBlue: #252e78;
+$hyperlinkBlue: #4b5cf0;
+$lightHyperlinkBlue: #a5adf7;
+$lightHyperlinkBlueSemiTransparent: #c9cefa;
+$black: #000000;
+$white: #ffffff;
+$darkGrey: #8a8580;
+$warmGrey: #e6ded6;
+$midGrey: #f0ebe6;
+$lightGrey: #faf8f7;
+
 /* Colors */
-$white: #fff;
-$light: #e1e4e8;
-$gray: #9eaebb;
-$black: #242424;
-$blackViolet: #121429;
-$violet: #4e529a;
+$light: $lightGrey;
+$gray: $midGrey;
+$blackLighter: #343a40;
+$blackViolet: $darkHyperlinkBlue;
+$violet: $hyperlinkBlue;
 $green: #1d9b4a;
-$darkViolet: #171a49; //MajorDark
-$mediumViolet: #2f3264;
-$lightViolet: #8c8dfc;
+$darkViolet: $darkHyperlinkBlue;
+$mediumViolet: $midHyperlinkBlue;
+$lightViolet: $lightHyperlinkBlue;
+$lightVioletSemiTransparent: $lightHyperlinkBlueSemiTransparent;
 $red: #f25f5c;
-$link-color: $lightViolet;
+$link-color: $lightHyperlinkBlue;
 $color-secondary: $violet;
 $openSans: "Open Sans", "sans-serif";
-$colorLightGray: #e9ecef;
+$colorLightGray: $lightGrey;
+
+$hoverGray: #f2f2f2;
 
 /* Uplifting */
 $bgDesign: #f4f5f7;
 $darkMain: #272640;
 
 /* Extracted values */
-$tempLightGray: #bababa;
-$tempLightYellow: #bababa;
-$tempDarkBlue: #11142b;
+$tempLightGray: $warmGrey;
+$tempLightYellow: $warmGrey;
+$tempDarkBlue: $darkHyperlinkBlue;
 $tempTransparent: transparent;
 $grayBG: rgba(186, 186, 186, 0.47);
 
 /* Bg */
 $accentBg: transparentize(
-  $color: $gray,
+  $color: $warmGrey,
   $amount: 0.95,
 );
-$bgLight: #fbfbfb;
-$bgSecondary: #ffffff10;
+$bgLight: $midGrey;
+$bgSecondary: $darkViolet;
 
 /* Input */
 $input-prefix-border-width: 0;
@@ -54,10 +68,11 @@ $modal-border-color-light: #180d0d05;
 $modal-background-light: $white;
 
 /* Fonts */
+$sora: "Sora", "sans-serif";
 $firaSans: "Fira Sans", "sans-serif";
 $firaCode: "Fira Code", "sans-serif";
 
-$font-family-primary-base: $firaSans;
+$font-family-primary-base: $sora;
 
 /* Transitions */
 $transition1: 0.2s ease;
@@ -98,6 +113,15 @@ $shadowColor4: #0000000a; //rgba(0, 0, 0, .04);
 $shadowColor5: #0000000c; //rgba(0, 0, 0, .05);
 $shadowColor8: #00000015; //rgba(0, 0, 0, .08);
 $shadowColor10: #0000001a; //rgba(0, 0, 0, .10);
+
+.-dark {
+  /* Shadow colors */
+  $shadowColor3: #ffffff07;
+  $shadowColor4: #ffffff0a; //rgba(255, 255, 255 .04);
+  $shadowColor5: #ffffff0c; //rgba(255, 255, 255 .05);
+  $shadowColor8: #ffffff15; //rgba(255, 255, 255 .08);
+  $shadowColor10: #ffffff1a; //rgba(255, 255, 255 .10);
+}
 
 /* Shadows */
 $shadowInset: inset 1px 1px 1px $shadowColor3;

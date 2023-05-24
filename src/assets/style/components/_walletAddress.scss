@@ -10,7 +10,6 @@
   border-radius: $borderRadiusMd;
   box-shadow: $shadowInset;
   transition: background-color $transition1, box-shadow $transition1;
-
   &.inputWallet {
     position: relative;
 
@@ -20,6 +19,14 @@
       top: calc(100% + 3px);
       width: 100%;
       color: $red;
+      font-size: 12px;
+    }
+
+    .domainAddress {
+      position: absolute;
+      left: 0;
+      top: calc(100% + 3px);
+      width: 100%;
       font-size: 12px;
     }
   }
@@ -43,6 +50,7 @@
   input {
     display: block;
     width: 100%;
+    height: 100%;
     font-size: 12px;
     height: 27px;
     text-align: center;

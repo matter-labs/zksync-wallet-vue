@@ -60,18 +60,21 @@
 
   #__layout {
     main {
-      padding: 60px 0 95px;
+      padding: 93px 0 63px;
       min-height: 100vh;
+      //height: 0 !important;
 
+      /* autoprefixer: off */
       @supports (-webkit-touch-callout: none) {
-        min-height: stretch;
+        //noinspection CssInvalidPropertyValue
+        min-height: -webkit-fill-available;
       }
     }
   }
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-family: $sora;
   line-height: 1.4;
 }
 
@@ -154,7 +157,7 @@ section.layoutContent {
 
       &:nth-child(2) {
         .total {
-          font-family: $firaSans;
+          font-family: $sora;
           letter-spacing: 0;
           font-size: 10px;
         }

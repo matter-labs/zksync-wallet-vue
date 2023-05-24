@@ -2,13 +2,21 @@
   <div class="chooseContactBlock">
     <!-- Contacts list -->
     <i-modal v-model="contactsListModal" size="md">
-      <template slot="header">Contacts</template>
+      <template #header>Contacts</template>
       <div>
-        <i-input v-if="isSearching || hasDisplayedContacts" ref="contactNameInput" v-model="contactSearch" placeholder="Filter contacts" maxlength="20">
-          <v-icon slot="prefix" name="ri-search-line" />
+        <i-input
+          v-if="isSearching || hasDisplayedContacts"
+          ref="contactNameInput"
+          v-model="contactSearch"
+          placeholder="Filter contacts"
+          maxlength="20"
+        >
+          <template #prefix>
+            <v-icon name="ri-search-line" />
+          </template>
         </i-input>
         <div class="contactsListContainer genericListContainer">
-          <div v-if="!isSearching && !hasDisplayedContacts" class="nothingFound">
+          <div v-if="!isSearching && !hasDisplayedContacts && !displayOwnAddress" class="nothingFound">
             <span>The contact list is empty</span>
           </div>
           <div v-else-if="isSearching && !hasDisplayedContacts" class="nothingFound _padding-top-2 _padding-bottom-1">
@@ -17,14 +25,23 @@
             </span>
           </div>
           <template v-else>
-            <div v-if="!isSearching && displayOwnAddress" class="contactItem" @click.self="chooseContact({ name: 'Own account', address: ownAddress })">
+            <div
+              v-if="!isSearching && displayOwnAddress"
+              class="contactItem"
+              @click.self="chooseContact({ name: 'Own account', address: ownAddress })"
+            >
               <user-img :wallet="ownAddress" />
               <div class="contactInfo">
                 <div class="contactName">Own account</div>
                 <div class="contactAddress walletAddress">{{ ownAddress }}</div>
               </div>
             </div>
-            <div v-for="(item, index) in displayedContactsList" :key="index" class="contactItem" @click.self="chooseContact(item)">
+            <div
+              v-for="(item, contactAddress) in displayedContactsList"
+              :key="contactAddress"
+              class="contactItem"
+              @click.self="chooseContact(item)"
+            >
               <user-img :wallet="item.address" />
               <div class="contactInfo">
                 <div class="contactName">{{ item.name }}</div>
@@ -38,10 +55,17 @@
 
     <!-- Save contact -->
     <i-modal v-model="saveContactModal" class="prevent-close" size="md">
-      <template slot="header">Save contact</template>
+      <template #header>Save contact</template>
       <div>
         <div class="_padding-bottom-1">Contact name</div>
-        <i-input ref="saveContactNameInput" v-model="saveContactInput" size="lg" placeholder="Name" maxlength="20" @keyup.enter="saveContact()" />
+        <i-input
+          ref="saveContactNameInput"
+          v-model="saveContactInput"
+          size="lg"
+          placeholder="Name"
+          maxlength="20"
+          @keyup.enter="saveContact()"
+        />
         <div v-if="saveContactModalError" class="modalError _margin-top-1">{{ saveContactModalError }}</div>
         <i-button class="_margin-top-1" block variant="secondary" size="lg" @click="saveContact()">Save</i-button>
       </div>
@@ -49,26 +73,42 @@
 
     <!-- Main -->
     <i-row class="_margin-top-md-1">
-      <i-column v-if="!chosenContact || (!chosenContact.name && !isOwnAddress)" :md="canSaveContact ? 7 : 12" xs="12">
-        <i-button data-cy="address_block_select_from_contacts_button" block link variant="secondary" @click="contactsListModal = true">Select from contacts</i-button>
+      <i-column v-if="!contact && !isOwnAddress" :md="canSaveContact ? 7 : 12" xs="12">
+        <i-button
+          data-cy="address_block_select_from_contacts_button"
+          block
+          link
+          variant="secondary"
+          @click="contactsListModal = true"
+          >Select from contacts
+        </i-button>
       </i-column>
       <i-column v-else xs="12" :md="canSaveContact ? 7 : 12">
-        <i-button data-cy="address_block_select_from_contacts_button" block link variant="secondary" @click="contactsListModal = true">
-          {{ isOwnAddress ? "Own account" : chosenContact.name }}&nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
+        <i-button
+          data-cy="address_block_select_from_contacts_button"
+          block
+          link
+          variant="secondary"
+          @click="contactsListModal = true"
+        >
+          {{ isOwnAddress ? "Own account" : contact.name }}&nbsp;&nbsp;<v-icon name="ri-arrow-down-s-line" />
         </i-button>
       </i-column>
       <i-column xs="12" md="5">
-        <i-button v-if="canSaveContact" block link variant="secondary" @click="saveContactModal = true"> Save to contacts</i-button>
+        <i-button v-if="canSaveContact" block link variant="secondary" @click="saveContactModal = true">
+          Save to contacts
+        </i-button>
       </i-column>
     </i-row>
   </div>
 </template>
 
 <script lang="ts">
-import utils from "@/plugins/utils";
-import { ZkInContact } from "@/types/lib";
-import { Address } from "zksync/build/types";
 import Vue, { PropOptions } from "vue";
+import { getAddress } from "ethers/lib/utils";
+import { Address } from "zksync/build/types";
+import { ZkContact, ZkContacts } from "@rsksmart/rif-rollup-nuxt-core/types";
+import { searchInObject } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
 export default Vue.extend({
   props: {
@@ -79,7 +119,7 @@ export default Vue.extend({
     } as PropOptions<Address>,
     displayOwnAddress: {
       type: Boolean,
-      default: true,
+      default: false,
       required: false,
     },
   },
@@ -93,106 +133,93 @@ export default Vue.extend({
       saveContactModal: false,
       saveContactInput: "",
       saveContactModalError: "",
-
-      /* Main */
-      chosenContact: <ZkInContact | undefined>undefined,
+      forceUpdateVal: Number.MIN_SAFE_INTEGER,
     };
   },
   computed: {
     ownAddress(): Address {
-      return this.$accessor.provider.address || "";
-    },
-    canSaveContact(): boolean {
-      return !this.isInContacts && !!this.chosenContact && !!this.chosenContact.address && !this.chosenContact.name && !this.isOwnAddress;
+      return this.$store.getters["zk-account/address"];
     },
     isOwnAddress(): boolean {
-      if (this.chosenContact && this.chosenContact.address) {
-        return this.ownAddress.toLowerCase() === this.chosenContact.address.toLowerCase();
-      } else {
+      if (!this.address) {
         return false;
       }
+      return this.$store.getters["zk-account/address"] === getAddress(this.address);
     },
-    contactsList(): Array<ZkInContact> {
-      return this.$accessor.contacts.get;
-    },
-    displayedContactsList(): Array<ZkInContact> {
-      if (!this.isSearching) {
-        return this.contactsList;
+    contact(): ZkContact | undefined {
+      /* eslint-disable no-unused-expressions */
+      this.forceUpdateVal;
+      if (!this.address) {
+        return undefined;
       }
-      return utils.searchInArr(this.contactSearch, this.contactsList, (e) => (e as ZkInContact).name) as ZkInContact[];
+      return this.$store.getters["zk-contacts/contactByAddressNotDeleted"](this.address);
     },
-    isInContacts(): boolean {
-      return this.chosenContact && this.chosenContact.address ? this.checkAddressInContacts(this.chosenContact.address) : false;
-    },
-    hasDisplayedContacts(): boolean {
-      return this.displayedContactsList.length !== 0 || this.displayOwnAddress;
+    canSaveContact(): boolean {
+      return Boolean(!this.contact && this.address && !this.isOwnAddress);
     },
     isSearching(): boolean {
       return !!this.contactSearch.trim();
     },
+    contactsList(): ZkContacts {
+      /* eslint-disable no-unused-expressions */
+      this.forceUpdateVal;
+      return this.$store.getters["zk-contacts/contactsNotDeleted"];
+    },
+    displayedContactsList(): ZkContacts {
+      /* eslint-disable no-unused-expressions */
+      this.forceUpdateVal;
+      return searchInObject(
+        this.contactsList,
+        this.contactSearch,
+        ([_, contact]: [string, ZkContact]) => `${contact.name} - ${contact.address}`
+      ) as ZkContacts;
+    },
+    hasDisplayedContacts(): boolean {
+      return Object.keys(this.displayedContactsList).length !== 0;
+    },
   },
   watch: {
-    chosenContact: {
-      deep: true,
-      handler(val) {
-        this.$emit("input", val);
-      },
-    },
-    address: {
-      immediate: true,
-      handler(val) {
-        this.chooseContact({
-          address: val,
-          name: "",
-        });
-      },
-    },
-
-    contactsListModal() {
+    contactsListModal(value: boolean): void {
       setTimeout(() => {
         (this.$refs.contactNameInput as Vue)?.$el?.querySelector("input")?.focus();
       }, 0);
+
+      if (value) {
+        this.$analytics.track("visit_select_contact");
+      }
     },
-    saveContactModal() {
+    saveContactModal(value: boolean): void {
       this.saveContactModalError = "";
       setTimeout(() => {
         (this.$refs.contactNameInput as Vue)?.$el?.querySelector("input")?.focus();
       }, 0);
+
+      if (value) {
+        this.$analytics.track("visit_save_contact");
+      }
     },
   },
+  mounted() {},
   methods: {
-    chooseContact(contact?: ZkInContact): void {
-      if (!contact?.address) {
-        this.chosenContact = undefined;
-        return;
-      }
-      if (!contact?.name) {
-        const foundContact = this.$accessor.contacts.getByAddress(contact.address);
-        if (foundContact) {
-          contact = foundContact;
-        }
-      }
-      this.chosenContact = contact;
+    chooseContact(contact: ZkContact) {
+      this.$analytics.track("select_contact");
+      this.$emit("chosen", contact.address);
       this.contactsListModal = false;
     },
-    checkAddressInContacts(address: Address): boolean {
-      return this.$accessor.contacts.isInContacts(address);
-    },
-    saveContact(): void {
+    saveContact() {
       if (this.saveContactInput.trim().length <= 0) {
-        this.saveContactModalError = "Name can't be empty";
+        this.saveContactModalError = "Invalid name";
         return;
       }
-      if (this.chosenContact) {
-        const contact = {
-          name: this.saveContactInput,
-          address: this.chosenContact.address,
-        };
-        this.$accessor.contacts.saveContact(contact);
-        this.chooseContact(contact);
+      if (!this.address) {
+        this.saveContactModalError = "Invalid address";
+        return;
       }
+      this.$analytics.track("save_contact");
+      this.$store.dispatch("zk-contacts/setContact", { address: this.address, name: this.saveContactInput.trim() });
       this.saveContactInput = "";
       this.saveContactModal = false;
+      this.forceUpdateVal++;
     },
   },
 });

@@ -9,15 +9,11 @@ header {
     position: fixed;
     top: 0;
     z-index: 3;
-
     @media screen and (max-width: $mobile) {
       position: fixed;
-      top: 0;
       left: 0;
-      z-index: 9;
       box-shadow: $shadowBottom;
     }
-
     border-bottom-width: 1px;
     border-bottom-style: solid;
     border-bottom-color: rgb(239, 241, 244);
@@ -103,7 +99,6 @@ header {
         width: auto !important;
         height: 100% !important;
         object-fit: contain;
-
         @media (max-width: $mobile) {
           height: 25px !important;
         }
@@ -112,7 +107,7 @@ header {
       .badge {
         margin-top: -30px;
         padding: 0;
-        color: $lightViolet !important;
+        color: $darkGrey !important;
         font-weight: 400;
         font-size: 12px !important;
         letter-spacing: 1px;
@@ -194,10 +189,9 @@ header {
     }
 
     .pagesContainer {
-      background-color: $darkViolet;
+      background-color: $violet;
       box-shadow: $shadowTop;
     }
-
     .pagesContainer {
       position: fixed;
       bottom: -1px;
@@ -225,7 +219,6 @@ header {
           display: block;
           margin: 0 auto;
         }
-
         span {
           margin-top: 2px;
         }
@@ -372,7 +365,7 @@ body.inkline.-light header {
 }
 
 body.inkline.-dark header.layout-header {
-  background: $darkViolet;
+  background: $violet;
   border-bottom-color: rgba(3, 5, 17, 0.98) !important;
 
   .userDropdown .userDropdownAddress .walletLabel {
@@ -384,11 +377,11 @@ body.inkline.-dark header.layout-header {
   }
 
   .linksContainer .headerLink {
-    color: $lightViolet;
+    color: $midGrey;
 
     &.nuxt-link-exact-active {
       color: darken($color: $white, $amount: 15);
-      background-color: darken($color: $darkViolet, $amount: 5);
+      background-color: darken($color: $violet, $amount: 5);
     }
   }
 }

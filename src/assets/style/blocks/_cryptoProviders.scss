@@ -1,0 +1,132 @@
+.cryptoProviders {
+  margin-top: 1rem;
+  display: grid;
+  width: 100%;
+  height: max-content;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-flow: row;
+  grid-auto-rows: 52px;
+  grid-gap: 11px;
+  &.transfer {
+    grid-auto-rows: 56px;
+    @media screen and (max-width: 560px) {
+      grid-template-columns: 100%;
+      grid-gap: 9px;
+    }
+
+    .providerOption label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 16px;
+
+      img,
+      svg {
+        height: 32px;
+        min-width: 32px;
+        max-height: initial;
+        margin-right: 0;
+      }
+    }
+  }
+
+  .providerOption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #eeeeee;
+    border-radius: 6px;
+    box-sizing: border-box;
+    transition: $transition1;
+    transition-property: border-color, opacity;
+    will-change: border-color, opacity;
+    &.disabled {
+      border-color: transparentize($color: #eeeeee, $amount: 0.7);
+      background-color: transparentize($color: #eeeeee, $amount: 0.7);
+
+      & > *:not(.loaderContainer) {
+        opacity: 0.5;
+      }
+    }
+    &:not(.disabled):hover {
+      border-color: #5d65b9 !important;
+      cursor: pointer;
+    }
+    & > * {
+      pointer-events: none;
+    }
+
+    label {
+      display: block;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.15;
+      margin-bottom: 0;
+      color: $black;
+      transition: color $transition1;
+      will-change: color;
+
+      img {
+        margin-right: 7px;
+      }
+    }
+    svg,
+    img {
+      max-width: 70%;
+      max-height: 70%;
+      object-fit: contain;
+    }
+    svg .letter {
+      fill: $black;
+      transition: fill $transition1;
+      will-change: fill;
+    }
+    .loaderContainer {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.inkline.-dark {
+  .cryptoProviders {
+    .providerOption {
+      border-color: transparentize($color: $gray, $amount: 0.65);
+      &.disabled {
+        border-color: transparentize($color: $gray, $amount: 0.85) !important;
+        background-color: transparentize($color: $gray, $amount: 0.9) !important;
+      }
+
+      svg .letter {
+        fill: $white;
+      }
+      label {
+        color: #f8f9fa;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: $mobile) {
+  .cryptoProviders {
+    grid-auto-rows: 40px;
+    grid-gap: 15px;
+  }
+
+  .orDivider {
+    padding: 10px 0 !important;
+  }
+}

@@ -8,3 +8,23 @@
   align-items: center !important;
   display: inline-flex !important;
 }
+
+.dropdown {
+  &.firstElementHovered {
+    span.arrow:after {
+      border-bottom-color: $hoverGray !important;
+    }
+  }
+
+  .bottomDivider {
+    border-bottom: 1.25px solid $lightVioletSemiTransparent !important;
+  }
+
+  &.-dark {
+    &.firstElementHovered {
+      span.arrow:after {
+        border-bottom-color: lighten($darkViolet, 5) !important;
+      }
+    }
+  }
+}

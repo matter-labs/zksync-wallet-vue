@@ -26,61 +26,27 @@
 main.layout.defaultLayout {
   max-height: 100%;
   overflow: hidden;
-  padding: 40px 0 70px;
-}
-
-/**
- * Only for the desktops
- */
-@media (min-width: $tablet) {
-  main.layout.defaultLayout {
-    max-height: 100%;
-    display: flex;
-    padding: 60px 0 60px;
-    justify-content: stretch;
-    height: 100vh;
-
-    @supports (-webkit-touch-callout: none) {
-      min-height: stretch;
-    }
-
-    section.layout-content.layoutContent {
-      display: flex;
-      overflow: hidden;
-
-      .routerContainer {
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-
-        .dappPageWrapper {
-          overflow-y: auto !important;
-          height: max-content;
-        }
-      }
-    }
-
-    .tileBlock {
-      margin: 0 auto;
-    }
-
-    .balancesList {
-      margin: 0 !important;
-    }
-  }
-
-  .bn-onboard-custom.bn-onboard-modal-content {
-    align-self: center;
-  }
+  padding: 90px 0 70px;
 }
 
 #__layout {
   display: flex;
 }
 
+a {
+  color: $lightViolet;
+}
+
 .secondaryText {
   color: $gray;
   font-size: 16px;
+  &.small {
+    font-size: 14px;
+  }
+}
+
+._text-decoration-underline {
+  text-decoration: underline;
 }
 
 .linkText {
@@ -102,6 +68,8 @@ main.layout.defaultLayout {
 }
 
 body.inkline {
+  overflow: auto;
+
   .button {
     &.-link {
       padding: 7px 12px;
@@ -124,9 +92,11 @@ body.inkline {
       }
     }
 
-    .planeIcon {
-      position: relative;
-      top: -2px;
+    &.-lg {
+      .planeIcon {
+        position: relative;
+        top: -2px;
+      }
     }
   }
 
@@ -169,6 +139,12 @@ body.inkline {
       }
     }
   }
+}
+
+#__nuxt,
+#__layout {
+  width: 100%;
+  height: 100%;
 }
 
 button.-lg.-circle {
@@ -271,12 +247,27 @@ button.-lg.-circle {
     > .header {
       font-weight: 400;
       font-size: 1.5rem;
-      font-family: $firaSans;
+      font-family: $sora;
+
+      @media screen and (max-width: $mobile) {
+        line-height: 100% !important;
+        padding: 0.5rem 1rem !important;
+      }
 
       & > .close {
         width: 2.2rem !important;
         height: 2.2rem !important;
         line-height: 2rem !important;
+
+        @media screen and (max-width: $mobile) {
+          width: 1.5rem !important;
+          height: 1.5rem !important;
+          line-height: 1rem !important;
+
+          i {
+            font-size: 1rem !important;
+          }
+        }
       }
 
       @media (max-width: $mobile) {
@@ -323,6 +314,7 @@ button.-lg.-circle {
     .close .icon {
       line-height: 18px;
       font-size: 18px;
+      color: $black;
     }
   }
 
@@ -532,12 +524,12 @@ button.-lg.-circle {
 
 .h1 {
   font-weight: 400 !important;
-  font-family: $firaSans;
+  font-family: $sora;
 }
 
 .h2 {
   font-weight: 600 !important;
-  font-family: $firaSans;
+  font-family: $sora;
 }
 
 ._margin-top-05 {
@@ -554,6 +546,12 @@ button.-lg.-circle {
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: 100%;
   grid-gap: 15px;
+  max-width: 100%;
+  overflow: hidden;
+
+  & > * {
+    overflow: hidden;
+  }
 
   &.single-col {
     grid-gap: 10px;

@@ -1,11 +1,8 @@
 {
-  "name": "@matterlabs/zksync-zkwallet-vue",
+  "name": "@rsksmart/rif-rollup-wallet",
   "title": "zkSync.io Wallet | Try solution for the Ethereum scalability\n with zero security compromises",
   "main": "nuxt.config.ts",
-  "types": [
-    "src/types/index.d.ts",
-    "src/types/lib.d.ts"
-  ],
+  "types": "src/types/index.d.ts",
   "files": [
     "src/types",
     "src"
@@ -35,10 +32,10 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "2.6.0",
+  "version": "3.28.6",
   "homepage": "https://wallet.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
-  "repository": "https://github.com/matter-labs/zksync-wallet-vue",
+  "repository": "https://github.com/rsksmart/rif-rollup-wallet",
   "author": "Matter Labs",
   "browserslist": {
     "production": [
@@ -53,126 +50,112 @@
     ]
   },
   "bugs": {
-    "url": "https://github.com/matter-labs/zksync-wallet-vue/issues"
+    "url": "https://github.com/rsksmart/rif-rollup-wallet/issues"
   },
   "dependencies": {
-    "@nuxt/http": "latest",
-    "@nuxt/typescript-runtime": "latest",
-    "@nuxtjs/google-gtag": "latest",
-    "@nuxtjs/sentry": "latest",
-    "@nuxtjs/toast": "latest",
-    "@walletconnect/utils": "1.4.0",
-    "@walletconnect/web3-provider": "1.4.0",
+    "@inkline/inkline": "^2.3.6",
+    "@inkline/nuxt": "^2.3.6",
+    "@matterlabs/eslint-config-nuxt": "^1.0.6",
+    "@matterlabs/prettier-config": "^1.0.2",
+    "@nuxt/typescript-runtime": "^2.1.0",
+    "@nuxtjs/google-gtag": "^1.0.4",
+    "@nuxtjs/sentry": "^5.1.7",
+    "@ramp-network/ramp-instant-sdk": "^2.5.0",
+    "@rsksmart/rif-rollup-nuxt-core": "https://github.com/rsksmart/rif-rollup-nuxt-core",
+    "@web3-onboard/core": "^2.16.2",
     "blockies-ts": "1.0.0",
-    "bnc-onboard": "^1.34.1",
-    "ethers": "5.0.32",
     "lottie-web": "^5.7.8",
-    "moment-timezone": "^0.5.33",
-    "nuxt": "latest",
-    "nuxt-build-optimisations": "latest",
-    "nuxt-typed-vuex": "latest",
+    "mixpanel-browser": "^2.42.0",
+    "moment-timezone": "^0.5.34",
+    "multiformats": "^9.4.7",
+    "nuxt": "^2.15.8",
+    "nuxt-typed-vuex": "^0.3.0",
     "oh-vue-icons": "^0.4.7",
-    "typed-vuex": "latest",
-    "vue": "2.*",
-    "vue-class-component": "latest",
-    "vue-qrcode": "latest",
-    "vue-router": "^3.5.1",
-    "vue-scrollto": "^2.20.0",
-    "web3": "^1.5.1",
-    "zksync": "latest"
+    "vue-qrcode": "0.4.0",
+    "zksync": "^0.13.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.15",
-    "@babel/preset-env": "^7.13.9",
-    "@babel/runtime": "^7.13.10",
-    "@inkline/nuxt": "^2.3.6",
-    "@nuxt/types": "latest",
-    "@nuxt/typescript": "latest",
-    "@nuxt/typescript-build": "latest",
-    "@nuxtjs/dotenv": "latest",
-    "@nuxtjs/eslint-config-typescript": "latest",
-    "@nuxtjs/google-fonts": "latest",
-    "@nuxtjs/style-resources": "latest",
-    "@types/jest": "^26.0.23",
-    "@typescript-eslint/eslint-plugin": "^4.21.0",
-    "@typescript-eslint/parser": "^4.21.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "commitlint": "^11.0.0",
-    "cspell": "latest",
-    "dotenv": "8.2.0",
-    "eslint": "^7.21.0",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-prettier-vue": "^2.1.1",
-    "eslint-plugin-vue": "^7.7.0",
-    "fork-ts-checker-webpack-plugin": "^6.1.0",
-    "jest": "^26.6.3",
-    "node-sass": "4.14.0",
-    "prettier": "^2.2.1",
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
+    "@ethersproject/address": "^5.5.0",
+    "@ethersproject/bignumber": "^5.5.0",
+    "@nuxt/types": "^2.15.8",
+    "@nuxt/typescript-build": "^2.1.0",
+    "@nuxtjs/google-fonts": "^1.3.0",
+    "@nuxtjs/proxy": "^2.1.0",
+    "@nuxtjs/style-resources": "^1.2.1",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/commit-analyzer": "^9.0.2",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^8.0.2",
+    "@semantic-release/npm": "^9.0.0",
+    "@semantic-release/release-notes-generator": "^10.0.3",
+    "@types/crypto-js": "^4.0.2",
+    "@types/mixpanel-browser": "^2.35.8",
+    "cspell": "^5.19.3",
+    "eslint": "^8.12.0",
+    "husky": "^7.0.0",
+    "lint-staged": "^12.1.5",
+    "node-sass": "^8",
     "qrcode": "^1.0.0",
-    "sass-loader": "^10.1.1",
-    "stylelint": "latest",
-    "stylelint-config-standard": "^22.0.0",
-    "stylelint-scss": "latest",
-    "typescript": "^4.2.4",
-    "vue-property-decorator": "latest",
-    "vuex": "^3.6.2",
-    "web3-core": "^1.5.1",
-    "webpack": "^4.46.0"
-  },
-  "peerDependencies": {
-    "@babel/core": "*",
-    "@babel/runtime": "*",
-    "typed-vuex": "*",
-    "vuex": "3.5.1"
+    "sass-loader": "^10.2.1",
+    "semantic-release": "^19.0.2"
   },
   "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
-  },
-  "fork-ts-checker": {
-    "typescript": true
+    "chalk": "4.1.2",
+    "webpack": "^4.46.0"
   },
   "optionalDependencies": {
-    "@sentry/webpack-plugin": "^1.14.0",
-    "fs-extra": "^9.1.0",
-    "fsevents": "^2.3.2"
+    "@sentry/webpack-plugin": "^1.18.3",
+    "stylelint-config-standard-scss": "^3.0.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --config .eslintrc.js --fix --ignore-path .eslintignore",
+      "prettier -w"
+    ],
+    "*.scss": [
+      "prettier -w"
+    ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-fix",
-      "commit-msg": "commitlint --format -E HUSKY_GIT_PARAMS"
+      "commit-msg": "npx --no-install commitlint --edit \"$1\"",
+      "pre-commit": "CI=\"1\"\nnpx lint-staged"
     }
   },
-  "lint-fix": [
-    "yarn lint-style:fix",
-    "yarn lint-ts:fix",
-    "yarn format:prettier",
-    "yarn spell-check"
-  ],
   "scripts": {
-    "local": "sh ./cli-process-env.sh 'ropsten-beta' 'dev' 1 1",
-    "dev": "yarn ci:build:rinkeby && nuxt",
-    "generate": "nuxt generate ",
-    "start": "yarn local && nuxt start",
     "build": "yarn local && nuxt build",
-    "ci:build:dev-rinkeby": "sh cli-process-env.sh 'rinkeby' dev 1 && yarn generate --fail-on-error",
-    "ci:build:dev-mainnet": "sh cli-process-env.sh 'mainnet' dev 1 && yarn generate --fail-on-error",
-    "ci:build:rinkeby-beta": "yarn ci:prepare:rinkeby-beta && yarn generate --fail-on-error",
-    "ci:build:ropsten-beta": "yarn ci:prepare:ropsten-beta && yarn generate --fail-on-error",
-    "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate --fail-on-error",
-    "ci:build:rinkeby": "yarn ci:prepare:rinkeby && yarn generate --fail-on-error",
-    "ci:build:ropsten": "yarn ci:prepare:ropsten && yarn generate --fail-on-error",
-    "ci:prepare:rinkeby-beta": "sh cli-process-env.sh 'rinkeby-beta' dev 1",
-    "ci:prepare:ropsten-beta": "sh cli-process-env.sh 'ropsten-beta' dev 1",
-    "ci:prepare:rinkeby": "sh cli-process-env.sh 'rinkeby' prod 1",
-    "ci:prepare:ropsten": "sh cli-process-env.sh 'ropsten' prod 1",
+    "ci:build:dev-mainnet": "sh cli-process-env.sh 'mainnet' dev 1 && yarn generate",
+    "ci:build:prod": "yarn ci:prepare:mainnet && yarn generate",
+    "ci:build:goerli": "yarn ci:prepare:goerli && yarn generate",
+    "ci:build:goerli-beta": "yarn ci:prepare:goerli-beta && yarn generate",
+    "ci:check": "yarn lint && yarn spell-check",
     "ci:prepare:mainnet": "sh cli-process-env.sh 'mainnet' prod 1",
-    "test": "jest",
-    "format:prettier": "prettier --config .prettierrc.js --ignore-path .prettierignore --write src/**/*.{ts,vue,js}",
-    "lint-ts:check": "eslint --quiet --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
-    "lint-ts:fix": "eslint --fix --config \".eslintrc.js\" ./src/**/*.{ts,vue,js}",
-    "lint-style:check": "stylelint --config .stylelintrc --ignore-path .stylelintignore --quiet",
-    "lint-style:fix": "stylelint src/**/*.scss --config '.stylelintrc' --fix -f verbose",
-    "spell-check": "cspell -c .cspell.json src/**/*.{ts,vue,js} *.md"
+    "ci:prepare:goerli": "sh cli-process-env.sh 'goerli' prod 1",
+    "dev": "yarn local && nuxt",
+    "format": "prettier -w --ignore-path .eslintignore **/*.{ts,vue,ks}",
+    "generate": "nuxt generate --fail-on-error",
+    "lint": "eslint --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js}",
+    "lint:fix": "eslint --fix --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js} --fix",
+    "local": "sh ./cli-process-env.sh 'goerli' 'dev' 1 1",
+    "postinstall": "husky install",
+    "semantic-release": "semantic-release",
+    "spell-check": "cspell -c cspell.json src/**/*.{ts,vue,js} *.md",
+    "start": "yarn local && nuxt start"
+  },
+  "prettier": "@matterlabs/prettier-config",
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "packageManager": "yarn@3.1.1",
+  "peerDependencies": {
+    "@ethersproject/hash": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

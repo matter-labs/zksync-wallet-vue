@@ -1,8 +1,20 @@
 <template>
   <div class="addressInput">
     <div class="walletContainer inputWallet" :class="{ error: error }" @click.self="focusInput()">
-      <lazy-user-img v-if="isValid" :wallet="inputtedHash" />
-      <div v-else class="userImgPlaceholder userImg"></div>
+      <i-button
+        v-if="isCID"
+        class="-open-in-new-window"
+        size="sm"
+        variant="secondary"
+        target="_blank"
+        circle
+        @click="openInNewWindow()"
+      >
+        <v-icon name="ri-external-link-line" />
+      </i-button>
+      <i-button v-else class="-open-in-new-window" size="sm" variant="secondary" circle disabled>
+        <v-icon name="ri-file-line" />
+      </i-button>
       <!--suppress HtmlFormInputWithoutLabel -->
       <input
         ref="input"
@@ -10,7 +22,7 @@
         autocomplete="none"
         class="walletAddress"
         maxlength="80"
-        placeholder="0x hash"
+        placeholder="0x hash or CID"
         spellcheck="false"
         type="text"
         @keyup.enter="$emit('enter')"
@@ -23,10 +35,9 @@
 </template>
 
 <script lang="ts">
-import { DecimalBalance } from "@/types/lib";
-
-import { ethers } from "ethers";
 import Vue, { PropOptions } from "vue";
+import { DecimalBalance, ModuleOptions } from "@rsksmart/rif-rollup-nuxt-core/types";
+import { contendAddressToRawContentHash, isCID } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
 export default Vue.extend({
   props: {
@@ -42,29 +53,23 @@ export default Vue.extend({
     };
   },
   computed: {
-    isValid(): boolean {
-      try {
-        ethers.utils.hexlify(this.inputtedHash);
-        const contentHashBytes = ethers.utils.arrayify(this.inputtedHash);
-        if (contentHashBytes.length !== 32) {
-          return false;
-        }
-        return true;
-      } catch (err) {
-        return false;
-      }
+    ipfsGateway(): string {
+      return (this.$store.getters["zk-onboard/options"] as ModuleOptions).ipfsGateway!;
     },
-    error(): string {
-      if (this.inputtedHash && !this.isValid) {
-        try {
-          const contentHashBytes = ethers.utils.arrayify(this.inputtedHash);
-          if (contentHashBytes.length !== 32) {
-            return "Content hash must be 32 bytes long";
-          }
-        } catch (error) {}
-        return "Invalid hash";
-      } else {
-        return "";
+    isValid(): boolean {
+      return this.inputtedHash.length > 0 && !this.error;
+    },
+    isCID(): boolean {
+      return isCID(this.inputtedHash);
+    },
+    error(): string | undefined {
+      try {
+        if (this.inputtedHash.length) {
+          contendAddressToRawContentHash(this.inputtedHash);
+        }
+        return undefined;
+      } catch ({ message }) {
+        return (message as string) || "Unknown error";
       }
     },
   },
@@ -89,6 +94,20 @@ export default Vue.extend({
         (this.$refs.input as HTMLElement).focus();
       }
     },
+    openInNewWindow(): void {
+      if (!this.isCID) {
+        return;
+      }
+      const url = `${this.ipfsGateway}/ipfs/${this.inputtedHash}`;
+      window.open(url, "_blank");
+    },
   },
 });
 </script>
+
+<style lang="scss" scoped>
+button.-open-in-new-window {
+  width: 27px !important;
+  height: 27px !important;
+}
+</style>

@@ -3,9 +3,9 @@
   height: 100%;
 
   .routerContainer {
-    min-height: $minRouteHeightMain;
-    //margin: 1rem auto;
     width: 100%;
+    height: max-content;
+    min-height: $minRouteHeightMain;
   }
 
   .headerSpace {
@@ -18,7 +18,7 @@ body.inkline.-light .defaultLayout {
   .tileBlock {
     background: $white;
 
-    .tileHeadline .returnBtn {
+    .tileHeadline {
       i,
       .ov-icon {
         color: $black;
@@ -34,9 +34,9 @@ body.inkline.-light .defaultLayout {
 
 body.inkline.-dark .defaultLayout {
   .tileBlock {
-    background: $darkViolet;
+    background: $mediumViolet;
 
-    .tileHeadline .returnBtn {
+    .tileHeadline {
       i,
       .ov-icon {
         color: $white;
@@ -88,7 +88,6 @@ input.form-input.-prefixed:focus {
   height: 28px;
   width: 28px;
   display: inline-block;
-
   @media (max-width: $mobile) {
     height: 24px;
     width: 24px;
@@ -113,7 +112,12 @@ input.form-input.-prefixed:focus {
   .defaultLayout {
     justify-content: stretch;
     align-items: stretch;
-    height: stretch;
     max-height: 100vh;
+
+    /* The hack for Safari */
+    @supports (-webkit-touch-callout: none) {
+      //noinspection CssInvalidPropertyValue
+      max-height: -webkit-fill-available;
+    }
   }
 }

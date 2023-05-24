@@ -1,35 +1,20 @@
-/**
- * zkSync Types
- */
-import { providers } from "ethers";
-import { WalletLinkProvider } from "walletlink";
-import { Provider } from "zksync";
-import { accessorType } from "~/store";
-
-// All interfaces, mappings and specific types
-import "~/types/lib";
+import { Route } from "vue-router";
+import { accessorType } from "@/store";
+import { Analytics } from "@/plugins/analytics";
+import "@/types/lib";
 
 declare module "vue/types/vue" {
   interface Vue {
     inactive: boolean;
+    fromRoute: Route | null;
     $accessor: typeof accessorType;
+    $analytics: Analytics;
   }
 }
 
 declare module "@nuxt/types" {
   interface NuxtAppOptions {
     $accessor: typeof accessorType;
-  }
-}
-
-/**
- * @author Serge B. | Matter Labs
- * Shims-declaration of the [window.ethereum] (possibly undefined)
- */
-declare global {
-  interface Window {
-    // @ts-ignore
-    ethereum: providers.BaseProvider | providers.ExternalProvider | providers.JsonRpcFetchFunc | WalletLinkProvider | undefined;
-    syncProvider?: Provider;
+    $analytics: Analytics;
   }
 }

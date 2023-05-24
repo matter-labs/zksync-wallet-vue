@@ -1,16 +1,26 @@
 <template>
   <div class="socialIcons">
-    <a v-for="(socialProfile, numIndex) in socialNetworks" :key="numIndex" :href="socialProfile.url" class="socialItem" target="_blank">
-      <i v-if="socialProfile.icon" :class="socialProfile.icon" />
-      <div v-else-if="socialProfile.img" class="svgContainer" v-html="socialIcons[socialProfile.img]"></div>
+    <a
+      v-for="socialProfile in socialNetworks"
+      :key="socialProfile.name"
+      :href="socialProfile.url"
+      class="socialItem"
+      target="_blank"
+    >
+      <v-icon :name="socialProfile.icon" :class="[socialProfile.icon]" />
     </a>
   </div>
 </template>
 
 <script lang="ts">
-import socialIcons from "@/plugins/socialIcons";
-import { singleIcon } from "@/types/lib";
-import Vue, { PropOptions } from "vue";
+import Vue, { PropType } from "vue";
+
+type SingleIcon = {
+  name: string;
+  icon: string;
+  url: string;
+  hideIn?: string;
+};
 
 type Location = "header" | "footer";
 
@@ -18,51 +28,45 @@ export default Vue.extend({
   props: {
     location: {
       required: false,
-      type: String,
+      type: String as PropType<Location>,
       default: "header",
-    } as PropOptions<Location>,
+    },
   },
   data() {
     return {
-      socialIcons,
-    };
-  },
-  computed: {
-    socialNetworks(): singleIcon[] {
-      const socialIcons = <singleIcon[]>[
+      socialProfiles: [
         {
           name: "Medium Blog",
-          img: "medium",
-          url: "https://medium.com/matter-labs",
-        },
-        {
-          name: "Gitter Rooms",
-          img: "gitter",
-          url: "https://gitter.im/matter-labs/zksync",
+          icon: "fa-medium-m",
+          url: "https://medium.com/@RSKNews",
         },
         {
           name: "Discord Community",
-          img: "discord",
-          url: "https://discord.com/invite/px2aR7w",
+          icon: "ri-discord-fill",
+          url: "https://discord.com/invite/fPerbqcWGE",
         },
         {
           name: "Telegram Community",
-          img: "telegram",
-          url: "https://t.me/zksync",
+          icon: "fa-telegram-plane",
+          url: "https://t.me/rif_os_community",
         },
         {
           name: "Twitter Community",
-          img: "twitter",
-          url: "https://twitter.com/zksync",
+          icon: "bi-twitter",
+          url: "https://twitter.com/rif_os",
         },
         {
           name: "All Contacts",
           icon: "ri-at-line",
-          url: "https://zksync.io/contact.html",
+          url: "https://share.hsforms.com/12SzCTRAlRm61Oo2CLyBN4g1noi4",
           hideIn: "footer",
         },
-      ];
-      return socialIcons.filter((item) => !item.hideIn || item.hideIn !== this.location);
+      ] as SingleIcon[],
+    };
+  },
+  computed: {
+    socialNetworks(): SingleIcon[] {
+      return this.socialProfiles.filter((item: SingleIcon) => item?.hideIn !== this.location);
     },
   },
 });

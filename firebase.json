@@ -1,4 +1,16 @@
 {
+  "functions": {
+    "predeploy": "npm --prefix functions run build",
+    "source": "functions"
+  },
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "ui": {
+      "enabled": true
+    }
+  },
   "hosting": [
     {
       "target": "stage-mainnet",
@@ -10,83 +22,83 @@
       ],
       "rewrites": [
         {
+          "source": "/api/banxaAuth",
+          "function": "banxaAuth"
+        },
+        {
+          "source": "/api/moonpaySign",
+          "function": "moonpaySign"
+        },
+        {
+          "source": "/tunnel/mixpanel/:path*",
+          "function": "mixpanelTunnel"
+        },
+        {
+          "source": "/tunnel/sentry",
+          "function": "sentryTunnel"
+        },
+        {
           "source": "**",
           "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer, strict-origin-when-cross-origin"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1; mode=block"
+            }
+          ]
         }
       ]
     },
     {
-      "target": "dev-mainnet",
+      "target": "goerli-beta",
       "public": "public",
       "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
       ],
-      "rewrites": [
+      "redirects": [
         {
           "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=goerli-beta"
         }
       ]
     },
     {
-      "target": "prod-ropsten",
+      "target": "prod-goerli",
       "public": "public",
       "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
       ],
-      "rewrites": [
+      "redirects": [
         {
           "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    {
-      "target": "ropsten-beta",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    {
-      "target": "prod-rinkeby",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    {
-      "target": "beta-rinkeby",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "rewrites": [
-        {
-          "source": "**",
-          "destination": "/index.html"
+          "type": 301,
+          "destination": "https://wallet.zksync.io?network=goerli"
         }
       ]
     },
@@ -100,8 +112,51 @@
       ],
       "rewrites": [
         {
+          "source": "/api/banxaAuth",
+          "function": "banxaAuth"
+        },
+        {
+          "source": "/api/moonpaySign",
+          "function": "moonpaySign"
+        },
+        {
+          "source": "/tunnel/mixpanel/:path*",
+          "function": "mixpanelTunnel"
+        },
+        {
+          "source": "/tunnel/sentry",
+          "function": "sentryTunnel"
+        },
+        {
           "source": "**",
           "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "**",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache, no-store, must-revalidate"
+            },
+            {
+              "key": "Referrer-Policy",
+              "value": "no-referrer, strict-origin-when-cross-origin"
+            },
+            {
+              "key": "X-Content-Type-Options",
+              "value": "nosniff"
+            },
+            {
+              "key": "X-Frame-Options",
+              "value": "DENY"
+            },
+            {
+              "key": "X-XSS-Protection",
+              "value": "1; mode=block"
+            }
+          ]
         }
       ]
     }
