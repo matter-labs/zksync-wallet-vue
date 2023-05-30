@@ -4440,9 +4440,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rsksmart/rif-rollup-nuxt-core@https://github.com/rsksmart/rif-rollup-nuxt-core.git":
+"@rsksmart/rif-rollup-nuxt-core@git@github.com:rsksmart/rif-rollup-nuxt-core.git":
   version: 1.10.2
-  resolution: "@rsksmart/rif-rollup-nuxt-core@https://github.com/rsksmart/rif-rollup-nuxt-core.git#commit=d18162d55d32970c77ada95c74462765d556154c"
+  resolution: "@rsksmart/rif-rollup-nuxt-core@git@github.com:rsksmart/rif-rollup-nuxt-core.git#commit=d18162d55d32970c77ada95c74462765d556154c"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@walletconnect/web3-provider": ^1.8.0
@@ -4494,7 +4494,7 @@ __metadata:
     "@nuxtjs/sentry": ^5.1.7
     "@nuxtjs/style-resources": ^1.2.1
     "@ramp-network/ramp-instant-sdk": ^2.5.0
-    "@rsksmart/rif-rollup-nuxt-core": "https://github.com/rsksmart/rif-rollup-nuxt-core.git"
+    "@rsksmart/rif-rollup-nuxt-core": "git@github.com:rsksmart/rif-rollup-nuxt-core.git"
     "@semantic-release/changelog": ^6.0.1
     "@semantic-release/commit-analyzer": ^9.0.2
     "@semantic-release/exec": ^6.0.3
@@ -4524,7 +4524,7 @@ __metadata:
     semantic-release: ^19.0.2
     stylelint-config-standard-scss: ^3.0.0
     vue-qrcode: 0.4.0
-    zksync: "https://github.com/rsksmart/rif-rollup-js-sdk.git"
+    zksync: "git@github.com:rsksmart/rif-rollup-js-sdk.git"
   peerDependencies:
     "@ethersproject/hash": ^5.5.0
   dependenciesMeta:
@@ -24200,6 +24200,21 @@ __metadata:
   version: 0.6.2
   resolution: "zksync-crypto@npm:0.6.2"
   checksum: b02b4ffb76cb7ac95b57935e0f9e09b06af6ae76b5ff80d3306707867e883cdbcaa41fb6222e1da71ce5edc096d0a783139fec297ceb62a95442812f0ac45940
+  languageName: node
+  linkType: hard
+
+"zksync@git@github.com:rsksmart/rif-rollup-js-sdk.git":
+  version: 0.13.1
+  resolution: "zksync@git@github.com:rsksmart/rif-rollup-js-sdk.git#commit=7e31ed347e5b933861d57d3b64e316f986820dee"
+  dependencies:
+    axios: ^0.21.2
+    websocket: ^1.0.30
+    websocket-as-promised: ^1.1.0
+    zksync-crypto: ^0.6.1
+  peerDependencies:
+    "@ethersproject/logger": ^5.4.0
+    ethers: ^5.4.4
+  checksum: 04b2ab71d4808f4999f4361c17fb6ae9f715e59d40854db4b3cb25e375b73ece6d5a1056c866afd5a624219f154493f120632d73eb234e9822046fe0954561dd
   languageName: node
   linkType: hard
 
