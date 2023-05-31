@@ -61,7 +61,7 @@
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.1.7",
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
-    "@rsksmart/rif-rollup-nuxt-core": "https://github.com/rsksmart/rif-rollup-nuxt-core",
+    "@rsksmart/rif-rollup-nuxt-core": "git@github.com:rsksmart/rif-rollup-nuxt-core.git",
     "@web3-onboard/core": "^2.16.2",
     "blockies-ts": "1.0.0",
     "lottie-web": "^5.7.8",
@@ -72,7 +72,7 @@
     "nuxt-typed-vuex": "^0.3.0",
     "oh-vue-icons": "^0.4.7",
     "vue-qrcode": "0.4.0",
-    "zksync": "^0.13.1"
+    "zksync": "git@github.com:rsksmart/rif-rollup-js-sdk.git"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
@@ -139,7 +139,8 @@
     "generate": "nuxt generate --fail-on-error",
     "lint": "eslint --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js}",
     "lint:fix": "eslint --fix --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js} --fix",
-    "local": "sh ./cli-process-env.sh 'goerli' 'dev' 1 1",
+    "local": "sh ./cli-process-env.sh 'local' 'dev' 1 1",
+    "goerli": "sh ./cli-process-env.sh 'goerli' 'dev' 1 1",
     "postinstall": "husky install",
     "semantic-release": "semantic-release",
     "spell-check": "cspell -c cspell.json src/**/*.{ts,vue,js} *.md",
