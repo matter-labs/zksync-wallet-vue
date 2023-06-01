@@ -65,7 +65,7 @@ export default Vue.extend({
       const syncWallet: Wallet | RemoteWallet = this.$store.getters["zk-wallet/syncWallet"];
       const accountState: AccountState = this.$store.getters["zk-account/accountState"];
       const tokenAddress = this.chosenToken.address;
-      const mainZkSyncContract = syncWallet.getZkSyncMainContract();
+      const mainZkSyncContract = syncWallet.getRifRollupMainContract();
       const gasEstimate = await mainZkSyncContract.estimateGas
         .depositERC20(tokenAddress, "1000000000", this.ownAddress, {
           nonce: accountState.committed.nonce,

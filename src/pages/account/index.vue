@@ -21,7 +21,7 @@
       <div v-if="emptyBalances" class="centerBlock">
         <p class="tileText">
           No balances yet, please
-          <nuxt-link to="/account/top-up">top your wallet up</nuxt-link>
+          <nuxt-link to="/transaction/deposit">top your wallet up</nuxt-link>
           or <a href="#" @click.prevent="openAccountModal">share your zk-address</a> to receive a transfer from someone!
         </p>
         <i-button
@@ -29,10 +29,10 @@
           class="_margin-top-1"
           data-cy="account_deposit_button"
           size="lg"
-          to="/account/top-up"
+          to="/transaction/deposit"
           variant="secondary"
         >
-          <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top&nbsp;up
+          <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Deposit&nbsp;
         </i-button>
       </div>
       <div v-else class="balances">
@@ -43,10 +43,10 @@
               class="_margin-y-0 _margin-right-1 _padding-right-2"
               data-cy="account_deposit_button"
               size="md"
-              to="/account/top-up"
+              to="/transaction/deposit"
               variant="secondary"
             >
-              <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Top&nbsp;up
+              <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Deposit
             </i-button>
             <i-button
               block

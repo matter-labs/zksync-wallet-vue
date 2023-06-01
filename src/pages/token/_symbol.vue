@@ -60,7 +60,7 @@
             size="sm"
             variant="secondary"
             :to="`/transaction/withdraw?token=${symbol}`"
-            >Send to Ethereum (L1)
+            >Send to Rootstock (L1)
           </i-button>
         </div>
         <i-button

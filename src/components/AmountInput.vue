@@ -104,8 +104,8 @@ export default Vue.extend({
       return BigNumber.from("0");
     },
     amountInputMaxText(): string {
-      if (this.type === "Deposit" && this.token === "ETH") {
-        return "ETH balance";
+      if (this.type === "Deposit" && this.token === "RBTC") {
+        return "RBTC balance";
       } else {
         return "Max";
       }

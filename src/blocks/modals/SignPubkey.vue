@@ -35,7 +35,7 @@
 
       <!-- Requesting signer -->
       <div v-if="requestingSigner" class="_text-center _margin-top-1" data-cy="requesting_signer_text">
-        Follow the instructions in your Ethereum wallet
+        Follow the instructions in your Rootstock wallet
       </div>
 
       <div v-if="error" class="errorText _text-center _margin-top-1">

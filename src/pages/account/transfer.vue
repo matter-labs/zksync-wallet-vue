@@ -10,23 +10,10 @@
       <section class="tileSubContainer">
         <h4 class="tileSmallHeadline">Transfer</h4>
         <div class="secondaryText small _margin-bottom-05">
-          You can send your assets within the zkSync lite network or send them to Ethereum
+          You can send your assets within the zkSync lite network or send them to Rootstock
           <span class="networkName">{{ network }}</span> network
         </div>
         <TransferProviders :providers="['zksync', 'ethereum']" />
-      </section>
-      <div class="orDivider">
-        <div class="line"></div>
-        <div class="orText">or</div>
-        <div class="line"></div>
-      </div>
-      <section class="tileSubContainer">
-        <h4 class="tileSmallHeadline">Sell Crypto for Fiat</h4>
-        <div class="secondaryText small _margin-bottom-05">
-          You can sell your assets on the zkSync lite network with our partners, and get a payout to your bank account.
-          Just finish the KYC process
-        </div>
-        <TransferProviders :providers="['banxa']" />
       </section>
     </div>
   </div>

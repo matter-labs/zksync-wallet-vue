@@ -15,7 +15,7 @@
         </span>
         <span class="env-details">
           <v-icon name="ri-reserved-fill" />
-          Ethereum env
+          Rootstock env
           <code class="_padding-y-0" data-cy="environment_details_network">{{ config.ethereumNetwork.name }}</code>
         </span>
       </template>

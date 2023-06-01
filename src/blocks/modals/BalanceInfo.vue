@@ -2,23 +2,23 @@
   <i-modal v-model="opened" size="md">
     <template #header>zkSync is a Layer-2 protocol</template>
     <p>
-      Your zkSync lite balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
+      Your RIF Rollup balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
       <a
-        :href="`https://${etherscanDomain}/address/${$store.getters['zk-account/address']}`"
+        :href="`https://${rskDomain}/address/${$store.getters['zk-account/address']}`"
         rel="noopener noreferrer"
         target="_blank"
-        >{{ etherscanDomain }}</a
+        >{{ rskDomain }}</a
       >
-      or in your Ethereum wallet, only in zkSync lite wallet and block explorer. Nevertheless, balances in zkSync lite
-      are as secure as if though they were in L1 (the Ethereum mainnet).
+      or in your Rootstock wallet, only in RIF Rollup wallet and block explorer. Nevertheless, balances in RIF Rollup
+      are as secure as if though they were in L1 (the Rootstock mainnet).
       <a href="https://docs.zksync.io/userdocs/security.html" rel="noopener noreferrer" target="_blank">Learn more.</a>
     </p>
     <p>
-      You can move your balances <b>from L1</b> into zkSync lite by making a
+      You can move your balances <b>from L1</b> into RIF Rollup by making a
       <nuxt-link class="logoLinkContainer" to="/transaction/deposit">Deposit</nuxt-link>
     </p>
     <p>
-      To move them back from zkSync lite <b>to L1</b> you can make a
+      To move them back from RIF Rollup <b>to L1</b> you can make a
       <nuxt-link class="logoLinkContainer" to="/transaction/withdraw">Withdraw</nuxt-link>
     </p>
   </i-modal>
@@ -41,7 +41,7 @@ export default Vue.extend({
         return this.$accessor.currentModal !== null && this.$accessor.currentModal === "BalanceInfo";
       },
     },
-    etherscanDomain(): string {
+    rskDomain(): string {
       const network: Network = this.$store.getters["zk-provider/network"];
       switch (network) {
         case "localhost":
@@ -49,7 +49,7 @@ export default Vue.extend({
           return "goerli.etherscan.io";
         case "mainnet":
         default:
-          return "etherscan.io";
+          return "explorer.rsk.co";
       }
     },
   },

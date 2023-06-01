@@ -64,7 +64,7 @@ export default Vue.extend({
         case "awaitingUserAction":
           return "Waiting for your action...";
         case "waitingForUserConfirmation":
-          return "Follow the instructions in your Ethereum wallet";
+          return "Follow the instructions in your wallet";
         case "committing":
           return "Waiting for the transaction to be committed...";
         case "updating":

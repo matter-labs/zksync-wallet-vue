@@ -38,7 +38,7 @@ export default Vue.extend({
         {
           name: "Medium Blog",
           icon: "fa-medium-m",
-          url: "https://medium.com/@RSKNews",
+          url: "https://medium.com/@RootstockNews",
         },
         {
           name: "Discord Community",

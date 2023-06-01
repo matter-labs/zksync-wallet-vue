@@ -62,7 +62,7 @@
         class="linkText"
         @click.passive="$analytics.track('view_transaction_in_blockexplorer')"
       >
-        Ethereum Transaction
+        Rootstock Transaction
         <v-icon name="ri-external-link-line" scale="0.8" />
       </a>
     </div>

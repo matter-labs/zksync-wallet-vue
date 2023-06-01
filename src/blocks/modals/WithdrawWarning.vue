@@ -1,9 +1,9 @@
 <template>
   <i-modal v-model="opened" data-cy="send_l1_understand_modal" size="md">
-    <template #header>Sending to Ethereum L1</template>
+    <template #header>Sending to Rootstock L1</template>
     <div>
       <div class="_padding-bottom-1">
-        <div class="_padding-bottom-1">You are about to send funds to Ethereum L1.</div>
+        <div class="_padding-bottom-1">You are about to send funds to Rootstock L1.</div>
         <ul class="_padding-left-1">
           <li>To prevent loss of funds, please verify that the recipient supports smart contract transactions.</li>
           <li>Once sent, you will see your funds on L1 between 30 min and 7 hours.</li>

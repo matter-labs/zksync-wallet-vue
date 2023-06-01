@@ -13,7 +13,7 @@
     </div>
     <div class="modalFooterBtn">
       <v-icon name="ri-reserved-fill" />
-      <span>Ethereum env:</span>
+      <span>Rootstock env:</span>
       <strong>{{ netName }}</strong>
     </div>
   </i-modal>
