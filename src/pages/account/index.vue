@@ -142,7 +142,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { AccountState as WalletAccountState, TokenInfo } from "zksync/build/types";
+import { AccountState as WalletAccountState, TokenInfo } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { ZkTokenBalances } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { searchByKey } from "@rsksmart/rif-rollup-nuxt-core/utils";
 import BlockModalsBalanceInfo from "@/blocks/modals/BalanceInfo.vue";

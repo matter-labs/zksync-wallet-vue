@@ -1,7 +1,7 @@
 import { NuxtConfig } from "@nuxt/types";
 import { NuxtOptionsBuild } from "@nuxt/types/config/build";
 import { NuxtOptionsEnv } from "@nuxt/types/config/env";
-import { version as zkSyncVersion } from "zksync/package.json";
+import { version as zkSyncVersion } from "@rsksmart/rif-rollup-js-sdk/package.json";
 
 import { ModuleOptions } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { Configuration } from "webpack";

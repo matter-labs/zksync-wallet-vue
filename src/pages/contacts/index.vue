@@ -116,7 +116,7 @@ import Vue from "vue";
 import { getAddress } from "ethers/lib/utils";
 import { ZkContact, ZkContacts } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { copyToClipboard, searchInObject } from "@rsksmart/rif-rollup-nuxt-core/utils";
-import { Address } from "zksync/build/types";
+import { Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 
 export default Vue.extend({
   data() {

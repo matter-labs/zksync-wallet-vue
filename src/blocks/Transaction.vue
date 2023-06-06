@@ -271,7 +271,7 @@
 import Vue from "vue";
 import { RawLocation } from "vue-router/types";
 import { BigNumber } from "@ethersproject/bignumber";
-import { Address, TokenLike, Tokens, TokenSymbol } from "zksync/build/types";
+import { Address, TokenLike, Tokens, TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import {
   ZkActiveTransaction,
   ZkCPKStatus,
@@ -281,7 +281,7 @@ import {
   ZkTransactionType,
 } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { getAddress } from "@ethersproject/address";
-import { RestProvider } from "zksync";
+import { RestProvider } from "@rsksmart/rif-rollup-js-sdk";
 import { warningCanceledKey } from "@/blocks/modals/TransferWarning.vue";
 import { DO_NOT_SHOW_WITHDRAW_WARNING_KEY } from "@/blocks/modals/WithdrawWarning.vue";
 

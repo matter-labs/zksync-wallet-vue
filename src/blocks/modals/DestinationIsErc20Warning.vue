@@ -19,7 +19,7 @@
 import { ZkTransactionType } from "@rsksmart/rif-rollup-nuxt-core/types";
 import Vue, { PropOptions } from "vue";
 
-import { Address, Tokens } from "zksync/build/types";
+import { Address, Tokens } from "@rsksmart/rif-rollup-js-sdk/build/types";
 
 export const warningCanceledKey = "canceledDestinationIsERC20Warning";
 export default Vue.extend({

@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Address } from "zksync/build/types";
+import { Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { ZkEthereumNetworkName } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export default Vue.extend({

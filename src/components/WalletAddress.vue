@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { Address } from "zksync/build/types";
+import { Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { copyToClipboard } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
 export default Vue.extend({

@@ -61,6 +61,7 @@
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.1.7",
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
+    "@rsksmart/rif-rollup-js-sdk": "^0.13.1-alpha",
     "@rsksmart/rif-rollup-nuxt-core": "git+ssh://git@github.com:rsksmart/rif-rollup-nuxt-core.git",
     "@web3-onboard/core": "^2.16.2",
     "blockies-ts": "1.0.0",
@@ -71,8 +72,7 @@
     "nuxt": "^2.15.8",
     "nuxt-typed-vuex": "^0.3.0",
     "oh-vue-icons": "^0.4.7",
-    "vue-qrcode": "0.4.0",
-    "zksync": "git+ssh://git@github.com:rsksmart/rif-rollup-js-sdk.git"
+    "vue-qrcode": "0.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.3",
@@ -152,7 +152,7 @@
       "@commitlint/config-conventional"
     ]
   },
-  "packageManager": "yarn@3.1.1",
+  "packageManager": "yarn@3.5.1",
   "peerDependencies": {
     "@ethersproject/hash": "^5.5.0"
   },

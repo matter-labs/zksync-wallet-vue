@@ -51,8 +51,8 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { TokenSymbol } from "zksync/build/types";
-import { isTransactionAmountPackable } from "zksync/build/utils";
+import { TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
+import { isTransactionAmountPackable } from "@rsksmart/rif-rollup-js-sdk/build/utils";
 import { DecimalBalance, ZkTransactionType } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 export default Vue.extend({
