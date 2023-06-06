@@ -12,6 +12,7 @@
       </i-row>
       <i-row center class="_text-nowrap _align-items-center _margin-0">
         <i-button
+          id="btn-switch-network"
           size="md"
           circle
           class="_margin-right-1 _hidden-sm-and-down"
@@ -23,6 +24,7 @@
           <v-icon name="co-ethereum" />
         </i-button>
         <i-button
+          id="btn-switch-theme"
           size="md"
           circle
           class="floating-on-mobile _hidden-sm-and-down"
