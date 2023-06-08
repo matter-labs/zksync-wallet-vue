@@ -13,7 +13,7 @@ Blue="\033[0;34m"    # Blue
 BBlue="\033[1;34m"   # Bold Blue
 
 if [ -z $NETWORK ]; then
-  NETWORK="goerli"
+  NETWORK="testnet"
 fi
 
 if [ -z $ENV_VALUE ]; then

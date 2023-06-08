@@ -11,7 +11,6 @@
       >
       or in your Rootstock wallet, only in RIF Rollup wallet and block explorer. Nevertheless, balances in RIF Rollup
       are as secure as if though they were in L1 (the Rootstock mainnet).
-      <a href="https://docs.zksync.io/userdocs/security.html" rel="noopener noreferrer" target="_blank">Learn more.</a>
     </p>
     <p>
       You can move your balances <b>from L1</b> into RIF Rollup by making a
@@ -46,7 +45,7 @@ export default Vue.extend({
       switch (network) {
         case "localhost":
         case "testnet":
-          return "goerli.etherscan.io";
+          return "explorer.testnet.rsk.co";
         case "mainnet":
         default:
           return "explorer.rsk.co";
