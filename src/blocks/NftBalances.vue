@@ -119,7 +119,7 @@
 import Vue from "vue";
 import { copyToClipboard, searchByKey } from "@rsksmart/rif-rollup-nuxt-core/utils";
 import { ZkNFTBalances } from "@rsksmart/rif-rollup-nuxt-core/types";
-import { Address } from "zksync/build/types";
+import { Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { getCIDFromContentHash } from "@/utils/nft";
 import { NFTItem } from "@/store/nfts";
 

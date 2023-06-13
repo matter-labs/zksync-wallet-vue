@@ -40,7 +40,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { ApiTransaction } from "zksync/build/types";
+import { ApiTransaction } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { ZkTransactionHistoryLoadingState } from "@rsksmart/rif-rollup-nuxt-core/types";
 
 let updateListInterval: ReturnType<typeof setInterval>;

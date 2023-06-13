@@ -100,7 +100,7 @@ import {
   ZkTransactionMainToken,
 } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { BigNumberish } from "@ethersproject/bignumber";
-import { Tokens } from "zksync/build/types";
+import { Tokens } from "@rsksmart/rif-rollup-js-sdk/build/types";
 
 export default Vue.extend({
   props: {

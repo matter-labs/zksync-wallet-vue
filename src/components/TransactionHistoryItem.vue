@@ -79,12 +79,12 @@
 </template>
 
 <script lang="ts">
-import { utils } from "zksync";
+import { utils } from "@rsksmart/rif-rollup-js-sdk";
 
 import moment from "moment-timezone";
 import Vue, { PropOptions } from "vue";
 import { BigNumberish } from "@ethersproject/bignumber";
-import { Address, ApiTransaction, TokenSymbol } from "zksync/build/types";
+import { Address, ApiTransaction, TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { Token, ZkConfig, ZkContact } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { copyToClipboard } from "@rsksmart/rif-rollup-nuxt-core/utils";
 import { getAddress } from "ethers/lib/utils";

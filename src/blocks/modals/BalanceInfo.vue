@@ -26,7 +26,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Network } from "zksync/build/types";
+import { Network } from "@rsksmart/rif-rollup-js-sdk/build/types";
 
 export default Vue.extend({
   name: "BlockModalsBalanceInfo",

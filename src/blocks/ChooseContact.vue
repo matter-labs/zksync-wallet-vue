@@ -106,7 +106,7 @@
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
 import { getAddress } from "ethers/lib/utils";
-import { Address } from "zksync/build/types";
+import { Address } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { ZkContact, ZkContacts } from "@rsksmart/rif-rollup-nuxt-core/types";
 import { searchInObject } from "@rsksmart/rif-rollup-nuxt-core/utils";
 

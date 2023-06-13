@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import Vue, { PropOptions } from "vue";
-import { Address, TokenSymbol } from "zksync/build/types";
+import { Address, TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
 import { validateAddress } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
 export default Vue.extend({

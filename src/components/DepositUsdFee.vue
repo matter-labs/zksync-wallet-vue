@@ -18,10 +18,10 @@ import {
   ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT,
   ERC20_DEPOSIT_GAS_LIMIT,
   ERC20_RECOMMENDED_DEPOSIT_GAS_LIMIT,
-} from "zksync/build/utils";
+} from "@rsksmart/rif-rollup-js-sdk/build/utils";
 import { Token } from "@rsksmart/rif-rollup-nuxt-core/types";
-import { AccountState, Address, Tokens, TokenSymbol } from "zksync/build/types";
-import { RemoteWallet, Wallet } from "zksync";
+import { AccountState, Address, Tokens, TokenSymbol } from "@rsksmart/rif-rollup-js-sdk/build/types";
+import { RemoteWallet, Wallet } from "@rsksmart/rif-rollup-js-sdk";
 
 export default Vue.extend({
   data() {
