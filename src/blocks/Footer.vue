@@ -62,8 +62,7 @@ export default Vue.extend({
   },
   computed: {
     blockExplorerLink(): string {
-      // return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
-      return "https://explorer.dev.aggregation.rifcomputing.net/";
+      return this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer;
     },
     isDarkTheme(): boolean {
       return this.theme === "dark";

@@ -1,8 +1,8 @@
 <template>
   <div @click="proceed">
     <label>
-      <span>Transfer to zkSync lite</span>
-      <img src="/images/logo-no-letters.svg" alt="zkSync Transfer" />
+      <span>Transfer to RIF Rollup</span>
+      <img src="/images/logo-no-letters.svg" alt="rif rollup Transfer" />
     </label>
   </div>
 </template>
