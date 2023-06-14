@@ -4,6 +4,7 @@
       <template #header>Rename wallet</template>
       <div>
         <i-input
+          id="txt-rename-wallet"
           ref="nameInput"
           v-model="walletName"
           size="lg"
@@ -13,6 +14,7 @@
           @keyup.enter="renameWallet()"
         />
         <i-button
+          id="btn-confirm-rename-wallet"
           block
           size="lg"
           variant="secondary"
@@ -34,6 +36,7 @@
       </div>
       <template #footer>
         <a
+          id="btn-view-in-blockexplorer-account"
           class="modalFooterBtn"
           :href="accountZkScanUrl"
           target="_blank"
@@ -42,11 +45,11 @@
           <v-icon name="ri-external-link-line" />
           <span>View in block explorer</span>
         </a>
-        <div class="modalFooterBtn" @click="renameWalletOpen">
+        <div id="btn-rename-wallet" class="modalFooterBtn" @click="renameWalletOpen">
           <v-icon name="ri-pencil-line" />
           <span>Rename wallet</span>
         </div>
-        <div class="modalFooterBtn" @click="logout()">
+        <div id="btn-disconnect-wallet" class="modalFooterBtn" @click="logout()">
           <v-icon name="ri-link-unlink-m" />
           <span>Disconnect wallet</span>
         </div>

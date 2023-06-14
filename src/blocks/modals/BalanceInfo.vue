@@ -1,6 +1,6 @@
 <template>
   <i-modal v-model="opened" size="md">
-    <template #header>zkSync is a Layer-2 protocol</template>
+    <template #header>RIF Rollup is a Layer-2 protocol</template>
     <p>
       Your RIF Rollup balances live in a separate space called Layer-2 (L2 for short). You won’t see them on
       <a

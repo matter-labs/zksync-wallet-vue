@@ -25,6 +25,7 @@
           or <a href="#" @click.prevent="openAccountModal">share your zk-address</a> to receive a transfer from someone!
         </p>
         <i-button
+          id="btn-account-deposit-empty-balances"
           block
           class="_margin-top-1"
           data-cy="account_deposit_button"
@@ -39,6 +40,7 @@
         <template v-if="!showLoader">
           <div class="_display-flex _justify-content-space-between balancesButtonGroup _margin-y-1">
             <i-button
+              id="btn-account-deposit"
               block
               class="_margin-y-0 _margin-right-1 _padding-right-2"
               data-cy="account_deposit_button"
@@ -49,6 +51,7 @@
               <v-icon class="planeIcon" name="ri-add-fill" />&nbsp;Deposit
             </i-button>
             <i-button
+              id="btn-account-transfer"
               block
               class="_margin-y-0 _padding-right-1 _margin-right-1"
               data-cy="account_send_zksync_button"
@@ -59,6 +62,7 @@
               <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
             </i-button>
             <i-button
+              id="btn-account-swap"
               :disabled="!zigZagLink"
               :href="zigZagLink"
               block
@@ -73,7 +77,14 @@
             </i-button>
           </div>
 
-          <i-input ref="searchInput" v-model="search" autofocus maxlength="6" placeholder="Filter tokens">
+          <i-input
+            id="txt-search-filter-tokens"
+            ref="searchInput"
+            v-model="search"
+            autofocus
+            maxlength="6"
+            placeholder="Filter tokens"
+          >
             <template #prefix>
               <v-icon name="ri-search-line" />
             </template>

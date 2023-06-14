@@ -33,7 +33,7 @@
         </i-column>
         <i-column :xs="6" :md="3" class="_margin-left-auto _padding-right-0 _display-flex _justify-content-end">
           <div class="linksContainer">
-            <div class="userDropdown" @click="togglePopup">
+            <div id="btn-toggle-user-dropdown" class="userDropdown" @click="togglePopup">
               <div class="userDropdownAddress">
                 <div class="walletLabel">Wallet</div>
                 <div class="userAddress">

@@ -19,7 +19,12 @@
         Now you can proceed to deposit.
       </template>
     </p>
-    <a v-if="txLink" :href="txLink" class="_display-block _text-center _margin-top-1" target="_blank"
+    <a
+      v-if="txLink"
+      id="btn-link-to-transaction"
+      :href="txLink"
+      class="_display-block _text-center _margin-top-1"
+      target="_blank"
       >Link to the transaction
       <v-icon name="ri-external-link-line"></v-icon>
     </a>

@@ -12,6 +12,7 @@
       <template #append>
         <i-button
           v-if="!token"
+          id="btn-token-select"
           data-cy="amount_block_token_select_button"
           block
           link
@@ -22,6 +23,7 @@
         </i-button>
         <i-button
           v-else
+          id="btn-token-select"
           data-cy="amount_block_token_select_button"
           block
           class="selectedTokenBtn"

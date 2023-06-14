@@ -18,7 +18,12 @@
             </i>
           </template>
         </i-input>
-        <div class="updateBtn" :class="{ disabled: secondaryLoading }" @click="updateBalances()">
+        <div
+          id="btn-update-balances"
+          class="updateBtn"
+          :class="{ disabled: secondaryLoading }"
+          @click="updateBalances()"
+        >
           <i-tooltip placement="left">
             <v-icon v-if="secondaryLoading" name="ri-loader-5-line" class="spin-animation" />
             <v-icon v-else name="ri-restart-line" />
@@ -29,6 +34,7 @@
       <div class="tokenListContainer genericListContainer _margin-top-05">
         <template v-for="(balance, symbolOrID) in displayedList">
           <div
+            :id="`btn-token-item-${symbolOrID}`"
             :key="symbolOrID"
             class="tokenItem"
             :class="{ disabled: feeAcceptable && !allowedFeeTokens[symbolOrID] }"
@@ -62,6 +68,7 @@
       </div>
       <template v-if="tokensType !== 'L2-NFT'">
         <i-button
+          id="btn-cant-find-token"
           block
           class="_margin-top-1"
           link
@@ -75,6 +82,7 @@
       </template>
       <template v-else>
         <i-button
+          id="btn-cant-find-token"
           block
           class="_margin-top-1"
           link

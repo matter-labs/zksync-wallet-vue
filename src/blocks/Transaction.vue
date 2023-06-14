@@ -45,7 +45,7 @@
 
         <template v-if="isDeposit">
           <div v-if="!isMainnet" class="_padding-0 _display-flex _justify-content-end">
-            <i-button class="_padding-y-0 _margin-top-05" link to="/transaction/mint">
+            <i-button id="btn-mint-deposit" class="_padding-y-0 _margin-top-05" link to="/transaction/mint">
               Mint tokens
               <v-icon name="ri-add-fill" scale="0.75" />
             </i-button>
@@ -56,6 +56,7 @@
       <template v-if="type === 'Transfer'">
         <div class="_padding-0 _display-flex _justify-content-end">
           <i-button
+            id="btn-withdraw-l1"
             class="_padding-y-0 send-link"
             data-cy="send_send_l1_button"
             link

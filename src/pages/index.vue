@@ -3,7 +3,12 @@
     <i-container>
       <h1>Connect your L1 Rootstock Wallet to start</h1>
       <div class="container-fluid _flex-direction-row _display-flex connections">
-        <button data-cy="core_connect_wallet_button" class="tileContainer _text-center" @click="customWallet()">
+        <button
+          id="btn-core-connect-wallet"
+          data-cy="core_connect_wallet_button"
+          class="tileContainer _text-center"
+          @click="customWallet()"
+        >
           <div class="tile">
             <img src="/images/wallets/external.png" alt="External" />
           </div>
