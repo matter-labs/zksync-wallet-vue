@@ -135,11 +135,13 @@
     "ci:prepare:mainnet": "sh cli-process-env.sh 'mainnet' prod 1",
     "ci:prepare:goerli": "sh cli-process-env.sh 'goerli' prod 1",
     "dev": "yarn local && nuxt",
+    "dev-testnet": "yarn testnet && nuxt",
     "format": "prettier -w --ignore-path .eslintignore **/*.{ts,vue,ks}",
     "generate": "nuxt generate --fail-on-error",
     "lint": "eslint --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js}",
     "lint:fix": "eslint --fix --config .eslintrc.js --ignore-path .eslintignore src/**/*.{ts,vue,js} --fix",
     "local": "sh ./cli-process-env.sh 'local' 'dev' 1 1",
+    "testnet": "sh ./cli-process-env.sh 'testnet' 'dev' 1 1",
     "goerli": "sh ./cli-process-env.sh 'goerli' 'dev' 1 1",
     "postinstall": "husky install",
     "semantic-release": "semantic-release",
@@ -152,7 +154,7 @@
       "@commitlint/config-conventional"
     ]
   },
-  "packageManager": "yarn@3.1.1",
+  "packageManager": "yarn@3.5.1",
   "peerDependencies": {
     "@ethersproject/hash": "^5.5.0"
   },
