@@ -1,0 +1,45 @@
+name: CICD for Testnet 
+
+on:
+  push:
+    branches: [develop, DEVOPS-1703/add-deploy-workflow]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: DEV
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.DEV_AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.DEV_AWS_REGION }}
+
+    - name: Setup Node 16
+      uses: actions/setup-node@v1
+      with:
+        node-version: '16.20.0'
+
+    - name: Set yarn version
+      run: yarn set version 3.1.1
+    
+    - name: Install dependencies
+      run: |
+        yarn install
+
+    - name: Build site
+      run: |
+        yarn ci:build:testnet
+
+    - name: Deploy site to S3
+      run: |
+        aws s3 sync --delete --only-show-errors public/ ${{ secrets.DEV_S3_BUCKET }}
+
+    - name: Invalidate CloudFront cache
+      run: |
+        aws cloudfront create-invalidation --distribution-id ${{ secrets.DEV_CLOUDFRONT_DISTRIBUTION }} --paths "/*"
