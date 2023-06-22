@@ -65,7 +65,7 @@ export default Vue.extend({
 
       try {
         this.loading = true;
-        const availableZksyncCurrencies = ["ETH_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC", "USDT_ZKSYNC"];
+        const availableZksyncCurrencies = ["RBTC_ZKSYNC", "USDC_ZKSYNC", "DAI_ZKSYNC", "USDT_ZKSYNC"];
         const url = `${moonpayConfig.url}?apiKey=${moonpayConfig.apiPublicKey}&walletAddresses=${encodeURIComponent(
           JSON.stringify(
             Object.fromEntries(availableZksyncCurrencies.map((currency) => [currency.toLowerCase(), this.address]))

@@ -3,7 +3,7 @@
     <b>Fee:</b>
     <span v-if="depositFeeLoading">Loading...</span>
     <span v-else-if="depositFee && !depositFeeLoading">
-      <token-price symbol="ETH" :amount="depositFee" />
+      <token-price symbol="RBTC" :amount="depositFee" />
     </span>
     <span v-else class="errorText"
       >Calculating fee error. <u class="_cursor-pointer" @click="getEstimatedDepositFee()">Try Again</u></span
@@ -15,7 +15,7 @@
 import Vue from "vue";
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import {
-  ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT,
+  RBTC_RECOMMENDED_DEPOSIT_GAS_LIMIT,
   ERC20_DEPOSIT_GAS_LIMIT,
   ERC20_RECOMMENDED_DEPOSIT_GAS_LIMIT,
 } from "@rsksmart/rif-rollup-js-sdk/build/utils";
@@ -82,13 +82,13 @@ export default Vue.extend({
       const gasLimit = gasEstimate.gte(recommendedGasLimit) ? gasEstimate : recommendedGasLimit;
       return this.gasPrice?.mul(gasLimit).toString();
     },
-    getETHDepositFee() {
-      const total = BigNumber.from(ETH_RECOMMENDED_DEPOSIT_GAS_LIMIT);
+    getRBTCDepositFee() {
+      const total = BigNumber.from(RBTC_RECOMMENDED_DEPOSIT_GAS_LIMIT);
       return this.gasPrice?.mul(total).toString();
     },
     async getEstimatedDepositFee(): Promise<void> {
       try {
-        const currentToken = !this.chosenToken ? "ETH" : this.chosenToken.symbol;
+        const currentToken = !this.chosenToken ? "RBTC" : this.chosenToken.symbol;
         if (this.latestRequested === currentToken) {
           return;
         }
@@ -97,8 +97,8 @@ export default Vue.extend({
         if (!this.gasPrice) {
           this.gasPrice = await this.$store.getters["zk-onboard/web3Provider"].getGasPrice();
         }
-        if (currentToken === "ETH") {
-          this.depositFee = this.getETHDepositFee();
+        if (currentToken === "RBTC") {
+          this.depositFee = this.getRBTCDepositFee();
         } else {
           this.depositFee = await this.getSelectedERC20DepositFee();
         }

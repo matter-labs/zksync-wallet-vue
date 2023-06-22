@@ -5,17 +5,17 @@
 
 ## Description
 
-RIF Rollup Wallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features. [Learn more](https://zksync.io/)
+RIF Rollup Wallet was created to unleash the power of RIF Rollup L2 operations and give everyone the access to L2 RIF Rollup features. [Learn more](https://www.rifos.org/solutions/#rollup)
 
 ---
 
 ## Build Setup
 
 ``` bash
-# install dependencies && populate .env file as of GOERLI connection (clear install)
-$ yarn ci:clear
+# install dependencies 
+$ yarn install
 
-# serve with hot reload at localhost:3000 [goerli]
+# serve with hot reload at localhost:3000 [localhost]
 $ yarn dev
 ```
 
@@ -33,7 +33,7 @@ See the latest changes [here](https://github.com/matter-labs/zksync-wallet-vue/b
 ## Solutions used
 
 - [Nuxt.js](https://nuxtjs.org)
-- [Rollup zkSync.io](https://zksync.io)
+- [Rollup](https://www.rifos.org/solutions/#rollup)
 - [prettier.js](https://prettier.io)
 - [eslint.js](https://eslint.org/)
 - [Vue.js](https://vuejs.org)

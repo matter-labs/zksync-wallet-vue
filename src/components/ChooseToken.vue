@@ -157,7 +157,7 @@ export default Vue.extend({
         return {};
       }
       return Object.fromEntries(
-        Object.entries(this.zkTokens ? this.zkTokens : {}).filter(([symbol]) => symbol !== "ETH")
+        Object.entries(this.zkTokens ? this.zkTokens : {}).filter(([symbol]) => symbol !== "RBTC")
       );
     },
     zkBalances(): ZkTokenBalances {

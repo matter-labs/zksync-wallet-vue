@@ -45,7 +45,7 @@ export default Vue.extend({
     token: {
       type: String,
       required: false,
-      default: "ETH",
+      default: "RBTC",
     } as PropOptions<TokenSymbol>,
   },
   data() {

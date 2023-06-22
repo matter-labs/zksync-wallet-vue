@@ -120,7 +120,7 @@ export default Vue.extend({
       return this.$store.getters["zk-account/accountStateLoading"];
     },
     displayTokenTooltip(): boolean {
-      return !this.zkTokensLoading && this.token && this.symbol !== "ETH";
+      return !this.zkTokensLoading && this.token && this.symbol !== "RBTC";
     },
     blockExplorerLink(): string {
       return this.$store.getters["zk-onboard/config"].ethereumNetwork.explorer;

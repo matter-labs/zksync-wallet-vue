@@ -61,7 +61,7 @@
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.1.7",
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
-    "@rsksmart/rif-rollup-js-sdk": "^0.13.1-alpha",
+    "@rsksmart/rif-rollup-js-sdk": "^0.13.3-alpha",
     "@rsksmart/rif-rollup-nuxt-core": "^1.0.2",
     "@web3-onboard/core": "^2.16.2",
     "blockies-ts": "1.0.0",
