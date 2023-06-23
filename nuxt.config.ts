@@ -296,6 +296,7 @@ const config = <NuxtConfig>{
     parallel: isProduction,
     babel: {
       compact: true,
+      plugins: ["@babel/plugin-proposal-optional-chaining", "@babel/plugin-proposal-nullish-coalescing-operator"],
     },
     postcss: {
       plugins: {
@@ -319,6 +320,22 @@ const config = <NuxtConfig>{
     },
     transpile: ["oh-vue-icons", "@inkline/inkline", "iconsPlugin", "filtersPlugin", "restoreSessionPlugin"],
     extend: (config: Configuration) => {
+      config.module!.rules.push({
+        test: /\.m?js$/,
+        include: [
+          /node_modules[\\/]@walletconnect/,
+          /node_modules[\\/]@web3modal[\\/]core/,
+          /node_modules[\\/]@web3modal[\\/]ui/,
+        ],
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: ["@babel/preset-env"],
+            plugins: ["@babel/plugin-proposal-optional-chaining", "@babel/plugin-proposal-nullish-coalescing-operator"],
+          },
+        },
+      });
+
       config.node = {
         fs: "empty",
       };
