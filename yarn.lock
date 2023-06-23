@@ -4440,9 +4440,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rsksmart/rif-rollup-js-sdk@npm:^0.13.1-alpha":
-  version: 0.13.1-alpha
-  resolution: "@rsksmart/rif-rollup-js-sdk@npm:0.13.1-alpha"
+"@rsksmart/rif-rollup-js-sdk@npm:^0.13.4-alpha":
+  version: 0.13.4-alpha
+  resolution: "@rsksmart/rif-rollup-js-sdk@npm:0.13.4-alpha"
   dependencies:
     axios: ^0.21.2
     websocket: ^1.0.30
@@ -4451,31 +4451,16 @@ __metadata:
   peerDependencies:
     "@ethersproject/logger": ^5.4.0
     ethers: ^5.4.4
-  checksum: a253124e0a91a50c29c9401047091f68c1bdbe2a07cb4f12159b409152f021fe49ca3f0179a39e39ae94d06488fb78735c813b98f29a609dda46d6df4a8f1883
+  checksum: 633d00f1546cd5a2aa1d7932e2b062fd24fb7e6cf4f2016456160340d1c5ace8e555d9218794cdbbfe1bb9a571fe851bc00ca3c6fbdc683717bdd37c8dd13334
   languageName: node
   linkType: hard
 
-"@rsksmart/rif-rollup-js-sdk@npm:^0.13.3-alpha":
-  version: 0.13.3-alpha
-  resolution: "@rsksmart/rif-rollup-js-sdk@npm:0.13.3-alpha"
-  dependencies:
-    axios: ^0.21.2
-    websocket: ^1.0.30
-    websocket-as-promised: ^1.1.0
-    zksync-crypto: ^0.6.1
-  peerDependencies:
-    "@ethersproject/logger": ^5.4.0
-    ethers: ^5.4.4
-  checksum: 5457c0d1e3b7c507822ecc0ad202209ec2f97cb3846643c77a30eefcf9917007cdd257553b50eb2e43e5f4ff5bda03bce63962621e0d82b075c04361b41ceaa6
-  languageName: node
-  linkType: hard
-
-"@rsksmart/rif-rollup-nuxt-core@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "@rsksmart/rif-rollup-nuxt-core@npm:1.0.2"
+"@rsksmart/rif-rollup-nuxt-core@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@rsksmart/rif-rollup-nuxt-core@npm:1.0.3"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
-    "@rsksmart/rif-rollup-js-sdk": ^0.13.1-alpha
+    "@rsksmart/rif-rollup-js-sdk": ^0.13.4-alpha
     "@walletconnect/web3-provider": ^1.8.0
     "@web3-onboard/coinbase": ^2.2.0
     "@web3-onboard/core": ^2.16.2
@@ -4499,7 +4484,7 @@ __metadata:
     nuxt: ^2.15.3
     ts-node: ^9.1.1
     web3: ^1.5.3
-  checksum: 4ec3a4399188af1f63f98f77bd0651be2bc64b52a0f0c5777f5aeac6b37827546169d8cf7033c2760885249b3091c0784160474110f53d70204ded77b85995fa
+  checksum: 3e75a138aadc7fcb05ca5735654a394ba707cad7c8ffae64dc6d8194498ce45b1911a6e3a6e1700e769d7e41a086079cb474cf57305e63317ecc5febef19987f
   languageName: node
   linkType: hard
 
@@ -4524,8 +4509,8 @@ __metadata:
     "@nuxtjs/sentry": ^5.1.7
     "@nuxtjs/style-resources": ^1.2.1
     "@ramp-network/ramp-instant-sdk": ^2.5.0
-    "@rsksmart/rif-rollup-js-sdk": ^0.13.3-alpha
-    "@rsksmart/rif-rollup-nuxt-core": ^1.0.2
+    "@rsksmart/rif-rollup-js-sdk": ^0.13.4-alpha
+    "@rsksmart/rif-rollup-nuxt-core": ^1.0.3
     "@semantic-release/changelog": ^6.0.1
     "@semantic-release/commit-analyzer": ^9.0.2
     "@semantic-release/exec": ^6.0.3
