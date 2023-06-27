@@ -21,7 +21,7 @@
           variant="dark"
           @click="openNetworkSwitchModal"
         >
-          <v-icon name="co-ethereum" />
+          <rootstock-icon />
         </i-button>
         <i-button
           id="btn-switch-theme"
@@ -53,9 +53,11 @@
 <script lang="ts">
 import Vue from "vue";
 import theme from "@rsksmart/rif-rollup-nuxt-core/utils/theme";
+import RootstockIcon from "@/components/RootstockIcon.vue";
 
 export default Vue.extend({
   name: "Footer",
+  components: { RootstockIcon },
   data() {
     return {
       footerModal: false,

@@ -13,7 +13,7 @@
           <v-icon v-if="zkNetworkName === network" class="selected" name="ri-check-line" />
         </span>
         <span>
-          zkSync lite <span class="networkName">{{ zkNetworkName }}</span>
+          RIF Rollup <span class="networkName">{{ zkNetworkName }}</span>
         </span>
       </li>
     </ul>

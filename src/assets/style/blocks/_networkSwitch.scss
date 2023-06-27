@@ -50,7 +50,7 @@ body.inkline {
   &.-light {
     .networkSwitchModal .network-list {
       .network-list-item {
-        color: $black;
+        color: $black !important;
         border-color: $warmGrey;
       }
     }
@@ -59,8 +59,8 @@ body.inkline {
   &.-dark {
     .networkSwitchModal .network-list {
       .network-list-item {
-        color: $white;
-        border-color: $input-border-color-dark;
+        color: $black !important;
+        border-color: $warmGrey;
       }
     }
   }
