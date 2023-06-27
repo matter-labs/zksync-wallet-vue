@@ -15,13 +15,13 @@
           id="btn-switch-network"
           size="md"
           circle
-          class="_margin-right-1 _hidden-sm-and-down"
+          class="_margin-right-1 _hidden-sm-and-down rootstock-icon"
           data-cy="network_switch_icon"
           outline
           variant="dark"
           @click="openNetworkSwitchModal"
         >
-          <v-icon name="co-ethereum" />
+          <rootstock-icon />
         </i-button>
         <i-button
           id="btn-switch-theme"
@@ -53,9 +53,11 @@
 <script lang="ts">
 import Vue from "vue";
 import theme from "@rsksmart/rif-rollup-nuxt-core/utils/theme";
+import RootstockIcon from "@/components/RootstockIcon.vue";
 
 export default Vue.extend({
   name: "Footer",
+  components: { RootstockIcon },
   data() {
     return {
       footerModal: false,
@@ -82,4 +84,34 @@ export default Vue.extend({
   },
 });
 </script>
-<style lang="scss"></style>
+
+<style lang="scss">
+.rootstock-icon {
+  &:hover {
+    svg {
+      fill: #fff !important;
+    }
+
+    path {
+      fill: #fff !important;
+    }
+
+    rect {
+      fill: #fff !important;
+    }
+  }
+  &:focus {
+    svg {
+      fill: #fff !important;
+    }
+
+    path {
+      fill: #fff !important;
+    }
+
+    rect {
+      fill: #fff !important;
+    }
+  }
+}
+</style>
