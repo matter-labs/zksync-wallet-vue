@@ -3,9 +3,9 @@
     <template #header>Transfer warning</template>
     <div>
       <div class="_padding-bottom-1">
-        You are about to transfer {{ isNFT ? "NFT" : "money" }} to an address that doesn't have a zkSync Lite balance
-        yet. The transfer will happen inside zkSync Lite L2. If you want to move {{ isNFT ? "NFT" : "money" }} from
-        zkSync Lite to the mainnet, please use the
+        You are about to transfer {{ isNFT ? "NFT" : "money" }} to an address that doesn't have a RIF Rollup balance
+        yet. The transfer will happen inside RIF Rollup L2. If you want to move {{ isNFT ? "NFT" : "money" }} from
+        RIF Rollup to the mainnet, please use the
         <nuxt-link
           :to="isNFT ? '/transaction/nft/withdraw' : '/transaction/withdraw'"
           @click.native="$accessor.closeActiveModal()"
@@ -15,7 +15,7 @@
       </div>
       <i-checkbox v-model="transferWithdrawWarningCheckmark">Do not show this again</i-checkbox>
       <i-button block class="_margin-top-1" size="lg" variant="secondary" @click="proceed()"
-        >Transfer{{ isNFT ? " NFT" : "" }} inside zkSync Lite
+        >Transfer{{ isNFT ? " NFT" : "" }} inside RIF Rollup
       </i-button>
     </div>
   </i-modal>

@@ -1,8 +1,8 @@
-# zkSync API for the Wallet dApp (Firebase Cloud Functions)
+# RIF Rollup API for the Wallet dApp (Firebase Cloud Functions)
 
 >Process server-side REST API with the Firebase Cloud Functions. Written in TypeScript
 
-This is child-package for the zkSync v.1.x Wallet
+This is child-package for the RIF Rollup v.1.x Wallet
 
 ## Contents
 * [1 Project structure](#1)

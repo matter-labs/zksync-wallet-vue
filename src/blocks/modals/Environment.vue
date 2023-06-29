@@ -3,12 +3,12 @@
     <template #header>Environment</template>
     <div class="modalFooterBtn">
       <v-icon name="ri-npmjs-fill" />
-      <span>zkSync:</span>
+      <span>RIF Rollup:</span>
       <strong>{{ $config.zksyncVersion }}</strong>
     </div>
     <div class="modalFooterBtn">
       <v-icon name="ri-reserved-fill" />
-      <span>zkSync API:</span>
+      <span>RIF Rollup API:</span>
       <strong>{{ zkApiBase }}</strong>
     </div>
     <div class="modalFooterBtn">

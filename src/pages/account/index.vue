@@ -22,7 +22,8 @@
         <p class="tileText">
           No balances yet, please
           <nuxt-link to="/transaction/deposit">top your wallet up</nuxt-link>
-          or <a href="#" @click.prevent="openAccountModal">share your zk-address</a> to receive a transfer from someone!
+          or <a href="#" @click.prevent="openAccountModal">share your RIF Rollup address</a> to receive a transfer from
+          someone!
         </p>
         <i-button
           id="btn-account-deposit-empty-balances"

@@ -10,7 +10,7 @@
       <section class="tileSubContainer">
         <h4 class="tileSmallHeadline">Transfer</h4>
         <div class="secondaryText small _margin-bottom-05">
-          You can send your assets within the zkSync lite network or send them to Rootstock
+          You can send your assets within the RIF Rollup network or send them to Rootstock
           <span class="networkName">{{ network }}</span> network
         </div>
         <TransferProviders :providers="['zksync', 'ethereum']" />

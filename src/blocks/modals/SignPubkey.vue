@@ -9,7 +9,7 @@
     <template #header>Account Activation</template>
     <div class="_text-center">
       <p v-if="state === false">
-        <span>Sign a message to activate your zkSync account.</span>
+        <span>Sign a message to activate your RIF Rollup account.</span>
         <span class="_display-block _margin-top-05 secondaryText text-sm">{{ transactionError }}</span>
       </p>
       <p v-else-if="state === 'processing'" class="_text-center">Processing...</p>
