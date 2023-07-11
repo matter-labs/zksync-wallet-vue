@@ -7,7 +7,7 @@
     >
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" :href="blockExplorerLink">RIFexplorer</a>
+          <a target="_blank" class="footer-link" :href="blockExplorerLink">RIF Rollup explorer</a>
         </div>
       </i-row>
       <i-row center class="_text-nowrap _align-items-center _margin-0">
@@ -18,7 +18,6 @@
           class="_margin-right-1 _hidden-sm-and-down rootstock-icon"
           data-cy="network_switch_icon"
           outline
-          variant="dark"
           @click="openNetworkSwitchModal"
         >
           <rootstock-icon />
@@ -29,7 +28,6 @@
           circle
           class="floating-on-mobile _hidden-sm-and-down"
           outline
-          variant="dark"
           @click="toggleDarkMode"
         >
           <v-icon v-if="isDarkTheme" name="ri-sun-fill" />
@@ -86,31 +84,42 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
+.button.-dark.-outline {
+  color: $lightViolet !important;
+  border-color: $lightViolet !important;
+  &:is(:hover, :focus) {
+    color: $white !important;
+    border-color: $white !important;
+  }
+}
+.button.-light.-outline {
+  color: $black !important;
+  border-color: $black !important;
+  &:is(:hover, :focus) {
+    color: $white !important;
+    border-color: $white !important;
+  }
+}
 .rootstock-icon {
-  &:hover {
-    svg {
-      fill: #fff !important;
-    }
-
-    path {
-      fill: #fff !important;
-    }
-
+  &.-dark {
+    svg,
+    path,
     rect {
-      fill: #fff !important;
+      fill: $lightViolet !important;
     }
   }
-  &:focus {
-    svg {
-      fill: #fff !important;
-    }
-
-    path {
-      fill: #fff !important;
-    }
-
+  &.-light {
+    svg,
+    path,
     rect {
-      fill: #fff !important;
+      fill: $black !important;
+    }
+  }
+  &:is(:hover, :focus) {
+    svg,
+    path,
+    rect {
+      fill: $white !important;
     }
   }
 }

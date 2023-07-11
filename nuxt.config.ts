@@ -24,9 +24,9 @@ const meta = {
   title: "RIF rollup Wallet",
   titleTemplate: "%s: secure, scalable crypto payments",
   description:
-    "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum",
+    "A crypto wallet & gateway to layer-2 RIF Rollup. RIF Rollup is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Rootstock",
   keywords:
-    "zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable crypto payments, zkWallet, cryptowallet",
+    "Rollup, RIF, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Rootstock, crypto, blockchain, permissionless, L2, secure payments, scalable crypto payments, cryptowallet",
   image: "/social.png",
 };
 

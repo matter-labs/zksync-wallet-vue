@@ -2,7 +2,7 @@
   <div class="walletPage dappPageWrapper">
     <div class="balancesBlock tileBlock">
       <h3 class="tileHeadline h3">
-        Balances in L2
+        Balances in RIF Rollup
         <v-icon
           id="questionMark"
           class="icon-container _display-flex iconInfo"
@@ -54,27 +54,13 @@
             <i-button
               id="btn-account-transfer"
               block
-              class="_margin-y-0 _padding-right-1 _margin-right-1"
+              class="_margin-y-0"
               data-cy="account_send_zksync_button"
               size="md"
               to="/account/transfer"
               variant="secondary"
             >
               <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
-            </i-button>
-            <i-button
-              id="btn-account-swap"
-              :disabled="!zigZagLink"
-              :href="zigZagLink"
-              block
-              class="_margin-y-0 _padding-right-1"
-              data-cy="account_swap_zksync_button"
-              size="md"
-              tag="a"
-              target="_blank"
-              variant="secondary"
-            >
-              <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;Swap
             </i-button>
           </div>
 

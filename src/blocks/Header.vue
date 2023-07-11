@@ -13,10 +13,10 @@
               <v-icon class="mobileOnly" name="ri-wallet-line" />
               <span>Home</span>
             </nuxt-link>
-            <nuxt-link class="headerLink" to="/account/nft">
-              <v-icon class="mobileOnly" name="ri-gallery-line" />
-              <span>NFTs</span>
-            </nuxt-link>
+            <!--            <nuxt-link class="headerLink" to="/account/nft">-->
+            <!--              <v-icon class="mobileOnly" name="ri-gallery-line" />-->
+            <!--              <span>NFTs</span>-->
+            <!--            </nuxt-link>-->
             <nuxt-link class="headerLink" to="/contacts">
               <v-icon class="mobileOnly" name="ri-contacts-line" />
               <span>Contacts</span>
