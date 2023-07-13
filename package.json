@@ -63,6 +63,7 @@
     "@ramp-network/ramp-instant-sdk": "^2.5.0",
     "@rsksmart/rif-rollup-js-sdk": "^0.13.4-alpha",
     "@rsksmart/rif-rollup-nuxt-core": "^1.0.3",
+    "@rsksmart/rns-sdk": "^1.0.0-beta.8",
     "@web3-onboard/core": "^2.16.2",
     "blockies-ts": "1.0.0",
     "lottie-web": "^5.7.8",

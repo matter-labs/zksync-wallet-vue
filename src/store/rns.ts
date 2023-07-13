@@ -1,38 +1,42 @@
 import { actionTree, getAccessorType, getterTree, mutationTree } from "typed-vuex";
 import Vue from "vue";
+import { AddrResolver } from "@rsksmart/rns-sdk";
 
-const resolutionService = "https://resolve.unstoppabledomains.com/domains/";
-const tldAPI = "https://resolve.unstoppabledomains.com/supported_tlds";
-const ethKey = "crypto.ETH.address";
+const addrResolver = new AddrResolver(
+  process.env.RNS_REGISTRY_ADDRESS || "0xcb868aeabd31e2b66f74e9a55cf064abb31a4ad5",
+  process.env.RNS_REGISTRY_NODE || "https://public-node.rsk.co"
+);
 
-type UnsState = {
+const ethKey = "crypto.RBTC.address";
+
+type DomainState = {
   supportedTlds: Array<string>;
   domainData: Map<string, any>;
 };
-export const state = (): UnsState => ({
-  supportedTlds: [],
+export const state = (): DomainState => ({
+  supportedTlds: ["rsk"],
   domainData: Object.create(null),
 });
 export const getters = getterTree(state, {
   getDomain:
-    (state: UnsState) =>
-    (address: string, ticker: string = "ETH") => {
+    (state: DomainState) =>
+    (address: string, ticker: string = "RBTC") => {
       const key = "crypto." + ticker + ".address";
       const domainWithTicker = state.domainData[address]?.[key];
       return domainWithTicker || state.domainData[address]?.[ethKey];
     },
-  getSupportedTld: (state: UnsState) => state.supportedTlds,
-  getDomainData: (state: UnsState) => state.domainData,
+  getSupportedTld: (state: DomainState) => state.supportedTlds,
+  getDomainData: (state: DomainState) => state.domainData,
 });
 
 export const mutations = mutationTree(state, {
-  setSupportedTlds(state: UnsState, supportedTlds: string[]): void {
+  setSupportedTlds(state: DomainState, supportedTlds: string[]): void {
     Vue.set(state, "supportedTlds", supportedTlds);
   },
-  setDomainData(state: UnsState, { address, domainData }: { address: string; domainData: any }): void {
+  setDomainData(state: DomainState, { address, domainData }: { address: string; domainData: any }): void {
     Vue.set(state.domainData, address, domainData);
   },
-  clear(state: UnsState) {
+  clear(state: DomainState) {
     Vue.set(state, "supportedTlds", []);
     Vue.set(state, "domainData", new Map());
   },
@@ -44,27 +48,14 @@ export const actions = actionTree(
     async lookupDomain({ commit, getters }, { address }: { address: string; ticker: string }) {
       try {
         const domain = address ? address.trim().toLowerCase() : "";
-        let supportedTlds = getters.getSupportedTld;
-        if (supportedTlds.length === 0) {
-          const response = await fetch(tldAPI);
-          const data = await response.json();
-          if (data.tlds) {
-            supportedTlds = data.tlds;
-            commit("setSupportedTlds", supportedTlds);
-          }
-        }
+        const supportedTlds = getters.getSupportedTld;
         const isValidDomain = supportedTlds?.some((tld) => domain.endsWith(tld)) ?? false;
         if (isValidDomain) {
-          const response = await fetch(resolutionService + domain, {
-            method: "get",
-            headers: new Headers({
-              Authorization: "Bearer " + process.env.UNS_KEY,
-            }),
+          const addr = await addrResolver.addr(domain);
+          commit("setDomainData", {
+            address: domain,
+            domainData: { "crypto.RBTC.address": addr },
           });
-          const data = await response.json();
-          if (data.records) {
-            commit("setDomainData", { address: domain, domainData: data.records });
-          }
         }
       } catch (e) {
         console.log(e);

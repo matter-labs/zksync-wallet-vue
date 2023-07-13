@@ -20,8 +20,8 @@
       />
 
       <transition name="fadeFast">
-        <div v-if="unsDomain" class="text-xs text-left flex domainAddress">
-          <img height="20" width="20" src="/images/UnsLogo.png" alt="Unstoppable Domains Logo" />
+        <div v-if="rnsDomain" class="text-xs text-left flex domainAddress">
+          <img height="16" width="16" src="/images/rootstock.png" alt="RNS Domain Logo" />
           {{ domainSubText }}
         </div>
         <div v-if="error" class="errorText" data-cy="address_block_error_message">{{ error }}</div>
@@ -52,6 +52,7 @@ export default Vue.extend({
     return {
       inputtedWallet: this.value ?? "",
       domainFetchingInProgress: false,
+      debounceTimer: null as NodeJS.Timeout | null,
     };
   },
   computed: {
@@ -72,17 +73,17 @@ export default Vue.extend({
       return !!this.getDomain && !this.domainFetchingInProgress;
     },
     getDomain(): string | null {
-      return this.$store.getters["uns/getDomain"](this.inputtedWallet, this.token);
+      return this.$store.getters["rns/getDomain"](this.inputtedWallet, this.token);
     },
     domainSubText(): string {
-      const domain = this.unsDomain;
+      const domain = this.rnsDomain;
       if (domain) {
         return domain.substring(0, 6) + "..." + domain.substring(domain.length - 6, domain.length);
       } else {
         return "";
       }
     },
-    unsDomain(): string | null {
+    rnsDomain(): string | null {
       return this.getDomain;
     },
   },
@@ -95,8 +96,8 @@ export default Vue.extend({
       }
       this.$emit("input", this.isValid ? val : "");
     },
-    getDomain() {
-      this.$emit("input", this.isValid ? this.inputtedWallet : "");
+    getDomain(val) {
+      val && this.$emit("input", val);
     },
     value(val) {
       if (this.isValid || (!this.isValid && !!val)) {
@@ -113,17 +114,21 @@ export default Vue.extend({
         (this.$refs.input as HTMLElement).focus();
       }
     },
-    async getDomainAddress() {
-      if (!this.isValidDomain) {
-        try {
-          this.domainFetchingInProgress = true;
-          await this.$store.dispatch("uns/lookupDomain", { address: this.inputtedWallet });
-        } catch (error) {
-          console.warn("UNS lookup failed", error);
-        } finally {
-          this.domainFetchingInProgress = false;
+    getDomainAddress() {
+      if (this.debounceTimer) clearTimeout(this.debounceTimer);
+
+      this.debounceTimer = setTimeout(async () => {
+        if (!this.isValidDomain) {
+          try {
+            this.domainFetchingInProgress = true;
+            await this.$store.dispatch("rns/lookupDomain", { address: this.inputtedWallet });
+          } catch (error) {
+            console.warn("RNS lookup failed", error);
+          } finally {
+            this.domainFetchingInProgress = false;
+          }
         }
-      }
+      }, 500); // Adjust the debounce delay as needed
     },
   },
 });

@@ -473,7 +473,7 @@ export default Vue.extend({
       return this.$store.getters["zk-wallet/cpk"];
     },
     inputtedAddressWithDomain(): string {
-      const domainAddress = this.$store.getters["uns/getDomain"](this.inputtedAddress, this.chosenToken);
+      const domainAddress = this.$store.getters["rns/getDomain"](this.inputtedAddress, this.chosenToken);
       return domainAddress || this.inputtedAddress;
     },
   },
@@ -491,7 +491,7 @@ export default Vue.extend({
       },
     },
     inputtedAddressWithDomain(val) {
-      const domainAddress = this.$store.getters["uns/getDomain"](val, this.chosenToken);
+      const domainAddress = this.$store.getters["rns/getDomain"](val, this.chosenToken);
       this.$store.dispatch("zk-transaction/setAddress", domainAddress || val);
     },
     contentHash(val) {

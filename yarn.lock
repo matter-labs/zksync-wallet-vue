@@ -1901,6 +1901,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ensdomains/eth-ens-namehash@npm:^2.0.15":
+  version: 2.0.15
+  resolution: "@ensdomains/eth-ens-namehash@npm:2.0.15"
+  checksum: 56e2d4275f30b701e7328e488b7107b5ee793b57653342232f01396f769a51b812e73f9475faf894198ffc8ea97eead3809c1431e0955b9377400f503b4da970
+  languageName: node
+  linkType: hard
+
 "@eslint/eslintrc@npm:^1.2.1":
   version: 1.2.1
   resolution: "@eslint/eslintrc@npm:1.2.1"
@@ -4456,8 +4463,8 @@ __metadata:
   linkType: hard
 
 "@rsksmart/rif-rollup-nuxt-core@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@rsksmart/rif-rollup-nuxt-core@npm:1.0.3"
+  version: 1.1.0
+  resolution: "@rsksmart/rif-rollup-nuxt-core@npm:1.1.0"
   dependencies:
     "@nuxtjs/axios": ^5.13.1
     "@rsksmart/rif-rollup-js-sdk": ^0.13.4-alpha
@@ -4484,7 +4491,7 @@ __metadata:
     nuxt: ^2.15.3
     ts-node: ^9.1.1
     web3: ^1.5.3
-  checksum: 3e75a138aadc7fcb05ca5735654a394ba707cad7c8ffae64dc6d8194498ce45b1911a6e3a6e1700e769d7e41a086079cb474cf57305e63317ecc5febef19987f
+  checksum: 102483830b68859e77c434d01480b812fa29c99eb0f881eaf8f25a4ac824ac4c27c1d2833f52ab912f79d014dae7745f0d207faa38c5b2831e68e3fd3b4846ae
   languageName: node
   linkType: hard
 
@@ -4511,6 +4518,7 @@ __metadata:
     "@ramp-network/ramp-instant-sdk": ^2.5.0
     "@rsksmart/rif-rollup-js-sdk": ^0.13.4-alpha
     "@rsksmart/rif-rollup-nuxt-core": ^1.0.3
+    "@rsksmart/rns-sdk": ^1.0.0-beta.8
     "@semantic-release/changelog": ^6.0.1
     "@semantic-release/commit-analyzer": ^9.0.2
     "@semantic-release/exec": ^6.0.3
@@ -4549,6 +4557,17 @@ __metadata:
       optional: true
   languageName: unknown
   linkType: soft
+
+"@rsksmart/rns-sdk@npm:^1.0.0-beta.8":
+  version: 1.0.0-beta.8
+  resolution: "@rsksmart/rns-sdk@npm:1.0.0-beta.8"
+  dependencies:
+    "@ensdomains/eth-ens-namehash": ^2.0.15
+    ethers: ^5.5.1
+    js-sha3: ^0.8.0
+  checksum: ca3ce9fa357a5149df2fe432f2c3754e4a96808750b8ffc827119cb80cad2b68deb0034673c24776e2cb97d8d5ca7f191c912e598b2795e7e82dde31d42303a7
+  languageName: node
+  linkType: hard
 
 "@semantic-release/changelog@npm:^6.0.1":
   version: 6.0.1
@@ -11743,7 +11762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:5.7.2, ethers@npm:^5.4.7":
+"ethers@npm:5.7.2, ethers@npm:^5.4.7, ethers@npm:^5.5.1":
   version: 5.7.2
   resolution: "ethers@npm:5.7.2"
   dependencies:
