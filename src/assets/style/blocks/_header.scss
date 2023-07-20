@@ -14,10 +14,6 @@ header {
       left: 0;
       box-shadow: $shadowBottom;
     }
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: rgb(239, 241, 244);
-    box-shadow: 0 1px 0.5px #0000001a;
   }
 
   &.indexHeader {
@@ -163,7 +159,7 @@ header {
 
     .headerLink {
       padding: 10px 15px;
-      color: $violet;
+      color: $black;
       border-radius: $borderRadiusMd;
       transition-property: background-color, color;
       will-change: background-color, color;
@@ -173,10 +169,9 @@ header {
       }
 
       &.nuxt-link-exact-active {
-        color: #27274e;
         font-weight: 600;
-        background: $mediumGrey;
-        //background: $light;
+        background: #f1f1f1;
+        border-radius: 20px !important;
       }
     }
   }
@@ -350,7 +345,7 @@ header {
 }
 
 body.inkline.-light header {
-  background: $bgLight;
+  background: $white;
 
   .linksContainer .mainLink {
     color: $black;
