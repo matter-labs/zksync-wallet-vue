@@ -33,12 +33,12 @@
         </i-column>
         <i-column :xs="6" :md="3" class="_margin-left-auto _padding-right-0 _display-flex _justify-content-end">
           <div class="linksContainer">
+            <i class="copy" @click="copyAddress()">
+              <v-icon name="ri-clipboard-line" />
+            </i>
             <div id="btn-toggle-user-dropdown" class="userDropdown" @click="togglePopup">
               <div class="userDropdownAddress">
-                <div class="walletLabel">Wallet</div>
-                <div class="userAddress">
-                  <div class="address">{{ walletName }}</div>
-                </div>
+                <div class="address">{{ walletName }}</div>
               </div>
               <div class="userImgContainer">
                 <user-img :wallet="walletAddressFull"></user-img>
@@ -59,6 +59,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { copyToClipboard } from "@rsksmart/rif-rollup-nuxt-core/utils";
 
 export default Vue.extend({
   name: "Header",
@@ -94,6 +95,9 @@ export default Vue.extend({
     },
     togglePopup(): void {
       this.$accessor.setAccountModalState(true);
+    },
+    copyAddress() {
+      copyToClipboard(this.walletAddressFull.toLowerCase());
     },
   },
 });
