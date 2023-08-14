@@ -1,3 +1,10 @@
+## [3.29.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.0...3.29.1) (2023-08-14)
+
+
+### Bug Fixes
+
+* update ramp sdk ([#338](https://github.com/matter-labs/zksync-wallet-vue/issues/338)) ([530ea67](https://github.com/matter-labs/zksync-wallet-vue/commit/530ea67448be2e5c441ad71178ac22283b1b1868))
+
 # [3.29.0](https://github.com/matter-labs/zksync-wallet-vue/compare/3.28.6...3.29.0) (2023-06-26)
 
 
