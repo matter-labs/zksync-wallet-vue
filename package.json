@@ -61,7 +61,7 @@
     "@nuxt/typescript-runtime": "^2.1.0",
     "@nuxtjs/google-gtag": "^1.0.4",
     "@nuxtjs/sentry": "^5.1.7",
-    "@ramp-network/ramp-instant-sdk": "^2.5.0",
+    "@ramp-network/ramp-instant-sdk": "^4.0.4",
     "@web3-onboard/core": "^2.16.2",
     "blockies-ts": "1.0.0",
     "lottie-web": "^5.7.8",
