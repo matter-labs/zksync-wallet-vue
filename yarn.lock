@@ -3644,7 +3644,7 @@ __metadata:
     "@nuxtjs/proxy": ^2.1.0
     "@nuxtjs/sentry": ^5.1.7
     "@nuxtjs/style-resources": ^1.2.1
-    "@ramp-network/ramp-instant-sdk": ^2.5.0
+    "@ramp-network/ramp-instant-sdk": ^4.0.4
     "@semantic-release/changelog": ^6.0.1
     "@semantic-release/commit-analyzer": ^9.0.2
     "@semantic-release/exec": ^6.0.3
@@ -4840,12 +4840,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ramp-network/ramp-instant-sdk@npm:^2.5.0":
-  version: 2.5.2
-  resolution: "@ramp-network/ramp-instant-sdk@npm:2.5.2"
+"@ramp-network/ramp-instant-sdk@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "@ramp-network/ramp-instant-sdk@npm:4.0.4"
   dependencies:
-    body-scroll-lock: ^2.6.4
-  checksum: 4c85ebdfd57d06952b856e2dbdaf186240a836e98771592d7017c86b2a7baf47d56415c905e9cf779cbb9afd46bea40bfae2a0cc21b847e0cc24740e88643843
+    body-scroll-lock: ^3.1.5
+  checksum: 2da4d030786e1465d72468f8e9d64a916f2f831d3660703ae948c27cdcd90029ac20980b5dea1b2183e75cb9257c0e957a612db762f8681d70cf5daa913245eb
   languageName: node
   linkType: hard
 
@@ -8883,10 +8883,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"body-scroll-lock@npm:^2.6.4":
-  version: 2.7.1
-  resolution: "body-scroll-lock@npm:2.7.1"
-  checksum: 7a6b57b9315dad3639ac5aa781ed25c2275a53b3aa1527a580eaaf17096ca5c93293c99c2d12ffc92a11388ac7004c8aa943ac9c356717a393727c9216e183e6
+"body-scroll-lock@npm:^3.1.5":
+  version: 3.1.5
+  resolution: "body-scroll-lock@npm:3.1.5"
+  checksum: 52c25b81d6e7a87cfbdd7870363c3e20a439dbc76535b735916e2df907abbce95c0da0d2c7a2cfe88f49775d53bbc4bd09445ffda2d61b999efa3f0b1dedfc5e
   languageName: node
   linkType: hard
 
