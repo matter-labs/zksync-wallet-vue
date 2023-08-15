@@ -1,3 +1,10 @@
+## [3.29.2](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.1...3.29.2) (2023-08-15)
+
+
+### Bug Fixes
+
+* replace medium blog with mirror ([#339](https://github.com/matter-labs/zksync-wallet-vue/issues/339)) ([49fa237](https://github.com/matter-labs/zksync-wallet-vue/commit/49fa237f6d821afe7c6adafc54dc7761b56f2ec5))
+
 ## [3.29.1](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.0...3.29.1) (2023-08-14)
 
 
