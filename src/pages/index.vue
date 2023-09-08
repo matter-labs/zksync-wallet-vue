@@ -34,7 +34,7 @@
             <v-icon id="questionMark" name="ri-question-mark" class="iconInfo" :scale="0.9" />
           </span>
         </h2>
-        <h3 class="noteContainer">Or you’ve receive funds on your exchange address such as Binance?</h3>
+        <h3 class="noteContainer">Or you’ve received funds on your exchange address such as Binance?</h3>
         <a
           data-cy="core_connect_wallet_button"
           class="tileContainer _text-center _margin-top-1"
