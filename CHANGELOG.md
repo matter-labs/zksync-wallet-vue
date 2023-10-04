@@ -1,3 +1,10 @@
+## [3.29.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.3...3.29.4) (2023-10-04)
+
+
+### Bug Fixes
+
+* update providers list ([#342](https://github.com/matter-labs/zksync-wallet-vue/issues/342)) ([8fba3b4](https://github.com/matter-labs/zksync-wallet-vue/commit/8fba3b4b9128b460e246d026e0f2a1d0c8afddea))
+
 ## [3.29.3](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.2...3.29.3) (2023-08-15)
 
 
