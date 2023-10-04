@@ -1,32 +1,20 @@
 <template>
   <div class="cryptoProviders transfer">
-    <transfer-providers-zk-sync
-      v-if="providers.includes('zksync')"
-      class="providerOption"
-      @providerError="setError"
-    />
+    <transfer-providers-zk-sync v-if="providers.includes('zksync')" class="providerOption" @providerError="setError" />
     <transfer-providers-ethereum
       v-if="providers.includes('ethereum')"
       class="providerOption"
       @providerError="setError"
     />
-    <transfer-providers-banxa
-      v-if="providers.includes('banxa')"
-      class="providerOption"
-      @providerError="setError"
-    />
 
-    <block-modals-transfer-error
-      :error-text="errorText"
-      @close="errorText = undefined"
-    />
+    <block-modals-transfer-error :error-text="errorText" @close="errorText = undefined" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue, { PropType } from "vue";
 
-type Providers = "banxa" | "zksync" | "ethereum";
+type Providers = "zksync" | "ethereum";
 
 export default Vue.extend({
   name: "TransferProviders",
