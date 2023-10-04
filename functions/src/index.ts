@@ -1,14 +1,7 @@
 import { handlerHelper } from "./helpers/handlerHelper.js";
 import { moonpaySignFunction } from "./functions/moonpay.sign.js";
-import { banxaAuthFunction } from "./functions/banxa.auth.js";
 import { sentryTunnelFunction } from "./functions/sentry.tunnel.js";
 import { mixpanelTunnelFunction } from "./functions/mixpanel.tunnel.js";
-
-/**
- * Banxa Authentication server-side lambda
- * @function banxa_auth
- */
-export const banxaAuth = handlerHelper(banxaAuthFunction);
 
 /**
  * Moonpay URL signing server-side lambda
@@ -21,7 +14,6 @@ export const moonpaySign = handlerHelper(moonpaySignFunction);
  * @function mixpanel_proxy
  */
 export const mixpanelTunnel = handlerHelper(mixpanelTunnelFunction);
-
 
 /**
  * Sentry tunneling to deal with cross-site-blockers

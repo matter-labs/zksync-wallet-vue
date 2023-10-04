@@ -41,8 +41,6 @@ Alef
 Zcon
 Paypal
 Numio
-banxa
-keriat
 
 // Used libraries
 numberish

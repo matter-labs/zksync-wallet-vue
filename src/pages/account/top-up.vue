@@ -19,7 +19,7 @@
           You can buy crypto directly on zkSync lite with your credit card, just go through KYC process of our partners
           and enter your wallet address
         </div>
-        <TopUpProviders :providers="['ramp', 'banxa', 'moonpay', 'utorg']" />
+        <TopUpProviders :providers="['ramp', 'moonpay', 'utorg']" />
       </section>
       <div class="orDivider">
         <div class="line"></div>
@@ -56,7 +56,7 @@
         <div class="secondaryText small _margin-bottom-05">
           You can bridge your assets from other networks & exchanges using one of our supported bridges
         </div>
-        <TopUpProviders :providers="['zksync', 'layerSwap', 'orbiter', 'zigzag']" />
+        <TopUpProviders :providers="['zksync', 'layerSwap', 'zigzag']" />
       </section>
     </div>
   </div>
