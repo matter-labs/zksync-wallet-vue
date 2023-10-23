@@ -1,3 +1,10 @@
+## [3.29.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.4...3.29.5) (2023-10-23)
+
+
+### Bug Fixes
+
+* improve transactions page ([#343](https://github.com/matter-labs/zksync-wallet-vue/issues/343)) ([1ed930a](https://github.com/matter-labs/zksync-wallet-vue/commit/1ed930a74f2d3f069af5f6fb624565f86df78516))
+
 ## [3.29.4](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.3...3.29.4) (2023-10-04)
 
 
