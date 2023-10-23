@@ -3,6 +3,30 @@
     <block-modals-account-activation />
     <div class="tileBlock transactionsTile">
       <div class="tileHeadline h3">Transactions</div>
+      <div class="_display-flex _justify-content-space-between transactionsButtonGroup _margin-bottom-1">
+        <i-button
+          block
+          class="_margin-y-0 _margin-right-1 _padding-right-2"
+          data-cy="account_deposit_button"
+          size="md"
+          :href="accountZkScanUrl"
+          target="_blank"
+          variant="secondary"
+        >
+          <v-icon class="planeIcon" name="ri-external-link-line" />&nbsp;View in Explorer
+        </i-button>
+        <i-button
+          block
+          class="_margin-y-0 _padding-right-1 _margin-right-1"
+          data-cy="account_send_zksync_button"
+          size="md"
+          :href="exportLink"
+          target="_blank"
+          variant="secondary"
+        >
+          <v-icon class="planeIcon" name="ri-file-line" />&nbsp;Export
+        </i-button>
+      </div>
       <div class="transactionsListContainer genericListContainer">
         <div v-if="loadingStatus === 'main'" class="nothingFound">
           <loader class="_display-block" />
@@ -57,6 +81,19 @@ export default Vue.extend({
     },
     transactionHistoryAllLoaded(): boolean {
       return this.$store.getters["zk-history/transactionHistoryAllLoaded"];
+    },
+    accountAddress(): string {
+      return this.$store.getters["zk-account/address"];
+    },
+    accountZkScanUrl(): string {
+      console.log(this.$store.getters["zk-onboard/config"]);
+      return (this.$store.getters["zk-onboard/config"].zkSyncNetwork.explorer +
+        "explorer/accounts/" +
+        this.accountAddress) as string;
+    },
+    exportLink(): string {
+      const network = this.$store.getters["zk-onboard/config"].ethereumNetwork.name;
+      return `https://zkexport-lite.netlify.app/export/account/transactions?address=${this.accountAddress}&network=${network}`;
     },
   },
   async mounted() {
