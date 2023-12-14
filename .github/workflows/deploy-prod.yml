@@ -39,9 +39,16 @@ jobs:
           yarn set version 3.1.1
           yarn install
 
-      - name: "Deploy target: prod-mainnet"
+      - name: "Build"
         run: yarn run ci:build:prod
-      - uses: matter-labs/action-hosting-deploy@main
+
+      - name: "Setup LTS node for deployment"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 'lts/*'
+        
+      - name: "Deploy target: prod-mainnet"
+        uses: matter-labs/action-hosting-deploy@main
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
