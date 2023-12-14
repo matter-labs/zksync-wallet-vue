@@ -1,3 +1,10 @@
+## [3.29.6](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.5...3.29.6) (2023-12-14)
+
+
+### Bug Fixes
+
+* temporarily remove ledger module ([ba54f7a](https://github.com/matter-labs/zksync-wallet-vue/commit/ba54f7a9a998ef70e41d17be4deb39e6de8aeb9f))
+
 ## [3.29.5](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.4...3.29.5) (2023-10-23)
 
 
