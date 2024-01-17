@@ -5,15 +5,15 @@
         <b>Information</b>
       </template>
       <template #default>
-        <a class="modalFooterBtn big" href="https://docs.zksync.io/userdocs/intro.html" target="_blank">
+        <a class="modalFooterBtn big" href="https://docs.lite.zksync.io/userdocs/intro.html" target="_blank">
           <v-icon name="ri-book-2-line" />
           <span>Docs</span>
         </a>
-        <a class="modalFooterBtn big" href="https://docs.zksync.io/legal/terms.html" target="_blank">
+        <a class="modalFooterBtn big" href="https://docs.lite.zksync.io/legal/terms.html" target="_blank">
           <v-icon name="ri-profile-line" />
           <span>Terms</span>
         </a>
-        <a class="modalFooterBtn big" href="https://docs.zksync.io/contact.html" target="_blank">
+        <a class="modalFooterBtn big" href="https://docs.lite.zksync.io/contact.html" target="_blank">
           <v-icon name="ri-contacts-book-line" />
           <span>Contact</span>
         </a>

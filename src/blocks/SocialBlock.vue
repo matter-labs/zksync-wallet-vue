@@ -20,7 +20,7 @@
     <a
       v-if="location !== 'footer'"
       title="All Contacts"
-      href="https://docs.zksync.io/contact.html"
+      href="https://docs.lite.zksync/contact.html"
       class="socialItem"
       target="_blank"
     >
