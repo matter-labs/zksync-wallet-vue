@@ -17,10 +17,10 @@ jobs:
       - name: "Enable yarn cache"
         uses: c-hive/gha-yarn-cache@v2  # using cache
 
-      - name: "Setup node@18"
+      - name: "Setup node@16"
         uses: actions/setup-node@v2
         with:
-          node-version: 18
+          node-version: 16
 
       - name: "Install dependencies"
         run: |
@@ -29,6 +29,12 @@ jobs:
 
       - name: "Deploy target: stage-mainnet"
         run: yarn run ci:build:prod
+
+      - name: "Setup node@18"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
       - uses: matter-labs/action-hosting-deploy@main
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
