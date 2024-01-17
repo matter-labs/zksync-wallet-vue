@@ -41,6 +41,11 @@ jobs:
       - name: "Generate dist (default network: goerli)"
         run: yarn run ci:build:goerli
 
+      - name: "Setup node@18"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18
+
       - name: "Deploy preview"
         uses: matter-labs/action-hosting-deploy@main
         id: deploy_preview

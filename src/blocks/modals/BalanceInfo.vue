@@ -11,7 +11,7 @@
       >
       or in your Ethereum wallet, only in zkSync lite wallet and block explorer. Nevertheless, balances in zkSync lite
       are as secure as if though they were in L1 (the Ethereum mainnet).
-      <a href="https://docs.zksync.io/userdocs/security.html" rel="noopener noreferrer" target="_blank">Learn more.</a>
+      <a href="https://docs.lite.zksync.io/userdocs/security.html" rel="noopener noreferrer" target="_blank">Learn more.</a>
     </p>
     <p>
       You can move your balances <b>from L1</b> into zkSync lite by making a

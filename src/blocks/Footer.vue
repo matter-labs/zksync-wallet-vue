@@ -7,13 +7,13 @@
     >
       <i-row center class="linksRow _margin-0 _margin-md-top-1 _flex-nowrap _text-nowrap">
         <div class="_padding-1-2 _padding-md-x-1 _padding-left-0">
-          <a target="_blank" class="footer-link" href="https://docs.zksync.io/userdocs/intro.html">Docs</a>
+          <a target="_blank" class="footer-link" href="https://docs.lite.zksync.io/userdocs/intro.html">Docs</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="https://docs.zksync.io/legal/terms.html">Terms</a>
+          <a target="_blank" class="footer-link" href="https://docs.lite.zksync.io/legal/terms.html">Terms</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
-          <a target="_blank" class="footer-link" href="https://docs.zksync.io/contact.html">Contact</a>
+          <a target="_blank" class="footer-link" href="https://docs.lite.zksync.io/contact.html">Contact</a>
         </div>
         <div class="_padding-1-2 _padding-md-x-1">
           <span class="dividerLine">|</span>
