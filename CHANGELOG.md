@@ -1,3 +1,10 @@
+## [3.29.8](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.7...3.29.8) (2024-02-01)
+
+
+### Bug Fixes
+
+* add account validation ([#345](https://github.com/matter-labs/zksync-wallet-vue/issues/345)) ([e81c6fd](https://github.com/matter-labs/zksync-wallet-vue/commit/e81c6fd912afc125034e2e19e674466e28f6be9e))
+
 ## [3.29.7](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.6...3.29.7) (2024-01-17)
 
 
