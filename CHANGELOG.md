@@ -1,3 +1,10 @@
+## [3.29.9](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.8...3.29.9) (2024-02-01)
+
+
+### Bug Fixes
+
+* use latest core version ([e50c0ea](https://github.com/matter-labs/zksync-wallet-vue/commit/e50c0ea5e2229c9d7c70e1de196d892445c6f353))
+
 ## [3.29.8](https://github.com/matter-labs/zksync-wallet-vue/compare/3.29.7...3.29.8) (2024-02-01)
 
 
