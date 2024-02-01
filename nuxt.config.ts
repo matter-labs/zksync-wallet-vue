@@ -226,6 +226,7 @@ const config = <NuxtConfig>{
         ],
         restoreNetwork: true,
         logoutRedirect: "/",
+        screeningApiUrl: process.env.SCREENING_API_URL,
       },
     ],
   ],
