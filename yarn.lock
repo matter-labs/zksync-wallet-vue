@@ -3635,7 +3635,7 @@ __metadata:
     semantic-release: ^19.0.2
     stylelint-config-standard-scss: ^3.0.0
     vue-qrcode: 0.4.0
-    zksync: ^0.13.1
+    zksync: 0.13.0
   peerDependencies:
     "@ethersproject/hash": ^5.5.0
   dependenciesMeta:
@@ -25742,6 +25742,21 @@ __metadata:
   version: 0.6.2
   resolution: "zksync-crypto@npm:0.6.2"
   checksum: b02b4ffb76cb7ac95b57935e0f9e09b06af6ae76b5ff80d3306707867e883cdbcaa41fb6222e1da71ce5edc096d0a783139fec297ceb62a95442812f0ac45940
+  languageName: node
+  linkType: hard
+
+"zksync@npm:0.13.0":
+  version: 0.13.0
+  resolution: "zksync@npm:0.13.0"
+  dependencies:
+    axios: ^0.21.2
+    websocket: ^1.0.30
+    websocket-as-promised: ^1.1.0
+    zksync-crypto: ^0.6.1
+  peerDependencies:
+    "@ethersproject/logger": ^5.4.0
+    ethers: ^5.4.4
+  checksum: a9e3b32e2e48d941f60b8e2a1aae7e283b40440b62610935fcf02b8e27a235a284a263a8d03f298bfa29e67c190589d074da6a90220b4b957944670bcf0d75ea
   languageName: node
   linkType: hard
 
