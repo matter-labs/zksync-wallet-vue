@@ -67,7 +67,7 @@
       ]
     },
     {
-      "target": "goerli-beta",
+      "target": "prod-sepolia",
       "public": "public",
       "ignore": [
         "firebase.json",
@@ -78,23 +78,7 @@
         {
           "source": "**",
           "type": 301,
-          "destination": "https://wallet.zksync.io?network=goerli-beta"
-        }
-      ]
-    },
-    {
-      "target": "prod-goerli",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "redirects": [
-        {
-          "source": "**",
-          "type": 301,
-          "destination": "https://wallet.zksync.io?network=goerli"
+          "destination": "https://wallet.zksync.io?network=sepolia"
         }
       ]
     },

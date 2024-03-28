@@ -8,11 +8,8 @@
         "stage-mainnet": [
           "zksync-vue"
         ],
-        "prod-goerli": [
-          "goerli-wallet-zksync"
-        ],
-        "goerli-beta": [
-          "goerli-beta-wallet-zksync"
+        "prod-sepolia": [
+          "sepolia-wallet-zksync"
         ]
       }
     },
