@@ -50,26 +50,13 @@
             </i-button>
             <i-button
               block
-              class="_margin-y-0 _padding-right-1 _margin-right-1"
+              class="_margin-y-0 _padding-right-1"
               data-cy="account_send_zksync_button"
               size="md"
               to="/account/transfer"
               variant="secondary"
             >
               <v-icon class="planeIcon" name="ri-send-plane-fill" />&nbsp;Transfer
-            </i-button>
-            <i-button
-              :disabled="!zigZagLink"
-              :href="zigZagLink"
-              block
-              class="_margin-y-0 _padding-right-1"
-              data-cy="account_swap_zksync_button"
-              size="md"
-              tag="a"
-              target="_blank"
-              variant="secondary"
-            >
-              <v-icon class="planeIcon" name="ri-arrow-left-right-line" />&nbsp;Swap
             </i-button>
           </div>
 
@@ -200,14 +187,6 @@ export default Vue.extend({
     },
     hasDisplayedBalances(): boolean {
       return Object.keys(this.displayedList).length !== 0 || Object.keys(this.activeDeposits).length !== 0;
-    },
-    zigZagLink(): string | null {
-      switch (this.$store.getters["zk-provider/network"]) {
-        case "mainnet":
-          return "https://trade.zigzag.exchange/";
-        default:
-          return null;
-      }
     },
     isSearching(): boolean {
       return this.search.trim().length > 0;
