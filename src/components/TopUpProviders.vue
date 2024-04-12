@@ -22,8 +22,6 @@
       data-cy="deposit_provider_zksync"
     />
 
-    <top-up-providers-zig-zag v-if="providers.includes('zigzag')" class="providerOption" @providerError="setError" />
-
     <block-modals-deposit-error :error-text="errorText" @close="errorText = undefined" />
   </div>
 </template>
@@ -31,7 +29,7 @@
 <script lang="ts">
 import Vue, { PropType } from "vue";
 
-type Providers = "ramp" | "moonpay" | "zksync" | "layerSwap" | "okex" | "bybit" | "utorg" | "zigzag";
+type Providers = "ramp" | "moonpay" | "zksync" | "layerSwap" | "okex" | "bybit" | "utorg";
 
 export default Vue.extend({
   name: "TopUpProviders",
