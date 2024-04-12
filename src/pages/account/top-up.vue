@@ -56,7 +56,7 @@
         <div class="secondaryText small _margin-bottom-05">
           You can bridge your assets from other networks & exchanges using one of our supported bridges
         </div>
-        <TopUpProviders :providers="['zksync', 'layerSwap', 'zigzag']" />
+        <TopUpProviders :providers="['zksync', 'layerSwap']" />
       </section>
     </div>
   </div>
