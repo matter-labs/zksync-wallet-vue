@@ -11,8 +11,8 @@ on:
       network:
         type: string
         required: true
-        default: "goerli"
-        description: "target/env: mainnet, goerli, goerli-beta"
+        default: "sepolia"
+        description: "target/env: mainnet, sepolia"
 jobs:
   build_and_preview:
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository }} || ${{ github.event.repository.full_name == github.repository }}
@@ -38,8 +38,8 @@ jobs:
         run: |
           yarn lint --max-warnings 0
 
-      - name: "Generate dist (default network: goerli)"
-        run: yarn run ci:build:goerli
+      - name: "Generate dist (default network: sepolia)"
+        run: yarn run ci:build:sepolia
 
       - name: "Setup node@18"
         uses: actions/setup-node@v2
