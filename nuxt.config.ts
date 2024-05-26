@@ -262,7 +262,7 @@ const config = <NuxtConfig>{
       anonymize_ip: true, // anonymize IP
       send_page_view: false, // might be necessary to avoid duplicated page track on page reload
       linker: {
-        domains: ["wallet.zksync.io"],
+        domains: ["lite.zksync.io"],
       },
     },
     debug: isDebugEnabled, // enable to track in dev mode

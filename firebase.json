@@ -67,38 +67,6 @@
       ]
     },
     {
-      "target": "goerli-beta",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "redirects": [
-        {
-          "source": "**",
-          "type": 301,
-          "destination": "https://wallet.zksync.io?network=goerli-beta"
-        }
-      ]
-    },
-    {
-      "target": "prod-goerli",
-      "public": "public",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
-      ],
-      "redirects": [
-        {
-          "source": "**",
-          "type": 301,
-          "destination": "https://wallet.zksync.io?network=goerli"
-        }
-      ]
-    },
-    {
       "target": "mainnet",
       "public": "public",
       "ignore": [
