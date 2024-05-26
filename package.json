@@ -30,7 +30,7 @@
       "url": "https://opensource.org/licenses/apache2.0.php"
     }
   ],
-  "version": "3.29.10",
+  "version": "3.29.11",
   "homepage": "https://lite.zksync.io",
   "description": "zkWallet was created to unleash the power of zkSync Lite L2 operations and give anyone an access to L2 zkSync Lite features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
