@@ -5,7 +5,7 @@
 
 ## Description
 
-zkWallet was created to unleash the power of zkSync L2 operations and give everyone the access to L2 zkSync features. [Learn more](https://zksync.io/)
+zkWallet was created to unleash the power of zkSync Lite L2 operations and give everyone the access to L2 zkSync Lite features. [Learn more](https://zksync.io/)
 
 It's working perfectly on [**mainnet**](https://lite.zksync.io), published and ready for mass adoption.
 

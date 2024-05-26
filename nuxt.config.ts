@@ -21,12 +21,12 @@ const gitRevision =
     : `${process.env.APP_GIT_REVISION}`;
 
 const meta = {
-  title: "zkSync Wallet",
-  titleTemplate: "%s | zkSync: secure, scalable crypto payments",
+  title: "zkSync Lite Wallet",
+  titleTemplate: "%s | zkSync Lite: secure, scalable crypto payments",
   description:
-    "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum",
+    "A crypto wallet & gateway to layer-2 zkSync Rollup. zkSync Lite is a trustless, secure, user-centric protocol for scaling payments and smart contracts on Ethereum",
   keywords:
-    "zkSync, Matter Labs, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable crypto payments, zkWallet, cryptowallet",
+    "zkSync Lite, rollup, ZK rollup, zero confirmation, ZKP, zero-knowledge proofs, Ethereum, crypto, blockchain, permissionless, L2, secure payments, scalable crypto payments, zkWallet",
   image: "/social.png",
 };
 
