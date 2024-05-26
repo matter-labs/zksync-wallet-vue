@@ -11,12 +11,10 @@
     "zksync",
     "ethereum",
     "web3",
-    "wallet",
     "defi",
     "payment gateway",
     "cryptopayments",
     "gitcoin",
-    "matter labs",
     "zksync dapps",
     "dapp",
     "ethers"
@@ -33,8 +31,8 @@
     }
   ],
   "version": "3.29.10",
-  "homepage": "https://wallet.zksync.io",
-  "description": "zkWallet was created to unleash the power of zkSync L2 operations and give anyone an access to L2 zkSync features on mainnet",
+  "homepage": "https://lite.zksync.io",
+  "description": "zkWallet was created to unleash the power of zkSync Lite L2 operations and give anyone an access to L2 zkSync Lite features on mainnet",
   "repository": "https://github.com/matter-labs/zksync-wallet-vue",
   "author": "Matter Labs",
   "browserslist": {
