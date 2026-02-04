@@ -6,6 +6,7 @@
     <block-modals-requesting-provider-error />
     <block-modals-onboard-error />
     <block-announcement />
+    <block-lite-shutdown-banner />
     <i-layout-content class="routerContainer">
       <transition name="fade" mode="out-in">
         <nuxt />

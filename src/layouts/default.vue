@@ -8,6 +8,7 @@
     <transition name="fade">
       <div v-if="!loggingIn && loggedIn">
         <block-header ref="header" />
+        <block-lite-shutdown-banner />
         <i-layout-content class="layoutContent">
           <block-modals-sign-pubkey />
           <div class="routerContainer">
