@@ -65,10 +65,15 @@ jobs:
       - name: "Prepare /functions/"
         run: npm --prefix functions i
 
+      - name: "Write Firebase service account (zksync-vue-mainnet)"
+        run: |
+          node -e "require('fs').writeFileSync(process.env.RUNNER_TEMP + '/firebase-sa.json', process.env.FIREBASE_SERVICE_ACCOUNT)"
+        env:
+          FIREBASE_SERVICE_ACCOUNT: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE_MAINNET }}"
+
       - name: "Deploy functions to firebase: zksync-vue-mainnet"
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
         env:
           PROJECT_ID: zksync-vue-mainnet
-          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
+          GOOGLE_APPLICATION_CREDENTIALS: "${{ runner.temp }}/firebase-sa.json"
+        run: |
+          npx firebase-tools@latest deploy --only functions --project zksync-vue-mainnet --non-interactive

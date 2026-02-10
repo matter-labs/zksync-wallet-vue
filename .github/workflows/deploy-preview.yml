@@ -60,9 +60,14 @@ jobs:
       - name: "Prepare /functions/"
         run: npm --prefix functions i
 
-      - name: "Deploy functions to firebase (staging)"
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
+      - name: "Write Firebase service account (zksync-vue)"
+        run: |
+          node -e "require('fs').writeFileSync(process.env.RUNNER_TEMP + '/firebase-sa.json', process.env.FIREBASE_SERVICE_ACCOUNT)"
         env:
-          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
+          FIREBASE_SERVICE_ACCOUNT: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+
+      - name: "Deploy functions to firebase (staging)"
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: "${{ runner.temp }}/firebase-sa.json"
+        run: |
+          npx firebase-tools@latest deploy --only functions --project zksync-vue --non-interactive
