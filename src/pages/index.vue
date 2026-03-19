@@ -99,7 +99,7 @@ export default Vue.extend({
 .indexPage {
   width: 100%;
   height: 100%;
-  padding-top: 93px;
+  padding-top: 24px;
   padding-bottom: 56px;
   display: flex;
   justify-content: center;

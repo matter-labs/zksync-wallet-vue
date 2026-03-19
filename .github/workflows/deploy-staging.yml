@@ -16,6 +16,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: "Enable yarn cache"
         uses: c-hive/gha-yarn-cache@v2  # using cache
+        continue-on-error: true
 
       - name: "Setup node@16"
         uses: actions/setup-node@v2
@@ -30,10 +31,10 @@ jobs:
       - name: "Deploy target: stage-mainnet"
         run: yarn run ci:build:prod
 
-      - name: "Setup node@18"
+      - name: "Setup node@20"
         uses: actions/setup-node@v2
         with:
-          node-version: 18
+          node-version: 20
 
       - uses: matter-labs/action-hosting-deploy@main
         with:
@@ -46,9 +47,14 @@ jobs:
       - name: "Prepare /functions/"
         run: npm --prefix functions i
 
-      - name: "Deploy functions to firebase: zksync-vue"
-        uses: w9jds/firebase-action@master
-        with:
-          args: deploy --only functions
+      - name: "Write Firebase service account (zksync-vue)"
+        run: |
+          node -e "require('fs').writeFileSync(process.env.RUNNER_TEMP + '/firebase-sa.json', process.env.FIREBASE_SERVICE_ACCOUNT)"
         env:
-          FIREBASE_TOKEN: '${{ secrets.FIREBASE_DEPLOY_TOKEN }}'
+          FIREBASE_SERVICE_ACCOUNT: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZKSYNC_VUE }}"
+
+      - name: "Deploy functions to firebase: zksync-vue"
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: "${{ runner.temp }}/firebase-sa.json"
+        run: |
+          npx firebase-tools@latest deploy --only functions --project zksync-vue --non-interactive

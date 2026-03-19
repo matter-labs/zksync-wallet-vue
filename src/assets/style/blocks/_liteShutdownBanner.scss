@@ -1,0 +1,109 @@
+.liteShutdownBanner {
+  position: relative;
+  z-index: 2;
+  margin-top: calc(#{$headerHeight} + 32px);
+  margin-bottom: 8px;
+  padding: 16px 0 8px;
+
+  &__card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 20px;
+    border: 1px solid #cc0000;
+    border-radius: $borderRadiusBig;
+    background: $redBg;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__text {
+    color: #cc0000;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.35;
+  }
+
+  &__line {
+    display: inline;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 8px 8px 8px 16px;
+    gap: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    letter-spacing: -0.03em;
+    color: #404c85;
+    text-decoration: none;
+    background: transparent;
+    border: 1px solid #404c85;
+    border-radius: 8px;
+    transition: $transition1;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: #404c85;
+      background: transparentize(#404c85, 0.92);
+      text-decoration: none;
+    }
+  }
+
+  &__btnIcon {
+    margin-left: 0;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+  }
+
+  @media (max-width: $mobile) {
+    &__card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    &__content {
+      width: 100%;
+      flex-direction: column;
+    }
+
+    &__line {
+      display: block;
+    }
+
+    &__actions {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
