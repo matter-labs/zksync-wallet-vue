@@ -8,7 +8,7 @@
           </div>
           <div class="liteShutdownBanner__text">
             <span class="liteShutdownBanner__line"
-              >zkSync Lite shuts down May 4th, 2025. Connect your wallet and withdraw your funds now.</span
+              >zkSync Lite shuts down May 4th, 2026. Connect your wallet and withdraw your funds now.</span
             >
           </div>
         </div>
@@ -26,7 +26,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-const DETAILS_LINK = "https://blog.matter-labs.io/8b8964ba7c59";
+const DETAILS_LINK = "https://www.zksync.io/blog/zksync-lite-sunset";
 
 export default Vue.extend({
   name: "LiteShutdownBanner",
